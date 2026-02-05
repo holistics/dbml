@@ -1,13 +1,13 @@
-const P = require('parsimmon');
-const KP = require('../keyword_parsers.cjs');
-const {
+import P from 'parsimmon';
+import * as KP from '../keyword_parsers.js';
+import {
   pDotDelimitedName, pIdentifier, pNumberList, pOptionList,
-} = require('../base_parsers.cjs');
-const { makeNode, makeList, streamline } = require('../utils.cjs');
-const { pColumnIndex } = require('../index_definition/index.cjs');
-const { pColumnConstraint } = require('../constraint_definition/index.cjs');
-const pExpression = require('../expression.cjs');
-const A = require('./actions.cjs');
+} from '../base_parsers.js';
+import { makeNode, makeList, streamline } from '../utils.js';
+import { pColumnIndex } from '../index_definition/index.js';
+import { pColumnConstraint } from '../constraint_definition/index.js';
+import pExpression from '../expression.js';
+import * as A from './actions.js';
 
 const Lang = P.createLanguage({
   ColumnsDefinition: (r) => P.alt(
@@ -77,10 +77,9 @@ const Lang = P.createLanguage({
   ),
 
 });
-module.exports = {
-  pIdentity: Lang.Identity,
-  pColumnIndex,
-  pColumnConstraint,
-  pDataType: Lang.DataType,
-  pColumnsDefinition: Lang.ColumnsDefinition,
-};
+
+export const pIdentity = Lang.Identity;
+export { pColumnIndex };
+export { pColumnConstraint };
+export const pDataType = Lang.DataType;
+export const pColumnsDefinition = Lang.ColumnsDefinition;

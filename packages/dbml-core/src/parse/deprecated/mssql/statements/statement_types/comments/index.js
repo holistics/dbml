@@ -1,7 +1,7 @@
-const P = require('parsimmon');
-const KP = require('../../../keyword_parsers.cjs');
-const A = require('./actions.cjs');
-const { makeNode } = require('../../../utils.cjs');
+import P from 'parsimmon';
+import * as KP from '../../../keyword_parsers.js';
+import * as A from './actions.js';
+import { makeNode } from '../../../utils.js';
 
 const Lang = P.createLanguage({
   StartComment: () => P.seq(KP.KeywordExec, KP.KeywordSP_ADDEXTENDEDPROPERTY),
@@ -40,4 +40,4 @@ const Lang = P.createLanguage({
   ).map(A.handleComment).thru(makeNode()),
 });
 
-module.exports = Lang.CommentSyntax;
+export default Lang.CommentSyntax;

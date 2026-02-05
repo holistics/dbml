@@ -1,6 +1,6 @@
-const { makeTableConstraint } = require('../../../../constraint_definition/index.cjs');
+import { makeTableConstraint } from '../../../../constraint_definition/index.js';
 
-function makeDefault (_keyword, constExpression, _for, fieldName, _withValues) {
+function makeDefault(_keyword, constExpression, _for, fieldName, _withValues) {
   const value = {};
   if (constExpression.type) {
     switch (constExpression.type) {
@@ -24,7 +24,8 @@ function makeDefault (_keyword, constExpression, _for, fieldName, _withValues) {
     value,
   };
 }
-module.exports = {
+
+export {
   makeTableConstraint,
   makeDefault,
 };

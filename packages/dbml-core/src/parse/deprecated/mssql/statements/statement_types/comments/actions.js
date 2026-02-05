@@ -8,7 +8,7 @@ const isValidColumnNote = (level) => level.length === 3
   && isTable(level[1].type)
   && isColumn(level[2].type);
 
-function handleComment ({ note, level }) {
+function handleComment({ note, level }) {
   let type = 'unsupported';
   let schemaName = null;
   let tableName = null;
@@ -36,6 +36,6 @@ function handleComment ({ note, level }) {
   };
 }
 
-module.exports = {
+export {
   handleComment,
 };

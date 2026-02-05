@@ -1,9 +1,9 @@
-const P = require('parsimmon');
-const KP = require('../keyword_parsers.cjs');
-const S = require('./statement_types/index.cjs');
-const wss = require('../whitespaces.cjs');
-const A = require('./actions.cjs');
-const { pIgnore } = require('../base_parsers.cjs');
+import P from 'parsimmon';
+import * as KP from '../keyword_parsers.js';
+import * as S from './statement_types/index.js';
+import wss from '../whitespaces.js';
+import * as A from './actions.js';
+import { pIgnore } from '../base_parsers.js';
 
 const Lang = P.createLanguage({
   Statements: (r) => wss.then(r.Seperator)
@@ -77,4 +77,4 @@ const Lang = P.createLanguage({
   Seperator: () => P.alt(KP.Semicolon, KP.KeywordGo, P.seq(KP.Semicolon, KP.KeywordGo)).many(),
 });
 
-module.exports = Lang.Statements;
+export default Lang.Statements;

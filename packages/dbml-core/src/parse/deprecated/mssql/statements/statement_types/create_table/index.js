@@ -1,13 +1,13 @@
-const P = require('parsimmon');
-const KP = require('../../../keyword_parsers.cjs');
-const {
+import P from 'parsimmon';
+import * as KP from '../../../keyword_parsers.js';
+import {
   pIdentifier, pDotDelimitedName,
-} = require('../../../base_parsers.cjs');
-const { makeNode, makeList } = require('../../../utils.cjs');
-const { pTableConstraint } = require('../../../constraint_definition/index.cjs');
-const { pTableIndex, pIgnoredIndexOption } = require('../../../index_definition/index.cjs');
-const { pColumnsDefinition } = require('../../../column_definition/index.cjs');
-const A = require('./actions.cjs');
+} from '../../../base_parsers.js';
+import { makeNode, makeList } from '../../../utils.js';
+import { pTableConstraint } from '../../../constraint_definition/index.js';
+import { pTableIndex, pIgnoredIndexOption } from '../../../index_definition/index.js';
+import { pColumnsDefinition } from '../../../column_definition/index.js';
+import * as A from './actions.js';
 
 const Lang = P.createLanguage({
 
@@ -32,4 +32,4 @@ const Lang = P.createLanguage({
   TextImageTableOption: () => P.seq(KP.KeywordTextImage_On, pIdentifier),
 });
 
-module.exports = Lang.CreateTable;
+export default Lang.CreateTable;

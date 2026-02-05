@@ -1,12 +1,12 @@
-const P = require('parsimmon');
-const KP = require('../../../../keyword_parsers.cjs');
-const { pIdentifier } = require('../../../../base_parsers.cjs');
-const { makeNode, makeList } = require('../../../../utils.cjs');
-const A = require('./actions.cjs');
-const { pTableConstraintFK } = require('../../../../fk_definition/index.cjs');
-const { pTableConstraintIndex } = require('../../../../index_definition/index.cjs');
-const { pConstraintCheck, pConstExpr, pConstraintName } = require('../../../../constraint_definition/index.cjs');
-const { pColumnsDefinition } = require('../../../../column_definition/index.cjs');
+import P from 'parsimmon';
+import * as KP from '../../../../keyword_parsers.js';
+import { pIdentifier } from '../../../../base_parsers.js';
+import { makeNode, makeList } from '../../../../utils.js';
+import * as A from './actions.js';
+import { pTableConstraintFK } from '../../../../fk_definition/index.js';
+import { pTableConstraintIndex } from '../../../../index_definition/index.js';
+import { pConstraintCheck, pConstExpr, pConstraintName } from '../../../../constraint_definition/index.js';
+import { pColumnsDefinition } from '../../../../column_definition/index.js';
 
 const Lang = P.createLanguage({
   AddAction: (r) => P.seq(KP.KeywordAdd, r.AddOption.sepBy1(KP.Comma)).map((value) => value[1]),
@@ -44,4 +44,5 @@ const Lang = P.createLanguage({
     makeList(P.seq(pIdentifier, KP.KeywordTo, pIdentifier)),
   ),
 });
-module.exports = Lang.AddAction;
+
+export default Lang.AddAction;

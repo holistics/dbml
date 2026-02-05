@@ -1,11 +1,11 @@
-const P = require('parsimmon');
-const KP = require('../../../keyword_parsers.cjs');
-const {
+import P from 'parsimmon';
+import * as KP from '../../../keyword_parsers.js';
+import {
   pIdentifier, pKeywordClusteredOrNon, pConst, pColumnNames, pDotDelimitedName, pComparsionOp,
-} = require('../../../base_parsers.cjs');
-const { makeNode, makeList } = require('../../../utils.cjs');
-const A = require('./actions.cjs');
-const { pIgnoredIndexOption } = require('../../../index_definition/index.cjs');
+} from '../../../base_parsers.js';
+import { makeNode, makeList } from '../../../utils.js';
+import * as A from './actions.js';
+import { pIgnoredIndexOption } from '../../../index_definition/index.js';
 
 const Lang = P.createLanguage({
 
@@ -32,4 +32,4 @@ const Lang = P.createLanguage({
 
 });
 
-module.exports = Lang.CreateIndex;
+export default Lang.CreateIndex;

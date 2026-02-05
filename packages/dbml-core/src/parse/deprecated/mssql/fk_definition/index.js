@@ -1,8 +1,8 @@
-const P = require('parsimmon');
-const KP = require('../keyword_parsers.cjs');
-const { pDotDelimitedName, pIdentifier, pColumnNames } = require('../base_parsers.cjs');
-const { makeList, makeNode } = require('../utils.cjs');
-const A = require('./actions.cjs');
+import P from 'parsimmon';
+import * as KP from '../keyword_parsers.js';
+import { pDotDelimitedName, pIdentifier, pColumnNames } from '../base_parsers.js';
+import { makeList, makeNode } from '../utils.js';
+import * as A from './actions.js';
 
 const Lang = P.createLanguage({
   TableConstraintFK: (r) => P.seqMap(
@@ -46,7 +46,6 @@ const Lang = P.createLanguage({
   FKOnOptions: () => P.alt(KP.KeywordNoAction, KP.KeywordCascade, KP.KeywordSetDefault, KP.KeywordSetNull),
 
 });
-module.exports = {
-  pColumnConstraintFK: Lang.ColumnConstraintFK,
-  pTableConstraintFK: Lang.TableConstraintFK,
-};
+
+export const pColumnConstraintFK = Lang.ColumnConstraintFK;
+export const pTableConstraintFK = Lang.TableConstraintFK;

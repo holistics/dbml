@@ -1,4 +1,4 @@
-function makeIndex (columnNames, isUnique, isPk, indexName = null) {
+function makeIndex(columnNames, isUnique, isPk, indexName = null) {
   const columns = [];
 
   columnNames.forEach((column) => {
@@ -19,7 +19,7 @@ function makeIndex (columnNames, isUnique, isPk, indexName = null) {
   };
 }
 
-function makeColumnIndex (_keyword, indexName) {
+function makeColumnIndex(_keyword, indexName) {
   return {
     type: 'indexes',
     value: {
@@ -30,11 +30,11 @@ function makeColumnIndex (_keyword, indexName) {
   };
 }
 
-function makeTableIndex (_keyword, indexName, isUnique, _clustered, _columnstore, columnNames) {
+function makeTableIndex(_keyword, indexName, isUnique, _clustered, _columnstore, columnNames) {
   return makeIndex(columnNames, isUnique, null, indexName);
 }
 
-function makeTableConstraintIndex (keyword, _keyword, columnNames) {
+function makeTableConstraintIndex(keyword, _keyword, columnNames) {
   let isPk = null;
   let isUnique = null;
 
@@ -47,7 +47,7 @@ function makeTableConstraintIndex (keyword, _keyword, columnNames) {
   return makeIndex(columnNames, isUnique, isPk);
 }
 
-module.exports = {
+export {
   makeTableIndex,
   makeTableConstraintIndex,
   makeColumnIndex,

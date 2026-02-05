@@ -1,10 +1,10 @@
-const P = require('parsimmon');
-const KP = require('../../../keyword_parsers.cjs');
-const {
+import P from 'parsimmon';
+import * as KP from '../../../keyword_parsers.js';
+import {
   pDotDelimitedName, pIgnore,
-} = require('../../../base_parsers.cjs');
-const A = require('./actions.cjs');
-const pAddAction = require('./add/index.cjs');
+} from '../../../base_parsers.js';
+import * as A from './actions.js';
+import pAddAction from './add/index.js';
 
 const Lang = P.createLanguage({
 
@@ -30,4 +30,5 @@ const Lang = P.createLanguage({
     KP.KeywordRebuild,
   ),
 });
-module.exports = Lang.AlterTable;
+
+export default Lang.AlterTable;

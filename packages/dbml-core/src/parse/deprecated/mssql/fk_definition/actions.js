@@ -1,7 +1,6 @@
-const _ = require('lodash');
-const { getFullTableName } = require('../utils.cjs');
+import { getFullTableName } from '../utils.js';
 
-function makeEndPoint (tableName, columnName, relation) {
+function makeEndPoint(tableName, columnName, relation) {
   return {
     tableName: tableName.name,
     schemaName: tableName.schemaName,
@@ -10,7 +9,7 @@ function makeEndPoint (tableName, columnName, relation) {
   };
 }
 
-function setOption (value, fkOptions) {
+function setOption(value, fkOptions) {
   fkOptions.forEach((option) => {
     if (option.type.match(/ON[^\S\r\n]DELETE/i)) {
       value.onDelete = option.setting;
@@ -21,7 +20,7 @@ function setOption (value, fkOptions) {
   });
 }
 
-function makeColumnConstraintFK (_unused, tableName, columnName, fkOptions) {
+function makeColumnConstraintFK(_unused, tableName, columnName, fkOptions) {
   const value = {};
   const fullTableName = getFullTableName(tableName);
 
@@ -33,7 +32,7 @@ function makeColumnConstraintFK (_unused, tableName, columnName, fkOptions) {
   };
 }
 
-function makeTableEndpoint (columnNames) {
+function makeTableEndpoint(columnNames) {
   return {
     type: 'endpoint',
     value: {
@@ -42,7 +41,7 @@ function makeTableEndpoint (columnNames) {
   };
 }
 
-function makeTableConstraintFK (_keyword1, endpoint1, _keyword2, tableName, endpoint2, fkOptions) {
+function makeTableConstraintFK(_keyword1, endpoint1, _keyword2, tableName, endpoint2, fkOptions) {
   const value = {};
   const fullTableName = getFullTableName(tableName);
 
@@ -71,14 +70,14 @@ function makeTableConstraintFK (_keyword1, endpoint1, _keyword2, tableName, endp
   };
 }
 
-function makeOnSetting (type, setting) {
+function makeOnSetting(type, setting) {
   return {
     type,
     setting: setting.toLowerCase().trim().split(/[ ]+/).join(' '),
   };
 }
 
-module.exports = {
+export {
   makeOnSetting,
   makeColumnConstraintFK,
   makeTableConstraintFK,
