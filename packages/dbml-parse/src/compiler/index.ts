@@ -70,7 +70,7 @@ export default class Compiler {
   private interpret (): Report<{ ast: ProgramNode; tokens: SyntaxToken[]; rawDb?: Database }> {
     const parseRes: Report<{ ast: ProgramNode; tokens: SyntaxToken[] }> = new Lexer(this.source)
       .lex()
-      .chain((lexedTokens) => new Parser(lexedTokens as SyntaxToken[], this.nodeIdGenerator).parse())
+      .chain((lexedTokens) => new Parser(this.source, lexedTokens as SyntaxToken[], this.nodeIdGenerator).parse())
       .chain(({ ast, tokens }) => new Analyzer(ast, this.symbolIdGenerator).analyze().map(() => ({ ast, tokens })));
 
     if (parseRes.getErrors().length > 0) {
@@ -78,7 +78,7 @@ export default class Compiler {
     }
 
     return parseRes.chain(({ ast, tokens }) =>
-      new Interpreter(ast, this.source).interpret().map((rawDb) => ({ ast, tokens, rawDb })),
+      new Interpreter(ast).interpret().map((rawDb) => ({ ast, tokens, rawDb })),
     );
   }
 
