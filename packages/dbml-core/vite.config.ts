@@ -26,7 +26,16 @@ export default defineConfig({
     testTimeout: 60000,
     coverage: {
       provider: 'v8',
-      reporter: ['json', 'json-summary', 'html', 'text'],
+      reporter: ['json-summary', 'text'],
+      exclude: [
+        '**/node_modules/**',
+        '**/dist/**',
+        '**/*.spec.ts',
+        '**/*.test.ts',
+        '**/__tests__/**',
+        '**/parse/ANTLR/parsers/**',  // Auto-generated ANTLR parsers (32MB)
+        '**/parse/deprecated/**',      // Deprecated parsers
+      ],
     },
   },
 });

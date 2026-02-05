@@ -21,7 +21,7 @@
     "dev": "vite build --watch",
     "start": "node dist/index.js",
     "test:watch": "vitest watch",
-    "test": "vitest",
+    "test": "vitest run",
     "coverage": "vitest --coverage",
     "lint": "eslint .",
     "lint:fix": "eslint --fix ."
