@@ -12,8 +12,8 @@ Table "humanresources"."employee" {
   "loginid" "character varying(256)" [not null, note: 'Network login.']
   "jobtitle" "character varying(50)" [not null, note: 'Work title such as Buyer or Sales Representative.']
   "birthdate" date [not null, note: 'Date of birth.']
-  "maritalstatus" "character (1)" [not null, note: 'M = Married, S = Single']
-  "gender" "character (1)" [not null, note: 'M = Male, F = Female']
+  "maritalstatus" character(1) [not null, note: 'M = Married, S = Single']
+  "gender" character(1) [not null, note: 'M = Male, F = Female']
   "hiredate" date [not null, note: 'Employee hired on this date.']
   "salariedflag" public.Flag [not null, default: true, note: 'Job classification. 0 = Hourly, not exempt from collective bargaining. 1 = Salaried, exempt from collective bargaining.']
   "vacationhours" smallint [not null, default: 0, note: 'Number of available vacation hours.']
@@ -135,7 +135,7 @@ Table "person"."emailaddress" {
 
 Table "person"."person" {
   "businessentityid" integer [pk, not null, note: 'Primary key for Person records.']
-  "persontype" "character (2)" [not null, note: 'Primary type of person: SC = Store Contact, IN = Individual (retail) customer, SP = Sales person, EM = Employee (non-sales), VC = Vendor contact, GC = General contact']
+  "persontype" character(2) [not null, note: 'Primary type of person: SC = Store Contact, IN = Individual (retail) customer, SP = Sales person, EM = Employee (non-sales), VC = Vendor contact, GC = General contact']
   "namestyle" public.NameStyle [not null, default: false, note: '0 = The data in FirstName and LastName are stored in western style (first name, last name) order.  1 = Eastern style (last name, first name) order.']
   "title" "character varying(8)" [note: 'A courtesy title. For example, Mr. or Ms.']
   "firstname" public.Name [not null, note: 'First name of the person.']
@@ -176,7 +176,7 @@ Table "person"."phonenumbertype" {
 
 Table "person"."stateprovince" {
   "stateprovinceid" integer [pk, not null, note: 'Primary key for StateProvince records.']
-  "stateprovincecode" "character (3)" [not null, note: 'ISO standard state or province code.']
+  "stateprovincecode" character(3) [not null, note: 'ISO standard state or province code.']
   "countryregioncode" "character varying(3)" [not null, note: 'ISO standard country or region code. Foreign key to CountryRegion.CountryRegionCode.']
   "isonlystateprovinceflag" public.Flag [not null, default: true, note: '0 = StateProvinceCode exists. 1 = StateProvinceCode unavailable, using CountryRegionCode.']
   "name" public.Name [not null, note: 'State or province description.']
@@ -236,7 +236,7 @@ Table "production"."billofmaterials" {
   "componentid" integer [not null, note: 'Component identification number. Foreign key to Product.ProductID.']
   "startdate" timestamp [not null, default: `now()`, note: 'Date the component started being used in the assembly item.']
   "enddate" timestamp [note: 'Date the component stopped being used in the assembly item.']
-  "unitmeasurecode" "character (3)" [not null, note: 'Standard code identifying the unit of measure for the quantity.']
+  "unitmeasurecode" character(3) [not null, note: 'Standard code identifying the unit of measure for the quantity.']
   "bomlevel" smallint [not null, note: 'Indicates the depth the component is from its parent (AssemblyID).']
   "perassemblyqty" numeric(8,2) [not null, default: 1.00, note: 'Quantity of the component needed to create the assembly.']
   "modifieddate" timestamp [not null, default: `now()`]
@@ -251,7 +251,7 @@ Table "production"."billofmaterials" {
 }
 
 Table "production"."culture" {
-  "cultureid" "character (6)" [pk, not null, note: 'Primary key for Culture records.']
+  "cultureid" character(6) [pk, not null, note: 'Primary key for Culture records.']
   "name" public.Name [not null, note: 'Culture description.']
   "modifieddate" timestamp [not null, default: `now()`]
   Note: 'Lookup table containing the languages in which some AdventureWorks data is stored.'
@@ -263,7 +263,7 @@ Table "production"."document" {
   "folderflag" public.Flag [not null, default: false, note: '0 = This is a folder, 1 = This is a document.']
   "filename" "character varying(400)" [not null, note: 'File name of the document']
   "fileextension" "character varying(8)" [note: 'File extension indicating the document type. For example, .doc or .txt.']
-  "revision" "character (5)" [not null, note: 'Revision number of the document.']
+  "revision" character(5) [not null, note: 'Revision number of the document.']
   "changenumber" integer [not null, default: 0, note: 'Engineering change approval number.']
   "status" smallint [not null, note: '1 = Pending approval, 2 = Approved, 3 = Obsolete']
   "documentsummary" text [note: 'Document abstract.']
@@ -311,13 +311,13 @@ Table "production"."product" {
   "standardcost" numeric [not null, note: 'Standard cost of the product.']
   "listprice" numeric [not null, note: 'Selling price.']
   "size" "character varying(5)" [note: 'Product size.']
-  "sizeunitmeasurecode" "character (3)" [note: 'Unit of measure for Size column.']
-  "weightunitmeasurecode" "character (3)" [note: 'Unit of measure for Weight column.']
+  "sizeunitmeasurecode" character(3) [note: 'Unit of measure for Size column.']
+  "weightunitmeasurecode" character(3) [note: 'Unit of measure for Weight column.']
   "weight" numeric(8,2) [note: 'Product weight.']
   "daystomanufacture" integer [not null, note: 'Number of days required to manufacture the product.']
-  "productline" "character (2)" [note: 'R = Road, M = Mountain, T = Touring, S = Standard']
-  "class" "character (2)" [note: 'H = High, M = Medium, L = Low']
-  "style" "character (2)" [note: 'W = Womens, M = Mens, U = Universal']
+  "productline" character(2) [note: 'R = Road, M = Mountain, T = Touring, S = Standard']
+  "class" character(2) [note: 'H = High, M = Medium, L = Low']
+  "style" character(2) [note: 'W = Womens, M = Mens, U = Universal']
   "productsubcategoryid" integer [note: 'Product is a member of this product subcategory. Foreign key to ProductSubCategory.ProductSubCategoryID.']
   "productmodelid" integer [note: 'Product is a member of this product model. Foreign key to ProductModel.ProductModelID.']
   "sellstartdate" timestamp [not null, note: 'Date the product was available for sale.']
@@ -447,7 +447,7 @@ Table "production"."productmodelillustration" {
 Table "production"."productmodelproductdescriptionculture" {
   "productmodelid" integer [not null, note: 'Primary key. Foreign key to ProductModel.ProductModelID.']
   "productdescriptionid" integer [not null, note: 'Primary key. Foreign key to ProductDescription.ProductDescriptionID.']
-  "cultureid" "character (6)" [not null, note: 'Culture identification number. Foreign key to Culture.CultureID.']
+  "cultureid" character(6) [not null, note: 'Culture identification number. Foreign key to Culture.CultureID.']
   "modifieddate" timestamp [not null, default: `now()`]
 
   Indexes {
@@ -517,7 +517,7 @@ Table "production"."transactionhistory" {
   "referenceorderid" integer [not null, note: 'Purchase order, sales order, or work order identification number.']
   "referenceorderlineid" integer [not null, default: 0, note: 'Line number associated with the purchase order, sales order, or work order.']
   "transactiondate" timestamp [not null, default: `now()`, note: 'Date and time of the transaction.']
-  "transactiontype" "character (1)" [not null, note: 'W = WorkOrder, S = SalesOrder, P = PurchaseOrder']
+  "transactiontype" character(1) [not null, note: 'W = WorkOrder, S = SalesOrder, P = PurchaseOrder']
   "quantity" integer [not null, note: 'Product quantity.']
   "actualcost" numeric [not null, note: 'Product cost.']
   "modifieddate" timestamp [not null, default: `now()`]
@@ -534,7 +534,7 @@ Table "production"."transactionhistoryarchive" {
   "referenceorderid" integer [not null, note: 'Purchase order, sales order, or work order identification number.']
   "referenceorderlineid" integer [not null, default: 0, note: 'Line number associated with the purchase order, sales order, or work order.']
   "transactiondate" timestamp [not null, default: `now()`, note: 'Date and time of the transaction.']
-  "transactiontype" "character (1)" [not null, note: 'W = Work Order, S = Sales Order, P = Purchase Order']
+  "transactiontype" character(1) [not null, note: 'W = Work Order, S = Sales Order, P = Purchase Order']
   "quantity" integer [not null, note: 'Product quantity.']
   "actualcost" numeric [not null, note: 'Product cost.']
   "modifieddate" timestamp [not null, default: `now()`]
@@ -546,7 +546,7 @@ Table "production"."transactionhistoryarchive" {
 }
 
 Table "production"."unitmeasure" {
-  "unitmeasurecode" "character (3)" [pk, not null, note: 'Primary key.']
+  "unitmeasurecode" character(3) [pk, not null, note: 'Primary key.']
   "name" public.Name [not null, note: 'Unit of measure description.']
   "modifieddate" timestamp [not null, default: `now()`]
   Note: 'Unit of measure lookup table.'
@@ -658,7 +658,7 @@ Table "purchasing"."productvendor" {
   "minorderqty" integer [not null, note: 'The maximum quantity that should be ordered.']
   "maxorderqty" integer [not null, note: 'The minimum quantity that should be ordered.']
   "onorderqty" integer [note: 'The quantity currently on order.']
-  "unitmeasurecode" "character (3)" [not null, note: '''The product\'s unit of measure.''']
+  "unitmeasurecode" character(3) [not null, note: '''The product\'s unit of measure.''']
   "modifieddate" timestamp [not null, default: `now()`]
 
   Checks {
@@ -730,8 +730,8 @@ Table "sales"."creditcard" {
 Table "sales"."currencyrate" {
   "currencyrateid" integer [pk, not null, note: 'Primary key for CurrencyRate records.']
   "currencyratedate" timestamp [not null, note: 'Date and time the exchange rate was obtained.']
-  "fromcurrencycode" "character (3)" [not null, note: 'Exchange rate was converted from this currency code.']
-  "tocurrencycode" "character (3)" [not null, note: 'Exchange rate was converted to this currency code.']
+  "fromcurrencycode" character(3) [not null, note: 'Exchange rate was converted from this currency code.']
+  "tocurrencycode" character(3) [not null, note: 'Exchange rate was converted to this currency code.']
   "averagerate" numeric [not null, note: 'Average exchange rate for the day.']
   "endofdayrate" numeric [not null, note: 'Final exchange rate for the day.']
   "modifieddate" timestamp [not null, default: `now()`]
@@ -740,7 +740,7 @@ Table "sales"."currencyrate" {
 
 Table "sales"."countryregioncurrency" {
   "countryregioncode" "character varying(3)" [not null, note: 'ISO code for countries and regions. Foreign key to CountryRegion.CountryRegionCode.']
-  "currencycode" "character (3)" [not null, note: 'ISO standard currency code. Foreign key to Currency.CurrencyCode.']
+  "currencycode" character(3) [not null, note: 'ISO standard currency code. Foreign key to Currency.CurrencyCode.']
   "modifieddate" timestamp [not null, default: `now()`]
 
   Indexes {
@@ -750,7 +750,7 @@ Table "sales"."countryregioncurrency" {
 }
 
 Table "sales"."currency" {
-  "currencycode" "character (3)" [pk, not null, note: 'The ISO code for the Currency.']
+  "currencycode" character(3) [pk, not null, note: 'The ISO code for the Currency.']
   "name" public.Name [not null, note: 'Currency name.']
   "modifieddate" timestamp [not null, default: `now()`]
   Note: 'Lookup table containing standard ISO currencies.'

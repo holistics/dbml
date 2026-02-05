@@ -1324,7 +1324,7 @@ BinaryIntegral: '0b' Digits;
 
 OctalIntegral: '0o' Digits;
 
-HexadecimalIntegral: '0x' Digits;
+HexadecimalIntegral: '0x' [0-9A-F]+; // Note: changed from original
 
 NumericFail: Digits '..' {this.HandleNumericFail();};
 
