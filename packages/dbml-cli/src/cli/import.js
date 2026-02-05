@@ -33,6 +33,7 @@ export default async function importHandler (program) {
   } catch (error) {
     if ('diags' in error) {
       logger.error(`\n    ${error.diags.map((diag) => new SyntaxError(diag.filepath, diag)).map(({ message }) => message).join('\n    ')}`);
+      return;
     }
     throw error;
   }
