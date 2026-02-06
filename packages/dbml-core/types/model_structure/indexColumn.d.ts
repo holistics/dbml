@@ -1,4 +1,4 @@
-import { NormalizedDatabase } from './database';
+import { NormalizedModel } from './database';
 import DbState from './dbState';
 import Element from './element';
 import Index from './indexes';
@@ -24,14 +24,17 @@ declare class IndexColumn extends Element {
         type: any;
         value: any;
     };
-    normalize(model: NormalizedDatabase): void;
+    normalize(model: NormalizedModel): void;
 }
 export interface NormalizedIndexColumn {
-    [_id: number]: {
-        id: number;
-        type: any;
-        value: any;
-        indexId: number;
-    };
+    id: number;
+    type: string;
+    value: string;
+    indexId: number;
 }
+
+export interface NormalizedIndexColumnIdMap {
+    [_id: number]: NormalizedIndexColumn;
+}
+
 export default IndexColumn;
