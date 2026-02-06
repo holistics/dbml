@@ -1,3 +1,12 @@
+## v6.1.0 (2026-02-06)
+
+#### :house_with_garden: Internal
+* `dbml-core`
+  * [#816](https://github.com/holistics/dbml/pull/816) Centralize and expose normalized model structure types from `@dbml/core` ([@hdnax](https://github.com/hdnax))
+
+#### Committers: 1
+- Huy DNA ([@hdnax](https://github.com/hdnax))
+
 ## v6.0.0 (2026-02-05)
 
 #### :bug: Bug Fix
