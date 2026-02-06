@@ -1,6 +1,6 @@
 {
   "name": "@dbml/playground",
-  "version": "6.0.0",
+  "version": "6.1.0",
   "description": "Interactive playground for debugging and visualizing the DBML parser pipeline",
   "author": "Holistics <dev@holistics.io>",
   "license": "Apache-2.0",
@@ -25,7 +25,7 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
-    "@dbml/parse": "^6.0.0",
+    "@dbml/parse": "^6.1.0",
     "lodash": "^4.17.21",
     "monaco-editor": "^0.52.2",
     "monaco-vim": "^0.4.2",
