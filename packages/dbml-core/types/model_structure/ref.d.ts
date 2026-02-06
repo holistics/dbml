@@ -2,7 +2,7 @@ import Element, { Token } from './element';
 import Endpoint from './endpoint';
 import Schema from './schema';
 import DbState from './dbState';
-import Database, { NormalizedDatabase } from './database';
+import Database, { NormalizedModel } from './database';
 import TablePartial from './tablePartial';
 interface RawRef {
     name: string;
@@ -60,18 +60,21 @@ declare class Ref extends Element {
     exportParentIds(): {
         schemaId: number;
     };
-    normalize(model: NormalizedDatabase): void;
+    normalize(model: NormalizedModel): void;
 }
 export interface NormalizedRef {
-    [_id: number]: {
-        id: number;
-        name?: string;
-        color?: string;
-        onUpdate?: string;
-        onDelete?: string;
-        endpointIds: number[];
-        schemaId: number;
-        injectedPartialId?: number;
-    };
+    id: number;
+    name: string | null;
+    color?: string;
+    onUpdate?: string;
+    onDelete?: string;
+    schemaId: number;
+    endpointIds: number[];
+    injectedPartialId?: number;
 }
+
+export interface NormalizedRefIdMap {
+    [_id: number]: NormalizedRef;
+}
+
 export default Ref;
