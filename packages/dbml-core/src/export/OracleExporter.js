@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { concat, flatten, forEach, isEmpty } from 'lodash-es';
 import {
   buildJunctionFields1,
   buildJunctionFields2,
@@ -11,7 +11,7 @@ class OracleExporter {
   static buildSchemaToTableNameSetMap (model) {
     const schemaToTableNameSetMap = new Map();
 
-    _.forEach(model.tables, (table) => {
+    forEach(model.tables, (table) => {
       const schema = model.schemas[table.schemaId];
 
       const tableSet = schemaToTableNameSetMap.get(schema.name);
@@ -461,16 +461,16 @@ class OracleExporter {
         prevStatements.schemas.push(this.exportSchema(schema.name));
       }
 
-      if (!_.isEmpty(tableIds)) {
+      if (!isEmpty(tableIds)) {
         prevStatements.tables.push(...this.exportTables(tableIds, model));
       }
 
-      const indexIds = _.flatten(tableIds.map((tableId) => model.tables[tableId].indexIds));
-      if (!_.isEmpty(indexIds)) {
+      const indexIds = flatten(tableIds.map((tableId) => model.tables[tableId].indexIds));
+      if (!isEmpty(indexIds)) {
         prevStatements.indexes.push(...this.exportIndexes(indexIds, model));
       }
 
-      const commentNodes = _.flatten(tableIds.map((tableId) => {
+      const commentNodes = flatten(tableIds.map((tableId) => {
         const { fieldIds, note } = model.tables[tableId];
         const fieldObjects = fieldIds
           .filter((fieldId) => model.fields[fieldId].note)
@@ -478,11 +478,11 @@ class OracleExporter {
         return note ? [{ type: 'table', tableId }].concat(fieldObjects) : fieldObjects;
       }));
 
-      if (!_.isEmpty(commentNodes)) {
+      if (!isEmpty(commentNodes)) {
         prevStatements.comments.push(...this.exportComments(commentNodes, model));
       }
 
-      if (!_.isEmpty(refIds)) {
+      if (!isEmpty(refIds)) {
         const { refs, tables: manyToManyTables } = this.exportReferencesAndNewTablesIfExists(refIds, model, schemaToTableNameSetMap);
         prevStatements.tables.push(...manyToManyTables);
         prevStatements.refs.push(...refs);
@@ -500,7 +500,7 @@ class OracleExporter {
       refs: [],
     });
 
-    const res = _.concat(
+    const res = concat(
       statements.schemas,
       statements.tables,
       statements.indexes,

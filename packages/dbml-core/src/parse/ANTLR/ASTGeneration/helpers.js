@@ -1,4 +1,4 @@
-import { isNil } from 'lodash';
+import { isNil } from 'lodash-es';
 
 export function getOriginalText (ctx) {
   const a = ctx.start.start;

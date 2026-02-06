@@ -17,7 +17,6 @@ export default defineConfig({
   build: {
     lib: {
       entry: path.resolve(__dirname, 'src/index.ts'),
-      name: 'DbmlParser',
       fileName: 'dbml-parse',
       formats: ['cjs', 'es'],
     },
@@ -31,7 +30,7 @@ export default defineConfig({
     globals: true,
     coverage: {
       provider: 'v8',
-      reporter: ['json', 'json-summary', 'html', 'text'],
+      reporter: ['json-summary', 'text'],
     },
   },
 });

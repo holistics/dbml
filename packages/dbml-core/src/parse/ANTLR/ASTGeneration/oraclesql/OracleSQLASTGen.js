@@ -1,4 +1,4 @@
-import { last, flatten } from 'lodash';
+import { last, flatten } from 'lodash-es';
 import {
   Field,
   Index,

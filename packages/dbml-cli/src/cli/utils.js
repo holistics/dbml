@@ -1,7 +1,7 @@
 import path from 'path';
 import fs from 'fs';
 import { CompilerError } from '@dbml/core';
-import { reduce } from 'lodash';
+import { reduce } from 'lodash-es';
 
 function resolvePaths (paths) {
   if (!Array.isArray(paths)) {

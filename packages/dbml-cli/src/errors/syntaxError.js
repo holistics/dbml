@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { isEmpty } from 'lodash-es';
 import DomainError from './domainError';
 
 class SyntaxError extends DomainError {
@@ -11,7 +11,7 @@ class SyntaxError extends DomainError {
 
     message += '.';
 
-    if (!_.isEmpty(rootError)) {
+    if (!isEmpty(rootError)) {
       message += ` ${rootError.message}`;
     }
     super(message, rootError);

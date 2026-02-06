@@ -25,10 +25,10 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsc --noEmit && vite build",
+    "build": "rm -rf ./dist && tsc --noEmit && vite build",
     "dev": "vite build --watch",
     "test": "vitest run",
-    "test:watch": "vitest tests",
+    "test:watch": "vitest watch",
     "coverage": "vitest run --coverage",
     "prepublish": "npm run build",
     "prepare": "npm run build",
@@ -36,17 +36,7 @@
     "lint:fix": "eslint --fix ."
   },
   "devDependencies": {
-    "@stylistic/eslint-plugin": "^5.5.0",
-    "@types/lodash-es": "^4.17.12",
-    "@types/node": "^20.8.8",
-    "@typescript-eslint/eslint-plugin": "^8.46.3",
-    "@typescript-eslint/parser": "^8.46.3",
-    "eslint": "^9.39.1",
-    "monaco-editor-core": "^0.44.0",
-    "typescript": "^5.9.3",
-    "typescript-eslint": "^8.46.3",
-    "vite": "^7.2.2",
-    "vite-plugin-dts": "^4.5.4"
+    "monaco-editor-core": "^0.44.0"
   },
   "dependencies": {
     "lodash-es": "^4.17.21"
