@@ -1,0 +1,98 @@
+{
+  "schemas": [],
+  "tables": [],
+  "refs": [],
+  "enums": [],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {},
+  "records": [
+    {
+      "tableName": "users",
+      "columns": [
+        "id",
+        "name",
+        "email"
+      ],
+      "values": [
+        [
+          {
+            "value": "1",
+            "type": "number"
+          },
+          {
+            "value": "Alice",
+            "type": "string"
+          },
+          {
+            "value": "alice@example.com",
+            "type": "string"
+          }
+        ]
+      ]
+    },
+    {
+      "tableName": "users",
+      "columns": [
+        "id",
+        "name",
+        "email"
+      ],
+      "values": [
+        [
+          {
+            "value": "2",
+            "type": "number"
+          },
+          {
+            "value": "Bob",
+            "type": "string"
+          },
+          {
+            "value": "bob@example.com",
+            "type": "string"
+          }
+        ],
+        [
+          {
+            "value": "3",
+            "type": "number"
+          },
+          {
+            "value": "Charlie",
+            "type": "string"
+          },
+          {
+            "value": "charlie@example.com",
+            "type": "string"
+          }
+        ]
+      ]
+    },
+    {
+      "tableName": "products",
+      "schemaName": "test_schema",
+      "columns": [
+        "product_id",
+        "product_name",
+        "price"
+      ],
+      "values": [
+        [
+          {
+            "value": "100",
+            "type": "number"
+          },
+          {
+            "value": "Widget",
+            "type": "string"
+          },
+          {
+            "value": "9.99",
+            "type": "number"
+          }
+        ]
+      ]
+    }
+  ]
+}

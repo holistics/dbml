@@ -1,4 +1,5 @@
 import { describe, expect, test } from 'vitest';
+import { CompileErrorCode } from '@/index';
 import { interpret, analyze } from '@tests/utils';
 
 describe('[example] interpreter', () => {

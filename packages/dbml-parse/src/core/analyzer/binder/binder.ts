@@ -25,7 +25,7 @@ export default class Binder {
     });
   }
 
-  resolve (): Report<ProgramNode, CompileError> {
+  resolve (): Report<ProgramNode> {
     const errors: CompileError[] = [];
     // Must call this before binding
     errors.push(...this.resolvePartialInjections());

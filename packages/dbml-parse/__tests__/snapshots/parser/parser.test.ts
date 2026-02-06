@@ -15,10 +15,13 @@ describe('[snapshot] parser', () => {
     const nodeIdGenerator = new SyntaxNodeIdGenerator();
     const output = JSON.stringify(
       lexer.lex().chain((tokens) => {
-        const parser = new Parser(tokens, nodeIdGenerator);
+        const parser = new Parser(program, tokens, nodeIdGenerator);
         return parser.parse().map((_) => _.ast);
       }),
-      null,
+      (key: string, value: any) => {
+        if (key === 'source') return undefined;
+        return value;
+      },
       2,
     );
     it(testName, () => expect(output).toMatchFileSnapshot(path.resolve(__dirname, `./output/${testName}.out.json`)));

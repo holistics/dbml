@@ -136,7 +136,7 @@ export class TablePartialInterpreter implements ElementInterpreter {
 
     column.name = extractVarNameFromPrimaryVariable(field.callee as any).unwrap();
 
-    const typeReport = processColumnType(field.args[0]);
+    const typeReport = processColumnType(field.args[0], this.env);
     column.type = typeReport.getValue();
     errors.push(...typeReport.getErrors());
 

@@ -1,5 +1,5 @@
-import { isEmpty, reduce } from 'lodash';
-import { addQuoteIfNeeded } from '@dbml/parse';
+import { groupBy, isEmpty, reduce } from 'lodash';
+import { addDoubleQuoteIfNeeded, formatRecordValue } from '@dbml/parse';
 import { shouldPrintSchema } from './utils';
 import { DEFAULT_SCHEMA_NAME } from '../model_structure/config';
 
@@ -218,7 +218,7 @@ class DbmlExporter {
       if (shouldPrintSchema(schema, model)) tableName = `"${schema.name}"."${table.name}"`;
 
       // Include alias if present
-      const aliasStr = table.alias ? ` as ${addQuoteIfNeeded(table.alias)}` : '';
+      const aliasStr = table.alias ? ` as ${addDoubleQuoteIfNeeded(table.alias)}` : '';
 
       const fieldStr = tableContent.fieldContents.map((field) => `  ${field}\n`).join('');
 
@@ -347,6 +347,45 @@ class DbmlExporter {
     }, '');
   }
 
+  static exportRecords (model) {
+    const records = model.records;
+    if (!records || isEmpty(records)) {
+      return '';
+    }
+
+    // Group records by schemaName and tableName
+    const recordGroups = groupBy(Object.values(records), (record) => `${record.schemaName || ''}.${record.tableName}`);
+
+    // Process each group
+    const recordStrs = Object.values(recordGroups).map((groupRecords) => {
+      const { schemaName, tableName } = groupRecords[0];
+
+      // Build table reference
+      const tableRef = schemaName
+        ? `${addDoubleQuoteIfNeeded(schemaName)}.${addDoubleQuoteIfNeeded(tableName)}`
+        : addDoubleQuoteIfNeeded(tableName);
+
+      // Collect all unique columns in order
+      const allColumns = [...new Set(groupRecords.flatMap((r) => r.columns))];
+      const columnList = allColumns.map(addDoubleQuoteIfNeeded).join(', ');
+
+      // Merge all rows
+      const allRows = groupRecords.flatMap((record) => {
+        const allColumnIndexes = allColumns.map((col) => record.columns.indexOf(col));
+        return record.values.map((row) => allColumnIndexes.map((colIdx) => colIdx === -1 ? { value: null, type: 'expression' } : row[colIdx]));
+      });
+
+      // Build data rows
+      const rowStrs = allRows.map((row) =>
+        `  ${row.map(formatRecordValue).join(', ')}`,
+      );
+
+      return `records ${tableRef}(${columnList}) {\n${rowStrs.join('\n')}\n}\n`;
+    });
+
+    return recordStrs.join('\n');
+  }
+
   static export (model) {
     const elementStrs = [];
     const database = model.database['1'];
@@ -363,6 +402,7 @@ class DbmlExporter {
     });
 
     if (!isEmpty(model.notes)) elementStrs.push(DbmlExporter.exportStickyNotes(model));
+    if (!isEmpty(model.records)) elementStrs.push(DbmlExporter.exportRecords(model));
 
     // all elements already end with 1 '\n', so join('\n') to separate them with 1 blank line
     return elementStrs.join('\n');

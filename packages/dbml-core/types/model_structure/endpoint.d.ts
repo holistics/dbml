@@ -3,6 +3,16 @@ import Field from './field';
 import Ref from './ref';
 import DbState from './dbState';
 import { NormalizedModel } from './database';
+import { Token } from 'antlr4';
+
+export interface RawEndpoint {
+    schemaName: string | null;
+    tableName: string;
+    fieldNames: string[];
+    relation: '1' | '*';
+    token: Token;
+}
+
 declare class Endpoint extends Element {
     relation: any;
     schemaName: string;

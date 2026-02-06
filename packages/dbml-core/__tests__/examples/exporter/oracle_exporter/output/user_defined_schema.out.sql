@@ -35,10 +35,10 @@ CREATE INDEX "FULLTEXT_INDEX_CATEGORY" ON "C##dbx"."category" ("cat_name");
 
 CREATE INDEX "FULLTEXT_INDEX_PRODUCT" ON "C##dbx"."product" ("product_name");
 
-ALTER TABLE "C##dbx"."category" ADD CONSTRAINT "FK_CATEGORY_SUPER" FOREIGN KEY ("super_cat_id") REFERENCES "C##dbx"."category" ("cat_id");
+ALTER TABLE "C##dbx"."category" ADD CONSTRAINT "FK_CATEGORY_SUPER" FOREIGN KEY ("super_cat_id") REFERENCES "C##dbx"."category" ("cat_id") DEFERRABLE INITIALLY IMMEDIATE;
 
-ALTER TABLE "C##dbx"."product" ADD CONSTRAINT "FK_PRODUCT_CATEGORY" FOREIGN KEY ("cat_id") REFERENCES "C##dbx"."category" ("cat_id");
+ALTER TABLE "C##dbx"."product" ADD CONSTRAINT "FK_PRODUCT_CATEGORY" FOREIGN KEY ("cat_id") REFERENCES "C##dbx"."category" ("cat_id") DEFERRABLE INITIALLY IMMEDIATE;
 
-ALTER TABLE "C##dbx"."wishlist" ADD CONSTRAINT "FK_WISHLIST_PRODUCT" FOREIGN KEY ("product_id") REFERENCES "C##dbx"."product" ("product_id");
+ALTER TABLE "C##dbx"."wishlist" ADD CONSTRAINT "FK_WISHLIST_PRODUCT" FOREIGN KEY ("product_id") REFERENCES "C##dbx"."product" ("product_id") DEFERRABLE INITIALLY IMMEDIATE;
 
-ALTER TABLE "C##dbx"."wishlist" ADD CONSTRAINT "FK_WISHLIST_USER" FOREIGN KEY ("user_id") REFERENCES "C##dbx"."users" ("user_id");
+ALTER TABLE "C##dbx"."wishlist" ADD CONSTRAINT "FK_WISHLIST_USER" FOREIGN KEY ("user_id") REFERENCES "C##dbx"."users" ("user_id") DEFERRABLE INITIALLY IMMEDIATE;

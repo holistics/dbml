@@ -92,7 +92,7 @@ export default class Lexer {
     );
   }
 
-  lex (): Report<SyntaxToken[], CompileError> {
+  lex (): Report<SyntaxToken[]> {
     this.scanTokens();
     this.tokens.push(SyntaxToken.create(SyntaxTokenKind.EOF, this.start, this.current, '', false));
     this.gatherTrivia();
@@ -386,15 +386,46 @@ export default class Lexer {
   }
 
   // we accept identifiers starting with digits but must contain at least one char or underscore
+  // supports scientific notation: 1e2, 1E2, 1e+2, 1e-2, 1.5e10, 3.14e-5
   numericLiteralOrIdentifier () {
     let nDots = 0;
+
     if (this.isAtEnd()) {
       return this.addToken(SyntaxTokenKind.NUMERIC_LITERAL);
     }
+
     while (!this.isAtEnd()) {
       const isDot = this.check('.');
       nDots += isDot ? 1 : 0;
       if (nDots > 1) {
+        break;
+      }
+
+      // Check for scientific notation: e or E followed by optional sign and digits
+      // Only consume if we have a valid exponent (peek ahead first)
+      if (this.check('e') || this.check('E')) {
+        const charAfterE = this.peek(1);
+        const hasSign = charAfterE === '+' || charAfterE === '-';
+        const digitPos = hasSign ? this.peek(2) : charAfterE;
+
+        // Valid exponent: e/E followed by digit, or e/E followed by sign and digit
+        if (digitPos && isDigit(digitPos)) {
+          this.advance(); // consume 'e' or 'E'
+          if (hasSign) {
+            this.advance(); // consume '+' or '-'
+          }
+          // Consume exponent digits
+          while (!this.isAtEnd() && isDigit(this.peek()!)) {
+            this.advance();
+          }
+          // After exponent, check if we can return
+          if (this.isAtEnd() || !isAlphaNumeric(this.peek()!)) {
+            return this.addToken(SyntaxTokenKind.NUMERIC_LITERAL);
+          }
+          // If there are more alphanumeric chars, it's an identifier (e.g., 1e2abc)
+          break;
+        }
+        // If 'e' is not followed by valid exponent, treat as identifier break
         break;
       }
 

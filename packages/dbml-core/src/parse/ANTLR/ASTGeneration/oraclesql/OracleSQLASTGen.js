@@ -882,7 +882,7 @@ export default class OracleSqlASTGen extends OracleSqlParserVisitor {
     const names = ctx.general_table_ref().accept(this);
     const tableName = last(names);
     const schemaName = names.length > 1 ? names[names.length - 2] : undefined;
-    const columns = ctx.paren_column_list() ? ctx.paren_column_list().accept(this).map((c) => last(c)) : [];
+    const columns = ctx.paren_column_list() ? ctx.paren_column_list().accept(this).map((c) => last(c)) : findTable(this.data.tables, schemaName, tableName)?.fields.map((field) => field.name);
     return {
       tableName,
       schemaName,
