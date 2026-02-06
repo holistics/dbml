@@ -2,7 +2,7 @@ import _ from 'lodash';
 import Database from '../../../src/model_structure/database';
 import jsonDb from './single_schema.json';
 import { DEFAULT_SCHEMA_NAME } from '../../../src/model_structure/config';
-import { NormalizedDatabase } from '../../../types/model_structure/database';
+import { NormalizedModel } from '../../../types/model_structure/database';
 
 describe('@dbml/core - model_structure', () => {
   let database: Database;
@@ -375,9 +375,9 @@ describe('@dbml/core - model_structure', () => {
     });
 
     describe('normalized_structure', () => {
-      let normalizedModel: NormalizedDatabase;
+      let normalizedModel: NormalizedModel;
 
-      function getEle (ele: keyof NormalizedDatabase, id: string) {
+      function getEle (ele: keyof NormalizedModel, id: string) {
         return (normalizedModel[ele] as any)[id];
       }
 

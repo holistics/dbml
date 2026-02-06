@@ -1,12 +1,12 @@
 import { readFileSync } from 'fs';
 import expectedNormalizeModel from './table_partial.out.json';
 import Parser from '../../../src/parse/Parser';
-import { NormalizedDatabase } from '../../../types/model_structure/database';
+import { NormalizedModel } from '../../../types/model_structure/database';
 import { isEqualExcludeTokenEmpty } from '../testHelpers';
 import path from 'path';
 
 describe('@dbml/core - normalized_structure', () => {
-  let normalizedModel: NormalizedDatabase;
+  let normalizedModel: NormalizedModel;
 
   beforeAll(() => {
     const dbml = readFileSync(path.resolve(__dirname, 'table_partial.in.dbml'), { encoding: 'utf8' });
