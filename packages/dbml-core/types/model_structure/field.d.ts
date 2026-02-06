@@ -88,7 +88,7 @@ export interface NormalizedField {
     endpointIds: number[];
     tableId: number;
     enumId: number | null;
-    injectedPartialId?: number;
+    injectedPartialId: number | null;
     checkIds: number[];
 }
 
