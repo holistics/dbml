@@ -4,7 +4,7 @@ Table "users" {
   "active" boolean
 }
 
-records users(id, name, active) {
+Records users(id, name, active) {
   1, 'Alice', null
   2, 'Bob', null
   null, 'Charlie', true
