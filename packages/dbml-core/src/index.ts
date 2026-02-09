@@ -20,7 +20,6 @@ export {
 
 // Re-export types and utilities from @dbml/parse
 export {
-  SqlDialect,
   isIntegerType,
   isFloatType,
   isNumericType,
