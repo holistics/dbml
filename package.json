@@ -30,8 +30,7 @@
     "eslint": "^9.39.1",
     "globals": "^16.5.0",
     "@types/lodash-es": "^4.17.12",
-    "@types/node": "^20.8.8",
-    "eslint-config-airbnb-base": "^15.0.0"
+    "@types/node": "^20.8.8"
   },
   "resolutions": {
     "**/tmp": "0.2.5"
