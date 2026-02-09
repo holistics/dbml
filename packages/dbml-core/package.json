@@ -37,6 +37,7 @@
   "scripts": {
     "dev": "vite build --watch",
     "test": "vitest run",
+    "coverage": "echo \"Coverage is disabled - running normal tests without coverage\" && vitest run",
     "test:watch": "vitest watch",
     "bench": "vitest bench",
     "build:parser": "node src/parse/deprecated/buildParser.cjs",
