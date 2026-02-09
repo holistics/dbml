@@ -57,12 +57,12 @@ export class RecordsInterpreter {
       if (prevRecord) {
         errors.push(new CompileError(
           CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE,
-          `Duplicate Records for the same Table '${table.name}'`,
+          `Duplicate Records blocks for the same Table '${table.name}' - A Table can only have one Records block`,
           prevRecord,
         ));
         errors.push(new CompileError(
           CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE,
-          `Duplicate Records for the same Table '${table.name}'`,
+          `Duplicate Records blocks for the same Table '${table.name}' - A Table can only have one Records block`,
           element,
         ));
         continue;
