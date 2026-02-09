@@ -1,22 +1,12 @@
 import Element, { RawNote, Token } from './element';
-<<<<<<< HEAD
-import Field, { RawField } from './field';
-import Index, { RawIndex } from './indexes';
-import Check, { RawCheck } from './check';
-=======
 import Field from './field';
 import Index from './indexes';
 import Check from './check';
->>>>>>> 7f379ede (Revert "fix: type definitions")
 import Schema from './schema';
 import DbState from './dbState';
 import TableGroup from './tableGroup';
 import TablePartial from './tablePartial';
-<<<<<<< HEAD
 import { NormalizedModel } from './database';
-=======
-import { NormalizedDatabase } from './database';
->>>>>>> 7f379ede (Revert "fix: type definitions")
 
 interface RawTable {
     name: string;
