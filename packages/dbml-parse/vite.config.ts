@@ -1,4 +1,4 @@
-/// <reference types="vitest" />
+/// <reference types='vitest' />
 
 import path from 'path';
 import { defineConfig } from 'vite';
@@ -10,8 +10,8 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "src/"),
-      "@tests": path.resolve(__dirname, "__tests__/"),
+      '@': path.resolve(__dirname, 'src/'),
+      '@tests': path.resolve(__dirname, '__tests__/'),
     },
   },
   build: {
