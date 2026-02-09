@@ -34,13 +34,13 @@ describe('[example - record] multiple records blocks', () => {
     // Verify exact error count and ALL error properties (3 blocks = 4 errors)
     expect(errors.length).toBe(4);
     expect(errors[0].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[0].diagnostic).toBe("Duplicate Records for the same Table 'users'");
+    expect(errors[0].diagnostic).toBe("Duplicate Records blocks for the same Table 'users' - A Table can only have one Records block");
     expect(errors[1].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[1].diagnostic).toBe("Duplicate Records for the same Table 'users'");
+    expect(errors[1].diagnostic).toBe("Duplicate Records blocks for the same Table 'users' - A Table can only have one Records block");
     expect(errors[2].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[2].diagnostic).toBe("Duplicate Records for the same Table 'users'");
+    expect(errors[2].diagnostic).toBe("Duplicate Records blocks for the same Table 'users' - A Table can only have one Records block");
     expect(errors[3].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[3].diagnostic).toBe("Duplicate Records for the same Table 'users'");
+    expect(errors[3].diagnostic).toBe("Duplicate Records blocks for the same Table 'users' - A Table can only have one Records block");
   });
 
   test('should report error for nested and top-level records blocks', () => {
@@ -65,9 +65,9 @@ describe('[example - record] multiple records blocks', () => {
 
     expect(errors.length).toBe(2);
     expect(errors[0].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[0].diagnostic).toBe("Duplicate Records for the same Table 'products'");
+    expect(errors[0].diagnostic).toBe("Duplicate Records blocks for the same Table 'products' - A Table can only have one Records block");
     expect(errors[1].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[1].diagnostic).toBe("Duplicate Records for the same Table 'products'");
+    expect(errors[1].diagnostic).toBe("Duplicate Records blocks for the same Table 'products' - A Table can only have one Records block");
   });
 
   test('should report error across multiple tables with duplicate blocks', () => {
