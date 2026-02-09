@@ -50,29 +50,20 @@ describe('@dbml/core - model_exporter', () => {
     }
   };
 
-  test.each(scanTestNames(__dirname, 'json_exporter/input'))('json_exporter/%s', (name) => {
-    runTest(name, 'json_exporter', 'json', JsonExporter);
-  });
+  const spec = {
+    json_exporter: { format: 'json' as ExportFormatOption, exporter: JsonExporter },
+    dbml_exporter: { format: 'dbml' as ExportFormatOption, exporter: DbmlExporter },
+    mysql_exporter: { format: 'mysql' as ExportFormatOption, exporter: MysqlExporter },
+    postgres_exporter: { format: 'postgres' as ExportFormatOption, exporter: PostgresExporter },
+    mssql_exporter: { format: 'mssql' as ExportFormatOption, exporter: SqlServerExporter },
+    oracle_exporter: { format: 'oracle' as ExportFormatOption, exporter: OracleExporter },
+  } as const;
 
-  test.each(scanTestNames(__dirname, 'dbml_exporter/input'))('dbml_exporter/%s', (name) => {
-    runTest(name, 'dbml_exporter', 'dbml', DbmlExporter);
-  });
-
-  test.each(scanTestNames(__dirname, 'mysql_exporter/input'))('mysql_exporter/%s', (name) => {
-    runTest(name, 'mysql_exporter', 'mysql', MysqlExporter);
-  });
-
-  test.each(scanTestNames(__dirname, 'postgres_exporter/input'))('postgres_exporter/%s', (name) => {
-    runTest(name, 'postgres_exporter', 'postgres', PostgresExporter);
-  });
-
-  test.each(scanTestNames(__dirname, 'mssql_exporter/input'))('mssql_exporter/%s', (name) => {
-    runTest(name, 'mssql_exporter', 'mssql', SqlServerExporter);
-  });
-
-  test.each(scanTestNames(__dirname, 'oracle_exporter/input'))('oracle_exporter/%s', (name) => {
-    runTest(name, 'oracle_exporter', 'oracle', OracleExporter);
-  });
+  for (const [exporterName, { format, exporter }] of Object.entries(spec)) {
+    test.each(scanTestNames(__dirname, `${exporterName}/input`))(`${exporterName}/%s`, (name) => {
+      runTest(name, exporterName, format, exporter);
+    });
+  }
 });
 
 describe('@dbml/core - model_exporter dbml_exporter.escapeNote', () => {

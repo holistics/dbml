@@ -21,24 +21,18 @@ describe('@dbml/core', () => {
       isEqualExcludeTokenEmpty(jsonSchema, output);
     };
 
-    test.each(scanTestNames(__dirname, 'mysql-parse/input'))('mysql-parse/%s', async (name) => {
-      await runTest(name, 'mysql-parse', 'mysql', 'parseMySQLToJSONv2');
-    });
+    const spec = {
+      'mysql-parse': { format: 'mysql' as ParseFormat, parseFunc: 'parseMySQLToJSONv2' },
+      'postgres-parse': { format: 'postgres' as ParseFormat, parseFunc: 'parsePostgresToJSONv2' },
+      'schemarb-parse': { format: 'schemarb' as ParseFormat, parseFunc: 'parseSchemaRbToJSON' },
+      'mssql-parse': { format: 'mssql' as ParseFormat, parseFunc: 'parseMSSQLToJSONv2' },
+      'oracle-parse': { format: 'oracle' as ParseFormat, parseFunc: 'parseOracleToJSON' },
+    } as const;
 
-    test.each(scanTestNames(__dirname, 'postgres-parse/input'))('postgres-parse/%s', async (name) => {
-      await runTest(name, 'postgres-parse', 'postgres', 'parsePostgresToJSONv2');
-    });
-
-    test.each(scanTestNames(__dirname, 'schemarb-parse/input'))('schemarb-parse/%s', async (name) => {
-      await runTest(name, 'schemarb-parse', 'schemarb', 'parseSchemaRbToJSON');
-    });
-
-    test.each(scanTestNames(__dirname, 'mssql-parse/input'))('mssql-parse/%s', async (name) => {
-      await runTest(name, 'mssql-parse', 'mssql', 'parseMSSQLToJSONv2');
-    });
-
-    test.each(scanTestNames(__dirname, 'oracle-parse/input'))('oracle-parse/%s', async (name) => {
-      await runTest(name, 'oracle-parse', 'oracle', 'parseOracleToJSON');
-    });
+    for (const [parser, { format, parseFunc }] of Object.entries(spec)) {
+      test.each(scanTestNames(__dirname, `${parser}/input`))(`${parser}/%s`, async (name) => {
+        await runTest(name, parser, format, parseFunc);
+      });
+    }
   });
 });
