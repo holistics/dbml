@@ -286,8 +286,8 @@ describe('[example - record] simple primary key constraints', () => {
 
     expect(errors.length).toBe(2);
     expect(errors[0].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[0].diagnostic).toBe("Duplicate Records for the same Table 'users'");
+    expect(errors[0].diagnostic).toBe("Duplicate Records blocks for the same Table 'users' - A Table can only have one Records block");
     expect(errors[1].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[1].diagnostic).toBe("Duplicate Records for the same Table 'users'");
+    expect(errors[1].diagnostic).toBe("Duplicate Records blocks for the same Table 'users' - A Table can only have one Records block");
   });
 });
