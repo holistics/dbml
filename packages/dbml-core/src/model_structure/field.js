@@ -1,4 +1,4 @@
-import { get } from 'lodash';
+import { get } from 'lodash-es';
 import Element from './element';
 import { DEFAULT_SCHEMA_NAME } from './config';
 import Check from './check';

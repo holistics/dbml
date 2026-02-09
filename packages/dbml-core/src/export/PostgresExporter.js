@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { concat, flatten, isEmpty } from 'lodash-es';
 import {
   hasWhiteSpaceOrUpperCase,
   shouldPrintSchema,
@@ -494,7 +494,7 @@ class PostgresExporter {
         prevStatements.schemas.push(`CREATE SCHEMA "${schema.name}";\n`);
       }
 
-      if (!_.isEmpty(enumIds)) {
+      if (!isEmpty(enumIds)) {
         const enumPairs = PostgresExporter.exportEnums(enumIds, model);
 
         enumPairs.forEach((enumPair) => {
@@ -518,34 +518,34 @@ class PostgresExporter {
       const schema = model.schemas[schemaId];
       const { tableIds, refIds } = schema;
 
-      if (!_.isEmpty(tableIds)) {
+      if (!isEmpty(tableIds)) {
         prevStatements.tables.push(...PostgresExporter.exportTables(tableIds, model, enumSet));
       }
 
-      const indexIds = _.flatten(tableIds.map((tableId) => model.tables[tableId].indexIds));
-      if (!_.isEmpty(indexIds)) {
+      const indexIds = flatten(tableIds.map((tableId) => model.tables[tableId].indexIds));
+      if (!isEmpty(indexIds)) {
         prevStatements.indexes.push(...PostgresExporter.exportIndexes(indexIds, model));
       }
 
-      const commentNodes = _.flatten(tableIds.map((tableId) => {
+      const commentNodes = flatten(tableIds.map((tableId) => {
         const { fieldIds, note } = model.tables[tableId];
         const fieldObjects = fieldIds
           .filter((fieldId) => model.fields[fieldId].note)
           .map((fieldId) => ({ type: 'column', fieldId, tableId }));
         return note ? [{ type: 'table', tableId }].concat(fieldObjects) : fieldObjects;
       }));
-      if (!_.isEmpty(commentNodes)) {
+      if (!isEmpty(commentNodes)) {
         prevStatements.comments.push(...PostgresExporter.exportComments(commentNodes, model));
       }
 
-      if (!_.isEmpty(refIds)) {
+      if (!isEmpty(refIds)) {
         prevStatements.refs.push(...PostgresExporter.exportRefs(refIds, model, usedTableNames));
       }
 
       return prevStatements;
     }, schemaEnumStatements);
 
-    const res = _.concat(
+    const res = concat(
       statements.schemas,
       statements.enums,
       statements.tables,

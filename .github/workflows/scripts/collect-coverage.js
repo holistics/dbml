@@ -65,12 +65,6 @@ function generateMarkdownReport(coverageData, commitSha) {
   let markdown = `## Coverage Report\n\n`;
   markdown += `**Commit:** ${commitSha}\n\n`;
 
-  // Add artifact link if running in GitHub Actions
-  if (process.env.GITHUB_RUN_ID && process.env.GITHUB_REPOSITORY) {
-    const artifactUrl = `https://github.com/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`;
-    markdown += `📊 [View detailed HTML coverage reports](${artifactUrl})\n\n`;
-  }
-
   let overallLines = { total: 0, covered: 0 };
   let overallBranches = { total: 0, covered: 0 };
   let overallFunctions = { total: 0, covered: 0 };

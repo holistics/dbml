@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { concat, flatten, isEmpty } from 'lodash-es';
 import {
   shouldPrintSchema,
   buildJunctionFields1,
@@ -330,27 +330,27 @@ class SqlServerExporter {
         prevStatements.schemas.push(`CREATE SCHEMA [${schema.name}]\nGO\n`);
       }
 
-      if (!_.isEmpty(tableIds)) {
+      if (!isEmpty(tableIds)) {
         prevStatements.tables.push(...SqlServerExporter.exportTables(tableIds, model));
       }
 
-      const indexIds = _.flatten(tableIds.map((tableId) => model.tables[tableId].indexIds));
-      if (!_.isEmpty(indexIds)) {
+      const indexIds = flatten(tableIds.map((tableId) => model.tables[tableId].indexIds));
+      if (!isEmpty(indexIds)) {
         prevStatements.indexes.push(...SqlServerExporter.exportIndexes(indexIds, model));
       }
 
-      const commentNodes = _.flatten(tableIds.map((tableId) => {
+      const commentNodes = flatten(tableIds.map((tableId) => {
         const { fieldIds, note } = model.tables[tableId];
         const fieldObjects = fieldIds
           .filter((fieldId) => model.fields[fieldId].note)
           .map((fieldId) => ({ type: 'column', fieldId, tableId }));
         return note ? [{ type: 'table', tableId }].concat(fieldObjects) : fieldObjects;
       }));
-      if (!_.isEmpty(commentNodes)) {
+      if (!isEmpty(commentNodes)) {
         prevStatements.comments.push(...SqlServerExporter.exportComments(commentNodes, model));
       }
 
-      if (!_.isEmpty(refIds)) {
+      if (!isEmpty(refIds)) {
         prevStatements.refs.push(...SqlServerExporter.exportRefs(refIds, model, usedTableNames));
       }
 
@@ -364,7 +364,7 @@ class SqlServerExporter {
       refs: [],
     });
 
-    const res = _.concat(
+    const res = concat(
       statements.schemas,
       statements.enums,
       statements.tables,

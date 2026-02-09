@@ -30,6 +30,7 @@ export default defineConfig(
           sourceType: 'module',
           ecmaVersion: 2020,
           project: './tsconfig.json',
+          tsconfigRootDir: import.meta.dirname,
         },
       },
       plugins: {
