@@ -1,4 +1,4 @@
-import { get } from 'lodash';
+import { get } from 'lodash-es';
 import Table from './table';
 import Element from './element';
 import Enum from './enum';

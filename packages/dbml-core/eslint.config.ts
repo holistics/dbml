@@ -1,4 +1,3 @@
-import jest from 'eslint-plugin-jest';
 import globals from 'globals';
 import eslint from '@eslint/js';
 import { defineConfig } from 'eslint/config';
@@ -20,12 +19,9 @@ export default defineConfig(
         'node_modules/*',
         'lib/*',
         'types/*',
-        'src/parse/dbmlParser.js',
-        'src/parse/mssqlParser.js',
-        'src/parse/mysqlParser.js',
-        'src/parse/postgresParser.js',
-        'src/parse/schemarbParser.js',
+        'src/parse/deprecated/*',
         'src/parse/ANTLR/parsers/*',
+        '__tests__/*',
       ],
     },
     {
@@ -33,7 +29,6 @@ export default defineConfig(
       languageOptions: {
         globals: {
           ...globals.browser,
-          ...globals.jest,
           ...globals.node,
           ...globals.es2022,
         },
@@ -58,22 +53,31 @@ export default defineConfig(
     },
     {
       files: ['**/__tests__/**/*.js', '**/*.test.js', '**/*.spec.js', '**/__tests__/**/*.ts', '**/*.test.ts', '**/*.spec.ts'],
-      ...jest.configs['flat/recommended'],
       plugins: {
         '@typescript-eslint': tseslint,
       },
       languageOptions: {
         globals: {
           ...globals.browser,
-          ...globals.jest,
           ...globals.node,
           ...globals.es2022,
+          // Vitest globals
+          describe: 'readonly',
+          it: 'readonly',
+          test: 'readonly',
+          expect: 'readonly',
+          beforeAll: 'readonly',
+          afterAll: 'readonly',
+          beforeEach: 'readonly',
+          afterEach: 'readonly',
+          vi: 'readonly',
         },
         parser: tsparser,
         parserOptions: {
           sourceType: 'module',
           ecmaVersion: 2020,
           project: './tsconfig.json',
+          tsconfigRootDir: import.meta.dirname,
         },
       },
       rules: {

@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { concat, flatten, isEmpty } from 'lodash-es';
 import {
   shouldPrintSchema,
   buildJunctionFields1,
@@ -314,24 +314,24 @@ class MySQLExporter {
         prevStatements.schemas.push(`CREATE SCHEMA \`${schema.name}\`;\n`);
       }
 
-      if (!_.isEmpty(tableIds)) {
+      if (!isEmpty(tableIds)) {
         prevStatements.tables.push(...MySQLExporter.exportTables(tableIds, model));
       }
 
-      const indexIds = _.flatten(tableIds.map((tableId) => model.tables[tableId].indexIds));
-      if (!_.isEmpty(indexIds)) {
+      const indexIds = flatten(tableIds.map((tableId) => model.tables[tableId].indexIds));
+      if (!isEmpty(indexIds)) {
         prevStatements.indexes.push(...MySQLExporter.exportIndexes(indexIds, model));
       }
 
-      const commentNodes = _.flatten(tableIds.map((tableId) => {
+      const commentNodes = flatten(tableIds.map((tableId) => {
         const { note } = model.tables[tableId];
         return note ? [{ type: 'table', tableId }] : [];
       }));
-      if (!_.isEmpty(commentNodes)) {
+      if (!isEmpty(commentNodes)) {
         prevStatements.comments.push(...MySQLExporter.exportComments(commentNodes, model));
       }
 
-      if (!_.isEmpty(refIds)) {
+      if (!isEmpty(refIds)) {
         prevStatements.refs.push(...MySQLExporter.exportRefs(refIds, model, usedTableNames));
       }
 
@@ -345,7 +345,7 @@ class MySQLExporter {
       refs: [],
     });
 
-    const res = _.concat(
+    const res = concat(
       statements.schemas,
       statements.enums,
       statements.tables,

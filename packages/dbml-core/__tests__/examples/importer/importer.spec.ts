@@ -3,6 +3,7 @@ import { scanTestNames, getFileExtension } from '../testHelpers';
 import { ParseFormat } from '../../../types/parse/Parser';
 import { readFileSync } from 'fs';
 import path from 'path';
+import { test, expect, describe } from 'vitest';
 
 describe('@dbml/core - importer', () => {
   const runTest = async (fileName: string, testDir: string, format: ParseFormat) => {
@@ -15,27 +16,18 @@ describe('@dbml/core - importer', () => {
     expect(res).toBe(output);
   };
 
-  test.each(scanTestNames(__dirname, 'json_importer/input'))('json_importer/%s', (name) => {
-    runTest(name, 'json_importer', 'json');
-  });
+  const spec = {
+    json_importer: 'json',
+    mysql_importer: 'mysql',
+    postgres_importer: 'postgres',
+    mssql_importer: 'mssql',
+    snowflake_importer: 'snowflake',
+    oracle_importer: 'oracle',
+  } as const;
 
-  test.each(scanTestNames(__dirname, 'mysql_importer/input'))('mysql_importer/%s', (name) => {
-    runTest(name, 'mysql_importer', 'mysql');
-  });
-
-  test.each(scanTestNames(__dirname, 'postgres_importer/input'))('postgres_importer/%s', (name) => {
-    runTest(name, 'postgres_importer', 'postgres');
-  });
-
-  test.each(scanTestNames(__dirname, 'mssql_importer/input'))('mssql_importer/%s', (name) => {
-    runTest(name, 'mssql_importer', 'mssql');
-  });
-
-  test.each(scanTestNames(__dirname, 'snowflake_importer/input'))('snowflake_importer/%s', (name) => {
-    runTest(name, 'snowflake_importer', 'snowflake');
-  });
-
-  test.each(scanTestNames(__dirname, 'oracle_importer/input'))('oracle_importer/%s', (name) => {
-    runTest(name, 'oracle_importer', 'oracle');
-  });
+  for (const [importer, type] of Object.entries(spec)) {
+    test.each(scanTestNames(__dirname, `${importer}/input`))(`${importer}/%s`, async (name) => {
+      await runTest(name, importer, type);
+    });
+  }
 });

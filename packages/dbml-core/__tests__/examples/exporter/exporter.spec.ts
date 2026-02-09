@@ -3,6 +3,7 @@ import { scanTestNames, getFileExtension } from '../testHelpers';
 import { ExportFormatOption } from '../../../types/export/ModelExporter';
 import { readFileSync } from 'fs';
 import path from 'path';
+import { test, expect, describe } from 'vitest';
 
 describe('@dbml/core - exporter', () => {
   const runTest = async (fileName: string, testDir: string, format: ExportFormatOption) => {
@@ -14,19 +15,16 @@ describe('@dbml/core - exporter', () => {
     expect(res).toBe(output);
   };
 
-  test.each(scanTestNames(__dirname, 'mysql_exporter/input'))('mysql_exporter/%s', (name) => {
-    runTest(name, 'mysql_exporter', 'mysql');
-  });
+  const spec = {
+    mysql_exporter: 'mysql',
+    postgres_exporter: 'postgres',
+    mssql_exporter: 'mssql',
+    oracle_exporter: 'oracle',
+  } as const;
 
-  test.each(scanTestNames(__dirname, 'postgres_exporter/input'))('postgres_exporter/%s', (name) => {
-    runTest(name, 'postgres_exporter', 'postgres');
-  });
-
-  test.each(scanTestNames(__dirname, 'mssql_exporter/input'))('mssql_exporter/%s', (name) => {
-    runTest(name, 'mssql_exporter', 'mssql');
-  });
-
-  test.each(scanTestNames(__dirname, 'oracle_exporter/input'))('oracle_exporter/%s', (name) => {
-    runTest(name, 'oracle_exporter', 'oracle');
-  });
+  for (const [exporter, type] of Object.entries(spec)) {
+    test.each(scanTestNames(__dirname, `${exporter}/input`))(`${exporter}/%s`, async (name) => {
+      await runTest(name, exporter, type);
+    });
+  }
 });

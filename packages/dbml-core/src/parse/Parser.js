@@ -1,12 +1,12 @@
 import { Compiler } from '@dbml/parse';
 import Database from '../model_structure/database';
-import mysqlParser from './mysqlParser';
-import postgresParser from './postgresParser';
-import dbmlParser from './dbmlParser';
-import schemarbParser from './schemarbParser';
-import mssqlParser from './mssqlParser';
 import { parse } from './ANTLR/ASTGeneration';
 import { CompilerError } from './error';
+import mysqlParser from './deprecated/mysqlParser.cjs';
+import postgresParser from './deprecated/postgresParser.cjs';
+import dbmlParser from './deprecated/dbmlParser.cjs';
+import schemarbParser from './deprecated/schemarbParser.cjs';
+import mssqlParser from './deprecated/mssqlParser.cjs';
 
 class Parser {
   constructor (dbmlCompiler) {
@@ -22,6 +22,9 @@ class Parser {
     return parse(str, 'mysql');
   }
 
+  /**
+   * @deprecated Use the `parseMySQLToJSONv2` method instead
+   */
   static parseMySQLToJSON (str) {
     return mysqlParser.parse(str);
   }
@@ -30,6 +33,9 @@ class Parser {
     return parse(str, 'postgres');
   }
 
+  /**
+   * @deprecated Use the `parsePostgresToJSONv2` method instead
+   */
   static parsePostgresToJSON (str) {
     return postgresParser.parse(str);
   }
@@ -59,6 +65,9 @@ class Parser {
     return compiler.parse.rawDb();
   }
 
+  /**
+   * @deprecated Use the `parseDBMLToJSONv2` method instead
+   */
   static parseDBMLToJSON (str) {
     return dbmlParser.parse(str);
   }
@@ -67,6 +76,9 @@ class Parser {
     return schemarbParser.parse(str);
   }
 
+  /**
+   * @deprecated Use the `parseMSSQLToJSONv2` method instead
+   */
   static parseMSSQLToJSON (str) {
     return mssqlParser.parseWithPegError(str);
   }

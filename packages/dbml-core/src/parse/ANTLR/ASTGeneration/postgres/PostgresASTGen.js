@@ -1,4 +1,4 @@
-import { last, flatten, flattenDepth } from 'lodash';
+import { last, flatten, flattenDepth } from 'lodash-es';
 import PostgreSQLParserVisitor from '../../parsers/postgresql/PostgreSQLParserVisitor';
 import {
   Enum, Field, Index, TableRecord, Table,
