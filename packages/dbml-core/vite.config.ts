@@ -18,9 +18,6 @@ export default defineConfig({
       formats: ['cjs', 'es'],
     },
   },
-  optimizeDeps: {
-    exclude: ['parsimmon'],
-  },
   test: {
     globals: true,
     testTimeout: 120000,  // 2 minutes for slow tests with coverage
