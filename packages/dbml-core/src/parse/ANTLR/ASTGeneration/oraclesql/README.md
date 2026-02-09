@@ -177,13 +177,13 @@ This module provides SQL parsing capabilities for Oracle databases, enabling con
 | Feature | Status | Notes |
 |---------|---------|-------|
 | Basic `INSERT` ... VALUES | ✓ | `INSERT INTO t (col) VALUES (1)` |
-| Multi-row `INSERT` | — | Oracle uses `INSERT ALL` syntax |
+| Multi-row `INSERT` | ✓ | Supported via `INSERT ALL` syntax |
 | `INSERT` ... SELECT | ✗ | Subquery as data source |
 | WITH clause (CTE) | ✗ | CTE before `INSERT` |
 | Target table alias | ✗ | `INSERT INTO t alias ...` |
 | `INSERT` ... RETURNING | ◐ | Returns inserted rows - clause is ignored |
-| `INSERT ALL` (multi-table insert) | ✗ | Oracle-specific multi-table insert |
-| Conditional `INSERT` (WHEN/FIRST/ALL) | ✗ | Oracle syntax for conditional inserts |
+| `INSERT ALL` (multi-table insert) | ✓ | Oracle-specific multi-table insert - fully supported |
+| Conditional `INSERT` (WHEN/FIRST/ALL) | ◐ | Conditional inserts with WHEN clauses not yet supported |
 | `INSERT` OVERWRITE | — | Snowflake/Hive syntax - not valid in Oracle |
 
 ---
@@ -243,7 +243,7 @@ This module provides SQL parsing capabilities for Oracle databases, enabling con
 ## Known Limitations
 
 - **`ON UPDATE` for `FOREIGN KEY`**: Oracle does not support `ON UPDATE` actions for foreign keys; only `ON DELETE` is available
-- **Multi-row `INSERT`**: Oracle uses `INSERT ALL` syntax which is not currently supported
+- **Conditional `INSERT ALL`**: Basic `INSERT ALL` is fully supported, but conditional inserts with WHEN/FIRST clauses are not yet supported
 - **DDL modification statements**: `DROP TABLE`, `DROP INDEX`, `ALTER INDEX` not supported
 - **`INSERT` ... SELECT**: Subqueries in `INSERT` statements not supported
 - **`CREATE VIEW`**: View definitions are not parsed
@@ -257,5 +257,5 @@ This module provides SQL parsing capabilities for Oracle databases, enabling con
 3. **Function-based Indexes**: Oracle's function-based indexes (e.g., `CREATE INDEX ON t (UPPER(col))`) are fully supported
 4. **`ON DELETE` Only**: Oracle foreign keys only support `ON DELETE` actions (`CASCADE`, `SET NULL`, `NO ACTION`). There is no `ON UPDATE` support
 5. **Comments**: Use `COMMENT ON TABLE/COLUMN` statements. These are separate DDL statements, not inline with `CREATE TABLE`
-6. **No Multi-row `INSERT`**: Oracle uses `INSERT ALL ... SELECT` syntax for multi-row inserts, which differs from other databases
+6. **`INSERT ALL` Support**: Oracle's `INSERT ALL ... SELECT * FROM dual` syntax for multi-row and multi-table inserts is fully supported. Rows with the same table and columns are automatically grouped together. Conditional inserts with WHEN clauses are not yet supported
 7. **`VARCHAR2`**: Oracle uses `VARCHAR2` (not `VARCHAR`) as the standard variable-length string type
