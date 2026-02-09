@@ -198,7 +198,7 @@ export function tryExtractString (value: SyntaxNode | string | boolean | number 
   if (typeof value === 'boolean') return value.toString();
 
   // Quoted string: 'hello', "world"
-  const res = extractQuotedStringToken(value).unwrap_or(null) ?? tryExtractBoolean(value) ?? tryExtractNumeric(value);
+  const res = extractQuotedStringToken(value).unwrap_or(null) ?? tryExtractNumeric(value) ?? tryExtractBoolean(value); // Important: DO NOT move extractNumeric to after extractBoolean, as `1` is extracted as `true`
   return res === null ? null : res.toString();
 }
 
