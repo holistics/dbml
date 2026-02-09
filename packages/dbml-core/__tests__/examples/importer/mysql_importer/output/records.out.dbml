@@ -10,14 +10,14 @@ Table "posts" {
   "title" varchar(255)
 }
 
-records users(id, name, email) {
+Records users(id, name, email) {
   1, 'Alice', 'alice@example.com'
   2, 'Bob', 'bob@example.com'
   3, 'Charlie', 'charlie@example.com'
   4, 'Dave', 'dave@example.com'
 }
 
-records posts(id, user_id, title) {
+Records posts(id, user_id, title) {
   1, 1, 'First Post'
   2, 1, 'Second Post'
   3, 2, 'Bob Post'

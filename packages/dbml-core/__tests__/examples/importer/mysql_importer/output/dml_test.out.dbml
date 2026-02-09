@@ -10,53 +10,53 @@ Table "t3" {
   "col" varchar(10)
 }
 
-records geom() {
+Records geom() {
   
 }
 
-records mytable() {
-  
-  
-}
-
-records tbl() {
-  
-  
-  
-  
+Records mytable() {
   
   
 }
 
-records t1(col1, col2, col3, a, b, c) {
+Records tbl() {
+  
+  
+  
+  
+  
+  
+}
+
+Records t1(col1, col2, col3, a, b, c) {
   'abc', 0, 0.12, null, null, null
   'adfasdf', 23432, `-.12`, null, null, null
   null, null, null, 1, 2, 3
   null, null, null, 4, 5, 6
 }
 
-records some_ship_info() {
+Records some_ship_info() {
 
 }
 
-records l4stal13prema00.fusion("partition en", classe, segment, "F tot", "F loc", "indice specif") {
+Records l4stal13prema00.fusion("partition en", classe, segment, "F tot", "F loc", "indice specif") {
 
 }
 
-records test_auto_inc() {
+Records test_auto_inc() {
 
 }
 
-records tbl_name(col1, col2) {
+Records tbl_name(col1, col2) {
   null, null
   15, null
 }
 
-records logs(site_id, time, hits) {
+Records logs(site_id, time, hits) {
   1, '2004-08-09', 15
 }
 
-records t2(b, c) {
+Records t2(b, c) {
   null, null
   null, null
   null, null
@@ -64,19 +64,19 @@ records t2(b, c) {
   null, null
 }
 
-records tbl_test(FirstName) {
+Records tbl_test(FirstName) {
 
 }
 
-records t() {
+Records t() {
   
 }
 
-records wptests_posts(post_author, post_date, post_date_gmt, post_content, post_content_filtered, post_title, post_excerpt, post_status, post_type, comment_status, ping_status, post_password, post_name, to_ping, pinged, post_modified, post_modified_gmt, post_parent, menu_order, post_mime_type, guid) {
+Records wptests_posts(post_author, post_date, post_date_gmt, post_content, post_content_filtered, post_title, post_excerpt, post_status, post_type, comment_status, ping_status, post_password, post_name, to_ping, pinged, post_modified, post_modified_gmt, post_parent, menu_order, post_mime_type, guid) {
   7, '2016-09-06 16:49:51', '2016-09-06 16:49:51', '', '', 'صورة', '', 'inherit', 'attachment', 'open', 'closed', '', '%d8%b5%d9%88%d8%b1%d8%a9', '', '', '2016-09-06 16:49:51', '2016-09-06 16:49:51', 0, 0, 'image/jpeg', ''
 }
 
-records sql_log() {
+Records sql_log() {
   
   
 }
