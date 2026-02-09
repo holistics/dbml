@@ -15,13 +15,16 @@ Table "database_products" {
   "status" CHAR(1) [default: 'A']
 }
 
-records database_products(product_id, product_name, vendor_name, release_year, is_open_source, license_cost, market_share, latest_version, description, is_active, max_connections, status, created_at) {
+Records database_products(product_id, product_name, vendor_name, release_year, is_open_source, license_cost, market_share, latest_version, description, is_active, max_connections, status, created_at) {
   `db_products_seq.NEXTVAL`, 'Oracle Database', 'Oracle Corporation', 1979, 0, 47500, 28.5, '21c', 'Enterprise relational database management system', 1, 10000, 'A', null
   null, 'MySQL', 'Oracle Corporation', null, 1, null, null, null, null, 1, null, null, null
   null, 'PostgreSQL', 'PostgreSQL Global Development Group', null, null, null, null, null, null, null, null, null, null
   null, 'SQLite', null, 2000, null, null, `15.5 + 2.3`, null, null, null, `1000 * 10`, null, null
   null, `UPPER('microsoft sql server')`, `'Microsoft' || ' Corporation'`, null, null, null, null, `SUBSTR('2022-CU10', 1, 4)`, `TRIM('  Relational database management system  ')`, null, null, null, null
   null, 'MariaDB', 'MariaDB Foundation', `EXTRACT(YEAR FROM SYSDATE)`, null, null, null, null, null, null, null, null, `SYSTIMESTAMP`
+  null, 'MongoDB', 'MongoDB Inc.', null, 1, null, 8.2, null, null, null, null, null, null
+  null, 'Redis', 'Redis Ltd.', null, 1, null, 6.7, null, null, null, null, null, null
+  null, 'Cassandra', 'Apache Software Foundation', null, 1, null, 4.1, null, null, null, null, null, null
   null, 'IBM Db2', null, null, null, `1500.00 * 12`, `ROUND(5.678, 1)`, null, null, null, `POWER(2, 14)`, null, null
   null, 'Amazon Aurora', 'Amazon Web Services', null, 0, `CASE WHEN 1=1 THEN 0.00 ELSE 1000.00 END`, null, null, null, null, null, null, null
   null, 'CockroachDB', null, null, null, null, null, null, null, null, null, null, null
