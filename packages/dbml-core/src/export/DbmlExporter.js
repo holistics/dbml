@@ -380,7 +380,7 @@ class DbmlExporter {
         `  ${row.map(formatRecordValue).join(', ')}`,
       );
 
-      return `records ${tableRef}(${columnList}) {\n${rowStrs.join('\n')}\n}\n`;
+      return `Records ${tableRef}(${columnList}) {\n${rowStrs.join('\n')}\n}\n`;
     });
 
     return recordStrs.join('\n');
