@@ -147,7 +147,7 @@ const POSTGRES_RESERVED_KEYWORDS = [
 class PostgresExporter {
   static exportRecords (model) {
     const records = Object.values(model.records || {});
-    if (_.isEmpty(records)) {
+    if (isEmpty(records)) {
       return [];
     }
 
