@@ -12,6 +12,8 @@
     * Test performance:
       * Before: ~10 min
       * After: ~3 min
+  * [#798](https://github.com/holistics/dbml/pull/798) No longer upload unnecessary HTML coverage reports to github to reduce CI cost ([@hdnax](https://github.com/hdnax))
+* `dbml-core`
   * [#798](https://github.com/holistics/dbml/pull/798) Disable coverage tests & run normal tests for `@dbml/core` in CI as the package is too large ([@hdnax](https://github.com/hdnax))
 
 #### Committers: 1
