@@ -1,3 +1,12 @@
+## v6.2.0 (2026-02-10)
+
+#### :house_with_garden: Internal
+* `dbml-cli`, `dbml-connector`, `dbml-core`, `dbml-parse`
+  * [#798](https://github.com/holistics/dbml/pull/798) Chore/migrate to vite ([@hdnax](https://github.com/hdnax))
+
+#### Committers: 1
+- Huy DNA ([@hdnax](https://github.com/hdnax))
+
 ## v6.1.0 (2026-02-06)
 
 #### :house_with_garden: Internal
