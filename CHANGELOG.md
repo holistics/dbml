@@ -2,7 +2,18 @@
 
 #### :house_with_garden: Internal
 * `dbml-cli`, `dbml-connector`, `dbml-core`, `dbml-parse`
-  * [#798](https://github.com/holistics/dbml/pull/798) Chore/migrate to vite ([@hdnax](https://github.com/hdnax))
+  * [#798](https://github.com/holistics/dbml/pull/798) Migrate to vite & vitest to speed up build & test process and reduce bundle size ([@hdnax](https://github.com/hdnax))
+    * Bundle size:
+      * Before: 33MB (CJS)
+      * After: 15MB (CJS), 25MB (ESM)
+    * Build performance:
+      * Before: ~1.5 min
+      * After: ~10 sec
+    * Test performance:
+      * Before: ~10 min
+      * After: ~3 min
+  * [#798](https://github.com/holistics/dbml/pull/798) Disable coverage tests & run normal tests for `@dbml/core` in CI as the package is too large ([@hdnax](https://github.com/hdnax))
+
 
 #### Committers: 1
 - Huy DNA ([@hdnax](https://github.com/hdnax))
