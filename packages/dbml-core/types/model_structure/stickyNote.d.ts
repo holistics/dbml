@@ -2,13 +2,15 @@ import Element, { Token } from './element';
 import Database from './database';
 import DbState from './dbState';
 import { NormalizedModel } from './database';
-interface RawStickyNote {
+
+export interface RawStickyNote {
     name: string;
     content: string;
     database: Database;
     token: Token;
     headerColor: string;
 }
+
 declare class StickyNote extends Element {
     name: string;
     content: string;

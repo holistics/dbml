@@ -14,7 +14,10 @@ interface RawField {
     token: Token;
     not_null: boolean;
     note: RawNote;
-    dbdefault: any;
+    dbdefault?: {
+      type: 'number' | 'string' | 'boolean' | 'expression';
+      value: number | string;
+    };
     increment: boolean;
     checks?: any[];
     table: Table;
