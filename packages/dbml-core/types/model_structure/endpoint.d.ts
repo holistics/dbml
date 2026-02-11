@@ -1,8 +1,17 @@
-import Element from './element';
+import Element, { Token } from './element';
 import Field from './field';
 import Ref from './ref';
 import DbState from './dbState';
 import { NormalizedModel } from './database';
+
+export interface RawEndpoint {
+    schemaName: string | null;
+    tableName: string;
+    fieldNames: string[];
+    relation: '1' | '*';
+    token: Token;
+}
+
 declare class Endpoint extends Element {
     relation: any;
     schemaName: string;
