@@ -1,3 +1,15 @@
+## v6.2.1 (2026-02-11)
+
+#### :house_with_garden: Internal
+* `dbml-core`
+  * [#821](https://github.com/holistics/dbml/pull/821) Expose raw and non-raw model structure types ([@hdnax](https://github.com/hdnax))
+  * [#821](https://github.com/holistics/dbml/pull/821) Make `RawField`'s `dbdefault` a precise type ([@hdnax](https://github.com/hdnax))
+  * [#821](https://github.com/holistics/dbml/pull/821) Add missing `records` field to `NormalizedModel` ([@hdnax](https://github.com/hdnax))
+  * [#821](https://github.com/holistics/dbml/pull/821) Add `NormalizedRecord` and `NormalizedRecordIdMap` and remove `NormalizedRecords` for consistency with other types ([@hdnax](https://github.com/hdnax))
+
+#### Committers: 1
+- Huy DNA ([@hdnax](https://github.com/hdnax))
+
 ## v6.2.0 (2026-02-10)
 
 #### :house_with_garden: Internal
