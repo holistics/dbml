@@ -83,7 +83,10 @@ export interface NormalizedField {
     pk: boolean;
     not_null: boolean;
     note: string | null;
-    dbdefault: unknown;
+    dbdefault?: {
+      type: 'number' | 'string' | 'boolean' | 'expression';
+      value: number | string;
+    };
     increment: boolean;
     endpointIds: number[];
     tableId: number;
