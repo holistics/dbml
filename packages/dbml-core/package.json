@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/package",
   "name": "@dbml/core",
-  "version": "6.2.0",
+  "version": "6.2.1",
   "description": "> TODO: description",
   "author": "Holistics <dev@holistics.io>",
   "license": "Apache-2.0",
@@ -48,7 +48,7 @@
     "lint:fix": "eslint --fix ."
   },
   "dependencies": {
-    "@dbml/parse": "^6.2.0",
+    "@dbml/parse": "^6.2.1",
     "antlr4": "^4.13.1",
     "lodash": "^4.17.15",
     "lodash-es": "^4.17.15",
