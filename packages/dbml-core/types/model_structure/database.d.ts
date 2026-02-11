@@ -40,8 +40,10 @@ export interface TableRecord extends RawTableRecord {
     id: number;
 }
 
-export interface NormalizedRecords {
-    [_id: number]: TableRecord;
+export type NormalizedRecord = TableRecord;
+
+export interface NormalizedRecordIdMap {
+    [_id: number]: NormalizedRecord;
 }
 
 export interface RawDatabase {
@@ -314,5 +316,6 @@ export interface NormalizedModel {
     notes: NormalizedNoteIdMap;
     checks: NormalizedCheckIdMap;
     tablePartials: NormalizedTablePartialIdMap;
+    records: NormalizedRecordIdMap;
 }
 export default Database;

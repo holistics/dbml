@@ -16,6 +16,8 @@ export { CompilerDiagnostic, CompilerError as CompilerDiagnostics, EditorPositio
 
 // Export normalized types
 export type {
+    NormalizedRecord,
+    NormalizedRecordIdMap,
     NormalizedDatabase,
     NormalizedDatabaseIdMap,
     NormalizedModel,
@@ -48,12 +50,10 @@ export type {
     Project,
     RawDatabase,
     TableRecord,
-    NormalizedRecords,
     RawSchema,
 } from './model_structure';
 export { RecordValueType, RecordValue } from './model_structure/database';
 export {
-  SqlDialect,
   isIntegerType,
   isFloatType,
   isNumericType,

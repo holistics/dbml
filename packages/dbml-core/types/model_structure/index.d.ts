@@ -19,6 +19,8 @@ export type {
     NormalizedDatabase,
     NormalizedDatabaseIdMap,
     NormalizedModel,
+    NormalizedRecord,
+    NormalizedRecordIdMap,
 } from './database';
 
 export type {
@@ -87,5 +89,5 @@ export type {
 } from './check';
 
 // Export other types
-export type { Project, RawDatabase, TableRecord, NormalizedRecords } from './database';
+export type { Project, RawDatabase, TableRecord } from './database';
 export type { RawSchema } from './schema';
