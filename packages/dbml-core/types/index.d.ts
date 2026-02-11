@@ -15,43 +15,7 @@ export {
 export { CompilerDiagnostic, CompilerError as CompilerDiagnostics, EditorPosition, ErrorCode, WarningLevel, } from './parse/error';
 
 // Export normalized types
-export type {
-    NormalizedRecord,
-    NormalizedRecordIdMap,
-    NormalizedDatabase,
-    NormalizedDatabaseIdMap,
-    NormalizedModel,
-    NormalizedSchema,
-    NormalizedSchemaIdMap,
-    NormalizedTable,
-    NormalizedTableIdMap,
-    NormalizedField,
-    NormalizedFieldIdMap,
-    NormalizedIndex,
-    NormalizedIndexIdMap,
-    NormalizedIndexColumn,
-    NormalizedIndexColumnIdMap,
-    NormalizedEnum,
-    NormalizedEnumIdMap,
-    NormalizedEnumValue,
-    NormalizedEnumValueIdMap,
-    NormalizedRef,
-    NormalizedRefIdMap,
-    NormalizedEndpoint,
-    NormalizedEndpointIdMap,
-    NormalizedTableGroup,
-    NormalizedTableGroupIdMap,
-    NormalizedNote,
-    NormalizedNoteIdMap,
-    NormalizedCheck,
-    NormalizedCheckIdMap,
-    NormalizedTablePartial,
-    NormalizedTablePartialIdMap,
-    Project,
-    RawDatabase,
-    TableRecord,
-    RawSchema,
-} from './model_structure';
+export type * from './model_structure';
 export { RecordValueType, RecordValue } from './model_structure/database';
 export {
   isIntegerType,
