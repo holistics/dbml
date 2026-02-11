@@ -5,7 +5,7 @@ import Endpoint from './endpoint';
 import Enum from './enum';
 import Table from './table';
 import TablePartial from './tablePartial';
-import Check, { RawCheck } from './check';
+import Check from './check';
 
 export interface InlineRef {
     schemaName: string | null;
