@@ -19,7 +19,6 @@
     "lib",
     "types"
   ],
-  "type": "module",
   "types": "./types/index.d.ts",
   "main": "./lib/index.cjs",
   "module": "./lib/index.js",
