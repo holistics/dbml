@@ -24,6 +24,7 @@ export interface InterpreterDatabase {
   tablePartials: Map<ElementDeclarationNode, TablePartial>;
   aliases: Alias[];
   project: Map<ElementDeclarationNode, Project>;
+  policies: Map<ElementDeclarationNode, Policy>;
 }
 
 export interface Database {
@@ -36,6 +37,7 @@ export interface Database {
   aliases: Alias[];
   project: Project;
   tablePartials: TablePartial[];
+  policies: Policy[];
 }
 
 export interface Table {
@@ -198,6 +200,18 @@ export interface TablePartial {
 export interface TablePartialInjection {
   name: string;
   order: number;
+  token: TokenPosition;
+}
+
+export interface Policy {
+  name: string;
+  schemaName: string;
+  tableName: string;
+  behavior: string;
+  command: string;
+  roles: string[];
+  using: string | null;
+  check: string | null;
   token: TokenPosition;
 }
 

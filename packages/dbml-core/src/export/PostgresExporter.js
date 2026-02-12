@@ -477,6 +477,21 @@ class PostgresExporter {
     return commentArr;
   }
 
+  static exportPolicies (policyIds, model) {
+    return policyIds.map((policyId) => {
+      const policy = model.policies[policyId];
+      let line = `CREATE POLICY "${policy.name}"`;
+      line += ` ON "${policy.schemaName}"."${policy.tableName}"`;
+      line += `\n  AS ${policy.behavior.toUpperCase()}`;
+      line += `\n  FOR ${policy.command.toUpperCase()}`;
+      line += `\n  TO ${policy.roles.join(', ')}`;
+      if (policy.using) line += `\n  USING (${policy.using})`;
+      if (policy.check) line += `\n  WITH CHECK (${policy.check})`;
+      line += ';\n';
+      return line;
+    });
+  }
+
   static export (model) {
     const database = model.database['1'];
 
@@ -545,6 +560,10 @@ class PostgresExporter {
       return prevStatements;
     }, schemaEnumStatements);
 
+    const policyStatements = database.policyIds
+      ? PostgresExporter.exportPolicies(database.policyIds, model)
+      : [];
+
     const res = concat(
       statements.schemas,
       statements.enums,
@@ -552,6 +571,7 @@ class PostgresExporter {
       statements.indexes,
       statements.comments,
       statements.refs,
+      policyStatements,
     ).join('\n');
     return res;
   }
