@@ -13,8 +13,10 @@ CREATE TABLE [orders] (
 )
 GO
 
--- Disable constraint checks for INSERT
-EXEC sp_MSforeachtable "ALTER TABLE ? NOCHECK CONSTRAINT all";
+-- Disable constraint checks for tables with data
+ALTER TABLE [products] NOCHECK CONSTRAINT ALL;
+GO
+ALTER TABLE [orders] NOCHECK CONSTRAINT ALL;
 GO
 
 INSERT INTO [products] ([id], [name], [price], [in_stock])
@@ -41,5 +43,7 @@ VALUES
 GO
 
 -- Re-enable constraint checks
-EXEC sp_MSforeachtable "ALTER TABLE ? WITH CHECK CHECK CONSTRAINT all";
+ALTER TABLE [products] WITH CHECK CHECK CONSTRAINT ALL;
+GO
+ALTER TABLE [orders] WITH CHECK CHECK CONSTRAINT ALL;
 GO

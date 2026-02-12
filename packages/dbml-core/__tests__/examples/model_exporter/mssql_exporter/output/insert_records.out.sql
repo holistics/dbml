@@ -18,8 +18,10 @@ GO
 ALTER TABLE [users] ADD FOREIGN KEY ([id]) REFERENCES [posts] ([user_id])
 GO
 
--- Disable constraint checks for INSERT
-EXEC sp_MSforeachtable "ALTER TABLE ? NOCHECK CONSTRAINT all";
+-- Disable constraint checks for tables with data
+ALTER TABLE [users] NOCHECK CONSTRAINT ALL;
+GO
+ALTER TABLE [posts] NOCHECK CONSTRAINT ALL;
 GO
 
 INSERT INTO [users] ([id], [name], [email], [active], [created_at])
@@ -35,5 +37,7 @@ VALUES
 GO
 
 -- Re-enable constraint checks
-EXEC sp_MSforeachtable "ALTER TABLE ? WITH CHECK CHECK CONSTRAINT all";
+ALTER TABLE [users] WITH CHECK CHECK CONSTRAINT ALL;
+GO
+ALTER TABLE [posts] WITH CHECK CHECK CONSTRAINT ALL;
 GO

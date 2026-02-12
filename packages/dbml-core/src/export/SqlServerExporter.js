@@ -415,21 +415,27 @@ class SqlServerExporter {
       refs: [],
     });
 
-    // Export INSERT statements
-    // Note: SQL Server does not support DEFERRED constraints, so constraint checks are disabled
+    // Export INSERT statements with constraint handling
     const insertStatements = SqlServerExporter.exportRecords(model);
     const recordsSection = !isEmpty(insertStatements)
-      ? [
-          '-- Disable constraint checks for INSERT',
-          'EXEC sp_MSforeachtable "ALTER TABLE ? NOCHECK CONSTRAINT all";',
-          'GO',
-          '',
-          ...insertStatements,
-          '',
-          '-- Re-enable constraint checks',
-          'EXEC sp_MSforeachtable "ALTER TABLE ? WITH CHECK CHECK CONSTRAINT all";',
-          'GO',
-        ]
+      ? (() => {
+          // Get unique tables from records to avoid duplicate ALTER TABLE statements
+          const uniqueTables = [...new Set(
+            Object.values(model.records || {}).map((record) => {
+              return record.schemaName ? `[${record.schemaName}].[${record.tableName}]` : `[${record.tableName}]`;
+            })
+          )];
+
+          return [
+            '-- Disable constraint checks for tables with data',
+            ...uniqueTables.map((tableRef) => `ALTER TABLE ${tableRef} NOCHECK CONSTRAINT ALL;\nGO`),
+            '',
+            ...insertStatements,
+            '',
+            '-- Re-enable constraint checks',
+            ...uniqueTables.map((tableRef) => `ALTER TABLE ${tableRef} WITH CHECK CHECK CONSTRAINT ALL;\nGO`),
+          ];
+        })()
       : [];
 
     const res = concat(
