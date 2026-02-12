@@ -399,7 +399,7 @@ class PostgresExporter {
       ? `"${refEndpointSchema.name}".`
       : ''}"${refEndpointTableName}" ADD FOREIGN KEY ("${refEndpointFields}") REFERENCES ${shouldPrintSchema(foreignEndpointSchema, model)
       ? `"${foreignEndpointSchema.name}".`
-      : ''}"${foreignEndpointTableName}" ${foreignEndpointFields};\n\n`;
+      : ''}"${foreignEndpointTableName}" ${foreignEndpointFields} DEFERRABLE INITIALLY IMMEDIATE;\n\n`;
     return line;
   }
 
@@ -449,7 +449,7 @@ class PostgresExporter {
         if (ref.onUpdate) {
           line += ` ON UPDATE ${ref.onUpdate.toUpperCase()}`;
         }
-        line += ';\n';
+        line += ' DEFERRABLE INITIALLY IMMEDIATE;\n';
       }
       return line;
     });
@@ -600,17 +600,16 @@ class PostgresExporter {
       return prevStatements;
     }, schemaEnumStatements);
 
-    // Export INSERT statements with constraint checking disabled
+    // Export INSERT statements with deferred constraints
     const insertStatements = PostgresExporter.exportRecords(model);
     const recordsSection = !isEmpty(insertStatements)
       ? [
-          '-- Disable constraint checking for INSERT',
+          '-- Defer constraint checking for INSERT',
           'BEGIN;',
-          'SET session_replication_role = replica;',
+          'SET CONSTRAINTS ALL DEFERRED;',
           '',
           ...insertStatements,
           '',
-          'SET session_replication_role = DEFAULT;',
           'COMMIT;',
         ]
       : [];

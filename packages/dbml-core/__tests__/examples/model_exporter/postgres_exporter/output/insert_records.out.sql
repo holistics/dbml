@@ -13,11 +13,11 @@ CREATE TABLE "posts" (
   "content" text
 );
 
-ALTER TABLE "users" ADD FOREIGN KEY ("id") REFERENCES "posts" ("user_id");
+ALTER TABLE "users" ADD FOREIGN KEY ("id") REFERENCES "posts" ("user_id") DEFERRABLE INITIALLY IMMEDIATE;
 
--- Disable constraint checking for INSERT
+-- Defer constraint checking for INSERT
 BEGIN;
-SET session_replication_role = replica;
+SET CONSTRAINTS ALL DEFERRED;
 
 INSERT INTO "users" ("id", "name", "email", "active", "created_at")
 VALUES
@@ -29,5 +29,4 @@ VALUES
   (1, 1, 'First Post', 'Hello World'),
   (2, 1, 'Second Post', 'It''s a beautiful day');
 
-SET session_replication_role = DEFAULT;
 COMMIT;
