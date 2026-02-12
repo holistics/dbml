@@ -21,13 +21,12 @@
   ],
   "types": "./types/index.d.ts",
   "main": "./lib/index.cjs",
-  "module": "./lib/index.js",
+  "module": "./lib/index.mjs",
   "exports": {
     ".": {
       "types": "./types/index.d.ts",
-      "import": "./lib/index.js",
-      "require": "./lib/index.cjs",
-      "default": "./lib/index.js"
+      "import": "./lib/index.mjs",
+      "require": "./lib/index.cjs"
     }
   },
   "publishConfig": {
