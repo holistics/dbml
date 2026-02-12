@@ -272,12 +272,20 @@ class PostgresExporter {
         }
       }
       if (field.dbdefault) {
-        if (field.dbdefault.type === 'expression') {
-          line += ` DEFAULT (${field.dbdefault.value})`;
-        } else if (field.dbdefault.type === 'string') {
-          line += ` DEFAULT '${field.dbdefault.value}'`;
-        } else {
-          line += ` DEFAULT ${field.dbdefault.value}`;
+        // Skip DEFAULT NULL as it's redundant (columns are nullable by default)
+        const isNullDefault = field.dbdefault.type === 'boolean' && (
+          field.dbdefault.value === null ||
+          (typeof field.dbdefault.value === 'string' && field.dbdefault.value.toLowerCase() === 'null')
+        );
+
+        if (!isNullDefault) {
+          if (field.dbdefault.type === 'expression') {
+            line += ` DEFAULT (${field.dbdefault.value})`;
+          } else if (field.dbdefault.type === 'string') {
+            line += ` DEFAULT '${field.dbdefault.value}'`;
+          } else {
+            line += ` DEFAULT ${field.dbdefault.value}`;
+          }
         }
       }
 

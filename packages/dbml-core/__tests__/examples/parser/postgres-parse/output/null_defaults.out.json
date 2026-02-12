@@ -2,58 +2,21 @@
   "schemas": [],
   "tables": [
     {
-      "name": "products",
+      "name": "test_nulls",
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "int",
+            "type_name": "INT",
             "schemaName": null
-          },
-          "dbdefault": {
-            "value": "123",
-            "type": "number"
           },
           "pk": true,
           "checks": []
         },
         {
-          "name": "name",
+          "name": "nullable_varchar",
           "type": {
-            "type_name": "varchar(255)",
-            "schemaName": null
-          },
-          "dbdefault": {
-            "value": "Tea",
-            "type": "string"
-          },
-          "checks": []
-        },
-        {
-          "name": "merchant_id",
-          "type": {
-            "type_name": "int",
-            "schemaName": null
-          },
-          "not_null": true,
-          "checks": []
-        },
-        {
-          "name": "price",
-          "type": {
-            "type_name": "float",
-            "schemaName": null
-          },
-          "dbdefault": {
-            "value": "123.12",
-            "type": "number"
-          },
-          "checks": []
-        },
-        {
-          "name": "status",
-          "type": {
-            "type_name": "varchar(255)",
+            "type_name": "VARCHAR(255)",
             "schemaName": null
           },
           "dbdefault": {
@@ -63,38 +26,71 @@
           "checks": []
         },
         {
-          "name": "created_at",
+          "name": "nullable_int",
           "type": {
-            "type_name": "varchar(255)",
+            "type_name": "INT",
             "schemaName": null
           },
           "dbdefault": {
-            "value": "now()",
-            "type": "expression"
-          },
-          "checks": []
-        },
-        {
-          "name": "stock",
-          "type": {
-            "type_name": "boolean",
-            "schemaName": null
-          },
-          "dbdefault": {
-            "value": "true",
+            "value": "null",
             "type": "boolean"
           },
           "checks": []
         },
         {
-          "name": "expiration",
+          "name": "nullable_text",
           "type": {
-            "type_name": "date",
+            "type_name": "TEXT",
             "schemaName": null
           },
           "dbdefault": {
-            "value": "current_date+interval1year",
-            "type": "expression"
+            "value": "null",
+            "type": "boolean"
+          },
+          "checks": []
+        },
+        {
+          "name": "nullable_date",
+          "type": {
+            "type_name": "DATE",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "null",
+            "type": "boolean"
+          },
+          "checks": []
+        },
+        {
+          "name": "nullable_timestamp",
+          "type": {
+            "type_name": "TIMESTAMP",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "null",
+            "type": "boolean"
+          },
+          "checks": []
+        },
+        {
+          "name": "not_null_with_default",
+          "type": {
+            "type_name": "VARCHAR(50)",
+            "schemaName": null
+          },
+          "not_null": true,
+          "dbdefault": {
+            "value": "value",
+            "type": "string"
+          },
+          "checks": []
+        },
+        {
+          "name": "just_nullable",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
           },
           "checks": []
         }

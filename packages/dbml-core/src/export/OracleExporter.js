@@ -132,10 +132,18 @@ class OracleExporter {
       // See column definition syntax https://docs.oracle.com/en/database/oracle/oracle-database/19/sqlrf/CREATE-TABLE.html#GUID-F9CE0CC3-13AE-4744-A43C-EAC7A71AAAB6__CEGEDHJE
       // See constraint syntax https://docs.oracle.com/en/database/oracle/oracle-database/19/sqlrf/constraint.html#GUID-1055EA97-BA6F-4764-A15F-1024FD5B6DFE__CJAEDFIB
       if (cloneField.dbdefault) {
-        if (cloneField.dbdefault.type === 'string') {
-          line += ` DEFAULT '${cloneField.dbdefault.value}'`;
-        } else {
-          line += ` DEFAULT ${cloneField.dbdefault.value}`;
+        // Skip DEFAULT NULL as it's redundant (columns are nullable by default)
+        const isNullDefault = cloneField.dbdefault.type === 'boolean' && (
+          cloneField.dbdefault.value === null ||
+          (typeof cloneField.dbdefault.value === 'string' && cloneField.dbdefault.value.toLowerCase() === 'null')
+        );
+
+        if (!isNullDefault) {
+          if (cloneField.dbdefault.type === 'string') {
+            line += ` DEFAULT '${cloneField.dbdefault.value}'`;
+          } else {
+            line += ` DEFAULT ${cloneField.dbdefault.value}`;
+          }
         }
       }
 

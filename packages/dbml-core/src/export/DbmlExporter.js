@@ -78,28 +78,36 @@ class DbmlExporter {
         constraints.push(...field.checkIds.map((id) => `check: \`${model.checks[id].expression}\``));
       }
       if (field.dbdefault) {
-        let value = 'default: ';
-        switch (field.dbdefault.type) {
-          case 'boolean':
-          case 'number':
-            value += `${field.dbdefault.value}`;
-            break;
+        // Skip DEFAULT NULL as it's redundant (columns are nullable by default)
+        const isNullDefault = field.dbdefault.type === 'boolean' && (
+          field.dbdefault.value === null ||
+          (typeof field.dbdefault.value === 'string' && field.dbdefault.value.toLowerCase() === 'null')
+        );
 
-          case 'string': {
-            const quote = field.dbdefault.value.includes('\n') ? '\'\'\'' : '\'';
-            value += `${quote}${field.dbdefault.value}${quote}`;
-            break;
+        if (!isNullDefault) {
+          let value = 'default: ';
+          switch (field.dbdefault.type) {
+            case 'boolean':
+            case 'number':
+              value += `${field.dbdefault.value}`;
+              break;
+
+            case 'string': {
+              const quote = field.dbdefault.value.includes('\n') ? '\'\'\'' : '\'';
+              value += `${quote}${field.dbdefault.value}${quote}`;
+              break;
+            }
+
+            case 'expression':
+              value += `\`${field.dbdefault.value}\``;
+              break;
+
+            default:
+              value += `\`${field.dbdefault.value}\``;
+              break;
           }
-
-          case 'expression':
-            value += `\`${field.dbdefault.value}\``;
-            break;
-
-          default:
-            value += `\`${field.dbdefault.value}\``;
-            break;
+          constraints.push(value);
         }
-        constraints.push(value);
       }
       if (field.note) {
         constraints.push(`note: ${DbmlExporter.escapeNote(field.note)}`);

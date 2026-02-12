@@ -596,7 +596,7 @@ export default class MySQLASTGen extends MySQLParserVisitor {
   visitDefaultValue (ctx) {
     if (ctx.NULL_LITERAL()) {
       return {
-        value: ctx.NULL_LITERAL().getText(),
+        value: ctx.NULL_LITERAL().getText().toLowerCase(),
         type: DATA_TYPE.BOOLEAN, // same behavior as the legacy parser
       };
     }
@@ -687,6 +687,13 @@ export default class MySQLASTGen extends MySQLParserVisitor {
       return {
         value: ctx.BIT_STRING().getText(),
         type: DATA_TYPE.STRING,
+      };
+    }
+
+    if (ctx.NULL_LITERAL()) {
+      return {
+        value: ctx.NULL_LITERAL().getText().toLowerCase(),
+        type: DATA_TYPE.BOOLEAN,
       };
     }
 

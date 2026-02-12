@@ -212,13 +212,13 @@ export function formatRecordValue (recordValue: { value: any; type: string } | s
   const { value, type } = recordValue;
 
   // Handle null/undefined values
-  if (value === null || value === undefined) {
+  if (value === null || value === undefined || (isBooleanType(type) && typeof value === 'string' && value.toLowerCase() === 'null')) {
     return 'null';
   }
 
   // Handle expressions (backtick strings)
   if (type === 'expression') {
-    return `\`${value}\``;
+    return typeof value === 'string' && value.toLowerCase().trim() === 'null' ? 'null' : `\`${value}\``;
   }
 
   // Try to extract typed values using tryExtract functions

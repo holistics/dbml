@@ -482,7 +482,7 @@ export default class MssqlASTGen extends TSqlParserVisitor {
   visitPrimitive_expression (ctx) {
     if (ctx.NULL_()) {
       return {
-        value: ctx.getText(),
+        value: ctx.getText().toLowerCase(),
         type: DATA_TYPE.BOOLEAN,
       };
     }
