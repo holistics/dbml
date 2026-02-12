@@ -8,6 +8,7 @@ import { EnumInterpreter } from '@/core/interpreter/elementInterpreter/enum';
 import { ProjectInterpreter } from '@/core/interpreter/elementInterpreter/project';
 import { TablePartialInterpreter } from '@/core/interpreter/elementInterpreter/tablePartial';
 import { RecordsInterpreter } from '@/core/interpreter/records';
+import { PolicyInterpreter } from '@/core/interpreter/elementInterpreter/policy';
 import Report from '@/core/report';
 import { getElementKind } from '@/core/analyzer/utils';
 import { ElementKind } from '@/core/analyzer/types';
@@ -62,6 +63,7 @@ function convertEnvToDb (env: InterpreterDatabase): Database {
     project: Array.from(env.project.values())[0] || {},
     tablePartials: Array.from(env.tablePartials.values()).map(processColumnInDb),
     records,
+    policies: Array.from(env.policies.values()),
   };
 }
 
@@ -88,6 +90,7 @@ export default class Interpreter {
       recordsElements: [],
       cachedMergedTables: new Map(),
       source: ast.source,
+      policies: new Map(),
     };
   }
 
@@ -113,6 +116,8 @@ export default class Interpreter {
           // Defer records interpretation - collect for later
           this.env.recordsElements.push(element);
           return [];
+        case ElementKind.Policy:
+          return (new PolicyInterpreter(element, this.env)).interpret();
         default:
           return [];
       }
