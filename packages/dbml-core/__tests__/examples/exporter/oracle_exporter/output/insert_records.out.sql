@@ -28,5 +28,5 @@ INSERT ALL
   INTO "posts" ("id", "user_id", "title", "content") VALUES (2, 1, 'Second Post', 'It''s a beautiful day')
 SELECT * FROM dual;
 
-COMMIT;
 SET CONSTRAINTS ALL IMMEDIATE;
+COMMIT;

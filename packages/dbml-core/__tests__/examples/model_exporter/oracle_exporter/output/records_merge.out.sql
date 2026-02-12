@@ -28,5 +28,5 @@ INSERT ALL
   INTO "employees" ("id", "dept_id", "name") VALUES (3, 2, 'Bob Johnson')
 SELECT * FROM dual;
 
-COMMIT;
 SET CONSTRAINTS ALL IMMEDIATE;
+COMMIT;

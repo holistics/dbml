@@ -610,8 +610,8 @@ class PostgresExporter {
           '',
           ...insertStatements,
           '',
-          'COMMIT;',
           'SET CONSTRAINTS ALL IMMEDIATE;',
+          'COMMIT;',
         ]
       : [];
 

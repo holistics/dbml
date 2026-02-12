@@ -33,5 +33,5 @@ VALUES
   (2, 2, 'Nice article'),
   (3, 1, 'Thanks for sharing');
 
-COMMIT;
 SET CONSTRAINTS ALL IMMEDIATE;
+COMMIT;
