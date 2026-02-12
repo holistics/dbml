@@ -29,5 +29,5 @@ VALUES
   (1, 1, 'First Post', 'Hello World'),
   (2, 1, 'Second Post', 'It''s a beautiful day');
 
-COMMIT;
 SET CONSTRAINTS ALL IMMEDIATE;
+COMMIT;
