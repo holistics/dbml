@@ -11,9 +11,9 @@ CREATE TABLE "comments" (
   "content" text
 );
 
--- Disable constraint checking for INSERT
+-- Defer constraint checking for INSERT
 BEGIN;
-SET session_replication_role = replica;
+SET CONSTRAINTS ALL DEFERRED;
 
 INSERT INTO "users" ("id", "name", "email", "active")
 VALUES
@@ -33,5 +33,4 @@ VALUES
   (2, 2, 'Nice article'),
   (3, 1, 'Thanks for sharing');
 
-SET session_replication_role = DEFAULT;
 COMMIT;
