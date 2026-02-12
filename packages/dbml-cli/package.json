@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/package",
   "name": "@dbml/cli",
-  "version": "6.3.0-alpha.5",
+  "version": "6.3.0-alpha.6",
   "description": "",
   "main": "lib/index.js",
   "license": "Apache-2.0",
@@ -33,7 +33,7 @@
   "dependencies": {
     "@babel/cli": "^7.21.0",
     "@dbml/connector": "^6.3.0-alpha.1",
-    "@dbml/core": "^6.3.0-alpha.5",
+    "@dbml/core": "^6.3.0-alpha.6",
     "bluebird": "^3.5.5",
     "chalk": "^2.4.2",
     "commander": "^2.20.0",
