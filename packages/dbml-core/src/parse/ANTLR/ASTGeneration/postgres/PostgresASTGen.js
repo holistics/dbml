@@ -467,7 +467,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
 
     if (ctx.TRUE_P() || ctx.FALSE_P() || ctx.NULL_P()) {
       return {
-        value: ctx.getText(),
+        value: ctx.getText().toLowerCase(),
         type: DATA_TYPE.BOOLEAN,
       };
     }
