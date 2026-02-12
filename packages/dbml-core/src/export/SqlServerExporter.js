@@ -423,7 +423,7 @@ class SqlServerExporter {
           const uniqueTables = [...new Set(
             Object.values(model.records || {}).map((record) => {
               return record.schemaName ? `[${record.schemaName}].[${record.tableName}]` : `[${record.tableName}]`;
-            })
+            }),
           )];
 
           return [
