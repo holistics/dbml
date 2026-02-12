@@ -564,6 +564,7 @@ class OracleExporter {
           ...insertStatements,
           '',
           'COMMIT;',
+          'SET CONSTRAINTS ALL IMMEDIATE;',
         ]
       : [];
 
