@@ -98,25 +98,35 @@ export enum SyntaxNodeKind {
   CALL_EXPRESSION = '<call-expression>',
   PRIMARY_EXPRESSION = '<primary-expression>',
   GROUP_EXPRESSION = '<group-expression>',
-  DUMMY = '<dummy>',
+  COMMA_EXPRESSION = '<comma-expression>',
+  EMPTY = '<dummy>',
   ARRAY = '<array>',
 }
 
+// Form: <element-declaration>*
+// The root node of a DBML program containing top-level element declarations
 export class ProgramNode extends SyntaxNode {
   body: ElementDeclarationNode[];
 
   eof?: SyntaxToken;
 
+  source: string;
+
   constructor (
-    { body = [], eof }: { body?: ElementDeclarationNode[]; eof?: SyntaxToken },
+    { body = [], eof, source }: { body?: ElementDeclarationNode[]; eof?: SyntaxToken; source: string },
     id: SyntaxNodeId,
   ) {
     super(id, SyntaxNodeKind.PROGRAM, [...body, eof]);
+    this.source = source;
     this.body = body;
     this.eof = eof;
   }
 }
 
+// Form: <type> [<name>] [as <alias>] [<attribute-list>] (: <body> | { <body> })
+// A declaration of a DBML element like Table, Ref, Enum, etc.
+// e.g. Table users { ... }
+// e.g. Ref: users.id > posts.user_id
 export class ElementDeclarationNode extends SyntaxNode {
   type?: SyntaxToken;
 
@@ -181,6 +191,10 @@ export class ElementDeclarationNode extends SyntaxNode {
   }
 }
 
+// Form: <identifier> <identifier>*
+// A contiguous stream of identifiers (space-separated)
+// e.g. primary key
+// e.g. no action
 export class IdentiferStreamNode extends SyntaxNode {
   identifiers: SyntaxToken[];
 
@@ -190,6 +204,11 @@ export class IdentiferStreamNode extends SyntaxNode {
   }
 }
 
+// Form: <name> [: <value>]
+// An attribute within a list expression (inside square brackets)
+// e.g. primary key
+// e.g. ref: users.id
+// e.g. note: 'some note'
 export class AttributeNode extends SyntaxNode {
   name?: IdentiferStreamNode | PrimaryExpressionNode;
 
@@ -226,10 +245,11 @@ export type NormalExpressionNode =
   | BlockExpressionNode
   | ListExpressionNode
   | TupleExpressionNode
+  | CommaExpressionNode
   | CallExpressionNode
   | PrimaryExpressionNode
   | FunctionExpressionNode
-  | DummyNode
+  | EmptyNode
   | ArrayNode;
 
 export type ExpressionNode =
@@ -237,6 +257,10 @@ export type ExpressionNode =
   | NormalExpressionNode
   | FunctionApplicationNode;
 
+// Form: <op> <expression>
+// A unary prefix expression
+// e.g. -5
+// e.g. !flag
 export class PrefixExpressionNode extends SyntaxNode {
   op?: SyntaxToken;
 
@@ -252,6 +276,11 @@ export class PrefixExpressionNode extends SyntaxNode {
   }
 }
 
+// Form: <left-expression> <op> <right-expression>
+// A binary infix expression
+// e.g. 1 + 2
+// e.g. a.b
+// e.g. x > y
 export class InfixExpressionNode extends SyntaxNode {
   op?: SyntaxToken;
 
@@ -278,6 +307,9 @@ export class InfixExpressionNode extends SyntaxNode {
   }
 }
 
+// Form: <expression> <op>
+// A unary postfix expression
+// e.g. x++
 export class PostfixExpressionNode extends SyntaxNode {
   op?: SyntaxToken;
 
@@ -293,6 +325,10 @@ export class PostfixExpressionNode extends SyntaxNode {
   }
 }
 
+// Form: `<expression>`
+// A backtick-quoted function/SQL expression
+// e.g. `now()`
+// e.g. `id * 2`
 export class FunctionExpressionNode extends SyntaxNode {
   value?: SyntaxToken;
 
@@ -302,6 +338,11 @@ export class FunctionExpressionNode extends SyntaxNode {
   }
 }
 
+// Form: <callee> <arg>* | <callee> <comma-expr>
+// A function application with space-separated arguments or comma-separated expressions
+// e.g. id integer [primary key]
+// e.g. Note 'This is a note'
+// e.g. sample_data 1, 2, 3
 export class FunctionApplicationNode extends SyntaxNode {
   callee?: ExpressionNode;
 
@@ -317,6 +358,10 @@ export class FunctionApplicationNode extends SyntaxNode {
   }
 }
 
+// Form: { <body>* }
+// A block containing element declarations or function applications
+// e.g. { id integer }
+// e.g. { Note: 'text' }
 export class BlockExpressionNode extends SyntaxNode {
   blockOpenBrace?: SyntaxToken;
 
@@ -343,6 +388,10 @@ export class BlockExpressionNode extends SyntaxNode {
   }
 }
 
+// Form: [ <attribute> [, <attribute>]* ]
+// A bracketed list of attributes
+// e.g. [primary key]
+// e.g. [ref: users.id, note: 'foreign key']
 export class ListExpressionNode extends SyntaxNode {
   listOpenBracket?: SyntaxToken;
 
@@ -378,6 +427,10 @@ export class ListExpressionNode extends SyntaxNode {
   }
 }
 
+// Form: ( <normal-expr> [, <normal-expr>]* )
+// A parenthesized comma-separated list of expressions
+// e.g. (1, 2, 3)
+// e.g. (a, b)
 export class TupleExpressionNode extends SyntaxNode {
   tupleOpenParen?: SyntaxToken;
 
@@ -413,6 +466,41 @@ export class TupleExpressionNode extends SyntaxNode {
   }
 }
 
+// Form: <normal-expr> , <normal-expr> [, <normal-expr>]*
+// A comma-separated list of expressions without delimiters (CSV-like)
+// Used inside function applications for multi-value arguments
+// Empty fields (consecutive commas) are represented by DummyNode
+// e.g. 1, 2, 3
+// e.g. 'a', 'b', 'c'
+// e.g. 1, , 3 (empty field in middle)
+// e.g. 1, 2, (trailing comma)
+export class CommaExpressionNode extends SyntaxNode {
+  elementList: NormalExpressionNode[];
+
+  commaList: SyntaxToken[];
+
+  constructor (
+    {
+      elementList = [],
+      commaList = [],
+    }: {
+      elementList?: NormalExpressionNode[];
+      commaList?: SyntaxToken[];
+    },
+    id: SyntaxNodeId,
+  ) {
+    super(id, SyntaxNodeKind.COMMA_EXPRESSION, [
+      ...interleave(elementList, commaList),
+    ]);
+    this.elementList = elementList;
+    this.commaList = commaList;
+  }
+}
+
+// Form: ( <expression> )
+// A parenthesized expression (single element, no commas)
+// e.g. (1 + 2)
+// e.g. (a.b)
 export class GroupExpressionNode extends TupleExpressionNode {
   constructor (
     {
@@ -439,6 +527,10 @@ export class GroupExpressionNode extends TupleExpressionNode {
   }
 }
 
+// Form: <callee> ( <arguments> )
+// A function call with parenthesized arguments
+// e.g. func(a, b, c)
+// e.g. now()
 export class CallExpressionNode extends SyntaxNode {
   callee?: NormalExpressionNode;
 
@@ -460,6 +552,11 @@ export class CallExpressionNode extends SyntaxNode {
   }
 }
 
+// Form: <number> | <string> | <color>
+// A literal value
+// e.g. 123
+// e.g. 'hello'
+// e.g. #ff0000
 export class LiteralNode extends SyntaxNode {
   literal?: SyntaxToken;
 
@@ -469,6 +566,10 @@ export class LiteralNode extends SyntaxNode {
   }
 }
 
+// Form: <identifier> | <quoted-string>
+// A variable reference
+// e.g. users
+// e.g. "table name"
 export class VariableNode extends SyntaxNode {
   variable?: SyntaxToken;
 
@@ -478,6 +579,10 @@ export class VariableNode extends SyntaxNode {
   }
 }
 
+// Form: <literal> | <variable>
+// A primary expression (leaf node in expression tree)
+// e.g. 123
+// e.g. users
 export class PrimaryExpressionNode extends SyntaxNode {
   expression?: LiteralNode | VariableNode;
 
@@ -487,14 +592,22 @@ export class PrimaryExpressionNode extends SyntaxNode {
   }
 }
 
-// A placeholder for missing operands
-export class DummyNode extends SyntaxNode {
-  constructor ({ pre }: { pre: Readonly<SyntaxNode> | Readonly<SyntaxToken> }, id: SyntaxNodeId) {
-    const nextToken = SyntaxToken.create(SyntaxTokenKind.SPACE, pre.endPos, pre.endPos, ' ', false);
-    super(id, SyntaxNodeKind.DUMMY, [nextToken]);
+// Form: (empty)
+// A placeholder node used for:
+// - Missing operands during error recovery
+// - Empty fields in comma expressions (e.g. 1, , 3)
+// - Trailing commas in comma expressions (e.g. 1, 2,)
+export class EmptyNode extends SyntaxNode {
+  constructor ({ prevToken }: { prevToken: Readonly<SyntaxNode> | Readonly<SyntaxToken> }, id: SyntaxNodeId) {
+    const nextToken = SyntaxToken.create(SyntaxTokenKind.SPACE, prevToken.endPos, prevToken.endPos, ' ', false);
+    super(id, SyntaxNodeKind.EMPTY, [nextToken]);
   }
 }
 
+// Form: <expression> [ <indexer> ]
+// An array access expression
+// e.g. arr[0]
+// e.g. matrix[i]
 export class ArrayNode extends SyntaxNode {
   array?: NormalExpressionNode;
   indexer?: ListExpressionNode;

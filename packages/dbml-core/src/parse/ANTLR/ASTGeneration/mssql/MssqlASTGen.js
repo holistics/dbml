@@ -10,6 +10,8 @@ import {
 
 const ADD_DESCRIPTION_FUNCTION_NAME = 'sp_addextendedproperty';
 
+const DEFAULT_SCHEMA = 'dbo';
+
 const getSchemaAndTableName = (names) => {
   const tableName = last(names);
   const schemaName = names.length > 1 ? nth(names, -2) : undefined;
@@ -110,6 +112,15 @@ export default class MssqlASTGen extends TSqlParserVisitor {
     };
   }
 
+  findTable (schemaName, tableName) {
+    const realSchemaName = schemaName || DEFAULT_SCHEMA;
+    const table = this.data.tables.find((t) => {
+      const targetSchemaName = t.schemaName || DEFAULT_SCHEMA;
+      return targetSchemaName === realSchemaName && t.name === tableName;
+    });
+    return table;
+  }
+
   // tsql_file
   //   : batch* EOF
   //   | execute_body_batch go_statement* EOF
@@ -185,7 +196,10 @@ export default class MssqlASTGen extends TSqlParserVisitor {
     const tableName = last(names);
     const schemaName = names.length > 1 ? nth(names, -2) : undefined;
 
-    const columns = ctx.insert_column_name_list() ? ctx.insert_column_name_list().accept(this) : [];
+    const columns = ctx.insert_column_name_list()
+      ? ctx.insert_column_name_list().accept(this)
+      : this.findTable(schemaName, tableName)?.fields.map((field) => field.name) || [];
+
     const values = ctx.insert_statement_value().accept(this);
 
     const record = new TableRecord({
@@ -468,7 +482,7 @@ export default class MssqlASTGen extends TSqlParserVisitor {
   visitPrimitive_expression (ctx) {
     if (ctx.NULL_()) {
       return {
-        value: ctx.getText(),
+        value: ctx.getText().toLowerCase(),
         type: DATA_TYPE.BOOLEAN,
       };
     }
@@ -1219,7 +1233,7 @@ export default class MssqlASTGen extends TSqlParserVisitor {
 
       if (!level0Type.includes('schema')) return;
 
-      const schemaName = argsObj.level0name !== 'dbo' ? argsObj.level0name : undefined;
+      const schemaName = argsObj.level0name !== DEFAULT_SCHEMA ? argsObj.level0name : undefined;
 
       const level1Type = argsObj.level1type.toLowerCase();
       const tableName = level1Type.includes('table') ? argsObj.level1name : null;

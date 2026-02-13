@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import Compiler from '@/compiler';
 import DBMLReferencesProvider from '@/services/references/provider';
-import { createPosition, createMockTextModel, extractTextFromRange } from '../../utils';
+import { createPosition, createMockTextModel, extractTextFromRange } from '../../../utils';
 
-describe('[snapshot] ReferencesProvider', () => {
+describe('[example] ReferencesProvider', () => {
   it('should return empty array when no references found', () => {
     const program = 'Table test { id int }';
     const compiler = new Compiler();
@@ -938,6 +938,146 @@ Ref: posts.user_id > "user-data".id`;
       const position = createPosition(1, 10);
       const references = referencesProvider.provideReferences(model, position);
 
+      expect(Array.isArray(references)).toBe(true);
+    });
+  });
+
+  describe('should find references for Records elements', () => {
+    it('- should find all Records references to a table', () => {
+      const program = `Table users {
+  id int pk
+  name varchar
+}
+
+Records users(id, name) {
+  1, "John"
+  2, "Jane"
+}
+
+Records users(id) {
+  3
+}`;
+      const compiler = new Compiler();
+      compiler.setSource(program);
+
+      const referencesProvider = new DBMLReferencesProvider(compiler);
+      const model = createMockTextModel(program);
+
+      // Position on "users" table declaration
+      const position = createPosition(1, 8);
+      const references = referencesProvider.provideReferences(model, position);
+
+      expect(references.length).toBeGreaterThan(0);
+      expect(Array.isArray(references)).toBe(true);
+    });
+
+    it('- should find all references to a column from Records', () => {
+      const program = `Table users {
+  id int pk
+  name varchar
+  email varchar
+}
+
+Records users(id, name, email) {
+  1, "John", "john@example.com"
+}
+
+Records users(email, name) {
+  "jane@example.com", "Jane"
+}`;
+      const compiler = new Compiler();
+      compiler.setSource(program);
+
+      const referencesProvider = new DBMLReferencesProvider(compiler);
+      const model = createMockTextModel(program);
+
+      // Position on "name" column declaration
+      const position = createPosition(3, 4);
+      const references = referencesProvider.provideReferences(model, position);
+
+      expect(references.length).toBeGreaterThan(0);
+      expect(Array.isArray(references)).toBe(true);
+    });
+
+    it('- should find enum field references from Records data', () => {
+      const program = `Enum status {
+  active
+  inactive
+}
+
+Table users {
+  id int pk
+  user_status status
+}
+
+Records users(id, user_status) {
+  1, status.active
+  2, status.inactive
+  3, status.active
+}`;
+      const compiler = new Compiler();
+      compiler.setSource(program);
+
+      const referencesProvider = new DBMLReferencesProvider(compiler);
+      const model = createMockTextModel(program);
+
+      // Position on "active" enum field declaration
+      const position = createPosition(2, 4);
+      const references = referencesProvider.provideReferences(model, position);
+
+      expect(references.length).toBeGreaterThan(0);
+      expect(Array.isArray(references)).toBe(true);
+    });
+
+    it('- should find schema-qualified table references from Records', () => {
+      const program = `Table public.orders {
+  id int pk
+  customer varchar
+}
+
+Records public.orders(id, customer) {
+  1, "John"
+}
+
+Records public.orders(id) {
+  2
+}`;
+      const compiler = new Compiler();
+      compiler.setSource(program);
+
+      const referencesProvider = new DBMLReferencesProvider(compiler);
+      const model = createMockTextModel(program);
+
+      // Position on "orders" table declaration
+      const position = createPosition(1, 16);
+      const references = referencesProvider.provideReferences(model, position);
+
+      expect(references.length).toBeGreaterThan(0);
+      expect(Array.isArray(references)).toBe(true);
+    });
+
+    it('- should find column references from Records inside table', () => {
+      const program = `Table products {
+  id integer [pk]
+  name varchar
+  price decimal
+
+  Records (id, name) {
+    1, "Laptop"
+    2, "Mouse"
+  }
+}`;
+      const compiler = new Compiler();
+      compiler.setSource(program);
+
+      const referencesProvider = new DBMLReferencesProvider(compiler);
+      const model = createMockTextModel(program);
+
+      // Position on "id" column declaration
+      const position = createPosition(2, 4);
+      const references = referencesProvider.provideReferences(model, position);
+
+      expect(references.length).toBeGreaterThan(0);
       expect(Array.isArray(references)).toBe(true);
     });
   });

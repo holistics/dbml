@@ -846,11 +846,13 @@ export default class OracleSqlASTGen extends OracleSqlParserVisitor {
   }
 
   // insert_statement
-  //   : INSERT (single_table_insert | <other rules>)
+  //   : INSERT (single_table_insert | multi_table_insert)
   //   ;
   visitInsert_statement (ctx) {
     if (ctx.single_table_insert()) {
       ctx.single_table_insert().accept(this);
+    } else if (ctx.multi_table_insert()) {
+      ctx.multi_table_insert().accept(this);
     }
   }
 
@@ -875,6 +877,73 @@ export default class OracleSqlASTGen extends OracleSqlParserVisitor {
     }
   }
 
+  // multi_table_insert
+  //   : (ALL multi_table_element+ | conditional_insert_clause) select_statement
+  //   ;
+  visitMulti_table_insert (ctx) {
+    if (!ctx.multi_table_element()) {
+      // conditional_insert_clause is not supported yet
+      return;
+    }
+
+    // Collect all insert elements from INSERT ALL statement
+    const elements = ctx.multi_table_element().map((element) => element.accept(this)).filter(Boolean);
+
+    // Group elements by table, schema, and columns to combine multiple rows into single records
+    const recordsMap = new Map();
+
+    elements.forEach((element) => {
+      const { tableName, schemaName, columns, values } = element;
+      const key = `${schemaName || ''}.${tableName}.${columns.join(',')}`;
+
+      if (recordsMap.has(key)) {
+        // Same table and columns - append values to existing record
+        recordsMap.get(key).values.push(...values);
+      } else {
+        // New combination - create new record entry
+        recordsMap.set(key, {
+          tableName,
+          schemaName,
+          columns,
+          values,
+        });
+      }
+    });
+
+    // Create TableRecord objects for each unique table/column combination
+    recordsMap.forEach((recordData) => {
+      const record = new TableRecord({
+        schemaName: recordData.schemaName,
+        tableName: recordData.tableName,
+        columns: recordData.columns,
+        values: recordData.values,
+      });
+      this.data.records.push(record);
+    });
+  }
+
+  // multi_table_element
+  //   : insert_into_clause values_clause? error_logging_clause?
+  //   ;
+  visitMulti_table_element (ctx) {
+    const intoClause = ctx.insert_into_clause().accept(this);
+    const valuesClause = ctx.values_clause()?.accept(this);
+
+    if (intoClause && valuesClause) {
+      const { tableName, schemaName, columns } = intoClause;
+      const { values } = valuesClause;
+
+      return {
+        tableName,
+        schemaName,
+        columns,
+        values,
+      };
+    }
+
+    return null;
+  }
+
   // insert_into_clause
   //   : INTO general_table_ref paren_column_list?
   //   ;
@@ -882,7 +951,7 @@ export default class OracleSqlASTGen extends OracleSqlParserVisitor {
     const names = ctx.general_table_ref().accept(this);
     const tableName = last(names);
     const schemaName = names.length > 1 ? names[names.length - 2] : undefined;
-    const columns = ctx.paren_column_list() ? ctx.paren_column_list().accept(this).map((c) => last(c)) : [];
+    const columns = ctx.paren_column_list() ? ctx.paren_column_list().accept(this).map((c) => last(c)) : findTable(this.data.tables, schemaName, tableName)?.fields.map((field) => field.name);
     return {
       tableName,
       schemaName,

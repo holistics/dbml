@@ -6,7 +6,7 @@ Table "pulse_aggregates" {
   "key_hash" binary(16)
   "aggregate" varchar(255) [not null]
   "value" decimal(20,2) [not null]
-  "count" int(10) [default: NULL]
+  "count" int(10)
 
   Indexes {
     (bucket, period, type, aggregate, key_hash) [unique, name: "pulse_aggregates_bucket_period_type_aggregate_key_hash_unique"]
@@ -32,7 +32,7 @@ Table "users" {
 Table "user_roles" {
   "id" serial [pk]
   "role_name" varchar(255) [unique, not null]
-  "description" varchar(255) [default: null]
+  "description" varchar(255)
 }
 
 Table "user_role_links" {
@@ -58,7 +58,7 @@ Table "a" {
 }
 
 Table "example" {
-  "id" varchar(255) [default: NULL]
+  "id" varchar(255)
 }
 
 Ref "user_role_links_fk_1":"users"."id" < "user_role_links"."user_id"

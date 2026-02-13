@@ -45,7 +45,8 @@ describe('@dbml/core - model_exporter', () => {
         break;
 
       default:
-        expect(res).toBe(output);
+        // Prevent meaningless spaces from failing the tests
+        expect(res.trim()).toBe(output.trim());
         break;
     }
   };

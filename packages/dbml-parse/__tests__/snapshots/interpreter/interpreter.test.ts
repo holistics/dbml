@@ -20,7 +20,7 @@ describe('[snapshot] interpreter', () => {
     const report = new Lexer(program)
       .lex()
       .chain((tokens) => {
-        return new Parser(tokens, nodeIdGenerator).parse();
+        return new Parser(program, tokens, nodeIdGenerator).parse();
       })
       .chain(({ ast }) => {
         return new Analyzer(ast, symbolIdGenerator).analyze();

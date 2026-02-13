@@ -353,6 +353,71 @@
       "tableName": "database_products",
       "columns": [
         "product_name",
+        "vendor_name",
+        "is_open_source",
+        "market_share"
+      ],
+      "values": [
+        [
+          {
+            "value": "MongoDB",
+            "type": "string"
+          },
+          {
+            "value": "MongoDB Inc.",
+            "type": "string"
+          },
+          {
+            "value": 1,
+            "type": "number"
+          },
+          {
+            "value": 8.2,
+            "type": "number"
+          }
+        ],
+        [
+          {
+            "value": "Redis",
+            "type": "string"
+          },
+          {
+            "value": "Redis Ltd.",
+            "type": "string"
+          },
+          {
+            "value": 1,
+            "type": "number"
+          },
+          {
+            "value": 6.7,
+            "type": "number"
+          }
+        ],
+        [
+          {
+            "value": "Cassandra",
+            "type": "string"
+          },
+          {
+            "value": "Apache Software Foundation",
+            "type": "string"
+          },
+          {
+            "value": 1,
+            "type": "number"
+          },
+          {
+            "value": 4.1,
+            "type": "number"
+          }
+        ]
+      ]
+    },
+    {
+      "tableName": "database_products",
+      "columns": [
+        "product_name",
         "license_cost",
         "market_share",
         "max_connections"

@@ -1,8 +1,9 @@
-import Element, { Token } from './element';
+import Element from './element';
 import Field from './field';
 import Ref from './ref';
 import DbState from './dbState';
 import { NormalizedModel } from './database';
+import { Token } from './element';
 
 export interface RawEndpoint {
     schemaName: string | null;

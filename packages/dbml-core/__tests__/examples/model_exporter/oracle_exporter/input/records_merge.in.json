@@ -1,0 +1,173 @@
+{
+  "schemas": [],
+  "tables": [
+    {
+      "name": "departments",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "schemaName": null,
+            "type_name": "integer",
+            "args": null
+          },
+          "token": { "start": { "offset": 0, "line": 1, "column": 1 }, "end": { "offset": 10, "line": 1, "column": 11 } },
+          "inline_refs": [],
+          "pk": true,
+          "unique": false
+        },
+        {
+          "name": "name",
+          "type": {
+            "schemaName": null,
+            "type_name": "nvarchar2",
+            "args": null
+          },
+          "token": { "start": { "offset": 0, "line": 2, "column": 1 }, "end": { "offset": 10, "line": 2, "column": 11 } },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "budget",
+          "type": {
+            "schemaName": null,
+            "type_name": "number",
+            "args": null
+          },
+          "token": { "start": { "offset": 0, "line": 3, "column": 1 }, "end": { "offset": 10, "line": 3, "column": 11 } },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        }
+      ],
+      "token": { "start": { "offset": 0, "line": 1, "column": 1 }, "end": { "offset": 100, "line": 4, "column": 2 } },
+      "indexes": []
+    },
+    {
+      "name": "employees",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "schemaName": null,
+            "type_name": "integer",
+            "args": null
+          },
+          "token": { "start": { "offset": 0, "line": 1, "column": 1 }, "end": { "offset": 10, "line": 1, "column": 11 } },
+          "inline_refs": [],
+          "pk": true,
+          "unique": false
+        },
+        {
+          "name": "dept_id",
+          "type": {
+            "schemaName": null,
+            "type_name": "integer",
+            "args": null
+          },
+          "token": { "start": { "offset": 0, "line": 2, "column": 1 }, "end": { "offset": 10, "line": 2, "column": 11 } },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "name",
+          "type": {
+            "schemaName": null,
+            "type_name": "nvarchar2",
+            "args": null
+          },
+          "token": { "start": { "offset": 0, "line": 3, "column": 1 }, "end": { "offset": 10, "line": 3, "column": 11 } },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        }
+      ],
+      "token": { "start": { "offset": 0, "line": 1, "column": 1 }, "end": { "offset": 100, "line": 4, "column": 2 } },
+      "indexes": []
+    }
+  ],
+  "notes": [],
+  "refs": [],
+  "enums": [],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {},
+  "records": [
+    {
+      "schemaName": null,
+      "tableName": "departments",
+      "columns": ["id", "name", "budget"],
+      "values": [
+        [
+          { "value": 1, "type": "integer" },
+          { "value": "Engineering", "type": "string" },
+          { "value": 500000, "type": "number" }
+        ]
+      ]
+    },
+    {
+      "schemaName": null,
+      "tableName": "departments",
+      "columns": ["id", "name", "budget"],
+      "values": [
+        [
+          { "value": 2, "type": "integer" },
+          { "value": "Marketing", "type": "string" },
+          { "value": 300000, "type": "number" }
+        ],
+        [
+          { "value": 3, "type": "integer" },
+          { "value": "Sales", "type": "string" },
+          { "value": 400000, "type": "number" }
+        ]
+      ]
+    },
+    {
+      "schemaName": null,
+      "tableName": "departments",
+      "columns": ["budget", "id", "name"],
+      "values": [
+        [
+          { "value": 250000, "type": "number" },
+          { "value": 4, "type": "integer" },
+          { "value": "HR", "type": "string" }
+        ]
+      ]
+    },
+    {
+      "schemaName": null,
+      "tableName": "employees",
+      "columns": ["id", "dept_id", "name"],
+      "values": [
+        [
+          { "value": 1, "type": "integer" },
+          { "value": 1, "type": "integer" },
+          { "value": "John Doe", "type": "string" }
+        ]
+      ]
+    },
+    {
+      "schemaName": null,
+      "tableName": "employees",
+      "columns": ["id", "dept_id", "name"],
+      "values": [
+        [
+          { "value": 2, "type": "integer" },
+          { "value": 1, "type": "integer" },
+          { "value": "Jane Smith", "type": "string" }
+        ],
+        [
+          { "value": 3, "type": "integer" },
+          { "value": 2, "type": "integer" },
+          { "value": "Bob Johnson", "type": "string" }
+        ]
+      ]
+    }
+  ]
+}
