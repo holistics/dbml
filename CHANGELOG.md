@@ -1,3 +1,30 @@
+## v6.3.0 (2026-02-13)
+
+#### :rocket: New Feature
+* `dbml-cli`, `dbml-core`, `dbml-parse`
+  * [#800](https://github.com/holistics/dbml/pull/800) Support sample table data in DBML - Add `Records` blocks to define sample data within tables or as standalone elements with full constraint validation (PK, FK, unique, not null) ([@hdnax](https://github.com/hdnax))
+  * [#800](https://github.com/holistics/dbml/pull/800) Support parsing INSERT statements from SQL and converting to DBML `Records` (MySQL, PostgreSQL, Oracle, MSSQL, Snowflake) ([@hdnax](https://github.com/hdnax))
+  * [#800](https://github.com/holistics/dbml/pull/800) Support exporting `Records` to INSERT statements in all SQL dialects with automatic constraint handling ([@hdnax](https://github.com/hdnax))
+  * [#800](https://github.com/holistics/dbml/pull/800) Add support for scientific notation in number literals (e.g., `1.23e5`, `-4.56e-3`) ([@hdnax](https://github.com/hdnax))
+  * [#800](https://github.com/holistics/dbml/pull/800) Add `DBMLDiagnosticsProvider` class with `provideDiagnostics()`, `provideErrors()`, `provideWarnings()` methods ([@hdnax](https://github.com/hdnax))
+
+#### :boom: Breaking Change
+* `dbml-core`
+  * [#800](https://github.com/holistics/dbml/pull/800) Hardcode `Report<T, E>` to `Report<T>` - E is now always `CompileError`, added support for `CompileWarning`. Use `getErrors()` and `getWarnings()` methods to access diagnostics ([@hdnax](https://github.com/hdnax))
+
+#### :bug: Bug Fix
+* `dbml-core`
+  * Fix `null` values to be consistently lowercased in SQL export instead of varying cases (NULL, null, Null) ([@hdnax](https://github.com/hdnax))
+  * Fix missing type definitions in `@dbml/core` (added missing `RecordValue`, `NormalizedRecord` and other exported types) ([@hdnax](https://github.com/hdnax))
+  * Fix incorrect Token import from `antlr4` package ([@hdnax](https://github.com/hdnax))
+
+#### :house_with_garden: Internal
+* `dbml-core`
+  * Build output now uses `.cjs` and `.esm` file extensions for non-ambiguity in module loaders ([@hdnax](https://github.com/hdnax))
+
+#### Committers: 1
+- Huy DNA ([@hdnax](https://github.com/hdnax))
+
 ## v6.2.1 (2026-02-11)
 
 #### :house_with_garden: Internal
