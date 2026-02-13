@@ -107,8 +107,8 @@ class SqlServerExporter {
       if (field.dbdefault) {
         // Skip DEFAULT NULL as it's redundant (columns are nullable by default)
         const isNullDefault = field.dbdefault.type === 'boolean' && (
-          field.dbdefault.value === null ||
-          (typeof field.dbdefault.value === 'string' && field.dbdefault.value.toLowerCase() === 'null')
+          field.dbdefault.value === null
+          || (typeof field.dbdefault.value === 'string' && field.dbdefault.value.toLowerCase() === 'null')
         );
 
         if (!isNullDefault) {
