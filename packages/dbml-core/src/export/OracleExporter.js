@@ -5,6 +5,8 @@ import {
   buildUniqueTableName,
   escapeObjectName,
   shouldPrintSchema,
+  parseIsoDatetime,
+  formatDatetimeForOracle,
 } from './utils';
 import {
   isNumericType,
@@ -38,7 +40,26 @@ class OracleExporter {
 
         if (isNumericType(val.type)) return val.value;
         if (isBooleanType(val.type)) return String(val.value).toUpperCase() === 'TRUE' ? '1' : '0';
-        if (isStringType(val.type) || isDateTimeType(val.type)) return `'${val.value.replace(/'/g, "''")}'`;
+
+        // Handle datetime types with TO_TIMESTAMP
+        if (isDateTimeType(val.type)) {
+          const datetimeInfo = parseIsoDatetime(val.value);
+          if (datetimeInfo) {
+            const { datetime, hasTimezone } = datetimeInfo;
+            const formattedDatetime = formatDatetimeForOracle(datetime, hasTimezone);
+
+            if (hasTimezone) {
+              // Use TO_TIMESTAMP_TZ for timestamps with timezone
+              return `TO_TIMESTAMP_TZ('${formattedDatetime}', 'YYYY-MM-DD HH24:MI:SS.FF3 TZH:TZM')`;
+            }
+            // Use TO_TIMESTAMP for timestamps without timezone
+            return `TO_TIMESTAMP('${formattedDatetime}', 'YYYY-MM-DD HH24:MI:SS.FF3')`;
+          }
+          // Fallback to quoted string if parsing fails
+          return `'${val.value.replace(/'/g, "''")}'`;
+        }
+
+        if (isStringType(val.type)) return `'${val.value.replace(/'/g, "''")}'`;
         if (isBinaryType(val.type)) return `HEXTORAW('${val.value}')`;
         // Unknown type - use CAST
         return `CAST('${val.value.replace(/'/g, "''")}' AS ${val.type})`;
