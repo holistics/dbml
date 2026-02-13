@@ -134,8 +134,8 @@ class OracleExporter {
       if (cloneField.dbdefault) {
         // Skip DEFAULT NULL as it's redundant (columns are nullable by default)
         const isNullDefault = cloneField.dbdefault.type === 'boolean' && (
-          cloneField.dbdefault.value === null ||
-          (typeof cloneField.dbdefault.value === 'string' && cloneField.dbdefault.value.toLowerCase() === 'null')
+          cloneField.dbdefault.value === null
+          || (typeof cloneField.dbdefault.value === 'string' && cloneField.dbdefault.value.toLowerCase() === 'null')
         );
 
         if (!isNullDefault) {
