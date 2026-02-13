@@ -109,7 +109,7 @@ Table "ts_table" {
   "ts7" TIMESTAMP [not null, default: `CURRENT_TIMESTAMP`]
   "ts8" TIMESTAMP(6) [not null]
   "ts9" TIMESTAMP(6) [not null, default: `NOW(6)`]
-  "ts10" TIMESTAMP [default: NULL]
+  "ts10" TIMESTAMP
   "ts11" TIMESTAMP [not null, default: '2038-01-01 00:00:00']
 }
 
@@ -121,7 +121,7 @@ Table "dt_table" {
   "dt5" DATETIME [not null, default: `CURRENT_TIMESTAMP`]
   "dt6" DATETIME [not null, default: `CURRENT_TIMESTAMP`]
   "dt7" DATETIME [not null, default: `CURRENT_TIMESTAMP`]
-  "dt10" DATETIME [default: NULL]
+  "dt10" DATETIME
   "dt11" DATETIME [default: '2038-01-01 00:00:00']
 }
 
@@ -367,10 +367,10 @@ Table "tbl" {
 
 Table "orders_json_2" {
   "id" int [pk, not null, increment]
-  "reward" json [default: NULL]
-  "additional_info" json [default: NULL]
-  "created_at" timestamp [default: NULL]
-  "updated_at" timestamp [default: NULL]
+  "reward" json
+  "additional_info" json
+  "created_at" timestamp
+  "updated_at" timestamp
 
   Indexes {
     `(cast(json_extract(`additional_info`,_utf8mb4'$.order_codes')aschar(17)array))` [name: "idx_order_codes"]
@@ -442,16 +442,16 @@ Table "tbl_signed_unsigned" {
 
 Table "daily_intelligences" {
   "id" bigint(20) [pk, not null, increment]
-  "partner_code" varchar(32) [default: NULL]
-  "text" LONGTEXT [default: NULL]
-  "monitor_time" TIMESTAMP [default: NULL]
+  "partner_code" varchar(32)
+  "text" LONGTEXT
+  "monitor_time" TIMESTAMP
   "gmt_modify" TIMESTAMP [not null, default: `CURRENT_TIMESTAMP`]
   "gmt_create" TIMESTAMP [not null, default: `CURRENT_TIMESTAMP`]
 }
 
 Table "auth_realm_clients" {
   "pk_realm" int [pk, not null, default: '0']
-  "fk_realm" int [default: NULL]
+  "fk_realm" int
   "client_id" varchar(150) [not null]
   "client_secret" blob [not null]
 
@@ -463,7 +463,7 @@ Table "auth_realm_clients" {
 Table "site_checker_b_sonet_group_favorites" {
   "USER_ID" int(11) [not null]
   "GROUP_ID" int(11) [not null]
-  "DATE_ADD" datetime [default: NULL]
+  "DATE_ADD" datetime
 
   Indexes {
     (USER_ID, GROUP_ID) [pk]
