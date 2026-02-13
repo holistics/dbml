@@ -32,10 +32,10 @@ CREATE TABLE "C##test"."products" (
   "id" int PRIMARY KEY
 );
 
-ALTER TABLE "users_products" ADD FOREIGN KEY ("users_id") REFERENCES "users" ("id");
+ALTER TABLE "users_products" ADD FOREIGN KEY ("users_id") REFERENCES "users" ("id") DEFERRABLE INITIALLY IMMEDIATE;
 
-ALTER TABLE "users_products" ADD FOREIGN KEY ("products_id") REFERENCES "products" ("id");
+ALTER TABLE "users_products" ADD FOREIGN KEY ("products_id") REFERENCES "products" ("id") DEFERRABLE INITIALLY IMMEDIATE;
 
-ALTER TABLE "C##test"."users_products" ADD FOREIGN KEY ("users_id") REFERENCES "C##test"."users" ("id");
+ALTER TABLE "C##test"."users_products" ADD FOREIGN KEY ("users_id") REFERENCES "C##test"."users" ("id") DEFERRABLE INITIALLY IMMEDIATE;
 
-ALTER TABLE "C##test"."users_products" ADD FOREIGN KEY ("products_id") REFERENCES "C##test"."products" ("id");
+ALTER TABLE "C##test"."users_products" ADD FOREIGN KEY ("products_id") REFERENCES "C##test"."products" ("id") DEFERRABLE INITIALLY IMMEDIATE;

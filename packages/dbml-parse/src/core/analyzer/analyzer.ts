@@ -2,7 +2,6 @@ import Validator from '@/core/analyzer/validator/validator';
 import Binder from '@/core/analyzer/binder/binder';
 import { ProgramNode } from '@/core/parser/nodes';
 import Report from '@/core/report';
-import { CompileError } from '@/core/errors';
 import { NodeSymbolIdGenerator } from '@/core/analyzer/symbol/symbols';
 import SymbolFactory from '@/core/analyzer/symbol/factory';
 
@@ -16,7 +15,7 @@ export default class Analyzer {
   }
 
   // Analyzing: Invoking both the validator and binder
-  analyze (): Report<ProgramNode, CompileError> {
+  analyze (): Report<ProgramNode> {
     const validator = new Validator(this.ast, this.symbolFactory);
 
     return validator.validate().chain((program) => {
@@ -27,7 +26,7 @@ export default class Analyzer {
   }
 
   // For invoking the validator only
-  validate (): Report<ProgramNode, CompileError> {
+  validate (): Report<ProgramNode> {
     const validator = new Validator(this.ast, this.symbolFactory);
 
     return validator.validate().chain((program) => new Report(program, []));

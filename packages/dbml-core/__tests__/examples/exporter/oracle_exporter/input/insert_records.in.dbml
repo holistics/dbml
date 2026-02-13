@@ -1,0 +1,27 @@
+Table users {
+  id integer [pk]
+  name varchar
+  email varchar
+  active boolean
+  created_at timestamp
+}
+
+Table posts {
+  id integer [pk]
+  user_id integer
+  title varchar
+  content text
+}
+
+Ref: users.id < posts.user_id
+
+Records users(id, name, email, active, created_at) {
+  1, "Alice", "alice@example.com", true, "2024-01-15 10:30:00+07:00"
+  2, "Bob", "bob@example.com", false, "2024-01-16 14:20:00+07:00"
+  3, "Charlie", null, true, "2024-01-17 09:15:00+07:00"
+}
+
+Records posts(id, user_id, title, content) {
+  1, 1, "First Post", "Hello World"
+  2, 1, "Second Post", "It's a beautiful day"
+}

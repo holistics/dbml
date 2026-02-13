@@ -12,6 +12,8 @@ import {
   AttributeNode,
   PrimaryExpressionNode,
   VariableNode,
+  CommaExpressionNode,
+  LiteralNode,
 } from '@/core/parser/nodes';
 import { SyntaxTokenKind } from '@/core/lexer/tokens';
 import { parse } from '@tests/utils';
@@ -21,6 +23,9 @@ function getPrimaryValue (node: PrimaryExpressionNode | undefined): string | und
   if (!node) return undefined;
   if (node.expression instanceof VariableNode) {
     return node.expression.variable?.value;
+  }
+  if (node.expression instanceof LiteralNode) {
+    return node.expression.literal?.value;
   }
   return undefined;
 }
@@ -838,6 +843,350 @@ Table posts {
       expect(body.callee?.kind).toBe(SyntaxNodeKind.INFIX_EXPRESSION);
       const infix = body.callee as InfixExpressionNode;
       expect(infix.op?.value).toBe('>');
+    });
+  });
+
+  describe('comma expression parsing', () => {
+    test('should parse comma expression in function application args', () => {
+      const source = `
+        Table users {
+          sample_data 1, 2, 3
+        }
+      `;
+      const elements = getElements(source);
+      const body = elements[0].body as BlockExpressionNode;
+
+      expect(body.body).toHaveLength(1);
+      const funcApp = body.body[0] as FunctionApplicationNode;
+      expect(funcApp.kind).toBe(SyntaxNodeKind.FUNCTION_APPLICATION);
+
+      // The args should contain a CommaExpressionNode
+      expect(funcApp.args).toHaveLength(1);
+      expect(funcApp.args[0].kind).toBe(SyntaxNodeKind.COMMA_EXPRESSION);
+
+      const commaExpr = funcApp.args[0] as CommaExpressionNode;
+      expect(commaExpr.elementList).toHaveLength(3);
+      expect(commaExpr.commaList).toHaveLength(2);
+
+      // Verify each element is a primary expression with a literal
+      commaExpr.elementList.forEach((elem) => {
+        expect(elem.kind).toBe(SyntaxNodeKind.PRIMARY_EXPRESSION);
+        const primary = elem as PrimaryExpressionNode;
+        expect(primary.expression?.kind).toBe(SyntaxNodeKind.LITERAL);
+      });
+    });
+
+    test('should parse comma expression with string values', () => {
+      const source = `
+        Table users {
+          sample_data 'a', 'b', 'c'
+        }
+      `;
+      const elements = getElements(source);
+      const body = elements[0].body as BlockExpressionNode;
+      const funcApp = body.body[0] as FunctionApplicationNode;
+
+      expect(funcApp.args).toHaveLength(1);
+      expect(funcApp.args[0].kind).toBe(SyntaxNodeKind.COMMA_EXPRESSION);
+
+      const commaExpr = funcApp.args[0] as CommaExpressionNode;
+      expect(commaExpr.elementList).toHaveLength(3);
+    });
+
+    test('should parse comma expression as callee', () => {
+      const source = `
+        Table users {
+          1, 2, 3
+        }
+      `;
+      const elements = getElements(source);
+      const body = elements[0].body as BlockExpressionNode;
+
+      expect(body.body).toHaveLength(1);
+      const funcApp = body.body[0] as FunctionApplicationNode;
+
+      // The callee should be a CommaExpressionNode
+      expect(funcApp.callee?.kind).toBe(SyntaxNodeKind.COMMA_EXPRESSION);
+
+      const commaExpr = funcApp.callee as CommaExpressionNode;
+      expect(commaExpr.elementList).toHaveLength(3);
+      expect(commaExpr.commaList).toHaveLength(2);
+    });
+
+    test('should parse single expression without comma as normal expression', () => {
+      const source = `
+        Table users {
+          sample_data 1
+        }
+      `;
+      const elements = getElements(source);
+      const body = elements[0].body as BlockExpressionNode;
+      const funcApp = body.body[0] as FunctionApplicationNode;
+
+      // Single value should be a PrimaryExpression, not CommaExpression
+      expect(funcApp.args).toHaveLength(1);
+      expect(funcApp.args[0].kind).toBe(SyntaxNodeKind.PRIMARY_EXPRESSION);
+    });
+
+    test('should parse multiple comma expressions in function application', () => {
+      const source = `
+        Table users {
+          sample_data 1, 2 'x', 'y'
+        }
+      `;
+      const elements = getElements(source);
+      const body = elements[0].body as BlockExpressionNode;
+      const funcApp = body.body[0] as FunctionApplicationNode;
+
+      // Should have two args: "1, 2" and "'x', 'y'"
+      expect(funcApp.args).toHaveLength(2);
+      expect(funcApp.args[0].kind).toBe(SyntaxNodeKind.COMMA_EXPRESSION);
+      expect(funcApp.args[1].kind).toBe(SyntaxNodeKind.COMMA_EXPRESSION);
+
+      const first = funcApp.args[0] as CommaExpressionNode;
+      expect(first.elementList).toHaveLength(2);
+
+      const second = funcApp.args[1] as CommaExpressionNode;
+      expect(second.elementList).toHaveLength(2);
+    });
+
+    test('should preserve comma tokens in comma expression', () => {
+      const source = `
+        Table users {
+          sample_data 1, 2, 3, 4
+        }
+      `;
+      const elements = getElements(source);
+      const body = elements[0].body as BlockExpressionNode;
+      const funcApp = body.body[0] as FunctionApplicationNode;
+      const commaExpr = funcApp.args[0] as CommaExpressionNode;
+
+      expect(commaExpr.commaList).toHaveLength(3);
+      commaExpr.commaList.forEach((comma) => {
+        expect(comma.value).toBe(',');
+        expect(comma.kind).toBe(SyntaxTokenKind.COMMA);
+      });
+    });
+
+    test('should parse empty field in comma expression (consecutive commas)', () => {
+      const source = `
+        Table users {
+          sample_data 1, , 3
+        }
+      `;
+      const elements = getElements(source);
+      const body = elements[0].body as BlockExpressionNode;
+      const funcApp = body.body[0] as FunctionApplicationNode;
+
+      expect(funcApp.args).toHaveLength(1);
+      expect(funcApp.args[0].kind).toBe(SyntaxNodeKind.COMMA_EXPRESSION);
+
+      const commaExpr = funcApp.args[0] as CommaExpressionNode;
+      expect(commaExpr.elementList).toHaveLength(3);
+      expect(commaExpr.commaList).toHaveLength(2);
+
+      // First element: 1
+      expect(commaExpr.elementList[0].kind).toBe(SyntaxNodeKind.PRIMARY_EXPRESSION);
+      // Second element: empty (EmptyNode)
+      expect(commaExpr.elementList[1].kind).toBe(SyntaxNodeKind.EMPTY);
+      // Third element: 3
+      expect(commaExpr.elementList[2].kind).toBe(SyntaxNodeKind.PRIMARY_EXPRESSION);
+    });
+
+    test('should parse multiple empty fields in comma expression', () => {
+      const source = `
+        Table users {
+          sample_data 1, , , 4
+        }
+      `;
+      const elements = getElements(source);
+      const body = elements[0].body as BlockExpressionNode;
+      const funcApp = body.body[0] as FunctionApplicationNode;
+      const commaExpr = funcApp.args[0] as CommaExpressionNode;
+
+      expect(commaExpr.elementList).toHaveLength(4);
+      expect(commaExpr.commaList).toHaveLength(3);
+
+      // First element: 1
+      expect(commaExpr.elementList[0].kind).toBe(SyntaxNodeKind.PRIMARY_EXPRESSION);
+      // Second element: empty (EmptyNode)
+      expect(commaExpr.elementList[1].kind).toBe(SyntaxNodeKind.EMPTY);
+      // Third element: empty (EmptyNode)
+      expect(commaExpr.elementList[2].kind).toBe(SyntaxNodeKind.EMPTY);
+      // Fourth element: 4
+      expect(commaExpr.elementList[3].kind).toBe(SyntaxNodeKind.PRIMARY_EXPRESSION);
+    });
+
+    test('should parse trailing comma in comma expression', () => {
+      const source = `
+        Table users {
+          sample_data 1, 2,
+        }
+      `;
+      const elements = getElements(source);
+      const body = elements[0].body as BlockExpressionNode;
+      const funcApp = body.body[0] as FunctionApplicationNode;
+      const commaExpr = funcApp.args[0] as CommaExpressionNode;
+
+      expect(commaExpr.elementList).toHaveLength(3);
+      expect(commaExpr.commaList).toHaveLength(2);
+
+      // First element: 1
+      expect(commaExpr.elementList[0].kind).toBe(SyntaxNodeKind.PRIMARY_EXPRESSION);
+      // Second element: 2
+      expect(commaExpr.elementList[1].kind).toBe(SyntaxNodeKind.PRIMARY_EXPRESSION);
+      // Third element: empty (EmptyNode for trailing comma)
+      expect(commaExpr.elementList[2].kind).toBe(SyntaxNodeKind.EMPTY);
+    });
+
+    test('should parse leading comma in comma expression (as callee)', () => {
+      const source = `
+        Table users {
+          ,1, 2
+        }
+      `;
+      const elements = getElements(source);
+      const body = elements[0].body as BlockExpressionNode;
+      const funcApp = body.body[0] as FunctionApplicationNode;
+
+      // The callee should be a CommaExpressionNode starting with empty
+      expect(funcApp.callee?.kind).toBe(SyntaxNodeKind.COMMA_EXPRESSION);
+
+      const commaExpr = funcApp.callee as CommaExpressionNode;
+      expect(commaExpr.elementList).toHaveLength(3);
+      expect(commaExpr.commaList).toHaveLength(2);
+
+      // First element: empty (EmptyNode for leading comma)
+      expect(commaExpr.elementList[0].kind).toBe(SyntaxNodeKind.EMPTY);
+      // Second element: 1
+      expect(commaExpr.elementList[1].kind).toBe(SyntaxNodeKind.PRIMARY_EXPRESSION);
+      expect(getPrimaryValue(commaExpr.elementList[1] as PrimaryExpressionNode)).toBe('1');
+      // Third element: 2
+      expect(commaExpr.elementList[2].kind).toBe(SyntaxNodeKind.PRIMARY_EXPRESSION);
+      expect(getPrimaryValue(commaExpr.elementList[2] as PrimaryExpressionNode)).toBe('2');
+    });
+
+    test('should parse leading and trailing comma in comma expression', () => {
+      const source = `
+        Table users {
+          ,1, 2,
+        }
+      `;
+      const elements = getElements(source);
+      const body = elements[0].body as BlockExpressionNode;
+      const funcApp = body.body[0] as FunctionApplicationNode;
+      const commaExpr = funcApp.callee as CommaExpressionNode;
+
+      expect(commaExpr.elementList).toHaveLength(4);
+      expect(commaExpr.commaList).toHaveLength(3);
+
+      // First element: empty (EmptyNode for leading comma)
+      expect(commaExpr.elementList[0].kind).toBe(SyntaxNodeKind.EMPTY);
+      // Second element: 1
+      expect(commaExpr.elementList[1].kind).toBe(SyntaxNodeKind.PRIMARY_EXPRESSION);
+      expect(getPrimaryValue(commaExpr.elementList[1] as PrimaryExpressionNode)).toBe('1');
+      // Third element: 2
+      expect(commaExpr.elementList[2].kind).toBe(SyntaxNodeKind.PRIMARY_EXPRESSION);
+      expect(getPrimaryValue(commaExpr.elementList[2] as PrimaryExpressionNode)).toBe('2');
+      // Fourth element: empty (EmptyNode for trailing comma)
+      expect(commaExpr.elementList[3].kind).toBe(SyntaxNodeKind.EMPTY);
+    });
+
+    test('should parse comma expression with only commas (all empty fields)', () => {
+      const source = `
+        Table users {
+          ,,
+        }
+      `;
+      const elements = getElements(source);
+      const body = elements[0].body as BlockExpressionNode;
+      const funcApp = body.body[0] as FunctionApplicationNode;
+      const commaExpr = funcApp.callee as CommaExpressionNode;
+
+      expect(commaExpr.elementList).toHaveLength(3);
+      expect(commaExpr.commaList).toHaveLength(2);
+
+      // All elements should be EmptyNodes
+      expect(commaExpr.elementList[0].kind).toBe(SyntaxNodeKind.EMPTY);
+      expect(commaExpr.elementList[1].kind).toBe(SyntaxNodeKind.EMPTY);
+      expect(commaExpr.elementList[2].kind).toBe(SyntaxNodeKind.EMPTY);
+    });
+
+    test('should parse leading comma as callee in function application with spaces', () => {
+      const source = `
+        Table users {
+          , 1, 2
+        }
+      `;
+      const elements = getElements(source);
+      const body = elements[0].body as BlockExpressionNode;
+      const funcApp = body.body[0] as FunctionApplicationNode;
+
+      // The callee should be a CommaExpressionNode starting with empty
+      expect(funcApp.callee?.kind).toBe(SyntaxNodeKind.COMMA_EXPRESSION);
+
+      const commaExpr = funcApp.callee as CommaExpressionNode;
+      expect(commaExpr.elementList).toHaveLength(3);
+
+      // First element: empty (EmptyNode for leading comma)
+      expect(commaExpr.elementList[0].kind).toBe(SyntaxNodeKind.EMPTY);
+      // Second element: 1
+      expect(commaExpr.elementList[1].kind).toBe(SyntaxNodeKind.PRIMARY_EXPRESSION);
+      expect(getPrimaryValue(commaExpr.elementList[1] as PrimaryExpressionNode)).toBe('1');
+      // Third element: 2
+      expect(commaExpr.elementList[2].kind).toBe(SyntaxNodeKind.PRIMARY_EXPRESSION);
+      expect(getPrimaryValue(commaExpr.elementList[2] as PrimaryExpressionNode)).toBe('2');
+    });
+
+    test('should parse leading comma with string values', () => {
+      const source = `
+        Table users {
+          ,'hello', 'world'
+        }
+      `;
+      const elements = getElements(source);
+      const body = elements[0].body as BlockExpressionNode;
+      const funcApp = body.body[0] as FunctionApplicationNode;
+      const commaExpr = funcApp.callee as CommaExpressionNode;
+
+      expect(commaExpr.elementList).toHaveLength(3);
+      expect(commaExpr.commaList).toHaveLength(2);
+
+      // First element: empty (EmptyNode for leading comma)
+      expect(commaExpr.elementList[0].kind).toBe(SyntaxNodeKind.EMPTY);
+      // Second element: 'hello' (string literal values don't include quotes)
+      expect(commaExpr.elementList[1].kind).toBe(SyntaxNodeKind.PRIMARY_EXPRESSION);
+      expect(getPrimaryValue(commaExpr.elementList[1] as PrimaryExpressionNode)).toBe('hello');
+      // Third element: 'world'
+      expect(commaExpr.elementList[2].kind).toBe(SyntaxNodeKind.PRIMARY_EXPRESSION);
+      expect(getPrimaryValue(commaExpr.elementList[2] as PrimaryExpressionNode)).toBe('world');
+    });
+
+    test('should parse leading comma with identifier values', () => {
+      const source = `
+        Table users {
+          ,foo, bar, baz
+        }
+      `;
+      const elements = getElements(source);
+      const body = elements[0].body as BlockExpressionNode;
+      const funcApp = body.body[0] as FunctionApplicationNode;
+      const commaExpr = funcApp.callee as CommaExpressionNode;
+
+      expect(commaExpr.elementList).toHaveLength(4);
+      expect(commaExpr.commaList).toHaveLength(3);
+
+      // First element: empty (EmptyNode for leading comma)
+      expect(commaExpr.elementList[0].kind).toBe(SyntaxNodeKind.EMPTY);
+      // Second element: foo
+      expect(commaExpr.elementList[1].kind).toBe(SyntaxNodeKind.PRIMARY_EXPRESSION);
+      expect(getPrimaryValue(commaExpr.elementList[1] as PrimaryExpressionNode)).toBe('foo');
+      // Third element: bar
+      expect(commaExpr.elementList[2].kind).toBe(SyntaxNodeKind.PRIMARY_EXPRESSION);
+      expect(getPrimaryValue(commaExpr.elementList[2] as PrimaryExpressionNode)).toBe('bar');
+      // Fourth element: baz
+      expect(commaExpr.elementList[3].kind).toBe(SyntaxNodeKind.PRIMARY_EXPRESSION);
+      expect(getPrimaryValue(commaExpr.elementList[3] as PrimaryExpressionNode)).toBe('baz');
     });
   });
 

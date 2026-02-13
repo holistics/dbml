@@ -1,5 +1,6 @@
 // Export main classes
 export { default as Database } from './database';
+export { default as Element } from './element';
 export { default as Schema } from './schema';
 export { default as Table } from './table';
 export { default as Field } from './field';
@@ -28,3 +29,4 @@ export * from './tableGroup';
 export * from './stickyNote';
 export * from './tablePartial';
 export * from './check';
+export * from './element';

@@ -1,0 +1,8 @@
+Table users {
+  id int [pk]
+  name varchar(100) [default: null]
+  email varchar(100) [default: null]
+  age int [default: null]
+  status varchar(50) [not null, default: 'active']
+  count int [default: 0]
+}

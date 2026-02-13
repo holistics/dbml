@@ -5,9 +5,84 @@ import {
   buildUniqueTableName,
   escapeObjectName,
   shouldPrintSchema,
+  parseIsoDatetime,
+  formatDatetimeForOracle,
 } from './utils';
+import {
+  isNumericType,
+  isStringType,
+  isBooleanType,
+  isDateTimeType,
+  isBinaryType,
+} from '@dbml/parse';
 
 class OracleExporter {
+  static exportRecords (model) {
+    const records = Object.values(model.records || {});
+    if (isEmpty(records)) {
+      return [];
+    }
+
+    const insertStatements = records.map((record) => {
+      const { schemaName, tableName, columns, values } = record;
+
+      // Build the table reference with schema if present
+      const tableRef = schemaName ? `"${schemaName}"."${tableName}"` : `"${tableName}"`;
+
+      // Build the column list
+      const columnList = columns.length > 0
+        ? `("${columns.join('", "')}")`
+        : '';
+
+      const formatValue = (val) => {
+        if (val.value === null) return 'NULL';
+        if (val.type === 'expression') return val.value;
+
+        if (isNumericType(val.type)) return val.value;
+        if (isBooleanType(val.type)) return String(val.value).toUpperCase() === 'TRUE' ? '1' : '0';
+
+        // Handle datetime types with TO_TIMESTAMP
+        if (isDateTimeType(val.type)) {
+          const datetimeInfo = parseIsoDatetime(val.value);
+          if (datetimeInfo) {
+            const { datetime, hasTimezone } = datetimeInfo;
+            const formattedDatetime = formatDatetimeForOracle(datetime, hasTimezone);
+
+            if (hasTimezone) {
+              // Use TO_TIMESTAMP_TZ for timestamps with timezone
+              return `TO_TIMESTAMP_TZ('${formattedDatetime}', 'YYYY-MM-DD HH24:MI:SS.FF3 TZH:TZM')`;
+            }
+            // Use TO_TIMESTAMP for timestamps without timezone
+            return `TO_TIMESTAMP('${formattedDatetime}', 'YYYY-MM-DD HH24:MI:SS.FF3')`;
+          }
+          // Fallback to quoted string if parsing fails
+          return `'${val.value.replace(/'/g, "''")}'`;
+        }
+
+        if (isStringType(val.type)) return `'${val.value.replace(/'/g, "''")}'`;
+        if (isBinaryType(val.type)) return `HEXTORAW('${val.value}')`;
+        // Unknown type - use CAST
+        return `CAST('${val.value.replace(/'/g, "''")}' AS ${val.type})`;
+      };
+
+      // Build the INSERT ALL statement for multiple rows
+      if (values.length > 1) {
+        const intoStatements = values.map((row) => {
+          const valueStrs = row.map(formatValue);
+          return `  INTO ${tableRef} ${columnList} VALUES (${valueStrs.join(', ')})`;
+        });
+        return `INSERT ALL\n${intoStatements.join('\n')}\nSELECT * FROM dual;`;
+      }
+
+      // Single row INSERT
+      const valueStrs = values[0].map(formatValue);
+
+      return `INSERT INTO ${tableRef} ${columnList}\nVALUES (${valueStrs.join(', ')});`;
+    });
+
+    return insertStatements;
+  }
+
   static buildSchemaToTableNameSetMap (model) {
     const schemaToTableNameSetMap = new Map();
 
@@ -78,10 +153,18 @@ class OracleExporter {
       // See column definition syntax https://docs.oracle.com/en/database/oracle/oracle-database/19/sqlrf/CREATE-TABLE.html#GUID-F9CE0CC3-13AE-4744-A43C-EAC7A71AAAB6__CEGEDHJE
       // See constraint syntax https://docs.oracle.com/en/database/oracle/oracle-database/19/sqlrf/constraint.html#GUID-1055EA97-BA6F-4764-A15F-1024FD5B6DFE__CJAEDFIB
       if (cloneField.dbdefault) {
-        if (cloneField.dbdefault.type === 'string') {
-          line += ` DEFAULT '${cloneField.dbdefault.value}'`;
-        } else {
-          line += ` DEFAULT ${cloneField.dbdefault.value}`;
+        // Skip DEFAULT NULL as it's redundant (columns are nullable by default)
+        const isNullDefault = cloneField.dbdefault.type === 'boolean' && (
+          cloneField.dbdefault.value === null
+          || (typeof cloneField.dbdefault.value === 'string' && cloneField.dbdefault.value.toLowerCase() === 'null')
+        );
+
+        if (!isNullDefault) {
+          if (cloneField.dbdefault.type === 'string') {
+            line += ` DEFAULT '${cloneField.dbdefault.value}'`;
+          } else {
+            line += ` DEFAULT ${cloneField.dbdefault.value}`;
+          }
         }
       }
 
@@ -229,7 +312,7 @@ class OracleExporter {
 
   static buildForeignKeyManyToMany (foreignEndpointTableName, foreignEndpointFields, refEndpointTableName, refEndpointFieldsString) {
     const foreignEndpointFieldsString = [...foreignEndpointFields.keys()].join('`, `');
-    const line = `ALTER TABLE ${foreignEndpointTableName} ADD FOREIGN KEY ("${foreignEndpointFieldsString}") REFERENCES ${refEndpointTableName} ${refEndpointFieldsString};\n`;
+    const line = `ALTER TABLE ${foreignEndpointTableName} ADD FOREIGN KEY ("${foreignEndpointFieldsString}") REFERENCES ${refEndpointTableName} ${refEndpointFieldsString} DEFERRABLE INITIALLY IMMEDIATE;\n`;
     return line;
   }
 
@@ -274,7 +357,7 @@ class OracleExporter {
           line += ` ON DELETE ${ref.onDelete.toUpperCase()}`;
         }
 
-        line += ';\n';
+        line += ' DEFERRABLE INITIALLY IMMEDIATE;\n';
         result.refs.push(line);
         return;
       }
@@ -500,6 +583,20 @@ class OracleExporter {
       refs: [],
     });
 
+    // Export INSERT statements with constraint checking disabled
+    const insertStatements = this.exportRecords(model);
+    const recordsSection = !isEmpty(insertStatements)
+      ? [
+          '-- Disable constraint checking for INSERT',
+          'SET CONSTRAINTS ALL DEFERRED;',
+          '',
+          ...insertStatements,
+          '',
+          'SET CONSTRAINTS ALL IMMEDIATE;',
+          'COMMIT;',
+        ]
+      : [];
+
     const res = concat(
       statements.schemas,
       statements.tables,
@@ -507,6 +604,7 @@ class OracleExporter {
       statements.comments,
       statements.referenceGrants,
       statements.refs,
+      recordsSection,
     ).join('\n');
     return res;
   }

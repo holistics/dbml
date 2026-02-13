@@ -1,4 +1,6 @@
+import { tryExtractDateTime } from '@dbml/parse';
 import { DEFAULT_SCHEMA_NAME } from '../model_structure/config';
+import { DateTime } from 'luxon';
 
 export function hasWhiteSpace (s) {
   return /\s/g.test(s);
@@ -88,4 +90,59 @@ export function escapeObjectName (name, database) {
   }
 
   return `${escapeSignature}${name}${escapeSignature}`;
+}
+
+/**
+ * Attempts to extract and parse a datetime value from a string using luxon
+ * @param {string} value - The datetime string to parse (supports various formats, normalized to ISO8601)
+ * @returns {{ datetime: DateTime, hasTimezone: boolean } | null} Parsed datetime with timezone info, or null if invalid
+ */
+export function parseIsoDatetime (value) {
+  if (!value || typeof value !== 'string') {
+    return null;
+  }
+
+  try {
+    // First normalize to ISO format using tryExtractDateTime
+    // This handles IsoDate, IsoTime, and IsoDateTime formats
+    const normalizedValue = tryExtractDateTime(value);
+    if (!normalizedValue) {
+      return null;
+    }
+
+    // Parse normalized ISO8601 string using luxon
+    const datetime = DateTime.fromISO(normalizedValue, { setZone: true });
+
+    // Check if the date is valid
+    if (!datetime.isValid) {
+      return null;
+    }
+
+    // Check if the normalized string contains explicit timezone information
+    const hasTimezone = /[+-]\d{2}:\d{2}|Z$/i.test(normalizedValue);
+
+    return { datetime, hasTimezone };
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Formats a luxon DateTime object for Oracle TO_TIMESTAMP function
+ * @param {DateTime} datetime - The luxon DateTime to format
+ * @param {boolean} hasTimezone - Whether to include timezone
+ * @returns {string} Formatted datetime string for Oracle
+ */
+export function formatDatetimeForOracle (datetime, hasTimezone) {
+  if (hasTimezone) {
+    // Format with timezone: YYYY-MM-DD HH24:MI:SS.FF3 TZH:TZM
+    // Oracle expects the timezone offset in +HH:MM or -HH:MM format
+    const formatted = datetime.toFormat('yyyy-MM-dd HH:mm:ss.SSS ZZ');
+    return formatted;
+  }
+
+  // Format without timezone: YYYY-MM-DD HH24:MI:SS.FF3
+  // Convert to UTC when no timezone is present
+  const formatted = datetime.toUTC().toFormat('yyyy-MM-dd HH:mm:ss.SSS');
+  return formatted;
 }

@@ -1,8 +1,10 @@
-import { isEmpty, flatten } from 'lodash-es';
+import { isEmpty, flatten, flattenDepth } from 'lodash-es';
 import SnowflakeParserVisitor from '../../parsers/snowflake/SnowflakeParserVisitor';
-import { Enum, Field, Index, Table } from '../AST';
-import { TABLE_CONSTRAINT_KIND, COLUMN_CONSTRAINT_KIND, CONSTRAINT_TYPE } from '../constants';
+import { Enum, Field, Index, Table, TableRecord } from '../AST';
+import { TABLE_CONSTRAINT_KIND, COLUMN_CONSTRAINT_KIND, DATA_TYPE, CONSTRAINT_TYPE } from '../constants';
 import { getOriginalText } from '../helpers';
+
+const DEFAULT_SCHEMA = 'public';
 
 const sanitizeComment = (stringContext) => {
   return getOriginalText(stringContext).replace(/''/g, "'").slice(1, -1);
@@ -19,7 +21,17 @@ export default class SnowflakeASTGen extends SnowflakeParserVisitor {
       tableGroups: [],
       aliases: [],
       project: {},
+      records: [],
     };
+  }
+
+  findTable (schemaName, tableName) {
+    const realSchemaName = schemaName || DEFAULT_SCHEMA;
+    const table = this.data.tables.find((t) => {
+      const targetSchemaName = t.schemaName || DEFAULT_SCHEMA;
+      return targetSchemaName === realSchemaName && t.name === tableName;
+    });
+    return table;
   }
 
   // batch? EOF
@@ -39,6 +51,8 @@ export default class SnowflakeASTGen extends SnowflakeParserVisitor {
   visitSql_command (ctx) {
     if (ctx.ddl_command()) {
       ctx.ddl_command().accept(this);
+    } else if (ctx.dml_command()) {
+      ctx.dml_command().accept(this);
     }
   }
 
@@ -48,6 +62,20 @@ export default class SnowflakeASTGen extends SnowflakeParserVisitor {
       ctx.alter_command().accept(this);
     } else if (ctx.create_command()) {
       ctx.create_command().accept(this);
+    }
+  }
+
+  // dml_command
+  //   : query_statement
+  //   | insert_statement
+  //   | insert_multi_table_statement
+  //   | update_statement
+  //   | delete_statement
+  //   | merge_statement
+  //   ;
+  visitDml_command (ctx) {
+    if (ctx.insert_statement()) {
+      ctx.insert_statement().accept(this);
     }
   }
 
@@ -588,5 +616,47 @@ export default class SnowflakeASTGen extends SnowflakeParserVisitor {
       return ctx.out_of_line_constraint().accept(this);
     }
     return null;
+  }
+
+  // insert_statement
+  //   : INSERT OVERWRITE? INTO object_name column_list_in_parentheses? (
+  //       values_builder
+  //       | query_statement
+  //   )
+  //   ;
+  visitInsert_statement (ctx) {
+    const [databaseName, schemaName, tableName] = ctx.object_name().accept(this);
+    let columns = ctx.column_list_in_parentheses()
+      ? ctx.column_list_in_parentheses().accept(this)
+      : this.findTable(schemaName, tableName)?.fields.map((field) => field.name) || [];
+
+    // Only handle values_builder, not query_statement
+    const values = ctx.values_builder() ? ctx.values_builder().accept(this) : [];
+
+    const record = new TableRecord({
+      schemaName,
+      tableName,
+      columns,
+      values,
+    });
+
+    this.data.records.push(record);
+  }
+
+  // values_builder
+  //   : VALUES '(' expr_list ')' (COMMA '(' expr_list ')')?
+  //   ;
+  visitValues_builder (ctx) {
+    return ctx.expr_list().map((exprList) => {
+      const rowValues = exprList.accept(this);
+      return flattenDepth(rowValues, 1);
+    });
+  }
+
+  // expr_list
+  //   : expr (COMMA expr)*
+  //   ;
+  visitExpr_list (ctx) {
+    return ctx.expr().map((expr) => expr.accept(this));
   }
 }

@@ -1,4 +1,5 @@
 import { ExportFormatOption } from './ModelExporter';
+import { RecordValueType } from '../model_structure/database';
 
 declare function _export(str: string, format: ExportFormatOption): string;
 declare const _default: {

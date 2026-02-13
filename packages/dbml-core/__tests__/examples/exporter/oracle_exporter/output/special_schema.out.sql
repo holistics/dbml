@@ -35,8 +35,8 @@ COMMENT ON TABLE "users" IS 'This table has a expression index';
 
 COMMENT ON COLUMN "orders"."user_id" IS 'Store user uuid';
 
-ALTER TABLE "orders" ADD FOREIGN KEY ("product_id", "supplier_id") REFERENCES "products" ("product_id", "supplier_id");
+ALTER TABLE "orders" ADD FOREIGN KEY ("product_id", "supplier_id") REFERENCES "products" ("product_id", "supplier_id") DEFERRABLE INITIALLY IMMEDIATE;
 
-ALTER TABLE "orders" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id") ON DELETE CASCADE;
+ALTER TABLE "orders" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id") ON DELETE CASCADE DEFERRABLE INITIALLY IMMEDIATE;
 
-ALTER TABLE "order_details" ADD FOREIGN KEY ("order_id") REFERENCES "orders" ("id") ON DELETE CASCADE;
+ALTER TABLE "order_details" ADD FOREIGN KEY ("order_id") REFERENCES "orders" ("id") ON DELETE CASCADE DEFERRABLE INITIALLY IMMEDIATE;

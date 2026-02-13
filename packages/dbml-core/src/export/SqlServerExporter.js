@@ -5,8 +5,59 @@ import {
   buildJunctionFields2,
   buildNewTableName,
 } from './utils';
+import {
+  isNumericType,
+  isStringType,
+  isBooleanType,
+  isDateTimeType,
+  isBinaryType,
+} from '@dbml/parse';
 
 class SqlServerExporter {
+  static exportRecords (model) {
+    const records = Object.values(model.records || {});
+    if (isEmpty(records)) {
+      return [];
+    }
+
+    const insertStatements = records.map((record) => {
+      const { schemaName, tableName, columns, values } = record;
+
+      // Build the table reference with schema if present
+      const tableRef = schemaName ? `[${schemaName}].[${tableName}]` : `[${tableName}]`;
+
+      // Build the column list
+      const columnList = columns.length > 0
+        ? `([${columns.join('], [')}])`
+        : '';
+
+      // Value formatter for SQL Server
+      const formatValue = (val) => {
+        if (val.value === null) return 'NULL';
+        if (val.type === 'expression') return val.value;
+
+        if (isNumericType(val.type)) return val.value;
+        if (isBooleanType(val.type)) return String(val.value).toUpperCase() === 'TRUE' ? '1' : '0';
+        if (isStringType(val.type) || isDateTimeType(val.type)) return `'${val.value.replace(/'/g, "''")}'`;
+        if (isBinaryType(val.type)) return `0x${val.value}`; // SQL Server binary as hex
+        // Unknown type - use CAST
+        return `CAST('${val.value.replace(/'/g, "''")}' AS ${val.type})`;
+      };
+
+      // Build the VALUES clause
+      const valueRows = values.map((row) => {
+        const valueStrs = row.map(formatValue);
+        return `(${valueStrs.join(', ')})`;
+      });
+
+      const valuesClause = valueRows.join(',\n  ');
+
+      return `INSERT INTO ${tableRef} ${columnList}\nVALUES\n  ${valuesClause};\nGO`;
+    });
+
+    return insertStatements;
+  }
+
   static getFieldLines (tableId, model) {
     const table = model.tables[tableId];
 
@@ -54,12 +105,20 @@ class SqlServerExporter {
         }
       }
       if (field.dbdefault) {
-        if (field.dbdefault.type === 'expression') {
-          line += ` DEFAULT (${field.dbdefault.value})`;
-        } else if (field.dbdefault.type === 'string') {
-          line += ` DEFAULT '${field.dbdefault.value}'`;
-        } else {
-          line += ` DEFAULT (${field.dbdefault.value})`;
+        // Skip DEFAULT NULL as it's redundant (columns are nullable by default)
+        const isNullDefault = field.dbdefault.type === 'boolean' && (
+          field.dbdefault.value === null
+          || (typeof field.dbdefault.value === 'string' && field.dbdefault.value.toLowerCase() === 'null')
+        );
+
+        if (!isNullDefault) {
+          if (field.dbdefault.type === 'expression') {
+            line += ` DEFAULT (${field.dbdefault.value})`;
+          } else if (field.dbdefault.type === 'string') {
+            line += ` DEFAULT '${field.dbdefault.value}'`;
+          } else {
+            line += ` DEFAULT (${field.dbdefault.value})`;
+          }
         }
       }
       return line;
@@ -364,6 +423,29 @@ class SqlServerExporter {
       refs: [],
     });
 
+    // Export INSERT statements with constraint handling
+    const insertStatements = SqlServerExporter.exportRecords(model);
+    const recordsSection = !isEmpty(insertStatements)
+      ? (() => {
+          // Get unique tables from records to avoid duplicate ALTER TABLE statements
+          const uniqueTables = [...new Set(
+            Object.values(model.records || {}).map((record) => {
+              return record.schemaName ? `[${record.schemaName}].[${record.tableName}]` : `[${record.tableName}]`;
+            }),
+          )];
+
+          return [
+            '-- Disable constraint checks for tables with data',
+            ...uniqueTables.map((tableRef) => `ALTER TABLE ${tableRef} NOCHECK CONSTRAINT ALL;\nGO`),
+            '',
+            ...insertStatements,
+            '',
+            '-- Re-enable constraint checks',
+            ...uniqueTables.map((tableRef) => `ALTER TABLE ${tableRef} WITH CHECK CHECK CONSTRAINT ALL;\nGO`),
+          ];
+        })()
+      : [];
+
     const res = concat(
       statements.schemas,
       statements.enums,
@@ -371,6 +453,7 @@ class SqlServerExporter {
       statements.indexes,
       statements.comments,
       statements.refs,
+      recordsSection,
     ).join('\n');
     return res;
   }

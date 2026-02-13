@@ -1,6 +1,5 @@
 import { ProgramNode } from '@/core/parser/nodes';
-import { CompileError } from '@/core/errors';
-import { Database, InterpreterDatabase } from '@/core/interpreter/types';
+import { Database, InterpreterDatabase, Table, TablePartial, TableRecord } from '@/core/interpreter/types';
 import { TableInterpreter } from '@/core/interpreter/elementInterpreter/table';
 import { StickyNoteInterpreter } from '@/core/interpreter/elementInterpreter/sticky_note';
 import { RefInterpreter } from '@/core/interpreter/elementInterpreter/ref';
@@ -8,21 +7,61 @@ import { TableGroupInterpreter } from '@/core/interpreter/elementInterpreter/tab
 import { EnumInterpreter } from '@/core/interpreter/elementInterpreter/enum';
 import { ProjectInterpreter } from '@/core/interpreter/elementInterpreter/project';
 import { TablePartialInterpreter } from '@/core/interpreter/elementInterpreter/tablePartial';
+import { RecordsInterpreter } from '@/core/interpreter/records';
 import Report from '@/core/report';
 import { getElementKind } from '@/core/analyzer/utils';
 import { ElementKind } from '@/core/analyzer/types';
+import { CompileWarning } from '../errors';
+
+function processColumnInDb<T extends Table | TablePartial> (table: T): T {
+  return {
+    ...table,
+    fields: table.fields.map((c) => ({
+      ...c,
+      type: {
+        ...c.type,
+        isEnum: undefined,
+        lengthParam: undefined,
+        numericParams: undefined,
+      },
+    })),
+  };
+}
 
 function convertEnvToDb (env: InterpreterDatabase): Database {
+  // Convert records Map to array of TableRecord
+  const records: TableRecord[] = [];
+  for (const [table, block] of env.records) {
+    if (!block.length) continue;
+    const columns = Object.keys(block[0].columnNodes);
+    records.push({
+      schemaName: table.schemaName || undefined,
+      tableName: table.name,
+      columns,
+      values: block.map((r) => {
+        // Convert object-based values to array-based values ordered by columns
+        return columns.map((col) => {
+          const val = r.values[col];
+          if (val) {
+            return { value: val.value, type: val.type };
+          }
+          return { value: null, type: 'expression' };
+        });
+      }),
+    });
+  }
+
   return {
     schemas: [],
-    tables: Array.from(env.tables.values()),
+    tables: Array.from(env.tables.values()).map(processColumnInDb),
     notes: Array.from(env.notes.values()),
     refs: Array.from(env.ref.values()),
     enums: Array.from(env.enums.values()),
     tableGroups: Array.from(env.tableGroups.values()),
     aliases: env.aliases,
     project: Array.from(env.project.values())[0] || {},
-    tablePartials: Array.from(env.tablePartials.values()),
+    tablePartials: Array.from(env.tablePartials.values()).map(processColumnInDb),
+    records,
   };
 }
 
@@ -45,10 +84,15 @@ export default class Interpreter {
       aliases: [],
       project: new Map(),
       tablePartials: new Map(),
+      records: new Map(),
+      recordsElements: [],
+      cachedMergedTables: new Map(),
+      source: ast.source,
     };
   }
 
-  interpret (): Report<Database, CompileError> {
+  interpret (): Report<Database> {
+    // First pass: interpret all non-records elements
     const errors = this.ast.body.flatMap((element) => {
       switch (getElementKind(element).unwrap_or(undefined)) {
         case ElementKind.Table:
@@ -65,11 +109,24 @@ export default class Interpreter {
           return (new EnumInterpreter(element, this.env)).interpret();
         case ElementKind.Project:
           return (new ProjectInterpreter(element, this.env)).interpret();
+        case ElementKind.Records:
+          // Defer records interpretation - collect for later
+          this.env.recordsElements.push(element);
+          return [];
         default:
           return [];
       }
     });
 
-    return new Report(convertEnvToDb(this.env), errors);
+    const warnings: CompileWarning[] = [];
+    if (this.env.recordsElements.length) {
+    // Second pass: interpret all records elements grouped by table
+    // Now that all tables, enums, etc. are interpreted, we can validate records properly
+      const recordsResult = new RecordsInterpreter(this.env).interpret(this.env.recordsElements);
+      errors.push(...recordsResult.getErrors());
+      warnings.push(...recordsResult.getWarnings());
+    }
+
+    return new Report(convertEnvToDb(this.env), errors, warnings);
   }
 }

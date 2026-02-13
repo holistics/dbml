@@ -9,9 +9,8 @@ describe('@dbml/core - importer', () => {
   const runTest = async (fileName: string, testDir: string, format: ParseFormat) => {
     const fileExtension = getFileExtension(format);
     const input = readFileSync(path.resolve(__dirname, `./${testDir}/input/${fileName}.in.${fileExtension}`), { encoding: 'utf8' });
-    const output = readFileSync(path.resolve(__dirname, `./${testDir}/output/${fileName}.out.dbml`), { encoding: 'utf8' });
-
     const res = importer.import(input, format);
+    const output = readFileSync(path.resolve(__dirname, `./${testDir}/output/${fileName}.out.dbml`), { encoding: 'utf8' });
 
     expect(res).toBe(output);
   };

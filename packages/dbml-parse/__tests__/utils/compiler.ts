@@ -17,6 +17,7 @@ import {
   BlockExpressionNode,
   ListExpressionNode,
   TupleExpressionNode,
+  CommaExpressionNode,
   CallExpressionNode,
   LiteralNode,
   VariableNode,
@@ -25,22 +26,22 @@ import {
 } from '@/core/parser/nodes';
 import { NodeSymbolIdGenerator } from '@/core/analyzer/symbol/symbols';
 import Report from '@/core/report';
-import { CompileError, Compiler, SyntaxToken } from '@/index';
+import { Compiler, SyntaxToken } from '@/index';
 import { Database } from '@/core/interpreter/types';
 
-export function lex (source: string): Report<SyntaxToken[], CompileError> {
+export function lex (source: string): Report<SyntaxToken[]> {
   return new Lexer(source).lex();
 }
 
-export function parse (source: string): Report<{ ast: ProgramNode; tokens: SyntaxToken[] }, CompileError> {
-  return new Lexer(source).lex().chain((tokens) => new Parser(tokens, new SyntaxNodeIdGenerator()).parse());
+export function parse (source: string): Report<{ ast: ProgramNode; tokens: SyntaxToken[] }> {
+  return new Lexer(source).lex().chain((tokens) => new Parser(source, tokens, new SyntaxNodeIdGenerator()).parse());
 }
 
-export function analyze (source: string): Report<ProgramNode, CompileError> {
+export function analyze (source: string): Report<ProgramNode> {
   return parse(source).chain(({ ast }) => new Analyzer(ast, new NodeSymbolIdGenerator()).analyze());
 }
 
-export function interpret (source: string): Report<Database | undefined, CompileError> {
+export function interpret (source: string): Report<Database | undefined> {
   const compiler = new Compiler();
   compiler.setSource(source);
   return compiler.parse._().map(({ rawDb }) => rawDb);
@@ -173,6 +174,13 @@ export function print (source: string, ast: SyntaxNode): string {
         break;
       }
 
+      case SyntaxNodeKind.COMMA_EXPRESSION: {
+        const comma = node as CommaExpressionNode;
+        comma.elementList.forEach(collectTokens);
+        comma.commaList.forEach(collectTokens);
+        break;
+      }
+
       case SyntaxNodeKind.CALL_EXPRESSION: {
         const call = node as CallExpressionNode;
         if (call.callee) collectTokens(call.callee);
@@ -205,8 +213,8 @@ export function print (source: string, ast: SyntaxNode): string {
         break;
       }
 
-      case SyntaxNodeKind.DUMMY:
-        // Dummy nodes don't contribute to output
+      case SyntaxNodeKind.EMPTY:
+        // Empty nodes don't contribute to output
         break;
 
       default: {

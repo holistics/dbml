@@ -109,6 +109,12 @@ export enum CompileErrorCode {
   DUPLICATE_CHECK_SETTING,
   INVALID_CHECK_SETTING_VALUE,
 
+  INVALID_RECORDS_CONTEXT,
+  INVALID_RECORDS_NAME,
+  INVALID_RECORDS_FIELD,
+  DUPLICATE_COLUMN_REFERENCES_IN_RECORDS,
+  DUPLICATE_RECORDS_FOR_TABLE,
+
   BINDING_ERROR = 4000,
 
   UNSUPPORTED = 5000,
@@ -124,7 +130,38 @@ export class CompileError extends Error {
 
   diagnostic: Readonly<string>;
 
-  nodeOrToken: Readonly<SyntaxNode | SyntaxToken | readonly (SyntaxNode | SyntaxToken)[]>; // The nodes or tokens that cause the error
+  nodeOrToken: Readonly<SyntaxNode | SyntaxToken>; // The nodes or tokens that cause the error
+
+  start: Readonly<number>;
+
+  end: Readonly<number>;
+
+  constructor (code: number, message: string, nodeOrToken: SyntaxNode | SyntaxToken) {
+    super(message);
+    this.code = code;
+    this.diagnostic = message;
+    this.nodeOrToken = nodeOrToken;
+    this.start = nodeOrToken.start;
+    this.end = nodeOrToken.end;
+    this.name = this.constructor.name;
+    Object.setPrototypeOf(this, CompileError.prototype);
+  }
+
+  toWarning (): CompileWarning {
+    return new CompileWarning(
+      this.code,
+      this.message,
+      this.nodeOrToken,
+    );
+  }
+}
+
+export class CompileWarning extends Error {
+  code: Readonly<CompileErrorCode>;
+
+  diagnostic: Readonly<string>;
+
+  nodeOrToken: Readonly<SyntaxNode | SyntaxToken>; // The nodes or tokens that cause the error
 
   start: Readonly<number>;
 

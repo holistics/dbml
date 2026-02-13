@@ -1,4 +1,4 @@
-import type {
+import {
   IPosition, editor, languages, IRange, IDisposable, CancellationToken as ICancellationToken,
 } from 'monaco-editor-core';
 
@@ -26,8 +26,10 @@ export interface CompletionItemProvider {
     token: CancellationToken,
   ): ProviderResult<CompletionItem>;
 }
-export type CompletionItem = languages.CompletionItem;
-export type CompletionList = languages.CompletionList;
+export type CompletionItem = languages.CompletionItem & { quoted?: boolean };
+export interface CompletionList extends languages.CompletionList {
+  suggestions: CompletionItem[];
+};
 export enum CompletionItemKind {
   Function = 1,
   Constructor = 2,
@@ -77,3 +79,13 @@ export type SignatureHelpResult = languages.SignatureHelpResult;
 
 // Show references
 export type ReferenceProvider = languages.ReferenceProvider;
+
+// Diagnostics/Markers
+export enum MarkerSeverity {
+  Hint = 1,
+  Info = 2,
+  Warning = 4,
+  Error = 8,
+}
+
+export type MarkerData = editor.IMarkerData;
