@@ -12,18 +12,21 @@
           },
           "note": {
             "value": "Employee ID number"
-          }
+          },
+          "checks": []
         }
       ],
       "indexes": [],
       "note": {
-        "value": "null"
-      }
+        "value": null
+      },
+      "checks": []
     }
   ],
   "refs": [],
   "enums": [],
   "tableGroups": [],
   "aliases": [],
-  "project": {}
+  "project": {},
+  "records": []
 }

@@ -3,7 +3,7 @@ Table "products" {
   "name" varchar [default: 'Tea']
   "merchant_id" int [not null]
   "price" float [default: 123.12]
-  "status" varchar [default: NULL]
+  "status" varchar
   "created_at" varchar [default: `now()`]
   "stock" boolean [default: true]
   "expiration" date [default: `current_date + interval 1 year`]
