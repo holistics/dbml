@@ -1,0 +1,36 @@
+Table users {
+  id int [pk]
+  email varchar
+}
+
+Table posts {
+  id int [pk]
+  user_id int
+  title varchar
+}
+
+Policy {
+  name 'Users can view their own data'
+  schema public
+  table users
+  behavior permissive
+  command select
+  roles [authenticated]
+  using `auth.uid() = id`
+  check null
+}
+
+Policy {
+  name 'Users can insert their own posts'
+  table posts
+  command insert
+  roles [authenticated, admin]
+  using null
+  check `auth.uid() = user_id`
+}
+
+Policy {
+  name 'Public read access'
+  table posts
+  command select
+}

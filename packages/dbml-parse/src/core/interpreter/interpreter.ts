@@ -8,6 +8,7 @@ import { TableGroupInterpreter } from '@/core/interpreter/elementInterpreter/tab
 import { EnumInterpreter } from '@/core/interpreter/elementInterpreter/enum';
 import { ProjectInterpreter } from '@/core/interpreter/elementInterpreter/project';
 import { TablePartialInterpreter } from '@/core/interpreter/elementInterpreter/tablePartial';
+import { PolicyInterpreter } from '@/core/interpreter/elementInterpreter/policy';
 import Report from '@/core/report';
 import { getElementKind } from '@/core/analyzer/utils';
 import { ElementKind } from '@/core/analyzer/types';
@@ -23,6 +24,7 @@ function convertEnvToDb (env: InterpreterDatabase): Database {
     aliases: env.aliases,
     project: Array.from(env.project.values())[0] || {},
     tablePartials: Array.from(env.tablePartials.values()),
+    policies: Array.from(env.policies.values()),
   };
 }
 
@@ -45,6 +47,7 @@ export default class Interpreter {
       aliases: [],
       project: new Map(),
       tablePartials: new Map(),
+      policies: new Map(),
     };
   }
 
@@ -65,6 +68,8 @@ export default class Interpreter {
           return (new EnumInterpreter(element, this.env)).interpret();
         case ElementKind.Project:
           return (new ProjectInterpreter(element, this.env)).interpret();
+        case ElementKind.Policy:
+          return (new PolicyInterpreter(element, this.env)).interpret();
         default:
           return [];
       }
