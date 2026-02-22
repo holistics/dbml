@@ -29,6 +29,7 @@ export interface InterpreterDatabase {
   cachedMergedTables: Map<Table, Table>; // map Table to Table that has been merged with table partials
   source: string;
   policies: Map<ElementDeclarationNode, Policy>;
+  functions: Map<ElementDeclarationNode, Function>;
 }
 
 
@@ -74,6 +75,7 @@ export interface Database {
   tablePartials: TablePartial[];
   records: TableRecord[];
   policies: Policy[];
+  functions: Function[];
 }
 
 export interface Table {
@@ -241,6 +243,23 @@ export interface TablePartial {
 export interface TablePartialInjection {
   name: string;
   order: number;
+  token: TokenPosition;
+}
+
+export interface FunctionArg {
+  name: string;
+  type: string;
+}
+
+export interface Function {
+  name: string;
+  schemaName: string;
+  returns: string;
+  args: FunctionArg[];
+  body: string;
+  language: string;
+  behavior: string;
+  security: string;
   token: TokenPosition;
 }
 
