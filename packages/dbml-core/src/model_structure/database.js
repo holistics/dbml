@@ -7,6 +7,7 @@ import Table from './table';
 import StickyNote from './stickyNote';
 import Element from './element';
 import Policy from './policy';
+import Function from './function';
 import {
   DEFAULT_SCHEMA_NAME, TABLE, TABLE_GROUP, ENUM, REF, NOTE,
 } from './config';
@@ -26,6 +27,7 @@ class Database extends Element {
     records = [],
     tablePartials = [],
     policies = [],
+    functions = [],
   }) {
     super();
     this.dbState = new DbState();
@@ -42,6 +44,7 @@ class Database extends Element {
     this.records = [];
     this.tablePartials = [];
     this.policies = [];
+    this.functions = [];
 
     // The global array containing references with 1 endpoint being a field injected from a partial to a table
     // These refs are add to this array when resolving partials in tables (`Table.processPartials()`)
@@ -52,6 +55,7 @@ class Database extends Element {
     this.processRecords(records);
     this.processTablePartials(tablePartials);
     this.processPolicies(policies);
+    this.processFunctions(functions);
     this.processSchemas(schemas);
     this.processSchemaElements(enums, ENUM);
     this.processSchemaElements(tables, TABLE);
@@ -100,6 +104,12 @@ class Database extends Element {
   processPolicies (rawPolicies) {
     rawPolicies.forEach((rawPolicy) => {
       this.policies.push(new Policy({ ...rawPolicy, database: this }));
+    });
+  }
+
+  processFunctions (rawFunctions) {
+    rawFunctions.forEach((rawFunction) => {
+      this.functions.push(new Function({ ...rawFunction, database: this }));
     });
   }
 
@@ -244,6 +254,7 @@ class Database extends Element {
       notes: this.notes.map((n) => n.export()),
       records: this.records.map((r) => ({ ...r })),
       policies: this.policies.map((p) => p.export()),
+      functions: this.functions.map((f) => f.export()),
     };
   }
 
@@ -252,6 +263,7 @@ class Database extends Element {
       schemaIds: this.schemas.map((s) => s.id),
       noteIds: this.notes.map((n) => n.id),
       policyIds: this.policies.map((p) => p.id),
+      functionIds: this.functions.map((f) => f.id),
     };
   }
 
@@ -279,6 +291,7 @@ class Database extends Element {
       records: {},
       tablePartials: {},
       policies: {},
+      functions: {},
     };
 
     this.schemas.forEach((schema) => schema.normalize(normalizedModel));
@@ -286,6 +299,7 @@ class Database extends Element {
     this.records.forEach((record) => { normalizedModel.records[record.id] = { ...record }; });
     this.tablePartials.forEach((tablePartial) => tablePartial.normalize(normalizedModel));
     this.policies.forEach((policy) => policy.normalize(normalizedModel));
+    this.functions.forEach((func) => func.normalize(normalizedModel));
     return normalizedModel;
   }
 }

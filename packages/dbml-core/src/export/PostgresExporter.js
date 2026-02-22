@@ -555,6 +555,24 @@ class PostgresExporter {
     });
   }
 
+  static exportFunctions (functionIds, model) {
+    return functionIds.map((functionId) => {
+      const fn = model.functions[functionId];
+      const schema = fn.schemaName || 'public';
+      const argList = (fn.args || []).map((a) => `${a.name} ${a.type}`).join(', ');
+      const returnType = (fn.returns || 'void').replace(/_/g, ' ');
+      let line = `CREATE OR REPLACE FUNCTION "${schema}"."${fn.name}"(${argList})`;
+      line += `\nRETURNS ${returnType}`;
+      line += `\nLANGUAGE ${fn.language || 'plpgsql'}`;
+      line += `\n${(fn.behavior || 'volatile').toUpperCase()}`;
+      if (fn.security === 'definer') line += '\nSECURITY DEFINER';
+      line += '\nAS $$';
+      line += `\n${(fn.body || '').trim()}`;
+      line += '\n$$;\n';
+      return line;
+    });
+  }
+
   static export (model) {
     const database = model.database['1'];
 
@@ -642,6 +660,10 @@ class PostgresExporter {
       ? PostgresExporter.exportPolicies(database.policyIds, model)
       : [];
 
+    const functionStatements = database.functionIds
+      ? PostgresExporter.exportFunctions(database.functionIds, model)
+      : [];
+
     const res = concat(
       statements.schemas,
       statements.enums,
@@ -651,6 +673,7 @@ class PostgresExporter {
       statements.refs,
       recordsSection,
       policyStatements,
+      functionStatements,
     ).join('\n');
     return res;
   }
