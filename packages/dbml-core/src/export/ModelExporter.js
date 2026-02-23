@@ -6,12 +6,22 @@ import SqlServerExporter from './SqlServerExporter';
 import OracleExporter from './OracleExporter';
 
 class ModelExporter {
-  static export (model = {}, format = '', isNormalized = true) {
+  /**
+   * @param {object} model
+   * @param {string} format
+   * @param {object|boolean} flags
+   * @deprecated Passing a boolean as the third argument is deprecated. Use `{ isNormalized: boolean }` instead.
+   */
+  static export (model = {}, format = '', flags = {}) {
     let res = '';
+    // Backwards compatibility: if a boolean is passed, treat it as the isNormalized flag
+    const resolvedFlags = typeof flags === 'boolean' ? { isNormalized: flags } : flags;
+    // isNormalized defaults to true; when false, the model is normalized before exporting
+    const isNormalized = resolvedFlags.isNormalized !== false;
     const normalizedModel = isNormalized ? model : model.normalize();
     switch (format) {
       case 'dbml':
-        res = DbmlExporter.export(normalizedModel);
+        res = DbmlExporter.export(normalizedModel, resolvedFlags);
         break;
 
       case 'mysql':
@@ -23,7 +33,7 @@ class ModelExporter {
         break;
 
       case 'json':
-        res = JsonExporter.export(model, isNormalized);
+        res = JsonExporter.export(model, resolvedFlags);
         break;
 
       case 'mssql':
