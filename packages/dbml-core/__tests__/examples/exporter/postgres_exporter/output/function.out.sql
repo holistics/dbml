@@ -1,7 +1,8 @@
-CREATE OR REPLACE FUNCTION "public"."increment"(len_from integer, len_to integer)
+CREATE OR REPLACE FUNCTION "public"."increment"("len_from" integer, "len_to" integer)
 RETURNS integer
 LANGUAGE plpgsql
 VOLATILE
+SECURITY INVOKER
 AS $$
 DECLARE
           film_count INTEGER;
@@ -14,7 +15,7 @@ DECLARE
       END;
 $$;
 
-CREATE OR REPLACE FUNCTION "public"."simple_add"(a integer, b integer)
+CREATE OR REPLACE FUNCTION "public"."simple_add"("a" integer, "b" integer)
 RETURNS integer
 LANGUAGE plpgsql
 IMMUTABLE

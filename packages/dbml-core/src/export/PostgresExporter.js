@@ -556,16 +556,17 @@ class PostgresExporter {
   }
 
   static exportFunctions (functionIds, model) {
+    const toSqlType = (type) => (type || '').replace(/_/g, ' ');
     return functionIds.map((functionId) => {
       const fn = model.functions[functionId];
       const schema = fn.schemaName || 'public';
-      const argList = (fn.args || []).map((a) => `${a.name} ${a.type}`).join(', ');
-      const returnType = (fn.returns || 'void').replace(/_/g, ' ');
+      const argList = (fn.args || []).map((a) => `"${a.name}" ${toSqlType(a.type)}`).join(', ');
+      const returnType = toSqlType(fn.returns || 'void');
       let line = `CREATE OR REPLACE FUNCTION "${schema}"."${fn.name}"(${argList})`;
       line += `\nRETURNS ${returnType}`;
       line += `\nLANGUAGE ${fn.language || 'plpgsql'}`;
       line += `\n${(fn.behavior || 'volatile').toUpperCase()}`;
-      if (fn.security === 'definer') line += '\nSECURITY DEFINER';
+      line += `\nSECURITY ${(fn.security || 'invoker').toUpperCase()}`;
       line += '\nAS $$';
       line += `\n${(fn.body || '').trim()}`;
       line += '\n$$;\n';
