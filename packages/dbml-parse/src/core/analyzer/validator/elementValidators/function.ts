@@ -6,8 +6,8 @@ import {
   ElementDeclarationNode,
   FunctionApplicationNode,
   FunctionExpressionNode,
-  IdentiferStreamNode,
   ListExpressionNode,
+  SyntaxNode,
 } from '@/core/parser/nodes';
 import { SyntaxToken } from '@/core/lexer/tokens';
 import { ElementValidator } from '@/core/analyzer/validator/types';
@@ -46,10 +46,18 @@ export default class FunctionValidator implements ElementValidator {
   validate (): CompileError[] {
     return [
       ...this.validateContext(),
+      ...this.validateName(this.declarationNode.name),
       ...this.validateAlias(this.declarationNode.alias),
       ...this.validateSettingList(this.declarationNode.attributeList),
       ...this.validateBody(this.declarationNode.body),
     ];
+  }
+
+  private validateName (nameNode?: SyntaxNode): CompileError[] {
+    if (!nameNode) {
+      return [new CompileError(CompileErrorCode.NAME_NOT_FOUND, 'A Function must have a name', this.declarationNode)];
+    }
+    return [];
   }
 
   private validateContext (): CompileError[] {
@@ -84,8 +92,13 @@ export default class FunctionValidator implements ElementValidator {
       return [new CompileError(CompileErrorCode.UNEXPECTED_SIMPLE_BODY, 'A Function\'s body must be a block', body)];
     }
 
-    const [fields] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
-    return this.validateFields(fields as FunctionApplicationNode[]);
+    const [fields, subElements] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    const subElementErrors = subElements.map((el) => new CompileError(
+      CompileErrorCode.UNKNOWN_FUNCTION_FIELD,
+      'Sub-elements are not allowed inside a Function block',
+      el,
+    ));
+    return [...subElementErrors, ...this.validateFields(fields as FunctionApplicationNode[])];
   }
 
   private validateFields (fields: FunctionApplicationNode[]): CompileError[] {
@@ -130,6 +143,12 @@ export default class FunctionValidator implements ElementValidator {
                 ));
               }
             });
+          } else {
+            errors.push(new CompileError(
+              CompileErrorCode.INVALID_FUNCTION_FIELD_VALUE,
+              '\'args\' must be a list (e.g. [name: type, ...])',
+              arg || field,
+            ));
           }
           break;
         }
