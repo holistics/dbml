@@ -394,9 +394,11 @@ class DbmlExporter {
     return recordStrs.join('\n');
   }
 
-  static export (model) {
+  static export (model, flags = {}) {
     const elementStrs = [];
     const database = model.database['1'];
+    // includeRecords defaults to true; set to false to omit TableData blocks from the output
+    const includeRecords = flags.includeRecords !== false;
 
     database.schemaIds.forEach((schemaId) => {
       const {
@@ -410,7 +412,7 @@ class DbmlExporter {
     });
 
     if (!isEmpty(model.notes)) elementStrs.push(DbmlExporter.exportStickyNotes(model));
-    if (!isEmpty(model.records)) elementStrs.push(DbmlExporter.exportRecords(model));
+    if (includeRecords && !isEmpty(model.records)) elementStrs.push(DbmlExporter.exportRecords(model));
 
     // all elements already end with 1 '\n', so join('\n') to separate them with 1 blank line
     return elementStrs.join('\n');
