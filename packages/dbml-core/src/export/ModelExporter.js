@@ -6,12 +6,6 @@ import SqlServerExporter from './SqlServerExporter';
 import OracleExporter from './OracleExporter';
 
 class ModelExporter {
-  /**
-   * @param {object} model
-   * @param {string} format
-   * @param {object|boolean} flags
-   * @deprecated Passing a boolean as the third argument is deprecated. Use `{ isNormalized: boolean }` instead.
-   */
   static export (model = {}, format = '', flags = {}) {
     let res = '';
     // Backwards compatibility: if a boolean is passed, treat it as the isNormalized flag
