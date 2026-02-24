@@ -42,8 +42,8 @@ describe('@dbml/core - exporter', () => {
   }
 });
 
-const EXPECTED_DBML_WITH_RECORDS = `\
-Table "users" {
+const EXPECTED_DBML_WITH_RECORDS =
+`Table "users" {
   "id" integer [pk]
   "name" varchar
 }
@@ -53,8 +53,8 @@ Records users(id, name) {
   2, 'Bob'
 }`;
 
-const EXPECTED_DBML_WITHOUT_RECORDS = `\
-Table "users" {
+const EXPECTED_DBML_WITHOUT_RECORDS =
+`Table "users" {
   "id" integer [pk]
   "name" varchar
 }`;
