@@ -1,33 +1,27 @@
 export class Index {
-  /**
-   * @param {{
-   *  name: string,
-   *  unique: boolean,
-   *  pk: boolean,
-   *  type: string,
-   *  columns: {value: string, type: 'column' | 'string' | 'expression'}[],
-   * }} param0
-   */
+  name: string;
+  type: string;
+  unique: boolean;
+  pk: boolean;
+  columns: { value: string; type: 'column' | 'string' | 'expression' }[];
+
   constructor ({
     name, unique, pk, type, columns,
+  }: {
+    name: string;
+    unique: boolean;
+    pk: boolean;
+    type: string;
+    columns: { value: string; type: 'column' | 'string' | 'expression' }[];
   }) {
-    /** @type {string} */
     this.name = name;
-
-    /** @type {string} */
     this.type = type;
-
-    /** @type {boolean} */
     this.unique = unique;
-
-    /** @type {boolean} */
     this.pk = pk;
-
-    /** @type {{value: string, type: 'column' | 'string' | 'expression'}[]} */
     this.columns = columns;
   }
 
-  toJSON () {
+  toJSON (): { name: string; type: string; unique: boolean; pk: boolean; columns: { value: string; type: 'column' | 'string' | 'expression' }[] } {
     return {
       name: this.name,
       type: this.type,
@@ -39,54 +33,51 @@ export class Index {
 }
 
 export class Field {
-  /** @type {boolean} */
-  // fk;
+  name: string;
+  type: { type_name: string; schemaName: string };
+  not_null: boolean;
+  increment: boolean;
+  dbdefault: { value: string; type: 'string' | 'number' | 'boolean' | 'expression' };
+  unique: boolean;
+  pk: boolean;
+  note: { value: string };
+  checks: { expression: string; name?: string }[];
 
-  /**
-   * @param {{
-   *  name: string,
-   *  type: {type_name: string, schemaName: string},
-   *  not_null: boolean,
-   *  increment: boolean,
-   *  dbdefault: {value: string, type: 'string' | 'number' | 'boolean' | 'expression'},
-   *  unique: boolean,
-   *  pk: boolean,
-   *  note: {value: string},
-   *  checks: {expression: string, name?: string}[]
-   * }} param0
-   */
   constructor ({
     name, type, not_null, increment, dbdefault, unique, pk, note, checks,
+  }: {
+    name: string;
+    type: { type_name: string; schemaName: string };
+    not_null: boolean;
+    increment: boolean;
+    dbdefault: { value: string; type: 'string' | 'number' | 'boolean' | 'expression' };
+    unique: boolean;
+    pk: boolean;
+    note: { value: string };
+    checks: { expression: string; name?: string }[];
   }) {
-    /** @type {string} */
     this.name = name;
-
-    /** @type {{type_name: string, schemaName: string}} */
     this.type = type;
-
-    /** @type {boolean} */
     this.not_null = not_null;
-
-    /** @type {boolean} */
     this.increment = increment;
-
-    /** @type {{value: string, type: 'string' | 'number' | 'boolean' | 'expression'}} */
     this.dbdefault = dbdefault;
-
-    /** @type {boolean} */
     this.unique = unique;
-
-    /** @type {boolean} */
     this.pk = pk;
-
-    /** @type {{value: string}} */
     this.note = note;
-
-    /** @type {{expression: string, name?: string}[]} */
     this.checks = checks;
   }
 
-  toJSON () {
+  toJSON (): {
+    name: string;
+    type: { type_name: string; schemaName: string };
+    not_null: boolean;
+    increment: boolean;
+    dbdefault: { value: string; type: 'string' | 'number' | 'boolean' | 'expression' };
+    unique: boolean;
+    pk: boolean;
+    note: { value: string };
+    checks: { expression: string; name?: string }[];
+  } {
     return {
       name: this.name,
       type: this.type,
@@ -102,39 +93,39 @@ export class Field {
 }
 
 export class Table {
-  /**
-   * @param {{
-   *  name: string,
-   *  schemaName: string,
-   *  fields: Field[],
-   *  indexes: Index[],
-   *  note: {value: string},
-   *  checks: {expression: string, name?: string}[]
-   * }} param0
-   */
+  name: string;
+  schemaName: string;
+  fields: Field[];
+  indexes: Index[];
+  note: { value: string };
+  checks: { expression: string; name?: string }[];
+
   constructor ({
     name, schemaName, fields, indexes, note, checks,
+  }: {
+    name: string;
+    schemaName: string;
+    fields: Field[];
+    indexes: Index[];
+    note: { value: string };
+    checks: { expression: string; name?: string }[];
   }) {
-    /** @type {string} */
     this.name = name;
-
-    /** @type {string} */
     this.schemaName = schemaName;
-
-    /** @type {Field[]} */
     this.fields = fields || [];
-
-    /** @type {Index[]} */
     this.indexes = indexes || [];
-
-    /** @type {{value: string}} */
     this.note = note;
-
-    /** @type {{expression: string, name?: string}[]} */
     this.checks = checks || [];
   }
 
-  toJSON () {
+  toJSON (): {
+    name: string;
+    schemaName: string;
+    fields: ReturnType<Field['toJSON']>[];
+    indexes: ReturnType<Index['toJSON']>[];
+    note: { value: string };
+    checks: { expression: string; name?: string }[];
+  } {
     return {
       name: this.name,
       schemaName: this.schemaName,
@@ -147,31 +138,26 @@ export class Table {
 }
 
 export class Endpoint {
-  /**
-   * @param {{
-   *  tableName: string,
-   *  schemaName: string,
-   *  fieldNames: string[],
-   *  relation: '*' | '1'
-   * }} param0
-   */
+  tableName: string;
+  schemaName: string;
+  fieldNames: string[];
+  relation: '*' | '1';
+
   constructor ({
     tableName, schemaName, fieldNames, relation,
+  }: {
+    tableName: string;
+    schemaName: string;
+    fieldNames: string[];
+    relation: '*' | '1';
   }) {
-    /** @type {string} */
     this.tableName = tableName;
-
-    /** @type {string} */
     this.schemaName = schemaName;
-
-    /** @type {string[]} */
     this.fieldNames = fieldNames;
-
-    /** @type {'*' | '1'} */
     this.relation = relation;
   }
 
-  toJSON () {
+  toJSON (): { tableName: string; schemaName: string; fieldNames: string[]; relation: '*' | '1' } {
     return {
       tableName: this.tableName,
       schemaName: this.schemaName,
@@ -182,31 +168,26 @@ export class Endpoint {
 }
 
 export class Ref {
-  /**
-   * @param {{
-   *  name: string,
-   *  endpoints: Endpoint[],
-   *  onDelete: string,
-   *  onUpdate: string
-   * }} param0
-   */
+  name: string;
+  endpoints: Endpoint[];
+  onDelete: string;
+  onUpdate: string;
+
   constructor ({
     name, endpoints, onDelete, onUpdate,
+  }: {
+    name: string;
+    endpoints: Endpoint[];
+    onDelete: string;
+    onUpdate: string;
   }) {
-    /** @type {string} */
     this.name = name;
-
-    /** @type {Endpoint[]} */
     this.endpoints = endpoints || [];
-
-    /** @type {string} */
     this.onDelete = onDelete;
-
-    /** @type {string} */
     this.onUpdate = onUpdate;
   }
 
-  toJSON () {
+  toJSON (): { name: string; onDelete: string; onUpdate: string; endpoints: ReturnType<Endpoint['toJSON']>[] } {
     return {
       name: this.name,
       onDelete: this.onDelete,
@@ -217,18 +198,17 @@ export class Ref {
 }
 
 export class Enum {
-  constructor ({ name, schemaName, values }) {
-    /** @type {string} */
+  name: string;
+  schemaName: string;
+  values: { name: string }[];
+
+  constructor ({ name, schemaName, values }: { name: string; schemaName: string; values: { name: string }[] }) {
     this.name = name;
-
-    /** @type {string} */
     this.schemaName = schemaName;
-
-    /** @type {{name: string}[]} */
     this.values = values;
   }
 
-  toJSON () {
+  toJSON (): { name: string; schemaName: string; values: { name: string }[] } {
     return {
       name: this.name,
       schemaName: this.schemaName,
@@ -238,34 +218,26 @@ export class Enum {
 }
 
 export class TableRecord {
-  /**
-   * @param {{
-   *  tableName: string,
-   *  columns: string[],
-   *  values: {
-   *    value: any,
-   *    type: string,
-   *  }[]
-   *  schemaName?: string,
-   * }} param0
-   */
+  tableName: string;
+  schemaName: string | undefined;
+  columns: string[];
+  values: { value: any; type: string }[];
+
   constructor ({
     tableName, columns, values, schemaName = undefined,
+  }: {
+    tableName: string;
+    columns: string[];
+    values: { value: any; type: string }[];
+    schemaName?: string;
   }) {
-    /** @type {string} */
     this.tableName = tableName;
-
-    /** @type {string | undefined} */
     this.schemaName = schemaName;
-
-    /** @type {string[]} */
     this.columns = columns;
-
-    /** @type {{value: any, type: string}[]} */
     this.values = values;
   }
 
-  toJSON () {
+  toJSON (): { tableName: string; schemaName: string | undefined; columns: string[]; values: { value: any; type: string }[] } {
     return {
       tableName: this.tableName,
       schemaName: this.schemaName,

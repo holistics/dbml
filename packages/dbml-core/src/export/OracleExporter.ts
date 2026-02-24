@@ -7,6 +7,7 @@ import {
   shouldPrintSchema,
   parseIsoDatetime,
   formatDatetimeForOracle,
+  CommentNode,
 } from './utils';
 import {
   isNumericType,
@@ -15,9 +16,11 @@ import {
   isDateTimeType,
   isBinaryType,
 } from '@dbml/parse';
+import { NormalizedModel } from '../model_structure/database';
+import { NormalizedSchema } from '../model_structure/schema';
 
 class OracleExporter {
-  static exportRecords (model) {
+  static exportRecords (model: NormalizedModel): string[] {
     const records = Object.values(model.records || {});
     if (isEmpty(records)) {
       return [];
@@ -34,7 +37,7 @@ class OracleExporter {
         ? `("${columns.join('", "')}")`
         : '';
 
-      const formatValue = (val) => {
+      const formatValue = (val: { value: any; type: string }): string => {
         if (val.value === null) return 'NULL';
         if (val.type === 'expression') return val.value;
 
@@ -67,7 +70,7 @@ class OracleExporter {
 
       // Build the INSERT ALL statement for multiple rows
       if (values.length > 1) {
-        const intoStatements = values.map((row) => {
+        const intoStatements = values.map((row: { value: any; type: string }[]) => {
           const valueStrs = row.map(formatValue);
           return `  INTO ${tableRef} ${columnList} VALUES (${valueStrs.join(', ')})`;
         });
@@ -83,16 +86,16 @@ class OracleExporter {
     return insertStatements;
   }
 
-  static buildSchemaToTableNameSetMap (model) {
-    const schemaToTableNameSetMap = new Map();
+  static buildSchemaToTableNameSetMap (model: NormalizedModel): Map<NormalizedSchema, Set<string>> {
+    const schemaToTableNameSetMap = new Map<NormalizedSchema, Set<string>>();
 
     forEach(model.tables, (table) => {
       const schema = model.schemas[table.schemaId];
 
-      const tableSet = schemaToTableNameSetMap.get(schema.name);
+      const tableSet = schemaToTableNameSetMap.get(schema);
 
       if (!tableSet) {
-        schemaToTableNameSetMap.set(schema.name, new Set([table.name]));
+        schemaToTableNameSetMap.set(schema, new Set([table.name]));
         return;
       }
 
@@ -102,11 +105,11 @@ class OracleExporter {
     return schemaToTableNameSetMap;
   }
 
-  static buildTableNameWithSchema (model, schema, table) {
+  static buildTableNameWithSchema (model: NormalizedModel, schema: NormalizedSchema, table: { name: string }): string {
     return `${shouldPrintSchema(schema, model) ? `${escapeObjectName(schema.name, 'oracle')}.` : ''}${escapeObjectName(table.name, 'oracle')}`;
   }
 
-  static exportSchema (schemaName) {
+  static exportSchema (schemaName: string): string {
     // According to Oracle, CREATE SCHEMA statement does not actually create a schema and it automatically creates a schema when we create a user
     // Learn more: https://docs.oracle.com/en/database/oracle/oracle-database/19/sqlrf/CREATE-SCHEMA.html#GUID-2D154F9C-9E2B-4A09-B658-2EA5B99AC838__GUID-CC0A5080-2AF3-4460-AB2B-DEA6C79519BA
     return `CREATE USER ${escapeObjectName(schemaName, 'oracle')}\n`
@@ -116,7 +119,7 @@ class OracleExporter {
       + 'QUOTA UNLIMITED ON system;\n';
   }
 
-  static getFieldLines (tableId, model) {
+  static getFieldLines (tableId: number, model: NormalizedModel): string[] {
     const table = model.tables[tableId];
 
     const lines = table.fieldIds.map((fieldId) => {
@@ -145,8 +148,8 @@ class OracleExporter {
         line += ' GENERATED AS IDENTITY';
 
         // in oracle, increment means using identity. If a clause includes identity, we must ignore not null + default value
-        cloneField.dbdefault = null;
-        cloneField.not_null = false;
+        (cloneField as any).dbdefault = null;
+        (cloneField as any).not_null = false;
       }
 
       // default value must be placed before the inline constraint expression
@@ -175,7 +178,7 @@ class OracleExporter {
         line += ' PRIMARY KEY';
       }
 
-      if (cloneField.not_null) {
+      if ((cloneField as any).not_null) {
         line += ' NOT NULL';
       }
 
@@ -201,14 +204,14 @@ class OracleExporter {
     return lines;
   }
 
-  static getCompositePKs (tableId, model) {
+  static getCompositePKs (tableId: number, model: NormalizedModel): string[] {
     const table = model.tables[tableId];
 
     const compositePkIds = table.indexIds ? table.indexIds.filter((indexId) => model.indexes[indexId].pk) : [];
     const lines = compositePkIds.map((keyId) => {
       const key = model.indexes[keyId];
       let line = 'PRIMARY KEY';
-      const columnArr = [];
+      const columnArr: string[] = [];
 
       key.columnIds.forEach((columnId) => {
         const column = model.indexColumns[columnId];
@@ -229,7 +232,7 @@ class OracleExporter {
     return lines;
   }
 
-  static getCheckLines (tableId, model) {
+  static getCheckLines (tableId: number, model: NormalizedModel): string[] {
     const table = model.tables[tableId];
 
     if (!table.checkIds || table.checkIds.length === 0) {
@@ -252,7 +255,12 @@ class OracleExporter {
     return lines;
   }
 
-  static getTableContents (tableIds, model) {
+  static getTableContents (tableIds: number[], model: NormalizedModel): Array<{
+    tableId: number;
+    fieldContents: string[];
+    checkContents: string[];
+    compositePKs: string[];
+  }> {
     const tableContentArr = tableIds.map((tableId) => {
       const fieldContents = this.getFieldLines(tableId, model);
       const checkContents = this.getCheckLines(tableId, model);
@@ -269,7 +277,7 @@ class OracleExporter {
     return tableContentArr;
   }
 
-  static exportTables (tableIds, model) {
+  static exportTables (tableIds: number[], model: NormalizedModel): string[] {
     const tableContentList = this.getTableContents(tableIds, model);
 
     const tableStrs = tableContentList.map((tableContent) => {
@@ -287,12 +295,12 @@ class OracleExporter {
     return tableStrs;
   }
 
-  static buildReferenceFieldNamesString (fieldIds, model) {
+  static buildReferenceFieldNamesString (fieldIds: number[], model: NormalizedModel): string {
     const fieldNames = fieldIds.map((fieldId) => `"${model.fields[fieldId].name}"`).join(', ');
     return `(${fieldNames})`;
   }
 
-  static buildTableManyToMany (firstTableFieldsMap, secondTableFieldsMap, tableName) {
+  static buildTableManyToMany (firstTableFieldsMap: Map<string, string>, secondTableFieldsMap: Map<string, string>, tableName: string): string {
     let line = `CREATE TABLE ${tableName} (\n`;
 
     firstTableFieldsMap.forEach((fieldType, fieldName) => {
@@ -310,14 +318,14 @@ class OracleExporter {
     return line;
   }
 
-  static buildForeignKeyManyToMany (foreignEndpointTableName, foreignEndpointFields, refEndpointTableName, refEndpointFieldsString) {
+  static buildForeignKeyManyToMany (foreignEndpointTableName: string, foreignEndpointFields: Map<string, string>, refEndpointTableName: string, refEndpointFieldsString: string): string {
     const foreignEndpointFieldsString = [...foreignEndpointFields.keys()].join('`, `');
     const line = `ALTER TABLE ${foreignEndpointTableName} ADD FOREIGN KEY ("${foreignEndpointFieldsString}") REFERENCES ${refEndpointTableName} ${refEndpointFieldsString} DEFERRABLE INITIALLY IMMEDIATE;\n`;
     return line;
   }
 
-  static exportReferencesAndNewTablesIfExists (refIds, model, usedTableNameMap) {
-    const result = { refs: [], tables: [] };
+  static exportReferencesAndNewTablesIfExists (refIds: number[], model: NormalizedModel, usedTableNameMap: Map<NormalizedSchema, Set<string>>): { refs: string[]; tables: string[] } {
+    const result: { refs: string[]; tables: string[] } = { refs: [], tables: [] };
 
     refIds.forEach((refId) => {
       const ref = model.refs[refId];
@@ -404,12 +412,12 @@ class OracleExporter {
     return result;
   }
 
-  static exportReferenceGrants (model, refIds) {
+  static exportReferenceGrants (model: NormalizedModel, refIds: number[]): string[] {
     // only default schema -> ignore it
     if (Object.keys(model.schemas).length <= 1) {
       return [];
     }
-    const tableNameList = [];
+    const tableNameList: string[] = [];
     refIds.forEach((refId) => {
       const ref = model.refs[refId];
 
@@ -458,7 +466,7 @@ class OracleExporter {
     return tableToGrantList;
   }
 
-  static exportIndexes (indexIds, model) {
+  static exportIndexes (indexIds: number[], model: NormalizedModel): string[] {
     // exclude composite pk index
     const indexArr = indexIds.filter((indexId) => !model.indexes[indexId].pk).map((indexId) => {
       const index = model.indexes[indexId];
@@ -480,7 +488,7 @@ class OracleExporter {
       const tableName = this.buildTableNameWithSchema(model, schema, table);
       line += ` ON ${tableName}`;
 
-      const columnArr = [];
+      const columnArr: string[] = [];
       index.columnIds.forEach((columnId) => {
         const column = model.indexColumns[columnId];
         let columnStr = '';
@@ -500,7 +508,7 @@ class OracleExporter {
     return indexArr;
   }
 
-  static exportComments (comments, model) {
+  static exportComments (comments: CommentNode[], model: NormalizedModel): string[] {
     const commentArr = comments.map((comment) => {
       let line = 'COMMENT ON';
 
@@ -511,12 +519,12 @@ class OracleExporter {
 
       switch (comment.type) {
         case 'table': {
-          line += ` TABLE ${tableName} IS '${table.note.replace(/'/g, '\'\'')}'`;
+          line += ` TABLE ${tableName} IS '${(table.note || '').replace(/'/g, '\'\'')}'`;
           break;
         }
         case 'column': {
-          const field = model.fields[comment.fieldId];
-          line += ` COLUMN ${tableName}.${escapeObjectName(field.name, 'oracle')} IS '${field.note.replace(/'/g, '\'\'')}'`;
+          const field = model.fields[comment.fieldId!];
+          line += ` COLUMN ${tableName}.${escapeObjectName(field.name, 'oracle')} IS '${(field.note || '').replace(/'/g, '\'\'')}'`;
           break;
         }
         default:
@@ -531,7 +539,7 @@ class OracleExporter {
     return commentArr;
   }
 
-  static export (model) {
+  static export (model: NormalizedModel): string {
     const database = model.database['1'];
 
     const schemaToTableNameSetMap = this.buildSchemaToTableNameSetMap(model);
@@ -553,12 +561,12 @@ class OracleExporter {
         prevStatements.indexes.push(...this.exportIndexes(indexIds, model));
       }
 
-      const commentNodes = flatten(tableIds.map((tableId) => {
+      const commentNodes: CommentNode[] = flatten<CommentNode>(tableIds.map((tableId): CommentNode[] => {
         const { fieldIds, note } = model.tables[tableId];
-        const fieldObjects = fieldIds
+        const fieldObjects: CommentNode[] = fieldIds
           .filter((fieldId) => model.fields[fieldId].note)
-          .map((fieldId) => ({ type: 'column', fieldId, tableId }));
-        return note ? [{ type: 'table', tableId }].concat(fieldObjects) : fieldObjects;
+          .map((fieldId) => ({ type: 'column' as const, fieldId, tableId }));
+        return note ? [{ type: 'table' as const, tableId }, ...fieldObjects] : fieldObjects;
       }));
 
       if (!isEmpty(commentNodes)) {
@@ -575,12 +583,12 @@ class OracleExporter {
 
       return prevStatements;
     }, {
-      schemas: [],
-      tables: [],
-      indexes: [],
-      comments: [],
-      referenceGrants: [],
-      refs: [],
+      schemas: [] as string[],
+      tables: [] as string[],
+      indexes: [] as string[],
+      comments: [] as string[],
+      referenceGrants: [] as string[],
+      refs: [] as string[],
     });
 
     // Export INSERT statements with constraint checking disabled

@@ -1,13 +1,94 @@
 import { get } from 'lodash-es';
-import Element from './element';
+import Element, { Token, RawNote } from './element';
 import { DEFAULT_SCHEMA_NAME } from './config';
 import Check from './check';
+import Endpoint from './endpoint';
+import Enum from './enum';
+import Table from './table';
+import TablePartial from './tablePartial';
+import DbState from './dbState';
+import { NormalizedModel } from './database';
+
+export interface InlineRef {
+  schemaName: string | null;
+  tableName: string;
+  fieldNames: string[];
+  relation: '>' | '<' | '-' | '<>';
+  token: Token;
+}
+
+export interface ColumnType {
+  schemaName: string | null;
+  type_name: string;
+  args: string | null;
+}
+
+export interface RawField {
+  name: string;
+  type: any;
+  unique: boolean;
+  pk: boolean;
+  token: Token;
+  not_null: boolean;
+  note: RawNote;
+  dbdefault: any;
+  increment: boolean;
+  checks?: any[];
+  table: Table;
+  noteToken?: Token | null;
+  injectedPartial?: TablePartial | null;
+  injectedToken?: Token | null;
+}
+
+export interface NormalizedField {
+  id: number;
+  name: string;
+  type: {
+    schemaName: string | null;
+    type_name: string;
+  };
+  unique: boolean;
+  pk: boolean;
+  not_null: boolean;
+  note: string | null;
+  dbdefault?: {
+    type: 'number' | 'string' | 'boolean' | 'expression';
+    value: number | string;
+  };
+  increment: boolean;
+  endpointIds: number[];
+  tableId: number;
+  enumId: number | null;
+  injectedPartialId: number | null;
+  checkIds: number[];
+}
+
+export interface NormalizedFieldIdMap {
+  [_id: number]: NormalizedField;
+}
 
 class Field extends Element {
+  name: string;
+  type: any;
+  unique: boolean;
+  pk: boolean;
+  dbState: DbState;
+  not_null: boolean;
+  note: string;
+  noteToken: Token;
+  dbdefault: any;
+  increment: boolean;
+  checks: Check[];
+  table: Table;
+  endpoints: Endpoint[];
+  _enum!: Enum;
+  injectedPartial?: TablePartial;
+  injectedToken!: Token;
+
   constructor ({
     name, type, unique, pk, token, not_null: notNull, note, dbdefault,
-    increment, checks = [], table = {}, noteToken = null, injectedPartial = null, injectedToken = null,
-  } = {}) {
+    increment, checks = [], table = {} as Table, noteToken = null, injectedPartial = null, injectedToken = null,
+  }: RawField) {
     super(token);
     if (!name) {
       this.error('Field must have a name');
@@ -21,15 +102,15 @@ class Field extends Element {
     this.unique = unique;
     this.pk = pk;
     this.not_null = notNull;
-    this.note = note ? get(note, 'value', note) : null;
-    this.noteToken = note ? get(note, 'token', noteToken) : null;
+    this.note = (note ? get(note, 'value', note) : null) as string;
+    this.noteToken = (note ? get(note, 'token', noteToken) : null) as Token;
     this.dbdefault = dbdefault;
     this.increment = increment;
     this.checks = [];
     this.endpoints = [];
     this.table = table;
-    this.injectedPartial = injectedPartial;
-    this.injectedToken = injectedToken;
+    this.injectedPartial = injectedPartial ?? undefined;
+    this.injectedToken = injectedToken as Token;
     this.dbState = this.table.dbState;
     this.generateId();
     this.bindType();
@@ -37,11 +118,11 @@ class Field extends Element {
     this.processChecks(checks);
   }
 
-  generateId () {
+  generateId (): void {
     this.id = this.dbState.generateId('fieldId');
   }
 
-  bindType () {
+  bindType (): void {
     const typeName = this.type.type_name;
     const typeSchemaName = this.type.schemaName || DEFAULT_SCHEMA_NAME;
     if (this.type.schemaName) {
@@ -65,30 +146,41 @@ class Field extends Element {
     }
   }
 
-  pushEndpoint (endpoint) {
+  pushEndpoint (endpoint: any): void {
     this.endpoints.push(endpoint);
   }
 
-  export () {
+  export (): ReturnType<Field['shallowExport']> {
     return {
       ...this.shallowExport(),
     };
   }
 
-  exportParentIds () {
+  exportParentIds (): { tableId: number; enumId: number | null } {
     return {
       tableId: this.table.id,
       enumId: this._enum ? this._enum.id : null,
     };
   }
 
-  exportChildIds () {
+  exportChildIds (): { endpointIds: number[] } {
     return {
       endpointIds: this.endpoints.map((e) => e.id),
     };
   }
 
-  shallowExport () {
+  shallowExport (): {
+    name: string;
+    type: any;
+    unique: boolean;
+    pk: boolean;
+    not_null: boolean;
+    note: string;
+    dbdefault: any;
+    increment: boolean;
+    injectedPartialId: number | null;
+    checkIds: number[];
+  } {
     return {
       name: this.name,
       type: this.type,
@@ -103,7 +195,7 @@ class Field extends Element {
     };
   }
 
-  normalize (model) {
+  normalize (model: NormalizedModel): void {
     model.fields[this.id] = {
       id: this.id,
       ...this.shallowExport(),
@@ -114,7 +206,7 @@ class Field extends Element {
     this.checks.forEach((check) => check.normalize(model));
   }
 
-  processChecks (checks) {
+  processChecks (checks: any[]): void {
     checks.forEach((check) => {
       this.checks.push(new Check({ ...check, table: this.table, column: this }));
     });

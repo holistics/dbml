@@ -1,27 +1,35 @@
 import { tryExtractDateTime } from '@dbml/parse';
 import { DEFAULT_SCHEMA_NAME } from '../model_structure/config';
 import { DateTime } from 'luxon';
+import { NormalizedModel } from '../model_structure/database';
+import { NormalizedSchema } from '../model_structure/schema';
 
-export function hasWhiteSpace (s) {
+export interface CommentNode {
+  type: 'table' | 'column';
+  tableId: number;
+  fieldId?: number;
+}
+
+export function hasWhiteSpace (s: string): boolean {
   return /\s/g.test(s);
 }
 
-export function hasWhiteSpaceOrUpperCase (s) {
+export function hasWhiteSpaceOrUpperCase (s: string): boolean {
   return /[\sA-Z]/g.test(s);
 }
 
-export function shouldPrintSchema (schema, model) {
+export function shouldPrintSchema (schema: NormalizedSchema, model: NormalizedModel): boolean {
   return schema.name !== DEFAULT_SCHEMA_NAME || (schema.name === DEFAULT_SCHEMA_NAME && model.database['1'].hasDefaultSchema);
 }
 
-export function buildJunctionFields1 (fieldIds, model) {
-  const fieldsMap = new Map();
+export function buildJunctionFields1 (fieldIds: number[], model: NormalizedModel): Map<string, string> {
+  const fieldsMap = new Map<string, string>();
   fieldIds.map((fieldId) => fieldsMap.set(`${model.tables[model.fields[fieldId].tableId].name}_${model.fields[fieldId].name}`, model.fields[fieldId].type.type_name));
   return fieldsMap;
 }
 
-export function buildJunctionFields2 (fieldIds, model, firstTableFieldsMap) {
-  const fieldsMap = new Map();
+export function buildJunctionFields2 (fieldIds: number[], model: NormalizedModel, firstTableFieldsMap: Map<string, string>): Map<string, string> {
+  const fieldsMap = new Map<string, string>();
   fieldIds.forEach((fieldId) => {
     let fieldName = `${model.tables[model.fields[fieldId].tableId].name}_${model.fields[fieldId].name}`;
     let count = 1;
@@ -34,7 +42,7 @@ export function buildJunctionFields2 (fieldIds, model, firstTableFieldsMap) {
   return fieldsMap;
 }
 
-export function buildNewTableName (firstTable, secondTable, usedTableNames) {
+export function buildNewTableName (firstTable: string, secondTable: string, usedTableNames: Set<string>): string {
   let newTableName = `${firstTable}_${secondTable}`;
   let count = 1;
   while (usedTableNames.has(newTableName)) {
@@ -54,7 +62,7 @@ export function buildNewTableName (firstTable, secondTable, usedTableNames) {
  * @returns string
  * @description This function is a clone version of the buildNewTableName, but without side effect - update the original usedTableNames
  */
-export function buildUniqueTableName (schemaName, firstTableName, secondTableName, schemaToTableNameSetMap) {
+export function buildUniqueTableName (schemaName: NormalizedSchema, firstTableName: string, secondTableName: string, schemaToTableNameSetMap: Map<NormalizedSchema, Set<string>>): string {
   let newTableName = `${firstTableName}_${secondTableName}`;
   let count = 1;
 
@@ -70,7 +78,7 @@ export function buildUniqueTableName (schemaName, firstTableName, secondTableNam
   return newTableName;
 }
 
-export function escapeObjectName (name, database) {
+export function escapeObjectName (name: string, database: string): string {
   if (!name) {
     return '';
   }
@@ -97,7 +105,7 @@ export function escapeObjectName (name, database) {
  * @param {string} value - The datetime string to parse (supports various formats, normalized to ISO8601)
  * @returns {{ datetime: DateTime, hasTimezone: boolean } | null} Parsed datetime with timezone info, or null if invalid
  */
-export function parseIsoDatetime (value) {
+export function parseIsoDatetime (value: string): { datetime: DateTime; hasTimezone: boolean } | null {
   if (!value || typeof value !== 'string') {
     return null;
   }
@@ -133,7 +141,7 @@ export function parseIsoDatetime (value) {
  * @param {boolean} hasTimezone - Whether to include timezone
  * @returns {string} Formatted datetime string for Oracle
  */
-export function formatDatetimeForOracle (datetime, hasTimezone) {
+export function formatDatetimeForOracle (datetime: DateTime, hasTimezone: boolean): string {
   if (hasTimezone) {
     // Format with timezone: YYYY-MM-DD HH24:MI:SS.FF3 TZH:TZM
     // Oracle expects the timezone offset in +HH:MM or -HH:MM format

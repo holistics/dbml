@@ -1,9 +1,38 @@
-import Element from './element';
+import Element, { Token } from './element';
+import Database from './database';
+import DbState from './dbState';
+import { NormalizedModel } from './database';
+
+export interface RawStickyNote {
+  name: string;
+  content: string;
+  database: Database;
+  token: Token;
+  headerColor: string;
+}
+
+export interface NormalizedNote {
+  id: number;
+  name: string;
+  content: string;
+  headerColor: string | null;
+}
+
+export interface NormalizedNoteIdMap {
+  [id: number]: NormalizedNote;
+}
 
 class StickyNote extends Element {
+  name: string;
+  content: string;
+  noteToken!: Token;
+  headerColor: string;
+  database: Database;
+  dbState: DbState;
+
   constructor ({
-    name, content, headerColor, token, database = {},
-  } = {}) {
+    name, content, headerColor, token, database = {} as Database,
+  }: RawStickyNote) {
     super(token);
     this.name = name;
     this.content = content;
@@ -13,11 +42,11 @@ class StickyNote extends Element {
     this.generateId();
   }
 
-  generateId () {
+  generateId (): void {
     this.id = this.dbState.generateId('noteId');
   }
 
-  export () {
+  export (): { name: string; content: string; headerColor: string } {
     return {
       name: this.name,
       content: this.content,
@@ -25,7 +54,7 @@ class StickyNote extends Element {
     };
   }
 
-  normalize (model) {
+  normalize (model: NormalizedModel): void {
     model.notes[this.id] = {
       id: this.id,
       ...this.export(),

@@ -2,21 +2,24 @@ import { groupBy, isEmpty, reduce } from 'lodash-es';
 import { addDoubleQuoteIfNeeded, formatRecordValue } from '@dbml/parse';
 import { shouldPrintSchema } from './utils';
 import { DEFAULT_SCHEMA_NAME } from '../model_structure/config';
+import { NormalizedModel } from '../model_structure/database';
+import { NormalizedTable } from '../model_structure/table';
+import { NormalizedTableGroup } from '../model_structure/tableGroup';
 
 class DbmlExporter {
-  static hasWhiteSpace (str) {
+  static hasWhiteSpace (str: string): boolean {
     return /\s/g.test(str);
   }
 
-  static hasSquareBracket (str) {
+  static hasSquareBracket (str: string): boolean {
     return /\[|\]/.test(str);
   }
 
-  static isExpression (str) {
+  static isExpression (str: string): boolean {
     return /\s*(\*|\+|-|\([A-Za-z0-9_]+\)|\(\))/g.test(str);
   }
 
-  static escapeNote (str) {
+  static escapeNote (str: string | null): string {
     if (str === null) {
       return '';
     }
@@ -30,7 +33,7 @@ class DbmlExporter {
     return `'''${newStr}'''`;
   }
 
-  static exportEnums (enumIds, model) {
+  static exportEnums (enumIds: number[], model: NormalizedModel): string {
     const enumStrs = enumIds.map((enumId) => {
       const _enum = model.enums[enumId];
       const schema = model.schemas[_enum.schemaId];
@@ -46,7 +49,7 @@ class DbmlExporter {
     return enumStrs.length ? enumStrs.join('\n') : '';
   }
 
-  static getFieldLines (tableId, model) {
+  static getFieldLines (tableId: number, model: NormalizedModel): string[] {
     const table = model.tables[tableId];
 
     const lines = table.fieldIds.map((fieldId) => {
@@ -61,7 +64,7 @@ class DbmlExporter {
         ? `"${field.type.type_name}"`
         : field.type.type_name}`;
 
-      const constraints = [];
+      const constraints: string[] = [];
       if (field.unique) {
         constraints.push('unique');
       }
@@ -93,7 +96,7 @@ class DbmlExporter {
               break;
 
             case 'string': {
-              const quote = field.dbdefault.value.includes('\n') ? '\'\'\'' : '\'';
+              const quote = (field.dbdefault.value as string).includes('\n') ? '\'\'\'' : '\'';
               value += `${quote}${field.dbdefault.value}${quote}`;
               break;
             }
@@ -122,7 +125,7 @@ class DbmlExporter {
     return lines;
   }
 
-  static getIndexLines (tableId, model) {
+  static getIndexLines (tableId: number, model: NormalizedModel): string[] {
     const table = model.tables[tableId];
 
     const lines = table.indexIds.map((indexId) => {
@@ -144,7 +147,7 @@ class DbmlExporter {
           : column.value;
       }
 
-      const indexSettings = [];
+      const indexSettings: string[] = [];
       if (index.pk) {
         indexSettings.push('pk');
       }
@@ -169,7 +172,7 @@ class DbmlExporter {
     return lines;
   }
 
-  static getCheckLines (tableId, model) {
+  static getCheckLines (tableId: number, model: NormalizedModel): string[] {
     const table = model.tables[tableId];
 
     const lines = table.checkIds.map((checkId) => {
@@ -185,7 +188,12 @@ class DbmlExporter {
     return lines;
   }
 
-  static getTableContentArr (tableIds, model) {
+  static getTableContentArr (tableIds: number[], model: NormalizedModel): Array<{
+    tableId: number;
+    fieldContents: string[];
+    checkContents: string[];
+    indexContents: string[];
+  }> {
     const tableContentArr = tableIds.map((tableId) => {
       const fieldContents = DbmlExporter.getFieldLines(tableId, model);
       const checkContents = DbmlExporter.getCheckLines(tableId, model);
@@ -202,7 +210,7 @@ class DbmlExporter {
     return tableContentArr;
   }
 
-  static getTableSettings (table) {
+  static getTableSettings (table: NormalizedTable): string {
     let settingStr = '';
     const settingSep = ', ';
     if (table.headerColor) {
@@ -214,7 +222,7 @@ class DbmlExporter {
     return settingStr ? ` [${settingStr}]` : '';
   }
 
-  static exportTables (tableIds, model) {
+  static exportTables (tableIds: number[], model: NormalizedModel): string {
     const tableContentArr = DbmlExporter.getTableContentArr(tableIds, model);
 
     const tableStrs = tableContentArr.map((tableContent) => {
@@ -250,12 +258,12 @@ class DbmlExporter {
     return tableStrs.length ? tableStrs.join('\n') : '';
   }
 
-  static buildFieldName (fieldIds, model) {
+  static buildFieldName (fieldIds: number[], model: NormalizedModel): string {
     const fieldNames = fieldIds.map((fieldId) => `"${model.fields[fieldId].name}"`).join(', ');
     return fieldIds.length === 1 ? fieldNames : `(${fieldNames})`;
   }
 
-  static exportRefs (refIds, model) {
+  static exportRefs (refIds: number[], model: NormalizedModel): string {
     const strArr = refIds.map((refId) => {
       const ref = model.refs[refId];
       const oneRelationEndpointIndex = ref.endpointIds.findIndex((endpointId) => model.endpoints[endpointId].relation === '1');
@@ -270,7 +278,7 @@ class DbmlExporter {
       const refEndpointField = model.fields[refEndpoint.fieldIds[0]];
       const refEndpointTable = model.tables[refEndpointField.tableId];
       const refEndpointSchema = model.schemas[refEndpointTable.schemaId];
-      const refEndpointFieldName = this.buildFieldName(refEndpoint.fieldIds, model, 'dbml');
+      const refEndpointFieldName = this.buildFieldName(refEndpoint.fieldIds, model);
 
       if (ref.name) {
         line += ` ${shouldPrintSchema(model.schemas[ref.schemaId], model)
@@ -285,7 +293,7 @@ class DbmlExporter {
       const foreignEndpointField = model.fields[foreignEndpoint.fieldIds[0]];
       const foreignEndpointTable = model.tables[foreignEndpointField.tableId];
       const foreignEndpointSchema = model.schemas[foreignEndpointTable.schemaId];
-      const foreignEndpointFieldName = this.buildFieldName(foreignEndpoint.fieldIds, model, 'dbml');
+      const foreignEndpointFieldName = this.buildFieldName(foreignEndpoint.fieldIds, model);
 
       if (isManyToMany) line += '<> ';
       else
@@ -295,7 +303,7 @@ class DbmlExporter {
         ? `"${foreignEndpointSchema.name}".`
         : ''}"${foreignEndpointTable.name}".${foreignEndpointFieldName}`;
 
-      const refActions = [];
+      const refActions: string[] = [];
       if (ref.onUpdate) {
         refActions.push(`update: ${ref.onUpdate.toLowerCase()}`);
       }
@@ -313,15 +321,15 @@ class DbmlExporter {
     return strArr.length ? strArr.join('\n') : '';
   }
 
-  static getTableGroupSettings (tableGroup) {
-    const settings = [];
+  static getTableGroupSettings (tableGroup: NormalizedTableGroup): string {
+    const settings: string[] = [];
 
     if (tableGroup.color) settings.push(`color: ${tableGroup.color}`);
 
     return settings.length ? ` [${settings.join(', ')}]` : '';
   }
 
-  static exportTableGroups (tableGroupIds, model) {
+  static exportTableGroups (tableGroupIds: number[], model: NormalizedModel): string {
     const tableGroupStrs = tableGroupIds.map((groupId) => {
       const group = model.tableGroups[groupId];
       const groupSchema = model.schemas[group.schemaId];
@@ -345,7 +353,7 @@ class DbmlExporter {
     return tableGroupStrs.length ? tableGroupStrs.join('\n') : '';
   }
 
-  static exportStickyNotes (model) {
+  static exportStickyNotes (model: NormalizedModel): string {
     return reduce(model.notes, (result, note) => {
       const escapedContent = `  ${DbmlExporter.escapeNote(note.content)}`;
       const stickyNote = `Note ${note.name} {\n${escapedContent}\n}\n`;
@@ -355,7 +363,7 @@ class DbmlExporter {
     }, '');
   }
 
-  static exportRecords (model) {
+  static exportRecords (model: NormalizedModel): string {
     const records = model.records;
     if (!records || isEmpty(records)) {
       return '';
@@ -380,7 +388,7 @@ class DbmlExporter {
       // Merge all rows
       const allRows = groupRecords.flatMap((record) => {
         const allColumnIndexes = allColumns.map((col) => record.columns.indexOf(col));
-        return record.values.map((row) => allColumnIndexes.map((colIdx) => colIdx === -1 ? { value: null, type: 'expression' } : row[colIdx]));
+        return record.values.map((row: any[]) => allColumnIndexes.map((colIdx) => colIdx === -1 ? { value: null, type: 'expression' } : row[colIdx]));
       });
 
       // Build data rows
@@ -394,8 +402,8 @@ class DbmlExporter {
     return recordStrs.join('\n');
   }
 
-  static export (model, flags = {}) {
-    const elementStrs = [];
+  static export (model: NormalizedModel, flags: { includeRecords?: boolean } = {}): string {
+    const elementStrs: string[] = [];
     const database = model.database['1'];
     // includeRecords defaults to true; set to false to omit TableData blocks from the output
     const includeRecords = flags.includeRecords !== false;

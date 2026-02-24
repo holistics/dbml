@@ -4,6 +4,7 @@ import {
   buildJunctionFields1,
   buildJunctionFields2,
   buildNewTableName,
+  CommentNode,
 } from './utils';
 import {
   isNumericType,
@@ -12,9 +13,10 @@ import {
   isDateTimeType,
   isBinaryType,
 } from '@dbml/parse';
+import { NormalizedModel, RecordValue } from '../model_structure/database';
 
 class MySQLExporter {
-  static exportRecords (model) {
+  static exportRecords (model: NormalizedModel): string[] {
     const records = Object.values(model.records || {});
     if (isEmpty(records)) {
       return [];
@@ -32,7 +34,7 @@ class MySQLExporter {
         : '';
 
       // Value formatter for MySQL
-      const formatValue = (val) => {
+      const formatValue = (val: RecordValue): string => {
         if (val.value === null) return 'NULL';
         if (val.type === 'expression') return val.value;
 
@@ -44,7 +46,7 @@ class MySQLExporter {
       };
 
       // Build the VALUES clause
-      const valueRows = values.map((row) => {
+      const valueRows = values.map((row: RecordValue[]) => {
         const valueStrs = row.map(formatValue);
         return `(${valueStrs.join(', ')})`;
       });
@@ -57,7 +59,7 @@ class MySQLExporter {
     return insertStatements;
   }
 
-  static getFieldLines (tableId, model) {
+  static getFieldLines (tableId: number, model: NormalizedModel): string[] {
     const table = model.tables[tableId];
 
     const lines = table.fieldIds.map((fieldId) => {
@@ -129,14 +131,14 @@ class MySQLExporter {
     return lines;
   }
 
-  static getCompositePKs (tableId, model) {
+  static getCompositePKs (tableId: number, model: NormalizedModel): string[] {
     const table = model.tables[tableId];
 
     const compositePkIds = table.indexIds ? table.indexIds.filter((indexId) => model.indexes[indexId].pk) : [];
     const lines = compositePkIds.map((keyId) => {
       const key = model.indexes[keyId];
       let line = 'PRIMARY KEY';
-      const columnArr = [];
+      const columnArr: string[] = [];
 
       key.columnIds.forEach((columnId) => {
         const column = model.indexColumns[columnId];
@@ -157,7 +159,7 @@ class MySQLExporter {
     return lines;
   }
 
-  static getCheckLines (tableId, model) {
+  static getCheckLines (tableId: number, model: NormalizedModel): string[] {
     const table = model.tables[tableId];
 
     if (!table.checkIds || table.checkIds.length === 0) {
@@ -180,7 +182,12 @@ class MySQLExporter {
     return lines;
   }
 
-  static getTableContentArr (tableIds, model) {
+  static getTableContentArr (tableIds: number[], model: NormalizedModel): Array<{
+    tableId: number;
+    fieldContents: string[];
+    checkContents: string[];
+    compositePKs: string[];
+  }> {
     const tableContentArr = tableIds.map((tableId) => {
       const fieldContents = MySQLExporter.getFieldLines(tableId, model);
       const checkContents = MySQLExporter.getCheckLines(tableId, model);
@@ -197,7 +204,7 @@ class MySQLExporter {
     return tableContentArr;
   }
 
-  static exportTables (tableIds, model) {
+  static exportTables (tableIds: number[], model: NormalizedModel): string[] {
     const tableContentArr = MySQLExporter.getTableContentArr(tableIds, model);
 
     const tableStrs = tableContentArr.map((tableContent) => {
@@ -214,12 +221,12 @@ class MySQLExporter {
     return tableStrs;
   }
 
-  static buildFieldName (fieldIds, model) {
+  static buildFieldName (fieldIds: number[], model: NormalizedModel): string {
     const fieldNames = fieldIds.map((fieldId) => `\`${model.fields[fieldId].name}\``).join(', ');
     return `(${fieldNames})`;
   }
 
-  static buildTableManyToMany (firstTableFieldsMap, secondTableFieldsMap, tableName, refEndpointSchema, model) {
+  static buildTableManyToMany (firstTableFieldsMap: Map<string, string>, secondTableFieldsMap: Map<string, string>, tableName: string, refEndpointSchema: any, model: NormalizedModel): string {
     let line = `CREATE TABLE ${shouldPrintSchema(refEndpointSchema, model) ? `\`${refEndpointSchema.name}\`.` : ''}\`${tableName}\` (\n`;
     const key1s = [...firstTableFieldsMap.keys()].join('`, `');
     const key2s = [...secondTableFieldsMap.keys()].join('`, `');
@@ -234,7 +241,15 @@ class MySQLExporter {
     return line;
   }
 
-  static buildForeignKeyManyToMany (fieldsMap, foreignEndpointFields, refEndpointTableName, foreignEndpointTableName, refEndpointSchema, foreignEndpointSchema, model) {
+  static buildForeignKeyManyToMany (
+    fieldsMap: Map<string, string>,
+    foreignEndpointFields: string,
+    refEndpointTableName: string,
+    foreignEndpointTableName: string,
+    refEndpointSchema: any,
+    foreignEndpointSchema: any,
+    model: NormalizedModel,
+  ): string {
     const refEndpointFields = [...fieldsMap.keys()].join('`, `');
     const line = `ALTER TABLE ${shouldPrintSchema(refEndpointSchema, model)
       ? `\`${refEndpointSchema.name}\`.`
@@ -244,7 +259,11 @@ class MySQLExporter {
     return line;
   }
 
-  static exportRefs (refIds, model, usedTableNames) {
+  static exportRefs (
+    refIds: number[],
+    model: NormalizedModel,
+    usedTableNames: Set<string>,
+  ): string[] {
     const strArr = refIds.map((refId) => {
       let line = '';
       const ref = model.refs[refId];
@@ -258,12 +277,12 @@ class MySQLExporter {
       const refEndpointField = model.fields[refEndpoint.fieldIds[0]];
       const refEndpointTable = model.tables[refEndpointField.tableId];
       const refEndpointSchema = model.schemas[refEndpointTable.schemaId];
-      const refEndpointFieldName = this.buildFieldName(refEndpoint.fieldIds, model, 'mysql');
+      const refEndpointFieldName = this.buildFieldName(refEndpoint.fieldIds, model);
 
       const foreignEndpointField = model.fields[foreignEndpoint.fieldIds[0]];
       const foreignEndpointTable = model.tables[foreignEndpointField.tableId];
       const foreignEndpointSchema = model.schemas[foreignEndpointTable.schemaId];
-      const foreignEndpointFieldName = this.buildFieldName(foreignEndpoint.fieldIds, model, 'mysql');
+      const foreignEndpointFieldName = this.buildFieldName(foreignEndpoint.fieldIds, model);
 
       if (refOneIndex === -1) {
         const firstTableFieldsMap = buildJunctionFields1(refEndpoint.fieldIds, model);
@@ -298,7 +317,10 @@ class MySQLExporter {
     return strArr;
   }
 
-  static exportIndexes (indexIds, model) {
+  static exportIndexes (
+    indexIds: number[],
+    model: NormalizedModel,
+  ): string[] {
     // exclude composite pk index
     const indexArr = indexIds.filter((indexId) => !model.indexes[indexId].pk).map((indexId, i) => {
       const index = model.indexes[indexId];
@@ -318,7 +340,7 @@ class MySQLExporter {
         ? `\`${schema.name}\`.`
         : ''}\`${table.name}\``;
 
-      const columnArr = [];
+      const columnArr: string[] = [];
       index.columnIds.forEach((columnId) => {
         const column = model.indexColumns[columnId];
         let columnStr = '';
@@ -342,7 +364,10 @@ class MySQLExporter {
     return indexArr;
   }
 
-  static exportComments (comments, model) {
+  static exportComments (
+    comments: CommentNode[],
+    model: NormalizedModel,
+  ): string[] {
     const commentArr = comments.map((comment) => {
       let line = '';
       if (comment.type === 'table') {
@@ -351,7 +376,7 @@ class MySQLExporter {
 
         line += `ALTER TABLE ${shouldPrintSchema(schema, model)
           ? `\`${schema.name}\`.`
-          : ''}\`${table.name}\` COMMENT = '${table.note.replace(/'/g, '\'\'')}'`;
+          : ''}\`${table.name}\` COMMENT = '${(table.note || '').replace(/'/g, '\'\'')}'`;
       }
       line += ';\n';
       return line;
@@ -359,7 +384,7 @@ class MySQLExporter {
     return commentArr;
   }
 
-  static export (model) {
+  static export (model: NormalizedModel): string {
     const database = model.database['1'];
 
     const usedTableNames = new Set(Object.values(model.tables).map((table) => table.name));
@@ -381,9 +406,9 @@ class MySQLExporter {
         prevStatements.indexes.push(...MySQLExporter.exportIndexes(indexIds, model));
       }
 
-      const commentNodes = flatten(tableIds.map((tableId) => {
+      const commentNodes: CommentNode[] = flatten(tableIds.map((tableId) => {
         const { note } = model.tables[tableId];
-        return note ? [{ type: 'table', tableId }] : [];
+        return note ? [{ type: 'table' as const, tableId }] : [];
       }));
       if (!isEmpty(commentNodes)) {
         prevStatements.comments.push(...MySQLExporter.exportComments(commentNodes, model));
@@ -395,12 +420,12 @@ class MySQLExporter {
 
       return prevStatements;
     }, {
-      schemas: [],
-      enums: [],
-      tables: [],
-      indexes: [],
-      comments: [],
-      refs: [],
+      schemas: [] as string[],
+      enums: [] as string[],
+      tables: [] as string[],
+      indexes: [] as string[],
+      comments: [] as string[],
+      refs: [] as string[],
     });
 
     // Export INSERT statements

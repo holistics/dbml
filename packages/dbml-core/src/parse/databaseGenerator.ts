@@ -8,16 +8,16 @@ import {
   Enum,
 } from './ANTLR/ASTGeneration/AST';
 
-const parseJSONToDatabase = (rawDatabase) => {
-  return new Database(rawDatabase);
+const parseJSONToDatabase = (rawDatabase: object): Database => {
+  return new Database(rawDatabase as any);
 };
 
-const createRefs = (rawRefs) => {
+const createRefs = (rawRefs: any[]): ReturnType<Ref['toJSON']>[] => {
   return rawRefs.map((rawRef) => {
     const {
       name, endpoints, onDelete, onUpdate,
     } = rawRef;
-    const eps = endpoints.map((ep) => new Endpoint(ep));
+    const eps = endpoints.map((ep: any) => new Endpoint(ep));
     return new Ref({
       name,
       endpoints: eps,
@@ -27,7 +27,7 @@ const createRefs = (rawRefs) => {
   });
 };
 
-const createEnums = (rawEnums) => {
+const createEnums = (rawEnums: any[]): Enum[] => {
   return rawEnums.map((rawEnum) => {
     const { name, schemaName, values } = rawEnum;
     return new Enum({
@@ -38,7 +38,7 @@ const createEnums = (rawEnums) => {
   });
 };
 
-const createFields = (rawFields, fieldsConstraints) => {
+const createFields = (rawFields: any[], fieldsConstraints: Record<string, any>): Field[] => {
   return rawFields.map((field) => {
     const constraints = fieldsConstraints[field.name] || {};
     const f = new Field({
@@ -56,7 +56,7 @@ const createFields = (rawFields, fieldsConstraints) => {
   });
 };
 
-const createIndexes = (rawIndexes) => {
+const createIndexes = (rawIndexes: any[]): Index[] => {
   return rawIndexes.map((rawIndex) => {
     const {
       name, unique, pk, type, columns,
@@ -72,7 +72,13 @@ const createIndexes = (rawIndexes) => {
   });
 };
 
-const createTables = (rawTables, rawFields, rawIndexes, rawTableChecks, tableConstraints) => {
+const createTables = (
+  rawTables: any[],
+  rawFields: Record<string, any[]>,
+  rawIndexes: Record<string, any[]>,
+  rawTableChecks: Record<string, any>,
+  tableConstraints: Record<string, any>,
+): Table[] => {
   return rawTables.map((rawTable) => {
     const { name, schemaName, note } = rawTable;
     const key = schemaName ? `${schemaName}.${name}` : `${name}`;
@@ -91,7 +97,15 @@ const createTables = (rawTables, rawFields, rawIndexes, rawTableChecks, tableCon
   });
 };
 
-const generateDatabase = (schemaJson) => {
+const generateDatabase = (schemaJson: {
+  tables: any[];
+  fields: Record<string, any[]>;
+  indexes: Record<string, any[]>;
+  refs: any[];
+  enums: any[];
+  tableConstraints: Record<string, any>;
+  checks: Record<string, any>;
+}): Database => {
   const {
     tables: rawTables,
     fields: rawFields,
@@ -118,7 +132,7 @@ const generateDatabase = (schemaJson) => {
     };
     return parseJSONToDatabase(rawDatabase);
   } catch (err) {
-    throw new Error(err);
+    throw new Error(err as string);
   }
 };
 

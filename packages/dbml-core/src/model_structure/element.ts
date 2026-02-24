@@ -1,5 +1,29 @@
+export interface Token {
+  end: {
+    column: number;
+    line: number;
+    offset: number;
+  };
+  start: {
+    column: number;
+    line: number;
+    offset: number;
+  };
+}
+
+export interface RawNote {
+  value: string;
+  token: Token;
+}
+
 class ElementError extends Error {
-  constructor (message, location = { start: { line: 1, column: 1 } }) {
+  location: { start: { line: number; column: number } };
+  error: string;
+
+  constructor (
+    message: string,
+    location: { start: { line: number; column: number } } = { start: { line: 1, column: 1 } },
+  ) {
     super(message);
     this.location = location;
     this.error = 'error';
@@ -7,15 +31,19 @@ class ElementError extends Error {
 }
 
 class Element {
-  constructor (token) {
+  token: Token;
+  id!: number;
+  selection!: string;
+
+  constructor (token: Token) {
     this.token = token;
   }
 
-  bind (selection) {
+  bind (selection: any): void {
     this.selection = selection;
   }
 
-  error (message) {
+  error (message: string): void {
     throw new ElementError(message, this.token);
   }
 }

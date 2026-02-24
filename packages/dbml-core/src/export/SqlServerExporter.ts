@@ -4,6 +4,7 @@ import {
   buildJunctionFields1,
   buildJunctionFields2,
   buildNewTableName,
+  CommentNode,
 } from './utils';
 import {
   isNumericType,
@@ -12,9 +13,11 @@ import {
   isDateTimeType,
   isBinaryType,
 } from '@dbml/parse';
+import { NormalizedModel } from '../model_structure/database';
+import { NormalizedSchema } from '../model_structure/schema';
 
 class SqlServerExporter {
-  static exportRecords (model) {
+  static exportRecords (model: NormalizedModel): string[] {
     const records = Object.values(model.records || {});
     if (isEmpty(records)) {
       return [];
@@ -32,7 +35,7 @@ class SqlServerExporter {
         : '';
 
       // Value formatter for SQL Server
-      const formatValue = (val) => {
+      const formatValue = (val: { value: any; type: string }): string => {
         if (val.value === null) return 'NULL';
         if (val.type === 'expression') return val.value;
 
@@ -45,7 +48,7 @@ class SqlServerExporter {
       };
 
       // Build the VALUES clause
-      const valueRows = values.map((row) => {
+      const valueRows = values.map((row: { value: any; type: string }[]) => {
         const valueStrs = row.map(formatValue);
         return `(${valueStrs.join(', ')})`;
       });
@@ -58,7 +61,7 @@ class SqlServerExporter {
     return insertStatements;
   }
 
-  static getFieldLines (tableId, model) {
+  static getFieldLines (tableId: number, model: NormalizedModel): string[] {
     const table = model.tables[tableId];
 
     const lines = table.fieldIds.map((fieldId) => {
@@ -127,14 +130,14 @@ class SqlServerExporter {
     return lines;
   }
 
-  static getCompositePKs (tableId, model) {
+  static getCompositePKs (tableId: number, model: NormalizedModel): string[] {
     const table = model.tables[tableId];
 
     const compositePkIds = table.indexIds ? table.indexIds.filter((indexId) => model.indexes[indexId].pk) : [];
     const lines = compositePkIds.map((keyId) => {
       const key = model.indexes[keyId];
       let line = 'PRIMARY KEY';
-      const columnArr = [];
+      const columnArr: string[] = [];
 
       key.columnIds.forEach((columnId) => {
         const column = model.indexColumns[columnId];
@@ -155,7 +158,7 @@ class SqlServerExporter {
     return lines;
   }
 
-  static getCheckLines (tableId, model) {
+  static getCheckLines (tableId: number, model: NormalizedModel): string[] {
     const table = model.tables[tableId];
 
     if (!table.checkIds || table.checkIds.length === 0) {
@@ -178,7 +181,12 @@ class SqlServerExporter {
     return lines;
   }
 
-  static getTableContentArr (tableIds, model) {
+  static getTableContentArr (tableIds: number[], model: NormalizedModel): Array<{
+    tableId: number;
+    fieldContents: string[];
+    checkContents: string[];
+    compositePKs: string[];
+  }> {
     const tableContentArr = tableIds.map((tableId) => {
       const fieldContents = SqlServerExporter.getFieldLines(tableId, model);
       const checkContents = SqlServerExporter.getCheckLines(tableId, model);
@@ -195,7 +203,7 @@ class SqlServerExporter {
     return tableContentArr;
   }
 
-  static exportTables (tableIds, model) {
+  static exportTables (tableIds: number[], model: NormalizedModel): string[] {
     const tableContentArr = SqlServerExporter.getTableContentArr(tableIds, model);
 
     const tableStrs = tableContentArr.map((tableContent) => {
@@ -212,7 +220,7 @@ class SqlServerExporter {
     return tableStrs;
   }
 
-  static buildTableManyToMany (firstTableFieldsMap, secondTableFieldsMap, tableName, refEndpointSchema, model) {
+  static buildTableManyToMany (firstTableFieldsMap: Map<string, string>, secondTableFieldsMap: Map<string, string>, tableName: string, refEndpointSchema: NormalizedSchema, model: NormalizedModel): string {
     let line = `CREATE TABLE ${shouldPrintSchema(refEndpointSchema, model)
       ? `[${refEndpointSchema.name}].`
       : ''}[${tableName}] (\n`;
@@ -229,7 +237,7 @@ class SqlServerExporter {
     return line;
   }
 
-  static buildForeignKeyManyToMany (fieldsMap, foreignEndpointFields, refEndpointTableName, foreignEndpointTableName, refEndpointSchema, foreignEndpointSchema, model) {
+  static buildForeignKeyManyToMany (fieldsMap: Map<string, string>, foreignEndpointFields: string, refEndpointTableName: string, foreignEndpointTableName: string, refEndpointSchema: NormalizedSchema, foreignEndpointSchema: NormalizedSchema, model: NormalizedModel): string {
     const refEndpointFields = [...fieldsMap.keys()].join('], [');
     const line = `ALTER TABLE ${shouldPrintSchema(refEndpointSchema, model)
       ? `[${refEndpointSchema.name}].`
@@ -239,12 +247,12 @@ class SqlServerExporter {
     return line;
   }
 
-  static buildFieldName (fieldIds, model) {
+  static buildFieldName (fieldIds: number[], model: NormalizedModel): string {
     const fieldNames = fieldIds.map((fieldId) => `[${model.fields[fieldId].name}]`).join(', ');
     return `(${fieldNames})`;
   }
 
-  static exportRefs (refIds, model, usedTableNames) {
+  static exportRefs (refIds: number[], model: NormalizedModel, usedTableNames: Set<string>): string[] {
     const strArr = refIds.map((refId) => {
       let line = '';
       const ref = model.refs[refId];
@@ -258,12 +266,12 @@ class SqlServerExporter {
       const refEndpointField = model.fields[refEndpoint.fieldIds[0]];
       const refEndpointTable = model.tables[refEndpointField.tableId];
       const refEndpointSchema = model.schemas[refEndpointTable.schemaId];
-      const refEndpointFieldName = this.buildFieldName(refEndpoint.fieldIds, model, 'mssql');
+      const refEndpointFieldName = this.buildFieldName(refEndpoint.fieldIds, model);
 
       const foreignEndpointField = model.fields[foreignEndpoint.fieldIds[0]];
       const foreignEndpointTable = model.tables[foreignEndpointField.tableId];
       const foreignEndpointSchema = model.schemas[foreignEndpointTable.schemaId];
-      const foreignEndpointFieldName = this.buildFieldName(foreignEndpoint.fieldIds, model, 'mssql');
+      const foreignEndpointFieldName = this.buildFieldName(foreignEndpoint.fieldIds, model);
 
       if (refOneIndex === -1) { // many to many relationship
         const firstTableFieldsMap = buildJunctionFields1(refEndpoint.fieldIds, model);
@@ -300,7 +308,7 @@ class SqlServerExporter {
     return strArr;
   }
 
-  static exportIndexes (indexIds, model) {
+  static exportIndexes (indexIds: number[], model: NormalizedModel): string[] {
     // exclude composite pk index
     const indexArr = indexIds.filter((indexId) => !model.indexes[indexId].pk).map((indexId, i) => {
       const index = model.indexes[indexId];
@@ -320,7 +328,7 @@ class SqlServerExporter {
         ? `[${schema.name}].`
         : ''}[${table.name}]`;
 
-      const columnArr = [];
+      const columnArr: string[] = [];
       index.columnIds.forEach((columnId) => {
         const column = model.indexColumns[columnId];
         let columnStr = '';
@@ -340,7 +348,7 @@ class SqlServerExporter {
     return indexArr;
   }
 
-  static exportComments (comments, model) {
+  static exportComments (comments: CommentNode[], model: NormalizedModel): string[] {
     const commentArr = comments.map((comment) => {
       const table = model.tables[comment.tableId];
       const schema = model.schemas[table.schemaId];
@@ -350,15 +358,15 @@ class SqlServerExporter {
       switch (comment.type) {
         case 'table': {
           line += '@name = N\'Table_Description\',\n';
-          line += `@value = '${table.note.replace(/'/g, '\'\'')}',\n`;
+          line += `@value = '${(table.note || '').replace(/'/g, '\'\'')}',\n`;
           line += `@level0type = N'Schema', @level0name = '${shouldPrintSchema(schema, model) ? `${schema.name}` : 'dbo'}',\n`;
           line += `@level1type = N'Table',  @level1name = '${table.name}';\n`;
           break;
         }
         case 'column': {
-          const field = model.fields[comment.fieldId];
+          const field = model.fields[comment.fieldId!];
           line += '@name = N\'Column_Description\',\n';
-          line += `@value = '${field.note.replace(/'/g, '\'\'')}',\n`;
+          line += `@value = '${(field.note || '').replace(/'/g, '\'\'')}',\n`;
           line += `@level0type = N'Schema', @level0name = '${shouldPrintSchema(schema, model) ? `${schema.name}` : 'dbo'}',\n`;
           line += `@level1type = N'Table',  @level1name = '${table.name}',\n`;
           line += `@level2type = N'Column', @level2name = '${field.name}';\n`;
@@ -376,7 +384,7 @@ class SqlServerExporter {
     return commentArr;
   }
 
-  static export (model) {
+  static export (model: NormalizedModel): string {
     const database = model.database['1'];
 
     const usedTableNames = new Set(Object.values(model.tables).map((table) => table.name));
@@ -398,12 +406,12 @@ class SqlServerExporter {
         prevStatements.indexes.push(...SqlServerExporter.exportIndexes(indexIds, model));
       }
 
-      const commentNodes = flatten(tableIds.map((tableId) => {
+      const commentNodes: CommentNode[] = flatten<CommentNode>(tableIds.map((tableId): CommentNode[] => {
         const { fieldIds, note } = model.tables[tableId];
-        const fieldObjects = fieldIds
+        const fieldObjects: CommentNode[] = fieldIds
           .filter((fieldId) => model.fields[fieldId].note)
-          .map((fieldId) => ({ type: 'column', fieldId, tableId }));
-        return note ? [{ type: 'table', tableId }].concat(fieldObjects) : fieldObjects;
+          .map((fieldId) => ({ type: 'column' as const, fieldId, tableId }));
+        return note ? [{ type: 'table' as const, tableId }, ...fieldObjects] : fieldObjects;
       }));
       if (!isEmpty(commentNodes)) {
         prevStatements.comments.push(...SqlServerExporter.exportComments(commentNodes, model));
@@ -415,12 +423,12 @@ class SqlServerExporter {
 
       return prevStatements;
     }, {
-      schemas: [],
-      enums: [],
-      tables: [],
-      indexes: [],
-      comments: [],
-      refs: [],
+      schemas: [] as string[],
+      enums: [] as string[],
+      tables: [] as string[],
+      indexes: [] as string[],
+      comments: [] as string[],
+      refs: [] as string[],
     });
 
     // Export INSERT statements with constraint handling

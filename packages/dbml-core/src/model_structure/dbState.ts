@@ -1,4 +1,21 @@
 export default class DbState {
+  [key: string]: any;
+  dbId: number;
+  schemaId: number;
+  enumId: number;
+  tableGroupId: number;
+  refId: number;
+  tableId: number;
+  noteId: number;
+  enumValueId: number;
+  endpointId: number;
+  checkId: number;
+  indexId: number;
+  fieldId: number;
+  indexColumnId: number;
+  recordId: number;
+  tablePartialId: number;
+
   constructor () {
     this.dbId = 1;
     this.schemaId = 1;
@@ -17,7 +34,7 @@ export default class DbState {
     this.tablePartialId = 1;
   }
 
-  generateId (el) {
+  generateId (el: string): any {
     const id = this[el];
     this[el] += 1;
     return id;
