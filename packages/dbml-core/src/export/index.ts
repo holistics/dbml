@@ -1,48 +1,48 @@
 import ModelExporter from './ModelExporter';
 import Parser from '../parse/Parser';
-import { DbmlExporterFlags } from '../types';
-import { JsonExporterFlags } from './JsonExporter';
+import { DbmlExporterOptions } from './DbmlExporter';
+import { JsonExporterOptions } from './JsonExporter';
 
-export type ExportFormatOption = 'dbml' | 'mysql' | 'postgres' | 'json' | 'mssql' | 'oracle';
+export type ExportFormat = 'dbml' | 'mysql' | 'postgres' | 'json' | 'mssql' | 'oracle';
 
-export type ExportFlags =
-  Partial<DbmlExporterFlags> &
-  Partial<JsonExporterFlags>;
+export type ExportOptions =
+  Partial<DbmlExporterOptions> &
+  Partial<JsonExporterOptions>;
 
 /**
- * @deprecated Passing a boolean as the third argument is deprecated. Use `ExportFlags` instead.
+ * @deprecated Passing a boolean as the third argument is deprecated. Use `ExportOptions` instead.
  */
 function _export (
   str: string,
-  format: ExportFormatOption,
-  flags: boolean,
+  format: ExportFormat,
+  options: boolean,
 ): string;
 
 function _export (
   str: string,
-  format: ExportFormatOption,
-  flags?: ExportFlags,
+  format: ExportFormat,
+  options?: ExportOptions,
 ): string;
 
 function _export (
   str: string,
-  format: ExportFormatOption,
-  flags: ExportFlags | boolean = {
+  format: ExportFormat,
+  options: ExportOptions | boolean = {
     isNormalized: true,
     includeRecords: true
   },
 ): string {
-  const resolvedFlags = normalizeExportFlags(flags);
+  const resolvedFlags = normalizeExportOptions(options);
   const database = (new Parser()).parse(str, 'dbmlv2');
   return ModelExporter.export(database.normalize(), format, resolvedFlags);
 }
 
-export function normalizeExportFlags (
-  flags: ExportFlags | boolean = {},
-): Required<ExportFlags> {
-  if (typeof flags === 'boolean') {
+export function normalizeExportOptions (
+  options: ExportOptions | boolean = {},
+): Required<ExportOptions> {
+  if (typeof options === 'boolean') {
     return {
-      isNormalized: flags,
+      isNormalized: options,
       includeRecords: true,
     };
   }
@@ -50,11 +50,11 @@ export function normalizeExportFlags (
   const {
     isNormalized = true,
     includeRecords = true,
-  } = flags;
+  } = options;
 
   return {
-    isNormalized: isNormalized,
-    includeRecords: includeRecords,
+    isNormalized,
+    includeRecords,
   };
 }
 

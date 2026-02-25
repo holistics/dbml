@@ -6,17 +6,9 @@ import type { NormalizedModel, RecordValue } from '../../types/model_structure/d
 import type { NormalizedTable } from '../../types/model_structure/table';
 import type { NormalizedTableGroup } from '../../types/model_structure/tableGroup';
 
-export interface DbmlExporterFlags {
-  /** When false, TableData (Records) blocks are omitted from the output. Defaults to true. */
+export interface DbmlExporterOptions {
+  /** When false, Records blocks are omitted from the output. Defaults to true. */
   includeRecords: boolean;
-}
-
-
-interface TableContent {
-  tableId: number;
-  fieldContents: string[];
-  checkContents: string[];
-  indexContents: string[];
 }
 
 class DbmlExporter {
@@ -202,7 +194,12 @@ class DbmlExporter {
     return lines;
   }
 
-  static getTableContentArr (tableIds: number[], model: NormalizedModel): TableContent[] {
+  static getTableContentArr (tableIds: number[], model: NormalizedModel): {
+    tableId: number;
+    fieldContents: string[];
+    checkContents: string[];
+    indexContents: string[];
+  }[] {
     const tableContentArr = tableIds.map((tableId) => {
       const fieldContents = DbmlExporter.getFieldLines(tableId, model);
       const checkContents = DbmlExporter.getCheckLines(tableId, model);
@@ -411,10 +408,10 @@ class DbmlExporter {
     return recordStrs.join('\n');
   }
 
-  static export (model: NormalizedModel, flags: DbmlExporterFlags): string {
+  static export (model: NormalizedModel, options: DbmlExporterOptions): string {
     const elementStrs: string[] = [];
     const database = model.database['1'];
-    const { includeRecords } = flags;
+    const { includeRecords } = options;
 
     database.schemaIds.forEach((schemaId) => {
       const {

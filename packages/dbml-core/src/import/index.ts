@@ -1,21 +1,21 @@
 import { generateDatabase } from '../parse/databaseGenerator';
 import Parser from '../parse/Parser';
 import ModelExporter from '../export/ModelExporter';
-import { DbmlExporterFlags } from 'export/DbmlExporter';
+import { DbmlExporterOptions } from 'export/DbmlExporter';
 
-export type ImportFormatOption = 'dbml' | 'mysql' | 'postgres' | 'json' | 'mssql' | 'postgresLegacy' | 'mssqlLegacy' | 'oracle';
+export type ImportFormat = 'dbml' | 'mysql' | 'postgres' | 'json' | 'mssql' | 'postgresLegacy' | 'mssqlLegacy' | 'schemarb' | 'snowflake' | 'oracle';
 
-export type ImportFlags = Partial<DbmlExporterFlags>;
+export type ImportOptions = Partial<DbmlExporterOptions>;
 
 function _import (
   str: string,
-  format: ImportFormatOption,
-  flags: ImportFlags = {
+  format: ImportFormat,
+  options: ImportOptions = {
     includeRecords: true,
   },
 ): string {
   const database = (new Parser()).parse(str, format);
-  const dbml = ModelExporter.export(database.normalize(), 'dbml', normalizeImportFlags(flags));
+  const dbml = ModelExporter.export(database.normalize(), 'dbml', normalizeImportOptions(options));
 
   return dbml;
 }
@@ -27,12 +27,12 @@ function generateDbml (schemaJson: unknown): string {
   return dbml;
 }
 
-export function normalizeImportFlags(
-  flags: ImportFlags,
-): Required<ImportFlags> {
+export function normalizeImportOptions(
+  options: ImportOptions,
+): Required<ImportOptions> {
   const {
     includeRecords = true,
-  } = flags;
+  } = options;
 
   return {
     includeRecords,

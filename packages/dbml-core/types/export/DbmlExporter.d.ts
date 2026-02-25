@@ -2,7 +2,7 @@ import type { NormalizedModel } from '../model_structure/database';
 import type { NormalizedTable } from '../model_structure/table';
 import type { NormalizedTableGroup } from '../model_structure/tableGroup';
 
-export interface DbmlExporterFlags {
+export interface DbmlExporterOptions {
     /** When false, TableData (Records) blocks are omitted from the output. Defaults to true. */
     includeRecords: boolean;
 }
@@ -24,7 +24,7 @@ declare class DbmlExporter {
     static exportTableGroups(tableGroupIds: number[], model: NormalizedModel): string;
     static exportStickyNotes(model: NormalizedModel): string;
     static exportRecords(model: NormalizedModel): string;
-    static export(model: NormalizedModel, flags: DbmlExporterFlags): string;
+    static export(model: NormalizedModel, options: DbmlExporterOptions): string;
 }
 
 export default DbmlExporter;

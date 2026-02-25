@@ -1,14 +1,14 @@
-import type { DbmlExporterFlags } from './DbmlExporter';
-import type { JsonExporterFlags } from './JsonExporter';
+import type { DbmlExporterOptions } from './DbmlExporter';
+import type { JsonExporterOptions } from './JsonExporter';
 
-export type ExportFormatOption = 'dbml' | 'mysql' | 'postgres' | 'json' | 'mssql' | 'oracle';
+export type ExportFormat = 'dbml' | 'mysql' | 'postgres' | 'json' | 'mssql' | 'oracle';
 
-export type ExportFlags =
-  Partial<DbmlExporterFlags> &
-  Partial<JsonExporterFlags>;
+export type ExportOptions =
+  Partial<DbmlExporterOptions> &
+  Partial<JsonExporterOptions>;
 
-declare function _export(str: string, format: ExportFormatOption, flags: boolean): string;
-declare function _export(str: string, format: ExportFormatOption, flags?: ExportFlags): string;
+declare function _export(str: string, format: ExportFormat, options: boolean): string;
+declare function _export(str: string, format: ExportFormat, options?: ExportOptions): string;
 
 declare const _default: {
     export: typeof _export;

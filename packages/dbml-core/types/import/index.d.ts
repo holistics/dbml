@@ -1,10 +1,12 @@
-import type { DbmlExporterFlags } from '../export/DbmlExporter';
+import type { DbmlExporterOptions } from '../export/DbmlExporter';
 
-export type ImportFormatOption = 'dbml' | 'mysql' | 'postgres' | 'json' | 'mssql' | 'postgresLegacy' | 'mssqlLegacy' | 'oracle';
+export type ImportFormat = 'dbml' | 'mysql' | 'postgres' | 'json' | 'mssql' | 'postgresLegacy' | 'mssqlLegacy' | 'schemarb' | 'snowflake' | 'oracle';
 
-export type ImportFlags = Partial<DbmlExporterFlags>;
+export type ImportOptions = Partial<DbmlExporterOptions>;
 
-declare function _import(str: string, format: ImportFormatOption, flags?: ImportFlags): string;
+export declare function normalizeImportOptions(options: ImportOptions): Required<ImportOptions>;
+
+declare function _import(str: string, format: ImportFormat, options?: ImportOptions): string;
 
 /**
  * @param schemaJson
