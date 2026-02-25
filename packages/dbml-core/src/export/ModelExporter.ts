@@ -27,6 +27,7 @@ class ModelExporter {
   static export (
     model: Database | NormalizedModel,
     format: ExportFormat,
+    // Some code uses `ModelExporter` directly, so we still need to provide a default value here
     options: ExportOptions | boolean = {
       isNormalized: true,
       includeRecords: true,
