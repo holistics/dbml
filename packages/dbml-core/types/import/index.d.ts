@@ -4,8 +4,6 @@ export type ImportFormat = 'dbml' | 'mysql' | 'postgres' | 'json' | 'mssql' | 'p
 
 export type ImportOptions = Partial<DbmlExporterOptions>;
 
-export declare function normalizeImportOptions(options: ImportOptions): Required<ImportOptions>;
-
 declare function _import(str: string, format: ImportFormat, options?: ImportOptions): string;
 
 /**
