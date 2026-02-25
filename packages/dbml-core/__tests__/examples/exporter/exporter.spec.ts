@@ -1,6 +1,6 @@
 import exporter from '../../../src/export';
 import { scanTestNames, getFileExtension } from '../testHelpers';
-import { ExportFormatOption } from '../../../types/export/ModelExporter';
+import { ExportFormat } from '../../../types/export/ModelExporter';
 import { readFileSync } from 'fs';
 import path from 'path';
 import { test, expect, describe } from 'vitest';
@@ -18,7 +18,7 @@ Records users(id, name) {
 `.trim();
 
 describe('@dbml/core - exporter', () => {
-  const runTest = async (fileName: string, testDir: string, format: ExportFormatOption) => {
+  const runTest = async (fileName: string, testDir: string, format: ExportFormat) => {
     const fileExtension = getFileExtension(format);
     const input = readFileSync(path.resolve(__dirname, `./${testDir}/input/${fileName}.in.dbml`), { encoding: 'utf8' });
     const output = readFileSync(path.resolve(__dirname, `./${testDir}/output/${fileName}.out.${fileExtension}`), { encoding: 'utf8' });
