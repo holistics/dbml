@@ -6,28 +6,28 @@ import SqlServerExporter from './SqlServerExporter';
 import OracleExporter from './OracleExporter';
 import Database from '../model_structure/database';
 import type { NormalizedModel } from '../../types/model_structure/database';
-import { ExportFlags, ExportFormatOption, normalizeExportFlags } from './index';
+import { ExportOptions, ExportFormat, normalizeExportOptions } from './index';
 
 class ModelExporter {
   /**
-   * @deprecated Passing a boolean as the third argument is deprecated. Use `ExportFlags` instead.
+   * @deprecated Passing a boolean as the third argument is deprecated. Use `ExportOptions` instead.
    */
   static export (
     model: Database | NormalizedModel,
-    format: ExportFormatOption,
-    flags: boolean,
+    format: ExportFormat,
+    options: boolean,
   ): string;
 
   static export (
     model: Database | NormalizedModel,
-    format: ExportFormatOption,
-    flags?: ExportFlags,
+    format: ExportFormat,
+    options?: ExportOptions,
   ): string;
 
   static export (
     model: Database | NormalizedModel,
-    format: ExportFormatOption,
-    flags: ExportFlags | boolean = {
+    format: ExportFormat,
+    options: ExportOptions | boolean = {
       isNormalized: true,
       includeRecords: true,
     },
@@ -35,7 +35,7 @@ class ModelExporter {
     const {
       isNormalized,
       includeRecords,
-    } = normalizeExportFlags(flags);
+    } = normalizeExportOptions(options);
 
     const normalizedModel: NormalizedModel = model instanceof Database
       ? model.normalize()
