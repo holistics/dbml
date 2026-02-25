@@ -1,20 +1,70 @@
 import { get, isNil } from 'lodash-es';
-import Element from './element';
+import Element, { RawNote, Token } from './element';
 import Field from './field';
 import Index from './indexes';
 import { DEFAULT_SCHEMA_NAME } from './config';
 import { shouldPrintSchema } from './utils';
 import Check from './check';
+import Schema from './schema';
+import DbState from './dbState';
+import TableGroup from './tableGroup';
+import TablePartial from './tablePartial';
+import { NormalizedModel } from './database';
+
+interface RawTable {
+  name: string;
+  alias: string;
+  note: RawNote;
+  fields: Field[];
+  indexes: Index[];
+  checks?: any[];
+  schema: Schema;
+  token: Token;
+  headerColor: string;
+  partials: TablePartial[];
+  noteToken?: Token | null;
+}
+
+export interface NormalizedTable {
+  id: number;
+  name: string;
+  alias: string | null;
+  note: string | null;
+  headerColor: string;
+  fieldIds: number[];
+  indexIds: number[];
+  checkIds: number[];
+  schemaId: number;
+  groupId: number | null;
+  partials: TablePartial[];
+}
+
+export interface NormalizedTableIdMap {
+  [id: number]: NormalizedTable;
+}
 
 class Table extends Element {
+  name: string;
+  alias: string;
+  note: string;
+  noteToken: Token;
+  fields: Field[];
+  indexes: Index[];
+  checks: Check[];
+  schema: Schema;
+  headerColor: string;
+  dbState: DbState;
+  group!: TableGroup;
+  partials: TablePartial[];
+
   constructor ({
-    name, alias, note, fields = [], indexes = [], checks = [], schema = {}, token, headerColor, noteToken = null, partials = [],
-  } = {}) {
+    name, alias, note, fields = [], indexes = [], checks = [], schema = {} as Schema, token, headerColor, noteToken = null, partials = [],
+  }: RawTable) {
     super(token);
     this.name = name;
     this.alias = alias;
-    this.note = note ? get(note, 'value', note) : null;
-    this.noteToken = note ? get(note, 'token', noteToken) : null;
+    this.note = (note ? get(note, 'value', note) : null) as string;
+    this.noteToken = (note ? get(note, 'token', noteToken) : null) as Token;
     this.headerColor = headerColor;
     this.fields = [];
     this.indexes = [];
@@ -33,28 +83,28 @@ class Table extends Element {
     this.processChecks(checks);
   }
 
-  generateId () {
+  generateId (): void {
     this.id = this.dbState.generateId('tableId');
   }
 
-  checkFieldCount () {
+  checkFieldCount (): void {
     if (this.fields.length === 0) {
       this.error('Table must have at least one field');
     }
   }
 
-  processFields (rawFields) {
-    rawFields.forEach((field) => {
+  processFields (rawFields: any): void {
+    rawFields.forEach((field: any) => {
       this.pushField(new Field({ ...field, table: this }));
     });
   }
 
-  pushField (field) {
+  pushField (field: any): void {
     this.checkField(field);
     this.fields.push(field);
   }
 
-  checkField (field) {
+  checkField (field: any): void {
     if (this.fields.some((f) => f.name === field.name)) {
       field.error(`Field "${field.name}" existed in table ${shouldPrintSchema(this.schema)
         ? `"${this.schema.name}".`
@@ -62,19 +112,19 @@ class Table extends Element {
     }
   }
 
-  processIndexes (rawIndexes) {
-    rawIndexes.forEach((index) => {
+  processIndexes (rawIndexes: any): void {
+    rawIndexes.forEach((index: any) => {
       this.pushIndex(new Index({ ...index, table: this }));
     });
   }
 
-  pushIndex (index) {
+  pushIndex (index: any): void {
     this.checkIndex(index);
     this.indexes.push(index);
   }
 
-  checkIndex (index) {
-    index.columns.forEach((column) => {
+  checkIndex (index: any): void {
+    index.columns.forEach((column: any) => {
       if (column.type === 'column' && !(this.findField(column.value))) {
         index.error(`Column "${column.value}" do not exist in table ${shouldPrintSchema(this.schema)
           ? `"${this.schema.name}".`
@@ -83,29 +133,29 @@ class Table extends Element {
     });
   }
 
-  processChecks (checks) {
+  processChecks (checks: any[]): void {
     checks.forEach((check) => {
       this.pushCheck(new Check({ ...check, table: this }));
     });
   }
 
-  pushCheck (check) {
+  pushCheck (check: any): void {
     this.checks.push(check);
   }
 
-  findField (fieldName) {
+  findField (fieldName: any): Field | undefined {
     return this.fields.find((f) => f.name === fieldName);
   }
 
-  checkSameId (table) {
+  checkSameId (table: any): boolean {
     return (this.schema.checkSameId(table.schemaName || DEFAULT_SCHEMA_NAME))
       && (this.name === table.name
         || this.alias === table.name
         || this.name === table.alias
-        || (this.alias && this.alias === table.alias));
+        || Boolean(this.alias && this.alias === table.alias));
   }
 
-  processPartials () {
+  processPartials (): void {
     if (!this.partials?.length) return;
     /**
      * When encountering conflicting columns or settings with identical names, the following resolution order is applied:
@@ -126,27 +176,27 @@ class Table extends Element {
     if (!isNil(this.headerColor)) existingSettingNames.add('headerColor');
 
     // descending order, we'll inserted the partial fields from tail to head
-    const sortedPartials = this.partials.sort((a, b) => b.order - a.order);
+    const sortedPartials = this.partials.sort((a: any, b: any) => b.order - a.order);
 
     // insert placeholder into table.fields
-    sortedPartials.toReversed().forEach((partial) => {
-      this.fields.splice(partial.order, 0, 'dummy');
+    [...sortedPartials].reverse().forEach((partial: any) => {
+      this.fields.splice(partial.order, 0, 'dummy' as any);
     });
 
-    sortedPartials.forEach((partial) => {
-      const tablePartial = this.schema.database.findTablePartial(partial.name);
-      if (!tablePartial) this.error(`Table partial ${partial.name} not found`, partial.token);
+    sortedPartials.forEach((partial: any) => {
+      const tablePartial = this.schema.database.findTablePartial(partial.name)!;
+      if (!tablePartial) this.error(`Table partial ${partial.name} not found`);
       partial.id = tablePartial.id;
 
       if (tablePartial.fields) {
         // ignore fields that already exist in the table, or have been added by a later partial
-        const rawFields = tablePartial.fields.filter((f) => !existingFieldNames.has(f.name));
-        const fields = rawFields.map((rawField) => {
+        const rawFields = tablePartial.fields.filter((f: any) => !existingFieldNames.has(f.name));
+        const fields = rawFields.map((rawField: any) => {
           existingFieldNames.add(rawField.name);
 
           // convert inline_refs from injected fields to refs
           if (rawField.inline_refs) {
-            rawField.inline_refs.forEach((iref) => {
+            rawField.inline_refs.forEach((iref: any) => {
               const ref = {
                 token: rawField.token,
                 endpoints: [{
@@ -185,7 +235,7 @@ class Table extends Element {
 
       // merge settings
       if (!existingSettingNames.has('note') && !isNil(tablePartial.note)) {
-        this.noteToken = null;
+        this.noteToken = null as unknown as Token;
         this.note = tablePartial.note;
         existingSettingNames.add('note');
       }
@@ -195,11 +245,11 @@ class Table extends Element {
       }
 
       // merge indexes
-      tablePartial.indexes.forEach((index) => {
+      tablePartial.indexes.forEach((index: any) => {
         this.indexes.push(new Index({ ...index, table: this, injectedPartial: tablePartial }));
       });
 
-      tablePartial.checks.forEach((check) => {
+      tablePartial.checks.forEach((check: any) => {
         this.checks.push(new Check({
           ...check,
           name: check.name && `${this.name}.${check.name}`, // deduplicate check names when instantiated to tables
@@ -210,21 +260,24 @@ class Table extends Element {
     });
   }
 
-  export () {
+  export (): ReturnType<Table['shallowExport']> & ReturnType<Table['exportChild']> {
     return {
       ...this.shallowExport(),
       ...this.exportChild(),
     };
   }
 
-  exportChild () {
+  exportChild (): {
+    fields: ReturnType<Field['export']>[];
+    indexes: ReturnType<Index['export']>[];
+  } {
     return {
       fields: this.fields.map((f) => f.export()),
       indexes: this.indexes.map((i) => i.export()),
     };
   }
 
-  exportChildIds () {
+  exportChildIds (): { fieldIds: number[]; indexIds: number[]; checkIds: number[] } {
     return {
       fieldIds: this.fields.map((f) => f.id),
       indexIds: this.indexes.map((i) => i.id),
@@ -232,14 +285,20 @@ class Table extends Element {
     };
   }
 
-  exportParentIds () {
+  exportParentIds (): { schemaId: number; groupId: number | null } {
     return {
       schemaId: this.schema.id,
       groupId: this.group ? this.group.id : null,
     };
   }
 
-  shallowExport () {
+  shallowExport (): {
+    name: string;
+    alias: string;
+    note: string;
+    headerColor: string;
+    partials: TablePartial[];
+  } {
     return {
       name: this.name,
       alias: this.alias,
@@ -249,7 +308,7 @@ class Table extends Element {
     };
   }
 
-  normalize (model) {
+  normalize (model: NormalizedModel): void {
     model.tables[this.id] = {
       id: this.id,
       ...this.shallowExport(),

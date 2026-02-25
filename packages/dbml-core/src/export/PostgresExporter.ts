@@ -6,6 +6,7 @@ import {
   buildJunctionFields2,
   buildNewTableName,
   hasWhiteSpace,
+  CommentNode,
 } from './utils';
 import { shouldPrintSchemaName } from '../model_structure/utils';
 import {
@@ -15,6 +16,8 @@ import {
   isDateTimeType,
   isBinaryType,
 } from '@dbml/parse';
+import { NormalizedModel } from '../model_structure/database';
+import { NormalizedSchema } from '../model_structure/schema';
 
 // PostgreSQL built-in data types
 // Generated from PostgreSQLParser.g4 and PostgreSQLLexer.g4
@@ -144,8 +147,9 @@ const POSTGRES_RESERVED_KEYWORDS = [
   'USER',
 ];
 
+
 class PostgresExporter {
-  static exportRecords (model) {
+  static exportRecords (model: NormalizedModel): string[] {
     const records = Object.values(model.records || {});
     if (isEmpty(records)) {
       return [];
@@ -164,11 +168,11 @@ class PostgresExporter {
 
       // Build the column list
       const columnList = columns.length > 0
-        ? `(${columns.map((col) => `"${col}"`).join(', ')})`
+        ? `(${columns.map((col: string) => `"${col}"`).join(', ')})`
         : '';
 
       // Value formatter for PostgreSQL
-      const formatValue = (val) => {
+      const formatValue = (val: { value: any; type: string }): string => {
         if (val.value === null) return 'NULL';
         if (val.type === 'expression') return val.value;
 
@@ -180,7 +184,7 @@ class PostgresExporter {
       };
 
       // Build the VALUES clause
-      const valueRows = values.map((row) => {
+      const valueRows = values.map((row: { value: any; type: string }[]) => {
         const valueStrs = row.map(formatValue);
         return `(${valueStrs.join(', ')})`;
       });
@@ -188,12 +192,12 @@ class PostgresExporter {
       const valuesClause = valueRows.join(',\n  ');
 
       return `INSERT INTO ${tableRef} ${columnList}\nVALUES\n  ${valuesClause};`;
-    }).filter(Boolean);
+    }).filter(Boolean) as string[];
 
     return insertStatements;
   }
 
-  static exportEnums (enumIds, model) {
+  static exportEnums (enumIds: number[], model: NormalizedModel): [string, string][] {
     return enumIds.map((enumId) => {
       const _enum = model.enums[enumId];
       const schema = model.schemas[_enum.schemaId];
@@ -207,11 +211,11 @@ class PostgresExporter {
       const enumValueStr = enumValueArr.join(',\n');
       const enumLine = `CREATE TYPE ${enumName} AS ENUM (\n${enumValueStr}\n);\n`;
 
-      return [enumName, enumLine];
+      return [enumName, enumLine] as [string, string];
     });
   }
 
-  static getFieldLines (tableId, model, enumSet) {
+  static getFieldLines (tableId: number, model: NormalizedModel, enumSet: Set<string>): string[] {
     const table = model.tables[tableId];
 
     const lines = table.fieldIds.map((fieldId) => {
@@ -236,8 +240,8 @@ class PostgresExporter {
 
         const typeName = shouldDoubleQuote ? `"${originalTypeName}"` : originalTypeName;
         line = `"${field.name}" ${typeName}`;
-      } else if (field.type.originalTypeName) { // A custom Postgres type that is not defined as enum in DBML content
-        line = `"${field.name}" "${field.type.schemaName}"."${field.type.originalTypeName}"`;
+      } else if ((field.type as any).originalTypeName) { // A custom Postgres type that is not defined as enum in DBML content
+        line = `"${field.name}" "${field.type.schemaName}"."${(field.type as any).originalTypeName}"`;
       } else {
         const schemaName = hasWhiteSpaceOrUpperCase(field.type.schemaName) ? `"${field.type.schemaName}".` : `${field.type.schemaName}.`;
         const typeName = hasWhiteSpaceOrUpperCase(field.type.type_name) ? `"${field.type.type_name}"` : field.type.type_name;
@@ -295,14 +299,14 @@ class PostgresExporter {
     return lines;
   }
 
-  static getCompositePKs (tableId, model) {
+  static getCompositePKs (tableId: number, model: NormalizedModel): string[] {
     const table = model.tables[tableId];
 
     const compositePkIds = table.indexIds ? table.indexIds.filter((indexId) => model.indexes[indexId].pk) : [];
     const lines = compositePkIds.map((keyId) => {
       const key = model.indexes[keyId];
       let line = 'PRIMARY KEY';
-      const columnArr = [];
+      const columnArr: string[] = [];
 
       key.columnIds.forEach((columnId) => {
         const column = model.indexColumns[columnId];
@@ -323,7 +327,7 @@ class PostgresExporter {
     return lines;
   }
 
-  static getCheckLines (tableId, model) {
+  static getCheckLines (tableId: number, model: NormalizedModel): string[] {
     const table = model.tables[tableId];
 
     if (!table.checkIds || table.checkIds.length === 0) {
@@ -346,7 +350,12 @@ class PostgresExporter {
     return lines;
   }
 
-  static getTableContentArr (tableIds, model, enumSet) {
+  static getTableContentArr (tableIds: number[], model: NormalizedModel, enumSet: Set<string>): Array<{
+    tableId: number;
+    fieldContents: string[];
+    checkContents: string[];
+    compositePKs: string[];
+  }> {
     const tableContentArr = tableIds.map((tableId) => {
       const fieldContents = PostgresExporter.getFieldLines(tableId, model, enumSet);
       const checkContents = PostgresExporter.getCheckLines(tableId, model);
@@ -363,7 +372,7 @@ class PostgresExporter {
     return tableContentArr;
   }
 
-  static exportTables (tableIds, model, enumSet) {
+  static exportTables (tableIds: number[], model: NormalizedModel, enumSet: Set<string>): string[] {
     const tableContentArr = PostgresExporter.getTableContentArr(tableIds, model, enumSet);
 
     const tableStrs = tableContentArr.map((tableContent) => {
@@ -379,12 +388,12 @@ class PostgresExporter {
     return tableStrs;
   }
 
-  static buildFieldName (fieldIds, model) {
+  static buildFieldName (fieldIds: number[], model: NormalizedModel): string {
     const fieldNames = fieldIds.map((fieldId) => `"${model.fields[fieldId].name}"`).join(', ');
     return `(${fieldNames})`;
   }
 
-  static buildTableManyToMany (firstTableFieldsMap, secondTableFieldsMap, tableName, refEndpointSchema, model) {
+  static buildTableManyToMany (firstTableFieldsMap: Map<string, string>, secondTableFieldsMap: Map<string, string>, tableName: string, refEndpointSchema: NormalizedSchema, model: NormalizedModel): string {
     let line = `CREATE TABLE ${shouldPrintSchema(refEndpointSchema, model)
       ? `"${refEndpointSchema.name}".`
       : ''}"${tableName}" (\n`;
@@ -401,7 +410,7 @@ class PostgresExporter {
     return line;
   }
 
-  static buildForeignKeyManyToMany (fieldsMap, foreignEndpointFields, refEndpointTableName, foreignEndpointTableName, refEndpointSchema, foreignEndpointSchema, model) {
+  static buildForeignKeyManyToMany (fieldsMap: Map<string, string>, foreignEndpointFields: string, refEndpointTableName: string, foreignEndpointTableName: string, refEndpointSchema: NormalizedSchema, foreignEndpointSchema: NormalizedSchema, model: NormalizedModel): string {
     const refEndpointFields = [...fieldsMap.keys()].join('", "');
     const line = `ALTER TABLE ${shouldPrintSchema(refEndpointSchema, model)
       ? `"${refEndpointSchema.name}".`
@@ -411,7 +420,7 @@ class PostgresExporter {
     return line;
   }
 
-  static exportRefs (refIds, model, usedTableNames) {
+  static exportRefs (refIds: number[], model: NormalizedModel, usedTableNames: Set<string>): string[] {
     const strArr = refIds.map((refId) => {
       let line = '';
       const ref = model.refs[refId];
@@ -425,12 +434,12 @@ class PostgresExporter {
       const refEndpointField = model.fields[refEndpoint.fieldIds[0]];
       const refEndpointTable = model.tables[refEndpointField.tableId];
       const refEndpointSchema = model.schemas[refEndpointTable.schemaId];
-      const refEndpointFieldName = this.buildFieldName(refEndpoint.fieldIds, model, 'postgres');
+      const refEndpointFieldName = this.buildFieldName(refEndpoint.fieldIds, model);
 
       const foreignEndpointField = model.fields[foreignEndpoint.fieldIds[0]];
       const foreignEndpointTable = model.tables[foreignEndpointField.tableId];
       const foreignEndpointSchema = model.schemas[foreignEndpointTable.schemaId];
-      const foreignEndpointFieldName = this.buildFieldName(foreignEndpoint.fieldIds, model, 'postgres');
+      const foreignEndpointFieldName = this.buildFieldName(foreignEndpoint.fieldIds, model);
 
       if (refOneIndex === -1) { // many to many relationship
         const firstTableFieldsMap = buildJunctionFields1(refEndpoint.fieldIds, model);
@@ -465,7 +474,7 @@ class PostgresExporter {
     return strArr;
   }
 
-  static exportIndexes (indexIds, model) {
+  static exportIndexes (indexIds: number[], model: NormalizedModel): string[] {
     // exclude composite pk index
     const indexArr = indexIds.filter((indexId) => !model.indexes[indexId].pk).map((indexId) => {
       const index = model.indexes[indexId];
@@ -488,7 +497,7 @@ class PostgresExporter {
         line += ` USING ${index.type.toUpperCase()}`;
       }
 
-      const columnArr = [];
+      const columnArr: string[] = [];
       index.columnIds.forEach((columnId) => {
         const column = model.indexColumns[columnId];
         let columnStr = '';
@@ -509,7 +518,7 @@ class PostgresExporter {
     return indexArr;
   }
 
-  static exportComments (comments, model) {
+  static exportComments (comments: CommentNode[], model: NormalizedModel): string[] {
     const commentArr = comments.map((comment) => {
       let line = 'COMMENT ON';
       const table = model.tables[comment.tableId];
@@ -518,14 +527,14 @@ class PostgresExporter {
         case 'table': {
           line += ` TABLE ${shouldPrintSchema(schema, model)
             ? `"${schema.name}".`
-            : ''}"${table.name}" IS '${table.note.replace(/'/g, '\'\'')}'`;
+            : ''}"${table.name}" IS '${(table.note || '').replace(/'/g, '\'\'')}'`;
           break;
         }
         case 'column': {
-          const field = model.fields[comment.fieldId];
+          const field = model.fields[comment.fieldId!];
           line += ` COLUMN ${shouldPrintSchema(schema, model)
             ? `"${schema.name}".`
-            : ''}"${table.name}"."${field.name}" IS '${field.note.replace(/'/g, '\'\'')}'`;
+            : ''}"${table.name}"."${field.name}" IS '${(field.note || '').replace(/'/g, '\'\'')}'`;
           break;
         }
         default:
@@ -540,14 +549,14 @@ class PostgresExporter {
     return commentArr;
   }
 
-  static export (model) {
+  static export (model: NormalizedModel): string {
     const database = model.database['1'];
 
     const usedTableNames = new Set(Object.values(model.tables).map((table) => table.name));
 
     // Pre-collect all user-defined enum names to distinguish them from built-in PostgreSQL types
     // This prevents built-in types like VARCHAR, INTEGER from being quoted unnecessarily
-    const enumSet = new Set();
+    const enumSet = new Set<string>();
 
     const schemaEnumStatements = database.schemaIds.reduce((prevStatements, schemaId) => {
       const schema = model.schemas[schemaId];
@@ -569,12 +578,12 @@ class PostgresExporter {
 
       return prevStatements;
     }, {
-      schemas: [],
-      enums: [],
-      tables: [],
-      indexes: [],
-      comments: [],
-      refs: [],
+      schemas: [] as string[],
+      enums: [] as string[],
+      tables: [] as string[],
+      indexes: [] as string[],
+      comments: [] as string[],
+      refs: [] as string[],
     });
 
     const statements = database.schemaIds.reduce((prevStatements, schemaId) => {
@@ -590,12 +599,12 @@ class PostgresExporter {
         prevStatements.indexes.push(...PostgresExporter.exportIndexes(indexIds, model));
       }
 
-      const commentNodes = flatten(tableIds.map((tableId) => {
+      const commentNodes: CommentNode[] = flatten<CommentNode>(tableIds.map((tableId): CommentNode[] => {
         const { fieldIds, note } = model.tables[tableId];
-        const fieldObjects = fieldIds
+        const fieldObjects: CommentNode[] = fieldIds
           .filter((fieldId) => model.fields[fieldId].note)
-          .map((fieldId) => ({ type: 'column', fieldId, tableId }));
-        return note ? [{ type: 'table', tableId }].concat(fieldObjects) : fieldObjects;
+          .map((fieldId) => ({ type: 'column' as const, fieldId, tableId }));
+        return note ? [{ type: 'table' as const, tableId }, ...fieldObjects] : fieldObjects;
       }));
       if (!isEmpty(commentNodes)) {
         prevStatements.comments.push(...PostgresExporter.exportComments(commentNodes, model));

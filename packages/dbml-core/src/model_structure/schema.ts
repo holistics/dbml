@@ -1,24 +1,67 @@
 import { get } from 'lodash-es';
 import Table from './table';
-import Element from './element';
+import Element, { RawNote, Token } from './element';
 import Enum from './enum';
 import { shouldPrintSchema } from './utils';
 import TableGroup from './tableGroup';
 import Ref from './ref';
+import Database, { NormalizedModel } from './database';
+import DbState from './dbState';
+
+export interface RawSchema {
+  name: string;
+  alias?: string;
+  note?: RawNote;
+  tables?: Table[];
+  refs?: Ref[];
+  enums?: Enum[];
+  tableGroups?: TableGroup[];
+  token?: Token;
+  database: Database;
+  noteToken?: Token | null;
+}
+
+export interface NormalizedSchema {
+  id: number;
+  name: string;
+  note: string | null;
+  alias: string;
+  tableIds: number[];
+  noteIds: number[];
+  refIds: number[];
+  tableGroupIds: number[];
+  enumIds: number[];
+  databaseId: number;
+}
+
+export interface NormalizedSchemaIdMap {
+  [_id: number]: NormalizedSchema;
+}
 
 class Schema extends Element {
+  name: string;
+  alias: string;
+  note: string;
+  noteToken: Token;
+  tables: Table[];
+  refs: Ref[];
+  enums: Enum[];
+  tableGroups: TableGroup[];
+  database: Database;
+  dbState: DbState;
+
   constructor ({
-    name, alias, note, tables = [], refs = [], enums = [], tableGroups = [], token, database = {}, noteToken = null,
-  } = {}) {
-    super(token);
+    name, alias, note, tables = [], refs = [], enums = [], tableGroups = [], token, database = {} as Database, noteToken = null,
+  }: RawSchema) {
+    super(token as Token);
     this.tables = [];
     this.enums = [];
     this.tableGroups = [];
     this.refs = [];
     this.name = name;
-    this.note = note ? get(note, 'value', note) : null;
-    this.noteToken = note ? get(note, 'token', noteToken) : null;
-    this.alias = alias;
+    this.note = (note ? get(note, 'value', note) : null) as string;
+    this.noteToken = (note ? get(note, 'token', noteToken) : null) as Token;
+    this.alias = alias as string;
     this.database = database;
     this.dbState = this.database.dbState;
     this.generateId();
@@ -29,43 +72,43 @@ class Schema extends Element {
     this.processTableGroups(tableGroups);
   }
 
-  generateId () {
+  generateId (): void {
     this.id = this.dbState.generateId('schemaId');
   }
 
-  processTables (rawTables) {
-    rawTables.forEach((table) => {
+  processTables (rawTables: any): void {
+    rawTables.forEach((table: any) => {
       this.pushTable(new Table({ ...table, schema: this }));
     });
   }
 
-  pushTable (table) {
+  pushTable (table: any): void {
     this.checkTable(table);
     this.tables.push(table);
   }
 
-  checkTable (table) {
+  checkTable (table: any): void {
     if (this.tables.some((t) => t.name === table.name)) {
       table.error(`Table ${shouldPrintSchema(this) ? `"${this.name}".` : ''}"${table.name}" existed`);
     }
   }
 
-  findTable (tableName) {
+  findTable (tableName: string): Table | undefined {
     return this.tables.find((t) => t.name === tableName);
   }
 
-  processEnums (rawEnums) {
-    rawEnums.forEach((_enum) => {
+  processEnums (rawEnums: any): void {
+    rawEnums.forEach((_enum: any) => {
       this.pushEnum(new Enum({ ..._enum, schema: this }));
     });
   }
 
-  pushEnum (_enum) {
+  pushEnum (_enum: any): void {
     this.checkEnum(_enum);
     this.enums.push(_enum);
   }
 
-  checkEnum (_enum) {
+  checkEnum (_enum: any): void {
     if (this.enums.some((e) => e.name === _enum.name)) {
       _enum.error(`Enum ${shouldPrintSchema(this)
         ? `"${this.name}".`
@@ -73,18 +116,18 @@ class Schema extends Element {
     }
   }
 
-  processRefs (rawRefs) {
-    rawRefs.forEach((ref) => {
+  processRefs (rawRefs: any): void {
+    rawRefs.forEach((ref: any) => {
       this.pushRef(new Ref({ ...ref, schema: this }));
     });
   }
 
-  pushRef (ref) {
+  pushRef (ref: any): void {
     this.checkRef(ref);
     this.refs.push(ref);
   }
 
-  checkRef (ref) {
+  checkRef (ref: any): void {
     if (this.refs.some((r) => r.equals(ref))) {
       const endpoint1 = ref.endpoints[0];
       const fieldList1 = endpoint1.fieldNames.map(JSON.stringify).join(', ');
@@ -96,38 +139,43 @@ class Schema extends Element {
     }
   }
 
-  processTableGroups (rawTableGroups) {
-    rawTableGroups.forEach((tableGroup) => {
+  processTableGroups (rawTableGroups: any): void {
+    rawTableGroups.forEach((tableGroup: any) => {
       this.pushTableGroup(new TableGroup({ ...tableGroup, schema: this }));
     });
   }
 
-  pushTableGroup (tableGroup) {
+  pushTableGroup (tableGroup: any): void {
     this.checkTableGroup(tableGroup);
     this.tableGroups.push(tableGroup);
   }
 
-  checkTableGroup (tableGroup) {
+  checkTableGroup (tableGroup: any): void {
     if (this.tableGroups.some((tg) => tg.name === tableGroup.name)) {
       tableGroup.error(`Table Group ${shouldPrintSchema(this) ? `"${this.name}".` : ''}"${tableGroup.name}" existed`);
     }
   }
 
-  checkSameId (schema) {
+  checkSameId (schema: any): boolean {
     return this.name === schema.name
       || this.alias === schema.name
       || this.name === schema.alias
-      || (this.alias && this.alias === schema.alias);
+      || Boolean(this.alias && this.alias === schema.alias);
   }
 
-  export () {
+  export (): ReturnType<Schema['shallowExport']> & ReturnType<Schema['exportChild']> {
     return {
       ...this.shallowExport(),
       ...this.exportChild(),
     };
   }
 
-  exportChild () {
+  exportChild (): {
+    tables: ReturnType<Table['export']>[];
+    enums: ReturnType<Enum['export']>[];
+    tableGroups: ReturnType<TableGroup['export']>[];
+    refs: ReturnType<Ref['export']>[];
+  } {
     return {
       tables: this.tables.map((t) => t.export()),
       enums: this.enums.map((e) => e.export()),
@@ -136,22 +184,23 @@ class Schema extends Element {
     };
   }
 
-  exportChildIds () {
+  exportChildIds (): { tableIds: number[]; noteIds: number[]; enumIds: number[]; tableGroupIds: number[]; refIds: number[] } {
     return {
       tableIds: this.tables.map((t) => t.id),
+      noteIds: [],
       enumIds: this.enums.map((e) => e.id),
       tableGroupIds: this.tableGroups.map((tg) => tg.id),
       refIds: this.refs.map((r) => r.id),
     };
   }
 
-  exportParentIds () {
+  exportParentIds (): { databaseId: number } {
     return {
       databaseId: this.database.id,
     };
   }
 
-  shallowExport () {
+  shallowExport (): { name: string; note: string; alias: string } {
     return {
       name: this.name,
       note: this.note,
@@ -159,7 +208,7 @@ class Schema extends Element {
     };
   }
 
-  normalize (model) {
+  normalize (model: NormalizedModel): void {
     model.schemas[this.id] = {
       id: this.id,
       ...this.shallowExport(),

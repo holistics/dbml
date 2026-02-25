@@ -1,42 +1,60 @@
 import Element from './element';
+import Index from './indexes';
+import DbState from './dbState';
+import { NormalizedModel } from './database';
+
+export interface NormalizedIndexColumn {
+  id: number;
+  type: string;
+  value: string;
+  indexId: number;
+}
+
+export interface NormalizedIndexColumnIdMap {
+  [_id: number]: NormalizedIndexColumn;
+}
 
 class IndexColumn extends Element {
+  type: any;
+  value: any;
+  index: Index;
+  dbState: DbState;
+
   constructor ({
     type, value, index, token,
-  }) {
-    super();
+  }: { type: any; value: any; index: any; token?: any }) {
+    super(token);
     this.type = type;
     this.value = value;
     this.index = index;
-    this.token = token;
     this.dbState = this.index.dbState;
     this.generateId();
   }
 
-  generateId () {
+  generateId (): void {
     this.id = this.dbState.generateId('indexColumnId');
   }
 
-  export () {
+  export (): { type: any; value: any } {
     return {
       ...this.shallowExport(),
     };
   }
 
-  exportParentIds () {
+  exportParentIds (): { indexId: number } {
     return {
       indexId: this.index.id,
     };
   }
 
-  shallowExport () {
+  shallowExport (): { type: any; value: any } {
     return {
       type: this.type,
       value: this.value,
     };
   }
 
-  normalize (model) {
+  normalize (model: NormalizedModel): void {
     model.indexColumns[this.id] = {
       id: this.id,
       ...this.shallowExport(),

@@ -1,5 +1,6 @@
 import { Compiler } from '@dbml/parse';
 import Database from '../model_structure/database';
+import { RawDatabase } from '../model_structure/database';
 import { parse } from './ANTLR/ASTGeneration';
 import { CompilerError } from './error';
 import mysqlParser from './deprecated/mysqlParser.cjs';
@@ -8,39 +9,53 @@ import dbmlParser from './deprecated/dbmlParser.cjs';
 import schemarbParser from './deprecated/schemarbParser.cjs';
 import mssqlParser from './deprecated/mssqlParser.cjs';
 
+export type ParseFormat = 'json'
+  | 'mysql' | 'mysqlLegacy'
+  | 'postgres' | 'postgresLegacy'
+  | 'dbml' | 'dbmlv2'
+  | 'mssql' | 'mssqlLegacy'
+  | 'schemarb'
+  | 'snowflake'
+  | 'oracle';
+
 class Parser {
-  constructor (dbmlCompiler) {
+  public DBMLCompiler: Compiler;
+
+  constructor (dbmlCompiler?: Compiler) {
     this.DBMLCompiler = dbmlCompiler || new Compiler();
   }
 
-  static parseJSONToDatabase (rawDatabase) {
+  static parseJSONToDatabase (rawDatabase: RawDatabase): Database {
     const database = new Database(rawDatabase);
     return database;
   }
 
-  static parseMySQLToJSONv2 (str) {
+  static parseMySQLToJSONv2 (str: string): RawDatabase {
     return parse(str, 'mysql');
   }
 
   /**
    * @deprecated Use the `parseMySQLToJSONv2` method instead
    */
-  static parseMySQLToJSON (str) {
-    return mysqlParser.parse(str);
+  static parseMySQLToJSON (str: string): RawDatabase {
+    return mysqlParser.parse(str) as RawDatabase;
   }
 
-  static parsePostgresToJSONv2 (str) {
+  static parsePostgresToJSONv2 (str: string): RawDatabase {
     return parse(str, 'postgres');
   }
 
   /**
    * @deprecated Use the `parsePostgresToJSONv2` method instead
    */
-  static parsePostgresToJSON (str) {
-    return postgresParser.parse(str);
+  static parsePostgresToJSON (str: string): RawDatabase {
+    return postgresParser.parse(str) as RawDatabase;
   }
 
-  static parseDBMLToJSONv2 (str, dbmlCompiler) {
+  static parseDBMLToJSONv2 (
+    str: string,
+    dbmlCompiler?: Compiler,
+  ): RawDatabase {
     const compiler = dbmlCompiler || new Compiler();
 
     compiler.setSource(str);
@@ -62,46 +77,71 @@ class Parser {
 
     if (diags.length > 0) throw CompilerError.create(diags);
 
-    return compiler.parse.rawDb();
+    return compiler.parse.rawDb() as unknown as RawDatabase;
   }
 
   /**
    * @deprecated Use the `parseDBMLToJSONv2` method instead
    */
-  static parseDBMLToJSON (str) {
-    return dbmlParser.parse(str);
+  static parseDBMLToJSON (str: string): RawDatabase {
+    return dbmlParser.parse(str) as unknown as RawDatabase;
   }
 
-  static parseSchemaRbToJSON (str) {
-    return schemarbParser.parse(str);
+  static parseSchemaRbToJSON (str: string): RawDatabase {
+    return schemarbParser.parse(str) as RawDatabase;
   }
 
   /**
    * @deprecated Use the `parseMSSQLToJSONv2` method instead
    */
-  static parseMSSQLToJSON (str) {
-    return mssqlParser.parseWithPegError(str);
+  static parseMSSQLToJSON (str: string): RawDatabase {
+    return (mssqlParser as any).parseWithPegError(str) as RawDatabase;
   }
 
-  static parseMSSQLToJSONv2 (str) {
+  static parseMSSQLToJSONv2 (str: string): RawDatabase {
     return parse(str, 'mssql');
   }
 
-  static parseSnowflakeToJSON (str) {
+  static parseSnowflakeToJSON (str: string): RawDatabase {
     return parse(str, 'snowflake');
   }
 
-  static parseOracleToJSON (str) {
+  static parseOracleToJSON (str: string): RawDatabase {
     return parse(str, 'oracle');
   }
 
-  static parse (str, format) {
+  /**
+   * Should use parse() instance method instead of this static method whenever possible
+   */
+  static parse (
+    str: string,
+    format: ParseFormat,
+  ): Database;
+  static parse (
+    str: RawDatabase,
+    format: 'json',
+  ): Database;
+  static parse (
+    str: any,
+    format: ParseFormat,
+  ): Database {
     return new Parser().parse(str, format);
   }
 
-  parse (str, format) {
+  parse (
+    str: string,
+    format: ParseFormat,
+  ): Database;
+  parse (
+    str: RawDatabase,
+    format: 'json',
+  ): Database;
+  parse (
+    str: any,
+    format: ParseFormat,
+  ): Database {
     try {
-      let rawDatabase = {};
+      let rawDatabase: any = {};
       switch (format) {
         case 'mysql':
           rawDatabase = Parser.parseMySQLToJSONv2(str);
