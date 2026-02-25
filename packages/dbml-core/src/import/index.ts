@@ -1,7 +1,7 @@
 import { generateDatabase } from '../parse/databaseGenerator';
 import Parser from '../parse/Parser';
 import ModelExporter from '../export/ModelExporter';
-import { DbmlExporterOptions } from 'export/DbmlExporter';
+import type { DbmlExporterOptions } from '../export/DbmlExporter';
 
 export type ImportFormat = 'dbml' | 'mysql' | 'postgres' | 'json' | 'mssql' | 'postgresLegacy' | 'mssqlLegacy' | 'schemarb' | 'snowflake' | 'oracle';
 
