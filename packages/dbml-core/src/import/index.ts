@@ -14,8 +14,12 @@ function _import (
     includeRecords: true,
   },
 ): string {
+  const {
+    includeRecords = true,
+  } = options;
+
   const database = (new Parser()).parse(str, format);
-  const dbml = ModelExporter.export(database.normalize(), 'dbml', normalizeImportOptions(options));
+  const dbml = ModelExporter.export(database.normalize(), 'dbml', { includeRecords });
 
   return dbml;
 }
@@ -25,18 +29,6 @@ function generateDbml (schemaJson: unknown): string {
   const dbml = ModelExporter.export(database.normalize(), 'dbml');
 
   return dbml;
-}
-
-export function normalizeImportOptions(
-  options: ImportOptions,
-): Required<ImportOptions> {
-  const {
-    includeRecords = true,
-  } = options;
-
-  return {
-    includeRecords,
-  };
 }
 
 export default {
