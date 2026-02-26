@@ -6,7 +6,7 @@
 
 #### :rocket: New Feature
 * `dbml-core`
-  * [#831](https://github.com/holistics/dbml/pull/831) feat: add flags object to exporter to control record generation ([@hdnax](https://github.com/hdnax))
+  * [#831](https://github.com/holistics/dbml/pull/831) Add options object to exporter and importer to control record generation ([@hdnax](https://github.com/hdnax))
 
 #### Committers: 1
 - Huy DNA ([@hdnax](https://github.com/hdnax))
