@@ -1,3 +1,16 @@
+## v6.4.0 (2026-02-26)
+
+#### :bug: Bug Fix
+* `dbml-core`
+  * [#830](https://github.com/holistics/dbml/pull/830) Remove `"type": "module"` from `@dbml/core`'s `package.json` so that CJS consumers can consume `.d.ts` files ([@hdnax](https://github.com/hdnax))
+
+#### :rocket: New Feature
+* `dbml-core`
+  * [#831](https://github.com/holistics/dbml/pull/831) feat: add flags object to exporter to control record generation ([@hdnax](https://github.com/hdnax))
+
+#### Committers: 1
+- Huy DNA ([@hdnax](https://github.com/hdnax))
+
 ## v6.3.0 (2026-02-13)
 
 #### :rocket: New Feature
