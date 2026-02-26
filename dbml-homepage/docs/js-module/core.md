@@ -25,11 +25,13 @@ npm install @dbml/core
 const { importer } = require('@dbml/core');
 ```
 
-#### `importer.import(str, format)`
+#### `importer.import(str, format[, options])`
 
 * **Arguments:**
   * ```{string} str```
   * ```{'mysql'|'mysqlLegacy'|'postgres'|'postgresLegacy'|'dbml'|'schemarb'|'mssql'|'mssqlLegacy'|'snowflake'|'json'|'oracle'} format```
+  * ```{ImportOptions} options``` *(optional)*
+    * `includeRecords` `{boolean}` — whether to include `Records` blocks in the output DBML. Defaults to `true`.
 
 * **Returns:**
   * ```{string} DBML```
@@ -85,11 +87,14 @@ const dbml = importer.generateDbml(schemaJson);
 const { exporter } = require('@dbml/core');
 ```
 
-#### `exporter.export(str, format)`
+#### `exporter.export(str, format[, options])`
 
 * **Arguments:**
   * ```{string} str```
-  * ```{'mysql'|'postgres'|'oracle'|'dbml'|'schemarb'|'mssql'|'json'} format```
+  * ```{'mysql'|'postgres'|'oracle'|'dbml'|'mssql'|'json'} format```
+  * ```{ExportOptions} options``` *(optional)*
+    * `includeRecords` `{boolean}` — whether to include `Records` blocks in the DBML output. Defaults to `true`. Only applies to the `dbml` format.
+    * `isNormalized` `{boolean}` — whether the model is already normalized. Defaults to `true`. Only applies to the `json` format.
 
 * **Returns:**
   * ```{string} SQL```
@@ -154,12 +159,18 @@ const database = parser.parse(dbml, 'dbml');
 const { ModelExporter } = require('@dbml/core');
 ```
 
-#### `ModelExporter.export(model, format, isNormalized)`
+#### `ModelExporter.export(model, format[, options])`
 
 * **Arguments:**
-  * ```{model} Database```
-  * ```{'mysql'|'postgres'|'oracle'|'dbml'|'schemarb'|'mssql'|'json'} format```
-  * ```{boolean} isNormalized```
+  * ```{Database|NormalizedModel} model```
+  * ```{'mysql'|'postgres'|'oracle'|'dbml'|'mssql'|'json'} format```
+  * ```{ExportOptions} options``` *(optional)*
+    * `includeRecords` `{boolean}` — whether to include `Records` blocks in the DBML output. Defaults to `true`. Only applies to the `dbml` format.
+    * `isNormalized` `{boolean}` — whether the passed model is already normalized. Defaults to `true`. Only applies to the `json` format.
+
+:::note
+Passing a boolean as the third argument is deprecated. Use `ExportOptions` instead.
+:::
 
 * **Returns:** specified format string
 
@@ -177,7 +188,5 @@ const parser = new Parser();
 const database = parser.parse(dbml, 'dbml');
 
 // Export Database object to PostgreSQL
-const postgreSQL = ModelExporter.export(database, 'postgres', false);
-// or
-const postgreSQL = ModelExporter.export(database.normalize(), 'postgres');
+const postgreSQL = ModelExporter.export(database, 'postgres');
 ```

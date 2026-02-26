@@ -5,11 +5,41 @@ import MysqlExporter from '../../../src/export/MysqlExporter';
 import PostgresExporter from '../../../src/export/PostgresExporter';
 import SqlServerExporter from '../../../src/export/SqlServerExporter';
 import OracleExporter from '../../../src/export/OracleExporter';
+import ModelExporter from '../../../src/export/ModelExporter';
 import { scanTestNames, getFileExtension, isEqualExcludeTokenEmpty } from '../testHelpers';
-import { ExportFormatOption } from '../../../types/export/ModelExporter';
 import { readFileSync } from 'fs';
 import path from 'path';
 import { test, expect, describe } from 'vitest';
+import { ExportFormat } from '../../../types';
+
+const DBML_WITH_RECORDS = `
+Table users {
+  id integer [pk]
+  name varchar
+}
+
+Records users(id, name) {
+  1, 'Alice'
+  2, 'Bob'
+}
+`.trim();
+
+const EXPECTED_DBML_WITH_RECORDS =
+`Table "users" {
+  "id" integer [pk]
+  "name" varchar
+}
+
+Records users(id, name) {
+  1, 'Alice'
+  2, 'Bob'
+}`;
+
+const EXPECTED_DBML_WITHOUT_RECORDS =
+`Table "users" {
+  "id" integer [pk]
+  "name" varchar
+}`;
 
 type ExporterClass =
   | typeof DbmlExporter
@@ -23,7 +53,7 @@ describe('@dbml/core - model_exporter', () => {
   const runTest = (
     fileName: string,
     testDir: string,
-    format: ExportFormatOption,
+    format: ExportFormat,
     ExporterClass: ExporterClass,
   ): void => {
     const fileExtension = getFileExtension(format);
@@ -34,7 +64,9 @@ describe('@dbml/core - model_exporter', () => {
     const database = (new Parser()).parse(input, 'json');
     let res: string;
     if (format === 'json') {
-      res = ExporterClass.export(database, false);
+      res = (ExporterClass as typeof JsonExporter).export(database, { isNormalized: false });
+    } else if (format === 'dbml') {
+      res = (ExporterClass as typeof DbmlExporter).export(database.normalize(), { includeRecords: true });
     } else {
       res = ExporterClass.export(database.normalize());
     }
@@ -52,12 +84,12 @@ describe('@dbml/core - model_exporter', () => {
   };
 
   const spec = {
-    json_exporter: { format: 'json' as ExportFormatOption, exporter: JsonExporter },
-    dbml_exporter: { format: 'dbml' as ExportFormatOption, exporter: DbmlExporter },
-    mysql_exporter: { format: 'mysql' as ExportFormatOption, exporter: MysqlExporter },
-    postgres_exporter: { format: 'postgres' as ExportFormatOption, exporter: PostgresExporter },
-    mssql_exporter: { format: 'mssql' as ExportFormatOption, exporter: SqlServerExporter },
-    oracle_exporter: { format: 'oracle' as ExportFormatOption, exporter: OracleExporter },
+    json_exporter: { format: 'json', exporter: JsonExporter },
+    dbml_exporter: { format: 'dbml', exporter: DbmlExporter },
+    mysql_exporter: { format: 'mysql', exporter: MysqlExporter },
+    postgres_exporter: { format: 'postgres', exporter: PostgresExporter },
+    mssql_exporter: { format: 'mssql', exporter: SqlServerExporter },
+    oracle_exporter: { format: 'oracle', exporter: OracleExporter },
   } as const;
 
   for (const [exporterName, { format, exporter }] of Object.entries(spec)) {
@@ -112,5 +144,67 @@ describe('@dbml/core - model_exporter dbml_exporter.escapeNote', () => {
   test('escapes backslash with newline', () => {
     // Spec is clear here, \ needs to be escaped as \\
     expect(DbmlExporter.escapeNote('hell\\\no')).toBe("'''hell\\\\\no'''");
+  });
+});
+
+describe('@dbml/core - DbmlExporter flags', () => {
+  describe('includeRecords', () => {
+    test('includes records by default', () => {
+      const database = (new Parser()).parse(DBML_WITH_RECORDS, 'dbmlv2');
+      const res = DbmlExporter.export(database.normalize(), { includeRecords: true });
+      expect(res.trim()).toBe(EXPECTED_DBML_WITH_RECORDS);
+    });
+
+    test('includes records when includeRecords is true', () => {
+      const database = (new Parser()).parse(DBML_WITH_RECORDS, 'dbmlv2');
+      const res = DbmlExporter.export(database.normalize(), { includeRecords: true });
+      expect(res.trim()).toBe(EXPECTED_DBML_WITH_RECORDS);
+    });
+
+    test('omits records when includeRecords is false', () => {
+      const database = (new Parser()).parse(DBML_WITH_RECORDS, 'dbmlv2');
+      const res = DbmlExporter.export(database.normalize(), { includeRecords: false });
+      expect(res.trim()).toBe(EXPECTED_DBML_WITHOUT_RECORDS);
+    });
+  });
+});
+
+describe('@dbml/core - ModelExporter backwards compatibility', () => {
+  test('accepts boolean true as isNormalized (old signature)', () => {
+    const database = (new Parser()).parse(DBML_WITH_RECORDS, 'dbmlv2');
+    const normalizedModel = database.normalize();
+    const resBoolean = ModelExporter.export(normalizedModel, 'dbml', true);
+    const resFlags = ModelExporter.export(normalizedModel, 'dbml', { isNormalized: true });
+    expect(resBoolean).toBe(resFlags);
+    expect(resBoolean.trim()).toBe(EXPECTED_DBML_WITH_RECORDS);
+  });
+
+  test('accepts boolean false as isNormalized (old signature)', () => {
+    const database = (new Parser()).parse(DBML_WITH_RECORDS, 'dbmlv2');
+    const resBoolean = ModelExporter.export(database, 'dbml', false);
+    const resFlags = ModelExporter.export(database, 'dbml', { isNormalized: false });
+    expect(resBoolean).toBe(resFlags);
+    expect(resBoolean.trim()).toBe(EXPECTED_DBML_WITH_RECORDS);
+  });
+});
+
+describe('@dbml/core - JsonExporter isNormalized option', () => {
+  test('exports normalized model when isNormalized is true', () => {
+    const database = (new Parser()).parse(DBML_WITH_RECORDS, 'dbmlv2');
+    const normalizedModel = database.normalize();
+    const res = JsonExporter.export(normalizedModel, { isNormalized: true });
+    // Normalized model is the internal model format — verify the table is present
+    const parsed = JSON.parse(res);
+    expect(Object.values(parsed.tables as Record<string, { name: string }>).map((t) => t.name)).toContain('users');
+  });
+
+  test('exports raw model when isNormalized is false', () => {
+    const database = (new Parser()).parse(DBML_WITH_RECORDS, 'dbmlv2');
+    const res = JsonExporter.export(database, { isNormalized: false });
+    // Non-normalized export uses database.export() format: { schemas, notes, records }
+    const parsed = JSON.parse(res);
+    expect(parsed.schemas[0].tables[0].name).toBe('users');
+    expect(parsed.records[0].tableName).toBe('users');
+    expect(parsed.records[0].columns).toEqual(['id', 'name']);
   });
 });

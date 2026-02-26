@@ -1,7 +1,15 @@
-import { ExportFormatOption } from './ModelExporter';
-import { RecordValueType } from '../model_structure/database';
+import type { DbmlExporterOptions } from './DbmlExporter';
+import type { JsonExporterOptions } from './JsonExporter';
 
-declare function _export(str: string, format: ExportFormatOption): string;
+export type ExportFormat = 'dbml' | 'mysql' | 'postgres' | 'json' | 'mssql' | 'oracle';
+
+export type ExportOptions =
+  Partial<DbmlExporterOptions> &
+  Partial<JsonExporterOptions>;
+
+declare function _export(str: string, format: ExportFormat, options: boolean): string;
+declare function _export(str: string, format: ExportFormat, options?: ExportOptions): string;
+
 declare const _default: {
     export: typeof _export;
 };
