@@ -1,7 +1,13 @@
-import Database, { NormalizedModel } from '../model_structure/database';
+import type Database from '../model_structure/database';
+import type { NormalizedModel } from '../model_structure/database';
+import type { ExportFormat, ExportOptions } from './index';
 
-export declare type ExportFormatOption = 'dbml' | 'mysql' | 'postgres' | 'json' | 'mssql' | 'oracle';
 declare class ModelExporter {
-    static export(model: Database | NormalizedModel, format: ExportFormatOption, isNormalized?: boolean): string;
+    /**
+     * @deprecated Passing a boolean as the third argument is deprecated. Use `ExportOptions` instead.
+     */
+    static export(model: Database | NormalizedModel, format: ExportFormat, options: boolean): string;
+    static export(model: Database | NormalizedModel, format: ExportFormat, options?: ExportOptions): string;
 }
+
 export default ModelExporter;

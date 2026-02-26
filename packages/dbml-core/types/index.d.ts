@@ -1,4 +1,4 @@
-import ModelExporter, { ExportFormatOption } from './export/ModelExporter';
+import ModelExporter from './export/ModelExporter';
 import Parser from './parse/Parser';
 import importer from './import';
 import exporter from './export';
@@ -10,9 +10,12 @@ export {
   importer,
   exporter,
   ModelExporter,
-  ExportFormatOption,
   Parser,
 };
+export type { ExportFormat, ExportOptions } from './export/index';
+export type { DbmlExporterOptions } from './export/DbmlExporter';
+export type { JsonExporterOptions } from './export/JsonExporter';
+export type { ImportFormat, ImportOptions } from './import/index';
 export { CompilerDiagnostic, CompilerError as CompilerDiagnostics, EditorPosition, ErrorCode, WarningLevel } from './parse/error';
 
 export * from './model_structure';
