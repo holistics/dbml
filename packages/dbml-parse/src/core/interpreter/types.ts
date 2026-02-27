@@ -28,7 +28,10 @@ export interface InterpreterDatabase {
   recordsElements: ElementDeclarationNode[];
   cachedMergedTables: Map<Table, Table>; // map Table to Table that has been merged with table partials
   source: string;
+  policies: Map<ElementDeclarationNode, Policy>;
+  functions: Map<ElementDeclarationNode, Function>;
 }
+
 
 // Record value type
 export type RecordValueType = 'string' | 'bool' | 'integer' | 'real' | 'date' | 'time' | 'datetime' | string;
@@ -71,6 +74,8 @@ export interface Database {
   project: Project;
   tablePartials: TablePartial[];
   records: TableRecord[];
+  policies: Policy[];
+  functions: Function[];
 }
 
 export interface Table {
@@ -238,6 +243,35 @@ export interface TablePartial {
 export interface TablePartialInjection {
   name: string;
   order: number;
+  token: TokenPosition;
+}
+
+export interface FunctionArg {
+  name: string;
+  type: string;
+}
+
+export interface Function {
+  name: string;
+  schemaName: string;
+  returns: string;
+  args: FunctionArg[];
+  body: string;
+  language: string;
+  behavior: string;
+  security: string;
+  token: TokenPosition;
+}
+
+export interface Policy {
+  name: string;
+  schemaName: string;
+  tableName: string;
+  behavior: string;
+  command: string;
+  roles: string[];
+  using: string | null;
+  check: string | null;
   token: TokenPosition;
 }
 

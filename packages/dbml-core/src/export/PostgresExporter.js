@@ -540,6 +540,40 @@ class PostgresExporter {
     return commentArr;
   }
 
+  static exportPolicies (policyIds, model) {
+    return policyIds.map((policyId) => {
+      const policy = model.policies[policyId];
+      let line = `CREATE POLICY "${policy.name}"`;
+      line += ` ON "${policy.schemaName}"."${policy.tableName}"`;
+      line += `\n  AS ${policy.behavior.toUpperCase()}`;
+      line += `\n  FOR ${policy.command.toUpperCase()}`;
+      line += `\n  TO ${policy.roles.join(', ')}`;
+      if (policy.using) line += `\n  USING (${policy.using})`;
+      if (policy.check) line += `\n  WITH CHECK (${policy.check})`;
+      line += ';\n';
+      return line;
+    });
+  }
+
+  static exportFunctions (functionIds, model) {
+    const toSqlType = (type) => (type || '').replace(/_/g, ' ');
+    return functionIds.map((functionId) => {
+      const fn = model.functions[functionId];
+      const schema = fn.schemaName || 'public';
+      const argList = (fn.args || []).map((a) => `"${a.name}" ${toSqlType(a.type)}`).join(', ');
+      const returnType = toSqlType(fn.returns || 'void');
+      let line = `CREATE OR REPLACE FUNCTION "${schema}"."${fn.name}"(${argList})`;
+      line += `\nRETURNS ${returnType}`;
+      line += `\nLANGUAGE ${fn.language || 'plpgsql'}`;
+      line += `\n${(fn.behavior || 'volatile').toUpperCase()}`;
+      line += `\nSECURITY ${(fn.security || 'invoker').toUpperCase()}`;
+      line += '\nAS $$';
+      line += `\n${(fn.body || '').trim()}`;
+      line += '\n$$;\n';
+      return line;
+    });
+  }
+
   static export (model) {
     const database = model.database['1'];
 
@@ -623,6 +657,14 @@ class PostgresExporter {
         ]
       : [];
 
+    const policyStatements = database.policyIds
+      ? PostgresExporter.exportPolicies(database.policyIds, model)
+      : [];
+
+    const functionStatements = database.functionIds
+      ? PostgresExporter.exportFunctions(database.functionIds, model)
+      : [];
+
     const res = concat(
       statements.schemas,
       statements.enums,
@@ -631,6 +673,8 @@ class PostgresExporter {
       statements.comments,
       statements.refs,
       recordsSection,
+      policyStatements,
+      functionStatements,
     ).join('\n');
     return res;
   }

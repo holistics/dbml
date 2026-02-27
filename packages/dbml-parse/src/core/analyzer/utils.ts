@@ -36,6 +36,8 @@ export function getElementKind (node?: ElementDeclarationNode): Option<ElementKi
     case ElementKind.TablePartial:
     case ElementKind.Check:
     case ElementKind.Records:
+    case ElementKind.Policy:
+    case ElementKind.Function:
       return new Some(kind as ElementKind);
     default:
       return new None();
