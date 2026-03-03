@@ -256,18 +256,7 @@ export function syncDiagramViews(
 ): string {
   let result = dbmlCode;
 
-  // Get existing DiagramView names from DBML
-  const existingNames = new Set<string>();
-  // Match both quoted "name" and unquoted name
-  const regex = /DiagramView\s+(?:"([^"]+)"|(\w+))/g;
-  let match;
-  while ((match = regex.exec(dbmlCode)) !== null) {
-    // match[1] is quoted name, match[2] is unquoted name
-    const name = match[1] || match[2];
-    existingNames.add(name);
-  }
-
-  // Step 1: Apply user's operation
+  // Step 1: Apply user's operation (auto-migration has been removed - frontend decides operation type)
   switch (operation.type) {
     case 'create':
       if (operation.filterConfig) {
