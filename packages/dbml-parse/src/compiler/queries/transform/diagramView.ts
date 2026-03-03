@@ -245,9 +245,8 @@ export interface ViewItem {
 }
 
 /**
- * Unified function that handles:
- * 1. User's operation (create/update/rename)
- * 2. Auto-migration of DB views that don't have DBML blocks yet
+ * Unified function that handles the user's operation (create/update/rename).
+ * Auto-migration has been removed - the frontend decides the operation type.
  */
 export function syncDiagramViews(
   this: any,
@@ -283,20 +282,6 @@ export function syncDiagramViews(
     case 'rename':
       result = renameDiagramView(operation.oldName!, operation.newName, result);
       break;
-  }
-
-  // Step 2: Auto-migrate DB views that don't have DBML blocks
-  for (const dbView of allDbViews) {
-    if (!existingNames.has(dbView.name)) {
-      // This DB view doesn't have a DBML block, create it
-      const filterConfig = dbView.visibleEntities || {
-        tables: null,
-        schemas: null,
-        tableGroups: null,
-        stickyNotes: null,
-      };
-      result = createDiagramView(dbView.name, filterConfig, result);
-    }
   }
 
   return result;

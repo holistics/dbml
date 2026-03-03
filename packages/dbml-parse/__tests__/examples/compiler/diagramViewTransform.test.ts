@@ -144,7 +144,8 @@ Table posts {
       expect(result).not.toContain('DiagramView old_view');
     });
 
-    test('should migrate DB views that are missing from DBML', () => {
+    test('should only apply explicit operation - no auto-migration', () => {
+      // With auto-migration removed, only the explicitly requested operation should be applied
       const dbViews = [
         { name: 'user_view', visibleEntities: { tables: [{ name: 'users', schemaName: '' }], schemas: null, tableGroups: null, stickyNotes: null } },
         { name: 'post_view', visibleEntities: { tables: [{ name: 'posts', schemaName: '' }], schemas: null, tableGroups: null, stickyNotes: null } },
@@ -152,12 +153,13 @@ Table posts {
       const operation = {
         type: 'create' as const,
         newName: 'new_view',
-        filterConfig: { tables: [], schemas: null, tableGroups: null, stickyNotes: null },
+        filterConfig: { tables: [{ name: 'users', schemaName: '' }], schemas: null, tableGroups: null, stickyNotes: null },
       };
       const result = syncDiagramViews(operation, dbViews, emptyDbml);
-      expect(result).toContain('DiagramView user_view');
-      expect(result).toContain('DiagramView post_view');
+      // Should only have the explicitly created view, not auto-migrated ones
       expect(result).toContain('DiagramView new_view');
+      expect(result).not.toContain('DiagramView user_view');
+      expect(result).not.toContain('DiagramView post_view');
     });
 
     test('should not migrate if DB view already exists in DBML', () => {
@@ -197,6 +199,26 @@ Table posts {
       expect(result).toContain('blog');
       expect(result).toContain('notes {');
       expect(result).toContain('reminder');
+    });
+
+    test('should NOT auto-migrate views - frontend decides operation', () => {
+      // Only the explicitly requested operation should be applied
+      const dbmlWithView = emptyDbml + '\n\nDiagramView existing_view {\n  tables {\n    users\n  }\n}';
+      const dbViews = [
+        { name: 'existing_view', visibleEntities: { tables: [{ name: 'users', schemaName: '' }], schemas: null, tableGroups: null, stickyNotes: null } },
+        { name: 'unrelated_view', visibleEntities: { tables: [{ name: 'posts', schemaName: '' }], schemas: null, tableGroups: null, stickyNotes: null } },
+      ];
+      const operation = {
+        type: 'update' as const,
+        newName: 'existing_view',
+        filterConfig: { tables: [{ name: 'posts', schemaName: '' }], schemas: null, tableGroups: null, stickyNotes: null },
+      };
+      const result = syncDiagramViews(operation, dbViews, dbmlWithView);
+      // Should only have 1 DiagramView block - the update should NOT create unrelated_view
+      const viewMatches = result.match(/DiagramView\s+(?:"[^"]+"|\w+)/g);
+      expect(viewMatches?.length).toBe(1);
+      expect(result).toContain('DiagramView existing_view');
+      expect(result).not.toContain('DiagramView unrelated_view');
     });
   });
 
