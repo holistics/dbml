@@ -229,7 +229,9 @@ DiagramView "Test View" {
       const result = updateDiagramView('Test View', ['orders'], dbmlWithQuotedView);
       expect(result).toContain('DiagramView "Test View"');
       expect(result).toContain('orders');
-      expect(result).not.toContain('users');
+      // Verify the DiagramView block specifically doesn't have 'users' (not the Table definitions)
+      const viewBlockMatch = result.match(/DiagramView "Test View" \{[\s\S]*?\}/);
+      expect(viewBlockMatch?.[0]).not.toContain('users');
     });
 
     test('should find and rename DiagramView with quoted name', () => {
