@@ -57,7 +57,7 @@ export interface DiagramViewOperation {
 }
 
 export function syncDiagramViews(
-  operation: DiagramViewOperation,
+  operations: DiagramViewOperation[],
   allDbViews: ViewItem[],
   dbmlCode: string
 ): string;

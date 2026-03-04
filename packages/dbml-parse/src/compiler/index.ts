@@ -117,8 +117,8 @@ export default class Compiler {
     return migrateViewsToDbml.call(this, dbViews, dbmlCode);
   }
 
-  syncDiagramViews (operation: DiagramViewOperation, allDbViews: ViewItem[], dbmlCode: string): string {
-    return syncDiagramViews.call(this, operation, allDbViews, dbmlCode);
+  syncDiagramViews (operations: DiagramViewOperation[], allDbViews: ViewItem[], dbmlCode: string): string {
+    return syncDiagramViews.call(this, operations, allDbViews, dbmlCode);
   }
 
   applyTextEdits (edits: TextEdit[]): string {

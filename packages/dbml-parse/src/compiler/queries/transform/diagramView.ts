@@ -112,6 +112,19 @@ function findDiagramViewToken(source: string, name: string): { start: number; en
 }
 
 /**
+ * Extracts all DiagramView names from existing DBML code
+ */
+function getExistingDbmlViewNames(dbmlCode: string): string[] {
+  const names: string[] = [];
+  const regex = /DiagramView\s+(?:"([^"]+)"|([^\s{]+))\s*\{/g;
+  let match;
+  while ((match = regex.exec(dbmlCode)) !== null) {
+    names.push(match[1] || match[2]);
+  }
+  return names;
+}
+
+/**
  * Helper to convert string[] to FilterConfig for backward compatibility
  */
 function convertToFilterConfig(tablesOrConfig: string[] | DiagramViewFilterConfig): DiagramViewFilterConfig {
@@ -228,7 +241,7 @@ export function migrateViewsToDbml(this: any, dbViews: DbView[], dbmlCode: strin
  * Operation types for syncDiagramViews
  */
 export interface DiagramViewOperation {
-  type: 'create' | 'update' | 'rename';
+  type: 'create' | 'update' | 'rename' | 'delete';
   oldName?: string;
   newName: string;
   filterConfig?: DiagramViewFilterConfig;
@@ -243,32 +256,83 @@ export interface ViewItem {
 }
 
 /**
- * Unified function that handles the user's operation (create/update/rename).
- * Auto-migration has been removed - the frontend decides the operation type.
+ * Unified function that handles multiple operations atomically.
+ * Also auto-creates views that exist in database but not in DBML.
  */
 export function syncDiagramViews(
   this: any,
-  operation: DiagramViewOperation,
+  operations: DiagramViewOperation[],
   allDbViews: ViewItem[],
   dbmlCode: string
 ): string {
   let result = dbmlCode;
 
-  // Step 1: Apply user's operation (auto-migration has been removed - frontend decides operation type)
-  switch (operation.type) {
-    case 'create':
-      if (operation.filterConfig) {
-        result = createDiagramView(operation.newName, operation.filterConfig, result);
+  // Step 1: Apply all operations in a single pass
+  const edits: Array<{ start: number; end: number; newText: string }> = [];
+
+  for (const operation of operations) {
+    switch (operation.type) {
+      case 'create': {
+        if (operation.filterConfig) {
+          const newBlock = generateDiagramViewDbml(operation.newName, operation.filterConfig);
+          result = result ? `${result.trimEnd()}\n\n${newBlock}\n` : `${newBlock}\n`;
+        }
+        break;
       }
-      break;
-    case 'update':
-      if (operation.filterConfig) {
-        result = updateDiagramView(operation.newName, operation.filterConfig, result);
+      case 'update': {
+        if (operation.filterConfig) {
+          const existing = findDiagramViewToken(result, operation.newName);
+          const newBlock = generateDiagramViewDbml(operation.newName, operation.filterConfig);
+          if (existing) {
+            edits.push({ start: existing.start, end: existing.end, newText: newBlock });
+          } else {
+            // If doesn't exist, create it
+            result = result ? `${result.trimEnd()}\n\n${newBlock}\n` : `${newBlock}\n`;
+          }
+        }
+        break;
       }
-      break;
-    case 'rename':
-      result = renameDiagramView(operation.oldName!, operation.newName, result);
-      break;
+      case 'rename': {
+        const existing = findDiagramViewToken(result, operation.oldName!);
+        if (existing) {
+          const quotedOldName = quoteNameIfNeeded(operation.oldName!);
+          const quotedNewName = quoteNameIfNeeded(operation.newName);
+          const oldHeader = `DiagramView ${quotedOldName}`;
+          const newHeader = `DiagramView ${quotedNewName}`;
+          edits.push({
+            start: existing.start,
+            end: existing.start + oldHeader.length,
+            newText: newHeader
+          });
+        }
+        break;
+      }
+      case 'delete': {
+        const existing = findDiagramViewToken(result, operation.newName);
+        if (existing) {
+          edits.push({ start: existing.start, end: existing.end, newText: '' });
+        }
+        break;
+      }
+    }
+  }
+
+  // Apply all edits at once if there are any
+  if (edits.length > 0) {
+    result = applyTextEdits(result, edits);
+  }
+
+  // Step 2: Detect and auto-create missing views
+  if (allDbViews && allDbViews.length > 0) {
+    const existingViewNames = getExistingDbmlViewNames(result);
+
+    for (const dbView of allDbViews) {
+      if (!existingViewNames.includes(dbView.name)) {
+        // Missing view - auto-create it
+        const newBlock = generateDiagramViewDbml(dbView.name, dbView.visibleEntities);
+        result = result ? `${result.trimEnd()}\n\n${newBlock}\n` : `${newBlock}\n`;
+      }
+    }
   }
 
   return result;
