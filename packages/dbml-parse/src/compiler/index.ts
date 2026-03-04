@@ -17,6 +17,14 @@ import {
   applyTextEdits,
   type TextEdit,
   type TableNameInput,
+  createDiagramView,
+  updateDiagramView,
+  renameDiagramView,
+  deleteDiagramView,
+  migrateViewsToDbml,
+  syncDiagramViews,
+  type DiagramViewOperation,
+  type ViewItem,
 } from './queries/transform';
 import { splitQualifiedIdentifier, unescapeString, escapeString, formatRecordValue, isValidIdentifier, addDoubleQuoteIfNeeded } from './queries/utils';
 
@@ -87,6 +95,30 @@ export default class Compiler {
     newName: TableNameInput,
   ): string {
     return renameTable.call(this, oldName, newName);
+  }
+
+  createDiagramView (name: string, tables: string[], dbmlCode: string): string {
+    return createDiagramView.call(this, name, tables, dbmlCode);
+  }
+
+  updateDiagramView (name: string, tables: string[], dbmlCode: string): string {
+    return updateDiagramView.call(this, name, tables, dbmlCode);
+  }
+
+  renameDiagramView (oldName: string, newName: string, dbmlCode: string): string {
+    return renameDiagramView.call(this, oldName, newName, dbmlCode);
+  }
+
+  deleteDiagramView (name: string, dbmlCode: string): string {
+    return deleteDiagramView.call(this, name, dbmlCode);
+  }
+
+  migrateViewsToDbml (dbViews: Array<{ name: string; tables: string[] }>, dbmlCode: string): string {
+    return migrateViewsToDbml.call(this, dbViews, dbmlCode);
+  }
+
+  syncDiagramViews (operation: DiagramViewOperation, allDbViews: ViewItem[], dbmlCode: string): string {
+    return syncDiagramViews.call(this, operation, allDbViews, dbmlCode);
   }
 
   applyTextEdits (edits: TextEdit[]): string {

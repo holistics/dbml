@@ -24,6 +24,7 @@ class Database extends Element {
     aliases = [],
     records = [],
     tablePartials = [],
+    diagramViews = [],
   }) {
     super();
     this.dbState = new DbState();
@@ -39,6 +40,7 @@ class Database extends Element {
     this.aliases = aliases;
     this.records = [];
     this.tablePartials = [];
+    this.diagramViews = diagramViews;
 
     // The global array containing references with 1 endpoint being a field injected from a partial to a table
     // These refs are add to this array when resolving partials in tables (`Table.processPartials()`)
@@ -233,6 +235,7 @@ class Database extends Element {
       schemas: this.schemas.map((s) => s.export()),
       notes: this.notes.map((n) => n.export()),
       records: this.records.map((r) => ({ ...r })),
+      diagramViews: this.diagramViews,
     };
   }
 
@@ -266,6 +269,7 @@ class Database extends Element {
       fields: {},
       records: {},
       tablePartials: {},
+      diagramViews: this.diagramViews,
     };
 
     this.schemas.forEach((schema) => schema.normalize(normalizedModel));

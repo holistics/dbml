@@ -31,54 +31,52 @@ function generateDiagramViewDbml(name: string, filterConfig: DiagramViewFilterCo
   // tables
   if (filterConfig && filterConfig.tables !== null && filterConfig.tables !== undefined) {
     if (filterConfig.tables.length > 0) {
-      lines.push('  tables {');
-      filterConfig.tables.forEach(t => {
+      const tableRefs = filterConfig.tables.map(t => {
         const tableRef = t.schemaName ? `${t.schemaName}.${t.name}` : t.name;
-        lines.push(`    ${tableRef}`);
+        return tableRef;
       });
-      lines.push('  }');
+      lines.push(`  Tables: [${tableRefs.join(', ')}]`);
     } else {
-      lines.push('  tables {}');
+      lines.push('  Tables: []');
     }
+  } else {
+    lines.push('  Tables: all');
   }
 
   // notes (stickyNotes)
   if (filterConfig && filterConfig.stickyNotes !== null && filterConfig.stickyNotes !== undefined) {
     if (filterConfig.stickyNotes.length > 0) {
-      lines.push('  notes {');
-      filterConfig.stickyNotes.forEach(n => {
-        lines.push(`    ${n.name}`);
-      });
-      lines.push('  }');
+      const noteRefs = filterConfig.stickyNotes.map(n => n.name);
+      lines.push(`  Notes: [${noteRefs.join(', ')}]`);
     } else {
-      lines.push('  notes {}');
+      lines.push('  Notes: []');
     }
+  } else {
+    lines.push('  Notes: all');
   }
 
   // tableGroups
   if (filterConfig && filterConfig.tableGroups !== null && filterConfig.tableGroups !== undefined) {
     if (filterConfig.tableGroups.length > 0) {
-      lines.push('  tableGroups {');
-      filterConfig.tableGroups.forEach(g => {
-        lines.push(`    ${g.name}`);
-      });
-      lines.push('  }');
+      const groupRefs = filterConfig.tableGroups.map(g => g.name);
+      lines.push(`  TableGroups: [${groupRefs.join(', ')}]`);
     } else {
-      lines.push('  tableGroups {}');
+      lines.push('  TableGroups: []');
     }
+  } else {
+    lines.push('  TableGroups: all');
   }
 
   // schemas
   if (filterConfig && filterConfig.schemas !== null && filterConfig.schemas !== undefined) {
     if (filterConfig.schemas.length > 0) {
-      lines.push('  schemas {');
-      filterConfig.schemas.forEach(s => {
-        lines.push(`    ${s.name}`);
-      });
-      lines.push('  }');
+      const schemaRefs = filterConfig.schemas.map(s => s.name);
+      lines.push(`  Schemas: [${schemaRefs.join(', ')}]`);
     } else {
-      lines.push('  schemas {}');
+      lines.push('  Schemas: []');
     }
+  } else {
+    lines.push('  Schemas: all');
   }
 
   lines.push('}');

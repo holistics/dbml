@@ -1,0 +1,6 @@
+Table users {
+  id int [pk]
+}
+
+DiagramView no_filter {
+}

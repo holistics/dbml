@@ -1078,7 +1078,7 @@ export default class Parser {
 
   private attribute (): AttributeNode {
     const args: {
-      name?: IdentiferStreamNode | PrimaryExpressionNode;
+      name?: IdentiferStreamNode | PrimaryExpressionNode | NormalExpressionNode;
       colon?: SyntaxToken;
       value?: NormalExpressionNode | IdentiferStreamNode;
     } = {};
@@ -1158,11 +1158,17 @@ export default class Parser {
     }
   };
 
-  private attributeName (): IdentiferStreamNode | PrimaryExpressionNode {
+  private attributeName (): IdentiferStreamNode | PrimaryExpressionNode | NormalExpressionNode {
     const identifiers: SyntaxToken[] = [];
 
     if (this.peek().kind !== SyntaxTokenKind.IDENTIFIER) {
       return this.primaryExpression();
+    }
+
+    // Check if this is a dotted expression (e.g., public.users)
+    // If so, parse using expression parser
+    if (this.peek(1).kind === SyntaxTokenKind.OP && this.peek(1).value === '.') {
+      return this.expression_bp(0);
     }
 
     while (

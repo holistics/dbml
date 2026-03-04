@@ -5,6 +5,15 @@ import importer from './import';
 import exporter from './export';
 import {
   renameTable,
+  createDiagramView,
+  updateDiagramView,
+  renameDiagramView,
+  deleteDiagramView,
+  migrateViewsToDbml,
+  syncDiagramViews,
+  type DiagramViewFilterConfig,
+  type DiagramViewOperation,
+  type ViewItem,
 } from './transform';
 import { VERSION } from './utils/version';
 
@@ -12,10 +21,22 @@ export {
   importer,
   exporter,
   renameTable,
+  createDiagramView,
+  updateDiagramView,
+  renameDiagramView,
+  deleteDiagramView,
+  migrateViewsToDbml,
+  syncDiagramViews,
   ModelExporter,
   CompilerError,
   Parser,
   VERSION,
+};
+
+export type {
+  DiagramViewFilterConfig,
+  DiagramViewOperation,
+  ViewItem,
 };
 
 // Re-export types and utilities from @dbml/parse

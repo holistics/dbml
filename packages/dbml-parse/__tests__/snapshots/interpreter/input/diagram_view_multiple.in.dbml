@@ -1,0 +1,24 @@
+Table users {
+  id int [pk]
+}
+
+Table posts {
+  id int [pk]
+}
+
+Table comments {
+  id int [pk]
+}
+
+DiagramView user_view {
+  tables {
+    users
+  }
+}
+
+DiagramView content_view {
+  tables {
+    posts
+    comments
+  }
+}

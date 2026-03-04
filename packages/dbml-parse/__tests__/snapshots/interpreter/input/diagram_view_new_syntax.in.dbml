@@ -1,0 +1,48 @@
+Table users {
+  id int [pk]
+}
+
+Table posts {
+  id int [pk]
+}
+
+Note reminder {
+  'Remember to add indexes'
+}
+
+TableGroup blog {
+  users
+  posts
+}
+
+// Test new colon syntax
+DiagramView "Show All Tables" {
+  Tables: all
+}
+
+DiagramView "Show Nothing" {
+  Tables: []
+  Notes: []
+  TableGroups: []
+  Schemas: []
+}
+
+DiagramView "Specific Tables" {
+  Tables: [users, posts]
+}
+
+DiagramView "Specific Notes" {
+  Notes: [reminder]
+}
+
+DiagramView "Mixed Syntax" {
+  Tables: [users]
+  Notes: [reminder]
+  TableGroups: [blog]
+}
+
+DiagramView "All" {
+  Notes: all
+  TableGroups: all
+  Schemas: all
+}

@@ -1,0 +1,13 @@
+Table users {
+  id int [pk]
+}
+
+Table posts {
+  id int [pk]
+}
+
+DiagramView tables_only {
+  tables {
+    users
+  }
+}

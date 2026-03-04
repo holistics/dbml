@@ -1,0 +1,10 @@
+Table users {
+  id int [pk]
+}
+
+DiagramView bad_ref {
+  tables {
+    users
+    non_existent_table
+  }
+}

@@ -1,0 +1,15 @@
+Table users {
+  id int [pk]
+}
+
+DiagramView my_view {
+  tables {
+    users
+  }
+}
+
+DiagramView my_view {
+  tables {
+    users
+  }
+}

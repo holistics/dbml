@@ -1,0 +1,9 @@
+Table users {
+  id int [pk]
+}
+
+DiagramView bad_note {
+  notes {
+    non_existent_note
+  }
+}

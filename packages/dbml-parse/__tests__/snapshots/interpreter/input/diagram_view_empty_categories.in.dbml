@@ -1,0 +1,8 @@
+Table users {
+  id int [pk]
+}
+
+DiagramView empty_view {
+  tables {
+  }
+}

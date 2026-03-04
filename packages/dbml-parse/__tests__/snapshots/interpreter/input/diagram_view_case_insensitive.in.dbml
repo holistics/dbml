@@ -1,0 +1,30 @@
+Table users {
+  id int [pk]
+}
+
+Table posts {
+  id int [pk]
+}
+
+Note reminder {
+  'A note'
+}
+
+TableGroup blog {
+  users
+  posts
+}
+
+diagramview my_view {
+  Tables {
+    users
+  }
+
+  Notes {
+    reminder
+  }
+
+  tablegroups {
+    blog
+  }
+}

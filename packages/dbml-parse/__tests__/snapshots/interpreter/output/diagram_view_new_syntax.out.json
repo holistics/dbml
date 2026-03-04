@@ -1,0 +1,305 @@
+{
+  "schemas": [],
+  "tables": [
+    {
+      "name": "users",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 16,
+              "line": 2,
+              "column": 3
+            },
+            "end": {
+              "offset": 27,
+              "line": 2,
+              "column": 14
+            }
+          },
+          "inline_refs": [],
+          "pk": true,
+          "increment": false,
+          "unique": false,
+          "checks": []
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 29,
+          "line": 3,
+          "column": 2
+        }
+      },
+      "indexes": [],
+      "partials": [],
+      "checks": []
+    },
+    {
+      "name": "posts",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 47,
+              "line": 6,
+              "column": 3
+            },
+            "end": {
+              "offset": 58,
+              "line": 6,
+              "column": 14
+            }
+          },
+          "inline_refs": [],
+          "pk": true,
+          "increment": false,
+          "unique": false,
+          "checks": []
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 31,
+          "line": 5,
+          "column": 1
+        },
+        "end": {
+          "offset": 60,
+          "line": 7,
+          "column": 2
+        }
+      },
+      "indexes": [],
+      "partials": [],
+      "checks": []
+    }
+  ],
+  "notes": [
+    {
+      "name": "reminder",
+      "content": "Remember to add indexes",
+      "token": {
+        "start": {
+          "offset": 62,
+          "line": 9,
+          "column": 1
+        },
+        "end": {
+          "offset": 107,
+          "line": 11,
+          "column": 2
+        }
+      }
+    }
+  ],
+  "refs": [],
+  "enums": [],
+  "tableGroups": [
+    {
+      "tables": [
+        {
+          "name": "users",
+          "schemaName": ""
+        },
+        {
+          "name": "posts",
+          "schemaName": ""
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 109,
+          "line": 13,
+          "column": 1
+        },
+        "end": {
+          "offset": 144,
+          "line": 16,
+          "column": 2
+        }
+      },
+      "name": "blog",
+      "schemaName": null
+    }
+  ],
+  "aliases": [],
+  "project": {},
+  "tablePartials": [],
+  "records": [],
+  "diagramViews": [
+    {
+      "name": "Show All Tables",
+      "token": {
+        "start": {
+          "offset": 171,
+          "line": 19,
+          "column": 1
+        },
+        "end": {
+          "offset": 218,
+          "line": 21,
+          "column": 2
+        }
+      },
+      "visibleEntities": {
+        "tables": null,
+        "schemas": [],
+        "tableGroups": [],
+        "stickyNotes": []
+      }
+    },
+    {
+      "name": "Show Nothing",
+      "token": {
+        "start": {
+          "offset": 220,
+          "line": 23,
+          "column": 1
+        },
+        "end": {
+          "offset": 307,
+          "line": 28,
+          "column": 2
+        }
+      },
+      "visibleEntities": {
+        "tables": [],
+        "schemas": [],
+        "tableGroups": [],
+        "stickyNotes": []
+      }
+    },
+    {
+      "name": "Specific Tables",
+      "token": {
+        "start": {
+          "offset": 309,
+          "line": 30,
+          "column": 1
+        },
+        "end": {
+          "offset": 367,
+          "line": 32,
+          "column": 2
+        }
+      },
+      "visibleEntities": {
+        "tables": [
+          {
+            "name": "users",
+            "schemaName": ""
+          },
+          {
+            "name": "posts",
+            "schemaName": ""
+          }
+        ],
+        "schemas": [],
+        "tableGroups": [],
+        "stickyNotes": []
+      }
+    },
+    {
+      "name": "Specific Notes",
+      "token": {
+        "start": {
+          "offset": 369,
+          "line": 34,
+          "column": 1
+        },
+        "end": {
+          "offset": 421,
+          "line": 36,
+          "column": 2
+        }
+      },
+      "visibleEntities": {
+        "tables": [],
+        "schemas": [],
+        "tableGroups": [],
+        "stickyNotes": [
+          {
+            "name": "reminder"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Mixed Syntax",
+      "token": {
+        "start": {
+          "offset": 423,
+          "line": 38,
+          "column": 1
+        },
+        "end": {
+          "offset": 513,
+          "line": 42,
+          "column": 2
+        }
+      },
+      "visibleEntities": {
+        "tables": [
+          {
+            "name": "users",
+            "schemaName": ""
+          }
+        ],
+        "schemas": [],
+        "tableGroups": [
+          {
+            "name": "blog"
+          }
+        ],
+        "stickyNotes": [
+          {
+            "name": "reminder"
+          }
+        ]
+      }
+    },
+    {
+      "name": "All",
+      "token": {
+        "start": {
+          "offset": 515,
+          "line": 44,
+          "column": 1
+        },
+        "end": {
+          "offset": 583,
+          "line": 48,
+          "column": 2
+        }
+      },
+      "visibleEntities": {
+        "tables": [],
+        "schemas": null,
+        "tableGroups": null,
+        "stickyNotes": null
+      }
+    }
+  ]
+}

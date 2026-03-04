@@ -210,7 +210,7 @@ export class IdentiferStreamNode extends SyntaxNode {
 // e.g. ref: users.id
 // e.g. note: 'some note'
 export class AttributeNode extends SyntaxNode {
-  name?: IdentiferStreamNode | PrimaryExpressionNode;
+  name?: IdentiferStreamNode | PrimaryExpressionNode | NormalExpressionNode;
 
   colon?: SyntaxToken;
 
@@ -222,7 +222,7 @@ export class AttributeNode extends SyntaxNode {
       colon,
       value,
     }: {
-      name?: IdentiferStreamNode | PrimaryExpressionNode;
+      name?: IdentiferStreamNode | PrimaryExpressionNode | NormalExpressionNode;
       colon?: SyntaxToken;
       value?: NormalExpressionNode | IdentiferStreamNode;
     },

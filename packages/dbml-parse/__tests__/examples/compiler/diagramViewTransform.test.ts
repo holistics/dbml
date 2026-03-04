@@ -112,7 +112,7 @@ Table posts {
       };
       const result = syncDiagramViews(operation, [], emptyDbml);
       expect(result).toContain('DiagramView user_view');
-      expect(result).toContain('tables {');
+      expect(result).toContain('Tables:');
       expect(result).toContain('users');
     });
 
@@ -129,7 +129,7 @@ Table posts {
         },
       };
       const result = syncDiagramViews(operation, [], dbmlWithView);
-      expect(result).toMatch(/DiagramView user_view\s*\{[^}]*tables\s*\{[^}]*users[^}]*posts[^}]*\}/s);
+      expect(result).toMatch(/DiagramView user_view\s*\{[^}]*Tables: \[.*users.*posts.*\]/s);
     });
 
     test('should rename an existing DiagramView block', () => {
@@ -193,11 +193,11 @@ Table posts {
       expect(result).toContain('DiagramView full_view');
       expect(result).toContain('core.users');
       expect(result).toContain('posts');
-      expect(result).toContain('schemas {');
+      expect(result).toContain('Schemas:');
       expect(result).toContain('core');
-      expect(result).toContain('tableGroups {');
+      expect(result).toContain('TableGroups:');
       expect(result).toContain('blog');
-      expect(result).toContain('notes {');
+      expect(result).toContain('Notes:');
       expect(result).toContain('reminder');
     });
 

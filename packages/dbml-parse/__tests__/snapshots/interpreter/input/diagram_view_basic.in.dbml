@@ -1,0 +1,33 @@
+Table users {
+  id int [pk]
+  name varchar
+}
+
+Table posts {
+  id int [pk]
+  user_id int
+}
+
+Note reminder {
+  'Remember to add indexes'
+}
+
+TableGroup blog {
+  users
+  posts
+}
+
+DiagramView my_view {
+  tables {
+    users
+    posts
+  }
+
+  notes {
+    reminder
+  }
+
+  tableGroups {
+    blog
+  }
+}

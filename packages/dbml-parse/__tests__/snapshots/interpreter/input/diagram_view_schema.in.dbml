@@ -1,0 +1,23 @@
+Table core.users {
+  id int [pk]
+}
+
+Table core.orders {
+  id int [pk]
+}
+
+Table public.logs {
+  id int [pk]
+}
+
+DiagramView filtered {
+  tables {
+    core.users
+    core.orders
+    logs
+  }
+
+  schemas {
+    core
+  }
+}

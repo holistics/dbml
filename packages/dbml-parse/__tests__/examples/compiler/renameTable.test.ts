@@ -1553,4 +1553,102 @@ Table Users {
       expect(result).not.toContain('customers');
     });
   });
+
+  describe('diagramView', () => {
+    test('should rename table references inside DiagramView', () => {
+      const input = `
+Table users {
+  id int [pk]
+}
+
+Table posts {
+  id int [pk]
+}
+
+DiagramView my_view {
+  tables {
+    users
+    posts
+  }
+}
+`;
+      const result = renameTable('users', 'customers', input);
+      expect(result).toContain('Table customers');
+      expect(result).not.toContain('Table users');
+      expect(result).toContain('customers'); // inside DiagramView
+      expect(result).toContain('posts'); // unchanged
+    });
+
+    test('should rename schema-qualified table in DiagramView', () => {
+      const input = `
+Table core.users {
+  id int [pk]
+}
+
+DiagramView filtered {
+  tables {
+    core.users
+  }
+}
+`;
+      const result = renameTable('core.users', 'core.customers', input);
+      expect(result).toContain('core.customers');
+      expect(result).not.toContain('core.users');
+    });
+
+    test('should rename table in both TableGroup and DiagramView', () => {
+      const input = `
+Table users {
+  id int [pk]
+}
+
+TableGroup g1 {
+  users
+}
+
+DiagramView my_view {
+  tables {
+    users
+  }
+
+  tableGroups {
+    g1
+  }
+}
+`;
+      const result = renameTable('users', 'customers', input);
+      expect(result).toContain('Table customers');
+      expect(result).not.toContain('Table users');
+      expect(result).toContain('customers'); // in both TableGroup and DiagramView
+      expect(result).toContain('g1'); // group name unchanged
+    });
+
+    test('should not rename non-table entities in DiagramView', () => {
+      const input = `
+Table users {
+  id int [pk]
+}
+
+Note reminder {
+  'A note'
+}
+
+DiagramView my_view {
+  tables {
+    users
+  }
+
+  notes {
+    reminder
+  }
+}
+`;
+      const result = renameTable('users', 'customers', input);
+      expect(result).toContain('Table customers');
+      // Note name should NOT be renamed
+      expect(result).toContain('Note reminder');
+      expect(result).toContain('notes {');
+      expect(result).toContain('reminder');
+    });
+  });
 });

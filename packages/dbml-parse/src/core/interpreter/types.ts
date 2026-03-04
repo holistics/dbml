@@ -28,6 +28,7 @@ export interface InterpreterDatabase {
   recordsElements: ElementDeclarationNode[];
   cachedMergedTables: Map<Table, Table>; // map Table to Table that has been merged with table partials
   source: string;
+  diagramViews: Map<ElementDeclarationNode, DiagramView>;
 }
 
 // Record value type
@@ -71,6 +72,7 @@ export interface Database {
   project: Project;
   tablePartials: TablePartial[];
   records: TableRecord[];
+  diagramViews: DiagramView[];
 }
 
 export interface Table {
@@ -239,6 +241,17 @@ export interface TablePartialInjection {
   name: string;
   order: number;
   token: TokenPosition;
+}
+
+export interface DiagramView {
+  name: string;
+  token: TokenPosition;
+  visibleEntities: {
+    tables: Array<{ name: string; schemaName: string }> | null;
+    schemas: Array<{ name: string }> | null;
+    tableGroups: Array<{ name: string }> | null;
+    stickyNotes: Array<{ name: string }> | null;
+  };
 }
 
 export type Project =

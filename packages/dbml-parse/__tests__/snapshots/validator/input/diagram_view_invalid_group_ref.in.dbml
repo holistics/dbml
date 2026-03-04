@@ -1,0 +1,9 @@
+Table users {
+  id int [pk]
+}
+
+DiagramView bad_group {
+  tableGroups {
+    non_existent_group
+  }
+}

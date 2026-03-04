@@ -18,6 +18,7 @@ import { getElementNameString, isExpressionAVariableNode } from '@/core/parser/u
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import { DEFAULT_SCHEMA_NAME } from '@/constants';
 import RecordsBinder from './elementBinder/records';
+import DiagramViewBinder from './elementBinder/diagramView';
 
 export function pickBinder (element: ElementDeclarationNode & { type: SyntaxToken }) {
   switch (element.type.value.toLowerCase() as ElementKind) {
@@ -41,6 +42,8 @@ export function pickBinder (element: ElementDeclarationNode & { type: SyntaxToke
       return ChecksBinder;
     case ElementKind.Records:
       return RecordsBinder;
+    case ElementKind.DiagramView:
+      return DiagramViewBinder;
     default:
       return CustomBinder;
   }

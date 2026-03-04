@@ -1,0 +1,212 @@
+{
+  "schemas": [],
+  "tables": [
+    {
+      "name": "users",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 16,
+              "line": 2,
+              "column": 3
+            },
+            "end": {
+              "offset": 27,
+              "line": 2,
+              "column": 14
+            }
+          },
+          "inline_refs": [],
+          "pk": true,
+          "increment": false,
+          "unique": false,
+          "checks": []
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 29,
+          "line": 3,
+          "column": 2
+        }
+      },
+      "indexes": [],
+      "partials": [],
+      "checks": []
+    },
+    {
+      "name": "posts",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 47,
+              "line": 6,
+              "column": 3
+            },
+            "end": {
+              "offset": 58,
+              "line": 6,
+              "column": 14
+            }
+          },
+          "inline_refs": [],
+          "pk": true,
+          "increment": false,
+          "unique": false,
+          "checks": []
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 31,
+          "line": 5,
+          "column": 1
+        },
+        "end": {
+          "offset": 60,
+          "line": 7,
+          "column": 2
+        }
+      },
+      "indexes": [],
+      "partials": [],
+      "checks": []
+    },
+    {
+      "name": "comments",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 81,
+              "line": 10,
+              "column": 3
+            },
+            "end": {
+              "offset": 92,
+              "line": 10,
+              "column": 14
+            }
+          },
+          "inline_refs": [],
+          "pk": true,
+          "increment": false,
+          "unique": false,
+          "checks": []
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 62,
+          "line": 9,
+          "column": 1
+        },
+        "end": {
+          "offset": 94,
+          "line": 11,
+          "column": 2
+        }
+      },
+      "indexes": [],
+      "partials": [],
+      "checks": []
+    }
+  ],
+  "notes": [],
+  "refs": [],
+  "enums": [],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {},
+  "tablePartials": [],
+  "records": [],
+  "diagramViews": [
+    {
+      "name": "user_view",
+      "token": {
+        "start": {
+          "offset": 96,
+          "line": 13,
+          "column": 1
+        },
+        "end": {
+          "offset": 146,
+          "line": 17,
+          "column": 2
+        }
+      },
+      "visibleEntities": {
+        "tables": [
+          {
+            "name": "users",
+            "schemaName": ""
+          }
+        ],
+        "schemas": [],
+        "tableGroups": [],
+        "stickyNotes": []
+      }
+    },
+    {
+      "name": "content_view",
+      "token": {
+        "start": {
+          "offset": 148,
+          "line": 19,
+          "column": 1
+        },
+        "end": {
+          "offset": 214,
+          "line": 24,
+          "column": 2
+        }
+      },
+      "visibleEntities": {
+        "tables": [
+          {
+            "name": "posts",
+            "schemaName": ""
+          },
+          {
+            "name": "comments",
+            "schemaName": ""
+          }
+        ],
+        "schemas": [],
+        "tableGroups": [],
+        "stickyNotes": []
+      }
+    }
+  ]
+}

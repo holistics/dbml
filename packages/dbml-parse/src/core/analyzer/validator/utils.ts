@@ -5,6 +5,7 @@ import {
   BlockExpressionNode,
   ElementDeclarationNode,
   FunctionExpressionNode,
+  IdentiferStreamNode,
   ListExpressionNode,
   LiteralNode,
   PrefixExpressionNode,
@@ -39,6 +40,7 @@ import { ElementKind } from '@/core/analyzer/types';
 import TablePartialValidator from './elementValidators/tablePartial';
 import ChecksValidator from './elementValidators/checks';
 import RecordsValidator from './elementValidators/records';
+import DiagramViewValidator from './elementValidators/diagramView';
 
 export function pickValidator (element: ElementDeclarationNode & { type: SyntaxToken }) {
   switch (element.type.value.toLowerCase() as ElementKind) {
@@ -62,6 +64,8 @@ export function pickValidator (element: ElementDeclarationNode & { type: SyntaxT
       return ChecksValidator;
     case ElementKind.Records:
       return RecordsValidator;
+    case ElementKind.DiagramView:
+      return DiagramViewValidator;
     default:
       return CustomValidator;
   }
@@ -301,8 +305,17 @@ export function aggregateSettingList (settingList?: ListExpressionNode): Report<
   settingList.elementList.forEach((attribute) => {
     if (!attribute.name) return;
 
+    // Allow NormalExpressionNode (including InfixExpressionNode for dotted names like public.table)
+    // Only reject PrimaryExpressionNode which is for literals
     if (attribute.name instanceof PrimaryExpressionNode) {
       errors.push(new CompileError(CompileErrorCode.INVALID_SETTINGS, 'A setting name must be a stream of identifiers', attribute.name));
+      return;
+    }
+
+    // For IdentiferStreamNode, extract the string
+    // For NormalExpressionNode (like InfixExpressionNode), we can't extract a simple name for settings
+    // Skip these - they're likely used for DiagramView references, not settings
+    if (!(attribute.name instanceof IdentiferStreamNode)) {
       return;
     }
 
