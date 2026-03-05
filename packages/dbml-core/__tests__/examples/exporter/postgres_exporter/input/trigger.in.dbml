@@ -1,0 +1,37 @@
+Table orders {
+  id int [pk]
+  status varchar
+  amount int
+}
+
+Trigger {
+  name 'trg_orders_before_insert'
+  table orders
+  when before
+  event [insert]
+  for_each row
+  function audit_fn
+}
+
+Trigger {
+  name 'trg_orders_update_check'
+  table orders
+  when after
+  event [insert, update]
+  update_of [status, amount]
+  for_each row
+  condition `NEW.amount > 0`
+  function validate_order
+}
+
+Trigger {
+  name 'trg_fk_check'
+  table orders
+  when after
+  event [insert, update]
+  for_each row
+  function fk_validate_fn
+  constraint true
+  deferrable true
+  timing initially_deferred
+}

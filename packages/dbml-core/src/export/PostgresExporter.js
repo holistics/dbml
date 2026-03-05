@@ -540,6 +540,88 @@ class PostgresExporter {
     return commentArr;
   }
 
+  static exportPolicies (policyIds, model) {
+    return policyIds.map((policyId) => {
+      const policy = model.policies[policyId];
+      let line = `CREATE POLICY "${policy.name}"`;
+      line += ` ON "${policy.schemaName}"."${policy.tableName}"`;
+      line += `\n  AS ${policy.behavior.toUpperCase()}`;
+      line += `\n  FOR ${policy.command.toUpperCase()}`;
+      line += `\n  TO ${policy.roles.join(', ')}`;
+      if (policy.using) line += `\n  USING (${policy.using})`;
+      if (policy.check) line += `\n  WITH CHECK (${policy.check})`;
+      line += ';\n';
+      return line;
+    });
+  }
+
+  static exportFunctions (functionIds, model) {
+    const toSqlType = (type) => (type || '').replace(/_/g, ' ');
+    return functionIds.map((functionId) => {
+      const fn = model.functions[functionId];
+      const schema = fn.schemaName || 'public';
+      const argList = (fn.args || []).map((a) => `"${a.name}" ${toSqlType(a.type)}`).join(', ');
+      const returnType = toSqlType(fn.returns || 'void');
+      let line = `CREATE OR REPLACE FUNCTION "${schema}"."${fn.name}"(${argList})`;
+      line += `\nRETURNS ${returnType}`;
+      line += `\nLANGUAGE ${fn.language || 'plpgsql'}`;
+      line += `\n${(fn.behavior || 'volatile').toUpperCase()}`;
+      line += `\nSECURITY ${(fn.security || 'invoker').toUpperCase()}`;
+      line += '\nAS $$';
+      line += `\n${(fn.body || '').trim()}`;
+      line += '\n$$;\n';
+      return line;
+    });
+  }
+
+  static exportTriggers (triggerIds, model) {
+    return triggerIds.map((triggerId) => {
+      const trigger = model.triggers[triggerId];
+
+      const isConstraint = trigger.constraint;
+      let line = 'CREATE OR REPLACE ';
+      if (isConstraint) {
+        line += 'CONSTRAINT ';
+      }
+      line += `TRIGGER ${trigger.name}`;
+
+      // WHEN clause (BEFORE/AFTER/INSTEAD OF)
+      const whenClause = trigger.when === 'instead_of' ? 'INSTEAD OF' : trigger.when.toUpperCase();
+
+      // Events
+      const events = trigger.event.map((e) => {
+        if (e === 'update' && trigger.updateOf && trigger.updateOf.length > 0) {
+          return `UPDATE OF ${trigger.updateOf.join(', ')}`;
+        }
+        return e.toUpperCase();
+      });
+      line += `\n  ${whenClause} ${events.join(' OR ')}`;
+
+      // ON table
+      const schemaPrefix = trigger.schemaName ? `"${trigger.schemaName}".` : '';
+      line += `\n  ON ${schemaPrefix}"${trigger.tableName}"`;
+
+      // DEFERRABLE
+      if (trigger.deferrable) {
+        const timingStr = trigger.timing === 'initially_deferred' ? 'INITIALLY DEFERRED' : 'INITIALLY IMMEDIATE';
+        line += `\n  DEFERRABLE ${timingStr}`;
+      }
+
+      // FOR EACH ROW/STATEMENT
+      line += `\n  FOR EACH ${trigger.forEach.toUpperCase()}`;
+
+      // WHEN condition
+      if (trigger.condition) {
+        line += `\n  WHEN (${trigger.condition})`;
+      }
+
+      // EXECUTE FUNCTION
+      line += `\n  EXECUTE FUNCTION ${trigger.functionName}();\n`;
+
+      return line;
+    });
+  }
+
   static export (model) {
     const database = model.database['1'];
 
@@ -623,6 +705,18 @@ class PostgresExporter {
         ]
       : [];
 
+    const policyStatements = database.policyIds
+      ? PostgresExporter.exportPolicies(database.policyIds, model)
+      : [];
+
+    const functionStatements = database.functionIds
+      ? PostgresExporter.exportFunctions(database.functionIds, model)
+      : [];
+
+    const triggerStatements = database.triggerIds
+      ? PostgresExporter.exportTriggers(database.triggerIds, model)
+      : [];
+
     const res = concat(
       statements.schemas,
       statements.enums,
@@ -631,6 +725,9 @@ class PostgresExporter {
       statements.comments,
       statements.refs,
       recordsSection,
+      policyStatements,
+      functionStatements,
+      triggerStatements,
     ).join('\n');
     return res;
   }

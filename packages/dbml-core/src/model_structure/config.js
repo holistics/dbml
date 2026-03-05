@@ -4,3 +4,4 @@ export const NOTE = 'note';
 export const ENUM = 'enum';
 export const REF = 'ref';
 export const TABLE_GROUP = 'table_group';
+export const POLICY = 'policy';

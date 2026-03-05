@@ -30,6 +30,7 @@ outlines the full syntax documentations of DBML.
   - [Table Notes](#table-notes)
   - [Column Notes](#column-notes)
   - [TableGroup Notes](#tablegroup-notes)
+- [Policy Definition](#policy-definition)
 - [Sticky Notes](#sticky-notes)
 - [TableGroup](#tablegroup)
     - [TableGroup Notes](#tablegroup-notes-1)
@@ -507,6 +508,38 @@ TableGroup e_commerce [note: 'Contains tables that are related to e-commerce sys
   Note: 'Contains tables that are related to e-commerce system'
 }
 ```
+
+## Policy Definition
+
+You can define RLS policies. dbml2sql only supports export for Postgres.
+
+```text
+Table users {
+  id integer [pk]
+  ...
+}
+
+Policy {
+  name 'Users can take all actions on their own accounts'
+  schema public
+  table users
+  behavior permissive
+  command all
+  roles [authenticated]
+  using `auth.uid() = id`
+  check null
+}
+```
+
+`schema` defaults to public if not provided.
+
+`behavior` can have the values `permissive` or `restrictive`. It defaults to `permissive` if not provided.
+
+`command` can have the values `select`, `insert`, `update`, `delete`, or `all`.
+
+`roles` accepts a list of roles and defaults to `public` if none are provided.
+
+`using` and `check` default to null if not provided.
 
 ## Sticky Notes
 
