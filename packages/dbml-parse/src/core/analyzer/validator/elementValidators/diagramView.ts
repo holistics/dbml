@@ -12,7 +12,7 @@ import { ElementKind } from '@/core/analyzer/types';
 import { extractElementName } from '@/core/interpreter/utils';
 import { DEFAULT_SCHEMA_NAME } from '@/constants';
 import { destructureComplexVariable, getElementKind as getElementKindUtil } from '@/core/analyzer/utils';
-import { createTableSymbolIndex, createSchemaSymbolIndex } from '@/core/analyzer/symbol/symbolIndex';
+import { createTableSymbolIndex, createSchemaSymbolIndex, createTableGroupSymbolIndex } from '@/core/analyzer/symbol/symbolIndex';
 
 export default class DiagramViewValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
@@ -400,7 +400,7 @@ export default class DiagramViewValidator implements ElementValidator {
       const errorNode: SyntaxNode = item.name ?? item;
 
       // TableGroups are registered directly in publicSymbolTable as "TableGroup:<name>"
-      const tableGroupId = `TableGroup:${tableGroupName}`;
+      const tableGroupId = createTableGroupSymbolIndex(tableGroupName);
       if (!this.publicSymbolTable.has(tableGroupId)) {
         errors.push(new CompileError(
           CompileErrorCode.UNKNOWN_SYMBOL,
@@ -457,7 +457,7 @@ export default class DiagramViewValidator implements ElementValidator {
         if (!tableGroupName) continue;
 
         // Check if tableGroup exists
-        const tableGroupId = `TableGroup:${tableGroupName}`;
+        const tableGroupId = createTableGroupSymbolIndex(tableGroupName);
         const tableGroupExists = this.publicSymbolTable.has(tableGroupId);
 
         if (!tableGroupExists && tableGroups.length > 0) {
