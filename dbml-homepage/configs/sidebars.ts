@@ -22,7 +22,7 @@ const SidebarConfigs: SidebarsConfig = {
       link: { type: 'doc', id: 'docs' },
       items: [
         {
-          id: 'syntax/core-database-markup',
+          id: 'docs',
           type: 'doc',
           label: 'Core Database Markup',
         },
