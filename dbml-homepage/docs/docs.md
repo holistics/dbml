@@ -35,6 +35,8 @@ outlines the full syntax documentations of DBML.
     - [TableGroup Notes](#tablegroup-notes-1)
     - [TableGroup Settings](#tablegroup-settings)
 - [TablePartial](#tablepartial)
+- [Data Sample](#data-sample)
+  - [Data Types](#data-types)
 - [Multi-line String](#multi-line-string)
 - [Comments](#comments)
 - [Syntax Consistency](#syntax-consistency)
@@ -657,6 +659,96 @@ When multiple partials define the same field, setting or index, DBML resolves co
 
 1. Local Table Definition: Fields, settings and indexes defined directly in the table override those from partials.
 2. Last Injected Partial: If a conflict exists between partials, the definition from the last-injected partial (in source order) takes precedence.
+
+## Data Sample
+
+`Records` allows you to define sample data for your tables directly in DBML. This is useful for documentation, testing, and providing example data for your database schema.
+
+Records can be defined either outside or inside a table definition.
+
+When the column list is omitted, records will automatically use all table columns in their definition order. **Implicit column lists are only supported for records defined inside a table.**
+
+```text
+// Outside table definition
+Table users {
+  id int [pk]
+  name varchar
+  email varchar
+}
+
+records users(id, name, email) {
+  1, 'Alice', 'alice@example.com'
+  2, 'Bob', 'bob@example.com'
+}
+
+// Inside table definition with explicit column list
+Table posts {
+  id int [pk]
+  title varchar
+  published boolean
+
+  records (id, title, published) {
+    1, 'First Post', true
+    2, 'Second Post', false
+  }
+}
+
+// Inside table definition with implicit column list
+Table comments {
+  id int [pk]
+  user_id int [ref: > users.id]
+  post_id int [ref: > posts.id]
+  title string
+
+  records {
+    1, 2, 1, 'First comment of first post by the second user'
+  }
+}
+```
+
+:::note
+Each table can have only one records block. You cannot define duplicate records block for the same table.
+:::
+
+When using implicit columns with tables that inject partials using `~partial_name`, the column order follows the same precedence rules as [TablePartial](#tablepartial) injection.
+
+### Data Types
+
+Records use CSV-style syntax. Each value is interpreted and type-checked according to the target column's SQL type.
+
+| Data Type | Syntax | Examples |
+|-----------|--------|----------|
+| **Strings** | Wrapped in single quotes. Escape single quotes using `\'` | `'Hello World'`<br/>`'Escape\'s sequence'` |
+| **Numbers** | Integer or decimal values with or without quotes | `42`, `3.14`, `-100`, `1.5e10` |
+| **Booleans** | All boolean constants are case-insensitive | `true`, `false`<br/>`'true'`, `'false'`<br/>`'Y'`, `'N'`<br/>`'T'`, `'F'`<br/>`1`, `0`<br/>`'1'`, `'0'` |
+| **Null** | Explicit NULL literal, empty string (non-string types only), or empty field | `null`<br/>`''`<br/>Empty field: `, ,` |
+| **Timestamps/Dates** | Wrapped in single quotes. Supports ISO 8601 and other sensible formats | `'2024-01-15 10:30:00'`<br/>`'2024-01-15T10:30:00.000+07:00'`<br/>`'2024-01-15'`<br/>`'10:30:00'` |
+| **Enum Values** | Enum constant or string literal | `Status.active`<br/>`'inactive'` |
+| **Expressions** | Wrapped in backticks for database functions. Disables static type checking | `` `now()` ``<br/>`` `uuid_generate_v4()` ``<br/>`` `1 + 2 * 3` `` |
+
+**Example:**
+
+```text
+enum Status {
+  active
+  inactive
+  pending
+}
+
+Table users {
+  id int
+  name varchar
+  age int
+  status Status
+  created_at timestamp
+}
+
+records users(id, name, age, status, created_at) {
+  1, 'Alice', 30, Status.active, '2024-01-15 10:30:00'
+  2, 'Bob', null, 'inactive', `now()`
+  3, 'Charlie', , Status.pending, '2024-01-15'
+}
+```
 
 ## Multi-line String
 

@@ -102,9 +102,9 @@ CREATE TABLE "D"."d_c" (
   PRIMARY KEY ("d_DE", "c_CD")
 );
 
-ALTER TABLE "D"."d_c" ADD FOREIGN KEY ("d_DE") REFERENCES "D"."d" ("DE");
+ALTER TABLE "D"."d_c" ADD FOREIGN KEY ("d_DE") REFERENCES "D"."d" ("DE") DEFERRABLE INITIALLY IMMEDIATE;
 
-ALTER TABLE "D"."d_c" ADD FOREIGN KEY ("c_CD") REFERENCES "C"."c" ("CD");
+ALTER TABLE "D"."d_c" ADD FOREIGN KEY ("c_CD") REFERENCES "C"."c" ("CD") DEFERRABLE INITIALLY IMMEDIATE;
 
 
 CREATE TABLE "A"."a_b" (
@@ -115,9 +115,9 @@ CREATE TABLE "A"."a_b" (
   PRIMARY KEY ("a_AB", "a_BA", "b_BC", "b_CB")
 );
 
-ALTER TABLE "A"."a_b" ADD FOREIGN KEY ("a_AB", "a_BA") REFERENCES "A"."a" ("AB", "BA");
+ALTER TABLE "A"."a_b" ADD FOREIGN KEY ("a_AB", "a_BA") REFERENCES "A"."a" ("AB", "BA") DEFERRABLE INITIALLY IMMEDIATE;
 
-ALTER TABLE "A"."a_b" ADD FOREIGN KEY ("b_BC", "b_CB") REFERENCES "B"."b" ("BC", "CB");
+ALTER TABLE "A"."a_b" ADD FOREIGN KEY ("b_BC", "b_CB") REFERENCES "B"."b" ("BC", "CB") DEFERRABLE INITIALLY IMMEDIATE;
 
 
 CREATE TABLE "E"."e_g" (
@@ -128,9 +128,9 @@ CREATE TABLE "E"."e_g" (
   PRIMARY KEY ("e_EF", "e_FE", "g_GH", "g_HG")
 );
 
-ALTER TABLE "E"."e_g" ADD FOREIGN KEY ("e_EF", "e_FE") REFERENCES "E"."e" ("EF", "FE");
+ALTER TABLE "E"."e_g" ADD FOREIGN KEY ("e_EF", "e_FE") REFERENCES "E"."e" ("EF", "FE") DEFERRABLE INITIALLY IMMEDIATE;
 
-ALTER TABLE "E"."e_g" ADD FOREIGN KEY ("g_GH", "g_HG") REFERENCES "G"."g" ("GH", "HG");
+ALTER TABLE "E"."e_g" ADD FOREIGN KEY ("g_GH", "g_HG") REFERENCES "G"."g" ("GH", "HG") DEFERRABLE INITIALLY IMMEDIATE;
 
 
 CREATE TABLE "t1_t2(1)" (
@@ -139,9 +139,9 @@ CREATE TABLE "t1_t2(1)" (
   PRIMARY KEY ("t1_a", "t2_a")
 );
 
-ALTER TABLE "t1_t2(1)" ADD FOREIGN KEY ("t1_a") REFERENCES "t1" ("a");
+ALTER TABLE "t1_t2(1)" ADD FOREIGN KEY ("t1_a") REFERENCES "t1" ("a") DEFERRABLE INITIALLY IMMEDIATE;
 
-ALTER TABLE "t1_t2(1)" ADD FOREIGN KEY ("t2_a") REFERENCES "t2" ("a");
+ALTER TABLE "t1_t2(1)" ADD FOREIGN KEY ("t2_a") REFERENCES "t2" ("a") DEFERRABLE INITIALLY IMMEDIATE;
 
 
 CREATE TABLE "t1_t2(2)" (
@@ -150,9 +150,9 @@ CREATE TABLE "t1_t2(2)" (
   PRIMARY KEY ("t1_b", "t2_b")
 );
 
-ALTER TABLE "t1_t2(2)" ADD FOREIGN KEY ("t1_b") REFERENCES "t1" ("b");
+ALTER TABLE "t1_t2(2)" ADD FOREIGN KEY ("t1_b") REFERENCES "t1" ("b") DEFERRABLE INITIALLY IMMEDIATE;
 
-ALTER TABLE "t1_t2(2)" ADD FOREIGN KEY ("t2_b") REFERENCES "t2" ("b");
+ALTER TABLE "t1_t2(2)" ADD FOREIGN KEY ("t2_b") REFERENCES "t2" ("b") DEFERRABLE INITIALLY IMMEDIATE;
 
 
 CREATE TABLE "schema"."image_content_item" (
@@ -161,9 +161,9 @@ CREATE TABLE "schema"."image_content_item" (
   PRIMARY KEY ("image_id", "content_item_id")
 );
 
-ALTER TABLE "schema"."image_content_item" ADD FOREIGN KEY ("image_id") REFERENCES "schema"."image" ("id");
+ALTER TABLE "schema"."image_content_item" ADD FOREIGN KEY ("image_id") REFERENCES "schema"."image" ("id") DEFERRABLE INITIALLY IMMEDIATE;
 
-ALTER TABLE "schema"."image_content_item" ADD FOREIGN KEY ("content_item_id") REFERENCES "schema"."content_item" ("id");
+ALTER TABLE "schema"."image_content_item" ADD FOREIGN KEY ("content_item_id") REFERENCES "schema"."content_item" ("id") DEFERRABLE INITIALLY IMMEDIATE;
 
 
 CREATE TABLE "schema1"."customers_orders" (
@@ -172,7 +172,7 @@ CREATE TABLE "schema1"."customers_orders" (
   PRIMARY KEY ("customers_id", "orders_id")
 );
 
-ALTER TABLE "schema1"."customers_orders" ADD FOREIGN KEY ("customers_id") REFERENCES "schema1"."customers" ("id");
+ALTER TABLE "schema1"."customers_orders" ADD FOREIGN KEY ("customers_id") REFERENCES "schema1"."customers" ("id") DEFERRABLE INITIALLY IMMEDIATE;
 
-ALTER TABLE "schema1"."customers_orders" ADD FOREIGN KEY ("orders_id") REFERENCES "schema2"."orders" ("id");
+ALTER TABLE "schema1"."customers_orders" ADD FOREIGN KEY ("orders_id") REFERENCES "schema2"."orders" ("id") DEFERRABLE INITIALLY IMMEDIATE;
 

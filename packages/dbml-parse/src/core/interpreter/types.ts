@@ -1,4 +1,4 @@
-import { ElementDeclarationNode } from '@/core/parser/nodes';
+import { ElementDeclarationNode, FunctionApplicationNode, SyntaxNode } from '@/core/parser/nodes';
 import { Position } from '@/core/types';
 import { CompileError } from '@/core/errors';
 
@@ -24,6 +24,40 @@ export interface InterpreterDatabase {
   tablePartials: Map<ElementDeclarationNode, TablePartial>;
   aliases: Alias[];
   project: Map<ElementDeclarationNode, Project>;
+  records: Map<Table, TableRecordRow[]>;
+  recordsElements: ElementDeclarationNode[];
+  cachedMergedTables: Map<Table, Table>; // map Table to Table that has been merged with table partials
+  source: string;
+}
+
+// Record value type
+export type RecordValueType = 'string' | 'bool' | 'integer' | 'real' | 'date' | 'time' | 'datetime' | string;
+
+export interface RecordValue {
+  value: any;
+  type: RecordValueType;
+}
+
+export interface TableRecordRow {
+  values: Record<string, {
+    value: any;
+    type: RecordValueType;
+    node?: SyntaxNode; // The specific node for this column value
+  }>;
+  node: FunctionApplicationNode;
+  columnNodes: Record<string, SyntaxNode>; // Map of column name to its value node
+}
+
+export interface TableRecordsData {
+  table: Table;
+  rows: TableRecordRow[];
+}
+
+export interface TableRecord {
+  schemaName: string | undefined;
+  tableName: string;
+  columns: string[];
+  values: RecordValue[][];
 }
 
 export interface Database {
@@ -36,13 +70,14 @@ export interface Database {
   aliases: Alias[];
   project: Project;
   tablePartials: TablePartial[];
+  records: TableRecord[];
 }
 
 export interface Table {
   name: string;
   schemaName: null | string;
   alias: string | null;
-  fields: Column[];
+  fields: Column[]; // The order of fields must match the order of declaration
   checks: Check[];
   partials: TablePartialInjection[];
   token: TokenPosition;
@@ -65,6 +100,11 @@ export interface ColumnType {
   schemaName: string | null;
   type_name: string;
   args: string | null;
+  // Parsed type parameters - stripped when passed to @dbml/core
+  numericParams?: { precision: number; scale: number };
+  lengthParam?: { length: number };
+  // Whether this type references an enum - stripped when passed to @dbml/core
+  isEnum?: boolean;
 }
 
 export interface Column {
@@ -216,6 +256,6 @@ export type Project =
     };
     token: TokenPosition;
     [
-    index: string & Omit<any, 'name' | 'tables' | 'refs' | 'enums' | 'tableGroups' | 'note' | 'tablePartials'>
+    index: string & Omit<any, 'name' | 'tables' | 'refs' | 'enums' | 'tableGroups' | 'note' | 'tablePartials' | 'records'>
     ]: string;
   };

@@ -4,12 +4,15 @@ import {
   ElementDeclarationNode,
   FunctionExpressionNode,
   InfixExpressionNode,
+  LiteralNode,
   PrimaryExpressionNode,
   ProgramNode,
   SyntaxNode,
   TupleExpressionNode,
   VariableNode,
+  CallExpressionNode,
 } from '@/core/parser/nodes';
+import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
 import { isRelationshipOp, isTupleOfVariables } from '@/core/analyzer/validator/utils';
 import { NodeSymbolIndex, isPublicSchemaIndex } from '@/core/analyzer/symbol/symbolIndex';
 import { NodeSymbol } from '@/core/analyzer/symbol/symbols';
@@ -18,7 +21,6 @@ import {
   isExpressionAQuotedString,
   isExpressionAVariableNode,
 } from '@/core/parser/utils';
-import { SyntaxToken } from '@/core/lexer/tokens';
 import { ElementKind } from '@/core/analyzer/types';
 
 export function getElementKind (node?: ElementDeclarationNode): Option<ElementKind> {
@@ -33,6 +35,7 @@ export function getElementKind (node?: ElementDeclarationNode): Option<ElementKi
     case ElementKind.TableGroup:
     case ElementKind.TablePartial:
     case ElementKind.Check:
+    case ElementKind.Records:
       return new Some(kind as ElementKind);
     default:
       return new None();
@@ -167,6 +170,33 @@ export function extractQuotedStringToken (value?: SyntaxNode): Option<string> {
   return new Some(value.expression.literal.value);
 }
 
+export function extractNumericLiteral (node?: SyntaxNode): number | null {
+  if (node instanceof PrimaryExpressionNode && node.expression instanceof LiteralNode) {
+    if (node.expression.literal?.kind === SyntaxTokenKind.NUMERIC_LITERAL) {
+      return Number(node.expression.literal.value);
+    }
+  }
+  return null;
+}
+
+// Extract referee from a simple variable (x) or complex variable (a.b.c)
+// For complex variables, returns the referee of the rightmost part
+export function extractReferee (node?: SyntaxNode): NodeSymbol | undefined {
+  if (!node) return undefined;
+
+  // Simple variable: x
+  if (isExpressionAVariableNode(node)) {
+    return node.referee;
+  }
+
+  // Complex variable: a.b.c - get referee from rightmost part
+  if (node instanceof InfixExpressionNode && node.op?.value === '.') {
+    return extractReferee(node.rightExpression);
+  }
+
+  return node.referee;
+}
+
 export function isBinaryRelationship (value?: SyntaxNode): value is InfixExpressionNode {
   if (!(value instanceof InfixExpressionNode)) {
     return false;
@@ -220,6 +250,41 @@ export function extractIndexName (
   }
 
   return value.value.value;
+}
+
+// Destructure a call expression like `schema.table(col1, col2)` or `table(col1, col2)`.
+// Returns the callee variables (schema, table) and the args (col1, col2).
+//   schema.table(col1, col2) => { variables: [schema, table], args: [col1, col2] }
+//   table(col1, col2)        => { variables: [table], args: [col1, col2] }
+//   table()                  => { variables: [table], args: [] }
+export function destructureCallExpression (
+  node?: SyntaxNode,
+): Option<{ variables: (PrimaryExpressionNode & { expression: VariableNode })[]; args: (PrimaryExpressionNode & { expression: VariableNode })[] }> {
+  if (!(node instanceof CallExpressionNode) || !node.callee) {
+    return new None();
+  }
+
+  // Destructure the callee (e.g., schema.table or just table)
+  const fragments = destructureMemberAccessExpression(node.callee).unwrap_or(undefined);
+  if (!fragments || fragments.length === 0) {
+    return new None();
+  }
+
+  // All callee fragments must be simple variables
+  if (!fragments.every(isExpressionAVariableNode)) {
+    return new None();
+  }
+
+  // Get args from argument list
+  let args: (PrimaryExpressionNode & { expression: VariableNode })[] = [];
+  if (isTupleOfVariables(node.argumentList)) {
+    args = [...node.argumentList.elementList];
+  }
+
+  return new Some({
+    variables: fragments as (PrimaryExpressionNode & { expression: VariableNode })[],
+    args,
+  });
 }
 
 // Starting from `startElement`

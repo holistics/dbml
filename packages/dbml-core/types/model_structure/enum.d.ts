@@ -1,4 +1,4 @@
-import { NormalizedDatabase } from './database';
+import { NormalizedModel } from './database';
 import DbState from './dbState';
 import Element, { Token, RawNote } from './element';
 import EnumValue from './enumValue';
@@ -53,16 +53,19 @@ declare class Enum extends Element {
         name: string;
         note: string;
     };
-    normalize(model: NormalizedDatabase): void;
+    normalize(model: NormalizedModel): void;
 }
 export interface NormalizedEnum {
-    [_id: number]: {
-        id: number;
-        name: string;
-        note: string;
-        valueIds: number[];
-        fieldIds: number[];
-        schemaId: number;
-    };
+    id: number;
+    name: string;
+    note: string | null;
+    valueIds: number[];
+    fieldIds: number[];
+    schemaId: number;
 }
+
+export interface NormalizedEnumIdMap {
+    [_id: number]: NormalizedEnum;
+}
+
 export default Enum;

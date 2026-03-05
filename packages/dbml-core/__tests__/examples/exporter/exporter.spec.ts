@@ -1,32 +1,79 @@
 import exporter from '../../../src/export';
 import { scanTestNames, getFileExtension } from '../testHelpers';
-import { ExportFormatOption } from '../../../types/export/ModelExporter';
+import { ExportFormat } from '../../../types/export/ModelExporter';
 import { readFileSync } from 'fs';
 import path from 'path';
+import { test, expect, describe } from 'vitest';
+
+const DBML_WITH_RECORDS = `
+Table users {
+  id integer [pk]
+  name varchar
+}
+
+Records users(id, name) {
+  1, 'Alice'
+  2, 'Bob'
+}
+`.trim();
 
 describe('@dbml/core - exporter', () => {
-  const runTest = async (fileName: string, testDir: string, format: ExportFormatOption) => {
+  const runTest = async (fileName: string, testDir: string, format: ExportFormat) => {
     const fileExtension = getFileExtension(format);
     const input = readFileSync(path.resolve(__dirname, `./${testDir}/input/${fileName}.in.dbml`), { encoding: 'utf8' });
     const output = readFileSync(path.resolve(__dirname, `./${testDir}/output/${fileName}.out.${fileExtension}`), { encoding: 'utf8' });
     const res = exporter.export(input, format);
 
-    expect(res).toBe(output);
+    // Exclude meaningless spaces from failing the tests
+    expect(res.trim()).toBe(output.trim());
   };
 
-  test.each(scanTestNames(__dirname, 'mysql_exporter/input'))('mysql_exporter/%s', (name) => {
-    runTest(name, 'mysql_exporter', 'mysql');
-  });
+  const spec = {
+    mysql_exporter: 'mysql',
+    postgres_exporter: 'postgres',
+    mssql_exporter: 'mssql',
+    oracle_exporter: 'oracle',
+  } as const;
 
-  test.each(scanTestNames(__dirname, 'postgres_exporter/input'))('postgres_exporter/%s', (name) => {
-    runTest(name, 'postgres_exporter', 'postgres');
-  });
+  for (const [exporter, type] of Object.entries(spec)) {
+    test.each(scanTestNames(__dirname, `${exporter}/input`))(`${exporter}/%s`, async (name) => {
+      await runTest(name, exporter, type);
+    });
+  }
+});
 
-  test.each(scanTestNames(__dirname, 'mssql_exporter/input'))('mssql_exporter/%s', (name) => {
-    runTest(name, 'mssql_exporter', 'mssql');
-  });
+const EXPECTED_DBML_WITH_RECORDS =
+`Table "users" {
+  "id" integer [pk]
+  "name" varchar
+}
 
-  test.each(scanTestNames(__dirname, 'oracle_exporter/input'))('oracle_exporter/%s', (name) => {
-    runTest(name, 'oracle_exporter', 'oracle');
+Records users(id, name) {
+  1, 'Alice'
+  2, 'Bob'
+}`;
+
+const EXPECTED_DBML_WITHOUT_RECORDS =
+`Table "users" {
+  "id" integer [pk]
+  "name" varchar
+}`;
+
+describe('@dbml/core - exporter flags', () => {
+  describe('includeRecords', () => {
+    test('includes records by default', () => {
+      const res = exporter.export(DBML_WITH_RECORDS, 'dbml');
+      expect(res.trim()).toBe(EXPECTED_DBML_WITH_RECORDS);
+    });
+
+    test('includes records when includeRecords is true', () => {
+      const res = exporter.export(DBML_WITH_RECORDS, 'dbml', { includeRecords: true });
+      expect(res.trim()).toBe(EXPECTED_DBML_WITH_RECORDS);
+    });
+
+    test('omits records when includeRecords is false', () => {
+      const res = exporter.export(DBML_WITH_RECORDS, 'dbml', { includeRecords: false });
+      expect(res.trim()).toBe(EXPECTED_DBML_WITHOUT_RECORDS);
+    });
   });
 });

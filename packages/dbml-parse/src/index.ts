@@ -1,12 +1,12 @@
-import { serialize } from '@/core/serialization/serialize';
 import Compiler from '@/compiler/index';
 import * as services from '@/services/index';
 
 // Export the types that playground and other consumers need
 export {
-  // Element types from analyzer
   ElementKind,
 } from '@/core/analyzer/types';
+
+export * from '@/core/interpreter/records/utils';
 
 export {
   // Core AST node types
@@ -35,12 +35,15 @@ export {
 } from '@/core/types';
 
 export {
-  addQuoteIfNeeded,
-} from '@/core/utils';
-
-export {
   // Scope kinds from compiler
   ScopeKind,
+  // Utilities
+  splitQualifiedIdentifier,
+  unescapeString,
+  escapeString,
+  formatRecordValue,
+  isValidIdentifier,
+  addDoubleQuoteIfNeeded,
 } from '@/compiler/index';
 
 // Export interpreted types for structured data
@@ -55,4 +58,4 @@ export {
   type TablePartial,
 } from '@/core/interpreter/types';
 
-export { serialize, Compiler, services };
+export { Compiler, services };

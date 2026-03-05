@@ -1,4 +1,4 @@
-/// <reference types="vitest" />
+/// <reference types='vitest' />
 
 import path from 'path';
 import { defineConfig } from 'vite';
@@ -10,14 +10,13 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "src/"),
-      "@tests": path.resolve(__dirname, "__tests__/"),
+      '@': path.resolve(__dirname, 'src/'),
+      '@tests': path.resolve(__dirname, '__tests__/'),
     },
   },
   build: {
     lib: {
       entry: path.resolve(__dirname, 'src/index.ts'),
-      name: 'DbmlParser',
       fileName: 'dbml-parse',
       formats: ['cjs', 'es'],
     },
@@ -31,7 +30,7 @@ export default defineConfig({
     globals: true,
     coverage: {
       provider: 'v8',
-      reporter: ['json', 'json-summary', 'html', 'text'],
+      reporter: ['json-summary', 'text'],
     },
   },
 });

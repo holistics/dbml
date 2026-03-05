@@ -1,4 +1,4 @@
-import { get, isNil } from 'lodash';
+import { get, isNil } from 'lodash-es';
 import Element from './element';
 import Field from './field';
 import Index from './indexes';

@@ -14,13 +14,17 @@ declare class Parser {
     public DBMLCompiler: Compiler;
     constructor(dbmlCompiler?: Compiler);
     static parseJSONToDatabase(rawDatabase: RawDatabase): Database;
+    /** @deprecated Use parseMySQLToJSONv2 instead */
     static parseMySQLToJSON(str: string): RawDatabase;
     static parseMySQLToJSONv2(str: string): RawDatabase;
+    /** @deprecated Use parsePostgresToJSONv2 instead */
     static parsePostgresToJSON(str: string): RawDatabase;
     static parsePostgresToJSONv2(str: string): RawDatabase;
+    /** @deprecated Use parseDBMLToJSONv2 instead */
     static parseDBMLToJSON(str: string): RawDatabase;
     static parseDBMLToJSONv2(str: string, dbmlCompiler?: Compiler): RawDatabase;
     static parseSchemaRbToJSON(str: string): RawDatabase;
+    /** @deprecated Use parseMSSQLToJSONv2 instead */
     static parseMSSQLToJSON(str: string): RawDatabase;
     static parseMSSQLToJSONv2(str: string): RawDatabase;
     static parseSnowflakeToJSON(str: string): RawDatabase;
