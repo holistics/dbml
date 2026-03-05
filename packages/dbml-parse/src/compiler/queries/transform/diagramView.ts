@@ -25,6 +25,14 @@ function quoteNameIfNeeded(name: string): string {
   return name;
 }
 
+function formatEntityList(items: string[], indent = '  '): string {
+  if (items.length <= 3) {
+    return `[${items.join(', ')}]`;
+  }
+  const lines = items.map(item => `${indent}  ${item},`);
+  return `[\n${lines.join('\n')}\n${indent}]`;
+}
+
 function generateDiagramViewDbml(name: string, filterConfig: DiagramViewFilterConfig): string {
   const quotedName = quoteNameIfNeeded(name);
   const lines: string[] = [`DiagramView ${quotedName} {`];
@@ -33,10 +41,12 @@ function generateDiagramViewDbml(name: string, filterConfig: DiagramViewFilterCo
   if (filterConfig && filterConfig.tables !== null && filterConfig.tables !== undefined) {
     if (filterConfig.tables.length > 0) {
       const tableRefs = filterConfig.tables.map(t => {
-        const tableRef = t.schemaName ? `${t.schemaName}.${t.name}` : t.name;
+        const tableRef = (t.schemaName && t.schemaName !== DEFAULT_SCHEMA_NAME)
+          ? `${t.schemaName}.${t.name}`
+          : t.name;
         return tableRef;
       });
-      lines.push(`  Tables: [${tableRefs.join(', ')}]`);
+      lines.push(`  Tables: ${formatEntityList(tableRefs)}`);
     } else {
       lines.push('  Tables: []');
     }
@@ -48,7 +58,7 @@ function generateDiagramViewDbml(name: string, filterConfig: DiagramViewFilterCo
   if (filterConfig && filterConfig.stickyNotes !== null && filterConfig.stickyNotes !== undefined) {
     if (filterConfig.stickyNotes.length > 0) {
       const noteRefs = filterConfig.stickyNotes.map(n => n.name);
-      lines.push(`  Notes: [${noteRefs.join(', ')}]`);
+      lines.push(`  Notes: ${formatEntityList(noteRefs)}`);
     } else {
       lines.push('  Notes: []');
     }
@@ -60,7 +70,7 @@ function generateDiagramViewDbml(name: string, filterConfig: DiagramViewFilterCo
   if (filterConfig && filterConfig.tableGroups !== null && filterConfig.tableGroups !== undefined) {
     if (filterConfig.tableGroups.length > 0) {
       const groupRefs = filterConfig.tableGroups.map(g => g.name);
-      lines.push(`  TableGroups: [${groupRefs.join(', ')}]`);
+      lines.push(`  TableGroups: ${formatEntityList(groupRefs)}`);
     } else {
       lines.push('  TableGroups: []');
     }
@@ -72,7 +82,7 @@ function generateDiagramViewDbml(name: string, filterConfig: DiagramViewFilterCo
   if (filterConfig && filterConfig.schemas !== null && filterConfig.schemas !== undefined) {
     if (filterConfig.schemas.length > 0) {
       const schemaRefs = filterConfig.schemas.map(s => s.name);
-      lines.push(`  Schemas: [${schemaRefs.join(', ')}]`);
+      lines.push(`  Schemas: ${formatEntityList(schemaRefs)}`);
     } else {
       lines.push('  Schemas: []');
     }

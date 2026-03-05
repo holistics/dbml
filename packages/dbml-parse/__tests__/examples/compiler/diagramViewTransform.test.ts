@@ -220,6 +220,82 @@ Table posts {
     });
   });
 
+  describe('multi-line formatting', () => {
+    test('should use inline format for 3 or fewer tables', () => {
+      const result = createDiagramView('v', {
+        tables: [
+          { name: 'a', schemaName: 'public' },
+          { name: 'b', schemaName: 'public' },
+          { name: 'c', schemaName: 'public' },
+        ],
+        schemas: null,
+        tableGroups: null,
+        stickyNotes: null,
+      }, '');
+      expect(result).toContain('Tables: [a, b, c]');
+    });
+
+    test('should use multi-line format for more than 3 tables', () => {
+      const result = createDiagramView('v', {
+        tables: [
+          { name: 'a', schemaName: 'public' },
+          { name: 'b', schemaName: 'public' },
+          { name: 'c', schemaName: 'public' },
+          { name: 'd', schemaName: 'public' },
+        ],
+        schemas: null,
+        tableGroups: null,
+        stickyNotes: null,
+      }, '');
+      expect(result).toContain('Tables: [\n    a,\n    b,\n    c,\n    d,\n  ]');
+    });
+
+    test('should use multi-line format for more than 3 schemas', () => {
+      const result = createDiagramView('v', {
+        tables: null,
+        schemas: [{ name: 'a' }, { name: 'b' }, { name: 'c' }, { name: 'd' }],
+        tableGroups: null,
+        stickyNotes: null,
+      }, '');
+      expect(result).toContain('Schemas: [\n    a,\n    b,\n    c,\n    d,\n  ]');
+    });
+
+    test('should use multi-line format for more than 3 tableGroups', () => {
+      const result = createDiagramView('v', {
+        tables: null,
+        schemas: null,
+        tableGroups: [{ name: 'a' }, { name: 'b' }, { name: 'c' }, { name: 'd' }],
+        stickyNotes: null,
+      }, '');
+      expect(result).toContain('TableGroups: [\n    a,\n    b,\n    c,\n    d,\n  ]');
+    });
+
+    test('should use multi-line format for more than 3 notes', () => {
+      const result = createDiagramView('v', {
+        tables: null,
+        schemas: null,
+        tableGroups: null,
+        stickyNotes: [{ name: 'a' }, { name: 'b' }, { name: 'c' }, { name: 'd' }],
+      }, '');
+      expect(result).toContain('Notes: [\n    a,\n    b,\n    c,\n    d,\n  ]');
+    });
+
+    test('should include schema prefix in multi-line tables when schema is not public', () => {
+      const result = createDiagramView('v', {
+        tables: [
+          { name: 'a', schemaName: 'core' },
+          { name: 'b', schemaName: 'core' },
+          { name: 'c', schemaName: 'core' },
+          { name: 'd', schemaName: 'core' },
+        ],
+        schemas: null,
+        tableGroups: null,
+        stickyNotes: null,
+      }, '');
+      expect(result).toContain('Tables: [\n    core.a,\n    core.b,\n    core.c,\n    core.d,\n  ]');
+    });
+  });
+
   describe('quoted view names with spaces', () => {
     const emptyDbml = `
 Table users {
