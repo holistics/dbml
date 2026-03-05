@@ -10,6 +10,7 @@ import { TablePartialInterpreter } from '@/core/interpreter/elementInterpreter/t
 import { RecordsInterpreter } from '@/core/interpreter/records';
 import { PolicyInterpreter } from '@/core/interpreter/elementInterpreter/policy';
 import { FunctionInterpreter } from '@/core/interpreter/elementInterpreter/function';
+import { TriggerInterpreter } from '@/core/interpreter/elementInterpreter/trigger';
 import Report from '@/core/report';
 import { getElementKind } from '@/core/analyzer/utils';
 import { ElementKind } from '@/core/analyzer/types';
@@ -66,6 +67,7 @@ function convertEnvToDb (env: InterpreterDatabase): Database {
     records,
     policies: Array.from(env.policies.values()),
     functions: Array.from(env.functions.values()),
+    triggers: Array.from(env.triggers.values()),
   };
 }
 
@@ -94,6 +96,7 @@ export default class Interpreter {
       source: ast.source,
       policies: new Map(),
       functions: new Map(),
+      triggers: new Map(),
     };
   }
 
@@ -123,6 +126,8 @@ export default class Interpreter {
           return (new PolicyInterpreter(element, this.env)).interpret();
         case ElementKind.Function:
           return (new FunctionInterpreter(element, this.env)).interpret();
+        case ElementKind.Trigger:
+          return (new TriggerInterpreter(element, this.env)).interpret();
         default:
           return [];
       }

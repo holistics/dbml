@@ -17,6 +17,7 @@ export default class DbState {
     this.tablePartialId = 1;
     this.policyId = 1;
     this.functionId = 1;
+    this.triggerId = 1;
   }
 
   generateId (el) {

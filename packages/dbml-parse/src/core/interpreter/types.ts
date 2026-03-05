@@ -30,6 +30,7 @@ export interface InterpreterDatabase {
   source: string;
   policies: Map<ElementDeclarationNode, Policy>;
   functions: Map<ElementDeclarationNode, Function>;
+  triggers: Map<ElementDeclarationNode, Trigger>;
 }
 
 
@@ -76,6 +77,7 @@ export interface Database {
   records: TableRecord[];
   policies: Policy[];
   functions: Function[];
+  triggers: Trigger[];
 }
 
 export interface Table {
@@ -272,6 +274,22 @@ export interface Policy {
   roles: string[];
   using: string | null;
   check: string | null;
+  token: TokenPosition;
+}
+
+export interface Trigger {
+  name: string;
+  schemaName: string;
+  tableName: string;
+  when: string;
+  event: string[];
+  updateOf: string[];
+  forEach: string;
+  condition: string | null;
+  functionName: string;
+  constraint: boolean;
+  deferrable: boolean;
+  timing: string | null;
   token: TokenPosition;
 }
 

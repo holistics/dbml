@@ -574,6 +574,54 @@ class PostgresExporter {
     });
   }
 
+  static exportTriggers (triggerIds, model) {
+    return triggerIds.map((triggerId) => {
+      const trigger = model.triggers[triggerId];
+
+      const isConstraint = trigger.constraint;
+      let line = 'CREATE OR REPLACE ';
+      if (isConstraint) {
+        line += 'CONSTRAINT ';
+      }
+      line += `TRIGGER ${trigger.name}`;
+
+      // WHEN clause (BEFORE/AFTER/INSTEAD OF)
+      const whenClause = trigger.when === 'instead_of' ? 'INSTEAD OF' : trigger.when.toUpperCase();
+
+      // Events
+      const events = trigger.event.map((e) => {
+        if (e === 'update' && trigger.updateOf && trigger.updateOf.length > 0) {
+          return `UPDATE OF ${trigger.updateOf.join(', ')}`;
+        }
+        return e.toUpperCase();
+      });
+      line += `\n  ${whenClause} ${events.join(' OR ')}`;
+
+      // ON table
+      const schemaPrefix = trigger.schemaName ? `"${trigger.schemaName}".` : '';
+      line += `\n  ON ${schemaPrefix}"${trigger.tableName}"`;
+
+      // DEFERRABLE
+      if (trigger.deferrable) {
+        const timingStr = trigger.timing === 'initially_deferred' ? 'INITIALLY DEFERRED' : 'INITIALLY IMMEDIATE';
+        line += `\n  DEFERRABLE ${timingStr}`;
+      }
+
+      // FOR EACH ROW/STATEMENT
+      line += `\n  FOR EACH ${trigger.forEach.toUpperCase()}`;
+
+      // WHEN condition
+      if (trigger.condition) {
+        line += `\n  WHEN (${trigger.condition})`;
+      }
+
+      // EXECUTE FUNCTION
+      line += `\n  EXECUTE FUNCTION ${trigger.functionName}();\n`;
+
+      return line;
+    });
+  }
+
   static export (model) {
     const database = model.database['1'];
 
@@ -665,6 +713,10 @@ class PostgresExporter {
       ? PostgresExporter.exportFunctions(database.functionIds, model)
       : [];
 
+    const triggerStatements = database.triggerIds
+      ? PostgresExporter.exportTriggers(database.triggerIds, model)
+      : [];
+
     const res = concat(
       statements.schemas,
       statements.enums,
@@ -675,6 +727,7 @@ class PostgresExporter {
       recordsSection,
       policyStatements,
       functionStatements,
+      triggerStatements,
     ).join('\n');
     return res;
   }

@@ -11,6 +11,7 @@ export enum ElementKind {
   Records = 'records',
   Policy = 'policy',
   Function = 'function',
+  Trigger = 'trigger',
 }
 
 export enum SettingName {
