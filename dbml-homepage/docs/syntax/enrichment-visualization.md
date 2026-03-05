@@ -4,7 +4,7 @@ title: Enrichment & Visualization
 
 # Enrichment & Visualization
 
-This section covers features specific to diagram & wiki tools like [dbdiagram.io](https://dbdiagram.io) & [dbdocs.io](https://dbdocs.io). These constructs have no SQL equivalent and are used solely to annotate and support the visualization.
+This part covers features specific to diagram & wiki tools like [dbdiagram.io](https://dbdiagram.io) & [dbdocs.io](https://dbdocs.io). These constructs have no SQL equivalent and are used solely to annotate and support the visualization.
 
 - [Note Definition](#note-definition)
   - [Project Notes](#project-notes)

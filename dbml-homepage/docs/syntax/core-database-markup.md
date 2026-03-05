@@ -4,7 +4,7 @@ title: Core Database Markup
 
 # Core Database Markup
 
-This section covers all constructs that define database structure and map directly to SQL output.
+This part covers all constructs that define database structure and map directly to SQL output.
 
 - [Project Definition](#project-definition)
 - [Schema Definition](#schema-definition)
@@ -76,6 +76,7 @@ Table schema_name.table_name {
 - settings are wrapped in `square brackets []`
 - string value is wrapped in a `single quote as 'string'`
 - `column_name` can be stated in just plain text, or wrapped in a `double quote as "column name"`
+- `note: 'string to add notes'`: add a metadata note to this table *(enrichment & visualization only — see [Table Notes](./enrichment-visualization.md#table-notes))*
 
 :::tip
 Use [TablePartial](#tablepartial) to reuse common fields, settings and indexes across multiple tables. Inject partials into a table using the `~partial_name` syntax.
