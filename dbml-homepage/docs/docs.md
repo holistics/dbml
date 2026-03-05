@@ -1,19 +1,16 @@
 ---
-title: Syntax
+title: DBML Syntax — Core Database Markup
 ---
 
-# DBML - Full Syntax Docs
+# DBML Syntax — Core Database Markup
 
-DBML (database markup language) is a simple, readable DSL language designed to define database structures. This page
-outlines the full syntax documentations of DBML.
+This part covers all constructs that define database structure and map directly to SQL output.
 
 - [Project Definition](#project-definition)
 - [Schema Definition](#schema-definition)
   - [Public Schema](#public-schema)
 - [Table Definition](#table-definition)
   - [Table Alias](#table-alias)
-  - [Table Notes](#table-notes)
-  - [Table Settings](#table-settings)
 - [Column Definition](#column-definition)
   - [Column Settings](#column-settings)
   - [Default Value](#default-value)
@@ -22,49 +19,16 @@ outlines the full syntax documentations of DBML.
 - [Index Definition](#index-definition)
   - [Index Settings](#index-settings)
 - [Relationships & Foreign Key Definitions](#relationships--foreign-key-definitions)
-  - [Relationship settings](#relationship-settings)
+  - [Relationship Settings](#relationship-settings)
   - [Many-to-many relationship](#many-to-many-relationship)
 - [Enum Definition](#enum-definition)
-- [Note Definition](#note-definition)
-  - [Project Notes](#project-notes)
-  - [Table Notes](#table-notes)
-  - [Column Notes](#column-notes)
-  - [TableGroup Notes](#tablegroup-notes)
-- [Sticky Notes](#sticky-notes)
-- [TableGroup](#tablegroup)
-    - [TableGroup Notes](#tablegroup-notes-1)
-    - [TableGroup Settings](#tablegroup-settings)
 - [TablePartial](#tablepartial)
 - [Data Sample](#data-sample)
   - [Data Types](#data-types)
-- [Multi-line String](#multi-line-string)
-- [Comments](#comments)
-- [Syntax Consistency](#syntax-consistency)
-
-## Example
-
-```text
-Table users {
-  id integer
-  username varchar
-  role varchar
-  created_at timestamp
-}
-
-Table posts {
-  id integer [primary key]
-  title varchar
-  body text [note: 'Content of the post']
-  user_id integer
-  created_at timestamp
-}
-
-Ref: posts.user_id > users.id // many-to-one
-```
 
 ## Project Definition
 
-You can give overall description of the project.
+You can give an overall description of the project.
 
 ```text
 Project project_name {
@@ -77,7 +41,7 @@ Project project_name {
 
 A new schema will be defined as long as it contains any table or enum.
 
-For example, the following code will define a new schema `core` along with a table `user` placed inside it
+For example, the following code will define a new schema `core` along with a table `user` placed inside it:
 
 ```text
 Table core.user {
@@ -107,11 +71,12 @@ Table schema_name.table_name {
 - title of database table is listed as `table_name`
 - name of the column is listed as `column_name`
 - type of the data in the column listed as `column_type`
-  - supports all data types, as long as it is a single word (remove all spaces in the data type). Example, JSON, JSONB, decimal(1,2), etc.
-- list is wrapped in `curly brackets {}`, for indexes, constraints and table definitions.
+  - supports all data types. The type name must not contain spaces; if your type has a space (e.g. `double precision`), wrap it in double quotes: `"double precision"`. Types with parentheses like `decimal(1,2)` or `varchar(255)` are supported as-is
+- list is wrapped in `curly brackets {}`, for indexes, constraints and table definitions
 - settings are wrapped in `square brackets []`
-- string value is be wrapped in a `single quote as 'string'`
+- string value is wrapped in a `single quote as 'string'`
 - `column_name` can be stated in just plain text, or wrapped in a `double quote as "column name"`
+- `note: 'string to add notes'`: add a metadata note to this table *(enrichment & visualization only — see [Table Notes](./syntax/enrichment-visualization.md#table-notes))*
 
 :::tip
 Use [TablePartial](#tablepartial) to reuse common fields, settings and indexes across multiple tables. Inject partials into a table using the `~partial_name` syntax.
@@ -129,41 +94,11 @@ Table very_long_user_table as U {
 Ref: U.id < posts.user_id
 ```
 
-### Table Notes
-
-You can add notes to the table, and refer to them in the visual plane.
-
-```text
-Table users {
-  id integer
-  status varchar [note: 'status']
-
-  Note: 'Stores user data'
-}
-```
-
-### Table Settings
-
-Settings are all defined within square brackets: `[setting1: value1, setting2: value2, setting3, setting4]`
-
-Each setting item can take in 2 forms: `Key: Value` or `keyword`, similar to that of Python function parameters.
-
-- `headercolor: <color_code>`: change the table header color.
-
-Example,
-
-```text
-Table users [headercolor: #3498DB] {
-  id integer [primary key]
-  username varchar(255) [not null, unique]
-}
-```
-
 ## Column Definition
 
 ### Column Settings
 
-Each column can take have optional settings, defined in square brackets like:
+Each column can have optional settings, defined in square brackets like:
 
 ```text
 Table buildings {
@@ -175,13 +110,13 @@ Table buildings {
 
 The list of column settings you can use:
 
-- `note: 'string to add notes'`: add a metadata note to this column
 - `primary key` or `pk`: mark a column as primary key. For composite primary key, refer to the 'Indexes' section
-- `null` or `not null`: mark a column null or not null. If you ommit this setting, the column will be null by default
+- `null` or `not null`: mark a column null or not null. If you omit this setting, the column will be null by default
 - `unique`: mark the column unique
 - `default: some_value`: set a default value of the column, please refer to the 'Default Value' section below
 - `increment`: mark the column as auto-increment
-- ``check: `check expression`‎``: add a check expression to this column. Multiple checks can be defined on a column. For checks involving multiple columns, refer to the 'Checks' section
+- ``check: `check expression`‎``: add a check expression to this column using a backtick expression. Multiple checks can be defined on a column. For checks involving multiple columns, refer to the [Check Definition](#check-definition) section
+- `note: 'string to add notes'`: add a metadata note to this column *(enrichment & visualization only — see [Column Notes](./syntax/enrichment-visualization.md#column-notes))*
 
 **Note:** You can use a workaround for un-supported settings by adding the setting name into the column type name, such as `id "bigint unsigned" [pk]`
 
@@ -207,6 +142,7 @@ Table users {
   rating integer [default: 10]
 }
 ```
+
 ## Check Definition
 
 Checks allow users to specify custom checks on one or many columns. These checks can be used to enforce check constraints on the possible values of one or many columns, which are otherwise impossible to express.
@@ -251,7 +187,7 @@ Table bookings {
 }
 ```
 
-There are 3 types of index definitions:
+There are 4 types of index definitions:
 
 - Index with single column (with index name): `CREATE INDEX created_at_index on users (created_at)`
 - Index with multiple columns (composite index): `CREATE INDEX on users (created_at, country)`
@@ -260,10 +196,11 @@ There are 3 types of index definitions:
 
 ### Index Settings
 
-- `type`: type of index (btree, gin, gist, hash depending on DB). For now, only type btree and hash are accepted.
+- `type`: type of index (btree, gin, gist, hash depending on DB). Supported types: `btree` and `hash`
 - `name`: name of index
 - `unique`: unique index
 - `pk`: primary key
+- `note`: a metadata note for the index *(enrichment & visualization only — see [Index Notes](./syntax/enrichment-visualization.md#index-notes))*
 
 ## Relationships & Foreign Key Definitions
 
@@ -290,7 +227,7 @@ There are 4 types of relationships: **one-to-one**, **one-to-many**, **many-to-o
 - `-`: one-to-one. E.g: `users.id - user_infos.user_id`
 - `<>`: many-to-many. E.g: `authors.id <> books.id`
 
-**Zero-to-(one/many)** or **(one/many)-to-zero** relationships will be automatically detected when you combine the relationship with foreign key’s nullable constraint. Like this example:
+**Zero-to-(one/many)** or **(one/many)-to-zero** relationships will be automatically detected when you combine the relationship with foreign key's nullable constraint. Like this example:
 ```text
 Table follows {
   following_user_id int [ref: > users.id] // many-to-zero
@@ -360,21 +297,22 @@ Table blogging.posts {
 Ref: blogging.posts.user_id > core.users.id
 ```
 
-### Relationship settings
+### Relationship Settings
 
 ```text
 // short form
-Ref: products.merchant_id > merchants.id [delete: cascade, update: no action, color: #79AD51]
+Ref: products.merchant_id > merchants.id [delete: cascade, update: no action]
 
 // long form
 Ref {
-  products.merchant_id > merchants.id [delete: cascade, update: no action, color: #79AD51]
+  products.merchant_id > merchants.id [delete: cascade, update: no action]
 }
 ```
 
-- `delete / update: cascade | restrict | set null | set default | no action`
-Define referential actions. Similar to `ON DELETE/UPDATE CASCADE/...` in SQL.
-- `color: <color_code>`: change the relationship color.
+- `delete / update: cascade | restrict | set null | set default | no action`:
+define referential actions. Similar to `ON DELETE/UPDATE CASCADE/...` in SQL.
+
+For the `color` setting on relationships, see [Colors](./syntax/enrichment-visualization.md#colors).
 
 *Relationship settings and names are not supported for inline form ref.*
 
@@ -382,16 +320,15 @@ Define referential actions. Similar to `ON DELETE/UPDATE CASCADE/...` in SQL.
 
 There're two ways to represent many-to-many relationship:
 
-- Using a single many-to-many relationship (`<>`).
+- Using a single many-to-many relationship (`<>`)
 
-- Using 2 many-to-one relationships (`>` and `<`). For more information, please refer to [https://community.dbdiagram.io/t/tutorial-many-to-many-relationships/412](https://community.dbdiagram.io/t/tutorial-many-to-many-relationships/412)
+- Using 2 many-to-one relationships (`>` and `<`). For more information, please refer to [this tutorial on many-to-many relationships](https://community.dbdiagram.io/t/tutorial-many-to-many-relationships/412)
 
-Beside presentation aspect, the main differece between these two approaches is how the relationship will be mapped into physical design when exporting to SQL.
+Besides the presentation aspect, the main difference between these two approaches is how the relationship will be mapped into physical design when exporting to SQL.
 
 ## Enum Definition
 
 `Enum` allows users to define different values of a particular column.
-When hovering over the column in the canvas, the enum values will be displayed.
 
 ```text
 // enum belonged to default "public" schema
@@ -424,158 +361,6 @@ enum grade {
   "A"
   "A-"
   "Not Yet Set"
-}
-```
-
-## Note Definition
-
-Note allows users to give description for a particular DBML element.
-
-```text
-Table users {
-  id int [pk]
-  name varchar
-
-  Note: 'This is a note of this table'
-  // or
-  Note {
-  'This is a note of this table'
-  }
-}
-```
-
-Note's value is a string. If your note spans over multiple lines, you can use [multi-line string](#multi-line-string) to define your note.
-
-### Project Notes
-
-```text
-Project DBML {
-  Note: '''
-  # DBML - Database Markup Language
-  DBML (database markup language) is a simple, readable DSL language designed to define database structures.
-
-  ## Benefits
-
-  * It is simple, flexible and highly human-readable
-  * It is database agnostic, focusing on the essential database structure definition without worrying about the detailed syntaxes of each database
-  * Comes with a free, simple database visualiser at [dbdiagram.io](http://dbdiagram.io)
-  '''
-}
-```
-
-### Table Notes
-
-```text
-Table users {
-  id int [pk]
-  name varchar
-
-  Note: 'Stores user data'
-}
-```
-
-### Column Notes
-
-You can add notes to your columns, so you can easily refer to it when hovering over the column in the diagram canvas.
-
-```text
-column_name column_type [note: 'replace text here']
-```
-
-Example,
-
-```text
-Table orders {
-  status varchar [
-  note: '''
-  💸 1 = processing,
-  ✔️ 2 = shipped,
-  ❌ 3 = cancelled,
-  😔 4 = refunded
-  ''']
-}
-```
-
-### TableGroup Notes
-
-```text
-TableGroup e_commerce [note: 'Contains tables that are related to e-commerce system'] {
-  merchants
-  countries
-
-  // or
-  Note: 'Contains tables that are related to e-commerce system'
-}
-```
-
-## Sticky Notes
-
-You can add sticky notes to the diagram canvas to serve as a quick reminder or to elaborate on a complex idea.
-
-Example,
-
-```text
-Table jobs {
-  ...
-}
-
-Note single_line_note {
-  'This is a single line note'
-}
-
-Note multiple_lines_note {
-'''
-  This is a multiple lines note
-  This string can spans over multiple lines.
-'''
-}
-```
-
-## TableGroup
-
-`TableGroup` allows users to group the related or associated tables together.
-
-```text
-TableGroup tablegroup_name { // tablegroup is case-insensitive.
-  table1
-  table2
-  table3
-}
-
-// example
-TableGroup e_commerce1 {
-  merchants
-  countries
-}
-```
-
-### TableGroup Notes
-
-Table groupings can be annotated with notes that describe their meaning and purpose.
-
-```text
-TableGroup e_commerce [note: 'Contains tables that are related to e-commerce system'] {
-  merchants
-  countries
-
-  // or
-  Note: 'Contains tables that are related to e-commerce system'
-}
-```
-
-### TableGroup Settings
-
-Each table group can take optional settings, defined within square brackets: `[setting1: value1, setting2: value2, setting3, setting4]`
-
-The list of table group settings you can use:
-- `note: 'string to add notes'`: add a note to this table group.
-- `color: <color_code>`: change the table group color.
-
-Example,
-```text
-TableGroup e_commerce [color: #345] {
-  merchants
-  countries
 }
 ```
 
@@ -749,65 +534,3 @@ records users(id, name, age, status, created_at) {
   3, 'Charlie', , Status.pending, '2024-01-15'
 }
 ```
-
-## Multi-line String
-
-Multiline string will be defined between triple single quote `'''`
-
-```text
-Note: '''
-  This is a block string
-  This string can spans over multiple lines.
-'''
-```
-
-- Line breaks: \<enter\> key
-- Line continuation: `\` backslash
-- Escaping characters:
-  - `\`: using double backslash `\\`
-  - `'`: using `\'`
-- The number of spaces you use to indent a block string will be the minimum number of leading spaces among all lines. The parser will automatically remove the number of indentation spaces in the final output. The result of the above example will be:
-
-```text
-  This is a block string
-  This string can spans over multiple lines.
-```
-
-## Comments
-
-**Single-line Comments**
-
-You can comment in your code using `//`, so it is easier for you to review the code later.
-
-Example,
-
-```text
-// order_items refer to items from that order
-```
-
-**Multi-line Comments**
-
-You can also put comment spanning multiple lines in your code by putting inside `/*` and `*/`.
-
-Example,
-
-```text
-/*
-  This is a
-  Multi-lines
-  comment
-*/
-```
-
-## Syntax Consistency
-
-DBML is the standard language for database and the syntax is consistent to provide clear and extensive functions.
-
-- curly brackets `{}`: grouping for indexes, constraints and table definitions
-- square brackets `[]`: settings
-- forward slashes `//`: comments
-- `column_name` is stated in just plain text
-- single quote as `'string'`: string value
-- double quote as `"column name"`: quoting variable
-- triple quote as `'''multi-line string'''`: multi-line string value
-- backtick `` ` ``: function expression

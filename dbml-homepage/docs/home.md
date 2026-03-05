@@ -20,7 +20,7 @@ title: Home
 
 ## Intro
 
-**DBML (Database Markup Language)** is an open-source DSL language designed to define and document database schemas and structures. It is designed to be simple, consistent and highly-readable.
+**DBML (Database Markup Language)** is an open-source DSL designed to define and document database schemas and structures. It is designed to be simple, consistent and highly-readable.
 
 It also comes with command-line tool and open-source module to help you convert between DBML and SQL.
 
