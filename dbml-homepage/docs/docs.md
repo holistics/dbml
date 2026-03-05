@@ -28,7 +28,7 @@ This part covers all constructs that define database structure and map directly 
 
 ## Project Definition
 
-You can give overall description of the project.
+You can give an overall description of the project.
 
 ```text
 Project project_name {
@@ -71,8 +71,8 @@ Table schema_name.table_name {
 - title of database table is listed as `table_name`
 - name of the column is listed as `column_name`
 - type of the data in the column listed as `column_type`
-  - supports all data types. The type name must not contain spaces; if your type has a space (e.g. `double precision`), wrap it in double quotes: `"double precision"`. Types with parentheses like `decimal(1,2)` or `varchar(255)` are supported as-is.
-- list is wrapped in `curly brackets {}`, for indexes, constraints and table definitions.
+  - supports all data types. The type name must not contain spaces; if your type has a space (e.g. `double precision`), wrap it in double quotes: `"double precision"`. Types with parentheses like `decimal(1,2)` or `varchar(255)` are supported as-is
+- list is wrapped in `curly brackets {}`, for indexes, constraints and table definitions
 - settings are wrapped in `square brackets []`
 - string value is wrapped in a `single quote as 'string'`
 - `column_name` can be stated in just plain text, or wrapped in a `double quote as "column name"`
@@ -196,7 +196,7 @@ There are 4 types of index definitions:
 
 ### Index Settings
 
-- `type`: type of index (btree, gin, gist, hash depending on DB). Supported types: `btree` and `hash`.
+- `type`: type of index (btree, gin, gist, hash depending on DB). Supported types: `btree` and `hash`
 - `name`: name of index
 - `unique`: unique index
 - `pk`: primary key
@@ -320,11 +320,11 @@ For the `color` setting on relationships, see [Colors](./syntax/enrichment-visua
 
 There're two ways to represent many-to-many relationship:
 
-- Using a single many-to-many relationship (`<>`).
+- Using a single many-to-many relationship (`<>`)
 
 - Using 2 many-to-one relationships (`>` and `<`). For more information, please refer to [this tutorial on many-to-many relationships](https://community.dbdiagram.io/t/tutorial-many-to-many-relationships/412)
 
-Beside presentation aspect, the main difference between these two approaches is how the relationship will be mapped into physical design when exporting to SQL.
+Besides the presentation aspect, the main difference between these two approaches is how the relationship will be mapped into physical design when exporting to SQL.
 
 ## Enum Definition
 

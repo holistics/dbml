@@ -12,7 +12,7 @@ This part describes the language-level constructs that apply across all DBML def
 
 ## Multi-line String
 
-Multiline string will be defined between triple single quote `'''`
+Multiline string will be defined between triple single quote `'''`.
 
 ```text
 Note: '''
@@ -61,7 +61,7 @@ Example,
 
 ## Syntax Consistency
 
-DBML is the standard language for database and the syntax is consistent to provide clear and extensive functions.
+DBML is the standard language for databases and the syntax is consistent to provide clear and extensive functions.
 
 - curly brackets `{}`: grouping for indexes, constraints and table definitions
 - square brackets `[]`: settings
