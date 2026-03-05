@@ -8,6 +8,7 @@ import {
   InfixExpressionNode,
   ListExpressionNode,
   TupleExpressionNode,
+  CommaExpressionNode,
   BlockExpressionNode,
   IdentiferStreamNode,
 } from '@/core/parser/nodes';
@@ -72,6 +73,12 @@ export function containerStack (this: Compiler, offset: number): readonly Readon
       }
     } else if (lastContainer instanceof TupleExpressionNode) {
       if (lastContainer.tupleCloseParen && lastContainer.end <= offset) {
+        res.pop();
+        popOnce = true;
+      }
+    } else if (lastContainer instanceof CommaExpressionNode) {
+      // CommaExpressionNode has no closing delimiter, so pop when offset is past its end
+      if (lastContainer.end <= offset) {
         res.pop();
         popOnce = true;
       }

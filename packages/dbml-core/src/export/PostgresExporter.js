@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { concat, flatten, isEmpty } from 'lodash-es';
 import {
   hasWhiteSpaceOrUpperCase,
   shouldPrintSchema,
@@ -8,6 +8,13 @@ import {
   hasWhiteSpace,
 } from './utils';
 import { shouldPrintSchemaName } from '../model_structure/utils';
+import {
+  isNumericType,
+  isStringType,
+  isBooleanType,
+  isDateTimeType,
+  isBinaryType,
+} from '@dbml/parse';
 
 // PostgreSQL built-in data types
 // Generated from PostgreSQLParser.g4 and PostgreSQLLexer.g4
@@ -138,6 +145,54 @@ const POSTGRES_RESERVED_KEYWORDS = [
 ];
 
 class PostgresExporter {
+  static exportRecords (model) {
+    const records = Object.values(model.records || {});
+    if (isEmpty(records)) {
+      return [];
+    }
+
+    const insertStatements = records.map((record) => {
+      const { schemaName, tableName, columns, values } = record;
+
+      // Skip if no values
+      if (!values || values.length === 0) {
+        return null;
+      }
+
+      // Build the table reference with schema if present
+      const tableRef = schemaName ? `"${schemaName}"."${tableName}"` : `"${tableName}"`;
+
+      // Build the column list
+      const columnList = columns.length > 0
+        ? `(${columns.map((col) => `"${col}"`).join(', ')})`
+        : '';
+
+      // Value formatter for PostgreSQL
+      const formatValue = (val) => {
+        if (val.value === null) return 'NULL';
+        if (val.type === 'expression') return val.value;
+
+        if (isNumericType(val.type)) return val.value;
+        if (isBooleanType(val.type)) return String(val.value).toUpperCase() === 'TRUE' ? 'TRUE' : 'FALSE';
+        if (isStringType(val.type) || isDateTimeType(val.type) || isBinaryType(val.type)) return `'${String(val.value).replace(/'/g, "''")}'`;
+        // Unknown type - use CAST
+        return `CAST('${String(val.value).replace(/'/g, "''")}' AS ${val.type})`;
+      };
+
+      // Build the VALUES clause
+      const valueRows = values.map((row) => {
+        const valueStrs = row.map(formatValue);
+        return `(${valueStrs.join(', ')})`;
+      });
+
+      const valuesClause = valueRows.join(',\n  ');
+
+      return `INSERT INTO ${tableRef} ${columnList}\nVALUES\n  ${valuesClause};`;
+    }).filter(Boolean);
+
+    return insertStatements;
+  }
+
   static exportEnums (enumIds, model) {
     return enumIds.map((enumId) => {
       const _enum = model.enums[enumId];
@@ -217,12 +272,20 @@ class PostgresExporter {
         }
       }
       if (field.dbdefault) {
-        if (field.dbdefault.type === 'expression') {
-          line += ` DEFAULT (${field.dbdefault.value})`;
-        } else if (field.dbdefault.type === 'string') {
-          line += ` DEFAULT '${field.dbdefault.value}'`;
-        } else {
-          line += ` DEFAULT ${field.dbdefault.value}`;
+        // Skip DEFAULT NULL as it's redundant (columns are nullable by default)
+        const isNullDefault = field.dbdefault.type === 'boolean' && (
+          field.dbdefault.value === null
+          || (typeof field.dbdefault.value === 'string' && field.dbdefault.value.toLowerCase() === 'null')
+        );
+
+        if (!isNullDefault) {
+          if (field.dbdefault.type === 'expression') {
+            line += ` DEFAULT (${field.dbdefault.value})`;
+          } else if (field.dbdefault.type === 'string') {
+            line += ` DEFAULT '${field.dbdefault.value}'`;
+          } else {
+            line += ` DEFAULT ${field.dbdefault.value}`;
+          }
         }
       }
 
@@ -344,7 +407,7 @@ class PostgresExporter {
       ? `"${refEndpointSchema.name}".`
       : ''}"${refEndpointTableName}" ADD FOREIGN KEY ("${refEndpointFields}") REFERENCES ${shouldPrintSchema(foreignEndpointSchema, model)
       ? `"${foreignEndpointSchema.name}".`
-      : ''}"${foreignEndpointTableName}" ${foreignEndpointFields};\n\n`;
+      : ''}"${foreignEndpointTableName}" ${foreignEndpointFields} DEFERRABLE INITIALLY IMMEDIATE;\n\n`;
     return line;
   }
 
@@ -394,7 +457,7 @@ class PostgresExporter {
         if (ref.onUpdate) {
           line += ` ON UPDATE ${ref.onUpdate.toUpperCase()}`;
         }
-        line += ';\n';
+        line += ' DEFERRABLE INITIALLY IMMEDIATE;\n';
       }
       return line;
     });
@@ -494,7 +557,7 @@ class PostgresExporter {
         prevStatements.schemas.push(`CREATE SCHEMA "${schema.name}";\n`);
       }
 
-      if (!_.isEmpty(enumIds)) {
+      if (!isEmpty(enumIds)) {
         const enumPairs = PostgresExporter.exportEnums(enumIds, model);
 
         enumPairs.forEach((enumPair) => {
@@ -518,40 +581,56 @@ class PostgresExporter {
       const schema = model.schemas[schemaId];
       const { tableIds, refIds } = schema;
 
-      if (!_.isEmpty(tableIds)) {
+      if (!isEmpty(tableIds)) {
         prevStatements.tables.push(...PostgresExporter.exportTables(tableIds, model, enumSet));
       }
 
-      const indexIds = _.flatten(tableIds.map((tableId) => model.tables[tableId].indexIds));
-      if (!_.isEmpty(indexIds)) {
+      const indexIds = flatten(tableIds.map((tableId) => model.tables[tableId].indexIds));
+      if (!isEmpty(indexIds)) {
         prevStatements.indexes.push(...PostgresExporter.exportIndexes(indexIds, model));
       }
 
-      const commentNodes = _.flatten(tableIds.map((tableId) => {
+      const commentNodes = flatten(tableIds.map((tableId) => {
         const { fieldIds, note } = model.tables[tableId];
         const fieldObjects = fieldIds
           .filter((fieldId) => model.fields[fieldId].note)
           .map((fieldId) => ({ type: 'column', fieldId, tableId }));
         return note ? [{ type: 'table', tableId }].concat(fieldObjects) : fieldObjects;
       }));
-      if (!_.isEmpty(commentNodes)) {
+      if (!isEmpty(commentNodes)) {
         prevStatements.comments.push(...PostgresExporter.exportComments(commentNodes, model));
       }
 
-      if (!_.isEmpty(refIds)) {
+      if (!isEmpty(refIds)) {
         prevStatements.refs.push(...PostgresExporter.exportRefs(refIds, model, usedTableNames));
       }
 
       return prevStatements;
     }, schemaEnumStatements);
 
-    const res = _.concat(
+    // Export INSERT statements with deferred constraints
+    const insertStatements = PostgresExporter.exportRecords(model);
+    const recordsSection = !isEmpty(insertStatements)
+      ? [
+          '-- Defer constraint checking for INSERT',
+          'BEGIN;',
+          'SET CONSTRAINTS ALL DEFERRED;',
+          '',
+          ...insertStatements,
+          '',
+          'SET CONSTRAINTS ALL IMMEDIATE;',
+          'COMMIT;',
+        ]
+      : [];
+
+    const res = concat(
       statements.schemas,
       statements.enums,
       statements.tables,
       statements.indexes,
       statements.comments,
       statements.refs,
+      recordsSection,
     ).join('\n');
     return res;
   }

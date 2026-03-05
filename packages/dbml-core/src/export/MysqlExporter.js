@@ -1,12 +1,62 @@
-import _ from 'lodash';
+import { concat, flatten, isEmpty } from 'lodash-es';
 import {
   shouldPrintSchema,
   buildJunctionFields1,
   buildJunctionFields2,
   buildNewTableName,
 } from './utils';
+import {
+  isNumericType,
+  isStringType,
+  isBooleanType,
+  isDateTimeType,
+  isBinaryType,
+} from '@dbml/parse';
 
 class MySQLExporter {
+  static exportRecords (model) {
+    const records = Object.values(model.records || {});
+    if (isEmpty(records)) {
+      return [];
+    }
+
+    const insertStatements = records.map((record) => {
+      const { schemaName, tableName, columns, values } = record;
+
+      // Build the table reference with schema if present
+      const tableRef = schemaName ? `\`${schemaName}\`.\`${tableName}\`` : `\`${tableName}\``;
+
+      // Build the column list
+      const columnList = columns.length > 0
+        ? `(\`${columns.join('`, `')}\`)`
+        : '';
+
+      // Value formatter for MySQL
+      const formatValue = (val) => {
+        if (val.value === null) return 'NULL';
+        if (val.type === 'expression') return val.value;
+
+        if (isNumericType(val.type)) return val.value;
+        if (isBooleanType(val.type)) return String(val.value).toUpperCase() === 'TRUE' ? 'TRUE' : 'FALSE';
+        if (isStringType(val.type) || isBinaryType(val.type) || isDateTimeType(val.type)) return `'${val.value.replace(/'/g, "''").replace(/\\/g, '\\\\')}'`;
+        // Unknown type - use CAST
+        return `CAST('${val.value.replace(/'/g, "''").replace(/\\/g, '\\\\')}' AS ${val.type})`;
+      };
+
+      // Build the VALUES clause
+      const valueRows = values.map((row) => {
+        const valueStrs = row.map(formatValue);
+        return `(${valueStrs.join(', ')})`;
+      });
+
+      const valuesClause = valueRows.join(',\n  ');
+
+      return `INSERT INTO ${tableRef} ${columnList}\nVALUES\n  ${valuesClause};`;
+    });
+
+    return insertStatements;
+  }
+
   static getFieldLines (tableId, model) {
     const table = model.tables[tableId];
 
@@ -53,12 +103,20 @@ class MySQLExporter {
         }
       }
       if (field.dbdefault) {
-        if (field.dbdefault.type === 'expression') {
-          line += ` DEFAULT (${field.dbdefault.value})`;
-        } else if (field.dbdefault.type === 'string') {
-          line += ` DEFAULT '${field.dbdefault.value}'`;
-        } else {
-          line += ` DEFAULT ${field.dbdefault.value}`;
+        // Skip DEFAULT NULL as it's redundant (columns are nullable by default)
+        const isNullDefault = field.dbdefault.type === 'boolean' && (
+          field.dbdefault.value === null
+          || (typeof field.dbdefault.value === 'string' && field.dbdefault.value.toLowerCase() === 'null')
+        );
+
+        if (!isNullDefault) {
+          if (field.dbdefault.type === 'expression') {
+            line += ` DEFAULT (${field.dbdefault.value})`;
+          } else if (field.dbdefault.type === 'string') {
+            line += ` DEFAULT '${field.dbdefault.value}'`;
+          } else {
+            line += ` DEFAULT ${field.dbdefault.value}`;
+          }
         }
       }
       if (field.note) {
@@ -314,24 +372,24 @@ class MySQLExporter {
         prevStatements.schemas.push(`CREATE SCHEMA \`${schema.name}\`;\n`);
       }
 
-      if (!_.isEmpty(tableIds)) {
+      if (!isEmpty(tableIds)) {
         prevStatements.tables.push(...MySQLExporter.exportTables(tableIds, model));
       }
 
-      const indexIds = _.flatten(tableIds.map((tableId) => model.tables[tableId].indexIds));
-      if (!_.isEmpty(indexIds)) {
+      const indexIds = flatten(tableIds.map((tableId) => model.tables[tableId].indexIds));
+      if (!isEmpty(indexIds)) {
         prevStatements.indexes.push(...MySQLExporter.exportIndexes(indexIds, model));
       }
 
-      const commentNodes = _.flatten(tableIds.map((tableId) => {
+      const commentNodes = flatten(tableIds.map((tableId) => {
         const { note } = model.tables[tableId];
         return note ? [{ type: 'table', tableId }] : [];
       }));
-      if (!_.isEmpty(commentNodes)) {
+      if (!isEmpty(commentNodes)) {
         prevStatements.comments.push(...MySQLExporter.exportComments(commentNodes, model));
       }
 
-      if (!_.isEmpty(refIds)) {
+      if (!isEmpty(refIds)) {
         prevStatements.refs.push(...MySQLExporter.exportRefs(refIds, model, usedTableNames));
       }
 
@@ -345,13 +403,29 @@ class MySQLExporter {
       refs: [],
     });
 
-    const res = _.concat(
+    // Export INSERT statements
+    // Note: MySQL does not support DEFERRED constraints, so foreign key checks are disabled
+    const insertStatements = MySQLExporter.exportRecords(model);
+    const recordsSection = !isEmpty(insertStatements)
+      ? [
+          '-- Disable foreign key checks for INSERT',
+          'SET FOREIGN_KEY_CHECKS = 0;',
+          '',
+          ...insertStatements,
+          '',
+          '-- Re-enable foreign key checks',
+          'SET FOREIGN_KEY_CHECKS = 1;',
+        ]
+      : [];
+
+    const res = concat(
       statements.schemas,
       statements.enums,
       statements.tables,
       statements.indexes,
       statements.comments,
       statements.refs,
+      recordsSection,
     ).join('\n');
     return res;
   }

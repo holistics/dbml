@@ -1,4 +1,4 @@
-import { get } from 'lodash';
+import { get } from 'lodash-es';
 import Element from './element';
 import { DEFAULT_SCHEMA_NAME } from './config';
 import Check from './check';
@@ -98,7 +98,7 @@ class Field extends Element {
       note: this.note,
       dbdefault: this.dbdefault,
       increment: this.increment,
-      injectedPartialId: this.injectedPartial?.id,
+      injectedPartialId: this.injectedPartial?.id ?? null,
       checkIds: this.checks.map((check) => check.id),
     };
   }

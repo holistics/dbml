@@ -1,10 +1,10 @@
-import { last, partition } from 'lodash';
+import { last, partition } from 'lodash-es';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, PrefixExpressionNode, ProgramNode, SyntaxNode,
 } from '../../../parser/nodes';
 import { ElementBinder } from '../types';
 import { SyntaxToken } from '../../../lexer/tokens';
-import { CompileError, CompileErrorCode } from '../../../errors';
+import { CompileError } from '../../../errors';
 import { lookupAndBindInScope, pickBinder, scanNonListNodeForBinding } from '../utils';
 import { aggregateSettingList, isValidPartialInjection } from '../../validator/utils';
 import { SymbolKind, createColumnSymbolIndex } from '../../symbol/symbolIndex';
@@ -46,7 +46,8 @@ export default class TableBinder implements ElementBinder {
       .filter((i) => i instanceof FunctionApplicationNode && isValidPartialInjection(i.callee))
       .reverse() // Warning: `reverse` mutates, but it's safe because we're working on a filtered array
       .flatMap((i) => {
-        const fragments = destructureComplexVariableTuple(((i as FunctionApplicationNode).callee as PrefixExpressionNode).expression).unwrap();
+        const fragments = destructureComplexVariableTuple(((i as FunctionApplicationNode).callee as PrefixExpressionNode).expression).unwrap_or(undefined);
+        if (!fragments) return [];
         const tablePartialBindee = fragments.variables.pop();
         const schemaBindees = fragments.variables;
 

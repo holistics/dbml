@@ -49,6 +49,11 @@ export class MockTextModel {
   getValue (): string {
     return this.content;
   }
+
+  getLineContent (lineNumber: number): string {
+    const lines = this.content.split(/\r\n|\r|\n/);
+    return lines[lineNumber - 1] || '';
+  }
 }
 
 export function createMockTextModel (content: string, uri: string = ''): TextModel {

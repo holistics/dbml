@@ -1,4 +1,4 @@
-import _, { get } from 'lodash';
+import { capitalize, get } from 'lodash-es';
 import Schema from './schema';
 import Ref from './ref';
 import Enum from './enum';
@@ -164,7 +164,7 @@ class Database extends Element {
       schema = new Schema({
         name: schemaName,
         note: {
-          value: schemaName === DEFAULT_SCHEMA_NAME ? `Default ${_.capitalize(DEFAULT_SCHEMA_NAME)} Schema` : null,
+          value: schemaName === DEFAULT_SCHEMA_NAME ? `Default ${capitalize(DEFAULT_SCHEMA_NAME)} Schema` : null,
         },
         database: this,
       });

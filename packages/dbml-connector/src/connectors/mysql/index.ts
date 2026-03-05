@@ -1,5 +1,5 @@
 import { createConnection, Connection } from 'mysql2/promise';
-import { flatten } from 'lodash';
+import { flatten } from 'lodash-es';
 import {
   CheckConstraintDictionary, DefaultInfo, DatabaseSchema, DefaultType, Field, IndexColumn, FieldsDictionary, Table, Enum, IndexesDictionary, TableConstraintsDictionary, Index, Ref,
 } from '../types';

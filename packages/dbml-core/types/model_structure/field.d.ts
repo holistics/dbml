@@ -1,4 +1,4 @@
-import { NormalizedDatabase } from './database';
+import { NormalizedModel } from './database';
 import DbState from './dbState';
 import Element, { Token, RawNote } from './element';
 import Endpoint from './endpoint';
@@ -6,7 +6,22 @@ import Enum from './enum';
 import Table from './table';
 import TablePartial from './tablePartial';
 import Check from './check';
-interface RawField {
+
+export interface InlineRef {
+    schemaName: string | null;
+    tableName: string;
+    fieldNames: string[];
+    relation: '>' | '<' | '-' | '<>';
+    token: Token;
+}
+
+export interface ColumnType {
+    schemaName: string | null;
+    type_name: string;
+    args: string | null;
+}
+
+export interface RawField {
     name: string;
     type: any;
     unique: boolean;
@@ -19,6 +34,7 @@ interface RawField {
     checks?: any[];
     table: Table;
 }
+
 declare class Field extends Element {
     name: string;
     type: any;
@@ -70,24 +86,34 @@ declare class Field extends Element {
         injectedPartialId?: number;
         checkIds: number[];
     };
-    normalize(model: NormalizedDatabase): void;
+    normalize(model: NormalizedModel): void;
 }
+
 export interface NormalizedField {
-    [_id: number]: {
-        id: number;
-        name: string;
-        type: any;
-        unique: boolean;
-        pk: boolean;
-        not_null: boolean;
-        note: string;
-        dbdefault: any;
-        increment: boolean;
-        tableId: number;
-        endpointIds: number[];
-        enumId: number;
-        injectedPartialId?: number;
-        checkIds: number[];
+    id: number;
+    name: string;
+    type: {
+        schemaName: string | null;
+        type_name: string;
     };
+    unique: boolean;
+    pk: boolean;
+    not_null: boolean;
+    note: string | null;
+    dbdefault?: {
+        type: 'number' | 'string' | 'boolean' | 'expression';
+        value: number | string;
+    };
+    increment: boolean;
+    endpointIds: number[];
+    tableId: number;
+    enumId: number | null;
+    injectedPartialId: number | null;
+    checkIds: number[];
 }
+
+export interface NormalizedFieldIdMap {
+    [_id: number]: NormalizedField;
+}
+
 export default Field;

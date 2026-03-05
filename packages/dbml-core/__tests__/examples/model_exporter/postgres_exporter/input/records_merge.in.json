@@ -1,0 +1,189 @@
+{
+  "schemas": [],
+  "tables": [
+    {
+      "name": "users",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "schemaName": null,
+            "type_name": "integer",
+            "args": null
+          },
+          "token": { "start": { "offset": 0, "line": 1, "column": 1 }, "end": { "offset": 10, "line": 1, "column": 11 } },
+          "inline_refs": [],
+          "pk": true,
+          "unique": false
+        },
+        {
+          "name": "name",
+          "type": {
+            "schemaName": null,
+            "type_name": "varchar",
+            "args": null
+          },
+          "token": { "start": { "offset": 0, "line": 2, "column": 1 }, "end": { "offset": 10, "line": 2, "column": 11 } },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "email",
+          "type": {
+            "schemaName": null,
+            "type_name": "varchar",
+            "args": null
+          },
+          "token": { "start": { "offset": 0, "line": 3, "column": 1 }, "end": { "offset": 10, "line": 3, "column": 11 } },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "active",
+          "type": {
+            "schemaName": null,
+            "type_name": "boolean",
+            "args": null
+          },
+          "token": { "start": { "offset": 0, "line": 4, "column": 1 }, "end": { "offset": 10, "line": 4, "column": 11 } },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        }
+      ],
+      "token": { "start": { "offset": 0, "line": 1, "column": 1 }, "end": { "offset": 100, "line": 5, "column": 2 } },
+      "indexes": []
+    },
+    {
+      "name": "comments",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "schemaName": null,
+            "type_name": "integer",
+            "args": null
+          },
+          "token": { "start": { "offset": 0, "line": 1, "column": 1 }, "end": { "offset": 10, "line": 1, "column": 11 } },
+          "inline_refs": [],
+          "pk": true,
+          "unique": false
+        },
+        {
+          "name": "user_id",
+          "type": {
+            "schemaName": null,
+            "type_name": "integer",
+            "args": null
+          },
+          "token": { "start": { "offset": 0, "line": 2, "column": 1 }, "end": { "offset": 10, "line": 2, "column": 11 } },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "content",
+          "type": {
+            "schemaName": null,
+            "type_name": "text",
+            "args": null
+          },
+          "token": { "start": { "offset": 0, "line": 3, "column": 1 }, "end": { "offset": 10, "line": 3, "column": 11 } },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        }
+      ],
+      "token": { "start": { "offset": 0, "line": 1, "column": 1 }, "end": { "offset": 100, "line": 4, "column": 2 } },
+      "indexes": []
+    }
+  ],
+  "notes": [],
+  "refs": [],
+  "enums": [],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {},
+  "records": [
+    {
+      "schemaName": null,
+      "tableName": "users",
+      "columns": ["id", "name", "email", "active"],
+      "values": [
+        [
+          { "value": 1, "type": "integer" },
+          { "value": "Alice", "type": "string" },
+          { "value": "alice@example.com", "type": "string" },
+          { "value": true, "type": "bool" }
+        ],
+        [
+          { "value": 2, "type": "integer" },
+          { "value": "Bob", "type": "string" },
+          { "value": "bob@example.com", "type": "string" },
+          { "value": false, "type": "bool" }
+        ]
+      ]
+    },
+    {
+      "schemaName": null,
+      "tableName": "users",
+      "columns": ["id", "name", "email", "active"],
+      "values": [
+        [
+          { "value": 3, "type": "integer" },
+          { "value": "Charlie", "type": "string" },
+          { "value": "charlie@example.com", "type": "string" },
+          { "value": true, "type": "bool" }
+        ]
+      ]
+    },
+    {
+      "schemaName": null,
+      "tableName": "users",
+      "columns": ["id", "email", "active", "name"],
+      "values": [
+        [
+          { "value": 4, "type": "integer" },
+          { "value": "dave@example.com", "type": "string" },
+          { "value": false, "type": "bool" },
+          { "value": "Dave", "type": "string" }
+        ]
+      ]
+    },
+    {
+      "schemaName": null,
+      "tableName": "comments",
+      "columns": ["id", "user_id", "content"],
+      "values": [
+        [
+          { "value": 1, "type": "integer" },
+          { "value": 1, "type": "integer" },
+          { "value": "Great post!", "type": "string" }
+        ]
+      ]
+    },
+    {
+      "schemaName": null,
+      "tableName": "comments",
+      "columns": ["id", "user_id", "content"],
+      "values": [
+        [
+          { "value": 2, "type": "integer" },
+          { "value": 2, "type": "integer" },
+          { "value": "Nice article", "type": "string" }
+        ],
+        [
+          { "value": 3, "type": "integer" },
+          { "value": 1, "type": "integer" },
+          { "value": "Thanks for sharing", "type": "string" }
+        ]
+      ]
+    }
+  ]
+}

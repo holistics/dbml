@@ -9,13 +9,13 @@
     },
     "fullStart": 0,
     "endPos": {
-      "offset": 461,
-      "line": 49,
-      "column": 1
+      "offset": 463,
+      "line": 50,
+      "column": 0
     },
-    "fullEnd": 461,
+    "fullEnd": 463,
     "start": 0,
-    "end": 461,
+    "end": 463,
     "body": [
       {
         "id": 216,
@@ -31,7 +31,7 @@
           "line": 49,
           "column": 1
         },
-        "fullEnd": 461,
+        "fullEnd": 463,
         "start": 0,
         "end": 461,
         "type": {
@@ -170,7 +170,7 @@
             "line": 49,
             "column": 1
           },
-          "fullEnd": 461,
+          "fullEnd": 463,
           "start": 16,
           "end": 461,
           "blockOpenBrace": {
@@ -12302,7 +12302,29 @@
             },
             "value": "}",
             "leadingTrivia": [],
-            "trailingTrivia": [],
+            "trailingTrivia": [
+              {
+                "kind": "<newline>",
+                "startPos": {
+                  "offset": 462,
+                  "line": 49,
+                  "column": 2
+                },
+                "endPos": {
+                  "offset": 463,
+                  "line": 50,
+                  "column": 0
+                },
+                "value": "\n",
+                "leadingTrivia": [],
+                "trailingTrivia": [],
+                "leadingInvalid": [],
+                "trailingInvalid": [],
+                "isInvalid": false,
+                "start": 462,
+                "end": 463
+              }
+            ],
             "leadingInvalid": [],
             "trailingInvalid": [],
             "isInvalid": false,
@@ -12315,14 +12337,14 @@
     "eof": {
       "kind": "<eof>",
       "startPos": {
-        "offset": 461,
-        "line": 49,
-        "column": 1
+        "offset": 463,
+        "line": 50,
+        "column": 0
       },
       "endPos": {
-        "offset": 461,
-        "line": 49,
-        "column": 1
+        "offset": 463,
+        "line": 50,
+        "column": 0
       },
       "value": "",
       "leadingTrivia": [],
@@ -12330,8 +12352,8 @@
       "leadingInvalid": [],
       "trailingInvalid": [],
       "isInvalid": false,
-      "start": 461,
-      "end": 461
+      "start": 463,
+      "end": 463
     }
   },
   "errors": [

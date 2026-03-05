@@ -1,4 +1,4 @@
-import { partition } from 'lodash';
+import { partition } from 'lodash-es';
 import {
   BlockExpressionNode,
   ElementDeclarationNode,
@@ -26,7 +26,7 @@ export default class RefBinder implements ElementBinder {
   }
 
   bind (): CompileError[] {
-    if (!(this.declarationNode.parent instanceof ProgramNode) && getElementKind(this.declarationNode.parent).unwrap() !== ElementKind.Project) {
+    if (!(this.declarationNode.parent instanceof ProgramNode) && getElementKind(this.declarationNode.parent).unwrap_or(undefined) !== ElementKind.Project) {
       return [];
     }
 
