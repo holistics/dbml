@@ -1028,7 +1028,7 @@ DiagramView my_view {
 }
 `;
       const errors = analyze(source).getErrors();
-      expect(errors.some(e => e.message?.includes('nonexistent'))).toBe(true);
+      expect(errors.some(e => e.diagnostic.includes('nonexistent'))).toBe(true);
     });
 
     test('should not report error for valid table in Tables: [...]', () => {
@@ -1041,7 +1041,7 @@ DiagramView my_view {
 }
 `;
       const errors = analyze(source).getErrors();
-      const validationErrors = errors.filter(e => e.message?.includes('does not exist'));
+      const validationErrors = errors.filter(e => e.diagnostic.includes('does not exist'));
       expect(validationErrors).toHaveLength(0);
     });
 
@@ -1054,7 +1054,7 @@ DiagramView my_view {
 }
 `;
       const errors = analyze(source).getErrors();
-      expect(errors.some(e => e.message?.includes('core'))).toBe(true);
+      expect(errors.some(e => e.diagnostic.includes('core'))).toBe(true);
     });
 
     test('should report error for unknown tableGroup in TableGroups: [...]', () => {
@@ -1067,7 +1067,7 @@ DiagramView my_view {
 }
 `;
       const errors = analyze(source).getErrors();
-      expect(errors.some(e => e.message?.includes('nonexistent_group'))).toBe(true);
+      expect(errors.some(e => e.diagnostic.includes('nonexistent_group'))).toBe(true);
     });
 
     test('should not report error for valid tableGroup in TableGroups: [...]', () => {
@@ -1080,7 +1080,7 @@ DiagramView my_view {
 }
 `;
       const errors = analyze(source).getErrors();
-      const validationErrors = errors.filter(e => e.message?.includes('does not exist'));
+      const validationErrors = errors.filter(e => e.diagnostic.includes('does not exist'));
       expect(validationErrors).toHaveLength(0);
     });
   });

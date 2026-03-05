@@ -154,7 +154,7 @@ export default class DiagramViewValidator implements ElementValidator {
   /**
    * Validate table references in colon-syntax list items (Tables: [users, posts]).
    */
-  private validateTableListItems (items: AttributeNode[]): CompileError[] {
+  private validateTableListItems (items: AttributeNode[], tables: SyntaxNode[]): CompileError[] {
     const errors: CompileError[] = [];
 
     for (const item of items) {
@@ -204,7 +204,7 @@ export default class DiagramViewValidator implements ElementValidator {
               `Table '${tableName}' not found in default schema '${DEFAULT_SCHEMA_NAME}'. Did you mean '${foundInSchema}.${tableName}'?`,
               errorNode,
             ));
-          } else {
+          } else if (tables.length > 0) {
             errors.push(new CompileError(
               CompileErrorCode.UNKNOWN_SYMBOL,
               `Table '${tableName}' does not exist`,
@@ -251,7 +251,7 @@ export default class DiagramViewValidator implements ElementValidator {
       // Colon syntax: Tables: [users, posts]
       // tablesBlock.body.callee should be a ListExpressionNode
       if (tablesBlock.body.callee instanceof ListExpressionNode) {
-        errors.push(...this.validateTableListItems(tablesBlock.body.callee.elementList));
+        errors.push(...this.validateTableListItems(tablesBlock.body.callee.elementList, tables));
       }
       return errors;
     }
