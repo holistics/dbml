@@ -1650,5 +1650,42 @@ DiagramView my_view {
       expect(result).toContain('notes {');
       expect(result).toContain('reminder');
     });
+
+    test('should rename table in colon-syntax Tables: [users] inside DiagramView block', () => {
+      const input = `
+Table users {
+  id int [pk]
+}
+
+Table posts {
+  id int [pk]
+}
+
+DiagramView my_view {
+  Tables: [users, posts]
+}
+`;
+      const result = renameTable('users', 'customers', input);
+      expect(result).toContain('Table customers');
+      expect(result).not.toContain('Table users');
+      // The reference inside Tables: [...] must also be updated
+      expect(result).toMatch(/Tables:\s*\[customers/);
+      expect(result).toContain('posts');
+    });
+
+    test('should rename schema-qualified table in colon-syntax Tables: [core.users]', () => {
+      const input = `
+Table core.users {
+  id int [pk]
+}
+
+DiagramView my_view {
+  Tables: [core.users]
+}
+`;
+      const result = renameTable('core.users', 'core.customers', input);
+      expect(result).toContain('core.customers');
+      expect(result).not.toContain('core.users');
+    });
   });
 });

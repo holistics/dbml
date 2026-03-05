@@ -1,12 +1,13 @@
 import { CompileError } from '@/core/errors';
 import { ElementBinder } from '@/core/analyzer/binder/types';
 import {
-  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ProgramNode,
+  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode,
+  IdentiferStreamNode, ListExpressionNode, ProgramNode,
 } from '@/core/parser/nodes';
 import { SyntaxToken } from '@/core/lexer/tokens';
 import SymbolFactory from '@/core/analyzer/symbol/factory';
 import { destructureComplexVariable } from '@/core/analyzer/utils';
-import { SymbolKind } from '@/core/analyzer/symbol/symbolIndex';
+import { createSchemaSymbolIndex, createTableSymbolIndex, SymbolKind } from '@/core/analyzer/symbol/symbolIndex';
 import { lookupAndBindInScope, scanNonListNodeForBinding } from '@/core/analyzer/binder/utils';
 
 export default class DiagramViewBinder implements ElementBinder {
@@ -42,9 +43,17 @@ export default class DiagramViewBinder implements ElementBinder {
         const subBody = element.body as BlockExpressionNode | undefined;
 
         switch (type) {
-          case 'tables':
-            errors.push(...this.bindTableReferences(subBody));
+          case 'tables': {
+            if (element.body instanceof FunctionApplicationNode
+              && element.body.callee instanceof ListExpressionNode) {
+              // Colon syntax: Tables: [users, posts]
+              errors.push(...this.bindTableReferencesFromList(element.body.callee));
+            } else {
+              // Block syntax: tables { users \n posts }
+              errors.push(...this.bindTableReferences(element.body as BlockExpressionNode | undefined));
+            }
             break;
+          }
           case 'notes':
           case 'sticky_notes':
             errors.push(...this.bindNoteReferences(subBody));
@@ -82,6 +91,54 @@ export default class DiagramViewBinder implements ElementBinder {
           const schemaBindees = bindee.variables;
 
           // Bind: schema (if present) + table
+          const bindPath: { node: any; kind: SymbolKind }[] = [
+            ...schemaBindees.map((b: any) => ({ node: b, kind: SymbolKind.Schema })),
+            { node: tableBindee, kind: SymbolKind.Table },
+          ];
+
+          try {
+            lookupAndBindInScope(this.ast, bindPath);
+          } catch (e) {
+            // Ignore binding errors - table may not exist
+          }
+        }
+      }
+    }
+
+    return [];
+  }
+
+  private bindTableReferencesFromList (listNode: ListExpressionNode): CompileError[] {
+    if (!this.ast.symbol?.symbolTable) {
+      return [];
+    }
+
+    for (const item of listNode.elementList) {
+      if (item.name instanceof IdentiferStreamNode) {
+        // Simple identifier: Tables: [users] — parsed as IdentiferStreamNode
+        const identifiers = item.name.identifiers;
+        if (identifiers.length === 1) {
+          // Simple table name in default schema
+          const tableName = identifiers[0].value;
+          const tableIndex = createTableSymbolIndex(tableName);
+          const tableSymbol = this.ast.symbol.symbolTable.get(tableIndex);
+          if (tableSymbol) {
+            item.name.referee = tableSymbol;
+            tableSymbol.references.push(item.name);
+          }
+        }
+        // Multi-identifier stream not expected here, skip
+      } else {
+        // Dotted expression: Tables: [core.users] — parsed via expression_bp(0)
+        const bindees = scanNonListNodeForBinding(item.name);
+
+        for (const bindee of bindees) {
+          const tableBindee = bindee.variables.pop();
+          if (!tableBindee) {
+            continue;
+          }
+          const schemaBindees = bindee.variables;
+
           const bindPath: { node: any; kind: SymbolKind }[] = [
             ...schemaBindees.map((b: any) => ({ node: b, kind: SymbolKind.Schema })),
             { node: tableBindee, kind: SymbolKind.Table },
