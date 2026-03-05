@@ -4,8 +4,8 @@ title: Syntax
 
 # DBML - Full Syntax Docs
 
-DBML (database markup language) is a simple, readable DSL language designed to define database structures. This page
-outlines the full syntax documentations of DBML.
+DBML (database markup language) is a simple, readable DSL designed to define database structures. This page
+outlines the full syntax documentation of DBML.
 
 - [Project Definition](#project-definition)
 - [Schema Definition](#schema-definition)
@@ -107,10 +107,10 @@ Table schema_name.table_name {
 - title of database table is listed as `table_name`
 - name of the column is listed as `column_name`
 - type of the data in the column listed as `column_type`
-  - supports all data types, as long as it is a single word (remove all spaces in the data type). Example, JSON, JSONB, decimal(1,2), etc.
+  - supports all data types. The type name must not contain spaces; if your type has a space (e.g. `double precision`), wrap it in double quotes: `"double precision"`. Types with parentheses like `decimal(1,2)` or `varchar(255)` are supported as-is.
 - list is wrapped in `curly brackets {}`, for indexes, constraints and table definitions.
 - settings are wrapped in `square brackets []`
-- string value is be wrapped in a `single quote as 'string'`
+- string value is wrapped in a `single quote as 'string'`
 - `column_name` can be stated in just plain text, or wrapped in a `double quote as "column name"`
 
 :::tip
@@ -163,7 +163,7 @@ Table users [headercolor: #3498DB] {
 
 ### Column Settings
 
-Each column can take have optional settings, defined in square brackets like:
+Each column can have optional settings, defined in square brackets like:
 
 ```text
 Table buildings {
@@ -177,11 +177,11 @@ The list of column settings you can use:
 
 - `note: 'string to add notes'`: add a metadata note to this column
 - `primary key` or `pk`: mark a column as primary key. For composite primary key, refer to the 'Indexes' section
-- `null` or `not null`: mark a column null or not null. If you ommit this setting, the column will be null by default
+- `null` or `not null`: mark a column null or not null. If you omit this setting, the column will be null by default
 - `unique`: mark the column unique
 - `default: some_value`: set a default value of the column, please refer to the 'Default Value' section below
 - `increment`: mark the column as auto-increment
-- ``check: `check expression`‎``: add a check expression to this column. Multiple checks can be defined on a column. For checks involving multiple columns, refer to the 'Checks' section
+- ``check: `check expression`‎``: add a check expression to this column using a backtick expression. Multiple checks can be defined on a column. For checks involving multiple columns, refer to the [Check Definition](#check-definition) section
 
 **Note:** You can use a workaround for un-supported settings by adding the setting name into the column type name, such as `id "bigint unsigned" [pk]`
 
@@ -207,6 +207,7 @@ Table users {
   rating integer [default: 10]
 }
 ```
+
 ## Check Definition
 
 Checks allow users to specify custom checks on one or many columns. These checks can be used to enforce check constraints on the possible values of one or many columns, which are otherwise impossible to express.
@@ -251,7 +252,7 @@ Table bookings {
 }
 ```
 
-There are 3 types of index definitions:
+There are 4 types of index definitions:
 
 - Index with single column (with index name): `CREATE INDEX created_at_index on users (created_at)`
 - Index with multiple columns (composite index): `CREATE INDEX on users (created_at, country)`
@@ -260,10 +261,11 @@ There are 3 types of index definitions:
 
 ### Index Settings
 
-- `type`: type of index (btree, gin, gist, hash depending on DB). For now, only type btree and hash are accepted.
+- `type`: type of index (btree, gin, gist, hash depending on DB). Supported types: `btree` and `hash`.
 - `name`: name of index
 - `unique`: unique index
 - `pk`: primary key
+- `note`: a metadata note for the index
 
 ## Relationships & Foreign Key Definitions
 
@@ -372,9 +374,9 @@ Ref {
 }
 ```
 
-- `delete / update: cascade | restrict | set null | set default | no action`
-Define referential actions. Similar to `ON DELETE/UPDATE CASCADE/...` in SQL.
-- `color: <color_code>`: change the relationship color.
+- `delete / update: cascade | restrict | set null | set default | no action`:
+define referential actions. Similar to `ON DELETE/UPDATE CASCADE/...` in SQL.
+- `color: <color_code>`: change the color of the relationship line on the diagram.
 
 *Relationship settings and names are not supported for inline form ref.*
 
@@ -384,9 +386,9 @@ There're two ways to represent many-to-many relationship:
 
 - Using a single many-to-many relationship (`<>`).
 
-- Using 2 many-to-one relationships (`>` and `<`). For more information, please refer to [https://community.dbdiagram.io/t/tutorial-many-to-many-relationships/412](https://community.dbdiagram.io/t/tutorial-many-to-many-relationships/412)
+- Using 2 many-to-one relationships (`>` and `<`). For more information, please refer to [this tutorial on many-to-many relationships](https://community.dbdiagram.io/t/tutorial-many-to-many-relationships/412)
 
-Beside presentation aspect, the main differece between these two approaches is how the relationship will be mapped into physical design when exporting to SQL.
+Beside presentation aspect, the main difference between these two approaches is how the relationship will be mapped into physical design when exporting to SQL.
 
 ## Enum Definition
 
@@ -429,7 +431,7 @@ enum grade {
 
 ## Note Definition
 
-Note allows users to give description for a particular DBML element.
+Note allows users to give description for a particular DBML element. Two syntax forms are supported:
 
 ```text
 Table users {
@@ -452,7 +454,7 @@ Note's value is a string. If your note spans over multiple lines, you can use [m
 Project DBML {
   Note: '''
   # DBML - Database Markup Language
-  DBML (database markup language) is a simple, readable DSL language designed to define database structures.
+  DBML (database markup language) is a simple, readable DSL designed to define database structures.
 
   ## Benefits
 
