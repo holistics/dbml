@@ -1,6 +1,7 @@
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, ProgramNode, SyntaxNode,
+  AttributeNode, IdentiferStreamNode, InfixExpressionNode, PrimaryExpressionNode, VariableNode,
 } from '@/core/parser/nodes';
 import SymbolFactory from '@/core/analyzer/symbol/factory';
 import { SyntaxToken } from '@/core/lexer/tokens';
@@ -64,6 +65,159 @@ export default class DiagramViewValidator implements ElementValidator {
     return errors;
   }
 
+  /**
+   * Extract name parts from an AttributeNode in a ListExpressionNode.
+   * e.g. "users"         -> ['users']
+   *      "public.users"  -> ['public', 'users']
+   * Returns null if extraction fails.
+   */
+  private extractNamePartsFromListItem (item: AttributeNode): string[] | null {
+    if (!item.name) return null;
+
+    if (item.name instanceof IdentiferStreamNode) {
+      const identifiers = item.name.identifiers;
+      if (identifiers.length === 0) return null;
+      return identifiers.map(id => id.value);
+    }
+
+    if (item.name instanceof InfixExpressionNode) {
+      return this.extractPartsFromInfixExpr(item.name);
+    }
+
+    if (item.name instanceof PrimaryExpressionNode && item.name.expression instanceof VariableNode) {
+      const val = item.name.expression.variable?.value;
+      return val ? [val] : null;
+    }
+
+    // Fallback: try destructureComplexVariable
+    return destructureComplexVariable(item.name).unwrap_or(null);
+  }
+
+  /**
+   * Walk an InfixExpressionNode with dot operator to extract name parts.
+   * e.g. public.users -> ['public', 'users']
+   */
+  private extractPartsFromInfixExpr (node: InfixExpressionNode): string[] | null {
+    const parts: string[] = [];
+    let current: SyntaxNode | undefined = node;
+
+    while (current instanceof InfixExpressionNode && current.op?.value === '.') {
+      if (current.rightExpression instanceof PrimaryExpressionNode) {
+        const varNode = current.rightExpression.expression;
+        if (varNode instanceof VariableNode && varNode.variable) {
+          parts.unshift(varNode.variable.value);
+        }
+      }
+      current = current.leftExpression;
+    }
+
+    if (current instanceof PrimaryExpressionNode) {
+      const varNode = current.expression;
+      if (varNode instanceof VariableNode && varNode.variable) {
+        parts.unshift(varNode.variable.value);
+      }
+    }
+
+    return parts.length > 0 ? parts : null;
+  }
+
+  /**
+   * Check if an unqualified table name exists in the public symbol table.
+   * Public/unqualified tables are registered directly in publicSymbolTable as "Table:<name>".
+   */
+  private tableExistsInPublic (tableName: string): boolean {
+    const tableId = createTableSymbolIndex(tableName);
+    return this.publicSymbolTable.has(tableId);
+  }
+
+  /**
+   * Check if a schema-qualified table exists.
+   * Returns null if it doesn't exist, or a descriptive string if there's an issue.
+   */
+  private validateSchemaQualifiedTable (schemaName: string, tableName: string): 'schema_missing' | 'table_missing' | 'ok' {
+    // Handle "public" schema — it's the global symbol table itself
+    if (schemaName === DEFAULT_SCHEMA_NAME) {
+      const tableId = createTableSymbolIndex(tableName);
+      return this.publicSymbolTable.has(tableId) ? 'ok' : 'table_missing';
+    }
+
+    const schemaId = createSchemaSymbolIndex(schemaName);
+    if (!this.publicSymbolTable.has(schemaId)) {
+      return 'schema_missing';
+    }
+
+    const schemaTable = this.publicSymbolTable.get(schemaId)?.symbolTable;
+    const tableId = createTableSymbolIndex(tableName);
+    return schemaTable?.has(tableId) ? 'ok' : 'table_missing';
+  }
+
+  /**
+   * Validate table references in colon-syntax list items (Tables: [users, posts]).
+   */
+  private validateTableListItems (items: AttributeNode[]): CompileError[] {
+    const errors: CompileError[] = [];
+
+    for (const item of items) {
+      const parts = this.extractNamePartsFromListItem(item);
+      if (!parts || parts.length === 0) continue;
+
+      const errorNode: SyntaxNode = item.name ?? item;
+      const partsCopy = [...parts];
+      const tableName = partsCopy.pop()!;
+      const schemaNames = partsCopy;
+
+      if (schemaNames.length > 0) {
+        const schemaName = schemaNames[0];
+        const result = this.validateSchemaQualifiedTable(schemaName, tableName);
+        if (result === 'schema_missing') {
+          errors.push(new CompileError(
+            CompileErrorCode.UNKNOWN_SYMBOL,
+            `Schema '${schemaName}' does not exist`,
+            errorNode,
+          ));
+        } else if (result === 'table_missing') {
+          errors.push(new CompileError(
+            CompileErrorCode.UNKNOWN_SYMBOL,
+            `Table '${schemaName}.${tableName}' does not exist`,
+            errorNode,
+          ));
+        }
+      } else {
+        // Unqualified table — look directly in publicSymbolTable
+        if (!this.tableExistsInPublic(tableName)) {
+          // Check if it exists in some non-default schema for a better message
+          let foundInSchema: string | undefined;
+          const tableId = createTableSymbolIndex(tableName);
+          for (const [key, symbol] of this.publicSymbolTable.entries()) {
+            if (key.startsWith('Schema:')) {
+              const sName = key.replace('Schema:', '');
+              if (symbol?.symbolTable?.has(tableId)) {
+                foundInSchema = sName;
+                break;
+              }
+            }
+          }
+
+          if (foundInSchema) {
+            errors.push(new CompileError(
+              CompileErrorCode.UNKNOWN_SYMBOL,
+              `Table '${tableName}' not found in default schema '${DEFAULT_SCHEMA_NAME}'. Did you mean '${foundInSchema}.${tableName}'?`,
+              errorNode,
+            ));
+          } else {
+            errors.push(new CompileError(
+              CompileErrorCode.UNKNOWN_SYMBOL,
+              `Table '${tableName}' does not exist`,
+              errorNode,
+            ));
+          }
+        }
+      }
+    }
+
+    return errors;
+  }
+
   private validateTableReferences (program: ProgramNode): CompileError[] {
     const errors: CompileError[] = [];
     const body = this.declarationNode.body;
@@ -78,7 +232,7 @@ export default class DiagramViewValidator implements ElementValidator {
         && elem.type?.value.toLowerCase() === 'tables',
     ) as ElementDeclarationNode | undefined;
 
-    if (!tablesBlock?.body || tablesBlock.body instanceof FunctionApplicationNode) {
+    if (!tablesBlock?.body) {
       return errors;
     }
 
@@ -93,7 +247,16 @@ export default class DiagramViewValidator implements ElementValidator {
       ? this.publicSymbolTable.get(publicSchemaId)?.symbolTable
       : undefined;
 
-    // Validate each table reference
+    if (tablesBlock.body instanceof FunctionApplicationNode) {
+      // Colon syntax: Tables: [users, posts]
+      // tablesBlock.body.callee should be a ListExpressionNode
+      if (tablesBlock.body.callee instanceof ListExpressionNode) {
+        errors.push(...this.validateTableListItems(tablesBlock.body.callee.elementList));
+      }
+      return errors;
+    }
+
+    // Block syntax: Tables { users\nposts }
     for (const element of tablesBlock.body.body) {
       if (element instanceof FunctionApplicationNode && element.callee) {
         const nameFragments = destructureComplexVariable(element.callee).unwrap_or([]);
@@ -223,6 +386,33 @@ export default class DiagramViewValidator implements ElementValidator {
     return errors;
   }
 
+  /**
+   * Validate tableGroup references in colon-syntax list items (TableGroups: [g1, g2]).
+   */
+  private validateTableGroupListItems (items: AttributeNode[], tableGroups: ElementDeclarationNode[]): CompileError[] {
+    const errors: CompileError[] = [];
+
+    for (const item of items) {
+      const parts = this.extractNamePartsFromListItem(item);
+      if (!parts || parts.length === 0) continue;
+
+      const tableGroupName = parts.join('.');
+      const errorNode: SyntaxNode = item.name ?? item;
+
+      // TableGroups are registered directly in publicSymbolTable as "TableGroup:<name>"
+      const tableGroupId = `TableGroup:${tableGroupName}`;
+      if (!this.publicSymbolTable.has(tableGroupId)) {
+        errors.push(new CompileError(
+          CompileErrorCode.UNKNOWN_SYMBOL,
+          `TableGroup '${tableGroupName}' does not exist`,
+          errorNode,
+        ));
+      }
+    }
+
+    return errors;
+  }
+
   private validateTableGroupReferences (program: ProgramNode): CompileError[] {
     const errors: CompileError[] = [];
     const body = this.declarationNode.body;
@@ -237,16 +427,28 @@ export default class DiagramViewValidator implements ElementValidator {
         && (elem.type?.value.toLowerCase() === 'tablegroups' || elem.type?.value.toLowerCase() === 'table_groups'),
     ) as ElementDeclarationNode | undefined;
 
-    if (!tableGroupsBlock?.body || tableGroupsBlock.body instanceof FunctionApplicationNode) {
+    if (!tableGroupsBlock?.body) {
       return errors;
     }
 
     // Get all tableGroups from the program
     const tableGroups = program.body.filter(
       (elem) => getElementKindUtil(elem).unwrap_or(undefined) === ElementKind.TableGroup,
-    );
+    ) as ElementDeclarationNode[];
 
-    // Validate each tableGroup reference
+    if (tableGroupsBlock.body instanceof FunctionApplicationNode) {
+      // Colon syntax: TableGroups: [g1, g2]
+      // tableGroupsBlock.body.callee should be a ListExpressionNode
+      if (tableGroupsBlock.body.callee instanceof ListExpressionNode) {
+        errors.push(...this.validateTableGroupListItems(
+          tableGroupsBlock.body.callee.elementList,
+          tableGroups,
+        ));
+      }
+      return errors;
+    }
+
+    // Block syntax: TableGroups { g1\ng2 }
     for (const element of tableGroupsBlock.body.body) {
       if (element instanceof FunctionApplicationNode && element.callee) {
         const nameFragments = destructureComplexVariable(element.callee).unwrap_or([]);

@@ -1018,6 +1018,73 @@ Table users { name varchar }`;
     });
   });
 
+  describe('[example] DiagramView validator - colon syntax', () => {
+    test('should report error for unknown table in Tables: [...]', () => {
+      const source = `
+Table users { id int }
+
+DiagramView my_view {
+  Tables: [users, nonexistent]
+}
+`;
+      const errors = analyze(source).getErrors();
+      expect(errors.some(e => e.message?.includes('nonexistent'))).toBe(true);
+    });
+
+    test('should not report error for valid table in Tables: [...]', () => {
+      const source = `
+Table users { id int }
+Table posts { id int }
+
+DiagramView my_view {
+  Tables: [users, posts]
+}
+`;
+      const errors = analyze(source).getErrors();
+      const validationErrors = errors.filter(e => e.message?.includes('does not exist'));
+      expect(validationErrors).toHaveLength(0);
+    });
+
+    test('should report error for unknown schema-qualified table in Tables: [...]', () => {
+      const source = `
+Table public.users { id int }
+
+DiagramView my_view {
+  Tables: [public.users, core.nonexistent]
+}
+`;
+      const errors = analyze(source).getErrors();
+      expect(errors.some(e => e.message?.includes('core'))).toBe(true);
+    });
+
+    test('should report error for unknown tableGroup in TableGroups: [...]', () => {
+      const source = `
+Table users { id int }
+TableGroup g1 { users }
+
+DiagramView my_view {
+  TableGroups: [g1, nonexistent_group]
+}
+`;
+      const errors = analyze(source).getErrors();
+      expect(errors.some(e => e.message?.includes('nonexistent_group'))).toBe(true);
+    });
+
+    test('should not report error for valid tableGroup in TableGroups: [...]', () => {
+      const source = `
+Table users { id int }
+TableGroup g1 { users }
+
+DiagramView my_view {
+  TableGroups: [g1]
+}
+`;
+      const errors = analyze(source).getErrors();
+      const validationErrors = errors.filter(e => e.message?.includes('does not exist'));
+      expect(validationErrors).toHaveLength(0);
+    });
+  });
+
   describe('error message quality', () => {
     test('should include entity name in duplicate error messages', () => {
       const source = `
