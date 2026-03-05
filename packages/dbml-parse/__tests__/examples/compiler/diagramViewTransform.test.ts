@@ -110,7 +110,7 @@ Table posts {
           stickyNotes: null,
         },
       };
-      const result = syncDiagramViews(operation, [], emptyDbml);
+      const result = syncDiagramViews([operation], [], emptyDbml);
       expect(result).toContain('DiagramView user_view');
       expect(result).toContain('Tables:');
       expect(result).toContain('users');
@@ -128,7 +128,7 @@ Table posts {
           stickyNotes: null,
         },
       };
-      const result = syncDiagramViews(operation, [], dbmlWithView);
+      const result = syncDiagramViews([operation], [], dbmlWithView);
       expect(result).toMatch(/DiagramView user_view\s*\{[^}]*Tables: \[.*users.*posts.*\]/s);
     });
 
@@ -139,13 +139,12 @@ Table posts {
         oldName: 'old_view',
         newName: 'new_view',
       };
-      const result = syncDiagramViews(operation, [], dbmlWithView);
+      const result = syncDiagramViews([operation], [], dbmlWithView);
       expect(result).toContain('DiagramView new_view');
       expect(result).not.toContain('DiagramView old_view');
     });
 
-    test('should only apply explicit operation - no auto-migration', () => {
-      // With auto-migration removed, only the explicitly requested operation should be applied
+    test('should apply explicit operation and auto-migrate missing views from allDbViews', () => {
       const dbViews = [
         { name: 'user_view', visibleEntities: { tables: [{ name: 'users', schemaName: '' }], schemas: null, tableGroups: null, stickyNotes: null } },
         { name: 'post_view', visibleEntities: { tables: [{ name: 'posts', schemaName: '' }], schemas: null, tableGroups: null, stickyNotes: null } },
@@ -155,11 +154,11 @@ Table posts {
         newName: 'new_view',
         filterConfig: { tables: [{ name: 'users', schemaName: '' }], schemas: null, tableGroups: null, stickyNotes: null },
       };
-      const result = syncDiagramViews(operation, dbViews, emptyDbml);
-      // Should only have the explicitly created view, not auto-migrated ones
+      const result = syncDiagramViews([operation], dbViews, emptyDbml);
+      // Explicit operation applied + missing views from allDbViews auto-created
       expect(result).toContain('DiagramView new_view');
-      expect(result).not.toContain('DiagramView user_view');
-      expect(result).not.toContain('DiagramView post_view');
+      expect(result).toContain('DiagramView user_view');
+      expect(result).toContain('DiagramView post_view');
     });
 
     test('should not migrate if DB view already exists in DBML', () => {
@@ -172,7 +171,7 @@ Table posts {
         newName: 'new_view',
         filterConfig: { tables: [], schemas: null, tableGroups: null, stickyNotes: null },
       };
-      const result = syncDiagramViews(operation, dbViews, dbmlWithView);
+      const result = syncDiagramViews([operation], dbViews, dbmlWithView);
       // Should only have 2 DiagramView blocks, not duplicate existing_view
       const viewMatches = result.match(/DiagramView\s+\w+/g);
       expect(viewMatches?.length).toBe(2);
@@ -189,7 +188,7 @@ Table posts {
           stickyNotes: [{ name: 'reminder' }],
         },
       };
-      const result = syncDiagramViews(operation, [], emptyDbml);
+      const result = syncDiagramViews([operation], [], emptyDbml);
       expect(result).toContain('DiagramView full_view');
       expect(result).toContain('core.users');
       expect(result).toContain('posts');
@@ -201,8 +200,7 @@ Table posts {
       expect(result).toContain('reminder');
     });
 
-    test('should NOT auto-migrate views - frontend decides operation', () => {
-      // Only the explicitly requested operation should be applied
+    test('should auto-migrate missing views from allDbViews alongside explicit operation', () => {
       const dbmlWithView = emptyDbml + '\n\nDiagramView existing_view {\n  tables {\n    users\n  }\n}';
       const dbViews = [
         { name: 'existing_view', visibleEntities: { tables: [{ name: 'users', schemaName: '' }], schemas: null, tableGroups: null, stickyNotes: null } },
@@ -213,12 +211,12 @@ Table posts {
         newName: 'existing_view',
         filterConfig: { tables: [{ name: 'posts', schemaName: '' }], schemas: null, tableGroups: null, stickyNotes: null },
       };
-      const result = syncDiagramViews(operation, dbViews, dbmlWithView);
-      // Should only have 1 DiagramView block - the update should NOT create unrelated_view
+      const result = syncDiagramViews([operation], dbViews, dbmlWithView);
+      // existing_view updated + unrelated_view auto-created from allDbViews
       const viewMatches = result.match(/DiagramView\s+(?:"[^"]+"|\w+)/g);
-      expect(viewMatches?.length).toBe(1);
+      expect(viewMatches?.length).toBe(2);
       expect(result).toContain('DiagramView existing_view');
-      expect(result).not.toContain('DiagramView unrelated_view');
+      expect(result).toContain('DiagramView unrelated_view');
     });
   });
 
@@ -298,7 +296,7 @@ DiagramView "View With Spaces" {
         newName: 'Test View',
         filterConfig: { tables: [{ name: 'posts', schemaName: '' }], schemas: null, tableGroups: null, stickyNotes: null },
       };
-      const result = syncDiagramViews(operation, dbViews, dbmlWithView);
+      const result = syncDiagramViews([operation], dbViews, dbmlWithView);
       // Should only have 1 DiagramView block, no duplicates
       const viewMatches = result.match(/DiagramView\s+(?:"[^"]+"|\w+)/g);
       expect(viewMatches?.length).toBe(1);

@@ -212,7 +212,7 @@ export interface TableGroup {
 
 export interface TableGroupField {
   name: string;
-  schemaName: string | null;
+  schemaName: string;
 }
 
 export interface Alias {

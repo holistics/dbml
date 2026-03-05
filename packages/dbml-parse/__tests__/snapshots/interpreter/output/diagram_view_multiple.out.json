@@ -170,7 +170,7 @@
         "tables": [
           {
             "name": "users",
-            "schemaName": ""
+            "schemaName": "public"
           }
         ],
         "schemas": [],
@@ -196,11 +196,11 @@
         "tables": [
           {
             "name": "posts",
-            "schemaName": ""
+            "schemaName": "public"
           },
           {
             "name": "comments",
-            "schemaName": ""
+            "schemaName": "public"
           }
         ],
         "schemas": [],

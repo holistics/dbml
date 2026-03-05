@@ -19,8 +19,8 @@ describe('[example] DiagramView new colon syntax parsing', () => {
       const view = db.diagramViews[0];
       expect(view.name).toBe('my_view');
       expect(view.visibleEntities.tables).toEqual([
-        { name: 'users', schemaName: '' },
-        { name: 'orders', schemaName: '' },
+        { name: 'users', schemaName: 'public' },
+        { name: 'orders', schemaName: 'public' },
       ]);
       // Other categories should be null (show all)
       expect(view.visibleEntities.schemas).toBeNull();

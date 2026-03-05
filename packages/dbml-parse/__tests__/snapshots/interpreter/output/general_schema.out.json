@@ -1380,11 +1380,11 @@
       "tables": [
         {
           "name": "users",
-          "schemaName": ""
+          "schemaName": "public"
         },
         {
           "name": "merchants",
-          "schemaName": ""
+          "schemaName": "public"
         }
       ],
       "token": {
@@ -1406,11 +1406,11 @@
       "tables": [
         {
           "name": "countries",
-          "schemaName": ""
+          "schemaName": "public"
         },
         {
           "name": "orders",
-          "schemaName": ""
+          "schemaName": "public"
         }
       ],
       "token": {

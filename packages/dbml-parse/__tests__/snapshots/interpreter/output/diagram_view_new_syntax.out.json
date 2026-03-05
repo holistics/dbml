@@ -121,11 +121,11 @@
       "tables": [
         {
           "name": "users",
-          "schemaName": ""
+          "schemaName": "public"
         },
         {
           "name": "posts",
-          "schemaName": ""
+          "schemaName": "public"
         }
       ],
       "token": {
@@ -209,11 +209,11 @@
         "tables": [
           {
             "name": "users",
-            "schemaName": ""
+            "schemaName": "public"
           },
           {
             "name": "posts",
-            "schemaName": ""
+            "schemaName": "public"
           }
         ],
         "schemas": [],
@@ -264,7 +264,7 @@
         "tables": [
           {
             "name": "users",
-            "schemaName": ""
+            "schemaName": "public"
           }
         ],
         "schemas": [],

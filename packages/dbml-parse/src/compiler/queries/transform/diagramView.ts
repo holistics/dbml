@@ -1,4 +1,5 @@
 import { applyTextEdits } from './applyTextEdits';
+import { DEFAULT_SCHEMA_NAME } from '@/constants';
 
 /**
  * FilterConfig type for DiagramView visible entities
@@ -131,7 +132,7 @@ function convertToFilterConfig(tablesOrConfig: string[] | DiagramViewFilterConfi
   if (Array.isArray(tablesOrConfig)) {
     // Old API: string[] - convert to FilterConfig
     return {
-      tables: tablesOrConfig.map(t => ({ name: t, schemaName: '' })),
+      tables: tablesOrConfig.map(t => ({ name: t, schemaName: DEFAULT_SCHEMA_NAME })),
       schemas: null,
       tableGroups: null,
       stickyNotes: null,
