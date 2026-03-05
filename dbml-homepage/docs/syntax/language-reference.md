@@ -4,7 +4,7 @@ title: Language Reference
 
 # Language Reference
 
-This section describes the language-level constructs that apply across all DBML definitions.
+This part describes the language-level constructs that apply across all DBML definitions.
 
 - [Multi-line String](#multi-line-string)
 - [Comments](#comments)
