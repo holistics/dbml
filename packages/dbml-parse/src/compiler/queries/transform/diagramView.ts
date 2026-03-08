@@ -5,7 +5,7 @@ import { DEFAULT_SCHEMA_NAME } from '@/constants';
  * FilterConfig type for DiagramView visible entities
  */
 export interface DiagramViewFilterConfig {
-  tables: Array<{ name: string; schemaName?: string }> | null;
+  tables: Array<{ name: string; schemaName?: string | null }> | null;
   schemas: Array<{ name: string }> | null;
   tableGroups: Array<{ name: string }> | null;
   stickyNotes: Array<{ name: string }> | null;
@@ -41,7 +41,7 @@ function generateDiagramViewDbml(name: string, filterConfig: DiagramViewFilterCo
   if (filterConfig && filterConfig.tables !== null && filterConfig.tables !== undefined) {
     if (filterConfig.tables.length > 0) {
       const tableRefs = filterConfig.tables.map(t => {
-        const tableRef = (t.schemaName && t.schemaName !== DEFAULT_SCHEMA_NAME)
+        const tableRef = t.schemaName != null
           ? `${t.schemaName}.${t.name}`
           : t.name;
         return tableRef;

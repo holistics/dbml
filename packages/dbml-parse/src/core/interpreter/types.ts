@@ -247,7 +247,7 @@ export interface DiagramView {
   name: string;
   token: TokenPosition;
   visibleEntities: {
-    tables: Array<{ name: string; schemaName: string }> | null;
+    tables: Array<{ name: string; schemaName: string | null }> | null;
     schemas: Array<{ name: string }> | null;
     tableGroups: Array<{ name: string }> | null;
     stickyNotes: Array<{ name: string }> | null;

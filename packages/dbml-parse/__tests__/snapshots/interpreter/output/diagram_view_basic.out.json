@@ -213,11 +213,11 @@
         "tables": [
           {
             "name": "users",
-            "schemaName": "public"
+            "schemaName": null
           },
           {
             "name": "posts",
-            "schemaName": "public"
+            "schemaName": null
           }
         ],
         "schemas": [],

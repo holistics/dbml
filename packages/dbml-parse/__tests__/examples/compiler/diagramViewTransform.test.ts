@@ -224,9 +224,9 @@ Table posts {
     test('should use inline format for 3 or fewer tables', () => {
       const result = createDiagramView('v', {
         tables: [
-          { name: 'a', schemaName: 'public' },
-          { name: 'b', schemaName: 'public' },
-          { name: 'c', schemaName: 'public' },
+          { name: 'a', schemaName: null },
+          { name: 'b', schemaName: null },
+          { name: 'c', schemaName: null },
         ],
         schemas: null,
         tableGroups: null,
@@ -238,10 +238,10 @@ Table posts {
     test('should use multi-line format for more than 3 tables', () => {
       const result = createDiagramView('v', {
         tables: [
-          { name: 'a', schemaName: 'public' },
-          { name: 'b', schemaName: 'public' },
-          { name: 'c', schemaName: 'public' },
-          { name: 'd', schemaName: 'public' },
+          { name: 'a', schemaName: null },
+          { name: 'b', schemaName: null },
+          { name: 'c', schemaName: null },
+          { name: 'd', schemaName: null },
         ],
         schemas: null,
         tableGroups: null,

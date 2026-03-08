@@ -9,11 +9,6 @@ import {
 } from '@/core/interpreter/utils';
 import { CompileError } from '@/core/errors';
 import { destructureComplexVariable } from '@/core/analyzer/utils';
-import { DEFAULT_SCHEMA_NAME } from '@/constants';
-
-function normalizeSchemaName(raw: string | null | undefined): string {
-  return (!raw || raw === DEFAULT_SCHEMA_NAME) ? DEFAULT_SCHEMA_NAME : raw;
-}
 
 export class DiagramViewInterpreter implements ElementInterpreter {
   private declarationNode: ElementDeclarationNode;
@@ -357,7 +352,7 @@ export class DiagramViewInterpreter implements ElementInterpreter {
         this.diagramView.visibleEntities!.tables = items.map((name) => {
           const parts = name.split('.');
           const tableName = parts.pop()!;
-          const schemaName = normalizeSchemaName(parts.join('.'));
+          const schemaName = parts.length > 0 ? parts.join('.') : null;
           return { name: tableName, schemaName };
         });
         break;
@@ -389,7 +384,7 @@ export class DiagramViewInterpreter implements ElementInterpreter {
       case 'tables':
         this.diagramView.visibleEntities!.tables = [{
           name,
-          schemaName: DEFAULT_SCHEMA_NAME,
+          schemaName: null,
         }];
         break;
       case 'notes':
@@ -498,7 +493,7 @@ export class DiagramViewInterpreter implements ElementInterpreter {
       .map((field) => {
         const fragments = destructureComplexVariable(field.callee).unwrap();
         const tableName = fragments.pop()!;
-        const schemaName = normalizeSchemaName(fragments.join('.'));
+        const schemaName = fragments.length > 0 ? fragments.join('.') : null;
         return { name: tableName, schemaName };
       });
 
