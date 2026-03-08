@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import { createDiagramView, updateDiagramView, renameDiagramView, deleteDiagramView, migrateViewsToDbml, syncDiagramViews } from '@dbml/core';
+import { createDiagramView, updateDiagramView, renameDiagramView, deleteDiagramView, migrateViewsToDbml, syncDiagramViews } from '@/compiler/queries/transform';
 
 const BASE_DBML = `
 Table users {
