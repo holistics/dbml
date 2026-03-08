@@ -9,7 +9,6 @@ import {
   extractElementName, getTokenPosition, normalizeNoteContent, extractColor,
 } from '@/core/interpreter/utils';
 import { aggregateSettingList } from '@/core/analyzer/validator/utils';
-import { DEFAULT_SCHEMA_NAME } from '@/constants';
 
 export class TableGroupInterpreter implements ElementInterpreter {
   private declarationNode: ElementDeclarationNode;
@@ -102,11 +101,9 @@ export class TableGroupInterpreter implements ElementInterpreter {
         this.env.tableOwnerGroup[tableid] = this.declarationNode;
       }
 
-      const tableName = fragments.pop()!;
-      const rawSchema = fragments.join('.');
       return {
-        name: tableName,
-        schemaName: (!rawSchema || rawSchema === DEFAULT_SCHEMA_NAME) ? DEFAULT_SCHEMA_NAME : rawSchema,
+        name: fragments.pop()!,
+        schemaName: fragments.join('.'),
       };
     });
 
