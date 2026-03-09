@@ -770,9 +770,10 @@ tableconstraint
     | constraintelem
     ;
 
+// Note: changed from orginal
 constraintelem
     : CHECK OPEN_PAREN a_expr CLOSE_PAREN constraintattributespec
-    | UNIQUE (
+    | UNIQUE nulls_distinct? (
         OPEN_PAREN columnlist CLOSE_PAREN c_include_? definition_? optconstablespace? constraintattributespec
         | existingindex constraintattributespec
     )
