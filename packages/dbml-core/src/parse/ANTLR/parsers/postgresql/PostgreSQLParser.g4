@@ -770,6 +770,7 @@ tableconstraint
     | constraintelem
     ;
 
+// Note: changed from orginal
 constraintelem
     : CHECK OPEN_PAREN a_expr CLOSE_PAREN constraintattributespec
     | UNIQUE nulls_distinct? (
