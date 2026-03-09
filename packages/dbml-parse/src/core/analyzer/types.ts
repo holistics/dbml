@@ -9,6 +9,9 @@ export enum ElementKind {
   TablePartial = 'tablepartial',
   Check = 'checks',
   Records = 'records',
+  Policy = 'policy',
+  Function = 'function',
+  Trigger = 'trigger',
 }
 
 export enum SettingName {

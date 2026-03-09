@@ -39,6 +39,9 @@ import { ElementKind } from '@/core/analyzer/types';
 import TablePartialValidator from './elementValidators/tablePartial';
 import ChecksValidator from './elementValidators/checks';
 import RecordsValidator from './elementValidators/records';
+import PolicyValidator from './elementValidators/policy';
+import FunctionValidator from './elementValidators/function';
+import TriggerValidator from './elementValidators/trigger';
 
 export function pickValidator (element: ElementDeclarationNode & { type: SyntaxToken }) {
   switch (element.type.value.toLowerCase() as ElementKind) {
@@ -62,6 +65,12 @@ export function pickValidator (element: ElementDeclarationNode & { type: SyntaxT
       return ChecksValidator;
     case ElementKind.Records:
       return RecordsValidator;
+    case ElementKind.Policy:
+      return PolicyValidator;
+    case ElementKind.Function:
+      return FunctionValidator;
+    case ElementKind.Trigger:
+      return TriggerValidator;
     default:
       return CustomValidator;
   }
