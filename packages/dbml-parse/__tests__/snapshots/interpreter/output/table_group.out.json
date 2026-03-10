@@ -343,11 +343,11 @@
       "tables": [
         {
           "name": "users",
-          "schemaName": "public"
+          "schemaName": ""
         },
         {
           "name": "merchants",
-          "schemaName": "public"
+          "schemaName": ""
         }
       ],
       "token": {

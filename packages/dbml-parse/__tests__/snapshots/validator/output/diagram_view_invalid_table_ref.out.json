@@ -1560,5 +1560,177 @@
       "references": []
     }
   },
-  "errors": []
+  "errors": [
+    {
+      "code": 1000,
+      "diagnostic": "Table 'non_existent_table' does not exist",
+      "nodeOrToken": {
+        "id": 20,
+        "kind": "<primary-expression>",
+        "startPos": {
+          "offset": 78,
+          "line": 7,
+          "column": 4
+        },
+        "fullStart": 74,
+        "endPos": {
+          "offset": 96,
+          "line": 7,
+          "column": 22
+        },
+        "fullEnd": 97,
+        "start": 78,
+        "end": 96,
+        "expression": {
+          "id": 19,
+          "kind": "<variable>",
+          "startPos": {
+            "offset": 78,
+            "line": 7,
+            "column": 4
+          },
+          "fullStart": 74,
+          "endPos": {
+            "offset": 96,
+            "line": 7,
+            "column": 22
+          },
+          "fullEnd": 97,
+          "start": 78,
+          "end": 96,
+          "variable": {
+            "kind": "<identifier>",
+            "startPos": {
+              "offset": 78,
+              "line": 7,
+              "column": 4
+            },
+            "endPos": {
+              "offset": 96,
+              "line": 7,
+              "column": 22
+            },
+            "value": "non_existent_table",
+            "leadingTrivia": [
+              {
+                "kind": "<space>",
+                "startPos": {
+                  "offset": 74,
+                  "line": 7,
+                  "column": 0
+                },
+                "endPos": {
+                  "offset": 75,
+                  "line": 7,
+                  "column": 1
+                },
+                "value": " ",
+                "leadingTrivia": [],
+                "trailingTrivia": [],
+                "leadingInvalid": [],
+                "trailingInvalid": [],
+                "isInvalid": false,
+                "start": 74,
+                "end": 75
+              },
+              {
+                "kind": "<space>",
+                "startPos": {
+                  "offset": 75,
+                  "line": 7,
+                  "column": 1
+                },
+                "endPos": {
+                  "offset": 76,
+                  "line": 7,
+                  "column": 2
+                },
+                "value": " ",
+                "leadingTrivia": [],
+                "trailingTrivia": [],
+                "leadingInvalid": [],
+                "trailingInvalid": [],
+                "isInvalid": false,
+                "start": 75,
+                "end": 76
+              },
+              {
+                "kind": "<space>",
+                "startPos": {
+                  "offset": 76,
+                  "line": 7,
+                  "column": 2
+                },
+                "endPos": {
+                  "offset": 77,
+                  "line": 7,
+                  "column": 3
+                },
+                "value": " ",
+                "leadingTrivia": [],
+                "trailingTrivia": [],
+                "leadingInvalid": [],
+                "trailingInvalid": [],
+                "isInvalid": false,
+                "start": 76,
+                "end": 77
+              },
+              {
+                "kind": "<space>",
+                "startPos": {
+                  "offset": 77,
+                  "line": 7,
+                  "column": 3
+                },
+                "endPos": {
+                  "offset": 78,
+                  "line": 7,
+                  "column": 4
+                },
+                "value": " ",
+                "leadingTrivia": [],
+                "trailingTrivia": [],
+                "leadingInvalid": [],
+                "trailingInvalid": [],
+                "isInvalid": false,
+                "start": 77,
+                "end": 78
+              }
+            ],
+            "trailingTrivia": [
+              {
+                "kind": "<newline>",
+                "startPos": {
+                  "offset": 96,
+                  "line": 7,
+                  "column": 22
+                },
+                "endPos": {
+                  "offset": 97,
+                  "line": 8,
+                  "column": 0
+                },
+                "value": "\n",
+                "leadingTrivia": [],
+                "trailingTrivia": [],
+                "leadingInvalid": [],
+                "trailingInvalid": [],
+                "isInvalid": false,
+                "start": 96,
+                "end": 97
+              }
+            ],
+            "leadingInvalid": [],
+            "trailingInvalid": [],
+            "isInvalid": false,
+            "start": 78,
+            "end": 96
+          }
+        }
+      },
+      "start": 78,
+      "end": 96,
+      "name": "CompileError"
+    }
+  ]
 }

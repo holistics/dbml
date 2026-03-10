@@ -1,7 +1,6 @@
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import {
-  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, ProgramNode, SyntaxNode,
-  AttributeNode, IdentiferStreamNode, InfixExpressionNode, PrimaryExpressionNode, VariableNode,
+  ElementDeclarationNode, FunctionApplicationNode, ProgramNode,
 } from '@/core/parser/nodes';
 import SymbolFactory from '@/core/analyzer/symbol/factory';
 import { SyntaxToken } from '@/core/lexer/tokens';
@@ -66,62 +65,6 @@ export default class DiagramViewValidator implements ElementValidator {
   }
 
   /**
-   * Extract name parts from an AttributeNode in a ListExpressionNode.
-   * e.g. "users"         -> ['users']
-   *      "public.users"  -> ['public', 'users']
-   * Returns null if extraction fails.
-   */
-  private extractNamePartsFromListItem (item: AttributeNode): string[] | null {
-    if (!item.name) return null;
-
-    if (item.name instanceof IdentiferStreamNode) {
-      const identifiers = item.name.identifiers;
-      if (identifiers.length === 0) return null;
-      return identifiers.map(id => id.value);
-    }
-
-    if (item.name instanceof InfixExpressionNode) {
-      return this.extractPartsFromInfixExpr(item.name);
-    }
-
-    if (item.name instanceof PrimaryExpressionNode && item.name.expression instanceof VariableNode) {
-      const val = item.name.expression.variable?.value;
-      return val ? [val] : null;
-    }
-
-    // Fallback: try destructureComplexVariable
-    return destructureComplexVariable(item.name).unwrap_or(null);
-  }
-
-  /**
-   * Walk an InfixExpressionNode with dot operator to extract name parts.
-   * e.g. public.users -> ['public', 'users']
-   */
-  private extractPartsFromInfixExpr (node: InfixExpressionNode): string[] | null {
-    const parts: string[] = [];
-    let current: SyntaxNode | undefined = node;
-
-    while (current instanceof InfixExpressionNode && current.op?.value === '.') {
-      if (current.rightExpression instanceof PrimaryExpressionNode) {
-        const varNode = current.rightExpression.expression;
-        if (varNode instanceof VariableNode && varNode.variable) {
-          parts.unshift(varNode.variable.value);
-        }
-      }
-      current = current.leftExpression;
-    }
-
-    if (current instanceof PrimaryExpressionNode) {
-      const varNode = current.expression;
-      if (varNode instanceof VariableNode && varNode.variable) {
-        parts.unshift(varNode.variable.value);
-      }
-    }
-
-    return parts.length > 0 ? parts : null;
-  }
-
-  /**
    * Check if an unqualified table name exists in the public symbol table.
    * Public/unqualified tables are registered directly in publicSymbolTable as "Table:<name>".
    */
@@ -151,79 +94,12 @@ export default class DiagramViewValidator implements ElementValidator {
     return schemaTable?.has(tableId) ? 'ok' : 'table_missing';
   }
 
-  /**
-   * Validate table references in colon-syntax list items (Tables: [users, posts]).
-   */
-  private validateTableListItems (items: AttributeNode[], tables: SyntaxNode[]): CompileError[] {
-    const errors: CompileError[] = [];
-
-    for (const item of items) {
-      const parts = this.extractNamePartsFromListItem(item);
-      if (!parts || parts.length === 0) continue;
-
-      const errorNode: SyntaxNode = item.name ?? item;
-      const partsCopy = [...parts];
-      const tableName = partsCopy.pop()!;
-      const schemaNames = partsCopy;
-
-      if (schemaNames.length > 0) {
-        const schemaName = schemaNames[0];
-        const result = this.validateSchemaQualifiedTable(schemaName, tableName);
-        if (result === 'schema_missing') {
-          errors.push(new CompileError(
-            CompileErrorCode.UNKNOWN_SYMBOL,
-            `Schema '${schemaName}' does not exist`,
-            errorNode,
-          ));
-        } else if (result === 'table_missing') {
-          errors.push(new CompileError(
-            CompileErrorCode.UNKNOWN_SYMBOL,
-            `Table '${schemaName}.${tableName}' does not exist`,
-            errorNode,
-          ));
-        }
-      } else {
-        // Unqualified table — look directly in publicSymbolTable
-        if (!this.tableExistsInPublic(tableName)) {
-          // Check if it exists in some non-default schema for a better message
-          let foundInSchema: string | undefined;
-          const tableId = createTableSymbolIndex(tableName);
-          for (const [key, symbol] of this.publicSymbolTable.entries()) {
-            if (key.startsWith('Schema:')) {
-              const sName = key.replace('Schema:', '');
-              if (symbol?.symbolTable?.has(tableId)) {
-                foundInSchema = sName;
-                break;
-              }
-            }
-          }
-
-          if (foundInSchema) {
-            errors.push(new CompileError(
-              CompileErrorCode.UNKNOWN_SYMBOL,
-              `Table '${tableName}' not found in default schema '${DEFAULT_SCHEMA_NAME}'. Did you mean '${foundInSchema}.${tableName}'?`,
-              errorNode,
-            ));
-          } else if (tables.length > 0) {
-            errors.push(new CompileError(
-              CompileErrorCode.UNKNOWN_SYMBOL,
-              `Table '${tableName}' does not exist`,
-              errorNode,
-            ));
-          }
-        }
-      }
-    }
-
-    return errors;
-  }
-
   private validateTableReferences (program: ProgramNode): CompileError[] {
     const errors: CompileError[] = [];
     const body = this.declarationNode.body;
 
     if (!body || body instanceof FunctionApplicationNode) {
-      return errors;
+      return [];
     }
 
     // Find the 'tables' block
@@ -236,24 +112,9 @@ export default class DiagramViewValidator implements ElementValidator {
       return errors;
     }
 
-    // Get all tables from the program
-    const tables = program.body.filter(
-      (elem) => getElementKindUtil(elem).unwrap_or(undefined) === ElementKind.Table,
-    );
-
-    // Get the public schema symbol table
-    const publicSchemaId = createSchemaSymbolIndex(DEFAULT_SCHEMA_NAME);
-    const publicSchemaTable = this.publicSymbolTable.has(publicSchemaId)
-      ? this.publicSymbolTable.get(publicSchemaId)?.symbolTable
-      : undefined;
-
+    // If the tables block body is a FunctionApplicationNode ({*} wildcard), skip validation
     if (tablesBlock.body instanceof FunctionApplicationNode) {
-      // Colon syntax: Tables: [users, posts]
-      // tablesBlock.body.callee should be a ListExpressionNode
-      if (tablesBlock.body.callee instanceof ListExpressionNode) {
-        errors.push(...this.validateTableListItems(tablesBlock.body.callee.elementList, tables));
-      }
-      return errors;
+      return [];
     }
 
     // Block syntax: Tables { users\nposts }
@@ -294,40 +155,14 @@ export default class DiagramViewValidator implements ElementValidator {
           }
         } else {
           // Table has no schema qualifier - check if it exists in the default schema (public)
-          const tableId = createTableSymbolIndex(tableName);
-          const existsInPublicSchema = publicSchemaTable?.has(tableId);
-
-          if (!existsInPublicSchema) {
-            // Also check if the table exists in any other schema (for better error message)
-            let foundInSchema: string | undefined;
-            for (const [key, symbol] of this.publicSymbolTable.entries()) {
-              if (key.startsWith('Schema:')) {
-                const schemaName = key.replace('Schema:', '');
-                const schemaTable = symbol?.symbolTable;
-                if (schemaTable?.has(tableId)) {
-                  foundInSchema = schemaName;
-                  break;
-                }
-              }
-            }
-
-            if (foundInSchema) {
-              errors.push(
-                new CompileError(
-                  CompileErrorCode.UNKNOWN_SYMBOL,
-                  `Table '${tableName}' not found in default schema '${DEFAULT_SCHEMA_NAME}'. Did you mean '${foundInSchema}.${tableName}'?`,
-                  element.callee,
-                ),
-              );
-            } else if (tables.length === 0) {
-              errors.push(
-                new CompileError(
-                  CompileErrorCode.UNKNOWN_SYMBOL,
-                  `Table '${tableName}' does not exist`,
-                  element.callee,
-                ),
-              );
-            }
+          if (!this.tableExistsInPublic(tableName)) {
+            errors.push(
+              new CompileError(
+                CompileErrorCode.UNKNOWN_SYMBOL,
+                `Table '${tableName}' does not exist`,
+                element.callee,
+              ),
+            );
           }
         }
       }
@@ -341,7 +176,7 @@ export default class DiagramViewValidator implements ElementValidator {
     const body = this.declarationNode.body;
 
     if (!body || body instanceof FunctionApplicationNode) {
-      return errors;
+      return [];
     }
 
     // Find the 'notes' block
@@ -350,8 +185,9 @@ export default class DiagramViewValidator implements ElementValidator {
         && (elem.type?.value.toLowerCase() === 'notes' || elem.type?.value.toLowerCase() === 'sticky_notes'),
     ) as ElementDeclarationNode | undefined;
 
+    // If notes block body is a FunctionApplicationNode ({*} wildcard), skip validation
     if (!notesBlock?.body || notesBlock.body instanceof FunctionApplicationNode) {
-      return errors;
+      return [];
     }
 
     // Get all notes from the program
@@ -386,39 +222,12 @@ export default class DiagramViewValidator implements ElementValidator {
     return errors;
   }
 
-  /**
-   * Validate tableGroup references in colon-syntax list items (TableGroups: [g1, g2]).
-   */
-  private validateTableGroupListItems (items: AttributeNode[], tableGroups: ElementDeclarationNode[]): CompileError[] {
-    const errors: CompileError[] = [];
-
-    for (const item of items) {
-      const parts = this.extractNamePartsFromListItem(item);
-      if (!parts || parts.length === 0) continue;
-
-      const tableGroupName = parts.join('.');
-      const errorNode: SyntaxNode = item.name ?? item;
-
-      // TableGroups are registered directly in publicSymbolTable as "TableGroup:<name>"
-      const tableGroupId = createTableGroupSymbolIndex(tableGroupName);
-      if (!this.publicSymbolTable.has(tableGroupId)) {
-        errors.push(new CompileError(
-          CompileErrorCode.UNKNOWN_SYMBOL,
-          `TableGroup '${tableGroupName}' does not exist`,
-          errorNode,
-        ));
-      }
-    }
-
-    return errors;
-  }
-
   private validateTableGroupReferences (program: ProgramNode): CompileError[] {
     const errors: CompileError[] = [];
     const body = this.declarationNode.body;
 
     if (!body || body instanceof FunctionApplicationNode) {
-      return errors;
+      return [];
     }
 
     // Find the 'tableGroups' block
@@ -431,22 +240,15 @@ export default class DiagramViewValidator implements ElementValidator {
       return errors;
     }
 
+    // If the tableGroups block body is a FunctionApplicationNode ({*} wildcard), skip validation
+    if (tableGroupsBlock.body instanceof FunctionApplicationNode) {
+      return [];
+    }
+
     // Get all tableGroups from the program
     const tableGroups = program.body.filter(
       (elem) => getElementKindUtil(elem).unwrap_or(undefined) === ElementKind.TableGroup,
     ) as ElementDeclarationNode[];
-
-    if (tableGroupsBlock.body instanceof FunctionApplicationNode) {
-      // Colon syntax: TableGroups: [g1, g2]
-      // tableGroupsBlock.body.callee should be a ListExpressionNode
-      if (tableGroupsBlock.body.callee instanceof ListExpressionNode) {
-        errors.push(...this.validateTableGroupListItems(
-          tableGroupsBlock.body.callee.elementList,
-          tableGroups,
-        ));
-      }
-      return errors;
-    }
 
     // Block syntax: TableGroups { g1\ng2 }
     for (const element of tableGroupsBlock.body.body) {

@@ -1651,7 +1651,7 @@ DiagramView my_view {
       expect(result).toContain('reminder');
     });
 
-    test('should rename table in colon-syntax Tables: [users] inside DiagramView block', () => {
+    test('should rename table in block-syntax Tables { users } inside DiagramView block', () => {
       const input = `
 Table users {
   id int [pk]
@@ -1662,25 +1662,30 @@ Table posts {
 }
 
 DiagramView my_view {
-  Tables: [users, posts]
+  Tables {
+    users
+    posts
+  }
 }
 `;
       const result = renameTable('users', 'customers', input);
       expect(result).toContain('Table customers');
       expect(result).not.toContain('Table users');
-      // The reference inside Tables: [...] must also be updated
-      expect(result).toMatch(/Tables:\s*\[customers/);
+      // The reference inside Tables { ... } must also be updated
+      expect(result).toContain('customers');
       expect(result).toContain('posts');
     });
 
-    test('should rename schema-qualified table in colon-syntax Tables: [core.users]', () => {
+    test('should rename schema-qualified table in block-syntax Tables { core.users }', () => {
       const input = `
 Table core.users {
   id int [pk]
 }
 
 DiagramView my_view {
-  Tables: [core.users]
+  Tables {
+    core.users
+  }
 }
 `;
       const result = renameTable('core.users', 'core.customers', input);

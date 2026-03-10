@@ -15,34 +15,48 @@ TableGroup blog {
   posts
 }
 
-// Test new colon syntax
+// Show all tables using {*}
 DiagramView "Show All Tables" {
-  Tables: all
+  Tables: {*}
 }
 
+// Show nothing — all empty blocks
 DiagramView "Show Nothing" {
-  Tables: []
-  Notes: []
-  TableGroups: []
-  Schemas: []
+  Tables {}
+  Notes {}
+  TableGroups {}
+  Schemas {}
 }
 
+// Show specific tables
 DiagramView "Specific Tables" {
-  Tables: [users, posts]
+  Tables {
+    users
+    posts
+  }
 }
 
+// Show specific notes
 DiagramView "Specific Notes" {
-  Notes: [reminder]
+  Notes {
+    reminder
+  }
 }
 
+// Mixed — specific tables and notes
 DiagramView "Mixed Syntax" {
-  Tables: [users]
-  Notes: [reminder]
-  TableGroups: [blog]
+  Tables {
+    users
+  }
+  Notes {
+    reminder
+  }
+  TableGroups {
+    blog
+  }
 }
 
+// Show all everything using top-level *
 DiagramView "All" {
-  Notes: all
-  TableGroups: all
-  Schemas: all
+  *
 }

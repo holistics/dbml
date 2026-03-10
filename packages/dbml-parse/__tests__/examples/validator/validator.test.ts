@@ -1018,26 +1018,32 @@ Table users { name varchar }`;
     });
   });
 
-  describe('[example] DiagramView validator - colon syntax', () => {
-    test('should report error for unknown table in Tables: [...]', () => {
+  describe('[example] DiagramView validator - block syntax', () => {
+    test('should report error for unknown table in Tables { ... }', () => {
       const source = `
 Table users { id int }
 
 DiagramView my_view {
-  Tables: [users, nonexistent]
+  Tables {
+    users
+    nonexistent
+  }
 }
 `;
       const errors = analyze(source).getErrors();
       expect(errors.some(e => e.diagnostic.includes('nonexistent'))).toBe(true);
     });
 
-    test('should not report error for valid table in Tables: [...]', () => {
+    test('should not report error for valid table in Tables { ... }', () => {
       const source = `
 Table users { id int }
 Table posts { id int }
 
 DiagramView my_view {
-  Tables: [users, posts]
+  Tables {
+    users
+    posts
+  }
 }
 `;
       const errors = analyze(source).getErrors();
@@ -1045,38 +1051,46 @@ DiagramView my_view {
       expect(validationErrors).toHaveLength(0);
     });
 
-    test('should report error for unknown schema-qualified table in Tables: [...]', () => {
+    test('should report error for unknown schema-qualified table in Tables { ... }', () => {
       const source = `
 Table public.users { id int }
 
 DiagramView my_view {
-  Tables: [public.users, core.nonexistent]
+  Tables {
+    public.users
+    core.nonexistent
+  }
 }
 `;
       const errors = analyze(source).getErrors();
       expect(errors.some(e => e.diagnostic.includes('core'))).toBe(true);
     });
 
-    test('should report error for unknown tableGroup in TableGroups: [...]', () => {
+    test('should report error for unknown tableGroup in TableGroups { ... }', () => {
       const source = `
 Table users { id int }
 TableGroup g1 { users }
 
 DiagramView my_view {
-  TableGroups: [g1, nonexistent_group]
+  TableGroups {
+    g1
+    nonexistent_group
+  }
 }
 `;
       const errors = analyze(source).getErrors();
       expect(errors.some(e => e.diagnostic.includes('nonexistent_group'))).toBe(true);
     });
 
-    test('should not report error for valid tableGroup in TableGroups: [...]', () => {
+    test('should not report error for valid tableGroup in TableGroups { ... }', () => {
       const source = `
 Table users { id int }
 TableGroup g1 { users }
 
 DiagramView my_view {
-  TableGroups: [g1]
+  TableGroups {
+    g1
+  }
 }
 `;
       const errors = analyze(source).getErrors();

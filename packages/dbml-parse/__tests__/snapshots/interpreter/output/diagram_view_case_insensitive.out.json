@@ -121,11 +121,11 @@
       "tables": [
         {
           "name": "users",
-          "schemaName": "public"
+          "schemaName": ""
         },
         {
           "name": "posts",
-          "schemaName": "public"
+          "schemaName": ""
         }
       ],
       "token": {
