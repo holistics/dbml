@@ -60,6 +60,10 @@ export default class Parser {
   // Keep track of which context we're parsing in
   private contextStack: ParsingContextStack = new ParsingContextStack();
 
+  // Counter tracking nesting depth of DiagramView body blocks.
+  // When > 0, '*' is a valid wildcard operand in expressions.
+  private wildcardAllowed: number = 0;
+
   private nodeFactory: NodeFactory;
 
   private source: string;
@@ -290,6 +294,10 @@ export default class Parser {
       return buildElement();
     }
 
+    const isDiagramView = args.type?.value.toLowerCase() === 'diagramview';
+    if (isDiagramView) {
+      this.wildcardAllowed += 1;
+    }
     try {
       if (this.match(SyntaxTokenKind.COLON)) {
         args.bodyColon = this.previous();
@@ -309,6 +317,10 @@ export default class Parser {
       }
       args.body = e.partialNode;
       throw new PartialParsingError(e.token, buildElement(), e.handlerContext);
+    } finally {
+      if (isDiagramView) {
+        this.wildcardAllowed -= 1;
+      }
     }
 
     return this.nodeFactory.create(ElementDeclarationNode, args);
@@ -655,6 +667,15 @@ export default class Parser {
 
   private leftExpression_bp (): NormalExpressionNode {
     let leftExpression: NormalExpressionNode | undefined;
+
+    // Allow '*' as a standalone wildcard operand only inside DiagramView body blocks
+    if (this.wildcardAllowed > 0 && this.check(SyntaxTokenKind.OP) && this.peek().value === '*') {
+      this.advance();
+      leftExpression = this.nodeFactory.create(PrimaryExpressionNode, {
+        expression: this.nodeFactory.create(VariableNode, { variable: this.previous() }),
+      });
+      return leftExpression;
+    }
 
     if (isOpToken(this.peek())) {
       const args: {
