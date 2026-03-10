@@ -25,69 +25,72 @@ function quoteNameIfNeeded(name: string): string {
   return name;
 }
 
-function formatEntityList(items: string[], indent = '  '): string {
-  if (items.length <= 3) {
-    return `[${items.join(', ')}]`;
-  }
-  const lines = items.map(item => `${indent}  ${item},`);
-  return `[\n${lines.join('\n')}\n${indent}]`;
-}
-
 function generateDiagramViewDbml(name: string, filterConfig: DiagramViewFilterConfig): string {
   const quotedName = quoteNameIfNeeded(name);
+
+  // Special case: all categories null → top-level *
+  const allNull = filterConfig.tables === null
+    && filterConfig.schemas === null
+    && filterConfig.tableGroups === null
+    && filterConfig.stickyNotes === null;
+
+  if (allNull) {
+    return `DiagramView ${quotedName} {\n  *\n}`;
+  }
+
   const lines: string[] = [`DiagramView ${quotedName} {`];
 
   // tables
-  if (filterConfig && filterConfig.tables !== null && filterConfig.tables !== undefined) {
-    if (filterConfig.tables.length > 0) {
-      const tableRefs = filterConfig.tables.map(t => {
-        const tableRef = t.schemaName != null
-          ? `${t.schemaName}.${t.name}`
-          : t.name;
-        return tableRef;
-      });
-      lines.push(`  Tables: ${formatEntityList(tableRefs)}`);
-    } else {
-      lines.push('  Tables: []');
+  if (filterConfig.tables === null) {
+    lines.push('  Tables: {*}');
+  } else if (filterConfig.tables.length > 0) {
+    lines.push('  Tables {');
+    for (const t of filterConfig.tables) {
+      const ref = t.schemaName ? `${t.schemaName}.${t.name}` : t.name;
+      lines.push(`    ${ref}`);
     }
+    lines.push('  }');
   } else {
-    lines.push('  Tables: all');
+    lines.push('  Tables {}');
   }
 
   // notes (stickyNotes)
-  if (filterConfig && filterConfig.stickyNotes !== null && filterConfig.stickyNotes !== undefined) {
-    if (filterConfig.stickyNotes.length > 0) {
-      const noteRefs = filterConfig.stickyNotes.map(n => n.name);
-      lines.push(`  Notes: ${formatEntityList(noteRefs)}`);
-    } else {
-      lines.push('  Notes: []');
+  if (filterConfig.stickyNotes === null) {
+    lines.push('  Notes: {*}');
+  } else if (filterConfig.stickyNotes.length > 0) {
+    lines.push('  Notes {');
+    for (const n of filterConfig.stickyNotes) {
+      lines.push(`    ${n.name}`);
     }
+    lines.push('  }');
   } else {
-    lines.push('  Notes: all');
+    lines.push('  Notes {}');
   }
 
   // tableGroups
-  if (filterConfig && filterConfig.tableGroups !== null && filterConfig.tableGroups !== undefined) {
-    if (filterConfig.tableGroups.length > 0) {
-      const groupRefs = filterConfig.tableGroups.map(g => g.name);
-      lines.push(`  TableGroups: ${formatEntityList(groupRefs)}`);
-    } else {
-      lines.push('  TableGroups: []');
+  if (filterConfig.tableGroups === null) {
+    lines.push('  TableGroups: {*}');
+  } else if (filterConfig.tableGroups.length > 0) {
+    lines.push('  TableGroups {');
+    for (const g of filterConfig.tableGroups) {
+      lines.push(`    ${g.name}`);
     }
+    lines.push('  }');
   } else {
-    lines.push('  TableGroups: all');
+    lines.push('  TableGroups {}');
   }
 
   // schemas
-  if (filterConfig && filterConfig.schemas !== null && filterConfig.schemas !== undefined) {
-    if (filterConfig.schemas.length > 0) {
-      const schemaRefs = filterConfig.schemas.map(s => s.name);
-      lines.push(`  Schemas: ${formatEntityList(schemaRefs)}`);
-    } else {
-      lines.push('  Schemas: []');
+  if (filterConfig.schemas === null) {
+    lines.push('  Schemas: {*}');
+  } else if (filterConfig.schemas.length > 0) {
+    lines.push('  Schemas {');
+    for (const s of filterConfig.schemas) {
+      lines.push(`    ${s.name}`);
     }
+    lines.push('  }');
   } else {
-    lines.push('  Schemas: all');
+    lines.push('  Schemas {}');
   }
 
   lines.push('}');
