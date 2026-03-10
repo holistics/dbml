@@ -112,7 +112,7 @@ Table posts {
       };
       const result = syncDiagramViews([operation], [], emptyDbml);
       expect(result).toContain('DiagramView user_view');
-      expect(result).toContain('Tables:');
+      expect(result).toContain('Tables {');
       expect(result).toContain('users');
     });
 
@@ -129,7 +129,7 @@ Table posts {
         },
       };
       const result = syncDiagramViews([operation], [], dbmlWithView);
-      expect(result).toMatch(/DiagramView user_view\s*\{[^}]*Tables: \[.*users.*posts.*\]/s);
+      expect(result).toMatch(/DiagramView user_view\s*\{[\s\S]*Tables\s*\{[\s\S]*users[\s\S]*posts/s);
     });
 
     test('should rename an existing DiagramView block', () => {
@@ -192,11 +192,11 @@ Table posts {
       expect(result).toContain('DiagramView full_view');
       expect(result).toContain('core.users');
       expect(result).toContain('posts');
-      expect(result).toContain('Schemas:');
+      expect(result).toContain('Schemas {');
       expect(result).toContain('core');
-      expect(result).toContain('TableGroups:');
+      expect(result).toContain('TableGroups {');
       expect(result).toContain('blog');
-      expect(result).toContain('Notes:');
+      expect(result).toContain('Notes {');
       expect(result).toContain('reminder');
     });
 
@@ -232,7 +232,7 @@ Table posts {
         tableGroups: null,
         stickyNotes: null,
       }, '');
-      expect(result).toContain('Tables: [a, b, c]');
+      expect(result).toContain('Tables {\n    a\n    b\n    c\n  }');
     });
 
     test('should use multi-line format for more than 3 tables', () => {
@@ -247,7 +247,7 @@ Table posts {
         tableGroups: null,
         stickyNotes: null,
       }, '');
-      expect(result).toContain('Tables: [\n    a,\n    b,\n    c,\n    d,\n  ]');
+      expect(result).toContain('Tables {\n    a\n    b\n    c\n    d\n  }');
     });
 
     test('should use multi-line format for more than 3 schemas', () => {
@@ -257,7 +257,7 @@ Table posts {
         tableGroups: null,
         stickyNotes: null,
       }, '');
-      expect(result).toContain('Schemas: [\n    a,\n    b,\n    c,\n    d,\n  ]');
+      expect(result).toContain('Schemas {\n    a\n    b\n    c\n    d\n  }');
     });
 
     test('should use multi-line format for more than 3 tableGroups', () => {
@@ -267,7 +267,7 @@ Table posts {
         tableGroups: [{ name: 'a' }, { name: 'b' }, { name: 'c' }, { name: 'd' }],
         stickyNotes: null,
       }, '');
-      expect(result).toContain('TableGroups: [\n    a,\n    b,\n    c,\n    d,\n  ]');
+      expect(result).toContain('TableGroups {\n    a\n    b\n    c\n    d\n  }');
     });
 
     test('should use multi-line format for more than 3 notes', () => {
@@ -277,7 +277,7 @@ Table posts {
         tableGroups: null,
         stickyNotes: [{ name: 'a' }, { name: 'b' }, { name: 'c' }, { name: 'd' }],
       }, '');
-      expect(result).toContain('Notes: [\n    a,\n    b,\n    c,\n    d,\n  ]');
+      expect(result).toContain('Notes {\n    a\n    b\n    c\n    d\n  }');
     });
 
     test('should include schema prefix in multi-line tables when schema is not public', () => {
@@ -292,7 +292,7 @@ Table posts {
         tableGroups: null,
         stickyNotes: null,
       }, '');
-      expect(result).toContain('Tables: [\n    core.a,\n    core.b,\n    core.c,\n    core.d,\n  ]');
+      expect(result).toContain('Tables {\n    core.a\n    core.b\n    core.c\n    core.d\n  }');
     });
   });
 
