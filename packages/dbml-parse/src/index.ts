@@ -56,6 +56,12 @@ export {
   type Project,
   type TableGroup,
   type TablePartial,
+  type DiagramView,
+  type FilterConfig,
 } from '@/core/interpreter/types';
+
+// Export syncDiagramView transform
+export { syncDiagramView } from '@/compiler/queries/transform/syncDiagramView';
+export type { DiagramViewSyncOperation } from '@/compiler/queries/transform/syncDiagramView';
 
 export { Compiler, services };
