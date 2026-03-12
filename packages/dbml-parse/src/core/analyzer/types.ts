@@ -9,6 +9,7 @@ export enum ElementKind {
   TablePartial = 'tablepartial',
   Check = 'checks',
   Records = 'records',
+  DiagramView = 'diagramview',
 }
 
 export enum SettingName {
