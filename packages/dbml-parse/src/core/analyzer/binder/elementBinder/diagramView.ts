@@ -1,6 +1,6 @@
 import { partition } from 'lodash-es';
 import {
-  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ProgramNode,
+  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, PrimaryExpressionNode, ProgramNode, VariableNode,
 } from '../../../parser/nodes';
 import { ElementBinder } from '../types';
 import { SyntaxToken } from '../../../lexer/tokens';
@@ -8,6 +8,17 @@ import { CompileError } from '../../../errors';
 import { lookupAndBindInScope, pickBinder, scanNonListNodeForBinding } from '../utils';
 import { SymbolKind } from '../../symbol/symbolIndex';
 import SymbolFactory from '../../symbol/factory';
+
+/**
+ * Check if a node is a wildcard expression (*)
+ */
+function isWildcardExpression (node: unknown): boolean {
+  if (!node) return false;
+  if (node instanceof PrimaryExpressionNode && node.expression instanceof VariableNode) {
+    return node.expression.variable?.value === '*';
+  }
+  return false;
+}
 
 export default class DiagramViewBinder implements ElementBinder {
   private symbolFactory: SymbolFactory;
@@ -81,7 +92,7 @@ export default class DiagramViewBinder implements ElementBinder {
       }
 
       // Skip wildcard
-      if (field.callee.type === 'WildcardExpression') {
+      if (isWildcardExpression(field.callee)) {
         return [];
       }
 
@@ -112,7 +123,7 @@ export default class DiagramViewBinder implements ElementBinder {
       }
 
       // Skip wildcard
-      if (field.callee.type === 'WildcardExpression') {
+      if (isWildcardExpression(field.callee)) {
         return [];
       }
 
@@ -140,7 +151,7 @@ export default class DiagramViewBinder implements ElementBinder {
       }
 
       // Skip wildcard
-      if (field.callee.type === 'WildcardExpression') {
+      if (isWildcardExpression(field.callee)) {
         return [];
       }
 
@@ -170,7 +181,7 @@ export default class DiagramViewBinder implements ElementBinder {
       }
 
       // Skip wildcard
-      if (field.callee.type === 'WildcardExpression') {
+      if (isWildcardExpression(field.callee)) {
         return [];
       }
 

@@ -1,7 +1,7 @@
 import { applyTextEdits, TextEdit } from './applyTextEdits';
 import Lexer from '@/core/lexer/lexer';
 import Parser from '@/core/parser/parser';
-import { SyntaxNodeIdGenerator } from '@/core/analyzer/symbol/symbols';
+import { SyntaxNodeIdGenerator } from '@/core/parser/nodes';
 
 export interface DiagramViewSyncOperation {
   operation: 'create' | 'update' | 'delete';
@@ -24,13 +24,13 @@ interface DiagramViewBlock {
 function findDiagramViewBlocks (source: string): DiagramViewBlock[] {
   const blocks: DiagramViewBlock[] = [];
   const lexerResult = new Lexer(source).lex();
-  if (!lexerResult.isOk()) return blocks;
+  if (lexerResult.getErrors().length > 0) return blocks;
 
-  const tokens = lexerResult.unwrap();
+  const tokens = lexerResult.getValue();
   const ast = new Parser(source, tokens, new SyntaxNodeIdGenerator()).parse();
-  if (!ast.isOk()) return blocks;
+  if (ast.getErrors().length > 0) return blocks;
 
-  const program = ast.unwrap().ast;
+  const program = ast.getValue().ast;
 
   for (const element of program.body) {
     if (element.type?.value === 'DiagramView') {

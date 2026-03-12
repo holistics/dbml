@@ -1,10 +1,21 @@
 import { partition } from 'lodash-es';
 import { destructureComplexVariable } from '@/core/analyzer/utils';
 import { CompileError } from '@/core/errors';
-import { BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, SyntaxNode } from '@/core/parser/nodes';
+import { BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, PrimaryExpressionNode, SyntaxNode, VariableNode } from '@/core/parser/nodes';
 import { ElementInterpreter, InterpreterDatabase, DiagramView, FilterConfig } from '@/core/interpreter/types';
 import { getTokenPosition } from '@/core/interpreter/utils';
 import { DEFAULT_SCHEMA_NAME } from '@/constants';
+
+/**
+ * Check if a node is a wildcard expression (*)
+ */
+function isWildcardExpression (node: SyntaxNode | undefined): boolean {
+  if (!node) return false;
+  if (node instanceof PrimaryExpressionNode && node.expression instanceof VariableNode) {
+    return node.expression.variable?.value === '*';
+  }
+  return false;
+}
 
 export class DiagramViewInterpreter implements ElementInterpreter {
   private declarationNode: ElementDeclarationNode;
@@ -62,7 +73,7 @@ export class DiagramViewInterpreter implements ElementInterpreter {
     // Check for shorthand { * }
     if (body.body.length === 1) {
       const first = body.body[0];
-      if (first instanceof FunctionApplicationNode && first.callee?.type === 'WildcardExpression') {
+      if (first instanceof FunctionApplicationNode && isWildcardExpression(first.callee)) {
         // Show all entities
         this.diagramView.visibleEntities = {
           tables: [],
@@ -91,7 +102,7 @@ export class DiagramViewInterpreter implements ElementInterpreter {
 
     // Check for wildcard
     const hasWildcard = body.body.some(
-      (e) => e instanceof FunctionApplicationNode && e.callee?.type === 'WildcardExpression',
+      (e) => e instanceof FunctionApplicationNode && isWildcardExpression(e.callee),
     );
 
     if (hasWildcard) {

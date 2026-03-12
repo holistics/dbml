@@ -36,4 +36,13 @@ export {
   tryExtractEnum,
   addDoubleQuoteIfNeeded,
   formatRecordValue,
+  // DiagramView exports
+  syncDiagramView,
+} from '@dbml/parse';
+
+// Re-export types
+export type {
+  DiagramViewSyncOperation,
+  DiagramView,
+  FilterConfig,
 } from '@dbml/parse';

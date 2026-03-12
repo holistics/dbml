@@ -8,13 +8,24 @@ import { ElementValidator } from '@/core/analyzer/validator/types';
 import SymbolTable from '@/core/analyzer/symbol/symbolTable';
 import { SyntaxToken } from '@/core/lexer/tokens';
 import {
-  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode,
+  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, PrimaryExpressionNode, SyntaxNode, VariableNode,
 } from '@/core/parser/nodes';
 import SymbolFactory from '@/core/analyzer/symbol/factory';
 import { createDiagramViewFieldSymbolIndex, createDiagramViewSymbolIndex } from '@/core/analyzer/symbol/symbolIndex';
 import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '@/core/analyzer/utils';
 import { DiagramViewFieldSymbol, DiagramViewSymbol } from '@/core/analyzer/symbol/symbols';
 import { isExpressionAVariableNode } from '@/core/parser/utils';
+
+/**
+ * Check if a node is a wildcard expression (*)
+ */
+function isWildcardExpression (node: SyntaxNode | undefined): boolean {
+  if (!node) return false;
+  if (node instanceof PrimaryExpressionNode && node.expression instanceof VariableNode) {
+    return node.expression.variable?.value === '*';
+  }
+  return false;
+}
 
 export default class DiagramViewValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
@@ -27,14 +38,14 @@ export default class DiagramViewValidator implements ElementValidator {
     this.symbolFactory = symbolFactory;
   }
 
-  validate (): (CompileError | CompileWarning)[] {
+  validate (): CompileError[] {
     return [
       ...this.validateContext(),
       ...this.validateName(this.declarationNode.name),
       ...this.validateAlias(this.declarationNode.alias),
       ...this.validateSettingList(this.declarationNode.attributeList),
       ...this.registerElement(),
-      ...this.validateBody(this.declarationNode.body),
+      ...this.validateBody(this.declarationNode.body) as CompileError[],
     ];
   }
 
@@ -187,10 +198,10 @@ export default class DiagramViewValidator implements ElementValidator {
 
     // Check for * combined with specific items (warning)
     const hasWildcard = body.body.some(
-      (e) => e instanceof FunctionApplicationNode && e.callee?.type === 'WildcardExpression',
+      (e) => e instanceof FunctionApplicationNode && isWildcardExpression(e.callee),
     );
     const hasSpecificItems = body.body.some(
-      (e) => e instanceof FunctionApplicationNode && e.callee?.type !== 'WildcardExpression',
+      (e) => e instanceof FunctionApplicationNode && !isWildcardExpression(e.callee),
     );
 
     if (hasWildcard && hasSpecificItems) {
