@@ -3,6 +3,7 @@ import { ElementDeclarationNode, InfixExpressionNode, PostfixExpressionNode, Pre
 import { ElementKind } from '@/core/analyzer/types';
 import ChecksBinder from './elementBinder/checks';
 import CustomBinder from './elementBinder/custom';
+import DiagramViewBinder from './elementBinder/diagramView';
 import EnumBinder from './elementBinder/enum';
 import IndexesBinder from './elementBinder/indexes';
 import NoteBinder from './elementBinder/note';
@@ -41,6 +42,8 @@ export function pickBinder (element: ElementDeclarationNode & { type: SyntaxToke
       return ChecksBinder;
     case ElementKind.Records:
       return RecordsBinder;
+    case ElementKind.DiagramView:
+      return DiagramViewBinder;
     default:
       return CustomBinder;
   }

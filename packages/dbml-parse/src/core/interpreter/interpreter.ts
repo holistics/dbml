@@ -7,6 +7,7 @@ import { TableGroupInterpreter } from '@/core/interpreter/elementInterpreter/tab
 import { EnumInterpreter } from '@/core/interpreter/elementInterpreter/enum';
 import { ProjectInterpreter } from '@/core/interpreter/elementInterpreter/project';
 import { TablePartialInterpreter } from '@/core/interpreter/elementInterpreter/tablePartial';
+import { DiagramViewInterpreter } from '@/core/interpreter/elementInterpreter/diagramView';
 import { RecordsInterpreter } from '@/core/interpreter/records';
 import Report from '@/core/report';
 import { getElementKind } from '@/core/analyzer/utils';
@@ -62,6 +63,7 @@ function convertEnvToDb (env: InterpreterDatabase): Database {
     project: Array.from(env.project.values())[0] || {},
     tablePartials: Array.from(env.tablePartials.values()).map(processColumnInDb),
     records,
+    diagramViews: env.diagramViews ? Array.from(env.diagramViews.values()) : [],
   };
 }
 
@@ -88,6 +90,7 @@ export default class Interpreter {
       recordsElements: [],
       cachedMergedTables: new Map(),
       source: ast.source,
+      diagramViews: new Map(),
     };
   }
 
@@ -109,6 +112,8 @@ export default class Interpreter {
           return (new EnumInterpreter(element, this.env)).interpret();
         case ElementKind.Project:
           return (new ProjectInterpreter(element, this.env)).interpret();
+        case ElementKind.DiagramView:
+          return (new DiagramViewInterpreter(element, this.env)).interpret();
         case ElementKind.Records:
           // Defer records interpretation - collect for later
           this.env.recordsElements.push(element);
