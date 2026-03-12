@@ -142,6 +142,35 @@ export class TableGroupFieldSymbol implements NodeSymbol {
   }
 }
 
+// A symbol for a DiagramView block
+export class DiagramViewSymbol implements NodeSymbol {
+  id: NodeSymbolId;
+  symbolTable: SymbolTable;
+  declaration: SyntaxNode;
+  references: SyntaxNode[] = [];
+
+  constructor(
+    { symbolTable, declaration }: { symbolTable: SymbolTable; declaration: SyntaxNode },
+    id: NodeSymbolId,
+  ) {
+    this.id = id;
+    this.symbolTable = symbolTable;
+    this.declaration = declaration;
+  }
+}
+
+// A symbol for a DiagramView field (table/note/group/schema reference)
+export class DiagramViewFieldSymbol implements NodeSymbol {
+  id: NodeSymbolId;
+  declaration: SyntaxNode;
+  references: SyntaxNode[] = [];
+
+  constructor({ declaration }: { declaration: SyntaxNode }, id: NodeSymbolId) {
+    this.id = id;
+    this.declaration = declaration;
+  }
+}
+
 // A symbol for a table partial, contains the table partial's symbol table
 // which is used to hold all the column symbols of the table partial
 export class TablePartialSymbol implements NodeSymbol {
