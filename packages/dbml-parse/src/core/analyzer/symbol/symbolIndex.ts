@@ -14,6 +14,8 @@ export enum SymbolKind {
   Note = 'Note',
   TablePartial = 'TablePartial',
   PartialInjection = 'PartialInjection',
+  DiagramView = 'DiagramView',
+  DiagramViewField = 'DiagramView field',
 }
 
 export function createSchemaSymbolIndex (key: string): NodeSymbolIndex {
@@ -56,6 +58,14 @@ export function createPartialInjectionSymbolIndex (key: string): NodeSymbolIndex
   return `${SymbolKind.PartialInjection}:${key}`;
 }
 
+export function createDiagramViewSymbolIndex (key: string): NodeSymbolIndex {
+  return `${SymbolKind.DiagramView}:${key}`;
+}
+
+export function createDiagramViewFieldSymbolIndex (key: string): NodeSymbolIndex {
+  return `${SymbolKind.DiagramViewField}:${key}`;
+}
+
 export function createNodeSymbolIndex (key: string, symbolKind: SymbolKind): NodeSymbolIndex {
   switch (symbolKind) {
     case SymbolKind.Column:
@@ -76,6 +86,10 @@ export function createNodeSymbolIndex (key: string, symbolKind: SymbolKind): Nod
       return createTablePartialSymbolIndex(key);
     case SymbolKind.PartialInjection:
       return createPartialInjectionSymbolIndex(key);
+    case SymbolKind.DiagramView:
+      return createDiagramViewSymbolIndex(key);
+    case SymbolKind.DiagramViewField:
+      return createDiagramViewFieldSymbolIndex(key);
     default:
       throw new Error('Unreachable');
   }
