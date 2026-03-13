@@ -1,6 +1,5 @@
 import { last } from 'lodash-es';
 import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
-import { None, Option, Some } from '@/core/option';
 import NodeFactory from '@/core/parser/factory';
 import {
   ArrayNode,
@@ -63,7 +62,7 @@ export function tryConvertToElementDeclaration (
   _callee: ExpressionNode | CommaExpressionNode | undefined,
   _args: (NormalExpressionNode | CommaExpressionNode)[],
   factory: NodeFactory,
-): Option<ElementDeclarationNode> {
+): ElementDeclarationNode | undefined {
   let args = _args;
   let callee = _callee;
   // Handle the case:
@@ -75,15 +74,15 @@ export function tryConvertToElementDeclaration (
     callee = callee.callee;
   }
   if (!callee || !isIdentifierExpression(callee) || args.length === 0) {
-    return new None();
+    return undefined;
   }
   const cpArgs = [...args];
 
-  const type = extractVariableNode(callee).unwrap();
+  const type = extractVariableNode(callee)!;
 
   const body = cpArgs.pop();
   if (!(body instanceof BlockExpressionNode)) {
-    return new None();
+    return undefined;
   }
 
   const attributeList = last(cpArgs) instanceof ListExpressionNode
@@ -91,44 +90,38 @@ export function tryConvertToElementDeclaration (
     : undefined;
 
   if (cpArgs.length === 3) {
-    const asKeywordNode = extractVariableNode(cpArgs[1]).value;
+    const asKeywordNode = extractVariableNode(cpArgs[1]);
     // If cpArgs = [sth, 'as', sth] then it's a valid element declaration
     return (!asKeywordNode || !isAsKeyword(asKeywordNode))
-      ? new None()
-      : new Some(
-          factory.create(ElementDeclarationNode, {
-            type,
-            name: cpArgs[0],
-            as: asKeywordNode,
-            alias: cpArgs[2],
-            attributeList,
-            body,
-          }),
-        );
+      ? undefined
+      : factory.create(ElementDeclarationNode, {
+          type,
+          name: cpArgs[0],
+          as: asKeywordNode,
+          alias: cpArgs[2],
+          attributeList,
+          body,
+        });
   }
 
   if (cpArgs.length === 1) {
-    return new Some(
-      factory.create(ElementDeclarationNode, {
-        type,
-        name: cpArgs[0],
-        attributeList,
-        body,
-      }),
-    );
+    return factory.create(ElementDeclarationNode, {
+      type,
+      name: cpArgs[0],
+      attributeList,
+      body,
+    });
   }
 
   if (cpArgs.length === 0) {
-    return new Some(
-      factory.create(ElementDeclarationNode, {
-        type,
-        attributeList,
-        body,
-      }),
-    );
+    return factory.create(ElementDeclarationNode, {
+      type,
+      attributeList,
+      body,
+    });
   }
 
-  return new None();
+  return undefined;
 }
 
 // True if the token is the identifier 'as'
@@ -344,12 +337,12 @@ export function getMemberChain (node: SyntaxNode): Readonly<(SyntaxNode | Syntax
 }
 
 // Extracts the variable token if the expression is a primary variable
-export function extractVariableNode (value?: unknown): Option<SyntaxToken> {
+export function extractVariableNode (value?: unknown): SyntaxToken | undefined {
   if (isVariableExpression(value)) {
-    return new Some(value.expression.variable);
+    return value.expression.variable;
   }
 
-  return new None();
+  return undefined;
 }
 
 // True if expression is a primary node wrapping a quoted string
@@ -439,14 +432,14 @@ export function isTupleOfVariables (value?: SyntaxNode): value is TupleExpressio
 }
 
 // Joins identifier stream tokens into a space-separated string
-export function extractStringFromIdentifierStream (stream?: IdentiferStreamNode): Option<string> {
+export function extractStringFromIdentifierStream (stream?: IdentiferStreamNode): string | undefined {
   if (stream === undefined) {
-    return new None();
+    return undefined;
   }
   const name = stream.identifiers.map((identifier) => identifier.value).join(' ');
   if (name === '') {
-    return new None();
+    return undefined;
   }
 
-  return new Some(name);
+  return name;
 }

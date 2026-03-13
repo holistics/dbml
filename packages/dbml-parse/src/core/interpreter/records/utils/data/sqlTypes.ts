@@ -153,7 +153,7 @@ export function getNumericTypeParams (columnSymbol: ColumnSymbol): { precision?:
 
   const precision = extractNumericLiteral(typeNode.argumentList.elementList[0]);
   const scale = extractNumericLiteral(typeNode.argumentList.elementList[1]);
-  if (precision === null || scale === null) return {};
+  if (precision === undefined || scale === undefined) return {};
 
   return { precision: Math.trunc(precision), scale: Math.trunc(scale) };
 }
@@ -165,7 +165,7 @@ export function getLengthTypeParam (columnSymbol: ColumnSymbol): { length?: numb
   if (!typeNode.argumentList || typeNode.argumentList.elementList.length !== 1) return {};
 
   const length = extractNumericLiteral(typeNode.argumentList.elementList[0]);
-  if (length === null) return {};
+  if (length === undefined) return {};
 
   return { length: Math.trunc(length) };
 }

@@ -98,9 +98,9 @@ export default class RefValidator implements ElementValidator {
       }
 
       if (field.callee && isBinaryRelationship(field.callee)) {
-        const leftFragment = destructureComplexVariableTuple(field.callee.leftExpression).unwrap_or({ variables: [], tupleElements: [] });
+        const leftFragment = destructureComplexVariableTuple(field.callee.leftExpression) ?? { variables: [], tupleElements: [] };
         const leftFragmentCount = leftFragment.variables.length + Math.min(leftFragment.tupleElements.length, 1);
-        const rightFragment = destructureComplexVariableTuple(field.callee.rightExpression).unwrap_or({ variables: [], tupleElements: [] });
+        const rightFragment = destructureComplexVariableTuple(field.callee.rightExpression) ?? { variables: [], tupleElements: [] };
         const rightFragmentCount = rightFragment.variables.length + Math.min(rightFragment.tupleElements.length, 1);
         if (leftFragmentCount < 2) {
           errors.push(new CompileError(CompileErrorCode.INVALID_REF_FIELD, 'Invalid column reference', field.callee.leftExpression || field.callee));
@@ -193,7 +193,7 @@ function isValidPolicy (value?: SyntaxNode): boolean {
 
   let extractedString: string | undefined;
   if (value instanceof IdentiferStreamNode) {
-    extractedString = extractStringFromIdentifierStream(value).unwrap_or('');
+    extractedString = extractStringFromIdentifierStream(value) ?? '';
   } else {
     extractedString = value.expression.variable.value;
   }

@@ -142,8 +142,8 @@ export default class TableValidator implements ElementValidator {
     const { name, alias } = this.declarationNode;
 
     const maybeNameFragments = destructureComplexVariable(name);
-    if (maybeNameFragments.isOk()) {
-      const nameFragments = [...maybeNameFragments.unwrap()];
+    if (maybeNameFragments != null) {
+      const nameFragments = [...maybeNameFragments];
       const tableName = nameFragments.pop()!;
       const symbolTable = registerSchemaStack(nameFragments, this.publicSymbolTable, this.symbolFactory);
       const tableId = createTableSymbolIndex(tableName);
@@ -156,9 +156,9 @@ export default class TableValidator implements ElementValidator {
     if (
       alias && isSimpleName(alias)
 
-      && !isAliasSameAsName(alias.expression.variable!.value, maybeNameFragments.unwrap_or([]))
+      && !isAliasSameAsName(alias.expression.variable!.value, maybeNameFragments ?? [])
     ) {
-      const aliasName = extractVariableName(alias as any).unwrap();
+      const aliasName = extractVariableName(alias as any)!;
       const aliasId = createTableSymbolIndex(aliasName);
       if (this.publicSymbolTable.has(aliasId)) {
         errors.push(new CompileError(CompileErrorCode.DUPLICATE_NAME, `Table name '${aliasName}' already exists`, name!));
@@ -217,7 +217,7 @@ export default class TableValidator implements ElementValidator {
       if (!isValidPartialInjection(field.callee)) {
         errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_PARTIAL_INJECTION, 'A partial injection should be of the form ~<table-partial>', field.callee));
       } else {
-        const injectedTablePartialName = extractVariableFromExpression(field.callee.expression).unwrap_or('');
+        const injectedTablePartialName = extractVariableFromExpression(field.callee.expression) ?? '';
         const partialInjectionSymbol = this.symbolFactory.create(PartialInjectionSymbol, { symbolTable: new SymbolTable(), declaration: field });
         const partialInjectionSymbolId = createPartialInjectionSymbolIndex(injectedTablePartialName);
         const symbolTable = this.declarationNode.symbol!.symbolTable!;
@@ -245,7 +245,7 @@ export default class TableValidator implements ElementValidator {
 
   registerField (field: FunctionApplicationNode): CompileError[] {
     if (field.callee && isVariableExpression(field.callee)) {
-      const columnName = extractVariableName(field.callee).unwrap();
+      const columnName = extractVariableName(field.callee)!;
       const columnId = createColumnSymbolIndex(columnName);
 
       const columnSymbol = this.symbolFactory.create(ColumnSymbol, { declaration: field });
@@ -289,7 +289,7 @@ export default class TableValidator implements ElementValidator {
     } = aggReport.getValue();
 
     parts.forEach((part) => {
-      const name = extractVariableName(part as any).unwrap_or('').toLowerCase();
+      const name = extractVariableName(part as any)?.toLowerCase() ?? '';
       if (name !== 'pk' && name !== 'unique') {
         errors.push(new CompileError(CompileErrorCode.INVALID_SETTINGS, 'Inline column settings can only be `pk` or `unique`', part));
         return;

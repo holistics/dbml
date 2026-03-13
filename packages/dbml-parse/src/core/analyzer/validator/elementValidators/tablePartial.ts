@@ -144,9 +144,9 @@ export default class TablePartialValidator implements ElementValidator {
     const { name } = this.declarationNode;
     this.declarationNode.symbol = this.symbolFactory.create(TablePartialSymbol, { declaration: this.declarationNode, symbolTable: new SymbolTable() });
     const maybeNamePartials = destructureComplexVariable(name);
-    if (!maybeNamePartials.isOk()) return [];
+    if (maybeNamePartials == null) return [];
 
-    const namePartials = maybeNamePartials.unwrap();
+    const namePartials = maybeNamePartials;
     const tablePartialName = namePartials.pop()!;
     const symbolTable = registerSchemaStack(namePartials, this.publicSymbolTable, this.symbolFactory);
     const tablePartialId = createTablePartialSymbolIndex(tablePartialName);
@@ -202,7 +202,7 @@ export default class TablePartialValidator implements ElementValidator {
   registerField (field: FunctionApplicationNode): CompileError[] {
     if (!field.callee || !isVariableExpression(field.callee)) return [];
 
-    const columnName = extractVariableName(field.callee).unwrap();
+    const columnName = extractVariableName(field.callee)!;
     const columnId = createColumnSymbolIndex(columnName);
 
     const columnSymbol = this.symbolFactory.create(ColumnSymbol, { declaration: field });
@@ -247,7 +247,7 @@ export default class TablePartialValidator implements ElementValidator {
     } = aggReport.getValue();
 
     parts.forEach((part) => {
-      const name = extractVariableName(part as any).unwrap_or('').toLowerCase();
+      const name = extractVariableName(part as any)?.toLowerCase() ?? '';
       if (name !== SettingName.PK && name !== SettingName.Unique) {
         errors.push(new CompileError(CompileErrorCode.INVALID_SETTINGS, 'Inline column settings can only be `pk` or `unique`', part));
         return;

@@ -82,8 +82,8 @@ export default class TableGroupValidator implements ElementValidator {
     const { name } = this.declarationNode;
     this.declarationNode.symbol = this.symbolFactory.create(TableGroupSymbol, { declaration: this.declarationNode, symbolTable: new SymbolTable() });
     const maybeNameFragments = destructureComplexVariable(name);
-    if (maybeNameFragments.isOk()) {
-      const nameFragments = maybeNameFragments.unwrap();
+    if (maybeNameFragments != null) {
+      const nameFragments = maybeNameFragments;
       const tableGroupName = nameFragments.pop()!;
       const symbolTable = registerSchemaStack(nameFragments, this.publicSymbolTable, this.symbolFactory);
       const tableId = createTableGroupSymbolIndex(tableGroupName);
@@ -172,7 +172,7 @@ export default class TableGroupValidator implements ElementValidator {
   validateFields (fields: FunctionApplicationNode[]): CompileError[] {
     return fields.flatMap((field) => {
       const errors: CompileError[] = [];
-      if (field.callee && !destructureComplexVariable(field.callee).isOk()) {
+      if (field.callee && destructureComplexVariable(field.callee) == null) {
         errors.push(new CompileError(CompileErrorCode.INVALID_TABLEGROUP_FIELD, 'A TableGroup field must be of the form <table> or <schema>.<table>', field.callee));
       }
 
@@ -204,7 +204,7 @@ export default class TableGroupValidator implements ElementValidator {
 
   registerField (field: FunctionApplicationNode): CompileError[] {
     if (field.callee && isVariableExpression(field.callee)) {
-      const tableGroupField = extractVariableName(field.callee).unwrap();
+      const tableGroupField = extractVariableName(field.callee)!;
       const tableGroupFieldId = createTableGroupFieldSymbolIndex(tableGroupField);
 
       const tableGroupSymbol = this.symbolFactory.create(TableGroupFieldSymbol, { declaration: field });

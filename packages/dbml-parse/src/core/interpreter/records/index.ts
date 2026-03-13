@@ -124,18 +124,18 @@ function getTableAndColumnsOfRecords (records: ElementDeclarationNode, env: Inte
       mergedTable,
       mergedColumns: mergedTable.fields,
     };
-    const mergedColumns = (nameNode as TupleExpressionNode).elementList.map((e) => mergedTable.fields.find((f) => f.name === extractVariableFromExpression(e).unwrap())!);
+    const mergedColumns = (nameNode as TupleExpressionNode).elementList.map((e) => mergedTable.fields.find((f) => f.name === extractVariableFromExpression(e)!)!);
     return {
       table,
       mergedTable,
       mergedColumns,
     };
   }
-  const fragments = destructureCallExpression(nameNode!).unwrap();
+  const fragments = destructureCallExpression(nameNode!)!;
   const tableNode = last(fragments.variables)!.referee!.declaration as ElementDeclarationNode;
   const table = env.tables.get(tableNode)!;
   const mergedTable = mergeTableAndPartials(table, env);
-  const mergedColumns = fragments.args.map((e) => mergedTable.fields.find((f) => f.name === extractVariableFromExpression(e).unwrap())!);
+  const mergedColumns = fragments.args.map((e) => mergedTable.fields.find((f) => f.name === extractVariableFromExpression(e)!)!);
   return {
     table,
     mergedTable,
@@ -230,9 +230,9 @@ function extractValue (
   // Enum type
   if (isEnum) {
     const enumMembers = ([...env.enums.values()].find((e) => e.schemaName === column.type.schemaName && e.name === column.type.type_name)?.values || []).map((field) => field.name);
-    let enumValue = extractQuotedStringToken(node).unwrap_or(undefined);
+    let enumValue = extractQuotedStringToken(node);
     if (enumValue === undefined) {
-      enumValue = destructureComplexVariable(node).unwrap_or([]).pop();
+      enumValue = (destructureComplexVariable(node) ?? []).pop();
     }
     if (!(enumMembers as (string | undefined)[]).includes(enumValue)) {
       return new Report({ value: enumValue, type: valueType }, [], [new CompileWarning(

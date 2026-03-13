@@ -62,14 +62,11 @@ export class TableGroupInterpreter implements ElementInterpreter {
     return subs.flatMap((sub) => {
       switch (sub.type?.value.toLowerCase()) {
         case 'note':
+          const noteNode2 = sub.body instanceof BlockExpressionNode
+            ? (sub.body.body[0] as FunctionApplicationNode).callee
+            : sub.body!.callee;
           this.tableGroup.note = {
-            value: extractQuotedStringToken(
-              sub.body instanceof BlockExpressionNode
-                ? (sub.body.body[0] as FunctionApplicationNode).callee
-                : sub.body!.callee,
-            )
-              .map(normalizeNoteContent)
-              .unwrap(),
+            value: normalizeNoteContent(extractQuotedStringToken(noteNode2)!),
             token: getTokenPosition(sub),
           };
           break;
@@ -85,13 +82,13 @@ export class TableGroupInterpreter implements ElementInterpreter {
   private interpretFields (fields: FunctionApplicationNode[]): CompileError[] {
     const errors: CompileError[] = [];
     this.tableGroup.tables = fields.map((field) => {
-      const fragments = destructureComplexVariable((field as FunctionApplicationNode).callee).unwrap();
+      const fragments = destructureComplexVariable((field as FunctionApplicationNode).callee)!;
 
       if (fragments.length > 2) {
         errors.push(new CompileError(CompileErrorCode.UNSUPPORTED, 'Nested schema is not supported', field));
       }
 
-      const tableid = destructureMemberAccessExpression((field as FunctionApplicationNode).callee!).unwrap().pop()!.referee!.id;
+      const tableid = destructureMemberAccessExpression((field as FunctionApplicationNode).callee!)!.pop()!.referee!.id;
       if (this.env.tableOwnerGroup[tableid]) {
         const tableGroup = this.env.tableOwnerGroup[tableid];
         const { schemaName, name } = this.env.tableGroups.get(tableGroup)!;
@@ -119,7 +116,7 @@ export class TableGroupInterpreter implements ElementInterpreter {
 
     const [noteNode] = settingMap.note || [];
     this.tableGroup.note = noteNode && {
-      value: extractQuotedStringToken(noteNode?.value).map(normalizeNoteContent).unwrap(),
+      value: normalizeNoteContent(extractQuotedStringToken(noteNode?.value)!),
       token: getTokenPosition(noteNode),
     };
 

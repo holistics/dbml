@@ -128,7 +128,7 @@ export function aggregateSettingList (settingList?: ListExpressionNode): Report<
       return;
     }
 
-    const name = extractStringFromIdentifierStream(attribute.name).unwrap_or(undefined)?.toLowerCase();
+    const name = extractStringFromIdentifierStream(attribute.name)?.toLowerCase();
     if (!name) return;
 
     if (map[name] === undefined) {

@@ -45,7 +45,7 @@ export default class RecordsValidator implements ElementValidator {
 
     // Check if parent is a table
     if (parent instanceof ElementDeclarationNode) {
-      const elementKind = getElementKind(parent).unwrap_or(undefined);
+      const elementKind = getElementKind(parent);
       if (elementKind === ElementKind.Table) {
         return [];
       }
@@ -240,7 +240,7 @@ export default class RecordsValidator implements ElementValidator {
 
     // Member access for enum field references: status.active, myschema.status.pending
     if (isAccessExpression(value)) {
-      const fragments = destructureComplexVariable(value).unwrap_or(undefined);
+      const fragments = destructureComplexVariable(value);
       return fragments !== undefined && fragments.length > 0;
     }
 

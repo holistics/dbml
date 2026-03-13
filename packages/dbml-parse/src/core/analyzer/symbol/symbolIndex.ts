@@ -1,5 +1,4 @@
 import { DEFAULT_SCHEMA_NAME } from '@/constants';
-import { None, Option, Some } from '@/core/option';
 
 // Used to index a symbol table to obtain a symbol
 export type NodeSymbolIndex = string;
@@ -81,19 +80,19 @@ export function createNodeSymbolIndex (key: string, symbolKind: SymbolKind): Nod
   }
 }
 
-export function destructureIndex (id: NodeSymbolIndex): Option<{ name: string; kind: SymbolKind }> {
+export function destructureIndex (id: NodeSymbolIndex): { name: string; kind: SymbolKind } | undefined {
   const [kind, name] = id.split(':');
 
   return Object.values(SymbolKind).includes(kind as SymbolKind)
-    ? new Some({
+    ? {
         name,
         kind: kind as SymbolKind,
-      })
-    : new None();
+      }
+    : undefined;
 }
 
 export function isPublicSchemaIndex (id: NodeSymbolIndex): boolean {
-  const res = destructureIndex(id).unwrap_or(undefined);
+  const res = destructureIndex(id);
   if (!res) {
     return false;
   }

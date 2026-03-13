@@ -1,6 +1,6 @@
 {
   "value": {
-    "id": 76,
+    "id": 74,
     "kind": "<program>",
     "startPos": {
       "offset": 0,
@@ -160,10 +160,10 @@
             "end": 9
           }
         },
-        "parent": 76
+        "parent": 74
       },
       {
-        "id": 38,
+        "id": 37,
         "kind": "<element-declaration>",
         "startPos": {
           "offset": 11,
@@ -324,7 +324,7 @@
           }
         },
         "body": {
-          "id": 37,
+          "id": 36,
           "kind": "<block-expression>",
           "startPos": {
             "offset": 23,
@@ -2338,7 +2338,7 @@
                   "end": 185
                 }
               },
-              "parent": 38
+              "parent": 37
             }
           ],
           "blockCloseBrace": {
@@ -2385,11 +2385,11 @@
             "end": 187
           }
         },
-        "parent": 76,
+        "parent": 74,
         "symbol": 1
       },
       {
-        "id": 75,
+        "id": 73,
         "kind": "<element-declaration>",
         "startPos": {
           "offset": 189,
@@ -2471,7 +2471,7 @@
           "end": 201
         },
         "name": {
-          "id": 40,
+          "id": 39,
           "kind": "<primary-expression>",
           "startPos": {
             "offset": 202,
@@ -2488,7 +2488,7 @@
           "start": 202,
           "end": 207,
           "expression": {
-            "id": 39,
+            "id": 38,
             "kind": "<variable>",
             "startPos": {
               "offset": 202,
@@ -2550,7 +2550,7 @@
           }
         },
         "body": {
-          "id": 74,
+          "id": 72,
           "kind": "<block-expression>",
           "startPos": {
             "offset": 208,
@@ -2611,7 +2611,7 @@
           },
           "body": [
             {
-              "id": 45,
+              "id": 44,
               "kind": "<function-application>",
               "startPos": {
                 "offset": 212,
@@ -2628,7 +2628,7 @@
               "start": 212,
               "end": 223,
               "callee": {
-                "id": 42,
+                "id": 41,
                 "kind": "<primary-expression>",
                 "startPos": {
                   "offset": 212,
@@ -2645,7 +2645,7 @@
                 "start": 212,
                 "end": 219,
                 "expression": {
-                  "id": 41,
+                  "id": 40,
                   "kind": "<variable>",
                   "startPos": {
                     "offset": 212,
@@ -2751,7 +2751,7 @@
               },
               "args": [
                 {
-                  "id": 44,
+                  "id": 43,
                   "kind": "<primary-expression>",
                   "startPos": {
                     "offset": 220,
@@ -2768,7 +2768,7 @@
                   "start": 220,
                   "end": 223,
                   "expression": {
-                    "id": 43,
+                    "id": 42,
                     "kind": "<variable>",
                     "startPos": {
                       "offset": 220,
@@ -2833,7 +2833,7 @@
               "symbol": 4
             },
             {
-              "id": 72,
+              "id": 71,
               "kind": "<element-declaration>",
               "startPos": {
                 "offset": 227,
@@ -2957,7 +2957,7 @@
                 "end": 233
               },
               "body": {
-                "id": 71,
+                "id": 70,
                 "kind": "<block-expression>",
                 "startPos": {
                   "offset": 234,
@@ -3018,7 +3018,7 @@
                 },
                 "body": [
                   {
-                    "id": 54,
+                    "id": 53,
                     "kind": "<function-application>",
                     "startPos": {
                       "offset": 240,
@@ -3035,7 +3035,7 @@
                     "start": 240,
                     "end": 280,
                     "callee": {
-                      "id": 48,
+                      "id": 47,
                       "kind": "<function-expression>",
                       "startPos": {
                         "offset": 240,
@@ -3182,7 +3182,7 @@
                     },
                     "args": [
                       {
-                        "id": 53,
+                        "id": 52,
                         "kind": "<list-expression>",
                         "startPos": {
                           "offset": 254,
@@ -3221,7 +3221,7 @@
                         },
                         "elementList": [
                           {
-                            "id": 52,
+                            "id": 51,
                             "kind": "<attribute>",
                             "startPos": {
                               "offset": 255,
@@ -3238,7 +3238,7 @@
                             "start": 255,
                             "end": 279,
                             "name": {
-                              "id": 49,
+                              "id": 48,
                               "kind": "<identifer-stream>",
                               "startPos": {
                                 "offset": 255,
@@ -3279,7 +3279,7 @@
                               ]
                             },
                             "value": {
-                              "id": 51,
+                              "id": 50,
                               "kind": "<primary-expression>",
                               "startPos": {
                                 "offset": 261,
@@ -3296,7 +3296,7 @@
                               "start": 261,
                               "end": 279,
                               "expression": {
-                                "id": 50,
+                                "id": 49,
                                 "kind": "<literal>",
                                 "startPos": {
                                   "offset": 261,
@@ -3428,7 +3428,7 @@
                     ]
                   },
                   {
-                    "id": 65,
+                    "id": 64,
                     "kind": "<function-application>",
                     "startPos": {
                       "offset": 290,
@@ -3445,7 +3445,7 @@
                     "start": 290,
                     "end": 333,
                     "callee": {
-                      "id": 55,
+                      "id": 54,
                       "kind": "<function-expression>",
                       "startPos": {
                         "offset": 290,
@@ -3697,7 +3697,7 @@
                     },
                     "args": [
                       {
-                        "id": 64,
+                        "id": 63,
                         "kind": "<list-expression>",
                         "startPos": {
                           "offset": 307,
@@ -3736,7 +3736,7 @@
                         },
                         "elementList": [
                           {
-                            "id": 59,
+                            "id": 58,
                             "kind": "<attribute>",
                             "startPos": {
                               "offset": 308,
@@ -3753,7 +3753,7 @@
                             "start": 308,
                             "end": 319,
                             "name": {
-                              "id": 56,
+                              "id": 55,
                               "kind": "<identifer-stream>",
                               "startPos": {
                                 "offset": 308,
@@ -3794,7 +3794,7 @@
                               ]
                             },
                             "value": {
-                              "id": 58,
+                              "id": 57,
                               "kind": "<primary-expression>",
                               "startPos": {
                                 "offset": 314,
@@ -3811,7 +3811,7 @@
                               "start": 314,
                               "end": 319,
                               "expression": {
-                                "id": 57,
+                                "id": 56,
                                 "kind": "<literal>",
                                 "startPos": {
                                   "offset": 314,
@@ -3895,7 +3895,7 @@
                             }
                           },
                           {
-                            "id": 63,
+                            "id": 62,
                             "kind": "<attribute>",
                             "startPos": {
                               "offset": 321,
@@ -3912,7 +3912,7 @@
                             "start": 321,
                             "end": 332,
                             "name": {
-                              "id": 60,
+                              "id": 59,
                               "kind": "<identifer-stream>",
                               "startPos": {
                                 "offset": 321,
@@ -3953,7 +3953,7 @@
                               ]
                             },
                             "value": {
-                              "id": 62,
+                              "id": 61,
                               "kind": "<primary-expression>",
                               "startPos": {
                                 "offset": 327,
@@ -3970,7 +3970,7 @@
                               "start": 327,
                               "end": 332,
                               "expression": {
-                                "id": 61,
+                                "id": 60,
                                 "kind": "<literal>",
                                 "startPos": {
                                   "offset": 327,
@@ -4146,7 +4146,7 @@
                     ]
                   },
                   {
-                    "id": 70,
+                    "id": 69,
                     "kind": "<function-application>",
                     "startPos": {
                       "offset": 338,
@@ -4163,7 +4163,7 @@
                     "start": 338,
                     "end": 365,
                     "callee": {
-                      "id": 66,
+                      "id": 65,
                       "kind": "<function-expression>",
                       "startPos": {
                         "offset": 338,
@@ -4310,7 +4310,7 @@
                     },
                     "args": [
                       {
-                        "id": 69,
+                        "id": 68,
                         "kind": "<list-expression>",
                         "startPos": {
                           "offset": 356,
@@ -4349,7 +4349,7 @@
                         },
                         "elementList": [
                           {
-                            "id": 68,
+                            "id": 67,
                             "kind": "<attribute>",
                             "startPos": {
                               "offset": 357,
@@ -4366,7 +4366,7 @@
                             "start": 357,
                             "end": 364,
                             "name": {
-                              "id": 67,
+                              "id": 66,
                               "kind": "<identifer-stream>",
                               "startPos": {
                                 "offset": 357,
@@ -4543,7 +4543,7 @@
                   "end": 369
                 }
               },
-              "parent": 75
+              "parent": 73
             }
           ],
           "blockCloseBrace": {
@@ -4590,7 +4590,7 @@
             "end": 371
           }
         },
-        "parent": 76,
+        "parent": 74,
         "symbol": 3
       }
     ],
@@ -4627,7 +4627,7 @@
               "declaration": 8
             }
           },
-          "declaration": 38
+          "declaration": 37
         },
         "TablePartial:Users": {
           "references": [],
@@ -4636,10 +4636,10 @@
             "Column:balance": {
               "references": [],
               "id": 4,
-              "declaration": 45
+              "declaration": 44
             }
           },
-          "declaration": 75
+          "declaration": 73
         }
       },
       "id": 0,
@@ -4793,7 +4793,7 @@
             "end": 9
           }
         },
-        "parent": 76
+        "parent": 74
       },
       "start": 0,
       "end": 9,
@@ -5201,7 +5201,7 @@
       "code": 3075,
       "diagnostic": "'name' can only appear once",
       "nodeOrToken": {
-        "id": 59,
+        "id": 58,
         "kind": "<attribute>",
         "startPos": {
           "offset": 308,
@@ -5218,7 +5218,7 @@
         "start": 308,
         "end": 319,
         "name": {
-          "id": 56,
+          "id": 55,
           "kind": "<identifer-stream>",
           "startPos": {
             "offset": 308,
@@ -5259,7 +5259,7 @@
           ]
         },
         "value": {
-          "id": 58,
+          "id": 57,
           "kind": "<primary-expression>",
           "startPos": {
             "offset": 314,
@@ -5276,7 +5276,7 @@
           "start": 314,
           "end": 319,
           "expression": {
-            "id": 57,
+            "id": 56,
             "kind": "<literal>",
             "startPos": {
               "offset": 314,
@@ -5367,7 +5367,7 @@
       "code": 3075,
       "diagnostic": "'name' can only appear once",
       "nodeOrToken": {
-        "id": 63,
+        "id": 62,
         "kind": "<attribute>",
         "startPos": {
           "offset": 321,
@@ -5384,7 +5384,7 @@
         "start": 321,
         "end": 332,
         "name": {
-          "id": 60,
+          "id": 59,
           "kind": "<identifer-stream>",
           "startPos": {
             "offset": 321,
@@ -5425,7 +5425,7 @@
           ]
         },
         "value": {
-          "id": 62,
+          "id": 61,
           "kind": "<primary-expression>",
           "startPos": {
             "offset": 327,
@@ -5442,7 +5442,7 @@
           "start": 327,
           "end": 332,
           "expression": {
-            "id": 61,
+            "id": 60,
             "kind": "<literal>",
             "startPos": {
               "offset": 327,
@@ -5533,7 +5533,7 @@
       "code": 3074,
       "diagnostic": "Unknown check setting 'invalid'",
       "nodeOrToken": {
-        "id": 68,
+        "id": 67,
         "kind": "<attribute>",
         "startPos": {
           "offset": 357,
@@ -5550,7 +5550,7 @@
         "start": 357,
         "end": 364,
         "name": {
-          "id": 67,
+          "id": 66,
           "kind": "<identifer-stream>",
           "startPos": {
             "offset": 357,

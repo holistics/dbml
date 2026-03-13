@@ -1,6 +1,6 @@
 {
   "value": {
-    "id": 58,
+    "id": 56,
     "kind": "<program>",
     "startPos": {
       "offset": 0,
@@ -18,7 +18,7 @@
     "end": 203,
     "body": [
       {
-        "id": 57,
+        "id": 55,
         "kind": "<element-declaration>",
         "startPos": {
           "offset": 0,
@@ -78,7 +78,7 @@
           "end": 7
         },
         "body": {
-          "id": 56,
+          "id": 54,
           "kind": "<block-expression>",
           "startPos": {
             "offset": 8,
@@ -1877,11 +1877,11 @@
                   "end": 109
                 }
               },
-              "parent": 57,
+              "parent": 55,
               "symbol": 1
             },
             {
-              "id": 54,
+              "id": 53,
               "kind": "<element-declaration>",
               "startPos": {
                 "offset": 117,
@@ -2047,7 +2047,7 @@
                 "end": 121
               },
               "name": {
-                "id": 40,
+                "id": 39,
                 "kind": "<infix-expression>",
                 "startPos": {
                   "offset": 122,
@@ -2085,7 +2085,7 @@
                   "end": 125
                 },
                 "leftExpression": {
-                  "id": 37,
+                  "id": 36,
                   "kind": "<primary-expression>",
                   "startPos": {
                     "offset": 122,
@@ -2102,7 +2102,7 @@
                   "start": 122,
                   "end": 124,
                   "expression": {
-                    "id": 36,
+                    "id": 35,
                     "kind": "<variable>",
                     "startPos": {
                       "offset": 122,
@@ -2142,7 +2142,7 @@
                   }
                 },
                 "rightExpression": {
-                  "id": 39,
+                  "id": 38,
                   "kind": "<primary-expression>",
                   "startPos": {
                     "offset": 125,
@@ -2159,7 +2159,7 @@
                   "start": 125,
                   "end": 131,
                   "expression": {
-                    "id": 38,
+                    "id": 37,
                     "kind": "<variable>",
                     "startPos": {
                       "offset": 125,
@@ -2222,7 +2222,7 @@
                 }
               },
               "body": {
-                "id": 53,
+                "id": 52,
                 "kind": "<block-expression>",
                 "startPos": {
                   "offset": 132,
@@ -2283,7 +2283,7 @@
                 },
                 "body": [
                   {
-                    "id": 43,
+                    "id": 42,
                     "kind": "<function-application>",
                     "startPos": {
                       "offset": 143,
@@ -2300,7 +2300,7 @@
                     "start": 143,
                     "end": 146,
                     "callee": {
-                      "id": 42,
+                      "id": 41,
                       "kind": "<primary-expression>",
                       "startPos": {
                         "offset": 143,
@@ -2317,7 +2317,7 @@
                       "start": 143,
                       "end": 146,
                       "expression": {
-                        "id": 41,
+                        "id": 40,
                         "kind": "<variable>",
                         "startPos": {
                           "offset": 143,
@@ -2551,7 +2551,7 @@
                     "symbol": 7
                   },
                   {
-                    "id": 46,
+                    "id": 45,
                     "kind": "<function-application>",
                     "startPos": {
                       "offset": 156,
@@ -2568,7 +2568,7 @@
                     "start": 156,
                     "end": 161,
                     "callee": {
-                      "id": 45,
+                      "id": 44,
                       "kind": "<primary-expression>",
                       "startPos": {
                         "offset": 156,
@@ -2585,7 +2585,7 @@
                       "start": 156,
                       "end": 161,
                       "expression": {
-                        "id": 44,
+                        "id": 43,
                         "kind": "<variable>",
                         "startPos": {
                           "offset": 156,
@@ -2819,7 +2819,7 @@
                     "symbol": 8
                   },
                   {
-                    "id": 49,
+                    "id": 48,
                     "kind": "<function-application>",
                     "startPos": {
                       "offset": 171,
@@ -2836,7 +2836,7 @@
                     "start": 171,
                     "end": 177,
                     "callee": {
-                      "id": 48,
+                      "id": 47,
                       "kind": "<primary-expression>",
                       "startPos": {
                         "offset": 171,
@@ -2853,7 +2853,7 @@
                       "start": 171,
                       "end": 177,
                       "expression": {
-                        "id": 47,
+                        "id": 46,
                         "kind": "<variable>",
                         "startPos": {
                           "offset": 171,
@@ -3087,7 +3087,7 @@
                     "symbol": 9
                   },
                   {
-                    "id": 52,
+                    "id": 51,
                     "kind": "<function-application>",
                     "startPos": {
                       "offset": 187,
@@ -3104,7 +3104,7 @@
                     "start": 187,
                     "end": 193,
                     "callee": {
-                      "id": 51,
+                      "id": 50,
                       "kind": "<primary-expression>",
                       "startPos": {
                         "offset": 187,
@@ -3121,7 +3121,7 @@
                       "start": 187,
                       "end": 193,
                       "expression": {
-                        "id": 50,
+                        "id": 49,
                         "kind": "<variable>",
                         "startPos": {
                           "offset": 187,
@@ -3484,7 +3484,7 @@
                   "end": 200
                 }
               },
-              "parent": 57,
+              "parent": 55,
               "symbol": 5
             }
           ],
@@ -3510,7 +3510,7 @@
             "end": 203
           }
         },
-        "parent": 58
+        "parent": 56
       }
     ],
     "eof": {
@@ -3570,25 +3570,25 @@
                 "Enum field:new": {
                   "references": [],
                   "id": 7,
-                  "declaration": 43
+                  "declaration": 42
                 },
                 "Enum field:churn": {
                   "references": [],
                   "id": 8,
-                  "declaration": 46
+                  "declaration": 45
                 },
                 "Enum field:active": {
                   "references": [],
                   "id": 9,
-                  "declaration": 49
+                  "declaration": 48
                 },
                 "Enum field:tenant": {
                   "references": [],
                   "id": 10,
-                  "declaration": 52
+                  "declaration": 51
                 }
               },
-              "declaration": 54
+              "declaration": 53
             }
           }
         }
@@ -5340,7 +5340,7 @@
             "end": 109
           }
         },
-        "parent": 57,
+        "parent": 55,
         "symbol": 1
       },
       "start": 15,
@@ -5351,7 +5351,7 @@
       "code": 3054,
       "diagnostic": "An Enum can only appear top-level",
       "nodeOrToken": {
-        "id": 54,
+        "id": 53,
         "kind": "<element-declaration>",
         "startPos": {
           "offset": 117,
@@ -5517,7 +5517,7 @@
           "end": 121
         },
         "name": {
-          "id": 40,
+          "id": 39,
           "kind": "<infix-expression>",
           "startPos": {
             "offset": 122,
@@ -5555,7 +5555,7 @@
             "end": 125
           },
           "leftExpression": {
-            "id": 37,
+            "id": 36,
             "kind": "<primary-expression>",
             "startPos": {
               "offset": 122,
@@ -5572,7 +5572,7 @@
             "start": 122,
             "end": 124,
             "expression": {
-              "id": 36,
+              "id": 35,
               "kind": "<variable>",
               "startPos": {
                 "offset": 122,
@@ -5612,7 +5612,7 @@
             }
           },
           "rightExpression": {
-            "id": 39,
+            "id": 38,
             "kind": "<primary-expression>",
             "startPos": {
               "offset": 125,
@@ -5629,7 +5629,7 @@
             "start": 125,
             "end": 131,
             "expression": {
-              "id": 38,
+              "id": 37,
               "kind": "<variable>",
               "startPos": {
                 "offset": 125,
@@ -5692,7 +5692,7 @@
           }
         },
         "body": {
-          "id": 53,
+          "id": 52,
           "kind": "<block-expression>",
           "startPos": {
             "offset": 132,
@@ -5753,7 +5753,7 @@
           },
           "body": [
             {
-              "id": 43,
+              "id": 42,
               "kind": "<function-application>",
               "startPos": {
                 "offset": 143,
@@ -5770,7 +5770,7 @@
               "start": 143,
               "end": 146,
               "callee": {
-                "id": 42,
+                "id": 41,
                 "kind": "<primary-expression>",
                 "startPos": {
                   "offset": 143,
@@ -5787,7 +5787,7 @@
                 "start": 143,
                 "end": 146,
                 "expression": {
-                  "id": 41,
+                  "id": 40,
                   "kind": "<variable>",
                   "startPos": {
                     "offset": 143,
@@ -6021,7 +6021,7 @@
               "symbol": 7
             },
             {
-              "id": 46,
+              "id": 45,
               "kind": "<function-application>",
               "startPos": {
                 "offset": 156,
@@ -6038,7 +6038,7 @@
               "start": 156,
               "end": 161,
               "callee": {
-                "id": 45,
+                "id": 44,
                 "kind": "<primary-expression>",
                 "startPos": {
                   "offset": 156,
@@ -6055,7 +6055,7 @@
                 "start": 156,
                 "end": 161,
                 "expression": {
-                  "id": 44,
+                  "id": 43,
                   "kind": "<variable>",
                   "startPos": {
                     "offset": 156,
@@ -6289,7 +6289,7 @@
               "symbol": 8
             },
             {
-              "id": 49,
+              "id": 48,
               "kind": "<function-application>",
               "startPos": {
                 "offset": 171,
@@ -6306,7 +6306,7 @@
               "start": 171,
               "end": 177,
               "callee": {
-                "id": 48,
+                "id": 47,
                 "kind": "<primary-expression>",
                 "startPos": {
                   "offset": 171,
@@ -6323,7 +6323,7 @@
                 "start": 171,
                 "end": 177,
                 "expression": {
-                  "id": 47,
+                  "id": 46,
                   "kind": "<variable>",
                   "startPos": {
                     "offset": 171,
@@ -6557,7 +6557,7 @@
               "symbol": 9
             },
             {
-              "id": 52,
+              "id": 51,
               "kind": "<function-application>",
               "startPos": {
                 "offset": 187,
@@ -6574,7 +6574,7 @@
               "start": 187,
               "end": 193,
               "callee": {
-                "id": 51,
+                "id": 50,
                 "kind": "<primary-expression>",
                 "startPos": {
                   "offset": 187,
@@ -6591,7 +6591,7 @@
                 "start": 187,
                 "end": 193,
                 "expression": {
-                  "id": 50,
+                  "id": 49,
                   "kind": "<variable>",
                   "startPos": {
                     "offset": 187,
@@ -6954,7 +6954,7 @@
             "end": 200
           }
         },
-        "parent": 57,
+        "parent": 55,
         "symbol": 5
       },
       "start": 117,

@@ -1,6 +1,6 @@
 {
   "value": {
-    "id": 36,
+    "id": 34,
     "kind": "<program>",
     "startPos": {
       "offset": 0,
@@ -18,7 +18,7 @@
     "end": 227,
     "body": [
       {
-        "id": 35,
+        "id": 33,
         "kind": "<element-declaration>",
         "startPos": {
           "offset": 0,
@@ -157,7 +157,7 @@
           }
         },
         "body": {
-          "id": 34,
+          "id": 32,
           "kind": "<block-expression>",
           "startPos": {
             "offset": 30,
@@ -1812,7 +1812,7 @@
               }
             },
             {
-              "id": 32,
+              "id": 31,
               "kind": "<element-declaration>",
               "startPos": {
                 "offset": 157,
@@ -1978,7 +1978,7 @@
                 "end": 161
               },
               "body": {
-                "id": 31,
+                "id": 30,
                 "kind": "<block-expression>",
                 "startPos": {
                   "offset": 162,
@@ -2039,7 +2039,7 @@
                 },
                 "body": [
                   {
-                    "id": 30,
+                    "id": 29,
                     "kind": "<function-application>",
                     "startPos": {
                       "offset": 173,
@@ -2056,7 +2056,7 @@
                     "start": 173,
                     "end": 217,
                     "callee": {
-                      "id": 29,
+                      "id": 28,
                       "kind": "<primary-expression>",
                       "startPos": {
                         "offset": 173,
@@ -2073,7 +2073,7 @@
                       "start": 173,
                       "end": 217,
                       "expression": {
-                        "id": 28,
+                        "id": 27,
                         "kind": "<literal>",
                         "startPos": {
                           "offset": 173,

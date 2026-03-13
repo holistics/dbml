@@ -50,7 +50,7 @@ export default class IndexesValidator implements ElementValidator {
     );
     if (this.declarationNode.parent instanceof ProgramNode) return [invalidContextError];
 
-    const elementKind = getElementKind(this.declarationNode.parent).unwrap_or(undefined);
+    const elementKind = getElementKind(this.declarationNode.parent);
     return (elementKind && [ElementKind.Table, ElementKind.TablePartial].includes(elementKind))
       ? []
       : [invalidContextError];
@@ -109,13 +109,13 @@ export default class IndexesValidator implements ElementValidator {
         // (id, name) (age, weight)
         // which is parsed as a call expression
         while (sub instanceof CallExpressionNode) {
-          if (sub.argumentList && !destructureIndexNode(sub.argumentList).isOk()) {
+          if (sub.argumentList && destructureIndexNode(sub.argumentList) == null) {
             errors.push(new CompileError(CompileErrorCode.INVALID_INDEXES_FIELD, 'An index field must be an identifier, a quoted identifier, a functional expression or a tuple of such', sub.argumentList));
           }
           sub = sub.callee!;
         }
 
-        if (!destructureIndexNode(sub).isOk()) {
+        if (destructureIndexNode(sub) == null) {
           errors.push(new CompileError(CompileErrorCode.INVALID_INDEXES_FIELD, 'An index field must be an identifier, a quoted identifier, a functional expression or a tuple of such', sub));
         }
       });

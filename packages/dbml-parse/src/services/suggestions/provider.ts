@@ -265,7 +265,7 @@ function suggestInTuple (compiler: Compiler, offset: number, tupleContainer: Tup
   // Check if we're in a Records element header
   if (
     element instanceof ElementDeclarationNode
-    && getElementKind(element).unwrap_or(undefined) === ElementKind.Records
+    && getElementKind(element) === ElementKind.Records
     && !(element.name instanceof CallExpressionNode)
     && isOffsetWithinElementHeader(offset, element)
   ) {
@@ -341,7 +341,7 @@ function suggestInAttribute (
     const res = suggestAttributeValue(
       compiler,
       offset,
-      extractStringFromIdentifierStream(container.name).unwrap_or(''),
+      extractStringFromIdentifierStream(container.name) ?? '',
     );
 
     return (token?.kind === SyntaxTokenKind.COLON && shouldPrependSpace(token, offset)) ? prependSpace(res) : res;
@@ -521,13 +521,13 @@ function suggestMembers (
   offset: number,
   container: InfixExpressionNode & { op: SyntaxToken },
 ): CompletionList {
-  const fragments = destructureMemberAccessExpression(container).unwrap_or([]);
+  const fragments = destructureMemberAccessExpression(container) ?? [];
   fragments.pop(); // The last fragment is not used in suggestions: v1.table.a<>
   if (fragments.some((f) => !isVariableExpression(f))) {
     return noSuggestions();
   }
 
-  const nameStack = fragments.map((f) => extractVariableFromExpression(f).unwrap());
+  const nameStack = fragments.map((f) => extractVariableFromExpression(f)!);
 
   return addQuoteToSuggestionIfNeeded({
     suggestions: compiler.symbol
@@ -696,7 +696,7 @@ function suggestInElementHeader (
   offset: number,
   container: ElementDeclarationNode,
 ): CompletionList {
-  const elementKind = getElementKind(container).unwrap_or(undefined);
+  const elementKind = getElementKind(container);
   if (elementKind === ElementKind.Records) {
     return suggestNamesInScope(compiler, offset, container.parent, [
       SymbolKind.Schema,
@@ -720,7 +720,7 @@ function suggestInCallExpression (
   // Check if we're in a Records element header (top-level Records)
   if (
     element instanceof ElementDeclarationNode
-    && getElementKind(element).unwrap_or(undefined) === ElementKind.Records
+    && getElementKind(element) === ElementKind.Records
     && isOffsetWithinElementHeader(offset, element)
   ) {
     if (inCallee) return suggestNamesInScope(compiler, offset, element.parent, [
@@ -732,7 +732,7 @@ function suggestInCallExpression (
     const callee = container.callee;
     if (!callee) return noSuggestions();
 
-    const fragments = destructureMemberAccessExpression(callee).unwrap_or([callee]);
+    const fragments = destructureMemberAccessExpression(callee) ?? [callee];
     const rightmostExpr = fragments[fragments.length - 1];
     const tableSymbol = rightmostExpr?.referee;
 
@@ -754,7 +754,7 @@ function suggestInCallExpression (
     if (!inArgs) continue;
     if (!(c instanceof FunctionApplicationNode)) continue;
     if (c.callee !== container) continue;
-    if (extractVariableFromExpression(container.callee).unwrap_or('').toLowerCase() !== ElementKind.Records) continue;
+    if ((extractVariableFromExpression(container.callee) ?? '').toLowerCase() !== ElementKind.Records) continue;
     const tableSymbol = compiler.container.element(offset).symbol;
     if (!tableSymbol) return noSuggestions();
     const suggestions = suggestMembersOfSymbol(compiler, tableSymbol, [SymbolKind.Column]);
@@ -772,7 +772,7 @@ function suggestInTableGroupField (compiler: Compiler): CompletionList {
     suggestions: [
       ...addQuoteToSuggestionIfNeeded({
         suggestions: [...compiler.parse.publicSymbolTable().entries()].flatMap(([index]) => {
-          const res = destructureIndex(index).unwrap_or(undefined);
+          const res = destructureIndex(index);
           if (res === undefined) return [];
           const { kind, name } = res;
           if (kind !== SymbolKind.Table && kind !== SymbolKind.Schema) return [];
@@ -888,7 +888,7 @@ function suggestColumnNameInIndexes (compiler: Compiler, offset: number): Comple
 
   return addQuoteToSuggestionIfNeeded({
     suggestions: [...symbolTable.entries()].flatMap(([index]) => {
-      const res = destructureIndex(index).unwrap_or(undefined);
+      const res = destructureIndex(index);
       if (res === undefined) {
         return [];
       }

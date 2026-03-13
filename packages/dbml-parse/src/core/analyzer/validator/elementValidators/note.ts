@@ -45,7 +45,7 @@ export default class NoteValidator implements ElementValidator {
           ElementKind.Project,
         ] as (ElementKind | undefined)[]
       )
-        .includes(getElementKind(this.declarationNode.parent).unwrap_or(undefined))
+        .includes(getElementKind(this.declarationNode.parent))
     ) {
       return [new CompileError(
         CompileErrorCode.INVALID_NOTE_CONTEXT,
@@ -70,9 +70,9 @@ export default class NoteValidator implements ElementValidator {
     }
 
     const nameFragments = destructureComplexVariable(nameNode);
-    if (!nameFragments.isOk()) return [new CompileError(CompileErrorCode.INVALID_NAME, 'Invalid name for sticky note ', this.declarationNode)];
+    if (nameFragments == null) return [new CompileError(CompileErrorCode.INVALID_NAME, 'Invalid name for sticky note ', this.declarationNode)];
 
-    const names = nameFragments.unwrap();
+    const names = nameFragments;
 
     const trueName = names.join('.');
 

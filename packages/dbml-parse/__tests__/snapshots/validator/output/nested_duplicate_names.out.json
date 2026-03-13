@@ -1,6 +1,6 @@
 {
   "value": {
-    "id": 25,
+    "id": 22,
     "kind": "<program>",
     "startPos": {
       "offset": 0,
@@ -18,7 +18,7 @@
     "end": 98,
     "body": [
       {
-        "id": 24,
+        "id": 21,
         "kind": "<element-declaration>",
         "startPos": {
           "offset": 0,
@@ -157,7 +157,7 @@
           }
         },
         "body": {
-          "id": 23,
+          "id": 20,
           "kind": "<block-expression>",
           "startPos": {
             "offset": 10,
@@ -652,11 +652,11 @@
                   "end": 35
                 }
               },
-              "parent": 24,
+              "parent": 21,
               "symbol": 1
             },
             {
-              "id": 14,
+              "id": 13,
               "kind": "<element-declaration>",
               "startPos": {
                 "offset": 43,
@@ -822,7 +822,7 @@
                 "end": 48
               },
               "name": {
-                "id": 12,
+                "id": 11,
                 "kind": "<primary-expression>",
                 "startPos": {
                   "offset": 49,
@@ -839,7 +839,7 @@
                 "start": 49,
                 "end": 50,
                 "expression": {
-                  "id": 11,
+                  "id": 10,
                   "kind": "<variable>",
                   "startPos": {
                     "offset": 49,
@@ -901,7 +901,7 @@
                 }
               },
               "body": {
-                "id": 13,
+                "id": 12,
                 "kind": "<block-expression>",
                 "startPos": {
                   "offset": 51,
@@ -1111,11 +1111,11 @@
                   "end": 61
                 }
               },
-              "parent": 24,
+              "parent": 21,
               "symbol": 2
             },
             {
-              "id": 21,
+              "id": 19,
               "kind": "<element-declaration>",
               "startPos": {
                 "offset": 69,
@@ -1281,7 +1281,7 @@
                 "end": 74
               },
               "name": {
-                "id": 19,
+                "id": 17,
                 "kind": "<primary-expression>",
                 "startPos": {
                   "offset": 75,
@@ -1298,7 +1298,7 @@
                 "start": 75,
                 "end": 76,
                 "expression": {
-                  "id": 18,
+                  "id": 16,
                   "kind": "<variable>",
                   "startPos": {
                     "offset": 75,
@@ -1360,7 +1360,7 @@
                 }
               },
               "body": {
-                "id": 20,
+                "id": 18,
                 "kind": "<block-expression>",
                 "startPos": {
                   "offset": 77,
@@ -1738,7 +1738,7 @@
                   "end": 95
                 }
               },
-              "parent": 24,
+              "parent": 21,
               "symbol": 3
             }
           ],
@@ -1764,7 +1764,7 @@
             "end": 98
           }
         },
-        "parent": 25
+        "parent": 22
       }
     ],
     "eof": {
@@ -1794,13 +1794,13 @@
           "references": [],
           "id": 2,
           "symbolTable": {},
-          "declaration": 14
+          "declaration": 13
         },
         "Table:B": {
           "references": [],
           "id": 3,
           "symbolTable": {},
-          "declaration": 21
+          "declaration": 19
         }
       },
       "id": 0,
@@ -2246,7 +2246,7 @@
             "end": 35
           }
         },
-        "parent": 24,
+        "parent": 21,
         "symbol": 1
       },
       "start": 17,
@@ -2257,7 +2257,7 @@
       "code": 3010,
       "diagnostic": "Table must appear top-level",
       "nodeOrToken": {
-        "id": 14,
+        "id": 13,
         "kind": "<element-declaration>",
         "startPos": {
           "offset": 43,
@@ -2423,7 +2423,7 @@
           "end": 48
         },
         "name": {
-          "id": 12,
+          "id": 11,
           "kind": "<primary-expression>",
           "startPos": {
             "offset": 49,
@@ -2440,7 +2440,7 @@
           "start": 49,
           "end": 50,
           "expression": {
-            "id": 11,
+            "id": 10,
             "kind": "<variable>",
             "startPos": {
               "offset": 49,
@@ -2502,7 +2502,7 @@
           }
         },
         "body": {
-          "id": 13,
+          "id": 12,
           "kind": "<block-expression>",
           "startPos": {
             "offset": 51,
@@ -2712,7 +2712,7 @@
             "end": 61
           }
         },
-        "parent": 24,
+        "parent": 21,
         "symbol": 2
       },
       "start": 43,
@@ -2723,7 +2723,7 @@
       "code": 3003,
       "diagnostic": "Table name 'A' already exists in schema 'public'",
       "nodeOrToken": {
-        "id": 12,
+        "id": 11,
         "kind": "<primary-expression>",
         "startPos": {
           "offset": 49,
@@ -2740,7 +2740,7 @@
         "start": 49,
         "end": 50,
         "expression": {
-          "id": 11,
+          "id": 10,
           "kind": "<variable>",
           "startPos": {
             "offset": 49,
@@ -2809,7 +2809,7 @@
       "code": 3010,
       "diagnostic": "Table must appear top-level",
       "nodeOrToken": {
-        "id": 21,
+        "id": 19,
         "kind": "<element-declaration>",
         "startPos": {
           "offset": 69,
@@ -2975,7 +2975,7 @@
           "end": 74
         },
         "name": {
-          "id": 19,
+          "id": 17,
           "kind": "<primary-expression>",
           "startPos": {
             "offset": 75,
@@ -2992,7 +2992,7 @@
           "start": 75,
           "end": 76,
           "expression": {
-            "id": 18,
+            "id": 16,
             "kind": "<variable>",
             "startPos": {
               "offset": 75,
@@ -3054,7 +3054,7 @@
           }
         },
         "body": {
-          "id": 20,
+          "id": 18,
           "kind": "<block-expression>",
           "startPos": {
             "offset": 77,
@@ -3432,7 +3432,7 @@
             "end": 95
           }
         },
-        "parent": 24,
+        "parent": 21,
         "symbol": 3
       },
       "start": 69,

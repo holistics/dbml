@@ -38,7 +38,7 @@ export function suggestRecordRowSnippet (
   // If not in an ElementDeclarationNode, fallthrough
   if (!(element instanceof ElementDeclarationNode)) return null;
 
-  const elementKind = getElementKind(element).unwrap_or(undefined);
+  const elementKind = getElementKind(element);
   // If not in a Records element, fallthrough
   if (elementKind !== ElementKind.Records || !(element.body instanceof BlockExpressionNode)) return null;
 
@@ -74,7 +74,7 @@ function suggestRecordRowInTopLevelRecords (
       if (!symbol || !(symbol instanceof ColumnSymbol || symbol instanceof TablePartialInjectedColumnSymbol)) {
         return null;
       }
-      const columnName = extractVariableFromExpression(element).unwrap_or(undefined);
+      const columnName = extractVariableFromExpression(element);
       if (!columnName) return null;
       const result = extractNameAndTypeOfColumnSymbol(symbol, columnName);
       return result;
@@ -129,7 +129,7 @@ function suggestRecordRowInNestedRecords (
         if (!symbol || !(symbol instanceof ColumnSymbol || symbol instanceof TablePartialInjectedColumnSymbol)) {
           return null;
         }
-        const columnName = extractVariableFromExpression(element).unwrap_or(undefined);
+        const columnName = extractVariableFromExpression(element);
         if (columnName === undefined) return null;
         return extractNameAndTypeOfColumnSymbol(symbol, columnName);
       })

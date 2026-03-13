@@ -51,12 +51,12 @@ export class EnumInterpreter implements ElementInterpreter {
       const enumField: Partial<EnumField> = { };
 
       enumField.token = getTokenPosition(field);
-      enumField.name = extractVariableFromExpression(field.callee).unwrap();
+      enumField.name = extractVariableFromExpression(field.callee)!;
 
       const settingMap = aggregateSettingList(field.args[0] as ListExpressionNode).getValue();
       const noteNode = settingMap.note?.at(0);
       enumField.note = noteNode && {
-        value: extractQuotedStringToken(noteNode.value).map(normalizeNoteContent).unwrap(),
+        value: normalizeNoteContent(extractQuotedStringToken(noteNode.value)!),
         token: getTokenPosition(noteNode),
       };
 

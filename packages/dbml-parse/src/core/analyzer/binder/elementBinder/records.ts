@@ -59,7 +59,7 @@ export default class RecordsBinder implements ElementBinder {
   //   records users(id, name) { }           // binds: Table[users], Column[id], Column[name]
   //   records myschema.users(id, name) { }  // binds: Schema[myschema], Table[users], Column[id], Column[name]
   private bindTopLevelName (nameNode: SyntaxNode): CompileError[] {
-    const fragments = destructureCallExpression(nameNode).unwrap_or(undefined);
+    const fragments = destructureCallExpression(nameNode);
     if (!fragments) {
       return [];
     }
@@ -85,11 +85,11 @@ export default class RecordsBinder implements ElementBinder {
       return [];
     }
 
-    const tableName = getElementNameString(tableBindee.referee?.declaration).unwrap_or('<invalid name>');
+    const tableName = getElementNameString(tableBindee.referee?.declaration) ?? '<invalid name>';
 
     const errors: CompileError[] = [];
     for (const columnBindee of fragments.args) {
-      const columnName = extractVariableName(columnBindee).unwrap_or('<unnamed>');
+      const columnName = extractVariableName(columnBindee) ?? '<unnamed>';
       const columnIndex = createColumnSymbolIndex(columnName);
       const columnSymbol = tableSymbol.symbolTable.get(columnIndex);
 
@@ -132,7 +132,7 @@ export default class RecordsBinder implements ElementBinder {
       return [];
     }
 
-    const elementKind = getElementKind(parent).unwrap_or(undefined);
+    const elementKind = getElementKind(parent);
     if (elementKind !== ElementKind.Table) {
       return [];
     }
@@ -146,11 +146,11 @@ export default class RecordsBinder implements ElementBinder {
       return [];
     }
 
-    const tableName = getElementNameString(parent).unwrap_or('<invalid name>');
+    const tableName = getElementNameString(parent) ?? '<invalid name>';
 
     const errors: CompileError[] = [];
     for (const columnBindee of nameNode.elementList) {
-      const columnName = extractVariableName(columnBindee).unwrap_or('<unnamed>');
+      const columnName = extractVariableName(columnBindee) ?? '<unnamed>';
       const columnIndex = createColumnSymbolIndex(columnName);
       const columnSymbol = tableSymbolTable.get(columnIndex);
 

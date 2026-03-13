@@ -1,6 +1,6 @@
 {
   "value": {
-    "id": 174,
+    "id": 173,
     "kind": "<program>",
     "startPos": {
       "offset": 0,
@@ -5064,7 +5064,7 @@
             "end": 405
           }
         },
-        "parent": 174,
+        "parent": 173,
         "symbol": 1
       },
       {
@@ -6655,7 +6655,7 @@
             "end": 516
           }
         },
-        "parent": 174,
+        "parent": 173,
         "symbol": 11
       },
       {
@@ -7407,11 +7407,11 @@
             "end": 564
           }
         },
-        "parent": 174,
+        "parent": 173,
         "symbol": 15
       },
       {
-        "id": 173,
+        "id": 172,
         "kind": "<element-declaration>",
         "startPos": {
           "offset": 566,
@@ -7572,7 +7572,7 @@
           }
         },
         "body": {
-          "id": 172,
+          "id": 171,
           "kind": "<block-expression>",
           "startPos": {
             "offset": 580,
@@ -8465,7 +8465,7 @@
                   "end": 630
                 }
               },
-              "parent": 173
+              "parent": 172
             }
           ],
           "blockCloseBrace": {
@@ -8490,7 +8490,7 @@
             "end": 632
           }
         },
-        "parent": 174,
+        "parent": 173,
         "symbol": 18
       }
     ],
@@ -8623,7 +8623,7 @@
               "declaration": 161
             }
           },
-          "declaration": 173
+          "declaration": 172
         }
       },
       "id": 0,

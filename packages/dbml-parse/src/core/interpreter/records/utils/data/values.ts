@@ -22,7 +22,7 @@ export function isNullish (value: SyntaxNode): boolean {
 }
 
 export function isEmptyStringLiteral (value: SyntaxNode): boolean {
-  return extractQuotedStringToken(value).unwrap_or(undefined) === '';
+  return extractQuotedStringToken(value) === '';
 }
 
 export function isFunctionExpression (value: SyntaxNode): value is FunctionExpressionNode {
@@ -34,14 +34,14 @@ export function isFunctionExpression (value: SyntaxNode): value is FunctionExpre
 export function extractSignedNumber (node: SyntaxNode): number | null {
   // Try plain numeric literal first
   const literal = extractNumericLiteral(node);
-  if (literal !== null) return literal;
+  if (literal !== undefined) return literal;
 
   // Try signed number: -42, +3.14
   if (isSignedNumberExpression(node)) {
     if (node instanceof PrefixExpressionNode && node.expression) {
       const op = node.op?.value;
       const inner = extractNumericLiteral(node.expression);
-      if (inner !== null) {
+      if (inner !== undefined) {
         return op === '-' ? -inner : inner;
       }
     }
@@ -69,7 +69,7 @@ export function tryExtractNumeric (value: SyntaxNode | number | string | boolean
   if (num !== null) return num;
 
   // Quoted string containing number: "42", '3.14'
-  const strValue = extractQuotedStringToken(value).unwrap_or(undefined);
+  const strValue = extractQuotedStringToken(value);
   if (strValue !== undefined) {
     const parsed = Number(strValue);
     if (!isNaN(parsed)) {
@@ -111,7 +111,7 @@ export function tryExtractInteger (value: SyntaxNode | number | string | boolean
   }
 
   // Quoted string containing number: "42", '3.14'
-  const strValue = extractQuotedStringToken(value).unwrap_or(undefined);
+  const strValue = extractQuotedStringToken(value);
   if (strValue !== undefined) {
     const parsed = Number(strValue);
     if (!isNaN(parsed) && Number.isInteger(parsed)) {
@@ -158,7 +158,7 @@ export function tryExtractBoolean (value: SyntaxNode | number | string | boolean
   if (numVal === 1) return true;
 
   // Quoted string: 'true', 'false', 'yes', 'no', 'y', 'n', 't', 'f', '0', '1'
-  const strValue = extractQuotedStringToken(value)?.unwrap_or('').toLowerCase();
+  const strValue = (extractQuotedStringToken(value) ?? '').toLowerCase();
   if (strValue) {
     if (TRUTHY_VALUES.includes(strValue)) return true;
     if (FALSY_VALUES.includes(strValue)) return false;
@@ -177,13 +177,13 @@ export function tryExtractEnum (value: SyntaxNode | string | undefined | null): 
   if (typeof value === 'string') return value;
 
   // Enum field reference: gender.male
-  const fragments = destructureComplexVariable(value).unwrap_or(undefined);
+  const fragments = destructureComplexVariable(value);
   if (fragments) {
     return last(fragments)!;
   }
 
   // Quoted string: 'male'
-  return extractQuotedStringToken(value).unwrap_or(null);
+  return extractQuotedStringToken(value) ?? null;
 }
 
 // Try to extract a string value from a syntax node or primitive
@@ -198,7 +198,7 @@ export function tryExtractString (value: SyntaxNode | string | boolean | number 
   if (typeof value === 'boolean') return value.toString();
 
   // Quoted string: 'hello', "world"
-  const res = extractQuotedStringToken(value).unwrap_or(null) ?? tryExtractNumeric(value) ?? tryExtractBoolean(value); // Important: DO NOT move extractNumeric to after extractBoolean, as `1` is extracted as `true`
+  const res = (extractQuotedStringToken(value) ?? null) ?? tryExtractNumeric(value) ?? tryExtractBoolean(value); // Important: DO NOT move extractNumeric to after extractBoolean, as `1` is extracted as `true`
   return res === null ? null : res.toString();
 }
 
@@ -236,7 +236,7 @@ export function tryExtractDateTime (value: SyntaxNode | string | undefined | nul
   // Handle null/undefined
   if (value === null || value === undefined) return null;
 
-  const extractedValue = typeof value === 'string' ? value : extractQuotedStringToken(value).unwrap_or(null);
+  const extractedValue = typeof value === 'string' ? value : extractQuotedStringToken(value) ?? null;
 
   if (extractedValue === null) return null;
 

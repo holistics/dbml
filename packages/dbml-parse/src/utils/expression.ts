@@ -1,5 +1,4 @@
 import { last } from 'lodash-es';
-import { None, Option, Some } from '@/core/option';
 import {
   ArrayNode,
   CallExpressionNode,
@@ -33,7 +32,7 @@ import {
 } from '@/utils/element';
 
 // Returns the ElementKind for a declaration node, if recognized
-export function getElementKind (node?: ElementDeclarationNode): Option<ElementKind> {
+export function getElementKind (node?: ElementDeclarationNode): ElementKind | undefined {
   const kind = node?.type?.value.toLowerCase();
   switch (kind as ElementKind | undefined) {
     case ElementKind.Enum:
@@ -46,69 +45,69 @@ export function getElementKind (node?: ElementDeclarationNode): Option<ElementKi
     case ElementKind.TablePartial:
     case ElementKind.Check:
     case ElementKind.Records:
-      return new Some(kind as ElementKind);
+      return kind as ElementKind;
     default:
-      return new None();
+      return undefined;
   }
 }
 
 // Splits a member-access chain (a.b.c) into an array of sub-expressions
-export function destructureMemberAccessExpression (node?: SyntaxNode): Option<SyntaxNode[]> {
-  if (!node) return new None();
+export function destructureMemberAccessExpression (node?: SyntaxNode): SyntaxNode[] | undefined {
+  if (!node) return undefined;
 
   if (!isAccessExpression(node)) {
-    return new Some([node]);
+    return [node];
   }
 
-  const fragments = destructureMemberAccessExpression(node.leftExpression).unwrap_or(undefined);
+  const fragments = destructureMemberAccessExpression(node.leftExpression);
 
   if (!fragments) {
-    return new None();
+    return undefined;
   }
 
   fragments.push(node.rightExpression);
 
-  return new Some(fragments);
+  return fragments;
 }
 
 // Extracts dot-path component strings from a member-access expression
-export function destructureComplexVariable (node?: SyntaxNode): Option<string[]> {
+export function destructureComplexVariable (node?: SyntaxNode): string[] | undefined {
   if (node === undefined) {
-    return new None();
+    return undefined;
   }
 
-  const fragments = destructureMemberAccessExpression(node).unwrap_or(undefined);
+  const fragments = destructureMemberAccessExpression(node);
 
   if (!fragments) {
-    return new None();
+    return undefined;
   }
 
   const variables: string[] = [];
 
   for (const fragment of fragments) {
-    const variable = extractVariableFromExpression(fragment).unwrap_or(undefined);
+    const variable = extractVariableFromExpression(fragment);
     if (typeof variable !== 'string') {
-      return new None();
+      return undefined;
     }
 
     variables.push(variable);
   }
 
-  return new Some(variables);
+  return variables;
 }
 
 // Splits a complex variable expression into path variables and optional tuple elements
 export function destructureComplexVariableTuple (
   node?: SyntaxNode,
-): Option<{ variables: (PrimaryExpressionNode & { expression: VariableNode })[]; tupleElements: (PrimaryExpressionNode & { expression: VariableNode })[] }> {
+): { variables: (PrimaryExpressionNode & { expression: VariableNode })[]; tupleElements: (PrimaryExpressionNode & { expression: VariableNode })[] } | undefined {
   if (node === undefined) {
-    return new None();
+    return undefined;
   }
 
-  const fragments = destructureMemberAccessExpression(node).unwrap_or(undefined);
+  const fragments = destructureMemberAccessExpression(node);
 
   if (!fragments || fragments.length === 0) {
-    return new None();
+    return undefined;
   }
 
   let tupleElements: (PrimaryExpressionNode & { expression: VariableNode })[] = [];
@@ -118,39 +117,39 @@ export function destructureComplexVariableTuple (
     if (isTupleOfVariables(topFragment)) {
       tupleElements = topFragment.elementList;
     } else {
-      return new None();
+      return undefined;
     }
   }
 
   const variables = fragments;
   if (!variables.every(isVariableExpression)) {
-    return new None();
+    return undefined;
   }
 
-  return new Some({
+  return {
     variables,
     tupleElements,
-  });
+  };
 }
 
 // Extracts the identifier string from a simple variable expression
-export function extractVariableFromExpression (node?: SyntaxNode): Option<string> {
+export function extractVariableFromExpression (node?: SyntaxNode): string | undefined {
   if (!isVariableExpression(node)) {
-    return new None();
+    return undefined;
   }
 
-  return new Some(node.expression.variable.value);
+  return node.expression.variable.value;
 }
 
 // Splits an index node into functional and non-functional parts
-export function destructureIndexNode (node?: SyntaxNode): Option<{
+export function destructureIndexNode (node?: SyntaxNode): {
   functional: FunctionExpressionNode[];
   nonFunctional: (PrimaryExpressionNode & { expression: VariableNode })[];
-}> {
+} | undefined {
   if (isValidIndexName(node)) {
     return node instanceof FunctionExpressionNode
-      ? new Some({ functional: [node], nonFunctional: [] })
-      : new Some({ functional: [], nonFunctional: [node] });
+      ? { functional: [node], nonFunctional: [] }
+      : { functional: [], nonFunctional: [node] };
   }
 
   if (node instanceof TupleExpressionNode && node.elementList.every(isValidIndexName)) {
@@ -159,42 +158,42 @@ export function destructureIndexNode (node?: SyntaxNode): Option<{
     ) as FunctionExpressionNode[];
     const nonfunctionalIndexName = node.elementList.filter(isVariableExpression);
 
-    return new Some({ functional: functionalIndexName, nonFunctional: nonfunctionalIndexName });
+    return { functional: functionalIndexName, nonFunctional: nonfunctionalIndexName };
   }
 
-  return new None();
+  return undefined;
 }
 
 // Extracts the token value string from a primary variable node
 export function extractVariableName (
   node?: PrimaryExpressionNode & { expression: VariableNode },
-): Option<string> {
+): string | undefined {
   const value = node?.expression.variable?.value;
 
-  return value === undefined ? new None() : new Some(value);
+  return value === undefined ? undefined : value;
 }
 
 // Extracts the raw value string from a quoted-string expression
-export function extractQuotedStringToken (value?: SyntaxNode): Option<string> {
+export function extractQuotedStringToken (value?: SyntaxNode): string | undefined {
   if (!isQuotedStringExpression(value)) {
-    return new None();
+    return undefined;
   }
 
   if (value.expression instanceof VariableNode) {
-    return new Some(value.expression.variable!.value);
+    return value.expression.variable!.value;
   }
 
-  return new Some(value.expression.literal.value);
+  return value.expression.literal.value;
 }
 
 // Extracts the numeric value from a numeric literal expression
-export function extractNumericLiteral (node?: SyntaxNode): number | null {
+export function extractNumericLiteral (node?: SyntaxNode): number | undefined {
   if (node instanceof PrimaryExpressionNode && node.expression instanceof LiteralNode) {
     if (node.expression.literal?.kind === SyntaxTokenKind.NUMERIC_LITERAL) {
       return Number(node.expression.literal.value);
     }
   }
-  return null;
+  return undefined;
 }
 
 // Returns the bound symbol for a variable or the rightmost member in an access expression
@@ -225,9 +224,8 @@ export function isBinaryRelationship (value?: SyntaxNode): value is InfixExpress
   }
 
   return (
-    destructureComplexVariableTuple(value.leftExpression)
-      .and_then(() => destructureComplexVariableTuple(value.rightExpression))
-      .unwrap_or(undefined) !== undefined
+    destructureComplexVariableTuple(value.leftExpression) !== undefined
+    && destructureComplexVariableTuple(value.rightExpression) !== undefined
   );
 }
 
@@ -236,12 +234,12 @@ export function isEqualTupleOperands (value: InfixExpressionNode): value is Infi
   const leftRes = destructureComplexVariableTuple(value.leftExpression);
   const rightRes = destructureComplexVariableTuple(value.rightExpression);
 
-  if (!leftRes.isOk() || !rightRes.isOk()) {
+  if (leftRes === undefined || rightRes === undefined) {
     return false;
   }
 
-  const { tupleElements: leftTuple } = leftRes.unwrap();
-  const { tupleElements: rightTuple } = rightRes.unwrap();
+  const { tupleElements: leftTuple } = leftRes;
+  const { tupleElements: rightTuple } = rightRes;
 
   if (leftTuple?.length !== rightTuple?.length) {
     return false;
@@ -276,20 +274,20 @@ export function extractIndexName (
 // Destructures a call expression into callee variables and argument variables
 export function destructureCallExpression (
   node?: SyntaxNode,
-): Option<{ variables: (PrimaryExpressionNode & { expression: VariableNode })[]; args: (PrimaryExpressionNode & { expression: VariableNode })[] }> {
+): { variables: (PrimaryExpressionNode & { expression: VariableNode })[]; args: (PrimaryExpressionNode & { expression: VariableNode })[] } | undefined {
   if (!(node instanceof CallExpressionNode) || !node.callee) {
-    return new None();
+    return undefined;
   }
 
   // Destructure the callee (e.g., schema.table or just table)
-  const fragments = destructureMemberAccessExpression(node.callee).unwrap_or(undefined);
+  const fragments = destructureMemberAccessExpression(node.callee);
   if (!fragments || fragments.length === 0) {
-    return new None();
+    return undefined;
   }
 
   // All callee fragments must be simple variables
   if (!fragments.every(isVariableExpression)) {
-    return new None();
+    return undefined;
   }
 
   // Get args from argument list
@@ -298,10 +296,10 @@ export function destructureCallExpression (
     args = [...node.argumentList.elementList];
   }
 
-  return new Some({
+  return {
     variables: fragments as (PrimaryExpressionNode & { expression: VariableNode })[],
     args,
-  });
+  };
 }
 
 // Walks up the element scope chain to find a symbol by index
@@ -333,7 +331,7 @@ export function findSymbol (
 
 // True if node is a valid simple or complex variable name
 export function isValidName (nameNode: SyntaxNode): boolean {
-  return !!destructureComplexVariable(nameNode).unwrap_or(false);
+  return !!(destructureComplexVariable(nameNode) ?? false);
 }
 
 // True if node is a unary relationship expression (op variable)
@@ -346,7 +344,7 @@ export function isUnaryRelationship (value?: SyntaxNode): value is PrefixExpress
     return false;
   }
 
-  const variables = destructureComplexVariable(value.expression).unwrap_or(undefined);
+  const variables = destructureComplexVariable(value.expression);
 
   return variables !== undefined && variables.length > 0;
 }
@@ -388,7 +386,7 @@ export function isValidColumnType (type: SyntaxNode): boolean {
     }
   }
 
-  const variables = destructureComplexVariable(type).unwrap_or(undefined);
+  const variables = destructureComplexVariable(type);
 
   return variables !== undefined && variables.length > 0;
 }
@@ -421,11 +419,12 @@ export function isValidDefaultValue (value?: SyntaxNode): boolean {
 
   if (!value) return false;
   if (!isDotDelimitedIdentifier(value)) return false;
-  const fragments = destructureMemberAccessExpression(value).unwrap();
+  const fragments = destructureMemberAccessExpression(value)!;
   return fragments.length === 2 || fragments.length === 3;
 }
 
 // Returns the dot-joined name string for an element declaration
-export function getElementNameString (element?: ElementDeclarationNode): Option<string> {
-  return destructureComplexVariable(element?.name).map((ss) => ss.join('.'));
+export function getElementNameString (element?: ElementDeclarationNode): string | undefined {
+  const vars = destructureComplexVariable(element?.name);
+  return vars !== undefined ? vars.join('.') : undefined;
 }
