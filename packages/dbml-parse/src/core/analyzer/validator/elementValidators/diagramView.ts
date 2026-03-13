@@ -144,6 +144,10 @@ export default class DiagramViewValidator implements ElementValidator {
 
   validateFields (fields: FunctionApplicationNode[]): (CompileError | CompileWarning)[] {
     return fields.flatMap((field) => {
+      // Body-level {*} is valid shorthand for "show all entities"
+      if (field instanceof FunctionApplicationNode && isWildcardExpression(field.callee)) {
+        return [];
+      }
       const errors: (CompileError | CompileWarning)[] = [];
       // Fields at the top level of DiagramView are not allowed
       errors.push(new CompileError(
