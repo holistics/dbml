@@ -1,28 +1,38 @@
 import { last } from 'lodash-es';
 import { None, Option, Some } from '@/core/option';
 import {
+  ArrayNode,
+  CallExpressionNode,
   ElementDeclarationNode,
   FunctionExpressionNode,
   InfixExpressionNode,
   LiteralNode,
+  PrefixExpressionNode,
   PrimaryExpressionNode,
   ProgramNode,
   SyntaxNode,
   TupleExpressionNode,
   VariableNode,
-  CallExpressionNode,
 } from '@/core/parser/nodes';
 import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
-import { isRelationshipOp, isTupleOfVariables } from '@/core/analyzer/validator/utils';
 import { NodeSymbolIndex, isPublicSchemaIndex } from '@/core/analyzer/symbol/symbolIndex';
 import { NodeSymbol } from '@/core/analyzer/symbol/symbols';
+import { ElementKind } from '@/core/analyzer/types';
+import { NUMERIC_LITERAL_PREFIX } from '@/constants';
 import {
   isAccessExpression,
-  isExpressionAQuotedString,
-  isExpressionAVariableNode,
-} from '@/core/parser/utils';
-import { ElementKind } from '@/core/analyzer/types';
+  isQuotedStringExpression,
+  isVariableExpression,
+  isIdentifierExpression,
+  isDotDelimitedIdentifier,
+  isTupleOfVariables,
+  isRelationshipOp,
+} from '@/utils/node';
+import {
+  isSignedNumberExpression,
+} from '@/utils/element';
 
+// Returns the ElementKind for a declaration node, if recognized
 export function getElementKind (node?: ElementDeclarationNode): Option<ElementKind> {
   const kind = node?.type?.value.toLowerCase();
   switch (kind as ElementKind | undefined) {
@@ -42,6 +52,7 @@ export function getElementKind (node?: ElementDeclarationNode): Option<ElementKi
   }
 }
 
+// Splits a member-access chain (a.b.c) into an array of sub-expressions
 export function destructureMemberAccessExpression (node?: SyntaxNode): Option<SyntaxNode[]> {
   if (!node) return new None();
 
@@ -60,6 +71,7 @@ export function destructureMemberAccessExpression (node?: SyntaxNode): Option<Sy
   return new Some(fragments);
 }
 
+// Extracts dot-path component strings from a member-access expression
 export function destructureComplexVariable (node?: SyntaxNode): Option<string[]> {
   if (node === undefined) {
     return new None();
@@ -85,6 +97,7 @@ export function destructureComplexVariable (node?: SyntaxNode): Option<string[]>
   return new Some(variables);
 }
 
+// Splits a complex variable expression into path variables and optional tuple elements
 export function destructureComplexVariableTuple (
   node?: SyntaxNode,
 ): Option<{ variables: (PrimaryExpressionNode & { expression: VariableNode })[]; tupleElements: (PrimaryExpressionNode & { expression: VariableNode })[] }> {
@@ -100,7 +113,7 @@ export function destructureComplexVariableTuple (
 
   let tupleElements: (PrimaryExpressionNode & { expression: VariableNode })[] = [];
 
-  if (!isExpressionAVariableNode(last(fragments))) {
+  if (!isVariableExpression(last(fragments))) {
     const topFragment = fragments.pop()!;
     if (isTupleOfVariables(topFragment)) {
       tupleElements = topFragment.elementList;
@@ -110,7 +123,7 @@ export function destructureComplexVariableTuple (
   }
 
   const variables = fragments;
-  if (!variables.every(isExpressionAVariableNode)) {
+  if (!variables.every(isVariableExpression)) {
     return new None();
   }
 
@@ -120,14 +133,16 @@ export function destructureComplexVariableTuple (
   });
 }
 
+// Extracts the identifier string from a simple variable expression
 export function extractVariableFromExpression (node?: SyntaxNode): Option<string> {
-  if (!isExpressionAVariableNode(node)) {
+  if (!isVariableExpression(node)) {
     return new None();
   }
 
   return new Some(node.expression.variable.value);
 }
 
+// Splits an index node into functional and non-functional parts
 export function destructureIndexNode (node?: SyntaxNode): Option<{
   functional: FunctionExpressionNode[];
   nonFunctional: (PrimaryExpressionNode & { expression: VariableNode })[];
@@ -142,7 +157,7 @@ export function destructureIndexNode (node?: SyntaxNode): Option<{
     const functionalIndexName = node.elementList.filter(
       (e) => e instanceof FunctionExpressionNode,
     ) as FunctionExpressionNode[];
-    const nonfunctionalIndexName = node.elementList.filter(isExpressionAVariableNode);
+    const nonfunctionalIndexName = node.elementList.filter(isVariableExpression);
 
     return new Some({ functional: functionalIndexName, nonFunctional: nonfunctionalIndexName });
   }
@@ -150,7 +165,8 @@ export function destructureIndexNode (node?: SyntaxNode): Option<{
   return new None();
 }
 
-export function extractVarNameFromPrimaryVariable (
+// Extracts the token value string from a primary variable node
+export function extractVariableName (
   node?: PrimaryExpressionNode & { expression: VariableNode },
 ): Option<string> {
   const value = node?.expression.variable?.value;
@@ -158,8 +174,9 @@ export function extractVarNameFromPrimaryVariable (
   return value === undefined ? new None() : new Some(value);
 }
 
+// Extracts the raw value string from a quoted-string expression
 export function extractQuotedStringToken (value?: SyntaxNode): Option<string> {
-  if (!isExpressionAQuotedString(value)) {
+  if (!isQuotedStringExpression(value)) {
     return new None();
   }
 
@@ -170,6 +187,7 @@ export function extractQuotedStringToken (value?: SyntaxNode): Option<string> {
   return new Some(value.expression.literal.value);
 }
 
+// Extracts the numeric value from a numeric literal expression
 export function extractNumericLiteral (node?: SyntaxNode): number | null {
   if (node instanceof PrimaryExpressionNode && node.expression instanceof LiteralNode) {
     if (node.expression.literal?.kind === SyntaxTokenKind.NUMERIC_LITERAL) {
@@ -179,13 +197,12 @@ export function extractNumericLiteral (node?: SyntaxNode): number | null {
   return null;
 }
 
-// Extract referee from a simple variable (x) or complex variable (a.b.c)
-// For complex variables, returns the referee of the rightmost part
+// Returns the bound symbol for a variable or the rightmost member in an access expression
 export function extractReferee (node?: SyntaxNode): NodeSymbol | undefined {
   if (!node) return undefined;
 
   // Simple variable: x
-  if (isExpressionAVariableNode(node)) {
+  if (isVariableExpression(node)) {
     return node.referee;
   }
 
@@ -197,6 +214,7 @@ export function extractReferee (node?: SyntaxNode): NodeSymbol | undefined {
   return node.referee;
 }
 
+// True if node is an infix relationship expression (a op b)
 export function isBinaryRelationship (value?: SyntaxNode): value is InfixExpressionNode {
   if (!(value instanceof InfixExpressionNode)) {
     return false;
@@ -213,6 +231,7 @@ export function isBinaryRelationship (value?: SyntaxNode): value is InfixExpress
   );
 }
 
+// True if both sides of a relationship have the same tuple arity
 export function isEqualTupleOperands (value: InfixExpressionNode): value is InfixExpressionNode {
   const leftRes = destructureComplexVariableTuple(value.leftExpression);
   const rightRes = destructureComplexVariableTuple(value.rightExpression);
@@ -231,6 +250,7 @@ export function isEqualTupleOperands (value: InfixExpressionNode): value is Infi
   return true;
 }
 
+// True if node is a valid index name (variable or function expression)
 export function isValidIndexName (
   value?: SyntaxNode,
 ): value is (PrimaryExpressionNode & { expression: VariableNode }) | FunctionExpressionNode {
@@ -240,6 +260,7 @@ export function isValidIndexName (
   );
 }
 
+// Returns the string name of an index (variable or function expression)
 export function extractIndexName (
   value:
     | (PrimaryExpressionNode & { expression: VariableNode & { variable: SyntaxToken } })
@@ -252,11 +273,7 @@ export function extractIndexName (
   return value.value.value;
 }
 
-// Destructure a call expression like `schema.table(col1, col2)` or `table(col1, col2)`.
-// Returns the callee variables (schema, table) and the args (col1, col2).
-//   schema.table(col1, col2) => { variables: [schema, table], args: [col1, col2] }
-//   table(col1, col2)        => { variables: [table], args: [col1, col2] }
-//   table()                  => { variables: [table], args: [] }
+// Destructures a call expression into callee variables and argument variables
 export function destructureCallExpression (
   node?: SyntaxNode,
 ): Option<{ variables: (PrimaryExpressionNode & { expression: VariableNode })[]; args: (PrimaryExpressionNode & { expression: VariableNode })[] }> {
@@ -271,7 +288,7 @@ export function destructureCallExpression (
   }
 
   // All callee fragments must be simple variables
-  if (!fragments.every(isExpressionAVariableNode)) {
+  if (!fragments.every(isVariableExpression)) {
     return new None();
   }
 
@@ -287,9 +304,7 @@ export function destructureCallExpression (
   });
 }
 
-// Starting from `startElement`
-// find the closest outer scope that contains `id`
-// and return the symbol corresponding to `id` in that scope
+// Walks up the element scope chain to find a symbol by index
 export function findSymbol (
   id: NodeSymbolIndex,
   startElement: ElementDeclarationNode,
@@ -314,4 +329,103 @@ export function findSymbol (
   }
 
   return undefined;
+}
+
+// True if node is a valid simple or complex variable name
+export function isValidName (nameNode: SyntaxNode): boolean {
+  return !!destructureComplexVariable(nameNode).unwrap_or(false);
+}
+
+// True if node is a unary relationship expression (op variable)
+export function isUnaryRelationship (value?: SyntaxNode): value is PrefixExpressionNode {
+  if (!(value instanceof PrefixExpressionNode)) {
+    return false;
+  }
+
+  if (!isRelationshipOp(value.op?.value)) {
+    return false;
+  }
+
+  const variables = destructureComplexVariable(value.expression).unwrap_or(undefined);
+
+  return variables !== undefined && variables.length > 0;
+}
+
+// True if node is a syntactically valid column type expression
+export function isValidColumnType (type: SyntaxNode): boolean {
+  if (
+    !(
+      type instanceof CallExpressionNode
+      || isAccessExpression(type)
+      || type instanceof PrimaryExpressionNode
+      || type instanceof ArrayNode
+    )
+  ) {
+    return false;
+  }
+
+  while (type instanceof CallExpressionNode || type instanceof ArrayNode) {
+    if (type instanceof CallExpressionNode) {
+      if (type.callee === undefined || type.argumentList === undefined) {
+        return false;
+      }
+
+      if (!type.argumentList.elementList.every((e) => isSignedNumberExpression(e) || isQuotedStringExpression(e) || isIdentifierExpression(e))) {
+        return false;
+      }
+
+      type = type.callee;
+    } else if (type instanceof ArrayNode) {
+      if (type.array === undefined || type.indexer === undefined) {
+        return false;
+      }
+
+      if (!type.indexer.elementList.every((attribute) => !attribute.colon && !attribute.value && isSignedNumberExpression(attribute.name))) {
+        return false;
+      }
+
+      type = type.array;
+    }
+  }
+
+  const variables = destructureComplexVariable(type).unwrap_or(undefined);
+
+  return variables !== undefined && variables.length > 0;
+}
+
+// True if node is a valid default value (literal, identifier, or enum ref)
+export function isValidDefaultValue (value?: SyntaxNode): boolean {
+  if (isQuotedStringExpression(value)) {
+    return true;
+  }
+
+  if (isSignedNumberExpression(value)) {
+    return true;
+  }
+
+  if (isIdentifierExpression(value) && ['true', 'false', 'null'].includes(value.expression.variable.value.toLowerCase())) {
+    return true;
+  }
+
+  if (
+    value instanceof PrefixExpressionNode
+    && NUMERIC_LITERAL_PREFIX.includes(value.op?.value as any)
+    && isSignedNumberExpression(value.expression)
+  ) {
+    return true;
+  }
+
+  if (value instanceof FunctionExpressionNode) {
+    return true;
+  }
+
+  if (!value) return false;
+  if (!isDotDelimitedIdentifier(value)) return false;
+  const fragments = destructureMemberAccessExpression(value).unwrap();
+  return fragments.length === 2 || fragments.length === 3;
+}
+
+// Returns the dot-joined name string for an element declaration
+export function getElementNameString (element?: ElementDeclarationNode): Option<string> {
+  return destructureComplexVariable(element?.name).map((ss) => ss.join('.'));
 }

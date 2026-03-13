@@ -8,14 +8,14 @@ import { lookupAndBindInScope, pickBinder, scanNonListNodeForBinding } from '../
 import SymbolFactory from '../../symbol/factory';
 import {
   destructureCallExpression,
-  extractVarNameFromPrimaryVariable,
+  extractVariableName,
   getElementKind,
-} from '../../utils';
+} from '@/utils/expression';
 import { createColumnSymbolIndex, SymbolKind } from '../../symbol/symbolIndex';
 import { ElementKind } from '../../types';
 import { isTupleOfVariables } from '../../validator/utils';
 import { NodeSymbol } from '../../symbol/symbols';
-import { getElementNameString } from '@/core/parser/utils';
+import { getElementNameString } from '@/utils/expression';
 
 export default class RecordsBinder implements ElementBinder {
   private symbolFactory: SymbolFactory;
@@ -89,7 +89,7 @@ export default class RecordsBinder implements ElementBinder {
 
     const errors: CompileError[] = [];
     for (const columnBindee of fragments.args) {
-      const columnName = extractVarNameFromPrimaryVariable(columnBindee).unwrap_or('<unnamed>');
+      const columnName = extractVariableName(columnBindee).unwrap_or('<unnamed>');
       const columnIndex = createColumnSymbolIndex(columnName);
       const columnSymbol = tableSymbol.symbolTable.get(columnIndex);
 
@@ -150,7 +150,7 @@ export default class RecordsBinder implements ElementBinder {
 
     const errors: CompileError[] = [];
     for (const columnBindee of nameNode.elementList) {
-      const columnName = extractVarNameFromPrimaryVariable(columnBindee).unwrap_or('<unnamed>');
+      const columnName = extractVariableName(columnBindee).unwrap_or('<unnamed>');
       const columnIndex = createColumnSymbolIndex(columnName);
       const columnSymbol = tableSymbolTable.get(columnIndex);
 

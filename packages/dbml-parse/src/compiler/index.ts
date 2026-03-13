@@ -18,7 +18,7 @@ import {
   type TextEdit,
   type TableNameInput,
 } from './queries/transform';
-import { splitQualifiedIdentifier, unescapeString, escapeString, formatRecordValue, isValidIdentifier, addDoubleQuoteIfNeeded } from './queries/utils';
+import { splitQualifiedIdentifier, unescapeString, escapeString, formatRecordValue, isValidIdentifier, addDoubleQuoteIfNeeded } from '@/utils/strings';
 
 // Re-export types
 export { ScopeKind } from './types';

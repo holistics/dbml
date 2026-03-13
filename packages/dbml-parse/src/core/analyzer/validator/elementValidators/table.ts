@@ -15,7 +15,7 @@ import {
   PrimaryExpressionNode,
   SyntaxNode,
 } from '@/core/parser/nodes';
-import { destructureComplexVariable, extractVariableFromExpression, extractVarNameFromPrimaryVariable } from '@/core/analyzer/utils';
+import { destructureComplexVariable, extractVariableFromExpression, extractVariableName } from '@/utils/expression';
 import {
   aggregateSettingList,
   isSimpleName,
@@ -34,10 +34,10 @@ import { ElementValidator } from '@/core/analyzer/validator/types';
 import { ColumnSymbol, PartialInjectionSymbol, TableSymbol } from '@/core/analyzer/symbol/symbols';
 import { createColumnSymbolIndex, createPartialInjectionSymbolIndex, createTableSymbolIndex } from '@/core/analyzer/symbol/symbolIndex';
 import {
-  isExpressionAQuotedString,
-  isExpressionAVariableNode,
-  isExpressionAnIdentifierNode,
-} from '@/core/parser/utils';
+  isQuotedStringExpression,
+  isVariableExpression,
+  isIdentifierExpression,
+} from '@/utils/node';
 import { SyntaxToken } from '@/core/lexer/tokens';
 import SymbolTable from '@/core/analyzer/symbol/symbolTable';
 import { SettingName } from '@/core/analyzer/types';
@@ -123,7 +123,7 @@ export default class TableValidator implements ElementValidator {
             errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_TABLE_SETTING, '\'note\' can only appear once', attr)));
           }
           attrs.forEach((attr) => {
-            if (!isExpressionAQuotedString(attr.value)) {
+            if (!isQuotedStringExpression(attr.value)) {
               errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_SETTING_VALUE, '\'note\' must be a string literal', attr.value || attr.name!));
             }
           });
@@ -158,7 +158,7 @@ export default class TableValidator implements ElementValidator {
 
       && !isAliasSameAsName(alias.expression.variable!.value, maybeNameFragments.unwrap_or([]))
     ) {
-      const aliasName = extractVarNameFromPrimaryVariable(alias as any).unwrap();
+      const aliasName = extractVariableName(alias as any).unwrap();
       const aliasId = createTableSymbolIndex(aliasName);
       if (this.publicSymbolTable.has(aliasId)) {
         errors.push(new CompileError(CompileErrorCode.DUPLICATE_NAME, `Table name '${aliasName}' already exists`, name!));
@@ -194,7 +194,7 @@ export default class TableValidator implements ElementValidator {
         errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN, 'A column must have a type', field.callee!));
       }
 
-      if (!isExpressionAVariableNode(field.callee)) {
+      if (!isVariableExpression(field.callee)) {
         errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_NAME, 'A column name must be an identifier or a quoted identifier', field.callee));
       }
 
@@ -244,8 +244,8 @@ export default class TableValidator implements ElementValidator {
   }
 
   registerField (field: FunctionApplicationNode): CompileError[] {
-    if (field.callee && isExpressionAVariableNode(field.callee)) {
-      const columnName = extractVarNameFromPrimaryVariable(field.callee).unwrap();
+    if (field.callee && isVariableExpression(field.callee)) {
+      const columnName = extractVariableName(field.callee).unwrap();
       const columnId = createColumnSymbolIndex(columnName);
 
       const columnSymbol = this.symbolFactory.create(ColumnSymbol, { declaration: field });
@@ -266,7 +266,7 @@ export default class TableValidator implements ElementValidator {
 
   // This is needed to support legacy inline settings
   validateFieldSetting (parts: ExpressionNode[]): CompileError[] {
-    if (!parts.slice(0, -1).every(isExpressionAnIdentifierNode) || !parts.slice(-1).every((p) => isExpressionAnIdentifierNode(p) || p instanceof ListExpressionNode)) {
+    if (!parts.slice(0, -1).every(isIdentifierExpression) || !parts.slice(-1).every((p) => isIdentifierExpression(p) || p instanceof ListExpressionNode)) {
       return [...parts.map((part) => new CompileError(CompileErrorCode.INVALID_COLUMN, 'These fields must be some inline settings optionally ended with a setting list', part))];
     }
 
@@ -289,7 +289,7 @@ export default class TableValidator implements ElementValidator {
     } = aggReport.getValue();
 
     parts.forEach((part) => {
-      const name = extractVarNameFromPrimaryVariable(part as any).unwrap_or('').toLowerCase();
+      const name = extractVariableName(part as any).unwrap_or('').toLowerCase();
       if (name !== 'pk' && name !== 'unique') {
         errors.push(new CompileError(CompileErrorCode.INVALID_SETTINGS, 'Inline column settings can only be `pk` or `unique`', part));
         return;
@@ -317,7 +317,7 @@ export default class TableValidator implements ElementValidator {
             errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, 'note can only appear once', attr)));
           }
           attrs.forEach((attr) => {
-            if (!isExpressionAQuotedString(attr.value)) {
+            if (!isQuotedStringExpression(attr.value)) {
               errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, '\'note\' must be a quoted string', attr.value || attr.name!));
             }
           });

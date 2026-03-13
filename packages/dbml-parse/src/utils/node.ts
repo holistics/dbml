@@ -1,7 +1,6 @@
 import { last } from 'lodash-es';
 import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
 import { None, Option, Some } from '@/core/option';
-import { alternateLists } from '@/core/utils';
 import NodeFactory from '@/core/parser/factory';
 import {
   ArrayNode,
@@ -28,10 +27,39 @@ import {
   TupleExpressionNode,
   VariableNode,
 } from '@/core/parser/nodes';
-import { destructureComplexVariable } from '@/core/analyzer/utils';
 
-// Try to interpret a function application as an element
-export function convertFuncAppToElem (
+// Interleaves two lists element-by-element, appending leftovers
+export function alternateLists<T, S> (firstList: T[], secondList: S[]): (T | S)[] {
+  const res: (T | S)[] = [];
+  const minLength = Math.min(firstList.length, secondList.length);
+  for (let i = 0; i < minLength; i += 1) {
+    res.push(firstList[i], secondList[i]);
+  }
+  res.push(...firstList.slice(minLength), ...secondList.slice(minLength));
+
+  return res;
+}
+
+// Extracts the raw numeric text including any sign prefix
+export function extractNumberText (node: PrimaryExpressionNode | PrefixExpressionNode): string {
+  if (node instanceof PrefixExpressionNode) {
+    return `${node.op?.value}${extractNumberText(node.expression!)}`;
+  }
+  return (node.expression as LiteralNode).literal!.value;
+}
+
+// Parses a numeric expression node to a JavaScript number
+export function parseNumber (node: PrefixExpressionNode | PrimaryExpressionNode): number {
+  if (node instanceof PrefixExpressionNode) {
+    const op = node.op?.value;
+    if (op === '-') return -parseNumber(node.expression!);
+    return parseNumber(node.expression!);
+  }
+  return Number.parseFloat((node.expression as LiteralNode).literal!.value);
+}
+
+// Tries to interpret a function-application node as an element declaration
+export function tryConvertToElementDeclaration (
   _callee: ExpressionNode | CommaExpressionNode | undefined,
   _args: (NormalExpressionNode | CommaExpressionNode)[],
   factory: NodeFactory,
@@ -46,7 +74,7 @@ export function convertFuncAppToElem (
     args = [callee.argumentList, ...args];
     callee = callee.callee;
   }
-  if (!callee || !isExpressionAnIdentifierNode(callee) || args.length === 0) {
+  if (!callee || !isIdentifierExpression(callee) || args.length === 0) {
     return new None();
   }
   const cpArgs = [...args];
@@ -103,13 +131,14 @@ export function convertFuncAppToElem (
   return new None();
 }
 
-// Check if a token is an `as` keyword
+// True if the token is the identifier 'as'
 export function isAsKeyword (
   token?: SyntaxToken,
 ): token is SyntaxToken & { kind: SyntaxTokenKind.IDENTIFIER; value: 'as' } {
   return token?.kind === SyntaxTokenKind.IDENTIFIER && token.value.toLowerCase() === 'as';
 }
 
+// Recursively marks a node or token as invalid
 export function markInvalid (nodeOrToken?: SyntaxNode | SyntaxToken) {
   if (!nodeOrToken) {
     return;
@@ -201,6 +230,7 @@ function markInvalidNode (node: SyntaxNode) {
   }
 }
 
+// True if the token is marked invalid
 export function isInvalidToken (token?: SyntaxToken): boolean {
   return !!token?.isInvalid;
 }
@@ -211,6 +241,7 @@ function filterUndefined (
   return args.filter((v) => v !== undefined) as (SyntaxNode | SyntaxToken)[];
 }
 
+// Returns the ordered list of child nodes/tokens for a given node
 export function getMemberChain (node: SyntaxNode): Readonly<(SyntaxNode | SyntaxToken)[]> {
   if (node instanceof ProgramNode) {
     return filterUndefined(...node.body, node.eof);
@@ -312,18 +343,17 @@ export function getMemberChain (node: SyntaxNode): Readonly<(SyntaxNode | Syntax
   throw new Error('Unreachable - no other possible cases');
 }
 
-// Return a variable node if it's nested inside a primary expression
+// Extracts the variable token if the expression is a primary variable
 export function extractVariableNode (value?: unknown): Option<SyntaxToken> {
-  if (isExpressionAVariableNode(value)) {
+  if (isVariableExpression(value)) {
     return new Some(value.expression.variable);
   }
 
   return new None();
 }
 
-// Return true if an expression node is a primary expression
-// with a nested quoted string (", ' or ''')
-export function isExpressionAQuotedString (value?: unknown): value is PrimaryExpressionNode
+// True if expression is a primary node wrapping a quoted string
+export function isQuotedStringExpression (value?: unknown): value is PrimaryExpressionNode
   & (
     | { expression: VariableNode & { variable: SyntaxToken & { kind: SyntaxTokenKind.QUOTED_STRING } } }
     | {
@@ -348,9 +378,8 @@ export function isExpressionAQuotedString (value?: unknown): value is PrimaryExp
   );
 }
 
-// Return true if an expression node is a primary expression
-// with a variable node (identifier or a double-quoted string)
-export function isExpressionAVariableNode (
+// True if expression is a primary node wrapping a variable token
+export function isVariableExpression (
   value?: unknown,
 ): value is PrimaryExpressionNode & { expression: VariableNode & { variable: SyntaxToken } } {
   return (
@@ -360,9 +389,8 @@ export function isExpressionAVariableNode (
   );
 }
 
-// Return true if an expression node is a primary expression
-// with an identifier-like variable node
-export function isExpressionAnIdentifierNode (value?: unknown): value is PrimaryExpressionNode & {
+// True if expression is a primary node wrapping an identifier token
+export function isIdentifierExpression (value?: unknown): value is PrimaryExpressionNode & {
   expression: VariableNode & { variable: { kind: SyntaxTokenKind.IDENTIFIER } };
 } {
   return (
@@ -382,6 +410,7 @@ type DotDelimitedIdentifier = PrimaryExpressionNode | (AccessExpression & {
   rightExpression: AccessExpression | PrimaryExpressionNode;
 });
 
+// True if node is a dot-access infix expression (a.b)
 export function isAccessExpression (node?: SyntaxNode): node is AccessExpression {
   return (
     node instanceof InfixExpressionNode
@@ -391,11 +420,25 @@ export function isAccessExpression (node?: SyntaxNode): node is AccessExpression
   );
 }
 
+// True if node is a dot-delimited chain of identifiers
 export function isDotDelimitedIdentifier (node?: SyntaxNode): node is DotDelimitedIdentifier {
-  if (isExpressionAVariableNode(node)) return true;
-  return isAccessExpression(node) && isExpressionAVariableNode(node.rightExpression) && isDotDelimitedIdentifier(node.leftExpression);
+  if (isVariableExpression(node)) return true;
+  return isAccessExpression(node) && isVariableExpression(node.rightExpression) && isDotDelimitedIdentifier(node.leftExpression);
 }
 
+// True if the operator string is a DBML relationship operator
+export function isRelationshipOp (op?: string): boolean {
+  return op === '-' || op === '<>' || op === '>' || op === '<';
+}
+
+// True if node is a tuple whose every element is a simple variable
+export function isTupleOfVariables (value?: SyntaxNode): value is TupleExpressionNode & {
+  elementList: (PrimaryExpressionNode & { expression: VariableNode })[];
+} {
+  return value instanceof TupleExpressionNode && value.elementList.every(isVariableExpression);
+}
+
+// Joins identifier stream tokens into a space-separated string
 export function extractStringFromIdentifierStream (stream?: IdentiferStreamNode): Option<string> {
   if (stream === undefined) {
     return new None();
@@ -406,8 +449,4 @@ export function extractStringFromIdentifierStream (stream?: IdentiferStreamNode)
   }
 
   return new Some(name);
-}
-
-export function getElementNameString (element?: ElementDeclarationNode): Option<string> {
-  return destructureComplexVariable(element?.name).map((ss) => ss.join('.'));
 }

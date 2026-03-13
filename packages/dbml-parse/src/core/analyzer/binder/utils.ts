@@ -11,10 +11,11 @@ import RefBinder from './elementBinder/ref';
 import TableBinder from './elementBinder/table';
 import TableGroupBinder from './elementBinder/tableGroup';
 import TablePartialBinder from './elementBinder/tablePartial';
-import { destructureComplexVariableTuple, extractVarNameFromPrimaryVariable } from '@/core/analyzer/utils';
+import { destructureComplexVariableTuple, extractVariableName } from '@/utils/expression';
 import { SymbolKind, createNodeSymbolIndex } from '@/core/analyzer/symbol/symbolIndex';
-import { getSymbolKind } from '@/core/analyzer/symbol/utils';
-import { getElementNameString, isExpressionAVariableNode } from '@/core/parser/utils';
+import { getSymbolKind } from '@/utils/symbol';
+import { isVariableExpression } from '@/utils/node';
+import { getElementNameString } from '@/utils/expression';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import { DEFAULT_SCHEMA_NAME } from '@/constants';
 import RecordsBinder from './elementBinder/records';
@@ -53,7 +54,7 @@ export function scanNonListNodeForBinding (node?: SyntaxNode):
     return [];
   }
 
-  if (isExpressionAVariableNode(node)) {
+  if (isVariableExpression(node)) {
     return [{ variables: [node], tupleElements: [] }];
   }
 
@@ -102,7 +103,7 @@ export function lookupAndBindInScope (
 
   if (initialScope instanceof ProgramNode && symbolInfos.length) {
     const { node, kind } = symbolInfos[0];
-    const name = extractVarNameFromPrimaryVariable(node).unwrap_or('<unnamed>');
+    const name = extractVariableName(node).unwrap_or('<unnamed>');
     if (name === DEFAULT_SCHEMA_NAME && kind === SymbolKind.Schema) {
       symbolInfos.shift();
     }
@@ -110,7 +111,7 @@ export function lookupAndBindInScope (
 
   for (const curSymbolInfo of symbolInfos) {
     const { node, kind } = curSymbolInfo;
-    const name = extractVarNameFromPrimaryVariable(node).unwrap_or('<unnamed>');
+    const name = extractVariableName(node).unwrap_or('<unnamed>');
     const index = createNodeSymbolIndex(name, kind);
     const symbol = curSymbolTable.get(index);
 

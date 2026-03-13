@@ -1,4 +1,4 @@
-import { extractQuotedStringToken, extractVariableFromExpression } from '@/core/analyzer/utils';
+import { extractQuotedStringToken, extractVariableFromExpression } from '@/utils/expression';
 import { aggregateSettingList } from '@/core/analyzer/validator/utils';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import {
@@ -7,7 +7,7 @@ import {
 import {
   ElementInterpreter, Enum, EnumField, InterpreterDatabase,
 } from '@/core/interpreter/types';
-import { extractElementName, getTokenPosition, normalizeNoteContent } from '@/core/interpreter/utils';
+import { extractElementName, getTokenPosition, normalizeNoteContent } from '@/utils/interpreter';
 
 export class EnumInterpreter implements ElementInterpreter {
   private declarationNode: ElementDeclarationNode;

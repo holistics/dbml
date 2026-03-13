@@ -1,5 +1,5 @@
 import { DEFAULT_SCHEMA_NAME } from '@/constants';
-import { splitQualifiedIdentifier } from '../utils';
+import { splitQualifiedIdentifier } from '@/utils/strings';
 import { createTableSymbolIndex, createSchemaSymbolIndex } from '@/core/analyzer/symbol/symbolIndex';
 import type SymbolTable from '@/core/analyzer/symbol/symbolTable';
 import { TableSymbol } from '@/core/analyzer/symbol/symbols';

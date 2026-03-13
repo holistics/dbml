@@ -9,7 +9,7 @@ import { ProjectInterpreter } from '@/core/interpreter/elementInterpreter/projec
 import { TablePartialInterpreter } from '@/core/interpreter/elementInterpreter/tablePartial';
 import { RecordsInterpreter } from '@/core/interpreter/records';
 import Report from '@/core/report';
-import { getElementKind } from '@/core/analyzer/utils';
+import { getElementKind } from '@/utils/expression';
 import { ElementKind } from '@/core/analyzer/types';
 import { CompileWarning } from '../errors';
 

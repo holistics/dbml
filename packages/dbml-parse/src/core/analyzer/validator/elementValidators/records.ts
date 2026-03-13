@@ -6,11 +6,11 @@ import {
 } from '@/core/parser/nodes';
 import { SyntaxToken } from '@/core/lexer/tokens';
 import { ElementValidator } from '@/core/analyzer/validator/types';
-import { isExpressionASignedNumberExpression, isTupleOfVariables, isValidName, pickValidator } from '@/core/analyzer/validator/utils';
+import { isSignedNumberExpression, isTupleOfVariables, isValidName, pickValidator } from '@/core/analyzer/validator/utils';
 import SymbolTable from '@/core/analyzer/symbol/symbolTable';
-import { destructureComplexVariable, getElementKind } from '@/core/analyzer/utils';
+import { destructureComplexVariable, getElementKind } from '@/utils/expression';
 import { ElementKind } from '@/core/analyzer/types';
-import { isAccessExpression, isExpressionAQuotedString, isExpressionAVariableNode } from '@/core/parser/utils';
+import { isAccessExpression, isQuotedStringExpression, isVariableExpression } from '@/utils/node';
 import { KEYWORDS_OF_DEFAULT_SETTING } from '@/constants';
 
 export default class RecordsValidator implements ElementValidator {
@@ -218,12 +218,12 @@ export default class RecordsValidator implements ElementValidator {
     }
 
     // Signed numbers: -2, +5, 42, 3.14
-    if (isExpressionASignedNumberExpression(value)) {
+    if (isSignedNumberExpression(value)) {
       return true;
     }
 
     // Quoted strings: 'single', "double"
-    if (isExpressionAQuotedString(value)) {
+    if (isQuotedStringExpression(value)) {
       return true;
     }
 
@@ -233,7 +233,7 @@ export default class RecordsValidator implements ElementValidator {
     }
 
     // Simple identifiers: only null, true, false (case-insensitive)
-    if (isExpressionAVariableNode(value)) {
+    if (isVariableExpression(value)) {
       const identifierValue = value.expression.variable.value.toLowerCase();
       return KEYWORDS_OF_DEFAULT_SETTING.includes(identifierValue);
     }

@@ -8,7 +8,7 @@ import {
   createConstraintErrors,
 } from './helper';
 import { DEFAULT_SCHEMA_NAME } from '@/constants';
-import { mergeTableAndPartials, extractInlineRefsFromTablePartials } from '@/core/interpreter/utils';
+import { mergeTableAndPartials, extractInlineRefsFromTablePartials } from '@/utils/interpreter';
 import { isEmpty, flatMap } from 'lodash-es';
 
 type TableInfo = {

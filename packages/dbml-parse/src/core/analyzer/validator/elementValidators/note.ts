@@ -6,11 +6,11 @@ import {
 } from '@/core/parser/nodes';
 import { SyntaxToken } from '@/core/lexer/tokens';
 import { ElementValidator } from '@/core/analyzer/validator/types';
-import { isExpressionAQuotedString } from '@/core/parser/utils';
+import { isQuotedStringExpression } from '@/utils/node';
 import { pickValidator } from '@/core/analyzer/validator/utils';
 import SymbolTable from '@/core/analyzer/symbol/symbolTable';
 import { ElementKind } from '@/core/analyzer/types';
-import { destructureComplexVariable, getElementKind } from '@/core/analyzer/utils';
+import { destructureComplexVariable, getElementKind } from '@/utils/expression';
 import { createStickyNoteSymbolIndex } from '@/core/analyzer/symbol/symbolIndex';
 
 export default class NoteValidator implements ElementValidator {
@@ -123,7 +123,7 @@ export default class NoteValidator implements ElementValidator {
     if (fields.length > 1) {
       fields.slice(1).forEach((field) => errors.push(new CompileError(CompileErrorCode.NOTE_CONTENT_REDEFINED, 'A Note can only contain one string', field)));
     }
-    if (!isExpressionAQuotedString(fields[0].callee)) {
+    if (!isQuotedStringExpression(fields[0].callee)) {
       errors.push(new CompileError(CompileErrorCode.INVALID_NOTE, 'A Note content must be a quoted string', fields[0]));
     }
     if (fields[0].args.length > 0) {

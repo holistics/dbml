@@ -2,7 +2,7 @@ import { flatten, zip } from 'lodash-es';
 import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
 import { NodeSymbol } from '@/core/analyzer/symbol/symbols';
 import { Position } from '@/core/types';
-import { getTokenFullEnd, getTokenFullStart } from '@/core/lexer/utils';
+import { getTokenFullEnd, getTokenFullStart } from '@/utils/token';
 
 export type SyntaxNodeId = number;
 export class SyntaxNodeIdGenerator {

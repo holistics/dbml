@@ -34,9 +34,9 @@ import {
   validateForeignKeys,
   isSerialType,
 } from './utils';
-import { destructureCallExpression, destructureComplexVariable, extractQuotedStringToken, extractVariableFromExpression } from '@/core/analyzer/utils';
+import { destructureCallExpression, destructureComplexVariable, extractQuotedStringToken, extractVariableFromExpression } from '@/utils/expression';
 import { last } from 'lodash-es';
-import { mergeTableAndPartials } from '../utils';
+import { mergeTableAndPartials } from '@/utils/interpreter';
 
 export class RecordsInterpreter {
   private env: InterpreterDatabase;

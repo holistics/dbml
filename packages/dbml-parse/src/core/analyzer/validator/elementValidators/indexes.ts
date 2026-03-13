@@ -12,12 +12,12 @@ import {
   SyntaxNode,
   VariableNode,
 } from '@/core/parser/nodes';
-import { isExpressionAQuotedString, isExpressionAVariableNode } from '@/core/parser/utils';
+import { isQuotedStringExpression, isVariableExpression } from '@/utils/node';
 import { aggregateSettingList } from '@/core/analyzer/validator/utils';
 import { isVoid, pickValidator } from '@/core/analyzer/validator/utils';
 import { SyntaxToken } from '@/core/lexer/tokens';
 import { ElementValidator } from '@/core/analyzer/validator/types';
-import { destructureIndexNode, getElementKind } from '@/core/analyzer/utils';
+import { destructureIndexNode, getElementKind } from '@/utils/expression';
 import SymbolTable from '@/core/analyzer/symbol/symbolTable';
 import { ElementKind } from '@/core/analyzer/types';
 
@@ -138,7 +138,7 @@ export default class IndexesValidator implements ElementValidator {
             attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.DUPLICATE_INDEX_SETTING, `'${name}' can only appear once`, attr)));
           }
           attrs.forEach((attr) => {
-            if (!isExpressionAQuotedString(attr.value)) {
+            if (!isQuotedStringExpression(attr.value)) {
               errors.push(new CompileError(CompileErrorCode.INVALID_INDEX_SETTING_VALUE, `'${name}' must be a string`, attr));
             }
           });
@@ -159,7 +159,7 @@ export default class IndexesValidator implements ElementValidator {
             attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.DUPLICATE_INDEX_SETTING, '\'type\' can only appear once', attr)));
           }
           attrs.forEach((attr) => {
-            if (!isExpressionAVariableNode(attr.value)) {
+            if (!isVariableExpression(attr.value)) {
               errors.push(new CompileError(CompileErrorCode.INVALID_INDEX_SETTING_VALUE, '\'type\' must be "btree" or "hash"', attr));
             }
           });

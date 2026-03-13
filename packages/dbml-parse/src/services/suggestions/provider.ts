@@ -2,14 +2,14 @@ import {
   destructureMemberAccessExpression,
   extractVariableFromExpression,
   getElementKind,
-} from '@/core/analyzer/utils';
+} from '@/utils/expression';
 import {
   extractStringFromIdentifierStream,
-  isExpressionAVariableNode,
-} from '@/core/parser/utils';
+  isVariableExpression,
+} from '@/utils/node';
 import Compiler, { ScopeKind } from '@/compiler';
 import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
-import { isOffsetWithinSpan } from '@/core/utils';
+import { isOffsetWithinSpan } from '@/utils/span';
 import {
   type CompletionList,
   type TextModel,
@@ -45,8 +45,7 @@ import {
   SyntaxNode,
   TupleExpressionNode,
 } from '@/core/parser/nodes';
-import { getOffsetFromMonacoPosition } from '@/services/utils';
-import { isComment } from '@/core/lexer/utils';
+import { isComment } from '@/utils/token';
 import { ElementKind, SettingName } from '@/core/analyzer/types';
 
 export default class DBMLCompletionItemProvider implements CompletionItemProvider {
@@ -60,7 +59,7 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
   }
 
   provideCompletionItems (model: TextModel, position: Position): CompletionList {
-    const offset = getOffsetFromMonacoPosition(model, position);
+    const offset = model.getOffsetAt(position);
 
     // Try to suggest record row snippet first
     const recordRowSnippet = suggestRecordRowSnippet(this.compiler, model, position, offset);
@@ -524,7 +523,7 @@ function suggestMembers (
 ): CompletionList {
   const fragments = destructureMemberAccessExpression(container).unwrap_or([]);
   fragments.pop(); // The last fragment is not used in suggestions: v1.table.a<>
-  if (fragments.some((f) => !isExpressionAVariableNode(f))) {
+  if (fragments.some((f) => !isVariableExpression(f))) {
     return noSuggestions();
   }
 

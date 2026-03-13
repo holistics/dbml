@@ -5,7 +5,7 @@ import { CompileError, CompileErrorCode } from '@/core/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode,
 } from '@/core/parser/nodes';
-import { isExpressionAQuotedString, isExpressionAVariableNode } from '@/core/parser/utils';
+import { isQuotedStringExpression, isVariableExpression } from '@/utils/node';
 import { SyntaxToken } from '@/core/lexer/tokens';
 import { ElementValidator } from '@/core/analyzer/validator/types';
 import {
@@ -13,7 +13,7 @@ import {
 import { isValidName, pickValidator } from '@/core/analyzer/validator/utils';
 import { registerSchemaStack } from '@/core/analyzer/validator/utils';
 import { createEnumFieldSymbolIndex, createEnumSymbolIndex } from '@/core/analyzer/symbol/symbolIndex';
-import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '@/core/analyzer/utils';
+import { destructureComplexVariable, extractVariableName } from '@/utils/expression';
 import SymbolTable from '@/core/analyzer/symbol/symbolTable';
 import { EnumFieldSymbol, EnumSymbol } from '@/core/analyzer/symbol/symbols';
 
@@ -114,7 +114,7 @@ export default class EnumValidator implements ElementValidator {
     return fields.flatMap((field) => {
       const errors: CompileError[] = [];
 
-      if (field.callee && !isExpressionAVariableNode(field.callee)) {
+      if (field.callee && !isVariableExpression(field.callee)) {
         errors.push(new CompileError(CompileErrorCode.INVALID_ENUM_ELEMENT_NAME, 'An enum field must be an identifier or a quoted identifier', field.callee));
       }
 
@@ -150,7 +150,7 @@ export default class EnumValidator implements ElementValidator {
             attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.DUPLICATE_ENUM_ELEMENT_SETTING, '\'note\' can only appear once', attr)));
           }
           attrs.forEach((attr) => {
-            if (!isExpressionAQuotedString(attr.value)) {
+            if (!isQuotedStringExpression(attr.value)) {
               errors.push(new CompileError(CompileErrorCode.INVALID_ENUM_ELEMENT_SETTING, '\'note\' must be a string', attr));
             }
           });
@@ -175,8 +175,8 @@ export default class EnumValidator implements ElementValidator {
   }
 
   registerField (field: FunctionApplicationNode): CompileError[] {
-    if (field.callee && isExpressionAVariableNode(field.callee)) {
-      const enumFieldName = extractVarNameFromPrimaryVariable(field.callee).unwrap();
+    if (field.callee && isVariableExpression(field.callee)) {
+      const enumFieldName = extractVariableName(field.callee).unwrap();
       const enumFieldId = createEnumFieldSymbolIndex(enumFieldName);
 
       const enumSymbol = this.symbolFactory.create(EnumFieldSymbol, { declaration: field });

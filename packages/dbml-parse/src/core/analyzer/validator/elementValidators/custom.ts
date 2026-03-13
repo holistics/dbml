@@ -5,9 +5,9 @@ import {
 import SymbolFactory from '@/core/analyzer/symbol/factory';
 import { SyntaxToken } from '@/core/lexer/tokens';
 import { ElementValidator } from '@/core/analyzer/validator/types';
-import { isExpressionAQuotedString } from '@/core/parser/utils';
+import { isQuotedStringExpression } from '@/utils/node';
 import SymbolTable from '@/core/analyzer/symbol/symbolTable';
-import { getElementKind } from '@/core/analyzer/utils';
+import { getElementKind } from '@/utils/expression';
 import { ElementKind } from '@/core/analyzer/types';
 
 export default class CustomValidator implements ElementValidator {
@@ -73,7 +73,7 @@ export default class CustomValidator implements ElementValidator {
 
     const errors: CompileError[] = [];
 
-    if (!isExpressionAQuotedString(body.callee)) {
+    if (!isQuotedStringExpression(body.callee)) {
       errors.push(new CompileError(CompileErrorCode.INVALID_CUSTOM_ELEMENT_VALUE, 'A Custom element value can only be a string', body));
     }
     if (body.args.length > 0) {

@@ -7,44 +7,15 @@ import {
   tryExtractString,
   tryExtractDateTime,
 } from '@/core/interpreter/records/utils';
-import { isAlphaOrUnderscore, isDigit } from '@/core/utils';
+import { isAlphaOrUnderscore, isDigit } from '@/utils/chars';
 
-/**
- * Checks if an identifier is valid (can be used without quotes in DBML).
- * Valid identifiers must:
- * - Contain only alphanumeric characters and underscores
- * - Not start with a digit
- *
- * @param name - The identifier to check
- * @returns True if the identifier is valid and doesn't need quotes
- *
- * @example
- * isValidIdentifier('users') => true
- * isValidIdentifier('user_name') => true
- * isValidIdentifier('user name') => false (contains space)
- * isValidIdentifier('123users') => false (starts with digit)
- */
+// True if name can be used unquoted in DBML
 export function isValidIdentifier (name: string): boolean {
   if (!name) return false;
   return name.split('').every((char) => isAlphaOrUnderscore(char) || isDigit(char)) && !isDigit(name[0]);
 }
 
-/**
- * Adds double quotes around an identifier if needed.
- * Identifiers need quotes if they:
- * - Contain non-alphanumeric characters (except underscore)
- * - Start with a digit
- * - Are empty strings
- *
- * @param identifier - The identifier to potentially quote
- * @returns The identifier with double quotes if needed, otherwise unchanged
- *
- * @example
- * addDoubleQuoteIfNeeded('users') => 'users'
- * addDoubleQuoteIfNeeded('user name') => '"user name"'
- * addDoubleQuoteIfNeeded('123users') => '"123users"'
- * addDoubleQuoteIfNeeded('user-name') => '"user-name"'
- */
+// Wraps identifier in double quotes if it contains special characters
 export function addDoubleQuoteIfNeeded (identifier: string): string {
   if (isValidIdentifier(identifier)) {
     return identifier;
@@ -52,19 +23,7 @@ export function addDoubleQuoteIfNeeded (identifier: string): string {
   return `"${escapeString(identifier)}"`;
 }
 
-/**
- * Unescapes a string by processing escape sequences.
- * Handles escaped quotes (\"), common escape sequences, unicode (\uHHHH), and arbitrary escapes.
- *
- * @param str - The string to unescape
- * @returns The unescaped string
- *
- * @example
- * unescapeString('table\\"name') => 'table"name'
- * unescapeString('line1\\nline2') => 'line1\nline2'
- * unescapeString('\\u0041BC') => 'ABC'
- * unescapeString('\\x') => 'x'
- */
+// Processes escape sequences in a raw string
 export function unescapeString (str: string): string {
   let result = '';
   let i = 0;
@@ -115,17 +74,7 @@ export function unescapeString (str: string): string {
   return result;
 }
 
-/**
- * Escapes a string by adding backslashes before special characters.
- * Handles quotes and other characters that need escaping.
- *
- * @param str - The string to escape
- * @returns The escaped string
- *
- * @example
- * escapeString('table"name') => 'table\\"name'
- * escapeString('line1\nline2') => 'line1\\nline2'
- */
+// Adds backslashes before special characters in a string
 export function escapeString (str: string): string {
   let result = '';
 
@@ -171,24 +120,7 @@ export function escapeString (str: string): string {
   return result;
 }
 
-/**
- * Formats a record value for DBML output.
- * Handles different data types and converts them to appropriate DBML syntax.
- *
- * @param recordValue - The record value with type information, or a primitive value
- * @returns The formatted string representation for DBML
- *
- * @example
- * formatRecordValue({ value: 1, type: 'integer' }) => '1'
- * formatRecordValue({ value: 'Alice', type: 'string' }) => "'Alice'"
- * formatRecordValue({ value: true, type: 'bool' }) => 'true'
- * formatRecordValue({ value: null, type: 'string' }) => 'null'
- * formatRecordValue(undefined) => 'null'
- * formatRecordValue(null) => 'null'
- * formatRecordValue('Alice') => "'Alice'"
- * formatRecordValue(42) => '42'
- * formatRecordValue(true) => 'true'
- */
+// Formats a typed record value as a DBML literal string
 export function formatRecordValue (recordValue: { value: any; type: string } | string | number | boolean | null | undefined): string {
   // Handle undefined and null primitives
   if (recordValue === undefined || recordValue === null) {
@@ -261,19 +193,7 @@ export function formatRecordValue (recordValue: { value: any; type: string } | s
   return `\`${value}\``;
 }
 
-/**
- * Splits a qualified identifier string into its components, handling quoted segments.
- *
- * Examples:
- *   - "schema.table" => ["schema", "table"]
- *   - '"schema name".table' => ["schema name", "table"]
- *   - '"schema.with.dots"."table.with.dots".column' => ["schema.with.dots", "table.with.dots", "column"]
- *   - 'schema."table name"."column name"' => ["schema", "table name", "column name"]
- *   - 'schema . table' => ["schema", "table"]
- *
- * @param identifier - The qualified identifier string to split
- * @returns Array of unquoted identifier components
- */
+// Splits a dot-delimited identifier into its components, respecting quoted segments
 export function splitQualifiedIdentifier (identifier: string): string[] {
   // Match quoted strings (with escaped quotes) or unquoted identifiers
   const pattern = /"(?:[^"\\]|\\.)*"|[^."]+/g;

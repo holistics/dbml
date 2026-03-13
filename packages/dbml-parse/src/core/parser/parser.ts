@@ -1,9 +1,9 @@
 import { last } from 'lodash-es';
 import {
-  convertFuncAppToElem,
+  tryConvertToElementDeclaration,
   isAsKeyword,
   markInvalid,
-} from '@/core/parser/utils';
+} from '@/utils/node';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import { SyntaxToken, SyntaxTokenKind, isOpToken } from '@/core/lexer/tokens';
 import Report from '@/core/report';
@@ -35,7 +35,7 @@ import {
   VariableNode,
 } from '@/core/parser/nodes';
 import NodeFactory from '@/core/parser/factory';
-import { hasTrailingNewLines, hasTrailingSpaces, isAtStartOfLine } from '@/core/lexer/utils';
+import { hasTrailingNewLines, hasTrailingSpaces, isAtStartOfLine } from '@/utils/token';
 
 // A class of errors that represent a parsing failure and contain the node that was partially parsed
 class PartialParsingError<T extends SyntaxNode> {
@@ -407,7 +407,7 @@ export default class Parser {
 
     // Try interpreting the function application as an element declaration expression
     // if fail, fall back to the generic function application
-    const buildExpression = () => convertFuncAppToElem(args.callee, args.args, this.nodeFactory).unwrap_or(
+    const buildExpression = () => tryConvertToElementDeclaration(args.callee, args.args, this.nodeFactory).unwrap_or(
       this.nodeFactory.create(FunctionApplicationNode, args),
     );
 

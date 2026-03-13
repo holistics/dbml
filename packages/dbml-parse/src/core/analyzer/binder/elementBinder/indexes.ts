@@ -9,7 +9,7 @@ import { ElementBinder } from '../types';
 import { SyntaxToken } from '../../../lexer/tokens';
 import { CompileError, CompileErrorCode } from '../../../errors';
 import { pickBinder, scanNonListNodeForBinding } from '../utils';
-import { destructureComplexVariable, extractVarNameFromPrimaryVariable, getElementKind } from '../../utils';
+import { destructureComplexVariable, extractVariableName, getElementKind } from '@/utils/expression';
 import { ElementKind } from '../../types';
 import { createColumnSymbolIndex } from '../../symbol/symbolIndex';
 import SymbolFactory from '../../symbol/factory';
@@ -76,7 +76,7 @@ export default class IndexesBinder implements ElementBinder {
         });
 
       return bindees.flatMap((bindee) => {
-        const columnName = extractVarNameFromPrimaryVariable(bindee).unwrap_or(undefined);
+        const columnName = extractVariableName(bindee).unwrap_or(undefined);
         if (columnName === undefined) return [];
         const columnIndex = createColumnSymbolIndex(columnName);
         const column = ownerTableSymbolTable.get(columnIndex);

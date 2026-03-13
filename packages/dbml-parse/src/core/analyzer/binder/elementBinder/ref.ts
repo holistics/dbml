@@ -9,7 +9,7 @@ import { ElementBinder } from '../types';
 import { SyntaxToken } from '../../../lexer/tokens';
 import { CompileError } from '../../../errors';
 import { lookupAndBindInScope, pickBinder, scanNonListNodeForBinding } from '../utils';
-import { getElementKind } from '../../utils';
+import { getElementKind } from '@/utils/expression';
 import { ElementKind } from '../../types';
 import { SymbolKind } from '../../symbol/symbolIndex';
 import SymbolFactory from '../../symbol/factory';

@@ -6,7 +6,7 @@ import { SyntaxToken } from '../../../lexer/tokens';
 import { ElementBinder } from '../types';
 import { CompileError } from '../../../errors';
 import { aggregateSettingList } from '../../validator/utils';
-import { destructureComplexVariableTuple } from '../../utils';
+import { destructureComplexVariableTuple } from '@/utils/expression';
 import { lookupAndBindInScope, pickBinder, scanNonListNodeForBinding } from '../utils';
 import { SymbolKind } from '../../symbol/symbolIndex';
 import SymbolFactory from '../../symbol/factory';

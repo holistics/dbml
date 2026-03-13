@@ -13,8 +13,8 @@ import {
   IdentiferStreamNode,
 } from '@/core/parser/nodes';
 import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
-import { isOffsetWithinSpan } from '@/core/utils';
-import { getMemberChain } from '@/core/parser/utils';
+import { isOffsetWithinSpan } from '@/utils/span';
+import { getMemberChain } from '@/utils/node';
 
 export function containerStack (this: Compiler, offset: number): readonly Readonly<SyntaxNode>[] {
   const tokens = this.token.flatStream();

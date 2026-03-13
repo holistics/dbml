@@ -1,4 +1,4 @@
-import { unescapeString, escapeString } from '@/compiler/queries/utils';
+import { unescapeString, escapeString } from '@/utils/strings';
 
 describe('unescapeString', () => {
   it('should handle escaped quotes', () => {

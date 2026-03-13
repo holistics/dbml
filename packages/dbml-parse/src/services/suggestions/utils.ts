@@ -1,12 +1,12 @@
 import { SymbolKind, destructureIndex, createColumnSymbolIndex } from '@/core/analyzer/symbol/symbolIndex';
 import { CompletionItemKind, CompletionItemInsertTextRule, type CompletionList } from '@/services/types';
 import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
-import { hasTrailingSpaces } from '@/core/lexer/utils';
+import { hasTrailingSpaces } from '@/utils/token';
 import { SyntaxNode, TupleExpressionNode, FunctionApplicationNode } from '@/core/parser/nodes';
 import Compiler from '@/compiler';
 import { ColumnSymbol, TablePartialInjectedColumnSymbol, TablePartialSymbol, TableSymbol } from '@/core/analyzer/symbol/symbols';
-import { extractVariableFromExpression } from '@/core/analyzer/utils';
-import { addDoubleQuoteIfNeeded } from '@/compiler/queries/utils';
+import { extractVariableFromExpression } from '@/utils/expression';
+import { addDoubleQuoteIfNeeded } from '@/utils/strings';
 
 export function pickCompletionItemKind (symbolKind: SymbolKind): CompletionItemKind {
   switch (symbolKind) {

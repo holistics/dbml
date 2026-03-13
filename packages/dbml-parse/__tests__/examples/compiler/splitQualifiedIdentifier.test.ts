@@ -1,4 +1,4 @@
-import { splitQualifiedIdentifier } from '@/compiler/queries/utils';
+import { splitQualifiedIdentifier } from '@/utils/strings';
 
 describe('splitQualifiedIdentifier', () => {
   it('should split simple unquoted identifiers', () => {

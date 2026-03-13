@@ -1,5 +1,5 @@
 import { partition } from 'lodash-es';
-import { destructureComplexVariable, destructureMemberAccessExpression, extractQuotedStringToken } from '@/core/analyzer/utils';
+import { destructureComplexVariable, destructureMemberAccessExpression, extractQuotedStringToken } from '@/utils/expression';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, SyntaxNode, ListExpressionNode,
@@ -7,7 +7,7 @@ import {
 import { ElementInterpreter, InterpreterDatabase, TableGroup } from '@/core/interpreter/types';
 import {
   extractElementName, getTokenPosition, normalizeNoteContent, extractColor,
-} from '@/core/interpreter/utils';
+} from '@/utils/interpreter';
 import { aggregateSettingList } from '@/core/analyzer/validator/utils';
 
 export class TableGroupInterpreter implements ElementInterpreter {

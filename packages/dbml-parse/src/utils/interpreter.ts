@@ -3,8 +3,8 @@ import { ColumnSymbol } from '@/core/analyzer/symbol/symbols';
 import {
   destructureComplexVariableTuple, destructureComplexVariable, destructureMemberAccessExpression, extractQuotedStringToken,
   extractVariableFromExpression,
-  extractVarNameFromPrimaryVariable,
-} from '@/core/analyzer/utils';
+  extractVariableName,
+} from '@/utils/expression';
 import {
   ArrayNode, BlockExpressionNode, CallExpressionNode, FunctionExpressionNode, FunctionApplicationNode, LiteralNode,
   PrimaryExpressionNode, SyntaxNode, TupleExpressionNode,
@@ -14,17 +14,18 @@ import {
   Column,
 } from '@/core/interpreter/types';
 import { SyntaxTokenKind } from '@/core/lexer/tokens';
-import { isDotDelimitedIdentifier, isExpressionAnIdentifierNode, isExpressionAQuotedString } from '@/core/parser/utils';
+import { isDotDelimitedIdentifier, isIdentifierExpression, isQuotedStringExpression } from '@/utils/node';
 import Report from '@/core/report';
 import { CompileError, CompileErrorCode } from '@/core/errors';
-import { getNumberTextFromExpression, parseNumber } from '@/core/utils';
-import { isExpressionASignedNumberExpression, isValidPartialInjection } from '../analyzer/validator/utils';
+import { extractNumberText, parseNumber } from '@/utils/node';
+import { isSignedNumberExpression, isValidPartialInjection } from '@/utils/element';
 
+// Extracts schema, table, and field names from a ref operand node
 export function extractNamesFromRefOperand (operand: SyntaxNode, owner?: Table): { schemaName: string | null; tableName: string; fieldNames: string[] } {
   const { variables, tupleElements } = destructureComplexVariableTuple(operand).unwrap();
 
-  const tupleNames = tupleElements.map((e) => extractVarNameFromPrimaryVariable(e).unwrap());
-  const variableNames = variables.map((e) => extractVarNameFromPrimaryVariable(e).unwrap());
+  const tupleNames = tupleElements.map((e) => extractVariableName(e).unwrap());
+  const variableNames = variables.map((e) => extractVariableName(e).unwrap());
 
   if (tupleElements.length) {
     if (variables.length === 0) {
@@ -57,6 +58,7 @@ export function extractNamesFromRefOperand (operand: SyntaxNode, owner?: Table):
   };
 }
 
+// Returns the cardinality pair for a given relationship operator
 export function getMultiplicities (
   op: string,
 ): [RelationCardinality, RelationCardinality] {
@@ -74,6 +76,7 @@ export function getMultiplicities (
   }
 }
 
+// Converts a syntax node's position to a TokenPosition object
 export function getTokenPosition (node: SyntaxNode): TokenPosition {
   return {
     start: {
@@ -89,6 +92,7 @@ export function getTokenPosition (node: SyntaxNode): TokenPosition {
   };
 }
 
+// Returns the ColumnSymbols bound to a ref operand node
 export function getColumnSymbolsOfRefOperand (ref: SyntaxNode): ColumnSymbol[] {
   const colNode = destructureMemberAccessExpression(ref).unwrap_or(undefined)?.pop();
   if (colNode instanceof TupleExpressionNode) {
@@ -97,6 +101,7 @@ export function getColumnSymbolsOfRefOperand (ref: SyntaxNode): ColumnSymbol[] {
   return [colNode!.referee as ColumnSymbol];
 }
 
+// Splits a qualified element name node into schema path and local name
 export function extractElementName (nameNode: SyntaxNode): { schemaName: string[]; name: string } {
   const fragments = destructureComplexVariable(nameNode).unwrap();
   const name = fragments.pop()!;
@@ -107,10 +112,12 @@ export function extractElementName (nameNode: SyntaxNode): { schemaName: string[
   };
 }
 
+// Extracts the color literal value string from a color primary node
 export function extractColor (node: PrimaryExpressionNode & { expression: LiteralNode } & { literal: { kind: SyntaxTokenKind.COLOR_LITERAL } }): string {
   return node.expression.literal!.value;
 }
 
+// Returns a canonical order-independent string ID for a ref between two columns
 export function getRefId (sym1: ColumnSymbol, sym2: ColumnSymbol): string;
 export function getRefId (sym1: ColumnSymbol[], sym2: ColumnSymbol[]): string;
 export function getRefId (sym1: ColumnSymbol | ColumnSymbol[], sym2: ColumnSymbol | ColumnSymbol[]): string {
@@ -125,6 +132,7 @@ export function getRefId (sym1: ColumnSymbol | ColumnSymbol[], sym2: ColumnSymbo
   return firstId < secondId ? `${firstId}-${secondId}` : `${secondId}-${firstId}`;
 }
 
+// True if two column symbols (or arrays of them) refer to the same endpoint
 export function isSameEndpoint (sym1: ColumnSymbol, sym2: ColumnSymbol): boolean;
 export function isSameEndpoint (sym1: ColumnSymbol[], sym2: ColumnSymbol[]): boolean;
 export function isSameEndpoint (sym1: ColumnSymbol | ColumnSymbol[], sym2: ColumnSymbol | ColumnSymbol[]): boolean {
@@ -139,6 +147,7 @@ export function isSameEndpoint (sym1: ColumnSymbol | ColumnSymbol[], sym2: Colum
   return firstId === secondId;
 }
 
+// Trims leading blank lines and dedents a multiline note string
 export function normalizeNoteContent (content: string): string {
   const lines = content.split('\n');
 
@@ -152,6 +161,7 @@ export function normalizeNoteContent (content: string): string {
   return trimmedTopEmptyLines.map((line) => line.slice(minIndent)).join('\n');
 }
 
+// Converts a default-value syntax node to a typed { type, value } object
 export function processDefaultValue (valueNode?: SyntaxNode):
   {
     type: 'string' | 'number' | 'boolean' | 'expression';
@@ -161,21 +171,21 @@ export function processDefaultValue (valueNode?: SyntaxNode):
     return undefined;
   }
 
-  if (isExpressionAQuotedString(valueNode)) {
+  if (isQuotedStringExpression(valueNode)) {
     return {
       value: extractQuotedStringToken(valueNode).unwrap(),
       type: 'string',
     };
   }
 
-  if (isExpressionASignedNumberExpression(valueNode)) {
+  if (isSignedNumberExpression(valueNode)) {
     return {
       type: 'number',
       value: parseNumber(valueNode),
     };
   }
 
-  if (isExpressionAnIdentifierNode(valueNode)) {
+  if (isIdentifierExpression(valueNode)) {
     const value = valueNode.expression.variable.value.toLowerCase();
     return {
       value,
@@ -200,6 +210,7 @@ export function processDefaultValue (valueNode?: SyntaxNode):
   throw new Error('Unreachable');
 }
 
+// Resolves a column-type syntax node to a ColumnType descriptor
 export function processColumnType (typeNode: SyntaxNode, env: InterpreterDatabase): Report<ColumnType> {
   let typeSuffix: string = '';
   let typeArgs: string | null = null;
@@ -209,10 +220,10 @@ export function processColumnType (typeNode: SyntaxNode, env: InterpreterDatabas
   if (typeNode instanceof CallExpressionNode) {
     const argElements = typeNode.argumentList!.elementList;
     typeArgs = argElements.map((e) => {
-      if (isExpressionASignedNumberExpression(e)) {
-        return getNumberTextFromExpression(e);
+      if (isSignedNumberExpression(e)) {
+        return extractNumberText(e);
       }
-      if (isExpressionAQuotedString(e)) {
+      if (isQuotedStringExpression(e)) {
         return extractQuotedStringToken(e).unwrap();
       }
       // e can only be an identifier here
@@ -222,14 +233,14 @@ export function processColumnType (typeNode: SyntaxNode, env: InterpreterDatabas
 
     // Parse numeric type parameters (precision, scale)
     if (argElements.length === 2
-      && isExpressionASignedNumberExpression(argElements[0])
-      && isExpressionASignedNumberExpression(argElements[1])) {
+      && isSignedNumberExpression(argElements[0])
+      && isSignedNumberExpression(argElements[1])) {
       const precision = parseNumber(argElements[0]);
       const scale = parseNumber(argElements[1]);
       if (!isNaN(precision) && !isNaN(scale)) {
         numericParams = { precision: Math.trunc(precision), scale: Math.trunc(scale) };
       }
-    } else if (argElements.length === 1 && isExpressionASignedNumberExpression(argElements[0])) {
+    } else if (argElements.length === 1 && isSignedNumberExpression(argElements[0])) {
       const length = parseNumber(argElements[0]);
       if (!isNaN(length)) {
         lengthParam = { length: Math.trunc(length) };
@@ -242,10 +253,10 @@ export function processColumnType (typeNode: SyntaxNode, env: InterpreterDatabas
     if (typeNode instanceof CallExpressionNode) {
       const args = typeNode
         .argumentList!.elementList.map((e) => {
-        if (isExpressionASignedNumberExpression(e)) {
-          return getNumberTextFromExpression(e);
+        if (isSignedNumberExpression(e)) {
+          return extractNumberText(e);
         }
-        if (isExpressionAQuotedString(e)) {
+        if (isQuotedStringExpression(e)) {
           return extractQuotedStringToken(e).unwrap();
         }
         // e can only be an identifier here
@@ -296,7 +307,7 @@ export function processColumnType (typeNode: SyntaxNode, env: InterpreterDatabas
   });
 }
 
-// The returned table respects (injected) column definition order
+// Merges a table's partial injections into a unified Table, respecting column order
 export function mergeTableAndPartials (table: Table, env: InterpreterDatabase): Table {
   const tableElement = [...env.tables.entries()].find(([, t]) => t === table)?.[0];
   if (!tableElement) {
@@ -377,6 +388,7 @@ export function mergeTableAndPartials (table: Table, env: InterpreterDatabase): 
   };
 }
 
+// Collects inline refs contributed by table partials not overridden by the table
 export function extractInlineRefsFromTablePartials (table: Table, env: InterpreterDatabase): Ref[] {
   const refs: Ref[] = [];
   const tablePartials = [...env.tablePartials.values()];

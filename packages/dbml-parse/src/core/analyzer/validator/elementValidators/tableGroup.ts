@@ -11,9 +11,9 @@ import {
 } from '@/core/parser/nodes';
 import SymbolFactory from '@/core/analyzer/symbol/factory';
 import { createTableGroupFieldSymbolIndex, createTableGroupSymbolIndex } from '@/core/analyzer/symbol/symbolIndex';
-import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '@/core/analyzer/utils';
+import { destructureComplexVariable, extractVariableName } from '@/utils/expression';
 import { TableGroupFieldSymbol, TableGroupSymbol } from '@/core/analyzer/symbol/symbols';
-import { isExpressionAVariableNode, isExpressionAQuotedString } from '@/core/parser/utils';
+import { isVariableExpression, isQuotedStringExpression } from '@/utils/node';
 
 export default class TableGroupValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
@@ -130,7 +130,7 @@ export default class TableGroupValidator implements ElementValidator {
             )));
           }
           attrs
-            .filter((attr) => !isExpressionAQuotedString(attr.value))
+            .filter((attr) => !isQuotedStringExpression(attr.value))
             .forEach((attr) => {
               errors.push(new CompileError(
                 CompileErrorCode.INVALID_TABLE_SETTING_VALUE,
@@ -203,8 +203,8 @@ export default class TableGroupValidator implements ElementValidator {
   }
 
   registerField (field: FunctionApplicationNode): CompileError[] {
-    if (field.callee && isExpressionAVariableNode(field.callee)) {
-      const tableGroupField = extractVarNameFromPrimaryVariable(field.callee).unwrap();
+    if (field.callee && isVariableExpression(field.callee)) {
+      const tableGroupField = extractVariableName(field.callee).unwrap();
       const tableGroupFieldId = createTableGroupFieldSymbolIndex(tableGroupField);
 
       const tableGroupSymbol = this.symbolFactory.create(TableGroupFieldSymbol, { declaration: field });

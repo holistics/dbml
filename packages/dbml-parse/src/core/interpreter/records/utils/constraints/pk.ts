@@ -8,7 +8,7 @@ import {
   formatValues,
   createConstraintErrors,
 } from './helper';
-import { mergeTableAndPartials } from '@/core/interpreter/utils';
+import { mergeTableAndPartials } from '@/utils/interpreter';
 import { isSerialType } from '../data';
 import { keyBy, groupBy, partition, compact, isEmpty, difference, filter, flatMap } from 'lodash-es';
 

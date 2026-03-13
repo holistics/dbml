@@ -2,7 +2,7 @@ import type Compiler from '../index';
 import { ElementDeclarationNode, ProgramNode } from '@/core/parser/nodes';
 import { NodeSymbol } from '@/core/analyzer/symbol/symbols';
 import { SymbolKind, destructureIndex } from '@/core/analyzer/symbol/symbolIndex';
-import { generatePossibleIndexes } from '@/core/analyzer/symbol/utils';
+import { generatePossibleIndexes } from '@/utils/symbol';
 import SymbolTable from '@/core/analyzer/symbol/symbolTable';
 
 export function symbolMembers (this: Compiler, ownerSymbol: NodeSymbol) {

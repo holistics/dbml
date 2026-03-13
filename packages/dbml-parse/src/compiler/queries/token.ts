@@ -1,6 +1,6 @@
 import type Compiler from '../index';
 import type { SyntaxToken } from '@/core/lexer/tokens';
-import { isInvalidToken } from '@/core/parser/utils';
+import { isInvalidToken } from '@/utils/node';
 
 export function flatStream (this: Compiler): readonly SyntaxToken[] {
   return this.parse.tokens()

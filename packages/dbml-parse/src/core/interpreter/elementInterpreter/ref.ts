@@ -1,4 +1,4 @@
-import { destructureComplexVariable, extractVariableFromExpression } from '@/core/analyzer/utils';
+import { destructureComplexVariable, extractVariableFromExpression } from '@/utils/expression';
 import { aggregateSettingList } from '@/core/analyzer/validator/utils';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import {
@@ -9,8 +9,8 @@ import {
 } from '@/core/interpreter/types';
 import {
   extractColor, extractNamesFromRefOperand, getColumnSymbolsOfRefOperand, getMultiplicities, getRefId, getTokenPosition, isSameEndpoint,
-} from '@/core/interpreter/utils';
-import { extractStringFromIdentifierStream } from '@/core/parser/utils';
+} from '@/utils/interpreter';
+import { extractStringFromIdentifierStream } from '@/utils/node';
 
 export class RefInterpreter implements ElementInterpreter {
   private declarationNode: ElementDeclarationNode;

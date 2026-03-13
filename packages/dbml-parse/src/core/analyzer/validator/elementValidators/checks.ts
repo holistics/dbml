@@ -10,11 +10,11 @@ import {
   ProgramNode,
   SyntaxNode,
 } from '@/core/parser/nodes';
-import { isExpressionAQuotedString } from '@/core/parser/utils';
+import { isQuotedStringExpression } from '@/utils/node';
 import { aggregateSettingList, pickValidator } from '@/core/analyzer/validator/utils';
 import { SyntaxToken } from '@/core/lexer/tokens';
 import { ElementValidator } from '@/core/analyzer/validator/types';
-import { getElementKind } from '@/core/analyzer/utils';
+import { getElementKind } from '@/utils/expression';
 import SymbolTable from '@/core/analyzer/symbol/symbolTable';
 import { ElementKind } from '@/core/analyzer/types';
 
@@ -122,7 +122,7 @@ export default class ChecksValidator implements ElementValidator {
             attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.DUPLICATE_CHECK_SETTING, `'${name}' can only appear once`, attr)));
           }
           attrs.forEach((attr) => {
-            if (!isExpressionAQuotedString(attr.value)) {
+            if (!isQuotedStringExpression(attr.value)) {
               errors.push(new CompileError(CompileErrorCode.INVALID_CHECK_SETTING_VALUE, `'${name}' must be a string`, attr));
             }
           });

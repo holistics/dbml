@@ -4,17 +4,17 @@ import {
   PrefixExpressionNode,
   SyntaxNode,
 } from '@/core/parser/nodes';
-import { isExpressionAnIdentifierNode } from '@/core/parser/utils';
-import { isExpressionASignedNumberExpression } from '@/core/analyzer/validator/utils';
-import { destructureComplexVariable, extractQuotedStringToken, extractNumericLiteral } from '@/core/analyzer/utils';
+import { isIdentifierExpression } from '@/utils/node';
+import { isSignedNumberExpression } from '@/core/analyzer/validator/utils';
+import { destructureComplexVariable, extractQuotedStringToken, extractNumericLiteral } from '@/utils/expression';
 import { last } from 'lodash-es';
 import { DateTime } from 'luxon';
 
-export { extractNumericLiteral } from '@/core/analyzer/utils';
+export { extractNumericLiteral } from '@/utils/expression';
 
 // Check if value is a NULL literal/Empty node
 export function isNullish (value: SyntaxNode): boolean {
-  if (isExpressionAnIdentifierNode(value)) {
+  if (isIdentifierExpression(value)) {
     const varName = value.expression.variable?.value?.toLowerCase();
     return varName === 'null';
   }
@@ -37,7 +37,7 @@ export function extractSignedNumber (node: SyntaxNode): number | null {
   if (literal !== null) return literal;
 
   // Try signed number: -42, +3.14
-  if (isExpressionASignedNumberExpression(node)) {
+  if (isSignedNumberExpression(node)) {
     if (node instanceof PrefixExpressionNode && node.expression) {
       const op = node.op?.value;
       const inner = extractNumericLiteral(node.expression);
@@ -146,7 +146,7 @@ export function tryExtractBoolean (value: SyntaxNode | number | string | boolean
   }
 
   // Identifier: true, false
-  if (isExpressionAnIdentifierNode(value)) {
+  if (isIdentifierExpression(value)) {
     const varName = value.expression.variable?.value?.toLowerCase();
     if (varName === 'true') return true;
     if (varName === 'false') return false;

@@ -6,7 +6,7 @@ import SymbolFactory from '@/core/analyzer/symbol/factory';
 import { pickValidator } from '@/core/analyzer/validator/utils';
 import SymbolTable from '@/core/analyzer/symbol/symbolTable';
 import { SyntaxToken } from '@/core/lexer/tokens';
-import { getElementKind } from '@/core/analyzer/utils';
+import { getElementKind } from '@/utils/expression';
 import { ElementKind } from '@/core/analyzer/types';
 
 export default class Validator {

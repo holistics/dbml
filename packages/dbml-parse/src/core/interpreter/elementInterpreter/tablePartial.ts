@@ -11,11 +11,11 @@ import {
 import {
   extractColor, extractElementName, getColumnSymbolsOfRefOperand, getTokenPosition,
   isSameEndpoint, normalizeNoteContent, processColumnType, processDefaultValue,
-} from '@/core/interpreter/utils';
+} from '@/utils/interpreter';
 import {
-  destructureComplexVariable, destructureIndexNode, extractQuotedStringToken, extractVarNameFromPrimaryVariable,
+  destructureComplexVariable, destructureIndexNode, extractQuotedStringToken, extractVariableName,
   extractVariableFromExpression,
-} from '@/core/analyzer/utils';
+} from '@/utils/expression';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import { aggregateSettingList } from '@/core/analyzer/validator/utils';
 import { ColumnSymbol } from '@/core/analyzer/symbol/symbols';
@@ -134,7 +134,7 @@ export class TablePartialInterpreter implements ElementInterpreter {
 
     const column: Partial<Column> = {};
 
-    column.name = extractVarNameFromPrimaryVariable(field.callee as any).unwrap();
+    column.name = extractVariableName(field.callee as any).unwrap();
 
     const typeReport = processColumnType(field.args[0], this.env);
     column.type = typeReport.getValue();
@@ -279,7 +279,7 @@ export class TablePartialInterpreter implements ElementInterpreter {
             token: getTokenPosition(s),
           })),
           ...nonFunctional.map((s) => ({
-            value: extractVarNameFromPrimaryVariable(s).unwrap(),
+            value: extractVariableName(s).unwrap(),
             type: 'column',
             token: getTokenPosition(s),
           })),

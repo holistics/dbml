@@ -4,7 +4,7 @@ import { pickBinder } from '@/core/analyzer/binder/utils';
 import Report from '@/core/report';
 import { SyntaxToken } from '@/core/lexer/tokens';
 import SymbolFactory from '@/core/analyzer/symbol/factory';
-import { getElementKind } from '@/core/analyzer/utils';
+import { getElementKind } from '@/utils/expression';
 import { ElementKind } from '@/core/analyzer/types';
 import TableBinder from './elementBinder/table';
 

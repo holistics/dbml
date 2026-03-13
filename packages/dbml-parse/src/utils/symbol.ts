@@ -10,7 +10,7 @@ import {
   createTableGroupSymbolIndex,
   createTablePartialSymbolIndex,
   createTableSymbolIndex,
-} from './symbolIndex';
+} from '@/core/analyzer/symbol/symbolIndex';
 import {
   ColumnSymbol,
   NodeSymbol,
@@ -23,10 +23,9 @@ import {
   EnumFieldSymbol,
   TablePartialSymbol,
   PartialInjectionSymbol,
-} from './symbols';
+} from '@/core/analyzer/symbol/symbols';
 
-// Given `name`, generate indexes with `name` and all possible kind
-// e.g `Schema:name`, `Table:name`, etc.
+// Generates symbol indexes for a name across all possible symbol kinds
 export function generatePossibleIndexes (name: string): NodeSymbolIndex[] {
   return [
     createSchemaSymbolIndex,
@@ -41,6 +40,7 @@ export function generatePossibleIndexes (name: string): NodeSymbolIndex[] {
   ].map((f) => f(name));
 }
 
+// Returns the SymbolKind enum value for a given symbol instance
 export function getSymbolKind (symbol: NodeSymbol): SymbolKind {
   if (symbol instanceof SchemaSymbol) {
     return SymbolKind.Schema;

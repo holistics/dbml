@@ -8,10 +8,10 @@ import { CompileError } from '../../../errors';
 import { lookupAndBindInScope, pickBinder, scanNonListNodeForBinding } from '../utils';
 import { aggregateSettingList, isValidPartialInjection } from '../../validator/utils';
 import { SymbolKind, createColumnSymbolIndex } from '../../symbol/symbolIndex';
-import { destructureComplexVariableTuple, extractVariableFromExpression } from '../../utils';
+import { destructureComplexVariableTuple, extractVariableFromExpression } from '@/utils/expression';
 import { TablePartialInjectedColumnSymbol, TablePartialSymbol } from '../../symbol/symbols';
 import SymbolFactory from '../../symbol/factory';
-import { isExpressionAQuotedString, isExpressionAVariableNode } from '../../../parser/utils';
+import { isQuotedStringExpression, isVariableExpression } from '@/utils/node';
 import { KEYWORDS_OF_DEFAULT_SETTING } from '@/constants';
 
 export default class TableBinder implements ElementBinder {
@@ -146,12 +146,12 @@ export default class TableBinder implements ElementBinder {
   // Bind enum field references in default values (e.g., order_status.pending)
   private tryToBindEnumFieldRef (defaultValue: SyntaxNode): CompileError[] {
     // Skip quoted strings (e.g., [default: "hello"] or [default: `hello`])
-    if (isExpressionAQuotedString(defaultValue)) {
+    if (isQuotedStringExpression(defaultValue)) {
       return [];
     }
 
     // Skip keywords (null, true, false)
-    if (isExpressionAVariableNode(defaultValue)) {
+    if (isVariableExpression(defaultValue)) {
       const varName = defaultValue.expression.variable?.value?.toLowerCase();
       if (varName && KEYWORDS_OF_DEFAULT_SETTING.includes(varName)) {
         return [];

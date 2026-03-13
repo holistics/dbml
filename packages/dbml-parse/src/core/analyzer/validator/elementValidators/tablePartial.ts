@@ -12,7 +12,7 @@ import {
   PrimaryExpressionNode,
   SyntaxNode,
 } from '@/core/parser/nodes';
-import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '@/core/analyzer/utils';
+import { destructureComplexVariable, extractVariableName } from '@/utils/expression';
 import {
   aggregateSettingList,
   isSimpleName,
@@ -28,10 +28,10 @@ import { ElementValidator } from '@/core/analyzer/validator/types';
 import { ColumnSymbol, TablePartialSymbol } from '@/core/analyzer/symbol/symbols';
 import { createColumnSymbolIndex, createTablePartialSymbolIndex } from '@/core/analyzer/symbol/symbolIndex';
 import {
-  isExpressionAQuotedString,
-  isExpressionAVariableNode,
-  isExpressionAnIdentifierNode,
-} from '@/core/parser/utils';
+  isQuotedStringExpression,
+  isVariableExpression,
+  isIdentifierExpression,
+} from '@/utils/node';
 import { SyntaxToken } from '@/core/lexer/tokens';
 import SymbolTable from '@/core/analyzer/symbol/symbolTable';
 import { ElementKind, SettingName } from '@/core/analyzer/types';
@@ -128,7 +128,7 @@ export default class TablePartialValidator implements ElementValidator {
             errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_TABLE_PARTIAL_SETTING, `'${name}' can only appear once`, attr)));
           }
           attrs.forEach((attr) => {
-            if (!isExpressionAQuotedString(attr.value)) {
+            if (!isQuotedStringExpression(attr.value)) {
               errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_PARTIAL_SETTING_VALUE, `'${name}' must be a string literal`, attr.value || attr.name!));
             }
           });
@@ -181,7 +181,7 @@ export default class TablePartialValidator implements ElementValidator {
         errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN, 'A column must have a type', field.callee!));
       }
 
-      if (!isExpressionAVariableNode(field.callee)) {
+      if (!isVariableExpression(field.callee)) {
         errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_NAME, 'A column name must be an identifier or a quoted identifier', field.callee));
       }
 
@@ -200,9 +200,9 @@ export default class TablePartialValidator implements ElementValidator {
   }
 
   registerField (field: FunctionApplicationNode): CompileError[] {
-    if (!field.callee || !isExpressionAVariableNode(field.callee)) return [];
+    if (!field.callee || !isVariableExpression(field.callee)) return [];
 
-    const columnName = extractVarNameFromPrimaryVariable(field.callee).unwrap();
+    const columnName = extractVariableName(field.callee).unwrap();
     const columnId = createColumnSymbolIndex(columnName);
 
     const columnSymbol = this.symbolFactory.create(ColumnSymbol, { declaration: field });
@@ -224,8 +224,8 @@ export default class TablePartialValidator implements ElementValidator {
   validateFieldSetting (parts: ExpressionNode[]): CompileError[] {
     const lastPart = last(parts);
     if (
-      !parts.slice(0, -1).every(isExpressionAnIdentifierNode)
-      || !(isExpressionAnIdentifierNode(lastPart) || lastPart instanceof ListExpressionNode)
+      !parts.slice(0, -1).every(isIdentifierExpression)
+      || !(isIdentifierExpression(lastPart) || lastPart instanceof ListExpressionNode)
     ) {
       return [...parts.map((part) => new CompileError(CompileErrorCode.INVALID_COLUMN, 'These fields must be some inline settings optionally ended with a setting list', part))];
     }
@@ -247,7 +247,7 @@ export default class TablePartialValidator implements ElementValidator {
     } = aggReport.getValue();
 
     parts.forEach((part) => {
-      const name = extractVarNameFromPrimaryVariable(part as any).unwrap_or('').toLowerCase();
+      const name = extractVariableName(part as any).unwrap_or('').toLowerCase();
       if (name !== SettingName.PK && name !== SettingName.Unique) {
         errors.push(new CompileError(CompileErrorCode.INVALID_SETTINGS, 'Inline column settings can only be `pk` or `unique`', part));
         return;
@@ -276,7 +276,7 @@ export default class TablePartialValidator implements ElementValidator {
             errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, `'${name}' can only appear once`, attr)));
           }
           attrs.forEach((attr) => {
-            if (!isExpressionAQuotedString(attr.value)) {
+            if (!isQuotedStringExpression(attr.value)) {
               errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, `'${name}' must be a quoted string`, attr.value || attr.name!));
             }
           });

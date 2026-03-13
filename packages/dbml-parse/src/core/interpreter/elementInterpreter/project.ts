@@ -1,10 +1,10 @@
-import { extractQuotedStringToken } from '@/core/analyzer/utils';
+import { extractQuotedStringToken } from '@/utils/expression';
 import { CompileError } from '@/core/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, SyntaxNode,
 } from '@/core/parser/nodes';
 import { ElementInterpreter, InterpreterDatabase, Project } from '@/core/interpreter/types';
-import { extractElementName, getTokenPosition, normalizeNoteContent } from '@/core/interpreter/utils';
+import { extractElementName, getTokenPosition, normalizeNoteContent } from '@/utils/interpreter';
 import { EnumInterpreter } from './enum';
 import { RefInterpreter } from './ref';
 import { TableInterpreter } from './table';

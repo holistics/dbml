@@ -5,7 +5,7 @@ import {
 } from '@/core/parser/nodes';
 import {
   extractColor, extractElementName, getTokenPosition, normalizeNoteContent,
-} from '@/core/interpreter/utils';
+} from '@/utils/interpreter';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import { aggregateSettingList } from '@/core/analyzer/validator/utils';
 

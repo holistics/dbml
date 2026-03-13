@@ -7,11 +7,11 @@ import {
 } from '@/core/parser/nodes';
 import {
   extractStringFromIdentifierStream,
-  isExpressionAVariableNode,
-} from '@/core/parser/utils';
+  isVariableExpression,
+} from '@/utils/node';
 import { ElementValidator } from '@/core/analyzer/validator/types';
 import { isSimpleName, isValidColor, pickValidator, aggregateSettingList } from '@/core/analyzer/validator/utils';
-import { destructureComplexVariable, destructureComplexVariableTuple, isBinaryRelationship, isEqualTupleOperands } from '@/core/analyzer/utils';
+import { destructureComplexVariable, destructureComplexVariableTuple, isBinaryRelationship, isEqualTupleOperands } from '@/utils/expression';
 import SymbolTable from '@/core/analyzer/symbol/symbolTable';
 
 export default class RefValidator implements ElementValidator {
@@ -183,7 +183,7 @@ export default class RefValidator implements ElementValidator {
 function isValidPolicy (value?: SyntaxNode): boolean {
   if (
     !(
-      isExpressionAVariableNode(value)
+      isVariableExpression(value)
       && value.expression.variable.kind !== SyntaxTokenKind.QUOTED_STRING
     )
     && !(value instanceof IdentiferStreamNode)

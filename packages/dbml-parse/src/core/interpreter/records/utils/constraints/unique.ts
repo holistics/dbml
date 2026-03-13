@@ -7,7 +7,7 @@ import {
   formatValues,
   createConstraintErrors,
 } from './helper';
-import { mergeTableAndPartials } from '@/core/interpreter/utils';
+import { mergeTableAndPartials } from '@/utils/interpreter';
 import { keyBy, groupBy, compact, isEmpty, filter, flatMap } from 'lodash-es';
 
 const getConstraintType = (columnCount: number) =>

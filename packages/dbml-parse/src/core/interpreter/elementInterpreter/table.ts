@@ -12,11 +12,11 @@ import {
   extractColor, extractElementName, getColumnSymbolsOfRefOperand, getMultiplicities,
   getRefId, getTokenPosition, isSameEndpoint, normalizeNoteContent,
   processColumnType, processDefaultValue,
-} from '@/core/interpreter/utils';
+} from '@/utils/interpreter';
 import {
-  destructureComplexVariable, destructureIndexNode, extractQuotedStringToken, extractVarNameFromPrimaryVariable,
+  destructureComplexVariable, destructureIndexNode, extractQuotedStringToken, extractVariableName,
   extractVariableFromExpression,
-} from '@/core/analyzer/utils';
+} from '@/utils/expression';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import { aggregateSettingList, isValidPartialInjection } from '@/core/analyzer/validator/utils';
 import { ColumnSymbol } from '@/core/analyzer/symbol/symbols';
@@ -97,7 +97,7 @@ export class TableInterpreter implements ElementInterpreter {
       return [];
     }
 
-    const alias = extractVarNameFromPrimaryVariable(aliasNode as any).unwrap_or(null);
+    const alias = extractVariableName(aliasNode as any).unwrap_or(null);
     if (alias) {
       this.env.aliases.push({
         name: alias,
@@ -205,7 +205,7 @@ export class TableInterpreter implements ElementInterpreter {
 
     const column: Partial<Column> = {};
 
-    column.name = extractVarNameFromPrimaryVariable(field.callee as any).unwrap();
+    column.name = extractVariableName(field.callee as any).unwrap();
 
     const typeReport = processColumnType(field.args[0], this.env);
     column.type = typeReport.getValue();
@@ -364,7 +364,7 @@ export class TableInterpreter implements ElementInterpreter {
             token: getTokenPosition(s),
           })),
           ...nonFunctional.map((s) => ({
-            value: extractVarNameFromPrimaryVariable(s).unwrap(),
+            value: extractVariableName(s).unwrap(),
             type: 'column',
             token: getTokenPosition(s),
           })),

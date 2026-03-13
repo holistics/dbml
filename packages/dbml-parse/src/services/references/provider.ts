@@ -1,4 +1,3 @@
-import { getOffsetFromMonacoPosition } from '@/services/utils';
 import Compiler from '@/compiler';
 import { SyntaxNodeKind } from '@/core/parser/nodes';
 import {
@@ -14,7 +13,7 @@ export default class DBMLReferencesProvider implements ReferenceProvider {
 
   provideReferences (model: TextModel, position: Position): Location[] {
     const { uri } = model;
-    const offset = getOffsetFromMonacoPosition(model, position);
+    const offset = model.getOffsetAt(position);
 
     const containers = [...this.compiler.container.stack(offset)];
     while (containers.length !== 0) {
