@@ -61,15 +61,16 @@ export class TableGroupInterpreter implements ElementInterpreter {
   private interpretSubElements (subs: ElementDeclarationNode[]): CompileError[] {
     return subs.flatMap((sub) => {
       switch (sub.type?.value.toLowerCase()) {
-        case 'note':
-          const noteNode2 = sub.body instanceof BlockExpressionNode
+        case 'note': {
+          const noteNode = sub.body instanceof BlockExpressionNode
             ? (sub.body.body[0] as FunctionApplicationNode).callee
             : sub.body!.callee;
           this.tableGroup.note = {
-            value: normalizeNoteContent(extractQuotedStringToken(noteNode2)!),
+            value: normalizeNoteContent(extractQuotedStringToken(noteNode)!),
             token: getTokenPosition(sub),
           };
           break;
+        }
 
         default:
           break;
