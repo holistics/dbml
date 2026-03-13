@@ -70,28 +70,38 @@ export class DiagramViewInterpreter implements ElementInterpreter {
   }
 
   private interpretBody (body: BlockExpressionNode): CompileError[] {
-    // Check for shorthand { * }
+    // Body-level {*} shorthand: show all entities including Notes
     if (body.body.length === 1) {
       const first = body.body[0];
       if (first instanceof FunctionApplicationNode && isWildcardExpression(first.callee)) {
-        // Show all entities
-        this.diagramView.visibleEntities = {
-          tables: [],
-          stickyNotes: [],
-          tableGroups: [],
-          schemas: [],
-        };
+        this.diagramView.visibleEntities = { tables: [], stickyNotes: [], tableGroups: [], schemas: [] };
         return [];
       }
     }
 
     const [, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    const explicitlySet = new Set<string>();
 
     for (const sub of subs as ElementDeclarationNode[]) {
       const blockType = sub.type?.value.toLowerCase();
+      if (blockType) explicitlySet.add(blockType);
       if (sub.body instanceof BlockExpressionNode) {
         this.interpretSubBlock(sub.body, blockType);
       }
+    }
+
+    // Trinity omit rule: if any Trinity dim was explicitly set with a non-null value,
+    // promote omitted Trinity dims from null → [] (show all)
+    const ve = this.diagramView.visibleEntities!;
+    const trinityHasNonNull =
+      (explicitlySet.has('tables') && ve.tables !== null) ||
+      (explicitlySet.has('tablegroups') && ve.tableGroups !== null) ||
+      (explicitlySet.has('schemas') && ve.schemas !== null);
+
+    if (trinityHasNonNull) {
+      if (!explicitlySet.has('tables')) ve.tables = [];
+      if (!explicitlySet.has('tablegroups')) ve.tableGroups = [];
+      if (!explicitlySet.has('schemas')) ve.schemas = [];
     }
 
     return [];

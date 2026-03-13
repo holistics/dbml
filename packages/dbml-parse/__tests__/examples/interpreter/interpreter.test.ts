@@ -985,6 +985,84 @@ describe('[example] interpreter', () => {
     });
   });
 
+  describe('DiagramView interpretation (Trinity omit rule)', () => {
+    test('should apply Trinity rule: Tables explicit → tableGroups and schemas default to []', () => {
+      const source = `
+        Table users { id int }
+        DiagramView myView {
+          Tables { users }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+
+      expect(db.diagramViews).toHaveLength(1);
+      const ve = db.diagramViews[0].visibleEntities;
+      expect(ve.tables).toEqual([{ name: 'users', schemaName: 'public' }]);
+      expect(ve.tableGroups).toEqual([]);
+      expect(ve.schemas).toEqual([]);
+      expect(ve.stickyNotes).toBeNull();
+    });
+
+    test('should apply Trinity rule: Tables {*} → tableGroups and schemas default to []', () => {
+      const source = `
+        DiagramView myView {
+          Tables { * }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+
+      const ve = db.diagramViews[0].visibleEntities;
+      expect(ve.tables).toEqual([]);
+      expect(ve.tableGroups).toEqual([]);
+      expect(ve.schemas).toEqual([]);
+      expect(ve.stickyNotes).toBeNull();
+    });
+
+    test('should apply Trinity rule: Tables explicit + Notes explicit → tableGroups/schemas default to [], stickyNotes is []', () => {
+      const source = `
+        Table users { id int }
+        DiagramView myView {
+          Tables { users }
+          Notes { * }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+
+      const ve = db.diagramViews[0].visibleEntities;
+      expect(ve.tables).toEqual([{ name: 'users', schemaName: 'public' }]);
+      expect(ve.tableGroups).toEqual([]);
+      expect(ve.schemas).toEqual([]);
+      expect(ve.stickyNotes).toEqual([]);
+    });
+
+    test('should produce all null when body is empty (no Trinity non-null)', () => {
+      const source = `
+        DiagramView myView {
+        }
+      `;
+      const db = interpret(source).getValue()!;
+
+      const ve = db.diagramViews[0].visibleEntities;
+      expect(ve.tables).toBeNull();
+      expect(ve.tableGroups).toBeNull();
+      expect(ve.schemas).toBeNull();
+      expect(ve.stickyNotes).toBeNull();
+    });
+
+    test('should produce all [] when body-level wildcard {*} is used', () => {
+      const source = `
+        DiagramView myView { * }
+      `;
+      const db = interpret(source).getValue()!;
+
+      const ve = db.diagramViews[0].visibleEntities;
+      expect(ve.tables).toEqual([]);
+      expect(ve.tableGroups).toEqual([]);
+      expect(ve.schemas).toEqual([]);
+      expect(ve.stickyNotes).toEqual([]);
+    });
+  });
+
   describe('standalone note interpretation', () => {
     test('should interpret standalone note', () => {
       const source = `
