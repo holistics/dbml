@@ -227,6 +227,9 @@ export default class DiagramViewValidator implements ElementValidator {
 
     for (const field of fields) {
       if (field.callee && isExpressionAVariableNode(field.callee)) {
+        // Wildcards are per-sub-block and don't need uniqueness tracking
+        if (isWildcardExpression(field.callee)) continue;
+
         const fieldName = extractVarNameFromPrimaryVariable(field.callee).unwrap();
         const fieldId = createDiagramViewFieldSymbolIndex(fieldName);
 

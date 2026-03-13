@@ -656,7 +656,14 @@ export default class Parser {
   private leftExpression_bp (): NormalExpressionNode {
     let leftExpression: NormalExpressionNode | undefined;
 
-    if (isOpToken(this.peek())) {
+    // Allow * as a wildcard identifier (e.g. DiagramView Tables { * })
+    // Must be handled before the isOpToken branch to avoid "Unexpected '*'" error
+    if (this.check(SyntaxTokenKind.OP) && this.peek().value === '*') {
+      this.advance();
+      leftExpression = this.nodeFactory.create(PrimaryExpressionNode, {
+        expression: this.nodeFactory.create(VariableNode, { variable: this.previous() }),
+      });
+    } else if (isOpToken(this.peek())) {
       const args: {
         op?: SyntaxToken;
         expression?: NormalExpressionNode;

@@ -2,6 +2,7 @@ import { applyTextEdits, TextEdit } from './applyTextEdits';
 import Lexer from '@/core/lexer/lexer';
 import Parser from '@/core/parser/parser';
 import { SyntaxNodeIdGenerator } from '@/core/parser/nodes';
+import { destructureComplexVariable } from '@/core/analyzer/utils';
 
 export interface DiagramViewSyncOperation {
   operation: 'create' | 'update' | 'delete';
@@ -34,7 +35,10 @@ function findDiagramViewBlocks (source: string): DiagramViewBlock[] {
 
   for (const element of program.body) {
     if (element.type?.value === 'DiagramView') {
-      const name = element.name?.toString() || '';
+      const fragments = element.name
+        ? destructureComplexVariable(element.name).unwrap_or([])
+        : [];
+      const name = fragments.length > 0 ? fragments[fragments.length - 1] : '';
       blocks.push({
         name,
         startIndex: element.start,
@@ -46,11 +50,22 @@ function findDiagramViewBlocks (source: string): DiagramViewBlock[] {
   return blocks;
 }
 
+/** Returns true if the name requires double-quote wrapping in DBML. */
+function needsQuoting (name: string): boolean {
+  return !/^[a-zA-Z_][a-zA-Z0-9_]*$/.test(name);
+}
+
+/** Wraps name in double quotes and escapes internal double quotes if needed. */
+function quoteName (name: string): string {
+  if (!needsQuoting(name)) return name;
+  return `"${name.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"`;
+}
+
 function generateDiagramViewBlock (
   name: string,
   visibleEntities: DiagramViewSyncOperation['visibleEntities'],
 ): string {
-  const lines: string[] = [`DiagramView ${name} {`];
+  const lines: string[] = [`DiagramView ${quoteName(name)} {`];
 
   // Tables
   if (visibleEntities?.tables !== undefined) {
@@ -149,6 +164,13 @@ function applyOperation (dbml: string, operation: DiagramViewSyncOperation): str
 }
 
 function applyCreate (dbml: string, operation: DiagramViewSyncOperation): string {
+  // If a block with this name already exists, treat as update to avoid duplicate blocks
+  const blocks = findDiagramViewBlocks(dbml);
+  const existing = blocks.find((b) => b.name === operation.name);
+  if (existing) {
+    return applyUpdate(dbml, operation, blocks);
+  }
+
   const newBlock = generateDiagramViewBlock(operation.name, operation.visibleEntities);
 
   // Append at end of file
