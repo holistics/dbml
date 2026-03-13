@@ -1061,6 +1061,36 @@ describe('[example] interpreter', () => {
       expect(ve.schemas).toEqual([]);
       expect(ve.stickyNotes).toEqual([]);
     });
+
+    test('should NOT apply Trinity rule when Tables {} is explicitly empty (null stays null)', () => {
+      const source = `
+        DiagramView myView {
+          Tables {}
+        }
+      `;
+      const db = interpret(source).getValue()!;
+
+      const ve = db.diagramViews[0].visibleEntities;
+      expect(ve.tables).toBeNull();
+      expect(ve.tableGroups).toBeNull();
+      expect(ve.schemas).toBeNull();
+      expect(ve.stickyNotes).toBeNull();
+    });
+
+    test('should apply Trinity rule: TableGroups {*} as sole trigger → tables and schemas default to []', () => {
+      const source = `
+        DiagramView myView {
+          TableGroups { * }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+
+      const ve = db.diagramViews[0].visibleEntities;
+      expect(ve.tables).toEqual([]);
+      expect(ve.tableGroups).toEqual([]);
+      expect(ve.schemas).toEqual([]);
+      expect(ve.stickyNotes).toBeNull();
+    });
   });
 
   describe('standalone note interpretation', () => {

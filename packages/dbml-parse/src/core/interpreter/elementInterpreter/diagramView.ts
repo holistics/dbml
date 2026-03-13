@@ -2,7 +2,7 @@ import { partition } from 'lodash-es';
 import { destructureComplexVariable } from '@/core/analyzer/utils';
 import { CompileError } from '@/core/errors';
 import { BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, PrimaryExpressionNode, SyntaxNode, VariableNode } from '@/core/parser/nodes';
-import { ElementInterpreter, InterpreterDatabase, DiagramView, FilterConfig } from '@/core/interpreter/types';
+import { ElementInterpreter, InterpreterDatabase, DiagramView } from '@/core/interpreter/types';
 import { getTokenPosition } from '@/core/interpreter/utils';
 import { DEFAULT_SCHEMA_NAME } from '@/constants';
 
@@ -79,7 +79,7 @@ export class DiagramViewInterpreter implements ElementInterpreter {
       }
     }
 
-    const [, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    const [subs] = partition(body.body, (e) => e instanceof ElementDeclarationNode);
     const explicitlySet = new Set<string>();
 
     for (const sub of subs as ElementDeclarationNode[]) {
@@ -94,9 +94,9 @@ export class DiagramViewInterpreter implements ElementInterpreter {
     // promote omitted Trinity dims from null → [] (show all)
     const ve = this.diagramView.visibleEntities!;
     const trinityHasNonNull =
-      (explicitlySet.has('tables') && ve.tables !== null) ||
-      (explicitlySet.has('tablegroups') && ve.tableGroups !== null) ||
-      (explicitlySet.has('schemas') && ve.schemas !== null);
+      (explicitlySet.has('tables') && ve.tables !== null)
+      || (explicitlySet.has('tablegroups') && ve.tableGroups !== null)
+      || (explicitlySet.has('schemas') && ve.schemas !== null);
 
     if (trinityHasNonNull) {
       if (!explicitlySet.has('tables')) ve.tables = [];
