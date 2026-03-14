@@ -23,6 +23,7 @@ import {
   EnumFieldSymbol,
   TablePartialSymbol,
   PartialInjectionSymbol,
+  StickyNoteSymbol,
 } from './symbols';
 
 // Given `name`, generate indexes with `name` and all possible kind
@@ -71,6 +72,9 @@ export function getSymbolKind (symbol: NodeSymbol): SymbolKind {
   }
   if (symbol instanceof PartialInjectionSymbol) {
     return SymbolKind.PartialInjection;
+  }
+  if (symbol instanceof StickyNoteSymbol) {
+    return SymbolKind.Note;
   }
   throw new Error('No other possible symbol kind in getSymbolKind');
 }

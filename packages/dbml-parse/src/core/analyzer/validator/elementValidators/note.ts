@@ -12,6 +12,7 @@ import SymbolTable from '@/core/analyzer/symbol/symbolTable';
 import { ElementKind } from '@/core/analyzer/types';
 import { destructureComplexVariable, getElementKind } from '@/core/analyzer/utils';
 import { createStickyNoteSymbolIndex } from '@/core/analyzer/symbol/symbolIndex';
+import { StickyNoteSymbol } from '@/core/analyzer/symbol/symbols';
 
 export default class NoteValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
@@ -82,7 +83,8 @@ export default class NoteValidator implements ElementValidator {
       return [new CompileError(CompileErrorCode.DUPLICATE_NAME, `Sticky note "${trueName}" has already been defined`, nameNode)];
     }
 
-    this.publicSymbolTable.set(noteId, this.declarationNode.symbol!);
+    this.declarationNode.symbol = this.symbolFactory.create(StickyNoteSymbol, { declaration: this.declarationNode });
+    this.publicSymbolTable.set(noteId, this.declarationNode.symbol);
 
     return [];
   }

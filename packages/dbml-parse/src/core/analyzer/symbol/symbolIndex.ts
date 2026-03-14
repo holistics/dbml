@@ -82,6 +82,8 @@ export function createNodeSymbolIndex (key: string, symbolKind: SymbolKind): Nod
       return createTableGroupSymbolIndex(key);
     case SymbolKind.TableGroupField:
       return createTableGroupFieldSymbolIndex(key);
+    case SymbolKind.Note:
+      return createStickyNoteSymbolIndex(key);
     case SymbolKind.TablePartial:
       return createTablePartialSymbolIndex(key);
     case SymbolKind.PartialInjection:
