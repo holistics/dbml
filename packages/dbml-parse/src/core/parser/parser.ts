@@ -178,8 +178,27 @@ export default class Parser {
     const eof = this.advance();
     const program = this.nodeFactory.create(ProgramNode, { body, eof, source: this.source });
     this.gatherInvalid();
+    this.assignParents(program);
 
     return new Report({ ast: program, tokens: this.tokens }, this.errors);
+  }
+
+  private assignParents (program: ProgramNode) {
+    program.body.forEach((element) => {
+      element.parent = program;
+      this.assignElementParents(element);
+    });
+  }
+
+  private assignElementParents (element: ElementDeclarationNode) {
+    if (element.body instanceof BlockExpressionNode) {
+      element.body.body.forEach((sub) => {
+        if (sub instanceof ElementDeclarationNode) {
+          sub.parent = element;
+          this.assignElementParents(sub);
+        }
+      });
+    }
   }
 
   /* Parsing and synchronizing ProgramNode */
