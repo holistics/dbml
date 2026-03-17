@@ -21,6 +21,7 @@
       "require": "./dist/dbml-parse.js"
     }
   },
+  "sideEffects": false,
   "files": [
     "dist"
   ],
@@ -41,7 +42,8 @@
   },
   "dependencies": {
     "lodash-es": "^4.17.21",
-    "luxon": "^3.7.2"
+    "luxon": "^3.7.2",
+    "workerpool": "^9.2.0"
   },
   "engines": {
     "node": ">=18"

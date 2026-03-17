@@ -1,7 +1,7 @@
 import { forIn, partition } from 'lodash-es';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import {
-  isSimpleName, pickValidator } from '@/core/analyzer/validator/utils';
+  isSimpleName, pickElementValidator } from '@/core/analyzer/validator/utils';
 import { isValidColor, registerSchemaStack, aggregateSettingList } from '@/core/analyzer/validator/utils';
 import { ElementValidator, ElementValidatorArgs, ElementValidatorResult } from '@/core/analyzer/validator/types';
 import SymbolTable from '@/core/analyzer/symbol/symbolTable';
@@ -197,7 +197,7 @@ export default class TableGroupValidator implements ElementValidator {
       if (!sub.type) {
         return [];
       }
-      const _Validator = pickValidator(sub as ElementDeclarationNode & { type: SyntaxToken });
+      const _Validator = pickElementValidator(sub as ElementDeclarationNode & { type: SyntaxToken });
       const validator = new _Validator({ declarationNode: sub as ElementDeclarationNode & { type: SyntaxToken }, publicSymbolTable: this.publicSymbolTable, nodeToSymbol: this.nodeToSymbol }, this.symbolFactory);
       return validator.validate().errors;
     });

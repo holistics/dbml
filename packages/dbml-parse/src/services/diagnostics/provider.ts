@@ -26,38 +26,21 @@ export default class DBMLDiagnosticsProvider {
    * Get all diagnostics (errors and warnings) from the current compilation
    */
   provideDiagnostics (): Diagnostic[] {
-    const diagnostics: Diagnostic[] = [];
-    const report = this.compiler.parse._();
-
-    // Add errors
-    const errors = report.getErrors();
-    for (const error of errors) {
-      diagnostics.push(this.createDiagnostic(error, 'error'));
-    }
-
-    // Add warnings
-    const warnings = report.getWarnings();
-    for (const warning of warnings) {
-      diagnostics.push(this.createDiagnostic(warning, 'warning'));
-    }
-
-    return diagnostics;
+    return this.provideErrors();
   }
 
   /**
    * Get only errors from the current compilation
    */
   provideErrors (): Diagnostic[] {
-    const errors = this.compiler.parse._().getErrors();
-    return errors.map((error) => this.createDiagnostic(error, 'error'));
+    return this.compiler.parse.errors().map((error) => this.createDiagnostic(error, 'error'));
   }
 
   /**
    * Get only warnings from the current compilation
    */
   provideWarnings (): Diagnostic[] {
-    const warnings = this.compiler.parse._().getWarnings();
-    return warnings.map((warning) => this.createDiagnostic(warning, 'warning'));
+    return [];
   }
 
   /**

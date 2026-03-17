@@ -23,7 +23,7 @@ export default class Binder {
   }
 
   private resolvePartialInjections (context: BinderContext): CompileError[] {
-    return this.ast.body.filter((e) => getElementKind(e).unwrap_or('') === ElementKind.Table).flatMap((t) => {
+    return this.ast.declarations.filter((e) => getElementKind(e).unwrap_or('') === ElementKind.Table).flatMap((t) => {
       const binder = new TableBinder({ declarationNode: t as ElementDeclarationNode & { type: SyntaxToken }, context }, this.symbolFactory);
       return binder.resolvePartialInjections();
     });
@@ -37,7 +37,7 @@ export default class Binder {
     // Must call this before binding
     errors.push(...this.resolvePartialInjections(context));
 
-    for (const element of this.ast.body) {
+    for (const element of this.ast.declarations) {
       if (element.type) {
         const _Binder = pickBinder(element as ElementDeclarationNode & { type: SyntaxToken });
         const binder = new _Binder({ declarationNode: element as ElementDeclarationNode & { type: SyntaxToken }, context }, this.symbolFactory);

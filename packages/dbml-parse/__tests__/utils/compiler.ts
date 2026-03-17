@@ -23,6 +23,9 @@ import {
   VariableNode,
   PrimaryExpressionNode,
   ArrayNode,
+  UseDeclarationNode,
+  UseSpecifierListNode,
+  UseSpecifierNode,
 } from '@/core/parser/nodes';
 import { NodeSymbolIdGenerator } from '@/core/analyzer/symbol/symbols';
 import Report from '@/core/report';
@@ -210,6 +213,31 @@ export function print (source: string, ast: SyntaxNode): string {
         const arr = node as ArrayNode;
         if (arr.array) collectTokens(arr.array);
         if (arr.indexer) collectTokens(arr.indexer);
+        break;
+      }
+
+      case SyntaxNodeKind.USE_DECLARATION: {
+        const use = node as UseDeclarationNode;
+        if (use.useKeyword) collectTokens(use.useKeyword);
+        if (use.specifiers) collectTokens(use.specifiers);
+        if (use.fromKeyword) collectTokens(use.fromKeyword);
+        if (use.path) collectTokens(use.path);
+        break;
+      }
+
+      case SyntaxNodeKind.USE_SPECIFIER_LIST: {
+        const list = node as UseSpecifierListNode;
+        if (list.openBrace) collectTokens(list.openBrace);
+        list.specifiers.forEach(collectTokens);
+        list.commaList.forEach(collectTokens);
+        if (list.closeBrace) collectTokens(list.closeBrace);
+        break;
+      }
+
+      case SyntaxNodeKind.USE_SPECIFIER: {
+        const spec = node as UseSpecifierNode;
+        if (spec.elementKind) collectTokens(spec.elementKind);
+        if (spec.name) collectTokens(spec.name);
         break;
       }
 

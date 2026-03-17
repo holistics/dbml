@@ -1,5 +1,6 @@
 import SymbolTable from './symbolTable';
-import { SyntaxNode } from '@/core/parser/nodes';
+import { type SyntaxNode } from '@/core/parser/nodes';
+import { SymbolKind } from './symbolIndex';
 
 export type NodeSymbolId = number;
 export class NodeSymbolIdGenerator {
@@ -160,6 +161,37 @@ export class TablePartialSymbol implements NodeSymbol {
     this.id = id;
     this.symbolTable = symbolTable;
     this.declaration = declaration;
+  }
+}
+
+// A symbol for an element brought in via a `use` declaration from another file.
+// `kind` records what type of symbol is expected (Table, Enum, TableGroup, TablePartial).
+// `name` records the name of the expected symbol.
+// `symbol` is initially undefined and is populated during the global resolution phase
+// when the referenced file is merged in.
+export class ExternalSymbol implements NodeSymbol {
+  id: NodeSymbolId;
+
+  symbolTable?: SymbolTable;
+
+  declaration: SyntaxNode;
+
+  references: SyntaxNode[] = [];
+
+  kind: SymbolKind;
+
+  name: string;
+
+  symbol?: NodeSymbol;
+
+  constructor (
+    { declaration, kind, name }: { declaration: SyntaxNode; kind: SymbolKind; name: string },
+    id: NodeSymbolId,
+  ) {
+    this.id = id;
+    this.declaration = declaration;
+    this.kind = kind;
+    this.name = name;
   }
 }
 

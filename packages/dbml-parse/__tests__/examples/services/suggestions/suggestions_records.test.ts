@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import Compiler from '@/compiler';
-import DBMLCompletionItemProvider from '@/services/suggestions/provider';
+import DbmlCompletionItemProvider from '@/services/suggestions/provider';
 import { createMockTextModel, createPosition } from '@tests/utils';
 import { getColumnsFromTableSymbol } from '@/services/suggestions/utils';
 import { TableSymbol } from '@/core/analyzer/symbol/symbols';
@@ -22,7 +22,7 @@ describe('[example] CompletionItemProvider - Records', () => {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       // Position inside the Records body (between the braces)
       const position = createPosition(8, 13);
       const result = provider.provideCompletionItems(model, position);
@@ -46,7 +46,7 @@ describe('[example] CompletionItemProvider - Records', () => {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(8, 11);
       const result = provider.provideCompletionItems(model, position);
 
@@ -70,7 +70,7 @@ describe('[example] Expand * to all columns in Records', () => {
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const suggestionProvider = new DBMLCompletionItemProvider(compiler);
+      const suggestionProvider = new DbmlCompletionItemProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position after "records ("
@@ -108,7 +108,7 @@ Records users() {
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const suggestionProvider = new DBMLCompletionItemProvider(compiler);
+      const suggestionProvider = new DbmlCompletionItemProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position after "Records users(" - inside the parentheses
@@ -141,7 +141,7 @@ Records products(
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const suggestionProvider = new DBMLCompletionItemProvider(compiler);
+      const suggestionProvider = new DbmlCompletionItemProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position after "Records products("
@@ -184,7 +184,7 @@ describe('[example] Suggestions Utils - Records', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(program);
-      compiler.parse._();
+      compiler.parseProject();
 
       const ast = compiler.parse.ast();
       const tableElement = ast.body[2]; // users table is the third element
@@ -220,7 +220,7 @@ describe('[example] Suggestions Utils - Records', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(program);
-      compiler.parse._();
+      compiler.parseProject();
 
       const ast = compiler.parse.ast();
       const tableElement = ast.body[1];
@@ -252,7 +252,7 @@ describe('[example] Suggestions Utils - Records', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(program);
-      compiler.parse._();
+      compiler.parseProject();
 
       const ast = compiler.parse.ast();
       const tableElement = ast.body[1];
@@ -283,7 +283,7 @@ describe('[example] Suggestions Utils - Records', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(program);
-      compiler.parse._(); // Trigger parsing
+      compiler.parseProject(); // Trigger parsing
 
       // Get the table symbol
       const ast = compiler.parse.ast();
@@ -319,7 +319,7 @@ describe('[example] Suggestions Utils - Records', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(program);
-      compiler.parse._();
+      compiler.parseProject();
 
       const ast = compiler.parse.ast();
       const tableElement = ast.body[0];
@@ -354,7 +354,7 @@ describe('[example] Suggestions Utils - Records', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(program);
-      compiler.parse._();
+      compiler.parseProject();
 
       const ast = compiler.parse.ast();
       const tableElement = ast.body[0];
@@ -381,7 +381,7 @@ describe('[example] Suggestions Utils - Records', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(program);
-      compiler.parse._();
+      compiler.parseProject();
 
       const ast = compiler.parse.ast();
       const tableElement = ast.body[0];
@@ -409,7 +409,7 @@ describe('[example] Suggestions Utils - Records', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(program);
-      compiler.parse._();
+      compiler.parseProject();
 
       const ast = compiler.parse.ast();
       const tableElement = ast.body[0];
@@ -436,7 +436,7 @@ describe('[example] Suggestions Utils - Records', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(program);
-      compiler.parse._();
+      compiler.parseProject();
 
       const ast = compiler.parse.ast();
       const tableElement = ast.body[0];
@@ -465,7 +465,7 @@ describe('[example] Suggestions Utils - Records', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(program);
-      compiler.parse._();
+      compiler.parseProject();
 
       const ast = compiler.parse.ast();
       const tableElement = ast.body[0];

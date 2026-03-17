@@ -9,7 +9,7 @@ import {
 import { SyntaxToken } from '@/core/lexer/tokens';
 import { ElementValidator, ElementValidatorArgs, ElementValidatorResult } from '@/core/analyzer/validator/types';
 import { isExpressionAQuotedString } from '@/core/parser/utils';
-import { pickValidator } from '@/core/analyzer/validator/utils';
+import { pickElementValidator } from '@/core/analyzer/validator/utils';
 import SymbolTable from '@/core/analyzer/symbol/symbolTable';
 import { ElementKind } from '@/core/analyzer/types';
 import { destructureComplexVariable, getElementKind } from '@/core/analyzer/utils';
@@ -143,7 +143,7 @@ export default class NoteValidator implements ElementValidator {
       if (!sub.type) {
         return [];
       }
-      const _Validator = pickValidator(sub as ElementDeclarationNode & { type: SyntaxToken });
+      const _Validator = pickElementValidator(sub as ElementDeclarationNode & { type: SyntaxToken });
       const validator = new _Validator({ declarationNode: sub as ElementDeclarationNode & { type: SyntaxToken }, publicSymbolTable: this.publicSymbolTable, nodeToSymbol: this.nodeToSymbol }, this.symbolFactory);
       return validator.validate().errors;
     });

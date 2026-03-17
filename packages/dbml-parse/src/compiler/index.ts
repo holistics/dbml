@@ -7,8 +7,10 @@ import Lexer from '@/core/lexer/lexer';
 import Parser from '@/core/parser/parser';
 import Analyzer, { NodeToSymbolMap, NodeToRefereeMap } from '@/core/analyzer/analyzer';
 import Interpreter from '@/core/interpreter/interpreter';
+import { type DbmlProjectLayout, Filepath, MemoryProjectLayout } from './projectLayout';
 import { DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLReferencesProvider, DBMLDiagnosticsProvider } from '@/services/index';
 import { ast, errors, warnings, tokens, rawDb, publicSymbolTable, nodeToSymbol, nodeToReferee } from './queries/parse';
+import { parseFile, parseProject, analyzeProject, interpretProject } from './queries/project';
 import { invalidStream, flatStream } from './queries/token';
 import { symbolOfName, symbolOfNameToKey, symbolMembers } from './queries/symbol';
 import { containerStack, containerToken, containerElement, containerScope, containerScopeKind } from './queries/container';
@@ -23,21 +25,34 @@ import { splitQualifiedIdentifier, unescapeString, escapeString, formatRecordVal
 // Re-export types
 export { ScopeKind } from './types';
 export type { TextEdit, TableNameInput };
+export type { FileIndex } from './types';
 
 // Re-export utilities
 export { splitQualifiedIdentifier, unescapeString, escapeString, formatRecordValue, isValidIdentifier, addDoubleQuoteIfNeeded };
 
+const DEFAULT_ENTRY = Filepath.from('/main.project.dbml');
+
 export default class Compiler {
-  private source = '';
+  private layout: DbmlProjectLayout;
   private cache = new Map<symbol, any>();
   private nodeIdGenerator = new SyntaxNodeIdGenerator();
   private symbolIdGenerator = new NodeSymbolIdGenerator();
 
-  setSource (source: string) {
-    this.source = source;
+  constructor (layout?: DbmlProjectLayout) {
+    this.layout = layout ?? new MemoryProjectLayout();
+  }
+
+  setSource (source: string, filePath?: Filepath): this {
+    if (filePath === undefined) {
+      // No filepath - reset to a clean single-file layout
+      this.layout = new MemoryProjectLayout({ [DEFAULT_ENTRY.key]: source });
+    } else {
+      this.layout.setSource(filePath, source);
+    }
     this.cache.clear();
     this.nodeIdGenerator.reset();
     this.symbolIdGenerator.reset();
+    return this;
   }
 
   private query<Args extends unknown[], Return> (
@@ -68,9 +83,11 @@ export default class Compiler {
   }
 
   private interpret (): Report<{ ast: ProgramNode; tokens: SyntaxToken[]; rawDb?: Database; nodeToSymbol: NodeToSymbolMap; nodeToReferee: NodeToRefereeMap }> {
-    const parseRes = new Lexer(this.source)
+    const source = this.layout.getSource(DEFAULT_ENTRY) ?? '';
+
+    const parseRes = new Lexer(source)
       .lex()
-      .chain((lexedTokens) => new Parser(this.source, lexedTokens as SyntaxToken[], this.nodeIdGenerator).parse())
+      .chain((lexedTokens) => new Parser(source, lexedTokens as SyntaxToken[], this.nodeIdGenerator).parse())
       .chain(({ ast, tokens }) => new Analyzer(ast, this.symbolIdGenerator).analyze().map((analysis) => ({ ...analysis, tokens })));
 
     if (parseRes.getErrors().length > 0) {
@@ -90,8 +107,13 @@ export default class Compiler {
   }
 
   applyTextEdits (edits: TextEdit[]): string {
-    return applyTextEdits(this.parse.source(), edits);
+    return applyTextEdits(this.parse.source() ?? '', edits);
   }
+
+  parseFile = parseFile.bind(this);
+  parseProject = parseProject.bind(this);
+  analyzeProject = analyzeProject.bind(this);
+  interpretProject = interpretProject.bind(this);
 
   readonly token = {
     invalidStream: this.query(invalidStream),
@@ -99,7 +121,8 @@ export default class Compiler {
   };
 
   readonly parse = {
-    source: () => this.source as Readonly<string>,
+    source: (filepath: Filepath = DEFAULT_ENTRY) => this.layout.getSource(filepath),
+    layout: () => this.layout,
     _: this.query(this.interpret),
     ast: this.query(ast),
     errors: this.query(errors),

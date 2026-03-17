@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import Compiler from '@/compiler';
-import DBMLReferencesProvider from '@/services/references/provider';
+import DbmlReferencesProvider from '@/services/references/provider';
 import { createPosition, createMockTextModel, extractTextFromRange } from '../../../utils';
 
 describe('[example] ReferencesProvider - Records', () => {
@@ -21,7 +21,7 @@ records users(id, name) {
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const referencesProvider = new DBMLReferencesProvider(compiler);
+      const referencesProvider = new DbmlReferencesProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "users" table declaration
@@ -47,7 +47,7 @@ records auth.users(id, email) {
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const referencesProvider = new DBMLReferencesProvider(compiler);
+      const referencesProvider = new DbmlReferencesProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "users" table declaration
@@ -71,7 +71,7 @@ records public.orders(id, total) {
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const referencesProvider = new DBMLReferencesProvider(compiler);
+      const referencesProvider = new DbmlReferencesProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "orders" in "Table public.orders" declaration
@@ -102,7 +102,7 @@ records users(id, name) {
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const referencesProvider = new DBMLReferencesProvider(compiler);
+      const referencesProvider = new DbmlReferencesProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "id" column declaration
@@ -128,7 +128,7 @@ records users(id, name) {
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const referencesProvider = new DBMLReferencesProvider(compiler);
+      const referencesProvider = new DbmlReferencesProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "name" column declaration
@@ -160,7 +160,7 @@ records users(id, status) {
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const referencesProvider = new DBMLReferencesProvider(compiler);
+      const referencesProvider = new DbmlReferencesProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "status" enum declaration
@@ -188,7 +188,7 @@ records auth.users(id, role) {
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const referencesProvider = new DBMLReferencesProvider(compiler);
+      const referencesProvider = new DbmlReferencesProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "role" enum declaration
@@ -222,7 +222,7 @@ records tasks(id, status) {
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const referencesProvider = new DBMLReferencesProvider(compiler);
+      const referencesProvider = new DbmlReferencesProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "pending" enum field declaration
@@ -254,7 +254,7 @@ records users(id, status) {
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const referencesProvider = new DBMLReferencesProvider(compiler);
+      const referencesProvider = new DbmlReferencesProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "active" enum field declaration
@@ -284,7 +284,7 @@ records auth.users(id, role) {
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const referencesProvider = new DBMLReferencesProvider(compiler);
+      const referencesProvider = new DbmlReferencesProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "admin" enum field declaration

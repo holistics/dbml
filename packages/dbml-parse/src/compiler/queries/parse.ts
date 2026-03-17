@@ -36,5 +36,5 @@ export function nodeToReferee (this: Compiler): NodeToRefereeMap | undefined {
 
 export function publicSymbolTable (this: Compiler): Readonly<SymbolTable> {
   const { ast, nodeToSymbol: map } = this.parse._().getValue();
-  return map!.get(ast)!.symbolTable!;
+  return (map?.get(ast)?.symbolTable) as SymbolTable;
 }

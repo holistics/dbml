@@ -17,14 +17,14 @@ import {
 } from '@/core/parser/nodes';
 import { isHexChar } from '@/core/utils';
 import { destructureComplexVariable, destructureMemberAccessExpression } from '@/core/analyzer/utils';
-import CustomValidator from './elementValidators/custom';
-import EnumValidator from './elementValidators/enum';
-import IndexesValidator from './elementValidators/indexes';
-import NoteValidator from './elementValidators/note';
-import ProjectValidator from './elementValidators/project';
-import RefValidator from './elementValidators/ref';
-import TableValidator from './elementValidators/table';
-import TableGroupValidator from './elementValidators/tableGroup';
+import CustomValidator from './validators/custom';
+import EnumValidator from './validators/enum';
+import IndexesValidator from './validators/indexes';
+import NoteValidator from './validators/note';
+import ProjectValidator from './validators/project';
+import RefValidator from './validators/ref';
+import TableValidator from './validators/table';
+import TableGroupValidator from './validators/tableGroup';
 import { createSchemaSymbolIndex } from '@/core/analyzer/symbol/symbolIndex';
 import { SchemaSymbol } from '@/core/analyzer/symbol/symbols';
 import SymbolTable from '@/core/analyzer/symbol/symbolTable';
@@ -36,12 +36,12 @@ import { NUMERIC_LITERAL_PREFIX } from '@/constants';
 import Report from '@/core/report';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import { ElementKind } from '@/core/analyzer/types';
-import TablePartialValidator from './elementValidators/tablePartial';
-import ChecksValidator from './elementValidators/checks';
-import RecordsValidator from './elementValidators/records';
+import TablePartialValidator from './validators/tablePartial';
+import ChecksValidator from './validators/checks';
+import RecordsValidator from './validators/records';
 
-export function pickValidator (element: ElementDeclarationNode & { type: SyntaxToken }) {
-  switch (element.type.value.toLowerCase() as ElementKind) {
+export function pickElementValidator (element: ElementDeclarationNode) {
+  switch (element.type?.value.toLowerCase()) {
     case ElementKind.Enum:
       return EnumValidator;
     case ElementKind.Table:

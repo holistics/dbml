@@ -51,7 +51,7 @@ export function containerStack (this: Compiler, offset: number): readonly Readon
     const lastContainer = last(res)!;
 
     if (lastContainer instanceof FunctionApplicationNode) {
-      const source = this.parse.source();
+      const source = this.parse.source() ?? '';
       for (let i = lastContainer.end; i < offset; i += 1) {
         if (source[i] === '\n') {
           res.pop();

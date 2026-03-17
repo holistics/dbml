@@ -28,7 +28,7 @@ import {
   isValidName,
   isValidPartialInjection,
   isVoid,
-  pickValidator,
+  pickElementValidator,
   registerSchemaStack,
 } from '@/core/analyzer/validator/utils';
 import { ElementValidator, ElementValidatorArgs, ElementValidatorResult } from '@/core/analyzer/validator/types';
@@ -436,7 +436,7 @@ export default class TableValidator implements ElementValidator {
       if (!sub.type) {
         return [];
       }
-      const _Validator = pickValidator(sub as ElementDeclarationNode & { type: SyntaxToken });
+      const _Validator = pickElementValidator(sub as ElementDeclarationNode & { type: SyntaxToken });
       const validator = new _Validator({ declarationNode: sub as ElementDeclarationNode & { type: SyntaxToken }, publicSymbolTable: this.publicSymbolTable, nodeToSymbol: this.nodeToSymbol }, this.symbolFactory);
       return validator.validate().errors;
     });

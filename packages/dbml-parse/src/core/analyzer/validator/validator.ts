@@ -3,12 +3,13 @@ import { CompileError, CompileErrorCode } from '@/core/errors';
 import { ElementDeclarationNode, ProgramNode } from '@/core/parser/nodes';
 import { SchemaSymbol } from '@/core/analyzer/symbol/symbols';
 import SymbolFactory from '@/core/analyzer/symbol/factory';
-import { pickValidator } from '@/core/analyzer/validator/utils';
+import { pickElementValidator } from '@/core/analyzer/validator/utils';
 import SymbolTable from '@/core/analyzer/symbol/symbolTable';
 import { SyntaxToken } from '@/core/lexer/tokens';
 import { getElementKind } from '@/core/analyzer/utils';
 import { ElementKind } from '@/core/analyzer/types';
 import { NodeToSymbolMap } from '@/core/analyzer/analyzer';
+import UseDeclarationValidator from '@/core/analyzer/validator/validators/use';
 
 export default class Validator {
   private ast: ProgramNode;
@@ -33,24 +34,28 @@ export default class Validator {
   validate (): Report<NodeToSymbolMap> {
     const errors: CompileError[] = [];
 
-    this.ast.body.forEach((element) => {
-      if (element.type === undefined) {
+    this.ast.declarations.forEach((decl) => {
+      if (decl instanceof ElementDeclarationNode) {
+        if (decl.type === undefined) {
+          return;
+        }
+        const Val = pickElementValidator(decl as ElementDeclarationNode & { type: SyntaxToken });
+        const validatorObject = new Val(
+          {
+            declarationNode: decl as ElementDeclarationNode & { type: SyntaxToken },
+            publicSymbolTable: this.publicSchemaSymbol.symbolTable,
+            nodeToSymbol: this.nodeToSymbol,
+          },
+          this.symbolFactory,
+        );
+        errors.push(...validatorObject.validate().errors);
         return;
       }
 
-      const Val = pickValidator(element as ElementDeclarationNode & { type: SyntaxToken });
-      const validatorObject = new Val(
-        {
-          declarationNode: element as ElementDeclarationNode & { type: SyntaxToken },
-          publicSymbolTable: this.publicSchemaSymbol.symbolTable,
-          nodeToSymbol: this.nodeToSymbol,
-        },
-        this.symbolFactory,
-      );
-      errors.push(...validatorObject.validate().errors);
+      errors.push(...new UseDeclarationValidator(decl, this.publicSchemaSymbol.symbolTable, this.nodeToSymbol, this.symbolFactory).validate());
     });
 
-    const projects = this.ast.body.filter((e) => getElementKind(e).unwrap_or(undefined) === ElementKind.Project);
+    const projects = this.ast.declarations.filter((e) => getElementKind(e).unwrap_or(undefined) === ElementKind.Project);
     if (projects.length > 1) {
       projects.forEach((project) => errors.push(new CompileError(CompileErrorCode.PROJECT_REDEFINED, 'Only one project can exist', project)));
     }

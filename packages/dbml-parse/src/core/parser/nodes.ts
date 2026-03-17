@@ -75,6 +75,9 @@ export class SyntaxNode {
 export enum SyntaxNodeKind {
   PROGRAM = '<program>',
   ELEMENT_DECLARATION = '<element-declaration>',
+  USE_DECLARATION = '<use-declaration>',
+  USE_SPECIFIER = '<use-specifier>',
+  USE_SPECIFIER_LIST = '<use-specifier-list>',
   ATTRIBUTE = '<attribute>',
   // A node that represents a contiguous stream of identifiers
   // Attribute name or value may use this
@@ -101,22 +104,31 @@ export enum SyntaxNodeKind {
 }
 
 // Form: <element-declaration>*
-// The root node of a DBML program containing top-level element declarations
+// The root node of a DBML program containing top-level statements in source order.
+// `declarations` and `useDeclarations` are filtered views for convenient access.
 export class ProgramNode extends SyntaxNode {
-  body: ElementDeclarationNode[];
+  body: (UseDeclarationNode | ElementDeclarationNode)[];
 
   eof?: SyntaxToken;
 
   source: string;
 
   constructor (
-    { body = [], eof, source }: { body?: ElementDeclarationNode[]; eof?: SyntaxToken; source: string },
+    { body = [], eof, source }: { body?: (UseDeclarationNode | ElementDeclarationNode)[]; eof?: SyntaxToken; source: string },
     id: SyntaxNodeId,
   ) {
     super(id, SyntaxNodeKind.PROGRAM, [...body, eof]);
     this.source = source;
     this.body = body;
     this.eof = eof;
+  }
+
+  get declarations (): ElementDeclarationNode[] {
+    return this.body.filter((s): s is ElementDeclarationNode => s.kind === SyntaxNodeKind.ELEMENT_DECLARATION);
+  }
+
+  get useDeclarations (): UseDeclarationNode[] {
+    return this.body.filter((s): s is UseDeclarationNode => s.kind === SyntaxNodeKind.USE_DECLARATION);
   }
 }
 
@@ -613,6 +625,95 @@ export class ArrayNode extends SyntaxNode {
     super(id, SyntaxNodeKind.ARRAY, [expression, indexer]);
     this.array = expression;
     this.indexer = indexer;
+  }
+}
+
+// Form: <kind> <name>
+// A single specifier inside a use statement
+// e.g. table users
+// e.g. enum status
+export class UseSpecifierNode extends SyntaxNode {
+  elementKind?: SyntaxToken;
+
+  name?: NormalExpressionNode;
+
+  constructor (
+    { elementKind, name }: { elementKind?: SyntaxToken; name?: NormalExpressionNode },
+    id: SyntaxNodeId,
+  ) {
+    super(id, SyntaxNodeKind.USE_SPECIFIER, [elementKind, name]);
+    this.elementKind = elementKind;
+    this.name = name;
+  }
+}
+
+// Form: { <specifier> [, <specifier>]* }
+// The braced list of specifiers in a use statement
+// e.g. { table users, enum status }
+export class UseSpecifierListNode extends SyntaxNode {
+  openBrace?: SyntaxToken;
+
+  specifiers: UseSpecifierNode[];
+
+  commaList: SyntaxToken[];
+
+  closeBrace?: SyntaxToken;
+
+  constructor (
+    {
+      openBrace,
+      specifiers = [],
+      commaList = [],
+      closeBrace,
+    }: {
+      openBrace?: SyntaxToken;
+      specifiers?: UseSpecifierNode[];
+      commaList?: SyntaxToken[];
+      closeBrace?: SyntaxToken;
+    },
+    id: SyntaxNodeId,
+  ) {
+    super(id, SyntaxNodeKind.USE_SPECIFIER_LIST, [openBrace, ...interleave(specifiers, commaList), closeBrace]);
+    this.openBrace = openBrace;
+    this.specifiers = specifiers;
+    this.commaList = commaList;
+    this.closeBrace = closeBrace;
+  }
+}
+
+// Form: use { <specifiers> } from <path>
+// A top-level import statement bringing named elements into scope
+// e.g. use { table users, enum status } from './schema'
+export class UseDeclarationNode extends SyntaxNode {
+  useKeyword?: SyntaxToken;
+
+  specifiers?: UseSpecifierListNode;
+
+  fromKeyword?: SyntaxToken;
+
+  path?: SyntaxToken;
+
+  parent?: ElementDeclarationNode | ProgramNode; // The enclosing element/program
+
+  constructor (
+    {
+      useKeyword,
+      specifiers,
+      fromKeyword,
+      path,
+    }: {
+      useKeyword?: SyntaxToken;
+      specifiers?: UseSpecifierListNode;
+      fromKeyword?: SyntaxToken;
+      path?: SyntaxToken;
+    },
+    id: SyntaxNodeId,
+  ) {
+    super(id, SyntaxNodeKind.USE_DECLARATION, [useKeyword, specifiers, fromKeyword, path]);
+    this.useKeyword = useKeyword;
+    this.specifiers = specifiers;
+    this.fromKeyword = fromKeyword;
+    this.path = path;
   }
 }
 

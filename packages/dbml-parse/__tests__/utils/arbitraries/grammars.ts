@@ -970,6 +970,30 @@ export const blockDuplicationArbitrary = (source: string) =>
     return source.slice(0, e) + block + source.slice(e);
   });
 
+// A single use specifier: "kind name"
+// e.g. "table users", "enum status"
+// Only table, tablegroup, enum, tablepartial are allowed by the validator
+const useSpecifierArbitrary = fc.tuple(
+  fc.constantFrom('table', 'enum', 'tablegroup', 'tablepartial'),
+  anyIdentifierArbitrary,
+).map(([kind, name]) => `${kind} ${name}`);
+
+// A use specifier list: "{ kind name, kind name, ... }"
+const useSpecifierListArbitrary = fc.array(useSpecifierArbitrary, { minLength: 1, maxLength: 5 })
+  .map((specifiers) => `{ ${specifiers.join(', ')} }`);
+
+// A complete use statement: "use { kind name, ... } from 'path'"
+export const useDeclarationArbitrary = fc.tuple(
+  useSpecifierListArbitrary,
+  singleLineStringArbitrary,
+).map(([specifiers, path]) => `use ${specifiers} from ${path}`);
+
+// A schema with use statements prepended
+export const schemaWithUseDeclarationsArbitrary = fc.tuple(
+  fc.array(useDeclarationArbitrary, { minLength: 1, maxLength: 3 }),
+  dbmlSchemaArbitrary,
+).map(([uses, schema]) => `${uses.join('\n')}\n${schema}`);
+
 // Convert a schema to use CRLF line endings (for Windows compatibility testing)
 export const toCRLF = (source: string): string => source.replace(/\r?\n/g, '\r\n');
 

@@ -26,6 +26,9 @@ import {
   ProgramNode,
   SyntaxNode,
   TupleExpressionNode,
+  UseSpecifierListNode,
+  UseSpecifierNode,
+  UseDeclarationNode,
   VariableNode,
 } from '@/core/parser/nodes';
 import { destructureComplexVariable } from '@/core/analyzer/utils';
@@ -110,6 +113,20 @@ export function isAsKeyword (
   return token?.kind === SyntaxTokenKind.IDENTIFIER && token.value.toLowerCase() === 'as';
 }
 
+// Check if a token is the `use` keyword (case-insensitive)
+export function isUseKeyword (
+  token?: SyntaxToken,
+): token is SyntaxToken & { kind: SyntaxTokenKind.IDENTIFIER } {
+  return token?.kind === SyntaxTokenKind.IDENTIFIER && token.value.toLowerCase() === 'use';
+}
+
+// Check if a token is the `from` keyword (case-insensitive)
+export function isFromKeyword (
+  token?: SyntaxToken,
+): token is SyntaxToken & { kind: SyntaxTokenKind.IDENTIFIER } {
+  return token?.kind === SyntaxTokenKind.IDENTIFIER && token.value.toLowerCase() === 'from';
+}
+
 export function markInvalid (nodeOrToken?: SyntaxNode | SyntaxToken) {
   if (!nodeOrToken) {
     return;
@@ -191,6 +208,19 @@ function markInvalidNode (node: SyntaxNode) {
   } else if (node instanceof ArrayNode) {
     markInvalid(node.array);
     markInvalid(node.indexer);
+  } else if (node instanceof UseDeclarationNode) {
+    markInvalid(node.useKeyword);
+    markInvalid(node.specifiers);
+    markInvalid(node.fromKeyword);
+    markInvalid(node.path);
+  } else if (node instanceof UseSpecifierListNode) {
+    markInvalid(node.openBrace);
+    node.specifiers.forEach(markInvalid);
+    node.commaList.forEach(markInvalid);
+    markInvalid(node.closeBrace);
+  } else if (node instanceof UseSpecifierNode) {
+    markInvalid(node.elementKind);
+    markInvalid(node.name);
   } else if (node instanceof ProgramNode) {
     node.body.forEach(markInvalid);
     markInvalid(node.eof);
@@ -303,6 +333,18 @@ export function getMemberChain (node: SyntaxNode): Readonly<(SyntaxNode | Syntax
       node.array,
       node.indexer,
     );
+  }
+
+  if (node instanceof UseDeclarationNode) {
+    return filterUndefined(node.useKeyword, node.specifiers, node.fromKeyword, node.path);
+  }
+
+  if (node instanceof UseSpecifierListNode) {
+    return filterUndefined(node.openBrace, ...alternateLists(node.specifiers, node.commaList), node.closeBrace);
+  }
+
+  if (node instanceof UseSpecifierNode) {
+    return filterUndefined(node.elementKind, node.name);
   }
 
   if (node instanceof GroupExpressionNode) {

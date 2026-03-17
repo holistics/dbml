@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import Compiler from '@/compiler';
-import DBMLCompletionItemProvider from '@/services/suggestions/provider';
+import DbmlCompletionItemProvider from '@/services/suggestions/provider';
 import { createMockTextModel, createPosition } from '@tests/utils';
 
 describe('[example] CompletionItemProvider', () => {
@@ -10,7 +10,7 @@ describe('[example] CompletionItemProvider', () => {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(1, 1);
       const result = provider.provideCompletionItems(model, position);
 
@@ -34,7 +34,7 @@ describe('[example] CompletionItemProvider', () => {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(1, 3);
       const result = provider.provideCompletionItems(model, position);
 
@@ -53,7 +53,7 @@ describe('[example] CompletionItemProvider', () => {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(1, 3);
       const result = provider.provideCompletionItems(model, position);
 
@@ -72,7 +72,7 @@ describe('[example] CompletionItemProvider', () => {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(1, 3);
       const result = provider.provideCompletionItems(model, position);
 
@@ -94,7 +94,7 @@ describe('[example] CompletionItemProvider', () => {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(1, 10);
       const result = provider.provideCompletionItems(model, position);
       // Should suggest table header settings like headercolor, note
@@ -106,7 +106,7 @@ describe('[example] CompletionItemProvider', () => {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(1, 13);
       const result = provider.provideCompletionItems(model, position);
 
@@ -124,7 +124,7 @@ describe('[example] CompletionItemProvider', () => {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(3, 3);
       const result = provider.provideCompletionItems(model, position);
 
@@ -146,7 +146,7 @@ describe('[example] CompletionItemProvider', () => {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(1, 29);
       const result = provider.provideCompletionItems(model, position);
 
@@ -172,7 +172,7 @@ describe('[example] CompletionItemProvider', () => {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(1, 10);
       const result = provider.provideCompletionItems(model, position);
 
@@ -200,7 +200,7 @@ describe('[example] CompletionItemProvider', () => {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(2, 3);
       const result = provider.provideCompletionItems(model, position);
 
@@ -222,7 +222,7 @@ describe('[example] CompletionItemProvider', () => {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(3, 3);
       const result = provider.provideCompletionItems(model, position);
 
@@ -246,7 +246,7 @@ describe('[example] CompletionItemProvider', () => {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(2, 6);
       const result = provider.provideCompletionItems(model, position);
 
@@ -380,7 +380,7 @@ describe('[example] CompletionItemProvider', () => {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(3, 6);
       const result = provider.provideCompletionItems(model, position);
 
@@ -516,7 +516,7 @@ describe('[example] CompletionItemProvider', () => {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(3, 6);
       const result = provider.provideCompletionItems(model, position);
 
@@ -654,7 +654,7 @@ describe('[example] CompletionItemProvider', () => {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(2, 11);
       const result = provider.provideCompletionItems(model, position);
 
@@ -696,7 +696,7 @@ describe('[example] CompletionItemProvider', () => {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(2, 11);
       const result = provider.provideCompletionItems(model, position);
 
@@ -738,7 +738,7 @@ describe('[example] CompletionItemProvider', () => {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(2, 15);
       const result = provider.provideCompletionItems(model, position);
 
@@ -782,7 +782,7 @@ describe('[example] CompletionItemProvider', () => {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(3, 22);
       const result = provider.provideCompletionItems(model, position);
 
@@ -806,7 +806,7 @@ describe('[example] CompletionItemProvider', () => {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(3, 32);
       const result = provider.provideCompletionItems(model, position);
 
@@ -832,7 +832,7 @@ describe('[example] CompletionItemProvider', () => {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(3, 23);
       const result = provider.provideCompletionItems(model, position);
 
@@ -860,7 +860,7 @@ describe('[example] CompletionItemProvider', () => {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(3, 31);
       const result = provider.provideCompletionItems(model, position);
 
@@ -884,7 +884,7 @@ describe('[example] CompletionItemProvider', () => {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(3, 23);
       const result = provider.provideCompletionItems(model, position);
 
@@ -914,7 +914,7 @@ describe('[example] CompletionItemProvider', () => {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(3, 6);
       const result = provider.provideCompletionItems(model, position);
 
@@ -940,7 +940,7 @@ describe('[example] CompletionItemProvider', () => {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(2, 13);
       const result = provider.provideCompletionItems(model, position);
 
@@ -964,7 +964,7 @@ describe('[example] CompletionItemProvider', () => {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(3, 23);
       const result = provider.provideCompletionItems(model, position);
 
@@ -990,7 +990,7 @@ describe('[example] CompletionItemProvider', () => {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(1, 28);
       const result = provider.provideCompletionItems(model, position);
 
@@ -1018,7 +1018,7 @@ describe('[example] CompletionItemProvider', () => {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(1, 36);
       const result = provider.provideCompletionItems(model, position);
 
@@ -1050,7 +1050,7 @@ describe('[example] CompletionItemProvider', () => {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(5, 5);
       const result = provider.provideCompletionItems(model, position);
 
@@ -1076,7 +1076,7 @@ describe('[example] CompletionItemProvider', () => {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(5, 10);
       const result = provider.provideCompletionItems(model, position);
 
@@ -1104,7 +1104,7 @@ describe('[example] CompletionItemProvider', () => {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(4, 9);
       const result = provider.provideCompletionItems(model, position);
 
@@ -1136,7 +1136,7 @@ describe('[example] CompletionItemProvider', () => {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(4, 15);
       const result = provider.provideCompletionItems(model, position);
 
@@ -1164,7 +1164,7 @@ describe('[example] CompletionItemProvider', () => {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(4, 14);
       const result = provider.provideCompletionItems(model, position);
 
@@ -1190,7 +1190,7 @@ describe('[example] CompletionItemProvider', () => {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(4, 3);
       const result = provider.provideCompletionItems(model, position);
 
@@ -1218,7 +1218,7 @@ describe('[example] CompletionItemProvider', () => {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(3, 3);
       const result = provider.provideCompletionItems(model, position);
 
@@ -1246,7 +1246,7 @@ describe('[example] CompletionItemProvider', () => {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(2, 3);
       const result = provider.provideCompletionItems(model, position);
 
@@ -1268,7 +1268,7 @@ describe('[example] CompletionItemProvider', () => {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(4, 4);
       const result = provider.provideCompletionItems(model, position);
 
@@ -1292,7 +1292,7 @@ describe('[example] CompletionItemProvider', () => {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(3, 10);
       const result = provider.provideCompletionItems(model, position);
 
@@ -1310,7 +1310,7 @@ describe('[example] CompletionItemProvider', () => {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(2, 12);
       const result = provider.provideCompletionItems(model, position);
 
@@ -1334,7 +1334,7 @@ describe('[example] CompletionItemProvider', () => {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(1, 10);
       const result = provider.provideCompletionItems(model, position);
 
@@ -1346,7 +1346,7 @@ describe('[example] CompletionItemProvider', () => {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(1, 10);
       const result = provider.provideCompletionItems(model, position);
 
@@ -1358,7 +1358,7 @@ describe('[example] CompletionItemProvider', () => {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(2, 32);
       const result = provider.provideCompletionItems(model, position);
 
@@ -1370,7 +1370,7 @@ describe('[example] CompletionItemProvider', () => {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(1, 18);
       const result = provider.provideCompletionItems(model, position);
 
@@ -1388,7 +1388,7 @@ describe('[example] CompletionItemProvider', () => {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(2, 13);
       const result = provider.provideCompletionItems(model, position);
 
@@ -1401,7 +1401,7 @@ describe('[example] CompletionItemProvider', () => {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(2, 6);
       const result = provider.provideCompletionItems(model, position);
 
@@ -1423,7 +1423,7 @@ describe('[example] CompletionItemProvider', () => {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(2, 11);
       const result = provider.provideCompletionItems(model, position);
 
@@ -1447,7 +1447,7 @@ describe('[example] CompletionItemProvider', () => {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(2, 3);
       const result = provider.provideCompletionItems(model, position);
 
@@ -1484,7 +1484,7 @@ Ref: `;
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(4, 6);
       const result = provider.provideCompletionItems(model, position);
 
@@ -1503,7 +1503,7 @@ Ref: auth.`;
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(4, 11);
       const result = provider.provideCompletionItems(model, position);
 
@@ -1523,7 +1523,7 @@ Ref: auth.users.`;
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(6, 16);
       const result = provider.provideCompletionItems(model, position);
 
@@ -1542,7 +1542,7 @@ Table users {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(5, 10);
       const result = provider.provideCompletionItems(model, position);
 
@@ -1559,7 +1559,7 @@ Table users {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(2, 32);
       const result = provider.provideCompletionItems(model, position);
 
@@ -1578,7 +1578,7 @@ Table users {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(3, 33);
       const result = provider.provideCompletionItems(model, position);
 
@@ -1591,7 +1591,7 @@ Table users {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(2, 29);
       const result = provider.provideCompletionItems(model, position);
 
@@ -1607,7 +1607,7 @@ Table users {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(3, 23);
       const result = provider.provideCompletionItems(model, position);
 
@@ -1631,7 +1631,7 @@ Table users {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(8, 12);
       const result = provider.provideCompletionItems(model, position);
 
@@ -1653,7 +1653,7 @@ Table users {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(8, 13);
       const result = provider.provideCompletionItems(model, position);
 
@@ -1675,7 +1675,7 @@ Table users {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(7, 38);
       const result = provider.provideCompletionItems(model, position);
 
@@ -1705,7 +1705,7 @@ Table users {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(12, 4);
       const result = provider.provideCompletionItems(model, position);
 
@@ -1726,7 +1726,7 @@ Table users {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(6, 5);
       const result = provider.provideCompletionItems(model, position);
 
@@ -1747,7 +1747,7 @@ Table users {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(7, 11);
       const result = provider.provideCompletionItems(model, position);
 
@@ -1771,7 +1771,7 @@ Table payments {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(9, 65);
       const result = provider.provideCompletionItems(model, position);
 
@@ -1788,7 +1788,7 @@ Table payments {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(3, 11);
       const result = provider.provideCompletionItems(model, position);
 
@@ -1805,7 +1805,7 @@ Ref order_user [update: cascade, delete: ]: orders.user_id > users.id`;
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(3, 42);
       const result = provider.provideCompletionItems(model, position);
 
@@ -1830,7 +1830,7 @@ Ref: (inventory.)`;
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(11, 17);
       const result = provider.provideCompletionItems(model, position);
 
@@ -1846,7 +1846,7 @@ Ref: public.orders.user_id > auth.`;
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(3, 35);
       const result = provider.provideCompletionItems(model, position);
 
@@ -1871,7 +1871,7 @@ Ref order_user {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(12, 26);
       const result = provider.provideCompletionItems(model, position);
 
@@ -1892,7 +1892,7 @@ TableGroup authentication {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(6, 8);
       const result = provider.provideCompletionItems(model, position);
 
@@ -1913,7 +1913,7 @@ TableGroup ecommerce {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(7, 3);
       const result = provider.provideCompletionItems(model, position);
 
@@ -1932,7 +1932,7 @@ TableGroup core {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(4, 3);
       const result = provider.provideCompletionItems(model, position);
 
@@ -1973,7 +1973,7 @@ Table notifications {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(26, 3);
       const result = provider.provideCompletionItems(model, position);
 
@@ -1993,7 +1993,7 @@ Table users {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(5, 41);
       const result = provider.provideCompletionItems(model, position);
 
@@ -2013,7 +2013,7 @@ Ref: products.category_id > categories.`;
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(8, 41);
       const result = provider.provideCompletionItems(model, position);
 
@@ -2036,7 +2036,7 @@ Ref: mycompany.ecommerce.orders.user_id > mycompany.ecommerce.`;
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(11, 62);
       const result = provider.provideCompletionItems(model, position);
 
@@ -2058,7 +2058,7 @@ Ref: mycompany.ecommerce.orders.user_id > mycompany.ecommerce.`;
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(5, 10);
       const result = provider.provideCompletionItems(model, position);
 
@@ -2073,7 +2073,7 @@ Ref: mycompany.ecommerce.orders.user_id > mycompany.ecommerce.`;
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(3, 18);
       const result = provider.provideCompletionItems(model, position);
 
@@ -2090,7 +2090,7 @@ Ref: orders.user_id >`;
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(3, 22);
       const result = provider.provideCompletionItems(model, position);
 
@@ -2112,7 +2112,7 @@ Table posts {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(9, 29);
       const result = provider.provideCompletionItems(model, position);
 
@@ -2136,7 +2136,7 @@ Records `;
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(10, 9);
       const result = provider.provideCompletionItems(model, position);
 
@@ -2156,7 +2156,7 @@ Records users(id, )`;
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(8, 19);
       const result = provider.provideCompletionItems(model, position);
 
@@ -2178,7 +2178,7 @@ Records s.`;
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(9, 11);
       const result = provider.provideCompletionItems(model, position);
 
@@ -2197,7 +2197,7 @@ Records s.`;
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(6, 12);
       const result = provider.provideCompletionItems(model, position);
 
@@ -2224,7 +2224,7 @@ Records users(id, user_status) {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(13, 14);
       const result = provider.provideCompletionItems(model, position);
 
@@ -2243,7 +2243,7 @@ Records users(id, user_status) {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(5, 3);
       const result = provider.provideCompletionItems(model, position);
 
@@ -2261,7 +2261,7 @@ Records users()`;
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(7, 15);
       const result = provider.provideCompletionItems(model, position);
 
@@ -2291,7 +2291,7 @@ describe('[example] CompletionItemProvider - Records Row Snippets', () => {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       // Position right after opening brace on new line
       const position = createPosition(9, 9);
       const result = provider.provideCompletionItems(model, position);
@@ -2321,7 +2321,7 @@ describe('[example] CompletionItemProvider - Records Row Snippets', () => {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(10, 9);
       const result = provider.provideCompletionItems(model, position);
 
@@ -2344,7 +2344,7 @@ describe('[example] CompletionItemProvider - Records Row Snippets', () => {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(9, 9);
       const result = provider.provideCompletionItems(model, position);
 
@@ -2367,7 +2367,7 @@ describe('[example] CompletionItemProvider - Records Row Snippets', () => {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(8, 11);
       const result = provider.provideCompletionItems(model, position);
 
@@ -2391,7 +2391,7 @@ describe('[example] CompletionItemProvider - Records Row Snippets', () => {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       // Position at the end of line 10 (after the last record)
       const position = createPosition(10, 44);
       const result = provider.provideCompletionItems(model, position);
@@ -2419,7 +2419,7 @@ describe('[example] CompletionItemProvider - Records Row Snippets', () => {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(7, 9);
       const result = provider.provideCompletionItems(model, position);
 
@@ -2442,7 +2442,7 @@ describe('[example] CompletionItemProvider - Records Row Snippets', () => {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(9, 9);
       const result = provider.provideCompletionItems(model, position);
 
@@ -2467,7 +2467,7 @@ describe('[example] CompletionItemProvider - Records Row Snippets', () => {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       // Position inside the record entry (after the comma)
       const position = createPosition(8, 14);
       const result = provider.provideCompletionItems(model, position);
@@ -2492,7 +2492,7 @@ describe('[example] CompletionItemProvider - Records Row Snippets', () => {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       // Position in the header (after "Records ")
       const position = createPosition(7, 17);
       const result = provider.provideCompletionItems(model, position);
@@ -2513,7 +2513,7 @@ describe('[example] CompletionItemProvider - Records Row Snippets', () => {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       // Position inside Table body
       const position = createPosition(3, 15);
       const result = provider.provideCompletionItems(model, position);
@@ -2545,7 +2545,7 @@ describe('[example] CompletionItemProvider - Records Row Snippets', () => {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(16, 9);
       const result = provider.provideCompletionItems(model, position);
 
@@ -2586,7 +2586,7 @@ describe('[example] CompletionItemProvider - Records Row Snippets', () => {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(17, 11);
       const result = provider.provideCompletionItems(model, position);
 
@@ -2616,7 +2616,7 @@ describe('[example] CompletionItemProvider - Records Row Snippets', () => {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(13, 1);
       const result = provider.provideCompletionItems(model, position);
 
@@ -2649,7 +2649,7 @@ describe('[example] CompletionItemProvider - Records Row Snippets', () => {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(13, 1);
       const result = provider.provideCompletionItems(model, position);
 
@@ -2683,7 +2683,7 @@ describe('[example] CompletionItemProvider - Records Row Snippets', () => {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(17, 1);
       const result = provider.provideCompletionItems(model, position);
 
@@ -2712,7 +2712,7 @@ describe('[example] CompletionItemProvider - Records Row Snippets', () => {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(6, 9);
       const result = provider.provideCompletionItems(model, position);
 
@@ -2736,7 +2736,7 @@ describe('[example] CompletionItemProvider - Records Row Snippets', () => {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(9, 9);
       const result = provider.provideCompletionItems(model, position);
 
@@ -2760,7 +2760,7 @@ describe('[example] CompletionItemProvider - Records Row Snippets', () => {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
+      const provider = new DbmlCompletionItemProvider(compiler);
       const position = createPosition(10, 9);
       const result = provider.provideCompletionItems(model, position);
 

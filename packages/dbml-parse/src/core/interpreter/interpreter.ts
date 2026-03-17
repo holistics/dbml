@@ -96,7 +96,7 @@ export default class Interpreter {
 
   interpret (): Report<Database> {
     // First pass: interpret all non-records elements
-    const errors = this.ast.body.flatMap((element) => {
+    const errors = this.ast.declarations.flatMap((element) => {
       switch (getElementKind(element).unwrap_or(undefined)) {
         case ElementKind.Table:
           return (new TableInterpreter(element, this.env)).interpret();
