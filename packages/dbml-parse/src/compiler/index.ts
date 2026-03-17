@@ -1,6 +1,6 @@
 import { type DbmlProjectLayout, Filepath, MemoryProjectLayout } from './projectLayout';
 import { type FilepathKey } from './projectLayout';
-import { type FileIndex } from './types';
+import { DEFAULT_ENTRY } from './constants';
 import { DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLReferencesProvider, DBMLDiagnosticsProvider } from '@/services/index';
 import { parseFile, parseProject, analyzeProject, interpretProject } from './queries/pipeline';
 import { flatTokenStream, invalidTokens } from './queries/token';
@@ -22,12 +22,10 @@ export type { FileIndex } from './types';
 // Re-export utilities
 export { splitQualifiedIdentifier, unescapeString, escapeString, formatRecordValue, isValidIdentifier, addDoubleQuoteIfNeeded };
 
-const DEFAULT_ENTRY = Filepath.from('/main.project.dbml');
-
 export default class Compiler {
   private _layout: DbmlProjectLayout;
   private globalCache = new Map<symbol, any>();
-  private fileIndexes = new Map<FilepathKey, FileIndex>();
+  private localCaches: Map<FilepathKey, unknown>[] = [];
   constructor (layout?: DbmlProjectLayout) {
     this._layout = layout ?? new MemoryProjectLayout();
   }
@@ -42,19 +40,21 @@ export default class Compiler {
 
     this.globalCache.clear();
     if (filePath === undefined) {
-      this.fileIndexes.clear();
+      this.localCaches.forEach((c) => c.clear());
     } else {
-      this.fileIndexes.delete(filePath.key);
+      this.localCaches.forEach((c) => c.delete(filePath.key));
     }
     return this;
   }
 
-  private localQuery (fn: (this: Compiler, filepath: Filepath) => FileIndex): (filepath: Filepath) => FileIndex {
-    return (filepath: Filepath): FileIndex => {
-      const cached = this.fileIndexes.get(filepath.key);
-      if (cached) return cached;
+  private localQuery<T> (fn: (this: Compiler, filepath: Filepath) => T): (filepath?: Filepath) => T {
+    const cache = new Map<FilepathKey, T>();
+    this.localCaches.push(cache as Map<FilepathKey, unknown>);
+    return (filepath: Filepath = DEFAULT_ENTRY): T => {
+      const cached = cache.get(filepath.key);
+      if (cached !== undefined) return cached;
       const result = fn.call(this, filepath);
-      this.fileIndexes.set(filepath.key, result);
+      cache.set(filepath.key, result);
       return result;
     };
   }
@@ -89,14 +89,14 @@ export default class Compiler {
   deleteSource (filePath: Filepath): this {
     this._layout.deleteSource(filePath);
     this.globalCache.clear();
-    this.fileIndexes.delete(filePath.key);
+    this.localCaches.forEach((c) => c.delete(filePath.key));
     return this;
   }
 
   clearSource (): this {
     this._layout.clearSource();
     this.globalCache.clear();
-    this.fileIndexes.clear();
+    this.localCaches.forEach((c) => c.clear());
     return this;
   }
 
@@ -144,16 +144,16 @@ export default class Compiler {
 
   /* token */
 
-  // A global query
-  // Ordered flat stream of every token across all files,
+  // A local query
+  // Ordered flat stream of every token in the given file,
   // with leading/trailing invalid tokens interleaved in source order
-  // Signature: () => readonly SyntaxToken[]
-  flatTokenStream = this.globalQuery(flatTokenStream);
+  // Signature: (filepath?: Filepath) => readonly SyntaxToken[]
+  flatTokenStream = this.localQuery(flatTokenStream);
 
-  // A global query
-  // All tokens that failed to lex
-  // Signature: () => readonly SyntaxToken[]
-  invalidTokens = this.globalQuery(invalidTokens);
+  // A local query
+  // All tokens that failed to lex in the given file
+  // Signature: (filepath?: Filepath) => readonly SyntaxToken[]
+  invalidTokens = this.localQuery(invalidTokens);
 
   /* symbol */
 

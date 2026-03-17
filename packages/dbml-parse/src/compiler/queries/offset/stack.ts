@@ -1,4 +1,5 @@
 import type Compiler from '../../index';
+import { DEFAULT_ENTRY } from '../../constants';
 import { findLastIndex, last } from 'lodash-es';
 import {
   SyntaxNode,
@@ -17,7 +18,7 @@ import { isOffsetWithinSpan } from '@/core/utils';
 import { getMemberChain } from '@/core/parser/utils';
 
 export function stackAtOffset (this: Compiler, offset: number): readonly Readonly<SyntaxNode>[] {
-  const tokens = this.flatTokenStream();
+  const tokens = this.flatTokenStream(DEFAULT_ENTRY);
   const { index: startIndex, token } = this.tokenAtOffset(offset);
   const validIndex = startIndex === undefined
     ? -1
