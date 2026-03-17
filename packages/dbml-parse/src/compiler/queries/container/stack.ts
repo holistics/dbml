@@ -17,7 +17,7 @@ import { isOffsetWithinSpan } from '@/core/utils';
 import { getMemberChain } from '@/core/parser/utils';
 
 export function stackAtOffset (this: Compiler, offset: number): readonly Readonly<SyntaxNode>[] {
-  const tokens = this.flatStream();
+  const tokens = this.flatTokenStream();
   const { index: startIndex, token } = this.tokenAtOffset(offset);
   const validIndex = startIndex === undefined
     ? -1

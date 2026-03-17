@@ -3,7 +3,7 @@ import { type FilepathKey } from './projectLayout';
 import { type FileIndex } from './types';
 import { DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLReferencesProvider, DBMLDiagnosticsProvider } from '@/services/index';
 import { parseFile, parseProject, analyzeProject, interpretProject, nodeSymbol, nodeReferences, nodeReferee } from './queries/project';
-import { invalidStream, flatStream } from './queries/token';
+import { flatTokenStream, invalidTokens } from './queries/token';
 import { symbolOfName, symbolOfNameToKey, symbolMembers } from './queries/symbol';
 import { stackAtOffset, tokenAtOffset, elementAtOffset, scopeAtOffset, scopeKindAtOffset } from './queries/container';
 import {
@@ -101,6 +101,10 @@ export default class Compiler {
     return this;
   }
 
+  getSource (filePath: Filepath): string | undefined {
+    return this.layout.getSource(filePath);
+  }
+
   renameTable (
     oldName: TableNameInput,
     newName: TableNameInput,
@@ -120,8 +124,8 @@ export default class Compiler {
 
   interpretProject = this.globalQuery(interpretProject);
 
-  flatStream = this.globalQuery(flatStream);
-  invalidStream = this.globalQuery(invalidStream);
+  flatTokenStream = this.globalQuery(flatTokenStream);
+  invalidTokens = this.globalQuery(invalidTokens);
 
   nodeSymbol = this.globalQuery(nodeSymbol);
   nodeReferences = this.globalQuery(nodeReferences);
