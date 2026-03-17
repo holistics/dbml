@@ -2,7 +2,7 @@ import type Compiler from '../../index';
 import { Filepath } from '../../projectLayout';
 import { dirname } from 'path';
 
-export type ModuleIndex = {
+export type Module = {
   // The *.project.dbml file that declares this module, or undefined if the root has none
   entry: Filepath | undefined;
   // Absolute path of the module's root directory
@@ -14,7 +14,7 @@ export type ModuleIndex = {
 
 const ROOT = Filepath.from('/');
 
-export function detectModules (this: Compiler): ModuleIndex[] {
+export function modules (this: Compiler): Module[] {
   const layout = this.layout();
   const allDbmlFiles = layout.listAllFiles(ROOT).filter((f) => f.extname === '.dbml');
 
@@ -29,7 +29,7 @@ export function detectModules (this: Compiler): ModuleIndex[] {
   }
 
   // Initialize one ModuleIndex per module directory
-  const modules = new Map<string, ModuleIndex>();
+  const modules = new Map<string, Module>();
   for (const [dir, entry] of moduleEntries) {
     modules.set(dir, { entry, dir, files: [] });
   }
@@ -45,7 +45,7 @@ export function detectModules (this: Compiler): ModuleIndex[] {
   return [...modules.values()];
 }
 
-function findNearestModuleDir (dir: string, modules: Map<string, ModuleIndex>): string | undefined {
+function findNearestModuleDir (dir: string, modules: Map<string, Module>): string | undefined {
   let current = dir;
   while (true) {
     if (modules.has(current)) return current;
