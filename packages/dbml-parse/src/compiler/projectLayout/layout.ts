@@ -1,6 +1,6 @@
 import { Filepath, FilepathKey } from './filepath';
 
-export interface DbmlProjectLayout {
+export interface DBMLProjectLayout {
   // Override the content of a file in-memory without touching the underlying source
   setSource (filePath: Filepath, content: string): void;
 
@@ -23,7 +23,7 @@ export interface DbmlProjectLayout {
 // All files are provided up front; no lazy loading
 // This one is mainly used for testing
 // Or webapps where there's no native filesystem
-export class MemoryProjectLayout implements DbmlProjectLayout {
+export class MemoryProjectLayout implements DBMLProjectLayout {
   private files: Map<string, string>;
 
   constructor (files: Map<FilepathKey, string> | Record<FilepathKey, string> = {}) {
