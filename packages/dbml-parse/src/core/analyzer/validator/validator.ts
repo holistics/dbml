@@ -26,17 +26,11 @@ export default class Validator {
   ) {
     this.ast = ast;
     this.symbolFactory = symbolFactory;
-
-    if (nodeToSymbol) {
-      this.nodeToSymbol = nodeToSymbol;
-      this.publicSchemaSymbol = nodeToSymbol.get(ast) as SchemaSymbol;
-    } else {
-      this.nodeToSymbol = new WeakMap();
-      this.publicSchemaSymbol = this.symbolFactory.create(SchemaSymbol, {
-        symbolTable: new SymbolTable(),
-      });
-      this.nodeToSymbol.set(this.ast, this.publicSchemaSymbol);
-    }
+    this.nodeToSymbol = nodeToSymbol ?? new WeakMap();
+    this.publicSchemaSymbol = (nodeToSymbol?.get(ast) ?? this.symbolFactory.create(SchemaSymbol, {
+      symbolTable: new SymbolTable(),
+    })) as SchemaSymbol;
+    this.nodeToSymbol.set(this.ast, this.publicSchemaSymbol);
   }
 
   validate (): Report<NodeToSymbolMap> {
