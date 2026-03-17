@@ -8,6 +8,8 @@ import Parser from '@/core/parser/parser';
 import Analyzer, { NodeToSymbolMap, NodeToRefereeMap } from '@/core/analyzer/analyzer';
 import Interpreter from '@/core/interpreter/interpreter';
 import { type DbmlProjectLayout, Filepath, MemoryProjectLayout } from './projectLayout';
+import { type FilepathKey } from './projectLayout';
+import { type FileIndex } from './types';
 import { DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLReferencesProvider, DBMLDiagnosticsProvider } from '@/services/index';
 import { ast, errors, warnings, tokens, rawDb, publicSymbolTable, nodeToSymbol, nodeToReferee } from './queries/parse';
 import { parseFile, parseProject, analyzeProject, interpretProject } from './queries/project';
@@ -34,7 +36,8 @@ const DEFAULT_ENTRY = Filepath.from('/main.project.dbml');
 
 export default class Compiler {
   private layout: DbmlProjectLayout;
-  private cache = new Map<symbol, any>();
+  private globalCache = new Map<symbol, any>();
+  fileIndexes = new Map<FilepathKey, FileIndex>();
   private nodeIdGenerator = new SyntaxNodeIdGenerator();
   private symbolIdGenerator = new NodeSymbolIdGenerator();
 
@@ -49,33 +52,47 @@ export default class Compiler {
     } else {
       this.layout.setSource(filePath, source);
     }
-    this.cache.clear();
-    this.nodeIdGenerator.reset();
-    this.symbolIdGenerator.reset();
+
+    this.globalCache.clear();
+    if (filePath === undefined) {
+      this.fileIndexes.clear();
+    } else {
+      this.fileIndexes.delete(filePath.key);
+    }
     return this;
   }
 
-  private query<Args extends unknown[], Return> (
+  private localQuery (fn: (this: Compiler, filepath: Filepath) => FileIndex): (filepath: Filepath) => FileIndex {
+    return (filepath: Filepath): FileIndex => {
+      const cached = this.fileIndexes.get(filepath.key);
+      if (cached) return cached;
+      const result = fn.call(this, filepath);
+      this.fileIndexes.set(filepath.key, result);
+      return result;
+    };
+  }
+
+  private globalQuery<Args extends unknown[], Return> (
     fn: (this: Compiler, ...args: Args) => Return,
     toKey?: (...args: Args) => unknown,
   ): (...args: Args) => Return {
     const cacheKey = Symbol();
     return ((...args: Args): Return => {
       if (args.length === 0) {
-        if (this.cache.has(cacheKey)) return this.cache.get(cacheKey);
+        if (this.globalCache.has(cacheKey)) return this.globalCache.get(cacheKey);
         const result = fn.apply(this, args);
-        this.cache.set(cacheKey, result);
+        this.globalCache.set(cacheKey, result);
         return result;
       }
 
       const key = toKey ? toKey(...args) : args[0];
-      let mapCache = this.cache.get(cacheKey);
+      let mapCache = this.globalCache.get(cacheKey);
       if (mapCache instanceof Map && mapCache.has(key)) return mapCache.get(key);
 
       const result = fn.apply(this, args);
       if (!(mapCache instanceof Map)) {
         mapCache = new Map();
-        this.cache.set(cacheKey, mapCache);
+        this.globalCache.set(cacheKey, mapCache);
       }
       mapCache.set(key, result);
       return result;
@@ -99,6 +116,20 @@ export default class Compiler {
     );
   }
 
+  deleteSource (filePath: Filepath): this {
+    this.layout.deleteSource(filePath);
+    this.globalCache.clear();
+    this.fileIndexes.delete(filePath.key);
+    return this;
+  }
+
+  clearSource (): this {
+    this.layout.clearSource();
+    this.globalCache.clear();
+    this.fileIndexes.clear();
+    return this;
+  }
+
   renameTable (
     oldName: TableNameInput,
     newName: TableNameInput,
@@ -110,41 +141,41 @@ export default class Compiler {
     return applyTextEdits(this.parse.source() ?? '', edits);
   }
 
-  parseFile = parseFile.bind(this);
+  parseFile = this.localQuery(parseFile);
   parseProject = parseProject.bind(this);
   analyzeProject = analyzeProject.bind(this);
   interpretProject = interpretProject.bind(this);
 
   readonly token = {
-    invalidStream: this.query(invalidStream),
-    flatStream: this.query(flatStream),
+    invalidStream: this.globalQuery(invalidStream),
+    flatStream: this.globalQuery(flatStream),
   };
 
   readonly parse = {
     source: (filepath: Filepath = DEFAULT_ENTRY) => this.layout.getSource(filepath),
     layout: () => this.layout,
-    _: this.query(this.interpret),
-    ast: this.query(ast),
-    errors: this.query(errors),
-    warnings: this.query(warnings),
-    tokens: this.query(tokens),
-    rawDb: this.query(rawDb),
-    publicSymbolTable: this.query(publicSymbolTable),
-    nodeToSymbol: this.query(nodeToSymbol),
-    nodeToReferee: this.query(nodeToReferee),
+    _: this.globalQuery(this.interpret),
+    ast: this.globalQuery(ast),
+    errors: this.globalQuery(errors),
+    warnings: this.globalQuery(warnings),
+    tokens: this.globalQuery(tokens),
+    rawDb: this.globalQuery(rawDb),
+    publicSymbolTable: this.globalQuery(publicSymbolTable),
+    nodeToSymbol: this.globalQuery(nodeToSymbol),
+    nodeToReferee: this.globalQuery(nodeToReferee),
   };
 
   readonly container = {
-    stack: this.query(containerStack),
-    token: this.query(containerToken),
-    element: this.query(containerElement),
-    scope: this.query(containerScope),
-    scopeKind: this.query(containerScopeKind),
+    stack: this.globalQuery(containerStack),
+    token: this.globalQuery(containerToken),
+    element: this.globalQuery(containerElement),
+    scope: this.globalQuery(containerScope),
+    scopeKind: this.globalQuery(containerScopeKind),
   };
 
   readonly symbol = {
-    ofName: this.query(symbolOfName, symbolOfNameToKey),
-    members: this.query(symbolMembers),
+    ofName: this.globalQuery(symbolOfName, symbolOfNameToKey),
+    members: this.globalQuery(symbolMembers),
   };
 
   initMonacoServices () {

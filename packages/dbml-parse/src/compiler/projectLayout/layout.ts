@@ -10,6 +10,9 @@ export interface DbmlProjectLayout {
   // Remove a file entirely from the layout
   deleteSource (filePath: Filepath): void;
 
+  // Remove all files from the layout
+  clearSource (): void;
+
   // Return true if a file or directory exists at the given path
   exists (filePath: Filepath): boolean;
 
@@ -45,6 +48,10 @@ export class MemoryProjectLayout implements DbmlProjectLayout {
 
   deleteSource (filePath: Filepath): void {
     this.files.delete(filePath.absolute);
+  }
+
+  clearSource (): void {
+    this.files.clear();
   }
 
   exists (filePath: Filepath): boolean {
