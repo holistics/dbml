@@ -20,6 +20,7 @@ export function parseFile (this: Compiler, filepath: Filepath): FileIndex {
     ast: parseReport.getValue().ast,
     tokens: parseReport.getValue().tokens,
     errors: parseReport.getErrors(),
+    warnings: parseReport.getWarnings(),
   };
 }
 

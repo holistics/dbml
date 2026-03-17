@@ -1,5 +1,6 @@
 import type Compiler from '../../index';
 import type { Database } from '@/core/interpreter/types';
+import type { CompileWarning } from '@/core/errors';
 import Interpreter from '@/core/interpreter/interpreter';
 
 function mergeDatabases (dbs: Database[]): Database {
@@ -17,16 +18,19 @@ function mergeDatabases (dbs: Database[]): Database {
   };
 }
 
-export function interpretProject (this: Compiler): Database | undefined {
+export function interpretProject (this: Compiler): { database: Database; warnings: CompileWarning[] } | undefined {
   const databases: Database[] = [];
+  const warnings: CompileWarning[] = [];
 
   for (const analyzedFile of this.analyzeProject().values()) {
     if (analyzedFile.errors.length > 0) {
       continue;
     }
 
-    databases.push(new Interpreter(analyzedFile.analysisResult).interpret().getValue());
+    const interpretReport = new Interpreter(analyzedFile.analysisResult).interpret();
+    databases.push(interpretReport.getValue());
+    warnings.push(...analyzedFile.warnings, ...interpretReport.getWarnings());
   }
 
-  return databases.length > 0 ? mergeDatabases(databases) : undefined;
+  return databases.length > 0 ? { database: mergeDatabases(databases), warnings } : undefined;
 }

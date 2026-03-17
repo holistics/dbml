@@ -1,6 +1,6 @@
 import type { ProgramNode } from '@/core/parser/nodes';
 import type { SyntaxToken } from '@/core/lexer/tokens';
-import type { CompileError } from '@/core/errors';
+import type { CompileError, CompileWarning } from '@/core/errors';
 import type { Filepath } from './projectLayout';
 
 // The result of lexing and parsing a single .dbml file.
@@ -11,6 +11,7 @@ export interface FileIndex {
   readonly ast: Readonly<ProgramNode>;
   readonly tokens: readonly Readonly<SyntaxToken>[];
   readonly errors: readonly Readonly<CompileError>[];
+  readonly warnings: readonly Readonly<CompileWarning>[];
 }
 
 export const enum ScopeKind {
