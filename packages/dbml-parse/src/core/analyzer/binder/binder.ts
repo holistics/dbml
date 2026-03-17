@@ -16,10 +16,16 @@ export default class Binder {
 
   private nodeToSymbol: NodeToSymbolMap;
 
-  constructor ({ ast, nodeToSymbol }: { ast: ProgramNode; nodeToSymbol: NodeToSymbolMap }, symbolFactory: SymbolFactory) {
+  private existingNodeToReferee?: NodeToRefereeMap;
+
+  constructor (
+    { ast, nodeToSymbol, nodeToReferee }: { ast: ProgramNode; nodeToSymbol: NodeToSymbolMap; nodeToReferee?: NodeToRefereeMap },
+    symbolFactory: SymbolFactory,
+  ) {
     this.ast = ast;
     this.symbolFactory = symbolFactory;
     this.nodeToSymbol = nodeToSymbol;
+    this.existingNodeToReferee = nodeToReferee;
   }
 
   private resolvePartialInjections (context: BinderContext): CompileError[] {
@@ -31,7 +37,7 @@ export default class Binder {
 
   resolve (): Report<NodeToRefereeMap> {
     const errors: CompileError[] = [];
-    const nodeToReferee: NodeToRefereeMap = new WeakMap();
+    const nodeToReferee: NodeToRefereeMap = this.existingNodeToReferee ?? new WeakMap();
     const context: BinderContext = { ast: this.ast, nodeToSymbol: this.nodeToSymbol, nodeToReferee };
 
     // Must call this before binding

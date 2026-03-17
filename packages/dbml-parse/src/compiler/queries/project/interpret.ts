@@ -1,7 +1,7 @@
 import type Compiler from '../../index';
 import type { Database } from '@/core/interpreter/types';
-import type { CompileWarning } from '@/core/errors';
 import Interpreter from '@/core/interpreter/interpreter';
+import Report from '@/core/report';
 
 function mergeDatabases (dbs: Database[]): Database {
   return {
@@ -18,19 +18,20 @@ function mergeDatabases (dbs: Database[]): Database {
   };
 }
 
-export function interpretProject (this: Compiler): { database: Database; warnings: CompileWarning[] } | undefined {
+export function interpretProject (this: Compiler): Report<Database | undefined> {
+  const analyzeReport = this.analyzeProject();
+  const { asts, nodeToSymbol, nodeToReferee } = analyzeReport.getValue();
+
   const databases: Database[] = [];
-  const warnings: CompileWarning[] = [];
+  let report: Report<unknown> = analyzeReport.map(() => undefined);
 
-  for (const analyzedFile of this.analyzeProject().values()) {
-    if (analyzedFile.errors.length > 0) {
-      continue;
-    }
-
-    const interpretReport = new Interpreter(analyzedFile.analysisResult).interpret();
+  for (const ast of asts) {
+    const interpretReport = new Interpreter({ ast, nodeToSymbol, nodeToReferee }).interpret();
     databases.push(interpretReport.getValue());
-    warnings.push(...analyzedFile.warnings, ...interpretReport.getWarnings());
+    report = report.chain(() => interpretReport.map(() => undefined));
   }
 
-  return databases.length > 0 ? { database: mergeDatabases(databases), warnings } : undefined;
+  const database = databases.length > 0 ? mergeDatabases(databases) : undefined;
+
+  return report.map(() => database);
 }

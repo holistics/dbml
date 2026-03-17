@@ -20,15 +20,23 @@ export default class Validator {
 
   private nodeToSymbol: NodeToSymbolMap;
 
-  constructor ({ ast }: { ast: ProgramNode }, symbolFactory: SymbolFactory) {
+  constructor (
+    { ast, nodeToSymbol }: { ast: ProgramNode; nodeToSymbol?: NodeToSymbolMap },
+    symbolFactory: SymbolFactory,
+  ) {
     this.ast = ast;
     this.symbolFactory = symbolFactory;
-    this.nodeToSymbol = new WeakMap();
-    this.publicSchemaSymbol = this.symbolFactory.create(SchemaSymbol, {
-      symbolTable: new SymbolTable(),
-    });
 
-    this.nodeToSymbol.set(this.ast, this.publicSchemaSymbol);
+    if (nodeToSymbol) {
+      this.nodeToSymbol = nodeToSymbol;
+      this.publicSchemaSymbol = nodeToSymbol.get(ast) as SchemaSymbol;
+    } else {
+      this.nodeToSymbol = new WeakMap();
+      this.publicSchemaSymbol = this.symbolFactory.create(SchemaSymbol, {
+        symbolTable: new SymbolTable(),
+      });
+      this.nodeToSymbol.set(this.ast, this.publicSchemaSymbol);
+    }
   }
 
   validate (): Report<NodeToSymbolMap> {
