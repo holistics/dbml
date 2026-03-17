@@ -8,7 +8,6 @@ import { symbolOfName, symbolOfNameToKey, symbolMembers } from './queries/symbol
 import { stackAtOffset, tokenAtOffset, elementAtOffset, scopeAtOffset, scopeKindAtOffset } from './queries/container';
 import {
   renameTable,
-  applyTextEdits,
   type TextEdit,
   type TableNameInput,
 } from './queries/transform';
@@ -117,11 +116,6 @@ export default class Compiler {
     newName: TableNameInput,
   ): string {
     return renameTable.call(this, oldName, newName);
-  }
-
-  applyTextEdits (edits: TextEdit[]): string {
-    // FIXME
-    return '';
   }
 
   /* Compilation pipeline */
