@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import Compiler from '@/compiler';
-import DbmlDefinitionProvider from '@/services/definition/provider';
+import DBMLDefinitionProvider from '@/services/definition/provider';
 import { createMockTextModel, createPosition, extractTextFromRange } from '../../../utils';
 
 describe('[example] DefinitionProvider', () => {
@@ -18,7 +18,7 @@ Ref: posts.user_id > users.id`;
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "users" in "Ref: posts.user_id > users.id"
@@ -62,7 +62,7 @@ Ref: posts.user_id > users.id`;
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "posts" in "Ref: posts.user_id"
@@ -95,7 +95,7 @@ Table posts {
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "users" in inline ref
@@ -130,7 +130,7 @@ Ref: posts.user_id < users.id`;
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "users" with < operator
@@ -171,7 +171,7 @@ Ref: users.referrer_id > users.id`;
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on second "users" in self-reference
@@ -208,7 +208,7 @@ Ref: posts.user_id > users.id`;
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "id" in "users.id"
@@ -248,7 +248,7 @@ Ref: posts.user_id > users.id`;
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "user_id" in "posts.user_id"
@@ -281,7 +281,7 @@ Table posts {
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "id" in inline ref
@@ -318,7 +318,7 @@ Ref: (orders.merchant_id, orders.country) > (merchants.id, merchants.country_cod
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "country_code" in composite ref
@@ -361,7 +361,7 @@ Table orders {
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "order_status" column type
@@ -395,7 +395,7 @@ Table orders {
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "order_status" in default value
@@ -434,7 +434,7 @@ Table orders {
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "pending" in default value
@@ -473,7 +473,7 @@ Table users {
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "true" in default value
@@ -512,7 +512,7 @@ Table users {
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "value" in default value
@@ -546,7 +546,7 @@ Table users {
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "hello" in default value
@@ -563,7 +563,7 @@ Table users {
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "true" keyword in default value
@@ -588,7 +588,7 @@ Ref: ecommerce.orders.user_id > ecommerce.users.id`;
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "users" in qualified name
@@ -623,7 +623,7 @@ Ref: ecommerce.orders.user_id > ecommerce.users.id`;
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "id" in qualified name
@@ -657,7 +657,7 @@ Table users {
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "status" in qualified enum type
@@ -707,7 +707,7 @@ TableGroup ecommerce {
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "users" in TableGroup
@@ -740,7 +740,7 @@ TableGroup group1 {
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "users" in qualified TableGroup reference
@@ -776,7 +776,7 @@ TableGroup group1 {
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "email" in index
@@ -811,7 +811,7 @@ TableGroup group1 {
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "status" in composite index
@@ -833,7 +833,7 @@ TableGroup group1 {
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "email" in named index
@@ -870,7 +870,7 @@ Table users {
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "base_timestamps" in injection
@@ -917,7 +917,7 @@ Ref: users.created_at > logs.timestamp`;
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "created_at" which is injected from partial
@@ -951,7 +951,7 @@ Table users {
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "timestamps" in qualified partial injection
@@ -970,7 +970,7 @@ Table users {
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on keyword "Table"
@@ -987,7 +987,7 @@ Ref: posts.user_id > users.id`;
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on ">" operator
@@ -1004,7 +1004,7 @@ Ref: posts.user_id > users.id`;
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on number literal
@@ -1021,7 +1021,7 @@ Ref: posts.user_id > users.id`;
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position inside string literal
@@ -1038,7 +1038,7 @@ Ref: posts.user_id > users.id`;
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "pk" attribute
@@ -1056,7 +1056,7 @@ Table posts {
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position inside comment
@@ -1077,7 +1077,7 @@ Ref: users.id > posts.user_id`;
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on blank line
@@ -1094,7 +1094,7 @@ Ref: users.id > posts.user_id`;
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position at very start
@@ -1111,7 +1111,7 @@ Ref: users.id > posts.user_id`;
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position at very end
@@ -1132,7 +1132,7 @@ Ref: users.id > nonexistent.id`;
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on non-existent table
@@ -1151,7 +1151,7 @@ Ref: users.nonexistent_col > posts.id`;
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on non-existent column
@@ -1168,7 +1168,7 @@ Ref: users.nonexistent_col > posts.id`;
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on non-existent enum
@@ -1186,7 +1186,7 @@ Ref: users.nonexistent_col > posts.id`;
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on non-existent partial
@@ -1211,7 +1211,7 @@ Ref: schema1.orders.id > schema2.orders.id`;
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on schema1.orders
@@ -1275,7 +1275,7 @@ Ref: users.created_at > logs.timestamp`;
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on created_at in ref - should find direct definition, not injected
@@ -1310,7 +1310,7 @@ Ref: orders.user_id > myproject.ecommerce.users.id`;
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "users" in long qualified name
@@ -1353,7 +1353,7 @@ Ref: orders.user_id > myproject.ecommerce.users.id`;
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "age" in check constraint
@@ -1379,7 +1379,7 @@ TableGroup group1 {
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on alias "u" in TableGroup
@@ -1400,7 +1400,7 @@ Ref: users.id > posts.user_id`;
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "users"
@@ -1432,7 +1432,7 @@ Ref: users.email > logs.email_col`;
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "email" in ref
@@ -1466,7 +1466,7 @@ Table users {
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "status" type
@@ -1504,7 +1504,7 @@ Ref: posts.user_id > users.id`;
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "id" in "users.id" (right side)
@@ -1542,7 +1542,7 @@ Table posts {
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "id" in "users.id" (right side)
@@ -1582,7 +1582,7 @@ Ref: users.id < posts.user_id`;
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "posts" (right side with < operator)
@@ -1628,7 +1628,7 @@ Ref: posts.(author_first, author_last) > users.(first_name, last_name)`;
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "first_name" in right side composite ref
@@ -1663,7 +1663,7 @@ Ref: posts.(author_first, author_last) > users.(first_name, last_name)`;
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "users"
@@ -1686,7 +1686,7 @@ Ref: posts.user_id >`;
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "posts" in incomplete ref
@@ -1728,7 +1728,7 @@ Table posts {
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "user_id"
@@ -1747,7 +1747,7 @@ Ref: posts.user_id > users.id`;
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "posts" (non-existent table)
@@ -1763,7 +1763,7 @@ Ref: posts.user_id > users.id`;
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "status"
@@ -1780,7 +1780,7 @@ Ref: posts.user_id > users.id`;
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "users"
@@ -1799,7 +1799,7 @@ TableGroup my_group {
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "users" in TableGroup
@@ -1840,7 +1840,7 @@ Ref: posts.(author_first, author_last) > users.(first_name, last_name)`;
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "author_last" (doesn't exist in posts)
@@ -1861,7 +1861,7 @@ Ref: posts.user_id > users.id`;
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "users" in ref
@@ -1890,7 +1890,7 @@ Ref: posts.user_id > users.id`;
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "id" in "users.id"
@@ -1920,7 +1920,7 @@ Table users {
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "status" type
@@ -1952,7 +1952,7 @@ Table users {
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "mypartial" in injection
@@ -1981,7 +1981,7 @@ Ref: posts.user_id > public.users.id`;
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "users" in "public.users"
@@ -2048,7 +2048,7 @@ Ref: post_tags.tag_id > tags.id`;
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "users" in last ref
@@ -2085,7 +2085,7 @@ Table enrollments {
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "students" in inline ref
@@ -2116,7 +2116,7 @@ Ref: comments.commentable_id > posts.id`;
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "users" in first polymorphic ref
@@ -2139,7 +2139,7 @@ Table users {
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "project_overview" Note
@@ -2163,7 +2163,7 @@ Ref: orders.user_id > users.id`;
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "users" in ref
@@ -2185,7 +2185,7 @@ Ref: posts.user_id > users.id`;
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "users" in ref
@@ -2213,7 +2213,7 @@ Ref: posts.user_id > users.id`;
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "first_name" in composite index
@@ -2236,7 +2236,7 @@ Ref: posts.user_id > users.id`;
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "status" in composite index
@@ -2276,7 +2276,7 @@ Ref: users.created_by > admins.id`;
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "timestamps" injection
@@ -2308,7 +2308,7 @@ Table articles {
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "searchable" injection
@@ -2336,7 +2336,7 @@ Table orders {
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "pending" in default value
@@ -2372,7 +2372,7 @@ Table permissions {
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "user_role" in permissions table
@@ -2414,7 +2414,7 @@ TableGroup finance [color: #2ecc71] {
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "users" in TableGroup
@@ -2443,7 +2443,7 @@ Ref: o.user_id > u.id`;
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "u" alias in TableGroup
@@ -2469,7 +2469,7 @@ Ref orders_user [update: cascade, delete: set null, color: #ff0000]: orders.user
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "users" in named ref with settings
@@ -2496,7 +2496,7 @@ Ref inventory_warehouse [delete: cascade]: (inventory.warehouse_id, inventory.wa
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "region_code" in composite ref
@@ -2522,7 +2522,7 @@ Ref: posts.user_id > "用户".id`;
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on quoted unicode table name
@@ -2547,7 +2547,7 @@ Ref: "order".id > "user".id`;
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "user" (SQL keyword as table name)
@@ -2566,7 +2566,7 @@ Ref: "order".id > "user".id`;
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position right after comma: [pk,| unique]
@@ -2583,7 +2583,7 @@ Ref: "order".id > "user".id`;
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position right after colon: [default:| 'test']
@@ -2600,7 +2600,7 @@ Ref: "order".id > "user".id`;
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position right after opening bracket: [|pk]
@@ -2617,7 +2617,7 @@ Ref: "order".id > "user".id`;
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position right before closing bracket: [pk|]
@@ -2634,7 +2634,7 @@ Ref: "order".id > "user".id`;
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position right after opening brace: users {|
@@ -2651,7 +2651,7 @@ Ref: "order".id > "user".id`;
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position right before closing brace
@@ -2669,7 +2669,7 @@ Ref: users.id > posts.user_id`;
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position right after dot: users.|id
@@ -2692,7 +2692,7 @@ Ref: orders.(merchant_id, country) > merchants.(id, country_code)`;
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on column inside tuple
@@ -2708,7 +2708,7 @@ Ref: orders.(merchant_id, country) > merchants.(id, country_code)`;
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position inside empty block
@@ -2727,7 +2727,7 @@ Ref: users.id > posts.user_id`;
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position at exact start of "users" token
@@ -2745,7 +2745,7 @@ Ref: users.id > posts.user_id`;
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position at exact end of "users" token
@@ -2771,7 +2771,7 @@ Records users(id, name, email) {
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "users" in Records declaration
@@ -2817,7 +2817,7 @@ Records users(id, name, email) {
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "name" in Records column list
@@ -2842,7 +2842,7 @@ Records public.orders(id, customer_name) {
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "orders" in schema-qualified Records
@@ -2883,7 +2883,7 @@ Records orders(id, status) {
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "order_status" enum in Records data
@@ -2924,7 +2924,7 @@ Records orders(id, status) {
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "pending" enum field in Records data
@@ -2965,7 +2965,7 @@ Records orders(id, status) {
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "name" in Records column list inside table

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import Compiler from '@/compiler';
-import DbmlDefinitionProvider from '@/services/definition/provider';
+import DBMLDefinitionProvider from '@/services/definition/provider';
 import { createMockTextModel, createPosition, extractTextFromRange } from '../../../utils';
 
 describe('[example - records] DefinitionProvider - Records', () => {
@@ -17,7 +17,7 @@ records users(id, name) {
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "users" in "records users(id, name)"
@@ -63,7 +63,7 @@ records auth.users(id, email) {
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "users" in "records auth.users"
@@ -114,7 +114,7 @@ records auth.users(id, email) {
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "users" in the call expression "auth.users(id, email)"
@@ -162,7 +162,7 @@ records users(id, name) {
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "id" in "records users(id, name)"
@@ -203,7 +203,7 @@ records users(id, name) {
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "name" in "records users(id, name)"
@@ -251,7 +251,7 @@ records users(id, status) {
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "status" in "status.active"
@@ -302,7 +302,7 @@ records users(id, status) {
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "active" in "status.active"
@@ -348,7 +348,7 @@ records auth.users(id, role) {
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const definitionProvider = new DbmlDefinitionProvider(compiler);
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position on "admin" in "auth.role.admin"

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import Compiler from '@/compiler';
-import DbmlCompletionItemProvider from '@/services/suggestions/provider';
+import DBMLCompletionItemProvider from '@/services/suggestions/provider';
 import { createMockTextModel, createPosition } from '@tests/utils';
 import { getColumnsFromTableSymbol } from '@/services/suggestions/utils';
 import { TableSymbol } from '@/core/analyzer/symbol/symbols';
@@ -22,7 +22,7 @@ describe('[example] CompletionItemProvider - Records', () => {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DbmlCompletionItemProvider(compiler);
+      const provider = new DBMLCompletionItemProvider(compiler);
       // Position inside the Records body (between the braces)
       const position = createPosition(8, 13);
       const result = provider.provideCompletionItems(model, position);
@@ -46,7 +46,7 @@ describe('[example] CompletionItemProvider - Records', () => {
       const compiler = new Compiler();
       compiler.setSource(program);
       const model = createMockTextModel(program);
-      const provider = new DbmlCompletionItemProvider(compiler);
+      const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(8, 11);
       const result = provider.provideCompletionItems(model, position);
 
@@ -70,7 +70,7 @@ describe('[example] Expand * to all columns in Records', () => {
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const suggestionProvider = new DbmlCompletionItemProvider(compiler);
+      const suggestionProvider = new DBMLCompletionItemProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position after "records ("
@@ -108,7 +108,7 @@ Records users() {
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const suggestionProvider = new DbmlCompletionItemProvider(compiler);
+      const suggestionProvider = new DBMLCompletionItemProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position after "Records users(" - inside the parentheses
@@ -141,7 +141,7 @@ Records products(
       const compiler = new Compiler();
       compiler.setSource(program);
 
-      const suggestionProvider = new DbmlCompletionItemProvider(compiler);
+      const suggestionProvider = new DBMLCompletionItemProvider(compiler);
       const model = createMockTextModel(program);
 
       // Position after "Records products("
