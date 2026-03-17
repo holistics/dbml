@@ -15,7 +15,7 @@ import { ast, errors, warnings, tokens, rawDb, publicSymbolTable, nodeToSymbol, 
 import { parseFile, parseProject, analyzeProject, interpretProject, nodeSymbol, nodeReferences, nodeReferee } from './queries/project';
 import { invalidStream, flatStream } from './queries/token';
 import { symbolOfName, symbolOfNameToKey, symbolMembers } from './queries/symbol';
-import { containerStack, containerToken, containerElement, containerScope, containerScopeKind } from './queries/container';
+import { stackAtOffset, tokenAtOffset, elementAtOffset, scopeAtOffset, scopeKindAtOffset } from './queries/container';
 import {
   renameTable,
   applyTextEdits,
@@ -144,11 +144,20 @@ export default class Compiler {
 
   parseFile = this.localQuery(parseFile);
   parseProject = this.globalQuery(parseProject);
+
   analyzeProject = this.globalQuery(analyzeProject);
+
   interpretProject = this.globalQuery(interpretProject);
+
   nodeSymbol = this.globalQuery(nodeSymbol);
   nodeReferences = this.globalQuery(nodeReferences);
   nodeReferee = this.globalQuery(nodeReferee);
+
+  stackAtOffset = this.globalQuery(stackAtOffset);
+  tokenAtOffset = this.globalQuery(tokenAtOffset);
+  elementAtOffset = this.globalQuery(elementAtOffset);
+  scopeAtOffset = this.globalQuery(scopeAtOffset);
+  scopeKindAtOffset = this.globalQuery(scopeKindAtOffset);
 
   initMonacoServices () {
     return {

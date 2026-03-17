@@ -16,20 +16,20 @@ import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
 import { isOffsetWithinSpan } from '@/core/utils';
 import { getMemberChain } from '@/core/parser/utils';
 
-export function containerStack (this: Compiler, offset: number): readonly Readonly<SyntaxNode>[] {
-  const tokens = this.token.flatStream();
-  const { index: startIndex, token } = this.container.token(offset);
+export function stackAtOffset (this: Compiler, offset: number): readonly Readonly<SyntaxNode>[] {
+  const tokens = this.flatStream();
+  const { index: startIndex, token } = this.tokenAtOffset(offset);
   const validIndex = startIndex === undefined
     ? -1
     : findLastIndex(tokens, (t) => !t.isInvalid, startIndex);
 
   if (validIndex === -1) {
-    return [this.parse.ast()];
+    return [this.ast()];
   }
 
   const searchOffset = tokens[validIndex].start;
 
-  let curNode: Readonly<SyntaxNode> = this.parse.ast();
+  let curNode: Readonly<SyntaxNode> = this.ast();
   const res: SyntaxNode[] = [curNode];
 
   while (true) {
@@ -51,7 +51,7 @@ export function containerStack (this: Compiler, offset: number): readonly Readon
     const lastContainer = last(res)!;
 
     if (lastContainer instanceof FunctionApplicationNode) {
-      const source = this.parse.source() ?? '';
+      const source = this.source() ?? '';
       for (let i = lastContainer.end; i < offset; i += 1) {
         if (source[i] === '\n') {
           res.pop();
@@ -62,7 +62,7 @@ export function containerStack (this: Compiler, offset: number): readonly Readon
       lastContainer instanceof PrefixExpressionNode
       || lastContainer instanceof InfixExpressionNode
     ) {
-      if (this.container.token(offset).token !== lastContainer.op) {
+      if (this.tokenAtOffset(offset).token !== lastContainer.op) {
         res.pop();
         popOnce = true;
       }

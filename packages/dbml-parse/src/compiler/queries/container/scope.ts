@@ -1,8 +1,8 @@
 import type Compiler from '../../index';
 import type SymbolTable from '@/core/analyzer/symbol/symbolTable';
 
-export function containerScope (this: Compiler, offset: number): Readonly<SymbolTable> | undefined {
-  const element = this.container.element(offset);
+export function scopeAtOffset (this: Compiler, offset: number): Readonly<SymbolTable> | undefined {
+  const element = this.elementAtOffset(offset);
   if (!element) return undefined;
-  return this.parse.nodeToSymbol()?.get(element)?.symbolTable;
+  return this.nodeSymbol(element)?.symbolTable;
 }

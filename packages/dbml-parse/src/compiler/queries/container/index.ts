@@ -1,5 +1,5 @@
-export { containerStack } from './stack';
-export { containerToken } from './token';
-export { containerElement } from './element';
-export { containerScope } from './scope';
-export { containerScopeKind } from './scopeKind';
+export { stackAtOffset } from './stack';
+export { tokenAtOffset } from './token';
+export { elementAtOffset } from './element';
+export { scopeAtOffset } from './scope';
+export { scopeKindAtOffset } from './scopeKind';
