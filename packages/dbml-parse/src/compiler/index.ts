@@ -7,7 +7,7 @@ import Lexer from '@/core/lexer/lexer';
 import Parser from '@/core/parser/parser';
 import Analyzer, { NodeToSymbolMap, NodeToRefereeMap } from '@/core/analyzer/analyzer';
 import Interpreter from '@/core/interpreter/interpreter';
-import { type DBMLProjectLayout, Filepath, MemoryProjectLayout } from './projectLayout';
+import { type DbmlProjectLayout, Filepath, MemoryProjectLayout } from './projectLayout';
 import { DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLReferencesProvider, DBMLDiagnosticsProvider } from '@/services/index';
 import { ast, errors, warnings, tokens, rawDb, publicSymbolTable, nodeToSymbol, nodeToReferee } from './queries/parse';
 import { parseFile, parseProject, analyzeProject, interpretProject } from './queries/project';
@@ -33,12 +33,12 @@ export { splitQualifiedIdentifier, unescapeString, escapeString, formatRecordVal
 const DEFAULT_ENTRY = Filepath.from('/main.project.dbml');
 
 export default class Compiler {
-  private layout: DBMLProjectLayout;
+  private layout: DbmlProjectLayout;
   private cache = new Map<symbol, any>();
   private nodeIdGenerator = new SyntaxNodeIdGenerator();
   private symbolIdGenerator = new NodeSymbolIdGenerator();
 
-  constructor (layout?: DBMLProjectLayout) {
+  constructor (layout?: DbmlProjectLayout) {
     this.layout = layout ?? new MemoryProjectLayout();
   }
 
