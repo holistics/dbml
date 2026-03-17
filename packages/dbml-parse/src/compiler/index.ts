@@ -1,17 +1,7 @@
-import { SyntaxNodeIdGenerator, ProgramNode } from '@/core/parser/nodes';
-import { NodeSymbolIdGenerator } from '@/core/analyzer/symbol/symbols';
-import { SyntaxToken } from '@/core/lexer/tokens';
-import { Database } from '@/core/interpreter/types';
-import Report from '@/core/report';
-import Lexer from '@/core/lexer/lexer';
-import Parser from '@/core/parser/parser';
-import Analyzer, { NodeToSymbolMap, NodeToRefereeMap } from '@/core/analyzer/analyzer';
-import Interpreter from '@/core/interpreter/interpreter';
 import { type DbmlProjectLayout, Filepath, MemoryProjectLayout } from './projectLayout';
 import { type FilepathKey } from './projectLayout';
 import { type FileIndex } from './types';
 import { DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLReferencesProvider, DBMLDiagnosticsProvider } from '@/services/index';
-import { ast, errors, warnings, tokens, rawDb, publicSymbolTable, nodeToSymbol, nodeToReferee } from './queries/parse';
 import { parseFile, parseProject, analyzeProject, interpretProject, nodeSymbol, nodeReferences, nodeReferee } from './queries/project';
 import { invalidStream, flatStream } from './queries/token';
 import { symbolOfName, symbolOfNameToKey, symbolMembers } from './queries/symbol';
@@ -38,9 +28,6 @@ export default class Compiler {
   private layout: DbmlProjectLayout;
   private globalCache = new Map<symbol, any>();
   private fileIndexes = new Map<FilepathKey, FileIndex>();
-  private nodeIdGenerator = new SyntaxNodeIdGenerator();
-  private symbolIdGenerator = new NodeSymbolIdGenerator();
-
   constructor (layout?: DbmlProjectLayout) {
     this.layout = layout ?? new MemoryProjectLayout();
   }
@@ -99,22 +86,6 @@ export default class Compiler {
     }) as (...args: Args) => Return;
   }
 
-  private interpret (): Report<{ ast: ProgramNode; tokens: SyntaxToken[]; rawDb?: Database; nodeToSymbol: NodeToSymbolMap; nodeToReferee: NodeToRefereeMap }> {
-    const source = this.layout.getSource(DEFAULT_ENTRY) ?? '';
-
-    const parseRes = new Lexer(source)
-      .lex()
-      .chain((lexedTokens) => new Parser(source, lexedTokens as SyntaxToken[], this.nodeIdGenerator).parse())
-      .chain(({ ast, tokens }) => new Analyzer(ast, this.symbolIdGenerator).analyze().map((analysis) => ({ ...analysis, tokens })));
-
-    if (parseRes.getErrors().length > 0) {
-      return parseRes as any;
-    }
-
-    return parseRes.chain((analysis) =>
-      new Interpreter(analysis).interpret().map((rawDb) => ({ ...analysis, rawDb })),
-    );
-  }
 
   deleteSource (filePath: Filepath): this {
     this.layout.deleteSource(filePath);
@@ -149,9 +120,15 @@ export default class Compiler {
 
   interpretProject = this.globalQuery(interpretProject);
 
+  flatStream = this.globalQuery(flatStream);
+  invalidStream = this.globalQuery(invalidStream);
+
   nodeSymbol = this.globalQuery(nodeSymbol);
   nodeReferences = this.globalQuery(nodeReferences);
   nodeReferee = this.globalQuery(nodeReferee);
+
+  symbolOfName = this.globalQuery(symbolOfName, symbolOfNameToKey);
+  symbolMembers = this.globalQuery(symbolMembers);
 
   stackAtOffset = this.globalQuery(stackAtOffset);
   tokenAtOffset = this.globalQuery(tokenAtOffset);

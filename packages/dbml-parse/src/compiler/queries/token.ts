@@ -3,10 +3,13 @@ import type { SyntaxToken } from '@/core/lexer/tokens';
 import { isInvalidToken } from '@/core/parser/utils';
 
 export function flatStream (this: Compiler): readonly SyntaxToken[] {
-  return this.parse.tokens()
+  return [...this.parseProject().values()]
+    .flatMap((fi) => fi.tokens)
     .flatMap((token) => [...token.leadingInvalid, token, ...token.trailingInvalid]);
 }
 
 export function invalidStream (this: Compiler): readonly SyntaxToken[] {
-  return this.parse.tokens().filter(isInvalidToken);
+  return [...this.parseProject().values()]
+    .flatMap((fi) => fi.tokens)
+    .filter(isInvalidToken);
 }
