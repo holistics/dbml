@@ -18,11 +18,7 @@ export default class Analyzer {
   analyze (): Report<ProgramNode> {
     const validator = new Validator(this.ast, this.symbolFactory);
 
-    return validator.validate().chain((program) => {
-      const binder = new Binder(program, this.symbolFactory);
-
-      return binder.resolve();
-    });
+    return validator.validate().chain(() => this.bind());
   }
 
   // For invoking the validator only
@@ -30,5 +26,12 @@ export default class Analyzer {
     const validator = new Validator(this.ast, this.symbolFactory);
 
     return validator.validate().chain((program) => new Report(program, []));
+  }
+
+  // For invoking the binder only
+  bind (): Report<ProgramNode> {
+    const binder = new Binder(this.ast, this.symbolFactory);
+
+    return binder.resolve();
   }
 }
