@@ -3,6 +3,7 @@ import Lexer from '@/core/lexer/lexer';
 import Parser from '@/core/parser/parser';
 import { SyntaxNodeIdGenerator, type ProgramNode } from '@/core/parser/nodes';
 import { Filepath, type FilepathKey } from '../../projectLayout';
+import { ROOT } from '../../constants';
 import type { SyntaxToken } from '@/core/lexer/tokens';
 import type { CompileError, CompileWarning } from '@/core/errors';
 
@@ -16,8 +17,6 @@ export type FileIndex = {
   readonly errors: readonly Readonly<CompileError>[];
   readonly warnings: readonly Readonly<CompileWarning>[];
 };
-
-const ROOT = Filepath.from('/');
 
 export function parseFile (this: Compiler, filepath: Filepath): FileIndex {
   const layout = this.layout();

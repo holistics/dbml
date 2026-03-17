@@ -1,5 +1,6 @@
 import type Compiler from '../../index';
 import { Filepath } from '../../projectLayout';
+import { ROOT } from '../../constants';
 import { dirname } from 'path';
 
 export type Module = {
@@ -11,8 +12,6 @@ export type Module = {
   // (includes files in subdirectories that don't define their own module)
   files: Filepath[];
 };
-
-const ROOT = Filepath.from('/');
 
 export function modules (this: Compiler): Module[] {
   const layout = this.layout();
