@@ -271,9 +271,9 @@ function suggestInTuple (compiler: Compiler, offset: number, tupleContainer: Tup
     && !(element.name instanceof CallExpressionNode)
     && isOffsetWithinElementHeader(offset, element)
   ) {
-    const nodeToSymbol2 = compiler.parse.nodeToSymbol();
-    const nodeToReferee2 = compiler.parse.nodeToReferee();
-    const tableSymbol = (element.parent ? nodeToSymbol2?.get(element.parent) : undefined) || (element.name ? nodeToReferee2?.get(element.name) : undefined);
+    const nodeToSymbol = compiler.parse.nodeToSymbol();
+    const nodeToReferee = compiler.parse.nodeToReferee();
+    const tableSymbol = (element.parent ? nodeToSymbol?.get(element.parent) : undefined) || (element.name ? nodeToReferee?.get(element.name) : undefined);
     if (tableSymbol) {
       const suggestions = suggestMembersOfSymbol(compiler, tableSymbol, [SymbolKind.Column]);
       // If the user already typed some columns, we do not suggest "all columns" anymore
@@ -759,8 +759,7 @@ function suggestInCallExpression (
     if (!(c instanceof FunctionApplicationNode)) continue;
     if (c.callee !== container) continue;
     if (extractVariableFromExpression(container.callee).unwrap_or('').toLowerCase() !== ElementKind.Records) continue;
-    const _el = compiler.container.element(offset);
-    const tableSymbol = _el ? compiler.parse.nodeToSymbol()?.get(_el) : undefined;
+    const tableSymbol = compiler.parse.nodeToSymbol()?.get(compiler.container.element(offset));
     if (!tableSymbol) return noSuggestions();
     const suggestions = suggestMembersOfSymbol(compiler, tableSymbol, [SymbolKind.Column]);
     const { argumentList } = container;
@@ -885,12 +884,12 @@ function suggestColumnType (compiler: Compiler, offset: number): CompletionList 
 function suggestColumnNameInIndexes (compiler: Compiler, offset: number): CompletionList {
   const indexesNode = compiler.container.element(offset);
   const tableNode = (indexesNode as any)?.parent;
-  const tableSymbol2 = tableNode ? compiler.parse.nodeToSymbol()?.get(tableNode) : undefined;
-  if (!(tableSymbol2 instanceof TableSymbol)) {
+  const tableSymbol = tableNode ? compiler.parse.nodeToSymbol()?.get(tableNode) : undefined;
+  if (!(tableSymbol instanceof TableSymbol)) {
     return noSuggestions();
   }
 
-  const { symbolTable } = tableSymbol2;
+  const { symbolTable } = tableSymbol;
 
   return addQuoteToSuggestionIfNeeded({
     suggestions: [...symbolTable.entries()].flatMap(([index]) => {
