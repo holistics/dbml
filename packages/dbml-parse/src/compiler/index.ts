@@ -143,7 +143,7 @@ export default class Compiler {
   }
 
   parseFile = this.localQuery(parseFile);
-  parseProject = parseProject.bind(this);
+  parseProject = this.globalQuery(parseProject);
   analyzeProject = this.globalQuery(analyzeProject);
   interpretProject = this.globalQuery(interpretProject);
   nodeSymbol = this.globalQuery(nodeSymbol);
