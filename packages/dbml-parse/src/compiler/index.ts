@@ -2,7 +2,7 @@ import { type DbmlProjectLayout, Filepath, MemoryProjectLayout } from './project
 import { type FilepathKey } from './projectLayout';
 import { DEFAULT_ENTRY } from './constants';
 import { DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLReferencesProvider, DBMLDiagnosticsProvider } from '@/services/index';
-import { parseFile, parseProject, analyzeProject, interpretProject } from './queries/pipeline';
+import { parseFile, parseProject, analyzeProject, interpretProject, detectModules } from './queries/pipeline';
 import { flatTokenStream, invalidTokens } from './queries/token';
 import { nodeSymbol, nodeReferences, nodeReferee, symbolOfName, symbolOfNameToKey, symbolMembers } from './queries/symbol';
 import { stackAtOffset, tokenAtOffset, elementAtOffset, scopeAtOffset, scopeKindAtOffset } from './queries/offset';
@@ -141,6 +141,13 @@ export default class Compiler {
   // Interpret the analyzed ASTs into a merged Database model
   // Signature: () => Report<Database | undefined>
   interpretProject = this.globalQuery(interpretProject);
+
+  // A global query
+  // Detect module boundaries in the project layout.
+  // A module is a folder containing a *.project.dbml file; root is always a module.
+  // Folders without *.project.dbml are merged into their nearest ancestor module.
+  // Signature: () => ModuleIndex[]
+  detectModules = this.globalQuery(detectModules);
 
   /* token */
 
