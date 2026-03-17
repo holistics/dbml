@@ -1,4 +1,4 @@
-import type Compiler from '../index';
+import type Compiler from '../../index';
 import type { SyntaxToken } from '@/core/lexer/tokens';
 import { isInvalidToken } from '@/core/parser/utils';
 

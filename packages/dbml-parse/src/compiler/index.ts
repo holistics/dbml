@@ -2,10 +2,11 @@ import { type DbmlProjectLayout, Filepath, MemoryProjectLayout } from './project
 import { type FilepathKey } from './projectLayout';
 import { type FileIndex } from './types';
 import { DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLReferencesProvider, DBMLDiagnosticsProvider } from '@/services/index';
-import { parseFile, parseProject, analyzeProject, interpretProject, nodeSymbol, nodeReferences, nodeReferee, errors, warnings } from './queries/project';
+import { parseFile, parseProject, analyzeProject, interpretProject } from './queries/pipeline';
 import { flatTokenStream, invalidTokens } from './queries/token';
-import { symbolOfName, symbolOfNameToKey, symbolMembers } from './queries/symbol';
-import { stackAtOffset, tokenAtOffset, elementAtOffset, scopeAtOffset, scopeKindAtOffset } from './queries/container';
+import { nodeSymbol, nodeReferences, nodeReferee, symbolOfName, symbolOfNameToKey, symbolMembers } from './queries/symbol';
+import { stackAtOffset, tokenAtOffset, elementAtOffset, scopeAtOffset, scopeKindAtOffset } from './queries/offset';
+import { errors, warnings } from './queries/diagnostics';
 import {
   renameTable,
   type TextEdit,
