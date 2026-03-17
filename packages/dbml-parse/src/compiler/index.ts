@@ -119,7 +119,7 @@ export default class Compiler {
     return renameTable.call(this, oldName, newName);
   }
 
-  /* Compilation pipeline */
+  /* pipeline */
 
   // A local query
   // Lex and parse a single file into its AST, token list, errors, and warnings
@@ -142,7 +142,7 @@ export default class Compiler {
   // Signature: () => Report<Database | undefined>
   interpretProject = this.globalQuery(interpretProject);
 
-  /* Token queries */
+  /* token */
 
   // A global query
   // Ordered flat stream of every token across all files,
@@ -155,7 +155,7 @@ export default class Compiler {
   // Signature: () => readonly SyntaxToken[]
   invalidTokens = this.globalQuery(invalidTokens);
 
-  /* Symbol queries */
+  /* symbol */
 
   // A global query
   // Symbol that declares or owns the given node
@@ -183,7 +183,7 @@ export default class Compiler {
   // Signature: (symbol: NodeSymbol) => { symbol: NodeSymbol; kind: SymbolKind; name: string }[]
   symbolMembers = this.globalQuery(symbolMembers);
 
-  /* Offset queries */
+  /* offset */
 
   // A global query
   // Ancestor chain from ProgramNode down to the innermost node spanning the offset
@@ -211,7 +211,7 @@ export default class Compiler {
   // Signature: (offset: number) => ScopeKind
   scopeKindAtOffset = this.globalQuery(scopeKindAtOffset);
 
-  /* Diagnostic queries */
+  /* diagnostics */
 
   // A global query
   // All compile errors collected from parsing and analysis
