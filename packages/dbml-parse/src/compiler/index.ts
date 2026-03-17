@@ -2,7 +2,7 @@ import { type DbmlProjectLayout, Filepath, MemoryProjectLayout } from './project
 import { type FilepathKey } from './projectLayout';
 import { type FileIndex } from './types';
 import { DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLReferencesProvider, DBMLDiagnosticsProvider } from '@/services/index';
-import { parseFile, parseProject, analyzeProject, interpretProject, nodeSymbol, nodeReferences, nodeReferee } from './queries/project';
+import { parseFile, parseProject, analyzeProject, interpretProject, nodeSymbol, nodeReferences, nodeReferee, errors, warnings } from './queries/project';
 import { flatTokenStream, invalidTokens } from './queries/token';
 import { symbolOfName, symbolOfNameToKey, symbolMembers } from './queries/symbol';
 import { stackAtOffset, tokenAtOffset, elementAtOffset, scopeAtOffset, scopeKindAtOffset } from './queries/container';
@@ -25,19 +25,19 @@ export { splitQualifiedIdentifier, unescapeString, escapeString, formatRecordVal
 const DEFAULT_ENTRY = Filepath.from('/main.project.dbml');
 
 export default class Compiler {
-  private layout: DbmlProjectLayout;
+  private _layout: DbmlProjectLayout;
   private globalCache = new Map<symbol, any>();
   private fileIndexes = new Map<FilepathKey, FileIndex>();
   constructor (layout?: DbmlProjectLayout) {
-    this.layout = layout ?? new MemoryProjectLayout();
+    this._layout = layout ?? new MemoryProjectLayout();
   }
 
   setSource (source: string, filePath?: Filepath): this {
     if (filePath === undefined) {
       // No filepath - reset to a clean single-file layout
-      this.layout = new MemoryProjectLayout({ [DEFAULT_ENTRY.key]: source });
+      this._layout = new MemoryProjectLayout({ [DEFAULT_ENTRY.key]: source });
     } else {
-      this.layout.setSource(filePath, source);
+      this._layout.setSource(filePath, source);
     }
 
     this.globalCache.clear();
@@ -86,24 +86,32 @@ export default class Compiler {
     }) as (...args: Args) => Return;
   }
 
-
   deleteSource (filePath: Filepath): this {
-    this.layout.deleteSource(filePath);
+    this._layout.deleteSource(filePath);
     this.globalCache.clear();
     this.fileIndexes.delete(filePath.key);
     return this;
   }
 
   clearSource (): this {
-    this.layout.clearSource();
+    this._layout.clearSource();
     this.globalCache.clear();
     this.fileIndexes.clear();
     return this;
   }
 
-  getSource (filePath: Filepath): string | undefined {
-    return this.layout.getSource(filePath);
+  layout (): Readonly<DbmlProjectLayout> {
+    return this._layout;
   }
+
+  ast (filePath: Filepath = DEFAULT_ENTRY) {
+    return this.parseFile(filePath).ast;
+  }
+
+  getSource (filePath: Filepath = DEFAULT_ENTRY): string | undefined {
+    return this._layout.getSource(filePath);
+  }
+
 
   renameTable (
     oldName: TableNameInput,
@@ -139,6 +147,9 @@ export default class Compiler {
   elementAtOffset = this.globalQuery(elementAtOffset);
   scopeAtOffset = this.globalQuery(scopeAtOffset);
   scopeKindAtOffset = this.globalQuery(scopeKindAtOffset);
+
+  errors = this.globalQuery(errors);
+  warnings = this.globalQuery(warnings);
 
   initMonacoServices () {
     return {

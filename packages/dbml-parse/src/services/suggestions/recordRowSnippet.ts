@@ -33,7 +33,7 @@ export function suggestRecordRowSnippet (
   position: Position,
   offset: number,
 ): CompletionList | null {
-  const element = compiler.container.element(offset);
+  const element = compiler.elementAtOffset(offset);
 
   // If not in an ElementDeclarationNode, fallthrough
   if (!(element instanceof ElementDeclarationNode)) return null;
@@ -65,7 +65,7 @@ function suggestRecordRowInTopLevelRecords (
   if (!(recordsElement.name instanceof CallExpressionNode)) return noSuggestions();
 
   const columnElements = recordsElement.name.argumentList?.elementList || [];
-  const nodeToReferee = compiler.parse.nodeToReferee()!;
+  const nodeToReferee = compiler.analyzeProject().getValue().nodeToReferee;
   const columnSymbols = columnElements.map((e) => extractReferee(e, nodeToReferee));
   if (!columnSymbols || columnSymbols.length === 0) return noSuggestions();
 
@@ -110,9 +110,8 @@ function suggestRecordRowInNestedRecords (
     return noSuggestions();
   }
 
-  const nodeToSymbol = compiler.parse.nodeToSymbol()!;
-  const nodeToReferee = compiler.parse.nodeToReferee()!;
-  const tableSymbol = nodeToSymbol.get(parent);
+  const { nodeToReferee } = compiler.analyzeProject().getValue();
+  const tableSymbol = compiler.nodeSymbol(parent);
   if (!(tableSymbol instanceof TableSymbol)) {
     return noSuggestions();
   }

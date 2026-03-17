@@ -68,9 +68,9 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
       return recordRowSnippet;
     }
 
-    const flatStream = this.compiler.token.flatStream();
+    const flatStream = this.compiler.flatTokenStream();
     // bOc: before-or-contain
-    const { token: bOcToken, index: bOcTokenId } = this.compiler.container.token(offset);
+    const { token: bOcToken, index: bOcTokenId } = this.compiler.tokenAtOffset(offset);
     // abOc: after before-or-contain
     const abOcToken = bOcTokenId === undefined ? flatStream[0] : flatStream[bOcTokenId + 1];
 
@@ -94,9 +94,9 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
       return noSuggestions();
     }
 
-    const element = this.compiler.container.element(offset);
+    const element = this.compiler.elementAtOffset(offset);
     if (
-      this.compiler.container.scopeKind(offset) === ScopeKind.TOPLEVEL
+      this.compiler.scopeKindAtOffset(offset) === ScopeKind.TOPLEVEL
       || (element instanceof ElementDeclarationNode
         && element.type
         && element.type.start <= offset
@@ -105,7 +105,7 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
       return suggestTopLevelElementType();
     }
 
-    const containers = [...this.compiler.container.stack(offset)].reverse();
+    const containers = [...this.compiler.stackAtOffset(offset)].reverse();
 
     for (const container of containers) {
       if (container instanceof PrefixExpressionNode) {
@@ -179,7 +179,7 @@ function suggestOnPartialInjectionOp (
   compiler: Compiler,
   offset: number,
 ) {
-  return suggestNamesInScope(compiler, offset, compiler.parse.ast(), [SymbolKind.TablePartial]);
+  return suggestNamesInScope(compiler, offset, compiler.ast(), [SymbolKind.TablePartial]);
 }
 
 function suggestOnRelOp (
@@ -187,14 +187,14 @@ function suggestOnRelOp (
   offset: number,
   container: (PrefixExpressionNode | InfixExpressionNode) & { op: SyntaxToken },
 ): CompletionList {
-  const scopeKind = compiler.container.scopeKind(offset);
+  const scopeKind = compiler.scopeKindAtOffset(offset);
 
   if ([
     ScopeKind.REF,
     ScopeKind.TABLE,
     ScopeKind.TABLEPARTIAL,
   ].includes(scopeKind)) {
-    const res = suggestNamesInScope(compiler, offset, compiler.container.element(offset), [
+    const res = suggestNamesInScope(compiler, offset, compiler.elementAtOffset(offset), [
       SymbolKind.Table,
       SymbolKind.Schema,
       SymbolKind.Column,
@@ -212,8 +212,7 @@ function suggestMembersOfSymbol (
   acceptedKinds: SymbolKind[],
 ): CompletionList {
   return addQuoteToSuggestionIfNeeded({
-    suggestions: compiler.symbol
-      .members(symbol)
+    suggestions: compiler.symbolMembers(symbol)
       .filter(({ kind }) => acceptedKinds.includes(kind))
       .map(({ name, kind }) => ({
         label: name,
@@ -236,11 +235,10 @@ function suggestNamesInScope (
     return noSuggestions();
   }
 
-  const nodeToSymbol = compiler.parse.nodeToSymbol();
   let curElement: SyntaxNode | undefined = parent;
   const res: CompletionList = { suggestions: [] };
   while (curElement) {
-    const symbol = nodeToSymbol?.get(curElement);
+    const symbol = compiler.nodeSymbol(curElement);
     if (symbol?.symbolTable) {
       res.suggestions.push(
         ...suggestMembersOfSymbol(compiler, symbol, acceptedKinds).suggestions,
@@ -253,11 +251,11 @@ function suggestNamesInScope (
 }
 
 function suggestInTuple (compiler: Compiler, offset: number, tupleContainer: TupleExpressionNode): CompletionList {
-  const scopeKind = compiler.container.scopeKind(offset);
-  const element = compiler.container.element(offset);
+  const scopeKind = compiler.scopeKindAtOffset(offset);
+  const element = compiler.elementAtOffset(offset);
 
   // Check if we're inside a CallExpression - delegate to suggestInCallExpression
-  const containers = [...compiler.container.stack(offset)];
+  const containers = [...compiler.stackAtOffset(offset)];
   for (const c of containers) {
     if (c instanceof CallExpressionNode && c.argumentList === tupleContainer) {
       return suggestInCallExpression(compiler, offset, c);
@@ -271,9 +269,7 @@ function suggestInTuple (compiler: Compiler, offset: number, tupleContainer: Tup
     && !(element.name instanceof CallExpressionNode)
     && isOffsetWithinElementHeader(offset, element)
   ) {
-    const nodeToSymbol = compiler.parse.nodeToSymbol();
-    const nodeToReferee = compiler.parse.nodeToReferee();
-    const tableSymbol = (element.parent ? nodeToSymbol?.get(element.parent) : undefined) || (element.name ? nodeToReferee?.get(element.name) : undefined);
+    const tableSymbol = (element.parent ? compiler.nodeSymbol(element.parent) : undefined) || (element.name ? compiler.nodeReferee(element.name) : undefined);
     if (tableSymbol) {
       const suggestions = suggestMembersOfSymbol(compiler, tableSymbol, [SymbolKind.Column]);
       // If the user already typed some columns, we do not suggest "all columns" anymore
@@ -308,12 +304,12 @@ function suggestInTuple (compiler: Compiler, offset: number, tupleContainer: Tup
 }
 
 function suggestInCommaExpression (compiler: Compiler, offset: number): CompletionList {
-  const scopeKind = compiler.container.scopeKind(offset);
+  const scopeKind = compiler.scopeKindAtOffset(offset);
 
   // CommaExpressionNode is used in records data rows
   if (scopeKind === ScopeKind.RECORDS) {
     // In records, suggest enum values if applicable
-    return suggestNamesInScope(compiler, offset, compiler.container.element(offset), [
+    return suggestNamesInScope(compiler, offset, compiler.elementAtOffset(offset), [
       SymbolKind.Schema,
       SymbolKind.Enum,
       SymbolKind.EnumField,
@@ -328,7 +324,7 @@ function suggestInAttribute (
   offset: number,
   container: AttributeNode,
 ): CompletionList {
-  const { token } = compiler.container.token(offset);
+  const { token } = compiler.tokenAtOffset(offset);
   if ([SyntaxTokenKind.COMMA, SyntaxTokenKind.LBRACKET].includes(token?.kind as any)) {
     const res = suggestAttributeName(compiler, offset);
 
@@ -355,10 +351,10 @@ function suggestInAttribute (
 }
 
 function suggestAttributeName (compiler: Compiler, offset: number): CompletionList {
-  const element = compiler.container.element(offset);
+  const element = compiler.elementAtOffset(offset);
   if (element instanceof ProgramNode) return noSuggestions();
 
-  const scopeKind = compiler.container.scopeKind(offset);
+  const scopeKind = compiler.scopeKindAtOffset(offset);
   if (element.body && !isOffsetWithinSpan(offset, (element as ElementDeclarationNode).body!)) {
     let attributes: string[];
 
@@ -509,7 +505,7 @@ function suggestAttributeValue (
         })),
       };
     case 'default':
-      return suggestNamesInScope(compiler, offset, compiler.container.element(offset), [
+      return suggestNamesInScope(compiler, offset, compiler.elementAtOffset(offset), [
         SymbolKind.Schema,
         SymbolKind.Enum,
       ]);
@@ -534,9 +530,8 @@ function suggestMembers (
   const nameStack = fragments.map((f) => extractVariableFromExpression(f).unwrap());
 
   return addQuoteToSuggestionIfNeeded({
-    suggestions: compiler.symbol
-      .ofName(nameStack, compiler.container.element(offset))
-      .flatMap(({ symbol }) => compiler.symbol.members(symbol))
+    suggestions: compiler.symbolOfName(nameStack, compiler.elementAtOffset(offset))
+      .flatMap(({ symbol }) => compiler.symbolMembers(symbol))
       .map(({ kind, name }) => ({
         label: name,
         insertText: name,
@@ -551,7 +546,7 @@ function suggestInSubField (
   offset: number,
   container?: FunctionApplicationNode,
 ): CompletionList {
-  const scopeKind = compiler.container.scopeKind(offset);
+  const scopeKind = compiler.scopeKindAtOffset(offset);
 
   switch (scopeKind) {
     case ScopeKind.TABLE:
@@ -567,8 +562,8 @@ function suggestInSubField (
       const suggestions = suggestInRefField(compiler, offset);
 
       return (
-        compiler.container.token(offset).token?.kind === SyntaxTokenKind.COLON
-        && shouldPrependSpace(compiler.container.token(offset).token, offset)
+        compiler.tokenAtOffset(offset).token?.kind === SyntaxTokenKind.COLON
+        && shouldPrependSpace(compiler.tokenAtOffset(offset).token, offset)
       )
         ? prependSpace(suggestions)
         : suggestions;
@@ -603,7 +598,7 @@ function suggestInEnumField (
   const containerArgId = findContainerArg(offset, container);
 
   if (containerArgId === 1) {
-    return suggestNamesInScope(compiler, offset, compiler.container.element(offset), [
+    return suggestNamesInScope(compiler, offset, compiler.elementAtOffset(offset), [
       SymbolKind.Schema,
       SymbolKind.Table,
       SymbolKind.Column,
@@ -688,7 +683,7 @@ function suggestInProjectField (
 }
 
 function suggestInRefField (compiler: Compiler, offset: number): CompletionList {
-  return suggestNamesInScope(compiler, offset, compiler.container.element(offset), [
+  return suggestNamesInScope(compiler, offset, compiler.elementAtOffset(offset), [
     SymbolKind.Schema,
     SymbolKind.Table,
     SymbolKind.Column,
@@ -715,7 +710,7 @@ function suggestInCallExpression (
   offset: number,
   container: CallExpressionNode,
 ): CompletionList {
-  const element = compiler.container.element(offset);
+  const element = compiler.elementAtOffset(offset);
 
   // Determine if we're in the callee or in the arguments
   const inCallee = container.callee && isOffsetWithinSpan(offset, container.callee);
@@ -738,7 +733,7 @@ function suggestInCallExpression (
 
     const fragments = destructureMemberAccessExpression(callee).unwrap_or([callee]);
     const rightmostExpr = fragments[fragments.length - 1];
-    const tableSymbol = rightmostExpr ? compiler.parse.nodeToReferee()?.get(rightmostExpr) : undefined;
+    const tableSymbol = rightmostExpr ? compiler.nodeReferee(rightmostExpr) : undefined;
 
     if (!tableSymbol) return noSuggestions();
     const suggestions = suggestMembersOfSymbol(compiler, tableSymbol, [SymbolKind.Column]);
@@ -753,13 +748,13 @@ function suggestInCallExpression (
   // Table T {
   //   Records () // This is currently treated as a CallExpressionNode
   // }
-  const containers = [...compiler.container.stack(offset)];
+  const containers = [...compiler.stackAtOffset(offset)];
   for (const c of containers) {
     if (!inArgs) continue;
     if (!(c instanceof FunctionApplicationNode)) continue;
     if (c.callee !== container) continue;
     if (extractVariableFromExpression(container.callee).unwrap_or('').toLowerCase() !== ElementKind.Records) continue;
-    const tableSymbol = compiler.parse.nodeToSymbol()?.get(compiler.container.element(offset));
+    const tableSymbol = compiler.nodeSymbol(compiler.elementAtOffset(offset));
     if (!tableSymbol) return noSuggestions();
     const suggestions = suggestMembersOfSymbol(compiler, tableSymbol, [SymbolKind.Column]);
     const { argumentList } = container;
@@ -775,7 +770,7 @@ function suggestInTableGroupField (compiler: Compiler): CompletionList {
   return {
     suggestions: [
       ...addQuoteToSuggestionIfNeeded({
-        suggestions: [...compiler.parse.publicSymbolTable().entries()].flatMap(([index]) => {
+        suggestions: [...(compiler.nodeSymbol(compiler.ast())?.symbolTable?.entries() ?? [])].flatMap(([index]) => {
           const res = destructureIndex(index).unwrap_or(undefined);
           if (res === undefined) return [];
           const { kind, name } = res;
@@ -873,7 +868,7 @@ function suggestColumnType (compiler: Compiler, offset: number): CompletionList 
         sortText: CompletionItemKind.TypeParameter.toString().padStart(2, '0'),
         range: undefined as any,
       })),
-      ...suggestNamesInScope(compiler, offset, compiler.container.element(offset), [
+      ...suggestNamesInScope(compiler, offset, compiler.elementAtOffset(offset), [
         SymbolKind.Enum,
         SymbolKind.Schema,
       ]).suggestions,
@@ -882,9 +877,9 @@ function suggestColumnType (compiler: Compiler, offset: number): CompletionList 
 }
 
 function suggestColumnNameInIndexes (compiler: Compiler, offset: number): CompletionList {
-  const indexesNode = compiler.container.element(offset);
+  const indexesNode = compiler.elementAtOffset(offset);
   const tableNode = (indexesNode as any)?.parent;
-  const tableSymbol = tableNode ? compiler.parse.nodeToSymbol()?.get(tableNode) : undefined;
+  const tableSymbol = tableNode ? compiler.nodeSymbol(tableNode) : undefined;
   if (!(tableSymbol instanceof TableSymbol)) {
     return noSuggestions();
   }

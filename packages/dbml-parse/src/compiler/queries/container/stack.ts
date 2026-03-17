@@ -51,7 +51,7 @@ export function stackAtOffset (this: Compiler, offset: number): readonly Readonl
     const lastContainer = last(res)!;
 
     if (lastContainer instanceof FunctionApplicationNode) {
-      const source = this.source() ?? '';
+      const source = this.getSource() ?? '';
       for (let i = lastContainer.end; i < offset; i += 1) {
         if (source[i] === '\n') {
           res.pop();

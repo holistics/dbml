@@ -8,7 +8,7 @@ import { FileIndex } from '../../types';
 const ROOT = Filepath.from('/');
 
 export function parseFile (this: Compiler, filepath: Filepath): FileIndex {
-  const layout = this.parse.layout();
+  const layout = this.layout();
   const source = layout.getSource(filepath) ?? '';
   const nodeIdGenerator = new SyntaxNodeIdGenerator();
   const parseReport = new Lexer(source)
@@ -25,10 +25,10 @@ export function parseFile (this: Compiler, filepath: Filepath): FileIndex {
 }
 
 export function parseProject (this: Compiler): Map<FilepathKey, FileIndex> {
-  const layout = this.parse.layout();
+  const layout = this.layout();
   return new Map(
     layout.listAllFiles(ROOT)
       .filter((f) => f.extname === '.dbml')
-      .map((filepath) => [filepath.key, parseFile.call(this, filepath)] as const),
+      .map((filepath: Filepath) => [filepath.key, this.parseFile(filepath)] as const),
   );
 }
