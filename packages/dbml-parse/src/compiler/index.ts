@@ -17,7 +17,7 @@ import { splitQualifiedIdentifier, unescapeString, escapeString, formatRecordVal
 // Re-export types
 export { ScopeKind } from './types';
 export type { TextEdit, TableNameInput };
-export type { FileIndex } from './types';
+export type { FileIndex } from './queries/pipeline';
 
 // Re-export utilities
 export { splitQualifiedIdentifier, unescapeString, escapeString, formatRecordValue, isValidIdentifier, addDoubleQuoteIfNeeded };

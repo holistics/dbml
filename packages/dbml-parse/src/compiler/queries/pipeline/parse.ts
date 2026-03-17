@@ -1,9 +1,18 @@
 import type Compiler from '../../index';
 import Lexer from '@/core/lexer/lexer';
 import Parser from '@/core/parser/parser';
-import { SyntaxNodeIdGenerator } from '@/core/parser/nodes';
+import { SyntaxNodeIdGenerator, type ProgramNode } from '@/core/parser/nodes';
 import { Filepath, type FilepathKey } from '../../projectLayout';
-import { FileIndex } from '../../types';
+import type { SyntaxToken } from '@/core/lexer/tokens';
+import type { CompileError, CompileWarning } from '@/core/errors';
+
+export type FileIndex = {
+  readonly path: Readonly<Filepath>;
+  readonly ast: Readonly<ProgramNode>;
+  readonly tokens: readonly Readonly<SyntaxToken>[];
+  readonly errors: readonly Readonly<CompileError>[];
+  readonly warnings: readonly Readonly<CompileWarning>[];
+};
 
 const ROOT = Filepath.from('/');
 
