@@ -112,7 +112,6 @@ export default class Compiler {
     return this._layout.getSource(filePath);
   }
 
-
   renameTable (
     oldName: TableNameInput,
     newName: TableNameInput,
@@ -125,30 +124,108 @@ export default class Compiler {
     return '';
   }
 
+  /* Compilation pipeline */
+
+  // A local query
+  // Lex and parse a single file into its AST, token list, errors, and warnings
+  // Signature: (filepath: Filepath) => FileIndex
   parseFile = this.localQuery(parseFile);
+
+  // A global query
+  // Parse every .dbml file in the project layout
+  // Signature: () => Map<FilepathKey, FileIndex>
   parseProject = this.globalQuery(parseProject);
 
+  // A global query
+  // Validate and bind all parsed files, producing a single shared AnalyzeResult;
+  // errors from all files are collected in the returned Report
+  // Signature: () => Report<AnalyzeResult>
   analyzeProject = this.globalQuery(analyzeProject);
 
+  // A global query
+  // Interpret the analyzed ASTs into a merged Database model
+  // Signature: () => Report<Database | undefined>
   interpretProject = this.globalQuery(interpretProject);
 
+  /* Token queries */
+
+  // A global query
+  // Ordered flat stream of every token across all files,
+  // with leading/trailing invalid tokens interleaved in source order
+  // Signature: () => readonly SyntaxToken[]
   flatTokenStream = this.globalQuery(flatTokenStream);
+
+  // A global query
+  // All tokens that failed to lex
+  // Signature: () => readonly SyntaxToken[]
   invalidTokens = this.globalQuery(invalidTokens);
 
+  /* Symbol queries */
+
+  // A global query
+  // Symbol that declares or owns the given node
+  // Signature: (node: SyntaxNode) => NodeSymbol | undefined
   nodeSymbol = this.globalQuery(nodeSymbol);
+
+  // A global query
+  // All nodes that reference the same symbol as the given node
+  // Signature: (node: SyntaxNode) => SyntaxNode[]
   nodeReferences = this.globalQuery(nodeReferences);
+
+  // A global query
+  // Symbol that the given reference node resolves to
+  // Signature: (node: SyntaxNode) => NodeSymbol | undefined
   nodeReferee = this.globalQuery(nodeReferee);
 
+  // A global query
+  // Resolve a qualified name (e.g. ['public', 'users']) to matching symbols,
+  // searching upward from the given scope owner
+  // Signature: (nameStack: string[], owner: ElementDeclarationNode | ProgramNode) => { symbol: NodeSymbol; kind: SymbolKind; name: string }[]
   symbolOfName = this.globalQuery(symbolOfName, symbolOfNameToKey);
+
+  // A global query
+  // Direct child symbols in the given symbol's symbol table
+  // Signature: (symbol: NodeSymbol) => { symbol: NodeSymbol; kind: SymbolKind; name: string }[]
   symbolMembers = this.globalQuery(symbolMembers);
 
+  /* Offset queries */
+
+  // A global query
+  // Ancestor chain from ProgramNode down to the innermost node spanning the offset
+  // (outermost first, innermost last)
+  // Signature: (offset: number) => readonly SyntaxNode[]
   stackAtOffset = this.globalQuery(stackAtOffset);
+
+  // A global query
+  // The token immediately before (or containing) the given offset in the flat token stream
+  // Signature: (offset: number) => { token: SyntaxToken; index: number } | { token: undefined; index: undefined }
   tokenAtOffset = this.globalQuery(tokenAtOffset);
+
+  // A global query
+  // Innermost ElementDeclarationNode containing the offset, or ProgramNode if at top level
+  // Signature: (offset: number) => ElementDeclarationNode | ProgramNode
   elementAtOffset = this.globalQuery(elementAtOffset);
+
+  // A global query
+  // Symbol table of the innermost scope containing the offset
+  // Signature: (offset: number) => SymbolTable | undefined
   scopeAtOffset = this.globalQuery(scopeAtOffset);
+
+  // A global query
+  // ScopeKind of the innermost element containing the offset (e.g. TABLE, ENUM, REF, TOPLEVEL)
+  // Signature: (offset: number) => ScopeKind
   scopeKindAtOffset = this.globalQuery(scopeKindAtOffset);
 
+  /* Diagnostic queries */
+
+  // A global query
+  // All compile errors collected from parsing and analysis
+  // Signature: () => readonly CompileError[]
   errors = this.globalQuery(errors);
+
+  // A global query
+  // All compile warnings collected from parsing and analysis
+  // Signature: () => readonly CompileWarning[]
   warnings = this.globalQuery(warnings);
 
   initMonacoServices () {
