@@ -138,45 +138,14 @@ export default class Compiler {
   }
 
   applyTextEdits (edits: TextEdit[]): string {
-    return applyTextEdits(this.parse.source() ?? '', edits);
+    // FIXME
+    return '';
   }
 
   parseFile = this.localQuery(parseFile);
   parseProject = parseProject.bind(this);
-  analyzeProject = analyzeProject.bind(this);
-  interpretProject = interpretProject.bind(this);
-
-  readonly token = {
-    invalidStream: this.globalQuery(invalidStream),
-    flatStream: this.globalQuery(flatStream),
-  };
-
-  readonly parse = {
-    source: (filepath: Filepath = DEFAULT_ENTRY) => this.layout.getSource(filepath),
-    layout: () => this.layout,
-    _: this.globalQuery(this.interpret),
-    ast: this.globalQuery(ast),
-    errors: this.globalQuery(errors),
-    warnings: this.globalQuery(warnings),
-    tokens: this.globalQuery(tokens),
-    rawDb: this.globalQuery(rawDb),
-    publicSymbolTable: this.globalQuery(publicSymbolTable),
-    nodeToSymbol: this.globalQuery(nodeToSymbol),
-    nodeToReferee: this.globalQuery(nodeToReferee),
-  };
-
-  readonly container = {
-    stack: this.globalQuery(containerStack),
-    token: this.globalQuery(containerToken),
-    element: this.globalQuery(containerElement),
-    scope: this.globalQuery(containerScope),
-    scopeKind: this.globalQuery(containerScopeKind),
-  };
-
-  readonly symbol = {
-    ofName: this.globalQuery(symbolOfName, symbolOfNameToKey),
-    members: this.globalQuery(symbolMembers),
-  };
+  analyzeProject = this.globalQuery(analyzeProject);
+  interpretProject = this.globalQuery(interpretProject);
 
   initMonacoServices () {
     return {
