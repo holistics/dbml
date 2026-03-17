@@ -16,19 +16,20 @@ import { ElementKind } from '../../types';
 import { isTupleOfVariables } from '../../validator/utils';
 import { NodeSymbol } from '../../symbol/symbols';
 import { getElementNameString } from '@/core/parser/utils';
+import { BinderContext } from '@/core/analyzer/analyzer';
 
 export default class RecordsBinder implements ElementBinder {
   private symbolFactory: SymbolFactory;
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
-  private ast: ProgramNode;
+  private context: BinderContext;
   // A mapping from bound column symbols to the referencing primary expressions nodes of column
   // Example: Records (col1, col2) -> Map symbol of `col1` to the `col1` in `Records (col1, col2)``
   private boundColumns: Map<NodeSymbol, SyntaxNode>;
 
-  constructor (declarationNode: ElementDeclarationNode & { type: SyntaxToken }, ast: ProgramNode, symbolFactory: SymbolFactory) {
+  constructor (declarationNode: ElementDeclarationNode & { type: SyntaxToken }, context: BinderContext, symbolFactory: SymbolFactory) {
     this.declarationNode = declarationNode;
-    this.ast = ast;
     this.symbolFactory = symbolFactory;
+    this.context = context;
     this.boundColumns = new Map();
   }
 
@@ -71,27 +72,27 @@ export default class RecordsBinder implements ElementBinder {
       return [];
     }
 
-    const tableErrors = lookupAndBindInScope(this.ast, [
+    const tableErrors = lookupAndBindInScope(this.context.ast, [
       ...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })),
       { node: tableBindee, kind: SymbolKind.Table },
-    ]);
+    ], this.context.nodeToSymbol, this.context.nodeToReferee);
 
     if (tableErrors.length > 0) {
       return tableErrors;
     }
 
-    const tableSymbol = tableBindee.referee;
-    if (!tableSymbol?.symbolTable) {
+    const tableReferee = this.context.nodeToReferee.get(tableBindee);
+    if (!tableReferee?.symbolTable) {
       return [];
     }
 
-    const tableName = getElementNameString(tableBindee.referee?.declaration).unwrap_or('<invalid name>');
+    const tableName = getElementNameString(tableReferee.declaration).unwrap_or('<invalid name>');
 
     const errors: CompileError[] = [];
     for (const columnBindee of fragments.args) {
       const columnName = extractVarNameFromPrimaryVariable(columnBindee).unwrap_or('<unnamed>');
       const columnIndex = createColumnSymbolIndex(columnName);
-      const columnSymbol = tableSymbol.symbolTable.get(columnIndex);
+      const columnSymbol = tableReferee.symbolTable.get(columnIndex);
 
       if (!columnSymbol) {
         errors.push(new CompileError(
@@ -101,7 +102,7 @@ export default class RecordsBinder implements ElementBinder {
         ));
         continue;
       }
-      columnBindee.referee = columnSymbol;
+      this.context.nodeToReferee.set(columnBindee, columnSymbol);
       columnSymbol.references.push(columnBindee);
 
       const originalBindee = this.boundColumns.get(columnSymbol);
@@ -137,7 +138,8 @@ export default class RecordsBinder implements ElementBinder {
       return [];
     }
 
-    const tableSymbolTable = parent.symbol?.symbolTable;
+    const tableSymbol = this.context.nodeToSymbol.get(parent);
+    const tableSymbolTable = tableSymbol?.symbolTable;
     if (!tableSymbolTable) {
       return [];
     }
@@ -163,7 +165,7 @@ export default class RecordsBinder implements ElementBinder {
         continue;
       }
 
-      columnBindee.referee = columnSymbol;
+      this.context.nodeToReferee.set(columnBindee, columnSymbol);
       columnSymbol.references.push(columnBindee);
     }
 
@@ -219,11 +221,11 @@ export default class RecordsBinder implements ElementBinder {
 
       const schemaBindees = bindee.variables;
 
-      return lookupAndBindInScope(this.ast, [
+      return lookupAndBindInScope(this.context.ast, [
         ...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })),
         { node: enumBindee, kind: SymbolKind.Enum },
         { node: enumFieldBindee, kind: SymbolKind.EnumField },
-      ]);
+      ], this.context.nodeToSymbol, this.context.nodeToReferee);
     });
   }
 
@@ -233,7 +235,7 @@ export default class RecordsBinder implements ElementBinder {
         return [];
       }
       const _Binder = pickBinder(sub as ElementDeclarationNode & { type: SyntaxToken });
-      const binder = new _Binder(sub as ElementDeclarationNode & { type: SyntaxToken }, this.ast, this.symbolFactory);
+      const binder = new _Binder(sub as ElementDeclarationNode & { type: SyntaxToken }, this.context, this.symbolFactory);
 
       return binder.bind();
     });

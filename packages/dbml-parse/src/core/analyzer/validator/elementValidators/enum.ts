@@ -16,16 +16,19 @@ import { createEnumFieldSymbolIndex, createEnumSymbolIndex } from '@/core/analyz
 import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '@/core/analyzer/utils';
 import SymbolTable from '@/core/analyzer/symbol/symbolTable';
 import { EnumFieldSymbol, EnumSymbol } from '@/core/analyzer/symbol/symbols';
+import { NodeToSymbolMap } from '@/core/analyzer/analyzer';
 
 export default class EnumValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
   private publicSymbolTable: SymbolTable;
   private symbolFactory: SymbolFactory;
+  private nodeToSymbol: NodeToSymbolMap;
 
-  constructor (declarationNode: ElementDeclarationNode & { type: SyntaxToken }, publicSymbolTable: SymbolTable, symbolFactory: SymbolFactory) {
+  constructor (declarationNode: ElementDeclarationNode & { type: SyntaxToken }, publicSymbolTable: SymbolTable, symbolFactory: SymbolFactory, nodeToSymbol: NodeToSymbolMap) {
     this.declarationNode = declarationNode;
     this.publicSymbolTable = publicSymbolTable;
     this.symbolFactory = symbolFactory;
+    this.nodeToSymbol = nodeToSymbol;
   }
 
   validate (): CompileError[] {
@@ -68,7 +71,8 @@ export default class EnumValidator implements ElementValidator {
 
   registerElement (): CompileError[] {
     const errors: CompileError[] = [];
-    this.declarationNode.symbol = this.symbolFactory.create(EnumSymbol, { declaration: this.declarationNode, symbolTable: new SymbolTable() });
+    const enumSymbol = this.symbolFactory.create(EnumSymbol, { declaration: this.declarationNode, symbolTable: new SymbolTable() });
+    this.nodeToSymbol.set(this.declarationNode, enumSymbol);
     const { name } = this.declarationNode;
 
     const maybeNameFragments = destructureComplexVariable(name);
@@ -80,7 +84,7 @@ export default class EnumValidator implements ElementValidator {
       if (symbolTable.has(enumId)) {
         errors.push(new CompileError(CompileErrorCode.DUPLICATE_NAME, `Enum name ${enumName} already exists in schema '${nameFragments.join('.') || DEFAULT_SCHEMA_NAME}'`, name!));
       }
-      symbolTable.set(enumId, this.declarationNode.symbol!);
+      symbolTable.set(enumId, enumSymbol);
     }
 
     return errors;
@@ -168,7 +172,7 @@ export default class EnumValidator implements ElementValidator {
         return [];
       }
       const _Validator = pickValidator(sub as ElementDeclarationNode & { type: SyntaxToken });
-      const validator = new _Validator(sub as ElementDeclarationNode & { type: SyntaxToken }, this.publicSymbolTable, this.symbolFactory);
+      const validator = new _Validator(sub as ElementDeclarationNode & { type: SyntaxToken }, this.publicSymbolTable, this.symbolFactory, this.nodeToSymbol);
       return validator.validate();
     });
   }
@@ -178,10 +182,10 @@ export default class EnumValidator implements ElementValidator {
       const enumFieldName = extractVarNameFromPrimaryVariable(field.callee).unwrap();
       const enumFieldId = createEnumFieldSymbolIndex(enumFieldName);
 
-      const enumSymbol = this.symbolFactory.create(EnumFieldSymbol, { declaration: field });
-      field.symbol = enumSymbol;
+      const enumFieldSymbol = this.symbolFactory.create(EnumFieldSymbol, { declaration: field });
+      this.nodeToSymbol.set(field, enumFieldSymbol);
 
-      const symbolTable = this.declarationNode.symbol!.symbolTable!;
+      const symbolTable = (this.nodeToSymbol.get(this.declarationNode) as EnumSymbol)!.symbolTable!;
       if (symbolTable.has(enumFieldId)) {
         const symbol = symbolTable.get(enumFieldId);
         return [
@@ -189,7 +193,7 @@ export default class EnumValidator implements ElementValidator {
           new CompileError(CompileErrorCode.DUPLICATE_COLUMN_NAME, `Duplicate enum field ${enumFieldName}`, symbol!.declaration!),
         ];
       }
-      symbolTable.set(enumFieldId, enumSymbol);
+      symbolTable.set(enumFieldId, enumFieldSymbol);
     }
     return [];
   }

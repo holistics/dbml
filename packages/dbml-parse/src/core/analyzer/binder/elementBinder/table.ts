@@ -13,16 +13,17 @@ import { TablePartialInjectedColumnSymbol, TablePartialSymbol } from '../../symb
 import SymbolFactory from '../../symbol/factory';
 import { isExpressionAQuotedString, isExpressionAVariableNode } from '../../../parser/utils';
 import { KEYWORDS_OF_DEFAULT_SETTING } from '@/constants';
+import { BinderContext } from '@/core/analyzer/analyzer';
 
 export default class TableBinder implements ElementBinder {
   private symbolFactory: SymbolFactory;
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
-  private ast: ProgramNode;
+  private context: BinderContext;
 
-  constructor (declarationNode: ElementDeclarationNode & { type: SyntaxToken }, ast: ProgramNode, symbolFactory: SymbolFactory) {
+  constructor (declarationNode: ElementDeclarationNode & { type: SyntaxToken }, context: BinderContext, symbolFactory: SymbolFactory) {
     this.declarationNode = declarationNode;
-    this.ast = ast;
     this.symbolFactory = symbolFactory;
+    this.context = context;
   }
 
   bind (): CompileError[] {
@@ -55,20 +56,22 @@ export default class TableBinder implements ElementBinder {
           return [];
         }
 
-        const errors = lookupAndBindInScope(this.ast, [
+        const errors = lookupAndBindInScope(this.context.ast, [
           ...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })),
           { node: tablePartialBindee, kind: SymbolKind.TablePartial },
-        ]);
+        ], this.context.nodeToSymbol, this.context.nodeToReferee);
         if (errors.length) return errors;
-        tablePartialBindee.referee?.symbolTable?.forEach((value) => {
+        const tablePartialReferee = this.context.nodeToReferee.get(tablePartialBindee);
+        tablePartialReferee?.symbolTable?.forEach((value) => {
           const columnName = extractVariableFromExpression((value.declaration as FunctionApplicationNode).callee).unwrap_or(undefined);
           if (columnName === undefined) return;
           const injectedColumnSymbol = this.symbolFactory.create(
             TablePartialInjectedColumnSymbol,
-            { declaration: i, tablePartialSymbol: tablePartialBindee.referee as TablePartialSymbol },
+            { declaration: i, tablePartialSymbol: tablePartialReferee as TablePartialSymbol },
           );
           const columnSymbolId = createColumnSymbolIndex(columnName);
-          const symbolTable = this.declarationNode.symbol?.symbolTable;
+          const declarationSymbol = this.context.nodeToSymbol.get(this.declarationNode);
+          const symbolTable = declarationSymbol?.symbolTable;
           if (symbolTable?.has(columnSymbolId)) return;
           symbolTable?.set(columnSymbolId, injectedColumnSymbol);
         });
@@ -137,10 +140,10 @@ export default class TableBinder implements ElementBinder {
       return;
     }
 
-    lookupAndBindInScope(this.ast, [
+    lookupAndBindInScope(this.context.ast, [
       ...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })),
       { node: enumBindee, kind: SymbolKind.Enum },
-    ]);
+    ], this.context.nodeToSymbol, this.context.nodeToReferee);
   }
 
   // Bind enum field references in default values (e.g., order_status.pending)
@@ -172,11 +175,11 @@ export default class TableBinder implements ElementBinder {
 
     const schemaBindees = fragments.variables;
 
-    return lookupAndBindInScope(this.ast, [
+    return lookupAndBindInScope(this.context.ast, [
       ...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })),
       { node: enumBindee, kind: SymbolKind.Enum },
       { node: enumFieldBindee, kind: SymbolKind.EnumField },
-    ]);
+    ], this.context.nodeToSymbol, this.context.nodeToReferee);
   }
 
   private bindInlineRef (ref: SyntaxNode): CompileError[] {
@@ -191,14 +194,14 @@ export default class TableBinder implements ElementBinder {
       const schemaBindees = bindee.variables;
 
       return tableBindee
-        ? lookupAndBindInScope(this.ast, [
+        ? lookupAndBindInScope(this.context.ast, [
             ...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })),
             { node: tableBindee, kind: SymbolKind.Table },
             { node: columnBindee, kind: SymbolKind.Column },
-          ])
+          ], this.context.nodeToSymbol, this.context.nodeToReferee)
         : lookupAndBindInScope(this.declarationNode, [
             { node: columnBindee, kind: SymbolKind.Column },
-          ]);
+          ], this.context.nodeToSymbol, this.context.nodeToReferee);
     });
   }
 
@@ -208,7 +211,7 @@ export default class TableBinder implements ElementBinder {
         return [];
       }
       const _Binder = pickBinder(sub as ElementDeclarationNode & { type: SyntaxToken });
-      const binder = new _Binder(sub as ElementDeclarationNode & { type: SyntaxToken }, this.ast, this.symbolFactory);
+      const binder = new _Binder(sub as ElementDeclarationNode & { type: SyntaxToken }, this.context, this.symbolFactory);
 
       return binder.bind();
     });

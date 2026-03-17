@@ -13,16 +13,17 @@ import { destructureComplexVariable, extractVarNameFromPrimaryVariable, getEleme
 import { ElementKind } from '../../types';
 import { createColumnSymbolIndex } from '../../symbol/symbolIndex';
 import SymbolFactory from '../../symbol/factory';
+import { BinderContext } from '@/core/analyzer/analyzer';
 
 export default class IndexesBinder implements ElementBinder {
   private symbolFactory: SymbolFactory;
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
-  private ast: ProgramNode;
+  private context: BinderContext;
 
-  constructor (declarationNode: ElementDeclarationNode & { type: SyntaxToken }, ast: ProgramNode, symbolFactory: SymbolFactory) {
+  constructor (declarationNode: ElementDeclarationNode & { type: SyntaxToken }, context: BinderContext, symbolFactory: SymbolFactory) {
     this.declarationNode = declarationNode;
-    this.ast = ast;
     this.symbolFactory = symbolFactory;
+    this.context = context;
   }
 
   bind (): CompileError[] {
@@ -60,7 +61,8 @@ export default class IndexesBinder implements ElementBinder {
       ).map(
         (fragments) => fragments.join('.'),
       ).unwrap_or('<unnamed>');
-      const ownerTableSymbolTable = this.declarationNode.parent!.symbol!.symbolTable!;
+      const ownerTableSymbol = this.context.nodeToSymbol.get(this.declarationNode.parent!);
+      const ownerTableSymbolTable = ownerTableSymbol!.symbolTable!;
 
       const args = [field.callee, ...field.args];
       const bindees = args.flatMap(scanNonListNodeForBinding)
@@ -83,7 +85,7 @@ export default class IndexesBinder implements ElementBinder {
         if (!column) {
           return new CompileError(CompileErrorCode.BINDING_ERROR, `No column named '${columnName}' inside Table '${ownerTableName}'`, bindee);
         }
-        bindee.referee = column;
+        this.context.nodeToReferee.set(bindee, column);
         column.references.push(bindee);
 
         return [];
@@ -97,7 +99,7 @@ export default class IndexesBinder implements ElementBinder {
         return [];
       }
       const _Binder = pickBinder(sub as ElementDeclarationNode & { type: SyntaxToken });
-      const binder = new _Binder(sub as ElementDeclarationNode & { type: SyntaxToken }, this.ast, this.symbolFactory);
+      const binder = new _Binder(sub as ElementDeclarationNode & { type: SyntaxToken }, this.context, this.symbolFactory);
 
       return binder.bind();
     });

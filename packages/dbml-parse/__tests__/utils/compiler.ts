@@ -1,6 +1,6 @@
 import Lexer from '@/core/lexer/lexer';
 import Parser from '@/core/parser/parser';
-import Analyzer from '@/core/analyzer/analyzer';
+import Analyzer, { AnalysisResult } from '@/core/analyzer/analyzer';
 import {
   ProgramNode,
   SyntaxNode,
@@ -37,7 +37,7 @@ export function parse (source: string): Report<{ ast: ProgramNode; tokens: Synta
   return new Lexer(source).lex().chain((tokens) => new Parser(source, tokens, new SyntaxNodeIdGenerator()).parse());
 }
 
-export function analyze (source: string): Report<ProgramNode> {
+export function analyze (source: string): Report<AnalysisResult> {
   return parse(source).chain(({ ast }) => new Analyzer(ast, new NodeSymbolIdGenerator()).analyze());
 }
 

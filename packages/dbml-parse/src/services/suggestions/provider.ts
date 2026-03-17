@@ -236,11 +236,12 @@ function suggestNamesInScope (
     return noSuggestions();
   }
 
+  const nodeToSymbol = compiler.parse.nodeToSymbol();
   let curElement: SyntaxNode | undefined = parent;
   const res: CompletionList = { suggestions: [] };
   while (curElement) {
-    if (curElement?.symbol?.symbolTable) {
-      const { symbol } = curElement;
+    const symbol = nodeToSymbol?.get(curElement);
+    if (symbol?.symbolTable) {
       res.suggestions.push(
         ...suggestMembersOfSymbol(compiler, symbol, acceptedKinds).suggestions,
       );
@@ -270,7 +271,9 @@ function suggestInTuple (compiler: Compiler, offset: number, tupleContainer: Tup
     && !(element.name instanceof CallExpressionNode)
     && isOffsetWithinElementHeader(offset, element)
   ) {
-    const tableSymbol = element.parent?.symbol || element.name?.referee;
+    const nodeToSymbol2 = compiler.parse.nodeToSymbol();
+    const nodeToReferee2 = compiler.parse.nodeToReferee();
+    const tableSymbol = (element.parent ? nodeToSymbol2?.get(element.parent) : undefined) || (element.name ? nodeToReferee2?.get(element.name) : undefined);
     if (tableSymbol) {
       const suggestions = suggestMembersOfSymbol(compiler, tableSymbol, [SymbolKind.Column]);
       // If the user already typed some columns, we do not suggest "all columns" anymore
@@ -735,7 +738,7 @@ function suggestInCallExpression (
 
     const fragments = destructureMemberAccessExpression(callee).unwrap_or([callee]);
     const rightmostExpr = fragments[fragments.length - 1];
-    const tableSymbol = rightmostExpr?.referee;
+    const tableSymbol = rightmostExpr ? compiler.parse.nodeToReferee()?.get(rightmostExpr) : undefined;
 
     if (!tableSymbol) return noSuggestions();
     const suggestions = suggestMembersOfSymbol(compiler, tableSymbol, [SymbolKind.Column]);
@@ -756,7 +759,8 @@ function suggestInCallExpression (
     if (!(c instanceof FunctionApplicationNode)) continue;
     if (c.callee !== container) continue;
     if (extractVariableFromExpression(container.callee).unwrap_or('').toLowerCase() !== ElementKind.Records) continue;
-    const tableSymbol = compiler.container.element(offset).symbol;
+    const _el = compiler.container.element(offset);
+    const tableSymbol = _el ? compiler.parse.nodeToSymbol()?.get(_el) : undefined;
     if (!tableSymbol) return noSuggestions();
     const suggestions = suggestMembersOfSymbol(compiler, tableSymbol, [SymbolKind.Column]);
     const { argumentList } = container;
@@ -881,11 +885,12 @@ function suggestColumnType (compiler: Compiler, offset: number): CompletionList 
 function suggestColumnNameInIndexes (compiler: Compiler, offset: number): CompletionList {
   const indexesNode = compiler.container.element(offset);
   const tableNode = (indexesNode as any)?.parent;
-  if (!(tableNode?.symbol instanceof TableSymbol)) {
+  const tableSymbol2 = tableNode ? compiler.parse.nodeToSymbol()?.get(tableNode) : undefined;
+  if (!(tableSymbol2 instanceof TableSymbol)) {
     return noSuggestions();
   }
 
-  const { symbolTable } = tableNode.symbol;
+  const { symbolTable } = tableSymbol2;
 
   return addQuoteToSuggestionIfNeeded({
     suggestions: [...symbolTable.entries()].flatMap(([index]) => {

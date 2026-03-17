@@ -17,23 +17,23 @@ describe('[example] records binder', () => {
     const result = analyze(source);
     expect(result.getErrors().length).toBe(0);
 
-    const ast = result.getValue();
-    const schemaSymbol = ast.symbol as SchemaSymbol;
+    const { ast, nodeToSymbol, nodeToReferee } = result.getValue();
+    const schemaSymbol = nodeToSymbol.get(ast) as SchemaSymbol;
     const tableSymbol = schemaSymbol.symbolTable.get('Table:users') as TableSymbol;
 
     // Table should have exactly 1 reference from records
     expect(tableSymbol.references.length).toBe(1);
-    expect(tableSymbol.references[0].referee).toBe(tableSymbol);
+    expect(nodeToReferee.get(tableSymbol.references[0])).toBe(tableSymbol);
 
     const idColumn = tableSymbol.symbolTable.get('Column:id') as ColumnSymbol;
     const nameColumn = tableSymbol.symbolTable.get('Column:name') as ColumnSymbol;
 
     // Each column should have exactly 1 reference from records column list
     expect(idColumn.references.length).toBe(1);
-    expect(idColumn.references[0].referee).toBe(idColumn);
+    expect(nodeToReferee.get(idColumn.references[0])).toBe(idColumn);
 
     expect(nameColumn.references.length).toBe(1);
-    expect(nameColumn.references[0].referee).toBe(nameColumn);
+    expect(nodeToReferee.get(nameColumn.references[0])).toBe(nameColumn);
   });
 
   test('should bind records with schema-qualified table', () => {
@@ -49,18 +49,18 @@ describe('[example] records binder', () => {
     const result = analyze(source);
     expect(result.getErrors().length).toBe(0);
 
-    const ast = result.getValue();
-    const publicSchema = ast.symbol as SchemaSymbol;
+    const { ast, nodeToSymbol, nodeToReferee } = result.getValue();
+    const publicSchema = nodeToSymbol.get(ast) as SchemaSymbol;
     const authSchema = publicSchema.symbolTable.get('Schema:auth') as SchemaSymbol;
     const tableSymbol = authSchema.symbolTable.get('Table:users') as TableSymbol;
 
     // Schema should have reference from records
     expect(authSchema.references.length).toBe(1);
-    expect(authSchema.references[0].referee).toBe(authSchema);
+    expect(nodeToReferee.get(authSchema.references[0])).toBe(authSchema);
 
     // Table should have exactly 1 reference from records
     expect(tableSymbol.references.length).toBe(1);
-    expect(tableSymbol.references[0].referee).toBe(tableSymbol);
+    expect(nodeToReferee.get(tableSymbol.references[0])).toBe(tableSymbol);
 
     // Columns should have references
     const idColumn = tableSymbol.symbolTable.get('Column:id') as ColumnSymbol;
@@ -112,8 +112,8 @@ describe('[example] records binder', () => {
     const result = analyze(source);
     expect(result.getErrors().length).toBe(0);
 
-    const ast = result.getValue();
-    const schemaSymbol = ast.symbol as SchemaSymbol;
+    const { ast, nodeToSymbol } = result.getValue();
+    const schemaSymbol = nodeToSymbol.get(ast) as SchemaSymbol;
     const tableSymbol = schemaSymbol.symbolTable.get('Table:users') as TableSymbol;
 
     // Table should have exactly 2 references from both records elements
@@ -142,8 +142,8 @@ describe('[example] records binder', () => {
     const result = analyze(source);
     expect(result.getErrors().length).toBe(0);
 
-    const ast = result.getValue();
-    const schemaSymbol = ast.symbol as SchemaSymbol;
+    const { ast, nodeToSymbol, nodeToReferee } = result.getValue();
+    const schemaSymbol = nodeToSymbol.get(ast) as SchemaSymbol;
     const enumSymbol = schemaSymbol.symbolTable.get('Enum:status') as EnumSymbol;
     const activeField = enumSymbol.symbolTable.get('Enum field:active') as EnumFieldSymbol;
 
@@ -152,7 +152,7 @@ describe('[example] records binder', () => {
 
     // Enum field should have exactly 1 reference from records value
     expect(activeField.references.length).toBe(1);
-    expect(activeField.references[0].referee).toBe(activeField);
+    expect(nodeToReferee.get(activeField.references[0])).toBe(activeField);
   });
 
   test('should allow forward reference to table in records', () => {
@@ -168,8 +168,8 @@ describe('[example] records binder', () => {
     const result = analyze(source);
     expect(result.getErrors().length).toBe(0);
 
-    const ast = result.getValue();
-    const schemaSymbol = ast.symbol as SchemaSymbol;
+    const { ast, nodeToSymbol } = result.getValue();
+    const schemaSymbol = nodeToSymbol.get(ast) as SchemaSymbol;
     const tableSymbol = schemaSymbol.symbolTable.get('Table:users') as TableSymbol;
 
     // Verify forward reference is properly bound
@@ -197,8 +197,8 @@ describe('[example] records binder', () => {
     const result = analyze(source);
     expect(result.getErrors().length).toBe(0);
 
-    const ast = result.getValue();
-    const publicSchema = ast.symbol as SchemaSymbol;
+    const { ast, nodeToSymbol, nodeToReferee } = result.getValue();
+    const publicSchema = nodeToSymbol.get(ast) as SchemaSymbol;
     const authSchema = publicSchema.symbolTable.get('Schema:auth') as SchemaSymbol;
     const enumSymbol = authSchema.symbolTable.get('Enum:role') as EnumSymbol;
 
@@ -209,10 +209,10 @@ describe('[example] records binder', () => {
     const userField = enumSymbol.symbolTable.get('Enum field:user') as EnumFieldSymbol;
 
     expect(adminField.references.length).toBe(1);
-    expect(adminField.references[0].referee).toBe(adminField);
+    expect(nodeToReferee.get(adminField.references[0])).toBe(adminField);
 
     expect(userField.references.length).toBe(1);
-    expect(userField.references[0].referee).toBe(userField);
+    expect(nodeToReferee.get(userField.references[0])).toBe(userField);
   });
 
   test('should detect unknown enum in records data', () => {
@@ -263,8 +263,8 @@ describe('[example] records binder', () => {
     const result = analyze(source);
     expect(result.getErrors().length).toBe(0);
 
-    const ast = result.getValue();
-    const schemaSymbol = ast.symbol as SchemaSymbol;
+    const { ast, nodeToSymbol } = result.getValue();
+    const schemaSymbol = nodeToSymbol.get(ast) as SchemaSymbol;
     const enumSymbol = schemaSymbol.symbolTable.get('Enum:status') as EnumSymbol;
 
     const pendingField = enumSymbol.symbolTable.get('Enum field:pending') as EnumFieldSymbol;

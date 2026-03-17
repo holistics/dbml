@@ -168,9 +168,9 @@ export class TablePartialInterpreter implements ElementInterpreter {
 
       const refs = settingMap[SettingName.Ref] || [];
       column.inline_refs = refs.flatMap((ref) => {
-        const [referredSymbol] = getColumnSymbolsOfRefOperand((ref.value as PrefixExpressionNode).expression!);
+        const [referredSymbol] = getColumnSymbolsOfRefOperand((ref.value as PrefixExpressionNode).expression!, this.env.nodeToReferee);
 
-        if (isSameEndpoint(referredSymbol, field.symbol as ColumnSymbol)) {
+        if (isSameEndpoint(referredSymbol, this.env.nodeToSymbol.get(field) as ColumnSymbol)) {
           errors.push(new CompileError(CompileErrorCode.SAME_ENDPOINT, 'Two endpoints are the same', ref));
           return [];
         }

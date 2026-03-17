@@ -6,7 +6,7 @@ import Parser from '@/core/parser/parser';
 import { NodeSymbolIdGenerator } from '@/core/analyzer/symbol/symbols';
 import { SyntaxNodeIdGenerator } from '@/core/parser/nodes';
 import Analyzer from '@/core/analyzer/analyzer';
-import { serialize, scanTestNames } from '@tests/utils';
+import { serializeAnalysis, scanTestNames } from '@tests/utils';
 
 describe('[snapshot] binder', () => {
   const testNames = scanTestNames(path.resolve(__dirname, './input/'));
@@ -23,7 +23,7 @@ describe('[snapshot] binder', () => {
       .chain(({ ast }) => {
         return new Analyzer(ast, symbolIdGenerator).analyze();
       });
-    const output = serialize(report, true);
+    const output = serializeAnalysis(report, true);
 
     it(testName, () => expect(output).toMatchFileSnapshot(path.resolve(__dirname, `./output/${testName}.out.json`)));
   });

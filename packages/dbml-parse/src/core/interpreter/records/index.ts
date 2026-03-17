@@ -132,7 +132,7 @@ function getTableAndColumnsOfRecords (records: ElementDeclarationNode, env: Inte
     };
   }
   const fragments = destructureCallExpression(nameNode!).unwrap();
-  const tableNode = last(fragments.variables)!.referee!.declaration as ElementDeclarationNode;
+  const tableNode = env.nodeToReferee.get(last(fragments.variables)!)!.declaration as ElementDeclarationNode;
   const table = env.tables.get(tableNode)!;
   const mergedTable = mergeTableAndPartials(table, env);
   const mergedColumns = fragments.args.map((e) => mergedTable.fields.find((f) => f.name === extractVariableFromExpression(e).unwrap())!);

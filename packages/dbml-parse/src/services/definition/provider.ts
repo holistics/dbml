@@ -15,21 +15,24 @@ export default class DBMLDefinitionProvider implements DefinitionProvider {
   provideDefinition (model: TextModel, position: Position): Definition {
     const { uri } = model;
     const offset = getOffsetFromMonacoPosition(model, position);
+    const nodeToReferee = this.compiler.parse.nodeToReferee();
     const containers = [...this.compiler.container.stack(offset)];
     while (containers.length !== 0) {
       const node = containers.pop();
+      if (!node) continue;
 
-      if (!node?.referee) continue;
+      const referee = nodeToReferee?.get(node);
+      if (!referee) continue;
 
       let declaration: SyntaxNode | undefined;
       if (
-        node.referee?.declaration
+        referee.declaration
         && [
           SyntaxNodeKind.PRIMARY_EXPRESSION,
           SyntaxNodeKind.VARIABLE,
-        ].includes(node?.kind)
+        ].includes(node.kind)
       ) {
-        ({ declaration } = node.referee);
+        ({ declaration } = referee);
       }
 
       if (declaration) {

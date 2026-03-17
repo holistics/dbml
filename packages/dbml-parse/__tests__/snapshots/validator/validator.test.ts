@@ -7,7 +7,7 @@ import Lexer from '@/core/lexer/lexer';
 import Parser from '@/core/parser/parser';
 import Validator from '@/core/analyzer/validator/validator';
 import SymbolFactory from '@/core/analyzer/symbol/factory';
-import { serialize, scanTestNames } from '@tests/utils';
+import { serializeAnalysis, scanTestNames } from '@tests/utils';
 
 describe('[snapshot] validator', () => {
   const testNames = scanTestNames(path.resolve(__dirname, './input/'));
@@ -22,9 +22,11 @@ describe('[snapshot] validator', () => {
         return new Parser(program, tokens, nodeIdGenerator).parse();
       })
       .chain(({ ast }) => {
-        return new Validator(ast, new SymbolFactory(symbolIdGenerator)).validate();
+        return new Validator(ast, new SymbolFactory(symbolIdGenerator))
+          .validate()
+          .map((nodeToSymbol) => ({ ast, nodeToSymbol, nodeToReferee: new WeakMap() }));
       });
-    const output = serialize(report, true);
+    const output = serializeAnalysis(report, true);
 
     it(testName, () => expect(output).toMatchFileSnapshot(path.resolve(__dirname, `./output/${testName}.out.json`)));
   });

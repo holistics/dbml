@@ -15,6 +15,7 @@ import {
   PrimaryExpressionNode,
   SyntaxNode,
 } from '@/core/parser/nodes';
+import { NodeToSymbolMap } from '@/core/analyzer/analyzer';
 import { destructureComplexVariable, extractVariableFromExpression, extractVarNameFromPrimaryVariable } from '@/core/analyzer/utils';
 import {
   aggregateSettingList,
@@ -46,15 +47,18 @@ export default class TableValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
   private symbolFactory: SymbolFactory;
   private publicSymbolTable: SymbolTable;
+  private nodeToSymbol: NodeToSymbolMap;
 
   constructor (
     declarationNode: ElementDeclarationNode & { type: SyntaxToken },
     publicSymbolTable: SymbolTable,
     symbolFactory: SymbolFactory,
+    nodeToSymbol: NodeToSymbolMap,
   ) {
     this.declarationNode = declarationNode;
     this.symbolFactory = symbolFactory;
     this.publicSymbolTable = publicSymbolTable;
+    this.nodeToSymbol = nodeToSymbol;
   }
 
   validate (): CompileError[] {
@@ -137,7 +141,8 @@ export default class TableValidator implements ElementValidator {
 
   registerElement (): CompileError[] {
     const errors: CompileError[] = [];
-    this.declarationNode.symbol = this.symbolFactory.create(TableSymbol, { declaration: this.declarationNode, symbolTable: new SymbolTable() });
+    const tableSymbol = this.symbolFactory.create(TableSymbol, { declaration: this.declarationNode, symbolTable: new SymbolTable() });
+    this.nodeToSymbol.set(this.declarationNode, tableSymbol);
 
     const { name, alias } = this.declarationNode;
 
@@ -150,7 +155,7 @@ export default class TableValidator implements ElementValidator {
       if (symbolTable.has(tableId)) {
         errors.push(new CompileError(CompileErrorCode.DUPLICATE_NAME, `Table name '${tableName}' already exists in schema '${nameFragments.join('.') || DEFAULT_SCHEMA_NAME}'`, name!));
       }
-      symbolTable.set(tableId, this.declarationNode.symbol!);
+      symbolTable.set(tableId, tableSymbol);
     }
 
     if (
@@ -163,7 +168,7 @@ export default class TableValidator implements ElementValidator {
       if (this.publicSymbolTable.has(aliasId)) {
         errors.push(new CompileError(CompileErrorCode.DUPLICATE_NAME, `Table name '${aliasName}' already exists`, name!));
       }
-      this.publicSymbolTable.set(aliasId, this.declarationNode.symbol!);
+      this.publicSymbolTable.set(aliasId, tableSymbol);
     }
 
     return errors;
@@ -220,7 +225,7 @@ export default class TableValidator implements ElementValidator {
         const injectedTablePartialName = extractVariableFromExpression(field.callee.expression).unwrap_or('');
         const partialInjectionSymbol = this.symbolFactory.create(PartialInjectionSymbol, { symbolTable: new SymbolTable(), declaration: field });
         const partialInjectionSymbolId = createPartialInjectionSymbolIndex(injectedTablePartialName);
-        const symbolTable = this.declarationNode.symbol!.symbolTable!;
+        const symbolTable = (this.nodeToSymbol.get(this.declarationNode) as TableSymbol)!.symbolTable!;
         if (symbolTable.has(partialInjectionSymbolId)) {
           const symbol = symbolTable.get(partialInjectionSymbolId);
           return [
@@ -249,9 +254,9 @@ export default class TableValidator implements ElementValidator {
       const columnId = createColumnSymbolIndex(columnName);
 
       const columnSymbol = this.symbolFactory.create(ColumnSymbol, { declaration: field });
-      field.symbol = columnSymbol;
+      this.nodeToSymbol.set(field, columnSymbol);
 
-      const symbolTable = this.declarationNode.symbol!.symbolTable!;
+      const symbolTable = (this.nodeToSymbol.get(this.declarationNode) as TableSymbol)!.symbolTable!;
       if (symbolTable.has(columnId)) {
         const symbol = symbolTable.get(columnId);
         return [
@@ -432,7 +437,7 @@ export default class TableValidator implements ElementValidator {
         return [];
       }
       const _Validator = pickValidator(sub as ElementDeclarationNode & { type: SyntaxToken });
-      const validator = new _Validator(sub as ElementDeclarationNode & { type: SyntaxToken }, this.publicSymbolTable, this.symbolFactory);
+      const validator = new _Validator(sub as ElementDeclarationNode & { type: SyntaxToken }, this.publicSymbolTable, this.symbolFactory, this.nodeToSymbol);
       return validator.validate();
     });
 

@@ -1,5 +1,6 @@
 import { last } from 'lodash-es';
 import { None, Option, Some } from '@/core/option';
+import { NodeToRefereeMap, NodeToSymbolMap } from '@/core/analyzer/analyzer';
 import {
   ElementDeclarationNode,
   FunctionExpressionNode,
@@ -181,20 +182,15 @@ export function extractNumericLiteral (node?: SyntaxNode): number | null {
 
 // Extract referee from a simple variable (x) or complex variable (a.b.c)
 // For complex variables, returns the referee of the rightmost part
-export function extractReferee (node?: SyntaxNode): NodeSymbol | undefined {
+export function extractReferee (node: SyntaxNode | undefined, nodeToReferee: NodeToRefereeMap): NodeSymbol | undefined {
   if (!node) return undefined;
-
-  // Simple variable: x
-  if (isExpressionAVariableNode(node)) {
-    return node.referee;
-  }
 
   // Complex variable: a.b.c - get referee from rightmost part
   if (node instanceof InfixExpressionNode && node.op?.value === '.') {
-    return extractReferee(node.rightExpression);
+    return extractReferee(node.rightExpression, nodeToReferee);
   }
 
-  return node.referee;
+  return nodeToReferee.get(node);
 }
 
 export function isBinaryRelationship (value?: SyntaxNode): value is InfixExpressionNode {
@@ -293,17 +289,19 @@ export function destructureCallExpression (
 export function findSymbol (
   id: NodeSymbolIndex,
   startElement: ElementDeclarationNode,
+  nodeToSymbol: NodeToSymbolMap,
 ): NodeSymbol | undefined {
   let curElement: ElementDeclarationNode | ProgramNode | undefined = startElement;
   const isPublicSchema = isPublicSchemaIndex(id);
 
   while (curElement) {
-    if (curElement.symbol?.symbolTable?.has(id)) {
-      return curElement.symbol.symbolTable?.get(id);
+    const sym = nodeToSymbol.get(curElement);
+    if (sym?.symbolTable?.has(id)) {
+      return sym.symbolTable?.get(id);
     }
 
-    if (curElement.symbol?.declaration instanceof ProgramNode && isPublicSchema) {
-      return curElement.symbol;
+    if (curElement instanceof ProgramNode && isPublicSchema) {
+      return sym;
     }
 
     if (curElement instanceof ProgramNode) {

@@ -14,16 +14,19 @@ import { createTableGroupFieldSymbolIndex, createTableGroupSymbolIndex } from '@
 import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '@/core/analyzer/utils';
 import { TableGroupFieldSymbol, TableGroupSymbol } from '@/core/analyzer/symbol/symbols';
 import { isExpressionAVariableNode, isExpressionAQuotedString } from '@/core/parser/utils';
+import { NodeToSymbolMap } from '@/core/analyzer/analyzer';
 
 export default class TableGroupValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
   private publicSymbolTable: SymbolTable;
   private symbolFactory: SymbolFactory;
+  private nodeToSymbol: NodeToSymbolMap;
 
-  constructor (declarationNode: ElementDeclarationNode & { type: SyntaxToken }, publicSymbolTable: SymbolTable, symbolFactory: SymbolFactory) {
+  constructor (declarationNode: ElementDeclarationNode & { type: SyntaxToken }, publicSymbolTable: SymbolTable, symbolFactory: SymbolFactory, nodeToSymbol: NodeToSymbolMap) {
     this.declarationNode = declarationNode;
     this.publicSymbolTable = publicSymbolTable;
     this.symbolFactory = symbolFactory;
+    this.nodeToSymbol = nodeToSymbol;
   }
 
   validate (): CompileError[] {
@@ -80,7 +83,8 @@ export default class TableGroupValidator implements ElementValidator {
 
   registerElement (): CompileError[] {
     const { name } = this.declarationNode;
-    this.declarationNode.symbol = this.symbolFactory.create(TableGroupSymbol, { declaration: this.declarationNode, symbolTable: new SymbolTable() });
+    const tableGroupSymbol = this.symbolFactory.create(TableGroupSymbol, { declaration: this.declarationNode, symbolTable: new SymbolTable() });
+    this.nodeToSymbol.set(this.declarationNode, tableGroupSymbol);
     const maybeNameFragments = destructureComplexVariable(name);
     if (maybeNameFragments.isOk()) {
       const nameFragments = maybeNameFragments.unwrap();
@@ -90,7 +94,7 @@ export default class TableGroupValidator implements ElementValidator {
       if (symbolTable.has(tableId)) {
         return [new CompileError(CompileErrorCode.DUPLICATE_NAME, `TableGroup name '${tableGroupName}' already exists`, name!)];
       }
-      symbolTable.set(tableId, this.declarationNode.symbol!);
+      symbolTable.set(tableId, tableGroupSymbol);
     }
 
     return [];
@@ -192,7 +196,7 @@ export default class TableGroupValidator implements ElementValidator {
         return [];
       }
       const _Validator = pickValidator(sub as ElementDeclarationNode & { type: SyntaxToken });
-      const validator = new _Validator(sub as ElementDeclarationNode & { type: SyntaxToken }, this.publicSymbolTable, this.symbolFactory);
+      const validator = new _Validator(sub as ElementDeclarationNode & { type: SyntaxToken }, this.publicSymbolTable, this.symbolFactory, this.nodeToSymbol);
       return validator.validate();
     });
 
@@ -206,10 +210,10 @@ export default class TableGroupValidator implements ElementValidator {
       const tableGroupField = extractVarNameFromPrimaryVariable(field.callee).unwrap();
       const tableGroupFieldId = createTableGroupFieldSymbolIndex(tableGroupField);
 
-      const tableGroupSymbol = this.symbolFactory.create(TableGroupFieldSymbol, { declaration: field });
-      field.symbol = tableGroupSymbol;
+      const tableGroupFieldSymbol = this.symbolFactory.create(TableGroupFieldSymbol, { declaration: field });
+      this.nodeToSymbol.set(field, tableGroupFieldSymbol);
 
-      const symbolTable = this.declarationNode.symbol!.symbolTable!;
+      const symbolTable = (this.nodeToSymbol.get(this.declarationNode) as TableGroupSymbol)!.symbolTable!;
       if (symbolTable.has(tableGroupFieldId)) {
         const symbol = symbolTable.get(tableGroupFieldId);
         return [
@@ -217,7 +221,7 @@ export default class TableGroupValidator implements ElementValidator {
           new CompileError(CompileErrorCode.DUPLICATE_TABLEGROUP_FIELD_NAME, `${tableGroupField} already exists in the group`, symbol!.declaration!),
         ];
       }
-      symbolTable.set(tableGroupFieldId, tableGroupSymbol);
+      symbolTable.set(tableGroupFieldId, tableGroupFieldSymbol);
     }
     return [];
   }

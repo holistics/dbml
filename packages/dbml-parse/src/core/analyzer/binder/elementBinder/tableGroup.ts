@@ -8,16 +8,17 @@ import { CompileError } from '../../../errors';
 import { lookupAndBindInScope, pickBinder, scanNonListNodeForBinding } from '../utils';
 import { SymbolKind } from '../../symbol/symbolIndex';
 import SymbolFactory from '../../symbol/factory';
+import { BinderContext } from '@/core/analyzer/analyzer';
 
 export default class TableGroupBinder implements ElementBinder {
   private symbolFactory: SymbolFactory;
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
-  private ast: ProgramNode;
+  private context: BinderContext;
 
-  constructor (declarationNode: ElementDeclarationNode & { type: SyntaxToken }, ast: ProgramNode, symbolFactory: SymbolFactory) {
+  constructor (declarationNode: ElementDeclarationNode & { type: SyntaxToken }, context: BinderContext, symbolFactory: SymbolFactory) {
     this.declarationNode = declarationNode;
-    this.ast = ast;
     this.symbolFactory = symbolFactory;
+    this.context = context;
   }
 
   bind (): CompileError[] {
@@ -57,10 +58,10 @@ export default class TableGroupBinder implements ElementBinder {
         }
         const schemaBindees = bindee.variables;
 
-        return lookupAndBindInScope(this.ast, [
+        return lookupAndBindInScope(this.context.ast, [
           ...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })),
           { node: tableBindee, kind: SymbolKind.Table },
-        ]);
+        ], this.context.nodeToSymbol, this.context.nodeToReferee);
       });
     });
   }
@@ -71,7 +72,7 @@ export default class TableGroupBinder implements ElementBinder {
         return [];
       }
       const _Binder = pickBinder(sub as ElementDeclarationNode & { type: SyntaxToken });
-      const binder = new _Binder(sub as ElementDeclarationNode & { type: SyntaxToken }, this.ast, this.symbolFactory);
+      const binder = new _Binder(sub as ElementDeclarationNode & { type: SyntaxToken }, this.context, this.symbolFactory);
 
       return binder.bind();
     });

@@ -176,8 +176,9 @@ export class TableInterpreter implements ElementInterpreter {
   }
 
   private interpretFields (fields: FunctionApplicationNode[]): CompileError[] {
-    const symbolTableEntries = this.declarationNode.symbol?.symbolTable
-      ? [...this.declarationNode.symbol.symbolTable.entries()]
+    const declSymbol = this.env.nodeToSymbol.get(this.declarationNode);
+    const symbolTableEntries = declSymbol?.symbolTable
+      ? [...declSymbol.symbolTable.entries()]
       : [];
     const columnEntries = symbolTableEntries.filter(([index]) => {
       const res = destructureIndex(index).unwrap_or(null);
@@ -237,9 +238,9 @@ export class TableInterpreter implements ElementInterpreter {
 
       const refs = settingMap[SettingName.Ref] || [];
       column.inline_refs = refs.flatMap((ref) => {
-        const [referredSymbol] = getColumnSymbolsOfRefOperand((ref.value as PrefixExpressionNode).expression!);
+        const [referredSymbol] = getColumnSymbolsOfRefOperand((ref.value as PrefixExpressionNode).expression!, this.env.nodeToReferee);
 
-        if (isSameEndpoint(referredSymbol, field.symbol as ColumnSymbol)) {
+        if (isSameEndpoint(referredSymbol, this.env.nodeToSymbol.get(field) as ColumnSymbol)) {
           errors.push(new CompileError(CompileErrorCode.SAME_ENDPOINT, 'Two endpoints are the same', ref));
 
           return [];
@@ -397,7 +398,7 @@ export class TableInterpreter implements ElementInterpreter {
   }
 
   private registerInlineRefToEnv (column: FunctionApplicationNode, referredSymbol: ColumnSymbol, inlineRef: InlineRef, ref: AttributeNode): CompileError[] {
-    const refId = getRefId(column.symbol as ColumnSymbol, referredSymbol);
+    const refId = getRefId(this.env.nodeToSymbol.get(column) as ColumnSymbol, referredSymbol);
     if (this.env.refIds[refId]) {
       return [
         new CompileError(CompileErrorCode.CIRCULAR_REF, 'References with same endpoints exist', ref),

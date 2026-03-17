@@ -91,7 +91,8 @@ export class TableGroupInterpreter implements ElementInterpreter {
         errors.push(new CompileError(CompileErrorCode.UNSUPPORTED, 'Nested schema is not supported', field));
       }
 
-      const tableid = destructureMemberAccessExpression((field as FunctionApplicationNode).callee!).unwrap().pop()!.referee!.id;
+      const lastNode = destructureMemberAccessExpression((field as FunctionApplicationNode).callee!).unwrap().pop()!;
+      const tableid = this.env.nodeToReferee.get(lastNode)!.id;
       if (this.env.tableOwnerGroup[tableid]) {
         const tableGroup = this.env.tableOwnerGroup[tableid];
         const { schemaName, name } = this.env.tableGroups.get(tableGroup)!;

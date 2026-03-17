@@ -1,6 +1,5 @@
 import { flatten, zip } from 'lodash-es';
 import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
-import { NodeSymbol } from '@/core/analyzer/symbol/symbols';
 import { Position } from '@/core/types';
 import { getTokenFullEnd, getTokenFullStart } from '@/core/lexer/utils';
 
@@ -26,8 +25,6 @@ export class SyntaxNode {
   endPos: Readonly<Position>;
   end: Readonly<number>;
   fullEnd: Readonly<number>; // End offset with trivias counted
-  symbol?: NodeSymbol;
-  referee?: NodeSymbol; // The symbol that this syntax node refers to
 
   // args must be passed in order of appearance in the node
   constructor (

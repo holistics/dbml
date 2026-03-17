@@ -13,16 +13,17 @@ import { getElementKind } from '../../utils';
 import { ElementKind } from '../../types';
 import { SymbolKind } from '../../symbol/symbolIndex';
 import SymbolFactory from '../../symbol/factory';
+import { BinderContext } from '@/core/analyzer/analyzer';
 
 export default class RefBinder implements ElementBinder {
   private symbolFactory: SymbolFactory;
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
-  private ast: ProgramNode;
+  private context: BinderContext;
 
-  constructor (declarationNode: ElementDeclarationNode & { type: SyntaxToken }, ast: ProgramNode, symbolFactory: SymbolFactory) {
+  constructor (declarationNode: ElementDeclarationNode & { type: SyntaxToken }, context: BinderContext, symbolFactory: SymbolFactory) {
     this.declarationNode = declarationNode;
-    this.ast = ast;
     this.symbolFactory = symbolFactory;
+    this.context = context;
   }
 
   bind (): CompileError[] {
@@ -67,11 +68,11 @@ export default class RefBinder implements ElementBinder {
 
         const schemaBindees = bindee.variables;
 
-        return columnBindees.flatMap((columnBindee) => lookupAndBindInScope(this.ast, [
+        return columnBindees.flatMap((columnBindee) => lookupAndBindInScope(this.context.ast, [
           ...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })),
           { node: tableBindee, kind: SymbolKind.Table },
           { node: columnBindee, kind: SymbolKind.Column },
-        ]));
+        ], this.context.nodeToSymbol, this.context.nodeToReferee));
       });
     });
   }
@@ -82,7 +83,7 @@ export default class RefBinder implements ElementBinder {
         return [];
       }
       const _Binder = pickBinder(sub as ElementDeclarationNode & { type: SyntaxToken });
-      const binder = new _Binder(sub as ElementDeclarationNode & { type: SyntaxToken }, this.ast, this.symbolFactory);
+      const binder = new _Binder(sub as ElementDeclarationNode & { type: SyntaxToken }, this.context, this.symbolFactory);
 
       return binder.bind();
     });

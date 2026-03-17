@@ -5,10 +5,10 @@ import { Database } from '@/core/interpreter/types';
 import Report from '@/core/report';
 import Lexer from '@/core/lexer/lexer';
 import Parser from '@/core/parser/parser';
-import Analyzer from '@/core/analyzer/analyzer';
+import Analyzer, { NodeToSymbolMap, NodeToRefereeMap } from '@/core/analyzer/analyzer';
 import Interpreter from '@/core/interpreter/interpreter';
 import { DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLReferencesProvider, DBMLDiagnosticsProvider } from '@/services/index';
-import { ast, errors, warnings, tokens, rawDb, publicSymbolTable } from './queries/parse';
+import { ast, errors, warnings, tokens, rawDb, publicSymbolTable, nodeToSymbol, nodeToReferee } from './queries/parse';
 import { invalidStream, flatStream } from './queries/token';
 import { symbolOfName, symbolOfNameToKey, symbolMembers } from './queries/symbol';
 import { containerStack, containerToken, containerElement, containerScope, containerScopeKind } from './queries/container';
@@ -67,18 +67,18 @@ export default class Compiler {
     }) as (...args: Args) => Return;
   }
 
-  private interpret (): Report<{ ast: ProgramNode; tokens: SyntaxToken[]; rawDb?: Database }> {
-    const parseRes: Report<{ ast: ProgramNode; tokens: SyntaxToken[] }> = new Lexer(this.source)
+  private interpret (): Report<{ ast: ProgramNode; tokens: SyntaxToken[]; rawDb?: Database; nodeToSymbol: NodeToSymbolMap; nodeToReferee: NodeToRefereeMap }> {
+    const parseRes = new Lexer(this.source)
       .lex()
       .chain((lexedTokens) => new Parser(this.source, lexedTokens as SyntaxToken[], this.nodeIdGenerator).parse())
-      .chain(({ ast, tokens }) => new Analyzer(ast, this.symbolIdGenerator).analyze().map(() => ({ ast, tokens })));
+      .chain(({ ast, tokens }) => new Analyzer(ast, this.symbolIdGenerator).analyze().map((analysis) => ({ ...analysis, tokens })));
 
     if (parseRes.getErrors().length > 0) {
-      return parseRes as Report<{ ast: ProgramNode; tokens: SyntaxToken[]; rawDb?: Database }>;
+      return parseRes as any;
     }
 
-    return parseRes.chain(({ ast, tokens }) =>
-      new Interpreter(ast).interpret().map((rawDb) => ({ ast, tokens, rawDb })),
+    return parseRes.chain((analysis) =>
+      new Interpreter(analysis).interpret().map((rawDb) => ({ ...analysis, rawDb })),
     );
   }
 
@@ -107,6 +107,8 @@ export default class Compiler {
     tokens: this.query(tokens),
     rawDb: this.query(rawDb),
     publicSymbolTable: this.query(publicSymbolTable),
+    nodeToSymbol: this.query(nodeToSymbol),
+    nodeToReferee: this.query(nodeToReferee),
   };
 
   readonly container = {

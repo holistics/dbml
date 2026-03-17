@@ -1,5 +1,6 @@
 import { partition, forIn, last } from 'lodash-es';
 import SymbolFactory from '@/core/analyzer/symbol/factory';
+import { NodeToSymbolMap } from '@/core/analyzer/analyzer';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import {
   AttributeNode,
@@ -43,14 +44,18 @@ export default class TablePartialValidator implements ElementValidator {
 
   private publicSymbolTable: SymbolTable;
 
+  private nodeToSymbol: NodeToSymbolMap;
+
   constructor (
     declarationNode: ElementDeclarationNode & { type: SyntaxToken },
     publicSymbolTable: SymbolTable,
     symbolFactory: SymbolFactory,
+    nodeToSymbol: NodeToSymbolMap,
   ) {
     this.declarationNode = declarationNode;
     this.symbolFactory = symbolFactory;
     this.publicSymbolTable = publicSymbolTable;
+    this.nodeToSymbol = nodeToSymbol;
   }
 
   validate (): CompileError[] {
@@ -142,7 +147,8 @@ export default class TablePartialValidator implements ElementValidator {
 
   registerElement (): CompileError[] {
     const { name } = this.declarationNode;
-    this.declarationNode.symbol = this.symbolFactory.create(TablePartialSymbol, { declaration: this.declarationNode, symbolTable: new SymbolTable() });
+    const tablePartialSymbol = this.symbolFactory.create(TablePartialSymbol, { declaration: this.declarationNode, symbolTable: new SymbolTable() });
+    this.nodeToSymbol.set(this.declarationNode, tablePartialSymbol);
     const maybeNamePartials = destructureComplexVariable(name);
     if (!maybeNamePartials.isOk()) return [];
 
@@ -153,7 +159,7 @@ export default class TablePartialValidator implements ElementValidator {
     if (symbolTable.has(tablePartialId)) {
       return [new CompileError(CompileErrorCode.DUPLICATE_NAME, `TablePartial name '${tablePartialName}' already exists`, name!)];
     }
-    symbolTable.set(tablePartialId, this.declarationNode.symbol!);
+    symbolTable.set(tablePartialId, tablePartialSymbol);
 
     return [];
   }
@@ -206,9 +212,9 @@ export default class TablePartialValidator implements ElementValidator {
     const columnId = createColumnSymbolIndex(columnName);
 
     const columnSymbol = this.symbolFactory.create(ColumnSymbol, { declaration: field });
-    field.symbol = columnSymbol;
+    this.nodeToSymbol.set(field, columnSymbol);
 
-    const symbolTable = this.declarationNode.symbol!.symbolTable!;
+    const symbolTable = (this.nodeToSymbol.get(this.declarationNode) as TablePartialSymbol)!.symbolTable!;
     if (symbolTable.has(columnId)) {
       const symbol = symbolTable.get(columnId);
       return [
@@ -401,7 +407,7 @@ export default class TablePartialValidator implements ElementValidator {
         return [];
       }
       const _Validator = pickValidator(sub as ElementDeclarationNode & { type: SyntaxToken });
-      const validator = new _Validator(sub as ElementDeclarationNode & { type: SyntaxToken }, this.publicSymbolTable, this.symbolFactory);
+      const validator = new _Validator(sub as ElementDeclarationNode & { type: SyntaxToken }, this.publicSymbolTable, this.symbolFactory, this.nodeToSymbol);
       return validator.validate();
     });
 

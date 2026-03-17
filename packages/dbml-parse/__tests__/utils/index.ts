@@ -11,7 +11,8 @@ export {
 // Test helpers for snapshot testing
 export {
   scanTestNames,
-  serialize,
+  serializeAst,
+  serializeAnalysis,
 } from './testHelpers';
 
 // Compiler utilities for property testing

@@ -27,9 +27,9 @@ export default class DBMLReferencesProvider implements ReferenceProvider {
           SyntaxNodeKind.PRIMARY_EXPRESSION,
         ].includes(node?.kind)
       ) {
-        const { symbol } = node;
+        const symbol = this.compiler.parse.nodeToSymbol()?.get(node);
         if (symbol?.references.length) {
-          return symbol.references.map(({ startPos, endPos }) => ({
+          return symbol.references.map(({ startPos, endPos }: { startPos: any; endPos: any }) => ({
             range: {
               startColumn: startPos.column + 1,
               startLineNumber: startPos.line + 1,

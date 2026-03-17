@@ -7,37 +7,44 @@ import SymbolFactory from '@/core/analyzer/symbol/factory';
 import { getElementKind } from '@/core/analyzer/utils';
 import { ElementKind } from '@/core/analyzer/types';
 import TableBinder from './elementBinder/table';
+import { NodeToSymbolMap, NodeToRefereeMap, BinderContext } from '@/core/analyzer/analyzer';
 
 export default class Binder {
   private ast: ProgramNode;
 
   private symbolFactory: SymbolFactory;
 
-  constructor (ast: ProgramNode, symbolFactory: SymbolFactory) {
+  private nodeToSymbol: NodeToSymbolMap;
+
+  constructor ({ ast, nodeToSymbol }: { ast: ProgramNode; nodeToSymbol: NodeToSymbolMap }, symbolFactory: SymbolFactory) {
     this.ast = ast;
     this.symbolFactory = symbolFactory;
+    this.nodeToSymbol = nodeToSymbol;
   }
 
-  private resolvePartialInjections (): CompileError[] {
+  private resolvePartialInjections (context: BinderContext): CompileError[] {
     return this.ast.body.filter((e) => getElementKind(e).unwrap_or('') === ElementKind.Table).flatMap((t) => {
-      const binder = new TableBinder(t as ElementDeclarationNode & { type: SyntaxToken }, this.ast, this.symbolFactory);
+      const binder = new TableBinder(t as ElementDeclarationNode & { type: SyntaxToken }, context, this.symbolFactory);
       return binder.resolvePartialInjections();
     });
   }
 
-  resolve (): Report<ProgramNode> {
+  resolve (): Report<NodeToRefereeMap> {
     const errors: CompileError[] = [];
+    const nodeToReferee: NodeToRefereeMap = new WeakMap();
+    const context: BinderContext = { ast: this.ast, nodeToSymbol: this.nodeToSymbol, nodeToReferee };
+
     // Must call this before binding
-    errors.push(...this.resolvePartialInjections());
+    errors.push(...this.resolvePartialInjections(context));
 
     for (const element of this.ast.body) {
       if (element.type) {
         const _Binder = pickBinder(element as ElementDeclarationNode & { type: SyntaxToken });
-        const binder = new _Binder(element as ElementDeclarationNode & { type: SyntaxToken }, this.ast, this.symbolFactory);
+        const binder = new _Binder(element as ElementDeclarationNode & { type: SyntaxToken }, context, this.symbolFactory);
         errors.push(...binder.bind());
       }
     }
 
-    return new Report(this.ast, errors);
+    return new Report(nodeToReferee, errors);
   }
 }
