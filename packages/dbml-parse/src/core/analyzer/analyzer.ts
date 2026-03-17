@@ -31,7 +31,7 @@ export default class Analyzer {
 
   // Analyzing: Invoking both the validator and binder
   analyze (): Report<AnalysisResult> {
-    const validator = new Validator(this.ast, this.symbolFactory);
+    const validator = new Validator({ ast: this.ast }, this.symbolFactory);
     const ast = this.ast;
 
     return validator.validate().chain((nodeToSymbol) => {
@@ -42,7 +42,7 @@ export default class Analyzer {
 
   // For invoking the validator only
   validate (): Report<NodeToSymbolMap> {
-    const validator = new Validator(this.ast, this.symbolFactory);
+    const validator = new Validator({ ast: this.ast }, this.symbolFactory);
 
     return validator.validate();
   }

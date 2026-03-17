@@ -22,7 +22,7 @@ describe('[snapshot] validator', () => {
         return new Parser(program, tokens, nodeIdGenerator).parse();
       })
       .chain(({ ast }) => {
-        return new Validator(ast, new SymbolFactory(symbolIdGenerator))
+        return new Validator({ ast }, new SymbolFactory(symbolIdGenerator))
           .validate()
           .map((nodeToSymbol) => ({ ast, nodeToSymbol, nodeToReferee: new WeakMap() }));
       });
