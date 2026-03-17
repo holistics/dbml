@@ -12,7 +12,7 @@ import { type FilepathKey } from './projectLayout';
 import { type FileIndex } from './types';
 import { DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLReferencesProvider, DBMLDiagnosticsProvider } from '@/services/index';
 import { ast, errors, warnings, tokens, rawDb, publicSymbolTable, nodeToSymbol, nodeToReferee } from './queries/parse';
-import { parseFile, parseProject, analyzeProject, interpretProject } from './queries/project';
+import { parseFile, parseProject, analyzeProject, interpretProject, nodeSymbol, nodeReferences, nodeReferee } from './queries/project';
 import { invalidStream, flatStream } from './queries/token';
 import { symbolOfName, symbolOfNameToKey, symbolMembers } from './queries/symbol';
 import { containerStack, containerToken, containerElement, containerScope, containerScopeKind } from './queries/container';
@@ -146,6 +146,9 @@ export default class Compiler {
   parseProject = parseProject.bind(this);
   analyzeProject = this.globalQuery(analyzeProject);
   interpretProject = this.globalQuery(interpretProject);
+  nodeSymbol = this.globalQuery(nodeSymbol);
+  nodeReferences = this.globalQuery(nodeReferences);
+  nodeReferee = this.globalQuery(nodeReferee);
 
   initMonacoServices () {
     return {
