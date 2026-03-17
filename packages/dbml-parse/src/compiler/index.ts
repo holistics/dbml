@@ -24,8 +24,10 @@ export { splitQualifiedIdentifier, unescapeString, escapeString, formatRecordVal
 
 export default class Compiler {
   private _layout: DbmlProjectLayout;
+
   private globalCache = new Map<symbol, any>();
   private localCaches: Map<FilepathKey, unknown>[] = [];
+
   constructor (layout?: DbmlProjectLayout) {
     this._layout = layout ?? new MemoryProjectLayout();
   }
