@@ -146,7 +146,7 @@ export default class Compiler {
   // Detect module boundaries in the project layout.
   // A module is a folder containing a *.project.dbml file; root is always a module.
   // Folders without *.project.dbml are merged into their nearest ancestor module.
-  // Signature: () => Module[]
+  // Signature: () => Report<Module[]>
   modules = this.globalQuery(modules);
 
   /* token */

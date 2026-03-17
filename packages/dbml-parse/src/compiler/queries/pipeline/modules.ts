@@ -1,11 +1,16 @@
 import type Compiler from '../../index';
 import { Filepath } from '../../projectLayout';
-import { ROOT } from '../../constants';
+import { ROOT, DBML_EXT, PROJECT_FILE_EXT } from '../../constants';
+import { CompileError, CompileErrorCode } from '@/core/errors';
+import Report from '@/core/report';
 import { dirname } from 'path';
 
 export type Module = {
   // The *.project.dbml file that declares this module, or undefined if the root has none
   entry: Filepath | undefined;
+  // The module name - stem of the entry basename (e.g. 'auth' from 'auth.project.dbml'),
+  // or undefined if the root has no entry
+  name: string | undefined;
   // Absolute path of the module's root directory
   dir: string;
   // All .dbml files that belong to this module
@@ -13,35 +18,56 @@ export type Module = {
   files: Filepath[];
 };
 
-export function modules (this: Compiler): Module[] {
+export function modules (this: Compiler): Report<Module[]> {
+  const errors: CompileError[] = [];
   const layout = this.layout();
-  const allDbmlFiles = layout.listAllFiles(ROOT).filter((f) => f.extname === '.dbml');
+  const allDbmlFiles = layout.listAllFiles(ROOT).filter((f) => f.extname === DBML_EXT);
 
-  // Collect module directories: every folder with a *.project.dbml, plus root (always a module)
-  const moduleEntries = new Map<string, Filepath | undefined>();
-  moduleEntries.set(ROOT.absolute, undefined);
-
+  // Group *.project.dbml files by directory to detect duplicates
+  const projectFilesByDir = new Map<string, Filepath[]>();
   for (const file of allDbmlFiles) {
-    if (file.basename.endsWith('.project.dbml')) {
-      moduleEntries.set(file.dirname, file);
+    if (file.basename.endsWith(PROJECT_FILE_EXT)) {
+      const dir = file.dirname;
+      if (!projectFilesByDir.has(dir)) projectFilesByDir.set(dir, []);
+      projectFilesByDir.get(dir)!.push(file);
     }
   }
 
-  // Initialize one ModuleIndex per module directory
-  const modules = new Map<string, Module>();
+  // Collect module entries — root is always a module; report errors for duplicate project files
+  const moduleEntries = new Map<string, Filepath | undefined>();
+  moduleEntries.set(ROOT.absolute, undefined);
+
+  for (const [dir, files] of projectFilesByDir) {
+    if (files.length > 1) {
+      for (const file of files) {
+        const ast = this.parseFile(file).ast;
+        errors.push(new CompileError(
+          CompileErrorCode.DUPLICATE_MODULE_ENTRY,
+          `Folder "${dir}" has multiple *.project.dbml files; only one is allowed`,
+          ast,
+        ));
+      }
+    } else {
+      moduleEntries.set(dir, files[0]);
+    }
+  }
+
+  // Initialize one Module per module directory
+  const result = new Map<string, Module>();
   for (const [dir, entry] of moduleEntries) {
-    modules.set(dir, { entry, dir, files: [] });
+    const name = entry ? entry.basename.slice(0, -PROJECT_FILE_EXT.length) : undefined;
+    result.set(dir, { entry, name, dir, files: [] });
   }
 
   // Assign each .dbml file to the nearest ancestor module directory
   for (const file of allDbmlFiles) {
-    const moduleDir = findNearestModuleDir(file.dirname, modules);
+    const moduleDir = findNearestModuleDir(file.dirname, result);
     if (moduleDir !== undefined) {
-      modules.get(moduleDir)!.files.push(file);
+      result.get(moduleDir)!.files.push(file);
     }
   }
 
-  return [...modules.values()];
+  return new Report([...result.values()], errors);
 }
 
 function findNearestModuleDir (dir: string, modules: Map<string, Module>): string | undefined {

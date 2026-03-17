@@ -3,7 +3,7 @@ import Lexer from '@/core/lexer/lexer';
 import Parser from '@/core/parser/parser';
 import { SyntaxNodeIdGenerator, type ProgramNode } from '@/core/parser/nodes';
 import { Filepath, type FilepathKey } from '../../projectLayout';
-import { ROOT } from '../../constants';
+import { ROOT, DBML_EXT } from '../../constants';
 import type { SyntaxToken } from '@/core/lexer/tokens';
 import type { CompileError, CompileWarning } from '@/core/errors';
 
@@ -39,7 +39,7 @@ export function parseProject (this: Compiler): Map<FilepathKey, FileIndex> {
   const layout = this.layout();
   return new Map(
     layout.listAllFiles(ROOT)
-      .filter((f) => f.extname === '.dbml')
+      .filter((f) => f.extname === DBML_EXT)
       .map((filepath: Filepath) => [filepath.key, this.parseFile(filepath)] as const),
   );
 }
