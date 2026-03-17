@@ -37,7 +37,7 @@ const DEFAULT_ENTRY = Filepath.from('/main.project.dbml');
 export default class Compiler {
   private layout: DbmlProjectLayout;
   private globalCache = new Map<symbol, any>();
-  fileIndexes = new Map<FilepathKey, FileIndex>();
+  private fileIndexes = new Map<FilepathKey, FileIndex>();
   private nodeIdGenerator = new SyntaxNodeIdGenerator();
   private symbolIdGenerator = new NodeSymbolIdGenerator();
 
