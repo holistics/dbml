@@ -15,7 +15,7 @@ describe('[snapshot] parser', () => {
     const nodeIdGenerator = new SyntaxNodeIdGenerator();
     const output = JSON.stringify(
       lexer.lex().chain((tokens) => {
-        const parser = new Parser(program, tokens, nodeIdGenerator);
+        const parser = new Parser(undefined, program, tokens, nodeIdGenerator);
         return parser.parse().map((_) => _.ast);
       }),
       (key: string, value: any) => {

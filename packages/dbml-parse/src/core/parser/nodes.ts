@@ -113,12 +113,15 @@ export class ProgramNode extends SyntaxNode {
 
   source: string;
 
+  filepath?: string;
+
   constructor (
-    { body = [], eof, source }: { body?: (UseDeclarationNode | ElementDeclarationNode)[]; eof?: SyntaxToken; source: string },
+    { body = [], eof, source, filepath }: { body?: (UseDeclarationNode | ElementDeclarationNode)[]; eof?: SyntaxToken; source: string; filepath?: string },
     id: SyntaxNodeId,
   ) {
     super(id, SyntaxNodeKind.PROGRAM, [...body, eof]);
     this.source = source;
+    this.filepath = filepath;
     this.body = body;
     this.eof = eof;
   }
