@@ -13,6 +13,7 @@ import Report from '@/core/report';
 import { getElementKind } from '@/core/analyzer/utils';
 import { ElementKind } from '@/core/analyzer/types';
 import { CompileWarning } from '../errors';
+import { DEFAULT_SCHEMA_NAME } from '@/constants';
 
 function processColumnInDb<T extends Table | TablePartial> (table: T): T {
   return {
@@ -27,6 +28,73 @@ function processColumnInDb<T extends Table | TablePartial> (table: T): T {
       },
     })),
   };
+}
+
+/**
+ * Entity types whose explicit wildcard (*) must be expanded to the concrete list of names.
+ * These types have no "show all" sentinel in FilterConfig — consumers expect
+ * an explicit list. Add more types here as needed.
+ */
+const WILDCARD_EXPAND_ENTITIES = new Set(['tableGroups']);
+
+/**
+ * Expand explicit wildcard ([]) in DiagramView visibleEntities to the actual list of
+ * entities for the types listed in WILDCARD_EXPAND_ENTITIES.
+ *
+ * Only expands when:
+ * 1. The user wrote `{ * }` for that entity type (tracked via _explicitWildcards)
+ * 2. The other Trinity dims (Tables, Schemas) are NOT explicitly set —
+ *    i.e. the wildcard entity is the only Trinity dim declared.
+ *    When other Trinity dims are also declared, [] keeps its "show all" meaning.
+ */
+function expandDiagramViewWildcards (env: InterpreterDatabase): void {
+  if (!env.diagramViews) return;
+
+  for (const view of env.diagramViews.values()) {
+    const ve = view.visibleEntities;
+    const wildcards = view._explicitWildcards;
+    const explicitlySet = view._explicitlySet;
+    if (!wildcards || !explicitlySet) continue;
+
+    if (WILDCARD_EXPAND_ENTITIES.has('tables') && wildcards.has('tables') && ve.tables && ve.tables.length === 0) {
+      const otherTrinitySet = explicitlySet.has('tableGroups') || explicitlySet.has('schemas');
+      if (!otherTrinitySet) {
+        ve.tables = Array.from(env.tables.values()).map((t) => ({
+          name: t.name,
+          schemaName: t.schemaName || DEFAULT_SCHEMA_NAME,
+        }));
+      }
+    }
+
+    if (WILDCARD_EXPAND_ENTITIES.has('tableGroups') && wildcards.has('tableGroups') && ve.tableGroups && ve.tableGroups.length === 0) {
+      const otherTrinitySet = explicitlySet.has('tables') || explicitlySet.has('schemas');
+      if (!otherTrinitySet) {
+        ve.tableGroups = Array.from(env.tableGroups.values()).map((tg) => ({
+          name: tg.name!,
+        }));
+      }
+    }
+
+    if (WILDCARD_EXPAND_ENTITIES.has('stickyNotes') && wildcards.has('stickyNotes') && ve.stickyNotes && ve.stickyNotes.length === 0) {
+      // stickyNotes is not part of Trinity, no other-dim check needed
+      ve.stickyNotes = Array.from(env.notes.values()).map((n) => ({
+        name: n.name,
+      }));
+    }
+
+    if (WILDCARD_EXPAND_ENTITIES.has('schemas') && wildcards.has('schemas') && ve.schemas && ve.schemas.length === 0) {
+      const otherTrinitySet = explicitlySet.has('tables') || explicitlySet.has('tableGroups');
+      if (!otherTrinitySet) {
+        ve.schemas = [...new Set(
+          Array.from(env.tables.values()).map((t) => t.schemaName || DEFAULT_SCHEMA_NAME),
+        )].map((name) => ({ name }));
+      }
+    }
+
+    // Clean up internal markers before output
+    delete view._explicitWildcards;
+    delete view._explicitlySet;
+  }
 }
 
 function convertEnvToDb (env: InterpreterDatabase): Database {
@@ -131,6 +199,10 @@ export default class Interpreter {
       errors.push(...recordsResult.getErrors());
       warnings.push(...recordsResult.getWarnings());
     }
+
+    // Post-processing: expand wildcards in DiagramView visibleEntities
+    // At this point all tables, tableGroups, notes are fully interpreted
+    expandDiagramViewWildcards(this.env);
 
     return new Report(convertEnvToDb(this.env), errors, warnings);
   }

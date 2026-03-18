@@ -32,6 +32,8 @@ export class DiagramViewInterpreter implements ElementInterpreter {
         tableGroups: null,
         schemas: null,
       },
+      _explicitWildcards: new Set(),
+      _explicitlySet: new Set(),
     };
   }
 
@@ -75,6 +77,8 @@ export class DiagramViewInterpreter implements ElementInterpreter {
       const first = body.body[0];
       if (first instanceof FunctionApplicationNode && isWildcardExpression(first.callee)) {
         this.diagramView.visibleEntities = { tables: [], stickyNotes: [], tableGroups: [], schemas: [] };
+        this.diagramView._explicitWildcards = new Set(['tables', 'stickyNotes', 'tableGroups', 'schemas']);
+        this.diagramView._explicitlySet = new Set(['tables', 'stickyNotes', 'tableGroups', 'schemas']);
         return [];
       }
     }
@@ -104,6 +108,12 @@ export class DiagramViewInterpreter implements ElementInterpreter {
       if (!explicitlySet.has('schemas')) ve.schemas = [];
     }
 
+    // Store which dims were explicitly declared (normalize block type names to FilterConfig keys)
+    if (explicitlySet.has('tables')) this.diagramView._explicitlySet!.add('tables');
+    if (explicitlySet.has('tablegroups')) this.diagramView._explicitlySet!.add('tableGroups');
+    if (explicitlySet.has('schemas')) this.diagramView._explicitlySet!.add('schemas');
+    if (explicitlySet.has('notes')) this.diagramView._explicitlySet!.add('stickyNotes');
+
     return [];
   }
 
@@ -120,15 +130,19 @@ export class DiagramViewInterpreter implements ElementInterpreter {
       switch (blockType) {
         case 'tables':
           this.diagramView.visibleEntities!.tables = [];
+          this.diagramView._explicitWildcards!.add('tables');
           break;
         case 'notes':
           this.diagramView.visibleEntities!.stickyNotes = [];
+          this.diagramView._explicitWildcards!.add('stickyNotes');
           break;
         case 'tablegroups':
           this.diagramView.visibleEntities!.tableGroups = [];
+          this.diagramView._explicitWildcards!.add('tableGroups');
           break;
         case 'schemas':
           this.diagramView.visibleEntities!.schemas = [];
+          this.diagramView._explicitWildcards!.add('schemas');
           break;
       }
       return;

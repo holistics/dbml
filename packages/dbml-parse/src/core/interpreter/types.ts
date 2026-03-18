@@ -29,6 +29,10 @@ export interface DiagramView {
   schemaName: string | null;
   visibleEntities: FilterConfig;
   token: TokenPosition;
+  /** Internal: tracks which dims used explicit wildcard (*). Stripped before output. */
+  _explicitWildcards?: Set<string>;
+  /** Internal: tracks which dims were explicitly declared in the DBML. Stripped before output. */
+  _explicitlySet?: Set<string>;
 }
 
 export interface InterpreterDatabase {

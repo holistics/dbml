@@ -1093,6 +1093,95 @@ describe('[example] interpreter', () => {
     });
   });
 
+  describe('DiagramView wildcard expansion for TableGroups', () => {
+    test('should expand explicit TableGroups {*} to concrete group names', () => {
+      const source = `
+        Table users { id int }
+        Table posts { id int }
+        TableGroup auth_tables { users }
+        TableGroup content_tables { posts }
+        DiagramView myView {
+          TableGroups { * }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+
+      const ve = db.diagramViews[0].visibleEntities;
+      expect(ve.tableGroups).toEqual([
+        { name: 'auth_tables' },
+        { name: 'content_tables' },
+      ]);
+      // Trinity rule still applies for tables/schemas (promoted to [])
+      expect(ve.tables).toEqual([]);
+      expect(ve.schemas).toEqual([]);
+      expect(ve.stickyNotes).toBeNull();
+    });
+
+    test('should NOT expand TableGroups {*} in body-level wildcard {*} (all dims are set)', () => {
+      const source = `
+        Table users { id int }
+        TableGroup auth_tables { users }
+        DiagramView myView { * }
+      `;
+      const db = interpret(source).getValue()!;
+
+      const ve = db.diagramViews[0].visibleEntities;
+      // Body-level {*} sets all dims — Tables/Schemas are also set, so no expansion
+      expect(ve.tableGroups).toEqual([]);
+      expect(ve.tables).toEqual([]);
+      expect(ve.schemas).toEqual([]);
+      expect(ve.stickyNotes).toEqual([]);
+    });
+
+    test('should NOT expand tableGroups [] from Trinity promotion', () => {
+      const source = `
+        Table users { id int }
+        TableGroup auth_tables { users }
+        DiagramView myView {
+          Tables { users }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+
+      const ve = db.diagramViews[0].visibleEntities;
+      // tableGroups [] comes from Trinity promotion, not explicit wildcard — should stay []
+      expect(ve.tableGroups).toEqual([]);
+      expect(ve.tables).toEqual([{ name: 'users', schemaName: 'public' }]);
+      expect(ve.schemas).toEqual([]);
+    });
+
+    test('should NOT expand TableGroups {*} when Tables is also explicitly set', () => {
+      const source = `
+        Table users { id int }
+        TableGroup auth_tables { users }
+        DiagramView myView {
+          Tables { users }
+          TableGroups { * }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+
+      const ve = db.diagramViews[0].visibleEntities;
+      // Tables is explicitly set, so TableGroups wildcard stays as []
+      expect(ve.tableGroups).toEqual([]);
+      expect(ve.tables).toEqual([{ name: 'users', schemaName: 'public' }]);
+      expect(ve.schemas).toEqual([]);
+    });
+
+    test('should return empty list when TableGroups {*} but no groups exist', () => {
+      const source = `
+        Table users { id int }
+        DiagramView myView {
+          TableGroups { * }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+
+      const ve = db.diagramViews[0].visibleEntities;
+      expect(ve.tableGroups).toEqual([]);
+    });
+  });
+
   describe('standalone note interpretation', () => {
     test('should interpret standalone note', () => {
       const source = `
