@@ -1,5 +1,5 @@
 import { CompileError } from '../../../errors';
-import { ElementBinder } from '../types';
+import { ElementBinder, ElementBinderArgs, ElementBinderResult } from '../types';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ProgramNode,
 } from '../../../parser/nodes';
@@ -13,14 +13,14 @@ export default class CustomBinder implements ElementBinder {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
   private context: BinderContext;
 
-  constructor (declarationNode: ElementDeclarationNode & { type: SyntaxToken }, context: BinderContext, symbolFactory: SymbolFactory) {
+  constructor ({ declarationNode, context }: ElementBinderArgs, symbolFactory: SymbolFactory) {
     this.declarationNode = declarationNode;
     this.symbolFactory = symbolFactory;
     this.context = context;
   }
 
-  bind (): CompileError[] {
-    return this.bindBody(this.declarationNode.body);
+  bind (): ElementBinderResult {
+    return { errors: this.bindBody(this.declarationNode.body) };
   }
 
   private bindBody (body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {
@@ -42,9 +42,9 @@ export default class CustomBinder implements ElementBinder {
         return [];
       }
       const _Binder = pickBinder(sub as ElementDeclarationNode & { type: SyntaxToken });
-      const binder = new _Binder(sub as ElementDeclarationNode & { type: SyntaxToken }, this.context, this.symbolFactory);
+      const binder = new _Binder({ declarationNode: sub as ElementDeclarationNode & { type: SyntaxToken }, context: this.context }, this.symbolFactory);
 
-      return binder.bind();
+      return binder.bind().errors;
     });
   }
 }

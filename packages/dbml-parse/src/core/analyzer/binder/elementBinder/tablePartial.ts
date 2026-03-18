@@ -3,7 +3,7 @@ import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, ProgramNode, SyntaxNode,
 } from '../../../parser/nodes';
 import { SyntaxToken } from '../../../lexer/tokens';
-import { ElementBinder } from '../types';
+import { ElementBinder, ElementBinderArgs, ElementBinderResult } from '../types';
 import { CompileError } from '../../../errors';
 import { aggregateSettingList } from '../../validator/utils';
 import { destructureComplexVariableTuple } from '../../utils';
@@ -17,18 +17,18 @@ export default class TablePartialBinder implements ElementBinder {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
   private context: BinderContext;
 
-  constructor (declarationNode: ElementDeclarationNode & { type: SyntaxToken }, context: BinderContext, symbolFactory: SymbolFactory) {
+  constructor ({ declarationNode, context }: ElementBinderArgs, symbolFactory: SymbolFactory) {
     this.declarationNode = declarationNode;
     this.symbolFactory = symbolFactory;
     this.context = context;
   }
 
-  bind (): CompileError[] {
+  bind (): ElementBinderResult {
     if (!(this.declarationNode.body instanceof BlockExpressionNode)) {
-      return [];
+      return { errors: [] };
     }
 
-    return this.bindBody(this.declarationNode.body);
+    return { errors: this.bindBody(this.declarationNode.body) };
   }
 
   private bindBody (body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {
@@ -118,9 +118,9 @@ export default class TablePartialBinder implements ElementBinder {
         return [];
       }
       const _Binder = pickBinder(sub as ElementDeclarationNode & { type: SyntaxToken });
-      const binder = new _Binder(sub as ElementDeclarationNode & { type: SyntaxToken }, this.context, this.symbolFactory);
+      const binder = new _Binder({ declarationNode: sub as ElementDeclarationNode & { type: SyntaxToken }, context: this.context }, this.symbolFactory);
 
-      return binder.bind();
+      return binder.bind().errors;
     });
   }
 }

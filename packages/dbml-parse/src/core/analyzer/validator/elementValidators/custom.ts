@@ -4,7 +4,7 @@ import {
 } from '@/core/parser/nodes';
 import SymbolFactory from '@/core/analyzer/symbol/factory';
 import { SyntaxToken } from '@/core/lexer/tokens';
-import { ElementValidator } from '@/core/analyzer/validator/types';
+import { ElementValidator, ElementValidatorArgs, ElementValidatorResult } from '@/core/analyzer/validator/types';
 import { isExpressionAQuotedString } from '@/core/parser/utils';
 import SymbolTable from '@/core/analyzer/symbol/symbolTable';
 import { getElementKind } from '@/core/analyzer/utils';
@@ -17,21 +17,23 @@ export default class CustomValidator implements ElementValidator {
   private symbolFactory: SymbolFactory;
   private nodeToSymbol: NodeToSymbolMap;
 
-  constructor (declarationNode: ElementDeclarationNode & { type: SyntaxToken }, publicSymbolTable: SymbolTable, symbolFactory: SymbolFactory, nodeToSymbol: NodeToSymbolMap) {
+  constructor ({ declarationNode, publicSymbolTable, nodeToSymbol }: ElementValidatorArgs, symbolFactory: SymbolFactory) {
     this.declarationNode = declarationNode;
     this.publicSymbolTable = publicSymbolTable;
     this.symbolFactory = symbolFactory;
     this.nodeToSymbol = nodeToSymbol;
   }
 
-  validate (): CompileError[] {
-    return [
-      ...this.validateContext(),
-      ...this.validateName(this.declarationNode.name),
-      ...this.validateAlias(this.declarationNode.alias),
-      ...this.validateSettingList(this.declarationNode.attributeList),
-      ...this.validateBody(this.declarationNode.body),
-    ];
+  validate (): ElementValidatorResult {
+    return {
+      errors: [
+        ...this.validateContext(),
+        ...this.validateName(this.declarationNode.name),
+        ...this.validateAlias(this.declarationNode.alias),
+        ...this.validateSettingList(this.declarationNode.attributeList),
+        ...this.validateBody(this.declarationNode.body),
+      ],
+    };
   }
 
   private validateContext (): CompileError[] {

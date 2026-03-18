@@ -6,7 +6,7 @@ import {
   BlockExpressionNode, CallExpressionNode, CommaExpressionNode, ElementDeclarationNode, EmptyNode, FunctionApplicationNode, FunctionExpressionNode, ListExpressionNode, ProgramNode, SyntaxNode,
 } from '@/core/parser/nodes';
 import { SyntaxToken } from '@/core/lexer/tokens';
-import { ElementValidator } from '@/core/analyzer/validator/types';
+import { ElementValidator, ElementValidatorArgs, ElementValidatorResult } from '@/core/analyzer/validator/types';
 import { isExpressionASignedNumberExpression, isTupleOfVariables, isValidName, pickValidator } from '@/core/analyzer/validator/utils';
 import SymbolTable from '@/core/analyzer/symbol/symbolTable';
 import { destructureComplexVariable, getElementKind } from '@/core/analyzer/utils';
@@ -20,15 +20,15 @@ export default class RecordsValidator implements ElementValidator {
   private symbolFactory: SymbolFactory;
   private nodeToSymbol: NodeToSymbolMap;
 
-  constructor (declarationNode: ElementDeclarationNode & { type: SyntaxToken }, publicSymbolTable: SymbolTable, symbolFactory: SymbolFactory, nodeToSymbol: NodeToSymbolMap) {
+  constructor ({ declarationNode, publicSymbolTable, nodeToSymbol }: ElementValidatorArgs, symbolFactory: SymbolFactory) {
     this.declarationNode = declarationNode;
     this.publicSymbolTable = publicSymbolTable;
     this.symbolFactory = symbolFactory;
     this.nodeToSymbol = nodeToSymbol;
   }
 
-  validate (): CompileError[] {
-    return [...this.validateContext(), ...this.validateName(this.declarationNode.name), ...this.validateAlias(this.declarationNode.alias), ...this.validateSettingList(this.declarationNode.attributeList), ...this.validateBody(this.declarationNode.body)];
+  validate (): ElementValidatorResult {
+    return { errors: [...this.validateContext(), ...this.validateName(this.declarationNode.name), ...this.validateAlias(this.declarationNode.alias), ...this.validateSettingList(this.declarationNode.attributeList), ...this.validateBody(this.declarationNode.body)] };
   }
 
   // Validate that Records can only appear top-level or inside a Table.
@@ -256,8 +256,8 @@ export default class RecordsValidator implements ElementValidator {
         return [];
       }
       const _Validator = pickValidator(sub as ElementDeclarationNode & { type: SyntaxToken });
-      const validator = new _Validator(sub as ElementDeclarationNode & { type: SyntaxToken }, this.publicSymbolTable, this.symbolFactory, this.nodeToSymbol);
-      return validator.validate();
+      const validator = new _Validator({ declarationNode: sub as ElementDeclarationNode & { type: SyntaxToken }, publicSymbolTable: this.publicSymbolTable, nodeToSymbol: this.nodeToSymbol }, this.symbolFactory);
+      return validator.validate().errors;
     });
   }
 }
