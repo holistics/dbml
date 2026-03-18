@@ -76,6 +76,8 @@ export function createNodeSymbolIndex (key: string, symbolKind: SymbolKind): Nod
       return createTablePartialSymbolIndex(key);
     case SymbolKind.PartialInjection:
       return createPartialInjectionSymbolIndex(key);
+    case SymbolKind.Note:
+      return createStickyNoteSymbolIndex(key);
     default:
       throw new Error('Unreachable');
   }

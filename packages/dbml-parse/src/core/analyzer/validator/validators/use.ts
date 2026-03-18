@@ -8,10 +8,12 @@ import { destructureComplexVariable } from '@/core/analyzer/utils';
 import SymbolFactory from '@/core/analyzer/symbol/factory';
 
 const VALID_USE_SPECIFIER_KINDS = new Set<string>([
+  SymbolKind.Schema,
   SymbolKind.Table,
   SymbolKind.TablePartial,
   SymbolKind.TableGroup,
   SymbolKind.Enum,
+  SymbolKind.Note,
 ]);
 
 export default class UseDeclarationValidator {
@@ -70,6 +72,12 @@ export default class UseDeclarationValidator {
       case 'enum':
         symbolKind = SymbolKind.Enum;
         break;
+      case 'note':
+        symbolKind = SymbolKind.Note;
+        break;
+      case 'schema':
+        symbolKind = SymbolKind.Schema;
+        break;
     }
 
     if (specifier.elementKind === undefined) {
@@ -98,6 +106,16 @@ export default class UseDeclarationValidator {
       case SymbolKind.TableGroup:
         if (nameFragments.length > 1) {
           return [new CompileError(CompileErrorCode.INVALID_USE_SPECIFIER_NAME, 'A TableGroup name must be a simple name', specifier.name!)];
+        }
+        break;
+      case SymbolKind.Note:
+        if (nameFragments.length > 1) {
+          return [new CompileError(CompileErrorCode.INVALID_USE_SPECIFIER_NAME, 'A Sticky Note name must be a simple name', specifier.name!)];
+        }
+        break;
+      case SymbolKind.Schema:
+        if (nameFragments.length > 1) {
+          return [new CompileError(CompileErrorCode.INVALID_USE_SPECIFIER_NAME, 'A Schema name must be a simple name', specifier.name!)];
         }
         break;
       default:
