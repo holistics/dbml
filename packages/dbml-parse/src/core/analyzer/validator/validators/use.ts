@@ -58,7 +58,7 @@ export default class UseDeclarationValidator {
 
     const kindValue = specifier.elementKind?.value;
 
-    let symbolKind;
+    let symbolKind: SymbolKind | undefined;
     switch (kindValue?.toLowerCase()) {
       case 'table':
         symbolKind = SymbolKind.Table;
