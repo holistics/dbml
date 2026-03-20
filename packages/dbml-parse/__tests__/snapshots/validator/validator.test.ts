@@ -2,12 +2,12 @@ import { readFileSync } from 'fs';
 import path from 'path';
 import { describe, expect, it } from 'vitest';
 import { DEFAULT_ENTRY } from '@/compiler/constants';
-import { NodeSymbolIdGenerator } from '@/core/analyzer/symbol/symbols';
+import { NodeSymbolIdGenerator } from '@/core/validator/symbol/symbols';
 import { SyntaxNodeIdGenerator } from '@/core/parser/nodes';
 import Lexer from '@/core/lexer/lexer';
 import Parser from '@/core/parser/parser';
-import Validator from '@/core/analyzer/validator/validator';
-import SymbolFactory from '@/core/analyzer/symbol/factory';
+import Validator from '@/core/validator/validator';
+import SymbolFactory from '@/core/validator/symbol/factory';
 import { serializeAnalysis, scanTestNames } from '@tests/utils';
 
 describe('[snapshot] validator', () => {

@@ -1,7 +1,7 @@
 import { ElementDeclarationNode, FunctionApplicationNode, SyntaxNode } from '@/core/parser/nodes';
 import { Position } from '@/core/types';
 import { CompileError } from '@/core/errors';
-import { NodeToSymbolMap, NodeToRefereeMap } from '@/core/analyzer/analyzer';
+import { NodeToSymbolMap, NodeToRefereeMap } from '@/core/types';
 
 export interface TokenPosition {
   start: Position;

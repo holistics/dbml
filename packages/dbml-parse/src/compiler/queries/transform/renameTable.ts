@@ -1,9 +1,9 @@
 import { DEFAULT_SCHEMA_NAME } from '@/constants';
 import type Compiler from '../../index';
 import { SyntaxNode } from '@/core/parser/nodes';
-import SymbolTable from '@/core/analyzer/symbol/symbolTable';
-import { TableSymbol } from '@/core/analyzer/symbol/symbols';
-import { createSchemaSymbolIndex, createTableSymbolIndex } from '@/core/analyzer/symbol/symbolIndex';
+import SymbolTable from '@/core/validator/symbol/symbolTable';
+import { TableSymbol } from '@/core/validator/symbol/symbols';
+import { createSchemaSymbolIndex, createTableSymbolIndex } from '@/core/validator/symbol/symbolIndex';
 import { applyTextEdits, TextEdit } from './applyTextEdits';
 import { isAlphaOrUnderscore, isDigit } from '@/core/utils';
 import { normalizeTableName, lookupTableSymbol, stripQuotes, type TableNameInput } from './utils';

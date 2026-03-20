@@ -2,7 +2,7 @@ import {
   destructureMemberAccessExpression,
   extractVariableFromExpression,
   getElementKind,
-} from '@/core/analyzer/utils';
+} from '@/core/utils';
 import {
   extractStringFromIdentifierStream,
   isExpressionAVariableNode,
@@ -18,8 +18,8 @@ import {
   CompletionItemKind,
   CompletionItemInsertTextRule,
 } from '@/services/types';
-import { TableSymbol, type NodeSymbol } from '@/core/analyzer/symbol/symbols';
-import { SymbolKind, destructureIndex } from '@/core/analyzer/symbol/symbolIndex';
+import { TableSymbol, type NodeSymbol } from '@/core/validator/symbol/symbols';
+import { SymbolKind, destructureIndex } from '@/core/validator/symbol/symbolIndex';
 import {
   pickCompletionItemKind,
   shouldPrependSpace,
@@ -47,7 +47,7 @@ import {
 } from '@/core/parser/nodes';
 import { getOffsetFromMonacoPosition } from '@/services/utils';
 import { isComment } from '@/core/lexer/utils';
-import { ElementKind, SettingName } from '@/core/analyzer/types';
+import { ElementKind, SettingName } from '@/core/types';
 
 export default class DBMLCompletionItemProvider implements CompletionItemProvider {
   private compiler: Compiler;

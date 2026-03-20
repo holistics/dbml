@@ -2,7 +2,7 @@ import {
   extractReferee,
   extractVariableFromExpression,
   getElementKind,
-} from '@/core/analyzer/utils';
+} from '@/core/utils';
 import {
   BlockExpressionNode,
   CallExpressionNode,
@@ -17,8 +17,8 @@ import {
   CompletionItemKind,
   CompletionItemInsertTextRule,
 } from '@/services/types';
-import { ColumnSymbol, TablePartialInjectedColumnSymbol, TableSymbol } from '@/core/analyzer/symbol/symbols';
-import { ElementKind } from '@/core/analyzer/types';
+import { ColumnSymbol, TablePartialInjectedColumnSymbol, TableSymbol } from '@/core/validator/symbol/symbols';
+import { ElementKind } from '@/core/types';
 import Compiler from '@/compiler';
 import {
   noSuggestions,
@@ -65,7 +65,7 @@ function suggestRecordRowInTopLevelRecords (
   if (!(recordsElement.name instanceof CallExpressionNode)) return noSuggestions();
 
   const columnElements = recordsElement.name.argumentList?.elementList || [];
-  const nodeToReferee = compiler.resolveProject().getValue().nodeToReferee;
+  const nodeToReferee = compiler.bindProject().getValue().nodeToReferee;
   const columnSymbols = columnElements.map((e) => extractReferee(e, nodeToReferee));
   if (!columnSymbols || columnSymbols.length === 0) return noSuggestions();
 
@@ -110,7 +110,7 @@ function suggestRecordRowInNestedRecords (
     return noSuggestions();
   }
 
-  const { nodeToReferee } = compiler.resolveProject().getValue();
+  const { nodeToReferee } = compiler.bindProject().getValue();
   const tableSymbol = compiler.symbol.nodeSymbol(parent);
   if (!(tableSymbol instanceof TableSymbol)) {
     return noSuggestions();

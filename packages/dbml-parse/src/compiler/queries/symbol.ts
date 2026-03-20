@@ -1,21 +1,21 @@
 import type Compiler from '../index';
 import type { SyntaxNode } from '@/core/parser/nodes';
-import type { NodeSymbol } from '@/core/analyzer/symbol/symbols';
+import type { NodeSymbol } from '@/core/validator/symbol/symbols';
 import { ElementDeclarationNode, ProgramNode } from '@/core/parser/nodes';
-import { SymbolKind, destructureIndex } from '@/core/analyzer/symbol/symbolIndex';
-import { generatePossibleIndexes } from '@/core/analyzer/symbol/utils';
-import SymbolTable from '@/core/analyzer/symbol/symbolTable';
+import { SymbolKind, destructureIndex } from '@/core/validator/symbol/symbolIndex';
+import { generatePossibleIndexes } from '@/core/validator/symbol/utils';
+import SymbolTable from '@/core/validator/symbol/symbolTable';
 
 export function nodeSymbol (this: Compiler, node: SyntaxNode): NodeSymbol | undefined {
-  return this.resolveProject().getValue().nodeToSymbol.get(node);
+  return this.bindProject().getValue().nodeToSymbol.get(node);
 }
 
 export function nodeReferences (this: Compiler, node: SyntaxNode): SyntaxNode[] {
-  return this.resolveProject().getValue().nodeToSymbol.get(node)?.references ?? [];
+  return this.bindProject().getValue().nodeToSymbol.get(node)?.references ?? [];
 }
 
 export function nodeReferee (this: Compiler, node: SyntaxNode): NodeSymbol | undefined {
-  return this.resolveProject().getValue().nodeToReferee.get(node);
+  return this.bindProject().getValue().nodeToReferee.get(node);
 }
 
 export function symbolMembers (this: Compiler, ownerSymbol: NodeSymbol) {

@@ -2,7 +2,7 @@ import { type DbmlProjectLayout, Filepath, MemoryProjectLayout } from './project
 import { type FilepathKey } from './projectLayout';
 import { DEFAULT_ENTRY } from './constants';
 import { DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLReferencesProvider, DBMLDiagnosticsProvider } from '@/services/index';
-import { parseFile, parseProject, localSymbolTable, resolveProject, interpretProject } from './queries/pipeline';
+import { parseFile, parseProject, localSymbolTable, bindProject, interpretProject } from './queries/pipeline';
 import { flatStream, invalidStream } from './queries/token';
 import { nodeSymbol, nodeReferences, nodeReferee, symbolOfName, symbolOfNameToKey, symbolMembers } from './queries/symbol';
 import { containerStack, containerToken, containerElement, containerScope, containerScopeKind } from './queries/container';
@@ -141,7 +141,7 @@ export default class Compiler {
   // Validate and bind all parsed files, producing a single shared AnalyzeResult;
   // errors from all files are collected in the returned Report
   // Signature: () => Report<AnalyzeResult>
-  resolveProject = this.globalQuery(resolveProject);
+  bindProject = this.globalQuery(bindProject);
 
   // A global query
   // Interpret the analyzed ASTs into a merged Database model

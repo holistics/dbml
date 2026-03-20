@@ -1,5 +1,5 @@
 import type Compiler from '../../index';
-import type SymbolTable from '@/core/analyzer/symbol/symbolTable';
+import type SymbolTable from '@/core/validator/symbol/symbolTable';
 
 export function containerScope (this: Compiler, offset: number): Readonly<SymbolTable> | undefined {
   const element = this.container.element(offset);

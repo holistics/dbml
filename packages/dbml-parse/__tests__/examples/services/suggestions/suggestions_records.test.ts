@@ -3,7 +3,7 @@ import Compiler from '@/compiler';
 import DBMLCompletionItemProvider from '@/services/suggestions/provider';
 import { createMockTextModel, createPosition } from '@tests/utils';
 import { getColumnsFromTableSymbol } from '@/services/suggestions/utils';
-import { TableSymbol } from '@/core/analyzer/symbol/symbols';
+import { TableSymbol } from '@/core/validator/symbol/symbols';
 
 describe('[example] CompletionItemProvider - Records', () => {
   describe('should NOT suggest record entry snippets in Records body (handled by inline completions)', () => {
@@ -188,7 +188,7 @@ describe('[example] Suggestions Utils - Records', () => {
 
       const ast = compiler.ast();
       const tableElement = ast.body[2]; // users table is the third element
-      const tableSymbol = compiler.resolveProject().getValue().nodeToSymbol.get(tableElement);
+      const tableSymbol = compiler.bindProject().getValue().nodeToSymbol.get(tableElement);
 
       if (tableSymbol instanceof TableSymbol) {
         const columns = getColumnsFromTableSymbol(tableSymbol);
@@ -224,7 +224,7 @@ describe('[example] Suggestions Utils - Records', () => {
 
       const ast = compiler.ast();
       const tableElement = ast.body[1];
-      const tableSymbol = compiler.resolveProject().getValue().nodeToSymbol.get(tableElement);
+      const tableSymbol = compiler.bindProject().getValue().nodeToSymbol.get(tableElement);
 
       if (tableSymbol instanceof TableSymbol) {
         const columns = getColumnsFromTableSymbol(tableSymbol);
@@ -256,7 +256,7 @@ describe('[example] Suggestions Utils - Records', () => {
 
       const ast = compiler.ast();
       const tableElement = ast.body[1];
-      const tableSymbol = compiler.resolveProject().getValue().nodeToSymbol.get(tableElement);
+      const tableSymbol = compiler.bindProject().getValue().nodeToSymbol.get(tableElement);
 
       if (tableSymbol instanceof TableSymbol) {
         const columns = getColumnsFromTableSymbol(tableSymbol);
@@ -288,7 +288,7 @@ describe('[example] Suggestions Utils - Records', () => {
       // Get the table symbol
       const ast = compiler.ast();
       const tableElement = ast.body[0];
-      const tableSymbol = compiler.resolveProject().getValue().nodeToSymbol.get(tableElement);
+      const tableSymbol = compiler.bindProject().getValue().nodeToSymbol.get(tableElement);
 
       expect(tableSymbol).toBeInstanceOf(TableSymbol);
 
@@ -323,7 +323,7 @@ describe('[example] Suggestions Utils - Records', () => {
 
       const ast = compiler.ast();
       const tableElement = ast.body[0];
-      const tableSymbol = compiler.resolveProject().getValue().nodeToSymbol.get(tableElement);
+      const tableSymbol = compiler.bindProject().getValue().nodeToSymbol.get(tableElement);
 
       if (tableSymbol instanceof TableSymbol) {
         const columns = getColumnsFromTableSymbol(tableSymbol);
@@ -358,7 +358,7 @@ describe('[example] Suggestions Utils - Records', () => {
 
       const ast = compiler.ast();
       const tableElement = ast.body[0];
-      const tableSymbol = compiler.resolveProject().getValue().nodeToSymbol.get(tableElement);
+      const tableSymbol = compiler.bindProject().getValue().nodeToSymbol.get(tableElement);
 
       if (tableSymbol instanceof TableSymbol) {
         const columns = getColumnsFromTableSymbol(tableSymbol);
@@ -385,7 +385,7 @@ describe('[example] Suggestions Utils - Records', () => {
 
       const ast = compiler.ast();
       const tableElement = ast.body[0];
-      const tableSymbol = compiler.resolveProject().getValue().nodeToSymbol.get(tableElement);
+      const tableSymbol = compiler.bindProject().getValue().nodeToSymbol.get(tableElement);
 
       if (tableSymbol instanceof TableSymbol) {
         const columns = getColumnsFromTableSymbol(tableSymbol);
@@ -413,7 +413,7 @@ describe('[example] Suggestions Utils - Records', () => {
 
       const ast = compiler.ast();
       const tableElement = ast.body[0];
-      const tableSymbol = compiler.resolveProject().getValue().nodeToSymbol.get(tableElement);
+      const tableSymbol = compiler.bindProject().getValue().nodeToSymbol.get(tableElement);
 
       if (tableSymbol instanceof TableSymbol) {
         const columns = getColumnsFromTableSymbol(tableSymbol);
@@ -440,7 +440,7 @@ describe('[example] Suggestions Utils - Records', () => {
 
       const ast = compiler.ast();
       const tableElement = ast.body[0];
-      const tableSymbol = compiler.resolveProject().getValue().nodeToSymbol.get(tableElement);
+      const tableSymbol = compiler.bindProject().getValue().nodeToSymbol.get(tableElement);
 
       if (tableSymbol instanceof TableSymbol) {
         const columns = getColumnsFromTableSymbol(tableSymbol);
@@ -469,7 +469,7 @@ describe('[example] Suggestions Utils - Records', () => {
 
       const ast = compiler.ast();
       const tableElement = ast.body[0];
-      const tableSymbol = compiler.resolveProject().getValue().nodeToSymbol.get(tableElement);
+      const tableSymbol = compiler.bindProject().getValue().nodeToSymbol.get(tableElement);
 
       if (tableSymbol instanceof TableSymbol) {
         const columns = getColumnsFromTableSymbol(tableSymbol);

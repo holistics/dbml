@@ -33,7 +33,7 @@ export default class DBMLDiagnosticsProvider {
    * Get only errors from the current compilation
    */
   provideErrors (): Diagnostic[] {
-    return this.compiler.resolveProject().getErrors().map((error: CompileError) => this.createDiagnostic(error, 'error'));
+    return this.compiler.bindProject().getErrors().map((error: CompileError) => this.createDiagnostic(error, 'error'));
   }
 
   /**

@@ -1,6 +1,6 @@
 import { ProgramNode } from '@/core/parser/nodes';
 import { Database, InterpreterDatabase, Table, TablePartial, TableRecord } from '@/core/interpreter/types';
-import { AnalysisResult } from '@/core/analyzer/analyzer';
+import { AnalysisResult } from '@/core/types';
 import { TableInterpreter } from '@/core/interpreter/elementInterpreter/table';
 import { StickyNoteInterpreter } from '@/core/interpreter/elementInterpreter/sticky_note';
 import { RefInterpreter } from '@/core/interpreter/elementInterpreter/ref';
@@ -10,8 +10,8 @@ import { ProjectInterpreter } from '@/core/interpreter/elementInterpreter/projec
 import { TablePartialInterpreter } from '@/core/interpreter/elementInterpreter/tablePartial';
 import { RecordsInterpreter } from '@/core/interpreter/records';
 import Report from '@/core/report';
-import { getElementKind } from '@/core/analyzer/utils';
-import { ElementKind } from '@/core/analyzer/types';
+import { getElementKind } from '@/core/utils';
+import { ElementKind } from '@/core/types';
 import { CompileWarning } from '../errors';
 
 function processColumnInDb<T extends Table | TablePartial> (table: T): T {
