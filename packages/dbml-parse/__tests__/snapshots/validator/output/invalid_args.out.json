@@ -7193,16 +7193,13 @@
     "symbol": {
       "symbolTable": {
         "Table:A": {
-          "references": [],
           "id": 1,
           "symbolTable": {
             "Column:id": {
-              "references": [],
               "id": 2,
               "declaration": 6
             },
             "Column:ssid": {
-              "references": [],
               "id": 3,
               "declaration": 9
             }
@@ -7210,26 +7207,21 @@
           "declaration": 11
         },
         "Enum:E": {
-          "references": [],
           "id": 4,
           "symbolTable": {
             "Enum field:a1": {
-              "references": [],
               "id": 5,
               "declaration": 23
             },
             "Enum field:a2": {
-              "references": [],
               "id": 6,
               "declaration": 33
             },
             "Enum field:a3": {
-              "references": [],
               "id": 7,
               "declaration": 40
             },
             "Enum field:a4": {
-              "references": [],
               "id": 8,
               "declaration": 45
             }
@@ -7237,11 +7229,9 @@
           "declaration": 47
         },
         "TableGroup:G": {
-          "references": [],
           "id": 9,
           "symbolTable": {
             "TableGroup field:A": {
-              "references": [],
               "id": 10,
               "declaration": 54
             }

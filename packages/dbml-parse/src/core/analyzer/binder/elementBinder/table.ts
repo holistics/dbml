@@ -59,7 +59,7 @@ export default class TableBinder implements ElementBinder {
         const errors = lookupAndBindInScope(this.context.ast, [
           ...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })),
           { node: tablePartialBindee, kind: SymbolKind.TablePartial },
-        ], this.context.nodeToSymbol, this.context.nodeToReferee);
+        ], this.context);
         if (errors.length) return errors;
         const tablePartialReferee = this.context.nodeToReferee.get(tablePartialBindee);
         tablePartialReferee?.symbolTable?.forEach((value) => {
@@ -143,7 +143,7 @@ export default class TableBinder implements ElementBinder {
     lookupAndBindInScope(this.context.ast, [
       ...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })),
       { node: enumBindee, kind: SymbolKind.Enum },
-    ], this.context.nodeToSymbol, this.context.nodeToReferee);
+    ], this.context);
   }
 
   // Bind enum field references in default values (e.g., order_status.pending)
@@ -179,7 +179,7 @@ export default class TableBinder implements ElementBinder {
       ...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })),
       { node: enumBindee, kind: SymbolKind.Enum },
       { node: enumFieldBindee, kind: SymbolKind.EnumField },
-    ], this.context.nodeToSymbol, this.context.nodeToReferee);
+    ], this.context);
   }
 
   private bindInlineRef (ref: SyntaxNode): CompileError[] {
@@ -198,10 +198,10 @@ export default class TableBinder implements ElementBinder {
             ...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })),
             { node: tableBindee, kind: SymbolKind.Table },
             { node: columnBindee, kind: SymbolKind.Column },
-          ], this.context.nodeToSymbol, this.context.nodeToReferee)
+          ], this.context)
         : lookupAndBindInScope(this.declarationNode, [
             { node: columnBindee, kind: SymbolKind.Column },
-          ], this.context.nodeToSymbol, this.context.nodeToReferee);
+          ], this.context);
     });
   }
 

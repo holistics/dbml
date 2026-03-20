@@ -18,7 +18,17 @@ import { getElementNameString, isExpressionAVariableNode } from '@/core/parser/u
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import { DEFAULT_SCHEMA_NAME } from '@/constants';
 import RecordsBinder from './elementBinder/records';
-import { NodeToSymbolMap, NodeToRefereeMap } from '@/core/analyzer/analyzer';
+import { SymbolToReferencesMap, BinderContext } from '@/core/analyzer/analyzer';
+import { NodeSymbol } from '@/core/analyzer/symbol/symbols';
+
+export function addSymbolReference (symbolToReferences: SymbolToReferencesMap, symbol: NodeSymbol, node: SyntaxNode): void {
+  const refs = symbolToReferences.get(symbol);
+  if (refs) {
+    refs.push(node);
+  } else {
+    symbolToReferences.set(symbol, [node]);
+  }
+}
 
 export function pickBinder (element: ElementDeclarationNode & { type: SyntaxToken }) {
   switch (element.type.value.toLowerCase() as ElementKind) {
@@ -92,9 +102,9 @@ export function scanNonListNodeForBinding (node?: SyntaxNode):
 export function lookupAndBindInScope (
   initialScope: ElementDeclarationNode | ProgramNode,
   symbolInfos: { node: PrimaryExpressionNode & { expression: VariableNode }; kind: SymbolKind }[],
-  nodeToSymbol: NodeToSymbolMap,
-  nodeToReferee: NodeToRefereeMap,
+  context: BinderContext,
 ): CompileError[] {
+  const { nodeToSymbol, nodeToReferee, symbolToReferences } = context;
   const initialSymbol = nodeToSymbol.get(initialScope);
   if (!initialSymbol?.symbolTable) {
     throw new Error('lookupAndBindInScope should only be called with initial scope having a symbol table');
@@ -122,7 +132,7 @@ export function lookupAndBindInScope (
       return [new CompileError(CompileErrorCode.BINDING_ERROR, `${kind} '${name}' does not exist in ${curName === undefined ? 'global scope' : `${curKind} '${curName}'`}`, node)];
     }
     nodeToReferee.set(node, symbol);
-    symbol.references.push(node);
+    addSymbolReference(symbolToReferences, symbol, node);
 
     curName = name;
     curKind = kind;

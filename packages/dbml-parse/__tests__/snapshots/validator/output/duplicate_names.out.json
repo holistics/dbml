@@ -2888,11 +2888,9 @@
     "symbol": {
       "symbolTable": {
         "Table:Users": {
-          "references": [],
           "id": 3,
           "symbolTable": {
             "Column:name": {
-              "references": [],
               "id": 4,
               "declaration": 19
             }
@@ -2900,19 +2898,16 @@
           "declaration": 21
         },
         "TableGroup:Users": {
-          "references": [],
           "id": 5,
           "symbolTable": {},
           "declaration": 25
         },
         "Enum:Users": {
-          "references": [],
           "id": 8,
           "symbolTable": {},
           "declaration": 37
         },
         "TablePartial:Users": {
-          "references": [],
           "id": 9,
           "symbolTable": {},
           "declaration": 41

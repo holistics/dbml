@@ -5,10 +5,10 @@ import { Database } from '@/core/interpreter/types';
 import Report from '@/core/report';
 import Lexer from '@/core/lexer/lexer';
 import Parser from '@/core/parser/parser';
-import Analyzer, { NodeToSymbolMap, NodeToRefereeMap } from '@/core/analyzer/analyzer';
+import Analyzer, { NodeToSymbolMap, NodeToRefereeMap, SymbolToReferencesMap } from '@/core/analyzer/analyzer';
 import Interpreter from '@/core/interpreter/interpreter';
 import { DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLReferencesProvider, DBMLDiagnosticsProvider } from '@/services/index';
-import { ast, errors, warnings, tokens, rawDb, publicSymbolTable, nodeToSymbol, nodeToReferee } from './queries/parse';
+import { ast, errors, warnings, tokens, rawDb, publicSymbolTable, nodeToSymbol, nodeToReferee, symbolToReferences } from './queries/parse';
 import { invalidStream, flatStream } from './queries/token';
 import { symbolOfName, symbolOfNameToKey, symbolMembers } from './queries/symbol';
 import { containerStack, containerToken, containerElement, containerScope, containerScopeKind } from './queries/container';
@@ -67,7 +67,7 @@ export default class Compiler {
     }) as (...args: Args) => Return;
   }
 
-  private interpret (): Report<{ ast: ProgramNode; tokens: SyntaxToken[]; rawDb?: Database; nodeToSymbol: NodeToSymbolMap; nodeToReferee: NodeToRefereeMap }> {
+  private interpret (): Report<{ ast: ProgramNode; tokens: SyntaxToken[]; rawDb?: Database; nodeToSymbol: NodeToSymbolMap; nodeToReferee: NodeToRefereeMap; symbolToReferences: SymbolToReferencesMap }> {
     const parseRes = new Lexer(this.source)
       .lex()
       .chain((lexedTokens) => new Parser(this.source, lexedTokens as SyntaxToken[], this.nodeIdGenerator).parse())
@@ -109,6 +109,7 @@ export default class Compiler {
     publicSymbolTable: this.query(publicSymbolTable),
     nodeToSymbol: this.query(nodeToSymbol),
     nodeToReferee: this.query(nodeToReferee),
+    symbolToReferences: this.query(symbolToReferences),
   };
 
   readonly container = {

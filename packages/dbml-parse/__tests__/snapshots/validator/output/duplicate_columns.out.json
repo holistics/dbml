@@ -2144,11 +2144,9 @@
     "symbol": {
       "symbolTable": {
         "Table:Users": {
-          "references": [],
           "id": 1,
           "symbolTable": {
             "Column:id": {
-              "references": [],
               "id": 2,
               "declaration": 6
             }
@@ -2156,11 +2154,9 @@
           "declaration": 18
         },
         "TablePartial:userPartial": {
-          "references": [],
           "id": 5,
           "symbolTable": {
             "Column:id": {
-              "references": [],
               "id": 6,
               "declaration": 25
             }

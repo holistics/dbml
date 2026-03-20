@@ -24,7 +24,7 @@ describe('[snapshot] validator', () => {
       .chain(({ ast }) => {
         return new Validator({ ast }, new SymbolFactory(symbolIdGenerator))
           .validate()
-          .map((nodeToSymbol) => ({ ast, nodeToSymbol, nodeToReferee: new WeakMap() }));
+          .map((nodeToSymbol) => ({ ast, nodeToSymbol, nodeToReferee: new WeakMap(), symbolToReferences: new Map() }));
       });
     const output = serializeAnalysis(report, true);
 

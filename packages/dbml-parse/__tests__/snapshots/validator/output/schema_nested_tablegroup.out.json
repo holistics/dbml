@@ -797,21 +797,17 @@
     "symbol": {
       "symbolTable": {
         "Table:A": {
-          "references": [],
           "id": 1,
           "symbolTable": {},
           "declaration": 3
         },
         "Schema:schema": {
-          "references": [],
           "id": 3,
           "symbolTable": {
             "TableGroup:alphabet": {
-              "references": [],
               "id": 2,
               "symbolTable": {
                 "TableGroup field:A": {
-                  "references": [],
                   "id": 4,
                   "declaration": 11
                 }

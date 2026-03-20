@@ -4,7 +4,7 @@ import {
   BlockExpressionNode, CommaExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ProgramNode, SyntaxNode,
 } from '../../../parser/nodes';
 import { CompileError, CompileErrorCode } from '../../../errors';
-import { lookupAndBindInScope, pickBinder, scanNonListNodeForBinding } from '../utils';
+import { addSymbolReference, lookupAndBindInScope, pickBinder, scanNonListNodeForBinding } from '../utils';
 import SymbolFactory from '../../symbol/factory';
 import {
   destructureCallExpression,
@@ -75,7 +75,7 @@ export default class RecordsBinder implements ElementBinder {
     const tableErrors = lookupAndBindInScope(this.context.ast, [
       ...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })),
       { node: tableBindee, kind: SymbolKind.Table },
-    ], this.context.nodeToSymbol, this.context.nodeToReferee);
+    ], this.context);
 
     if (tableErrors.length > 0) {
       return tableErrors;
@@ -103,7 +103,7 @@ export default class RecordsBinder implements ElementBinder {
         continue;
       }
       this.context.nodeToReferee.set(columnBindee, columnSymbol);
-      columnSymbol.references.push(columnBindee);
+      addSymbolReference(this.context.symbolToReferences, columnSymbol, columnBindee);
 
       const originalBindee = this.boundColumns.get(columnSymbol);
       if (originalBindee) {
@@ -166,7 +166,7 @@ export default class RecordsBinder implements ElementBinder {
       }
 
       this.context.nodeToReferee.set(columnBindee, columnSymbol);
-      columnSymbol.references.push(columnBindee);
+      addSymbolReference(this.context.symbolToReferences, columnSymbol, columnBindee);
     }
 
     return errors;
@@ -225,7 +225,7 @@ export default class RecordsBinder implements ElementBinder {
         ...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })),
         { node: enumBindee, kind: SymbolKind.Enum },
         { node: enumFieldBindee, kind: SymbolKind.EnumField },
-      ], this.context.nodeToSymbol, this.context.nodeToReferee);
+      ], this.context);
     });
   }
 

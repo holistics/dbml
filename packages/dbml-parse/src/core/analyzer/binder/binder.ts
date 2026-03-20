@@ -7,7 +7,7 @@ import SymbolFactory from '@/core/analyzer/symbol/factory';
 import { getElementKind } from '@/core/analyzer/utils';
 import { ElementKind } from '@/core/analyzer/types';
 import TableBinder from './elementBinder/table';
-import { NodeToSymbolMap, NodeToRefereeMap, BinderContext } from '@/core/analyzer/analyzer';
+import { NodeToSymbolMap, NodeToRefereeMap, SymbolToReferencesMap, BinderContext } from '@/core/analyzer/analyzer';
 
 export default class Binder {
   private ast: ProgramNode;
@@ -16,10 +16,13 @@ export default class Binder {
 
   private nodeToSymbol: NodeToSymbolMap;
 
-  constructor ({ ast, nodeToSymbol }: { ast: ProgramNode; nodeToSymbol: NodeToSymbolMap }, symbolFactory: SymbolFactory) {
+  private symbolToReferences: SymbolToReferencesMap;
+
+  constructor ({ ast, nodeToSymbol, symbolToReferences }: { ast: ProgramNode; nodeToSymbol: NodeToSymbolMap; symbolToReferences: SymbolToReferencesMap }, symbolFactory: SymbolFactory) {
     this.ast = ast;
     this.symbolFactory = symbolFactory;
     this.nodeToSymbol = nodeToSymbol;
+    this.symbolToReferences = symbolToReferences;
   }
 
   private resolvePartialInjections (context: BinderContext): CompileError[] {
@@ -32,7 +35,7 @@ export default class Binder {
   resolve (): Report<NodeToRefereeMap> {
     const errors: CompileError[] = [];
     const nodeToReferee: NodeToRefereeMap = new WeakMap();
-    const context: BinderContext = { ast: this.ast, nodeToSymbol: this.nodeToSymbol, nodeToReferee };
+    const context: BinderContext = { ast: this.ast, nodeToSymbol: this.nodeToSymbol, nodeToReferee, symbolToReferences: this.symbolToReferences };
 
     // Must call this before binding
     errors.push(...this.resolvePartialInjections(context));

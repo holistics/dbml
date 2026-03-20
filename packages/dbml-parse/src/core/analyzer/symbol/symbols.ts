@@ -20,7 +20,6 @@ export interface NodeSymbol {
   id: NodeSymbolId;
   symbolTable?: SymbolTable;
   declaration?: SyntaxNode;
-  references: SyntaxNode[];
 }
 
 // A symbol for a schema, contains the schema's symbol table
@@ -28,8 +27,6 @@ export class SchemaSymbol implements NodeSymbol {
   id: NodeSymbolId;
 
   symbolTable: SymbolTable;
-
-  references: SyntaxNode[] = [];
 
   constructor ({ symbolTable }: { symbolTable: SymbolTable }, id: NodeSymbolId) {
     this.id = id;
@@ -45,8 +42,6 @@ export class EnumSymbol implements NodeSymbol {
   symbolTable: SymbolTable;
 
   declaration: SyntaxNode;
-
-  references: SyntaxNode[] = [];
 
   constructor (
     { symbolTable, declaration }: { symbolTable: SymbolTable; declaration: SyntaxNode },
@@ -64,8 +59,6 @@ export class EnumFieldSymbol implements NodeSymbol {
 
   declaration: SyntaxNode;
 
-  references: SyntaxNode[] = [];
-
   constructor ({ declaration }: { declaration: SyntaxNode }, id: NodeSymbolId) {
     this.id = id;
     this.declaration = declaration;
@@ -80,8 +73,6 @@ export class TableSymbol implements NodeSymbol {
   symbolTable: SymbolTable;
 
   declaration: SyntaxNode;
-
-  references: SyntaxNode[] = [];
 
   constructor (
     { symbolTable, declaration }: { symbolTable: SymbolTable; declaration: SyntaxNode },
@@ -99,8 +90,6 @@ export class ColumnSymbol implements NodeSymbol {
 
   declaration: SyntaxNode;
 
-  references: SyntaxNode[] = [];
-
   constructor ({ declaration }: { declaration: SyntaxNode }, id: NodeSymbolId) {
     this.id = id;
     this.declaration = declaration;
@@ -115,8 +104,6 @@ export class TableGroupSymbol implements NodeSymbol {
   symbolTable: SymbolTable;
 
   declaration: SyntaxNode;
-
-  references: SyntaxNode[] = [];
 
   constructor (
     { symbolTable, declaration }: { symbolTable: SymbolTable; declaration: SyntaxNode },
@@ -134,8 +121,6 @@ export class TableGroupFieldSymbol implements NodeSymbol {
 
   declaration: SyntaxNode;
 
-  references: SyntaxNode[] = [];
-
   constructor ({ declaration }: { declaration: SyntaxNode }, id: NodeSymbolId) {
     this.id = id;
     this.declaration = declaration;
@@ -150,8 +135,6 @@ export class TablePartialSymbol implements NodeSymbol {
   symbolTable: SymbolTable;
 
   declaration: SyntaxNode;
-
-  references: SyntaxNode[] = [];
 
   constructor (
     { symbolTable, declaration }: { symbolTable: SymbolTable; declaration: SyntaxNode },
@@ -171,8 +154,6 @@ export class PartialInjectionSymbol implements NodeSymbol {
 
   declaration: SyntaxNode;
 
-  references: SyntaxNode[] = [];
-
   constructor (
     { symbolTable, declaration }: { symbolTable: SymbolTable; declaration: SyntaxNode },
     id: NodeSymbolId,
@@ -190,8 +171,6 @@ export class TablePartialInjectedColumnSymbol implements NodeSymbol {
   declaration: SyntaxNode;
 
   tablePartialSymbol: TablePartialSymbol;
-
-  references: SyntaxNode[] = [];
 
   constructor ({ declaration, tablePartialSymbol }: { declaration: SyntaxNode; tablePartialSymbol: TablePartialSymbol }, id: NodeSymbolId) {
     this.id = id;

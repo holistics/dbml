@@ -8,7 +8,7 @@ import {
 import { ElementBinder, ElementBinderArgs, ElementBinderResult } from '../types';
 import { SyntaxToken } from '../../../lexer/tokens';
 import { CompileError, CompileErrorCode } from '../../../errors';
-import { pickBinder, scanNonListNodeForBinding } from '../utils';
+import { addSymbolReference, pickBinder, scanNonListNodeForBinding } from '../utils';
 import { destructureComplexVariable, extractVarNameFromPrimaryVariable, getElementKind } from '../../utils';
 import { ElementKind } from '../../types';
 import { createColumnSymbolIndex } from '../../symbol/symbolIndex';
@@ -86,7 +86,7 @@ export default class IndexesBinder implements ElementBinder {
           return new CompileError(CompileErrorCode.BINDING_ERROR, `No column named '${columnName}' inside Table '${ownerTableName}'`, bindee);
         }
         this.context.nodeToReferee.set(bindee, column);
-        column.references.push(bindee);
+        addSymbolReference(this.context.symbolToReferences, column, bindee);
 
         return [];
       });

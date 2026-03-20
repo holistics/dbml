@@ -7029,21 +7029,17 @@
     "symbol": {
       "symbolTable": {
         "Enum:status": {
-          "references": [],
           "id": 1,
           "symbolTable": {
             "Enum field:active": {
-              "references": [],
               "id": 2,
               "declaration": 4
             },
             "Enum field:churned": {
-              "references": [],
               "id": 3,
               "declaration": 7
             },
             "Enum field:inactive": {
-              "references": [],
               "id": 4,
               "declaration": 10
             }
@@ -7051,20 +7047,16 @@
           "declaration": 12
         },
         "Schema:demographic": {
-          "references": [],
           "id": 6,
           "symbolTable": {
             "Enum:gender": {
-              "references": [],
               "id": 5,
               "symbolTable": {
                 "Enum field:male": {
-                  "references": [],
                   "id": 7,
                   "declaration": 20
                 },
                 "Enum field:female": {
-                  "references": [],
                   "id": 8,
                   "declaration": 23
                 }
@@ -7072,31 +7064,25 @@
               "declaration": 25
             },
             "Enum:age segment": {
-              "references": [],
               "id": 9,
               "symbolTable": {
                 "Enum field:toddler": {
-                  "references": [],
                   "id": 10,
                   "declaration": 33
                 },
                 "Enum field:children": {
-                  "references": [],
                   "id": 11,
                   "declaration": 36
                 },
                 "Enum field:teenager": {
-                  "references": [],
                   "id": 12,
                   "declaration": 39
                 },
                 "Enum field:young_adult": {
-                  "references": [],
                   "id": 13,
                   "declaration": 42
                 },
                 "Enum field:elder": {
-                  "references": [],
                   "id": 14,
                   "declaration": 45
                 }
@@ -7106,46 +7092,37 @@
           }
         },
         "Table:user": {
-          "references": [],
           "id": 15,
           "symbolTable": {
             "Column:name": {
-              "references": [],
               "id": 16,
               "declaration": 54
             },
             "Column:id": {
-              "references": [],
               "id": 17,
               "declaration": 59
             },
             "Column:status": {
-              "references": [],
               "id": 18,
               "declaration": 72
             },
             "Column:gender": {
-              "references": [],
               "id": 19,
               "declaration": 91
             },
             "Column:age_type": {
-              "references": [],
               "id": 20,
               "declaration": 110
             },
             "Column:invalid_validate_col": {
-              "references": [],
               "id": 21,
               "declaration": 120
             },
             "Column:invalid_validate_col2": {
-              "references": [],
               "id": 22,
               "declaration": 139
             },
             "Column:invalid_bind_col": {
-              "references": [],
               "id": 23,
               "declaration": 152
             }

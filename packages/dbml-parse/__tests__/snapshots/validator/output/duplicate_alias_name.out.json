@@ -3370,11 +3370,9 @@
     "symbol": {
       "symbolTable": {
         "Table:A": {
-          "references": [],
           "id": 1,
           "symbolTable": {
             "Column:id": {
-              "references": [],
               "id": 2,
               "declaration": 11
             }
@@ -3382,11 +3380,9 @@
           "declaration": 13
         },
         "Table:B": {
-          "references": [],
           "id": 3,
           "symbolTable": {
             "Column:id": {
-              "references": [],
               "id": 4,
               "declaration": 25
             }
@@ -3394,11 +3390,9 @@
           "declaration": 27
         },
         "Table:C": {
-          "references": [],
           "id": 5,
           "symbolTable": {
             "Column:id": {
-              "references": [],
               "id": 6,
               "declaration": 39
             }
@@ -3406,11 +3400,9 @@
           "declaration": 41
         },
         "Table:D": {
-          "references": [],
           "id": 7,
           "symbolTable": {
             "Column:id": {
-              "references": [],
               "id": 8,
               "declaration": 53
             }
