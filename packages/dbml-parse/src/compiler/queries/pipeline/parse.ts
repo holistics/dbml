@@ -10,7 +10,7 @@ import type { CompileError, CompileWarning } from '@/core/errors';
 // The result of lexing and parsing a single .dbml file.
 // Only invalidated when the file changes. Should not be modified after creation.
 // See: https://www.notion.so/holistics/TDD-91-DBML-multi-file-support-319f89dc7e49804f94f6d8d7cd2cdf6e?source=copy_link#323f89dc7e498039b7bcde3e0b22f9fa
-export type FileIndex = {
+export type FileParseIndex = {
   readonly path: Readonly<Filepath>;
   readonly ast: Readonly<ProgramNode>;
   readonly tokens: readonly Readonly<SyntaxToken>[];
@@ -18,7 +18,7 @@ export type FileIndex = {
   readonly warnings: readonly Readonly<CompileWarning>[];
 };
 
-export function parseFile (this: Compiler, filepath: Filepath): FileIndex {
+export function parseFile (this: Compiler, filepath: Filepath): FileParseIndex {
   const layout = this.layout();
   const source = layout.getSource(filepath) ?? '';
   const nodeIdGenerator = new SyntaxNodeIdGenerator();
@@ -35,7 +35,7 @@ export function parseFile (this: Compiler, filepath: Filepath): FileIndex {
   };
 }
 
-export function parseProject (this: Compiler): Map<FilepathKey, FileIndex> {
+export function parseProject (this: Compiler): Map<FilepathKey, FileParseIndex> {
   const layout = this.layout();
   return new Map(
     layout.listAllFiles(ROOT)

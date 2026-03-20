@@ -2,7 +2,7 @@ import { type DbmlProjectLayout, Filepath, MemoryProjectLayout } from './project
 import { type FilepathKey } from './projectLayout';
 import { DEFAULT_ENTRY } from './constants';
 import { DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLReferencesProvider, DBMLDiagnosticsProvider } from '@/services/index';
-import { parseFile, parseProject, analyzeProject, interpretProject } from './queries/pipeline';
+import { parseFile, parseProject, localSymbolTable, analyzeProject, interpretProject } from './queries/pipeline';
 import { flatStream, invalidStream } from './queries/token';
 import { nodeSymbol, nodeReferences, nodeReferee, symbolOfName, symbolOfNameToKey, symbolMembers } from './queries/symbol';
 import { containerStack, containerToken, containerElement, containerScope, containerScopeKind } from './queries/container';
@@ -17,7 +17,7 @@ import { splitQualifiedIdentifier, unescapeString, escapeString, formatRecordVal
 // Re-export types
 export { ScopeKind } from './types';
 export type { TextEdit, TableNameInput };
-export type { FileIndex } from './queries/pipeline';
+export type { FileParseIndex } from './queries/pipeline';
 
 // Re-export utilities
 export { splitQualifiedIdentifier, unescapeString, escapeString, formatRecordValue, isValidIdentifier, addDoubleQuoteIfNeeded };
@@ -124,12 +124,17 @@ export default class Compiler {
 
   // A local query
   // Lex and parse a single file into its AST, token list, errors, and warnings
-  // Signature: (filepath: Filepath) => FileIndex
+  // Signature: (filepath: Filepath) => FileParseIndex
   parseFile = this.localQuery(parseFile);
+
+  // A local query
+  // Validate a single file, producing its symbol table and external filepath references
+  // Signature: (filepath?: Filepath) => Report<FileLocalSymbolIndex>
+  localSymbolTable = this.localQuery(localSymbolTable);
 
   // A global query
   // Parse every .dbml file in the project layout
-  // Signature: () => Map<FilepathKey, FileIndex>
+  // Signature: () => Map<FilepathKey, FileParseIndex>
   parseProject = this.globalQuery(parseProject);
 
   // A global query
