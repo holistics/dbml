@@ -3,7 +3,6 @@ import { type FilepathKey } from './projectLayout';
 import { DEFAULT_ENTRY } from './constants';
 import { DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLReferencesProvider, DBMLDiagnosticsProvider } from '@/services/index';
 import { parseFile, parseProject, analyzeProject, interpretProject } from './queries/pipeline';
-import { modules, parentModule, childModules, ancestorModules, descendantModules, dirToKey } from './queries/modules';
 import { flatStream, invalidStream } from './queries/token';
 import { nodeSymbol, nodeReferences, nodeReferee, symbolOfName, symbolOfNameToKey, symbolMembers } from './queries/symbol';
 import { containerStack, containerToken, containerElement, containerScope, containerScopeKind } from './queries/container';
@@ -71,7 +70,6 @@ export default class Compiler {
       if (args.length === 0) {
         if (this.globalCache.has(cacheKey)) return this.globalCache.get(cacheKey);
         const result = fn.apply(this, args);
-        this.globalCache.set(cacheKey, result);
         return result;
       }
 
@@ -144,35 +142,6 @@ export default class Compiler {
   // Interpret the analyzed ASTs into a merged Database model
   // Signature: () => Report<Database | undefined>
   interpretProject = this.globalQuery(interpretProject);
-
-  /* modules */
-
-  // A global query
-  // Detect module boundaries in the project layout.
-  // A module is a folder containing a *.project.dbml file; root is always a module.
-  // Folders without *.project.dbml are merged into their nearest ancestor module.
-  // Signature: () => Report<Module[]>
-  modules = this.globalQuery(modules);
-
-  // A global query
-  // Nearest ancestor module of the given module directory, walking up the directory tree
-  // Signature: (dir: Filepath) => Module | undefined
-  parentModule = this.globalQuery(parentModule, dirToKey);
-
-  // A global query
-  // Direct children in the module tree: modules whose parentModule is the given directory
-  // Signature: (dir: Filepath) => Module[]
-  childModules = this.globalQuery(childModules, dirToKey);
-
-  // A global query
-  // All ancestors ordered from nearest to root
-  // Signature: (dir: Filepath) => Module[]
-  ancestorModules = this.globalQuery(ancestorModules, dirToKey);
-
-  // A global query
-  // All descendants at any depth: modules whose directory is under the given directory
-  // Signature: (dir: Filepath) => Module[]
-  descendantModules = this.globalQuery(descendantModules, dirToKey);
 
   /* diagnostics */
 
