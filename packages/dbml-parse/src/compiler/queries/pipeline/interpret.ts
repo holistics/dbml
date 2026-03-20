@@ -1,6 +1,5 @@
 import type Compiler from '../../index';
 import type { Filepath } from '../../projectLayout';
-import type { CompileError, CompileWarning } from '@/core/errors';
 import type { Database } from '@/core/interpreter/types';
 import Interpreter from '@/core/interpreter/interpreter';
 import Report from '@/core/report';
@@ -28,39 +27,6 @@ export function interpretFile (this: Compiler, filepath: Filepath): Report<Datab
   );
 }
 
-function mergeDatabases (dbs: Database[]): Database {
-  return {
-    schemas: [],
-    tables: dbs.flatMap((d) => d.tables),
-    notes: dbs.flatMap((d) => d.notes),
-    refs: dbs.flatMap((d) => d.refs),
-    enums: dbs.flatMap((d) => d.enums),
-    tableGroups: dbs.flatMap((d) => d.tableGroups),
-    aliases: dbs.flatMap((d) => d.aliases),
-    project: dbs.find((d) => Object.keys(d.project).length > 0)?.project ?? {},
-    tablePartials: dbs.flatMap((d) => d.tablePartials),
-    records: dbs.flatMap((d) => d.records),
-  };
-}
-
 function emptyDatabase (): Database {
   return { schemas: [], tables: [], notes: [], refs: [], enums: [], tableGroups: [], aliases: [], project: {}, tablePartials: [], records: [] };
-}
-
-export function interpretProject (this: Compiler): Report<Database> {
-  const errors: CompileError[] = [];
-  const warnings: CompileWarning[] = [];
-  const databases: Database[] = [];
-
-  for (const [, fileIndex] of this.parseProject()) {
-    const result = this.interpretFile(fileIndex.path as Filepath);
-    errors.push(...result.getErrors());
-    warnings.push(...result.getWarnings());
-    if (result.getErrors().length === 0) {
-      databases.push(result.getValue());
-    }
-  }
-
-  const database = databases.length > 0 ? mergeDatabases(databases) : emptyDatabase();
-  return new Report(database, errors, warnings);
 }

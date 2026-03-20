@@ -2,8 +2,7 @@ import type Compiler from '../../index';
 import Lexer from '@/core/lexer/lexer';
 import Parser from '@/core/parser/parser';
 import { SyntaxNodeIdGenerator, type ProgramNode } from '@/core/parser/nodes';
-import { Filepath, type FilepathId } from '../../projectLayout';
-import { ROOT, DBML_EXT } from '../../constants';
+import { Filepath } from '../../projectLayout';
 import type { SyntaxToken } from '@/core/lexer/tokens';
 import type { CompileError, CompileWarning } from '@/core/errors';
 
@@ -33,13 +32,4 @@ export function parseFile (this: Compiler, filepath: Filepath): FileParseIndex {
     errors: parseReport.getErrors(),
     warnings: parseReport.getWarnings(),
   };
-}
-
-export function parseProject (this: Compiler): Map<FilepathId, FileParseIndex> {
-  const layout = this.layout();
-  return new Map(
-    layout.listAllFiles(ROOT)
-      .filter((f) => f.extname === DBML_EXT)
-      .map((filepath: Filepath) => [filepath.intern(), this.parseFile(filepath)] as const),
-  );
 }

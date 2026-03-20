@@ -184,7 +184,7 @@ describe('[example] Suggestions Utils - Records', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(program);
-      compiler.parseProject();
+      compiler.parseFile();
 
       const ast = compiler.ast();
       const tableElement = ast.body[2]; // users table is the third element
@@ -220,7 +220,7 @@ describe('[example] Suggestions Utils - Records', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(program);
-      compiler.parseProject();
+      compiler.parseFile();
 
       const ast = compiler.ast();
       const tableElement = ast.body[1];
@@ -252,7 +252,7 @@ describe('[example] Suggestions Utils - Records', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(program);
-      compiler.parseProject();
+      compiler.parseFile();
 
       const ast = compiler.ast();
       const tableElement = ast.body[1];
@@ -283,7 +283,7 @@ describe('[example] Suggestions Utils - Records', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(program);
-      compiler.parseProject(); // Trigger parsing
+      compiler.parseFile(); // Trigger parsing
 
       // Get the table symbol
       const ast = compiler.ast();
@@ -319,7 +319,7 @@ describe('[example] Suggestions Utils - Records', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(program);
-      compiler.parseProject();
+      compiler.parseFile();
 
       const ast = compiler.ast();
       const tableElement = ast.body[0];
@@ -354,7 +354,7 @@ describe('[example] Suggestions Utils - Records', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(program);
-      compiler.parseProject();
+      compiler.parseFile();
 
       const ast = compiler.ast();
       const tableElement = ast.body[0];
@@ -381,7 +381,7 @@ describe('[example] Suggestions Utils - Records', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(program);
-      compiler.parseProject();
+      compiler.parseFile();
 
       const ast = compiler.ast();
       const tableElement = ast.body[0];
@@ -409,7 +409,7 @@ describe('[example] Suggestions Utils - Records', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(program);
-      compiler.parseProject();
+      compiler.parseFile();
 
       const ast = compiler.ast();
       const tableElement = ast.body[0];
@@ -436,7 +436,7 @@ describe('[example] Suggestions Utils - Records', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(program);
-      compiler.parseProject();
+      compiler.parseFile();
 
       const ast = compiler.ast();
       const tableElement = ast.body[0];
@@ -465,7 +465,7 @@ describe('[example] Suggestions Utils - Records', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(program);
-      compiler.parseProject();
+      compiler.parseFile();
 
       const ast = compiler.ast();
       const tableElement = ast.body[0];

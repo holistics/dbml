@@ -3,7 +3,7 @@ import { type FilepathId } from './projectLayout';
 import { intern } from '@/core/internable';
 import { DEFAULT_ENTRY } from './constants';
 import { DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLReferencesProvider, DBMLDiagnosticsProvider } from '@/services/index';
-import { parseFile, parseProject, validateFile, localSymbolTable, localFileDependencies, resolvedSymbolTable, bindFile, bindProject, interpretFile, interpretProject } from './queries/pipeline';
+import { parseFile, validateFile, localSymbolTable, localFileDependencies, resolvedSymbolTable, bindFile, interpretFile } from './queries/pipeline';
 import { flatStream, invalidStream } from './queries/token';
 import { nodeSymbol, nodeReferences, nodeReferee, symbolOfName, symbolMembers } from './queries/symbol';
 import { containerStack, containerToken, containerElement, containerScope, containerScopeKind } from './queries/container';
@@ -158,20 +158,6 @@ export default class Compiler {
   // Signature: (filepath?: Filepath) => Report<Database>
   interpretFile = this.localQuery(interpretFile);
 
-  // A global query
-  // Parse every .dbml file in the project layout
-  // Signature: () => Map<FilepathId, FileParseIndex>
-  parseProject = this.globalQuery(parseProject);
-
-  // A global query
-  // Bind all parsed files
-  // Signature: () => Report<void>
-  bindProject = this.globalQuery(bindProject);
-
-  // A global query
-  // Interpret all files into a merged Database model
-  // Signature: () => Report<Database>
-  interpretProject = this.globalQuery(interpretProject);
 
   /* diagnostics */
 

@@ -1,5 +1,4 @@
 import type Compiler from '../../index';
-import type { CompileError, CompileWarning } from '@/core/errors';
 import type { NodeToRefereeMap, SymbolToReferencesMap } from '@/core/types';
 import type { Filepath } from '../../projectLayout';
 import Binder from '@/core/binder/binder';
@@ -36,17 +35,4 @@ export function bindFile (this: Compiler, filepath: Filepath): Report<FileBindIn
     [...resolved.getErrors(), ...bindingReport.getErrors()],
     [...resolved.getWarnings(), ...bindingReport.getWarnings()],
   );
-}
-
-export function bindProject (this: Compiler): Report<void> {
-  const errors: CompileError[] = [];
-  const warnings: CompileWarning[] = [];
-
-  for (const [, fileIndex] of this.parseProject()) {
-    const result = this.bindFile(fileIndex.path as Filepath);
-    errors.push(...result.getErrors());
-    warnings.push(...result.getWarnings());
-  }
-
-  return new Report(undefined, errors, warnings);
 }
