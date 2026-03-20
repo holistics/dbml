@@ -7,20 +7,36 @@ import { shouldPrintSchema } from './utils';
 import Check from './check';
 
 class Table extends Element {
+  /**
+   * @param {import('../../types/model_structure/table').RawTable} param0
+   */
   constructor ({
     name, alias, note, fields = [], indexes = [], checks = [], schema = {}, token, headerColor, noteToken = null, partials = [],
   } = {}) {
     super(token);
+    /** @type {string} */
     this.name = name;
+    /** @type {string} */
     this.alias = alias;
+    /** @type {string} */
     this.note = note ? get(note, 'value', note) : null;
+    /** @type {import('../../types/model_structure/element').Token} */
     this.noteToken = note ? get(note, 'token', noteToken) : null;
+    /** @type {string} */
     this.headerColor = headerColor;
+    /** @type {import('../../types/model_structure/field').default[]} */
     this.fields = [];
+    /** @type {import('../../types/model_structure/indexes').default[]} */
     this.indexes = [];
+    /** @type {import('../../types/model_structure/check').default[]} */
     this.checks = [];
+    /** @type {import('../../types/model_structure/schema').default} */
     this.schema = schema;
+    /** @type {import('../../types/model_structure/tablePartial').default[]} */
     this.partials = partials;
+    /** @type {number | null} */
+    this.recordId = null;
+    /** @type {import('../../types/model_structure/dbState').default} */
     this.dbState = this.schema.dbState;
     this.generateId();
 
@@ -34,6 +50,7 @@ class Table extends Element {
   }
 
   generateId () {
+    /** @type {number} */
     this.id = this.dbState.generateId('tableId');
   }
 
@@ -43,17 +60,26 @@ class Table extends Element {
     }
   }
 
+  /**
+   * @param {any[]} rawFields
+   */
   processFields (rawFields) {
     rawFields.forEach((field) => {
       this.pushField(new Field({ ...field, table: this }));
     });
   }
 
+  /**
+   * @param {import('../../types/model_structure/field').default} field
+   */
   pushField (field) {
     this.checkField(field);
     this.fields.push(field);
   }
 
+  /**
+   * @param {import('../../types/model_structure/field').default} field
+   */
   checkField (field) {
     if (this.fields.some((f) => f.name === field.name)) {
       field.error(`Field "${field.name}" existed in table ${shouldPrintSchema(this.schema)
@@ -62,17 +88,26 @@ class Table extends Element {
     }
   }
 
+  /**
+   * @param {any[]} rawIndexes
+   */
   processIndexes (rawIndexes) {
     rawIndexes.forEach((index) => {
       this.pushIndex(new Index({ ...index, table: this }));
     });
   }
 
+  /**
+   * @param {import('../../types/model_structure/indexes').default} index
+   */
   pushIndex (index) {
     this.checkIndex(index);
     this.indexes.push(index);
   }
 
+  /**
+   * @param {import('../../types/model_structure/indexes').default} index
+   */
   checkIndex (index) {
     index.columns.forEach((column) => {
       if (column.type === 'column' && !(this.findField(column.value))) {
@@ -83,20 +118,34 @@ class Table extends Element {
     });
   }
 
+  /**
+   * @param {any[]} checks
+   */
   processChecks (checks) {
     checks.forEach((check) => {
       this.pushCheck(new Check({ ...check, table: this }));
     });
   }
 
+  /**
+   * @param {import('../../types/model_structure/check').default} check
+   */
   pushCheck (check) {
     this.checks.push(check);
   }
 
+  /**
+   * @param {string} fieldName
+   * @returns {import('../../types/model_structure/field').default}
+   */
   findField (fieldName) {
     return this.fields.find((f) => f.name === fieldName);
   }
 
+  /**
+   * @param {any} table
+   * @returns {boolean}
+   */
   checkSameId (table) {
     return (this.schema.checkSameId(table.schemaName || DEFAULT_SCHEMA_NAME))
       && (this.name === table.name
@@ -246,9 +295,13 @@ class Table extends Element {
       note: this.note,
       headerColor: this.headerColor,
       partials: this.partials,
+      recordId: this.recordId,
     };
   }
 
+  /**
+   * @param {import('../../types/model_structure/database').NormalizedDatabase} model
+   */
   normalize (model) {
     model.tables[this.id] = {
       id: this.id,
