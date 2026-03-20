@@ -43,7 +43,7 @@ export function resolvedSymbolTable (this: Compiler, filepath: Filepath): Report
     }
 
     const externalTable = externalLocal.getValue().symbolTable;
-    resolveExternalSymbols(resolvedTable, externalTable, externalFilepath.absolute);
+    resolveExternalSymbols(resolvedTable, externalTable, externalFilepath);
     mergeExternalSchemas(resolvedTable, externalTable, externalFilepath);
   }
 
@@ -87,11 +87,11 @@ function mergeExternalSchemas (
 function resolveExternalSymbols (
   resolvedTable: SymbolTable,
   externalTable: Readonly<SymbolTable>,
-  externalFilepath: string,
+  externalFilepath: Filepath,
 ): void {
   for (const [symbolId, symbol] of resolvedTable.entries()) {
     if (!(symbol instanceof ExternalSymbol)) continue;
-    if (symbol.externalFilepath !== externalFilepath) continue;
+    if (symbol.externalFilepath.key !== externalFilepath.key) continue;
 
     const resolvedSymbolId = createNodeSymbolIndex(symbol.name, symbol.kind);
     const resolvedSymbol = externalTable.get(resolvedSymbolId);

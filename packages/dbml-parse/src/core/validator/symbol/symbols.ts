@@ -176,8 +176,6 @@ export class TablePartialSymbol implements NodeSymbol {
 export class ExternalSymbol implements NodeSymbol {
   id: NodeSymbolId;
 
-  symbolTable?: SymbolTable;
-
   declaration: SyntaxNode;
 
   references: SyntaxNode[] = [];
@@ -186,10 +184,10 @@ export class ExternalSymbol implements NodeSymbol {
 
   name: string;
 
-  externalFilepath: string;
+  externalFilepath: Filepath;
 
   constructor (
-    { declaration, kind, name, externalFilepath }: { declaration: SyntaxNode; kind: SymbolKind; name: string; externalFilepath: string },
+    { declaration, kind, name, externalFilepath }: { declaration: SyntaxNode; kind: SymbolKind; name: string; externalFilepath: Filepath },
     id: NodeSymbolId,
   ) {
     this.id = id;

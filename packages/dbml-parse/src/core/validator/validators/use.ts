@@ -177,7 +177,7 @@ export default class UseDeclarationValidator {
       declaration: specifier,
       kind: symbolKind,
       name: itemName,
-      externalFilepath: externalFilepath?.absolute ?? '',
+      externalFilepath: externalFilepath!,
     });
     this.declarations.set(specifier, symbol);
     symbolTable.set(symbolId, symbol);
