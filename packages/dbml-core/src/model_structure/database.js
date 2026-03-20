@@ -13,6 +13,9 @@ import DbState from './dbState';
 import TablePartial from './tablePartial';
 
 class Database extends Element {
+  /**
+    * @param {import('../../types/model_structure/database').RawDatabase} param0
+    */
   constructor ({
     schemas = [],
     tables = [],
@@ -29,6 +32,7 @@ class Database extends Element {
     this.dbState = new DbState();
     this.generateId();
     this.hasDefaultSchema = false;
+    /** @type {import('../../types/model_structure/schema').default[]} */
     this.schemas = [];
     this.notes = [];
     this.note = project.note ? get(project, 'note.value', project.note) : null;
@@ -51,6 +55,7 @@ class Database extends Element {
     this.processSchemas(schemas);
     this.processSchemaElements(enums, ENUM);
     this.processSchemaElements(tables, TABLE);
+    this.linkRecordsToTables();
     this.processSchemaElements(notes, NOTE);
     this.processSchemaElements(refs, REF);
     this.processSchemaElements(tableGroups, TABLE_GROUP);
@@ -154,6 +159,28 @@ class Database extends Element {
         default:
           break;
       }
+    });
+  }
+
+  linkRecordsToTables () {
+    // Build a map of [schemaName][tableName] -> table for O(1) lookup
+    const tableMap = {};
+    this.schemas.forEach((schema) => {
+      tableMap[schema.name] = {};
+      schema.tables.forEach((table) => {
+        tableMap[schema.name][table.name] = table;
+      });
+    });
+
+    // Link records to tables using the map
+    this.records.forEach((record) => {
+      // Fallback to 'public' if schemaName is null, undefined, or empty string
+      const schemaName = record.schemaName || DEFAULT_SCHEMA_NAME;
+      const table = tableMap[schemaName]?.[record.tableName];
+      if (!table) return;
+
+      record.tableId = table.id;
+      table.recordId = record.id;
     });
   }
 

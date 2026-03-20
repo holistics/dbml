@@ -8,7 +8,7 @@ import TableGroup from './tableGroup';
 import TablePartial from './tablePartial';
 import { NormalizedModel } from './database';
 
-interface RawTable {
+export interface RawTable {
     name: string;
     alias: string;
     note: RawNote;
@@ -35,6 +35,7 @@ declare class Table extends Element {
     id: number;
     group: TableGroup;
     partials: TablePartial[];
+    recordId: number | null;
 
     constructor({ name, alias, note, fields, indexes, checks, schema, token, headerColor }: RawTable);
     generateId(): void;
@@ -115,6 +116,7 @@ declare class Table extends Element {
         note: string;
         headerColor: string;
         partials: TablePartial[];
+        recordId: number | null;
     };
     normalize(model: NormalizedModel): void;
 }
@@ -131,6 +133,7 @@ export interface NormalizedTable {
     schemaId: number;
     groupId: number | null;
     partials: TablePartial[];
+    recordId: number | null;
 }
 
 export interface NormalizedTableIdMap {
