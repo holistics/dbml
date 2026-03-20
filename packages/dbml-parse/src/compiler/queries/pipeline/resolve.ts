@@ -16,18 +16,18 @@ export type FileResolvedSymbolIndex = {
 // Creates a new symbol table (copy of local) with ExternalSymbols replaced by real symbols.
 export function resolvedSymbolTable (this: Compiler, filepath: Filepath): Report<FileResolvedSymbolIndex> {
   const local = this.validateFile(filepath);
-  const errors: CompileError[] = [...local.getErrors()];
-  const warnings: CompileWarning[] = [...local.getWarnings()];
+  const errors: CompileError[] = [...local.errors];
+  const warnings: CompileWarning[] = [...local.warnings];
 
   if (errors.length > 0) {
     return new Report(
-      { symbolTable: new SymbolTable(), nodeToSymbol: local.getValue().nodeToSymbol },
+      { symbolTable: new SymbolTable(), nodeToSymbol: local.nodeToSymbol },
       errors,
       warnings,
     );
   }
 
-  const { symbolTable: localTable, nodeToSymbol, externalFilepaths } = local.getValue();
+  const { symbolTable: localTable, nodeToSymbol, externalFilepaths } = local;
 
   // Copy the local symbol table so we don't mutate the cached local result
   const resolvedTable = cloneSymbolTable(localTable);
@@ -36,15 +36,12 @@ export function resolvedSymbolTable (this: Compiler, filepath: Filepath): Report
     const externalFilepath = Filepath.from(filepathKey);
     const externalLocal = this.validateFile(externalFilepath);
 
-    if (externalLocal.getErrors().length > 0) {
-      errors.push(...externalLocal.getErrors());
-      warnings.push(...externalLocal.getWarnings());
+    if (externalLocal.errors.length > 0) {
       continue;
     }
 
-    const externalTable = externalLocal.getValue().symbolTable;
-    resolveExternalSymbols(resolvedTable, externalTable, externalFilepath);
-    mergeExternalSchemas(resolvedTable, externalTable, externalFilepath);
+    resolveExternalSymbols(resolvedTable, externalLocal.symbolTable, externalFilepath);
+    mergeExternalSchemas(resolvedTable, externalLocal.symbolTable, externalFilepath);
   }
 
   return new Report({ symbolTable: resolvedTable, nodeToSymbol }, errors, warnings);

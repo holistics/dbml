@@ -10,14 +10,14 @@ export function interpretFile (this: Compiler, filepath: Filepath): Report<Datab
   const local = this.validateFile(filepath);
   const bound = this.bindFile(filepath);
 
-  const allErrors = [...local.getErrors(), ...bound.getErrors()];
-  const allWarnings = [...local.getWarnings(), ...bound.getWarnings()];
+  const allErrors = [...local.errors, ...bound.getErrors()];
+  const allWarnings = [...local.warnings, ...bound.getWarnings()];
 
   if (allErrors.length > 0) {
     return new Report(emptyDatabase(), allErrors, allWarnings);
   }
 
-  const { nodeToSymbol } = local.getValue();
+  const { nodeToSymbol } = local;
   const { nodeToReferee, symbolToReferences } = bound.getValue();
   const interpretReport = new Interpreter({ ast: fileIndex.ast, nodeToSymbol, nodeToReferee, symbolToReferences }).interpret();
 

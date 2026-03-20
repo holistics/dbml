@@ -130,7 +130,7 @@ export default class Compiler {
 
   // A local query
   // Validate a single file, producing its symbol table and external filepath references
-  // Signature: (filepath?: Filepath) => Report<FileLocalSymbolIndex>
+  // Signature: (filepath?: Filepath) => FileLocalSymbolIndex
   validateFile = this.localQuery(validateFile);
 
   // A local query
