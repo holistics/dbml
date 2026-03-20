@@ -2140,31 +2140,25 @@
     "symbol": {
       "symbolTable": {
         "Table:User": {
-          "references": [],
           "id": 1,
           "symbolTable": {
             "Column:id": {
-              "references": [],
               "id": 2,
               "declaration": 6
             },
             "Column:secret": {
-              "references": [],
               "id": 3,
               "declaration": 15
             },
             "Column:name": {
-              "references": [],
               "id": 4,
               "declaration": 24
             },
             "Column:code": {
-              "references": [],
               "id": 5,
               "declaration": 33
             },
             "Column:ssid": {
-              "references": [],
               "id": 6,
               "declaration": 42
             }

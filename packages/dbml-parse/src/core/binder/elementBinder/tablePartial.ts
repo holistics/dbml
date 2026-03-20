@@ -86,7 +86,7 @@ export default class TablePartialBinder implements ElementBinder {
     lookupAndBindInScope(this.context.ast, [
       ...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })),
       { node: enumBindee, kind: SymbolKind.Enum },
-    ], this.context.nodeToSymbol, this.context.nodeToReferee);
+    ], this.context);
   }
 
   private bindInlineRef (ref: SyntaxNode): CompileError[] {
@@ -105,10 +105,10 @@ export default class TablePartialBinder implements ElementBinder {
             ...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })),
             { node: tableBindee, kind: SymbolKind.Table },
             { node: columnBindee, kind: SymbolKind.Column },
-          ], this.context.nodeToSymbol, this.context.nodeToReferee)
+          ], this.context)
         : lookupAndBindInScope(this.declarationNode, [
             { node: columnBindee, kind: SymbolKind.Column },
-          ], this.context.nodeToSymbol, this.context.nodeToReferee);
+          ], this.context);
     });
   }
 

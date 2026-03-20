@@ -18,8 +18,8 @@ export function interpretFile (this: Compiler, filepath: Filepath): Report<Datab
   }
 
   const { nodeToSymbol } = local.getValue();
-  const { nodeToReferee } = bound.getValue();
-  const interpretReport = new Interpreter({ ast: fileIndex.ast, nodeToSymbol, nodeToReferee }).interpret();
+  const { nodeToReferee, symbolToReferences } = bound.getValue();
+  const interpretReport = new Interpreter({ ast: fileIndex.ast, nodeToSymbol, nodeToReferee, symbolToReferences }).interpret();
 
   return new Report(
     interpretReport.getValue(),

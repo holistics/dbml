@@ -266,7 +266,8 @@ export function renameTable (
     }
   }
 
-  for (const ref of tableSymbol.references) {
+  const references = this.bindFile().getValue().symbolToReferences.get(tableSymbol) ?? [];
+  for (const ref of references) {
     const refText = source.substring(ref.start, ref.end);
     const cleanRefText = refText.replace(/"/g, '');
     if (cleanRefText === oldTable) {

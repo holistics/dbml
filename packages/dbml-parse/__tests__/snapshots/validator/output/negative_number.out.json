@@ -6444,21 +6444,17 @@
     "symbol": {
       "symbolTable": {
         "Table:a": {
-          "references": [],
           "id": 1,
           "symbolTable": {
             "Column:id": {
-              "references": [],
               "id": 2,
               "declaration": 17
             },
             "Column:id2": {
-              "references": [],
               "id": 3,
               "declaration": 35
             },
             "Column:id3": {
-              "references": [],
               "id": 4,
               "declaration": 60
             }
@@ -6466,21 +6462,17 @@
           "declaration": 62
         },
         "TablePartial:P1": {
-          "references": [],
           "id": 5,
           "symbolTable": {
             "Column:id": {
-              "references": [],
               "id": 6,
               "declaration": 80
             },
             "Column:id2": {
-              "references": [],
               "id": 7,
               "declaration": 98
             },
             "Column:id3": {
-              "references": [],
               "id": 8,
               "declaration": 127
             }
@@ -6488,16 +6480,13 @@
           "declaration": 129
         },
         "Table:b": {
-          "references": [],
           "id": 9,
           "symbolTable": {
             "Column:id": {
-              "references": [],
               "id": 10,
               "declaration": 136
             },
             "PartialInjection:P1": {
-              "references": [],
               "id": 11,
               "symbolTable": {},
               "declaration": 140

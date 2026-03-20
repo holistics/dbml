@@ -1495,11 +1495,10 @@
     "symbol": {
       "symbolTable": {
         "Schema:v": {
-          "references": [],
+          "externalFilepaths": [],
           "id": 2,
           "symbolTable": {
             "Enum:A": {
-              "references": [],
               "id": 1,
               "symbolTable": {},
               "declaration": 6

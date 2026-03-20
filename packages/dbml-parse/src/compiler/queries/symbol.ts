@@ -12,7 +12,9 @@ export function nodeSymbol (this: Compiler, node: SyntaxNode): NodeSymbol | unde
 }
 
 export function nodeReferences (this: Compiler, node: SyntaxNode): SyntaxNode[] {
-  return this.validateFile().getValue().nodeToSymbol.get(node)?.references ?? [];
+  const symbol = this.validateFile().getValue().nodeToSymbol.get(node);
+  if (!symbol) return [];
+  return this.bindFile().getValue().symbolToReferences.get(symbol) ?? [];
 }
 
 export function nodeReferee (this: Compiler, node: SyntaxNode): NodeSymbol | undefined {

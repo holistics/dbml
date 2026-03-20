@@ -72,7 +72,7 @@ export default class RefBinder implements ElementBinder {
           ...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })),
           { node: tableBindee, kind: SymbolKind.Table },
           { node: columnBindee, kind: SymbolKind.Column },
-        ], this.context.nodeToSymbol, this.context.nodeToReferee));
+        ], this.context));
       });
     });
   }

@@ -8,12 +8,11 @@ import {
 import { ElementBinder, ElementBinderArgs, ElementBinderResult } from '../types';
 import { SyntaxToken } from '@/core/lexer/tokens';
 import { CompileError, CompileErrorCode } from '@/core/errors';
-import { pickBinder, scanNonListNodeForBinding } from '../utils';
+import { addSymbolReference, pickBinder, scanNonListNodeForBinding } from '../utils';
 import { destructureComplexVariable, extractVarNameFromPrimaryVariable, getElementKind } from '@/core/utils';
-import { ElementKind } from '@/core/types';
+import { ElementKind, BinderContext } from '@/core/types';
 import { createColumnSymbolIndex } from '@/core/validator/symbol/symbolIndex';
 import SymbolFactory from '@/core/validator/symbol/factory';
-import { BinderContext } from '@/core/types';
 
 export default class IndexesBinder implements ElementBinder {
   private symbolFactory: SymbolFactory;
@@ -86,7 +85,7 @@ export default class IndexesBinder implements ElementBinder {
           return new CompileError(CompileErrorCode.BINDING_ERROR, `No column named '${columnName}' inside Table '${ownerTableName}'`, bindee);
         }
         this.context.nodeToReferee.set(bindee, column);
-        column.references.push(bindee);
+        addSymbolReference(this.context.symbolToReferences, column, bindee);
 
         return [];
       });

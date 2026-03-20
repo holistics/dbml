@@ -21,17 +21,20 @@ export enum ElementKind {
 
 export type NodeToSymbolMap = WeakMap<SyntaxNode, NodeSymbol>;
 export type NodeToRefereeMap = WeakMap<SyntaxNode, NodeSymbol>;
+export type SymbolToReferencesMap = Map<NodeSymbol, SyntaxNode[]>;
 
 export type AnalysisResult = {
   ast: ProgramNode;
   nodeToSymbol: NodeToSymbolMap;
   nodeToReferee: NodeToRefereeMap;
+  symbolToReferences: SymbolToReferencesMap;
 };
 
 export type BinderContext = {
   ast: ProgramNode;
   nodeToSymbol: NodeToSymbolMap;
   nodeToReferee: NodeToRefereeMap;
+  symbolToReferences: SymbolToReferencesMap;
 };
 
 export enum SettingName {

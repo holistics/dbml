@@ -1,6 +1,6 @@
 import Lexer from '@/core/lexer/lexer';
 import Parser from '@/core/parser/parser';
-import { type AnalysisResult } from '@/core/types';
+import { type AnalysisResult, type SymbolToReferencesMap } from '@/core/types';
 import Validator from '@/core/validator/validator';
 import Binder from '@/core/binder/binder';
 import SymbolFactory from '@/core/validator/symbol/factory';
@@ -52,7 +52,8 @@ export function analyze (source: string): Report<AnalysisResult> {
     const nodeToSymbol = new WeakMap();
     nodeToSymbol.set(ast, symbolFactory.create(SchemaSymbol, { symbolTable: new SymbolTable() }));
     return new Validator({ ast, filepath: DEFAULT_ENTRY, nodeToSymbol }, symbolFactory).validate().chain(({ nodeToSymbol: nts }) => {
-      return new Binder({ ast, nodeToSymbol: nts }, symbolFactory).resolve().map((nodeToReferee) => ({ ast, nodeToSymbol: nts, nodeToReferee }));
+      const symbolToReferences: SymbolToReferencesMap = new Map();
+      return new Binder({ ast, nodeToSymbol: nts, symbolToReferences }, symbolFactory).resolve().map((nodeToReferee) => ({ ast, nodeToSymbol: nts, nodeToReferee, symbolToReferences }));
     });
   });
 }

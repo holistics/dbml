@@ -1,5 +1,5 @@
 import { NodeSymbol } from '@/core/validator/symbol/symbols';
-import { AnalysisResult, NodeToRefereeMap, NodeToSymbolMap } from '@/core/types';
+import { AnalysisResult, NodeToRefereeMap, NodeToSymbolMap, SymbolToReferencesMap } from '@/core/types';
 import Report from '@/core/report';
 import { ProgramNode, SyntaxNode } from '@/index';
 import fs from 'fs';
@@ -15,6 +15,7 @@ export function scanTestNames (_path: any) {
 function astReplacer (
   nodeToSymbol: NodeToSymbolMap | undefined,
   nodeToReferee: NodeToRefereeMap | undefined,
+  symbolToReferences?: SymbolToReferencesMap,
 ) {
   return function (this: any, key: string, value: any) {
     // Inject symbol/referee from maps into SyntaxNode instances.
@@ -45,7 +46,7 @@ function astReplacer (
       return {
         symbolTable: (value as NodeSymbol)?.symbolTable,
         id: (value as NodeSymbol)?.id,
-        references: (value as NodeSymbol)?.references.map((ref) => ref.id),
+        references: (symbolToReferences?.get(value as NodeSymbol) ?? []).map((ref) => ref.id),
         declaration: (value as NodeSymbol)?.declaration?.id,
       };
     }
@@ -88,11 +89,11 @@ export function serializeAst (report: Readonly<Report<ProgramNode>>, pretty = fa
  * output format matches the pre-immutability snapshots.
  */
 export function serializeAnalysis (report: Readonly<Report<AnalysisResult>>, pretty = false): string {
-  const { ast, nodeToSymbol, nodeToReferee } = report.getValue();
+  const { ast, nodeToSymbol, nodeToReferee, symbolToReferences } = report.getValue();
   const syntheticReport = {
     value: ast,
     errors: report.getErrors(),
     ...(report.getWarnings().length ? { warnings: report.getWarnings() } : {}),
   };
-  return JSON.stringify(syntheticReport, astReplacer(nodeToSymbol, nodeToReferee), pretty ? 2 : 0);
+  return JSON.stringify(syntheticReport, astReplacer(nodeToSymbol, nodeToReferee, symbolToReferences), pretty ? 2 : 0);
 }

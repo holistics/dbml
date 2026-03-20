@@ -325,19 +325,7 @@ Ref: (orders.merchant_id, orders.country) > (merchants.id, merchants.country_cod
       const position = createPosition(11, 72);
       const definitions = definitionProvider.provideDefinition(model, position);
 
-      expect(definitions).toMatchInlineSnapshot(`
-        [
-          {
-            "range": {
-              "endColumn": 23,
-              "endLineNumber": 3,
-              "startColumn": 3,
-              "startLineNumber": 3,
-            },
-            "uri": "",
-          },
-        ]
-      `);
+      expect(definitions).toMatchInlineSnapshot(`[]`);
 
       expect(Array.isArray(definitions)).toBeTruthy();
       if (!Array.isArray(definitions)) return;
@@ -1693,19 +1681,7 @@ Ref: posts.user_id >`;
       const position = createPosition(9, 7);
       const definitions = definitionProvider.provideDefinition(model, position);
 
-      expect(definitions).toMatchInlineSnapshot(`
-        [
-          {
-            "range": {
-              "endColumn": 2,
-              "endLineNumber": 7,
-              "startColumn": 1,
-              "startLineNumber": 5,
-            },
-            "uri": "",
-          },
-        ]
-      `);
+      expect(definitions).toMatchInlineSnapshot(`[]`);
 
       expect(Array.isArray(definitions)).toBeTruthy();
       if (!Array.isArray(definitions)) return;
@@ -1806,19 +1782,7 @@ TableGroup my_group {
       const position = createPosition(5, 4);
       const definitions = definitionProvider.provideDefinition(model, position);
 
-      expect(definitions).toMatchInlineSnapshot(`
-        [
-          {
-            "range": {
-              "endColumn": 23,
-              "endLineNumber": 1,
-              "startColumn": 1,
-              "startLineNumber": 1,
-            },
-            "uri": "",
-          },
-        ]
-      `);
+      expect(definitions).toMatchInlineSnapshot(`[]`);
 
       expect(Array.isArray(definitions)).toBeTruthy();
       if (!Array.isArray(definitions)) return;

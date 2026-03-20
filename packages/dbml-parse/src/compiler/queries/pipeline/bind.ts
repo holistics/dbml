@@ -1,6 +1,6 @@
 import type Compiler from '../../index';
 import type { CompileError, CompileWarning } from '@/core/errors';
-import type { NodeToRefereeMap } from '@/core/types';
+import type { NodeToRefereeMap, SymbolToReferencesMap } from '@/core/types';
 import type { Filepath } from '../../projectLayout';
 import Binder from '@/core/binder/binder';
 import SymbolFactory from '@/core/validator/symbol/factory';
@@ -9,6 +9,7 @@ import Report from '@/core/report';
 
 export type FileBindIndex = {
   readonly nodeToReferee: NodeToRefereeMap;
+  readonly symbolToReferences: SymbolToReferencesMap;
 };
 
 export function bindFile (this: Compiler, filepath: Filepath): Report<FileBindIndex> {
@@ -16,7 +17,7 @@ export function bindFile (this: Compiler, filepath: Filepath): Report<FileBindIn
 
   if (resolved.getErrors().length > 0) {
     return new Report(
-      { nodeToReferee: new WeakMap() },
+      { nodeToReferee: new WeakMap(), symbolToReferences: new Map() },
       [...resolved.getErrors()],
       [...resolved.getWarnings()],
     );
@@ -26,11 +27,12 @@ export function bindFile (this: Compiler, filepath: Filepath): Report<FileBindIn
   const { nodeToSymbol } = resolved.getValue();
   const symbolFactory = new SymbolFactory(new NodeSymbolIdGenerator());
   const nodeToReferee: NodeToRefereeMap = new WeakMap();
+  const symbolToReferences: SymbolToReferencesMap = new Map();
 
-  const bindingReport = new Binder({ ast: fileIndex.ast, nodeToSymbol, nodeToReferee }, symbolFactory).resolve();
+  const bindingReport = new Binder({ ast: fileIndex.ast, nodeToSymbol, nodeToReferee, symbolToReferences }, symbolFactory).resolve();
 
   return new Report(
-    { nodeToReferee },
+    { nodeToReferee, symbolToReferences },
     [...resolved.getErrors(), ...bindingReport.getErrors()],
     [...resolved.getWarnings(), ...bindingReport.getWarnings()],
   );

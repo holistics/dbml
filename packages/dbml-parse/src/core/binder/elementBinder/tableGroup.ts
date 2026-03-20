@@ -61,7 +61,7 @@ export default class TableGroupBinder implements ElementBinder {
         return lookupAndBindInScope(this.context.ast, [
           ...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })),
           { node: tableBindee, kind: SymbolKind.Table },
-        ], this.context.nodeToSymbol, this.context.nodeToReferee);
+        ], this.context);
       });
     });
   }

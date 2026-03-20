@@ -32,7 +32,7 @@ describe('[snapshot] interpreter (NaN cases)', () => {
         const nodeToSymbol = new WeakMap();
         nodeToSymbol.set(ast, symbolFactory.create(SchemaSymbol, { symbolTable: new SymbolTable() }));
         return new Validator({ ast, filepath: DEFAULT_ENTRY, nodeToSymbol }, symbolFactory).validate().chain(({ nodeToSymbol: nts }) => {
-          return new Binder({ ast, nodeToSymbol: nts }, symbolFactory).resolve().map((nodeToReferee) => ({ ast, nodeToSymbol: nts, nodeToReferee }));
+          return new Binder({ ast, nodeToSymbol: nts, symbolToReferences: new Map() }, symbolFactory).resolve().map((nodeToReferee) => ({ ast, nodeToSymbol: nts, nodeToReferee, symbolToReferences: new Map() }));
         });
       });
 
