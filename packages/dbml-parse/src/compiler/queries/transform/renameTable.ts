@@ -230,7 +230,7 @@ export function renameTable (
   newName: TableNameInput,
 ): string {
   const source = this.getSource() ?? '';
-  const symbolTable = this.nodeSymbol(this.ast())?.symbolTable;
+  const symbolTable = this.symbol.nodeSymbol(this.ast())?.symbolTable;
   if (!symbolTable) return source;
 
   const normalizedOld = normalizeTableName(oldName);

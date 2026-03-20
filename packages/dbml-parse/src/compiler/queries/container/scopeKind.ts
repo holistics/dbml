@@ -2,8 +2,8 @@ import type Compiler from '../../index';
 import { ScopeKind } from '../../types';
 import { ElementDeclarationNode, ProgramNode } from '@/core/parser/nodes';
 
-export function scopeKindAtOffset (this: Compiler, offset: number): ScopeKind {
-  const elem = this.elementAtOffset(offset);
+export function containerScopeKind (this: Compiler, offset: number): ScopeKind {
+  const elem = this.container.element(offset);
 
   if (elem instanceof ProgramNode) {
     return ScopeKind.TOPLEVEL;

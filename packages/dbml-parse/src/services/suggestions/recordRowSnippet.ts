@@ -33,7 +33,7 @@ export function suggestRecordRowSnippet (
   position: Position,
   offset: number,
 ): CompletionList | null {
-  const element = compiler.elementAtOffset(offset);
+  const element = compiler.container.element(offset);
 
   // If not in an ElementDeclarationNode, fallthrough
   if (!(element instanceof ElementDeclarationNode)) return null;
@@ -111,7 +111,7 @@ function suggestRecordRowInNestedRecords (
   }
 
   const { nodeToReferee } = compiler.analyzeProject().getValue();
-  const tableSymbol = compiler.nodeSymbol(parent);
+  const tableSymbol = compiler.symbol.nodeSymbol(parent);
   if (!(tableSymbol instanceof TableSymbol)) {
     return noSuggestions();
   }

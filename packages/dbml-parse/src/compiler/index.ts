@@ -4,9 +4,9 @@ import { DEFAULT_ENTRY } from './constants';
 import { DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLReferencesProvider, DBMLDiagnosticsProvider } from '@/services/index';
 import { parseFile, parseProject, analyzeProject, interpretProject } from './queries/pipeline';
 import { modules, parentModule, childModules, ancestorModules, descendantModules, dirToKey } from './queries/modules';
-import { flatTokenStream, invalidTokens } from './queries/token';
+import { flatStream, invalidStream } from './queries/token';
 import { nodeSymbol, nodeReferences, nodeReferee, symbolOfName, symbolOfNameToKey, symbolMembers } from './queries/symbol';
-import { stackAtOffset, tokenAtOffset, elementAtOffset, scopeAtOffset, scopeKindAtOffset } from './queries/offset';
+import { containerStack, containerToken, containerElement, containerScope, containerScopeKind } from './queries/container';
 import { errors, warnings } from './queries/diagnostics';
 import {
   renameTable,
@@ -174,75 +174,6 @@ export default class Compiler {
   // Signature: (dir: Filepath) => Module[]
   descendantModules = this.globalQuery(descendantModules, dirToKey);
 
-  /* token */
-
-  // A local query
-  // Ordered flat stream of every token in the given file,
-  // with leading/trailing invalid tokens interleaved in source order
-  // Signature: (filepath?: Filepath) => readonly SyntaxToken[]
-  flatTokenStream = this.localQuery(flatTokenStream);
-
-  // A local query
-  // All tokens that failed to lex in the given file
-  // Signature: (filepath?: Filepath) => readonly SyntaxToken[]
-  invalidTokens = this.localQuery(invalidTokens);
-
-  /* symbol */
-
-  // A global query
-  // Symbol that declares or owns the given node
-  // Signature: (node: SyntaxNode) => NodeSymbol | undefined
-  nodeSymbol = this.globalQuery(nodeSymbol);
-
-  // A global query
-  // All nodes that reference the same symbol as the given node
-  // Signature: (node: SyntaxNode) => SyntaxNode[]
-  nodeReferences = this.globalQuery(nodeReferences);
-
-  // A global query
-  // Symbol that the given reference node resolves to
-  // Signature: (node: SyntaxNode) => NodeSymbol | undefined
-  nodeReferee = this.globalQuery(nodeReferee);
-
-  // A global query
-  // Resolve a qualified name (e.g. ['public', 'users']) to matching symbols,
-  // searching upward from the given scope owner
-  // Signature: (nameStack: string[], owner: ElementDeclarationNode | ProgramNode) => { symbol: NodeSymbol; kind: SymbolKind; name: string }[]
-  symbolOfName = this.globalQuery(symbolOfName, symbolOfNameToKey);
-
-  // A global query
-  // Direct child symbols in the given symbol's symbol table
-  // Signature: (symbol: NodeSymbol) => { symbol: NodeSymbol; kind: SymbolKind; name: string }[]
-  symbolMembers = this.globalQuery(symbolMembers);
-
-  /* offset */
-
-  // A global query
-  // Ancestor chain from ProgramNode down to the innermost node spanning the offset
-  // (outermost first, innermost last)
-  // Signature: (offset: number) => readonly SyntaxNode[]
-  stackAtOffset = this.globalQuery(stackAtOffset);
-
-  // A global query
-  // The token immediately before (or containing) the given offset in the flat token stream
-  // Signature: (offset: number) => { token: SyntaxToken; index: number } | { token: undefined; index: undefined }
-  tokenAtOffset = this.globalQuery(tokenAtOffset);
-
-  // A global query
-  // Innermost ElementDeclarationNode containing the offset, or ProgramNode if at top level
-  // Signature: (offset: number) => ElementDeclarationNode | ProgramNode
-  elementAtOffset = this.globalQuery(elementAtOffset);
-
-  // A global query
-  // Symbol table of the innermost scope containing the offset
-  // Signature: (offset: number) => SymbolTable | undefined
-  scopeAtOffset = this.globalQuery(scopeAtOffset);
-
-  // A global query
-  // ScopeKind of the innermost element containing the offset (e.g. TABLE, ENUM, REF, TOPLEVEL)
-  // Signature: (offset: number) => ScopeKind
-  scopeKindAtOffset = this.globalQuery(scopeKindAtOffset);
-
   /* diagnostics */
 
   // A global query
@@ -254,6 +185,27 @@ export default class Compiler {
   // All compile warnings collected from parsing and analysis
   // Signature: () => readonly CompileWarning[]
   warnings = this.globalQuery(warnings);
+
+  readonly token = {
+    flatStream: this.localQuery(flatStream),
+    invalidStream: this.localQuery(invalidStream),
+  };
+
+  readonly symbol = {
+    nodeSymbol: this.globalQuery(nodeSymbol),
+    nodeReferences: this.globalQuery(nodeReferences),
+    nodeReferee: this.globalQuery(nodeReferee),
+    ofName: this.globalQuery(symbolOfName, symbolOfNameToKey),
+    members: this.globalQuery(symbolMembers),
+  };
+
+  readonly container = {
+    stack: this.globalQuery(containerStack),
+    token: this.globalQuery(containerToken),
+    element: this.globalQuery(containerElement),
+    scope: this.globalQuery(containerScope),
+    scopeKind: this.globalQuery(containerScopeKind),
+  };
 
   initMonacoServices () {
     return {

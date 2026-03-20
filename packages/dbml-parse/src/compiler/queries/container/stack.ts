@@ -17,9 +17,9 @@ import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
 import { isOffsetWithinSpan } from '@/core/utils';
 import { getMemberChain } from '@/core/parser/utils';
 
-export function stackAtOffset (this: Compiler, offset: number): readonly Readonly<SyntaxNode>[] {
-  const tokens = this.flatTokenStream(DEFAULT_ENTRY);
-  const { index: startIndex, token } = this.tokenAtOffset(offset);
+export function containerStack (this: Compiler, offset: number): readonly Readonly<SyntaxNode>[] {
+  const tokens = this.token.flatStream(DEFAULT_ENTRY);
+  const { index: startIndex, token } = this.container.token(offset);
   const validIndex = startIndex === undefined
     ? -1
     : findLastIndex(tokens, (t) => !t.isInvalid, startIndex);
@@ -63,7 +63,7 @@ export function stackAtOffset (this: Compiler, offset: number): readonly Readonl
       lastContainer instanceof PrefixExpressionNode
       || lastContainer instanceof InfixExpressionNode
     ) {
-      if (this.tokenAtOffset(offset).token !== lastContainer.op) {
+      if (this.container.token(offset).token !== lastContainer.op) {
         res.pop();
         popOnce = true;
       }

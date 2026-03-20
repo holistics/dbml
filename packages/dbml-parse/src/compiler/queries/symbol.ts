@@ -1,9 +1,22 @@
-import type Compiler from '../../index';
+import type Compiler from '../index';
+import type { SyntaxNode } from '@/core/parser/nodes';
+import type { NodeSymbol } from '@/core/analyzer/symbol/symbols';
 import { ElementDeclarationNode, ProgramNode } from '@/core/parser/nodes';
-import { NodeSymbol } from '@/core/analyzer/symbol/symbols';
 import { SymbolKind, destructureIndex } from '@/core/analyzer/symbol/symbolIndex';
 import { generatePossibleIndexes } from '@/core/analyzer/symbol/utils';
 import SymbolTable from '@/core/analyzer/symbol/symbolTable';
+
+export function nodeSymbol (this: Compiler, node: SyntaxNode): NodeSymbol | undefined {
+  return this.analyzeProject().getValue().nodeToSymbol.get(node);
+}
+
+export function nodeReferences (this: Compiler, node: SyntaxNode): SyntaxNode[] {
+  return this.analyzeProject().getValue().nodeToSymbol.get(node)?.references ?? [];
+}
+
+export function nodeReferee (this: Compiler, node: SyntaxNode): NodeSymbol | undefined {
+  return this.analyzeProject().getValue().nodeToReferee.get(node);
+}
 
 export function symbolMembers (this: Compiler, ownerSymbol: NodeSymbol) {
   if (!ownerSymbol.symbolTable) {
@@ -30,7 +43,7 @@ export function symbolOfName (this: Compiler, nameStack: string[], owner: Elemen
       ? currentOwner.parent
       : undefined
   ) {
-    const ownerSymbol = this.nodeSymbol(currentOwner);
+    const ownerSymbol = this.symbol.nodeSymbol(currentOwner);
     if (!ownerSymbol?.symbolTable) {
       continue;
     }

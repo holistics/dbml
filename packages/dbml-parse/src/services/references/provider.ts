@@ -16,7 +16,7 @@ export default class DBMLReferencesProvider implements ReferenceProvider {
     const { uri } = model;
     const offset = getOffsetFromMonacoPosition(model, position);
 
-    const containers = [...this.compiler.stackAtOffset(offset)];
+    const containers = [...this.compiler.container.stack(offset)];
     while (containers.length !== 0) {
       const node = containers.pop();
       if (
@@ -27,7 +27,7 @@ export default class DBMLReferencesProvider implements ReferenceProvider {
           SyntaxNodeKind.PRIMARY_EXPRESSION,
         ].includes(node?.kind)
       ) {
-        const symbol = this.compiler.nodeSymbol(node);
+        const symbol = this.compiler.symbol.nodeSymbol(node);
         if (symbol?.references.length) {
           return symbol.references.map(({ startPos, endPos }: { startPos: any; endPos: any }) => ({
             range: {
