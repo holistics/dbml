@@ -1,57 +1,50 @@
 import type Compiler from '../../index';
-import type { ProgramNode } from '@/core/parser/nodes';
 import type { CompileError, CompileWarning } from '@/core/errors';
-import type { NodeToSymbolMap, NodeToRefereeMap } from '@/core/types';
+import type { NodeToRefereeMap } from '@/core/types';
 import type { Filepath } from '../../projectLayout';
-import Validator from '@/core/validator/validator';
 import Binder from '@/core/binder/binder';
-import { NodeSymbolIdGenerator, SchemaSymbol } from '@/core/validator/symbol/symbols';
 import SymbolFactory from '@/core/validator/symbol/factory';
-import SymbolTable from '@/core/validator/symbol/symbolTable';
+import { NodeSymbolIdGenerator } from '@/core/validator/symbol/symbols';
 import Report from '@/core/report';
 
-export type BindResult = {
-  asts: ProgramNode[];
-  nodeToSymbol: NodeToSymbolMap;
-  nodeToReferee: NodeToRefereeMap;
+export type FileBindIndex = {
+  readonly nodeToReferee: NodeToRefereeMap;
 };
 
-export function bindProject (this: Compiler): Report<BindResult> {
+export function bindFile (this: Compiler, filepath: Filepath): Report<FileBindIndex> {
+  const local = this.localSymbolTable(filepath);
+
+  if (local.getErrors().length > 0) {
+    return new Report(
+      { nodeToReferee: new WeakMap() },
+      [...local.getErrors()],
+      [...local.getWarnings()],
+    );
+  }
+
+  const fileIndex = this.parseFile(filepath);
+  const { nodeToSymbol } = local.getValue();
+  const symbolFactory = new SymbolFactory(new NodeSymbolIdGenerator());
+  const nodeToReferee: NodeToRefereeMap = new WeakMap();
+
+  const bindingReport = new Binder({ ast: fileIndex.ast, nodeToSymbol, nodeToReferee }, symbolFactory).resolve();
+
+  return new Report(
+    { nodeToReferee },
+    [...local.getErrors(), ...bindingReport.getErrors()],
+    [...local.getWarnings(), ...bindingReport.getWarnings()],
+  );
+}
+
+export function bindProject (this: Compiler): Report<void> {
   const errors: CompileError[] = [];
   const warnings: CompileWarning[] = [];
 
-  const nodeToSymbol: NodeToSymbolMap = new WeakMap();
-  const nodeToReferee: NodeToRefereeMap = new WeakMap();
-  const asts: ProgramNode[] = [];
-
   for (const [, fileIndex] of this.parseProject()) {
-    errors.push(...fileIndex.errors);
-    warnings.push(...fileIndex.warnings);
-
-    if (fileIndex.errors.length > 0) {
-      continue;
-    }
-
-    const filepath = fileIndex.path as Filepath;
-    const symbolFactory = new SymbolFactory(new NodeSymbolIdGenerator());
-    const publicSchemaSymbol = symbolFactory.create(SchemaSymbol, { symbolTable: new SymbolTable() });
-    nodeToSymbol.set(fileIndex.ast, publicSchemaSymbol);
-
-    const validationReport = new Validator({ ast: fileIndex.ast, filepath, nodeToSymbol }, symbolFactory).validate();
-    errors.push(...validationReport.getErrors());
-    warnings.push(...validationReport.getWarnings());
-
-    if (validationReport.getErrors().length > 0) {
-      continue;
-    }
-
-    const { nodeToSymbol: localNodeToSymbol } = validationReport.getValue();
-    const bindingReport = new Binder({ ast: fileIndex.ast, nodeToSymbol: localNodeToSymbol, nodeToReferee }, symbolFactory).resolve();
-    errors.push(...bindingReport.getErrors());
-    warnings.push(...bindingReport.getWarnings());
-
-    asts.push(fileIndex.ast);
+    const result = this.bindFile(fileIndex.path as Filepath);
+    errors.push(...result.getErrors());
+    warnings.push(...result.getWarnings());
   }
 
-  return new Report({ asts, nodeToSymbol, nodeToReferee }, errors, warnings);
+  return new Report(undefined, errors, warnings);
 }

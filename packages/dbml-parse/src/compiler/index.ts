@@ -2,7 +2,7 @@ import { type DbmlProjectLayout, Filepath, MemoryProjectLayout } from './project
 import { type FilepathKey } from './projectLayout';
 import { DEFAULT_ENTRY } from './constants';
 import { DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLReferencesProvider, DBMLDiagnosticsProvider } from '@/services/index';
-import { parseFile, parseProject, localSymbolTable, bindProject, interpretProject } from './queries/pipeline';
+import { parseFile, parseProject, localSymbolTable, bindFile, bindProject, interpretFile, interpretProject } from './queries/pipeline';
 import { flatStream, invalidStream } from './queries/token';
 import { nodeSymbol, nodeReferences, nodeReferee, symbolOfName, symbolOfNameToKey, symbolMembers } from './queries/symbol';
 import { containerStack, containerToken, containerElement, containerScope, containerScopeKind } from './queries/container';
@@ -132,20 +132,29 @@ export default class Compiler {
   // Signature: (filepath?: Filepath) => Report<FileLocalSymbolIndex>
   localSymbolTable = this.localQuery(localSymbolTable);
 
+  // A local query
+  // Bind a single file, producing nodeToReferee
+  // Signature: (filepath?: Filepath) => Report<FileBindIndex>
+  bindFile = this.localQuery(bindFile);
+
+  // A local query
+  // Interpret a single file into a Database model
+  // Signature: (filepath?: Filepath) => Report<Database>
+  interpretFile = this.localQuery(interpretFile);
+
   // A global query
   // Parse every .dbml file in the project layout
   // Signature: () => Map<FilepathKey, FileParseIndex>
   parseProject = this.globalQuery(parseProject);
 
   // A global query
-  // Validate and bind all parsed files, producing a single shared AnalyzeResult;
-  // errors from all files are collected in the returned Report
-  // Signature: () => Report<AnalyzeResult>
+  // Bind all parsed files
+  // Signature: () => Report<void>
   bindProject = this.globalQuery(bindProject);
 
   // A global query
-  // Interpret the analyzed ASTs into a merged Database model
-  // Signature: () => Report<Database | undefined>
+  // Interpret all files into a merged Database model
+  // Signature: () => Report<Database>
   interpretProject = this.globalQuery(interpretProject);
 
   /* diagnostics */

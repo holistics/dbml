@@ -1,7 +1,32 @@
 import type Compiler from '../../index';
+import type { Filepath } from '../../projectLayout';
+import type { CompileError, CompileWarning } from '@/core/errors';
 import type { Database } from '@/core/interpreter/types';
 import Interpreter from '@/core/interpreter/interpreter';
 import Report from '@/core/report';
+
+export function interpretFile (this: Compiler, filepath: Filepath): Report<Database> {
+  const fileIndex = this.parseFile(filepath);
+  const local = this.localSymbolTable(filepath);
+  const bound = this.bindFile(filepath);
+
+  const allErrors = [...local.getErrors(), ...bound.getErrors()];
+  const allWarnings = [...local.getWarnings(), ...bound.getWarnings()];
+
+  if (allErrors.length > 0) {
+    return new Report(emptyDatabase(), allErrors, allWarnings);
+  }
+
+  const { nodeToSymbol } = local.getValue();
+  const { nodeToReferee } = bound.getValue();
+  const interpretReport = new Interpreter({ ast: fileIndex.ast, nodeToSymbol, nodeToReferee }).interpret();
+
+  return new Report(
+    interpretReport.getValue(),
+    [...allErrors, ...interpretReport.getErrors()],
+    [...allWarnings, ...interpretReport.getWarnings()],
+  );
+}
 
 function mergeDatabases (dbs: Database[]): Database {
   return {
@@ -18,21 +43,24 @@ function mergeDatabases (dbs: Database[]): Database {
   };
 }
 
-export function interpretProject (this: Compiler): Report<Database | undefined> {
-  const analyzeReport = this.bindProject();
-  const { asts, nodeToSymbol, nodeToReferee } = analyzeReport.getValue();
-
-  const databases: Database[] = [];
-  let report: Report<unknown> = analyzeReport.map(() => undefined);
-
-  for (const ast of asts) {
-    const interpretReport = new Interpreter({ ast, nodeToSymbol, nodeToReferee }).interpret();
-    databases.push(interpretReport.getValue());
-    report = report.chain(() => interpretReport.map(() => undefined));
-  }
-
-  const database = databases.length > 0 ? mergeDatabases(databases) : undefined;
-
-  return report.map(() => database);
+function emptyDatabase (): Database {
+  return { schemas: [], tables: [], notes: [], refs: [], enums: [], tableGroups: [], aliases: [], project: {}, tablePartials: [], records: [] };
 }
 
+export function interpretProject (this: Compiler): Report<Database> {
+  const errors: CompileError[] = [];
+  const warnings: CompileWarning[] = [];
+  const databases: Database[] = [];
+
+  for (const [, fileIndex] of this.parseProject()) {
+    const result = this.interpretFile(fileIndex.path as Filepath);
+    errors.push(...result.getErrors());
+    warnings.push(...result.getWarnings());
+    if (result.getErrors().length === 0) {
+      databases.push(result.getValue());
+    }
+  }
+
+  const database = databases.length > 0 ? mergeDatabases(databases) : emptyDatabase();
+  return new Report(database, errors, warnings);
+}
