@@ -1,3 +1,6 @@
+import { type SyntaxNode, type ProgramNode } from '@/core/parser/nodes';
+import type { NodeSymbol } from '@/core/validator/symbol/symbols';
+
 export interface Position {
   offset: number;
   line: number;
@@ -15,9 +18,6 @@ export enum ElementKind {
   Check = 'checks',
   Records = 'records',
 }
-
-import { type SyntaxNode, type ProgramNode } from '@/core/parser/nodes';
-import type { NodeSymbol } from '@/core/validator/symbol/symbols';
 
 export type NodeToSymbolMap = WeakMap<SyntaxNode, NodeSymbol>;
 export type NodeToRefereeMap = WeakMap<SyntaxNode, NodeSymbol>;
