@@ -1,6 +1,7 @@
 import SymbolTable from './symbolTable';
 import { type SyntaxNode } from '@/core/parser/nodes';
 import { SymbolKind } from './symbolIndex';
+import type { Filepath } from '@/compiler/projectLayout/filepath';
 
 export type NodeSymbolId = number;
 export class NodeSymbolIdGenerator {
@@ -31,6 +32,9 @@ export class SchemaSymbol implements NodeSymbol {
   symbolTable: SymbolTable;
 
   references: SyntaxNode[] = [];
+
+  // Filepaths of external files whose schema contents should be merged into this one
+  externalFilepaths: Filepath[] = [];
 
   constructor ({ symbolTable }: { symbolTable: SymbolTable }, id: NodeSymbolId) {
     this.id = id;

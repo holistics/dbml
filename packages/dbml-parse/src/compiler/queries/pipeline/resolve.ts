@@ -1,8 +1,8 @@
 import type Compiler from '../../index';
 import type { NodeToSymbolMap } from '@/core/types';
 import { Filepath } from '../../projectLayout';
-import { ExternalSymbol } from '@/core/validator/symbol/symbols';
-import { createNodeSymbolIndex } from '@/core/validator/symbol/symbolIndex';
+import { ExternalSymbol, SchemaSymbol } from '@/core/validator/symbol/symbols';
+import { createNodeSymbolIndex, destructureIndex, SymbolKind } from '@/core/validator/symbol/symbolIndex';
 import SymbolTable from '@/core/validator/symbol/symbolTable';
 import Report from '@/core/report';
 import type { CompileError, CompileWarning } from '@/core/errors';
@@ -44,6 +44,7 @@ export function resolvedSymbolTable (this: Compiler, filepath: Filepath): Report
 
     const externalTable = externalLocal.getValue().symbolTable;
     resolveExternalSymbols(resolvedTable, externalTable, externalFilepath.absolute);
+    mergeExternalSchemas(resolvedTable, externalTable, externalFilepath);
   }
 
   return new Report({ symbolTable: resolvedTable, nodeToSymbol }, errors, warnings);
@@ -55,6 +56,32 @@ function cloneSymbolTable (source: Readonly<SymbolTable>): SymbolTable {
     clone.set(id, symbol);
   }
   return clone;
+}
+
+// Merge external schema contents into local schemas that have been marked for merging
+function mergeExternalSchemas (
+  resolvedTable: SymbolTable,
+  externalTable: Readonly<SymbolTable>,
+  externalFilepath: Filepath,
+): void {
+  for (const [symbolId, symbol] of resolvedTable.entries()) {
+    if (!(symbol instanceof SchemaSymbol)) continue;
+    if (!symbol.externalFilepaths.some((fp) => fp.key === externalFilepath.key)) continue;
+
+    const info = destructureIndex(symbolId).unwrap_or(undefined);
+    if (!info || info.kind !== SymbolKind.Schema) continue;
+
+    // Find the matching schema in the external file's symbol table
+    const externalSchema = externalTable.get(symbolId);
+    if (!(externalSchema instanceof SchemaSymbol)) continue;
+
+    // Merge external schema's symbol table entries into the local schema
+    for (const [entryId, entrySymbol] of externalSchema.symbolTable.entries()) {
+      if (!symbol.symbolTable.has(entryId)) {
+        symbol.symbolTable.set(entryId, entrySymbol);
+      }
+    }
+  }
 }
 
 function resolveExternalSymbols (

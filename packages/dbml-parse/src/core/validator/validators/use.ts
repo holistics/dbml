@@ -2,7 +2,7 @@ import { CompileError, CompileErrorCode } from '@/core/errors';
 import { ElementDeclarationNode, UseDeclarationNode, UseSpecifierNode, type SyntaxNode } from '@/core/parser/nodes';
 import SymbolTable from '@/core/validator/symbol/symbolTable';
 import { isValidName, registerSchemaStack } from '@/core/validator/utils';
-import { ExternalSymbol, type NodeSymbol } from '@/core/validator/symbol/symbols';
+import { ExternalSymbol, SchemaSymbol, type NodeSymbol } from '@/core/validator/symbol/symbols';
 import { createNodeSymbolIndex, SymbolKind } from '@/core/validator/symbol/symbolIndex';
 import { destructureComplexVariable } from '@/core/utils';
 import SymbolFactory from '@/core/validator/symbol/factory';
@@ -130,13 +130,13 @@ export default class UseDeclarationValidator {
         errors.push(...this.registerExternalFilepath(resolved));
         if (errors.length > 0) return errors;
       }
-      errors.push(...this.registerSpecifierSymbol(specifier, symbolKind, resolved?.absolute));
+      errors.push(...this.registerSpecifierSymbol(specifier, symbolKind, resolved));
     }
 
     return errors;
   }
 
-  private registerSpecifierSymbol (specifier: UseSpecifierNode, symbolKind: SymbolKind, externalFilepath?: string): CompileError[] {
+  private registerSpecifierSymbol (specifier: UseSpecifierNode, symbolKind: SymbolKind, externalFilepath?: Filepath): CompileError[] {
     const nameFragments = [...destructureComplexVariable(specifier.name).unwrap()];
 
     switch (symbolKind) {
@@ -164,6 +164,12 @@ export default class UseDeclarationValidator {
     const symbolId = createNodeSymbolIndex(itemName, symbolKind);
 
     if (symbolTable.has(symbolId)) {
+      const existingSymbol = symbolTable.get(symbolId);
+      // Schema symbols from external files should be merged, not treated as conflicts
+      if (symbolKind === SymbolKind.Schema && existingSymbol instanceof SchemaSymbol && externalFilepath) {
+        existingSymbol.externalFilepaths.push(externalFilepath);
+        return [];
+      }
       return [new CompileError(CompileErrorCode.DUPLICATE_NAME, `'${itemName}' is already defined`, specifier.name!)];
     }
 
@@ -171,7 +177,7 @@ export default class UseDeclarationValidator {
       declaration: specifier,
       kind: symbolKind,
       name: itemName,
-      externalFilepath: externalFilepath ?? '',
+      externalFilepath: externalFilepath?.absolute ?? '',
     });
     this.declarations.set(specifier, symbol);
     symbolTable.set(symbolId, symbol);
