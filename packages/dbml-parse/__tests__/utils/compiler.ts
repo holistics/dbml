@@ -47,7 +47,7 @@ export function analyze (source: string): Report<AnalysisResult> {
 export function interpret (source: string): Report<Database | undefined> {
   const compiler = new Compiler();
   compiler.setSource(source);
-  return compiler.parse._().map(({ rawDb }) => rawDb);
+  return compiler.interpretProject();
 }
 
 export function flattenTokens (token: SyntaxToken): SyntaxToken[] {

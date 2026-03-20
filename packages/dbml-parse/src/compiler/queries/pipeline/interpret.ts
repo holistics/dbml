@@ -35,3 +35,4 @@ export function interpretProject (this: Compiler): Report<Database | undefined> 
 
   return report.map(() => database);
 }
+

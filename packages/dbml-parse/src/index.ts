@@ -59,3 +59,6 @@ export {
 } from '@/core/interpreter/types';
 
 export { Compiler, services };
+
+export { Filepath, MemoryProjectLayout } from '@/compiler/projectLayout';
+export type { DbmlProjectLayout } from '@/compiler/projectLayout';

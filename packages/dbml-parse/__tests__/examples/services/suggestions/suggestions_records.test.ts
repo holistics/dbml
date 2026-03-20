@@ -186,9 +186,9 @@ describe('[example] Suggestions Utils - Records', () => {
       compiler.setSource(program);
       compiler.parseProject();
 
-      const ast = compiler.parse.ast();
+      const ast = compiler.ast();
       const tableElement = ast.body[2]; // users table is the third element
-      const tableSymbol = compiler.parse.nodeToSymbol()?.get(tableElement);
+      const tableSymbol = compiler.analyzeProject().getValue().nodeToSymbol.get(tableElement);
 
       if (tableSymbol instanceof TableSymbol) {
         const columns = getColumnsFromTableSymbol(tableSymbol);
@@ -222,9 +222,9 @@ describe('[example] Suggestions Utils - Records', () => {
       compiler.setSource(program);
       compiler.parseProject();
 
-      const ast = compiler.parse.ast();
+      const ast = compiler.ast();
       const tableElement = ast.body[1];
-      const tableSymbol = compiler.parse.nodeToSymbol()?.get(tableElement);
+      const tableSymbol = compiler.analyzeProject().getValue().nodeToSymbol.get(tableElement);
 
       if (tableSymbol instanceof TableSymbol) {
         const columns = getColumnsFromTableSymbol(tableSymbol);
@@ -254,9 +254,9 @@ describe('[example] Suggestions Utils - Records', () => {
       compiler.setSource(program);
       compiler.parseProject();
 
-      const ast = compiler.parse.ast();
+      const ast = compiler.ast();
       const tableElement = ast.body[1];
-      const tableSymbol = compiler.parse.nodeToSymbol()?.get(tableElement);
+      const tableSymbol = compiler.analyzeProject().getValue().nodeToSymbol.get(tableElement);
 
       if (tableSymbol instanceof TableSymbol) {
         const columns = getColumnsFromTableSymbol(tableSymbol);
@@ -286,9 +286,9 @@ describe('[example] Suggestions Utils - Records', () => {
       compiler.parseProject(); // Trigger parsing
 
       // Get the table symbol
-      const ast = compiler.parse.ast();
+      const ast = compiler.ast();
       const tableElement = ast.body[0];
-      const tableSymbol = compiler.parse.nodeToSymbol()?.get(tableElement);
+      const tableSymbol = compiler.analyzeProject().getValue().nodeToSymbol.get(tableElement);
 
       expect(tableSymbol).toBeInstanceOf(TableSymbol);
 
@@ -321,9 +321,9 @@ describe('[example] Suggestions Utils - Records', () => {
       compiler.setSource(program);
       compiler.parseProject();
 
-      const ast = compiler.parse.ast();
+      const ast = compiler.ast();
       const tableElement = ast.body[0];
-      const tableSymbol = compiler.parse.nodeToSymbol()?.get(tableElement);
+      const tableSymbol = compiler.analyzeProject().getValue().nodeToSymbol.get(tableElement);
 
       if (tableSymbol instanceof TableSymbol) {
         const columns = getColumnsFromTableSymbol(tableSymbol);
@@ -356,9 +356,9 @@ describe('[example] Suggestions Utils - Records', () => {
       compiler.setSource(program);
       compiler.parseProject();
 
-      const ast = compiler.parse.ast();
+      const ast = compiler.ast();
       const tableElement = ast.body[0];
-      const tableSymbol = compiler.parse.nodeToSymbol()?.get(tableElement);
+      const tableSymbol = compiler.analyzeProject().getValue().nodeToSymbol.get(tableElement);
 
       if (tableSymbol instanceof TableSymbol) {
         const columns = getColumnsFromTableSymbol(tableSymbol);
@@ -383,9 +383,9 @@ describe('[example] Suggestions Utils - Records', () => {
       compiler.setSource(program);
       compiler.parseProject();
 
-      const ast = compiler.parse.ast();
+      const ast = compiler.ast();
       const tableElement = ast.body[0];
-      const tableSymbol = compiler.parse.nodeToSymbol()?.get(tableElement);
+      const tableSymbol = compiler.analyzeProject().getValue().nodeToSymbol.get(tableElement);
 
       if (tableSymbol instanceof TableSymbol) {
         const columns = getColumnsFromTableSymbol(tableSymbol);
@@ -411,9 +411,9 @@ describe('[example] Suggestions Utils - Records', () => {
       compiler.setSource(program);
       compiler.parseProject();
 
-      const ast = compiler.parse.ast();
+      const ast = compiler.ast();
       const tableElement = ast.body[0];
-      const tableSymbol = compiler.parse.nodeToSymbol()?.get(tableElement);
+      const tableSymbol = compiler.analyzeProject().getValue().nodeToSymbol.get(tableElement);
 
       if (tableSymbol instanceof TableSymbol) {
         const columns = getColumnsFromTableSymbol(tableSymbol);
@@ -438,9 +438,9 @@ describe('[example] Suggestions Utils - Records', () => {
       compiler.setSource(program);
       compiler.parseProject();
 
-      const ast = compiler.parse.ast();
+      const ast = compiler.ast();
       const tableElement = ast.body[0];
-      const tableSymbol = compiler.parse.nodeToSymbol()?.get(tableElement);
+      const tableSymbol = compiler.analyzeProject().getValue().nodeToSymbol.get(tableElement);
 
       if (tableSymbol instanceof TableSymbol) {
         const columns = getColumnsFromTableSymbol(tableSymbol);
@@ -467,9 +467,9 @@ describe('[example] Suggestions Utils - Records', () => {
       compiler.setSource(program);
       compiler.parseProject();
 
-      const ast = compiler.parse.ast();
+      const ast = compiler.ast();
       const tableElement = ast.body[0];
-      const tableSymbol = compiler.parse.nodeToSymbol()?.get(tableElement);
+      const tableSymbol = compiler.analyzeProject().getValue().nodeToSymbol.get(tableElement);
 
       if (tableSymbol instanceof TableSymbol) {
         const columns = getColumnsFromTableSymbol(tableSymbol);

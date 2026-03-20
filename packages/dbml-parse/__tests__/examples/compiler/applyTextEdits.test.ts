@@ -217,12 +217,11 @@ describe('[example] applyTextEdits', () => {
     });
   });
 
-  describe('Compiler.applyTextEdits method', () => {
+  describe('applyTextEdits function', () => {
     test('should apply edits to compiler source', () => {
-      const compiler = new Compiler();
-      compiler.setSource('Table users { id int }');
+      const source = 'Table users { id int }';
 
-      const result = compiler.applyTextEdits([
+      const result = applyTextEdits(source, [
         { start: 6, end: 11, newText: 'customers' },
       ]);
 
@@ -230,13 +229,12 @@ describe('[example] applyTextEdits', () => {
     });
 
     test('should apply multiple edits to DBML', () => {
-      const compiler = new Compiler();
-      compiler.setSource(`Table users {
+      const source = `Table users {
   id int [pk]
   email varchar
-}`);
+}`;
 
-      const result = compiler.applyTextEdits([
+      const result = applyTextEdits(source, [
         { start: 6, end: 11, newText: 'customers' },
         { start: 30, end: 35, newText: 'name' },
       ]);
@@ -245,17 +243,15 @@ describe('[example] applyTextEdits', () => {
       expect(result).toContain('name varchar');
     });
 
-    test('should not modify the original source in compiler', () => {
+    test('should not modify the original source', () => {
       const originalSource = 'Table users { id int }';
-      const compiler = new Compiler();
-      compiler.setSource(originalSource);
 
-      compiler.applyTextEdits([
+      const result = applyTextEdits(originalSource, [
         { start: 6, end: 11, newText: 'customers' },
       ]);
 
-      // Original source should be unchanged
-      expect(compiler.parse.source()).toBe(originalSource);
+      expect(originalSource).toBe('Table users { id int }');
+      expect(result).toBe('Table customers { id int }');
     });
   });
 });
