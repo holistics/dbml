@@ -19,7 +19,7 @@ function mergeDatabases (dbs: Database[]): Database {
 }
 
 export function interpretProject (this: Compiler): Report<Database | undefined> {
-  const analyzeReport = this.analyzeProject();
+  const analyzeReport = this.resolveProject();
   const { asts, nodeToSymbol, nodeToReferee } = analyzeReport.getValue();
 
   const databases: Database[] = [];

@@ -7,15 +7,15 @@ import { generatePossibleIndexes } from '@/core/analyzer/symbol/utils';
 import SymbolTable from '@/core/analyzer/symbol/symbolTable';
 
 export function nodeSymbol (this: Compiler, node: SyntaxNode): NodeSymbol | undefined {
-  return this.analyzeProject().getValue().nodeToSymbol.get(node);
+  return this.resolveProject().getValue().nodeToSymbol.get(node);
 }
 
 export function nodeReferences (this: Compiler, node: SyntaxNode): SyntaxNode[] {
-  return this.analyzeProject().getValue().nodeToSymbol.get(node)?.references ?? [];
+  return this.resolveProject().getValue().nodeToSymbol.get(node)?.references ?? [];
 }
 
 export function nodeReferee (this: Compiler, node: SyntaxNode): NodeSymbol | undefined {
-  return this.analyzeProject().getValue().nodeToReferee.get(node);
+  return this.resolveProject().getValue().nodeToReferee.get(node);
 }
 
 export function symbolMembers (this: Compiler, ownerSymbol: NodeSymbol) {

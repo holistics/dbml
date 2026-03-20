@@ -65,7 +65,7 @@ function suggestRecordRowInTopLevelRecords (
   if (!(recordsElement.name instanceof CallExpressionNode)) return noSuggestions();
 
   const columnElements = recordsElement.name.argumentList?.elementList || [];
-  const nodeToReferee = compiler.analyzeProject().getValue().nodeToReferee;
+  const nodeToReferee = compiler.resolveProject().getValue().nodeToReferee;
   const columnSymbols = columnElements.map((e) => extractReferee(e, nodeToReferee));
   if (!columnSymbols || columnSymbols.length === 0) return noSuggestions();
 
@@ -110,7 +110,7 @@ function suggestRecordRowInNestedRecords (
     return noSuggestions();
   }
 
-  const { nodeToReferee } = compiler.analyzeProject().getValue();
+  const { nodeToReferee } = compiler.resolveProject().getValue();
   const tableSymbol = compiler.symbol.nodeSymbol(parent);
   if (!(tableSymbol instanceof TableSymbol)) {
     return noSuggestions();

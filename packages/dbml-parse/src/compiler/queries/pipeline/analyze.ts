@@ -49,7 +49,7 @@ export type AnalyzeResult = {
   nodeToReferee: NodeToRefereeMap;
 };
 
-export function analyzeProject (this: Compiler): Report<AnalyzeResult> {
+export function resolveProject (this: Compiler): Report<AnalyzeResult> {
   const errors: CompileError[] = [];
   const warnings: CompileWarning[] = [];
 
