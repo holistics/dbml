@@ -3,7 +3,7 @@ import type { SyntaxNode } from '@/core/parser/nodes';
 import type { NodeToSymbolMap } from '@/core/types';
 import type { Filepath, FilepathKey } from '../../projectLayout';
 import Validator from '@/core/validator/validator';
-import { NodeSymbolIdGenerator, SchemaSymbol } from '@/core/validator/symbol/symbols';
+import { NodeSymbolIdGenerator } from '@/core/validator/symbol/symbols';
 import SymbolFactory from '@/core/validator/symbol/factory';
 import SymbolTable from '@/core/validator/symbol/symbolTable';
 import Report from '@/core/report';
@@ -27,15 +27,11 @@ export function localSymbolTable (this: Compiler, filepath: Filepath): Report<Fi
   }
 
   const symbolFactory = new SymbolFactory(new NodeSymbolIdGenerator());
-  const nodeToSymbol: NodeToSymbolMap = new WeakMap();
-  const fileSymbol = symbolFactory.create(SchemaSymbol, { symbolTable: new SymbolTable() });
-  nodeToSymbol.set(fileIndex.ast, fileSymbol);
-
-  const validationReport = new Validator({ ast: fileIndex.ast, filepath, nodeToSymbol }, symbolFactory).validate();
-  const { externalFilepaths } = validationReport.getValue();
+  const validationReport = new Validator({ ast: fileIndex.ast, filepath }, symbolFactory).validate();
+  const { symbolTable, nodeToSymbol, externalFilepaths } = validationReport.getValue();
 
   return new Report(
-    { path: fileIndex.path, symbolTable: fileSymbol.symbolTable, nodeToSymbol, externalFilepaths },
+    { path: fileIndex.path, symbolTable, nodeToSymbol, externalFilepaths },
     [...fileIndex.errors, ...validationReport.getErrors()],
     [...fileIndex.warnings, ...validationReport.getWarnings()],
   );
