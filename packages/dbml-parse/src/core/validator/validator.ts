@@ -7,12 +7,12 @@ import { pickElementValidator } from '@/core/validator/utils';
 import SymbolTable from '@/core/validator/symbol/symbolTable';
 import { SyntaxToken } from '@/core/lexer/tokens';
 import { getElementKind } from '@/core/utils';
-import { ElementKind, NodeToSymbolMap } from '@/core/types';
+import { ElementKind } from '@/core/types';
+import { NodeToSymbolMap } from '@/core/types';
 import type { Filepath, FilepathKey } from '@/compiler/projectLayout';
 import UseDeclarationValidator from '@/core/validator/validators/use';
 
 export type ValidatorResult = {
-  symbolTable: SymbolTable;
   nodeToSymbol: NodeToSymbolMap;
   externalFilepaths: Map<FilepathKey, SyntaxNode>;
 };
@@ -22,27 +22,31 @@ export default class Validator {
 
   private filepath: Filepath;
 
+  private publicSchemaSymbol: SchemaSymbol;
+
   private symbolFactory: SymbolFactory;
 
+  private nodeToSymbol: NodeToSymbolMap;
+
   constructor (
-    { ast, filepath }: { ast: ProgramNode; filepath: Filepath },
+    { ast, filepath, nodeToSymbol }: { ast: ProgramNode; filepath: Filepath; nodeToSymbol?: NodeToSymbolMap },
     symbolFactory: SymbolFactory,
   ) {
     this.ast = ast;
     this.filepath = filepath;
     this.symbolFactory = symbolFactory;
+    this.nodeToSymbol = nodeToSymbol ?? new WeakMap();
+    this.publicSchemaSymbol = (nodeToSymbol?.get(ast) ?? this.symbolFactory.create(SchemaSymbol, {
+      symbolTable: new SymbolTable(),
+    })) as SchemaSymbol;
+    this.nodeToSymbol.set(this.ast, this.publicSchemaSymbol);
   }
 
   validate (): Report<ValidatorResult> {
     const errors: CompileError[] = [];
     const externalFilepaths = new Map<FilepathKey, SyntaxNode>();
-    const nodeToSymbol: NodeToSymbolMap = new WeakMap();
 
-    const publicSchemaSymbol = this.symbolFactory.create(SchemaSymbol, {
-      symbolTable: new SymbolTable(),
-    });
-    nodeToSymbol.set(this.ast, publicSchemaSymbol);
-
+    // Validate in source order
     this.ast.body.forEach((decl) => {
       if (decl instanceof ElementDeclarationNode) {
         if (decl.type === undefined) return;
@@ -50,15 +54,15 @@ export default class Validator {
         const validatorObject = new Val(
           {
             declarationNode: decl as ElementDeclarationNode & { type: SyntaxToken },
-            publicSymbolTable: publicSchemaSymbol.symbolTable,
-            nodeToSymbol,
+            publicSymbolTable: this.publicSchemaSymbol.symbolTable,
+            nodeToSymbol: this.nodeToSymbol,
           },
           this.symbolFactory,
         );
         errors.push(...validatorObject.validate().errors);
       } else {
         errors.push(...new UseDeclarationValidator(
-          { node: decl, filepath: this.filepath, publicSymbolTable: publicSchemaSymbol.symbolTable, declarations: nodeToSymbol },
+          { node: decl, filepath: this.filepath, publicSymbolTable: this.publicSchemaSymbol.symbolTable, declarations: this.nodeToSymbol },
           this.symbolFactory,
           externalFilepaths,
         ).validate());
@@ -70,6 +74,6 @@ export default class Validator {
       projects.forEach((project) => errors.push(new CompileError(CompileErrorCode.PROJECT_REDEFINED, 'Only one project can exist', project)));
     }
 
-    return new Report({ symbolTable: publicSchemaSymbol.symbolTable, nodeToSymbol, externalFilepaths }, errors);
+    return new Report({ nodeToSymbol: this.nodeToSymbol, externalFilepaths }, errors);
   }
 }
