@@ -5,7 +5,7 @@ import { ExternalSymbol, SchemaSymbol } from '@/core/validator/symbol/symbols';
 import { createNodeSymbolIndex, destructureIndex, SymbolKind } from '@/core/validator/symbol/symbolIndex';
 import SymbolTable from '@/core/validator/symbol/symbolTable';
 import Report from '@/core/report';
-import type { CompileError, CompileWarning } from '@/core/errors';
+import { CompileError, CompileErrorCode, type CompileWarning } from '@/core/errors';
 
 export type FileResolvedSymbolIndex = {
   readonly symbolTable: Readonly<SymbolTable>;
@@ -41,7 +41,7 @@ export function resolvedSymbolTable (this: Compiler, filepath: Filepath): Report
     }
 
     resolveExternalSymbols(resolvedTable, externalLocal.symbolTable, externalFilepath);
-    mergeExternalSchemas(resolvedTable, externalLocal.symbolTable, externalFilepath);
+    errors.push(...mergeExternalSchemas(resolvedTable, externalLocal.symbolTable, externalFilepath));
   }
 
   return new Report({ symbolTable: resolvedTable, nodeToSymbol }, errors, warnings);
@@ -60,7 +60,9 @@ function mergeExternalSchemas (
   resolvedTable: SymbolTable,
   externalTable: Readonly<SymbolTable>,
   externalFilepath: Filepath,
-): void {
+): CompileError[] {
+  const errors: CompileError[] = [];
+
   for (const [symbolId, symbol] of resolvedTable.entries()) {
     if (!(symbol instanceof SchemaSymbol)) continue;
     if (!symbol.externalFilepaths.some((fp) => fp.intern() === externalFilepath.intern())) continue;
@@ -74,11 +76,23 @@ function mergeExternalSchemas (
 
     // Merge external schema's symbol table entries into the local schema
     for (const [entryId, entrySymbol] of externalSchema.symbolTable.entries()) {
-      if (!symbol.symbolTable.has(entryId)) {
+      if (symbol.symbolTable.has(entryId)) {
+        const existing = symbol.symbolTable.get(entryId);
+        if (existing !== entrySymbol) {
+          const entryInfo = destructureIndex(entryId).unwrap_or(undefined);
+          errors.push(new CompileError(
+            CompileErrorCode.DUPLICATE_NAME,
+            `'${entryInfo?.name ?? entryId}' in schema '${info.name}' conflicts with an imported definition`,
+            entrySymbol.declaration!,
+          ));
+        }
+      } else {
         symbol.symbolTable.set(entryId, entrySymbol);
       }
     }
   }
+
+  return errors;
 }
 
 function resolveExternalSymbols (
