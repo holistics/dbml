@@ -73,7 +73,7 @@ describe('[property] use statement', () => {
       );
     });
 
-    it('every use statement should have useKeyword, specifiers, fromKeyword, and path', () => {
+    it('every use statement should have useKeyword and path', () => {
       fc.assert(
         fc.property(useDeclarationArbitrary, (source) => {
           const result = parse(source);
@@ -82,7 +82,21 @@ describe('[property] use statement', () => {
           const stmt = result.getValue().ast.useDeclarations[0];
           expect(stmt.useKeyword).toBeDefined();
           expect(stmt.useKeyword?.value).toBe('use');
-          expect(stmt.specifiers).toBeDefined();
+          expect(stmt.path).toBeDefined();
+        }),
+        CONFIG,
+      );
+    });
+
+    it('selective use should have specifiers, fromKeyword, and path', () => {
+      fc.assert(
+        fc.property(useDeclarationArbitrary, (source) => {
+          const result = parse(source);
+          fc.pre(result.getErrors().length === 0);
+
+          const stmt = result.getValue().ast.useDeclarations[0];
+          fc.pre(stmt.specifiers !== undefined);
+
           expect(stmt.fromKeyword).toBeDefined();
           expect(stmt.fromKeyword?.value).toBe('from');
           expect(stmt.path).toBeDefined();
@@ -91,14 +105,32 @@ describe('[property] use statement', () => {
       );
     });
 
-    it('specifier list should have at least one specifier', () => {
+    it('entire-file use should have no specifiers or fromKeyword', () => {
       fc.assert(
         fc.property(useDeclarationArbitrary, (source) => {
           const result = parse(source);
           fc.pre(result.getErrors().length === 0);
 
           const stmt = result.getValue().ast.useDeclarations[0];
-          expect(stmt.specifiers?.specifiers.length).toBeGreaterThanOrEqual(1);
+          fc.pre(stmt.specifiers === undefined);
+
+          expect(stmt.fromKeyword).toBeUndefined();
+          expect(stmt.path).toBeDefined();
+        }),
+        CONFIG,
+      );
+    });
+
+    it('selective use specifier list should have at least one specifier', () => {
+      fc.assert(
+        fc.property(useDeclarationArbitrary, (source) => {
+          const result = parse(source);
+          fc.pre(result.getErrors().length === 0);
+
+          const stmt = result.getValue().ast.useDeclarations[0];
+          fc.pre(stmt.specifiers !== undefined);
+
+          expect(stmt.specifiers!.specifiers.length).toBeGreaterThanOrEqual(1);
         }),
         CONFIG,
       );
@@ -110,7 +142,10 @@ describe('[property] use statement', () => {
           const result = parse(source);
           fc.pre(result.getErrors().length === 0);
 
-          const list = result.getValue().ast.useDeclarations[0].specifiers!;
+          const stmt = result.getValue().ast.useDeclarations[0];
+          fc.pre(stmt.specifiers !== undefined);
+
+          const list = stmt.specifiers!;
           expect(list.commaList.length).toBe(list.specifiers.length - 1);
         }),
         CONFIG,

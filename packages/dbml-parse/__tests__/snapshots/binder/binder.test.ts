@@ -1,6 +1,7 @@
 import { readFileSync } from 'fs';
 import path from 'path';
 import { describe, expect, it } from 'vitest';
+import { DEFAULT_ENTRY } from '@/compiler/constants';
 import Lexer from '@/core/lexer/lexer';
 import Parser from '@/core/parser/parser';
 import { NodeSymbolIdGenerator } from '@/core/analyzer/symbol/symbols';
@@ -21,7 +22,7 @@ describe('[snapshot] binder', () => {
         return new Parser(undefined, program, tokens, nodeIdGenerator).parse();
       })
       .chain(({ ast }) => {
-        return new Analyzer(ast, symbolIdGenerator).analyze();
+        return new Analyzer(ast, symbolIdGenerator, DEFAULT_ENTRY).analyze();
       });
     const output = serializeAnalysis(report, true);
 

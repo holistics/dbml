@@ -4,6 +4,7 @@ import { ProgramNode, SyntaxNode } from '@/core/parser/nodes';
 import Report from '@/core/report';
 import { NodeSymbolIdGenerator, NodeSymbol } from '@/core/analyzer/symbol/symbols';
 import SymbolFactory from '@/core/analyzer/symbol/factory';
+import type { Filepath } from '@/compiler/projectLayout';
 
 export type NodeToSymbolMap = WeakMap<SyntaxNode, NodeSymbol>;
 export type NodeToRefereeMap = WeakMap<SyntaxNode, NodeSymbol>;
@@ -22,35 +23,32 @@ export type BinderContext = {
 
 export default class Analyzer {
   private ast: ProgramNode;
+  private filepath: Filepath;
   private symbolFactory: SymbolFactory;
 
-  constructor (ast: ProgramNode, symbolIdGenerator: NodeSymbolIdGenerator) {
+  constructor (ast: ProgramNode, symbolIdGenerator: NodeSymbolIdGenerator, filepath: Filepath) {
     this.ast = ast;
+    this.filepath = filepath;
     this.symbolFactory = new SymbolFactory(symbolIdGenerator);
   }
 
-  // Analyzing: Invoking both the validator and binder
   analyze (): Report<AnalysisResult> {
-    const validator = new Validator({ ast: this.ast }, this.symbolFactory);
+    const validator = new Validator({ ast: this.ast, filepath: this.filepath }, this.symbolFactory);
     const ast = this.ast;
 
-    return validator.validate().chain((nodeToSymbol) => {
+    return validator.validate().chain(({ nodeToSymbol }) => {
       const binder = new Binder({ ast, nodeToSymbol }, this.symbolFactory);
       return binder.resolve().map((nodeToReferee) => ({ ast, nodeToSymbol, nodeToReferee }));
     });
   }
 
-  // For invoking the validator only
-  validate (): Report<NodeToSymbolMap> {
-    const validator = new Validator({ ast: this.ast }, this.symbolFactory);
-
+  validate () {
+    const validator = new Validator({ ast: this.ast, filepath: this.filepath }, this.symbolFactory);
     return validator.validate();
   }
 
-  // For invoking the binder only
   bind (nodeToSymbol: NodeToSymbolMap): Report<NodeToRefereeMap> {
     const binder = new Binder({ ast: this.ast, nodeToSymbol }, this.symbolFactory);
-
     return binder.resolve();
   }
 }

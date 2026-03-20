@@ -61,6 +61,52 @@ describe('[example] parser - use statement', () => {
       const ast = result.getValue().ast;
       expect(ast.useDeclarations).toHaveLength(2);
     });
+
+    test('should parse entire-file use', () => {
+      const source = "use './common.dbml'";
+      const result = parse(source);
+
+      expect(result.getErrors()).toHaveLength(0);
+
+      const ast = result.getValue().ast;
+      expect(ast.useDeclarations).toHaveLength(1);
+      expect(ast.declarations).toHaveLength(0);
+
+      const stmt = ast.useDeclarations[0];
+      expect(stmt.useKeyword?.value).toBe('use');
+      expect(stmt.path?.value).toBe('./common.dbml');
+      expect(stmt.specifiers).toBeUndefined();
+      expect(stmt.fromKeyword).toBeUndefined();
+    });
+
+    test('should parse entire-file use followed by selective use', () => {
+      const source = "use './common.dbml'\nuse { table users } from './schema'";
+      const result = parse(source);
+
+      expect(result.getErrors()).toHaveLength(0);
+
+      const ast = result.getValue().ast;
+      expect(ast.useDeclarations).toHaveLength(2);
+
+      // entire-file
+      expect(ast.useDeclarations[0].specifiers).toBeUndefined();
+      expect(ast.useDeclarations[0].path?.value).toBe('./common.dbml');
+
+      // selective
+      expect(ast.useDeclarations[1].specifiers?.specifiers).toHaveLength(1);
+      expect(ast.useDeclarations[1].path?.value).toBe('./schema');
+    });
+
+    test('should parse entire-file use followed by table declaration', () => {
+      const source = "use './common.dbml'\nTable orders { id int }";
+      const result = parse(source);
+
+      expect(result.getErrors()).toHaveLength(0);
+
+      const ast = result.getValue().ast;
+      expect(ast.useDeclarations).toHaveLength(1);
+      expect(ast.declarations).toHaveLength(1);
+    });
   });
 
   describe('AST node structure', () => {
@@ -230,16 +276,6 @@ describe('[example] parser - use statement', () => {
 
     test('bare use without specifiers or path: use', () => {
       const source = 'use';
-      const errors = parse(source).getErrors();
-      expect(errors.length).toBeGreaterThan(0);
-      expect(errors[0].code).toBe(CompileErrorCode.UNEXPECTED_TOKEN);
-      expect(errors[0].diagnostic).toBe("Expect an opening brace '{'");
-    });
-
-    test('bare use with only a path (no specifier list): use \'path\'', () => {
-      // This form is NOT supported — specifier list is required
-      // 'path' will be treated as element kind in specifier, then fails
-      const source = "use './schema'";
       const errors = parse(source).getErrors();
       expect(errors.length).toBeGreaterThan(0);
       expect(errors[0].code).toBe(CompileErrorCode.UNEXPECTED_TOKEN);

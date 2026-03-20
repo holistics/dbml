@@ -182,16 +182,17 @@ export class ExternalSymbol implements NodeSymbol {
 
   name: string;
 
-  symbol?: NodeSymbol;
+  externalFilepath: string;
 
   constructor (
-    { declaration, kind, name }: { declaration: SyntaxNode; kind: SymbolKind; name: string },
+    { declaration, kind, name, externalFilepath }: { declaration: SyntaxNode; kind: SymbolKind; name: string; externalFilepath: string },
     id: NodeSymbolId,
   ) {
     this.id = id;
     this.declaration = declaration;
     this.kind = kind;
     this.name = name;
+    this.externalFilepath = externalFilepath;
   }
 }
 

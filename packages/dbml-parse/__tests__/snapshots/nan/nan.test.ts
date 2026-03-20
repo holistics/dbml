@@ -1,6 +1,7 @@
 import { readFileSync } from 'fs';
 import path from 'path';
 import { describe, expect, it } from 'vitest';
+import { DEFAULT_ENTRY } from '@/compiler/constants';
 import { scanTestNames } from '../../utils';
 import { NodeSymbolIdGenerator } from '@/core/analyzer/symbol/symbols';
 import { SyntaxNodeIdGenerator } from '@/core/parser/nodes';
@@ -23,7 +24,7 @@ describe('[snapshot] interpreter (NaN cases)', () => {
         return new Parser(undefined, program, tokens, nodeIdGenerator).parse();
       })
       .chain(({ ast }) => {
-        return new Analyzer(ast, symbolIdGenerator).analyze();
+        return new Analyzer(ast, symbolIdGenerator, DEFAULT_ENTRY).analyze();
       });
 
     if (report.getErrors().length !== 0) {

@@ -1,6 +1,6 @@
 import Report from '@/core/report';
 import { CompileError, CompileErrorCode } from '@/core/errors';
-import { ElementDeclarationNode, ProgramNode } from '@/core/parser/nodes';
+import { ElementDeclarationNode, ProgramNode, SyntaxNode } from '@/core/parser/nodes';
 import { SchemaSymbol } from '@/core/analyzer/symbol/symbols';
 import SymbolFactory from '@/core/analyzer/symbol/factory';
 import { pickElementValidator } from '@/core/analyzer/validator/utils';
@@ -9,10 +9,18 @@ import { SyntaxToken } from '@/core/lexer/tokens';
 import { getElementKind } from '@/core/analyzer/utils';
 import { ElementKind } from '@/core/analyzer/types';
 import { NodeToSymbolMap } from '@/core/analyzer/analyzer';
+import type { Filepath, FilepathKey } from '@/compiler/projectLayout';
 import UseDeclarationValidator from '@/core/analyzer/validator/validators/use';
+
+export type ValidatorResult = {
+  nodeToSymbol: NodeToSymbolMap;
+  externalFilepaths: Map<FilepathKey, SyntaxNode>;
+};
 
 export default class Validator {
   private ast: ProgramNode;
+
+  private filepath: Filepath;
 
   private publicSchemaSymbol: SchemaSymbol;
 
@@ -21,10 +29,11 @@ export default class Validator {
   private nodeToSymbol: NodeToSymbolMap;
 
   constructor (
-    { ast, nodeToSymbol }: { ast: ProgramNode; nodeToSymbol?: NodeToSymbolMap },
+    { ast, filepath, nodeToSymbol }: { ast: ProgramNode; filepath: Filepath; nodeToSymbol?: NodeToSymbolMap },
     symbolFactory: SymbolFactory,
   ) {
     this.ast = ast;
+    this.filepath = filepath;
     this.symbolFactory = symbolFactory;
     this.nodeToSymbol = nodeToSymbol ?? new WeakMap();
     this.publicSchemaSymbol = (nodeToSymbol?.get(ast) ?? this.symbolFactory.create(SchemaSymbol, {
@@ -33,14 +42,14 @@ export default class Validator {
     this.nodeToSymbol.set(this.ast, this.publicSchemaSymbol);
   }
 
-  validate (): Report<NodeToSymbolMap> {
+  validate (): Report<ValidatorResult> {
     const errors: CompileError[] = [];
+    const externalFilepaths = new Map<FilepathKey, SyntaxNode>();
 
-    this.ast.declarations.forEach((decl) => {
+    // Validate in source order
+    this.ast.body.forEach((decl) => {
       if (decl instanceof ElementDeclarationNode) {
-        if (decl.type === undefined) {
-          return;
-        }
+        if (decl.type === undefined) return;
         const Val = pickElementValidator(decl as ElementDeclarationNode & { type: SyntaxToken });
         const validatorObject = new Val(
           {
@@ -51,10 +60,13 @@ export default class Validator {
           this.symbolFactory,
         );
         errors.push(...validatorObject.validate().errors);
-        return;
+      } else {
+        errors.push(...new UseDeclarationValidator(
+          { node: decl, filepath: this.filepath, publicSymbolTable: this.publicSchemaSymbol.symbolTable, declarations: this.nodeToSymbol },
+          this.symbolFactory,
+          externalFilepaths,
+        ).validate());
       }
-
-      errors.push(...new UseDeclarationValidator(decl, this.publicSchemaSymbol.symbolTable, this.nodeToSymbol, this.symbolFactory).validate());
     });
 
     const projects = this.ast.declarations.filter((e) => getElementKind(e).unwrap_or(undefined) === ElementKind.Project);
@@ -62,6 +74,6 @@ export default class Validator {
       projects.forEach((project) => errors.push(new CompileError(CompileErrorCode.PROJECT_REDEFINED, 'Only one project can exist', project)));
     }
 
-    return new Report(this.nodeToSymbol, errors);
+    return new Report({ nodeToSymbol: this.nodeToSymbol, externalFilepaths }, errors);
   }
 }

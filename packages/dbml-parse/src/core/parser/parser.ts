@@ -256,6 +256,14 @@ export default class Parser {
     this.advance();
     args.useKeyword = this.previous();
 
+    // Entire-file use: use './path.dbml'
+    if (this.match(SyntaxTokenKind.STRING_LITERAL)) {
+      args.path = this.previous();
+      return buildNode();
+    }
+
+    // Selective use: use { ... } from './path.dbml'
+
     // parse specifier list { ... }
     try {
       args.specifiers = this.useSpecifierList();

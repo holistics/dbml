@@ -31,6 +31,7 @@ import { NodeSymbolIdGenerator } from '@/core/analyzer/symbol/symbols';
 import Report from '@/core/report';
 import { Compiler, SyntaxToken } from '@/index';
 import { Database } from '@/core/interpreter/types';
+import { DEFAULT_ENTRY } from '@/compiler/constants';
 
 export function lex (source: string): Report<SyntaxToken[]> {
   return new Lexer(source).lex();
@@ -41,7 +42,7 @@ export function parse (source: string): Report<{ ast: ProgramNode; tokens: Synta
 }
 
 export function analyze (source: string): Report<AnalysisResult> {
-  return parse(source).chain(({ ast }) => new Analyzer(ast, new NodeSymbolIdGenerator()).analyze());
+  return parse(source).chain(({ ast }) => new Analyzer(ast, new NodeSymbolIdGenerator(), DEFAULT_ENTRY).analyze());
 }
 
 export function interpret (source: string): Report<Database | undefined> {

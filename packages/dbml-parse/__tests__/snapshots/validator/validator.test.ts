@@ -1,6 +1,7 @@
 import { readFileSync } from 'fs';
 import path from 'path';
 import { describe, expect, it } from 'vitest';
+import { DEFAULT_ENTRY } from '@/compiler/constants';
 import { NodeSymbolIdGenerator } from '@/core/analyzer/symbol/symbols';
 import { SyntaxNodeIdGenerator } from '@/core/parser/nodes';
 import Lexer from '@/core/lexer/lexer';
@@ -22,9 +23,9 @@ describe('[snapshot] validator', () => {
         return new Parser(undefined, program, tokens, nodeIdGenerator).parse();
       })
       .chain(({ ast }) => {
-        return new Validator({ ast }, new SymbolFactory(symbolIdGenerator))
+        return new Validator({ ast, filepath: DEFAULT_ENTRY }, new SymbolFactory(symbolIdGenerator))
           .validate()
-          .map((nodeToSymbol) => ({ ast, nodeToSymbol, nodeToReferee: new WeakMap() }));
+          .map(({ nodeToSymbol }) => ({ ast, nodeToSymbol, nodeToReferee: new WeakMap() }));
       });
     const output = serializeAnalysis(report, true);
 

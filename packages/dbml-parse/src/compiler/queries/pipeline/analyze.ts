@@ -2,6 +2,7 @@ import type Compiler from '../../index';
 import type { ProgramNode } from '@/core/parser/nodes';
 import type { CompileError, CompileWarning } from '@/core/errors';
 import type { NodeToSymbolMap, NodeToRefereeMap } from '@/core/analyzer/analyzer';
+import type { Filepath } from '../../projectLayout';
 import Validator from '@/core/analyzer/validator/validator';
 import Binder from '@/core/analyzer/binder/binder';
 import { NodeSymbolIdGenerator, SchemaSymbol } from '@/core/analyzer/symbol/symbols';
@@ -19,10 +20,8 @@ export function analyzeProject (this: Compiler): Report<AnalyzeResult> {
   const errors: CompileError[] = [];
   const warnings: CompileWarning[] = [];
 
-  const symbolFactory = new SymbolFactory(new NodeSymbolIdGenerator());
   const nodeToSymbol: NodeToSymbolMap = new WeakMap();
   const nodeToReferee: NodeToRefereeMap = new WeakMap();
-  const publicSchemaSymbol = symbolFactory.create(SchemaSymbol, { symbolTable: new SymbolTable() });
   const asts: ProgramNode[] = [];
 
   for (const [, fileIndex] of this.parseProject()) {
@@ -33,8 +32,12 @@ export function analyzeProject (this: Compiler): Report<AnalyzeResult> {
       continue;
     }
 
+    const filepath = fileIndex.path as Filepath;
+    const symbolFactory = new SymbolFactory(new NodeSymbolIdGenerator());
+    const publicSchemaSymbol = symbolFactory.create(SchemaSymbol, { symbolTable: new SymbolTable() });
     nodeToSymbol.set(fileIndex.ast, publicSchemaSymbol);
-    const validationReport = new Validator({ ast: fileIndex.ast, nodeToSymbol }, symbolFactory).validate();
+
+    const validationReport = new Validator({ ast: fileIndex.ast, filepath, nodeToSymbol }, symbolFactory).validate();
     errors.push(...validationReport.getErrors());
     warnings.push(...validationReport.getWarnings());
 
@@ -42,7 +45,8 @@ export function analyzeProject (this: Compiler): Report<AnalyzeResult> {
       continue;
     }
 
-    const bindingReport = new Binder({ ast: fileIndex.ast, nodeToSymbol, nodeToReferee }, symbolFactory).resolve();
+    const { nodeToSymbol: localNodeToSymbol } = validationReport.getValue();
+    const bindingReport = new Binder({ ast: fileIndex.ast, nodeToSymbol: localNodeToSymbol, nodeToReferee }, symbolFactory).resolve();
     errors.push(...bindingReport.getErrors());
     warnings.push(...bindingReport.getWarnings());
 

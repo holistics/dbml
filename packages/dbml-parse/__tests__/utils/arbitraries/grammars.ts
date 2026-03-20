@@ -982,11 +982,17 @@ const useSpecifierArbitrary = fc.tuple(
 const useSpecifierListArbitrary = fc.array(useSpecifierArbitrary, { minLength: 1, maxLength: 5 })
   .map((specifiers) => `{ ${specifiers.join(', ')} }`);
 
-// A complete use statement: "use { kind name, ... } from 'path'"
-export const useDeclarationArbitrary = fc.tuple(
+// A selective use statement: "use { kind name, ... } from 'path'"
+const selectiveUseArbitrary = fc.tuple(
   useSpecifierListArbitrary,
   singleLineStringArbitrary,
 ).map(([specifiers, path]) => `use ${specifiers} from ${path}`);
+
+// An entire-file use statement: "use 'path'"
+const entireFileUseArbitrary = singleLineStringArbitrary.map((path) => `use ${path}`);
+
+// Either form of use statement
+export const useDeclarationArbitrary = fc.oneof(selectiveUseArbitrary, entireFileUseArbitrary);
 
 // A schema with use statements prepended
 export const schemaWithUseDeclarationsArbitrary = fc.tuple(

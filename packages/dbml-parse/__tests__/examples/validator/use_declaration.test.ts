@@ -32,12 +32,18 @@ describe('[example] validator - use statement', () => {
     });
 
     test('should reject disallowed element kinds', () => {
-      const disallowed = ['ref', 'note', 'project', 'indexes', 'checks', 'records'];
+      const disallowed = ['ref', 'project', 'indexes', 'checks', 'records'];
       for (const kind of disallowed) {
         const source = `use { ${kind} foo } from './schema'`;
         const errors = analyze(source).getErrors();
         expect(errors.some((e) => e.code === CompileErrorCode.INVALID_USE_SPECIFIER_KIND)).toBe(true);
       }
+    });
+
+    test('should accept note as a valid element kind', () => {
+      const source = "use { note my_note } from './schema'";
+      const errors = analyze(source).getErrors();
+      expect(errors).toHaveLength(0);
     });
 
     test('should accept quoted name', () => {
