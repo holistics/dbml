@@ -8,11 +8,11 @@ import SymbolTable from '@/core/validator/symbol/symbolTable';
 
 export function nodeSymbol (this: Compiler, node: SyntaxNode): NodeSymbol | undefined {
   // TODO: for multi-file, find the correct file for this node
-  return this.localSymbolTable().getValue().nodeToSymbol.get(node);
+  return this.validateFile().getValue().nodeToSymbol.get(node);
 }
 
 export function nodeReferences (this: Compiler, node: SyntaxNode): SyntaxNode[] {
-  return this.localSymbolTable().getValue().nodeToSymbol.get(node)?.references ?? [];
+  return this.validateFile().getValue().nodeToSymbol.get(node)?.references ?? [];
 }
 
 export function nodeReferee (this: Compiler, node: SyntaxNode): NodeSymbol | undefined {

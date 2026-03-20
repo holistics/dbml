@@ -15,7 +15,7 @@ export type FileResolvedSymbolIndex = {
 // Global query: resolve external symbols by looking up referenced files' local symbol tables.
 // Creates a new symbol table (copy of local) with ExternalSymbols replaced by real symbols.
 export function resolvedSymbolTable (this: Compiler, filepath: Filepath): Report<FileResolvedSymbolIndex> {
-  const local = this.localSymbolTable(filepath);
+  const local = this.validateFile(filepath);
   const errors: CompileError[] = [...local.getErrors()];
   const warnings: CompileWarning[] = [...local.getWarnings()];
 
@@ -34,7 +34,7 @@ export function resolvedSymbolTable (this: Compiler, filepath: Filepath): Report
 
   for (const [filepathKey] of externalFilepaths) {
     const externalFilepath = Filepath.from(filepathKey);
-    const externalLocal = this.localSymbolTable(externalFilepath);
+    const externalLocal = this.validateFile(externalFilepath);
 
     if (externalLocal.getErrors().length > 0) {
       errors.push(...externalLocal.getErrors());

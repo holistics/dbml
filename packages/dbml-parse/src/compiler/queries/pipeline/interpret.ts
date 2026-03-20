@@ -7,7 +7,7 @@ import Report from '@/core/report';
 
 export function interpretFile (this: Compiler, filepath: Filepath): Report<Database> {
   const fileIndex = this.parseFile(filepath);
-  const local = this.localSymbolTable(filepath);
+  const local = this.validateFile(filepath);
   const bound = this.bindFile(filepath);
 
   const allErrors = [...local.getErrors(), ...bound.getErrors()];

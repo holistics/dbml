@@ -2,7 +2,7 @@ import { type DbmlProjectLayout, Filepath, MemoryProjectLayout } from './project
 import { type FilepathKey } from './projectLayout';
 import { DEFAULT_ENTRY } from './constants';
 import { DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLReferencesProvider, DBMLDiagnosticsProvider } from '@/services/index';
-import { parseFile, parseProject, localSymbolTable, localFileDependencies, resolvedSymbolTable, bindFile, bindProject, interpretFile, interpretProject } from './queries/pipeline';
+import { parseFile, parseProject, validateFile, localSymbolTable, localFileDependencies, resolvedSymbolTable, bindFile, bindProject, interpretFile, interpretProject } from './queries/pipeline';
 import { flatStream, invalidStream } from './queries/token';
 import { nodeSymbol, nodeReferences, nodeReferee, symbolOfName, symbolOfNameToKey, symbolMembers } from './queries/symbol';
 import { containerStack, containerToken, containerElement, containerScope, containerScopeKind } from './queries/container';
@@ -130,6 +130,11 @@ export default class Compiler {
   // A local query
   // Validate a single file, producing its symbol table and external filepath references
   // Signature: (filepath?: Filepath) => Report<FileLocalSymbolIndex>
+  validateFile = this.localQuery(validateFile);
+
+  // A local query
+  // The symbol table for a single file (after validation)
+  // Signature: (filepath?: Filepath) => Readonly<SymbolTable>
   localSymbolTable = this.localQuery(localSymbolTable);
 
   // A local query

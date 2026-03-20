@@ -15,11 +15,15 @@ export type FileLocalSymbolIndex = {
   readonly externalFilepaths: ReadonlyMap<FilepathKey, SyntaxNode>;
 };
 
-export function localFileDependencies (this: Compiler, filepath: Filepath): ReadonlyMap<FilepathKey, SyntaxNode> {
-  return this.localSymbolTable(filepath).getValue().externalFilepaths;
+export function localSymbolTable (this: Compiler, filepath: Filepath): Readonly<SymbolTable> {
+  return this.validateFile(filepath).getValue().symbolTable;
 }
 
-export function localSymbolTable (this: Compiler, filepath: Filepath): Report<FileLocalSymbolIndex> {
+export function localFileDependencies (this: Compiler, filepath: Filepath): ReadonlyMap<FilepathKey, SyntaxNode> {
+  return this.validateFile(filepath).getValue().externalFilepaths;
+}
+
+export function validateFile (this: Compiler, filepath: Filepath): Report<FileLocalSymbolIndex> {
   const fileIndex = this.parseFile(filepath);
 
   if (fileIndex.errors.length > 0) {
