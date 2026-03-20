@@ -7,6 +7,7 @@ import { generatePossibleIndexes } from '@/core/validator/symbol/utils';
 import SymbolTable from '@/core/validator/symbol/symbolTable';
 
 export function nodeSymbol (this: Compiler, node: SyntaxNode): NodeSymbol | undefined {
+  // TODO: for multi-file, find the correct file for this node
   return this.localSymbolTable().getValue().nodeToSymbol.get(node);
 }
 

@@ -12,18 +12,18 @@ export type FileBindIndex = {
 };
 
 export function bindFile (this: Compiler, filepath: Filepath): Report<FileBindIndex> {
-  const local = this.localSymbolTable(filepath);
+  const resolved = this.resolvedSymbolTable(filepath);
 
-  if (local.getErrors().length > 0) {
+  if (resolved.getErrors().length > 0) {
     return new Report(
       { nodeToReferee: new WeakMap() },
-      [...local.getErrors()],
-      [...local.getWarnings()],
+      [...resolved.getErrors()],
+      [...resolved.getWarnings()],
     );
   }
 
   const fileIndex = this.parseFile(filepath);
-  const { nodeToSymbol } = local.getValue();
+  const { nodeToSymbol } = resolved.getValue();
   const symbolFactory = new SymbolFactory(new NodeSymbolIdGenerator());
   const nodeToReferee: NodeToRefereeMap = new WeakMap();
 
@@ -31,8 +31,8 @@ export function bindFile (this: Compiler, filepath: Filepath): Report<FileBindIn
 
   return new Report(
     { nodeToReferee },
-    [...local.getErrors(), ...bindingReport.getErrors()],
-    [...local.getWarnings(), ...bindingReport.getWarnings()],
+    [...resolved.getErrors(), ...bindingReport.getErrors()],
+    [...resolved.getWarnings(), ...bindingReport.getWarnings()],
   );
 }
 
