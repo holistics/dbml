@@ -2,6 +2,7 @@ import { flatten, zip } from 'lodash-es';
 import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
 import { Position } from '@/core/types';
 import { getTokenFullEnd, getTokenFullStart } from '@/core/lexer/utils';
+import type { Internable } from '@/core/internable';
 
 export type SyntaxNodeId = number;
 export class SyntaxNodeIdGenerator {
@@ -16,9 +17,14 @@ export class SyntaxNodeIdGenerator {
   }
 }
 
-export class SyntaxNode {
+export class SyntaxNode implements Internable<SyntaxNodeId> {
   id: Readonly<SyntaxNodeId>;
   kind: SyntaxNodeKind;
+
+  intern (): SyntaxNodeId {
+    return this.id;
+  }
+
   startPos: Readonly<Position>;
   start: Readonly<number>;
   fullStart: Readonly<number>; // Start offset with trivias counted

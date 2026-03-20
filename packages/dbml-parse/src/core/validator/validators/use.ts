@@ -6,7 +6,7 @@ import { ExternalSymbol, SchemaSymbol, type NodeSymbol } from '@/core/validator/
 import { createNodeSymbolIndex, SymbolKind } from '@/core/validator/symbol/symbolIndex';
 import { destructureComplexVariable } from '@/core/utils';
 import SymbolFactory from '@/core/validator/symbol/factory';
-import { Filepath, type FilepathKey } from '@/compiler/projectLayout';
+import { Filepath, type FilepathId } from '@/compiler/projectLayout';
 
 const VALID_USE_SPECIFIER_KINDS = new Set<string>([
   SymbolKind.Schema,
@@ -28,7 +28,7 @@ export default class UseDeclarationValidator {
 
   private symbolFactory: SymbolFactory;
 
-  private externalFilepaths: Map<FilepathKey, SyntaxNode>;
+  private externalFilepaths: Map<FilepathId, SyntaxNode>;
 
   constructor (
     { node, filepath, publicSymbolTable, declarations }: {
@@ -38,7 +38,7 @@ export default class UseDeclarationValidator {
       declarations: WeakMap<SyntaxNode, NodeSymbol>;
     },
     symbolFactory: SymbolFactory,
-    externalFilepaths: Map<FilepathKey, SyntaxNode>,
+    externalFilepaths: Map<FilepathId, SyntaxNode>,
   ) {
     this.node = node;
     this.filepath = filepath;
@@ -79,17 +79,17 @@ export default class UseDeclarationValidator {
     const resolved = this.resolveExternalFilepath();
     if (!resolved) return [];
 
-    if (this.externalFilepaths.has(resolved.key)) {
+    if (this.externalFilepaths.has(resolved.intern())) {
       return [new CompileError(CompileErrorCode.DUPLICATE_NAME, `'${resolved.absolute}' is already imported`, this.node)];
     }
 
-    this.externalFilepaths.set(resolved.key, this.node);
+    this.externalFilepaths.set(resolved.intern(), this.node);
     return [];
   }
 
   private registerExternalFilepath (resolved: Filepath): CompileError[] {
     // A selective use from a filepath that's already whole-file imported is an error
-    if (this.externalFilepaths.has(resolved.key)) {
+    if (this.externalFilepaths.has(resolved.intern())) {
       return [new CompileError(CompileErrorCode.DUPLICATE_NAME, `'${resolved.absolute}' is already imported as a whole file`, this.node)];
     }
     return [];

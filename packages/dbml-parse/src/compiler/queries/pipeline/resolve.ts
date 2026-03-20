@@ -66,7 +66,7 @@ function mergeExternalSchemas (
 ): void {
   for (const [symbolId, symbol] of resolvedTable.entries()) {
     if (!(symbol instanceof SchemaSymbol)) continue;
-    if (!symbol.externalFilepaths.some((fp) => fp.key === externalFilepath.key)) continue;
+    if (!symbol.externalFilepaths.some((fp) => fp.intern() === externalFilepath.intern())) continue;
 
     const info = destructureIndex(symbolId).unwrap_or(undefined);
     if (!info || info.kind !== SymbolKind.Schema) continue;
@@ -91,7 +91,7 @@ function resolveExternalSymbols (
 ): void {
   for (const [symbolId, symbol] of resolvedTable.entries()) {
     if (!(symbol instanceof ExternalSymbol)) continue;
-    if (symbol.externalFilepath.key !== externalFilepath.key) continue;
+    if (symbol.externalFilepath.intern() !== externalFilepath.intern()) continue;
 
     const resolvedSymbolId = createNodeSymbolIndex(symbol.name, symbol.kind);
     const resolvedSymbol = externalTable.get(resolvedSymbolId);

@@ -1,10 +1,11 @@
 import { type DbmlProjectLayout, Filepath, MemoryProjectLayout } from './projectLayout';
-import { type FilepathKey } from './projectLayout';
+import { type FilepathId } from './projectLayout';
+import { intern } from '@/core/internable';
 import { DEFAULT_ENTRY } from './constants';
 import { DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLReferencesProvider, DBMLDiagnosticsProvider } from '@/services/index';
 import { parseFile, parseProject, validateFile, localSymbolTable, localFileDependencies, resolvedSymbolTable, bindFile, bindProject, interpretFile, interpretProject } from './queries/pipeline';
 import { flatStream, invalidStream } from './queries/token';
-import { nodeSymbol, nodeReferences, nodeReferee, symbolOfName, symbolOfNameToKey, symbolMembers } from './queries/symbol';
+import { nodeSymbol, nodeReferences, nodeReferee, symbolOfName, symbolMembers } from './queries/symbol';
 import { containerStack, containerToken, containerElement, containerScope, containerScopeKind } from './queries/container';
 import { errors, warnings } from './queries/diagnostics';
 import {
@@ -26,7 +27,7 @@ export default class Compiler {
   private _layout: DbmlProjectLayout;
 
   private globalCache = new Map<symbol, any>();
-  private localCaches: Map<FilepathKey, unknown>[] = [];
+  private localCaches: Map<FilepathId, unknown>[] = [];
 
   constructor (layout?: DbmlProjectLayout) {
     this._layout = layout ?? new MemoryProjectLayout();
@@ -35,7 +36,7 @@ export default class Compiler {
   setSource (source: string, filePath?: Filepath): this {
     if (filePath === undefined) {
       // No filepath - reset to a clean single-file layout
-      this._layout = new MemoryProjectLayout({ [DEFAULT_ENTRY.key]: source });
+      this._layout = new MemoryProjectLayout({ [DEFAULT_ENTRY.intern()]: source });
     } else {
       this._layout.setSource(filePath, source);
     }
@@ -44,26 +45,26 @@ export default class Compiler {
     if (filePath === undefined) {
       this.localCaches.forEach((c) => c.clear());
     } else {
-      this.localCaches.forEach((c) => c.delete(filePath.key));
+      this.localCaches.forEach((c) => c.delete(filePath.intern()));
     }
     return this;
   }
 
   private localQuery<T> (fn: (this: Compiler, filepath: Filepath) => T): (filepath?: Filepath) => T {
-    const cache = new Map<FilepathKey, T>();
-    this.localCaches.push(cache as Map<FilepathKey, unknown>);
+    const cache = new Map<FilepathId, T>();
+    this.localCaches.push(cache as Map<FilepathId, unknown>);
     return (filepath: Filepath = DEFAULT_ENTRY): T => {
-      const cached = cache.get(filepath.key);
+      const id = filepath.intern();
+      const cached = cache.get(id);
       if (cached !== undefined) return cached;
       const result = fn.call(this, filepath);
-      cache.set(filepath.key, result);
+      cache.set(id, result);
       return result;
     };
   }
 
   private globalQuery<Args extends unknown[], Return> (
     fn: (this: Compiler, ...args: Args) => Return,
-    toKey?: (...args: Args) => unknown,
   ): (...args: Args) => Return {
     const cacheKey = Symbol();
     return ((...args: Args): Return => {
@@ -73,7 +74,7 @@ export default class Compiler {
         return result;
       }
 
-      const key = toKey ? toKey(...args) : args[0];
+      const key = args.map((a) => intern(a as any)).join('\0');
       let mapCache = this.globalCache.get(cacheKey);
       if (mapCache instanceof Map && mapCache.has(key)) return mapCache.get(key);
 
@@ -90,7 +91,7 @@ export default class Compiler {
   deleteSource (filePath: Filepath): this {
     this._layout.deleteSource(filePath);
     this.globalCache.clear();
-    this.localCaches.forEach((c) => c.delete(filePath.key));
+    this.localCaches.forEach((c) => c.delete(filePath.intern()));
     return this;
   }
 
@@ -139,7 +140,7 @@ export default class Compiler {
 
   // A local query
   // External filepaths referenced by use declarations in a single file
-  // Signature: (filepath?: Filepath) => ReadonlyMap<FilepathKey, SyntaxNode>
+  // Signature: (filepath?: Filepath) => ReadonlyMap<FilepathId, SyntaxNode>
   localFileDependencies = this.localQuery(localFileDependencies);
 
   // A global query
@@ -159,7 +160,7 @@ export default class Compiler {
 
   // A global query
   // Parse every .dbml file in the project layout
-  // Signature: () => Map<FilepathKey, FileParseIndex>
+  // Signature: () => Map<FilepathId, FileParseIndex>
   parseProject = this.globalQuery(parseProject);
 
   // A global query
@@ -193,7 +194,7 @@ export default class Compiler {
     nodeSymbol: this.globalQuery(nodeSymbol),
     nodeReferences: this.globalQuery(nodeReferences),
     nodeReferee: this.globalQuery(nodeReferee),
-    ofName: this.globalQuery(symbolOfName, symbolOfNameToKey),
+    ofName: this.globalQuery(symbolOfName),
     members: this.globalQuery(symbolMembers),
   };
 

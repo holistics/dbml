@@ -1,9 +1,10 @@
 import { basename, dirname, extname, isAbsolute, join, normalize, relative, resolve } from 'path';
+import type { Internable } from '@/core/internable';
 
-declare const __filepathKeyBrand: unique symbol;
-export type FilepathKey = string & { [__filepathKeyBrand]: true };
+declare const __filepathIdBrand: unique symbol;
+export type FilepathId = string & { [__filepathIdBrand]: true };
 
-export class Filepath {
+export class Filepath implements Internable<FilepathId> {
   private readonly path: string;
 
   constructor (absolutePath: string) {
@@ -13,8 +14,8 @@ export class Filepath {
     this.path = normalize(absolutePath);
   }
 
-  get key (): FilepathKey {
-    return this.path as FilepathKey;
+  intern (): FilepathId {
+    return this.path as FilepathId;
   }
 
   static from (absolutePath: string): Filepath {

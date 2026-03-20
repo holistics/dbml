@@ -2,6 +2,7 @@ import SymbolTable from './symbolTable';
 import { type SyntaxNode } from '@/core/parser/nodes';
 import { SymbolKind } from './symbolIndex';
 import type { Filepath } from '@/compiler/projectLayout/filepath';
+import type { Internable } from '@/core/internable';
 
 export type NodeSymbolId = number;
 export class NodeSymbolIdGenerator {
@@ -18,7 +19,7 @@ export class NodeSymbolIdGenerator {
 
 // A Symbol contains metadata about an entity (Enum, Table, etc.)
 // This does not include `name` as an entity may have multiple names (e.g alias)
-export interface NodeSymbol {
+export interface NodeSymbol extends Internable<NodeSymbolId> {
   id: NodeSymbolId;
   symbolTable?: SymbolTable;
   declaration?: SyntaxNode;
@@ -36,6 +37,10 @@ export class SchemaSymbol implements NodeSymbol {
   constructor ({ symbolTable }: { symbolTable: SymbolTable }, id: NodeSymbolId) {
     this.id = id;
     this.symbolTable = symbolTable;
+  }
+
+  intern (): NodeSymbolId {
+    return this.id;
   }
 }
 
@@ -56,6 +61,10 @@ export class EnumSymbol implements NodeSymbol {
     this.symbolTable = symbolTable;
     this.declaration = declaration;
   }
+
+  intern (): NodeSymbolId {
+    return this.id;
+  }
 }
 
 // A symbol for an enum field
@@ -67,6 +76,10 @@ export class EnumFieldSymbol implements NodeSymbol {
   constructor ({ declaration }: { declaration: SyntaxNode }, id: NodeSymbolId) {
     this.id = id;
     this.declaration = declaration;
+  }
+
+  intern (): NodeSymbolId {
+    return this.id;
   }
 }
 
@@ -87,6 +100,10 @@ export class TableSymbol implements NodeSymbol {
     this.symbolTable = symbolTable;
     this.declaration = declaration;
   }
+
+  intern (): NodeSymbolId {
+    return this.id;
+  }
 }
 
 // A symbol for a column field
@@ -98,6 +115,10 @@ export class ColumnSymbol implements NodeSymbol {
   constructor ({ declaration }: { declaration: SyntaxNode }, id: NodeSymbolId) {
     this.id = id;
     this.declaration = declaration;
+  }
+
+  intern (): NodeSymbolId {
+    return this.id;
   }
 }
 
@@ -118,6 +139,10 @@ export class TableGroupSymbol implements NodeSymbol {
     this.symbolTable = symbolTable;
     this.declaration = declaration;
   }
+
+  intern (): NodeSymbolId {
+    return this.id;
+  }
 }
 
 // A symbol for a tablegroup field
@@ -129,6 +154,10 @@ export class TableGroupFieldSymbol implements NodeSymbol {
   constructor ({ declaration }: { declaration: SyntaxNode }, id: NodeSymbolId) {
     this.id = id;
     this.declaration = declaration;
+  }
+
+  intern (): NodeSymbolId {
+    return this.id;
   }
 }
 
@@ -148,6 +177,10 @@ export class TablePartialSymbol implements NodeSymbol {
     this.id = id;
     this.symbolTable = symbolTable;
     this.declaration = declaration;
+  }
+
+  intern (): NodeSymbolId {
+    return this.id;
   }
 }
 
@@ -177,6 +210,10 @@ export class ExternalSymbol implements NodeSymbol {
     this.name = name;
     this.externalFilepath = externalFilepath;
   }
+
+  intern (): NodeSymbolId {
+    return this.id;
+  }
 }
 
 // A member symbol for a Table injecting a TablePartial
@@ -195,6 +232,10 @@ export class PartialInjectionSymbol implements NodeSymbol {
     this.symbolTable = symbolTable;
     this.declaration = declaration;
   }
+
+  intern (): NodeSymbolId {
+    return this.id;
+  }
 }
 
 // A symbol for a column field
@@ -209,5 +250,9 @@ export class TablePartialInjectedColumnSymbol implements NodeSymbol {
     this.id = id;
     this.declaration = declaration;
     this.tablePartialSymbol = tablePartialSymbol;
+  }
+
+  intern (): NodeSymbolId {
+    return this.id;
   }
 }

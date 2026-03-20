@@ -1,7 +1,7 @@
 import type Compiler from '../../index';
 import type { SyntaxNode } from '@/core/parser/nodes';
 import type { NodeToSymbolMap } from '@/core/types';
-import type { Filepath, FilepathKey } from '../../projectLayout';
+import type { Filepath, FilepathId } from '../../projectLayout';
 import Validator from '@/core/validator/validator';
 import { NodeSymbolIdGenerator, SchemaSymbol } from '@/core/validator/symbol/symbols';
 import SymbolFactory from '@/core/validator/symbol/factory';
@@ -12,14 +12,14 @@ export type FileLocalSymbolIndex = {
   readonly path: Readonly<Filepath>;
   readonly symbolTable: Readonly<SymbolTable>;
   readonly nodeToSymbol: NodeToSymbolMap;
-  readonly externalFilepaths: ReadonlyMap<FilepathKey, SyntaxNode>;
+  readonly externalFilepaths: ReadonlyMap<FilepathId, SyntaxNode>;
 };
 
 export function localSymbolTable (this: Compiler, filepath: Filepath): Readonly<SymbolTable> {
   return this.validateFile(filepath).getValue().symbolTable;
 }
 
-export function localFileDependencies (this: Compiler, filepath: Filepath): ReadonlyMap<FilepathKey, SyntaxNode> {
+export function localFileDependencies (this: Compiler, filepath: Filepath): ReadonlyMap<FilepathId, SyntaxNode> {
   return this.validateFile(filepath).getValue().externalFilepaths;
 }
 

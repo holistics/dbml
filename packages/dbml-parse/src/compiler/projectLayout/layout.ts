@@ -1,4 +1,4 @@
-import { Filepath, FilepathKey } from './filepath';
+import { Filepath, FilepathId } from './filepath';
 
 export interface DbmlProjectLayout {
   // Override the content of a file in-memory without touching the underlying source
@@ -29,7 +29,7 @@ export interface DbmlProjectLayout {
 export class MemoryProjectLayout implements DbmlProjectLayout {
   private files: Map<string, string>;
 
-  constructor (files: Map<FilepathKey, string> | Record<FilepathKey, string> = {}) {
+  constructor (files: Map<FilepathId, string> | Record<FilepathId, string> = {}) {
     this.files = files instanceof Map
       ? new Map(files)
       : new Map(

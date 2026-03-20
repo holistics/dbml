@@ -74,7 +74,3 @@ export function symbolOfName (this: Compiler, nameStack: string[], owner: Elemen
 
   return res;
 }
-
-export function symbolOfNameToKey (nameStack: string[], owner: { id: number }): string {
-  return `${nameStack.join('.')}@${owner.id}`;
-}

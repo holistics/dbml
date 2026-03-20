@@ -9,12 +9,12 @@ import { SyntaxToken } from '@/core/lexer/tokens';
 import { getElementKind } from '@/core/utils';
 import { ElementKind } from '@/core/types';
 import { NodeToSymbolMap } from '@/core/types';
-import type { Filepath, FilepathKey } from '@/compiler/projectLayout';
+import type { Filepath, FilepathId } from '@/compiler/projectLayout';
 import UseDeclarationValidator from '@/core/validator/validators/use';
 
 export type ValidatorResult = {
   nodeToSymbol: NodeToSymbolMap;
-  externalFilepaths: Map<FilepathKey, SyntaxNode>;
+  externalFilepaths: Map<FilepathId, SyntaxNode>;
 };
 
 export default class Validator {
@@ -44,7 +44,7 @@ export default class Validator {
 
   validate (): Report<ValidatorResult> {
     const errors: CompileError[] = [];
-    const externalFilepaths = new Map<FilepathKey, SyntaxNode>();
+    const externalFilepaths = new Map<FilepathId, SyntaxNode>();
 
     // Validate in source order
     this.ast.body.forEach((decl) => {
