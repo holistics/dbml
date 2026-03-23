@@ -24,9 +24,10 @@ class Database extends Element {
     aliases = [],
     records = [],
     tablePartials = [],
+    dbState,
   }) {
     super();
-    this.dbState = new DbState();
+    this.dbState = dbState || new DbState();
     this.generateId();
     this.hasDefaultSchema = false;
     this.schemas = [];
