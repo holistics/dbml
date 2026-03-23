@@ -34,8 +34,8 @@ class Table extends Element {
     this.schema = schema;
     /** @type {import('../../types/model_structure/tablePartial').default[]} */
     this.partials = partials;
-    /** @type {number | null} */
-    this.recordId = null;
+    /** @type {import('../../types/model_structure/database').TableRecord[]} */
+    this.records = [];
     /** @type {import('../../types/model_structure/dbState').default} */
     this.dbState = this.schema.dbState;
     this.generateId();
@@ -295,7 +295,7 @@ class Table extends Element {
       note: this.note,
       headerColor: this.headerColor,
       partials: this.partials,
-      recordId: this.recordId,
+      recordIds: this.records.map((r) => r.id),
     };
   }
 

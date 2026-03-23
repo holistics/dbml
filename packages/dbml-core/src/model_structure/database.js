@@ -180,7 +180,7 @@ class Database extends Element {
       if (!table) return;
 
       record.tableId = table.id;
-      table.recordId = record.id;
+      table.records.push(record);
     });
   }
 
