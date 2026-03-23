@@ -1,5 +1,6 @@
 import { type SyntaxNode, type ProgramNode } from '@/core/parser/nodes';
 import type { NodeSymbol } from '@/core/validator/symbol/symbols';
+import type { Filepath } from '@/compiler/projectLayout/filepath';
 
 export interface Position {
   offset: number;
@@ -31,6 +32,7 @@ export type AnalysisResult = {
 };
 
 export type BinderContext = {
+  filepath: Filepath;
   ast: ProgramNode;
   nodeToSymbol: NodeToSymbolMap;
   nodeToReferee: NodeToRefereeMap;

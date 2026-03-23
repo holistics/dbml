@@ -7,14 +7,14 @@ import { generatePossibleIndexes } from '@/core/validator/symbol/utils';
 import SymbolTable from '@/core/validator/symbol/symbolTable';
 
 export function nodeSymbol (this: Compiler, node: SyntaxNode): NodeSymbol | undefined {
-  // TODO: for multi-file, find the correct file for this node
-  return this.validateFile().nodeToSymbol.get(node);
+  return this.bindFile().getValue().nodeToSymbol.get(node);
 }
 
 export function nodeReferences (this: Compiler, node: SyntaxNode): SyntaxNode[] {
-  const symbol = this.validateFile().nodeToSymbol.get(node);
+  const bound = this.bindFile().getValue();
+  const symbol = bound.nodeToSymbol.get(node);
   if (!symbol) return [];
-  return this.bindFile().getValue().symbolToReferences.get(symbol) ?? [];
+  return bound.symbolToReferences.get(symbol) ?? [];
 }
 
 export function nodeReferee (this: Compiler, node: SyntaxNode): NodeSymbol | undefined {

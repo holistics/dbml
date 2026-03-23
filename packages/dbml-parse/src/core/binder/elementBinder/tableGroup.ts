@@ -4,7 +4,7 @@ import {
 } from '@/core/parser/nodes';
 import { ElementBinder, ElementBinderArgs, ElementBinderResult } from '../types';
 import { SyntaxToken } from '@/core/lexer/tokens';
-import { CompileError } from '@/core/errors';
+import { CompileError, CompileErrorCode } from '@/core/errors';
 import { lookupAndBindInScope, pickBinder, scanNonListNodeForBinding } from '../utils';
 import { SymbolKind } from '@/core/validator/symbol/symbolIndex';
 import SymbolFactory from '@/core/validator/symbol/factory';
@@ -58,10 +58,19 @@ export default class TableGroupBinder implements ElementBinder {
         }
         const schemaBindees = bindee.variables;
 
-        return lookupAndBindInScope(this.context.ast, [
+        const errors = lookupAndBindInScope(this.context.ast, [
           ...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })),
           { node: tableBindee, kind: SymbolKind.Table },
         ], this.context);
+        if (errors.length > 0) return errors;
+
+        // A tablegroup can only contain tables defined in the current file
+        const boundSymbol = this.context.nodeToReferee.get(tableBindee);
+        if (boundSymbol?.isExternal(this.context.filepath)) {
+          return [new CompileError(CompileErrorCode.BINDING_ERROR, 'A TableGroup can only contain locally defined tables', tableBindee)];
+        }
+
+        return [];
       });
     });
   }

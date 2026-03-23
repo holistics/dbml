@@ -36,8 +36,8 @@ function astReplacer (
       return (value as NodeSymbol)?.id;
     }
 
-    // Don't include source or filepath in the serialized AST
-    if (this instanceof ProgramNode && (key === 'source' || key === 'filepath')) {
+    // Don't include source or filepath in the serialized output
+    if (key === 'source' || key === 'filepath') {
       return undefined;
     }
 

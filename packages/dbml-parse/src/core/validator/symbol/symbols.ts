@@ -4,7 +4,12 @@ import { SymbolKind } from './symbolIndex';
 import type { Filepath } from '@/compiler/projectLayout/filepath';
 import type { Internable } from '@/core/internable';
 
+// Locally unique numeric id (unique within a file, not across files).
 export type NodeSymbolId = number;
+
+// Globally unique interned key for a symbol (filepath + local id).
+declare const __nodeSymbolKeyBrand: unique symbol;
+export type NodeSymbolKey = string & { [__nodeSymbolKeyBrand]: true };
 export class NodeSymbolIdGenerator {
   private id = 0;
 
@@ -19,168 +24,131 @@ export class NodeSymbolIdGenerator {
 
 // A Symbol contains metadata about an entity (Enum, Table, etc.)
 // This does not include `name` as an entity may have multiple names (e.g alias)
-export interface NodeSymbol extends Internable<NodeSymbolId> {
-  id: NodeSymbolId;
+export abstract class NodeSymbol implements Internable<NodeSymbolKey> {
+  readonly id: NodeSymbolId;
+  readonly filepath: Filepath;
   symbolTable?: SymbolTable;
   declaration?: SyntaxNode;
+
+  constructor (id: NodeSymbolId, filepath: Filepath) {
+    this.id = id;
+    this.filepath = filepath;
+  }
+
+  intern (): NodeSymbolKey {
+    return `${this.filepath.intern()}:${this.id}` as NodeSymbolKey;
+  }
+
+  isExternal (currentFilepath: Filepath): boolean {
+    return !this.filepath.equals(currentFilepath);
+  }
 }
 
 // A symbol for a schema, contains the schema's symbol table
-export class SchemaSymbol implements NodeSymbol {
-  id: NodeSymbolId;
-
+export class SchemaSymbol extends NodeSymbol {
   symbolTable: SymbolTable;
 
   // Filepaths of external files whose schema contents should be merged into this one
   externalFilepaths: Filepath[] = [];
 
-  constructor ({ symbolTable }: { symbolTable: SymbolTable }, id: NodeSymbolId) {
-    this.id = id;
+  constructor ({ filepath, symbolTable }: { filepath: Filepath; symbolTable: SymbolTable }, id: NodeSymbolId) {
+    super(id, filepath);
     this.symbolTable = symbolTable;
   }
 
-  intern (): NodeSymbolId {
-    return this.id;
-  }
 }
 
 // A symbol for an enum, contains the enum's symbol table
 // which is used to hold all the enum field symbols of the enum
-export class EnumSymbol implements NodeSymbol {
-  id: NodeSymbolId;
-
+export class EnumSymbol extends NodeSymbol {
   symbolTable: SymbolTable;
-
   declaration: SyntaxNode;
 
   constructor (
-    { symbolTable, declaration }: { symbolTable: SymbolTable; declaration: SyntaxNode },
+    { filepath, symbolTable, declaration }: { filepath: Filepath; symbolTable: SymbolTable; declaration: SyntaxNode },
     id: NodeSymbolId,
   ) {
-    this.id = id;
+    super(id, filepath);
     this.symbolTable = symbolTable;
     this.declaration = declaration;
-  }
-
-  intern (): NodeSymbolId {
-    return this.id;
   }
 }
 
 // A symbol for an enum field
-export class EnumFieldSymbol implements NodeSymbol {
-  id: NodeSymbolId;
-
+export class EnumFieldSymbol extends NodeSymbol {
   declaration: SyntaxNode;
 
-  constructor ({ declaration }: { declaration: SyntaxNode }, id: NodeSymbolId) {
-    this.id = id;
+  constructor ({ filepath, declaration }: { filepath: Filepath; declaration: SyntaxNode }, id: NodeSymbolId) {
+    super(id, filepath);
     this.declaration = declaration;
-  }
-
-  intern (): NodeSymbolId {
-    return this.id;
   }
 }
 
 // A symbol for a table, contains the table's symbol table
 // which is used to hold all the column and table partial symbols of the table
-export class TableSymbol implements NodeSymbol {
-  id: NodeSymbolId;
-
+export class TableSymbol extends NodeSymbol {
   symbolTable: SymbolTable;
-
   declaration: SyntaxNode;
 
   constructor (
-    { symbolTable, declaration }: { symbolTable: SymbolTable; declaration: SyntaxNode },
+    { filepath, symbolTable, declaration }: { filepath: Filepath; symbolTable: SymbolTable; declaration: SyntaxNode },
     id: NodeSymbolId,
   ) {
-    this.id = id;
+    super(id, filepath);
     this.symbolTable = symbolTable;
     this.declaration = declaration;
-  }
-
-  intern (): NodeSymbolId {
-    return this.id;
   }
 }
 
 // A symbol for a column field
-export class ColumnSymbol implements NodeSymbol {
-  id: NodeSymbolId;
-
+export class ColumnSymbol extends NodeSymbol {
   declaration: SyntaxNode;
 
-  constructor ({ declaration }: { declaration: SyntaxNode }, id: NodeSymbolId) {
-    this.id = id;
+  constructor ({ filepath, declaration }: { filepath: Filepath; declaration: SyntaxNode }, id: NodeSymbolId) {
+    super(id, filepath);
     this.declaration = declaration;
-  }
-
-  intern (): NodeSymbolId {
-    return this.id;
   }
 }
 
 // A symbol for a tablegroup, contains the symbol table for the tablegroup
 // which is used to hold all the symbols of the table group fields
-export class TableGroupSymbol implements NodeSymbol {
-  id: NodeSymbolId;
-
+export class TableGroupSymbol extends NodeSymbol {
   symbolTable: SymbolTable;
-
   declaration: SyntaxNode;
 
   constructor (
-    { symbolTable, declaration }: { symbolTable: SymbolTable; declaration: SyntaxNode },
+    { filepath, symbolTable, declaration }: { filepath: Filepath; symbolTable: SymbolTable; declaration: SyntaxNode },
     id: NodeSymbolId,
   ) {
-    this.id = id;
+    super(id, filepath);
     this.symbolTable = symbolTable;
     this.declaration = declaration;
-  }
-
-  intern (): NodeSymbolId {
-    return this.id;
   }
 }
 
 // A symbol for a tablegroup field
-export class TableGroupFieldSymbol implements NodeSymbol {
-  id: NodeSymbolId;
-
+export class TableGroupFieldSymbol extends NodeSymbol {
   declaration: SyntaxNode;
 
-  constructor ({ declaration }: { declaration: SyntaxNode }, id: NodeSymbolId) {
-    this.id = id;
+  constructor ({ filepath, declaration }: { filepath: Filepath; declaration: SyntaxNode }, id: NodeSymbolId) {
+    super(id, filepath);
     this.declaration = declaration;
-  }
-
-  intern (): NodeSymbolId {
-    return this.id;
   }
 }
 
 // A symbol for a table partial, contains the table partial's symbol table
 // which is used to hold all the column symbols of the table partial
-export class TablePartialSymbol implements NodeSymbol {
-  id: NodeSymbolId;
-
+export class TablePartialSymbol extends NodeSymbol {
   symbolTable: SymbolTable;
-
   declaration: SyntaxNode;
 
   constructor (
-    { symbolTable, declaration }: { symbolTable: SymbolTable; declaration: SyntaxNode },
+    { filepath, symbolTable, declaration }: { filepath: Filepath; symbolTable: SymbolTable; declaration: SyntaxNode },
     id: NodeSymbolId,
   ) {
-    this.id = id;
+    super(id, filepath);
     this.symbolTable = symbolTable;
     this.declaration = declaration;
-  }
-
-  intern (): NodeSymbolId {
-    return this.id;
   }
 }
 
@@ -189,70 +157,50 @@ export class TablePartialSymbol implements NodeSymbol {
 // `name` records the name of the expected symbol.
 // `symbol` is initially undefined and is populated during the global resolution phase
 // when the referenced file is merged in.
-export class ExternalSymbol implements NodeSymbol {
-  id: NodeSymbolId;
-
+export class ExternalSymbol extends NodeSymbol {
   declaration: SyntaxNode;
-
   kind: SymbolKind;
-
   name: string;
-
   externalFilepath: Filepath;
 
   constructor (
-    { declaration, kind, name, externalFilepath }: { declaration: SyntaxNode; kind: SymbolKind; name: string; externalFilepath: Filepath },
+    { filepath, declaration, kind, name, externalFilepath }: { filepath: Filepath; declaration: SyntaxNode; kind: SymbolKind; name: string; externalFilepath: Filepath },
     id: NodeSymbolId,
   ) {
-    this.id = id;
+    super(id, filepath);
     this.declaration = declaration;
     this.kind = kind;
     this.name = name;
     this.externalFilepath = externalFilepath;
   }
-
-  intern (): NodeSymbolId {
-    return this.id;
-  }
 }
 
 // A member symbol for a Table injecting a TablePartial
-export class PartialInjectionSymbol implements NodeSymbol {
-  id: NodeSymbolId;
-
+export class PartialInjectionSymbol extends NodeSymbol {
   symbolTable: SymbolTable;
-
   declaration: SyntaxNode;
 
   constructor (
-    { symbolTable, declaration }: { symbolTable: SymbolTable; declaration: SyntaxNode },
+    { filepath, symbolTable, declaration }: { filepath: Filepath; symbolTable: SymbolTable; declaration: SyntaxNode },
     id: NodeSymbolId,
   ) {
-    this.id = id;
+    super(id, filepath);
     this.symbolTable = symbolTable;
     this.declaration = declaration;
-  }
-
-  intern (): NodeSymbolId {
-    return this.id;
   }
 }
 
 // A symbol for a column field
-export class TablePartialInjectedColumnSymbol implements NodeSymbol {
-  id: NodeSymbolId;
-
+export class TablePartialInjectedColumnSymbol extends NodeSymbol {
   declaration: SyntaxNode;
-
   tablePartialSymbol: TablePartialSymbol;
 
-  constructor ({ declaration, tablePartialSymbol }: { declaration: SyntaxNode; tablePartialSymbol: TablePartialSymbol }, id: NodeSymbolId) {
-    this.id = id;
+  constructor (
+    { filepath, declaration, tablePartialSymbol }: { filepath: Filepath; declaration: SyntaxNode; tablePartialSymbol: TablePartialSymbol },
+    id: NodeSymbolId,
+  ) {
+    super(id, filepath);
     this.declaration = declaration;
     this.tablePartialSymbol = tablePartialSymbol;
-  }
-
-  intern (): NodeSymbolId {
-    return this.id;
   }
 }

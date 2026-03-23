@@ -1,4 +1,5 @@
 import type Compiler from '@/compiler';
+import type { Filepath } from '@/compiler/projectLayout/filepath';
 import type { CompileError, CompileWarning } from '@/core/errors';
 import { MarkerSeverity, MarkerData } from '@/services/types';
 import type { SyntaxNode } from '@/core/parser/nodes';
@@ -25,29 +26,25 @@ export default class DBMLDiagnosticsProvider {
   /**
    * Get all diagnostics (errors and warnings) from the current compilation
    */
-  provideDiagnostics (): Diagnostic[] {
-    return this.provideErrors();
+  provideDiagnostics (filepath?: Filepath): Diagnostic[] {
+    return [...this.provideErrors(filepath), ...this.provideWarnings(filepath)];
   }
 
-  /**
-   * Get only errors from the current compilation
-   */
-  provideErrors (): Diagnostic[] {
-    return this.compiler.bindFile().getErrors().map((error: CompileError) => this.createDiagnostic(error, 'error'));
+  provideErrors (filepath?: Filepath): Diagnostic[] {
+    const errors = filepath ? this.compiler.fileErrors(filepath) : this.compiler.projectErrors();
+    return errors.map((error: CompileError) => this.createDiagnostic(error, 'error'));
   }
 
-  /**
-   * Get only warnings from the current compilation
-   */
-  provideWarnings (): Diagnostic[] {
-    return [];
+  provideWarnings (filepath?: Filepath): Diagnostic[] {
+    const warnings = filepath ? this.compiler.fileWarnings(filepath) : this.compiler.projectWarnings();
+    return warnings.map((warning: CompileWarning) => this.createDiagnostic(warning, 'warning'));
   }
 
   /**
    * Convert Monaco markers format (for editor integration)
    */
-  provideMarkers (): MarkerData[] {
-    const diagnostics = this.provideDiagnostics();
+  provideMarkers (filepath?: Filepath): MarkerData[] {
+    const diagnostics = this.provideDiagnostics(filepath);
     return diagnostics.map((diag) => {
       const severity = this.getSeverityValue(diag.type);
       return {

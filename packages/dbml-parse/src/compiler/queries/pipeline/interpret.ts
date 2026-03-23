@@ -6,24 +6,22 @@ import Report from '@/core/report';
 
 export function interpretFile (this: Compiler, filepath: Filepath): Report<Database> {
   const fileIndex = this.parseFile(filepath);
-  const local = this.validateFile(filepath);
   const bound = this.bindFile(filepath);
 
-  const allErrors = [...local.errors, ...bound.getErrors()];
-  const allWarnings = [...local.warnings, ...bound.getWarnings()];
+  const errors = [...bound.getErrors()];
+  const warnings = [...bound.getWarnings()];
 
-  if (allErrors.length > 0) {
-    return new Report(emptyDatabase(), allErrors, allWarnings);
+  if (errors.length > 0) {
+    return new Report(emptyDatabase(), errors, warnings);
   }
 
-  const { nodeToSymbol } = local;
-  const { nodeToReferee, symbolToReferences } = bound.getValue();
+  const { nodeToSymbol, nodeToReferee, symbolToReferences } = bound.getValue();
   const interpretReport = new Interpreter({ ast: fileIndex.ast, nodeToSymbol, nodeToReferee, symbolToReferences }).interpret();
 
   return new Report(
     interpretReport.getValue(),
-    [...allErrors, ...interpretReport.getErrors()],
-    [...allWarnings, ...interpretReport.getWarnings()],
+    [...errors, ...interpretReport.getErrors()],
+    [...warnings, ...interpretReport.getWarnings()],
   );
 }
 

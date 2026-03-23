@@ -28,7 +28,7 @@ export default class UseDeclarationValidator {
 
   private symbolFactory: SymbolFactory;
 
-  private externalFilepaths: Map<FilepathId, SyntaxNode>;
+  private externalFilepaths: Map<FilepathId, UseDeclarationNode>;
 
   constructor (
     { node, filepath, publicSymbolTable, declarations }: {
@@ -38,7 +38,7 @@ export default class UseDeclarationValidator {
       declarations: WeakMap<SyntaxNode, NodeSymbol>;
     },
     symbolFactory: SymbolFactory,
-    externalFilepaths: Map<FilepathId, SyntaxNode>,
+    externalFilepaths: Map<FilepathId, UseDeclarationNode>,
   ) {
     this.node = node;
     this.filepath = filepath;

@@ -48,7 +48,7 @@ export function parse (source: string): Report<{ ast: ProgramNode; tokens: Synta
 
 export function analyze (source: string): Report<AnalysisResult> {
   return parse(source).chain(({ ast }) => {
-    const symbolFactory = new SymbolFactory(new NodeSymbolIdGenerator());
+    const symbolFactory = new SymbolFactory(new NodeSymbolIdGenerator(), DEFAULT_ENTRY);
     const nodeToSymbol = new WeakMap();
     nodeToSymbol.set(ast, symbolFactory.create(SchemaSymbol, { symbolTable: new SymbolTable() }));
     return new Validator({ ast, filepath: DEFAULT_ENTRY, nodeToSymbol }, symbolFactory).validate().chain(({ nodeToSymbol: nts }) => {

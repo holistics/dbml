@@ -2,7 +2,8 @@ import { DEFAULT_SCHEMA_NAME } from '@/constants';
 import { None, Option, Some } from '@/core/option';
 
 // Used to index a symbol table to obtain a symbol
-export type NodeSymbolIndex = string;
+declare const __nodeSymbolIndexBrand: unique symbol;
+export type NodeSymbolIndex = string & { [__nodeSymbolIndexBrand]: true };
 export enum SymbolKind {
   Schema = 'Schema',
   Table = 'Table',
@@ -17,43 +18,43 @@ export enum SymbolKind {
 }
 
 export function createSchemaSymbolIndex (key: string): NodeSymbolIndex {
-  return `${SymbolKind.Schema}:${key}`;
+  return `${SymbolKind.Schema}:${key}` as NodeSymbolIndex;
 }
 
 export function createTableSymbolIndex (key: string): NodeSymbolIndex {
-  return `${SymbolKind.Table}:${key}`;
+  return `${SymbolKind.Table}:${key}` as NodeSymbolIndex;
 }
 
 export function createColumnSymbolIndex (key: string): NodeSymbolIndex {
-  return `${SymbolKind.Column}:${key}`;
+  return `${SymbolKind.Column}:${key}` as NodeSymbolIndex;
 }
 
 export function createEnumSymbolIndex (key: string): NodeSymbolIndex {
-  return `${SymbolKind.Enum}:${key}`;
+  return `${SymbolKind.Enum}:${key}` as NodeSymbolIndex;
 }
 
 export function createEnumFieldSymbolIndex (key: string): NodeSymbolIndex {
-  return `${SymbolKind.EnumField}:${key}`;
+  return `${SymbolKind.EnumField}:${key}` as NodeSymbolIndex;
 }
 
 export function createTableGroupSymbolIndex (key: string): NodeSymbolIndex {
-  return `${SymbolKind.TableGroup}:${key}`;
+  return `${SymbolKind.TableGroup}:${key}` as NodeSymbolIndex;
 }
 
 export function createTableGroupFieldSymbolIndex (key: string): NodeSymbolIndex {
-  return `${SymbolKind.TableGroupField}:${key}`;
+  return `${SymbolKind.TableGroupField}:${key}` as NodeSymbolIndex;
 }
 
 export function createStickyNoteSymbolIndex (key: string): NodeSymbolIndex {
-  return `${SymbolKind.Note}:${key}`;
+  return `${SymbolKind.Note}:${key}` as NodeSymbolIndex;
 }
 
 export function createTablePartialSymbolIndex (key: string): NodeSymbolIndex {
-  return `${SymbolKind.TablePartial}:${key}`;
+  return `${SymbolKind.TablePartial}:${key}` as NodeSymbolIndex;
 }
 
 export function createPartialInjectionSymbolIndex (key: string): NodeSymbolIndex {
-  return `${SymbolKind.PartialInjection}:${key}`;
+  return `${SymbolKind.PartialInjection}:${key}` as NodeSymbolIndex;
 }
 
 export function createNodeSymbolIndex (key: string, symbolKind: SymbolKind): NodeSymbolIndex {

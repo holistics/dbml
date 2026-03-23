@@ -39,7 +39,13 @@ export default class Binder {
 
   resolve (): Report<NodeToRefereeMap> {
     const errors: CompileError[] = [];
-    const context: BinderContext = { ast: this.ast, nodeToSymbol: this.nodeToSymbol, nodeToReferee: this.nodeToReferee, symbolToReferences: this.symbolToReferences };
+    const context: BinderContext = {
+      filepath: this.symbolFactory.filepath,
+      ast: this.ast,
+      nodeToSymbol: this.nodeToSymbol,
+      nodeToReferee: this.nodeToReferee,
+      symbolToReferences: this.symbolToReferences,
+    };
 
     // Must call this before binding
     errors.push(...this.resolvePartialInjections(context));

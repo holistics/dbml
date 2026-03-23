@@ -4,8 +4,9 @@ export interface Internable<Id> {
   intern (): Id;
 }
 
-type Primitive = string | number | boolean | symbol | bigint | null | undefined;
+export type Primitive = string | number | boolean | symbol | bigint | null | undefined;
 
+export function intern<T extends Primitive, Id> (value: Internable<Id> | T | T[]): Id | T | string;
 export function intern<Id> (value: Internable<Id>): Id;
 export function intern<T extends Primitive> (value: T): T;
 export function intern<T extends Primitive> (value: T[]): string;

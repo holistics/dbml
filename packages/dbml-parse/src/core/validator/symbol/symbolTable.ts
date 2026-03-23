@@ -33,4 +33,12 @@ export default class SymbolTable {
   forEach (callback: (value: NodeSymbol, key: NodeSymbolIndex) => void) {
     return this.table.forEach(callback);
   }
+
+  clone (): SymbolTable {
+    const copy = new SymbolTable();
+    for (const [id, symbol] of this.table) {
+      copy.set(id, symbol);
+    }
+    return copy;
+  }
 }

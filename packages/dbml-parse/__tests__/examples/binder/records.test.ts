@@ -3,7 +3,7 @@ import { TableSymbol, EnumSymbol, ColumnSymbol, EnumFieldSymbol, SchemaSymbol } 
 import { SyntaxNode } from '@/core/parser/nodes';
 import { NodeSymbol } from '@/core/validator/symbol/symbols';
 import { SymbolToReferencesMap } from '@/core/types';
-import { analyze } from '@tests/utils';
+import { analyze, idx } from '@tests/utils';
 
 function refsOf (map: SymbolToReferencesMap, symbol: NodeSymbol): SyntaxNode[] {
   return map.get(symbol) ?? [];
@@ -26,14 +26,14 @@ describe('[example] records binder', () => {
 
     const { ast, nodeToSymbol, nodeToReferee, symbolToReferences } = result.getValue();
     const schemaSymbol = nodeToSymbol.get(ast) as SchemaSymbol;
-    const tableSymbol = schemaSymbol.symbolTable.get('Table:users') as TableSymbol;
+    const tableSymbol = schemaSymbol.symbolTable.get(idx('Table:users')) as TableSymbol;
 
     // Table should have exactly 1 reference from records
     expect(refsOf(symbolToReferences, tableSymbol).length).toBe(1);
     expect(nodeToReferee.get(refsOf(symbolToReferences, tableSymbol)[0])).toBe(tableSymbol);
 
-    const idColumn = tableSymbol.symbolTable.get('Column:id') as ColumnSymbol;
-    const nameColumn = tableSymbol.symbolTable.get('Column:name') as ColumnSymbol;
+    const idColumn = tableSymbol.symbolTable.get(idx('Column:id')) as ColumnSymbol;
+    const nameColumn = tableSymbol.symbolTable.get(idx('Column:name')) as ColumnSymbol;
 
     // Each column should have exactly 1 reference from records column list
     expect(refsOf(symbolToReferences, idColumn).length).toBe(1);
@@ -58,8 +58,8 @@ describe('[example] records binder', () => {
 
     const { ast, nodeToSymbol, nodeToReferee, symbolToReferences } = result.getValue();
     const publicSchema = nodeToSymbol.get(ast) as SchemaSymbol;
-    const authSchema = publicSchema.symbolTable.get('Schema:auth') as SchemaSymbol;
-    const tableSymbol = authSchema.symbolTable.get('Table:users') as TableSymbol;
+    const authSchema = publicSchema.symbolTable.get(idx('Schema:auth')) as SchemaSymbol;
+    const tableSymbol = authSchema.symbolTable.get(idx('Table:users')) as TableSymbol;
 
     // Schema should have reference from records
     expect(refsOf(symbolToReferences, authSchema).length).toBe(1);
@@ -70,8 +70,8 @@ describe('[example] records binder', () => {
     expect(nodeToReferee.get(refsOf(symbolToReferences, tableSymbol)[0])).toBe(tableSymbol);
 
     // Columns should have references
-    const idColumn = tableSymbol.symbolTable.get('Column:id') as ColumnSymbol;
-    const emailColumn = tableSymbol.symbolTable.get('Column:email') as ColumnSymbol;
+    const idColumn = tableSymbol.symbolTable.get(idx('Column:id')) as ColumnSymbol;
+    const emailColumn = tableSymbol.symbolTable.get(idx('Column:email')) as ColumnSymbol;
 
     expect(refsOf(symbolToReferences, idColumn).length).toBe(1);
 
@@ -121,14 +121,14 @@ describe('[example] records binder', () => {
 
     const { ast, nodeToSymbol, symbolToReferences } = result.getValue();
     const schemaSymbol = nodeToSymbol.get(ast) as SchemaSymbol;
-    const tableSymbol = schemaSymbol.symbolTable.get('Table:users') as TableSymbol;
+    const tableSymbol = schemaSymbol.symbolTable.get(idx('Table:users')) as TableSymbol;
 
     // Table should have exactly 2 references from both records elements
     expect(refsOf(symbolToReferences, tableSymbol).length).toBe(2);
 
     // Each column should have exactly 2 references
-    const idColumn = tableSymbol.symbolTable.get('Column:id') as ColumnSymbol;
-    const nameColumn = tableSymbol.symbolTable.get('Column:name') as ColumnSymbol;
+    const idColumn = tableSymbol.symbolTable.get(idx('Column:id')) as ColumnSymbol;
+    const nameColumn = tableSymbol.symbolTable.get(idx('Column:name')) as ColumnSymbol;
 
     expect(refsOf(symbolToReferences, idColumn).length).toBe(2);
 
@@ -151,8 +151,8 @@ describe('[example] records binder', () => {
 
     const { ast, nodeToSymbol, nodeToReferee, symbolToReferences } = result.getValue();
     const schemaSymbol = nodeToSymbol.get(ast) as SchemaSymbol;
-    const enumSymbol = schemaSymbol.symbolTable.get('Enum:status') as EnumSymbol;
-    const activeField = enumSymbol.symbolTable.get('Enum field:active') as EnumFieldSymbol;
+    const enumSymbol = schemaSymbol.symbolTable.get(idx('Enum:status')) as EnumSymbol;
+    const activeField = enumSymbol.symbolTable.get(idx('Enum field:active')) as EnumFieldSymbol;
 
     // Enum should have 2 references: 1 from column type, 1 from records data
     expect(refsOf(symbolToReferences, enumSymbol).length).toBe(2);
@@ -177,13 +177,13 @@ describe('[example] records binder', () => {
 
     const { ast, nodeToSymbol, symbolToReferences } = result.getValue();
     const schemaSymbol = nodeToSymbol.get(ast) as SchemaSymbol;
-    const tableSymbol = schemaSymbol.symbolTable.get('Table:users') as TableSymbol;
+    const tableSymbol = schemaSymbol.symbolTable.get(idx('Table:users')) as TableSymbol;
 
     // Verify forward reference is properly bound
     expect(refsOf(symbolToReferences, tableSymbol).length).toBe(1);
 
-    const idColumn = tableSymbol.symbolTable.get('Column:id') as ColumnSymbol;
-    const nameColumn = tableSymbol.symbolTable.get('Column:name') as ColumnSymbol;
+    const idColumn = tableSymbol.symbolTable.get(idx('Column:id')) as ColumnSymbol;
+    const nameColumn = tableSymbol.symbolTable.get(idx('Column:name')) as ColumnSymbol;
 
     expect(refsOf(symbolToReferences, idColumn).length).toBe(1);
     expect(refsOf(symbolToReferences, nameColumn).length).toBe(1);
@@ -206,14 +206,14 @@ describe('[example] records binder', () => {
 
     const { ast, nodeToSymbol, nodeToReferee, symbolToReferences } = result.getValue();
     const publicSchema = nodeToSymbol.get(ast) as SchemaSymbol;
-    const authSchema = publicSchema.symbolTable.get('Schema:auth') as SchemaSymbol;
-    const enumSymbol = authSchema.symbolTable.get('Enum:role') as EnumSymbol;
+    const authSchema = publicSchema.symbolTable.get(idx('Schema:auth')) as SchemaSymbol;
+    const enumSymbol = authSchema.symbolTable.get(idx('Enum:role')) as EnumSymbol;
 
     // Enum should have 3 references: 1 from column type, 2 from records data
     expect(refsOf(symbolToReferences, enumSymbol).length).toBe(3);
 
-    const adminField = enumSymbol.symbolTable.get('Enum field:admin') as EnumFieldSymbol;
-    const userField = enumSymbol.symbolTable.get('Enum field:user') as EnumFieldSymbol;
+    const adminField = enumSymbol.symbolTable.get(idx('Enum field:admin')) as EnumFieldSymbol;
+    const userField = enumSymbol.symbolTable.get(idx('Enum field:user')) as EnumFieldSymbol;
 
     expect(refsOf(symbolToReferences, adminField).length).toBe(1);
     expect(nodeToReferee.get(refsOf(symbolToReferences, adminField)[0])).toBe(adminField);
@@ -272,11 +272,11 @@ describe('[example] records binder', () => {
 
     const { ast, nodeToSymbol, symbolToReferences } = result.getValue();
     const schemaSymbol = nodeToSymbol.get(ast) as SchemaSymbol;
-    const enumSymbol = schemaSymbol.symbolTable.get('Enum:status') as EnumSymbol;
+    const enumSymbol = schemaSymbol.symbolTable.get(idx('Enum:status')) as EnumSymbol;
 
-    const pendingField = enumSymbol.symbolTable.get('Enum field:pending') as EnumFieldSymbol;
-    const activeField = enumSymbol.symbolTable.get('Enum field:active') as EnumFieldSymbol;
-    const completedField = enumSymbol.symbolTable.get('Enum field:completed') as EnumFieldSymbol;
+    const pendingField = enumSymbol.symbolTable.get(idx('Enum field:pending')) as EnumFieldSymbol;
+    const activeField = enumSymbol.symbolTable.get(idx('Enum field:active')) as EnumFieldSymbol;
+    const completedField = enumSymbol.symbolTable.get(idx('Enum field:completed')) as EnumFieldSymbol;
 
     // pending is referenced twice
     expect(refsOf(symbolToReferences, pendingField).length).toBe(2);
