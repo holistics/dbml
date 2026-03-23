@@ -5,7 +5,8 @@ import JsonExporter from './JsonExporter';
 import SqlServerExporter from './SqlServerExporter';
 import OracleExporter from './OracleExporter';
 import Database from '../model_structure/database';
-import type { NormalizedModel } from '../../types/model_structure/database';
+import Model from '../model_structure/model';
+import type { NormalizedModel } from '../../types/model_structure/model';
 import { ExportOptions, ExportFormat, normalizeExportOptions } from './index';
 
 class ModelExporter {
@@ -13,19 +14,19 @@ class ModelExporter {
    * @deprecated Passing a boolean as the third argument is deprecated. Use `ExportOptions` instead.
    */
   static export (
-    model: Database | NormalizedModel,
+    model: Database | Model | NormalizedModel,
     format: ExportFormat,
     options: boolean,
   ): string;
 
   static export (
-    model: Database | NormalizedModel,
+    model: Database | Model | NormalizedModel,
     format: ExportFormat,
     options?: ExportOptions,
   ): string;
 
   static export (
-    model: Database | NormalizedModel,
+    model: Database | Model | NormalizedModel,
     format: ExportFormat,
     // Some code uses `ModelExporter` directly, so we still need to provide a default value here
     options: ExportOptions | boolean = {
@@ -38,9 +39,14 @@ class ModelExporter {
       includeRecords,
     } = normalizeExportOptions(options);
 
-    const normalizedModel: NormalizedModel = model instanceof Database
-      ? model.normalize()
-      : model;
+    let normalizedModel: NormalizedModel;
+    if (model instanceof Model) {
+      normalizedModel = model.normalize();
+    } else if (model instanceof Database) {
+      normalizedModel = model.normalize();
+    } else {
+      normalizedModel = model;
+    }
 
     let res = '';
     switch (format) {

@@ -1,5 +1,6 @@
 import { Compiler } from '@dbml/parse';
 import Database from '../model_structure/database';
+import Model from '../model_structure/model';
 import { parse } from './ANTLR/ASTGeneration';
 import { CompilerError } from './error';
 import mysqlParser from './deprecated/mysqlParser.cjs';
@@ -95,11 +96,11 @@ class Parser {
     return parse(str, 'oracle');
   }
 
-  static parse (str, format) {
-    return new Parser().parse(str, format);
+  static parse (str, format, options = {}) {
+    return new Parser().parse(str, format, options);
   }
 
-  parse (str, format) {
+  parse (str, format, options = {}) {
     try {
       let rawDatabase = {};
       switch (format) {
@@ -159,8 +160,11 @@ class Parser {
           break;
       }
 
-      const schema = Parser.parseJSONToDatabase(rawDatabase);
-      return schema;
+      const database = Parser.parseJSONToDatabase(rawDatabase);
+      if (options.shouldReturnModel) {
+        return new Model({ database: [database] });
+      }
+      return database;
     } catch (diags) {
       throw CompilerError.create(diags);
     }
