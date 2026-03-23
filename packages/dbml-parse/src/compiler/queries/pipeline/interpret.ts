@@ -1,5 +1,5 @@
-import type Compiler from '../../index';
-import type { Filepath } from '../../projectLayout';
+import type Compiler from '@/compiler';
+import type { Filepath } from '@/compiler/projectLayout';
 import type { Database } from '@/core/interpreter/types';
 import Interpreter from '@/core/interpreter/interpreter';
 import Report from '@/core/report';

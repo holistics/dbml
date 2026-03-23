@@ -1,11 +1,33 @@
 import type Compiler from '../../../index';
 import { Filepath } from '../../../projectLayout';
-import { ExternalSymbol, SchemaSymbol } from '@/core/validator/symbol/symbols';
+import { ExternalSymbol, NodeSymbol, SchemaSymbol, TableGroupSymbol } from '@/core/validator/symbol/symbols';
+import { BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode } from '@/core/parser/nodes';
+import { destructureComplexVariable } from '@/core/utils';
+import { registerSchemaStack } from '@/core/validator/utils';
 import SymbolFactory from '@/core/validator/symbol/factory';
-import { createNodeSymbolIndex, destructureIndex } from '@/core/validator/symbol/symbolIndex';
+import { createNodeSymbolIndex, destructureIndex, SymbolKind } from '@/core/validator/symbol/symbolIndex';
 import SymbolTable from '@/core/validator/symbol/symbolTable';
 import Report from '@/core/report';
 import { CompileError, CompileErrorCode } from '@/core/errors';
+
+// Walk a path of { name, kind } steps from a starting symbol table.
+// Each intermediate step must resolve to a symbol with a sub-table.
+// Returns the final symbol, or undefined if any step fails.
+function lookupSymbol (
+  table: Readonly<SymbolTable>,
+  path: { name: string; kind: SymbolKind }[],
+): NodeSymbol | undefined {
+  let current: Readonly<SymbolTable> = table;
+  for (let i = 0; i < path.length; i++) {
+    const id = createNodeSymbolIndex(path[i].name, path[i].kind);
+    const symbol = current.get(id);
+    if (!symbol) return undefined;
+    if (i === path.length - 1) return symbol;
+    if (!symbol.symbolTable) return undefined;
+    current = symbol.symbolTable;
+  }
+  return undefined;
+}
 
 // Resolve all `use` declarations for a file. Clones the local table and returns the resolved copy.
 export function resolveExternalDependencies (
@@ -60,6 +82,9 @@ function resolveSelectiveUse ({ resolvedTable, externalTable, externalFilepath, 
 
   // Replace placeholders (recurses into schema sub-tables)
   replacePlaceholders(resolvedTable, externalTable, externalFilepath);
+
+  // Pull member tables of imported tablegroups into scope
+  pullTableGroupMembers(resolvedTable, externalTable, symbolFactory);
 
   // Merge imported schemas
   for (const [symbolId, symbol] of resolvedTable.entries()) {
@@ -154,6 +179,46 @@ function replacePlaceholders (
       const externalSchema = externalTable.get(symbolId);
       if (externalSchema instanceof SchemaSymbol) {
         replacePlaceholders(symbol.symbolTable, externalSchema.symbolTable, externalFilepath);
+      }
+    }
+  }
+}
+
+// When a TableGroup is imported, also pull its member tables into scope.
+// Traverses the tablegroup's declaration AST to extract field names (simple or schema-qualified),
+// then looks up the corresponding table in the external file and inserts it into the resolved table.
+function pullTableGroupMembers (
+  resolvedTable: SymbolTable,
+  externalTable: Readonly<SymbolTable>,
+  symbolFactory: SymbolFactory,
+): void {
+  for (const [, symbol] of resolvedTable.entries()) {
+    if (!(symbol instanceof TableGroupSymbol)) continue;
+    if (!(symbol.declaration instanceof ElementDeclarationNode)) continue;
+    if (!(symbol.declaration.body instanceof BlockExpressionNode)) continue;
+
+    for (const field of symbol.declaration.body.body) {
+      if (!(field instanceof FunctionApplicationNode) || !field.callee) continue;
+
+      const fragments = destructureComplexVariable(field.callee).unwrap_or(undefined);
+      if (!fragments || fragments.length === 0) continue;
+
+      const tableName = fragments.pop()!;
+      const schemaNames = fragments;
+
+      // Look up the table in the external file
+      const path = [
+        ...schemaNames.map((name) => ({ name, kind: SymbolKind.Schema })),
+        { name: tableName, kind: SymbolKind.Table },
+      ];
+      const tableSymbol = lookupSymbol(externalTable, path);
+      if (!tableSymbol) continue;
+
+      // Ensure parent schemas exist in the resolved table, then insert the table
+      const targetTable = registerSchemaStack(schemaNames, resolvedTable, symbolFactory);
+      const tableId = createNodeSymbolIndex(tableName, SymbolKind.Table);
+      if (!targetTable.has(tableId)) {
+        targetTable.set(tableId, tableSymbol);
       }
     }
   }
