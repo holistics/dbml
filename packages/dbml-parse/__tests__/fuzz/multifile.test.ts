@@ -150,9 +150,8 @@ describe('[fuzz] multifile - model structure invariants', () => {
           const depFiles: Record<string, string> = {};
           const useStatements: string[] = [];
           depContents.forEach((content, i) => {
-            const path = `/dep${i}.dbml`;
-            depFiles[path] = content;
-            useStatements.push(`use * from '${path}'`);
+            depFiles[`/dep${i}.dbml`] = content;
+            useStatements.push(`use * from './dep${i}.dbml'`);
           });
 
           const compiler = createCompiler({

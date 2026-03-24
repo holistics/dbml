@@ -71,7 +71,10 @@ export default class UseDeclarationValidator {
   }
 
   private validateBody (): CompileError[] {
-    // Entire-file use: use * from './path.dbml'
+    if (this.node.path && !Filepath.isRelative(this.node.path.value)) {
+      return [new CompileError(CompileErrorCode.INVALID_USE_SPECIFIER_NAME, 'Import path must be a relative path (starting with \'./\' or \'../\')', this.node.path)];
+    }
+
     if (!this.node.specifiers) {
       return this.registerWholeFileUse();
     }

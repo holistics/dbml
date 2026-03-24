@@ -64,4 +64,8 @@ export class Filepath implements Internable<FilepathId> {
   equals (other: Filepath): boolean {
     return this.path === other.path;
   }
+
+  static isRelative (p: string): boolean {
+    return !isAbsolute(p);
+  }
 }
