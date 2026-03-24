@@ -1,4 +1,0 @@
-use { schema auth } from './auth.dbml'
-Table public.orders {
-  id int [pk]
-}

@@ -1,6 +1,0 @@
-use { enum user_status } from './enums.dbml'
-Table users {
-  id int [pk]
-  name varchar
-  status user_status
-}

@@ -1,5 +1,0 @@
-use { table users } from './a.dbml'
-use { table orders } from './b.dbml'
-Table main_table {
-  id int [pk]
-}
