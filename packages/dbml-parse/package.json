@@ -21,7 +21,6 @@
       "require": "./dist/dbml-parse.js"
     }
   },
-  "sideEffects": false,
   "files": [
     "dist"
   ],
