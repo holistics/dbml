@@ -20,7 +20,7 @@ describe('[snapshot] validator', () => {
     const report = new Lexer(program)
       .lex()
       .chain((tokens) => {
-        return new Parser(undefined, program, tokens, nodeIdGenerator).parse();
+        return new Parser(DEFAULT_ENTRY, program, tokens, nodeIdGenerator).parse();
       })
       .chain(({ ast }) => {
         return new Validator({ ast, filepath: DEFAULT_ENTRY }, new SymbolFactory(symbolIdGenerator, DEFAULT_ENTRY))

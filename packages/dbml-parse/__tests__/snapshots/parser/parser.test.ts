@@ -1,6 +1,7 @@
 import { readFileSync } from 'fs';
 import path from 'path';
 import { describe, expect, it } from 'vitest';
+import { DEFAULT_ENTRY } from '@/compiler/constants';
 import Lexer from '@/core/lexer/lexer';
 import Parser from '@/core/parser/parser';
 import { SyntaxNodeIdGenerator } from '@/core/parser/nodes';
@@ -15,7 +16,7 @@ describe('[snapshot] parser', () => {
     const nodeIdGenerator = new SyntaxNodeIdGenerator();
     const output = JSON.stringify(
       lexer.lex().chain((tokens) => {
-        const parser = new Parser(undefined, program, tokens, nodeIdGenerator);
+        const parser = new Parser(DEFAULT_ENTRY, program, tokens, nodeIdGenerator);
         return parser.parse().map((_) => _.ast);
       }),
       (key: string, value: any) => {

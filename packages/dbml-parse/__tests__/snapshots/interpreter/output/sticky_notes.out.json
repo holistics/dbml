@@ -1,4 +1,7 @@
 {
+  "filepath": {
+    "path": "/main.project.dbml"
+  },
   "schemas": [],
   "tables": [
     {
@@ -14,6 +17,9 @@
             "args": null
           },
           "token": {
+            "filepath": {
+              "path": "/main.project.dbml"
+            },
             "start": {
               "offset": 39,
               "line": 2,
@@ -39,6 +45,9 @@
             "args": "255"
           },
           "token": {
+            "filepath": {
+              "path": "/main.project.dbml"
+            },
             "start": {
               "offset": 66,
               "line": 3,
@@ -59,6 +68,9 @@
         }
       ],
       "token": {
+        "filepath": {
+          "path": "/main.project.dbml"
+        },
         "start": {
           "offset": 0,
           "line": 1,
@@ -81,6 +93,9 @@
       "name": "note",
       "content": "One line note",
       "token": {
+        "filepath": {
+          "path": "/main.project.dbml"
+        },
         "start": {
           "offset": 110,
           "line": 6,
@@ -97,6 +112,9 @@
       "name": "note2",
       "content": "# Title\nbody\n",
       "token": {
+        "filepath": {
+          "path": "/main.project.dbml"
+        },
         "start": {
           "offset": 143,
           "line": 10,

@@ -76,7 +76,7 @@ export function getMultiplicities (
   }
 }
 
-export function getTokenPosition (node: SyntaxNode, filepath?: Filepath): TokenPosition {
+export function getTokenPosition (node: SyntaxNode, filepath: Filepath): TokenPosition {
   return {
     filepath,
     start: {

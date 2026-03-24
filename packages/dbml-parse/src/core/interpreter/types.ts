@@ -5,7 +5,7 @@ import { NodeToSymbolMap, NodeToRefereeMap } from '@/core/types';
 import type { Filepath } from '@/compiler/projectLayout';
 
 export interface TokenPosition {
-  filepath?: Filepath;
+  filepath: Filepath;
   start: Position;
   end: Position;
 }
@@ -15,7 +15,7 @@ export interface ElementInterpreter {
 }
 
 export interface InterpreterDatabase {
-  filepath?: Filepath;
+  filepath: Filepath;
   schema: [];
   tables: Map<ElementDeclarationNode, Table>;
   notes: Map<ElementDeclarationNode, Note>;
@@ -67,7 +67,7 @@ export interface TableRecord {
 }
 
 export interface Database {
-  filepath?: Filepath;
+  filepath: Filepath;
   schemas: [];
   tables: Table[];
   notes: Note[];

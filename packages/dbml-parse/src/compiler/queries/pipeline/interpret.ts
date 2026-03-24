@@ -64,6 +64,6 @@ function interpretSingle (compiler: Compiler, filepath: Filepath): {
   };
 }
 
-function emptyDatabase (filepath?: Filepath): Database {
+function emptyDatabase (filepath: Filepath): Database {
   return { filepath, schemas: [], tables: [], notes: [], refs: [], enums: [], tableGroups: [], aliases: [], project: {}, tablePartials: [], records: [] };
 }

@@ -1,4 +1,7 @@
 {
+  "filepath": {
+    "path": "/main.project.dbml"
+  },
   "schemas": [],
   "tables": [
     {
@@ -14,6 +17,9 @@
             "args": null
           },
           "token": {
+            "filepath": {
+              "path": "/main.project.dbml"
+            },
             "start": {
               "offset": 215,
               "line": 10,
@@ -39,6 +45,9 @@
             "args": null
           },
           "token": {
+            "filepath": {
+              "path": "/main.project.dbml"
+            },
             "start": {
               "offset": 233,
               "line": 11,
@@ -57,6 +66,9 @@
           "note": {
             "value": "This is a column note",
             "token": {
+              "filepath": {
+                "path": "/main.project.dbml"
+              },
               "start": {
                 "offset": 252,
                 "line": 11,
@@ -73,6 +85,9 @@
         }
       ],
       "token": {
+        "filepath": {
+          "path": "/main.project.dbml"
+        },
         "start": {
           "offset": 200,
           "line": 9,
@@ -101,6 +116,9 @@
             "args": null
           },
           "token": {
+            "filepath": {
+              "path": "/main.project.dbml"
+            },
             "start": {
               "offset": 397,
               "line": 22,
@@ -124,6 +142,9 @@
             "args": null
           },
           "token": {
+            "filepath": {
+              "path": "/main.project.dbml"
+            },
             "start": {
               "offset": 416,
               "line": 23,
@@ -147,6 +168,9 @@
             "args": null
           },
           "token": {
+            "filepath": {
+              "path": "/main.project.dbml"
+            },
             "start": {
               "offset": 440,
               "line": 24,
@@ -164,6 +188,9 @@
         }
       ],
       "token": {
+        "filepath": {
+          "path": "/main.project.dbml"
+        },
         "start": {
           "offset": 380,
           "line": 21,
@@ -187,6 +214,9 @@
       "values": [
         {
           "token": {
+            "filepath": {
+              "path": "/main.project.dbml"
+            },
             "start": {
               "offset": 20,
               "line": 2,
@@ -202,6 +232,9 @@
           "note": {
             "value": "Job created and pending",
             "token": {
+              "filepath": {
+                "path": "/main.project.dbml"
+              },
               "start": {
                 "offset": 29,
                 "line": 2,
@@ -217,6 +250,9 @@
         },
         {
           "token": {
+            "filepath": {
+              "path": "/main.project.dbml"
+            },
             "start": {
               "offset": 64,
               "line": 3,
@@ -232,6 +268,9 @@
           "note": {
             "value": "Waiting for warehouse to process",
             "token": {
+              "filepath": {
+                "path": "/main.project.dbml"
+              },
               "start": {
                 "offset": 73,
                 "line": 3,
@@ -247,6 +286,9 @@
         },
         {
           "token": {
+            "filepath": {
+              "path": "/main.project.dbml"
+            },
             "start": {
               "offset": 117,
               "line": 4,
@@ -262,6 +304,9 @@
         },
         {
           "token": {
+            "filepath": {
+              "path": "/main.project.dbml"
+            },
             "start": {
               "offset": 124,
               "line": 5,
@@ -277,6 +322,9 @@
         },
         {
           "token": {
+            "filepath": {
+              "path": "/main.project.dbml"
+            },
             "start": {
               "offset": 132,
               "line": 6,
@@ -292,6 +340,9 @@
           "note": {
             "value": "Enum label that has white spaces",
             "token": {
+              "filepath": {
+                "path": "/main.project.dbml"
+              },
               "start": {
                 "offset": 155,
                 "line": 6,
@@ -307,6 +358,9 @@
         }
       ],
       "token": {
+        "filepath": {
+          "path": "/main.project.dbml"
+        },
         "start": {
           "offset": 0,
           "line": 1,
@@ -325,6 +379,9 @@
       "values": [
         {
           "token": {
+            "filepath": {
+              "path": "/main.project.dbml"
+            },
             "start": {
               "offset": 310,
               "line": 15,
@@ -340,6 +397,9 @@
           "note": {
             "value": "Order created",
             "token": {
+              "filepath": {
+                "path": "/main.project.dbml"
+              },
               "start": {
                 "offset": 319,
                 "line": 15,
@@ -355,6 +415,9 @@
         },
         {
           "token": {
+            "filepath": {
+              "path": "/main.project.dbml"
+            },
             "start": {
               "offset": 344,
               "line": 16,
@@ -370,6 +433,9 @@
         },
         {
           "token": {
+            "filepath": {
+              "path": "/main.project.dbml"
+            },
             "start": {
               "offset": 354,
               "line": 17,
@@ -385,6 +451,9 @@
         },
         {
           "token": {
+            "filepath": {
+              "path": "/main.project.dbml"
+            },
             "start": {
               "offset": 367,
               "line": 18,
@@ -400,6 +469,9 @@
         }
       ],
       "token": {
+        "filepath": {
+          "path": "/main.project.dbml"
+        },
         "start": {
           "offset": 286,
           "line": 14,

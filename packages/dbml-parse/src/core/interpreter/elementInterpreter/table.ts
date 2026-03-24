@@ -63,8 +63,9 @@ export class TableInterpreter implements ElementInterpreter {
       this.table.indexes!.push({
         columns: this.pkColumns.map(({ name, token }) => ({ value: name, type: 'column', token })),
         token: {
-          start: { offset: -1, line: -1, column: -1 }, // do not make sense to have a meaningful start (?)
-          end: { offset: -1, line: -1, column: -1 }, // do not make sense to have a meaningful end (?)
+          filepath: this.env.filepath,
+          start: { offset: -1, line: -1, column: -1 },
+          end: { offset: -1, line: -1, column: -1 },
         },
         pk: true,
       });

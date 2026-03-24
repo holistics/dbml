@@ -70,9 +70,9 @@ export default class Parser {
 
   private source: string;
 
-  private filepath?: Filepath;
+  private filepath: Filepath;
 
-  constructor (filepath: Filepath | undefined, source: string, tokens: SyntaxToken[], nodeIdGenerator: SyntaxNodeIdGenerator) {
+  constructor (filepath: Filepath, source: string, tokens: SyntaxToken[], nodeIdGenerator: SyntaxNodeIdGenerator) {
     this.filepath = filepath;
     this.source = source;
     this.tokens = tokens;
