@@ -2,10 +2,6 @@ import { Compiler } from '@dbml/parse';
 import Database, { RawDatabase } from '../model_structure/database';
 import Model from '../model_structure/model';
 
-export interface ParseOptions {
-    shouldReturnModel?: boolean;
-}
-
 export declare type ParseFormat = 'json'
     | 'mysql' | 'mysqlLegacy'
     | 'postgres' | 'postgresLegacy'
@@ -37,9 +33,9 @@ declare class Parser {
     /**
      * Should use parse() instance method instead of this static method whenever possible
      */
-    static parse(str: string, format: ParseFormat, options?: ParseOptions): Database | Model;
-    static parse(str: RawDatabase, format: 'json', options?: ParseOptions): Database | Model;
-    parse(str: string, format: ParseFormat, options?: ParseOptions): Database | Model;
-    parse(str: RawDatabase, format: 'json', options?: ParseOptions): Database | Model;
+    static parse(str: string, format: ParseFormat): Database | Model;
+    static parse(str: RawDatabase, format: 'json'): Database | Model;
+    parse(str: string, format: ParseFormat): Database | Model;
+    parse(str: RawDatabase, format: 'json'): Database | Model;
 }
 export default Parser;
