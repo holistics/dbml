@@ -124,7 +124,6 @@ describe('[property] multifile compilation', () => {
         EXTENDED,
       );
     });
-
   });
 
   describe('cache correctness invariants', () => {

@@ -3,7 +3,7 @@ import { TableSymbol, EnumSymbol, ColumnSymbol, EnumFieldSymbol, SchemaSymbol } 
 import { SyntaxNode } from '@/core/parser/nodes';
 import { NodeSymbol } from '@/core/validator/symbol/symbols';
 import { SymbolToReferencesMap } from '@/core/types';
-import { analyze} from '@tests/utils';
+import { analyze } from '@tests/utils';
 
 function refsOf (map: SymbolToReferencesMap, symbol: NodeSymbol): SyntaxNode[] {
   return map.get(symbol) ?? [];

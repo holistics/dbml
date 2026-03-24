@@ -49,9 +49,7 @@ Ref: posts.user_id > users.id`;
               "startColumn": 22,
               "startLineNumber": 9,
             },
-            "uri": MockUri {
-              "path": "",
-            },
+            "uri": "",
           },
         ]
       `);
@@ -91,9 +89,7 @@ Table posts {
               "startColumn": 23,
               "startLineNumber": 6,
             },
-            "uri": MockUri {
-              "path": "",
-            },
+            "uri": "",
           },
         ]
       `);
@@ -138,9 +134,7 @@ TableGroup my_group {
               "startColumn": 3,
               "startLineNumber": 10,
             },
-            "uri": MockUri {
-              "path": "",
-            },
+            "uri": "",
           },
         ]
       `);
@@ -178,9 +172,7 @@ Ref: posts.user_id > myschema.users.id`;
               "startColumn": 31,
               "startLineNumber": 5,
             },
-            "uri": MockUri {
-              "path": "",
-            },
+            "uri": "",
           },
         ]
       `);
@@ -224,9 +216,7 @@ Ref: posts.user_id > users.id`;
               "startColumn": 22,
               "startLineNumber": 9,
             },
-            "uri": MockUri {
-              "path": "",
-            },
+            "uri": "",
           },
         ]
       `);
@@ -270,9 +260,7 @@ Ref: posts.author_id > users.id`;
               "startColumn": 22,
               "startLineNumber": 10,
             },
-            "uri": MockUri {
-              "path": "",
-            },
+            "uri": "",
           },
           {
             "range": {
@@ -281,9 +269,7 @@ Ref: posts.author_id > users.id`;
               "startColumn": 24,
               "startLineNumber": 11,
             },
-            "uri": MockUri {
-              "path": "",
-            },
+            "uri": "",
           },
         ]
       `);
@@ -326,9 +312,7 @@ Table users {
               "startColumn": 15,
               "startLineNumber": 7,
             },
-            "uri": MockUri {
-              "path": "",
-            },
+            "uri": "",
           },
         ]
       `);
@@ -369,9 +353,7 @@ Table users {
               "startColumn": 24,
               "startLineNumber": 7,
             },
-            "uri": MockUri {
-              "path": "",
-            },
+            "uri": "",
           },
         ]
       `);

@@ -11,6 +11,7 @@ class MockUri {
   path: string;
   constructor (path: string) { this.path = path; }
   with (change: { path?: string }): MockUri { return new MockUri(change.path ?? this.path); }
+  toJSON () { return this.path; }
 }
 
 export class MockTextModel {

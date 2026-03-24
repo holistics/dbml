@@ -213,5 +213,4 @@ describe('[fuzz] multifile - error handling', () => {
       ROBUSTNESS_CONFIG,
     );
   });
-
 });

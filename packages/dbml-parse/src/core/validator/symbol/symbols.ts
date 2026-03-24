@@ -55,7 +55,6 @@ export class SchemaSymbol extends NodeSymbol {
     super(id, filepath);
     this.symbolTable = symbolTable;
   }
-
 }
 
 // A symbol for an enum, contains the enum's symbol table

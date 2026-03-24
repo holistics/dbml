@@ -188,7 +188,7 @@ function suggestOnPartialInjectionOp (
   compiler: Compiler,
   offset: number,
 
-  filepath: Filepath,) {
+  filepath: Filepath) {
   return suggestNamesInScope(compiler, offset, compiler.ast(filepath), [SymbolKind.TablePartial], filepath);
 }
 
@@ -406,7 +406,7 @@ function suggestInTuple (compiler: Compiler, offset: number, tupleContainer: Tup
               compiler,
               offset,
               container as InfixExpressionNode & { op: { value: '.' } },
-            filepath,
+              filepath,
             );
           }
         }
@@ -440,7 +440,7 @@ function suggestInAttribute (
   compiler: Compiler,
   offset: number,
   container: AttributeNode,
-filepath: Filepath,
+  filepath: Filepath,
 ): CompletionList {
   const { token } = compiler.container.token(offset, filepath);
   if ([SyntaxTokenKind.COMMA, SyntaxTokenKind.LBRACKET].includes(token?.kind as any)) {
@@ -600,7 +600,7 @@ function suggestAttributeValue (
   compiler: Compiler,
   offset: number,
   settingName: string,
-filepath: Filepath,
+  filepath: Filepath,
 ): CompletionList {
   switch (settingName?.toLowerCase()) {
     case 'update':
@@ -640,7 +640,7 @@ function suggestMembers (
   compiler: Compiler,
   offset: number,
   container: InfixExpressionNode & { op: SyntaxToken },
-filepath: Filepath,
+  filepath: Filepath,
 ): CompletionList {
   const fragments = destructureMemberAccessExpression(container).unwrap_or([]);
   fragments.pop(); // The last fragment is not used in suggestions: v1.table.a<>
@@ -818,7 +818,7 @@ function suggestInElementHeader (
   compiler: Compiler,
   offset: number,
   container: ElementDeclarationNode,
-filepath: Filepath,
+  filepath: Filepath,
 ): CompletionList {
   const elementKind = getElementKind(container).unwrap_or(undefined);
   if (elementKind === ElementKind.Records) {
@@ -834,7 +834,7 @@ function suggestInCallExpression (
   compiler: Compiler,
   offset: number,
   container: CallExpressionNode,
-filepath: Filepath,
+  filepath: Filepath,
 ): CompletionList {
   const element = compiler.container.element(offset, filepath);
 

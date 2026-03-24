@@ -34,9 +34,7 @@ Ref: posts.user_id > users.id`;
               "startColumn": 1,
               "startLineNumber": 1,
             },
-            "uri": MockUri {
-              "path": "",
-            },
+            "uri": "",
           },
         ]
       `);
@@ -80,9 +78,7 @@ Ref: posts.user_id > users.id`;
               "startColumn": 1,
               "startLineNumber": 5,
             },
-            "uri": MockUri {
-              "path": "",
-            },
+            "uri": "",
           },
         ]
       `);
@@ -115,9 +111,7 @@ Table posts {
               "startColumn": 1,
               "startLineNumber": 1,
             },
-            "uri": MockUri {
-              "path": "",
-            },
+            "uri": "",
           },
         ]
       `);
@@ -152,9 +146,7 @@ Ref: posts.user_id < users.id`;
               "startColumn": 1,
               "startLineNumber": 1,
             },
-            "uri": MockUri {
-              "path": "",
-            },
+            "uri": "",
           },
         ]
       `);
@@ -195,9 +187,7 @@ Ref: users.referrer_id > users.id`;
               "startColumn": 1,
               "startLineNumber": 1,
             },
-            "uri": MockUri {
-              "path": "",
-            },
+            "uri": "",
           },
         ]
       `);
@@ -234,9 +224,7 @@ Ref: posts.user_id > users.id`;
               "startColumn": 3,
               "startLineNumber": 2,
             },
-            "uri": MockUri {
-              "path": "",
-            },
+            "uri": "",
           },
         ]
       `);
@@ -276,9 +264,7 @@ Ref: posts.user_id > users.id`;
               "startColumn": 3,
               "startLineNumber": 6,
             },
-            "uri": MockUri {
-              "path": "",
-            },
+            "uri": "",
           },
         ]
       `);
@@ -311,9 +297,7 @@ Table posts {
               "startColumn": 3,
               "startLineNumber": 2,
             },
-            "uri": MockUri {
-              "path": "",
-            },
+            "uri": "",
           },
         ]
       `);
@@ -350,9 +334,7 @@ Ref: (orders.merchant_id, orders.country) > (merchants.id, merchants.country_cod
               "startColumn": 3,
               "startLineNumber": 3,
             },
-            "uri": MockUri {
-              "path": "",
-            },
+            "uri": "",
           },
         ]
       `);
@@ -395,9 +377,7 @@ Table orders {
               "startColumn": 1,
               "startLineNumber": 1,
             },
-            "uri": MockUri {
-              "path": "",
-            },
+            "uri": "",
           },
         ]
       `);
@@ -430,9 +410,7 @@ Table orders {
               "startColumn": 1,
               "startLineNumber": 1,
             },
-            "uri": MockUri {
-              "path": "",
-            },
+            "uri": "",
           },
         ]
       `);
@@ -472,9 +450,7 @@ Table orders {
               "startColumn": 3,
               "startLineNumber": 2,
             },
-            "uri": MockUri {
-              "path": "",
-            },
+            "uri": "",
           },
         ]
       `);
@@ -512,9 +488,7 @@ Table users {
               "startColumn": 1,
               "startLineNumber": 1,
             },
-            "uri": MockUri {
-              "path": "",
-            },
+            "uri": "",
           },
         ]
       `);
@@ -553,9 +527,7 @@ Table users {
               "startColumn": 3,
               "startLineNumber": 2,
             },
-            "uri": MockUri {
-              "path": "",
-            },
+            "uri": "",
           },
         ]
       `);
@@ -632,9 +604,7 @@ Ref: ecommerce.orders.user_id > ecommerce.users.id`;
               "startColumn": 1,
               "startLineNumber": 1,
             },
-            "uri": MockUri {
-              "path": "",
-            },
+            "uri": "",
           },
         ]
       `);
@@ -669,9 +639,7 @@ Ref: ecommerce.orders.user_id > ecommerce.users.id`;
               "startColumn": 3,
               "startLineNumber": 2,
             },
-            "uri": MockUri {
-              "path": "",
-            },
+            "uri": "",
           },
         ]
       `);
@@ -705,9 +673,7 @@ Table users {
               "startColumn": 1,
               "startLineNumber": 1,
             },
-            "uri": MockUri {
-              "path": "",
-            },
+            "uri": "",
           },
         ]
       `);
@@ -757,9 +723,7 @@ TableGroup ecommerce {
               "startColumn": 1,
               "startLineNumber": 1,
             },
-            "uri": MockUri {
-              "path": "",
-            },
+            "uri": "",
           },
         ]
       `);
@@ -792,9 +756,7 @@ TableGroup group1 {
               "startColumn": 1,
               "startLineNumber": 1,
             },
-            "uri": MockUri {
-              "path": "",
-            },
+            "uri": "",
           },
         ]
       `);
@@ -830,9 +792,7 @@ TableGroup group1 {
               "startColumn": 3,
               "startLineNumber": 3,
             },
-            "uri": MockUri {
-              "path": "",
-            },
+            "uri": "",
           },
         ]
       `);
@@ -889,9 +849,7 @@ TableGroup group1 {
               "startColumn": 3,
               "startLineNumber": 3,
             },
-            "uri": MockUri {
-              "path": "",
-            },
+            "uri": "",
           },
         ]
       `);
@@ -928,9 +886,7 @@ Table users {
               "startColumn": 1,
               "startLineNumber": 1,
             },
-            "uri": MockUri {
-              "path": "",
-            },
+            "uri": "",
           },
         ]
       `);
@@ -977,9 +933,7 @@ Ref: users.created_at > logs.timestamp`;
               "startColumn": 3,
               "startLineNumber": 8,
             },
-            "uri": MockUri {
-              "path": "",
-            },
+            "uri": "",
           },
         ]
       `);
@@ -1273,9 +1227,7 @@ Ref: schema1.orders.id > schema2.orders.id`;
               "startColumn": 1,
               "startLineNumber": 1,
             },
-            "uri": MockUri {
-              "path": "",
-            },
+            "uri": "",
           },
         ]
       `);
@@ -1302,9 +1254,7 @@ Ref: schema1.orders.id > schema2.orders.id`;
               "startColumn": 1,
               "startLineNumber": 5,
             },
-            "uri": MockUri {
-              "path": "",
-            },
+            "uri": "",
           },
         ]
       `);
@@ -1341,9 +1291,7 @@ Ref: users.created_at > logs.timestamp`;
               "startColumn": 3,
               "startLineNumber": 7,
             },
-            "uri": MockUri {
-              "path": "",
-            },
+            "uri": "",
           },
         ]
       `);
@@ -1378,9 +1326,7 @@ Ref: orders.user_id > myproject.ecommerce.users.id`;
               "startColumn": 1,
               "startLineNumber": 1,
             },
-            "uri": MockUri {
-              "path": "",
-            },
+            "uri": "",
           },
         ]
       `);
@@ -1470,9 +1416,7 @@ Ref: users.id > posts.user_id`;
               "startColumn": 1,
               "startLineNumber": 1,
             },
-            "uri": MockUri {
-              "path": "",
-            },
+            "uri": "",
           },
         ]
       `);
@@ -1504,9 +1448,7 @@ Ref: users.email > logs.email_col`;
               "startColumn": 3,
               "startLineNumber": 3,
             },
-            "uri": MockUri {
-              "path": "",
-            },
+            "uri": "",
           },
         ]
       `);
@@ -1540,9 +1482,7 @@ Table users {
               "startColumn": 1,
               "startLineNumber": 1,
             },
-            "uri": MockUri {
-              "path": "",
-            },
+            "uri": "",
           },
         ]
       `);
@@ -1580,9 +1520,7 @@ Ref: posts.user_id > users.id`;
               "startColumn": 3,
               "startLineNumber": 2,
             },
-            "uri": MockUri {
-              "path": "",
-            },
+            "uri": "",
           },
         ]
       `);
@@ -1620,9 +1558,7 @@ Table posts {
               "startColumn": 3,
               "startLineNumber": 2,
             },
-            "uri": MockUri {
-              "path": "",
-            },
+            "uri": "",
           },
         ]
       `);
@@ -1662,9 +1598,7 @@ Ref: users.id < posts.user_id`;
               "startColumn": 1,
               "startLineNumber": 5,
             },
-            "uri": MockUri {
-              "path": "",
-            },
+            "uri": "",
           },
         ]
       `);
@@ -1710,9 +1644,7 @@ Ref: posts.(author_first, author_last) > users.(first_name, last_name)`;
               "startColumn": 3,
               "startLineNumber": 2,
             },
-            "uri": MockUri {
-              "path": "",
-            },
+            "uri": "",
           },
         ]
       `);
@@ -1770,9 +1702,7 @@ Ref: posts.user_id >`;
               "startColumn": 1,
               "startLineNumber": 5,
             },
-            "uri": MockUri {
-              "path": "",
-            },
+            "uri": "",
           },
         ]
       `);
@@ -1885,9 +1815,7 @@ TableGroup my_group {
               "startColumn": 1,
               "startLineNumber": 1,
             },
-            "uri": MockUri {
-              "path": "",
-            },
+            "uri": "",
           },
         ]
       `);
@@ -2859,9 +2787,7 @@ Records users(id, name, email) {
               "startColumn": 1,
               "startLineNumber": 1,
             },
-            "uri": MockUri {
-              "path": "",
-            },
+            "uri": "",
           },
         ]
       `);
@@ -2932,9 +2858,7 @@ Records public.orders(id, customer_name) {
               "startColumn": 1,
               "startLineNumber": 1,
             },
-            "uri": MockUri {
-              "path": "",
-            },
+            "uri": "",
           },
         ]
       `);
@@ -2975,9 +2899,7 @@ Records orders(id, status) {
               "startColumn": 1,
               "startLineNumber": 1,
             },
-            "uri": MockUri {
-              "path": "",
-            },
+            "uri": "",
           },
         ]
       `);
@@ -3018,9 +2940,7 @@ Records orders(id, status) {
               "startColumn": 3,
               "startLineNumber": 2,
             },
-            "uri": MockUri {
-              "path": "",
-            },
+            "uri": "",
           },
         ]
       `);
@@ -3062,9 +2982,7 @@ Records orders(id, status) {
               "startColumn": 3,
               "startLineNumber": 3,
             },
-            "uri": MockUri {
-              "path": "",
-            },
+            "uri": "",
           },
         ]
       `);
