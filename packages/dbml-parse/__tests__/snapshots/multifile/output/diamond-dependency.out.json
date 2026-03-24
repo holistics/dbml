@@ -1,0 +1,306 @@
+{
+  "database": [
+    {
+      "schemas": [],
+      "tables": [
+        {
+          "name": "main_table",
+          "schemaName": null,
+          "alias": null,
+          "fields": [
+            {
+              "name": "id",
+              "type": {
+                "schemaName": null,
+                "type_name": "int",
+                "args": null
+              },
+              "token": {
+                "start": {
+                  "offset": 94,
+                  "line": 4,
+                  "column": 3
+                },
+                "end": {
+                  "offset": 105,
+                  "line": 4,
+                  "column": 14
+                }
+              },
+              "inline_refs": [],
+              "pk": true,
+              "increment": false,
+              "unique": false,
+              "checks": []
+            }
+          ],
+          "token": {
+            "start": {
+              "offset": 73,
+              "line": 3,
+              "column": 1
+            },
+            "end": {
+              "offset": 107,
+              "line": 5,
+              "column": 2
+            }
+          },
+          "indexes": [],
+          "partials": [],
+          "checks": []
+        }
+      ],
+      "notes": [],
+      "refs": [],
+      "enums": [],
+      "tableGroups": [],
+      "aliases": [],
+      "project": {},
+      "tablePartials": [],
+      "records": []
+    },
+    {
+      "schemas": [],
+      "tables": [
+        {
+          "name": "users",
+          "schemaName": null,
+          "alias": null,
+          "fields": [
+            {
+              "name": "id",
+              "type": {
+                "schemaName": null,
+                "type_name": "int",
+                "args": null
+              },
+              "token": {
+                "start": {
+                  "offset": 57,
+                  "line": 3,
+                  "column": 3
+                },
+                "end": {
+                  "offset": 68,
+                  "line": 3,
+                  "column": 14
+                }
+              },
+              "inline_refs": [],
+              "pk": true,
+              "increment": false,
+              "unique": false,
+              "checks": []
+            },
+            {
+              "name": "status",
+              "type": {
+                "schemaName": null,
+                "type_name": "status",
+                "args": null
+              },
+              "token": {
+                "start": {
+                  "offset": 71,
+                  "line": 4,
+                  "column": 3
+                },
+                "end": {
+                  "offset": 84,
+                  "line": 4,
+                  "column": 16
+                }
+              },
+              "inline_refs": [],
+              "pk": false,
+              "unique": false
+            }
+          ],
+          "token": {
+            "start": {
+              "offset": 41,
+              "line": 2,
+              "column": 1
+            },
+            "end": {
+              "offset": 86,
+              "line": 5,
+              "column": 2
+            }
+          },
+          "indexes": [],
+          "partials": [],
+          "checks": []
+        }
+      ],
+      "notes": [],
+      "refs": [],
+      "enums": [],
+      "tableGroups": [],
+      "aliases": [],
+      "project": {},
+      "tablePartials": [],
+      "records": []
+    },
+    {
+      "schemas": [],
+      "tables": [],
+      "notes": [],
+      "refs": [],
+      "enums": [
+        {
+          "values": [
+            {
+              "token": {
+                "start": {
+                  "offset": 16,
+                  "line": 2,
+                  "column": 3
+                },
+                "end": {
+                  "offset": 22,
+                  "line": 2,
+                  "column": 9
+                }
+              },
+              "name": "active"
+            },
+            {
+              "token": {
+                "start": {
+                  "offset": 25,
+                  "line": 3,
+                  "column": 3
+                },
+                "end": {
+                  "offset": 33,
+                  "line": 3,
+                  "column": 11
+                }
+              },
+              "name": "inactive"
+            },
+            {
+              "token": {
+                "start": {
+                  "offset": 36,
+                  "line": 4,
+                  "column": 3
+                },
+                "end": {
+                  "offset": 43,
+                  "line": 4,
+                  "column": 10
+                }
+              },
+              "name": "pending"
+            }
+          ],
+          "token": {
+            "start": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            },
+            "end": {
+              "offset": 45,
+              "line": 5,
+              "column": 2
+            }
+          },
+          "name": "status",
+          "schemaName": null
+        }
+      ],
+      "tableGroups": [],
+      "aliases": [],
+      "project": {},
+      "tablePartials": [],
+      "records": []
+    },
+    {
+      "schemas": [],
+      "tables": [
+        {
+          "name": "orders",
+          "schemaName": null,
+          "alias": null,
+          "fields": [
+            {
+              "name": "id",
+              "type": {
+                "schemaName": null,
+                "type_name": "int",
+                "args": null
+              },
+              "token": {
+                "start": {
+                  "offset": 58,
+                  "line": 3,
+                  "column": 3
+                },
+                "end": {
+                  "offset": 69,
+                  "line": 3,
+                  "column": 14
+                }
+              },
+              "inline_refs": [],
+              "pk": true,
+              "increment": false,
+              "unique": false,
+              "checks": []
+            },
+            {
+              "name": "status",
+              "type": {
+                "schemaName": null,
+                "type_name": "status",
+                "args": null
+              },
+              "token": {
+                "start": {
+                  "offset": 72,
+                  "line": 4,
+                  "column": 3
+                },
+                "end": {
+                  "offset": 85,
+                  "line": 4,
+                  "column": 16
+                }
+              },
+              "inline_refs": [],
+              "pk": false,
+              "unique": false
+            }
+          ],
+          "token": {
+            "start": {
+              "offset": 41,
+              "line": 2,
+              "column": 1
+            },
+            "end": {
+              "offset": 87,
+              "line": 5,
+              "column": 2
+            }
+          },
+          "indexes": [],
+          "partials": [],
+          "checks": []
+        }
+      ],
+      "notes": [],
+      "refs": [],
+      "enums": [],
+      "tableGroups": [],
+      "aliases": [],
+      "project": {},
+      "tablePartials": [],
+      "records": []
+    }
+  ]
+}

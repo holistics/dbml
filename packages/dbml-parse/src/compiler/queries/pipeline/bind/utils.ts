@@ -49,7 +49,7 @@ export function resolveExternalDependencies (
     if (externalLocal.errors.length > 0) continue;
 
     if (!useNode.specifiers) {
-      errors.push(...resolveWholeFileUse({ resolvedTable, externalTable: externalLocal.symbolTable, ...ctx }));
+      errors.push(...resolveWholeFileUse({ resolvedTable, externalTable: externalLocal.symbolTable, externalFilepath, ...ctx }));
     } else {
       errors.push(...resolveSelectiveUse({ resolvedTable, externalTable: externalLocal.symbolTable, externalFilepath, ...ctx }));
     }
@@ -59,12 +59,14 @@ export function resolveExternalDependencies (
 }
 
 // `use './b.dbml'`: merge all symbols from the external file (except its own imports).
-function resolveWholeFileUse ({ resolvedTable, externalTable, symbolFactory, clonedSchemas }: {
+function resolveWholeFileUse ({ resolvedTable, externalTable, externalFilepath, symbolFactory, clonedSchemas }: {
   resolvedTable: SymbolTable;
   externalTable: Readonly<SymbolTable>;
+  externalFilepath: Filepath;
   symbolFactory: SymbolFactory;
   clonedSchemas: WeakSet<SchemaSymbol>;
 }): CompileError[] {
+  replacePlaceholders(resolvedTable, externalTable, externalFilepath);
   return mergeSymbolTables({ target: resolvedTable, source: externalTable, symbolFactory, clonedSchemas });
 }
 
@@ -147,16 +149,18 @@ function mergeSymbolTables ({ target, source, schemaPath, symbolFactory, clonedS
       continue;
     }
 
-    // Duplicate - error
-    if (existing !== entrySymbol) {
-      const entryInfo = destructureIndex(entryId).unwrap_or(undefined);
-      const location = schemaPath ? ` in schema '${schemaPath}'` : '';
-      errors.push(new CompileError(
-        CompileErrorCode.DUPLICATE_NAME,
-        `'${entryInfo?.name ?? entryId}'${location} conflicts with an imported definition`,
-        entrySymbol.declaration!,
-      ));
+    // Same symbol by reference or from the same source file — skip
+    if (existing === entrySymbol || existing.filepath.intern() === entrySymbol.filepath.intern()) {
+      continue;
     }
+
+    const entryInfo = destructureIndex(entryId).unwrap_or(undefined);
+    const location = schemaPath ? ` in schema '${schemaPath}'` : '';
+    errors.push(new CompileError(
+      CompileErrorCode.DUPLICATE_NAME,
+      `'${entryInfo?.name ?? entryId}'${location} conflicts with an imported definition`,
+      entrySymbol.declaration!,
+    ));
   }
 
   return errors;

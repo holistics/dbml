@@ -105,7 +105,7 @@ describe('[property] use statement', () => {
       );
     });
 
-    it('entire-file use should have no specifiers or fromKeyword', () => {
+    it('entire-file use should have star and fromKeyword but no specifiers', () => {
       fc.assert(
         fc.property(useDeclarationArbitrary, (source) => {
           const result = parse(source);
@@ -114,7 +114,10 @@ describe('[property] use statement', () => {
           const stmt = result.getValue().ast.useDeclarations[0];
           fc.pre(stmt.specifiers === undefined);
 
-          expect(stmt.fromKeyword).toBeUndefined();
+          expect(stmt.star).toBeDefined();
+          expect(stmt.star?.value).toBe('*');
+          expect(stmt.fromKeyword).toBeDefined();
+          expect(stmt.fromKeyword?.value).toBe('from');
           expect(stmt.path).toBeDefined();
         }),
         CONFIG,

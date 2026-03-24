@@ -49,7 +49,7 @@ export function parse (source: string): Report<{ ast: ProgramNode; tokens: Synta
 export function analyze (source: string): Report<AnalysisResult> {
   return parse(source).chain(({ ast }) => {
     const symbolFactory = new SymbolFactory(new NodeSymbolIdGenerator(), DEFAULT_ENTRY);
-    const nodeToSymbol = new WeakMap();
+    const nodeToSymbol = new Map();
     nodeToSymbol.set(ast, symbolFactory.create(SchemaSymbol, { symbolTable: new SymbolTable() }));
     return new Validator({ ast, filepath: DEFAULT_ENTRY, nodeToSymbol }, symbolFactory).validate().chain(({ nodeToSymbol: nts }) => {
       const symbolToReferences: SymbolToReferencesMap = new Map();
@@ -61,7 +61,13 @@ export function analyze (source: string): Report<AnalysisResult> {
 export function interpret (source: string): Report<Database | undefined> {
   const compiler = new Compiler();
   compiler.setSource(source);
-  return compiler.interpretFile();
+  const modelReport = compiler.interpretFile(DEFAULT_ENTRY);
+  const model = modelReport.getValue();
+  return new Report(
+    model.database[0],
+    modelReport.getErrors(),
+    modelReport.getWarnings(),
+  );
 }
 
 export function flattenTokens (token: SyntaxToken): SyntaxToken[] {
@@ -233,6 +239,7 @@ export function print (source: string, ast: SyntaxNode): string {
       case SyntaxNodeKind.USE_DECLARATION: {
         const use = node as UseDeclarationNode;
         if (use.useKeyword) collectTokens(use.useKeyword);
+        if (use.star) collectTokens(use.star);
         if (use.specifiers) collectTokens(use.specifiers);
         if (use.fromKeyword) collectTokens(use.fromKeyword);
         if (use.path) collectTokens(use.path);

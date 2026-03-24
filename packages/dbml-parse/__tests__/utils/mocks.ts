@@ -7,14 +7,19 @@ export function createPosition (lineNumber: number, column: number): Position {
   } as Position;
 }
 
-// Mock TextModel for property testing
+class MockUri {
+  path: string;
+  constructor (path: string) { this.path = path; }
+  with (change: { path?: string }): MockUri { return new MockUri(change.path ?? this.path); }
+}
+
 export class MockTextModel {
   private content: string;
-  public uri: any;
+  public uri: MockUri;
 
   constructor (content: string, uri: string = '') {
     this.content = content;
-    this.uri = uri;
+    this.uri = new MockUri(uri);
   }
 
   getOffsetAt (position: Position): number {

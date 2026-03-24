@@ -1,0 +1,6 @@
+use { tablepartial timestamps } from './partials.dbml'
+Table users {
+  id int [pk]
+  name varchar
+  ~timestamps
+}

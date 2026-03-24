@@ -1,0 +1,229 @@
+{
+  "database": [
+    {
+      "schemas": [],
+      "tables": [
+        {
+          "name": "orders",
+          "schemaName": null,
+          "alias": null,
+          "fields": [
+            {
+              "name": "id",
+              "type": {
+                "schemaName": null,
+                "type_name": "int",
+                "args": null
+              },
+              "token": {
+                "start": {
+                  "offset": 58,
+                  "line": 3,
+                  "column": 3
+                },
+                "end": {
+                  "offset": 69,
+                  "line": 3,
+                  "column": 14
+                }
+              },
+              "inline_refs": [],
+              "pk": true,
+              "increment": false,
+              "unique": false,
+              "checks": []
+            },
+            {
+              "name": "user_id",
+              "type": {
+                "schemaName": null,
+                "type_name": "int",
+                "args": null
+              },
+              "token": {
+                "start": {
+                  "offset": 72,
+                  "line": 4,
+                  "column": 3
+                },
+                "end": {
+                  "offset": 101,
+                  "line": 4,
+                  "column": 32
+                }
+              },
+              "inline_refs": [
+                {
+                  "schemaName": null,
+                  "tableName": "users",
+                  "fieldNames": [
+                    "id"
+                  ],
+                  "relation": ">",
+                  "token": {
+                    "start": {
+                      "offset": 85,
+                      "line": 4,
+                      "column": 16
+                    },
+                    "end": {
+                      "offset": 100,
+                      "line": 4,
+                      "column": 31
+                    }
+                  }
+                }
+              ],
+              "pk": false,
+              "increment": false,
+              "unique": false,
+              "checks": []
+            }
+          ],
+          "token": {
+            "start": {
+              "offset": 41,
+              "line": 2,
+              "column": 1
+            },
+            "end": {
+              "offset": 103,
+              "line": 5,
+              "column": 2
+            }
+          },
+          "indexes": [],
+          "partials": [],
+          "checks": []
+        }
+      ],
+      "notes": [],
+      "refs": [
+        {
+          "name": null,
+          "schemaName": null,
+          "token": {
+            "start": {
+              "offset": 85,
+              "line": 4,
+              "column": 16
+            },
+            "end": {
+              "offset": 100,
+              "line": 4,
+              "column": 31
+            }
+          },
+          "endpoints": [
+            {
+              "schemaName": null,
+              "tableName": "users",
+              "fieldNames": [
+                "id"
+              ],
+              "relation": "1",
+              "token": {
+                "start": {
+                  "offset": 85,
+                  "line": 4,
+                  "column": 16
+                },
+                "end": {
+                  "offset": 100,
+                  "line": 4,
+                  "column": 31
+                }
+              }
+            },
+            {
+              "schemaName": null,
+              "tableName": "orders",
+              "fieldNames": [
+                "user_id"
+              ],
+              "token": {
+                "start": {
+                  "offset": 72,
+                  "line": 4,
+                  "column": 3
+                },
+                "end": {
+                  "offset": 101,
+                  "line": 4,
+                  "column": 32
+                }
+              },
+              "relation": "*"
+            }
+          ]
+        }
+      ],
+      "enums": [],
+      "tableGroups": [],
+      "aliases": [],
+      "project": {},
+      "tablePartials": [],
+      "records": []
+    },
+    {
+      "schemas": [],
+      "tables": [
+        {
+          "name": "users",
+          "schemaName": null,
+          "alias": null,
+          "fields": [
+            {
+              "name": "id",
+              "type": {
+                "schemaName": null,
+                "type_name": "int",
+                "args": null
+              },
+              "token": {
+                "start": {
+                  "offset": 16,
+                  "line": 2,
+                  "column": 3
+                },
+                "end": {
+                  "offset": 27,
+                  "line": 2,
+                  "column": 14
+                }
+              },
+              "inline_refs": [],
+              "pk": true,
+              "increment": false,
+              "unique": false,
+              "checks": []
+            }
+          ],
+          "token": {
+            "start": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            },
+            "end": {
+              "offset": 29,
+              "line": 3,
+              "column": 2
+            }
+          },
+          "indexes": [],
+          "partials": [],
+          "checks": []
+        }
+      ],
+      "notes": [],
+      "refs": [],
+      "enums": [],
+      "tableGroups": [],
+      "aliases": [],
+      "project": {},
+      "tablePartials": [],
+      "records": []
+    }
+  ]
+}

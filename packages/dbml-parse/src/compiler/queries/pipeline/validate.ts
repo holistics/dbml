@@ -30,18 +30,9 @@ export function localFileDependencies (this: Compiler, filepath: Filepath): Read
 
 export function validateFile (this: Compiler, filepath: Filepath): FileLocalSymbolIndex {
   const fileIndex = this.parseFile(filepath);
-
   const symbolIdGenerator = new NodeSymbolIdGenerator();
-
-  if (fileIndex.errors.length > 0) {
-    return {
-      path: fileIndex.path, symbolTable: new SymbolTable(), symbolIdGenerator, nodeToSymbol: new WeakMap(), externalFilepaths: new Map(),
-      errors: fileIndex.errors, warnings: fileIndex.warnings,
-    };
-  }
-
   const symbolFactory = new SymbolFactory(symbolIdGenerator, filepath);
-  const nodeToSymbol: NodeToSymbolMap = new WeakMap();
+  const nodeToSymbol: NodeToSymbolMap = new Map();
   const fileSymbol = symbolFactory.create(SchemaSymbol, { symbolTable: new SymbolTable() });
   nodeToSymbol.set(fileIndex.ast, fileSymbol);
 

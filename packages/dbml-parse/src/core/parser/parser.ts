@@ -242,10 +242,11 @@ export default class Parser {
     return statements;
   }
 
-  /* Parsing UseDeclarationNode: use { <specifiers> } from <path> */
+  /* Parsing UseDeclarationNode: use { <specifiers> } from <path> | use * from <path> */
   private useDeclaration (): UseDeclarationNode {
     const args: {
       useKeyword?: SyntaxToken;
+      star?: SyntaxToken;
       specifiers?: UseSpecifierListNode;
       fromKeyword?: SyntaxToken;
       path?: SyntaxToken;
@@ -256,30 +257,28 @@ export default class Parser {
     this.advance();
     args.useKeyword = this.previous();
 
-    // Entire-file use: use './path.dbml'
-    if (this.match(SyntaxTokenKind.STRING_LITERAL)) {
-      args.path = this.previous();
-      return buildNode();
-    }
-
-    // Selective use: use { ... } from './path.dbml'
-
-    // parse specifier list { ... }
-    try {
-      args.specifiers = this.useSpecifierList();
-    } catch (e) {
-      if (!(e instanceof PartialParsingError)) {
-        throw e;
+    // Entire-file use: use * from './path.dbml'
+    if (this.peek().kind === SyntaxTokenKind.OP && this.peek().value === '*') {
+      args.star = this.advance();
+    } else {
+      // Selective use: use { ... } from './path.dbml'
+      try {
+        args.specifiers = this.useSpecifierList();
+      } catch (e) {
+        if (!(e instanceof PartialParsingError)) {
+          throw e;
+        }
+        args.specifiers = e.partialNode;
+        throw new PartialParsingError(e.token, buildNode(), e.handlerContext);
       }
-      args.specifiers = e.partialNode;
-      throw new PartialParsingError(e.token, buildNode(), e.handlerContext);
     }
 
     // consume 'from' keyword
+    const afterWhat = args.star ? "'*'" : 'specifier list';
     if (isFromKeyword(this.peek())) {
       args.fromKeyword = this.advance();
     } else {
-      this.logError(this.peek(), CompileErrorCode.UNEXPECTED_TOKEN, 'Expect \'from\' after specifier list');
+      this.logError(this.peek(), CompileErrorCode.UNEXPECTED_TOKEN, `Expect 'from' after ${afterWhat}`);
       throw new PartialParsingError(this.peek(), buildNode(), this.contextStack.findHandlerContext(this.tokens, this.current));
     }
 

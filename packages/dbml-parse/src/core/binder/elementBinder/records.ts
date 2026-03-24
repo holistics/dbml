@@ -86,6 +86,8 @@ export default class RecordsBinder implements ElementBinder {
       return [];
     }
 
+    this.context.nodeToSymbol.set(this.declarationNode, tableReferee);
+
     const tableName = getElementNameString(tableReferee.declaration).unwrap_or('<invalid name>');
 
     const errors: CompileError[] = [];

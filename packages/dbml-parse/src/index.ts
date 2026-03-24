@@ -49,6 +49,7 @@ export {
 // Export interpreted types for structured data
 export {
   type Database,
+  type Model,
   type Table,
   type Column,
   type Enum,

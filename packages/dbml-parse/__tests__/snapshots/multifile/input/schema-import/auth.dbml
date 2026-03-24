@@ -1,0 +1,8 @@
+Table auth.users {
+  id int [pk]
+  email varchar
+}
+Table auth.roles {
+  id int [pk]
+  name varchar
+}

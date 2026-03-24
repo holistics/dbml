@@ -1,0 +1,5 @@
+use { enum status } from './shared.dbml'
+Table users {
+  id int [pk]
+  status status
+}

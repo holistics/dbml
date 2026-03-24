@@ -37,7 +37,9 @@ records users(id, name) {
               "startColumn": 1,
               "startLineNumber": 1,
             },
-            "uri": "",
+            "uri": MockUri {
+              "path": "",
+            },
           },
         ]
       `);
@@ -83,7 +85,9 @@ records auth.users(id, email) {
               "startColumn": 1,
               "startLineNumber": 1,
             },
-            "uri": "",
+            "uri": MockUri {
+              "path": "",
+            },
           },
         ]
       `);
@@ -134,7 +138,9 @@ records auth.users(id, email) {
               "startColumn": 1,
               "startLineNumber": 1,
             },
-            "uri": "",
+            "uri": MockUri {
+              "path": "",
+            },
           },
         ]
       `);
@@ -182,7 +188,9 @@ records users(id, name) {
               "startColumn": 3,
               "startLineNumber": 2,
             },
-            "uri": "",
+            "uri": MockUri {
+              "path": "",
+            },
           },
         ]
       `);
@@ -223,7 +231,9 @@ records users(id, name) {
               "startColumn": 3,
               "startLineNumber": 3,
             },
-            "uri": "",
+            "uri": MockUri {
+              "path": "",
+            },
           },
         ]
       `);
@@ -271,7 +281,9 @@ records users(id, status) {
               "startColumn": 1,
               "startLineNumber": 1,
             },
-            "uri": "",
+            "uri": MockUri {
+              "path": "",
+            },
           },
         ]
       `);
@@ -322,7 +334,9 @@ records users(id, status) {
               "startColumn": 3,
               "startLineNumber": 2,
             },
-            "uri": "",
+            "uri": MockUri {
+              "path": "",
+            },
           },
         ]
       `);
@@ -368,7 +382,9 @@ records auth.users(id, role) {
               "startColumn": 3,
               "startLineNumber": 2,
             },
-            "uri": "",
+            "uri": MockUri {
+              "path": "",
+            },
           },
         ]
       `);

@@ -76,6 +76,10 @@ export interface Database {
   records: TableRecord[];
 }
 
+export interface Model {
+  database: Database[];
+}
+
 export interface Table {
   name: string;
   schemaName: null | string;

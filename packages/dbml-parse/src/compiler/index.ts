@@ -63,14 +63,13 @@ export default class Compiler {
   //
   // Usage:  parseFile = this.localQuery(parseFile);
   //         this.parseFile(filepath)  // first call computes, subsequent calls return cached result
-  private localQuery<T> (fn: (this: Compiler, filepath: Filepath) => T): (filepath?: Filepath) => T {
+  private localQuery<T> (fn: (this: Compiler, filepath: Filepath) => T): (filepath: Filepath) => T {
     const cacheKey = Symbol(); // unique identifier for this particular query in localQueryCache
     const cache = new Map<FilepathId, T>();
     this.localQueryCache.set(cacheKey, cache); // register so setSource/deleteSource can invalidate entries
-    return (filepath: Filepath = DEFAULT_ENTRY): T => {
+    return (filepath: Filepath): T => {
       const fileId = filepath.intern();
-      const cached = cache.get(fileId);
-      if (cached !== undefined) return cached;
+      if (cache.has(fileId)) return cache.get(fileId)!;
       const result = fn.call(this, filepath);
       cache.set(fileId, result);
       return result;
@@ -92,17 +91,8 @@ export default class Compiler {
   private globalQuery<Args extends (Primitive | Primitive[] | Internable<unknown>)[], Return> (
     fn: (this: Compiler, ...args: Args) => Return,
   ): (...args: Args) => Return {
-    const cacheKey = Symbol(); // unique identifier for this particular query in globalQueryCache
+    const cacheKey = Symbol();
     return ((...args: Args): Return => {
-      // No-arg path: store result directly under cacheKey
-      if (args.length === 0) {
-        if (this.globalQueryCache.has(cacheKey)) return this.globalQueryCache.get(cacheKey);
-        const result = fn.apply(this, args);
-        this.globalQueryCache.set(cacheKey, result);
-        return result;
-      }
-
-      // With-arg path: store results in a sub-map keyed by serialized args
       const argKey = args.map((a) => intern(a)).join('\0');
       let subCache = this.globalQueryCache.get(cacheKey);
       if (subCache instanceof Map && subCache.has(argKey)) return subCache.get(argKey);
@@ -135,11 +125,11 @@ export default class Compiler {
     return this._layout;
   }
 
-  ast (filePath: Filepath = DEFAULT_ENTRY) {
+  ast (filePath: Filepath) {
     return this.parseFile(filePath).ast;
   }
 
-  getSource (filePath: Filepath = DEFAULT_ENTRY): string | undefined {
+  getSource (filePath: Filepath): string | undefined {
     return this._layout.getSource(filePath);
   }
 
@@ -147,7 +137,7 @@ export default class Compiler {
     oldName: TableNameInput,
     newName: TableNameInput,
   ): string {
-    return renameTable.call(this, oldName, newName);
+    return renameTable.call(this, oldName, newName, DEFAULT_ENTRY);
   }
 
   /* pipeline */
@@ -184,10 +174,10 @@ export default class Compiler {
   // A global query - resolve + bind a file, producing symbolTable, nodeToSymbol, nodeToReferee, symbolToReferences.
   bindFile = this.globalQuery(bindFile);
 
-  // A local query
-  // Interpret a single file into a Database model
-  // Signature: (filepath?: Filepath) => Report<Database>
-  interpretFile = this.localQuery(interpretFile);
+  // A global query - interpret a file and its dependency graph into a Model (one Database per file).
+  // Global because it depends on bindFile (a global query for cross-file resolution).
+  // Signature: (filepath?: Filepath) => Report<Model>
+  interpretFile = this.globalQuery(interpretFile);
 
   /* diagnostics */
 

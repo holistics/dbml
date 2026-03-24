@@ -63,7 +63,7 @@ describe('[example] parser - use statement', () => {
     });
 
     test('should parse entire-file use', () => {
-      const source = "use './common.dbml'";
+      const source = "use * from './common.dbml'";
       const result = parse(source);
 
       expect(result.getErrors()).toHaveLength(0);
@@ -74,13 +74,14 @@ describe('[example] parser - use statement', () => {
 
       const stmt = ast.useDeclarations[0];
       expect(stmt.useKeyword?.value).toBe('use');
+      expect(stmt.star?.value).toBe('*');
+      expect(stmt.fromKeyword?.value).toBe('from');
       expect(stmt.path?.value).toBe('./common.dbml');
       expect(stmt.specifiers).toBeUndefined();
-      expect(stmt.fromKeyword).toBeUndefined();
     });
 
     test('should parse entire-file use followed by selective use', () => {
-      const source = "use './common.dbml'\nuse { table users } from './schema'";
+      const source = "use * from './common.dbml'\nuse { table users } from './schema'";
       const result = parse(source);
 
       expect(result.getErrors()).toHaveLength(0);
@@ -90,6 +91,7 @@ describe('[example] parser - use statement', () => {
 
       // entire-file
       expect(ast.useDeclarations[0].specifiers).toBeUndefined();
+      expect(ast.useDeclarations[0].star?.value).toBe('*');
       expect(ast.useDeclarations[0].path?.value).toBe('./common.dbml');
 
       // selective
@@ -98,7 +100,7 @@ describe('[example] parser - use statement', () => {
     });
 
     test('should parse entire-file use followed by table declaration', () => {
-      const source = "use './common.dbml'\nTable orders { id int }";
+      const source = "use * from './common.dbml'\nTable orders { id int }";
       const result = parse(source);
 
       expect(result.getErrors()).toHaveLength(0);

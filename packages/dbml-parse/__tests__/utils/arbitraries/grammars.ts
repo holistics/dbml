@@ -988,8 +988,8 @@ const selectiveUseArbitrary = fc.tuple(
   singleLineStringArbitrary,
 ).map(([specifiers, path]) => `use ${specifiers} from ${path}`);
 
-// An entire-file use statement: "use 'path'"
-const entireFileUseArbitrary = singleLineStringArbitrary.map((path) => `use ${path}`);
+// An entire-file use statement: "use * from 'path'"
+const entireFileUseArbitrary = singleLineStringArbitrary.map((path) => `use * from ${path}`);
 
 // Either form of use statement
 export const useDeclarationArbitrary = fc.oneof(selectiveUseArbitrary, entireFileUseArbitrary);

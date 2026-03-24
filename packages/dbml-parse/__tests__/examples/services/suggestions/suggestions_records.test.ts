@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import Compiler from '@/compiler';
+import { DEFAULT_ENTRY } from '@/compiler/constants';
 import DBMLCompletionItemProvider from '@/services/suggestions/provider';
 import { createMockTextModel, createPosition } from '@tests/utils';
 import { getColumnsFromTableSymbol } from '@/services/suggestions/utils';
@@ -184,11 +185,11 @@ describe('[example] Suggestions Utils - Records', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(program);
-      compiler.parseFile();
+      compiler.parseFile(DEFAULT_ENTRY);
 
-      const ast = compiler.ast();
+      const ast = compiler.ast(DEFAULT_ENTRY);
       const tableElement = ast.body[2]; // users table is the third element
-      const tableSymbol = compiler.validateFile().nodeToSymbol.get(tableElement);
+      const tableSymbol = compiler.bindFile(DEFAULT_ENTRY).getValue().nodeToSymbol.get(tableElement);
 
       if (tableSymbol instanceof TableSymbol) {
         const columns = getColumnsFromTableSymbol(tableSymbol);
@@ -220,11 +221,11 @@ describe('[example] Suggestions Utils - Records', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(program);
-      compiler.parseFile();
+      compiler.parseFile(DEFAULT_ENTRY);
 
-      const ast = compiler.ast();
+      const ast = compiler.ast(DEFAULT_ENTRY);
       const tableElement = ast.body[1];
-      const tableSymbol = compiler.validateFile().nodeToSymbol.get(tableElement);
+      const tableSymbol = compiler.bindFile(DEFAULT_ENTRY).getValue().nodeToSymbol.get(tableElement);
 
       if (tableSymbol instanceof TableSymbol) {
         const columns = getColumnsFromTableSymbol(tableSymbol);
@@ -252,11 +253,11 @@ describe('[example] Suggestions Utils - Records', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(program);
-      compiler.parseFile();
+      compiler.parseFile(DEFAULT_ENTRY);
 
-      const ast = compiler.ast();
+      const ast = compiler.ast(DEFAULT_ENTRY);
       const tableElement = ast.body[1];
-      const tableSymbol = compiler.validateFile().nodeToSymbol.get(tableElement);
+      const tableSymbol = compiler.bindFile(DEFAULT_ENTRY).getValue().nodeToSymbol.get(tableElement);
 
       if (tableSymbol instanceof TableSymbol) {
         const columns = getColumnsFromTableSymbol(tableSymbol);
@@ -283,12 +284,12 @@ describe('[example] Suggestions Utils - Records', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(program);
-      compiler.parseFile(); // Trigger parsing
+      compiler.parseFile(DEFAULT_ENTRY); // Trigger parsing
 
       // Get the table symbol
-      const ast = compiler.ast();
+      const ast = compiler.ast(DEFAULT_ENTRY);
       const tableElement = ast.body[0];
-      const tableSymbol = compiler.validateFile().nodeToSymbol.get(tableElement);
+      const tableSymbol = compiler.bindFile(DEFAULT_ENTRY).getValue().nodeToSymbol.get(tableElement);
 
       expect(tableSymbol).toBeInstanceOf(TableSymbol);
 
@@ -319,11 +320,11 @@ describe('[example] Suggestions Utils - Records', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(program);
-      compiler.parseFile();
+      compiler.parseFile(DEFAULT_ENTRY);
 
-      const ast = compiler.ast();
+      const ast = compiler.ast(DEFAULT_ENTRY);
       const tableElement = ast.body[0];
-      const tableSymbol = compiler.validateFile().nodeToSymbol.get(tableElement);
+      const tableSymbol = compiler.bindFile(DEFAULT_ENTRY).getValue().nodeToSymbol.get(tableElement);
 
       if (tableSymbol instanceof TableSymbol) {
         const columns = getColumnsFromTableSymbol(tableSymbol);
@@ -354,11 +355,11 @@ describe('[example] Suggestions Utils - Records', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(program);
-      compiler.parseFile();
+      compiler.parseFile(DEFAULT_ENTRY);
 
-      const ast = compiler.ast();
+      const ast = compiler.ast(DEFAULT_ENTRY);
       const tableElement = ast.body[0];
-      const tableSymbol = compiler.validateFile().nodeToSymbol.get(tableElement);
+      const tableSymbol = compiler.bindFile(DEFAULT_ENTRY).getValue().nodeToSymbol.get(tableElement);
 
       if (tableSymbol instanceof TableSymbol) {
         const columns = getColumnsFromTableSymbol(tableSymbol);
@@ -381,11 +382,11 @@ describe('[example] Suggestions Utils - Records', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(program);
-      compiler.parseFile();
+      compiler.parseFile(DEFAULT_ENTRY);
 
-      const ast = compiler.ast();
+      const ast = compiler.ast(DEFAULT_ENTRY);
       const tableElement = ast.body[0];
-      const tableSymbol = compiler.validateFile().nodeToSymbol.get(tableElement);
+      const tableSymbol = compiler.bindFile(DEFAULT_ENTRY).getValue().nodeToSymbol.get(tableElement);
 
       if (tableSymbol instanceof TableSymbol) {
         const columns = getColumnsFromTableSymbol(tableSymbol);
@@ -409,11 +410,11 @@ describe('[example] Suggestions Utils - Records', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(program);
-      compiler.parseFile();
+      compiler.parseFile(DEFAULT_ENTRY);
 
-      const ast = compiler.ast();
+      const ast = compiler.ast(DEFAULT_ENTRY);
       const tableElement = ast.body[0];
-      const tableSymbol = compiler.validateFile().nodeToSymbol.get(tableElement);
+      const tableSymbol = compiler.bindFile(DEFAULT_ENTRY).getValue().nodeToSymbol.get(tableElement);
 
       if (tableSymbol instanceof TableSymbol) {
         const columns = getColumnsFromTableSymbol(tableSymbol);
@@ -436,11 +437,11 @@ describe('[example] Suggestions Utils - Records', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(program);
-      compiler.parseFile();
+      compiler.parseFile(DEFAULT_ENTRY);
 
-      const ast = compiler.ast();
+      const ast = compiler.ast(DEFAULT_ENTRY);
       const tableElement = ast.body[0];
-      const tableSymbol = compiler.validateFile().nodeToSymbol.get(tableElement);
+      const tableSymbol = compiler.bindFile(DEFAULT_ENTRY).getValue().nodeToSymbol.get(tableElement);
 
       if (tableSymbol instanceof TableSymbol) {
         const columns = getColumnsFromTableSymbol(tableSymbol);
@@ -465,11 +466,11 @@ describe('[example] Suggestions Utils - Records', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(program);
-      compiler.parseFile();
+      compiler.parseFile(DEFAULT_ENTRY);
 
-      const ast = compiler.ast();
+      const ast = compiler.ast(DEFAULT_ENTRY);
       const tableElement = ast.body[0];
-      const tableSymbol = compiler.validateFile().nodeToSymbol.get(tableElement);
+      const tableSymbol = compiler.bindFile(DEFAULT_ENTRY).getValue().nodeToSymbol.get(tableElement);
 
       if (tableSymbol instanceof TableSymbol) {
         const columns = getColumnsFromTableSymbol(tableSymbol);

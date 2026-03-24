@@ -1,5 +1,6 @@
 import { DEFAULT_SCHEMA_NAME } from '@/constants';
 import type Compiler from '../../index';
+import type { Filepath } from '../../projectLayout';
 import { SyntaxNode } from '@/core/parser/nodes';
 import SymbolTable from '@/core/validator/symbol/symbolTable';
 import { TableSymbol } from '@/core/validator/symbol/symbols';
@@ -228,9 +229,10 @@ export function renameTable (
   this: Compiler,
   oldName: TableNameInput,
   newName: TableNameInput,
+  filepath: Filepath,
 ): string {
-  const source = this.getSource() ?? '';
-  const symbolTable = this.symbol.nodeSymbol(this.ast())?.symbolTable;
+  const source = this.getSource(filepath) ?? '';
+  const symbolTable = this.symbol.nodeSymbol(this.ast(filepath), filepath)?.symbolTable;
   if (!symbolTable) return source;
 
   const normalizedOld = normalizeTableName(oldName);
@@ -266,7 +268,7 @@ export function renameTable (
     }
   }
 
-  const references = this.bindFile().getValue().symbolToReferences.get(tableSymbol) ?? [];
+  const references = this.bindFile(filepath).getValue().symbolToReferences.get(tableSymbol) ?? [];
   for (const ref of references) {
     const refText = source.substring(ref.start, ref.end);
     const cleanRefText = refText.replace(/"/g, '');

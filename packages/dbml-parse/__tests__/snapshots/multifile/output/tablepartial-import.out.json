@@ -1,0 +1,182 @@
+{
+  "database": [
+    {
+      "schemas": [],
+      "tables": [
+        {
+          "name": "users",
+          "schemaName": null,
+          "alias": null,
+          "fields": [
+            {
+              "name": "id",
+              "type": {
+                "schemaName": null,
+                "type_name": "int",
+                "args": null
+              },
+              "token": {
+                "start": {
+                  "offset": 71,
+                  "line": 3,
+                  "column": 3
+                },
+                "end": {
+                  "offset": 82,
+                  "line": 3,
+                  "column": 14
+                }
+              },
+              "inline_refs": [],
+              "pk": true,
+              "increment": false,
+              "unique": false,
+              "checks": []
+            },
+            {
+              "name": "name",
+              "type": {
+                "schemaName": null,
+                "type_name": "varchar",
+                "args": null
+              },
+              "token": {
+                "start": {
+                  "offset": 85,
+                  "line": 4,
+                  "column": 3
+                },
+                "end": {
+                  "offset": 97,
+                  "line": 4,
+                  "column": 15
+                }
+              },
+              "inline_refs": [],
+              "pk": false,
+              "unique": false
+            }
+          ],
+          "token": {
+            "start": {
+              "offset": 55,
+              "line": 2,
+              "column": 1
+            },
+            "end": {
+              "offset": 113,
+              "line": 6,
+              "column": 2
+            }
+          },
+          "indexes": [],
+          "partials": [
+            {
+              "order": 2,
+              "token": {
+                "start": {
+                  "offset": 100,
+                  "line": 5,
+                  "column": 3
+                },
+                "end": {
+                  "offset": 111,
+                  "line": 5,
+                  "column": 14
+                }
+              },
+              "name": "timestamps"
+            }
+          ],
+          "checks": []
+        }
+      ],
+      "notes": [],
+      "refs": [],
+      "enums": [],
+      "tableGroups": [],
+      "aliases": [],
+      "project": {},
+      "tablePartials": [],
+      "records": []
+    },
+    {
+      "schemas": [],
+      "tables": [],
+      "notes": [],
+      "refs": [],
+      "enums": [],
+      "tableGroups": [],
+      "aliases": [],
+      "project": {},
+      "tablePartials": [
+        {
+          "name": "timestamps",
+          "fields": [
+            {
+              "name": "created_at",
+              "type": {
+                "schemaName": null,
+                "type_name": "timestamp",
+                "args": null
+              },
+              "token": {
+                "start": {
+                  "offset": 28,
+                  "line": 2,
+                  "column": 3
+                },
+                "end": {
+                  "offset": 48,
+                  "line": 2,
+                  "column": 23
+                }
+              },
+              "inline_refs": [],
+              "pk": false,
+              "unique": false
+            },
+            {
+              "name": "updated_at",
+              "type": {
+                "schemaName": null,
+                "type_name": "timestamp",
+                "args": null
+              },
+              "token": {
+                "start": {
+                  "offset": 51,
+                  "line": 3,
+                  "column": 3
+                },
+                "end": {
+                  "offset": 71,
+                  "line": 3,
+                  "column": 23
+                }
+              },
+              "inline_refs": [],
+              "pk": false,
+              "unique": false
+            }
+          ],
+          "token": {
+            "start": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            },
+            "end": {
+              "offset": 73,
+              "line": 4,
+              "column": 2
+            }
+          },
+          "indexes": [],
+          "checks": []
+        }
+      ],
+      "records": []
+    }
+  ]
+}

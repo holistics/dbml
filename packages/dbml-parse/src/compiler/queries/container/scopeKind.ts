@@ -1,9 +1,10 @@
 import type Compiler from '../../index';
+import type { Filepath } from '../../projectLayout';
 import { ScopeKind } from '../../types';
 import { ElementDeclarationNode, ProgramNode } from '@/core/parser/nodes';
 
-export function containerScopeKind (this: Compiler, offset: number): ScopeKind {
-  const elem = this.container.element(offset);
+export function containerScopeKind (this: Compiler, offset: number, filepath: Filepath): ScopeKind {
+  const elem = this.container.element(offset, filepath);
 
   if (elem instanceof ProgramNode) {
     return ScopeKind.TOPLEVEL;

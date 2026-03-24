@@ -1,0 +1,4 @@
+use * from './common.dbml'
+Table orders {
+  id int [pk]
+}

@@ -7,24 +7,20 @@ import type { CompileWarning } from '@/core/errors';
 import { DEFAULT_ENTRY } from '../../../constants';
 import Binder from '@/core/binder/binder';
 import SymbolFactory from '@/core/validator/symbol/factory';
-import { ExternalSymbol } from '@/core/validator/symbol/symbols';
-import { createNodeSymbolIndex } from '@/core/validator/symbol/symbolIndex';
+import { SchemaSymbol } from '@/core/validator/symbol/symbols';
 import SymbolTable from '@/core/validator/symbol/symbolTable';
 import Report from '@/core/report';
 import { CompileError } from '@/core/errors';
 import { resolveExternalDependencies } from './utils';
 
 // Given a node, return its symbol with ExternalSymbols resolved to the actual symbol they reference.
-export function resolvedSymbol (this: Compiler, node: SyntaxNode, filepath: Filepath = DEFAULT_ENTRY): NodeSymbol | undefined {
-  const symbol = this.validateFile(filepath).nodeToSymbol.get(node);
-  if (!(symbol instanceof ExternalSymbol)) return symbol;
-  const resolvedId = createNodeSymbolIndex(symbol.name, symbol.kind);
-  return this.resolvedSymbolTable(filepath).getValue().symbolTable.get(resolvedId) ?? symbol;
+export function resolvedSymbol (this: Compiler, node: SyntaxNode, filepath: Filepath): NodeSymbol | undefined {
+  return this.resolvedSymbolTable(filepath).getValue().nodeToSymbol.get(node);
 }
 
 // Resolve external symbols for a single file.
 // Returns the resolved symbol table and nodeToSymbol map.
-export function resolvedSymbolTable (this: Compiler, filepath: Filepath = DEFAULT_ENTRY): Report<{
+export function resolvedSymbolTable (this: Compiler, filepath: Filepath): Report<{
   readonly symbolTable: Readonly<SymbolTable>;
   readonly nodeToSymbol: NodeToSymbolMap;
 }> {
@@ -43,15 +39,20 @@ export function resolvedSymbolTable (this: Compiler, filepath: Filepath = DEFAUL
   const resolved = resolveExternalDependencies(this, filepath);
   errors.push(...resolved.getErrors());
 
+  const fileIndex = this.parseFile(filepath);
+  const nodeToSymbol = new Map(local.nodeToSymbol);
+  nodeToSymbol.set(fileIndex.ast, new SymbolFactory(local.symbolIdGenerator, filepath)
+    .create(SchemaSymbol, { symbolTable: resolved.getValue() }));
+
   return new Report(
-    { symbolTable: resolved.getValue(), nodeToSymbol: local.nodeToSymbol },
+    { symbolTable: resolved.getValue(), nodeToSymbol },
     errors,
     warnings,
   );
 }
 
 // Resolve external symbols and bind references for a single file.
-export function bindFile (this: Compiler, filepath: Filepath = DEFAULT_ENTRY): Report<{
+export function bindFile (this: Compiler, filepath: Filepath): Report<{
   readonly symbolTable: Readonly<SymbolTable>;
   readonly nodeToSymbol: NodeToSymbolMap;
   readonly nodeToReferee: NodeToRefereeMap;
@@ -60,15 +61,6 @@ export function bindFile (this: Compiler, filepath: Filepath = DEFAULT_ENTRY): R
   const resolved = this.resolvedSymbolTable(filepath);
   const errors = [...resolved.getErrors()];
   const warnings = [...resolved.getWarnings()];
-
-  if (errors.length > 0) {
-    return new Report(
-      { symbolTable: new SymbolTable(), nodeToSymbol: resolved.getValue().nodeToSymbol, nodeToReferee: new WeakMap(), symbolToReferences: new Map() },
-      errors,
-      warnings,
-    );
-  }
-
   const { symbolTable: resolvedTable, nodeToSymbol } = resolved.getValue();
   const { symbolIdGenerator } = this.validateFile(filepath);
   const fileIndex = this.parseFile(filepath);

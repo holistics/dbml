@@ -27,7 +27,7 @@ describe('[snapshot] binder', () => {
       })
       .chain(({ ast }) => {
         const symbolFactory = new SymbolFactory(symbolIdGenerator, DEFAULT_ENTRY);
-        const nodeToSymbol = new WeakMap();
+        const nodeToSymbol = new Map();
         nodeToSymbol.set(ast, symbolFactory.create(SchemaSymbol, { symbolTable: new SymbolTable() }));
         return new Validator({ ast, filepath: DEFAULT_ENTRY, nodeToSymbol }, symbolFactory).validate().chain(({ nodeToSymbol: nts }) => {
           return new Binder({ ast, nodeToSymbol: nts, symbolToReferences: new Map() }, symbolFactory).resolve().map((nodeToReferee) => ({ ast, nodeToSymbol: nts, nodeToReferee, symbolToReferences: new Map() }));

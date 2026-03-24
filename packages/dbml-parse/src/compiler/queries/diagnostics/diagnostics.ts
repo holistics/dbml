@@ -1,15 +1,14 @@
 import type Compiler from '../../index';
 import type { Filepath } from '../../projectLayout';
-import { DEFAULT_ENTRY } from '../../constants';
 import type { CompileError, CompileWarning } from '@/core/errors';
 
 // Per-file diagnostics (includes lex, parse, validate, bind, and interpret errors/warnings)
 
-export function fileErrors (this: Compiler, filepath: Filepath = DEFAULT_ENTRY): readonly CompileError[] {
+export function fileErrors (this: Compiler, filepath: Filepath): readonly CompileError[] {
   return this.interpretFile(filepath).getErrors();
 }
 
-export function fileWarnings (this: Compiler, filepath: Filepath = DEFAULT_ENTRY): readonly CompileWarning[] {
+export function fileWarnings (this: Compiler, filepath: Filepath): readonly CompileWarning[] {
   return this.interpretFile(filepath).getWarnings();
 }
 

@@ -7,6 +7,7 @@ import { createNodeSymbolIndex, SymbolKind } from '@/core/validator/symbol/symbo
 import { destructureComplexVariable } from '@/core/utils';
 import SymbolFactory from '@/core/validator/symbol/factory';
 import { Filepath, type FilepathId } from '@/compiler/projectLayout';
+import { DBML_EXT } from '@/compiler/constants';
 
 const VALID_USE_SPECIFIER_KINDS = new Set<string>([
   SymbolKind.Schema,
@@ -50,7 +51,9 @@ export default class UseDeclarationValidator {
 
   private resolveExternalFilepath (): Filepath | undefined {
     if (!this.node.path) return undefined;
-    return Filepath.resolve(this.filepath.dirname, this.node.path.value);
+    const resolved = Filepath.resolve(this.filepath.dirname, this.node.path.value);
+    if (resolved.absolute.endsWith(DBML_EXT)) return resolved;
+    return Filepath.from(resolved.absolute + DBML_EXT);
   }
 
   validate (): CompileError[] {
@@ -68,7 +71,7 @@ export default class UseDeclarationValidator {
   }
 
   private validateBody (): CompileError[] {
-    // Entire-file use: use './path.dbml'
+    // Entire-file use: use * from './path.dbml'
     if (!this.node.specifiers) {
       return this.registerWholeFileUse();
     }
@@ -78,19 +81,12 @@ export default class UseDeclarationValidator {
   private registerWholeFileUse (): CompileError[] {
     const resolved = this.resolveExternalFilepath();
     if (!resolved) return [];
-
-    if (this.externalFilepaths.has(resolved.intern())) {
-      return [new CompileError(CompileErrorCode.DUPLICATE_NAME, `'${resolved.absolute}' is already imported`, this.node)];
-    }
-
-    this.externalFilepaths.set(resolved.intern(), this.node);
-    return [];
+    return this.registerExternalFilepath(resolved);
   }
 
   private registerExternalFilepath (resolved: Filepath): CompileError[] {
-    // A selective use from a filepath that's already whole-file imported is an error
-    if (this.externalFilepaths.has(resolved.intern())) {
-      return [new CompileError(CompileErrorCode.DUPLICATE_NAME, `'${resolved.absolute}' is already imported as a whole file`, this.node)];
+    if (!this.externalFilepaths.has(resolved.intern())) {
+      this.externalFilepaths.set(resolved.intern(), this.node);
     }
     return [];
   }
@@ -167,8 +163,19 @@ export default class UseDeclarationValidator {
       const existingSymbol = symbolTable.get(symbolId);
       // Schema symbols from external files should be merged, not treated as conflicts
       if (symbolKind === SymbolKind.Schema && existingSymbol instanceof SchemaSymbol && externalFilepath) {
-        existingSymbol.externalFilepaths.push(externalFilepath);
+        if (!existingSymbol.externalFilepaths.some((fp) => fp.intern() === externalFilepath.intern())) {
+          existingSymbol.externalFilepaths.push(externalFilepath);
+        }
         return [];
+      }
+      // Duplicate use of the same symbol from the same file is allowed
+      if (externalFilepath) {
+        const existingSource = existingSymbol instanceof ExternalSymbol
+          ? existingSymbol.externalFilepath.intern()
+          : existingSymbol.filepath.intern();
+        if (existingSource === externalFilepath.intern()) {
+          return [];
+        }
       }
       return [new CompileError(CompileErrorCode.DUPLICATE_NAME, `'${itemName}' is already defined`, specifier.name!)];
     }

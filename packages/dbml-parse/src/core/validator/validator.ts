@@ -35,7 +35,7 @@ export default class Validator {
     this.ast = ast;
     this.filepath = filepath;
     this.symbolFactory = symbolFactory;
-    this.nodeToSymbol = nodeToSymbol ?? new WeakMap();
+    this.nodeToSymbol = nodeToSymbol ?? new Map();
     this.publicSchemaSymbol = (nodeToSymbol?.get(ast) ?? this.symbolFactory.create(SchemaSymbol, {
       symbolTable: new SymbolTable(),
     })) as SchemaSymbol;

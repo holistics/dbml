@@ -1,0 +1,6 @@
+use * from './models.dbml'
+Table main_config {
+  id int [pk]
+  key varchar
+  value varchar
+}

@@ -1,7 +1,7 @@
 import {
   Definition, DefinitionProvider, TextModel, Position,
 } from '@/services/types';
-import { getOffsetFromMonacoPosition } from '@/services/utils';
+import { getOffsetFromMonacoPosition, getFilepathFromModel } from '@/services/utils';
 import Compiler from '@/compiler';
 import { SyntaxNode, SyntaxNodeKind } from '@/core/parser/nodes';
 
@@ -14,13 +14,14 @@ export default class DBMLDefinitionProvider implements DefinitionProvider {
 
   provideDefinition (model: TextModel, position: Position): Definition {
     const { uri } = model;
+    const filepath = getFilepathFromModel(model);
     const offset = getOffsetFromMonacoPosition(model, position);
-    const containers = [...this.compiler.container.stack(offset)];
+    const containers = [...this.compiler.container.stack(offset, filepath)];
     while (containers.length !== 0) {
       const node = containers.pop();
       if (!node) continue;
 
-      const referee = this.compiler.symbol.nodeReferee(node);
+      const referee = this.compiler.symbol.nodeReferee(node, filepath);
       if (!referee) continue;
 
       let declaration: SyntaxNode | undefined;
@@ -36,6 +37,9 @@ export default class DBMLDefinitionProvider implements DefinitionProvider {
 
       if (declaration) {
         const { startPos, endPos } = declaration;
+        const defUri = referee.filepath.absolute !== filepath.absolute
+          ? uri.with({ path: referee.filepath.absolute })
+          : uri;
         return [
           {
             range: {
@@ -44,7 +48,7 @@ export default class DBMLDefinitionProvider implements DefinitionProvider {
               endColumn: endPos.column + 1,
               endLineNumber: endPos.line + 1,
             },
-            uri,
+            uri: defUri,
           },
         ];
       }

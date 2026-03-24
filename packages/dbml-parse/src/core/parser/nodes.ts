@@ -690,11 +690,15 @@ export class UseSpecifierListNode extends SyntaxNode {
   }
 }
 
-// Form: use { <specifiers> } from <path>
+// Form: use { <specifiers> } from <path>  (selective)
+//    or: use * from <path>                (entire-file)
 // A top-level import statement bringing named elements into scope
 // e.g. use { table users, enum status } from './schema'
+// e.g. use * from './common'
 export class UseDeclarationNode extends SyntaxNode {
   useKeyword?: SyntaxToken;
+
+  star?: SyntaxToken; // The '*' token for entire-file imports
 
   specifiers?: UseSpecifierListNode;
 
@@ -707,19 +711,22 @@ export class UseDeclarationNode extends SyntaxNode {
   constructor (
     {
       useKeyword,
+      star,
       specifiers,
       fromKeyword,
       path,
     }: {
       useKeyword?: SyntaxToken;
+      star?: SyntaxToken;
       specifiers?: UseSpecifierListNode;
       fromKeyword?: SyntaxToken;
       path?: SyntaxToken;
     },
     id: SyntaxNodeId,
   ) {
-    super(id, SyntaxNodeKind.USE_DECLARATION, [useKeyword, specifiers, fromKeyword, path]);
+    super(id, SyntaxNodeKind.USE_DECLARATION, [useKeyword, star, specifiers, fromKeyword, path]);
     this.useKeyword = useKeyword;
+    this.star = star;
     this.specifiers = specifiers;
     this.fromKeyword = fromKeyword;
     this.path = path;

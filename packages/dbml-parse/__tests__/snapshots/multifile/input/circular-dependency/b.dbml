@@ -1,0 +1,4 @@
+use { table A } from './main.dbml'
+Table B {
+  id int [pk]
+}

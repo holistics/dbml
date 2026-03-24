@@ -20,7 +20,7 @@ export enum ElementKind {
   Records = 'records',
 }
 
-export type NodeToSymbolMap = WeakMap<SyntaxNode, NodeSymbol>;
+export type NodeToSymbolMap = Map<SyntaxNode, NodeSymbol>;
 export type NodeToRefereeMap = WeakMap<SyntaxNode, NodeSymbol>;
 export type SymbolToReferencesMap = Map<NodeSymbol, SyntaxNode[]>;
 

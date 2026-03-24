@@ -1,4 +1,4 @@
-import { getOffsetFromMonacoPosition } from '@/services/utils';
+import { getOffsetFromMonacoPosition, getFilepathFromModel } from '@/services/utils';
 import Compiler from '@/compiler';
 import { SyntaxNodeKind } from '@/core/parser/nodes';
 import {
@@ -14,9 +14,10 @@ export default class DBMLReferencesProvider implements ReferenceProvider {
 
   provideReferences (model: TextModel, position: Position): Location[] {
     const { uri } = model;
+    const filepath = getFilepathFromModel(model);
     const offset = getOffsetFromMonacoPosition(model, position);
 
-    const containers = [...this.compiler.container.stack(offset)];
+    const containers = [...this.compiler.container.stack(offset, filepath)];
     while (containers.length !== 0) {
       const node = containers.pop();
       if (
@@ -27,8 +28,8 @@ export default class DBMLReferencesProvider implements ReferenceProvider {
           SyntaxNodeKind.PRIMARY_EXPRESSION,
         ].includes(node?.kind)
       ) {
-        const symbol = this.compiler.symbol.nodeSymbol(node);
-        const references = symbol ? this.compiler.symbol.nodeReferences(node) : undefined;
+        const symbol = this.compiler.symbol.nodeSymbol(node, filepath);
+        const references = symbol ? this.compiler.symbol.nodeReferences(node, filepath) : undefined;
         if (references?.length) {
           return references.map(({ startPos, endPos }: { startPos: any; endPos: any }) => ({
             range: {

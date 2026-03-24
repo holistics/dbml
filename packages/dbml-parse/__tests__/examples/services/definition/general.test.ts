@@ -34,7 +34,9 @@ Ref: posts.user_id > users.id`;
               "startColumn": 1,
               "startLineNumber": 1,
             },
-            "uri": "",
+            "uri": MockUri {
+              "path": "",
+            },
           },
         ]
       `);
@@ -78,7 +80,9 @@ Ref: posts.user_id > users.id`;
               "startColumn": 1,
               "startLineNumber": 5,
             },
-            "uri": "",
+            "uri": MockUri {
+              "path": "",
+            },
           },
         ]
       `);
@@ -111,7 +115,9 @@ Table posts {
               "startColumn": 1,
               "startLineNumber": 1,
             },
-            "uri": "",
+            "uri": MockUri {
+              "path": "",
+            },
           },
         ]
       `);
@@ -146,7 +152,9 @@ Ref: posts.user_id < users.id`;
               "startColumn": 1,
               "startLineNumber": 1,
             },
-            "uri": "",
+            "uri": MockUri {
+              "path": "",
+            },
           },
         ]
       `);
@@ -187,7 +195,9 @@ Ref: users.referrer_id > users.id`;
               "startColumn": 1,
               "startLineNumber": 1,
             },
-            "uri": "",
+            "uri": MockUri {
+              "path": "",
+            },
           },
         ]
       `);
@@ -224,7 +234,9 @@ Ref: posts.user_id > users.id`;
               "startColumn": 3,
               "startLineNumber": 2,
             },
-            "uri": "",
+            "uri": MockUri {
+              "path": "",
+            },
           },
         ]
       `);
@@ -264,7 +276,9 @@ Ref: posts.user_id > users.id`;
               "startColumn": 3,
               "startLineNumber": 6,
             },
-            "uri": "",
+            "uri": MockUri {
+              "path": "",
+            },
           },
         ]
       `);
@@ -297,7 +311,9 @@ Table posts {
               "startColumn": 3,
               "startLineNumber": 2,
             },
-            "uri": "",
+            "uri": MockUri {
+              "path": "",
+            },
           },
         ]
       `);
@@ -325,7 +341,21 @@ Ref: (orders.merchant_id, orders.country) > (merchants.id, merchants.country_cod
       const position = createPosition(11, 72);
       const definitions = definitionProvider.provideDefinition(model, position);
 
-      expect(definitions).toMatchInlineSnapshot(`[]`);
+      expect(definitions).toMatchInlineSnapshot(`
+        [
+          {
+            "range": {
+              "endColumn": 23,
+              "endLineNumber": 3,
+              "startColumn": 3,
+              "startLineNumber": 3,
+            },
+            "uri": MockUri {
+              "path": "",
+            },
+          },
+        ]
+      `);
 
       expect(Array.isArray(definitions)).toBeTruthy();
       if (!Array.isArray(definitions)) return;
@@ -365,7 +395,9 @@ Table orders {
               "startColumn": 1,
               "startLineNumber": 1,
             },
-            "uri": "",
+            "uri": MockUri {
+              "path": "",
+            },
           },
         ]
       `);
@@ -398,7 +430,9 @@ Table orders {
               "startColumn": 1,
               "startLineNumber": 1,
             },
-            "uri": "",
+            "uri": MockUri {
+              "path": "",
+            },
           },
         ]
       `);
@@ -438,7 +472,9 @@ Table orders {
               "startColumn": 3,
               "startLineNumber": 2,
             },
-            "uri": "",
+            "uri": MockUri {
+              "path": "",
+            },
           },
         ]
       `);
@@ -476,7 +512,9 @@ Table users {
               "startColumn": 1,
               "startLineNumber": 1,
             },
-            "uri": "",
+            "uri": MockUri {
+              "path": "",
+            },
           },
         ]
       `);
@@ -515,7 +553,9 @@ Table users {
               "startColumn": 3,
               "startLineNumber": 2,
             },
-            "uri": "",
+            "uri": MockUri {
+              "path": "",
+            },
           },
         ]
       `);
@@ -592,7 +632,9 @@ Ref: ecommerce.orders.user_id > ecommerce.users.id`;
               "startColumn": 1,
               "startLineNumber": 1,
             },
-            "uri": "",
+            "uri": MockUri {
+              "path": "",
+            },
           },
         ]
       `);
@@ -627,7 +669,9 @@ Ref: ecommerce.orders.user_id > ecommerce.users.id`;
               "startColumn": 3,
               "startLineNumber": 2,
             },
-            "uri": "",
+            "uri": MockUri {
+              "path": "",
+            },
           },
         ]
       `);
@@ -661,7 +705,9 @@ Table users {
               "startColumn": 1,
               "startLineNumber": 1,
             },
-            "uri": "",
+            "uri": MockUri {
+              "path": "",
+            },
           },
         ]
       `);
@@ -711,7 +757,9 @@ TableGroup ecommerce {
               "startColumn": 1,
               "startLineNumber": 1,
             },
-            "uri": "",
+            "uri": MockUri {
+              "path": "",
+            },
           },
         ]
       `);
@@ -744,7 +792,9 @@ TableGroup group1 {
               "startColumn": 1,
               "startLineNumber": 1,
             },
-            "uri": "",
+            "uri": MockUri {
+              "path": "",
+            },
           },
         ]
       `);
@@ -780,7 +830,9 @@ TableGroup group1 {
               "startColumn": 3,
               "startLineNumber": 3,
             },
-            "uri": "",
+            "uri": MockUri {
+              "path": "",
+            },
           },
         ]
       `);
@@ -837,7 +889,9 @@ TableGroup group1 {
               "startColumn": 3,
               "startLineNumber": 3,
             },
-            "uri": "",
+            "uri": MockUri {
+              "path": "",
+            },
           },
         ]
       `);
@@ -874,7 +928,9 @@ Table users {
               "startColumn": 1,
               "startLineNumber": 1,
             },
-            "uri": "",
+            "uri": MockUri {
+              "path": "",
+            },
           },
         ]
       `);
@@ -921,7 +977,9 @@ Ref: users.created_at > logs.timestamp`;
               "startColumn": 3,
               "startLineNumber": 8,
             },
-            "uri": "",
+            "uri": MockUri {
+              "path": "",
+            },
           },
         ]
       `);
@@ -1215,7 +1273,9 @@ Ref: schema1.orders.id > schema2.orders.id`;
               "startColumn": 1,
               "startLineNumber": 1,
             },
-            "uri": "",
+            "uri": MockUri {
+              "path": "",
+            },
           },
         ]
       `);
@@ -1242,7 +1302,9 @@ Ref: schema1.orders.id > schema2.orders.id`;
               "startColumn": 1,
               "startLineNumber": 5,
             },
-            "uri": "",
+            "uri": MockUri {
+              "path": "",
+            },
           },
         ]
       `);
@@ -1279,7 +1341,9 @@ Ref: users.created_at > logs.timestamp`;
               "startColumn": 3,
               "startLineNumber": 7,
             },
-            "uri": "",
+            "uri": MockUri {
+              "path": "",
+            },
           },
         ]
       `);
@@ -1314,7 +1378,9 @@ Ref: orders.user_id > myproject.ecommerce.users.id`;
               "startColumn": 1,
               "startLineNumber": 1,
             },
-            "uri": "",
+            "uri": MockUri {
+              "path": "",
+            },
           },
         ]
       `);
@@ -1404,7 +1470,9 @@ Ref: users.id > posts.user_id`;
               "startColumn": 1,
               "startLineNumber": 1,
             },
-            "uri": "",
+            "uri": MockUri {
+              "path": "",
+            },
           },
         ]
       `);
@@ -1436,7 +1504,9 @@ Ref: users.email > logs.email_col`;
               "startColumn": 3,
               "startLineNumber": 3,
             },
-            "uri": "",
+            "uri": MockUri {
+              "path": "",
+            },
           },
         ]
       `);
@@ -1470,7 +1540,9 @@ Table users {
               "startColumn": 1,
               "startLineNumber": 1,
             },
-            "uri": "",
+            "uri": MockUri {
+              "path": "",
+            },
           },
         ]
       `);
@@ -1508,7 +1580,9 @@ Ref: posts.user_id > users.id`;
               "startColumn": 3,
               "startLineNumber": 2,
             },
-            "uri": "",
+            "uri": MockUri {
+              "path": "",
+            },
           },
         ]
       `);
@@ -1546,7 +1620,9 @@ Table posts {
               "startColumn": 3,
               "startLineNumber": 2,
             },
-            "uri": "",
+            "uri": MockUri {
+              "path": "",
+            },
           },
         ]
       `);
@@ -1586,7 +1662,9 @@ Ref: users.id < posts.user_id`;
               "startColumn": 1,
               "startLineNumber": 5,
             },
-            "uri": "",
+            "uri": MockUri {
+              "path": "",
+            },
           },
         ]
       `);
@@ -1632,7 +1710,9 @@ Ref: posts.(author_first, author_last) > users.(first_name, last_name)`;
               "startColumn": 3,
               "startLineNumber": 2,
             },
-            "uri": "",
+            "uri": MockUri {
+              "path": "",
+            },
           },
         ]
       `);
@@ -1681,7 +1761,21 @@ Ref: posts.user_id >`;
       const position = createPosition(9, 7);
       const definitions = definitionProvider.provideDefinition(model, position);
 
-      expect(definitions).toMatchInlineSnapshot(`[]`);
+      expect(definitions).toMatchInlineSnapshot(`
+        [
+          {
+            "range": {
+              "endColumn": 2,
+              "endLineNumber": 7,
+              "startColumn": 1,
+              "startLineNumber": 5,
+            },
+            "uri": MockUri {
+              "path": "",
+            },
+          },
+        ]
+      `);
 
       expect(Array.isArray(definitions)).toBeTruthy();
       if (!Array.isArray(definitions)) return;
@@ -1782,7 +1876,21 @@ TableGroup my_group {
       const position = createPosition(5, 4);
       const definitions = definitionProvider.provideDefinition(model, position);
 
-      expect(definitions).toMatchInlineSnapshot(`[]`);
+      expect(definitions).toMatchInlineSnapshot(`
+        [
+          {
+            "range": {
+              "endColumn": 23,
+              "endLineNumber": 1,
+              "startColumn": 1,
+              "startLineNumber": 1,
+            },
+            "uri": MockUri {
+              "path": "",
+            },
+          },
+        ]
+      `);
 
       expect(Array.isArray(definitions)).toBeTruthy();
       if (!Array.isArray(definitions)) return;
@@ -2751,7 +2859,9 @@ Records users(id, name, email) {
               "startColumn": 1,
               "startLineNumber": 1,
             },
-            "uri": "",
+            "uri": MockUri {
+              "path": "",
+            },
           },
         ]
       `);
@@ -2822,7 +2932,9 @@ Records public.orders(id, customer_name) {
               "startColumn": 1,
               "startLineNumber": 1,
             },
-            "uri": "",
+            "uri": MockUri {
+              "path": "",
+            },
           },
         ]
       `);
@@ -2863,7 +2975,9 @@ Records orders(id, status) {
               "startColumn": 1,
               "startLineNumber": 1,
             },
-            "uri": "",
+            "uri": MockUri {
+              "path": "",
+            },
           },
         ]
       `);
@@ -2904,7 +3018,9 @@ Records orders(id, status) {
               "startColumn": 3,
               "startLineNumber": 2,
             },
-            "uri": "",
+            "uri": MockUri {
+              "path": "",
+            },
           },
         ]
       `);
@@ -2946,7 +3062,9 @@ Records orders(id, status) {
               "startColumn": 3,
               "startLineNumber": 3,
             },
-            "uri": "",
+            "uri": MockUri {
+              "path": "",
+            },
           },
         ]
       `);

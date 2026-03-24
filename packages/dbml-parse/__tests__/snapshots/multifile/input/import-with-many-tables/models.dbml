@@ -1,0 +1,15 @@
+Table users {
+  id int [pk]
+  name varchar
+}
+
+Table orders {
+  id int [pk]
+  total int
+}
+
+Table products {
+  id int [pk]
+  name varchar
+  price int
+}

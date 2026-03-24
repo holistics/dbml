@@ -1,5 +1,5 @@
 import type Compiler from '../../index';
-import { DEFAULT_ENTRY } from '../../constants';
+import type { Filepath } from '../../projectLayout';
 import { findLastIndex, last } from 'lodash-es';
 import {
   SyntaxNode,
@@ -17,20 +17,20 @@ import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
 import { isOffsetWithinSpan } from '@/core/utils';
 import { getMemberChain } from '@/core/parser/utils';
 
-export function containerStack (this: Compiler, offset: number): readonly Readonly<SyntaxNode>[] {
-  const tokens = this.token.flatStream(DEFAULT_ENTRY);
-  const { index: startIndex, token } = this.container.token(offset);
+export function containerStack (this: Compiler, offset: number, filepath: Filepath): readonly Readonly<SyntaxNode>[] {
+  const tokens = this.token.flatStream(filepath);
+  const { index: startIndex, token } = this.container.token(offset, filepath);
   const validIndex = startIndex === undefined
     ? -1
     : findLastIndex(tokens, (t) => !t.isInvalid, startIndex);
 
   if (validIndex === -1) {
-    return [this.ast()];
+    return [this.ast(filepath)];
   }
 
   const searchOffset = tokens[validIndex].start;
 
-  let curNode: Readonly<SyntaxNode> = this.ast();
+  let curNode: Readonly<SyntaxNode> = this.ast(filepath);
   const res: SyntaxNode[] = [curNode];
 
   while (true) {
@@ -52,7 +52,7 @@ export function containerStack (this: Compiler, offset: number): readonly Readon
     const lastContainer = last(res)!;
 
     if (lastContainer instanceof FunctionApplicationNode) {
-      const source = this.getSource() ?? '';
+      const source = this.getSource(filepath) ?? '';
       for (let i = lastContainer.end; i < offset; i += 1) {
         if (source[i] === '\n') {
           res.pop();
@@ -63,7 +63,7 @@ export function containerStack (this: Compiler, offset: number): readonly Readon
       lastContainer instanceof PrefixExpressionNode
       || lastContainer instanceof InfixExpressionNode
     ) {
-      if (this.container.token(offset).token !== lastContainer.op) {
+      if (this.container.token(offset, filepath).token !== lastContainer.op) {
         res.pop();
         popOnce = true;
       }

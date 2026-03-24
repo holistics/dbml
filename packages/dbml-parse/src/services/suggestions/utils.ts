@@ -4,6 +4,7 @@ import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
 import { hasTrailingSpaces } from '@/core/lexer/utils';
 import { SyntaxNode, TupleExpressionNode, FunctionApplicationNode } from '@/core/parser/nodes';
 import Compiler from '@/compiler';
+import type { Filepath } from '@/compiler/projectLayout';
 import { ColumnSymbol, TablePartialInjectedColumnSymbol, TablePartialSymbol, TableSymbol } from '@/core/validator/symbol/symbols';
 import { extractVariableFromExpression } from '@/core/utils';
 import { addDoubleQuoteIfNeeded } from '@/compiler/queries/utils';
@@ -107,8 +108,8 @@ export function addSuggestAllSuggestion (completionList: CompletionList, separat
 }
 
 // Get the source text of a node or a token
-export function getNodeOrTokenSource (compiler: Compiler, tokenOrNode: SyntaxToken | SyntaxNode): string {
-  return (compiler.getSource() ?? '').slice(tokenOrNode.start, tokenOrNode.end);
+export function getNodeOrTokenSource (compiler: Compiler, tokenOrNode: SyntaxToken | SyntaxNode, filepath: Filepath): string {
+  return (compiler.getSource(filepath) ?? '').slice(tokenOrNode.start, tokenOrNode.end);
 }
 
 /**
