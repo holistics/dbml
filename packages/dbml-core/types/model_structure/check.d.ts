@@ -40,6 +40,7 @@ declare class Check extends Element {
 
 export interface NormalizedCheck {
     id: number;
+    token: Token;
     name: string;
     expression: string;
     tableId: number;

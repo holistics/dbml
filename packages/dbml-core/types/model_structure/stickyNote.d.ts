@@ -30,6 +30,7 @@ declare class StickyNote extends Element {
 }
 export interface NormalizedNote {
     id: number;
+    token: Token;
     name: string;
     content: string;
     headerColor: string | null;

@@ -64,6 +64,7 @@ declare class Ref extends Element {
 }
 export interface NormalizedRef {
     id: number;
+    token: Token;
     name: string | null;
     color?: string;
     onUpdate?: string;

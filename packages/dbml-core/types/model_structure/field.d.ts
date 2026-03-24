@@ -91,6 +91,7 @@ declare class Field extends Element {
 
 export interface NormalizedField {
     id: number;
+    token: Token;
     name: string;
     type: {
         schemaName: string | null;

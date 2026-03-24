@@ -249,6 +249,7 @@ class Database extends Element {
         [this.id]: {
           id: this.id,
           ...this.shallowExport(),
+          token: this.token,
           ...this.exportChildIds(),
         },
       },
