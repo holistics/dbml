@@ -1,7 +1,4 @@
 {
-  "filepath": {
-    "path": "/main.project.dbml"
-  },
   "schemas": [],
   "tables": [
     {
@@ -17,9 +14,6 @@
             "args": null
           },
           "token": {
-            "filepath": {
-              "path": "/main.project.dbml"
-            },
             "start": {
               "offset": 16,
               "line": 2,
@@ -38,9 +32,6 @@
           "note": {
             "value": "# Objective\n  * Support writing long string that can 'span' over multiple lines\n  * Support writing markdown for DBML Note\n\n# Syntax\n\n",
             "token": {
-              "filepath": {
-                "path": "/main.project.dbml"
-              },
               "start": {
                 "offset": 24,
                 "line": 2,
@@ -57,9 +48,6 @@
         }
       ],
       "token": {
-        "filepath": {
-          "path": "/main.project.dbml"
-        },
         "start": {
           "offset": 0,
           "line": 1,

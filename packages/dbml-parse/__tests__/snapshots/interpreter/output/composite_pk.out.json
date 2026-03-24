@@ -2,9 +2,6 @@
   {
     "code": 3003,
     "diagnostic": "Table name 'users' already exists in schema 'public'",
-    "filepath": {
-      "path": "/main.project.dbml"
-    },
     "nodeOrToken": {
       "id": 65,
       "kind": "<primary-expression>",

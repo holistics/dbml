@@ -2,9 +2,6 @@
   {
     "code": 4000,
     "diagnostic": "Table 'staff' does not exist in Schema 'public'",
-    "filepath": {
-      "path": "/main.project.dbml"
-    },
     "nodeOrToken": {
       "id": 21,
       "kind": "<primary-expression>",
@@ -69,9 +66,6 @@
   {
     "code": 4000,
     "diagnostic": "Table 'rental' does not exist in Schema 'public'",
-    "filepath": {
-      "path": "/main.project.dbml"
-    },
     "nodeOrToken": {
       "id": 35,
       "kind": "<primary-expression>",

@@ -1,9 +1,6 @@
 {
   "database": [
     {
-      "filepath": {
-        "path": "/main.dbml"
-      },
       "schemas": [],
       "tables": [
         {
@@ -19,9 +16,6 @@
                 "args": null
               },
               "token": {
-                "filepath": {
-                  "path": "/main.dbml"
-                },
                 "start": {
                   "offset": 58,
                   "line": 3,
@@ -47,9 +41,6 @@
                 "args": null
               },
               "token": {
-                "filepath": {
-                  "path": "/main.dbml"
-                },
                 "start": {
                   "offset": 72,
                   "line": 4,
@@ -67,9 +58,6 @@
             }
           ],
           "token": {
-            "filepath": {
-              "path": "/main.dbml"
-            },
             "start": {
               "offset": 41,
               "line": 2,
@@ -96,9 +84,6 @@
       "records": []
     },
     {
-      "filepath": {
-        "path": "/common.dbml"
-      },
       "schemas": [],
       "tables": [
         {
@@ -114,9 +99,6 @@
                 "args": null
               },
               "token": {
-                "filepath": {
-                  "path": "/common.dbml"
-                },
                 "start": {
                   "offset": 16,
                   "line": 2,
@@ -142,9 +124,6 @@
                 "args": null
               },
               "token": {
-                "filepath": {
-                  "path": "/common.dbml"
-                },
                 "start": {
                   "offset": 30,
                   "line": 3,
@@ -162,9 +141,6 @@
             }
           ],
           "token": {
-            "filepath": {
-              "path": "/common.dbml"
-            },
             "start": {
               "offset": 0,
               "line": 1,

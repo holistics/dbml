@@ -39,7 +39,7 @@ describe('[snapshot] interpreter', () => {
     if (report.getErrors().length !== 0) {
       output = JSON.stringify(
         report.getErrors(),
-        (key, value) => (['symbol', 'references', 'referee', 'parent'].includes(key) ? undefined : value),
+        (key, value) => (['symbol', 'references', 'referee', 'parent', 'filepath'].includes(key) ? undefined : value),
         2,
       );
     } else {
@@ -47,13 +47,13 @@ describe('[snapshot] interpreter', () => {
       if (res.getErrors().length > 0) {
         output = JSON.stringify(
           res.getErrors(),
-          (key, value) => (['symbol', 'references', 'referee', 'parent'].includes(key) ? undefined : value),
+          (key, value) => (['symbol', 'references', 'referee', 'parent', 'filepath'].includes(key) ? undefined : value),
           2,
         );
       } else {
         output = JSON.stringify(
           res.getValue(),
-          (key, value) => (['symbol', 'references', 'referee'].includes(key) ? undefined : value),
+          (key, value) => (['symbol', 'references', 'referee', 'filepath'].includes(key) ? undefined : value),
           2,
         );
       }

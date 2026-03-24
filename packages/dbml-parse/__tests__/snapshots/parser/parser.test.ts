@@ -20,7 +20,7 @@ describe('[snapshot] parser', () => {
         return parser.parse().map((_) => _.ast);
       }),
       (key: string, value: any) => {
-        if (key === 'source' || key === 'parent') return undefined;
+        if (key === 'source' || key === 'parent' || key === 'filepath') return undefined;
         return value;
       },
       2,

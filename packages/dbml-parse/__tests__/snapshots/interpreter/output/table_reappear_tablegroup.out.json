@@ -2,9 +2,6 @@
   {
     "code": 5005,
     "diagnostic": "Table \"follows\" already appears in group \"A1\"",
-    "filepath": {
-      "path": "/main.project.dbml"
-    },
     "nodeOrToken": {
       "id": 73,
       "kind": "<function-application>",
@@ -153,9 +150,6 @@
   {
     "code": 5005,
     "diagnostic": "Table \"users\" already appears in group \"A2\"",
-    "filepath": {
-      "path": "/main.project.dbml"
-    },
     "nodeOrToken": {
       "id": 83,
       "kind": "<function-application>",
@@ -304,9 +298,6 @@
   {
     "code": 5005,
     "diagnostic": "Table \"U\" already appears in group \"A2\"",
-    "filepath": {
-      "path": "/main.project.dbml"
-    },
     "nodeOrToken": {
       "id": 90,
       "kind": "<function-application>",
@@ -497,9 +488,6 @@
   {
     "code": 5005,
     "diagnostic": "Table \"A.users\" already appears in group \"A5\"",
-    "filepath": {
-      "path": "/main.project.dbml"
-    },
     "nodeOrToken": {
       "id": 107,
       "kind": "<function-application>",

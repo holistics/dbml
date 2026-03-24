@@ -1,9 +1,6 @@
 {
   "database": [
     {
-      "filepath": {
-        "path": "/main.dbml"
-      },
       "schemas": [],
       "tables": [
         {
@@ -19,9 +16,6 @@
                 "args": null
               },
               "token": {
-                "filepath": {
-                  "path": "/main.dbml"
-                },
                 "start": {
                   "offset": 61,
                   "line": 3,
@@ -47,9 +41,6 @@
                 "args": null
               },
               "token": {
-                "filepath": {
-                  "path": "/main.dbml"
-                },
                 "start": {
                   "offset": 75,
                   "line": 4,
@@ -73,9 +64,6 @@
                 "args": null
               },
               "token": {
-                "filepath": {
-                  "path": "/main.dbml"
-                },
                 "start": {
                   "offset": 90,
                   "line": 5,
@@ -93,9 +81,6 @@
             }
           ],
           "token": {
-            "filepath": {
-              "path": "/main.dbml"
-            },
             "start": {
               "offset": 45,
               "line": 2,
@@ -122,9 +107,6 @@
       "records": []
     },
     {
-      "filepath": {
-        "path": "/enums.dbml"
-      },
       "schemas": [],
       "tables": [],
       "notes": [],
@@ -134,9 +116,6 @@
           "values": [
             {
               "token": {
-                "filepath": {
-                  "path": "/enums.dbml"
-                },
                 "start": {
                   "offset": 21,
                   "line": 2,
@@ -152,9 +131,6 @@
             },
             {
               "token": {
-                "filepath": {
-                  "path": "/enums.dbml"
-                },
                 "start": {
                   "offset": 30,
                   "line": 3,
@@ -170,9 +146,6 @@
             },
             {
               "token": {
-                "filepath": {
-                  "path": "/enums.dbml"
-                },
                 "start": {
                   "offset": 41,
                   "line": 4,
@@ -188,9 +161,6 @@
             }
           ],
           "token": {
-            "filepath": {
-              "path": "/enums.dbml"
-            },
             "start": {
               "offset": 0,
               "line": 1,

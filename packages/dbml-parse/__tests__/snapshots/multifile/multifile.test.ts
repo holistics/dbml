@@ -24,7 +24,7 @@ function loadProject (testDir: string): Record<string, string> {
 }
 
 const REPLACER = (key: string, value: unknown) =>
-  ['symbol', 'references', 'referee', 'parent'].includes(key) ? undefined : value;
+  ['symbol', 'references', 'referee', 'parent', 'filepath'].includes(key) ? undefined : value;
 
 describe('[snapshot] multifile interpretation', () => {
   const inputDir = path.resolve(__dirname, './input');

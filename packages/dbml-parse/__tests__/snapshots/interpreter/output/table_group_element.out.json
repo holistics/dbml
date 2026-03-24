@@ -1,7 +1,4 @@
 {
-  "filepath": {
-    "path": "/main.project.dbml"
-  },
   "schemas": [],
   "tables": [
     {
@@ -17,9 +14,6 @@
             "args": null
           },
           "token": {
-            "filepath": {
-              "path": "/main.project.dbml"
-            },
             "start": {
               "offset": 17,
               "line": 2,
@@ -39,9 +33,6 @@
         }
       ],
       "token": {
-        "filepath": {
-          "path": "/main.project.dbml"
-        },
         "start": {
           "offset": 0,
           "line": 1,
@@ -70,9 +61,6 @@
             "args": null
           },
           "token": {
-            "filepath": {
-              "path": "/main.project.dbml"
-            },
             "start": {
               "offset": 49,
               "line": 6,
@@ -92,9 +80,6 @@
         }
       ],
       "token": {
-        "filepath": {
-          "path": "/main.project.dbml"
-        },
         "start": {
           "offset": 32,
           "line": 5,
@@ -121,9 +106,6 @@
           "name": "table1",
           "schemaName": "",
           "token": {
-            "filepath": {
-              "path": "/main.project.dbml"
-            },
             "start": {
               "offset": 126,
               "line": 11,
@@ -140,9 +122,6 @@
           "name": "table2",
           "schemaName": "",
           "token": {
-            "filepath": {
-              "path": "/main.project.dbml"
-            },
             "start": {
               "offset": 135,
               "line": 12,
@@ -157,9 +136,6 @@
         }
       ],
       "token": {
-        "filepath": {
-          "path": "/main.project.dbml"
-        },
         "start": {
           "offset": 64,
           "line": 9,
@@ -176,9 +152,6 @@
       "note": {
         "value": "# Note\n\n## Objective\n  * Support define element's note inside element body\n  * Make writing long note easier with the new syntax\n  \n",
         "token": {
-          "filepath": {
-            "path": "/main.project.dbml"
-          },
           "start": {
             "offset": 145,
             "line": 14,
@@ -195,9 +168,6 @@
     {
       "tables": [],
       "token": {
-        "filepath": {
-          "path": "/main.project.dbml"
-        },
         "start": {
           "offset": 327,
           "line": 26,
@@ -214,9 +184,6 @@
       "note": {
         "value": "# Note\n* Support define element's note inside element body\n  ",
         "token": {
-          "filepath": {
-            "path": "/main.project.dbml"
-          },
           "start": {
             "offset": 349,
             "line": 27,
@@ -233,9 +200,6 @@
     {
       "tables": [],
       "token": {
-        "filepath": {
-          "path": "/main.project.dbml"
-        },
         "start": {
           "offset": 427,
           "line": 33,
@@ -252,9 +216,6 @@
       "note": {
         "value": "simple note",
         "token": {
-          "filepath": {
-            "path": "/main.project.dbml"
-          },
           "start": {
             "offset": 449,
             "line": 34,
