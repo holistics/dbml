@@ -1,3 +1,4 @@
+import type { Filepath } from '@/compiler/projectLayout';
 import { ProgramNode } from '@/core/parser/nodes';
 import { Database, InterpreterDatabase, Table, TablePartial, TableRecord } from '@/core/interpreter/types';
 import { AnalysisResult } from '@/core/types';
@@ -53,6 +54,7 @@ function convertEnvToDb (env: InterpreterDatabase): Database {
   }
 
   return {
+    filepath: env.filepath,
     schemas: [],
     tables: Array.from(env.tables.values()).map(processColumnInDb),
     notes: Array.from(env.notes.values()),
@@ -74,6 +76,7 @@ export default class Interpreter {
   constructor ({ ast, nodeToSymbol, nodeToReferee }: AnalysisResult) {
     this.ast = ast;
     this.env = {
+      filepath: ast.filepath,
       schema: [],
       tables: new Map(),
       notes: new Map(),

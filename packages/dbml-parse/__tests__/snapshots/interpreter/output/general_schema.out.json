@@ -1380,11 +1380,35 @@
       "tables": [
         {
           "name": "users",
-          "schemaName": ""
+          "schemaName": "",
+          "token": {
+            "start": {
+              "offset": 836,
+              "line": 52,
+              "column": 3
+            },
+            "end": {
+              "offset": 841,
+              "line": 52,
+              "column": 8
+            }
+          }
         },
         {
           "name": "merchants",
-          "schemaName": ""
+          "schemaName": "",
+          "token": {
+            "start": {
+              "offset": 844,
+              "line": 53,
+              "column": 3
+            },
+            "end": {
+              "offset": 853,
+              "line": 53,
+              "column": 12
+            }
+          }
         }
       ],
       "token": {
@@ -1406,11 +1430,35 @@
       "tables": [
         {
           "name": "countries",
-          "schemaName": ""
+          "schemaName": "",
+          "token": {
+            "start": {
+              "offset": 875,
+              "line": 57,
+              "column": 3
+            },
+            "end": {
+              "offset": 884,
+              "line": 57,
+              "column": 12
+            }
+          }
         },
         {
           "name": "orders",
-          "schemaName": ""
+          "schemaName": "",
+          "token": {
+            "start": {
+              "offset": 887,
+              "line": 58,
+              "column": 3
+            },
+            "end": {
+              "offset": 893,
+              "line": 58,
+              "column": 9
+            }
+          }
         }
       ],
       "token": {

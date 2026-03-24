@@ -1,6 +1,9 @@
 {
   "database": [
     {
+      "filepath": {
+        "path": "/main.dbml"
+      },
       "schemas": [],
       "tables": [
         {
@@ -16,6 +19,9 @@
                 "args": null
               },
               "token": {
+                "filepath": {
+                  "path": "/main.dbml"
+                },
                 "start": {
                   "offset": 44,
                   "line": 3,
@@ -35,6 +41,9 @@
             }
           ],
           "token": {
+            "filepath": {
+              "path": "/main.dbml"
+            },
             "start": {
               "offset": 27,
               "line": 2,
@@ -61,6 +70,9 @@
       "records": []
     },
     {
+      "filepath": {
+        "path": "/common.dbml"
+      },
       "schemas": [],
       "tables": [
         {
@@ -76,6 +88,9 @@
                 "args": null
               },
               "token": {
+                "filepath": {
+                  "path": "/common.dbml"
+                },
                 "start": {
                   "offset": 16,
                   "line": 2,
@@ -101,6 +116,9 @@
                 "args": null
               },
               "token": {
+                "filepath": {
+                  "path": "/common.dbml"
+                },
                 "start": {
                   "offset": 30,
                   "line": 3,
@@ -118,6 +136,9 @@
             }
           ],
           "token": {
+            "filepath": {
+              "path": "/common.dbml"
+            },
             "start": {
               "offset": 0,
               "line": 1,
@@ -141,6 +162,9 @@
           "values": [
             {
               "token": {
+                "filepath": {
+                  "path": "/common.dbml"
+                },
                 "start": {
                   "offset": 61,
                   "line": 6,
@@ -156,6 +180,9 @@
             },
             {
               "token": {
+                "filepath": {
+                  "path": "/common.dbml"
+                },
                 "start": {
                   "offset": 70,
                   "line": 7,
@@ -171,6 +198,9 @@
             }
           ],
           "token": {
+            "filepath": {
+              "path": "/common.dbml"
+            },
             "start": {
               "offset": 45,
               "line": 5,

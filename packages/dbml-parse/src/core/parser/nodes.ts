@@ -3,6 +3,7 @@ import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
 import { Position } from '@/core/types';
 import { getTokenFullEnd, getTokenFullStart } from '@/core/lexer/utils';
 import type { Internable } from '@/core/internable';
+import type { Filepath } from '@/compiler/projectLayout';
 
 export type SyntaxNodeId = number;
 export class SyntaxNodeIdGenerator {
@@ -119,10 +120,10 @@ export class ProgramNode extends SyntaxNode {
 
   source: string;
 
-  filepath?: string;
+  filepath?: Filepath;
 
   constructor (
-    { body = [], eof, source, filepath }: { body?: (UseDeclarationNode | ElementDeclarationNode)[]; eof?: SyntaxToken; source: string; filepath?: string },
+    { body = [], eof, source, filepath }: { body?: (UseDeclarationNode | ElementDeclarationNode)[]; eof?: SyntaxToken; source: string; filepath?: Filepath },
     id: SyntaxNodeId,
   ) {
     super(id, SyntaxNodeKind.PROGRAM, [...body, eof]);

@@ -1,6 +1,9 @@
 {
   "database": [
     {
+      "filepath": {
+        "path": "/main.dbml"
+      },
       "schemas": [],
       "tables": [
         {
@@ -16,6 +19,9 @@
                 "args": null
               },
               "token": {
+                "filepath": {
+                  "path": "/main.dbml"
+                },
                 "start": {
                   "offset": 71,
                   "line": 3,
@@ -41,6 +47,9 @@
                 "args": null
               },
               "token": {
+                "filepath": {
+                  "path": "/main.dbml"
+                },
                 "start": {
                   "offset": 85,
                   "line": 4,
@@ -58,6 +67,9 @@
             }
           ],
           "token": {
+            "filepath": {
+              "path": "/main.dbml"
+            },
             "start": {
               "offset": 55,
               "line": 2,
@@ -74,6 +86,9 @@
             {
               "order": 2,
               "token": {
+                "filepath": {
+                  "path": "/main.dbml"
+                },
                 "start": {
                   "offset": 100,
                   "line": 5,
@@ -101,6 +116,9 @@
       "records": []
     },
     {
+      "filepath": {
+        "path": "/partials.dbml"
+      },
       "schemas": [],
       "tables": [],
       "notes": [],
@@ -121,6 +139,9 @@
                 "args": null
               },
               "token": {
+                "filepath": {
+                  "path": "/partials.dbml"
+                },
                 "start": {
                   "offset": 28,
                   "line": 2,
@@ -144,6 +165,9 @@
                 "args": null
               },
               "token": {
+                "filepath": {
+                  "path": "/partials.dbml"
+                },
                 "start": {
                   "offset": 51,
                   "line": 3,
@@ -161,6 +185,9 @@
             }
           ],
           "token": {
+            "filepath": {
+              "path": "/partials.dbml"
+            },
             "start": {
               "offset": 0,
               "line": 1,

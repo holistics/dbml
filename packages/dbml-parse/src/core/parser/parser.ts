@@ -1,4 +1,5 @@
 import { last } from 'lodash-es';
+import type { Filepath } from '@/compiler/projectLayout';
 import {
   convertFuncAppToElem,
   isAsKeyword,
@@ -69,9 +70,9 @@ export default class Parser {
 
   private source: string;
 
-  private filepath?: string;
+  private filepath?: Filepath;
 
-  constructor (filepath: string | undefined, source: string, tokens: SyntaxToken[], nodeIdGenerator: SyntaxNodeIdGenerator) {
+  constructor (filepath: Filepath | undefined, source: string, tokens: SyntaxToken[], nodeIdGenerator: SyntaxNodeIdGenerator) {
     this.filepath = filepath;
     this.source = source;
     this.tokens = tokens;

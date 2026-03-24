@@ -46,7 +46,7 @@ export class TableInterpreter implements ElementInterpreter {
   }
 
   interpret (): CompileError[] {
-    this.table.token = getTokenPosition(this.declarationNode);
+    this.table.token = getTokenPosition(this.declarationNode, this.env.filepath);
     this.env.tables.set(this.declarationNode, this.table as Table);
 
     const errors = [
@@ -106,6 +106,7 @@ export class TableInterpreter implements ElementInterpreter {
           tableName: this.table.name!,
           schemaName: this.table.schemaName!,
         },
+        token: getTokenPosition(aliasNode, this.env.filepath),
       });
       this.table.alias = alias;
     }
@@ -123,7 +124,7 @@ export class TableInterpreter implements ElementInterpreter {
     const [noteNode] = settingMap[SettingName.Note] || [];
     this.table.note = noteNode && {
       value: extractQuotedStringToken(noteNode?.value).map(normalizeNoteContent).unwrap(),
-      token: getTokenPosition(noteNode),
+      token: getTokenPosition(noteNode, this.env.filepath),
     };
 
     return [];
@@ -147,7 +148,7 @@ export class TableInterpreter implements ElementInterpreter {
                 ? (sub.body.body[0] as FunctionApplicationNode).callee
                 : sub.body!.callee,
             ).map(normalizeNoteContent).unwrap(),
-            token: getTokenPosition(sub),
+            token: getTokenPosition(sub, this.env.filepath),
           };
           return [];
 
@@ -169,7 +170,7 @@ export class TableInterpreter implements ElementInterpreter {
   }
 
   private interpretInjection (injection: PrefixExpressionNode, order: number) {
-    const partial: Partial<TablePartialInjection> = { order, token: getTokenPosition(injection) };
+    const partial: Partial<TablePartialInjection> = { order, token: getTokenPosition(injection, this.env.filepath) };
     partial.name = extractVariableFromExpression(injection.expression).unwrap_or('');
     this.table.partials!.push(partial as TablePartialInjection);
     return [];
@@ -212,7 +213,7 @@ export class TableInterpreter implements ElementInterpreter {
     column.type = typeReport.getValue();
     errors.push(...typeReport.getErrors());
 
-    column.token = getTokenPosition(field);
+    column.token = getTokenPosition(field, this.env.filepath);
     column.inline_refs = [];
 
     const settings = field.args.slice(1);
@@ -233,7 +234,7 @@ export class TableInterpreter implements ElementInterpreter {
       const noteNode = settingMap[SettingName.Note]?.at(0);
       column.note = noteNode && {
         value: extractQuotedStringToken(noteNode.value).map(normalizeNoteContent).unwrap(),
-        token: getTokenPosition(noteNode),
+        token: getTokenPosition(noteNode, this.env.filepath),
       };
 
       const refs = settingMap[SettingName.Ref] || [];
@@ -258,7 +259,7 @@ export class TableInterpreter implements ElementInterpreter {
             tableName: this.table.name!,
             fieldNames: [columnName],
             relation: op.value as any,
-            token: getTokenPosition(ref),
+            token: getTokenPosition(ref, this.env.filepath),
           };
         } else if (fragments.length === 2) {
           const [table, columnName] = fragments;
@@ -267,7 +268,7 @@ export class TableInterpreter implements ElementInterpreter {
             tableName: table,
             fieldNames: [columnName],
             relation: op.value as any,
-            token: getTokenPosition(ref),
+            token: getTokenPosition(ref, this.env.filepath),
           };
         } else if (fragments.length === 3) {
           const [schema, table, columnName] = fragments;
@@ -276,7 +277,7 @@ export class TableInterpreter implements ElementInterpreter {
             tableName: table,
             fieldNames: [columnName],
             relation: op.value as any,
-            token: getTokenPosition(ref),
+            token: getTokenPosition(ref, this.env.filepath),
           };
         } else {
           errors.push(new CompileError(CompileErrorCode.UNSUPPORTED, 'Nested schema is not supported', ref));
@@ -288,7 +289,7 @@ export class TableInterpreter implements ElementInterpreter {
             tableName: table,
             fieldNames: [columnName],
             relation: op.value as any,
-            token: getTokenPosition(ref),
+            token: getTokenPosition(ref, this.env.filepath),
           };
         }
 
@@ -300,7 +301,7 @@ export class TableInterpreter implements ElementInterpreter {
 
       const checkNodes = settingMap[SettingName.Check] || [];
       column.checks = checkNodes.map((checkNode) => {
-        const token = getTokenPosition(checkNode);
+        const token = getTokenPosition(checkNode, this.env.filepath);
         const expression = (checkNode.value as FunctionExpressionNode).value!.value!;
         return {
           token,
@@ -325,7 +326,7 @@ export class TableInterpreter implements ElementInterpreter {
       const index: Partial<Index> = { columns: [] };
 
       const indexField = _indexField as FunctionApplicationNode;
-      index.token = getTokenPosition(indexField);
+      index.token = getTokenPosition(indexField, this.env.filepath);
       const args = [indexField.callee!, ...indexField.args];
       if (last(args) instanceof ListExpressionNode) {
         const settingMap = aggregateSettingList(args.pop() as ListExpressionNode).getValue();
@@ -335,7 +336,7 @@ export class TableInterpreter implements ElementInterpreter {
         const noteNode = settingMap[SettingName.Note]?.at(0);
         index.note = noteNode && {
           value: extractQuotedStringToken(noteNode.value).unwrap(),
-          token: getTokenPosition(noteNode),
+          token: getTokenPosition(noteNode, this.env.filepath),
         };
         index.type = extractVariableFromExpression(settingMap[SettingName.Type]?.at(0)?.value).unwrap_or(undefined);
       }
@@ -362,12 +363,12 @@ export class TableInterpreter implements ElementInterpreter {
           ...functional.map((s) => ({
             value: s.value!.value,
             type: 'expression',
-            token: getTokenPosition(s),
+            token: getTokenPosition(s, this.env.filepath),
           })),
           ...nonFunctional.map((s) => ({
             value: extractVarNameFromPrimaryVariable(s).unwrap(),
             type: 'column',
-            token: getTokenPosition(s),
+            token: getTokenPosition(s, this.env.filepath),
           })),
         );
       });
@@ -382,7 +383,7 @@ export class TableInterpreter implements ElementInterpreter {
     this.table.checks!.push(...(checks.body as BlockExpressionNode).body.map((_checkField) => {
       const check: Partial<Check> = {};
       const checkField = _checkField as FunctionApplicationNode;
-      check.token = getTokenPosition(checkField);
+      check.token = getTokenPosition(checkField, this.env.filepath);
 
       if (checkField.args[0] instanceof ListExpressionNode) {
         const settingMap = aggregateSettingList(checkField.args[0] as ListExpressionNode).getValue();
@@ -421,7 +422,7 @@ export class TableInterpreter implements ElementInterpreter {
           schemaName: this.table.schemaName!,
           tableName: this.table.name!,
           fieldNames: [extractVariableFromExpression(column.callee!).unwrap()],
-          token: getTokenPosition(column),
+          token: getTokenPosition(column, this.env.filepath),
           relation: multiplicities[0],
         },
       ],

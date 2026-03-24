@@ -26,7 +26,7 @@ export class RefInterpreter implements ElementInterpreter {
   }
 
   interpret (): CompileError[] {
-    this.ref.token = getTokenPosition(this.declarationNode);
+    this.ref.token = getTokenPosition(this.declarationNode, this.env.filepath);
     this.env.ref.set(this.declarationNode, this.ref as Ref);
     const errors = [
       ...this.interpretName(this.declarationNode.name!),
@@ -97,12 +97,12 @@ export class RefInterpreter implements ElementInterpreter {
       {
         ...extractNamesFromRefOperand(leftExpression!, this.container as Table | undefined),
         relation: multiplicities[0],
-        token: getTokenPosition(leftExpression!),
+        token: getTokenPosition(leftExpression!, this.env.filepath),
       },
       {
         ...extractNamesFromRefOperand(rightExpression!, this.container as Table | undefined),
         relation: multiplicities[1],
-        token: getTokenPosition(rightExpression!),
+        token: getTokenPosition(rightExpression!, this.env.filepath),
       },
     ];
 

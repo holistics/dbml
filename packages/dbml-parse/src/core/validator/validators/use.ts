@@ -162,8 +162,8 @@ export default class UseDeclarationValidator {
     const symbolTable = registerSchemaStack(nameFragments, this.publicSymbolTable, this.symbolFactory);
     const symbolId = createNodeSymbolIndex(itemName, symbolKind);
 
-    if (symbolTable.has(symbolId)) {
-      const existingSymbol = symbolTable.get(symbolId);
+    const existingSymbol = symbolTable.get(symbolId);
+    if (existingSymbol) {
       // Schema symbols from external files should be merged, not treated as conflicts
       if (symbolKind === SymbolKind.Schema && existingSymbol instanceof SchemaSymbol && externalFilepath) {
         if (!existingSymbol.externalFilepaths.some((fp) => fp.intern() === externalFilepath.intern())) {

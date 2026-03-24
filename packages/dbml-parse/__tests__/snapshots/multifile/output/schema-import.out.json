@@ -1,6 +1,9 @@
 {
   "database": [
     {
+      "filepath": {
+        "path": "/main.dbml"
+      },
       "schemas": [],
       "tables": [
         {
@@ -16,6 +19,9 @@
                 "args": null
               },
               "token": {
+                "filepath": {
+                  "path": "/main.dbml"
+                },
                 "start": {
                   "offset": 63,
                   "line": 3,
@@ -35,6 +41,9 @@
             }
           ],
           "token": {
+            "filepath": {
+              "path": "/main.dbml"
+            },
             "start": {
               "offset": 39,
               "line": 2,
@@ -61,6 +70,9 @@
       "records": []
     },
     {
+      "filepath": {
+        "path": "/auth.dbml"
+      },
       "schemas": [],
       "tables": [
         {
@@ -76,6 +88,9 @@
                 "args": null
               },
               "token": {
+                "filepath": {
+                  "path": "/auth.dbml"
+                },
                 "start": {
                   "offset": 21,
                   "line": 2,
@@ -101,6 +116,9 @@
                 "args": null
               },
               "token": {
+                "filepath": {
+                  "path": "/auth.dbml"
+                },
                 "start": {
                   "offset": 35,
                   "line": 3,
@@ -118,6 +136,9 @@
             }
           ],
           "token": {
+            "filepath": {
+              "path": "/auth.dbml"
+            },
             "start": {
               "offset": 0,
               "line": 1,
@@ -146,6 +167,9 @@
                 "args": null
               },
               "token": {
+                "filepath": {
+                  "path": "/auth.dbml"
+                },
                 "start": {
                   "offset": 72,
                   "line": 6,
@@ -171,6 +195,9 @@
                 "args": null
               },
               "token": {
+                "filepath": {
+                  "path": "/auth.dbml"
+                },
                 "start": {
                   "offset": 86,
                   "line": 7,
@@ -188,6 +215,9 @@
             }
           ],
           "token": {
+            "filepath": {
+              "path": "/auth.dbml"
+            },
             "start": {
               "offset": 51,
               "line": 5,

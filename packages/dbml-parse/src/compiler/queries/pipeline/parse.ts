@@ -23,7 +23,7 @@ export function parseFile (this: Compiler, filepath: Filepath): FileParseIndex {
   const nodeIdGenerator = new SyntaxNodeIdGenerator();
   const parseReport = new Lexer(source)
     .lex()
-    .chain((tokens) => new Parser(filepath.absolute, source, tokens, nodeIdGenerator).parse());
+    .chain((tokens) => new Parser(filepath, source, tokens, nodeIdGenerator).parse());
 
   return {
     path: filepath,

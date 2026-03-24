@@ -23,7 +23,7 @@ export class TableGroupInterpreter implements ElementInterpreter {
 
   interpret (): CompileError[] {
     const errors: CompileError[] = [];
-    this.tableGroup.token = getTokenPosition(this.declarationNode);
+    this.tableGroup.token = getTokenPosition(this.declarationNode, this.env.filepath);
     this.env.tableGroups.set(this.declarationNode, this.tableGroup as TableGroup);
 
     errors.push(
@@ -70,7 +70,7 @@ export class TableGroupInterpreter implements ElementInterpreter {
             )
               .map(normalizeNoteContent)
               .unwrap(),
-            token: getTokenPosition(sub),
+            token: getTokenPosition(sub, this.env.filepath),
           };
           break;
 
@@ -105,6 +105,7 @@ export class TableGroupInterpreter implements ElementInterpreter {
       return {
         name: fragments.pop()!,
         schemaName: fragments.join('.'),
+        token: getTokenPosition(field, this.env.filepath),
       };
     });
 
@@ -121,7 +122,7 @@ export class TableGroupInterpreter implements ElementInterpreter {
     const [noteNode] = settingMap.note || [];
     this.tableGroup.note = noteNode && {
       value: extractQuotedStringToken(noteNode?.value).map(normalizeNoteContent).unwrap(),
-      token: getTokenPosition(noteNode),
+      token: getTokenPosition(noteNode, this.env.filepath),
     };
 
     return [];

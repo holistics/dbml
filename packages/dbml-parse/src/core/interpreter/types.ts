@@ -2,8 +2,10 @@ import { ElementDeclarationNode, FunctionApplicationNode, SyntaxNode } from '@/c
 import { Position } from '@/core/types';
 import { CompileError } from '@/core/errors';
 import { NodeToSymbolMap, NodeToRefereeMap } from '@/core/types';
+import type { Filepath } from '@/compiler/projectLayout';
 
 export interface TokenPosition {
+  filepath?: Filepath;
   start: Position;
   end: Position;
 }
@@ -13,6 +15,7 @@ export interface ElementInterpreter {
 }
 
 export interface InterpreterDatabase {
+  filepath?: Filepath;
   schema: [];
   tables: Map<ElementDeclarationNode, Table>;
   notes: Map<ElementDeclarationNode, Note>;
@@ -64,6 +67,7 @@ export interface TableRecord {
 }
 
 export interface Database {
+  filepath?: Filepath;
   schemas: [];
   tables: Table[];
   notes: Note[];
@@ -218,6 +222,7 @@ export interface TableGroup {
 export interface TableGroupField {
   name: string;
   schemaName: string | null;
+  token: TokenPosition;
 }
 
 export interface Alias {
@@ -227,6 +232,7 @@ export interface Alias {
     tableName: string;
     schemaName: string | null;
   };
+  token: TokenPosition;
 }
 
 export interface TablePartial {

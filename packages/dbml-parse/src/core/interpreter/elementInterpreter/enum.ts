@@ -21,7 +21,7 @@ export class EnumInterpreter implements ElementInterpreter {
   }
 
   interpret (): CompileError[] {
-    this.enum.token = getTokenPosition(this.declarationNode);
+    this.enum.token = getTokenPosition(this.declarationNode, this.env.filepath);
     this.env.enums.set(this.declarationNode, this.enum as Enum);
     const errors = [...this.interpretName(this.declarationNode.name!), ...this.interpretBody(this.declarationNode.body as BlockExpressionNode)];
 
@@ -50,14 +50,14 @@ export class EnumInterpreter implements ElementInterpreter {
 
       const enumField: Partial<EnumField> = { };
 
-      enumField.token = getTokenPosition(field);
+      enumField.token = getTokenPosition(field, this.env.filepath);
       enumField.name = extractVariableFromExpression(field.callee).unwrap();
 
       const settingMap = aggregateSettingList(field.args[0] as ListExpressionNode).getValue();
       const noteNode = settingMap.note?.at(0);
       enumField.note = noteNode && {
         value: extractQuotedStringToken(noteNode.value).map(normalizeNoteContent).unwrap(),
-        token: getTokenPosition(noteNode),
+        token: getTokenPosition(noteNode, this.env.filepath),
       };
 
       this.enum.values!.push(enumField as EnumField);

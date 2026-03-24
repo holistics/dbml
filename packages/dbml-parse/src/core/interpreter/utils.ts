@@ -1,4 +1,5 @@
 import { last, zip, uniqBy } from 'lodash-es';
+import type { Filepath } from '@/compiler/projectLayout';
 import { ColumnSymbol } from '@/core/validator/symbol/symbols';
 import { NodeToRefereeMap } from '@/core/types';
 import {
@@ -75,8 +76,9 @@ export function getMultiplicities (
   }
 }
 
-export function getTokenPosition (node: SyntaxNode): TokenPosition {
+export function getTokenPosition (node: SyntaxNode, filepath?: Filepath): TokenPosition {
   return {
+    filepath,
     start: {
       offset: node.startPos.offset,
       line: node.startPos.line + 1,

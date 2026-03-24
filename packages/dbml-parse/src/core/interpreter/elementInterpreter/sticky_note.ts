@@ -21,7 +21,7 @@ export class StickyNoteInterpreter implements ElementInterpreter {
   }
 
   interpret (): CompileError[] {
-    this.note.token = getTokenPosition(this.declarationNode);
+    this.note.token = getTokenPosition(this.declarationNode, this.env.filepath);
     this.env.notes.set(this.declarationNode, this.note as Note);
 
     const errors = [

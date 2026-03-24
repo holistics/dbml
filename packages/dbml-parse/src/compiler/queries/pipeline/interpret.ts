@@ -51,7 +51,7 @@ function interpretSingle (compiler: Compiler, filepath: Filepath): {
   const warnings = [...bound.getWarnings()];
 
   if (errors.length > 0) {
-    return { db: emptyDatabase(), errors, warnings };
+    return { db: emptyDatabase(filepath), errors, warnings };
   }
 
   const { nodeToSymbol, nodeToReferee, symbolToReferences } = bound.getValue();
@@ -64,6 +64,6 @@ function interpretSingle (compiler: Compiler, filepath: Filepath): {
   };
 }
 
-function emptyDatabase (): Database {
-  return { schemas: [], tables: [], notes: [], refs: [], enums: [], tableGroups: [], aliases: [], project: {}, tablePartials: [], records: [] };
+function emptyDatabase (filepath?: Filepath): Database {
+  return { filepath, schemas: [], tables: [], notes: [], refs: [], enums: [], tableGroups: [], aliases: [], project: {}, tablePartials: [], records: [] };
 }

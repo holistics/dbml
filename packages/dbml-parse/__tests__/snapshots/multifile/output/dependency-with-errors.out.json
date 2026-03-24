@@ -1,6 +1,9 @@
 {
   "database": [
     {
+      "filepath": {
+        "path": "/main.dbml"
+      },
       "schemas": [],
       "tables": [
         {
@@ -16,6 +19,9 @@
                 "args": null
               },
               "token": {
+                "filepath": {
+                  "path": "/main.dbml"
+                },
                 "start": {
                   "offset": 55,
                   "line": 3,
@@ -35,6 +41,9 @@
             }
           ],
           "token": {
+            "filepath": {
+              "path": "/main.dbml"
+            },
             "start": {
               "offset": 38,
               "line": 2,
@@ -61,6 +70,9 @@
       "records": []
     },
     {
+      "filepath": {
+        "path": "/bad.dbml"
+      },
       "schemas": [],
       "tables": [],
       "notes": [],

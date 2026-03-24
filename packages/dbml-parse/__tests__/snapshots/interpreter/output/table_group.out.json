@@ -343,11 +343,35 @@
       "tables": [
         {
           "name": "users",
-          "schemaName": ""
+          "schemaName": "",
+          "token": {
+            "start": {
+              "offset": 272,
+              "line": 17,
+              "column": 3
+            },
+            "end": {
+              "offset": 277,
+              "line": 17,
+              "column": 8
+            }
+          }
         },
         {
           "name": "merchants",
-          "schemaName": ""
+          "schemaName": "",
+          "token": {
+            "start": {
+              "offset": 280,
+              "line": 18,
+              "column": 3
+            },
+            "end": {
+              "offset": 289,
+              "line": 18,
+              "column": 12
+            }
+          }
         }
       ],
       "token": {
@@ -373,6 +397,18 @@
       "value": {
         "tableName": "users",
         "schemaName": null
+      },
+      "token": {
+        "start": {
+          "offset": 15,
+          "line": 1,
+          "column": 16
+        },
+        "end": {
+          "offset": 16,
+          "line": 1,
+          "column": 17
+        }
       }
     }
   ],
