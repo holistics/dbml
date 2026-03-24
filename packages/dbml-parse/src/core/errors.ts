@@ -1,5 +1,6 @@
 import { SyntaxToken } from './lexer/tokens';
 import { SyntaxNode } from './parser/nodes';
+import type { Filepath } from '@/compiler/projectLayout';
 
 export enum CompileErrorCode {
   UNKNOWN_SYMBOL = 1000,
@@ -135,16 +136,19 @@ export class CompileError extends Error {
 
   diagnostic: Readonly<string>;
 
-  nodeOrToken: Readonly<SyntaxNode | SyntaxToken>; // The nodes or tokens that cause the error
+  filepath: Readonly<Filepath | undefined>;
+
+  nodeOrToken: Readonly<SyntaxNode | SyntaxToken>;
 
   start: Readonly<number>;
 
   end: Readonly<number>;
 
-  constructor (code: number, message: string, nodeOrToken: SyntaxNode | SyntaxToken) {
+  constructor (code: number, message: string, nodeOrToken: SyntaxNode | SyntaxToken, filepath?: Filepath) {
     super(message);
     this.code = code;
     this.diagnostic = message;
+    this.filepath = filepath;
     this.nodeOrToken = nodeOrToken;
     this.start = nodeOrToken.start;
     this.end = nodeOrToken.end;
@@ -157,6 +161,7 @@ export class CompileError extends Error {
       this.code,
       this.message,
       this.nodeOrToken,
+      this.filepath as Filepath | undefined,
     );
   }
 }
@@ -166,20 +171,23 @@ export class CompileWarning extends Error {
 
   diagnostic: Readonly<string>;
 
-  nodeOrToken: Readonly<SyntaxNode | SyntaxToken>; // The nodes or tokens that cause the error
+  filepath: Readonly<Filepath | undefined>;
+
+  nodeOrToken: Readonly<SyntaxNode | SyntaxToken>;
 
   start: Readonly<number>;
 
   end: Readonly<number>;
 
-  constructor (code: number, message: string, nodeOrToken: SyntaxNode | SyntaxToken) {
+  constructor (code: number, message: string, nodeOrToken: SyntaxNode | SyntaxToken, filepath?: Filepath) {
     super(message);
     this.code = code;
     this.diagnostic = message;
+    this.filepath = filepath;
     this.nodeOrToken = nodeOrToken;
     this.start = nodeOrToken.start;
     this.end = nodeOrToken.end;
     this.name = this.constructor.name;
-    Object.setPrototypeOf(this, CompileError.prototype);
+    Object.setPrototypeOf(this, CompileWarning.prototype);
   }
 }
