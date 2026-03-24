@@ -4,7 +4,7 @@ import Element, { RawNote, Token} from './element';
 import Schema from './schema';
 import Table from './table';
 
-interface RawTableGroup {
+export interface RawTableGroup {
     name: string;
     tables: Table[];
     schema: Schema;

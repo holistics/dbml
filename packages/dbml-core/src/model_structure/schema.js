@@ -7,19 +7,32 @@ import TableGroup from './tableGroup';
 import Ref from './ref';
 
 class Schema extends Element {
+  /**
+   * @param {import('../../types/model_structure/schema').RawSchema} param0
+   */
   constructor ({
     name, alias, note, tables = [], refs = [], enums = [], tableGroups = [], token, database = {}, noteToken = null,
   } = {}) {
     super(token);
+    /** @type {import('../../types/model_structure/table').default[]} */
     this.tables = [];
+    /** @type {import('../../types/model_structure/enum').default[]} */
     this.enums = [];
+    /** @type {import('../../types/model_structure/tableGroup').default[]} */
     this.tableGroups = [];
+    /** @type {import('../../types/model_structure/ref').default[]} */
     this.refs = [];
+    /** @type {string} */
     this.name = name;
+    /** @type {string} */
     this.note = note ? get(note, 'value', note) : null;
+    /** @type {import('../../types/model_structure/element').Token} */
     this.noteToken = note ? get(note, 'token', noteToken) : null;
+    /** @type {string} */
     this.alias = alias;
+    /** @type {import('../../types/model_structure/database').default} */
     this.database = database;
+    /** @type {import('../../types/model_structure/dbState').default} */
     this.dbState = this.database.dbState;
     this.generateId();
 
@@ -30,41 +43,64 @@ class Schema extends Element {
   }
 
   generateId () {
+    /** @type {number} */
     this.id = this.dbState.generateId('schemaId');
   }
 
+  /**
+   * @param {any[]} rawTables
+   */
   processTables (rawTables) {
     rawTables.forEach((table) => {
       this.pushTable(new Table({ ...table, schema: this }));
     });
   }
 
+  /**
+   * @param {import('../../types/model_structure/table').default} table
+   */
   pushTable (table) {
     this.checkTable(table);
     this.tables.push(table);
   }
 
+  /**
+   * @param {import('../../types/model_structure/table').default} table
+   */
   checkTable (table) {
     if (this.tables.some((t) => t.name === table.name)) {
       table.error(`Table ${shouldPrintSchema(this) ? `"${this.name}".` : ''}"${table.name}" existed`);
     }
   }
 
+  /**
+   * @param {string} tableName
+   * @returns {import('../../types/model_structure/table').default}
+   */
   findTable (tableName) {
     return this.tables.find((t) => t.name === tableName);
   }
 
+  /**
+   * @param {any[]} rawEnums
+   */
   processEnums (rawEnums) {
     rawEnums.forEach((_enum) => {
       this.pushEnum(new Enum({ ..._enum, schema: this }));
     });
   }
 
+  /**
+   * @param {import('../../types/model_structure/enum').default} _enum
+   */
   pushEnum (_enum) {
     this.checkEnum(_enum);
     this.enums.push(_enum);
   }
 
+  /**
+   * @param {import('../../types/model_structure/enum').default} _enum
+   */
   checkEnum (_enum) {
     if (this.enums.some((e) => e.name === _enum.name)) {
       _enum.error(`Enum ${shouldPrintSchema(this)
@@ -73,17 +109,26 @@ class Schema extends Element {
     }
   }
 
+  /**
+   * @param {any[]} rawRefs
+   */
   processRefs (rawRefs) {
     rawRefs.forEach((ref) => {
       this.pushRef(new Ref({ ...ref, schema: this }));
     });
   }
 
+  /**
+   * @param {import('../../types/model_structure/ref').default} ref
+   */
   pushRef (ref) {
     this.checkRef(ref);
     this.refs.push(ref);
   }
 
+  /**
+   * @param {import('../../types/model_structure/ref').default} ref
+   */
   checkRef (ref) {
     if (this.refs.some((r) => r.equals(ref))) {
       const endpoint1 = ref.endpoints[0];
@@ -96,23 +141,36 @@ class Schema extends Element {
     }
   }
 
+  /**
+   * @param {any[]} rawTableGroups
+   */
   processTableGroups (rawTableGroups) {
     rawTableGroups.forEach((tableGroup) => {
       this.pushTableGroup(new TableGroup({ ...tableGroup, schema: this }));
     });
   }
 
+  /**
+   * @param {import('../../types/model_structure/tableGroup').default} tableGroup
+   */
   pushTableGroup (tableGroup) {
     this.checkTableGroup(tableGroup);
     this.tableGroups.push(tableGroup);
   }
 
+  /**
+   * @param {import('../../types/model_structure/tableGroup').default} tableGroup
+   */
   checkTableGroup (tableGroup) {
     if (this.tableGroups.some((tg) => tg.name === tableGroup.name)) {
       tableGroup.error(`Table Group ${shouldPrintSchema(this) ? `"${this.name}".` : ''}"${tableGroup.name}" existed`);
     }
   }
 
+  /**
+   * @param {any} schema
+   * @returns {boolean}
+   */
   checkSameId (schema) {
     return this.name === schema.name
       || this.alias === schema.name
@@ -159,6 +217,9 @@ class Schema extends Element {
     };
   }
 
+  /**
+   * @param {import('../../types/model_structure/database').NormalizedDatabase} model
+   */
   normalize (model) {
     model.schemas[this.id] = {
       id: this.id,

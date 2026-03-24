@@ -3,17 +3,27 @@ import { DEFAULT_SCHEMA_NAME } from './config';
 import { shouldPrintSchema, shouldPrintSchemaName } from './utils';
 
 class Endpoint extends Element {
+  /**
+   * @param {{ tableName: string, schemaName: string, fieldNames: string[], relation: any, token: import('../../types/model_structure/element').Token, ref: import('../../types/model_structure/ref').default }} param0
+   */
   constructor ({
     tableName, schemaName, fieldNames, relation, token, ref,
   }) {
     super(token);
+    /** @type {any} */
     this.relation = relation;
 
+    /** @type {string} */
     this.schemaName = schemaName;
+    /** @type {string} */
     this.tableName = tableName;
+    /** @type {string[]} */
     this.fieldNames = fieldNames;
+    /** @type {import('../../types/model_structure/field').default[]} */
     this.fields = [];
+    /** @type {import('../../types/model_structure/ref').default} */
     this.ref = ref;
+    /** @type {import('../../types/model_structure/dbState').default} */
     this.dbState = this.ref.dbState;
     this.generateId();
     // Use name of schema,table and field object
@@ -30,14 +40,23 @@ class Endpoint extends Element {
   }
 
   generateId () {
+    /** @type {number} */
     this.id = this.dbState.generateId('endpointId');
   }
 
+  /**
+   * @param {import('../../types/model_structure/endpoint').default} endpoint
+   * @returns {boolean}
+   */
   equals (endpoint) {
     if (this.fields.length !== endpoint.fields.length) return false;
     return this.compareFields(endpoint);
   }
 
+  /**
+   * @param {import('../../types/model_structure/endpoint').default} endpoint
+   * @returns {boolean}
+   */
   compareFields (endpoint) {
     const sortedThisFieldIds = this.fields.map((field) => field.id).sort();
     const sortedEndpointFieldIds = endpoint.fields.map((field) => field.id).sort();
@@ -69,6 +88,10 @@ class Endpoint extends Element {
     };
   }
 
+  /**
+   * @param {string[]} fieldNames
+   * @param {import('../../types/model_structure/table').default} table
+   */
   setFields (fieldNames, table) {
     let newFieldNames = (fieldNames && fieldNames.length) ? [...fieldNames] : [];
     if (!newFieldNames.length) {
@@ -96,6 +119,9 @@ class Endpoint extends Element {
     });
   }
 
+  /**
+   * @param {import('../../types/model_structure/database').NormalizedDatabase} model
+   */
   normalize (model) {
     model.endpoints[this.id] = {
       id: this.id,
