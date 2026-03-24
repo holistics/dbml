@@ -1,3 +1,24 @@
+## v6.5.0 (2026-03-24)
+
+#### :memo: Documentation
+* [#837](https://github.com/holistics/dbml/pull/837) Refactor documentation structure and improve wording ([@TeaNguyen](https://github.com/TeaNguyen))
+
+#### :bug: Bug Fix
+* `dbml-core`
+  * [#839](https://github.com/holistics/dbml/pull/839) fix(postgres): support UNIQUE NULLS NOT DISTINCT constraint syntax ([@frenzzy](https://github.com/frenzzy))
+* `dbml-connector`
+  * [#835](https://github.com/holistics/dbml/pull/835) Short-circuit null check constraints (db2dbml mssql) ([@ajar](https://github.com/ajar))
+
+#### :rocket: New Feature
+* `dbml-core`
+  * [#844](https://github.com/holistics/dbml/pull/844) feat: link sample id with table id ([@nguyenalter](https://github.com/nguyenalter))
+
+#### Committers: 4
+- Aaron Artille ([@ajar](https://github.com/ajar))
+- Nguyen Hoang ([@nguyenalter](https://github.com/nguyenalter))
+- Thi Nguyen ([@TeaNguyen](https://github.com/TeaNguyen))
+- Vladimir Kutepov ([@frenzzy](https://github.com/frenzzy))
+
 ## v6.4.0 (2026-02-26)
 
 #### :bug: Bug Fix
