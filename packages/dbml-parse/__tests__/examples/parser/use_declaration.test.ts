@@ -11,355 +11,121 @@ function specNameValue (spec?: UseSpecifierNode): string | undefined {
   return undefined;
 }
 
-function getUseStatements (source: string): UseDeclarationNode[] {
-  return parse(source).getValue().ast.useDeclarations;
-}
-
 describe('[example] parser - use statement', () => {
-  describe('basic parsing', () => {
-    test('should parse a single specifier', () => {
-      const source = "use { table users } from './schema'";
-      const result = parse(source);
+  test('selective use: parses specifiers, fromKeyword, path, AST structure', () => {
+    const source = "use { table users, enum status } from './schema'";
+    const result = parse(source);
+    expect(result.getErrors()).toHaveLength(0);
 
-      expect(result.getErrors()).toHaveLength(0);
+    const ast = result.getValue().ast;
+    expect(ast.useDeclarations).toHaveLength(1);
+    expect(ast.declarations).toHaveLength(0);
 
-      const ast = result.getValue().ast;
-      expect(ast.useDeclarations).toHaveLength(1);
-      expect(ast.declarations).toHaveLength(0);
-    });
+    const stmt = ast.useDeclarations[0];
+    expect(stmt.kind).toBe(SyntaxNodeKind.USE_DECLARATION);
+    expect(stmt.useKeyword?.value).toBe('use');
+    expect(stmt.fromKeyword?.value).toBe('from');
+    expect(stmt.path?.value).toBe('./schema');
+    expect(stmt.specifiers?.kind).toBe(SyntaxNodeKind.USE_SPECIFIER_LIST);
+    expect(stmt.specifiers?.specifiers).toHaveLength(2);
 
-    test('should parse multiple specifiers', () => {
-      const source = "use { table users, enum status, table orders } from './schema'";
-      const result = parse(source);
+    const spec = stmt.specifiers?.specifiers[0];
+    expect(spec?.kind).toBe(SyntaxNodeKind.USE_SPECIFIER);
+    expect(spec?.elementKind?.value).toBe('table');
+    expect(specNameValue(spec)).toBe('users');
 
-      expect(result.getErrors()).toHaveLength(0);
-
-      const stmts = getUseStatements(source);
-      expect(stmts).toHaveLength(1);
-
-      const stmt = stmts[0];
-      expect(stmt.specifiers?.specifiers).toHaveLength(3);
-    });
-
-    test('should parse use statement followed by table declaration', () => {
-      const source = "use { table users } from './schema'\nTable orders { id int }";
-      const result = parse(source);
-
-      expect(result.getErrors()).toHaveLength(0);
-
-      const ast = result.getValue().ast;
-      expect(ast.useDeclarations).toHaveLength(1);
-      expect(ast.declarations).toHaveLength(1);
-    });
-
-    test('should parse multiple use statements', () => {
-      const source = "use { table users } from './a'\nuse { enum status } from './b'";
-      const result = parse(source);
-
-      expect(result.getErrors()).toHaveLength(0);
-
-      const ast = result.getValue().ast;
-      expect(ast.useDeclarations).toHaveLength(2);
-    });
-
-    test('should parse entire-file use', () => {
-      const source = "use * from './common.dbml'";
-      const result = parse(source);
-
-      expect(result.getErrors()).toHaveLength(0);
-
-      const ast = result.getValue().ast;
-      expect(ast.useDeclarations).toHaveLength(1);
-      expect(ast.declarations).toHaveLength(0);
-
-      const stmt = ast.useDeclarations[0];
-      expect(stmt.useKeyword?.value).toBe('use');
-      expect(stmt.star?.value).toBe('*');
-      expect(stmt.fromKeyword?.value).toBe('from');
-      expect(stmt.path?.value).toBe('./common.dbml');
-      expect(stmt.specifiers).toBeUndefined();
-    });
-
-    test('should parse entire-file use followed by selective use', () => {
-      const source = "use * from './common.dbml'\nuse { table users } from './schema'";
-      const result = parse(source);
-
-      expect(result.getErrors()).toHaveLength(0);
-
-      const ast = result.getValue().ast;
-      expect(ast.useDeclarations).toHaveLength(2);
-
-      // entire-file
-      expect(ast.useDeclarations[0].specifiers).toBeUndefined();
-      expect(ast.useDeclarations[0].star?.value).toBe('*');
-      expect(ast.useDeclarations[0].path?.value).toBe('./common.dbml');
-
-      // selective
-      expect(ast.useDeclarations[1].specifiers?.specifiers).toHaveLength(1);
-      expect(ast.useDeclarations[1].path?.value).toBe('./schema');
-    });
-
-    test('should parse entire-file use followed by table declaration', () => {
-      const source = "use * from './common.dbml'\nTable orders { id int }";
-      const result = parse(source);
-
-      expect(result.getErrors()).toHaveLength(0);
-
-      const ast = result.getValue().ast;
-      expect(ast.useDeclarations).toHaveLength(1);
-      expect(ast.declarations).toHaveLength(1);
-    });
+    expect(stmt.start).toBe(0);
+    expect(stmt.end).toBe(source.length);
   });
 
-  describe('AST node structure', () => {
-    test('UseDeclarationNode should have correct kind', () => {
-      const stmts = getUseStatements("use { table users } from './schema'");
-      expect(stmts[0].kind).toBe(SyntaxNodeKind.USE_DECLARATION);
-    });
+  test('entire-file use: star token, fromKeyword, no specifiers', () => {
+    const source = "use * from './common.dbml'";
+    const result = parse(source);
+    expect(result.getErrors()).toHaveLength(0);
 
-    test('should have useKeyword token with value "use"', () => {
-      const stmts = getUseStatements("use { table users } from './schema'");
-      expect(stmts[0].useKeyword?.value).toBe('use');
-    });
-
-    test('should have fromKeyword token with value "from"', () => {
-      const stmts = getUseStatements("use { table users } from './schema'");
-      expect(stmts[0].fromKeyword?.value).toBe('from');
-    });
-
-    test('should have path token as string literal (value is content without quotes)', () => {
-      const stmts = getUseStatements("use { table users } from './schema'");
-      // The lexer strips surrounding quote characters; value is the content only
-      expect(stmts[0].path?.value).toBe('./schema');
-    });
-
-    test('specifiers should have USE_SPECIFIER_LIST kind', () => {
-      const stmts = getUseStatements("use { table users } from './schema'");
-      expect(stmts[0].specifiers?.kind).toBe(SyntaxNodeKind.USE_SPECIFIER_LIST);
-    });
-
-    test('each specifier should have USE_SPECIFIER kind', () => {
-      const stmts = getUseStatements("use { table users, enum status } from './schema'");
-      const specifiers = stmts[0].specifiers?.specifiers ?? [];
-      expect(specifiers).toHaveLength(2);
-      specifiers.forEach((s) => expect(s.kind).toBe(SyntaxNodeKind.USE_SPECIFIER));
-    });
-
-    test('specifier should have elementKind and name tokens', () => {
-      const stmts = getUseStatements("use { table users } from './schema'");
-      const spec = stmts[0].specifiers?.specifiers[0];
-      expect(spec?.elementKind?.value).toBe('table');
-      expect(specNameValue(spec)).toBe('users');
-    });
-
-    test('should accept quoted name in specifier', () => {
-      const source = 'use { table "user accounts" } from \'./schema\'';
-      const result = parse(source);
-      expect(result.getErrors()).toHaveLength(0);
-
-      const spec = getUseStatements(source)[0].specifiers?.specifiers[0];
-      // QUOTED_STRING token value is the content without surrounding double quotes
-      expect(specNameValue(spec)).toBe('user accounts');
-    });
+    const stmt = result.getValue().ast.useDeclarations[0];
+    expect(stmt.star?.value).toBe('*');
+    expect(stmt.fromKeyword?.value).toBe('from');
+    expect(stmt.path?.value).toBe('./common.dbml');
+    expect(stmt.specifiers).toBeUndefined();
   });
 
-  describe('position tracking', () => {
-    test('use statement should span the full text', () => {
-      const source = "use { table users } from './schema'";
-      const stmt = getUseStatements(source)[0];
-      expect(stmt.start).toBe(0);
-      expect(stmt.end).toBe(source.length);
-    });
+  test('multiple use statements and coexistence with declarations', () => {
+    const source = "use * from './common.dbml'\nuse { table users } from './schema'\nTable orders { id int }";
+    const result = parse(source);
+    expect(result.getErrors()).toHaveLength(0);
 
-    test('use statements should come before body elements in source order', () => {
-      const source = "use { table users } from './a'\nTable orders { id int }";
-      const ast = parse(source).getValue().ast;
-      const useEnd = ast.useDeclarations[0].end;
-      const bodyStart = ast.declarations[0].start;
-      expect(bodyStart).toBeGreaterThanOrEqual(useEnd);
-    });
+    const ast = result.getValue().ast;
+    expect(ast.useDeclarations).toHaveLength(2);
+    expect(ast.declarations).toHaveLength(1);
+
+    // entire-file first
+    expect(ast.useDeclarations[0].star?.value).toBe('*');
+    expect(ast.useDeclarations[0].specifiers).toBeUndefined();
+
+    // selective second
+    expect(ast.useDeclarations[1].specifiers?.specifiers).toHaveLength(1);
+
+    // use comes before body in source order
+    expect(ast.declarations[0].start).toBeGreaterThanOrEqual(ast.useDeclarations[1].end);
+
+    // body array does not contain use declarations
+    ast.declarations.forEach((elem) => expect(elem.kind).not.toBe(SyntaxNodeKind.USE_DECLARATION));
   });
 
-  describe('specifier list details', () => {
-    test('comma list should have N-1 commas for N specifiers', () => {
-      const source = "use { table a, enum b, table c } from './x'";
-      const stmts = getUseStatements(source);
-      const list = stmts[0].specifiers as UseSpecifierListNode;
-      expect(list.specifiers).toHaveLength(3);
-      expect(list.commaList).toHaveLength(2);
-    });
+  test('specifier list: commas, braces, quoted names', () => {
+    const list = parse("use { table a, enum b, table c } from './x'")
+      .getValue().ast.useDeclarations[0].specifiers as UseSpecifierListNode;
+    expect(list.specifiers).toHaveLength(3);
+    expect(list.commaList).toHaveLength(2);
+    expect(list.openBrace?.value).toBe('{');
+    expect(list.closeBrace?.value).toBe('}');
 
-    test('should have openBrace and closeBrace tokens', () => {
-      const source = "use { table users } from './schema'";
-      const list = getUseStatements(source)[0].specifiers as UseSpecifierListNode;
-      expect(list.openBrace?.value).toBe('{');
-      expect(list.closeBrace?.value).toBe('}');
-    });
+    // quoted name
+    const quoted = parse('use { table "user accounts" } from \'./schema\'');
+    expect(quoted.getErrors()).toHaveLength(0);
+    expect(specNameValue(quoted.getValue().ast.useDeclarations[0].specifiers?.specifiers[0])).toBe('user accounts');
   });
 
-  describe('negative tests — invalid syntax must produce errors', () => {
-    test('missing "from" keyword: use { table users } \'path\'', () => {
-      const source = "use { table users } './schema'";
-      const errors = parse(source).getErrors();
-      expect(errors).toHaveLength(1);
-      expect(errors[0].code).toBe(CompileErrorCode.UNEXPECTED_TOKEN);
-      expect(errors[0].diagnostic).toBe("Expect 'from' after specifier list");
+  test('case insensitive: USE keyword', () => {
+    const result = parse("USE { table users } from './schema'");
+    expect(result.getErrors()).toHaveLength(0);
+    expect(result.getValue().ast.useDeclarations).toHaveLength(1);
+    expect(result.getValue().ast.useDeclarations[0].useKeyword?.value).toBe('USE');
+  });
+
+  test('empty specifier list is accepted (semantic concern, not syntax)', () => {
+    const result = parse("use { } from './schema'");
+    expect(result.getErrors()).toHaveLength(0);
+    expect(result.getValue().ast.useDeclarations[0].specifiers?.specifiers).toHaveLength(0);
+  });
+
+  describe('invalid syntax produces errors', () => {
+    test.each([
+      ["missing 'from'", "use { table users } './schema'", "Expect 'from' after specifier list"],
+      ['missing path', 'use { table users } from', 'Expect a string literal path'],
+      ['missing specifier name', "use { table } from './schema'", 'Expect an element name'],
+      ['numeric name', "use { table 123 } from './schema'", 'Expect an element name'],
+      ['non-string path', 'use { table users } from users', 'Expect a string literal path'],
+      ['numeric path', 'use { table users } from 42', 'Expect a string literal path'],
+      ['bare use', 'use', undefined],
+    ])('%s', (_name, source, expectedMessage) => {
+      const errs = parse(source).getErrors();
+      expect(errs.length).toBeGreaterThan(0);
+      expect(errs[0].code).toBe(CompileErrorCode.UNEXPECTED_TOKEN);
+      if (expectedMessage) expect(errs[0].diagnostic).toBe(expectedMessage);
     });
 
-    test('missing path after from: use { table users } from', () => {
-      const source = 'use { table users } from';
-      const errors = parse(source).getErrors();
-      expect(errors.length).toBeGreaterThan(0);
-      expect(errors[0].code).toBe(CompileErrorCode.UNEXPECTED_TOKEN);
-      expect(errors[0].diagnostic).toBe('Expect a string literal path');
-    });
-
-    test('missing specifier list: use from \'path\'', () => {
-      // 'from' is parsed as a specifier kind — then './schema' is not a valid name
-      const source = "use from './schema'";
-      const errors = parse(source).getErrors();
-      expect(errors.length).toBeGreaterThan(0);
-      expect(errors[0].code).toBe(CompileErrorCode.UNEXPECTED_TOKEN);
-    });
-
-    test('empty specifier list: use { } from \'path\' is accepted without error', () => {
-      // The parser does not enforce a non-empty specifier list — that is a semantic concern
-      const source = "use { } from './schema'";
-      const result = parse(source);
-      expect(result.getErrors()).toHaveLength(0);
-      const stmt = result.getValue().ast.useDeclarations[0];
-      expect(stmt.useKeyword?.value).toBe('use');
-      expect(stmt.fromKeyword?.value).toBe('from');
-      expect(stmt.path?.value).toBe('./schema');
-      expect(stmt.specifiers?.specifiers).toHaveLength(0);
-    });
-
-    test('specifier missing name: use { table } from \'path\'', () => {
-      // 'table' is consumed as elementKind, then '}' is not a valid name
-      const source = "use { table } from './schema'";
-      const errors = parse(source).getErrors();
-      expect(errors.length).toBeGreaterThan(0);
-      expect(errors[0].code).toBe(CompileErrorCode.UNEXPECTED_TOKEN);
-      expect(errors[0].diagnostic).toBe('Expect an element name');
-    });
-
-    test('specifier with number as name: use { table 123 } from \'path\'', () => {
-      // Numeric literal is not IDENTIFIER or QUOTED_STRING
-      const source = "use { table 123 } from './schema'";
-      const errors = parse(source).getErrors();
-      expect(errors.length).toBeGreaterThan(0);
-      expect(errors[0].code).toBe(CompileErrorCode.UNEXPECTED_TOKEN);
-      expect(errors[0].diagnostic).toBe('Expect an element name');
-    });
-
-    test('non-string-literal path: use { table users } from users', () => {
-      // Identifier is not a STRING_LITERAL
-      const source = 'use { table users } from users';
-      const errors = parse(source).getErrors();
-      expect(errors).toHaveLength(1);
-      expect(errors[0].code).toBe(CompileErrorCode.UNEXPECTED_TOKEN);
-      expect(errors[0].diagnostic).toBe('Expect a string literal path');
-    });
-
-    test('numeric path: use { table users } from 42', () => {
-      const source = 'use { table users } from 42';
-      const errors = parse(source).getErrors();
-      expect(errors).toHaveLength(1);
-      expect(errors[0].code).toBe(CompileErrorCode.UNEXPECTED_TOKEN);
-      expect(errors[0].diagnostic).toBe('Expect a string literal path');
-    });
-
-    test('unclosed specifier list: use { table users from \'path\'', () => {
-      const source = "use { table users from './schema'";
-      const errors = parse(source).getErrors();
-      expect(errors.length).toBeGreaterThan(0);
-      expect(errors[0].code).toBe(CompileErrorCode.UNEXPECTED_TOKEN);
-    });
-
-    test('bare use without specifiers or path: use', () => {
-      const source = 'use';
-      const errors = parse(source).getErrors();
-      expect(errors.length).toBeGreaterThan(0);
-      expect(errors[0].code).toBe(CompileErrorCode.UNEXPECTED_TOKEN);
-    });
-
-    test('USE keyword (uppercase) is accepted as a use statement (case-insensitive)', () => {
-      const source = "USE { table users } from './schema'";
-      const result = parse(source);
-      expect(result.getErrors()).toHaveLength(0);
-      const ast = result.getValue().ast;
-      expect(ast.useDeclarations).toHaveLength(1);
-      expect(ast.declarations).toHaveLength(0);
-      expect(ast.useDeclarations[0].useKeyword?.value).toBe('USE');
-    });
-
-    test('still produces a valid AST on any broken use statement', () => {
-      const broken = [
-        'use',
-        'use {',
-        'use { }',
-        'use { table }',
-        'use { table users }',
-        'use { table users } from',
-        'use { table users } from 42',
-        'use {{{ from @@@ }',
-      ];
-      broken.forEach((source) => {
-        const result = parse(source);
-        expect(result.getValue().ast.kind).toBe(SyntaxNodeKind.PROGRAM);
-        expect(result.getErrors().length).toBeGreaterThan(0);
+    test('broken use statements still produce valid AST with error recovery', () => {
+      ['use', 'use {', 'use { }', 'use { table }', 'use { table users }', 'use { table users } from', 'use {{{ from @@@ }'].forEach((source) => {
+        expect(parse(source).getValue().ast.kind).toBe(SyntaxNodeKind.PROGRAM);
+        expect(parse(source).getErrors().length).toBeGreaterThan(0);
       });
-    });
 
-    test('body elements are still parsed after a broken use statement', () => {
-      const source = 'use { table users } from\nTable orders { id int }';
-      const result = parse(source);
+      // body elements survive after broken use
+      const result = parse('use { table users } from\nTable orders { id int }');
       expect(result.getErrors().length).toBeGreaterThan(0);
-      // Error recovery should not swallow the Table declaration
       expect(result.getValue().ast.declarations.length).toBeGreaterThanOrEqual(1);
-    });
-
-    test('error recovery after broken use statement does not crash', () => {
-      // The first use statement is broken (missing path). synchronizeProgram() consumes
-      // exactly one token for recovery, which may overlap the second statement.
-      // The key invariant is: no crash and at least one error is reported.
-      const source = "use { table users } from\nuse { enum status } from './b'";
-      const result = parse(source);
-      expect(result.getValue().ast.kind).toBe(SyntaxNodeKind.PROGRAM);
-      expect(result.getErrors().length).toBeGreaterThan(0);
-    });
-  });
-
-  describe('coexistence with other elements', () => {
-    test('use statements should not appear in body array', () => {
-      const source = "use { table users } from './a'\nTable orders { id int }";
-      const ast = parse(source).getValue().ast;
-      ast.declarations.forEach((elem) => {
-        expect(elem.kind).not.toBe(SyntaxNodeKind.USE_DECLARATION);
-      });
-    });
-
-    test('body elements should not appear in useDeclarations array', () => {
-      const source = "use { table users } from './a'\nTable orders { id int }";
-      const ast = parse(source).getValue().ast;
-      ast.useDeclarations.forEach((stmt) => {
-        expect(stmt.kind).toBe(SyntaxNodeKind.USE_DECLARATION);
-      });
-    });
-
-    test('should preserve normal element parsing with use statements present', () => {
-      const source = [
-        "use { table users } from './a'",
-        'Table orders { id int }',
-        'Enum status { active inactive }',
-      ].join('\n');
-
-      const result = parse(source);
-      expect(result.getErrors()).toHaveLength(0);
-
-      const ast = result.getValue().ast;
-      expect(ast.useDeclarations).toHaveLength(1);
-      expect(ast.declarations).toHaveLength(2);
     });
   });
 });
