@@ -174,8 +174,8 @@ class Database extends Element {
 
     // Link records to tables using the map
     this.records.forEach((record) => {
-      // Fallback to 'public' if schemaName is null, undefined, or empty string
-      const schemaName = record.schemaName || DEFAULT_SCHEMA_NAME;
+      // Fallback to 'public' if schemaName is null, undefined
+      const schemaName = record.schemaName ?? DEFAULT_SCHEMA_NAME;
       const table = tableMap[schemaName]?.[record.tableName];
       if (!table) return;
 
