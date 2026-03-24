@@ -1,6 +1,5 @@
-import { Compiler, Filepath, MemoryProjectLayout } from '@dbml/parse';
+import { Compiler } from '@dbml/parse';
 import Database from '../model_structure/database';
-import Model from '../model_structure/model';
 import { parse } from './ANTLR/ASTGeneration';
 import { CompilerError } from './error';
 import mysqlParser from './deprecated/mysqlParser.cjs';
@@ -43,43 +42,27 @@ class Parser {
 
   static parseDBMLToJSONv2 (str, dbmlCompiler) {
     const compiler = dbmlCompiler || new Compiler();
+
     compiler.setSource(str);
-    return Parser._interpretAndThrow(compiler);
-  }
 
-  static parseDBMLMultiFile (files, entryPath) {
-    const entries = {};
-    for (const [filePath, content] of Object.entries(files)) {
-      entries[Filepath.from(filePath).intern()] = content;
-    }
-    const compiler = new Compiler(new MemoryProjectLayout(entries));
-    const entry = entryPath ? Filepath.from(entryPath) : undefined;
-    return Parser._interpretAndThrow(compiler, entry);
-  }
-
-  static _interpretAndThrow (compiler, filepath) {
-    const report = compiler.interpretFile(filepath);
-    const errors = report.getErrors();
-
-    if (errors.length > 0) {
-      const diags = errors.map((error) => ({
-        message: error.diagnostic,
-        location: {
-          start: {
-            line: error.nodeOrToken.startPos.line + 1,
-            column: error.nodeOrToken.startPos.column + 1,
-          },
-          end: {
-            line: error.nodeOrToken.endPos.line + 1,
-            column: error.nodeOrToken.endPos.column + 1,
-          },
+    const diags = compiler.parse.errors().map((error) => ({
+      message: error.diagnostic,
+      location: {
+        start: {
+          line: error.nodeOrToken.startPos.line + 1,
+          column: error.nodeOrToken.startPos.column + 1,
         },
-        code: error.code,
-      }));
-      throw CompilerError.create(diags);
-    }
+        end: {
+          line: error.nodeOrToken.endPos.line + 1,
+          column: error.nodeOrToken.endPos.column + 1,
+        },
+      },
+      code: error.code,
+    }));
 
-    return report.getValue();
+    if (diags.length > 0) throw CompilerError.create(diags);
+
+    return compiler.parse.rawDb();
   }
 
   /**
@@ -112,20 +95,12 @@ class Parser {
     return parse(str, 'oracle');
   }
 
-  static parse (str, format, options = {}) {
-    return new Parser().parse(str, format, options);
+  static parse (str, format) {
+    return new Parser().parse(str, format);
   }
 
-  parse (str, format, options = {}) {
+  parse (str, format) {
     try {
-      if (format === 'dbmlv2') {
-        const model = Parser.parseDBMLToJSONv2(str, this.DBMLCompiler);
-        if (options.shouldReturnModel) {
-          return new Model(model);
-        }
-        return Parser.parseJSONToDatabase(model.database[0]);
-      }
-
       let rawDatabase = {};
       switch (format) {
         case 'mysql':
@@ -150,6 +125,10 @@ class Parser {
 
         case 'dbml':
           rawDatabase = Parser.parseDBMLToJSON(str);
+          break;
+
+        case 'dbmlv2':
+          rawDatabase = Parser.parseDBMLToJSONv2(str, this.DBMLCompiler);
           break;
 
         case 'schemarb':
@@ -180,11 +159,8 @@ class Parser {
           break;
       }
 
-      const database = Parser.parseJSONToDatabase(rawDatabase);
-      if (options.shouldReturnModel) {
-        return new Model({ database: [database] });
-      }
-      return database;
+      const schema = Parser.parseJSONToDatabase(rawDatabase);
+      return schema;
     } catch (diags) {
       throw CompilerError.create(diags);
     }
