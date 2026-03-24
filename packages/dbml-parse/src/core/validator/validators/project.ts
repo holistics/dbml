@@ -29,7 +29,7 @@ export default class ProjectValidator implements ElementValidator {
 
   private validateContext (): CompileError[] {
     if (this.declarationNode.parent instanceof ElementDeclarationNode) {
-      return [new CompileError(CompileErrorCode.INVALID_PROJECT_CONTEXT, 'A Project can only appear top-level', this.declarationNode)];
+      return [new CompileError(CompileErrorCode.INVALID_PROJECT_CONTEXT, 'A Project can only appear top-level', this.declarationNode, this.symbolFactory.filepath)];
     }
 
     return [];
@@ -41,7 +41,7 @@ export default class ProjectValidator implements ElementValidator {
     }
 
     if (!isSimpleName(nameNode)) {
-      return [new CompileError(CompileErrorCode.INVALID_NAME, 'A Project\'s name is optional or must be an identifier or a quoted identifer', nameNode)];
+      return [new CompileError(CompileErrorCode.INVALID_NAME, 'A Project\'s name is optional or must be an identifier or a quoted identifer', nameNode, this.symbolFactory.filepath)];
     }
 
     return [];
@@ -49,7 +49,7 @@ export default class ProjectValidator implements ElementValidator {
 
   private validateAlias (aliasNode?: SyntaxNode): CompileError[] {
     if (aliasNode) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'A Project shouldn\'t have an alias', aliasNode)];
+      return [new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'A Project shouldn\'t have an alias', aliasNode, this.symbolFactory.filepath)];
     }
 
     return [];
@@ -57,7 +57,7 @@ export default class ProjectValidator implements ElementValidator {
 
   private validateSettingList (settingList?: ListExpressionNode): CompileError[] {
     if (settingList) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'A Project shouldn\'t have a setting list', settingList)];
+      return [new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'A Project shouldn\'t have a setting list', settingList, this.symbolFactory.filepath)];
     }
 
     return [];
@@ -68,12 +68,12 @@ export default class ProjectValidator implements ElementValidator {
       return [];
     }
     if (body instanceof FunctionApplicationNode) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_SIMPLE_BODY, 'A Project\'s body must be a block', body)];
+      return [new CompileError(CompileErrorCode.UNEXPECTED_SIMPLE_BODY, 'A Project\'s body must be a block', body, this.symbolFactory.filepath)];
     }
 
     const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
     return [
-      ...fields.map((field) => new CompileError(CompileErrorCode.INVALID_PROJECT_FIELD, 'A Project can not have inline fields', field)),
+      ...fields.map((field) => new CompileError(CompileErrorCode.INVALID_PROJECT_FIELD, 'A Project can not have inline fields', field, this.symbolFactory.filepath)),
       ...this.validateSubElements(subs as ElementDeclarationNode[]),
     ];
   }

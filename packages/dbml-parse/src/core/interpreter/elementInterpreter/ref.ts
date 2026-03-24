@@ -41,7 +41,7 @@ export class RefInterpreter implements ElementInterpreter {
     const fragments = destructureComplexVariable(this.declarationNode.name!).unwrap_or([]);
     this.ref.name = fragments.pop() || null;
     if (fragments.length > 1) {
-      errors.push(new CompileError(CompileErrorCode.UNSUPPORTED, 'Nested schema is not supported', this.declarationNode.name!));
+      errors.push(new CompileError(CompileErrorCode.UNSUPPORTED, 'Nested schema is not supported', this.declarationNode.name!, this.env.filepath));
     }
     this.ref.schemaName = fragments.join('.') || null;
 
@@ -64,14 +64,14 @@ export class RefInterpreter implements ElementInterpreter {
     const rightSymbols = getColumnSymbolsOfRefOperand(rightExpression!, this.env.nodeToReferee);
 
     if (isSameEndpoint(leftSymbols, rightSymbols)) {
-      return [new CompileError(CompileErrorCode.SAME_ENDPOINT, 'Two endpoints are the same', field)];
+      return [new CompileError(CompileErrorCode.SAME_ENDPOINT, 'Two endpoints are the same', field, this.env.filepath)];
     }
 
     const refId = getRefId(leftSymbols, rightSymbols);
     if (this.env.refIds[refId]) {
       return [
-        new CompileError(CompileErrorCode.CIRCULAR_REF, 'References with same endpoints exist', this.declarationNode),
-        new CompileError(CompileErrorCode.CIRCULAR_REF, 'References with same endpoints exist', this.env.refIds[refId]),
+        new CompileError(CompileErrorCode.CIRCULAR_REF, 'References with same endpoints exist', this.declarationNode, this.env.filepath),
+        new CompileError(CompileErrorCode.CIRCULAR_REF, 'References with same endpoints exist', this.env.refIds[refId], this.env.filepath),
       ];
     }
 

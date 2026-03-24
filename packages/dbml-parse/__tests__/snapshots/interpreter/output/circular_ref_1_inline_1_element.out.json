@@ -2,6 +2,9 @@
   {
     "code": 5001,
     "diagnostic": "References with same endpoints exist",
+    "filepath": {
+      "path": "/main.project.dbml"
+    },
     "nodeOrToken": {
       "id": 58,
       "kind": "<element-declaration>",
@@ -585,6 +588,9 @@
   {
     "code": 5001,
     "diagnostic": "References with same endpoints exist",
+    "filepath": {
+      "path": "/main.project.dbml"
+    },
     "nodeOrToken": {
       "id": 13,
       "kind": "<attribute>",
@@ -908,6 +914,9 @@
   {
     "code": 5001,
     "diagnostic": "References with same endpoints exist",
+    "filepath": {
+      "path": "/main.project.dbml"
+    },
     "nodeOrToken": {
       "id": 168,
       "kind": "<element-declaration>",
@@ -1491,6 +1500,9 @@
   {
     "code": 5001,
     "diagnostic": "References with same endpoints exist",
+    "filepath": {
+      "path": "/main.project.dbml"
+    },
     "nodeOrToken": {
       "id": 141,
       "kind": "<attribute>",

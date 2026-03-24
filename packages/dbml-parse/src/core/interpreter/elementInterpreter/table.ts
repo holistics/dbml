@@ -84,7 +84,7 @@ export class TableInterpreter implements ElementInterpreter {
       this.table.name = name;
       this.table.schemaName = schemaName.join('.');
 
-      return [new CompileError(CompileErrorCode.UNSUPPORTED, 'Nested schema is not supported', nameNode)];
+      return [new CompileError(CompileErrorCode.UNSUPPORTED, 'Nested schema is not supported', nameNode, this.env.filepath)];
     }
 
     this.table.name = name;
@@ -189,7 +189,7 @@ export class TableInterpreter implements ElementInterpreter {
 
     const columnCountErrors = columnEntries.length
       ? []
-      : [new CompileError(CompileErrorCode.EMPTY_TABLE, 'A Table must have at least one column', this.declarationNode)];
+      : [new CompileError(CompileErrorCode.EMPTY_TABLE, 'A Table must have at least one column', this.declarationNode, this.env.filepath)];
 
     const interpretFieldErrors = fields.flatMap((field, order) => {
       return isValidPartialInjection(field.callee)
@@ -243,7 +243,7 @@ export class TableInterpreter implements ElementInterpreter {
         const [referredSymbol] = getColumnSymbolsOfRefOperand((ref.value as PrefixExpressionNode).expression!, this.env.nodeToReferee);
 
         if (isSameEndpoint(referredSymbol, this.env.nodeToSymbol.get(field) as ColumnSymbol)) {
-          errors.push(new CompileError(CompileErrorCode.SAME_ENDPOINT, 'Two endpoints are the same', ref));
+          errors.push(new CompileError(CompileErrorCode.SAME_ENDPOINT, 'Two endpoints are the same', ref, this.env.filepath));
 
           return [];
         }
@@ -281,7 +281,7 @@ export class TableInterpreter implements ElementInterpreter {
             token: getTokenPosition(ref, this.env.filepath),
           };
         } else {
-          errors.push(new CompileError(CompileErrorCode.UNSUPPORTED, 'Nested schema is not supported', ref));
+          errors.push(new CompileError(CompileErrorCode.UNSUPPORTED, 'Nested schema is not supported', ref, this.env.filepath));
           const columnName = fragments.pop()!;
           const table = fragments.pop()!;
           const schema = fragments.join('.');
@@ -403,8 +403,8 @@ export class TableInterpreter implements ElementInterpreter {
     const refId = getRefId(this.env.nodeToSymbol.get(column) as ColumnSymbol, referredSymbol);
     if (this.env.refIds[refId]) {
       return [
-        new CompileError(CompileErrorCode.CIRCULAR_REF, 'References with same endpoints exist', ref),
-        new CompileError(CompileErrorCode.CIRCULAR_REF, 'References with same endpoints exist', this.env.refIds[refId]),
+        new CompileError(CompileErrorCode.CIRCULAR_REF, 'References with same endpoints exist', ref, this.env.filepath),
+        new CompileError(CompileErrorCode.CIRCULAR_REF, 'References with same endpoints exist', this.env.refIds[refId], this.env.filepath),
       ];
     }
 

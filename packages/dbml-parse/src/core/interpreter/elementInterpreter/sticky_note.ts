@@ -54,7 +54,7 @@ export class StickyNoteInterpreter implements ElementInterpreter {
 
     if (fields.length !== 1 || subs.length > 0) {
       return [
-        new CompileError(CompileErrorCode.INVALID_NOTE, 'Invalid note syntax', body),
+        new CompileError(CompileErrorCode.INVALID_NOTE, 'Invalid note syntax', body, this.env.filepath),
       ];
     }
 

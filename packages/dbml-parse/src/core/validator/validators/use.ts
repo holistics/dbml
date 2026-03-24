@@ -65,14 +65,14 @@ export default class UseDeclarationValidator {
 
   private validateContext (): CompileError[] {
     if (this.node.parent instanceof ElementDeclarationNode) {
-      return [new CompileError(CompileErrorCode.INVALID_TABLE_CONTEXT, '\'use\' must appear at the top level', this.node)];
+      return [new CompileError(CompileErrorCode.INVALID_TABLE_CONTEXT, '\'use\' must appear at the top level', this.node, this.symbolFactory.filepath)];
     }
     return [];
   }
 
   private validateBody (): CompileError[] {
     if (this.node.path && !Filepath.isRelative(this.node.path.value)) {
-      return [new CompileError(CompileErrorCode.INVALID_USE_SPECIFIER_NAME, 'Import path must be a relative path (starting with \'./\' or \'../\')', this.node.path)];
+      return [new CompileError(CompileErrorCode.INVALID_USE_SPECIFIER_NAME, 'Import path must be a relative path (starting with \'./\' or \'../\')', this.node.path, this.symbolFactory.filepath)];
     }
 
     if (!this.node.specifiers) {
@@ -110,15 +110,15 @@ export default class UseDeclarationValidator {
     }
 
     if (specifier.elementKind === undefined) {
-      errors.push(new CompileError(CompileErrorCode.INVALID_USE_SPECIFIER_KIND, 'A use specifier must have a type (e.g. table, enum)', specifier));
+      errors.push(new CompileError(CompileErrorCode.INVALID_USE_SPECIFIER_KIND, 'A use specifier must have a type (e.g. table, enum)', specifier, this.symbolFactory.filepath));
     } else if (!VALID_USE_SPECIFIER_KINDS.has(symbolKind ?? '')) {
-      errors.push(new CompileError(CompileErrorCode.INVALID_USE_SPECIFIER_KIND, `'${specifier.elementKind.value}' is not a valid specifier type`, specifier.elementKind));
+      errors.push(new CompileError(CompileErrorCode.INVALID_USE_SPECIFIER_KIND, `'${specifier.elementKind.value}' is not a valid specifier type`, specifier.elementKind, this.symbolFactory.filepath));
     }
 
     if (specifier.name === undefined) {
-      errors.push(new CompileError(CompileErrorCode.INVALID_USE_SPECIFIER_NAME, 'A use specifier must have a name', specifier));
+      errors.push(new CompileError(CompileErrorCode.INVALID_USE_SPECIFIER_NAME, 'A use specifier must have a name', specifier, this.symbolFactory.filepath));
     } else if (!isValidName(specifier.name)) {
-      errors.push(new CompileError(CompileErrorCode.INVALID_USE_SPECIFIER_NAME, 'A use specifier name must be a simple or schema-qualified name', specifier.name));
+      errors.push(new CompileError(CompileErrorCode.INVALID_USE_SPECIFIER_NAME, 'A use specifier name must be a simple or schema-qualified name', specifier.name, this.symbolFactory.filepath));
     }
 
     if (errors.length > 0) return errors;
@@ -141,17 +141,17 @@ export default class UseDeclarationValidator {
     switch (symbolKind) {
       case SymbolKind.TableGroup:
         if (nameFragments.length > 1) {
-          return [new CompileError(CompileErrorCode.INVALID_USE_SPECIFIER_NAME, 'A TableGroup name must be a simple name', specifier.name!)];
+          return [new CompileError(CompileErrorCode.INVALID_USE_SPECIFIER_NAME, 'A TableGroup name must be a simple name', specifier.name!, this.symbolFactory.filepath)];
         }
         break;
       case SymbolKind.Note:
         if (nameFragments.length > 1) {
-          return [new CompileError(CompileErrorCode.INVALID_USE_SPECIFIER_NAME, 'A Sticky Note name must be a simple name', specifier.name!)];
+          return [new CompileError(CompileErrorCode.INVALID_USE_SPECIFIER_NAME, 'A Sticky Note name must be a simple name', specifier.name!, this.symbolFactory.filepath)];
         }
         break;
       case SymbolKind.Schema:
         if (nameFragments.length > 1) {
-          return [new CompileError(CompileErrorCode.INVALID_USE_SPECIFIER_NAME, 'A Schema name must be a simple name', specifier.name!)];
+          return [new CompileError(CompileErrorCode.INVALID_USE_SPECIFIER_NAME, 'A Schema name must be a simple name', specifier.name!, this.symbolFactory.filepath)];
         }
         break;
       default:
@@ -180,7 +180,7 @@ export default class UseDeclarationValidator {
           return [];
         }
       }
-      return [new CompileError(CompileErrorCode.DUPLICATE_NAME, `'${itemName}' is already defined`, specifier.name!)];
+      return [new CompileError(CompileErrorCode.DUPLICATE_NAME, `'${itemName}' is already defined`, specifier.name!, this.symbolFactory.filepath)];
     }
 
     const symbol = this.symbolFactory.create(ExternalSymbol, {

@@ -2,6 +2,9 @@
   {
     "code": 3044,
     "diagnostic": "Duplicate notes are defined",
+    "filepath": {
+      "path": "/main.project.dbml"
+    },
     "nodeOrToken": {
       "id": 36,
       "kind": "<element-declaration>",
@@ -253,6 +256,9 @@
   {
     "code": 3044,
     "diagnostic": "Duplicate notes are defined",
+    "filepath": {
+      "path": "/main.project.dbml"
+    },
     "nodeOrToken": {
       "id": 68,
       "kind": "<element-declaration>",

@@ -56,8 +56,7 @@ export default class NoteValidator implements ElementValidator {
       return [new CompileError(
         CompileErrorCode.INVALID_NOTE_CONTEXT,
         'A Note can only appear inside a Table, a TableGroup, a TablePartial or a Project. Sticky note can only appear at the global scope.',
-        this.declarationNode,
-      )];
+        this.declarationNode, this.symbolFactory.filepath)];
     }
 
     return [];
@@ -66,17 +65,17 @@ export default class NoteValidator implements ElementValidator {
   private validateName (nameNode?: SyntaxNode): CompileError[] {
     if (!(this.declarationNode.parent instanceof ProgramNode)) {
       if (nameNode) {
-        return [new CompileError(CompileErrorCode.UNEXPECTED_NAME, 'A Note shouldn\'t have a name', nameNode)];
+        return [new CompileError(CompileErrorCode.UNEXPECTED_NAME, 'A Note shouldn\'t have a name', nameNode, this.symbolFactory.filepath)];
       }
       return [];
     }
 
     if (!nameNode) {
-      return [new CompileError(CompileErrorCode.INVALID_NAME, 'Sticky note must have a name', this.declarationNode)];
+      return [new CompileError(CompileErrorCode.INVALID_NAME, 'Sticky note must have a name', this.declarationNode, this.symbolFactory.filepath)];
     }
 
     const nameFragments = destructureComplexVariable(nameNode);
-    if (!nameFragments.isOk()) return [new CompileError(CompileErrorCode.INVALID_NAME, 'Invalid name for sticky note ', this.declarationNode)];
+    if (!nameFragments.isOk()) return [new CompileError(CompileErrorCode.INVALID_NAME, 'Invalid name for sticky note ', this.declarationNode, this.symbolFactory.filepath)];
 
     const names = nameFragments.unwrap();
 
@@ -85,7 +84,7 @@ export default class NoteValidator implements ElementValidator {
     const noteId = createStickyNoteSymbolIndex(trueName);
 
     if (this.publicSymbolTable.has(noteId)) {
-      return [new CompileError(CompileErrorCode.DUPLICATE_NAME, `Sticky note "${trueName}" has already been defined`, nameNode)];
+      return [new CompileError(CompileErrorCode.DUPLICATE_NAME, `Sticky note "${trueName}" has already been defined`, nameNode, this.symbolFactory.filepath)];
     }
 
     this.publicSymbolTable.set(noteId, this.nodeToSymbol.get(this.declarationNode) as NodeSymbol);
@@ -95,7 +94,7 @@ export default class NoteValidator implements ElementValidator {
 
   private validateAlias (aliasNode?: SyntaxNode): CompileError[] {
     if (aliasNode) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'A Ref shouldn\'t have an alias', aliasNode)];
+      return [new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'A Ref shouldn\'t have an alias', aliasNode, this.symbolFactory.filepath)];
     }
 
     return [];
@@ -103,7 +102,7 @@ export default class NoteValidator implements ElementValidator {
 
   private validateSettingList (settingList?: ListExpressionNode): CompileError[] {
     if (settingList) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'A Note shouldn\'t have a setting list', settingList)];
+      return [new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'A Note shouldn\'t have a setting list', settingList, this.symbolFactory.filepath)];
     }
 
     return [];
@@ -124,16 +123,16 @@ export default class NoteValidator implements ElementValidator {
   validateFields (fields: FunctionApplicationNode[]): CompileError[] {
     const errors: CompileError[] = [];
     if (fields.length === 0) {
-      return [new CompileError(CompileErrorCode.EMPTY_NOTE, 'A Note must have a content', this.declarationNode)];
+      return [new CompileError(CompileErrorCode.EMPTY_NOTE, 'A Note must have a content', this.declarationNode, this.symbolFactory.filepath)];
     }
     if (fields.length > 1) {
-      fields.slice(1).forEach((field) => errors.push(new CompileError(CompileErrorCode.NOTE_CONTENT_REDEFINED, 'A Note can only contain one string', field)));
+      fields.slice(1).forEach((field) => errors.push(new CompileError(CompileErrorCode.NOTE_CONTENT_REDEFINED, 'A Note can only contain one string', field, this.symbolFactory.filepath)));
     }
     if (!isExpressionAQuotedString(fields[0].callee)) {
-      errors.push(new CompileError(CompileErrorCode.INVALID_NOTE, 'A Note content must be a quoted string', fields[0]));
+      errors.push(new CompileError(CompileErrorCode.INVALID_NOTE, 'A Note content must be a quoted string', fields[0], this.symbolFactory.filepath));
     }
     if (fields[0].args.length > 0) {
-      errors.push(...fields[0].args.map((arg) => new CompileError(CompileErrorCode.INVALID_NOTE, 'A Note can only contain one quoted string', arg)));
+      errors.push(...fields[0].args.map((arg) => new CompileError(CompileErrorCode.INVALID_NOTE, 'A Note can only contain one quoted string', arg, this.symbolFactory.filepath)));
     }
     return errors;
   }

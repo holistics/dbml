@@ -57,8 +57,7 @@ export default class RecordsValidator implements ElementValidator {
     return [new CompileError(
       CompileErrorCode.INVALID_RECORDS_CONTEXT,
       'Records can only appear at top-level or inside a Table',
-      this.declarationNode,
-    )];
+      this.declarationNode, this.symbolFactory.filepath)];
   }
 
   private validateName (nameNode?: SyntaxNode): CompileError[] {
@@ -80,8 +79,7 @@ export default class RecordsValidator implements ElementValidator {
       return [new CompileError(
         CompileErrorCode.INVALID_RECORDS_NAME,
         'Records at top-level must have a name in the form of table(col1, col2, ...) or schema.table(col1, col2, ...)',
-        nameNode || this.declarationNode.type,
-      )];
+        nameNode || this.declarationNode.type, this.symbolFactory.filepath)];
     }
 
     const errors: CompileError[] = [];
@@ -91,8 +89,7 @@ export default class RecordsValidator implements ElementValidator {
       errors.push(new CompileError(
         CompileErrorCode.INVALID_RECORDS_NAME,
         'Records table reference must be a valid table name',
-        nameNode.callee || nameNode,
-      ));
+        nameNode.callee || nameNode, this.symbolFactory.filepath));
     }
 
     // Validate argument list is a tuple of simple variables
@@ -100,8 +97,7 @@ export default class RecordsValidator implements ElementValidator {
       errors.push(new CompileError(
         CompileErrorCode.INVALID_RECORDS_NAME,
         'Records column list must be simple column names',
-        nameNode.argumentList || nameNode,
-      ));
+        nameNode.argumentList || nameNode, this.symbolFactory.filepath));
     }
 
     return errors;
@@ -116,8 +112,7 @@ export default class RecordsValidator implements ElementValidator {
       return [new CompileError(
         CompileErrorCode.INVALID_RECORDS_NAME,
         'Records inside a Table can only have a column list like (col1, col2, ...)',
-        nameNode,
-      )];
+        nameNode, this.symbolFactory.filepath)];
     }
 
     return [];
@@ -125,14 +120,14 @@ export default class RecordsValidator implements ElementValidator {
 
   private validateAlias (aliasNode?: SyntaxNode): CompileError[] {
     if (aliasNode) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'Records cannot have an alias', aliasNode)];
+      return [new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'Records cannot have an alias', aliasNode, this.symbolFactory.filepath)];
     }
     return [];
   }
 
   private validateSettingList (settingList?: ListExpressionNode): CompileError[] {
     if (settingList) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'Records cannot have a setting list', settingList)];
+      return [new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'Records cannot have a setting list', settingList, this.symbolFactory.filepath)];
     }
     return [];
   }
@@ -182,8 +177,7 @@ export default class RecordsValidator implements ElementValidator {
       errors.push(new CompileError(
         CompileErrorCode.INVALID_RECORDS_FIELD,
         'Invalid record row structure',
-        row,
-      ));
+        row, this.symbolFactory.filepath));
       return errors;
     }
 
@@ -195,8 +189,7 @@ export default class RecordsValidator implements ElementValidator {
           errors.push(new CompileError(
             CompileErrorCode.INVALID_RECORDS_FIELD,
             'Records can only contain simple values (literals, null, true, false, or enum references). Complex expressions are not allowed.',
-            value,
-          ));
+            value, this.symbolFactory.filepath));
         }
       }
     } else {
@@ -205,8 +198,7 @@ export default class RecordsValidator implements ElementValidator {
         errors.push(new CompileError(
           CompileErrorCode.INVALID_RECORDS_FIELD,
           'Records can only contain simple values (literals, null, true, false, or enum references). Complex expressions are not allowed.',
-          row.callee,
-        ));
+          row.callee, this.symbolFactory.filepath));
       }
     }
 

@@ -71,7 +71,7 @@ export default class Validator {
 
     const projects = this.ast.declarations.filter((e) => getElementKind(e).unwrap_or(undefined) === ElementKind.Project);
     if (projects.length > 1) {
-      projects.forEach((project) => errors.push(new CompileError(CompileErrorCode.PROJECT_REDEFINED, 'Only one project can exist', project)));
+      projects.forEach((project) => errors.push(new CompileError(CompileErrorCode.PROJECT_REDEFINED, 'Only one project can exist', project, this.symbolFactory.filepath)));
     }
 
     return new Report({ nodeToSymbol: this.nodeToSymbol, externalFilepaths }, errors);

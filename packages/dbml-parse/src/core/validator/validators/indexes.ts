@@ -51,8 +51,7 @@ export default class IndexesValidator implements ElementValidator {
     const invalidContextError = new CompileError(
       CompileErrorCode.INVALID_INDEXES_CONTEXT,
       'An Indexes can only appear inside a Table or a TablePartial',
-      this.declarationNode,
-    );
+      this.declarationNode, this.symbolFactory.filepath);
     if (this.declarationNode.parent instanceof ProgramNode) return [invalidContextError];
 
     const elementKind = getElementKind(this.declarationNode.parent).unwrap_or(undefined);
@@ -63,7 +62,7 @@ export default class IndexesValidator implements ElementValidator {
 
   private validateName (nameNode?: SyntaxNode): CompileError[] {
     if (nameNode) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_NAME, 'An Indexes shouldn\'t have a name', nameNode)];
+      return [new CompileError(CompileErrorCode.UNEXPECTED_NAME, 'An Indexes shouldn\'t have a name', nameNode, this.symbolFactory.filepath)];
     }
 
     return [];
@@ -71,7 +70,7 @@ export default class IndexesValidator implements ElementValidator {
 
   private validateAlias (aliasNode?: SyntaxNode): CompileError[] {
     if (aliasNode) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'An Indexes shouldn\'t have an alias', aliasNode)];
+      return [new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'An Indexes shouldn\'t have an alias', aliasNode, this.symbolFactory.filepath)];
     }
 
     return [];
@@ -79,7 +78,7 @@ export default class IndexesValidator implements ElementValidator {
 
   private validateSettingList (settingList?: ListExpressionNode): CompileError[] {
     if (settingList) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'An Indexes shouldn\'t have a setting list', settingList)];
+      return [new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'An Indexes shouldn\'t have a setting list', settingList, this.symbolFactory.filepath)];
     }
 
     return [];
@@ -90,7 +89,7 @@ export default class IndexesValidator implements ElementValidator {
       return [];
     }
     if (body instanceof FunctionApplicationNode) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_SIMPLE_BODY, 'An Indexes must have a complex body', body)];
+      return [new CompileError(CompileErrorCode.UNEXPECTED_SIMPLE_BODY, 'An Indexes must have a complex body', body, this.symbolFactory.filepath)];
     }
 
     const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
@@ -115,13 +114,13 @@ export default class IndexesValidator implements ElementValidator {
         // which is parsed as a call expression
         while (sub instanceof CallExpressionNode) {
           if (sub.argumentList && !destructureIndexNode(sub.argumentList).isOk()) {
-            errors.push(new CompileError(CompileErrorCode.INVALID_INDEXES_FIELD, 'An index field must be an identifier, a quoted identifier, a functional expression or a tuple of such', sub.argumentList));
+            errors.push(new CompileError(CompileErrorCode.INVALID_INDEXES_FIELD, 'An index field must be an identifier, a quoted identifier, a functional expression or a tuple of such', sub.argumentList, this.symbolFactory.filepath));
           }
           sub = sub.callee!;
         }
 
         if (!destructureIndexNode(sub).isOk()) {
-          errors.push(new CompileError(CompileErrorCode.INVALID_INDEXES_FIELD, 'An index field must be an identifier, a quoted identifier, a functional expression or a tuple of such', sub));
+          errors.push(new CompileError(CompileErrorCode.INVALID_INDEXES_FIELD, 'An index field must be an identifier, a quoted identifier, a functional expression or a tuple of such', sub, this.symbolFactory.filepath));
         }
       });
 
@@ -140,37 +139,37 @@ export default class IndexesValidator implements ElementValidator {
         case 'note':
         case 'name':
           if (attrs.length > 1) {
-            attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.DUPLICATE_INDEX_SETTING, `'${name}' can only appear once`, attr)));
+            attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.DUPLICATE_INDEX_SETTING, `'${name}' can only appear once`, attr, this.symbolFactory.filepath)));
           }
           attrs.forEach((attr) => {
             if (!isExpressionAQuotedString(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_INDEX_SETTING_VALUE, `'${name}' must be a string`, attr));
+              errors.push(new CompileError(CompileErrorCode.INVALID_INDEX_SETTING_VALUE, `'${name}' must be a string`, attr, this.symbolFactory.filepath));
             }
           });
           break;
         case 'unique':
         case 'pk':
           if (attrs.length > 1) {
-            attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.DUPLICATE_INDEX_SETTING, `'${name}' can only appear once`, attr)));
+            attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.DUPLICATE_INDEX_SETTING, `'${name}' can only appear once`, attr, this.symbolFactory.filepath)));
           }
           attrs.forEach((attr) => {
             if (!isVoid(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_INDEX_SETTING_VALUE, `'${name}' must not have a value`, attr));
+              errors.push(new CompileError(CompileErrorCode.INVALID_INDEX_SETTING_VALUE, `'${name}' must not have a value`, attr, this.symbolFactory.filepath));
             }
           });
           break;
         case 'type':
           if (attrs.length > 1) {
-            attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.DUPLICATE_INDEX_SETTING, '\'type\' can only appear once', attr)));
+            attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.DUPLICATE_INDEX_SETTING, '\'type\' can only appear once', attr, this.symbolFactory.filepath)));
           }
           attrs.forEach((attr) => {
             if (!isExpressionAVariableNode(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_INDEX_SETTING_VALUE, '\'type\' must be "btree" or "hash"', attr));
+              errors.push(new CompileError(CompileErrorCode.INVALID_INDEX_SETTING_VALUE, '\'type\' must be "btree" or "hash"', attr, this.symbolFactory.filepath));
             }
           });
           break;
         default:
-          attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.UNKNOWN_INDEX_SETTING, `Unknown index setting '${name}'`, attr)));
+          attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.UNKNOWN_INDEX_SETTING, `Unknown index setting '${name}'`, attr, this.symbolFactory.filepath)));
       }
     }
     return errors;

@@ -202,6 +202,9 @@
   {
     "code": 3021,
     "diagnostic": "Unknown column setting 'diagram_id'",
+    "filepath": {
+      "path": "/main.project.dbml"
+    },
     "nodeOrToken": {
       "id": 37,
       "kind": "<attribute>",

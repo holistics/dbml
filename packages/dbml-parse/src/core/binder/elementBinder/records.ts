@@ -100,8 +100,7 @@ export default class RecordsBinder implements ElementBinder {
         errors.push(new CompileError(
           CompileErrorCode.BINDING_ERROR,
           `Column '${columnName}' does not exist in Table '${tableName}'`,
-          columnBindee,
-        ));
+          columnBindee, this.symbolFactory.filepath));
         continue;
       }
       this.context.nodeToReferee.set(columnBindee, columnSymbol);
@@ -112,13 +111,11 @@ export default class RecordsBinder implements ElementBinder {
         errors.push(new CompileError(
           CompileErrorCode.DUPLICATE_COLUMN_REFERENCES_IN_RECORDS,
           `Column '${columnName}' is referenced more than once in a Records for Table '${tableName}'`,
-          originalBindee,
-        ));
+          originalBindee, this.symbolFactory.filepath));
         errors.push(new CompileError(
           CompileErrorCode.DUPLICATE_COLUMN_REFERENCES_IN_RECORDS,
           `Column '${columnName}' is referenced more than once in a Records for Table '${tableName}'`,
-          columnBindee,
-        ));
+          columnBindee, this.symbolFactory.filepath));
       }
       this.boundColumns.set(columnSymbol, columnBindee);
     }
@@ -162,8 +159,7 @@ export default class RecordsBinder implements ElementBinder {
         errors.push(new CompileError(
           CompileErrorCode.BINDING_ERROR,
           `Column '${columnName}' does not exist in Table '${tableName}'`,
-          columnBindee,
-        ));
+          columnBindee, this.symbolFactory.filepath));
         continue;
       }
 

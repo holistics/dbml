@@ -172,7 +172,7 @@ export class TablePartialInterpreter implements ElementInterpreter {
         const [referredSymbol] = getColumnSymbolsOfRefOperand((ref.value as PrefixExpressionNode).expression!, this.env.nodeToReferee);
 
         if (isSameEndpoint(referredSymbol, this.env.nodeToSymbol.get(field) as ColumnSymbol)) {
-          errors.push(new CompileError(CompileErrorCode.SAME_ENDPOINT, 'Two endpoints are the same', ref));
+          errors.push(new CompileError(CompileErrorCode.SAME_ENDPOINT, 'Two endpoints are the same', ref, this.env.filepath));
           return [];
         }
 
@@ -199,7 +199,7 @@ export class TablePartialInterpreter implements ElementInterpreter {
             token: getTokenPosition(ref, this.env.filepath),
           };
         } else {
-          errors.push(new CompileError(CompileErrorCode.UNSUPPORTED, 'Unsupported', ref));
+          errors.push(new CompileError(CompileErrorCode.UNSUPPORTED, 'Unsupported', ref, this.env.filepath));
           const columnName = fragments.pop()!;
           const table = fragments.pop()!;
           const schema = fragments.join('.');

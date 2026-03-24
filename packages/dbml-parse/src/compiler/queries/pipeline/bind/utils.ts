@@ -159,8 +159,7 @@ function mergeSymbolTables ({ target, source, schemaPath, symbolFactory, clonedS
     errors.push(new CompileError(
       CompileErrorCode.DUPLICATE_NAME,
       `'${entryInfo?.name ?? entryId}'${location} conflicts with an imported definition`,
-      entrySymbol.declaration!,
-    ));
+      entrySymbol.declaration!, entrySymbol.filepath));
   }
 
   return errors;

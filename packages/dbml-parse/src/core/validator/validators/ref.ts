@@ -44,7 +44,7 @@ export default class RefValidator implements ElementValidator {
     if (this.declarationNode.parent instanceof ProgramNode) {
       return [];
     }
-    return [new CompileError(CompileErrorCode.INVALID_REF_CONTEXT, 'A Ref must appear top-level', this.declarationNode)];
+    return [new CompileError(CompileErrorCode.INVALID_REF_CONTEXT, 'A Ref must appear top-level', this.declarationNode, this.symbolFactory.filepath)];
   }
 
   private validateName (nameNode?: SyntaxNode): CompileError[] {
@@ -53,7 +53,7 @@ export default class RefValidator implements ElementValidator {
     }
 
     if (!isSimpleName(nameNode)) {
-      return [new CompileError(CompileErrorCode.INVALID_NAME, 'A Ref\'s name is optional or must be an identifier or a quoted identifer', nameNode)];
+      return [new CompileError(CompileErrorCode.INVALID_NAME, 'A Ref\'s name is optional or must be an identifier or a quoted identifer', nameNode, this.symbolFactory.filepath)];
     }
 
     return [];
@@ -61,7 +61,7 @@ export default class RefValidator implements ElementValidator {
 
   private validateAlias (aliasNode?: SyntaxNode): CompileError[] {
     if (aliasNode) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'A Ref shouldn\'t have an alias', aliasNode)];
+      return [new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'A Ref shouldn\'t have an alias', aliasNode, this.symbolFactory.filepath)];
     }
 
     return [];
@@ -69,7 +69,7 @@ export default class RefValidator implements ElementValidator {
 
   private validateSettingList (settingList?: ListExpressionNode): CompileError[] {
     if (settingList) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'A Ref shouldn\'t have a setting list', settingList)];
+      return [new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'A Ref shouldn\'t have a setting list', settingList, this.symbolFactory.filepath)];
     }
 
     return [];
@@ -89,17 +89,17 @@ export default class RefValidator implements ElementValidator {
 
   validateFields (fields: FunctionApplicationNode[]): CompileError[] {
     if (fields.length === 0) {
-      return [new CompileError(CompileErrorCode.EMPTY_REF, 'A Ref must have at least one field', this.declarationNode)];
+      return [new CompileError(CompileErrorCode.EMPTY_REF, 'A Ref must have at least one field', this.declarationNode, this.symbolFactory.filepath)];
     }
 
     const errors: CompileError[] = [];
     if (fields.length > 1) {
-      errors.push(...fields.slice(1).map((field) => new CompileError(CompileErrorCode.REF_REDEFINED, 'A Ref can only contain one binary relationship', field)));
+      errors.push(...fields.slice(1).map((field) => new CompileError(CompileErrorCode.REF_REDEFINED, 'A Ref can only contain one binary relationship', field, this.symbolFactory.filepath)));
     }
 
     fields.forEach((field) => {
       if (field.callee && !isBinaryRelationship(field.callee)) {
-        errors.push(new CompileError(CompileErrorCode.INVALID_REF_FIELD, 'A Ref field must be a binary relationship', field.callee));
+        errors.push(new CompileError(CompileErrorCode.INVALID_REF_FIELD, 'A Ref field must be a binary relationship', field.callee, this.symbolFactory.filepath));
       }
 
       if (field.callee && isBinaryRelationship(field.callee)) {
@@ -108,15 +108,15 @@ export default class RefValidator implements ElementValidator {
         const rightFragment = destructureComplexVariableTuple(field.callee.rightExpression).unwrap_or({ variables: [], tupleElements: [] });
         const rightFragmentCount = rightFragment.variables.length + Math.min(rightFragment.tupleElements.length, 1);
         if (leftFragmentCount < 2) {
-          errors.push(new CompileError(CompileErrorCode.INVALID_REF_FIELD, 'Invalid column reference', field.callee.leftExpression || field.callee));
+          errors.push(new CompileError(CompileErrorCode.INVALID_REF_FIELD, 'Invalid column reference', field.callee.leftExpression || field.callee, this.symbolFactory.filepath));
         }
         if (rightFragmentCount < 2) {
-          errors.push(new CompileError(CompileErrorCode.INVALID_REF_FIELD, 'Invalid column reference', field.callee.rightExpression || field.callee));
+          errors.push(new CompileError(CompileErrorCode.INVALID_REF_FIELD, 'Invalid column reference', field.callee.rightExpression || field.callee, this.symbolFactory.filepath));
         }
       }
 
       if (field.callee && !isEqualTupleOperands(field.callee)) {
-        errors.push(new CompileError(CompileErrorCode.UNEQUAL_FIELDS_BINARY_REF, 'Unequal fields in ref endpoints', field.callee));
+        errors.push(new CompileError(CompileErrorCode.UNEQUAL_FIELDS_BINARY_REF, 'Unequal fields in ref endpoints', field.callee, this.symbolFactory.filepath));
       }
 
       const args = [...field.args];
@@ -130,7 +130,7 @@ export default class RefValidator implements ElementValidator {
       }
 
       if (args.length > 0) {
-        errors.push(...args.map((arg) => new CompileError(CompileErrorCode.INVALID_REF_FIELD, 'A Ref field should only have a single binary relationship', arg)));
+        errors.push(...args.map((arg) => new CompileError(CompileErrorCode.INVALID_REF_FIELD, 'A Ref field should only have a single binary relationship', arg, this.symbolFactory.filepath)));
       }
     });
 
@@ -147,26 +147,26 @@ export default class RefValidator implements ElementValidator {
         case 'delete':
         case 'update':
           if (attrs.length > 1) {
-            attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.DUPLICATE_REF_SETTING, `'${name}' can only appear once`, attr)));
+            attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.DUPLICATE_REF_SETTING, `'${name}' can only appear once`, attr, this.symbolFactory.filepath)));
           }
           attrs.forEach((attr) => {
             if (!isValidPolicy(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_REF_SETTING_VALUE, `'${name}' can only have values "cascade", "no action", "set null", "set default" or "restrict"`, attr));
+              errors.push(new CompileError(CompileErrorCode.INVALID_REF_SETTING_VALUE, `'${name}' can only have values "cascade", "no action", "set null", "set default" or "restrict"`, attr, this.symbolFactory.filepath));
             }
           });
           break;
         case 'color':
           if (attrs.length > 1) {
-            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_REF_SETTING, '\'color\' can only appear once', attr)));
+            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_REF_SETTING, '\'color\' can only appear once', attr, this.symbolFactory.filepath)));
           }
           attrs.forEach((attr) => {
             if (!isValidColor(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_REF_SETTING_VALUE, '\'color\' must be a color literal', attr!));
+              errors.push(new CompileError(CompileErrorCode.INVALID_REF_SETTING_VALUE, '\'color\' must be a color literal', attr!, this.symbolFactory.filepath));
             }
           });
           break;
         default:
-          attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.UNKNOWN_REF_SETTING, `Unknown ref setting '${name}'`, attr)));
+          attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.UNKNOWN_REF_SETTING, `Unknown ref setting '${name}'`, attr, this.symbolFactory.filepath)));
       }
     }
     return errors;
