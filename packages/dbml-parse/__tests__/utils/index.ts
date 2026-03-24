@@ -24,6 +24,3 @@ export {
   flattenTokens,
   print,
 } from './compiler';
-
-// Type helpers
-export { idx } from './types';
