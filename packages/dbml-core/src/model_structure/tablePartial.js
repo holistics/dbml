@@ -41,6 +41,7 @@ class TablePartial extends Element {
     model.tablePartials[this.id] = {
       id: this.id,
       ...this.shallowExport(),
+      token: this.token,
     };
   }
 }

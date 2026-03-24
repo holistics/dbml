@@ -1,4 +1,5 @@
 import Database from './database';
+import { Token } from './element';
 import { NormalizedSchemaIdMap } from './schema';
 import { NormalizedRefIdMap } from './ref';
 import { NormalizedEnumIdMap } from './enum';
@@ -29,6 +30,7 @@ declare class Model {
 
 export interface NormalizedDatabase {
     id: number;
+    token: Token;
     hasDefaultSchema: boolean;
     note: string | null;
     databaseType: string;

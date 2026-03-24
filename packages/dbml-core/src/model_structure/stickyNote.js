@@ -29,6 +29,7 @@ class StickyNote extends Element {
     model.notes[this.id] = {
       id: this.id,
       ...this.export(),
+      token: this.token,
     };
   }
 }

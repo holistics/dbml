@@ -100,6 +100,7 @@ class Endpoint extends Element {
     model.endpoints[this.id] = {
       id: this.id,
       ...this.shallowExport(),
+      token: this.token,
       ...this.exportParentIds(),
     };
   }

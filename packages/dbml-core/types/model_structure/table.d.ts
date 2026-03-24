@@ -121,6 +121,7 @@ declare class Table extends Element {
 
 export interface NormalizedTable {
     id: number;
+    token: Token;
     name: string;
     alias: string | null;
     note: string | null;
