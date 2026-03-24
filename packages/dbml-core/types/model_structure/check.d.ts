@@ -4,7 +4,7 @@ import Field from './field';
 import Table from './table';
 import TablePartial from './tablePartial';
 
-interface RawCheck {
+export interface RawCheck {
     token: Token;
     name: string;
     expression: string;

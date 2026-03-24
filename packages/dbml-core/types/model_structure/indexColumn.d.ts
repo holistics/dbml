@@ -1,7 +1,15 @@
 import { NormalizedModel } from './database';
 import DbState from './dbState';
-import Element from './element';
+import Element, { Token } from './element';
 import Index from './indexes';
+
+export interface RawIndexColumn {
+    type: any;
+    value: any;
+    index: Index;
+    token: Token;
+}
+
 declare class IndexColumn extends Element {
     type: any;
     value: any;

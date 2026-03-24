@@ -5,7 +5,7 @@ import Check from './check';
 import DbState from './dbState';
 import { NormalizedModel } from './database';
 
-interface RawTablePartial {
+export interface RawTablePartial {
     name: string;
     note: RawNote;
     fields: Field[];

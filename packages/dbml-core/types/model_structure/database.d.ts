@@ -38,6 +38,7 @@ export interface RawTableRecord {
 
 export interface TableRecord extends RawTableRecord {
     id: number;
+    tableId?: number;
 }
 
 export type NormalizedRecord = TableRecord;
