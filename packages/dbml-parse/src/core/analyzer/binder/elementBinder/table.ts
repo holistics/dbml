@@ -2,7 +2,7 @@ import { last, partition } from 'lodash-es';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, PrefixExpressionNode, ProgramNode, SyntaxNode,
 } from '../../../parser/nodes';
-import { ElementBinder, ElementBinderArgs, ElementBinderResult } from '../types';
+import { ElementBinder } from '../types';
 import { SyntaxToken } from '../../../lexer/tokens';
 import { CompileError } from '../../../errors';
 import { lookupAndBindInScope, pickBinder, scanNonListNodeForBinding } from '../utils';
@@ -20,18 +20,18 @@ export default class TableBinder implements ElementBinder {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
   private context: BinderContext;
 
-  constructor ({ declarationNode, context }: ElementBinderArgs, symbolFactory: SymbolFactory) {
+  constructor (declarationNode: ElementDeclarationNode & { type: SyntaxToken }, context: BinderContext, symbolFactory: SymbolFactory) {
     this.declarationNode = declarationNode;
     this.symbolFactory = symbolFactory;
     this.context = context;
   }
 
-  bind (): ElementBinderResult {
+  bind (): CompileError[] {
     if (!(this.declarationNode.body instanceof BlockExpressionNode)) {
-      return { errors: [] };
+      return [];
     }
 
-    return { errors: this.bindBody(this.declarationNode.body) };
+    return this.bindBody(this.declarationNode.body);
   }
 
   // Must call this before any bind methods of any binder classes
@@ -211,9 +211,9 @@ export default class TableBinder implements ElementBinder {
         return [];
       }
       const _Binder = pickBinder(sub as ElementDeclarationNode & { type: SyntaxToken });
-      const binder = new _Binder({ declarationNode: sub as ElementDeclarationNode & { type: SyntaxToken }, context: this.context }, this.symbolFactory);
+      const binder = new _Binder(sub as ElementDeclarationNode & { type: SyntaxToken }, this.context, this.symbolFactory);
 
-      return binder.bind().errors;
+      return binder.bind();
     });
   }
 }

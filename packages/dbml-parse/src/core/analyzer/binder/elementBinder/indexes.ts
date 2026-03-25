@@ -5,7 +5,7 @@ import {
   FunctionApplicationNode,
   ProgramNode,
 } from '../../../parser/nodes';
-import { ElementBinder, ElementBinderArgs, ElementBinderResult } from '../types';
+import { ElementBinder } from '../types';
 import { SyntaxToken } from '../../../lexer/tokens';
 import { CompileError, CompileErrorCode } from '../../../errors';
 import { addSymbolReference, pickBinder, scanNonListNodeForBinding } from '../utils';
@@ -20,22 +20,22 @@ export default class IndexesBinder implements ElementBinder {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
   private context: BinderContext;
 
-  constructor ({ declarationNode, context }: ElementBinderArgs, symbolFactory: SymbolFactory) {
+  constructor (declarationNode: ElementDeclarationNode & { type: SyntaxToken }, context: BinderContext, symbolFactory: SymbolFactory) {
     this.declarationNode = declarationNode;
     this.symbolFactory = symbolFactory;
     this.context = context;
   }
 
-  bind (): ElementBinderResult {
+  bind (): CompileError[] {
     if (!(this.declarationNode.parent instanceof ElementDeclarationNode) || getElementKind(this.declarationNode.parent).unwrap_or(undefined) !== ElementKind.Table) {
-      return { errors: [] };
+      return [];
     }
 
     if (!(this.declarationNode.body instanceof BlockExpressionNode)) {
-      return { errors: [] };
+      return [];
     }
 
-    return { errors: this.bindBody(this.declarationNode.body) };
+    return this.bindBody(this.declarationNode.body);
   }
 
   private bindBody (body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {
@@ -99,9 +99,9 @@ export default class IndexesBinder implements ElementBinder {
         return [];
       }
       const _Binder = pickBinder(sub as ElementDeclarationNode & { type: SyntaxToken });
-      const binder = new _Binder({ declarationNode: sub as ElementDeclarationNode & { type: SyntaxToken }, context: this.context }, this.symbolFactory);
+      const binder = new _Binder(sub as ElementDeclarationNode & { type: SyntaxToken }, this.context, this.symbolFactory);
 
-      return binder.bind().errors;
+      return binder.bind();
     });
   }
 }

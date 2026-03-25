@@ -25,7 +25,7 @@ import {
   registerSchemaStack,
   pickValidator,
 } from '@/core/analyzer/validator/utils';
-import { ElementValidator, ElementValidatorArgs, ElementValidatorResult } from '@/core/analyzer/validator/types';
+import { ElementValidator } from '@/core/analyzer/validator/types';
 import { ColumnSymbol, TablePartialSymbol } from '@/core/analyzer/symbol/symbols';
 import { createColumnSymbolIndex, createTablePartialSymbolIndex } from '@/core/analyzer/symbol/symbolIndex';
 import {
@@ -47,7 +47,7 @@ export default class TablePartialValidator implements ElementValidator {
   private nodeToSymbol: NodeToSymbolMap;
 
   constructor (
-    { declarationNode, publicSymbolTable, nodeToSymbol }: ElementValidatorArgs,
+    declarationNode: ElementDeclarationNode & { type: SyntaxToken }, publicSymbolTable: SymbolTable, nodeToSymbol: NodeToSymbolMap,
     symbolFactory: SymbolFactory,
   ) {
     this.declarationNode = declarationNode;
@@ -56,17 +56,15 @@ export default class TablePartialValidator implements ElementValidator {
     this.nodeToSymbol = nodeToSymbol;
   }
 
-  validate (): ElementValidatorResult {
-    return {
-      errors: [
+  validate (): CompileError[] {
+    return [
         ...this.validateContext(),
         ...this.validateName(this.declarationNode.name),
         ...this.validateAlias(this.declarationNode.alias),
         ...this.validateSettingList(this.declarationNode.attributeList),
         ...this.registerElement(),
         ...this.validateBody(this.declarationNode.body),
-      ],
-    };
+      ];
   }
 
   private validateContext (): CompileError[] {
@@ -407,8 +405,8 @@ export default class TablePartialValidator implements ElementValidator {
         return [];
       }
       const _Validator = pickValidator(sub as ElementDeclarationNode & { type: SyntaxToken });
-      const validator = new _Validator({ declarationNode: sub as ElementDeclarationNode & { type: SyntaxToken }, publicSymbolTable: this.publicSymbolTable, nodeToSymbol: this.nodeToSymbol }, this.symbolFactory);
-      return validator.validate().errors;
+      const validator = new _Validator(sub as ElementDeclarationNode & { type: SyntaxToken }, this.publicSymbolTable, this.nodeToSymbol, this.symbolFactory);
+      return validator.validate();
     });
 
     const notes = subs.filter((sub) => sub.type?.value.toLowerCase() === ElementKind.Note);

@@ -40,14 +40,12 @@ export default class Validator {
 
       const Val = pickValidator(element as ElementDeclarationNode & { type: SyntaxToken });
       const validatorObject = new Val(
-        {
-          declarationNode: element as ElementDeclarationNode & { type: SyntaxToken },
-          publicSymbolTable: this.publicSchemaSymbol.symbolTable,
-          nodeToSymbol: this.nodeToSymbol,
-        },
+        element as ElementDeclarationNode & { type: SyntaxToken },
+        this.publicSchemaSymbol.symbolTable,
+        this.nodeToSymbol,
         this.symbolFactory,
       );
-      errors.push(...validatorObject.validate().errors);
+      errors.push(...validatorObject.validate());
     });
 
     const projects = this.ast.body.filter((e) => getElementKind(e).unwrap_or(undefined) === ElementKind.Project);

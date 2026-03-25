@@ -17,7 +17,7 @@ import { isExpressionAQuotedString, isExpressionAVariableNode } from '@/core/par
 import { aggregateSettingList } from '@/core/analyzer/validator/utils';
 import { isVoid, pickValidator } from '@/core/analyzer/validator/utils';
 import { SyntaxToken } from '@/core/lexer/tokens';
-import { ElementValidator, ElementValidatorArgs, ElementValidatorResult } from '@/core/analyzer/validator/types';
+import { ElementValidator } from '@/core/analyzer/validator/types';
 import { destructureIndexNode, getElementKind } from '@/core/analyzer/utils';
 import SymbolTable from '@/core/analyzer/symbol/symbolTable';
 import { ElementKind } from '@/core/analyzer/types';
@@ -28,23 +28,21 @@ export default class IndexesValidator implements ElementValidator {
   private symbolFactory: SymbolFactory;
   private nodeToSymbol: NodeToSymbolMap;
 
-  constructor ({ declarationNode, publicSymbolTable, nodeToSymbol }: ElementValidatorArgs, symbolFactory: SymbolFactory) {
+  constructor (declarationNode: ElementDeclarationNode & { type: SyntaxToken }, publicSymbolTable: SymbolTable, nodeToSymbol: NodeToSymbolMap, symbolFactory: SymbolFactory) {
     this.declarationNode = declarationNode;
     this.publicSymbolTable = publicSymbolTable;
     this.symbolFactory = symbolFactory;
     this.nodeToSymbol = nodeToSymbol;
   }
 
-  validate (): ElementValidatorResult {
-    return {
-      errors: [
+  validate (): CompileError[] {
+    return [
         ...this.validateContext(),
         ...this.validateName(this.declarationNode.name),
         ...this.validateAlias(this.declarationNode.alias),
         ...this.validateSettingList(this.declarationNode.attributeList),
         ...this.validateBody(this.declarationNode.body),
-      ],
-    };
+      ];
   }
 
   private validateContext (): CompileError[] {
@@ -182,8 +180,8 @@ export default class IndexesValidator implements ElementValidator {
         return [];
       }
       const _Validator = pickValidator(sub as ElementDeclarationNode & { type: SyntaxToken });
-      const validator = new _Validator({ declarationNode: sub as ElementDeclarationNode & { type: SyntaxToken }, publicSymbolTable: this.publicSymbolTable, nodeToSymbol: this.nodeToSymbol }, this.symbolFactory);
-      return validator.validate().errors;
+      const validator = new _Validator(sub as ElementDeclarationNode & { type: SyntaxToken }, this.publicSymbolTable, this.nodeToSymbol, this.symbolFactory);
+      return validator.validate();
     });
   }
 }
