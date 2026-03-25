@@ -1,5 +1,6 @@
-import { Compiler } from '@dbml/parse';
+import { Compiler, Filepath } from '@dbml/parse';
 import Database from '../model_structure/database';
+import Model from '../model_structure/model';
 import { parse } from './ANTLR/ASTGeneration';
 import { CompilerError } from './error';
 import mysqlParser from './deprecated/mysqlParser.cjs';
@@ -97,6 +98,32 @@ class Parser {
 
   static parse (str, format) {
     return new Parser().parse(str, format);
+  }
+
+  static parseDbmlProject (layout, entry) {
+    const compiler = new Compiler(layout);
+    const entryFilepath = Filepath.from(entry);
+    const report = compiler.interpretFile(entryFilepath);
+
+    const diags = report.getErrors().map((error) => ({
+      message: error.diagnostic,
+      location: {
+        start: {
+          line: error.nodeOrToken.startPos.line + 1,
+          column: error.nodeOrToken.startPos.column + 1,
+        },
+        end: {
+          line: error.nodeOrToken.endPos.line + 1,
+          column: error.nodeOrToken.endPos.column + 1,
+        },
+      },
+      code: error.code,
+    }));
+
+    if (diags.length > 0) throw CompilerError.create(diags);
+
+    const model = report.getValue();
+    return new Model({ databases: model.databases });
   }
 
   parse (str, format) {
