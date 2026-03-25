@@ -11,5 +11,5 @@ export function interpretFile (this: Compiler): Report<Database | undefined> {
     return pipeline.map(() => undefined);
   }
 
-  return pipeline.chain(() => new Interpreter(this.analyzeFile().getValue()).interpret());
+  return pipeline.chain(() => new Interpreter(this).interpret());
 }

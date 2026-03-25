@@ -176,7 +176,7 @@ export class TableInterpreter implements ElementInterpreter {
   }
 
   private interpretFields (fields: FunctionApplicationNode[]): CompileError[] {
-    const declSymbol = this.env.nodeToSymbol.get(this.declarationNode);
+    const declSymbol = this.env.compiler.resolvedSymbol(this.declarationNode);
     const symbolTableEntries = declSymbol?.symbolTable
       ? [...declSymbol.symbolTable.entries()]
       : [];
@@ -238,9 +238,9 @@ export class TableInterpreter implements ElementInterpreter {
 
       const refs = settingMap[SettingName.Ref] || [];
       column.inline_refs = refs.flatMap((ref) => {
-        const [referredSymbol] = getColumnSymbolsOfRefOperand((ref.value as PrefixExpressionNode).expression!, this.env.nodeToReferee);
+        const [referredSymbol] = getColumnSymbolsOfRefOperand((ref.value as PrefixExpressionNode).expression!, this.env.compiler);
 
-        if (isSameEndpoint(referredSymbol, this.env.nodeToSymbol.get(field) as ColumnSymbol)) {
+        if (isSameEndpoint(referredSymbol, this.env.compiler.resolvedSymbol(field) as ColumnSymbol)) {
           errors.push(new CompileError(CompileErrorCode.SAME_ENDPOINT, 'Two endpoints are the same', ref));
 
           return [];
@@ -398,7 +398,7 @@ export class TableInterpreter implements ElementInterpreter {
   }
 
   private registerInlineRefToEnv (column: FunctionApplicationNode, referredSymbol: ColumnSymbol, inlineRef: InlineRef, ref: AttributeNode): CompileError[] {
-    const refId = getRefId(this.env.nodeToSymbol.get(column) as ColumnSymbol, referredSymbol);
+    const refId = getRefId(this.env.compiler.resolvedSymbol(column) as ColumnSymbol, referredSymbol);
     if (this.env.refIds[refId]) {
       return [
         new CompileError(CompileErrorCode.CIRCULAR_REF, 'References with same endpoints exist', ref),

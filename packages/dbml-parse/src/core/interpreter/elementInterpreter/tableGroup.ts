@@ -92,7 +92,7 @@ export class TableGroupInterpreter implements ElementInterpreter {
       }
 
       const lastNode = destructureMemberAccessExpression((field as FunctionApplicationNode).callee!).unwrap().pop()!;
-      const tableid = this.env.nodeToReferee.get(lastNode)!.id;
+      const tableid = this.env.compiler.nodeReferee(lastNode)!.id;
       if (this.env.tableOwnerGroup[tableid]) {
         const tableGroup = this.env.tableOwnerGroup[tableid];
         const { schemaName, name } = this.env.tableGroups.get(tableGroup)!;

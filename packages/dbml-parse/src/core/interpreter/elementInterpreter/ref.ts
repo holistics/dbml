@@ -60,8 +60,8 @@ export class RefInterpreter implements ElementInterpreter {
     const op = (field.callee as InfixExpressionNode).op!.value;
     const { leftExpression, rightExpression } = field.callee as InfixExpressionNode;
 
-    const leftSymbols = getColumnSymbolsOfRefOperand(leftExpression!, this.env.nodeToReferee);
-    const rightSymbols = getColumnSymbolsOfRefOperand(rightExpression!, this.env.nodeToReferee);
+    const leftSymbols = getColumnSymbolsOfRefOperand(leftExpression!, this.env.compiler);
+    const rightSymbols = getColumnSymbolsOfRefOperand(rightExpression!, this.env.compiler);
 
     if (isSameEndpoint(leftSymbols, rightSymbols)) {
       return [new CompileError(CompileErrorCode.SAME_ENDPOINT, 'Two endpoints are the same', field)];

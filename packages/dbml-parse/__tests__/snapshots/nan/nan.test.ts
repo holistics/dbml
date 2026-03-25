@@ -23,7 +23,7 @@ describe('[snapshot] interpreter (NaN cases)', () => {
         2,
       );
     } else {
-      const res = new Interpreter(compiler.analyzeFile().getValue()).interpret();
+      const res = new Interpreter(compiler).interpret();
       if (res.getErrors().length > 0) {
         output = JSON.stringify(
           res.getErrors(),

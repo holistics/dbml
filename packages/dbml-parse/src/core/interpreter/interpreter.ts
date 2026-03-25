@@ -1,6 +1,6 @@
 import { ProgramNode } from '@/core/parser/nodes';
 import { Database, InterpreterDatabase, Table, TablePartial, TableRecord } from '@/core/interpreter/types';
-import { AnalysisResult } from '@/core/analyzer/analyzer';
+import type Compiler from '@/compiler/index';
 import { TableInterpreter } from '@/core/interpreter/elementInterpreter/table';
 import { StickyNoteInterpreter } from '@/core/interpreter/elementInterpreter/sticky_note';
 import { RefInterpreter } from '@/core/interpreter/elementInterpreter/ref';
@@ -71,7 +71,8 @@ export default class Interpreter {
   ast: ProgramNode;
   env: InterpreterDatabase;
 
-  constructor ({ ast, nodeToSymbol, nodeToReferee }: AnalysisResult) {
+  constructor (compiler: Compiler) {
+    const ast = compiler.parseFile().getValue().ast;
     this.ast = ast;
     this.env = {
       schema: [],
@@ -89,8 +90,7 @@ export default class Interpreter {
       recordsElements: [],
       cachedMergedTables: new Map(),
       source: ast.source,
-      nodeToSymbol,
-      nodeToReferee,
+      compiler,
     };
   }
 

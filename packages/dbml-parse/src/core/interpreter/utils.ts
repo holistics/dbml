@@ -1,6 +1,6 @@
 import { last, zip, uniqBy } from 'lodash-es';
 import { ColumnSymbol } from '@/core/analyzer/symbol/symbols';
-import { NodeToRefereeMap } from '@/core/analyzer/analyzer';
+import type Compiler from '@/compiler/index';
 import {
   destructureComplexVariableTuple, destructureComplexVariable, destructureMemberAccessExpression, extractQuotedStringToken,
   extractVariableFromExpression,
@@ -90,12 +90,12 @@ export function getTokenPosition (node: SyntaxNode): TokenPosition {
   };
 }
 
-export function getColumnSymbolsOfRefOperand (ref: SyntaxNode, nodeToReferee: NodeToRefereeMap): ColumnSymbol[] {
+export function getColumnSymbolsOfRefOperand (ref: SyntaxNode, compiler: Compiler): ColumnSymbol[] {
   const colNode = destructureMemberAccessExpression(ref).unwrap_or(undefined)?.pop();
   if (colNode instanceof TupleExpressionNode) {
-    return colNode.elementList.map((e) => nodeToReferee.get(e) as ColumnSymbol);
+    return colNode.elementList.map((e) => compiler.nodeReferee(e) as ColumnSymbol);
   }
-  return [nodeToReferee.get(colNode!) as ColumnSymbol];
+  return [compiler.nodeReferee(colNode!) as ColumnSymbol];
 }
 
 export function extractElementName (nameNode: SyntaxNode): { schemaName: string[]; name: string } {
