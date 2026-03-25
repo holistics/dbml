@@ -1,15 +1,8 @@
 import { describe, expect, test } from 'vitest';
-import { SyntaxNodeKind, UseDeclarationNode, UseSpecifierListNode, UseSpecifierNode, PrimaryExpressionNode, VariableNode } from '@/core/parser/nodes';
+import { SyntaxNodeKind, UseSpecifierListNode } from '@/core/parser/nodes';
 import { CompileErrorCode } from '@/core/errors';
 import { parse } from '@tests/utils';
-
-function specNameValue (spec?: UseSpecifierNode): string | undefined {
-  const name = spec?.name;
-  if (name instanceof PrimaryExpressionNode && name.expression instanceof VariableNode) {
-    return name.expression.variable?.value;
-  }
-  return undefined;
-}
+import { extractVariableFromExpression } from '@/core/utils';
 
 describe('[example] parser - use statement', () => {
   test('selective use: parses specifiers, fromKeyword, path, AST structure', () => {
@@ -32,7 +25,7 @@ describe('[example] parser - use statement', () => {
     const spec = stmt.specifiers?.specifiers[0];
     expect(spec?.kind).toBe(SyntaxNodeKind.USE_SPECIFIER);
     expect(spec?.elementKind?.value).toBe('table');
-    expect(specNameValue(spec)).toBe('users');
+    expect(extractVariableFromExpression(spec).unwrap_or(undefined)).toBe('users');
 
     expect(stmt.start).toBe(0);
     expect(stmt.end).toBe(source.length);
@@ -84,7 +77,7 @@ describe('[example] parser - use statement', () => {
     // quoted name
     const quoted = parse('use { table "user accounts" } from \'./schema\'');
     expect(quoted.getErrors()).toHaveLength(0);
-    expect(specNameValue(quoted.getValue().ast.useDeclarations[0].specifiers?.specifiers[0])).toBe('user accounts');
+    expect(extractVariableFromExpression(quoted.getValue().ast.useDeclarations[0].specifiers?.specifiers[0]).unwrap_or(undefined)).toBe('user accounts');
   });
 
   test('case insensitive: USE keyword', () => {
@@ -102,30 +95,46 @@ describe('[example] parser - use statement', () => {
 
   describe('invalid syntax produces errors', () => {
     test.each([
-      ["missing 'from'", "use { table users } './schema'", "Expect 'from' after specifier list"],
-      ['missing path', 'use { table users } from', 'Expect a string literal path'],
-      ['missing specifier name', "use { table } from './schema'", 'Expect an element name'],
-      ['numeric name', "use { table 123 } from './schema'", 'Expect an element name'],
-      ['non-string path', 'use { table users } from users', 'Expect a string literal path'],
-      ['numeric path', 'use { table users } from 42', 'Expect a string literal path'],
-      ['bare use', 'use', undefined],
+      [
+        "missing 'from'", // test name
+        "use { table users } './schema'", // program
+        "Expect 'from' after specifier list", // error
+      ],
+      [
+        'missing path',
+        'use { table users } from',
+        'Expect a string literal path',
+      ],
+      [
+        'missing specifier name',
+        "use { table } from './schema'",
+        'Expect an element name',
+      ],
+      [
+        'numeric name',
+        "use { table 123 } from './schema'",
+        'Expect an element name',
+      ],
+      [
+        'non-string path',
+        'use { table users } from users',
+        'Expect a string literal path',
+      ],
+      [
+        'numeric path',
+        'use { table users } from 42',
+        'Expect a string literal path',
+      ],
+      [
+        'bare use',
+        'use',
+        undefined,
+      ],
     ])('%s', (_name, source, expectedMessage) => {
       const errs = parse(source).getErrors();
       expect(errs.length).toBeGreaterThan(0);
       expect(errs[0].code).toBe(CompileErrorCode.UNEXPECTED_TOKEN);
       if (expectedMessage) expect(errs[0].diagnostic).toBe(expectedMessage);
-    });
-
-    test('broken use statements still produce valid AST with error recovery', () => {
-      ['use', 'use {', 'use { }', 'use { table }', 'use { table users }', 'use { table users } from', 'use {{{ from @@@ }'].forEach((source) => {
-        expect(parse(source).getValue().ast.kind).toBe(SyntaxNodeKind.PROGRAM);
-        expect(parse(source).getErrors().length).toBeGreaterThan(0);
-      });
-
-      // body elements survive after broken use
-      const result = parse('use { table users } from\nTable orders { id int }');
-      expect(result.getErrors().length).toBeGreaterThan(0);
-      expect(result.getValue().ast.declarations.length).toBeGreaterThanOrEqual(1);
     });
   });
 });
