@@ -180,18 +180,6 @@ export function extractNumericLiteral (node?: SyntaxNode): number | null {
   return null;
 }
 
-// Extract referee from a simple variable (x) or complex variable (a.b.c)
-// For complex variables, returns the referee of the rightmost part
-export function extractReferee (node: SyntaxNode | undefined, nodeToReferee: NodeToRefereeMap): NodeSymbol | undefined {
-  if (!node) return undefined;
-
-  // Complex variable: a.b.c - get referee from rightmost part
-  if (node instanceof InfixExpressionNode && node.op?.value === '.') {
-    return extractReferee(node.rightExpression, nodeToReferee);
-  }
-
-  return nodeToReferee.get(node);
-}
 
 export function isBinaryRelationship (value?: SyntaxNode): value is InfixExpressionNode {
   if (!(value instanceof InfixExpressionNode)) {

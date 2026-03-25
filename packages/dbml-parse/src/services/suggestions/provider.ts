@@ -236,11 +236,10 @@ function suggestNamesInScope (
     return noSuggestions();
   }
 
-  const nodeToSymbol = compiler.parse.nodeToSymbol();
   let curElement: SyntaxNode | undefined = parent;
   const res: CompletionList = { suggestions: [] };
   while (curElement) {
-    const symbol = nodeToSymbol?.get(curElement);
+    const symbol = compiler.resolvedSymbol(curElement);
     if (symbol?.symbolTable) {
       res.suggestions.push(
         ...suggestMembersOfSymbol(compiler, symbol, acceptedKinds).suggestions,
@@ -271,8 +270,7 @@ function suggestInTuple (compiler: Compiler, offset: number, tupleContainer: Tup
     && !(element.name instanceof CallExpressionNode)
     && isOffsetWithinElementHeader(offset, element)
   ) {
-    const nodeToSymbol = compiler.parse.nodeToSymbol();
-    const tableSymbol = (element.parent ? nodeToSymbol?.get(element.parent) : undefined) || (element.name ? compiler.nodeReferee(element.name) : undefined);
+    const tableSymbol = (element.parent ? compiler.resolvedSymbol(element.parent) : undefined) || (element.name ? compiler.nodeReferee(element.name) : undefined);
     if (tableSymbol) {
       const suggestions = suggestMembersOfSymbol(compiler, tableSymbol, [SymbolKind.Column]);
       // If the user already typed some columns, we do not suggest "all columns" anymore
@@ -758,7 +756,7 @@ function suggestInCallExpression (
     if (!(c instanceof FunctionApplicationNode)) continue;
     if (c.callee !== container) continue;
     if (extractVariableFromExpression(container.callee).unwrap_or('').toLowerCase() !== ElementKind.Records) continue;
-    const tableSymbol = compiler.parse.nodeToSymbol()?.get(compiler.container.element(offset));
+    const tableSymbol = compiler.resolvedSymbol(compiler.container.element(offset));
     if (!tableSymbol) return noSuggestions();
     const suggestions = suggestMembersOfSymbol(compiler, tableSymbol, [SymbolKind.Column]);
     const { argumentList } = container;
@@ -883,7 +881,7 @@ function suggestColumnType (compiler: Compiler, offset: number): CompletionList 
 function suggestColumnNameInIndexes (compiler: Compiler, offset: number): CompletionList {
   const indexesNode = compiler.container.element(offset);
   const tableNode = (indexesNode as any)?.parent;
-  const tableSymbol = tableNode ? compiler.parse.nodeToSymbol()?.get(tableNode) : undefined;
+  const tableSymbol = tableNode ? compiler.resolvedSymbol(tableNode) : undefined;
   if (!(tableSymbol instanceof TableSymbol)) {
     return noSuggestions();
   }

@@ -4,7 +4,7 @@ import type { SyntaxToken } from '@/core/lexer/tokens';
 import type { CompileError, CompileWarning } from '@/core/errors';
 import type { Database } from '@/core/interpreter/types';
 import type SymbolTable from '@/core/analyzer/symbol/symbolTable';
-import type { NodeToSymbolMap, SymbolToReferencesMap } from '@/core/analyzer/analyzer';
+import type { SymbolToReferencesMap } from '@/core/analyzer/analyzer';
 
 export function ast (this: Compiler): Readonly<ProgramNode> {
   return this.parseFile().getValue().ast;
@@ -24,10 +24,6 @@ export function tokens (this: Compiler): readonly Readonly<SyntaxToken>[] {
 
 export function rawDb (this: Compiler): Readonly<Database> | undefined {
   return this.parse._().getValue();
-}
-
-export function nodeToSymbol (this: Compiler): Readonly<NodeToSymbolMap> | undefined {
-  return this.analyzeFile().getValue().nodeToSymbol;
 }
 
 export function symbolToReferences (this: Compiler): Readonly<SymbolToReferencesMap> | undefined {

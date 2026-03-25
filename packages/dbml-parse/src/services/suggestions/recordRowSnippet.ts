@@ -1,8 +1,8 @@
 import {
-  extractReferee,
   extractVariableFromExpression,
   getElementKind,
 } from '@/core/analyzer/utils';
+import { extractReferee } from '@/services/utils';
 import {
   BlockExpressionNode,
   CallExpressionNode,
@@ -65,8 +65,7 @@ function suggestRecordRowInTopLevelRecords (
   if (!(recordsElement.name instanceof CallExpressionNode)) return noSuggestions();
 
   const columnElements = recordsElement.name.argumentList?.elementList || [];
-  const nodeToReferee = compiler.analyzeFile().getValue().nodeToReferee;
-  const columnSymbols = columnElements.map((e) => extractReferee(e, nodeToReferee));
+  const columnSymbols = columnElements.map((e) => extractReferee(compiler, e));
   if (!columnSymbols || columnSymbols.length === 0) return noSuggestions();
 
   const columns = columnElements
@@ -110,9 +109,7 @@ function suggestRecordRowInNestedRecords (
     return noSuggestions();
   }
 
-  const nodeToSymbol = compiler.parse.nodeToSymbol()!;
-  const nodeToReferee = compiler.analyzeFile().getValue().nodeToReferee;
-  const tableSymbol = nodeToSymbol.get(parent);
+  const tableSymbol = compiler.resolvedSymbol(parent);
   if (!(tableSymbol instanceof TableSymbol)) {
     return noSuggestions();
   }
@@ -123,7 +120,7 @@ function suggestRecordRowInNestedRecords (
     // Explicit columns from tuple: records (col1, col2)
     const columnElements = recordsElement.name.elementList;
     const columnSymbols = columnElements
-      .map((e) => extractReferee(e, nodeToReferee))
+      .map((e) => extractReferee(compiler, e))
       .filter((s) => s !== undefined);
 
     columns = columnElements
