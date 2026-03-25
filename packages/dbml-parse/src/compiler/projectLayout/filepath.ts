@@ -44,11 +44,15 @@ export class Filepath implements Internable<FilepathId> {
 
   // Resolve a relative path from this file's directory.
   resolve (relativePath: string): Filepath {
+    // Filepath is a virtual path abstraction backed by in-memory maps, not real filesystem I/O
+    // bearer:disable javascript_lang_path_traversal
     return new Filepath(resolve(this.dirname, relativePath));
   }
 
   // Return a new FilePath with the given filename appended to this directory
   join (...segments: string[]): Filepath {
+    // Filepath is a virtual path abstraction backed by in-memory maps, not real filesystem I/O
+    // bearer:disable javascript_lang_path_traversal
     return new Filepath(join(this.path, ...segments));
   }
 
