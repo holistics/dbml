@@ -33,9 +33,8 @@ function _export (
   },
 ): string {
   const resolvedFlags = normalizeExportOptions(options);
-
   const database = (new Parser()).parse(str, 'dbmlv2');
-  return ModelExporter.export(database, format, resolvedFlags);
+  return ModelExporter.export(database.normalize(), format, resolvedFlags);
 }
 
 export function normalizeExportOptions (
