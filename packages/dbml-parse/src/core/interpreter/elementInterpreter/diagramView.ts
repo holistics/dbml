@@ -1,5 +1,5 @@
 import { partition } from 'lodash-es';
-import { destructureComplexVariable } from '@/core/analyzer/utils';
+import { destructureComplexVariable, extractReferee } from '@/core/analyzer/utils';
 import { CompileError } from '@/core/errors';
 import { BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, PrimaryExpressionNode, SyntaxNode, VariableNode } from '@/core/parser/nodes';
 import { ElementInterpreter, InterpreterDatabase, DiagramView } from '@/core/interpreter/types';
@@ -158,6 +158,20 @@ export class DiagramViewInterpreter implements ElementInterpreter {
     for (const field of body.body) {
       if (!(field instanceof FunctionApplicationNode)) continue;
 
+      // If the field was bound to a symbol (e.g., alias "U" → Table "users"),
+      // resolve the real name from the referee's declaration
+      const referee = extractReferee(field.callee);
+      if (referee?.declaration instanceof ElementDeclarationNode) {
+        const realFragments = destructureComplexVariable(referee.declaration.name).unwrap_or([]);
+        if (realFragments.length > 0) {
+          const name = realFragments[realFragments.length - 1];
+          const schemaName = realFragments.length > 1 ? realFragments.slice(0, -1).join('.') : DEFAULT_SCHEMA_NAME;
+          items.push({ name, schemaName });
+          continue;
+        }
+      }
+
+      // Fallback: use the literal text (for unbound references or non-table blocks)
       const fragments = destructureComplexVariable(field.callee).unwrap_or([]);
       if (fragments.length === 0) continue;
 

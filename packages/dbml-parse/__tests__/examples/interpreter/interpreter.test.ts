@@ -1182,6 +1182,82 @@ describe('[example] interpreter', () => {
     });
   });
 
+  describe('DiagramView alias resolution', () => {
+    test('should resolve table alias to real name', () => {
+      const source = `
+        Table users as U { id int }
+        DiagramView myView {
+          Tables { U }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+      const ve = db.diagramViews[0].visibleEntities;
+      expect(ve.tables).toEqual([{ name: 'users', schemaName: 'public' }]);
+    });
+
+    test('should resolve schema-qualified table alias', () => {
+      const source = `
+        Table public.articles as A { id int }
+        DiagramView myView {
+          Tables { A }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+      const ve = db.diagramViews[0].visibleEntities;
+      expect(ve.tables).toEqual([{ name: 'articles', schemaName: 'public' }]);
+    });
+
+    test('should keep real name when no alias is used', () => {
+      const source = `
+        Table users { id int }
+        DiagramView myView {
+          Tables { users }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+      const ve = db.diagramViews[0].visibleEntities;
+      expect(ve.tables).toEqual([{ name: 'users', schemaName: 'public' }]);
+    });
+
+    test('should resolve multiple aliases in same block', () => {
+      const source = `
+        Table users as U { id int }
+        Table posts as P { id int }
+        DiagramView myView {
+          Tables {
+            U
+            P
+          }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+      const ve = db.diagramViews[0].visibleEntities;
+      expect(ve.tables).toEqual([
+        { name: 'users', schemaName: 'public' },
+        { name: 'posts', schemaName: 'public' },
+      ]);
+    });
+
+    test('should resolve mixed aliases and real names', () => {
+      const source = `
+        Table users as U { id int }
+        Table posts { id int }
+        DiagramView myView {
+          Tables {
+            U
+            posts
+          }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+      const ve = db.diagramViews[0].visibleEntities;
+      expect(ve.tables).toEqual([
+        { name: 'users', schemaName: 'public' },
+        { name: 'posts', schemaName: 'public' },
+      ]);
+    });
+  });
+
   describe('standalone note interpretation', () => {
     test('should interpret standalone note', () => {
       const source = `
