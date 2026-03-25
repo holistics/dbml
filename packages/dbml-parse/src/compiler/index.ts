@@ -214,6 +214,22 @@ export default class Compiler {
     scopeKind: this.globalQuery(containerScopeKind),
   };
 
+  /** @deprecated Use parseFile/fileErrors/fileWarnings/interpretFile with explicit filepath instead. */
+  readonly parse = {
+    /** @deprecated Use `compiler.getSource(filepath)` */
+    source: () => this.getSource(DEFAULT_ENTRY) ?? '',
+    /** @deprecated Use `compiler.parseFile(filepath).ast` */
+    ast: () => this.parseFile(DEFAULT_ENTRY).ast,
+    /** @deprecated Use `compiler.fileErrors(filepath)` */
+    errors: () => this.fileErrors(DEFAULT_ENTRY),
+    /** @deprecated Use `compiler.fileWarnings(filepath)` */
+    warnings: () => this.fileWarnings(DEFAULT_ENTRY),
+    /** @deprecated Use `compiler.parseFile(filepath).tokens` */
+    tokens: () => this.parseFile(DEFAULT_ENTRY).tokens,
+    /** @deprecated Use `compiler.interpretFile(filepath).getValue().databases[0]` */
+    rawDb: () => this.interpretFile(DEFAULT_ENTRY).getValue().databases[0],
+  };
+
   initMonacoServices () {
     return {
       definitionProvider: new DBMLDefinitionProvider(this),
