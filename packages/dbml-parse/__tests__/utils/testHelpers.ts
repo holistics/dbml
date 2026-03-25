@@ -1,5 +1,5 @@
-import { NodeSymbol } from '@/core/analyzer/symbol/symbols';
-import { AnalysisResult, NodeToRefereeMap, NodeToSymbolMap, SymbolToReferencesMap } from '@/core/analyzer/analyzer';
+import { NodeSymbol, NodeSymbolIdGenerator } from '@/core/analyzer/symbol/symbols';
+import Analyzer, { AnalysisResult, NodeToRefereeMap, NodeToSymbolMap, SymbolToReferencesMap } from '@/core/analyzer/analyzer';
 import Report from '@/core/report';
 import { ProgramNode, SyntaxNode } from '@/index';
 import type Compiler from '@/compiler/index';
@@ -130,8 +130,9 @@ export function serializeAnalysis (reportOrCompiler: Readonly<Report<AnalysisRes
  */
 export function serializeValidation (compiler: Compiler, pretty = false): string {
   const { ast } = compiler.parseFile().getValue();
-  const { nodeToSymbol } = compiler.validateFile().getValue();
-  const errors = [...compiler.parseFile().getErrors(), ...compiler.validateFile().getErrors()];
+  const validateResult = new Analyzer(ast, new NodeSymbolIdGenerator()).validate();
+  const nodeToSymbol = validateResult.getValue();
+  const errors = [...compiler.parseFile().getErrors(), ...validateResult.getErrors()];
   const report = { value: ast, errors };
   return JSON.stringify(report, createJsonReplacer(nodeToSymbol, undefined), pretty ? 2 : 0);
 }

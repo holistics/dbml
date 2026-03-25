@@ -26,11 +26,11 @@ export function rawDb (this: Compiler): Readonly<Database> | undefined {
   return this.parse._().getValue();
 }
 
-export function nodeToSymbol (this: Compiler): NodeToSymbolMap | undefined {
+export function nodeToSymbol (this: Compiler): Readonly<NodeToSymbolMap> | undefined {
   return this.analyzeFile().getValue().nodeToSymbol;
 }
 
-export function symbolToReferences (this: Compiler): SymbolToReferencesMap | undefined {
+export function symbolToReferences (this: Compiler): Readonly<SymbolToReferencesMap> | undefined {
   return this.analyzeFile().getValue().symbolToReferences;
 }
 

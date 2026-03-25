@@ -3,7 +3,7 @@ import type { Database } from '@/core/interpreter/types';
 import Report from '@/core/report';
 import Interpreter from '@/core/interpreter/interpreter';
 
-export function interpretFile (this: Compiler): Report<Database | undefined> {
+export function interpretFile (this: Compiler): Report<Readonly<Database> | undefined> {
   const pipeline = this.parseFile()
     .chain(() => this.analyzeFile());
 

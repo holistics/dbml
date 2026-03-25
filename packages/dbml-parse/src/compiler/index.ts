@@ -12,7 +12,7 @@ import {
   type TableNameInput,
 } from './queries/transform';
 import { splitQualifiedIdentifier, unescapeString, escapeString, formatRecordValue, isValidIdentifier, addDoubleQuoteIfNeeded } from './queries/utils';
-import { parseFile, analyzeFile, interpretFile, validateFile } from './queries/pipeline';
+import { parseFile, analyzeFile, interpretFile } from './queries/pipeline';
 
 // Re-export types
 export { ScopeKind } from './types';
@@ -59,7 +59,6 @@ export default class Compiler {
 
   parseFile = this.query(parseFile);
   analyzeFile = this.query(analyzeFile);
-  validateFile = this.query(validateFile);
 
   resolvedSymbol (node: SyntaxNode): NodeSymbol | undefined {
     return this.analyzeFile().getValue().nodeToSymbol.get(node);

@@ -6,7 +6,10 @@ import Lexer from '@/core/lexer/lexer';
 import Parser from '@/core/parser/parser';
 import { SyntaxNodeIdGenerator } from '@/core/parser/nodes';
 
-export function parseFile (this: Compiler): Report<{ readonly ast: Readonly<ProgramNode>; readonly tokens: readonly Readonly<SyntaxToken>[] }> {
+export function parseFile (this: Compiler): Report<{
+  readonly ast: Readonly<ProgramNode>;
+  readonly tokens: readonly Readonly<SyntaxToken>[];
+}> {
   const source = this.parse.source();
   return new Lexer(source)
     .lex()
