@@ -1,7 +1,6 @@
 import { ElementDeclarationNode, FunctionApplicationNode, SyntaxNode } from '@/core/parser/nodes';
 import { Position } from '@/core/types';
 import { CompileError } from '@/core/errors';
-import type Compiler from '@/compiler/index';
 
 export interface TokenPosition {
   start: Position;
@@ -29,7 +28,6 @@ export interface InterpreterDatabase {
   recordsElements: ElementDeclarationNode[];
   cachedMergedTables: Map<Table, Table>; // map Table to Table that has been merged with table partials
   source: string;
-  compiler: Compiler;
 }
 
 // Record value type

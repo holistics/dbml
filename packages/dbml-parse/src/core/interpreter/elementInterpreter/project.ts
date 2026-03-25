@@ -10,13 +10,16 @@ import { RefInterpreter } from './ref';
 import { TableInterpreter } from './table';
 import { TableGroupInterpreter } from './tableGroup';
 import { TablePartialInterpreter } from './tablePartial';
+import type Compiler from '@/compiler/index';
 
 export class ProjectInterpreter implements ElementInterpreter {
+  private compiler: Compiler;
   private declarationNode: ElementDeclarationNode;
   private env: InterpreterDatabase;
   private project: Partial<Project>;
 
-  constructor (declarationNode: ElementDeclarationNode, env: InterpreterDatabase) {
+  constructor (compiler: Compiler, declarationNode: ElementDeclarationNode, env: InterpreterDatabase) {
+    this.compiler = compiler;
     this.declarationNode = declarationNode;
     this.env = env;
     this.project = {
@@ -50,25 +53,25 @@ export class ProjectInterpreter implements ElementInterpreter {
       const sub = _sub as ElementDeclarationNode;
       switch (sub.type?.value.toLowerCase()) {
         case 'table': {
-          const errors = (new TableInterpreter(sub, this.env)).interpret();
+          const errors = (new TableInterpreter(this.compiler, sub, this.env)).interpret();
           this.project.tables!.push(this.env.tables.get(sub)!);
 
           return errors;
         }
         case 'ref': {
-          const errors = (new RefInterpreter(sub, this.env)).interpret();
+          const errors = (new RefInterpreter(this.compiler, sub, this.env)).interpret();
           this.project.refs!.push(this.env.ref.get(sub)!);
 
           return errors;
         }
         case 'tablegroup': {
-          const errors = (new TableGroupInterpreter(sub, this.env)).interpret();
+          const errors = (new TableGroupInterpreter(this.compiler, sub, this.env)).interpret();
           this.project.tableGroups!.push(this.env.tableGroups.get(sub)!);
 
           return errors;
         }
         case 'enum': {
-          const errors = (new EnumInterpreter(sub, this.env)).interpret();
+          const errors = (new EnumInterpreter(this.compiler, sub, this.env)).interpret();
           this.project.enums!.push(this.env.enums.get(sub)!);
 
           return errors;
@@ -85,7 +88,7 @@ export class ProjectInterpreter implements ElementInterpreter {
           return [];
         }
         case 'tablepartial': {
-          const errors = (new TablePartialInterpreter(sub, this.env)).interpret();
+          const errors = (new TablePartialInterpreter(this.compiler, sub, this.env)).interpret();
           this.project.tablePartials!.push(this.env.tablePartials.get(sub)!);
           return errors;
         }

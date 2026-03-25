@@ -22,14 +22,17 @@ import { aggregateSettingList, isValidPartialInjection } from '@/core/analyzer/v
 import { ColumnSymbol } from '@/core/analyzer/symbol/symbols';
 import { destructureIndex, SymbolKind } from '@/core/analyzer/symbol/symbolIndex';
 import { ElementKind, SettingName } from '@/core/analyzer/types';
+import type Compiler from '@/compiler/index';
 
 export class TableInterpreter implements ElementInterpreter {
+  private compiler: Compiler;
   private declarationNode: ElementDeclarationNode;
   private env: InterpreterDatabase;
   private table: Partial<Table>;
   private pkColumns: Column[];
 
-  constructor (declarationNode: ElementDeclarationNode, env: InterpreterDatabase) {
+  constructor (compiler: Compiler, declarationNode: ElementDeclarationNode, env: InterpreterDatabase) {
+    this.compiler = compiler;
     this.declarationNode = declarationNode;
     this.env = env;
     this.table = {
@@ -176,7 +179,7 @@ export class TableInterpreter implements ElementInterpreter {
   }
 
   private interpretFields (fields: FunctionApplicationNode[]): CompileError[] {
-    const declSymbol = this.env.compiler.resolvedSymbol(this.declarationNode);
+    const declSymbol = this.compiler.resolvedSymbol(this.declarationNode);
     const symbolTableEntries = declSymbol?.symbolTable
       ? [...declSymbol.symbolTable.entries()]
       : [];
@@ -238,9 +241,9 @@ export class TableInterpreter implements ElementInterpreter {
 
       const refs = settingMap[SettingName.Ref] || [];
       column.inline_refs = refs.flatMap((ref) => {
-        const [referredSymbol] = getColumnSymbolsOfRefOperand((ref.value as PrefixExpressionNode).expression!, this.env.compiler);
+        const [referredSymbol] = getColumnSymbolsOfRefOperand((ref.value as PrefixExpressionNode).expression!, this.compiler);
 
-        if (isSameEndpoint(referredSymbol, this.env.compiler.resolvedSymbol(field) as ColumnSymbol)) {
+        if (isSameEndpoint(referredSymbol, this.compiler.resolvedSymbol(field) as ColumnSymbol)) {
           errors.push(new CompileError(CompileErrorCode.SAME_ENDPOINT, 'Two endpoints are the same', ref));
 
           return [];
@@ -398,7 +401,7 @@ export class TableInterpreter implements ElementInterpreter {
   }
 
   private registerInlineRefToEnv (column: FunctionApplicationNode, referredSymbol: ColumnSymbol, inlineRef: InlineRef, ref: AttributeNode): CompileError[] {
-    const refId = getRefId(this.env.compiler.resolvedSymbol(column) as ColumnSymbol, referredSymbol);
+    const refId = getRefId(this.compiler.resolvedSymbol(column) as ColumnSymbol, referredSymbol);
     if (this.env.refIds[refId]) {
       return [
         new CompileError(CompileErrorCode.CIRCULAR_REF, 'References with same endpoints exist', ref),

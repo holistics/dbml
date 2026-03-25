@@ -8,13 +8,16 @@ import {
   ElementInterpreter, Enum, EnumField, InterpreterDatabase,
 } from '@/core/interpreter/types';
 import { extractElementName, getTokenPosition, normalizeNoteContent } from '@/core/interpreter/utils';
+import type Compiler from '@/compiler/index';
 
 export class EnumInterpreter implements ElementInterpreter {
+  private compiler: Compiler;
   private declarationNode: ElementDeclarationNode;
   private env: InterpreterDatabase;
   private enum: Partial<Enum>;
 
-  constructor (declarationNode: ElementDeclarationNode, env: InterpreterDatabase) {
+  constructor (compiler: Compiler, declarationNode: ElementDeclarationNode, env: InterpreterDatabase) {
+    this.compiler = compiler;
     this.declarationNode = declarationNode;
     this.env = env;
     this.enum = { values: [] };

@@ -1,7 +1,7 @@
 import { SyntaxNode } from '@/core/parser/nodes';
 import type { NodeSymbol } from '@/core/analyzer/symbol/symbols';
 import { DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLReferencesProvider, DBMLDiagnosticsProvider } from '@/services/index';
-import { ast, errors, warnings, tokens, rawDb, publicSymbolTable, nodeToSymbol, nodeToReferee, symbolToReferences } from './queries/parse';
+import { ast, errors, warnings, tokens, rawDb, publicSymbolTable, nodeToSymbol, symbolToReferences } from './queries/parse';
 import { invalidStream, flatStream } from './queries/token';
 import { symbolOfName, symbolOfNameToKey, symbolMembers } from './queries/symbol';
 import { containerStack, containerToken, containerElement, containerScope, containerScopeKind } from './queries/container';
@@ -102,7 +102,6 @@ export default class Compiler {
     rawDb: this.query(rawDb),
     publicSymbolTable: this.query(publicSymbolTable),
     nodeToSymbol: this.query(nodeToSymbol),
-    nodeToReferee: this.query(nodeToReferee),
     symbolToReferences: this.query(symbolToReferences),
   };
 

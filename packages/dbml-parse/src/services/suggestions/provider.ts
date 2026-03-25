@@ -272,8 +272,7 @@ function suggestInTuple (compiler: Compiler, offset: number, tupleContainer: Tup
     && isOffsetWithinElementHeader(offset, element)
   ) {
     const nodeToSymbol = compiler.parse.nodeToSymbol();
-    const nodeToReferee = compiler.parse.nodeToReferee();
-    const tableSymbol = (element.parent ? nodeToSymbol?.get(element.parent) : undefined) || (element.name ? nodeToReferee?.get(element.name) : undefined);
+    const tableSymbol = (element.parent ? nodeToSymbol?.get(element.parent) : undefined) || (element.name ? compiler.nodeReferee(element.name) : undefined);
     if (tableSymbol) {
       const suggestions = suggestMembersOfSymbol(compiler, tableSymbol, [SymbolKind.Column]);
       // If the user already typed some columns, we do not suggest "all columns" anymore
@@ -738,7 +737,7 @@ function suggestInCallExpression (
 
     const fragments = destructureMemberAccessExpression(callee).unwrap_or([callee]);
     const rightmostExpr = fragments[fragments.length - 1];
-    const tableSymbol = rightmostExpr ? compiler.parse.nodeToReferee()?.get(rightmostExpr) : undefined;
+    const tableSymbol = rightmostExpr ? compiler.nodeReferee(rightmostExpr) : undefined;
 
     if (!tableSymbol) return noSuggestions();
     const suggestions = suggestMembersOfSymbol(compiler, tableSymbol, [SymbolKind.Column]);

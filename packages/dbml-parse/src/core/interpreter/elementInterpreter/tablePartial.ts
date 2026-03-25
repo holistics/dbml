@@ -20,14 +20,17 @@ import { CompileError, CompileErrorCode } from '@/core/errors';
 import { aggregateSettingList } from '@/core/analyzer/validator/utils';
 import { ColumnSymbol } from '@/core/analyzer/symbol/symbols';
 import { ElementKind, SettingName } from '@/core/analyzer/types';
+import type Compiler from '@/compiler/index';
 
 export class TablePartialInterpreter implements ElementInterpreter {
+  private compiler: Compiler;
   private declarationNode: ElementDeclarationNode;
   private env: InterpreterDatabase;
   private tablePartial: Partial<TablePartial>;
   private pkColumns: Column[];
 
-  constructor (declarationNode: ElementDeclarationNode, env: InterpreterDatabase) {
+  constructor (compiler: Compiler, declarationNode: ElementDeclarationNode, env: InterpreterDatabase) {
+    this.compiler = compiler;
     this.declarationNode = declarationNode;
     this.env = env;
     this.tablePartial = {
@@ -168,9 +171,9 @@ export class TablePartialInterpreter implements ElementInterpreter {
 
       const refs = settingMap[SettingName.Ref] || [];
       column.inline_refs = refs.flatMap((ref) => {
-        const [referredSymbol] = getColumnSymbolsOfRefOperand((ref.value as PrefixExpressionNode).expression!, this.env.compiler);
+        const [referredSymbol] = getColumnSymbolsOfRefOperand((ref.value as PrefixExpressionNode).expression!, this.compiler);
 
-        if (isSameEndpoint(referredSymbol, this.env.compiler.resolvedSymbol(field) as ColumnSymbol)) {
+        if (isSameEndpoint(referredSymbol, this.compiler.resolvedSymbol(field) as ColumnSymbol)) {
           errors.push(new CompileError(CompileErrorCode.SAME_ENDPOINT, 'Two endpoints are the same', ref));
           return [];
         }
