@@ -1,5 +1,7 @@
+import type { Filepath } from '@dbml/parse';
+
 export interface Token {
-    filepath?: string;
+    filepath?: Filepath;
     end: {
         column: number;
         line: number;

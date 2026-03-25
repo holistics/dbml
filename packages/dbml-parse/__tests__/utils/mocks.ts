@@ -1,4 +1,7 @@
 import { type Position, type TextModel } from '@/services';
+import { Filepath } from '@/compiler/projectLayout';
+import { DEFAULT_ENTRY } from '@/compiler/constants';
+import { Uri, UriComponents } from 'monaco-editor-core';
 
 export function createPosition (lineNumber: number, column: number): Position {
   return {
@@ -7,20 +10,61 @@ export function createPosition (lineNumber: number, column: number): Position {
   } as Position;
 }
 
-class MockUri {
-  path: string;
-  constructor (path: string) { this.path = path; }
-  with (change: { path?: string }): MockUri { return new MockUri(change.path ?? this.path); }
-  toJSON () { return this.path; }
+class MockUri implements Uri {
+  readonly scheme: string;
+  readonly authority: string;
+  readonly path: string;
+  readonly query: string;
+  readonly fragment: string;
+
+  get fsPath (): string {
+    return '';
+  }
+
+  constructor ({
+    path = '',
+    scheme = '',
+    authority = '',
+    query = '',
+    fragment = '',
+  }: {
+    path?: string;
+    scheme?: string;
+    authority?: string;
+    query?: string;
+    fragment?: string;
+  }) {
+    this.path = path;
+    this.scheme = scheme;
+    this.authority = authority;
+    this.query = query;
+    this.fragment = fragment;
+  }
+
+  with (_change: {
+    scheme?: string;
+    authority?: string | null;
+    path?: string | null;
+    query?: string | null;
+    fragment?: string | null;
+  }): MockUri {
+    throw new Error('Unimplemented');
+  }
+
+  toJSON (): UriComponents {
+    return {
+      ...this,
+    };
+  }
 }
 
-export class MockTextModel {
+export class MockTextModel implements TextModel {
   private content: string;
   public uri: MockUri;
 
-  constructor (content: string, uri: string = '') {
+  constructor (content: string, uri: Filepath = DEFAULT_ENTRY) {
     this.content = content;
-    this.uri = new MockUri(uri);
+    this.uri = new MockUri({ path: uri.absolute });
   }
 
   getOffsetAt (position: Position): number {
@@ -29,13 +73,15 @@ export class MockTextModel {
     let lastIndex = 0;
     const lines: Array<{ text: string; ending: string }> = [];
 
-    let match;
-    while ((match = lineEndingRegex.exec(this.content)) !== null) {
+    let match: RegExpMatchArray | null;
+    while (true) {
+      match = lineEndingRegex.exec(this.content);
+      if (match === null) break;
       lines.push({
         text: this.content.slice(lastIndex, match.index),
         ending: match[0],
       });
-      lastIndex = match.index + match[0].length;
+      lastIndex = (match.index ?? 0) + match[0].length;
     }
     // Add remaining content after last line ending
     lines.push({ text: this.content.slice(lastIndex), ending: '' });
@@ -62,8 +108,8 @@ export class MockTextModel {
   }
 }
 
-export function createMockTextModel (content: string, uri: string = ''): TextModel {
-  return new MockTextModel(content, uri) as unknown as TextModel;
+export function createMockTextModel (content: string, uri: Filepath = DEFAULT_ENTRY): MockTextModel {
+  return new MockTextModel(content, uri);
 }
 
 // Extract source text from a range in the program

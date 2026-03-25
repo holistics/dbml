@@ -3,7 +3,6 @@
 // Mocks for testing services
 export {
   createPosition,
-  MockTextModel,
   createMockTextModel,
   extractTextFromRange,
 } from './mocks';

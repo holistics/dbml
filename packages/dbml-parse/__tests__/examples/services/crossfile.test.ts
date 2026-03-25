@@ -4,8 +4,7 @@ import { Filepath, MemoryProjectLayout } from '@/compiler/projectLayout';
 import DBMLDefinitionProvider from '@/services/definition/provider';
 import DBMLReferencesProvider from '@/services/references/provider';
 import DBMLCompletionItemProvider from '@/services/suggestions/provider';
-import { createPosition, MockTextModel } from '../../utils';
-import type { TextModel } from '@/services/types';
+import { createPosition, createMockTextModel } from '../../utils';
 
 function createCompiler (files: Record<string, string>): Compiler {
   const entries: Record<string, string> = {};
@@ -13,10 +12,6 @@ function createCompiler (files: Record<string, string>): Compiler {
     entries[Filepath.from(path).intern()] = content;
   }
   return new Compiler(new MemoryProjectLayout(entries));
-}
-
-function createModel (content: string, filepath: string): TextModel {
-  return new MockTextModel(content, filepath) as unknown as TextModel;
 }
 
 describe('[example] cross-file services', () => {
@@ -31,7 +26,7 @@ describe('[example] cross-file services', () => {
       });
 
       const provider = new DBMLDefinitionProvider(compiler);
-      const model = createModel(mainContent, '/main.dbml');
+      const model = createMockTextModel(mainContent);
 
       // Position on "users" in "Ref: orders.user_id > users.id" (line 6)
       const position = createPosition(6, 24);
@@ -48,7 +43,7 @@ describe('[example] cross-file services', () => {
 
       const compiler = createCompiler({ '/main.dbml': mainContent });
       const provider = new DBMLDefinitionProvider(compiler);
-      const model = createModel(mainContent, '/main.dbml');
+      const model = createMockTextModel(mainContent);
 
       const position = createPosition(7, 24);
       const definitions = provider.provideDefinition(model, position);
@@ -69,7 +64,7 @@ describe('[example] cross-file services', () => {
       });
 
       const provider = new DBMLDefinitionProvider(compiler);
-      const model = createModel(mainContent, '/main.dbml');
+      const model = createMockTextModel(mainContent);
 
       const position = createPosition(4, 12);
       const definitions = provider.provideDefinition(model, position);
@@ -89,7 +84,7 @@ describe('[example] cross-file services', () => {
       });
 
       const provider = new DBMLDefinitionProvider(compiler);
-      const model = createModel(mainContent, '/main.dbml');
+      const model = createMockTextModel(mainContent);
 
       const position = createPosition(3, 6);
       const definitions = provider.provideDefinition(model, position);
@@ -110,7 +105,7 @@ describe('[example] cross-file services', () => {
       });
 
       const provider = new DBMLDefinitionProvider(compiler);
-      const model = createModel(mainContent, '/main.dbml');
+      const model = createMockTextModel(mainContent);
 
       // Position on "id" in "users.id" (line 5, after the dot)
       const position = createPosition(5, 31);
@@ -127,7 +122,7 @@ describe('[example] cross-file services', () => {
 
       const compiler = createCompiler({ '/main.dbml': mainContent });
       const provider = new DBMLDefinitionProvider(compiler);
-      const model = createModel(mainContent, '/main.dbml');
+      const model = createMockTextModel(mainContent);
 
       const position = createPosition(3, 4);
       const definitions = provider.provideDefinition(model, position);
@@ -145,7 +140,7 @@ describe('[example] cross-file services', () => {
       });
 
       const provider = new DBMLDefinitionProvider(compiler);
-      const model = createModel(mainContent, '/main.dbml');
+      const model = createMockTextModel(mainContent);
 
       // Position on "timestamps" in "~timestamps" (line 4)
       const position = createPosition(4, 5);
@@ -167,7 +162,7 @@ describe('[example] cross-file services', () => {
       });
 
       const provider = new DBMLDefinitionProvider(compiler);
-      const model = createModel(mainContent, '/main.dbml');
+      const model = createMockTextModel(mainContent);
 
       // Position on "users" in Ref
       const position = createPosition(5, 24);
@@ -186,7 +181,7 @@ describe('[example] cross-file services', () => {
 
       const compiler = createCompiler({ '/main.dbml': mainContent });
       const provider = new DBMLReferencesProvider(compiler);
-      const model = createModel(mainContent, '/main.dbml');
+      const model = createMockTextModel(mainContent);
 
       // Position on "users" table declaration
       const position = createPosition(1, 7);
@@ -200,7 +195,7 @@ describe('[example] cross-file services', () => {
 
       const compiler = createCompiler({ '/main.dbml': mainContent });
       const provider = new DBMLReferencesProvider(compiler);
-      const model = createModel(mainContent, '/main.dbml');
+      const model = createMockTextModel(mainContent);
 
       // Position on "int" keyword
       const position = createPosition(2, 6);
@@ -214,7 +209,7 @@ describe('[example] cross-file services', () => {
 
       const compiler = createCompiler({ '/main.dbml': mainContent });
       const provider = new DBMLReferencesProvider(compiler);
-      const model = createModel(mainContent, '/main.dbml');
+      const model = createMockTextModel(mainContent);
 
       const position = createPosition(1, 7);
       const references = provider.provideReferences(model, position);
@@ -235,7 +230,7 @@ describe('[example] cross-file services', () => {
       });
 
       const provider = new DBMLCompletionItemProvider(compiler);
-      const model = createModel(mainContent, '/main.dbml');
+      const model = createMockTextModel(mainContent);
 
       const position = createPosition(4, 23);
       const result = provider.provideCompletionItems(model, position);
@@ -254,7 +249,7 @@ describe('[example] cross-file services', () => {
       });
 
       const provider = new DBMLCompletionItemProvider(compiler);
-      const model = createModel(mainContent, '/main.dbml');
+      const model = createMockTextModel(mainContent);
 
       // Position after "> " in Ref
       const position = createPosition(5, 24);
@@ -282,7 +277,7 @@ describe('[example] cross-file services', () => {
       });
 
       const provider = new DBMLCompletionItemProvider(compiler);
-      const model = createModel(mainContent, '/main.dbml');
+      const model = createMockTextModel(mainContent);
 
       const position = createPosition(6, 24);
       const result = provider.provideCompletionItems(model, position);
@@ -301,7 +296,7 @@ describe('[example] cross-file services', () => {
 
       const compiler = createCompiler({ '/main.dbml': mainContent });
       const provider = new DBMLCompletionItemProvider(compiler);
-      const model = createModel(mainContent, '/main.dbml');
+      const model = createMockTextModel(mainContent);
 
       const position = createPosition(8, 24);
       const result = provider.provideCompletionItems(model, position);
@@ -320,7 +315,7 @@ describe('[example] cross-file services', () => {
       });
 
       const provider = new DBMLCompletionItemProvider(compiler);
-      const model = createModel(mainContent, '/main.dbml');
+      const model = createMockTextModel(mainContent);
 
       const position = createPosition(3, 10);
       const result = provider.provideCompletionItems(model, position);
@@ -344,7 +339,7 @@ describe('[example] cross-file services', () => {
       });
 
       const provider = new DBMLCompletionItemProvider(compiler);
-      const model = createModel(mainContent, '/main.dbml');
+      const model = createMockTextModel(mainContent);
 
       const position = createPosition(6, 29);
       const result = provider.provideCompletionItems(model, position);
@@ -369,7 +364,7 @@ describe('[example] cross-file services', () => {
       });
 
       const provider = new DBMLCompletionItemProvider(compiler);
-      const model = createModel(mainContent, '/main.dbml');
+      const model = createMockTextModel(mainContent);
 
       // Position after "~" (tilde operator)
       const position = createPosition(3, 4);
@@ -392,7 +387,7 @@ describe('[example] cross-file services', () => {
       });
 
       const provider = new DBMLCompletionItemProvider(compiler);
-      const model = createModel(subContent, '/sub/main.dbml');
+      const model = createMockTextModel(subContent, Filepath.from('/sub/main.dbml'));
 
       const position = createPosition(2, 14);
       const result = provider.provideCompletionItems(model, position);
@@ -405,7 +400,7 @@ describe('[example] cross-file services', () => {
 
       const compiler = createCompiler({ '/main.dbml': mainContent });
       const provider = new DBMLCompletionItemProvider(compiler);
-      const model = createModel(mainContent, '/main.dbml');
+      const model = createMockTextModel(mainContent);
 
       const position = createPosition(1, 1);
       const result = provider.provideCompletionItems(model, position);
@@ -423,7 +418,7 @@ describe('[example] cross-file services', () => {
       });
 
       const provider = new DBMLCompletionItemProvider(compiler);
-      const model = createModel(mainContent, '/main.dbml');
+      const model = createMockTextModel(mainContent);
 
       const position = createPosition(6, 24);
       const result = provider.provideCompletionItems(model, position);
@@ -443,7 +438,7 @@ describe('[example] cross-file services', () => {
       });
 
       const provider = new DBMLCompletionItemProvider(compiler);
-      const model = createModel(mainContent, '/main.dbml');
+      const model = createMockTextModel(mainContent);
 
       const position = createPosition(5, 24);
       const result = provider.provideCompletionItems(model, position);
@@ -470,7 +465,7 @@ describe('[example] cross-file services', () => {
       });
 
       const provider = new DBMLCompletionItemProvider(compiler);
-      const model = createModel(mainContent, '/main.dbml');
+      const model = createMockTextModel(mainContent);
 
       const position = createPosition(5, 24);
       const result = provider.provideCompletionItems(model, position);

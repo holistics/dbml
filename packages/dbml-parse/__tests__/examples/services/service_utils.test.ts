@@ -1,13 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import { getOffsetFromMonacoPosition } from '@/services/utils';
-import { createPosition, MockTextModel } from '../../utils';
+import { createPosition, createMockTextModel } from '../../utils';
 
 describe('[example] Services Utils', () => {
   // Useful for detecting breaking changes of monaco-editor-core
   describe('getOffsetFromMonacoPosition', () => {
     it('should calculate offset from position correctly', () => {
       const program = 'Line1\nLine2\nLine3';
-      const model = new MockTextModel(program) as any;
+      const model = createMockTextModel(program);
 
       const position1 = createPosition(1, 1);
       const offset1 = getOffsetFromMonacoPosition(model, position1);
@@ -24,7 +24,7 @@ describe('[example] Services Utils', () => {
 
     it('should handle empty content', () => {
       const program = '';
-      const model = new MockTextModel(program) as any;
+      const model = createMockTextModel(program);
 
       const position = createPosition(1, 1);
       const offset = getOffsetFromMonacoPosition(model, position);
@@ -33,7 +33,7 @@ describe('[example] Services Utils', () => {
 
     it('should handle position at end of line', () => {
       const program = 'Hello\nWorld';
-      const model = new MockTextModel(program) as any;
+      const model = createMockTextModel(program);
 
       const position = createPosition(1, 6);
       const offset = getOffsetFromMonacoPosition(model, position);
@@ -42,7 +42,7 @@ describe('[example] Services Utils', () => {
 
     it('should handle multiline content', () => {
       const program = 'Table users {\n  id int\n  name varchar\n}';
-      const model = new MockTextModel(program) as any;
+      const model = createMockTextModel(program);
 
       const position1 = createPosition(2, 3);
       const offset1 = getOffsetFromMonacoPosition(model, position1);
