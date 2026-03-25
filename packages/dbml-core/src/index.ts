@@ -38,6 +38,8 @@ export {
   formatRecordValue,
   // DiagramView exports
   syncDiagramView,
+  // Monaco editor syntax highlighting
+  dbmlMonarchTokensProvider,
 } from '@dbml/parse';
 
 // Re-export types

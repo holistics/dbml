@@ -64,4 +64,6 @@ export {
 export { syncDiagramView } from '@/compiler/queries/transform/syncDiagramView';
 export type { DiagramViewSyncOperation } from '@/compiler/queries/transform/syncDiagramView';
 
+export { dbmlMonarchTokensProvider } from '@/services/monarch';
+
 export { Compiler, services };
