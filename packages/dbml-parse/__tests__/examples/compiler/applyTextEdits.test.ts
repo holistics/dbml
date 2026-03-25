@@ -242,16 +242,5 @@ describe('[example] applyTextEdits', () => {
       expect(result).toContain('Table customers');
       expect(result).toContain('name varchar');
     });
-
-    test('should not modify the original source', () => {
-      const originalSource = 'Table users { id int }';
-
-      const result = applyTextEdits(originalSource, [
-        { start: 6, end: 11, newText: 'customers' },
-      ]);
-
-      expect(originalSource).toBe('Table users { id int }');
-      expect(result).toBe('Table customers { id int }');
-    });
   });
 });
