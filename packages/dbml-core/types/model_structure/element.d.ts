@@ -1,5 +1,4 @@
 export interface Token {
-    filepath?: string;
     end: {
         column: number;
         line: number;
