@@ -3,10 +3,10 @@ import DbState from './dbState';
 
 class Model {
   constructor ({
-    database = [],
+    databases = [],
   } = {}) {
     this.dbState = new DbState();
-    this.database = database.map((db) => {
+    this.databases = databases.map((db) => {
       db.dbState = this.dbState;
       return new Database(db);
     });
@@ -31,7 +31,7 @@ class Model {
       tablePartials: {},
     };
 
-    for (const db of this.database) {
+    for (const db of this.databases) {
       const normalized = db.normalize();
       Object.assign(result.database, normalized.database);
       Object.assign(result.schemas, normalized.schemas);

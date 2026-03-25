@@ -281,8 +281,8 @@ describe('[example] multi-file compilation', () => {
         Filepath.from('/main.dbml'),
         { '/main.dbml': 'Table users { id int [pk] }' },
       ).getValue();
-      expect(model.database).toHaveLength(1);
-      expect(model.database[0].tables[0].name).toBe('users');
+      expect(model.databases).toHaveLength(1);
+      expect(model.databases[0].tables[0].name).toBe('users');
     });
 
     test('import produces multiple databases, entry first', () => {
@@ -293,9 +293,9 @@ describe('[example] multi-file compilation', () => {
         `,
         '/common.dbml': 'Table users { id int [pk] }',
       }).getValue();
-      expect(model.database).toHaveLength(2);
-      expect(model.database[0].tables[0].name).toBe('orders');
-      expect(model.database.flatMap((db) => db.tables.map((t) => t.name))).toContain('users');
+      expect(model.databases).toHaveLength(2);
+      expect(model.databases[0].tables[0].name).toBe('orders');
+      expect(model.databases.flatMap((db) => db.tables.map((t) => t.name))).toContain('users');
     });
 
     test('cross-file refs are correct', () => {
@@ -309,7 +309,7 @@ describe('[example] multi-file compilation', () => {
           Ref: orders.user_id > users.id
         `,
         '/common.dbml': 'Table users { id int [pk]\nname varchar }',
-      }).getValue().database[0];
+      }).getValue().databases[0];
       expect(mainDb.refs).toHaveLength(1);
       expect(mainDb.refs[0].endpoints[0].tableName).toBe('orders');
       expect(mainDb.refs[0].endpoints[1].tableName).toBe('users');
@@ -326,7 +326,7 @@ describe('[example] multi-file compilation', () => {
           Table products { id int [pk] }
         `,
       }).getValue();
-      expect(model.database.find((db) => db.tables.some((t) => t.name === 'products'))!.tables).toHaveLength(2);
+      expect(model.databases.find((db) => db.tables.some((t) => t.name === 'products'))!.tables).toHaveLength(2);
     });
   });
 
@@ -342,24 +342,24 @@ describe('[example] multi-file compilation', () => {
         '/b.dbml': 'use { enum status } from \'./shared.dbml\'\nTable orders { id int [pk] }',
         '/shared.dbml': 'Enum status { active\ninactive }',
       }).getValue();
-      expect(new Set(model.database).size).toBe(model.database.length);
+      expect(new Set(model.databases).size).toBe(model.databases.length);
     });
 
     test('circular, 3-way circular, self-import do not loop', () => {
       expect(compileFile(Filepath.from('/a.dbml'), {
         '/a.dbml': 'use { table B } from \'./b.dbml\'\nTable A { id int [pk] }',
         '/b.dbml': 'use { table A } from \'./a.dbml\'\nTable B { id int [pk] }',
-      }).getValue().database.length).toBeGreaterThanOrEqual(2);
+      }).getValue().databases.length).toBeGreaterThanOrEqual(2);
 
       expect(compileFile(Filepath.from('/a.dbml'), {
         '/a.dbml': 'use { table B } from \'./b.dbml\'\nTable A { id int }',
         '/b.dbml': 'use { table C } from \'./c.dbml\'\nTable B { id int }',
         '/c.dbml': 'use { table A } from \'./a.dbml\'\nTable C { id int }',
-      }).getValue().database).toHaveLength(3);
+      }).getValue().databases).toHaveLength(3);
 
       expect(compileFile(Filepath.from('/self.dbml'), {
         '/self.dbml': 'use { table X } from \'./self.dbml\'\nTable X { id int }',
-      }).getValue().database).toBeDefined();
+      }).getValue().databases).toBeDefined();
     });
 
     test('deep chain and fan-out', () => {
@@ -373,7 +373,7 @@ describe('[example] multi-file compilation', () => {
           Table B { id int [pk] }
         `,
         '/c.dbml': 'Table C { id int [pk] }',
-      }).getValue().database).toHaveLength(3);
+      }).getValue().databases).toHaveLength(3);
 
       expect(compileFile(Filepath.from('/main.dbml'), {
         '/main.dbml': `
@@ -395,22 +395,22 @@ describe('[example] multi-file compilation', () => {
           Table C { id int }
         `,
         '/shared.dbml': 'Enum status { active\ninactive }',
-      }).getValue().database).toHaveLength(5);
+      }).getValue().databases).toHaveLength(5);
     });
   });
 
   describe('edge cases', () => {
     test('empty file, comments only, use-only file', () => {
       expect(compileFile(Filepath.from('/main.dbml'),
-        { '/main.dbml': '' }).getValue().database).toHaveLength(1);
+        { '/main.dbml': '' }).getValue().databases).toHaveLength(1);
 
       expect(compileFile(Filepath.from('/main.dbml'),
-        { '/main.dbml': '// just a comment' }).getValue().database[0].tables).toHaveLength(0);
+        { '/main.dbml': '// just a comment' }).getValue().databases[0].tables).toHaveLength(0);
 
       expect(compileFile(Filepath.from('/main.dbml'), {
         '/main.dbml': 'use * from \'./common.dbml\'',
         '/common.dbml': 'Table users { id int [pk] }',
-      }).getValue().database).toHaveLength(2);
+      }).getValue().databases).toHaveLength(2);
     });
 
     test('parse errors, missing dep, bad dep still produce a model', () => {
@@ -419,14 +419,14 @@ describe('[example] multi-file compilation', () => {
         { '/main.dbml': 'Table users { id int [pk' },
       );
       expect(r1.getErrors().length).toBeGreaterThan(0);
-      expect(r1.getValue().database).toHaveLength(1);
+      expect(r1.getValue().databases).toHaveLength(1);
 
       expect(compileFile(Filepath.from('/main.dbml'), {
         '/main.dbml': `
           use { table users } from './missing.dbml'
           Table orders { id int [pk] }
         `,
-      }).getValue().database).toBeDefined();
+      }).getValue().databases).toBeDefined();
 
       expect(compileFile(Filepath.from('/main.dbml'), {
         '/main.dbml': `
@@ -434,7 +434,7 @@ describe('[example] multi-file compilation', () => {
           Table orders { id int [pk] }
         `,
         '/bad.dbml': 'Table users { id int [pk',
-      }).getValue().database).toBeDefined();
+      }).getValue().databases).toBeDefined();
     });
 
     test('relative path going up directories', () => {
@@ -493,7 +493,7 @@ describe('[example] multi-file compilation', () => {
         `,
         '/shared.dbml': 'Table shared { id int }',
       }).getValue();
-      expect(new Set(model.database).size).toBe(model.database.length);
+      expect(new Set(model.databases).size).toBe(model.databases.length);
     });
   });
 
@@ -510,17 +510,17 @@ describe('[example] multi-file compilation', () => {
         entries[Filepath.from(path).intern()] = content;
       }
       const compiler = new Compiler(new MemoryProjectLayout(entries));
-      expect(compiler.interpretFile(Filepath.from('/main.dbml')).getValue().database).toHaveLength(2);
+      expect(compiler.interpretFile(Filepath.from('/main.dbml')).getValue().databases).toHaveLength(2);
 
       compiler.setSource(`
         Table users { id int }
         Table products { id int }
       `, Filepath.from('/common.dbml'));
-      const updated = compiler.interpretFile(Filepath.from('/main.dbml')).getValue().database;
+      const updated = compiler.interpretFile(Filepath.from('/main.dbml')).getValue().databases;
       expect(updated.find((db) => db.tables.some((t) => t.name === 'products'))?.tables).toHaveLength(2);
 
       compiler.deleteSource(Filepath.from('/common.dbml'));
-      expect(compiler.interpretFile(Filepath.from('/main.dbml')).getValue().database.length).toBeGreaterThanOrEqual(1);
+      expect(compiler.interpretFile(Filepath.from('/main.dbml')).getValue().databases.length).toBeGreaterThanOrEqual(1);
     });
   });
 });

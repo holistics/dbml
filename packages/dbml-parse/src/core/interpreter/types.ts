@@ -81,7 +81,7 @@ export interface Database {
 }
 
 export interface Model {
-  database: Database[];
+  databases: Database[];
 }
 
 export interface Table {

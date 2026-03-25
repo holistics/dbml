@@ -39,7 +39,7 @@ export function interpretFile (this: Compiler, filepath: Filepath): Report<Model
     }
   }
 
-  return new Report({ database: databases }, entryErrors, entryWarnings);
+  return new Report({ databases }, entryErrors, entryWarnings);
 }
 
 function interpretSingle (compiler: Compiler, filepath: Filepath): {

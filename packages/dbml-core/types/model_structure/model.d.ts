@@ -12,34 +12,19 @@ import { NormalizedIndexColumnIdMap } from './indexColumn';
 import { NormalizedIndexIdMap } from './indexes';
 import { NormalizedCheckIdMap } from './check';
 import { NormalizedTablePartialIdMap } from './tablePartial';
-import { NormalizedRecordIdMap, RawDatabase } from './database';
+import { NormalizedRecordIdMap, NormalizedDatabaseIdMap, RawDatabase } from './database';
 import DbState from './dbState';
 
 export interface RawModel {
-    database: RawDatabase[];
+    databases: RawDatabase[];
 }
 
 declare class Model {
     dbState: DbState;
-    database: Database[];
+    databases: Database[];
 
-    constructor({ database }: RawModel);
+    constructor({ databases }: RawModel);
     normalize(): NormalizedModel;
-}
-
-export interface NormalizedDatabase {
-    id: number;
-    filepath: string;
-    hasDefaultSchema: boolean;
-    note: string | null;
-    databaseType: string;
-    name: string;
-    schemaIds: number[];
-    noteIds: number[];
-}
-
-export interface NormalizedDatabaseIdMap {
-    [_id: number]: NormalizedDatabase;
 }
 
 export interface NormalizedModel {

@@ -64,7 +64,7 @@ export function interpret (source: string): Report<Database | undefined> {
   const modelReport = compiler.interpretFile(DEFAULT_ENTRY);
   const model = modelReport.getValue();
   return new Report(
-    model.database[0],
+    model.databases[0],
     modelReport.getErrors(),
     modelReport.getWarnings(),
   );
