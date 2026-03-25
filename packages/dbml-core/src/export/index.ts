@@ -7,8 +7,7 @@ export type ExportFormat = 'dbml' | 'mysql' | 'postgres' | 'json' | 'mssql' | 'o
 
 export type ExportOptions =
   Partial<DbmlExporterOptions> &
-  Partial<JsonExporterOptions> &
-  Partial<{ shouldReturnModel: boolean }>;
+  Partial<JsonExporterOptions>;
 
 /**
  * @deprecated Passing a boolean as the third argument is deprecated. Use `ExportOptions` instead.
@@ -35,11 +34,6 @@ function _export (
 ): string {
   const resolvedFlags = normalizeExportOptions(options);
 
-  if (resolvedFlags.shouldReturnModel) {
-    const model = (new Parser()).parse(str, 'dbmlv2', { shouldReturnModel: true });
-    return ModelExporter.export(model, format, resolvedFlags);
-  }
-
   const database = (new Parser()).parse(str, 'dbmlv2');
   return ModelExporter.export(database, format, resolvedFlags);
 }
@@ -51,20 +45,17 @@ export function normalizeExportOptions (
     return {
       isNormalized: options,
       includeRecords: true,
-      shouldReturnModel: false,
     };
   }
 
   const {
     isNormalized = true,
     includeRecords = true,
-    shouldReturnModel = false,
   } = options;
 
   return {
     isNormalized,
     includeRecords,
-    shouldReturnModel,
   };
 }
 

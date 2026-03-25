@@ -49,7 +49,13 @@ Ref: posts.user_id > users.id`;
               "startColumn": 22,
               "startLineNumber": 9,
             },
-            "uri": "",
+            "uri": {
+              "authority": "",
+              "fragment": "",
+              "path": "/main.dbml",
+              "query": "",
+              "scheme": "",
+            },
           },
         ]
       `);
@@ -89,7 +95,13 @@ Table posts {
               "startColumn": 23,
               "startLineNumber": 6,
             },
-            "uri": "",
+            "uri": {
+              "authority": "",
+              "fragment": "",
+              "path": "/main.dbml",
+              "query": "",
+              "scheme": "",
+            },
           },
         ]
       `);
@@ -134,7 +146,13 @@ TableGroup my_group {
               "startColumn": 3,
               "startLineNumber": 10,
             },
-            "uri": "",
+            "uri": {
+              "authority": "",
+              "fragment": "",
+              "path": "/main.dbml",
+              "query": "",
+              "scheme": "",
+            },
           },
         ]
       `);
@@ -172,7 +190,13 @@ Ref: posts.user_id > myschema.users.id`;
               "startColumn": 31,
               "startLineNumber": 5,
             },
-            "uri": "",
+            "uri": {
+              "authority": "",
+              "fragment": "",
+              "path": "/main.dbml",
+              "query": "",
+              "scheme": "",
+            },
           },
         ]
       `);
@@ -216,7 +240,13 @@ Ref: posts.user_id > users.id`;
               "startColumn": 22,
               "startLineNumber": 9,
             },
-            "uri": "",
+            "uri": {
+              "authority": "",
+              "fragment": "",
+              "path": "/main.dbml",
+              "query": "",
+              "scheme": "",
+            },
           },
         ]
       `);
@@ -260,7 +290,13 @@ Ref: posts.author_id > users.id`;
               "startColumn": 22,
               "startLineNumber": 10,
             },
-            "uri": "",
+            "uri": {
+              "authority": "",
+              "fragment": "",
+              "path": "/main.dbml",
+              "query": "",
+              "scheme": "",
+            },
           },
           {
             "range": {
@@ -269,7 +305,13 @@ Ref: posts.author_id > users.id`;
               "startColumn": 24,
               "startLineNumber": 11,
             },
-            "uri": "",
+            "uri": {
+              "authority": "",
+              "fragment": "",
+              "path": "/main.dbml",
+              "query": "",
+              "scheme": "",
+            },
           },
         ]
       `);
@@ -312,7 +354,13 @@ Table users {
               "startColumn": 15,
               "startLineNumber": 7,
             },
-            "uri": "",
+            "uri": {
+              "authority": "",
+              "fragment": "",
+              "path": "/main.dbml",
+              "query": "",
+              "scheme": "",
+            },
           },
         ]
       `);
@@ -353,7 +401,13 @@ Table users {
               "startColumn": 24,
               "startLineNumber": 7,
             },
-            "uri": "",
+            "uri": {
+              "authority": "",
+              "fragment": "",
+              "path": "/main.dbml",
+              "query": "",
+              "scheme": "",
+            },
           },
         ]
       `);

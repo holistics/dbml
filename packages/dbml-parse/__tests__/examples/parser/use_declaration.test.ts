@@ -25,7 +25,7 @@ describe('[example] parser - use statement', () => {
     const spec = stmt.specifiers?.specifiers[0];
     expect(spec?.kind).toBe(SyntaxNodeKind.USE_SPECIFIER);
     expect(spec?.elementKind?.value).toBe('table');
-    expect(extractVariableFromExpression(spec).unwrap_or(undefined)).toBe('users');
+    expect(extractVariableFromExpression(spec?.name).unwrap_or(undefined)).toBe('users');
 
     expect(stmt.start).toBe(0);
     expect(stmt.end).toBe(source.length);
@@ -77,7 +77,7 @@ describe('[example] parser - use statement', () => {
     // quoted name
     const quoted = parse('use { table "user accounts" } from \'./schema\'');
     expect(quoted.getErrors()).toHaveLength(0);
-    expect(extractVariableFromExpression(quoted.getValue().ast.useDeclarations[0].specifiers?.specifiers[0]).unwrap_or(undefined)).toBe('user accounts');
+    expect(extractVariableFromExpression(quoted.getValue().ast.useDeclarations[0].specifiers?.specifiers[0]?.name).unwrap_or(undefined)).toBe('user accounts');
   });
 
   test('case insensitive: USE keyword', () => {

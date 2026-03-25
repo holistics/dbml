@@ -37,7 +37,13 @@ records users(id, name) {
               "startColumn": 1,
               "startLineNumber": 1,
             },
-            "uri": "",
+            "uri": {
+              "authority": "",
+              "fragment": "",
+              "path": "/main.dbml",
+              "query": "",
+              "scheme": "",
+            },
           },
         ]
       `);
@@ -83,7 +89,13 @@ records auth.users(id, email) {
               "startColumn": 1,
               "startLineNumber": 1,
             },
-            "uri": "",
+            "uri": {
+              "authority": "",
+              "fragment": "",
+              "path": "/main.dbml",
+              "query": "",
+              "scheme": "",
+            },
           },
         ]
       `);
@@ -134,7 +146,13 @@ records auth.users(id, email) {
               "startColumn": 1,
               "startLineNumber": 1,
             },
-            "uri": "",
+            "uri": {
+              "authority": "",
+              "fragment": "",
+              "path": "/main.dbml",
+              "query": "",
+              "scheme": "",
+            },
           },
         ]
       `);
@@ -182,7 +200,13 @@ records users(id, name) {
               "startColumn": 3,
               "startLineNumber": 2,
             },
-            "uri": "",
+            "uri": {
+              "authority": "",
+              "fragment": "",
+              "path": "/main.dbml",
+              "query": "",
+              "scheme": "",
+            },
           },
         ]
       `);
@@ -223,7 +247,13 @@ records users(id, name) {
               "startColumn": 3,
               "startLineNumber": 3,
             },
-            "uri": "",
+            "uri": {
+              "authority": "",
+              "fragment": "",
+              "path": "/main.dbml",
+              "query": "",
+              "scheme": "",
+            },
           },
         ]
       `);
@@ -271,7 +301,13 @@ records users(id, status) {
               "startColumn": 1,
               "startLineNumber": 1,
             },
-            "uri": "",
+            "uri": {
+              "authority": "",
+              "fragment": "",
+              "path": "/main.dbml",
+              "query": "",
+              "scheme": "",
+            },
           },
         ]
       `);
@@ -322,7 +358,13 @@ records users(id, status) {
               "startColumn": 3,
               "startLineNumber": 2,
             },
-            "uri": "",
+            "uri": {
+              "authority": "",
+              "fragment": "",
+              "path": "/main.dbml",
+              "query": "",
+              "scheme": "",
+            },
           },
         ]
       `);
@@ -368,7 +410,13 @@ records auth.users(id, role) {
               "startColumn": 3,
               "startLineNumber": 2,
             },
-            "uri": "",
+            "uri": {
+              "authority": "",
+              "fragment": "",
+              "path": "/main.dbml",
+              "query": "",
+              "scheme": "",
+            },
           },
         ]
       `);

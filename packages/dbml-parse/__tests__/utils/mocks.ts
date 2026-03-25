@@ -1,4 +1,4 @@
-import { type Position, type TextModel } from '@/services';
+import { type Position } from '@/services';
 import { Filepath } from '@/compiler/projectLayout';
 import { DEFAULT_ENTRY } from '@/compiler/constants';
 import { Uri, UriComponents } from 'monaco-editor-core';
@@ -41,14 +41,20 @@ class MockUri implements Uri {
     this.fragment = fragment;
   }
 
-  with (_change: {
+  with (change: {
     scheme?: string;
     authority?: string | null;
     path?: string | null;
     query?: string | null;
     fragment?: string | null;
   }): MockUri {
-    throw new Error('Unimplemented');
+    return new MockUri({
+      path: change.path ?? this.path,
+      scheme: change.scheme ?? this.scheme,
+      authority: change.authority ?? this.authority,
+      query: change.query ?? this.query,
+      fragment: change.fragment ?? this.fragment,
+    });
   }
 
   toJSON (): UriComponents {
@@ -58,7 +64,7 @@ class MockUri implements Uri {
   }
 }
 
-export class MockTextModel implements TextModel {
+export class MockTextModel {
   private content: string;
   public uri: MockUri;
 
@@ -108,8 +114,8 @@ export class MockTextModel implements TextModel {
   }
 }
 
-export function createMockTextModel (content: string, uri: Filepath = DEFAULT_ENTRY): MockTextModel {
-  return new MockTextModel(content, uri);
+export function createMockTextModel (content: string, uri: Filepath = DEFAULT_ENTRY): MockTextModel & { [K: string]: any } {
+  return new MockTextModel(content, uri) as any;
 }
 
 // Extract source text from a range in the program

@@ -21,6 +21,7 @@ export class SyntaxNodeIdGenerator {
 export class SyntaxNode implements Internable<SyntaxNodeId> {
   id: Readonly<SyntaxNodeId>;
   kind: SyntaxNodeKind;
+  filepath!: Filepath;
 
   intern (): SyntaxNodeId {
     return this.id;
@@ -120,15 +121,12 @@ export class ProgramNode extends SyntaxNode {
 
   source: string;
 
-  filepath: Filepath;
-
   constructor (
-    { body = [], eof, source, filepath }: { body?: (UseDeclarationNode | ElementDeclarationNode)[]; eof?: SyntaxToken; source: string; filepath: Filepath },
+    { body = [], eof, source }: { body?: (UseDeclarationNode | ElementDeclarationNode)[]; eof?: SyntaxToken; source: string },
     id: SyntaxNodeId,
   ) {
     super(id, SyntaxNodeKind.PROGRAM, [...body, eof]);
     this.source = source;
-    this.filepath = filepath;
     this.body = body;
     this.eof = eof;
   }

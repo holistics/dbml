@@ -70,13 +70,10 @@ export default class Parser {
 
   private source: string;
 
-  private filepath: Filepath;
-
   constructor (filepath: Filepath, source: string, tokens: SyntaxToken[], nodeIdGenerator: SyntaxNodeIdGenerator) {
-    this.filepath = filepath;
     this.source = source;
     this.tokens = tokens;
-    this.nodeFactory = new NodeFactory(nodeIdGenerator);
+    this.nodeFactory = new NodeFactory(nodeIdGenerator, filepath);
   }
 
   private isAtEnd (): boolean {
@@ -185,7 +182,7 @@ export default class Parser {
   parse (): Report<{ ast: ProgramNode; tokens: SyntaxToken[] }> {
     const body = this.program();
     const eof = this.advance();
-    const program = this.nodeFactory.create(ProgramNode, { body, eof, source: this.source, filepath: this.filepath });
+    const program = this.nodeFactory.create(ProgramNode, { body, eof, source: this.source });
     this.gatherInvalid();
     this.assignParents(program);
 

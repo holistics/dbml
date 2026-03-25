@@ -5,7 +5,7 @@ import type { DbmlExporterOptions } from '../export/DbmlExporter';
 
 export type ImportFormat = 'dbml' | 'mysql' | 'postgres' | 'json' | 'mssql' | 'postgresLegacy' | 'mssqlLegacy' | 'schemarb' | 'snowflake' | 'oracle';
 
-export type ImportOptions = Partial<DbmlExporterOptions> & Partial<{ shouldReturnModel: boolean }>;
+export type ImportOptions = Partial<DbmlExporterOptions>;
 
 function _import (
   str: string,
@@ -16,13 +16,7 @@ function _import (
 ): string {
   const {
     includeRecords = true,
-    shouldReturnModel = false,
   } = options;
-
-  if (shouldReturnModel) {
-    const model = (new Parser()).parse(str, format, { shouldReturnModel: true });
-    return ModelExporter.export(model, 'dbml', { includeRecords });
-  }
 
   const database = (new Parser()).parse(str, format);
   const dbml = ModelExporter.export(database.normalize(), 'dbml', { includeRecords });
