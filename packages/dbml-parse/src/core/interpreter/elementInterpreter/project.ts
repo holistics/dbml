@@ -26,7 +26,7 @@ export class ProjectInterpreter implements ElementInterpreter {
 
   interpret (): CompileError[] {
     this.env.project.set(this.declarationNode, this.project as Project);
-    this.project.token = getTokenPosition(this.declarationNode, this.env.filepath);
+    this.project.token = getTokenPosition(this.declarationNode);
     const errors = [...this.interpretName(this.declarationNode.name), ...this.interpretBody(this.declarationNode.body as BlockExpressionNode)];
 
     return errors;
@@ -80,7 +80,7 @@ export class ProjectInterpreter implements ElementInterpreter {
                 ? (sub.body.body[0] as FunctionApplicationNode).callee
                 : sub.body!.callee,
             ).map(normalizeNoteContent).unwrap(),
-            token: getTokenPosition(sub, this.env.filepath),
+            token: getTokenPosition(sub),
           };
           return [];
         }

@@ -21,7 +21,7 @@ export class EnumInterpreter implements ElementInterpreter {
   }
 
   interpret (): CompileError[] {
-    this.enum.token = getTokenPosition(this.declarationNode, this.env.filepath);
+    this.enum.token = getTokenPosition(this.declarationNode);
     this.env.enums.set(this.declarationNode, this.enum as Enum);
     const errors = [...this.interpretName(this.declarationNode.name!), ...this.interpretBody(this.declarationNode.body as BlockExpressionNode)];
 
@@ -35,7 +35,7 @@ export class EnumInterpreter implements ElementInterpreter {
       this.enum.name = name;
       this.enum.schemaName = schemaName.join('.');
 
-      return [new CompileError(CompileErrorCode.UNSUPPORTED, 'Nested schema is not supported', nameNode, this.env.filepath)];
+      return [new CompileError(CompileErrorCode.UNSUPPORTED, 'Nested schema is not supported', nameNode)];
     }
 
     this.enum.name = name;
@@ -50,14 +50,14 @@ export class EnumInterpreter implements ElementInterpreter {
 
       const enumField: Partial<EnumField> = { };
 
-      enumField.token = getTokenPosition(field, this.env.filepath);
+      enumField.token = getTokenPosition(field);
       enumField.name = extractVariableFromExpression(field.callee).unwrap();
 
       const settingMap = aggregateSettingList(field.args[0] as ListExpressionNode).getValue();
       const noteNode = settingMap.note?.at(0);
       enumField.note = noteNode && {
         value: extractQuotedStringToken(noteNode.value).map(normalizeNoteContent).unwrap(),
-        token: getTokenPosition(noteNode, this.env.filepath),
+        token: getTokenPosition(noteNode),
       };
 
       this.enum.values!.push(enumField as EnumField);

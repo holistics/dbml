@@ -17,7 +17,7 @@ describe('[snapshot] validator', () => {
     const program = readFileSync(path.resolve(__dirname, `./input/${testName}.in.dbml`), 'utf-8');
     const symbolIdGenerator = new NodeSymbolIdGenerator();
     const nodeIdGenerator = new SyntaxNodeIdGenerator();
-    const report = new Lexer(program)
+    const report = new Lexer(program, DEFAULT_ENTRY)
       .lex()
       .chain((tokens) => {
         return new Parser(DEFAULT_ENTRY, program, tokens, nodeIdGenerator).parse();

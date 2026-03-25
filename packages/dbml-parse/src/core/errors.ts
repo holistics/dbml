@@ -1,6 +1,5 @@
 import { SyntaxToken } from './lexer/tokens';
 import { SyntaxNode } from './parser/nodes';
-import type { Filepath } from '@/compiler/projectLayout';
 
 export enum CompileErrorCode {
   UNKNOWN_SYMBOL = 1000,
@@ -136,19 +135,18 @@ export class CompileError extends Error {
 
   diagnostic: Readonly<string>;
 
-  filepath: Readonly<Filepath | undefined>;
-
   nodeOrToken: Readonly<SyntaxNode | SyntaxToken>;
 
   start: Readonly<number>;
 
   end: Readonly<number>;
 
-  constructor (code: number, message: string, nodeOrToken: SyntaxNode | SyntaxToken, filepath?: Filepath) {
+  get filepath () { return this.nodeOrToken.filepath; }
+
+  constructor (code: number, message: string, nodeOrToken: SyntaxNode | SyntaxToken) {
     super(message);
     this.code = code;
     this.diagnostic = message;
-    this.filepath = filepath;
     this.nodeOrToken = nodeOrToken;
     this.start = nodeOrToken.start;
     this.end = nodeOrToken.end;
@@ -161,7 +159,6 @@ export class CompileError extends Error {
       this.code,
       this.message,
       this.nodeOrToken,
-      this.filepath as Filepath | undefined,
     );
   }
 }
@@ -171,19 +168,18 @@ export class CompileWarning extends Error {
 
   diagnostic: Readonly<string>;
 
-  filepath: Readonly<Filepath | undefined>;
-
   nodeOrToken: Readonly<SyntaxNode | SyntaxToken>;
 
   start: Readonly<number>;
 
   end: Readonly<number>;
 
-  constructor (code: number, message: string, nodeOrToken: SyntaxNode | SyntaxToken, filepath?: Filepath) {
+  get filepath () { return this.nodeOrToken.filepath; }
+
+  constructor (code: number, message: string, nodeOrToken: SyntaxNode | SyntaxToken) {
     super(message);
     this.code = code;
     this.diagnostic = message;
-    this.filepath = filepath;
     this.nodeOrToken = nodeOrToken;
     this.start = nodeOrToken.start;
     this.end = nodeOrToken.end;

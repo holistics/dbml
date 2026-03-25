@@ -21,7 +21,7 @@ export function parseFile (this: Compiler, filepath: Filepath): FileParseIndex {
   const layout = this.layout();
   const source = layout.getSource(filepath) ?? '';
   const nodeIdGenerator = new SyntaxNodeIdGenerator();
-  const parseReport = new Lexer(source)
+  const parseReport = new Lexer(source, filepath)
     .lex()
     .chain((tokens) => new Parser(filepath, source, tokens, nodeIdGenerator).parse());
 

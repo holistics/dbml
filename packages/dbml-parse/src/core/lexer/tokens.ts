@@ -1,4 +1,5 @@
-import { Position } from '@/core/types';
+import type { Filepath } from '@/compiler/projectLayout';
+import type { Position } from '@/core/types';
 
 export enum SyntaxTokenKind {
   SPACE = '<space>',
@@ -79,6 +80,8 @@ export class SyntaxToken {
 
   value: string;
 
+  readonly filepath: Filepath;
+
   leadingTrivia: SyntaxToken[];
 
   trailingTrivia: SyntaxToken[];
@@ -103,11 +106,13 @@ export class SyntaxToken {
     endPos: Position,
     value: string,
     isInvalid: boolean,
+    filepath: Filepath,
   ) {
     this.kind = kind;
     this.startPos = startPos;
     this.endPos = endPos;
     this.value = value;
+    this.filepath = filepath;
     this.leadingTrivia = [];
     this.trailingTrivia = [];
     this.leadingInvalid = [];
@@ -124,7 +129,8 @@ export class SyntaxToken {
     endPos: Position,
     value: string,
     isInvalid: boolean,
+    filepath: Filepath,
   ) {
-    return new SyntaxToken(kind, startPos, endPos, value, isInvalid);
+    return new SyntaxToken(kind, startPos, endPos, value, isInvalid, filepath);
   }
 }

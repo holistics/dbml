@@ -48,7 +48,7 @@ export default class ChecksValidator implements ElementValidator {
     const invalidContextError = new CompileError(
       CompileErrorCode.INVALID_CHECKS_CONTEXT,
       'A Checks can only appear inside a Table or a TablePartial',
-      this.declarationNode, this.symbolFactory.filepath);
+      this.declarationNode);
     if (this.declarationNode.parent instanceof ProgramNode) return [invalidContextError];
 
     const elementKind = getElementKind(this.declarationNode.parent).unwrap_or(undefined);
@@ -59,7 +59,7 @@ export default class ChecksValidator implements ElementValidator {
 
   private validateName (nameNode?: SyntaxNode): CompileError[] {
     if (nameNode) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_NAME, 'A Checks shouldn\'t have a name', nameNode, this.symbolFactory.filepath)];
+      return [new CompileError(CompileErrorCode.UNEXPECTED_NAME, 'A Checks shouldn\'t have a name', nameNode)];
     }
 
     return [];
@@ -67,7 +67,7 @@ export default class ChecksValidator implements ElementValidator {
 
   private validateAlias (aliasNode?: SyntaxNode): CompileError[] {
     if (aliasNode) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'A Checks shouldn\'t have an alias', aliasNode, this.symbolFactory.filepath)];
+      return [new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'A Checks shouldn\'t have an alias', aliasNode)];
     }
 
     return [];
@@ -75,7 +75,7 @@ export default class ChecksValidator implements ElementValidator {
 
   private validateSettingList (settingList?: ListExpressionNode): CompileError[] {
     if (settingList) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'A Checks shouldn\'t have a setting list', settingList, this.symbolFactory.filepath)];
+      return [new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'A Checks shouldn\'t have a setting list', settingList)];
     }
 
     return [];
@@ -86,7 +86,7 @@ export default class ChecksValidator implements ElementValidator {
       return [];
     }
     if (body instanceof FunctionApplicationNode) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_SIMPLE_BODY, 'A Checks must have a complex body', body, this.symbolFactory.filepath)];
+      return [new CompileError(CompileErrorCode.UNEXPECTED_SIMPLE_BODY, 'A Checks must have a complex body', body)];
     }
 
     const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
@@ -106,7 +106,7 @@ export default class ChecksValidator implements ElementValidator {
       }
 
       if (args.length > 1 || !(args[0] instanceof FunctionExpressionNode)) {
-        errors.push(new CompileError(CompileErrorCode.INVALID_CHECKS_FIELD, 'A check field must be a function expression', field, this.symbolFactory.filepath));
+        errors.push(new CompileError(CompileErrorCode.INVALID_CHECKS_FIELD, 'A check field must be a function expression', field));
       }
 
       return errors;
@@ -123,16 +123,16 @@ export default class ChecksValidator implements ElementValidator {
       switch (name) {
         case 'name':
           if (attrs.length > 1) {
-            attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.DUPLICATE_CHECK_SETTING, `'${name}' can only appear once`, attr, this.symbolFactory.filepath)));
+            attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.DUPLICATE_CHECK_SETTING, `'${name}' can only appear once`, attr)));
           }
           attrs.forEach((attr) => {
             if (!isExpressionAQuotedString(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_CHECK_SETTING_VALUE, `'${name}' must be a string`, attr, this.symbolFactory.filepath));
+              errors.push(new CompileError(CompileErrorCode.INVALID_CHECK_SETTING_VALUE, `'${name}' must be a string`, attr));
             }
           });
           break;
         default:
-          attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.UNKNOWN_CHECK_SETTING, `Unknown check setting '${name}'`, attr, this.symbolFactory.filepath)));
+          attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.UNKNOWN_CHECK_SETTING, `Unknown check setting '${name}'`, attr)));
       }
     }
     return errors;

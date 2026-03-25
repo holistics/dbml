@@ -26,7 +26,7 @@ export class RefInterpreter implements ElementInterpreter {
   }
 
   interpret (): CompileError[] {
-    this.ref.token = getTokenPosition(this.declarationNode, this.env.filepath);
+    this.ref.token = getTokenPosition(this.declarationNode);
     this.env.ref.set(this.declarationNode, this.ref as Ref);
     const errors = [
       ...this.interpretName(this.declarationNode.name!),
@@ -41,7 +41,7 @@ export class RefInterpreter implements ElementInterpreter {
     const fragments = destructureComplexVariable(this.declarationNode.name!).unwrap_or([]);
     this.ref.name = fragments.pop() || null;
     if (fragments.length > 1) {
-      errors.push(new CompileError(CompileErrorCode.UNSUPPORTED, 'Nested schema is not supported', this.declarationNode.name!, this.env.filepath));
+      errors.push(new CompileError(CompileErrorCode.UNSUPPORTED, 'Nested schema is not supported', this.declarationNode.name!));
     }
     this.ref.schemaName = fragments.join('.') || null;
 
@@ -64,14 +64,14 @@ export class RefInterpreter implements ElementInterpreter {
     const rightSymbols = getColumnSymbolsOfRefOperand(rightExpression!, this.env.nodeToReferee);
 
     if (isSameEndpoint(leftSymbols, rightSymbols)) {
-      return [new CompileError(CompileErrorCode.SAME_ENDPOINT, 'Two endpoints are the same', field, this.env.filepath)];
+      return [new CompileError(CompileErrorCode.SAME_ENDPOINT, 'Two endpoints are the same', field)];
     }
 
     const refId = getRefId(leftSymbols, rightSymbols);
     if (this.env.refIds[refId]) {
       return [
-        new CompileError(CompileErrorCode.CIRCULAR_REF, 'References with same endpoints exist', this.declarationNode, this.env.filepath),
-        new CompileError(CompileErrorCode.CIRCULAR_REF, 'References with same endpoints exist', this.env.refIds[refId], this.env.filepath),
+        new CompileError(CompileErrorCode.CIRCULAR_REF, 'References with same endpoints exist', this.declarationNode),
+        new CompileError(CompileErrorCode.CIRCULAR_REF, 'References with same endpoints exist', this.env.refIds[refId]),
       ];
     }
 
@@ -97,12 +97,12 @@ export class RefInterpreter implements ElementInterpreter {
       {
         ...extractNamesFromRefOperand(leftExpression!, this.container as Table | undefined),
         relation: multiplicities[0],
-        token: getTokenPosition(leftExpression!, this.env.filepath),
+        token: getTokenPosition(leftExpression!),
       },
       {
         ...extractNamesFromRefOperand(rightExpression!, this.container as Table | undefined),
         relation: multiplicities[1],
-        token: getTokenPosition(rightExpression!, this.env.filepath),
+        token: getTokenPosition(rightExpression!),
       },
     ];
 

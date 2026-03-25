@@ -4,6 +4,7 @@ import { isAlphaOrUnderscore, isAlphaNumeric, isDigit } from '@/core/utils';
 import {
   SyntaxToken, SyntaxTokenKind, isOp, isTriviaToken,
 } from '@/core/lexer/tokens';
+import type { Filepath } from '@/compiler/projectLayout';
 import { Position } from '@/core/types';
 import { isInvalidToken } from '@/core/parser/utils';
 
@@ -22,12 +23,15 @@ export default class Lexer {
 
   private text: string;
 
+  private filepath: Filepath;
+
   private tokens: SyntaxToken[] = []; // list of lexed tokens, not including invalid tokens
 
   private errors: CompileError[] = []; // list of errors during lexing
 
-  constructor (text: string) {
+  constructor (text: string, filepath: Filepath) {
     this.text = text;
+    this.filepath = filepath;
   }
 
   private isAtEnd (): boolean {
@@ -89,12 +93,13 @@ export default class Lexer {
       this.current,
       this.text.substring(this.start.offset, this.current.offset),
       isInvalid,
+      this.filepath,
     );
   }
 
   lex (): Report<SyntaxToken[]> {
     this.scanTokens();
-    this.tokens.push(SyntaxToken.create(SyntaxTokenKind.EOF, this.start, this.current, '', false));
+    this.tokens.push(SyntaxToken.create(SyntaxTokenKind.EOF, this.start, this.current, '', false, this.filepath));
     this.gatherTrivia();
     this.gatherInvalid();
 
@@ -306,7 +311,7 @@ export default class Lexer {
     if (consumeStopSequence) {
       this.match(stopSequence);
     }
-    this.tokens.push(SyntaxToken.create(tokenKind, this.start, this.current, string, false));
+    this.tokens.push(SyntaxToken.create(tokenKind, this.start, this.current, string, false, this.filepath));
   }
 
   singleLineStringLiteral () {
@@ -527,7 +532,7 @@ export default class Lexer {
             this.errors.push(new CompileError(
               CompileErrorCode.INVALID_ESCAPE_SEQUENCE,
               `Invalid unicode escape sequence '\\u${hex}', only unicode escape sequences of the form '\\uHHHH' where H is a hexadecimal number are allowed`,
-              SyntaxToken.create(SyntaxTokenKind.STRING_LITERAL, prevPos, this.current, `\\u${hex}`, true),
+              SyntaxToken.create(SyntaxTokenKind.STRING_LITERAL, prevPos, this.current, `\\u${hex}`, true, this.filepath),
             ));
 
             return `\\u${hex}`;

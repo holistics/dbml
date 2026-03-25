@@ -1,4 +1,4 @@
-import { basename, dirname, extname, isAbsolute, join, normalize, relative, resolve } from 'path';
+import { basename, dirname, extname, isAbsolute, join, normalize, relative, resolve } from 'pathe';
 import type { Internable } from '@/core/internable';
 
 declare const __filepathIdBrand: unique symbol;

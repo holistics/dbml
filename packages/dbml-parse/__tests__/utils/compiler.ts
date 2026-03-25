@@ -39,11 +39,11 @@ import { Database } from '@/core/interpreter/types';
 import { DEFAULT_ENTRY } from '@/compiler/constants';
 
 export function lex (source: string): Report<SyntaxToken[]> {
-  return new Lexer(source).lex();
+  return new Lexer(source, DEFAULT_ENTRY).lex();
 }
 
 export function parse (source: string): Report<{ ast: ProgramNode; tokens: SyntaxToken[] }> {
-  return new Lexer(source).lex().chain((tokens) => new Parser(DEFAULT_ENTRY, source, tokens, new SyntaxNodeIdGenerator()).parse());
+  return new Lexer(source, DEFAULT_ENTRY).lex().chain((tokens) => new Parser(DEFAULT_ENTRY, source, tokens, new SyntaxNodeIdGenerator()).parse());
 }
 
 export function analyze (source: string): Report<AnalysisResult> {

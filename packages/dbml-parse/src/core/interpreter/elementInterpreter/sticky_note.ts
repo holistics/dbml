@@ -21,7 +21,7 @@ export class StickyNoteInterpreter implements ElementInterpreter {
   }
 
   interpret (): CompileError[] {
-    this.note.token = getTokenPosition(this.declarationNode, this.env.filepath);
+    this.note.token = getTokenPosition(this.declarationNode);
     this.env.notes.set(this.declarationNode, this.note as Note);
 
     const errors = [
@@ -54,7 +54,7 @@ export class StickyNoteInterpreter implements ElementInterpreter {
 
     if (fields.length !== 1 || subs.length > 0) {
       return [
-        new CompileError(CompileErrorCode.INVALID_NOTE, 'Invalid note syntax', body, this.env.filepath),
+        new CompileError(CompileErrorCode.INVALID_NOTE, 'Invalid note syntax', body),
       ];
     }
 

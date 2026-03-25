@@ -10,9 +10,7 @@ export default class NodeFactory {
     this.filepath = filepath;
   }
 
-  create<T extends SyntaxNode, A>(Type: { new (args: A, id: SyntaxNodeId): T }, args: A): T {
-    const node = new Type(args, this.generator.nextId());
-    node.filepath = this.filepath;
-    return node;
+  create<T extends SyntaxNode, A>(Type: { new (args: A, id: SyntaxNodeId, filepath: Filepath): T }, args: A): T {
+    return new Type(args, this.generator.nextId(), this.filepath);
   }
 }

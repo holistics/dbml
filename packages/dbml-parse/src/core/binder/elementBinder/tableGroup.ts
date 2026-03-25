@@ -67,7 +67,7 @@ export default class TableGroupBinder implements ElementBinder {
         // A tablegroup can only contain tables defined in the current file
         const boundSymbol = this.context.nodeToReferee.get(tableBindee);
         if (boundSymbol?.isExternal(this.context.filepath)) {
-          return [new CompileError(CompileErrorCode.BINDING_ERROR, 'A TableGroup can only contain locally defined tables', tableBindee, this.symbolFactory.filepath)];
+          return [new CompileError(CompileErrorCode.BINDING_ERROR, 'A TableGroup can only contain locally defined tables', tableBindee)];
         }
 
         return [];

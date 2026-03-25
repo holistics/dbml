@@ -47,7 +47,7 @@ export default class TableGroupValidator implements ElementValidator {
       return [new CompileError(
         CompileErrorCode.INVALID_TABLEGROUP_CONTEXT,
         'TableGroup must appear top-level',
-        this.declarationNode, this.symbolFactory.filepath)];
+        this.declarationNode)];
     }
     return [];
   }
@@ -57,13 +57,13 @@ export default class TableGroupValidator implements ElementValidator {
       return [new CompileError(
         CompileErrorCode.NAME_NOT_FOUND,
         'A TableGroup must have a name',
-        this.declarationNode, this.symbolFactory.filepath)];
+        this.declarationNode)];
     }
     if (!isSimpleName(nameNode)) {
       return [new CompileError(
         CompileErrorCode.INVALID_NAME,
         'A TableGroup name must be a single identifier',
-        nameNode, this.symbolFactory.filepath)];
+        nameNode)];
     }
     return [];
   }
@@ -73,7 +73,7 @@ export default class TableGroupValidator implements ElementValidator {
       return [new CompileError(
         CompileErrorCode.UNEXPECTED_ALIAS,
         'A TableGroup shouldn\'t have an alias',
-        aliasNode, this.symbolFactory.filepath)];
+        aliasNode)];
     }
 
     return [];
@@ -90,7 +90,7 @@ export default class TableGroupValidator implements ElementValidator {
       const symbolTable = registerSchemaStack(nameFragments, this.publicSymbolTable, this.symbolFactory);
       const tableId = createTableGroupSymbolIndex(tableGroupName);
       if (symbolTable.has(tableId)) {
-        return [new CompileError(CompileErrorCode.DUPLICATE_NAME, `TableGroup name '${tableGroupName}' already exists`, name!, this.symbolFactory.filepath)];
+        return [new CompileError(CompileErrorCode.DUPLICATE_NAME, `TableGroup name '${tableGroupName}' already exists`, name!)];
       }
       symbolTable.set(tableId, tableGroupSymbol);
     }
@@ -110,14 +110,14 @@ export default class TableGroupValidator implements ElementValidator {
             errors.push(...attrs.map((attr) => new CompileError(
               CompileErrorCode.DUPLICATE_TABLE_SETTING,
               '\'color\' can only appear once',
-              attr, this.symbolFactory.filepath)));
+              attr)));
           }
           attrs.forEach((attr) => {
             if (!isValidColor(attr.value)) {
               errors.push(new CompileError(
                 CompileErrorCode.INVALID_TABLE_SETTING_VALUE,
                 '\'color\' must be a color literal',
-                attr.value || attr.name!, this.symbolFactory.filepath));
+                attr.value || attr.name!));
             }
           });
           break;
@@ -126,7 +126,7 @@ export default class TableGroupValidator implements ElementValidator {
             errors.push(...attrs.map((attr) => new CompileError(
               CompileErrorCode.DUPLICATE_TABLE_SETTING,
               '\'note\' can only appear once',
-              attr, this.symbolFactory.filepath)));
+              attr)));
           }
           attrs
             .filter((attr) => !isExpressionAQuotedString(attr.value))
@@ -134,14 +134,14 @@ export default class TableGroupValidator implements ElementValidator {
               errors.push(new CompileError(
                 CompileErrorCode.INVALID_TABLE_SETTING_VALUE,
                 '\'note\' must be a string literal',
-                attr.value || attr.name!, this.symbolFactory.filepath));
+                attr.value || attr.name!));
             });
           break;
         default:
           errors.push(...attrs.map((attr) => new CompileError(
             CompileErrorCode.UNKNOWN_TABLE_SETTING,
             `Unknown '${name}' setting`,
-            attr, this.symbolFactory.filepath)));
+            attr)));
           break;
       }
     });
@@ -155,7 +155,7 @@ export default class TableGroupValidator implements ElementValidator {
       return [new CompileError(
         CompileErrorCode.UNEXPECTED_SIMPLE_BODY,
         'A TableGroup\'s body must be a block',
-        body, this.symbolFactory.filepath)];
+        body)];
     }
 
     const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
@@ -169,13 +169,13 @@ export default class TableGroupValidator implements ElementValidator {
     return fields.flatMap((field) => {
       const errors: CompileError[] = [];
       if (field.callee && !destructureComplexVariable(field.callee).isOk()) {
-        errors.push(new CompileError(CompileErrorCode.INVALID_TABLEGROUP_FIELD, 'A TableGroup field must be of the form <table> or <schema>.<table>', field.callee, this.symbolFactory.filepath));
+        errors.push(new CompileError(CompileErrorCode.INVALID_TABLEGROUP_FIELD, 'A TableGroup field must be of the form <table> or <schema>.<table>', field.callee));
       }
 
       this.registerField(field);
 
       if (field.args.length > 0) {
-        errors.push(...field.args.map((arg) => new CompileError(CompileErrorCode.INVALID_TABLEGROUP_FIELD, 'A TableGroup field should only have a single Table name', arg, this.symbolFactory.filepath)));
+        errors.push(...field.args.map((arg) => new CompileError(CompileErrorCode.INVALID_TABLEGROUP_FIELD, 'A TableGroup field should only have a single Table name', arg)));
       }
 
       return errors;
@@ -193,7 +193,7 @@ export default class TableGroupValidator implements ElementValidator {
     });
 
     const notes = subs.filter((sub) => sub.type?.value.toLowerCase() === 'note');
-    if (notes.length > 1) errors.push(...notes.map((note) => new CompileError(CompileErrorCode.NOTE_REDEFINED, 'Duplicate notes are defined', note, this.symbolFactory.filepath)));
+    if (notes.length > 1) errors.push(...notes.map((note) => new CompileError(CompileErrorCode.NOTE_REDEFINED, 'Duplicate notes are defined', note)));
     return errors;
   }
 
@@ -209,8 +209,8 @@ export default class TableGroupValidator implements ElementValidator {
       if (symbolTable.has(tableGroupFieldId)) {
         const symbol = symbolTable.get(tableGroupFieldId);
         return [
-          new CompileError(CompileErrorCode.DUPLICATE_TABLEGROUP_FIELD_NAME, `${tableGroupField} already exists in the group`, field, this.symbolFactory.filepath),
-          new CompileError(CompileErrorCode.DUPLICATE_TABLEGROUP_FIELD_NAME, `${tableGroupField} already exists in the group`, symbol!.declaration!, this.symbolFactory.filepath),
+          new CompileError(CompileErrorCode.DUPLICATE_TABLEGROUP_FIELD_NAME, `${tableGroupField} already exists in the group`, field),
+          new CompileError(CompileErrorCode.DUPLICATE_TABLEGROUP_FIELD_NAME, `${tableGroupField} already exists in the group`, symbol!.declaration!),
         ];
       }
       symbolTable.set(tableGroupFieldId, tableGroupFieldSymbol);

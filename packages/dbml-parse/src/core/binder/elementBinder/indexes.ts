@@ -82,7 +82,7 @@ export default class IndexesBinder implements ElementBinder {
         const columnIndex = createColumnSymbolIndex(columnName);
         const column = ownerTableSymbolTable.get(columnIndex);
         if (!column) {
-          return new CompileError(CompileErrorCode.BINDING_ERROR, `No column named '${columnName}' inside Table '${ownerTableName}'`, bindee, this.symbolFactory.filepath);
+          return new CompileError(CompileErrorCode.BINDING_ERROR, `No column named '${columnName}' inside Table '${ownerTableName}'`, bindee);
         }
         this.context.nodeToReferee.set(bindee, column);
         addSymbolReference(this.context.symbolToReferences, column, bindee);

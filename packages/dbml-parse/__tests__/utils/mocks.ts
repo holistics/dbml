@@ -114,8 +114,8 @@ export class MockTextModel {
   }
 }
 
-export function createMockTextModel (content: string, uri: Filepath = DEFAULT_ENTRY): MockTextModel & { [K: string]: any } {
-  return new MockTextModel(content, uri) as any;
+export function createMockTextModel (content: string, uri: Filepath = DEFAULT_ENTRY): any {
+  return new MockTextModel(content, uri);
 }
 
 // Extract source text from a range in the program

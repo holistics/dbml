@@ -23,7 +23,7 @@ export class TableGroupInterpreter implements ElementInterpreter {
 
   interpret (): CompileError[] {
     const errors: CompileError[] = [];
-    this.tableGroup.token = getTokenPosition(this.declarationNode, this.env.filepath);
+    this.tableGroup.token = getTokenPosition(this.declarationNode);
     this.env.tableGroups.set(this.declarationNode, this.tableGroup as TableGroup);
 
     errors.push(
@@ -42,7 +42,7 @@ export class TableGroupInterpreter implements ElementInterpreter {
     if (schemaName.length >= 2) {
       this.tableGroup.name = name;
       this.tableGroup.schemaName = schemaName.join('.');
-      errors.push(new CompileError(CompileErrorCode.UNSUPPORTED, 'Nested schema is not supported', this.declarationNode.name!, this.env.filepath));
+      errors.push(new CompileError(CompileErrorCode.UNSUPPORTED, 'Nested schema is not supported', this.declarationNode.name!));
     }
     this.tableGroup.name = name;
     this.tableGroup.schemaName = schemaName[0] || null;
@@ -70,7 +70,7 @@ export class TableGroupInterpreter implements ElementInterpreter {
             )
               .map(normalizeNoteContent)
               .unwrap(),
-            token: getTokenPosition(sub, this.env.filepath),
+            token: getTokenPosition(sub),
           };
           break;
 
@@ -88,7 +88,7 @@ export class TableGroupInterpreter implements ElementInterpreter {
       const fragments = destructureComplexVariable((field as FunctionApplicationNode).callee).unwrap();
 
       if (fragments.length > 2) {
-        errors.push(new CompileError(CompileErrorCode.UNSUPPORTED, 'Nested schema is not supported', field, this.env.filepath));
+        errors.push(new CompileError(CompileErrorCode.UNSUPPORTED, 'Nested schema is not supported', field));
       }
 
       const lastNode = destructureMemberAccessExpression((field as FunctionApplicationNode).callee!).unwrap().pop()!;
@@ -97,7 +97,7 @@ export class TableGroupInterpreter implements ElementInterpreter {
         const tableGroup = this.env.tableOwnerGroup[tableid];
         const { schemaName, name } = this.env.tableGroups.get(tableGroup)!;
         const groupName = schemaName ? `${schemaName}.${name}` : name;
-        errors.push(new CompileError(CompileErrorCode.TABLE_REAPPEAR_IN_TABLEGROUP, `Table "${fragments.join('.')}" already appears in group "${groupName}"`, field, this.env.filepath));
+        errors.push(new CompileError(CompileErrorCode.TABLE_REAPPEAR_IN_TABLEGROUP, `Table "${fragments.join('.')}" already appears in group "${groupName}"`, field));
       } else {
         this.env.tableOwnerGroup[tableid] = this.declarationNode;
       }
@@ -105,7 +105,7 @@ export class TableGroupInterpreter implements ElementInterpreter {
       return {
         name: fragments.pop()!,
         schemaName: fragments.join('.'),
-        token: getTokenPosition(field, this.env.filepath),
+        token: getTokenPosition(field),
       };
     });
 
@@ -122,7 +122,7 @@ export class TableGroupInterpreter implements ElementInterpreter {
     const [noteNode] = settingMap.note || [];
     this.tableGroup.note = noteNode && {
       value: extractQuotedStringToken(noteNode?.value).map(normalizeNoteContent).unwrap(),
-      token: getTokenPosition(noteNode, this.env.filepath),
+      token: getTokenPosition(noteNode),
     };
 
     return [];

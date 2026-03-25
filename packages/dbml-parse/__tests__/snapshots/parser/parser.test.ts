@@ -12,7 +12,7 @@ describe('[snapshot] parser', () => {
 
   testNames.forEach((testName) => {
     const program = readFileSync(path.resolve(__dirname, `./input/${testName}.in.dbml`), 'utf-8');
-    const lexer = new Lexer(program);
+    const lexer = new Lexer(program, DEFAULT_ENTRY);
     const nodeIdGenerator = new SyntaxNodeIdGenerator();
     const output = JSON.stringify(
       lexer.lex().chain((tokens) => {

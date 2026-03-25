@@ -22,7 +22,7 @@ describe('[snapshot] interpreter (NaN cases)', () => {
     const symbolIdGenerator = new NodeSymbolIdGenerator();
     const nodeIdGenerator = new SyntaxNodeIdGenerator();
     let output: any;
-    const report = new Lexer(program)
+    const report = new Lexer(program, DEFAULT_ENTRY)
       .lex()
       .chain((tokens) => {
         return new Parser(DEFAULT_ENTRY, program, tokens, nodeIdGenerator).parse();
