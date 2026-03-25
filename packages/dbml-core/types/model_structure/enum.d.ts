@@ -57,7 +57,7 @@ declare class Enum extends Element {
 }
 export interface NormalizedEnum {
     id: number;
-    token: Token;
+    filepath: string;
     name: string;
     note: string | null;
     valueIds: number[];

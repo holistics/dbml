@@ -66,7 +66,7 @@ declare class Index extends Element {
 }
 export interface NormalizedIndex {
     id: number;
-    token: Token;
+    filepath: string;
     name: string | null;
     type: any;
     unique: boolean;

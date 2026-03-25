@@ -289,7 +289,7 @@ declare class Database extends Element {
 }
 export interface NormalizedDatabase {
     id: number;
-    token: Token;
+    filepath: string;
     hasDefaultSchema: boolean;
     note: string | null;
     databaseType: string;

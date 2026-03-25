@@ -31,7 +31,7 @@ declare class EnumValue extends Element {
 }
 export interface NormalizedEnumValue {
     id: number;
-    token: Token;
+    filepath: string;
     name: string;
     note: string | null;
     enumId: number;

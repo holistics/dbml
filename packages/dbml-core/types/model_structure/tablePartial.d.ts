@@ -88,7 +88,7 @@ declare class TablePartial extends Element {
 
 export interface NormalizedTablePartial {
     id: number;
-    token: Token;
+    filepath: string;
     name: string;
     note: string;
     headerColor: string;

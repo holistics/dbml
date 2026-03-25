@@ -176,7 +176,7 @@ declare class Schema extends Element {
 }
 export interface NormalizedSchema {
     id: number;
-    token: Token;
+    filepath: string;
     name: string;
     note: string | null;
     alias: string;

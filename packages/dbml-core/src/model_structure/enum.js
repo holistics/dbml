@@ -98,7 +98,7 @@ class Enum extends Element {
     model.enums[this.id] = {
       id: this.id,
       ...this.shallowExport(),
-      token: this.token,
+      filepath: this.token?.filepath?.toString(),
       ...this.exportChildIds(),
       ...this.exportParentIds(),
     };

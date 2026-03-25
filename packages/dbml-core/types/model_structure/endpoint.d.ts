@@ -53,7 +53,7 @@ declare class Endpoint extends Element {
 }
 export interface NormalizedEndpoint {
     id: number;
-    token: Token;
+    filepath: string;
     schemaName: string | null;
     tableName: string;
     fieldNames: string[];

@@ -28,7 +28,7 @@ declare class IndexColumn extends Element {
 }
 export interface NormalizedIndexColumn {
     id: number;
-    token: Token;
+    filepath: string;
     type: string;
     value: string;
     indexId: number;

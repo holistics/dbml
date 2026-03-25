@@ -57,7 +57,7 @@ declare class TableGroup extends Element {
 }
 export interface NormalizedTableGroup {
     id: number;
-    token: Token;
+    filepath: string;
     name: string;
     note: string | null;
     color: string;

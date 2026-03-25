@@ -44,7 +44,7 @@ class EnumValue extends Element {
     model.enumValues[this.id] = {
       id: this.id,
       ...this.shallowExport(),
-      token: this.token,
+      filepath: this.token?.filepath?.toString(),
       ...this.exportParentIds(),
     };
   }
