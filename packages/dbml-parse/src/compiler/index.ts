@@ -1,4 +1,4 @@
-import { SyntaxNode } from '@/core/parser/nodes';
+import type { SyntaxNode } from '@/core/parser/nodes';
 import type { NodeSymbol } from '@/core/analyzer/symbol/symbols';
 import { DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLReferencesProvider, DBMLDiagnosticsProvider } from '@/services/index';
 import { ast, errors, warnings, tokens, rawDb, publicSymbolTable, symbolToReferences } from './queries/parse';
@@ -68,9 +68,9 @@ export default class Compiler {
     return this.analyzeFile().getValue().nodeToReferee.get(node);
   }
 
-  nodeReferences (nodeOrSymbol: SyntaxNode | NodeSymbol): SyntaxNode[] {
+  nodeReferences (node: SyntaxNode): SyntaxNode[] {
     const { nodeToSymbol, symbolToReferences } = this.analyzeFile().getValue();
-    const symbol = nodeOrSymbol instanceof SyntaxNode ? nodeToSymbol.get(nodeOrSymbol) : nodeOrSymbol;
+    const symbol = nodeToSymbol.get(node);
     if (!symbol) return [];
     return symbolToReferences.get(symbol) ?? [];
   }

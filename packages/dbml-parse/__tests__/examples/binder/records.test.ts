@@ -28,18 +28,18 @@ describe('[example] records binder', () => {
     const tableSymbol = schemaSymbol.symbolTable.get('Table:users') as TableSymbol;
 
     // Table should have exactly 1 reference from records
-    expect(compiler.nodeReferences(tableSymbol).length).toBe(1);
-    expect(compiler.nodeReferee(compiler.nodeReferences(tableSymbol)[0])).toBe(tableSymbol);
+    expect(compiler.nodeReferences(tableSymbol.declaration!).length).toBe(1);
+    expect(compiler.nodeReferee(compiler.nodeReferences(tableSymbol.declaration!)[0])).toBe(tableSymbol);
 
     const idColumn = tableSymbol.symbolTable.get('Column:id') as ColumnSymbol;
     const nameColumn = tableSymbol.symbolTable.get('Column:name') as ColumnSymbol;
 
     // Each column should have exactly 1 reference from records column list
-    expect(compiler.nodeReferences(idColumn).length).toBe(1);
-    expect(compiler.nodeReferee(compiler.nodeReferences(idColumn)[0])).toBe(idColumn);
+    expect(compiler.nodeReferences(idColumn.declaration!).length).toBe(1);
+    expect(compiler.nodeReferee(compiler.nodeReferences(idColumn.declaration!)[0])).toBe(idColumn);
 
-    expect(compiler.nodeReferences(nameColumn).length).toBe(1);
-    expect(compiler.nodeReferee(compiler.nodeReferences(nameColumn)[0])).toBe(nameColumn);
+    expect(compiler.nodeReferences(nameColumn.declaration!).length).toBe(1);
+    expect(compiler.nodeReferee(compiler.nodeReferences(nameColumn.declaration!)[0])).toBe(nameColumn);
   });
 
   test('should bind records with schema-qualified table', () => {
@@ -61,20 +61,20 @@ describe('[example] records binder', () => {
     const tableSymbol = authSchema.symbolTable.get('Table:users') as TableSymbol;
 
     // Schema should have reference from records
-    expect(compiler.nodeReferences(authSchema).length).toBe(1);
-    expect(compiler.nodeReferee(compiler.nodeReferences(authSchema)[0])).toBe(authSchema);
-
+    const authSchemaRefs = compiler.analyzeFile().getValue().symbolToReferences.get(authSchema) ?? [];
+    expect(authSchemaRefs.length).toBe(1);
+    expect(compiler.nodeReferee(authSchemaRefs[0])).toBe(authSchema);
     // Table should have exactly 1 reference from records
-    expect(compiler.nodeReferences(tableSymbol).length).toBe(1);
-    expect(compiler.nodeReferee(compiler.nodeReferences(tableSymbol)[0])).toBe(tableSymbol);
+    expect(compiler.nodeReferences(tableSymbol.declaration!).length).toBe(1);
+    expect(compiler.nodeReferee(compiler.nodeReferences(tableSymbol.declaration!)[0])).toBe(tableSymbol);
 
     // Columns should have references
     const idColumn = tableSymbol.symbolTable.get('Column:id') as ColumnSymbol;
     const emailColumn = tableSymbol.symbolTable.get('Column:email') as ColumnSymbol;
 
-    expect(compiler.nodeReferences(idColumn).length).toBe(1);
+    expect(compiler.nodeReferences(idColumn.declaration!).length).toBe(1);
 
-    expect(compiler.nodeReferences(emailColumn).length).toBe(1);
+    expect(compiler.nodeReferences(emailColumn.declaration!).length).toBe(1);
   });
 
   test('should detect unknown table in records', () => {
@@ -127,15 +127,15 @@ describe('[example] records binder', () => {
     const tableSymbol = schemaSymbol.symbolTable.get('Table:users') as TableSymbol;
 
     // Table should have exactly 2 references from both records elements
-    expect(compiler.nodeReferences(tableSymbol).length).toBe(2);
+    expect(compiler.nodeReferences(tableSymbol.declaration!).length).toBe(2);
 
     // Each column should have exactly 2 references
     const idColumn = tableSymbol.symbolTable.get('Column:id') as ColumnSymbol;
     const nameColumn = tableSymbol.symbolTable.get('Column:name') as ColumnSymbol;
 
-    expect(compiler.nodeReferences(idColumn).length).toBe(2);
+    expect(compiler.nodeReferences(idColumn.declaration!).length).toBe(2);
 
-    expect(compiler.nodeReferences(nameColumn).length).toBe(2);
+    expect(compiler.nodeReferences(nameColumn.declaration!).length).toBe(2);
   });
 
   test('should bind records with enum column type', () => {
@@ -158,11 +158,11 @@ describe('[example] records binder', () => {
     const activeField = enumSymbol.symbolTable.get('Enum field:active') as EnumFieldSymbol;
 
     // Enum should have 2 references: 1 from column type, 1 from records data
-    expect(compiler.nodeReferences(enumSymbol).length).toBe(2);
+    expect(compiler.nodeReferences(enumSymbol.declaration!).length).toBe(2);
 
     // Enum field should have exactly 1 reference from records value
-    expect(compiler.nodeReferences(activeField).length).toBe(1);
-    expect(compiler.nodeReferee(compiler.nodeReferences(activeField)[0])).toBe(activeField);
+    expect(compiler.nodeReferences(activeField.declaration!).length).toBe(1);
+    expect(compiler.nodeReferee(compiler.nodeReferences(activeField.declaration!)[0])).toBe(activeField);
   });
 
   test('should allow forward reference to table in records', () => {
@@ -183,13 +183,13 @@ describe('[example] records binder', () => {
     const tableSymbol = schemaSymbol.symbolTable.get('Table:users') as TableSymbol;
 
     // Verify forward reference is properly bound
-    expect(compiler.nodeReferences(tableSymbol).length).toBe(1);
+    expect(compiler.nodeReferences(tableSymbol.declaration!).length).toBe(1);
 
     const idColumn = tableSymbol.symbolTable.get('Column:id') as ColumnSymbol;
     const nameColumn = tableSymbol.symbolTable.get('Column:name') as ColumnSymbol;
 
-    expect(compiler.nodeReferences(idColumn).length).toBe(1);
-    expect(compiler.nodeReferences(nameColumn).length).toBe(1);
+    expect(compiler.nodeReferences(idColumn.declaration!).length).toBe(1);
+    expect(compiler.nodeReferences(nameColumn.declaration!).length).toBe(1);
   });
 
   test('should bind schema-qualified enum values in records', () => {
@@ -213,16 +213,16 @@ describe('[example] records binder', () => {
     const enumSymbol = authSchema.symbolTable.get('Enum:role') as EnumSymbol;
 
     // Enum should have 3 references: 1 from column type, 2 from records data
-    expect(compiler.nodeReferences(enumSymbol).length).toBe(3);
+    expect(compiler.nodeReferences(enumSymbol.declaration!).length).toBe(3);
 
     const adminField = enumSymbol.symbolTable.get('Enum field:admin') as EnumFieldSymbol;
     const userField = enumSymbol.symbolTable.get('Enum field:user') as EnumFieldSymbol;
 
-    expect(compiler.nodeReferences(adminField).length).toBe(1);
-    expect(compiler.nodeReferee(compiler.nodeReferences(adminField)[0])).toBe(adminField);
+    expect(compiler.nodeReferences(adminField.declaration!).length).toBe(1);
+    expect(compiler.nodeReferee(compiler.nodeReferences(adminField.declaration!)[0])).toBe(adminField);
 
-    expect(compiler.nodeReferences(userField).length).toBe(1);
-    expect(compiler.nodeReferee(compiler.nodeReferences(userField)[0])).toBe(userField);
+    expect(compiler.nodeReferences(userField.declaration!).length).toBe(1);
+    expect(compiler.nodeReferee(compiler.nodeReferences(userField.declaration!)[0])).toBe(userField);
   });
 
   test('should detect unknown enum in records data', () => {
@@ -286,13 +286,13 @@ describe('[example] records binder', () => {
     const completedField = enumSymbol.symbolTable.get('Enum field:completed') as EnumFieldSymbol;
 
     // pending is referenced twice
-    expect(compiler.nodeReferences(pendingField).length).toBe(2);
+    expect(compiler.nodeReferences(pendingField.declaration!).length).toBe(2);
 
     // active is referenced once
-    expect(compiler.nodeReferences(activeField).length).toBe(1);
+    expect(compiler.nodeReferences(activeField.declaration!).length).toBe(1);
 
     // completed is referenced once
-    expect(compiler.nodeReferences(completedField).length).toBe(1);
+    expect(compiler.nodeReferences(completedField.declaration!).length).toBe(1);
   });
 
   test('should error when there are duplicate columns in top-level records', () => {

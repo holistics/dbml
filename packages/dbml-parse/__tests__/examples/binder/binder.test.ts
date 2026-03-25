@@ -21,7 +21,7 @@ describe('[example] binder', () => {
       // Verify symbol properties
       expect(tableSymbol).toBeInstanceOf(TableSymbol);
       expect(tableSymbol.declaration).toBe(tableNode);
-      expect(compiler.nodeReferences(tableSymbol)).toEqual([]);
+      expect(compiler.nodeReferences(tableSymbol.declaration!)).toEqual([]);
 
       // Verify symbolTable contains column
       expect(tableSymbol.symbolTable.get('Column:id')).toBeInstanceOf(ColumnSymbol);
@@ -31,7 +31,7 @@ describe('[example] binder', () => {
       const tableBody = tableNode.body as BlockExpressionNode;
       const columnNode = tableBody.body[0];
       expect(columnSymbol.declaration).toBe(columnNode);
-      expect(compiler.nodeReferences(columnSymbol)).toEqual([]);
+      expect(compiler.nodeReferences(columnSymbol.declaration!)).toEqual([]);
 
       // Verify public schema symbol table (publicSymbolTable concept)
       const schemaSymbol = compiler.resolvedSymbol(ast) as SchemaSymbol;
@@ -142,9 +142,9 @@ describe('[example] binder', () => {
       const elements = ast.body.filter((n): n is ElementDeclarationNode => n.kind === SyntaxNodeKind.ELEMENT_DECLARATION);
       const usersSymbol = compiler.resolvedSymbol(elements[0]) as TableSymbol;
 
-      expect(compiler.nodeReferences(usersSymbol).length).toBe(3);
+      expect(compiler.nodeReferences(usersSymbol.declaration!).length).toBe(3);
       // 1 from TableGroup, 2 from Ref (U.id appears twice)
-      compiler.nodeReferences(usersSymbol).forEach((refNode) => {
+      compiler.nodeReferences(usersSymbol.declaration!).forEach((refNode) => {
         expect(refNode.kind).toBe(SyntaxNodeKind.PRIMARY_EXPRESSION);
         expect(compiler.nodeReferee(refNode)).toBe(usersSymbol);
       });
@@ -165,9 +165,9 @@ describe('[example] binder', () => {
       const elements = ast.body.filter((n): n is ElementDeclarationNode => n.kind === SyntaxNodeKind.ELEMENT_DECLARATION);
       const employeesSymbol = compiler.resolvedSymbol(elements[0]) as TableSymbol;
 
-      expect(compiler.nodeReferences(employeesSymbol).length).toBe(1);
-      expect(compiler.nodeReferences(employeesSymbol)[0].kind).toBe(SyntaxNodeKind.PRIMARY_EXPRESSION);
-      expect(compiler.nodeReferee(compiler.nodeReferences(employeesSymbol)[0])).toBe(employeesSymbol);
+      expect(compiler.nodeReferences(employeesSymbol.declaration!).length).toBe(1);
+      expect(compiler.nodeReferences(employeesSymbol.declaration!)[0].kind).toBe(SyntaxNodeKind.PRIMARY_EXPRESSION);
+      expect(compiler.nodeReferee(compiler.nodeReferences(employeesSymbol.declaration!)[0])).toBe(employeesSymbol);
     });
 
     test('should handle deeply nested schema names and quoted identifiers', () => {
@@ -199,7 +199,7 @@ describe('[example] binder', () => {
 
       expect(columnSymbol).toBeInstanceOf(ColumnSymbol);
       expect(columnSymbol.declaration).toBe(columnNode);
-      expect(compiler.nodeReferences(columnSymbol)).toEqual([]);
+      expect(compiler.nodeReferences(columnSymbol.declaration!)).toEqual([]);
 
       // Verify column is in table's symbol table
       const tableSymbol = compiler.resolvedSymbol(tableElement) as TableSymbol;
@@ -258,9 +258,9 @@ describe('[example] binder', () => {
       const idColumn = tableBody.body[0] as ElementDeclarationNode;
       const columnSymbol = compiler.resolvedSymbol(idColumn) as ColumnSymbol;
 
-      expect(compiler.nodeReferences(columnSymbol).length).toBe(1);
-      expect(compiler.nodeReferences(columnSymbol)[0].kind).toBe(SyntaxNodeKind.PRIMARY_EXPRESSION);
-      expect(compiler.nodeReferee(compiler.nodeReferences(columnSymbol)[0])).toBe(columnSymbol);
+      expect(compiler.nodeReferences(columnSymbol.declaration!).length).toBe(1);
+      expect(compiler.nodeReferences(columnSymbol.declaration!)[0].kind).toBe(SyntaxNodeKind.PRIMARY_EXPRESSION);
+      expect(compiler.nodeReferee(compiler.nodeReferences(columnSymbol.declaration!)[0])).toBe(columnSymbol);
     });
 
     test('should maintain correct reference counts after multiple refs', () => {
@@ -279,14 +279,14 @@ describe('[example] binder', () => {
       const idColumn = tableBody.body[0] as ElementDeclarationNode;
       const columnSymbol = compiler.resolvedSymbol(idColumn) as ColumnSymbol;
 
-      expect(compiler.nodeReferences(usersSymbol).length).toBe(3);
-      compiler.nodeReferences(usersSymbol).forEach((refNode) => {
+      expect(compiler.nodeReferences(usersSymbol.declaration!).length).toBe(3);
+      compiler.nodeReferences(usersSymbol.declaration!).forEach((refNode) => {
         expect(refNode.kind).toBe(SyntaxNodeKind.PRIMARY_EXPRESSION);
         expect(compiler.nodeReferee(refNode)).toBe(usersSymbol);
       });
 
-      expect(compiler.nodeReferences(columnSymbol).length).toBe(3);
-      compiler.nodeReferences(columnSymbol).forEach((refNode) => {
+      expect(compiler.nodeReferences(columnSymbol.declaration!).length).toBe(3);
+      compiler.nodeReferences(columnSymbol.declaration!).forEach((refNode) => {
         expect(refNode.kind).toBe(SyntaxNodeKind.PRIMARY_EXPRESSION);
         expect(compiler.nodeReferee(refNode)).toBe(columnSymbol);
       });
@@ -372,7 +372,7 @@ describe('[example] binder', () => {
       expect(enumSymbol.declaration).toBe(enumNode);
       expect(enumSymbol.symbolTable.get('Enum field:active')).toBeInstanceOf(EnumFieldSymbol);
       expect(enumSymbol.symbolTable.get('Enum field:inactive')).toBeInstanceOf(EnumFieldSymbol);
-      expect(compiler.nodeReferences(enumSymbol)).toEqual([]);
+      expect(compiler.nodeReferences(enumSymbol.declaration!)).toEqual([]);
 
       // Verify enum is in public schema symbol table
       const schemaSymbol = compiler.resolvedSymbol(ast) as SchemaSymbol;
@@ -404,7 +404,7 @@ describe('[example] binder', () => {
         const fieldSymbol = compiler.resolvedSymbol(field as ElementDeclarationNode) as EnumFieldSymbol;
         expect(fieldSymbol).toBeInstanceOf(EnumFieldSymbol);
         expect(fieldSymbol.declaration).toBe(field);
-        expect(compiler.nodeReferences(fieldSymbol)).toEqual([]);
+        expect(compiler.nodeReferences(fieldSymbol.declaration!)).toEqual([]);
       });
     });
 
@@ -524,10 +524,10 @@ describe('[example] binder', () => {
       const pendingField = enumSymbol.symbolTable.get('Enum field:pending') as EnumFieldSymbol;
 
       // Enum should have 2 references: column type + default value
-      expect(compiler.nodeReferences(enumSymbol).length).toBe(2);
+      expect(compiler.nodeReferences(enumSymbol.declaration!).length).toBe(2);
       // Enum field should have 1 reference from default value
-      expect(compiler.nodeReferences(pendingField).length).toBe(1);
-      expect(compiler.nodeReferee(compiler.nodeReferences(pendingField)[0])).toBe(pendingField);
+      expect(compiler.nodeReferences(pendingField.declaration!).length).toBe(1);
+      expect(compiler.nodeReferee(compiler.nodeReferences(pendingField.declaration!)[0])).toBe(pendingField);
     });
 
     test('should bind schema-qualified enum field references in default values', () => {
@@ -550,9 +550,9 @@ describe('[example] binder', () => {
       const enumSymbol = typesSchema.symbolTable.get('Enum:status') as EnumSymbol;
       const activeField = enumSymbol.symbolTable.get('Enum field:active') as EnumFieldSymbol;
 
-      expect(compiler.nodeReferences(enumSymbol).length).toBe(2);
-      expect(compiler.nodeReferences(activeField).length).toBe(1);
-      expect(compiler.nodeReferee(compiler.nodeReferences(activeField)[0])).toBe(activeField);
+      expect(compiler.nodeReferences(enumSymbol.declaration!).length).toBe(2);
+      expect(compiler.nodeReferences(activeField.declaration!).length).toBe(1);
+      expect(compiler.nodeReferee(compiler.nodeReferences(activeField.declaration!)[0])).toBe(activeField);
     });
 
     test('should detect invalid enum field in default value', () => {
@@ -684,9 +684,9 @@ describe('[example] binder', () => {
       const valueField = enumSymbol.symbolTable.get('Enum field:value') as EnumFieldSymbol;
 
       // Enum should have 2 references: column type + default value
-      expect(compiler.nodeReferences(enumSymbol).length).toBe(2);
+      expect(compiler.nodeReferences(enumSymbol.declaration!).length).toBe(2);
       // Enum field should have 1 reference from default value
-      expect(compiler.nodeReferences(valueField).length).toBe(1);
+      expect(compiler.nodeReferences(valueField.declaration!).length).toBe(1);
     });
 
     test('should bind quoted string with field as enum access', () => {
@@ -719,13 +719,13 @@ describe('[example] binder', () => {
       const usersSymbol = compiler.resolvedSymbol(elements[0]) as TableSymbol;
       const postsSymbol = compiler.resolvedSymbol(elements[1]) as TableSymbol;
 
-      expect(compiler.nodeReferences(usersSymbol).length).toBe(1);
-      expect(compiler.nodeReferences(usersSymbol)[0].kind).toBe(SyntaxNodeKind.PRIMARY_EXPRESSION);
-      expect(compiler.nodeReferee(compiler.nodeReferences(usersSymbol)[0])).toBe(usersSymbol);
+      expect(compiler.nodeReferences(usersSymbol.declaration!).length).toBe(1);
+      expect(compiler.nodeReferences(usersSymbol.declaration!)[0].kind).toBe(SyntaxNodeKind.PRIMARY_EXPRESSION);
+      expect(compiler.nodeReferee(compiler.nodeReferences(usersSymbol.declaration!)[0])).toBe(usersSymbol);
 
-      expect(compiler.nodeReferences(postsSymbol).length).toBe(1);
-      expect(compiler.nodeReferences(postsSymbol)[0].kind).toBe(SyntaxNodeKind.PRIMARY_EXPRESSION);
-      expect(compiler.nodeReferee(compiler.nodeReferences(postsSymbol)[0])).toBe(postsSymbol);
+      expect(compiler.nodeReferences(postsSymbol.declaration!).length).toBe(1);
+      expect(compiler.nodeReferences(postsSymbol.declaration!)[0].kind).toBe(SyntaxNodeKind.PRIMARY_EXPRESSION);
+      expect(compiler.nodeReferee(compiler.nodeReferences(postsSymbol.declaration!)[0])).toBe(postsSymbol);
     });
 
     test('should bind inline refs', () => {
@@ -745,13 +745,13 @@ describe('[example] binder', () => {
       const idColumn = tableBody.body[0] as ElementDeclarationNode;
       const columnSymbol = compiler.resolvedSymbol(idColumn) as ColumnSymbol;
 
-      expect(compiler.nodeReferences(usersSymbol).length).toBe(1);
-      expect(compiler.nodeReferences(usersSymbol)[0].kind).toBe(SyntaxNodeKind.PRIMARY_EXPRESSION);
-      expect(compiler.nodeReferee(compiler.nodeReferences(usersSymbol)[0])).toBe(usersSymbol);
+      expect(compiler.nodeReferences(usersSymbol.declaration!).length).toBe(1);
+      expect(compiler.nodeReferences(usersSymbol.declaration!)[0].kind).toBe(SyntaxNodeKind.PRIMARY_EXPRESSION);
+      expect(compiler.nodeReferee(compiler.nodeReferences(usersSymbol.declaration!)[0])).toBe(usersSymbol);
 
-      expect(compiler.nodeReferences(columnSymbol).length).toBe(1);
-      expect(compiler.nodeReferences(columnSymbol)[0].kind).toBe(SyntaxNodeKind.PRIMARY_EXPRESSION);
-      expect(compiler.nodeReferee(compiler.nodeReferences(columnSymbol)[0])).toBe(columnSymbol);
+      expect(compiler.nodeReferences(columnSymbol.declaration!).length).toBe(1);
+      expect(compiler.nodeReferences(columnSymbol.declaration!)[0].kind).toBe(SyntaxNodeKind.PRIMARY_EXPRESSION);
+      expect(compiler.nodeReferee(compiler.nodeReferences(columnSymbol.declaration!)[0])).toBe(columnSymbol);
     });
 
     test('should detect unknown table and column references', () => {
@@ -785,8 +785,8 @@ describe('[example] binder', () => {
       const elements = ast.body.filter((n): n is ElementDeclarationNode => n.kind === SyntaxNodeKind.ELEMENT_DECLARATION);
       const usersSymbol = compiler.resolvedSymbol(elements[0]) as TableSymbol;
 
-      expect(compiler.nodeReferences(usersSymbol).length).toBe(3);
-      compiler.nodeReferences(usersSymbol).forEach((refNode) => {
+      expect(compiler.nodeReferences(usersSymbol.declaration!).length).toBe(3);
+      compiler.nodeReferences(usersSymbol.declaration!).forEach((refNode) => {
         expect(refNode.kind).toBe(SyntaxNodeKind.PRIMARY_EXPRESSION);
         expect(compiler.nodeReferee(refNode)).toBe(usersSymbol);
       });
@@ -811,13 +811,13 @@ describe('[example] binder', () => {
       const usersSymbol = schemaSymbol.symbolTable.get('Table:users') as TableSymbol;
       const postsSymbol = schemaSymbol.symbolTable.get('Table:posts') as TableSymbol;
 
-      expect(compiler.nodeReferences(usersSymbol).length).toBe(1);
-      expect(compiler.nodeReferences(usersSymbol)[0].kind).toBe(SyntaxNodeKind.PRIMARY_EXPRESSION);
-      expect(compiler.nodeReferee(compiler.nodeReferences(usersSymbol)[0])).toBe(usersSymbol);
+      expect(compiler.nodeReferences(usersSymbol.declaration!).length).toBe(1);
+      expect(compiler.nodeReferences(usersSymbol.declaration!)[0].kind).toBe(SyntaxNodeKind.PRIMARY_EXPRESSION);
+      expect(compiler.nodeReferee(compiler.nodeReferences(usersSymbol.declaration!)[0])).toBe(usersSymbol);
 
-      expect(compiler.nodeReferences(postsSymbol).length).toBe(1);
-      expect(compiler.nodeReferences(postsSymbol)[0].kind).toBe(SyntaxNodeKind.PRIMARY_EXPRESSION);
-      expect(compiler.nodeReferee(compiler.nodeReferences(postsSymbol)[0])).toBe(postsSymbol);
+      expect(compiler.nodeReferences(postsSymbol.declaration!).length).toBe(1);
+      expect(compiler.nodeReferences(postsSymbol.declaration!)[0].kind).toBe(SyntaxNodeKind.PRIMARY_EXPRESSION);
+      expect(compiler.nodeReferee(compiler.nodeReferences(postsSymbol.declaration!)[0])).toBe(postsSymbol);
     });
 
     test('should allow forward reference to table', () => {
@@ -847,8 +847,8 @@ describe('[example] binder', () => {
       const elements = ast.body.filter((n): n is ElementDeclarationNode => n.kind === SyntaxNodeKind.ELEMENT_DECLARATION);
       const usersSymbol = compiler.resolvedSymbol(elements[0]) as TableSymbol;
 
-      expect(compiler.nodeReferences(usersSymbol).length).toBe(4);
-      compiler.nodeReferences(usersSymbol).forEach((refNode) => {
+      expect(compiler.nodeReferences(usersSymbol.declaration!).length).toBe(4);
+      compiler.nodeReferences(usersSymbol.declaration!).forEach((refNode) => {
         expect(refNode.kind).toBe(SyntaxNodeKind.PRIMARY_EXPRESSION);
         expect(compiler.nodeReferee(refNode)).toBe(usersSymbol);
       });
@@ -876,8 +876,8 @@ describe('[example] binder', () => {
       const ordersSymbol = schemaSymbol.symbolTable.get('Table:orders') as TableSymbol;
 
       // Both tables should have 2 references (table name + tuple access)
-      expect(compiler.nodeReferences(merchantsSymbol).length).toBe(2);
-      expect(compiler.nodeReferences(ordersSymbol).length).toBe(2);
+      expect(compiler.nodeReferences(merchantsSymbol.declaration!).length).toBe(2);
+      expect(compiler.nodeReferences(ordersSymbol.declaration!).length).toBe(2);
 
       // Check column references
       const idColumn = merchantsSymbol.symbolTable.get('Column:id') as ColumnSymbol;
@@ -885,14 +885,14 @@ describe('[example] binder', () => {
       const merchantIdColumn = ordersSymbol.symbolTable.get('Column:merchant_id') as ColumnSymbol;
       const countryColumn = ordersSymbol.symbolTable.get('Column:country') as ColumnSymbol;
 
-      expect(compiler.nodeReferences(idColumn).length).toBe(1);
-      expect(compiler.nodeReferences(countryCodeColumn).length).toBe(1);
-      expect(compiler.nodeReferences(merchantIdColumn).length).toBe(1);
-      expect(compiler.nodeReferences(countryColumn).length).toBe(1);
+      expect(compiler.nodeReferences(idColumn.declaration!).length).toBe(1);
+      expect(compiler.nodeReferences(countryCodeColumn.declaration!).length).toBe(1);
+      expect(compiler.nodeReferences(merchantIdColumn.declaration!).length).toBe(1);
+      expect(compiler.nodeReferences(countryColumn.declaration!).length).toBe(1);
 
       // Verify all references have correct referee
       [idColumn, countryCodeColumn, merchantIdColumn, countryColumn].forEach((col) => {
-        expect(compiler.nodeReferee(compiler.nodeReferences(col)[0])).toBe(col);
+        expect(compiler.nodeReferee(compiler.nodeReferences(col.declaration!)[0])).toBe(col);
       });
     });
 
@@ -918,8 +918,8 @@ describe('[example] binder', () => {
       const productsSymbol = shopSchema.symbolTable.get('Table:products') as TableSymbol;
       const ordersSymbol = shopSchema.symbolTable.get('Table:orders') as TableSymbol;
 
-      expect(compiler.nodeReferences(productsSymbol).length).toBe(2);
-      expect(compiler.nodeReferences(ordersSymbol).length).toBe(2);
+      expect(compiler.nodeReferences(productsSymbol.declaration!).length).toBe(2);
+      expect(compiler.nodeReferences(ordersSymbol.declaration!).length).toBe(2);
     });
 
     test('should detect errors in composite foreign key references', () => {
@@ -947,7 +947,7 @@ describe('[example] binder', () => {
       expect(partialSymbol).toBeInstanceOf(TablePartialSymbol);
       expect(partialSymbol.declaration).toBe(partialNode);
       expect(partialSymbol.symbolTable.get('Column:created_at')).toBeInstanceOf(ColumnSymbol);
-      expect(compiler.nodeReferences(partialSymbol)).toEqual([]);
+      expect(compiler.nodeReferences(partialSymbol.declaration!)).toEqual([]);
 
       // Verify TablePartial is in public schema symbol table
       const schemaSymbol = compiler.resolvedSymbol(ast) as SchemaSymbol;
@@ -971,9 +971,9 @@ describe('[example] binder', () => {
       const partial = elements.find((e) => e.type?.value === 'TablePartial');
       const partialSymbol = compiler.resolvedSymbol(partial!) as TablePartialSymbol;
 
-      expect(compiler.nodeReferences(partialSymbol).length).toBe(1);
-      expect(compiler.nodeReferences(partialSymbol)[0].kind).toBe(SyntaxNodeKind.PRIMARY_EXPRESSION);
-      expect(compiler.nodeReferee(compiler.nodeReferences(partialSymbol)[0])).toBe(partialSymbol);
+      expect(compiler.nodeReferences(partialSymbol.declaration!).length).toBe(1);
+      expect(compiler.nodeReferences(partialSymbol.declaration!)[0].kind).toBe(SyntaxNodeKind.PRIMARY_EXPRESSION);
+      expect(compiler.nodeReferee(compiler.nodeReferences(partialSymbol.declaration!)[0])).toBe(partialSymbol);
     });
 
     test('should detect unknown TablePartial references', () => {
@@ -1010,13 +1010,13 @@ describe('[example] binder', () => {
       const timestampsSymbol = schemaSymbol.symbolTable.get('TablePartial:timestamps') as TablePartialSymbol;
       const auditSymbol = schemaSymbol.symbolTable.get('TablePartial:audit') as TablePartialSymbol;
 
-      expect(compiler.nodeReferences(timestampsSymbol).length).toBe(1);
-      expect(compiler.nodeReferences(timestampsSymbol)[0].kind).toBe(SyntaxNodeKind.PRIMARY_EXPRESSION);
-      expect(compiler.nodeReferee(compiler.nodeReferences(timestampsSymbol)[0])).toBe(timestampsSymbol);
+      expect(compiler.nodeReferences(timestampsSymbol.declaration!).length).toBe(1);
+      expect(compiler.nodeReferences(timestampsSymbol.declaration!)[0].kind).toBe(SyntaxNodeKind.PRIMARY_EXPRESSION);
+      expect(compiler.nodeReferee(compiler.nodeReferences(timestampsSymbol.declaration!)[0])).toBe(timestampsSymbol);
 
-      expect(compiler.nodeReferences(auditSymbol).length).toBe(1);
-      expect(compiler.nodeReferences(auditSymbol)[0].kind).toBe(SyntaxNodeKind.PRIMARY_EXPRESSION);
-      expect(compiler.nodeReferee(compiler.nodeReferences(auditSymbol)[0])).toBe(auditSymbol);
+      expect(compiler.nodeReferences(auditSymbol.declaration!).length).toBe(1);
+      expect(compiler.nodeReferences(auditSymbol.declaration!)[0].kind).toBe(SyntaxNodeKind.PRIMARY_EXPRESSION);
+      expect(compiler.nodeReferee(compiler.nodeReferences(auditSymbol.declaration!)[0])).toBe(auditSymbol);
     });
 
     test('should handle tables with only partial injections', () => {
@@ -1033,9 +1033,9 @@ describe('[example] binder', () => {
       const baseSymbol = schemaSymbol.symbolTable.get('TablePartial:base') as TablePartialSymbol;
       const derivedSymbol = schemaSymbol.symbolTable.get('Table:derived') as TableSymbol;
 
-      expect(compiler.nodeReferences(baseSymbol).length).toBe(1);
-      expect(compiler.nodeReferences(baseSymbol)[0].kind).toBe(SyntaxNodeKind.PRIMARY_EXPRESSION);
-      expect(compiler.nodeReferee(compiler.nodeReferences(baseSymbol)[0])).toBe(baseSymbol);
+      expect(compiler.nodeReferences(baseSymbol.declaration!).length).toBe(1);
+      expect(compiler.nodeReferences(baseSymbol.declaration!)[0].kind).toBe(SyntaxNodeKind.PRIMARY_EXPRESSION);
+      expect(compiler.nodeReferee(compiler.nodeReferences(baseSymbol.declaration!)[0])).toBe(baseSymbol);
       expect(derivedSymbol).toBeInstanceOf(TableSymbol);
     });
 
@@ -1150,8 +1150,8 @@ describe('[example] binder', () => {
       const idColumn = usersSymbol.symbolTable.get('Column:id') as ColumnSymbol;
 
       // users.id should be referenced from the partial's inline ref
-      expect(compiler.nodeReferences(idColumn).length).toBe(1);
-      expect(compiler.nodeReferee(compiler.nodeReferences(idColumn)[0])).toBe(idColumn);
+      expect(compiler.nodeReferences(idColumn.declaration!).length).toBe(1);
+      expect(compiler.nodeReferee(compiler.nodeReferences(idColumn.declaration!)[0])).toBe(idColumn);
     });
   });
 
@@ -1172,7 +1172,7 @@ describe('[example] binder', () => {
       expect(groupSymbol).toBeInstanceOf(TableGroupSymbol);
       expect(groupSymbol.declaration).toBe(tableGroup);
       expect(groupSymbol.symbolTable).toBeDefined();
-      expect(compiler.nodeReferences(groupSymbol)).toEqual([]);
+      expect(compiler.nodeReferences(groupSymbol.declaration!)).toEqual([]);
 
       // Verify TableGroup is in public schema symbol table
       const schemaSymbol = compiler.resolvedSymbol(ast) as SchemaSymbol;
@@ -1197,13 +1197,13 @@ describe('[example] binder', () => {
       const usersSymbol = compiler.resolvedSymbol(elements[0]) as TableSymbol;
       const postsSymbol = compiler.resolvedSymbol(elements[1]) as TableSymbol;
 
-      expect(compiler.nodeReferences(usersSymbol).length).toBe(1);
-      expect(compiler.nodeReferences(usersSymbol)[0].kind).toBe(SyntaxNodeKind.PRIMARY_EXPRESSION);
-      expect(compiler.nodeReferee(compiler.nodeReferences(usersSymbol)[0])).toBe(usersSymbol);
+      expect(compiler.nodeReferences(usersSymbol.declaration!).length).toBe(1);
+      expect(compiler.nodeReferences(usersSymbol.declaration!)[0].kind).toBe(SyntaxNodeKind.PRIMARY_EXPRESSION);
+      expect(compiler.nodeReferee(compiler.nodeReferences(usersSymbol.declaration!)[0])).toBe(usersSymbol);
 
-      expect(compiler.nodeReferences(postsSymbol).length).toBe(1);
-      expect(compiler.nodeReferences(postsSymbol)[0].kind).toBe(SyntaxNodeKind.PRIMARY_EXPRESSION);
-      expect(compiler.nodeReferee(compiler.nodeReferences(postsSymbol)[0])).toBe(postsSymbol);
+      expect(compiler.nodeReferences(postsSymbol.declaration!).length).toBe(1);
+      expect(compiler.nodeReferences(postsSymbol.declaration!)[0].kind).toBe(SyntaxNodeKind.PRIMARY_EXPRESSION);
+      expect(compiler.nodeReferee(compiler.nodeReferences(postsSymbol.declaration!)[0])).toBe(postsSymbol);
     });
   });
 
