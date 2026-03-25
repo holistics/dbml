@@ -1974,9 +1974,11 @@
     "symbol": {
       "symbolTable": {
         "Table:table1": {
+          "references": [],
           "id": 1,
           "symbolTable": {
             "Column:id": {
+              "references": [],
               "id": 2,
               "declaration": 9
             }
@@ -1984,9 +1986,11 @@
           "declaration": 11
         },
         "TableGroup:group1": {
+          "references": [],
           "id": 3,
           "symbolTable": {
             "TableGroup field:table1": {
+              "references": [],
               "id": 4,
               "declaration": 20
             }

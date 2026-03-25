@@ -6430,25 +6430,31 @@
     "symbol": {
       "symbolTable": {
         "TablePartial:userPartial": {
+          "references": [],
           "id": 1,
           "symbolTable": {
             "Column:id": {
+              "references": [],
               "id": 2,
               "declaration": 22
             },
             "Column:name": {
+              "references": [],
               "id": 3,
               "declaration": 30
             },
             "Column:age": {
+              "references": [],
               "id": 4,
               "declaration": 48
             },
             "Column:status": {
+              "references": [],
               "id": 5,
               "declaration": 67
             },
             "Column:dob": {
+              "references": [],
               "id": 6,
               "declaration": 79
             }
@@ -6456,24 +6462,30 @@
           "declaration": 81
         },
         "Schema:v2": {
+          "references": [],
           "id": 8,
           "symbolTable": {
             "Enum:status": {
+              "references": [],
               "id": 7,
               "symbolTable": {
                 "Enum field:churn": {
+                  "references": [],
                   "id": 9,
                   "declaration": 89
                 },
                 "Enum field:new": {
+                  "references": [],
                   "id": 10,
                   "declaration": 92
                 },
                 "Enum field:active": {
+                  "references": [],
                   "id": 11,
                   "declaration": 95
                 },
                 "Enum field:tenant": {
+                  "references": [],
                   "id": 12,
                   "declaration": 98
                 }
@@ -6483,9 +6495,11 @@
           }
         },
         "Table:Users": {
+          "references": [],
           "id": 13,
           "symbolTable": {
             "Column:email": {
+              "references": [],
               "id": 14,
               "declaration": 107
             }

@@ -12211,37 +12211,46 @@
     "symbol": {
       "symbolTable": {
         "Table:b": {
+          "references": [],
           "id": 1,
           "symbolTable": {
             "Column:id": {
+              "references": [],
               "id": 2,
               "declaration": 11
             },
             "Column:c_id": {
+              "references": [],
               "id": 3,
               "declaration": 16
             },
             "Column:id2": {
+              "references": [],
               "id": 4,
               "declaration": 21
             },
             "Column:id3": {
+              "references": [],
               "id": 5,
               "declaration": 26
             },
             "Column:id4": {
+              "references": [],
               "id": 6,
               "declaration": 31
             },
             "Column:id5": {
+              "references": [],
               "id": 7,
               "declaration": 36
             },
             "Column:id6": {
+              "references": [],
               "id": 8,
               "declaration": 41
             },
             "Column:id7": {
+              "references": [],
               "id": 9,
               "declaration": 46
             }
@@ -12249,37 +12258,46 @@
           "declaration": 48
         },
         "Table:c": {
+          "references": [],
           "id": 10,
           "symbolTable": {
             "Column:id": {
+              "references": [],
               "id": 11,
               "declaration": 55
             },
             "Column:b_id": {
+              "references": [],
               "id": 12,
               "declaration": 60
             },
             "Column:id2": {
+              "references": [],
               "id": 13,
               "declaration": 65
             },
             "Column:id3": {
+              "references": [],
               "id": 14,
               "declaration": 70
             },
             "Column:id4": {
+              "references": [],
               "id": 15,
               "declaration": 75
             },
             "Column:id5": {
+              "references": [],
               "id": 16,
               "declaration": 80
             },
             "Column:id6": {
+              "references": [],
               "id": 17,
               "declaration": 85
             },
             "Column:id7": {
+              "references": [],
               "id": 18,
               "declaration": 90
             }

@@ -23,8 +23,6 @@ export function symbolOfName (this: Compiler, nameStack: string[], owner: Elemen
 
   const res: { symbol: NodeSymbol; kind: SymbolKind; name: string }[] = [];
 
-  const nodeToSymbol = this.parse.nodeToSymbol();
-
   for (
     let currentOwner: ElementDeclarationNode | ProgramNode | undefined = owner;
     currentOwner;
@@ -32,7 +30,7 @@ export function symbolOfName (this: Compiler, nameStack: string[], owner: Elemen
       ? currentOwner.parent
       : undefined
   ) {
-    const ownerSymbol = nodeToSymbol?.get(currentOwner);
+    const ownerSymbol = this.resolvedSymbol(currentOwner);
     if (!ownerSymbol?.symbolTable) {
       continue;
     }

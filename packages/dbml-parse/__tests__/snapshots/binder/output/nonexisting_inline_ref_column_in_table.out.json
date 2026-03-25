@@ -2861,17 +2861,21 @@
     "symbol": {
       "symbolTable": {
         "Table:T1": {
+          "references": [],
           "id": 1,
           "symbolTable": {
             "Column:col1": {
+              "references": [],
               "id": 2,
               "declaration": 12
             },
             "Column:col2": {
+              "references": [],
               "id": 3,
               "declaration": 26
             },
             "Column:col3": {
+              "references": [],
               "id": 4,
               "declaration": 40
             }
@@ -2879,9 +2883,70 @@
           "declaration": 42
         },
         "Table:T2": {
+          "references": [
+            {
+              "id": 19,
+              "kind": "<primary-expression>",
+              "startPos": {
+                "offset": 60,
+                "line": 2,
+                "column": 20
+              },
+              "fullStart": 60,
+              "endPos": {
+                "offset": 62,
+                "line": 2,
+                "column": 22
+              },
+              "fullEnd": 62,
+              "start": 60,
+              "end": 62,
+              "expression": {
+                "id": 18,
+                "kind": "<variable>",
+                "startPos": {
+                  "offset": 60,
+                  "line": 2,
+                  "column": 20
+                },
+                "fullStart": 60,
+                "endPos": {
+                  "offset": 62,
+                  "line": 2,
+                  "column": 22
+                },
+                "fullEnd": 62,
+                "start": 60,
+                "end": 62,
+                "variable": {
+                  "kind": "<identifier>",
+                  "startPos": {
+                    "offset": 60,
+                    "line": 2,
+                    "column": 20
+                  },
+                  "endPos": {
+                    "offset": 62,
+                    "line": 2,
+                    "column": 22
+                  },
+                  "value": "T2",
+                  "leadingTrivia": [],
+                  "trailingTrivia": [],
+                  "leadingInvalid": [],
+                  "trailingInvalid": [],
+                  "isInvalid": false,
+                  "start": 60,
+                  "end": 62
+                }
+              },
+              "referee": 5
+            }
+          ],
           "id": 5,
           "symbolTable": {
             "Column:col": {
+              "references": [],
               "id": 6,
               "declaration": 55
             }

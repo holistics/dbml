@@ -4792,33 +4792,41 @@
     "symbol": {
       "symbolTable": {
         "Table:Users": {
+          "references": [],
           "id": 1,
           "symbolTable": {
             "Column:id": {
+              "references": [],
               "id": 2,
               "declaration": 6
             },
             "Column:status1": {
+              "references": [],
               "id": 3,
               "declaration": 14
             },
             "Column:status2": {
+              "references": [],
               "id": 4,
               "declaration": 22
             },
             "Column:status3": {
+              "references": [],
               "id": 5,
               "declaration": 30
             },
             "Column:status4": {
+              "references": [],
               "id": 6,
               "declaration": 38
             },
             "Column:status5": {
+              "references": [],
               "id": 7,
               "declaration": 45
             },
             "Column:status6": {
+              "references": [],
               "id": 8,
               "declaration": 52
             }
@@ -4826,24 +4834,228 @@
           "declaration": 54
         },
         "Schema:v2": {
+          "references": [
+            {
+              "id": 10,
+              "kind": "<primary-expression>",
+              "startPos": {
+                "offset": 43,
+                "line": 2,
+                "column": 12
+              },
+              "fullStart": 43,
+              "endPos": {
+                "offset": 45,
+                "line": 2,
+                "column": 14
+              },
+              "fullEnd": 45,
+              "start": 43,
+              "end": 45,
+              "expression": {
+                "id": 9,
+                "kind": "<variable>",
+                "startPos": {
+                  "offset": 43,
+                  "line": 2,
+                  "column": 12
+                },
+                "fullStart": 43,
+                "endPos": {
+                  "offset": 45,
+                  "line": 2,
+                  "column": 14
+                },
+                "fullEnd": 45,
+                "start": 43,
+                "end": 45,
+                "variable": {
+                  "kind": "<identifier>",
+                  "startPos": {
+                    "offset": 43,
+                    "line": 2,
+                    "column": 12
+                  },
+                  "endPos": {
+                    "offset": 45,
+                    "line": 2,
+                    "column": 14
+                  },
+                  "value": "v2",
+                  "leadingTrivia": [],
+                  "trailingTrivia": [],
+                  "leadingInvalid": [],
+                  "trailingInvalid": [],
+                  "isInvalid": false,
+                  "start": 43,
+                  "end": 45
+                }
+              },
+              "referee": 10
+            },
+            {
+              "id": 34,
+              "kind": "<primary-expression>",
+              "startPos": {
+                "offset": 121,
+                "line": 5,
+                "column": 12
+              },
+              "fullStart": 121,
+              "endPos": {
+                "offset": 123,
+                "line": 5,
+                "column": 14
+              },
+              "fullEnd": 123,
+              "start": 121,
+              "end": 123,
+              "expression": {
+                "id": 33,
+                "kind": "<variable>",
+                "startPos": {
+                  "offset": 121,
+                  "line": 5,
+                  "column": 12
+                },
+                "fullStart": 121,
+                "endPos": {
+                  "offset": 123,
+                  "line": 5,
+                  "column": 14
+                },
+                "fullEnd": 123,
+                "start": 121,
+                "end": 123,
+                "variable": {
+                  "kind": "<identifier>",
+                  "startPos": {
+                    "offset": 121,
+                    "line": 5,
+                    "column": 12
+                  },
+                  "endPos": {
+                    "offset": 123,
+                    "line": 5,
+                    "column": 14
+                  },
+                  "value": "v2",
+                  "leadingTrivia": [],
+                  "trailingTrivia": [],
+                  "leadingInvalid": [],
+                  "trailingInvalid": [],
+                  "isInvalid": false,
+                  "start": 121,
+                  "end": 123
+                }
+              },
+              "referee": 10
+            }
+          ],
           "id": 10,
           "symbolTable": {
             "Enum:status": {
+              "references": [
+                {
+                  "id": 12,
+                  "kind": "<primary-expression>",
+                  "startPos": {
+                    "offset": 46,
+                    "line": 2,
+                    "column": 15
+                  },
+                  "fullStart": 46,
+                  "endPos": {
+                    "offset": 52,
+                    "line": 2,
+                    "column": 21
+                  },
+                  "fullEnd": 54,
+                  "start": 46,
+                  "end": 52,
+                  "expression": {
+                    "id": 11,
+                    "kind": "<variable>",
+                    "startPos": {
+                      "offset": 46,
+                      "line": 2,
+                      "column": 15
+                    },
+                    "fullStart": 46,
+                    "endPos": {
+                      "offset": 52,
+                      "line": 2,
+                      "column": 21
+                    },
+                    "fullEnd": 54,
+                    "start": 46,
+                    "end": 52,
+                    "variable": {
+                      "kind": "<identifier>",
+                      "startPos": {
+                        "offset": 46,
+                        "line": 2,
+                        "column": 15
+                      },
+                      "endPos": {
+                        "offset": 52,
+                        "line": 2,
+                        "column": 21
+                      },
+                      "value": "status",
+                      "leadingTrivia": [],
+                      "trailingTrivia": [
+                        {
+                          "kind": "<newline>",
+                          "startPos": {
+                            "offset": 53,
+                            "line": 2,
+                            "column": 22
+                          },
+                          "endPos": {
+                            "offset": 54,
+                            "line": 3,
+                            "column": 0
+                          },
+                          "value": "\n",
+                          "leadingTrivia": [],
+                          "trailingTrivia": [],
+                          "leadingInvalid": [],
+                          "trailingInvalid": [],
+                          "isInvalid": false,
+                          "start": 53,
+                          "end": 54
+                        }
+                      ],
+                      "leadingInvalid": [],
+                      "trailingInvalid": [],
+                      "isInvalid": false,
+                      "start": 46,
+                      "end": 52
+                    }
+                  },
+                  "referee": 9
+                }
+              ],
               "id": 9,
               "symbolTable": {
                 "Enum field:churn": {
+                  "references": [],
                   "id": 11,
                   "declaration": 62
                 },
                 "Enum field:new": {
+                  "references": [],
                   "id": 12,
                   "declaration": 65
                 },
                 "Enum field:active": {
+                  "references": [],
                   "id": 13,
                   "declaration": 68
                 },
                 "Enum field:tenant": {
+                  "references": [],
                   "id": 14,
                   "declaration": 71
                 }
@@ -4853,21 +5065,107 @@
           }
         },
         "Enum:status": {
+          "references": [
+            {
+              "id": 20,
+              "kind": "<primary-expression>",
+              "startPos": {
+                "offset": 73,
+                "line": 3,
+                "column": 19
+              },
+              "fullStart": 73,
+              "endPos": {
+                "offset": 79,
+                "line": 3,
+                "column": 25
+              },
+              "fullEnd": 81,
+              "start": 73,
+              "end": 79,
+              "expression": {
+                "id": 19,
+                "kind": "<variable>",
+                "startPos": {
+                  "offset": 73,
+                  "line": 3,
+                  "column": 19
+                },
+                "fullStart": 73,
+                "endPos": {
+                  "offset": 79,
+                  "line": 3,
+                  "column": 25
+                },
+                "fullEnd": 81,
+                "start": 73,
+                "end": 79,
+                "variable": {
+                  "kind": "<identifier>",
+                  "startPos": {
+                    "offset": 73,
+                    "line": 3,
+                    "column": 19
+                  },
+                  "endPos": {
+                    "offset": 79,
+                    "line": 3,
+                    "column": 25
+                  },
+                  "value": "status",
+                  "leadingTrivia": [],
+                  "trailingTrivia": [
+                    {
+                      "kind": "<newline>",
+                      "startPos": {
+                        "offset": 80,
+                        "line": 3,
+                        "column": 26
+                      },
+                      "endPos": {
+                        "offset": 81,
+                        "line": 4,
+                        "column": 0
+                      },
+                      "value": "\n",
+                      "leadingTrivia": [],
+                      "trailingTrivia": [],
+                      "leadingInvalid": [],
+                      "trailingInvalid": [],
+                      "isInvalid": false,
+                      "start": 80,
+                      "end": 81
+                    }
+                  ],
+                  "leadingInvalid": [],
+                  "trailingInvalid": [],
+                  "isInvalid": false,
+                  "start": 73,
+                  "end": 79
+                }
+              },
+              "referee": 15
+            }
+          ],
           "id": 15,
           "symbolTable": {
             "Enum field:churn": {
+              "references": [],
               "id": 16,
               "declaration": 78
             },
             "Enum field:new": {
+              "references": [],
               "id": 17,
               "declaration": 81
             },
             "Enum field:active": {
+              "references": [],
               "id": 18,
               "declaration": 84
             },
             "Enum field:tenant": {
+              "references": [],
               "id": 19,
               "declaration": 87
             }

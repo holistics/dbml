@@ -1,11 +1,7 @@
 import { readFileSync } from 'fs';
 import path from 'path';
 import { describe, expect, it } from 'vitest';
-import Lexer from '@/core/lexer/lexer';
-import Parser from '@/core/parser/parser';
-import { NodeSymbolIdGenerator } from '@/core/analyzer/symbol/symbols';
-import { SyntaxNodeIdGenerator } from '@/core/parser/nodes';
-import Analyzer from '@/core/analyzer/analyzer';
+import { Compiler } from '@/index';
 import { serializeAnalysis, scanTestNames } from '@tests/utils';
 
 describe('[snapshot] binder', () => {
@@ -13,17 +9,9 @@ describe('[snapshot] binder', () => {
 
   testNames.forEach((testName) => {
     const program = readFileSync(path.resolve(__dirname, `./input/${testName}.in.dbml`), 'utf-8');
-    const symbolIdGenerator = new NodeSymbolIdGenerator();
-    const nodeIdGenerator = new SyntaxNodeIdGenerator();
-    const report = new Lexer(program)
-      .lex()
-      .chain((tokens) => {
-        return new Parser(program, tokens, nodeIdGenerator).parse();
-      })
-      .chain(({ ast }) => {
-        return new Analyzer(ast, symbolIdGenerator).analyze();
-      });
-    const output = serializeAnalysis(report, true);
+    const compiler = new Compiler();
+    compiler.setSource(program);
+    const output = serializeAnalysis(compiler, true);
 
     it(testName, () => expect(output).toMatchFileSnapshot(path.resolve(__dirname, `./output/${testName}.out.json`)));
   });

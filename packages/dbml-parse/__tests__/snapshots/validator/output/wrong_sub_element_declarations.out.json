@@ -1931,9 +1931,11 @@
     "symbol": {
       "symbolTable": {
         "Table:A": {
+          "references": [],
           "id": 1,
           "symbolTable": {
             "Column:Indexes": {
+              "references": [],
               "id": 2,
               "declaration": 11
             }

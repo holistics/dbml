@@ -1,12 +1,5 @@
-import { SyntaxNodeIdGenerator, ProgramNode } from '@/core/parser/nodes';
-import { NodeSymbolIdGenerator } from '@/core/analyzer/symbol/symbols';
-import { SyntaxToken } from '@/core/lexer/tokens';
-import { Database } from '@/core/interpreter/types';
-import Report from '@/core/report';
-import Lexer from '@/core/lexer/lexer';
-import Parser from '@/core/parser/parser';
-import Analyzer, { NodeToSymbolMap, NodeToRefereeMap, SymbolToReferencesMap } from '@/core/analyzer/analyzer';
-import Interpreter from '@/core/interpreter/interpreter';
+import { SyntaxNode } from '@/core/parser/nodes';
+import type { NodeSymbol } from '@/core/analyzer/symbol/symbols';
 import { DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLReferencesProvider, DBMLDiagnosticsProvider } from '@/services/index';
 import { ast, errors, warnings, tokens, rawDb, publicSymbolTable, nodeToSymbol, nodeToReferee, symbolToReferences } from './queries/parse';
 import { invalidStream, flatStream } from './queries/token';
@@ -19,6 +12,7 @@ import {
   type TableNameInput,
 } from './queries/transform';
 import { splitQualifiedIdentifier, unescapeString, escapeString, formatRecordValue, isValidIdentifier, addDoubleQuoteIfNeeded } from './queries/utils';
+import { parseFile, analyzeFile, interpretFile, validateFile } from './queries/pipeline';
 
 // Re-export types
 export { ScopeKind } from './types';
@@ -30,14 +24,10 @@ export { splitQualifiedIdentifier, unescapeString, escapeString, formatRecordVal
 export default class Compiler {
   private source = '';
   private cache = new Map<symbol, any>();
-  private nodeIdGenerator = new SyntaxNodeIdGenerator();
-  private symbolIdGenerator = new NodeSymbolIdGenerator();
 
   setSource (source: string) {
     this.source = source;
     this.cache.clear();
-    this.nodeIdGenerator.reset();
-    this.symbolIdGenerator.reset();
   }
 
   private query<Args extends unknown[], Return> (
@@ -67,19 +57,23 @@ export default class Compiler {
     }) as (...args: Args) => Return;
   }
 
-  private interpret (): Report<{ ast: ProgramNode; tokens: SyntaxToken[]; rawDb?: Database; nodeToSymbol: NodeToSymbolMap; nodeToReferee: NodeToRefereeMap; symbolToReferences: SymbolToReferencesMap }> {
-    const parseRes = new Lexer(this.source)
-      .lex()
-      .chain((lexedTokens) => new Parser(this.source, lexedTokens as SyntaxToken[], this.nodeIdGenerator).parse())
-      .chain(({ ast, tokens }) => new Analyzer(ast, this.symbolIdGenerator).analyze().map((analysis) => ({ ...analysis, tokens })));
+  parseFile = this.query(parseFile);
+  analyzeFile = this.query(analyzeFile);
+  validateFile = this.query(validateFile);
 
-    if (parseRes.getErrors().length > 0) {
-      return parseRes as any;
-    }
+  resolvedSymbol (node: SyntaxNode): NodeSymbol | undefined {
+    return this.analyzeFile().getValue().nodeToSymbol.get(node);
+  }
 
-    return parseRes.chain((analysis) =>
-      new Interpreter(analysis).interpret().map((rawDb) => ({ ...analysis, rawDb })),
-    );
+  nodeReferee (node: SyntaxNode): NodeSymbol | undefined {
+    return this.analyzeFile().getValue().nodeToReferee.get(node);
+  }
+
+  nodeReferences (nodeOrSymbol: SyntaxNode | NodeSymbol): SyntaxNode[] {
+    const { nodeToSymbol, symbolToReferences } = this.analyzeFile().getValue();
+    const symbol = nodeOrSymbol instanceof SyntaxNode ? nodeToSymbol.get(nodeOrSymbol) : nodeOrSymbol;
+    if (!symbol) return [];
+    return symbolToReferences.get(symbol) ?? [];
   }
 
   renameTable (
@@ -100,7 +94,7 @@ export default class Compiler {
 
   readonly parse = {
     source: () => this.source as Readonly<string>,
-    _: this.query(this.interpret),
+    _: this.query(interpretFile),
     ast: this.query(ast),
     errors: this.query(errors),
     warnings: this.query(warnings),

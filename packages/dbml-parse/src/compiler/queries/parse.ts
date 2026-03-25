@@ -7,7 +7,7 @@ import type SymbolTable from '@/core/analyzer/symbol/symbolTable';
 import type { NodeToSymbolMap, NodeToRefereeMap, SymbolToReferencesMap } from '@/core/analyzer/analyzer';
 
 export function ast (this: Compiler): Readonly<ProgramNode> {
-  return this.parse._().getValue().ast;
+  return this.parseFile().getValue().ast;
 }
 
 export function errors (this: Compiler): readonly Readonly<CompileError>[] {
@@ -18,27 +18,27 @@ export function warnings (this: Compiler): readonly Readonly<CompileWarning>[] {
   return this.parse._().getWarnings();
 }
 
-export function tokens (this: Compiler): Readonly<SyntaxToken>[] {
-  return this.parse._().getValue().tokens;
+export function tokens (this: Compiler): readonly Readonly<SyntaxToken>[] {
+  return this.parseFile().getValue().tokens;
 }
 
 export function rawDb (this: Compiler): Readonly<Database> | undefined {
-  return this.parse._().getValue().rawDb;
+  return this.parse._().getValue();
 }
 
 export function nodeToSymbol (this: Compiler): NodeToSymbolMap | undefined {
-  return this.parse._().getValue().nodeToSymbol;
+  return this.analyzeFile().getValue().nodeToSymbol;
 }
 
 export function nodeToReferee (this: Compiler): NodeToRefereeMap | undefined {
-  return this.parse._().getValue().nodeToReferee;
+  return this.analyzeFile().getValue().nodeToReferee;
 }
 
 export function symbolToReferences (this: Compiler): SymbolToReferencesMap | undefined {
-  return this.parse._().getValue().symbolToReferences;
+  return this.analyzeFile().getValue().symbolToReferences;
 }
 
 export function publicSymbolTable (this: Compiler): Readonly<SymbolTable> {
-  const { ast, nodeToSymbol: map } = this.parse._().getValue();
+  const { ast, nodeToSymbol: map } = this.analyzeFile().getValue();
   return map!.get(ast)!.symbolTable!;
 }

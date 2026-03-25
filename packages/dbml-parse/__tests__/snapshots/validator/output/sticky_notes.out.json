@@ -4957,13 +4957,16 @@
     "symbol": {
       "symbolTable": {
         "Table:users": {
+          "references": [],
           "id": 1,
           "symbolTable": {
             "Column:id": {
+              "references": [],
               "id": 2,
               "declaration": 14
             },
             "Column:username": {
+              "references": [],
               "id": 3,
               "declaration": 28
             }

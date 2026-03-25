@@ -1,39 +1,29 @@
 import { readFileSync } from 'fs';
 import path from 'path';
 import { describe, expect, it } from 'vitest';
-import { scanTestNames } from '../../utils';
-import { NodeSymbolIdGenerator } from '@/core/analyzer/symbol/symbols';
-import { SyntaxNodeIdGenerator } from '@/core/parser/nodes';
-import Lexer from '@/core/lexer/lexer';
-import Parser from '@/core/parser/parser';
-import Analyzer from '@/core/analyzer/analyzer';
+import { Compiler } from '@/index';
 import Interpreter from '@/core/interpreter/interpreter';
+import { scanTestNames } from '../../utils';
 
 describe('[snapshot] interpreter (NaN cases)', () => {
   const testNames = scanTestNames(path.resolve(__dirname, './input/'));
 
   testNames.forEach((testName) => {
     const program = readFileSync(path.resolve(__dirname, `./input/${testName}.in.dbml`), 'utf-8');
-    const symbolIdGenerator = new NodeSymbolIdGenerator();
-    const nodeIdGenerator = new SyntaxNodeIdGenerator();
+    const compiler = new Compiler();
+    compiler.setSource(program);
     let output: any;
-    const report = new Lexer(program)
-      .lex()
-      .chain((tokens) => {
-        return new Parser(program, tokens, nodeIdGenerator).parse();
-      })
-      .chain(({ ast }) => {
-        return new Analyzer(ast, symbolIdGenerator).analyze();
-      });
 
-    if (report.getErrors().length !== 0) {
+    const analyzeReport = compiler.parseFile().chain(() => compiler.analyzeFile());
+
+    if (analyzeReport.getErrors().length !== 0) {
       output = JSON.stringify(
-        report.getErrors(),
+        analyzeReport.getErrors(),
         (key, value) => (['symbol', 'references', 'referee', 'parent'].includes(key) ? undefined : value),
         2,
       );
     } else {
-      const res = new Interpreter(report.getValue()).interpret();
+      const res = new Interpreter(compiler.analyzeFile().getValue()).interpret();
       if (res.getErrors().length > 0) {
         output = JSON.stringify(
           res.getErrors(),

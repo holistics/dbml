@@ -1,6 +1,6 @@
 import Lexer from '@/core/lexer/lexer';
 import Parser from '@/core/parser/parser';
-import Analyzer, { AnalysisResult } from '@/core/analyzer/analyzer';
+import { AnalysisResult } from '@/core/analyzer/analyzer';
 import {
   ProgramNode,
   SyntaxNode,
@@ -24,7 +24,6 @@ import {
   PrimaryExpressionNode,
   ArrayNode,
 } from '@/core/parser/nodes';
-import { NodeSymbolIdGenerator } from '@/core/analyzer/symbol/symbols';
 import Report from '@/core/report';
 import { Compiler, SyntaxToken } from '@/index';
 import { Database } from '@/core/interpreter/types';
@@ -38,13 +37,16 @@ export function parse (source: string): Report<{ ast: ProgramNode; tokens: Synta
 }
 
 export function analyze (source: string): Report<AnalysisResult> {
-  return parse(source).chain(({ ast }) => new Analyzer(ast, new NodeSymbolIdGenerator()).analyze());
+  const compiler = new Compiler();
+  compiler.setSource(source);
+  return compiler.parseFile()
+    .chain(() => compiler.analyzeFile());
 }
 
 export function interpret (source: string): Report<Database | undefined> {
   const compiler = new Compiler();
   compiler.setSource(source);
-  return compiler.parse._().map(({ rawDb }) => rawDb);
+  return compiler.parse._();
 }
 
 export function flattenTokens (token: SyntaxToken): SyntaxToken[] {
