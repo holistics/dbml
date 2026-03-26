@@ -116,16 +116,15 @@ export enum SyntaxNodeKind {
 // Form: <element-declaration>*
 // The root node of a DBML program containing top-level statements in source order.
 // `declarations` and `useDeclarations` are filtered views for convenient access.
+const declarationsCache = new WeakMap<ProgramNode, ElementDeclarationNode[]>();
+const useDeclarationsCache = new WeakMap<ProgramNode, UseDeclarationNode[]>();
+
 export class ProgramNode extends SyntaxNode {
   body: (UseDeclarationNode | ElementDeclarationNode)[];
 
   eof?: SyntaxToken;
 
   source: string;
-
-  private _declarations?: ElementDeclarationNode[];
-
-  private _useDeclarations?: UseDeclarationNode[];
 
   constructor (
     { body = [], eof, source }: { body?: (UseDeclarationNode | ElementDeclarationNode)[]; eof?: SyntaxToken; source: string },
@@ -139,13 +138,21 @@ export class ProgramNode extends SyntaxNode {
   }
 
   get declarations (): ElementDeclarationNode[] {
-    this._declarations ??= this.body.filter((s): s is ElementDeclarationNode => s.kind === SyntaxNodeKind.ELEMENT_DECLARATION);
-    return this._declarations;
+    let cached = declarationsCache.get(this);
+    if (!cached) {
+      cached = this.body.filter((s): s is ElementDeclarationNode => s.kind === SyntaxNodeKind.ELEMENT_DECLARATION);
+      declarationsCache.set(this, cached);
+    }
+    return cached;
   }
 
   get useDeclarations (): UseDeclarationNode[] {
-    this._useDeclarations ??= this.body.filter((s): s is UseDeclarationNode => s.kind === SyntaxNodeKind.USE_DECLARATION);
-    return this._useDeclarations;
+    let cached = useDeclarationsCache.get(this);
+    if (!cached) {
+      cached = this.body.filter((s): s is UseDeclarationNode => s.kind === SyntaxNodeKind.USE_DECLARATION);
+      useDeclarationsCache.set(this, cached);
+    }
+    return cached;
   }
 }
 
