@@ -20,7 +20,11 @@ export class RefInterpreter implements ElementInterpreter {
   private container: Partial<Table> | undefined;
   private ref: Partial<Ref>;
 
-  constructor (compiler: Compiler, declarationNode: ElementDeclarationNode, env: InterpreterDatabase) {
+  constructor (
+    compiler: Compiler,
+    declarationNode: ElementDeclarationNode,
+    env: InterpreterDatabase,
+  ) {
     this.compiler = compiler;
     this.declarationNode = declarationNode;
     this.env = env;

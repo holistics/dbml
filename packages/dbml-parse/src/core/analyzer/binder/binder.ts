@@ -18,11 +18,14 @@ export default class Binder {
 
   private symbolToReferences: SymbolToReferencesMap;
 
-  constructor ({ ast, nodeToSymbol, symbolToReferences }: {
-    ast: ProgramNode;
-    nodeToSymbol: NodeToSymbolMap;
-    symbolToReferences: SymbolToReferencesMap;
-  }, symbolFactory: SymbolFactory) {
+  constructor (
+    { ast, nodeToSymbol, symbolToReferences }: {
+      ast: ProgramNode;
+      nodeToSymbol: NodeToSymbolMap;
+      symbolToReferences: SymbolToReferencesMap;
+    },
+    symbolFactory: SymbolFactory,
+  ) {
     this.ast = ast;
     this.symbolFactory = symbolFactory;
     this.nodeToSymbol = nodeToSymbol;

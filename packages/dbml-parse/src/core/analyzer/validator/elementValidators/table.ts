@@ -50,7 +50,9 @@ export default class TableValidator implements ElementValidator {
   private nodeToSymbol: NodeToSymbolMap;
 
   constructor (
-    declarationNode: ElementDeclarationNode & { type: SyntaxToken }, publicSymbolTable: SymbolTable, nodeToSymbol: NodeToSymbolMap,
+    declarationNode: ElementDeclarationNode & { type: SyntaxToken },
+    publicSymbolTable: SymbolTable,
+    nodeToSymbol: NodeToSymbolMap,
     symbolFactory: SymbolFactory,
   ) {
     this.declarationNode = declarationNode;

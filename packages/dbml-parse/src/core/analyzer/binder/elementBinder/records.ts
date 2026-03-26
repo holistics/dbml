@@ -26,7 +26,11 @@ export default class RecordsBinder implements ElementBinder {
   // Example: Records (col1, col2) -> Map symbol of `col1` to the `col1` in `Records (col1, col2)``
   private boundColumns: Map<NodeSymbol, SyntaxNode>;
 
-  constructor (declarationNode: ElementDeclarationNode & { type: SyntaxToken }, context: BinderContext, symbolFactory: SymbolFactory) {
+  constructor (
+    declarationNode: ElementDeclarationNode & { type: SyntaxToken },
+    context: BinderContext,
+    symbolFactory: SymbolFactory,
+  ) {
     this.declarationNode = declarationNode;
     this.symbolFactory = symbolFactory;
     this.context = context;

@@ -31,7 +31,11 @@ export class TableInterpreter implements ElementInterpreter {
   private table: Partial<Table>;
   private pkColumns: Column[];
 
-  constructor (compiler: Compiler, declarationNode: ElementDeclarationNode, env: InterpreterDatabase) {
+  constructor (
+    compiler: Compiler,
+    declarationNode: ElementDeclarationNode,
+    env: InterpreterDatabase,
+  ) {
     this.compiler = compiler;
     this.declarationNode = declarationNode;
     this.env = env;

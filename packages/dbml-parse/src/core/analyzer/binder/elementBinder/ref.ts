@@ -20,7 +20,11 @@ export default class RefBinder implements ElementBinder {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
   private context: BinderContext;
 
-  constructor (declarationNode: ElementDeclarationNode & { type: SyntaxToken }, context: BinderContext, symbolFactory: SymbolFactory) {
+  constructor (
+    declarationNode: ElementDeclarationNode & { type: SyntaxToken },
+    context: BinderContext,
+    symbolFactory: SymbolFactory,
+  ) {
     this.declarationNode = declarationNode;
     this.symbolFactory = symbolFactory;
     this.context = context;

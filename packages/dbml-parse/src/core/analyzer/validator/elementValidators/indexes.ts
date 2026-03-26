@@ -28,7 +28,12 @@ export default class IndexesValidator implements ElementValidator {
   private symbolFactory: SymbolFactory;
   private nodeToSymbol: NodeToSymbolMap;
 
-  constructor (declarationNode: ElementDeclarationNode & { type: SyntaxToken }, publicSymbolTable: SymbolTable, nodeToSymbol: NodeToSymbolMap, symbolFactory: SymbolFactory) {
+  constructor (
+    declarationNode: ElementDeclarationNode & { type: SyntaxToken },
+    publicSymbolTable: SymbolTable,
+    nodeToSymbol: NodeToSymbolMap,
+    symbolFactory: SymbolFactory,
+  ) {
     this.declarationNode = declarationNode;
     this.publicSymbolTable = publicSymbolTable;
     this.symbolFactory = symbolFactory;

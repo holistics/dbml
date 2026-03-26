@@ -19,7 +19,10 @@ export default class Validator {
 
   private nodeToSymbol: NodeToSymbolMap;
 
-  constructor ({ ast }: { ast: ProgramNode }, symbolFactory: SymbolFactory) {
+  constructor (
+    { ast }: { ast: ProgramNode },
+    symbolFactory: SymbolFactory,
+  ) {
     this.ast = ast;
     this.symbolFactory = symbolFactory;
     this.nodeToSymbol = new WeakMap();

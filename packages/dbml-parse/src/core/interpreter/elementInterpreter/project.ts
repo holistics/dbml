@@ -18,7 +18,11 @@ export class ProjectInterpreter implements ElementInterpreter {
   private env: InterpreterDatabase;
   private project: Partial<Project>;
 
-  constructor (compiler: Compiler, declarationNode: ElementDeclarationNode, env: InterpreterDatabase) {
+  constructor (
+    compiler: Compiler,
+    declarationNode: ElementDeclarationNode,
+    env: InterpreterDatabase,
+  ) {
     this.compiler = compiler;
     this.declarationNode = declarationNode;
     this.env = env;
