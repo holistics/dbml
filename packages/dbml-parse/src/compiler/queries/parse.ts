@@ -26,10 +26,6 @@ export function rawDb (this: Compiler): Readonly<Database> | undefined {
   return this.parse._().getValue();
 }
 
-export function symbolToReferences (this: Compiler): Readonly<SymbolToReferencesMap> | undefined {
-  return this.analyzeFile().getValue().symbolToReferences;
-}
-
 export function publicSymbolTable (this: Compiler): Readonly<SymbolTable> {
   const { ast, nodeToSymbol: map } = this.analyzeFile().getValue();
   return map!.get(ast)!.symbolTable!;

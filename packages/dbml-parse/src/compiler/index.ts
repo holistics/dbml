@@ -1,13 +1,12 @@
 import type { SyntaxNode } from '@/core/parser/nodes';
 import type { NodeSymbol } from '@/core/analyzer/symbol/symbols';
 import { DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLReferencesProvider, DBMLDiagnosticsProvider } from '@/services/index';
-import { ast, errors, warnings, tokens, rawDb, publicSymbolTable, symbolToReferences } from './queries/parse';
+import { ast, errors, warnings, tokens, rawDb, publicSymbolTable } from './queries/parse';
 import { invalidStream, flatStream } from './queries/token';
 import { symbolOfName, symbolOfNameToKey, symbolMembers } from './queries/symbol';
 import { containerStack, containerToken, containerElement, containerScope, containerScopeKind } from './queries/container';
 import {
   renameTable,
-  applyTextEdits,
   type TextEdit,
   type TableNameInput,
 } from './queries/transform';
@@ -75,6 +74,11 @@ export default class Compiler {
     return symbolToReferences.get(symbol) ?? [];
   }
 
+  symbolReferences (symbol: NodeSymbol): SyntaxNode[] {
+    const { symbolToReferences } = this.analyzeFile().getValue();
+    return symbolToReferences.get(symbol) ?? [];
+  }
+
   renameTable (
     oldName: TableNameInput,
     newName: TableNameInput,
@@ -96,7 +100,6 @@ export default class Compiler {
     tokens: this.query(tokens),
     rawDb: this.query(rawDb),
     publicSymbolTable: this.query(publicSymbolTable),
-    symbolToReferences: this.query(symbolToReferences),
   };
 
   readonly container = {

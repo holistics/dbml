@@ -2,7 +2,7 @@ import { DEFAULT_SCHEMA_NAME } from '@/constants';
 import type Compiler from '../../index';
 import { SyntaxNode } from '@/core/parser/nodes';
 import SymbolTable from '@/core/analyzer/symbol/symbolTable';
-import { TableSymbol } from '@/core/analyzer/symbol/symbols';
+import { NodeSymbol, TableSymbol } from '@/core/analyzer/symbol/symbols';
 import { createSchemaSymbolIndex, createTableSymbolIndex } from '@/core/analyzer/symbol/symbolIndex';
 import { applyTextEdits, TextEdit } from './applyTextEdits';
 import { isAlphaOrUnderscore, isDigit } from '@/core/utils';
@@ -84,7 +84,7 @@ function checkForNameCollision (
   newTable: string,
 ): boolean {
   const tableSymbolIndex = createTableSymbolIndex(newTable);
-  let existingTableSymbol;
+  let existingTableSymbol: NodeSymbol | undefined;
 
   if (newSchema === DEFAULT_SCHEMA_NAME) {
     existingTableSymbol = symbolTable.get(tableSymbolIndex);
@@ -265,7 +265,7 @@ export function renameTable (
     }
   }
 
-  const references = this.parse.symbolToReferences()?.get(tableSymbol) ?? [];
+  const references = this.symbolReferences(tableSymbol);
   for (const ref of references) {
     const refText = source.substring(ref.start, ref.end);
     const cleanRefText = refText.replace(/"/g, '');

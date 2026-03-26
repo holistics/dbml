@@ -180,7 +180,6 @@ export function extractNumericLiteral (node?: SyntaxNode): number | null {
   return null;
 }
 
-
 export function isBinaryRelationship (value?: SyntaxNode): value is InfixExpressionNode {
   if (!(value instanceof InfixExpressionNode)) {
     return false;
