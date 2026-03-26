@@ -5,9 +5,6 @@
     "nodeOrToken": {
       "id": 65,
       "kind": "<primary-expression>",
-      "filepath": {
-        "path": "/main.dbml"
-      },
       "startPos": {
         "offset": 232,
         "line": 15,
@@ -25,9 +22,6 @@
       "expression": {
         "id": 64,
         "kind": "<variable>",
-        "filepath": {
-          "path": "/main.dbml"
-        },
         "startPos": {
           "offset": 232,
           "line": 15,
@@ -55,9 +49,6 @@
             "column": 11
           },
           "value": "users",
-          "filepath": {
-            "path": "/main.dbml"
-          },
           "leadingTrivia": [],
           "trailingTrivia": [
             {
@@ -73,9 +64,6 @@
                 "column": 12
               },
               "value": " ",
-              "filepath": {
-                "path": "/main.dbml"
-              },
               "leadingTrivia": [],
               "trailingTrivia": [],
               "leadingInvalid": [],

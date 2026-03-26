@@ -5,9 +5,6 @@
     "nodeOrToken": {
       "id": 21,
       "kind": "<primary-expression>",
-      "filepath": {
-        "path": "/main.dbml"
-      },
       "startPos": {
         "offset": 71,
         "line": 3,
@@ -25,9 +22,6 @@
       "expression": {
         "id": 20,
         "kind": "<variable>",
-        "filepath": {
-          "path": "/main.dbml"
-        },
         "startPos": {
           "offset": 71,
           "line": 3,
@@ -55,9 +49,6 @@
             "column": 28
           },
           "value": "staff",
-          "filepath": {
-            "path": "/main.dbml"
-          },
           "leadingTrivia": [],
           "trailingTrivia": [],
           "leadingInvalid": [],
@@ -78,9 +69,6 @@
     "nodeOrToken": {
       "id": 35,
       "kind": "<primary-expression>",
-      "filepath": {
-        "path": "/main.dbml"
-      },
       "startPos": {
         "offset": 105,
         "line": 4,
@@ -98,9 +86,6 @@
       "expression": {
         "id": 34,
         "kind": "<variable>",
-        "filepath": {
-          "path": "/main.dbml"
-        },
         "startPos": {
           "offset": 105,
           "line": 4,
@@ -128,9 +113,6 @@
             "column": 30
           },
           "value": "rental",
-          "filepath": {
-            "path": "/main.dbml"
-          },
           "leadingTrivia": [],
           "trailingTrivia": [],
           "leadingInvalid": [],

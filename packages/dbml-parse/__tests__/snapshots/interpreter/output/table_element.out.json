@@ -5,9 +5,6 @@
     "nodeOrToken": {
       "id": 36,
       "kind": "<element-declaration>",
-      "filepath": {
-        "path": "/main.dbml"
-      },
       "startPos": {
         "offset": 123,
         "line": 6,
@@ -35,9 +32,6 @@
           "column": 6
         },
         "value": "Note",
-        "filepath": {
-          "path": "/main.dbml"
-        },
         "leadingTrivia": [
           {
             "kind": "<newline>",
@@ -52,9 +46,6 @@
               "column": 0
             },
             "value": "\n",
-            "filepath": {
-              "path": "/main.dbml"
-            },
             "leadingTrivia": [],
             "trailingTrivia": [],
             "leadingInvalid": [],
@@ -76,9 +67,6 @@
               "column": 1
             },
             "value": " ",
-            "filepath": {
-              "path": "/main.dbml"
-            },
             "leadingTrivia": [],
             "trailingTrivia": [],
             "leadingInvalid": [],
@@ -100,9 +88,6 @@
               "column": 2
             },
             "value": " ",
-            "filepath": {
-              "path": "/main.dbml"
-            },
             "leadingTrivia": [],
             "trailingTrivia": [],
             "leadingInvalid": [],
@@ -132,9 +117,6 @@
           "column": 7
         },
         "value": ":",
-        "filepath": {
-          "path": "/main.dbml"
-        },
         "leadingTrivia": [],
         "trailingTrivia": [
           {
@@ -150,9 +132,6 @@
               "column": 8
             },
             "value": " ",
-            "filepath": {
-              "path": "/main.dbml"
-            },
             "leadingTrivia": [],
             "trailingTrivia": [],
             "leadingInvalid": [],
@@ -171,9 +150,6 @@
       "body": {
         "id": 35,
         "kind": "<function-application>",
-        "filepath": {
-          "path": "/main.dbml"
-        },
         "startPos": {
           "offset": 129,
           "line": 6,
@@ -191,9 +167,6 @@
         "callee": {
           "id": 34,
           "kind": "<primary-expression>",
-          "filepath": {
-            "path": "/main.dbml"
-          },
           "startPos": {
             "offset": 129,
             "line": 6,
@@ -211,9 +184,6 @@
           "expression": {
             "id": 33,
             "kind": "<literal>",
-            "filepath": {
-              "path": "/main.dbml"
-            },
             "startPos": {
               "offset": 129,
               "line": 6,
@@ -241,9 +211,6 @@
                 "column": 20
               },
               "value": "Short note",
-              "filepath": {
-                "path": "/main.dbml"
-              },
               "leadingTrivia": [],
               "trailingTrivia": [
                 {
@@ -259,9 +226,6 @@
                     "column": 0
                   },
                   "value": "\n",
-                  "filepath": {
-                    "path": "/main.dbml"
-                  },
                   "leadingTrivia": [],
                   "trailingTrivia": [],
                   "leadingInvalid": [],
@@ -292,9 +256,6 @@
     "nodeOrToken": {
       "id": 68,
       "kind": "<element-declaration>",
-      "filepath": {
-        "path": "/main.dbml"
-      },
       "startPos": {
         "offset": 227,
         "line": 18,
@@ -322,9 +283,6 @@
           "column": 6
         },
         "value": "Note",
-        "filepath": {
-          "path": "/main.dbml"
-        },
         "leadingTrivia": [
           {
             "kind": "<newline>",
@@ -339,9 +297,6 @@
               "column": 0
             },
             "value": "\n",
-            "filepath": {
-              "path": "/main.dbml"
-            },
             "leadingTrivia": [],
             "trailingTrivia": [],
             "leadingInvalid": [],
@@ -363,9 +318,6 @@
               "column": 1
             },
             "value": " ",
-            "filepath": {
-              "path": "/main.dbml"
-            },
             "leadingTrivia": [],
             "trailingTrivia": [],
             "leadingInvalid": [],
@@ -387,9 +339,6 @@
               "column": 2
             },
             "value": " ",
-            "filepath": {
-              "path": "/main.dbml"
-            },
             "leadingTrivia": [],
             "trailingTrivia": [],
             "leadingInvalid": [],
@@ -413,9 +362,6 @@
               "column": 7
             },
             "value": " ",
-            "filepath": {
-              "path": "/main.dbml"
-            },
             "leadingTrivia": [],
             "trailingTrivia": [],
             "leadingInvalid": [],
@@ -434,9 +380,6 @@
       "body": {
         "id": 67,
         "kind": "<block-expression>",
-        "filepath": {
-          "path": "/main.dbml"
-        },
         "startPos": {
           "offset": 232,
           "line": 18,
@@ -464,9 +407,6 @@
             "column": 8
           },
           "value": "{",
-          "filepath": {
-            "path": "/main.dbml"
-          },
           "leadingTrivia": [],
           "trailingTrivia": [
             {
@@ -482,9 +422,6 @@
                 "column": 0
               },
               "value": "\n",
-              "filepath": {
-                "path": "/main.dbml"
-              },
               "leadingTrivia": [],
               "trailingTrivia": [],
               "leadingInvalid": [],
@@ -504,9 +441,6 @@
           {
             "id": 66,
             "kind": "<function-application>",
-            "filepath": {
-              "path": "/main.dbml"
-            },
             "startPos": {
               "offset": 238,
               "line": 19,
@@ -524,9 +458,6 @@
             "callee": {
               "id": 65,
               "kind": "<primary-expression>",
-              "filepath": {
-                "path": "/main.dbml"
-              },
               "startPos": {
                 "offset": 238,
                 "line": 19,
@@ -544,9 +475,6 @@
               "expression": {
                 "id": 64,
                 "kind": "<literal>",
-                "filepath": {
-                  "path": "/main.dbml"
-                },
                 "startPos": {
                   "offset": 238,
                   "line": 19,
@@ -574,9 +502,6 @@
                     "column": 7
                   },
                   "value": "\n    # Note\n\n    ## Objective\n      * Support define element's note inside element body\n      * Make writing long note easier with the new syntax\n      \n    ",
-                  "filepath": {
-                    "path": "/main.dbml"
-                  },
                   "leadingTrivia": [
                     {
                       "kind": "<space>",
@@ -591,9 +516,6 @@
                         "column": 1
                       },
                       "value": " ",
-                      "filepath": {
-                        "path": "/main.dbml"
-                      },
                       "leadingTrivia": [],
                       "trailingTrivia": [],
                       "leadingInvalid": [],
@@ -615,9 +537,6 @@
                         "column": 2
                       },
                       "value": " ",
-                      "filepath": {
-                        "path": "/main.dbml"
-                      },
                       "leadingTrivia": [],
                       "trailingTrivia": [],
                       "leadingInvalid": [],
@@ -639,9 +558,6 @@
                         "column": 3
                       },
                       "value": " ",
-                      "filepath": {
-                        "path": "/main.dbml"
-                      },
                       "leadingTrivia": [],
                       "trailingTrivia": [],
                       "leadingInvalid": [],
@@ -663,9 +579,6 @@
                         "column": 4
                       },
                       "value": " ",
-                      "filepath": {
-                        "path": "/main.dbml"
-                      },
                       "leadingTrivia": [],
                       "trailingTrivia": [],
                       "leadingInvalid": [],
@@ -689,9 +602,6 @@
                         "column": 0
                       },
                       "value": "\n",
-                      "filepath": {
-                        "path": "/main.dbml"
-                      },
                       "leadingTrivia": [],
                       "trailingTrivia": [],
                       "leadingInvalid": [],
@@ -725,9 +635,6 @@
             "column": 3
           },
           "value": "}",
-          "filepath": {
-            "path": "/main.dbml"
-          },
           "leadingTrivia": [
             {
               "kind": "<space>",
@@ -742,9 +649,6 @@
                 "column": 1
               },
               "value": " ",
-              "filepath": {
-                "path": "/main.dbml"
-              },
               "leadingTrivia": [],
               "trailingTrivia": [],
               "leadingInvalid": [],
@@ -766,9 +670,6 @@
                 "column": 2
               },
               "value": " ",
-              "filepath": {
-                "path": "/main.dbml"
-              },
               "leadingTrivia": [],
               "trailingTrivia": [],
               "leadingInvalid": [],
@@ -792,9 +693,6 @@
                 "column": 0
               },
               "value": "\n",
-              "filepath": {
-                "path": "/main.dbml"
-              },
               "leadingTrivia": [],
               "trailingTrivia": [],
               "leadingInvalid": [],

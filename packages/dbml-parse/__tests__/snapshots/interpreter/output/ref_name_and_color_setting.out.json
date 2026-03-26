@@ -1,7 +1,4 @@
 {
-  "filepath": {
-    "path": "/main.dbml"
-  },
   "schemas": [],
   "tables": [
     {
@@ -17,9 +14,6 @@
             "args": null
           },
           "token": {
-            "filepath": {
-              "path": "/main.dbml"
-            },
             "start": {
               "offset": 35,
               "line": 2,
@@ -43,9 +37,6 @@
             "args": null
           },
           "token": {
-            "filepath": {
-              "path": "/main.dbml"
-            },
             "start": {
               "offset": 44,
               "line": 3,
@@ -63,9 +54,6 @@
         }
       ],
       "token": {
-        "filepath": {
-          "path": "/main.dbml"
-        },
         "start": {
           "offset": 0,
           "line": 1,
@@ -95,9 +83,6 @@
             "args": null
           },
           "token": {
-            "filepath": {
-              "path": "/main.dbml"
-            },
             "start": {
               "offset": 68,
               "line": 7,
@@ -121,9 +106,6 @@
             "args": null
           },
           "token": {
-            "filepath": {
-              "path": "/main.dbml"
-            },
             "start": {
               "offset": 77,
               "line": 8,
@@ -141,9 +123,6 @@
         }
       ],
       "token": {
-        "filepath": {
-          "path": "/main.dbml"
-        },
         "start": {
           "offset": 56,
           "line": 6,
@@ -164,9 +143,6 @@
   "refs": [
     {
       "token": {
-        "filepath": {
-          "path": "/main.dbml"
-        },
         "start": {
           "offset": 103,
           "line": 12,
@@ -190,9 +166,6 @@
           "schemaName": null,
           "relation": "1",
           "token": {
-            "filepath": {
-              "path": "/main.dbml"
-            },
             "start": {
               "offset": 118,
               "line": 12,
@@ -213,9 +186,6 @@
           "schemaName": null,
           "relation": "*",
           "token": {
-            "filepath": {
-              "path": "/main.dbml"
-            },
             "start": {
               "offset": 125,
               "line": 12,
@@ -232,9 +202,6 @@
     },
     {
       "token": {
-        "filepath": {
-          "path": "/main.dbml"
-        },
         "start": {
           "offset": 161,
           "line": 15,
@@ -258,9 +225,6 @@
           "schemaName": null,
           "relation": "1",
           "token": {
-            "filepath": {
-              "path": "/main.dbml"
-            },
             "start": {
               "offset": 178,
               "line": 16,
@@ -281,9 +245,6 @@
           "schemaName": null,
           "relation": "*",
           "token": {
-            "filepath": {
-              "path": "/main.dbml"
-            },
             "start": {
               "offset": 185,
               "line": 16,
