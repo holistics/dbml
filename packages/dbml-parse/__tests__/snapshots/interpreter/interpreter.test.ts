@@ -14,7 +14,7 @@ describe('[snapshot] interpreter', () => {
     compiler.setSource(program);
     let output: any;
 
-    const analyzeReport = compiler.parseFile().chain(() => compiler.analyzeFile());
+    const analyzeReport = compiler.analyzeFile();
 
     if (analyzeReport.getErrors().length !== 0) {
       output = JSON.stringify(
