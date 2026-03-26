@@ -19,7 +19,7 @@ import { isDotDelimitedIdentifier, isExpressionAnIdentifierNode, isExpressionAQu
 import Report from '@/core/report';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import { getNumberTextFromExpression, parseNumber } from '@/core/analyzer/utils';
-import { isExpressionASignedNumberExpression, isValidPartialInjection } from '@/core/analyzer/validator/utils';
+import { isExpressionASignedNumberExpression, isValidPartialInjection } from '../analyzer/validator/utils';
 
 export function extractNamesFromRefOperand (operand: SyntaxNode, owner?: Table): { schemaName: string | null; tableName: string; fieldNames: string[] } {
   const { variables, tupleElements } = destructureComplexVariableTuple(operand).unwrap();

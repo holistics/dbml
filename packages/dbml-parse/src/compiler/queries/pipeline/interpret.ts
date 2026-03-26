@@ -1,4 +1,4 @@
-import type Compiler from '@/compiler';
+import type Compiler from '@/compiler/index';
 import { Filepath, type FilepathId } from '@/compiler/projectLayout';
 import type { Database, Model } from '@/core/interpreter/types';
 import type { CompileError, CompileWarning } from '@/core/errors';

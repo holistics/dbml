@@ -9,7 +9,7 @@ import {
   extractElementName, getTokenPosition, normalizeNoteContent, extractColor,
 } from '@/core/interpreter/utils';
 import { aggregateSettingList } from '@/core/analyzer/validator/utils';
-import type Compiler from '@/compiler';
+import type Compiler from '@/compiler/index';
 
 export class TableGroupInterpreter implements ElementInterpreter {
   private compiler: Compiler;

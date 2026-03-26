@@ -8,7 +8,7 @@ import {
 } from '@/core/interpreter/utils';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import { aggregateSettingList } from '@/core/analyzer/validator/utils';
-import type Compiler from '@/compiler';
+import type Compiler from '@/compiler/index';
 
 export class StickyNoteInterpreter implements ElementInterpreter {
   private compiler: Compiler;

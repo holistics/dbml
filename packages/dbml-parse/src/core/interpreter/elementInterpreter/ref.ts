@@ -11,7 +11,7 @@ import {
   extractColor, extractNamesFromRefOperand, getColumnSymbolsOfRefOperand, getMultiplicities, getRefId, getTokenPosition, isSameEndpoint,
 } from '@/core/interpreter/utils';
 import { extractStringFromIdentifierStream } from '@/core/parser/utils';
-import type Compiler from '@/compiler';
+import type Compiler from '@/compiler/index';
 
 export class RefInterpreter implements ElementInterpreter {
   private compiler: Compiler;

@@ -8,7 +8,7 @@ import {
   ElementInterpreter, Enum, EnumField, InterpreterDatabase,
 } from '@/core/interpreter/types';
 import { extractElementName, getTokenPosition, normalizeNoteContent } from '@/core/interpreter/utils';
-import type Compiler from '@/compiler';
+import type Compiler from '@/compiler/index';
 
 export class EnumInterpreter implements ElementInterpreter {
   private compiler: Compiler;

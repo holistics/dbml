@@ -1,4 +1,4 @@
-import type Compiler from '@/compiler';
+import type Compiler from '@/compiler/index';
 import type { Filepath } from '@/compiler/projectLayout';
 import { ProgramNode } from '@/core/parser/nodes';
 import { Database, InterpreterDatabase, Table, TablePartial, TableRecord } from '@/core/interpreter/types';

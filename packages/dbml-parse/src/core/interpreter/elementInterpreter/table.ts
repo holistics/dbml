@@ -22,7 +22,7 @@ import { aggregateSettingList, isValidPartialInjection } from '@/core/analyzer/v
 import { ColumnSymbol } from '@/core/analyzer/symbol/symbols';
 import { destructureIndex, SymbolKind } from '@/core/analyzer/symbol/symbolIndex';
 import { ElementKind, SettingName } from '@/core/analyzer/types';
-import type Compiler from '@/compiler';
+import type Compiler from '@/compiler/index';
 
 export class TableInterpreter implements ElementInterpreter {
   private compiler: Compiler;
