@@ -31,7 +31,7 @@ export function symbolOfName (this: Compiler, nameStack: string[], owner: Elemen
       ? currentOwner.parent
       : undefined
   ) {
-    const ownerSymbol = this.resolvedSymbol(currentOwner, filepath);
+    const ownerSymbol = this.resolvedSymbol(currentOwner);
     if (!ownerSymbol?.symbolTable) {
       continue;
     }

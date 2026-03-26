@@ -28,5 +28,5 @@ export function extractReferee (compiler: Compiler, filepath: Filepath, node: Sy
     return extractReferee(compiler, filepath, node.rightExpression);
   }
 
-  return compiler.nodeReferee(node, filepath);
+  return compiler.nodeReferee(node);
 }

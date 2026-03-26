@@ -28,8 +28,8 @@ export default class DBMLReferencesProvider implements ReferenceProvider {
           SyntaxNodeKind.PRIMARY_EXPRESSION,
         ].includes(node?.kind)
       ) {
-        const symbol = this.compiler.resolvedSymbol(node, filepath);
-        const references = symbol ? this.compiler.nodeReferences(node, filepath) : undefined;
+        const symbol = this.compiler.resolvedSymbol(node);
+        const references = symbol ? this.compiler.nodeReferences(node) : undefined;
         if (references?.length) {
           return references.map(({ startPos, endPos }: { startPos: any; endPos: any }) => ({
             range: {

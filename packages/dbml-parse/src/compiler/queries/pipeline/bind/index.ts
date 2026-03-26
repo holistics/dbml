@@ -77,18 +77,14 @@ export function analyzeFile (this: Compiler, filepath: Filepath): Report<Analyze
 
   nodeToSymbol.set(fileIndex.ast, symbolFactory.create(SchemaSymbol, { symbolTable: resolved.getValue() }));
 
-  // Skip binding when validation had errors to avoid misleading secondary errors
   const nodeToReferee: NodeToRefereeMap = new WeakMap();
   const symbolToReferences: SymbolToReferencesMap = new Map();
-
-  if (errors.length === 0) {
-    const bindingReport = new Binder(
-      { ast: fileIndex.ast, nodeToSymbol, nodeToReferee, symbolToReferences },
-      symbolFactory,
-    ).resolve();
-    errors.push(...bindingReport.getErrors());
-    warnings.push(...bindingReport.getWarnings());
-  }
+  const bindingReport = new Binder(
+    { ast: fileIndex.ast, nodeToSymbol, nodeToReferee, symbolToReferences },
+    symbolFactory,
+  ).resolve();
+  errors.push(...bindingReport.getErrors());
+  warnings.push(...bindingReport.getWarnings());
 
   return new Report(
     {

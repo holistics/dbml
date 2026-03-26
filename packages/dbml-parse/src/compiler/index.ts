@@ -126,16 +126,17 @@ export default class Compiler {
 
   /* utility queries */
 
-  resolvedSymbol (node: SyntaxNode, filepath: Filepath): NodeSymbol | undefined {
-    return this.analyzeFile(filepath).getValue().nodeToSymbol.get(node);
+  resolvedSymbol (node: SyntaxNode): NodeSymbol | undefined {
+    return this.analyzeFile(node.filepath).getValue().nodeToSymbol.get(node);
   }
 
-  nodeReferee (node: SyntaxNode, filepath: Filepath): NodeSymbol | undefined {
-    return this.analyzeFile(filepath).getValue().nodeToReferee.get(node);
+  nodeReferee (node: SyntaxNode): NodeSymbol | undefined {
+    return this.analyzeFile(node.filepath).getValue().nodeToReferee.get(node);
   }
 
-  nodeReferences (node: SyntaxNode, filepath: Filepath): SyntaxNode[] {
-    const { nodeToSymbol, symbolToReferences } = this.analyzeFile(filepath).getValue();
+  // Warning: this query may return missing references if some files that `use` this node but are not included in the compilation path from the entrypoint file
+  nodeReferences (node: SyntaxNode): SyntaxNode[] {
+    const { nodeToSymbol, symbolToReferences } = this.analyzeFile(node.filepath).getValue();
     const symbol = nodeToSymbol.get(node);
     if (!symbol) return [];
     return symbolToReferences.get(symbol) ?? [];

@@ -108,7 +108,7 @@ function suggestRecordRowInNestedRecords (
     return noSuggestions();
   }
 
-  const tableSymbol = compiler.resolvedSymbol(parent, filepath);
+  const tableSymbol = compiler.resolvedSymbol(parent);
   if (!(tableSymbol instanceof TableSymbol)) {
     return noSuggestions();
   }
