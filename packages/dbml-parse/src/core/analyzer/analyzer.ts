@@ -7,7 +7,7 @@ import SymbolFactory from '@/core/analyzer/symbol/factory';
 
 export type NodeToSymbolMap = WeakMap<SyntaxNode, NodeSymbol>;
 export type NodeToRefereeMap = WeakMap<SyntaxNode, NodeSymbol>;
-export type SymbolToReferencesMap = Map<NodeSymbol, SyntaxNode[]>;
+export type SymbolToReferencesMap = WeakMap<NodeSymbol, SyntaxNode[]>;
 export type AnalysisResult = {
   ast: ProgramNode;
   nodeToSymbol: NodeToSymbolMap;
@@ -41,7 +41,7 @@ export default class Analyzer {
     const ast = this.ast;
 
     return validator.validate().chain((nodeToSymbol) => {
-      const symbolToReferences: SymbolToReferencesMap = new Map();
+      const symbolToReferences: SymbolToReferencesMap = new WeakMap();
       const binder = new Binder(
         { ast, nodeToSymbol, symbolToReferences },
         this.symbolFactory,
@@ -62,7 +62,7 @@ export default class Analyzer {
 
   // For invoking the binder only
   bind (nodeToSymbol: NodeToSymbolMap, symbolToReferences?: SymbolToReferencesMap): Report<{ nodeToReferee: NodeToRefereeMap; symbolToReferences: SymbolToReferencesMap }> {
-    const refs = symbolToReferences ?? new Map();
+    const refs = symbolToReferences ?? new WeakMap();
     const binder = new Binder(
       { ast: this.ast, nodeToSymbol, symbolToReferences: refs },
       this.symbolFactory,
