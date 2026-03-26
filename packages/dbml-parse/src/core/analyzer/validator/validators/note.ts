@@ -1,7 +1,7 @@
 import { partition } from 'lodash-es';
-import SymbolFactory from '@/core/analyzer/validator/symbol/factory';
-import { NodeToSymbolMap } from '@/core/types';
-import { NodeSymbol } from '@/core/analyzer/validator/symbol/symbols';
+import SymbolFactory from '@/core/analyzer/symbol/factory';
+import { NodeToSymbolMap } from '@/core/analyzer/types';
+import { NodeSymbol } from '@/core/analyzer/symbol/symbols';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, ProgramNode, SyntaxNode,
@@ -10,10 +10,10 @@ import { SyntaxToken } from '@/core/lexer/tokens';
 import { ElementValidator } from '@/core/analyzer/validator/types';
 import { isExpressionAQuotedString } from '@/core/parser/utils';
 import { pickElementValidator } from '@/core/analyzer/validator/utils';
-import SymbolTable from '@/core/analyzer/validator/symbol/symbolTable';
-import { ElementKind } from '@/core/types';
+import SymbolTable from '@/core/analyzer/symbol/symbolTable';
+import { ElementKind } from '@/core/analyzer/types';
 import { destructureComplexVariable, getElementKind } from '@/core/utils';
-import { createStickyNoteSymbolIndex } from '@/core/analyzer/validator/symbol/symbolIndex';
+import { createStickyNoteSymbolIndex } from '@/core/analyzer/symbol/symbolIndex';
 
 export default class NoteValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };

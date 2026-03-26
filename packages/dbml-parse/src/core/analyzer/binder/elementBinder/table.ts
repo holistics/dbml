@@ -7,13 +7,13 @@ import { SyntaxToken } from '@/core/lexer/tokens';
 import { CompileError } from '@/core/errors';
 import { lookupAndBindInScope, pickBinder, scanNonListNodeForBinding } from '../utils';
 import { aggregateSettingList, isValidPartialInjection } from '@/core/analyzer/validator/utils';
-import { SymbolKind, createColumnSymbolIndex } from '@/core/analyzer/validator/symbol/symbolIndex';
+import { SymbolKind, createColumnSymbolIndex } from '@/core/analyzer/symbol/symbolIndex';
 import { destructureComplexVariableTuple, extractVariableFromExpression } from '@/core/utils';
-import { TablePartialInjectedColumnSymbol, TablePartialSymbol } from '@/core/analyzer/validator/symbol/symbols';
-import SymbolFactory from '@/core/analyzer/validator/symbol/factory';
+import { TablePartialInjectedColumnSymbol, TablePartialSymbol } from '@/core/analyzer/symbol/symbols';
+import SymbolFactory from '@/core/analyzer/symbol/factory';
 import { isExpressionAQuotedString, isExpressionAVariableNode } from '@/core/parser/utils';
 import { KEYWORDS_OF_DEFAULT_SETTING } from '@/constants';
-import { BinderContext } from '@/core/types';
+import { BinderContext } from '@/core/analyzer/analyzer';
 
 export default class TableBinder implements ElementBinder {
   private symbolFactory: SymbolFactory;

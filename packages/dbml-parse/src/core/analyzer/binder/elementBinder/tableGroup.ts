@@ -6,9 +6,9 @@ import { ElementBinder } from '../types';
 import { SyntaxToken } from '@/core/lexer/tokens';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import { lookupAndBindInScope, pickBinder, scanNonListNodeForBinding } from '../utils';
-import { SymbolKind } from '@/core/analyzer/validator/symbol/symbolIndex';
-import SymbolFactory from '@/core/analyzer/validator/symbol/factory';
-import { BinderContext } from '@/core/types';
+import { SymbolKind } from '@/core/analyzer/symbol/symbolIndex';
+import SymbolFactory from '@/core/analyzer/symbol/factory';
+import { BinderContext } from '@/core/analyzer/analyzer';
 
 export default class TableGroupBinder implements ElementBinder {
   private symbolFactory: SymbolFactory;

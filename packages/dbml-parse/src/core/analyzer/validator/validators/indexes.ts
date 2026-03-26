@@ -1,6 +1,6 @@
 import { last, partition } from 'lodash-es';
-import SymbolFactory from '@/core/analyzer/validator/symbol/factory';
-import { NodeToSymbolMap } from '@/core/types';
+import SymbolFactory from '@/core/analyzer/symbol/factory';
+import { NodeToSymbolMap } from '@/core/analyzer/types';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import {
   BlockExpressionNode,
@@ -19,8 +19,8 @@ import { isVoid, pickElementValidator } from '@/core/analyzer/validator/utils';
 import { SyntaxToken } from '@/core/lexer/tokens';
 import { ElementValidator } from '@/core/analyzer/validator/types';
 import { destructureIndexNode, getElementKind } from '@/core/utils';
-import SymbolTable from '@/core/analyzer/validator/symbol/symbolTable';
-import { ElementKind } from '@/core/types';
+import SymbolTable from '@/core/analyzer/symbol/symbolTable';
+import { ElementKind } from '@/core/analyzer/types';
 
 export default class IndexesValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };

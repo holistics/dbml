@@ -1,6 +1,6 @@
 import { SyntaxToken } from '@/core/lexer/tokens';
 import { ElementDeclarationNode, InfixExpressionNode, PostfixExpressionNode, PrefixExpressionNode, PrimaryExpressionNode, ProgramNode, SyntaxNode, TupleExpressionNode, VariableNode } from '@/core/parser/nodes';
-import { ElementKind } from '@/core/types';
+import { ElementKind } from '@/core/analyzer/types';
 import ChecksBinder from './elementBinder/checks';
 import CustomBinder from './elementBinder/custom';
 import EnumBinder from './elementBinder/enum';
@@ -12,14 +12,14 @@ import TableBinder from './elementBinder/table';
 import TableGroupBinder from './elementBinder/tableGroup';
 import TablePartialBinder from './elementBinder/tablePartial';
 import { destructureComplexVariableTuple, extractVarNameFromPrimaryVariable } from '@/core/utils';
-import { SymbolKind, createNodeSymbolIndex } from '@/core/analyzer/validator/symbol/symbolIndex';
-import { getSymbolKind } from '@/core/analyzer/validator/symbol/utils';
+import { SymbolKind, createNodeSymbolIndex } from '@/core/analyzer/symbol/symbolIndex';
+import { getSymbolKind } from '@/core/analyzer/symbol/utils';
 import { getElementNameString, isExpressionAVariableNode } from '@/core/parser/utils';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import { DEFAULT_SCHEMA_NAME } from '@/constants';
 import RecordsBinder from './elementBinder/records';
-import { SymbolToReferencesMap, BinderContext } from '@/core/types';
-import { NodeSymbol } from '@/core/analyzer/validator/symbol/symbols';
+import { SymbolToReferencesMap, BinderContext } from '@/core/analyzer/analyzer';
+import { NodeSymbol } from '@/core/analyzer/symbol/symbols';
 
 export function addSymbolReference (symbolToReferences: SymbolToReferencesMap, symbol: NodeSymbol, node: SyntaxNode): void {
   const refs = symbolToReferences.get(symbol);

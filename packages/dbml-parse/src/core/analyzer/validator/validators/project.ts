@@ -1,5 +1,5 @@
 import { partition } from 'lodash-es';
-import SymbolFactory from '@/core/analyzer/validator/symbol/factory';
+import SymbolFactory from '@/core/analyzer/symbol/factory';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode,
@@ -7,8 +7,8 @@ import {
 import { SyntaxToken } from '@/core/lexer/tokens';
 import { ElementValidator } from '@/core/analyzer/validator/types';
 import { isSimpleName, pickElementValidator } from '@/core/analyzer/validator/utils';
-import SymbolTable from '@/core/analyzer/validator/symbol/symbolTable';
-import { NodeToSymbolMap } from '@/core/types';
+import SymbolTable from '@/core/analyzer/symbol/symbolTable';
+import { NodeToSymbolMap } from '@/core/analyzer/analyzer';
 
 export default class ProjectValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };

@@ -18,8 +18,8 @@ import {
 } from '@/core/utils';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import { aggregateSettingList } from '@/core/analyzer/validator/utils';
-import { ColumnSymbol } from '@/core/analyzer/validator/symbol/symbols';
-import { ElementKind, SettingName } from '@/core/types';
+import { ColumnSymbol } from '@/core/analyzer/symbol/symbols';
+import { ElementKind, SettingName } from '@/core/analyzer/types';
 import type Compiler from '@/compiler';
 
 export class TablePartialInterpreter implements ElementInterpreter {

@@ -19,8 +19,8 @@ import {
   CompletionItemKind,
   CompletionItemInsertTextRule,
 } from '@/services/types';
-import { TableSymbol, type NodeSymbol } from '@/core/analyzer/validator/symbol/symbols';
-import { SymbolKind, destructureIndex } from '@/core/analyzer/validator/symbol/symbolIndex';
+import { TableSymbol, type NodeSymbol } from '@/core/analyzer/symbol/symbols';
+import { SymbolKind, destructureIndex } from '@/core/analyzer/symbol/symbolIndex';
 import {
   pickCompletionItemKind,
   shouldPrependSpace,
@@ -49,9 +49,9 @@ import {
 import { getOffsetFromMonacoPosition, getFilepathFromModel } from '@/services/utils';
 import type { Filepath } from '@/compiler/projectLayout';
 import { ROOT } from '@/compiler/constants';
-import { ExternalSymbol } from '@/core/analyzer/validator/symbol/symbols';
+import { ExternalSymbol } from '@/core/analyzer/symbol/symbols';
 import { isComment } from '@/core/lexer/utils';
-import { ElementKind, SettingName } from '@/core/types';
+import { ElementKind, SettingName } from '@/core/analyzer/types';
 
 export default class DBMLCompletionItemProvider implements CompletionItemProvider {
   private compiler: Compiler;

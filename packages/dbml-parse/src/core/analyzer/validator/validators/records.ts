@@ -1,6 +1,6 @@
 import { partition } from 'lodash-es';
-import SymbolFactory from '@/core/analyzer/validator/symbol/factory';
-import { NodeToSymbolMap } from '@/core/types';
+import SymbolFactory from '@/core/analyzer/symbol/factory';
+import { NodeToSymbolMap } from '@/core/analyzer/types';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import {
   BlockExpressionNode, CallExpressionNode, CommaExpressionNode, ElementDeclarationNode, EmptyNode, FunctionApplicationNode, FunctionExpressionNode, ListExpressionNode, ProgramNode, SyntaxNode,
@@ -8,9 +8,9 @@ import {
 import { SyntaxToken } from '@/core/lexer/tokens';
 import { ElementValidator } from '@/core/analyzer/validator/types';
 import { isExpressionASignedNumberExpression, isTupleOfVariables, isValidName, pickElementValidator } from '@/core/analyzer/validator/utils';
-import SymbolTable from '@/core/analyzer/validator/symbol/symbolTable';
+import SymbolTable from '@/core/analyzer/symbol/symbolTable';
 import { destructureComplexVariable, getElementKind } from '@/core/utils';
-import { ElementKind } from '@/core/types';
+import { ElementKind } from '@/core/analyzer/types';
 import { isAccessExpression, isExpressionAQuotedString, isExpressionAVariableNode } from '@/core/parser/utils';
 import { KEYWORDS_OF_DEFAULT_SETTING } from '@/constants';
 

@@ -1,8 +1,8 @@
 import { DEFAULT_SCHEMA_NAME } from '@/constants';
 import { splitQualifiedIdentifier } from '../utils';
-import { createTableSymbolIndex, createSchemaSymbolIndex } from '@/core/analyzer/validator/symbol/symbolIndex';
-import type SymbolTable from '@/core/analyzer/validator/symbol/symbolTable';
-import { TableSymbol } from '@/core/analyzer/validator/symbol/symbols';
+import { createTableSymbolIndex, createSchemaSymbolIndex } from '@/core/analyzer/symbol/symbolIndex';
+import type SymbolTable from '@/core/analyzer/symbol/symbolTable';
+import { TableSymbol } from '@/core/analyzer/symbol/symbols';
 
 export type TableNameInput = string | { schema?: string; table: string };
 

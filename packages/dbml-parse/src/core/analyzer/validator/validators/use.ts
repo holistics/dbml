@@ -1,11 +1,11 @@
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import { ElementDeclarationNode, UseDeclarationNode, UseSpecifierNode, type SyntaxNode } from '@/core/parser/nodes';
-import SymbolTable from '@/core/analyzer/validator/symbol/symbolTable';
+import SymbolTable from '@/core/analyzer/symbol/symbolTable';
 import { isValidName, registerSchemaStack } from '@/core/analyzer/validator/utils';
-import { ExternalSymbol, SchemaSymbol, type NodeSymbol } from '@/core/analyzer/validator/symbol/symbols';
-import { createNodeSymbolIndex, SymbolKind } from '@/core/analyzer/validator/symbol/symbolIndex';
+import { ExternalSymbol, SchemaSymbol, type NodeSymbol } from '@/core/analyzer/symbol/symbols';
+import { createNodeSymbolIndex, SymbolKind } from '@/core/analyzer/symbol/symbolIndex';
 import { destructureComplexVariable } from '@/core/utils';
-import SymbolFactory from '@/core/analyzer/validator/symbol/factory';
+import SymbolFactory from '@/core/analyzer/symbol/factory';
 import { Filepath, type FilepathId } from '@/compiler/projectLayout';
 import { DBML_EXT } from '@/compiler/constants';
 

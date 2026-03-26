@@ -19,9 +19,9 @@ import {
 } from '@/core/utils';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import { aggregateSettingList, isValidPartialInjection } from '@/core/analyzer/validator/utils';
-import { ColumnSymbol } from '@/core/analyzer/validator/symbol/symbols';
-import { destructureIndex, SymbolKind } from '@/core/analyzer/validator/symbol/symbolIndex';
-import { ElementKind, SettingName } from '@/core/types';
+import { ColumnSymbol } from '@/core/analyzer/symbol/symbols';
+import { destructureIndex, SymbolKind } from '@/core/analyzer/symbol/symbolIndex';
+import { ElementKind, SettingName } from '@/core/analyzer/types';
 import type Compiler from '@/compiler';
 
 export class TableInterpreter implements ElementInterpreter {

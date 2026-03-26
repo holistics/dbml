@@ -5,8 +5,8 @@ import {
 } from '@/core/parser/nodes';
 import { SyntaxToken } from '@/core/lexer/tokens';
 import { pickBinder } from '../utils';
-import SymbolFactory from '@/core/analyzer/validator/symbol/factory';
-import { BinderContext } from '@/core/types';
+import SymbolFactory from '@/core/analyzer/symbol/factory';
+import { BinderContext } from '@/core/analyzer/analyzer';
 
 export default class EnumBinder implements ElementBinder {
   private symbolFactory: SymbolFactory;

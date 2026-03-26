@@ -1,6 +1,6 @@
 import { partition, forIn, last } from 'lodash-es';
-import SymbolFactory from '@/core/analyzer/validator/symbol/factory';
-import { NodeToSymbolMap } from '@/core/types';
+import SymbolFactory from '@/core/analyzer/symbol/factory';
+import { NodeToSymbolMap } from '@/core/analyzer/analyzer';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import {
   AttributeNode,
@@ -26,16 +26,16 @@ import {
   pickElementValidator,
 } from '@/core/analyzer/validator/utils';
 import { ElementValidator } from '@/core/analyzer/validator/types';
-import { ColumnSymbol, TablePartialSymbol } from '@/core/analyzer/validator/symbol/symbols';
-import { createColumnSymbolIndex, createTablePartialSymbolIndex } from '@/core/analyzer/validator/symbol/symbolIndex';
+import { ColumnSymbol, TablePartialSymbol } from '@/core/analyzer/symbol/symbols';
+import { createColumnSymbolIndex, createTablePartialSymbolIndex } from '@/core/analyzer/symbol/symbolIndex';
 import {
   isExpressionAQuotedString,
   isExpressionAVariableNode,
   isExpressionAnIdentifierNode,
 } from '@/core/parser/utils';
 import { SyntaxToken } from '@/core/lexer/tokens';
-import SymbolTable from '@/core/analyzer/validator/symbol/symbolTable';
-import { ElementKind, SettingName } from '@/core/types';
+import SymbolTable from '@/core/analyzer/symbol/symbolTable';
+import { ElementKind, SettingName } from '@/core/analyzer/types';
 
 export default class TablePartialValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };

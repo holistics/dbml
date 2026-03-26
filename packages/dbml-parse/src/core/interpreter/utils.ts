@@ -1,6 +1,6 @@
 import { last, zip, uniqBy } from 'lodash-es';
 
-import { ColumnSymbol, NodeSymbol } from '@/core/analyzer/validator/symbol/symbols';
+import { ColumnSymbol, NodeSymbol } from '@/core/analyzer/symbol/symbols';
 import {
   destructureComplexVariableTuple, destructureComplexVariable, destructureMemberAccessExpression, extractQuotedStringToken,
   extractVariableFromExpression,

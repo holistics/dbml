@@ -1,12 +1,12 @@
 import type Compiler from '../../../index';
 import { Filepath } from '../../../projectLayout';
-import { ExternalSymbol, NodeSymbol, NodeSymbolIdGenerator, SchemaSymbol, TableGroupSymbol } from '@/core/analyzer/validator/symbol/symbols';
+import { ExternalSymbol, NodeSymbol, NodeSymbolIdGenerator, SchemaSymbol, TableGroupSymbol } from '@/core/analyzer/symbol/symbols';
 import { BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode } from '@/core/parser/nodes';
 import { destructureComplexVariable } from '@/core/utils';
 import { registerSchemaStack } from '@/core/analyzer/validator/utils';
-import SymbolFactory from '@/core/analyzer/validator/symbol/factory';
-import { createNodeSymbolIndex, destructureIndex, SymbolKind } from '@/core/analyzer/validator/symbol/symbolIndex';
-import SymbolTable from '@/core/analyzer/validator/symbol/symbolTable';
+import SymbolFactory from '@/core/analyzer/symbol/factory';
+import { createNodeSymbolIndex, destructureIndex, SymbolKind } from '@/core/analyzer/symbol/symbolIndex';
+import SymbolTable from '@/core/analyzer/symbol/symbolTable';
 import Report from '@/core/report';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import { validateFile } from './index';

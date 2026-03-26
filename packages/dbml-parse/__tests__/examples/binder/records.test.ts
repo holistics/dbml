@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import { TableSymbol, EnumSymbol, ColumnSymbol, EnumFieldSymbol, SchemaSymbol } from '@/core/analyzer/validator/symbol/symbols';
+import { TableSymbol, EnumSymbol, ColumnSymbol, EnumFieldSymbol, SchemaSymbol } from '@/core/analyzer/symbol/symbols';
 import { Compiler } from '@/index';
 import { DEFAULT_ENTRY } from '@/compiler/constants';
 

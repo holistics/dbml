@@ -25,17 +25,17 @@ import ProjectValidator from './validators/project';
 import RefValidator from './validators/ref';
 import TableValidator from './validators/table';
 import TableGroupValidator from './validators/tableGroup';
-import { createSchemaSymbolIndex } from '@/core/analyzer/validator/symbol/symbolIndex';
-import { SchemaSymbol } from '@/core/analyzer/validator/symbol/symbols';
-import SymbolTable from '@/core/analyzer/validator/symbol/symbolTable';
-import SymbolFactory from '@/core/analyzer/validator/symbol/factory';
+import { createSchemaSymbolIndex } from '@/core/analyzer/symbol/symbolIndex';
+import { SchemaSymbol } from '@/core/analyzer/symbol/symbols';
+import SymbolTable from '@/core/analyzer/symbol/symbolTable';
+import SymbolFactory from '@/core/analyzer/symbol/factory';
 import {
   extractStringFromIdentifierStream, isAccessExpression, isDotDelimitedIdentifier, isExpressionAQuotedString, isExpressionAVariableNode, isExpressionAnIdentifierNode,
 } from '@/core/parser/utils';
 import { NUMERIC_LITERAL_PREFIX } from '@/constants';
 import Report from '@/core/report';
 import { CompileError, CompileErrorCode } from '@/core/errors';
-import { ElementKind } from '@/core/types';
+import { ElementKind } from '@/core/analyzer/types';
 import TablePartialValidator from './validators/tablePartial';
 import ChecksValidator from './validators/checks';
 import RecordsValidator from './validators/records';

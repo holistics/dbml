@@ -3,9 +3,10 @@ import { ElementDeclarationNode, ProgramNode } from '@/core/parser/nodes';
 import { pickBinder } from '@/core/analyzer/binder/utils';
 import Report from '@/core/report';
 import { SyntaxToken } from '@/core/lexer/tokens';
-import SymbolFactory from '@/core/analyzer/validator/symbol/factory';
+import SymbolFactory from '@/core/analyzer/symbol/factory';
 import { getElementKind } from '@/core/utils';
-import { ElementKind, NodeToSymbolMap, NodeToRefereeMap, SymbolToReferencesMap, BinderContext } from '@/core/types';
+import { ElementKind } from '@/core/analyzer/types';
+import { NodeToSymbolMap, NodeToRefereeMap, SymbolToReferencesMap, BinderContext } from '@/core/analyzer/analyzer';
 import TableBinder from './elementBinder/table';
 
 export default class Binder {

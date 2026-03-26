@@ -1,8 +1,8 @@
 import { ElementDeclarationNode, ProgramNode, SyntaxToken } from '@/core/..';
 import { CompileError } from '@/core/errors';
-import SymbolFactory from '@/core/analyzer/validator/symbol/factory';
+import SymbolFactory from '@/core/analyzer/symbol/factory';
 import { ElementBinder } from '../types';
-import { BinderContext } from '@/core/types';
+import { BinderContext } from '@/core/analyzer/analyzer';
 
 export default class ChecksBinder implements ElementBinder {
   private symbolFactory: SymbolFactory;

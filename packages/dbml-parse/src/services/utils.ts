@@ -4,7 +4,7 @@ import { DEFAULT_ENTRY } from '@/compiler/constants';
 import type Compiler from '@/compiler';
 import type { SyntaxNode } from '@/core/parser/nodes';
 import { InfixExpressionNode } from '@/core/parser/nodes';
-import type { NodeSymbol } from '@/core/analyzer/validator/symbol/symbols';
+import type { NodeSymbol } from '@/core/analyzer/symbol/symbols';
 
 export function getOffsetFromMonacoPosition (model: TextModel, position: Position): number {
   return model.getOffsetAt(position);

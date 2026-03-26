@@ -1,6 +1,6 @@
 import { DEFAULT_SCHEMA_NAME } from '@/constants';
 import { last, partition } from 'lodash-es';
-import SymbolFactory from '@/core/analyzer/validator/symbol/factory';
+import SymbolFactory from '@/core/analyzer/symbol/factory';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode,
@@ -12,11 +12,11 @@ import {
   aggregateSettingList } from '@/core/analyzer/validator/utils';
 import { isValidName, pickElementValidator } from '@/core/analyzer/validator/utils';
 import { registerSchemaStack } from '@/core/analyzer/validator/utils';
-import { createEnumFieldSymbolIndex, createEnumSymbolIndex } from '@/core/analyzer/validator/symbol/symbolIndex';
+import { createEnumFieldSymbolIndex, createEnumSymbolIndex } from '@/core/analyzer/symbol/symbolIndex';
 import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '@/core/utils';
-import SymbolTable from '@/core/analyzer/validator/symbol/symbolTable';
-import { EnumFieldSymbol, EnumSymbol } from '@/core/analyzer/validator/symbol/symbols';
-import { NodeToSymbolMap } from '@/core/types';
+import SymbolTable from '@/core/analyzer/symbol/symbolTable';
+import { EnumFieldSymbol, EnumSymbol } from '@/core/analyzer/symbol/symbols';
+import { NodeToSymbolMap } from '@/core/analyzer/analyzer';
 
 export default class EnumValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };

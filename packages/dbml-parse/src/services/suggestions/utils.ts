@@ -1,11 +1,11 @@
-import { SymbolKind, destructureIndex, createColumnSymbolIndex } from '@/core/analyzer/validator/symbol/symbolIndex';
+import { SymbolKind, destructureIndex, createColumnSymbolIndex } from '@/core/analyzer/symbol/symbolIndex';
 import { CompletionItemKind, CompletionItemInsertTextRule, type CompletionList } from '@/services/types';
 import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
 import { hasTrailingSpaces } from '@/core/lexer/utils';
 import { SyntaxNode, TupleExpressionNode, FunctionApplicationNode } from '@/core/parser/nodes';
 import Compiler from '@/compiler';
 import type { Filepath } from '@/compiler/projectLayout';
-import { ColumnSymbol, TablePartialInjectedColumnSymbol, TablePartialSymbol, TableSymbol } from '@/core/analyzer/validator/symbol/symbols';
+import { ColumnSymbol, TablePartialInjectedColumnSymbol, TablePartialSymbol, TableSymbol } from '@/core/analyzer/symbol/symbols';
 import { extractVariableFromExpression } from '@/core/utils';
 import { addDoubleQuoteIfNeeded } from '@/compiler/queries/utils';
 

@@ -1,6 +1,6 @@
 import Lexer from '@/core/lexer/lexer';
 import Parser from '@/core/parser/parser';
-import { AnalysisResult } from '@/core/types';
+import { AnalysisResult } from '@/core/analyzer/analyzer';
 import {
   ProgramNode,
   SyntaxNode,

@@ -10,10 +10,10 @@ import { SyntaxToken } from '@/core/lexer/tokens';
 import { CompileError } from '@/core/errors';
 import { lookupAndBindInScope, pickBinder, scanNonListNodeForBinding } from '../utils';
 import { getElementKind } from '@/core/utils';
-import { ElementKind } from '@/core/types';
-import { SymbolKind } from '@/core/analyzer/validator/symbol/symbolIndex';
-import SymbolFactory from '@/core/analyzer/validator/symbol/factory';
-import { BinderContext } from '@/core/types';
+import { ElementKind } from '@/core/analyzer/types';
+import { SymbolKind } from '@/core/analyzer/symbol/symbolIndex';
+import SymbolFactory from '@/core/analyzer/symbol/factory';
+import { BinderContext } from '@/core/analyzer/types';
 
 export default class RefBinder implements ElementBinder {
   private symbolFactory: SymbolFactory;

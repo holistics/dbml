@@ -3,7 +3,7 @@ import { type FilepathId } from './projectLayout';
 import { intern, Internable, Primitive } from '@/core/internable';
 import { DEFAULT_ENTRY } from './constants';
 import type { SyntaxNode } from '@/core/parser/nodes';
-import type { NodeSymbol } from '@/core/analyzer/validator/symbol/symbols';
+import type { NodeSymbol } from '@/core/analyzer/symbol/symbols';
 import { DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLReferencesProvider, DBMLDiagnosticsProvider } from '@/services/index';
 import { parseFile, localFileDependencies, analyzeFile, interpretFile } from './queries/pipeline';
 import { flatStream, invalidStream } from './queries/token';

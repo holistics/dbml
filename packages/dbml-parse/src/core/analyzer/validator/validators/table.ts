@@ -1,6 +1,6 @@
 import { DEFAULT_SCHEMA_NAME } from '@/constants';
 import { last, forIn, partition } from 'lodash-es';
-import SymbolFactory from '@/core/analyzer/validator/symbol/factory';
+import SymbolFactory from '@/core/analyzer/symbol/factory';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import {
   ArrayNode,
@@ -15,7 +15,7 @@ import {
   PrimaryExpressionNode,
   SyntaxNode,
 } from '@/core/parser/nodes';
-import { NodeToSymbolMap } from '@/core/types';
+import { NodeToSymbolMap } from '@/core/analyzer/analyzer';
 import { destructureComplexVariable, extractVariableFromExpression, extractVarNameFromPrimaryVariable } from '@/core/utils';
 import {
   aggregateSettingList,
@@ -32,16 +32,16 @@ import {
   registerSchemaStack,
 } from '@/core/analyzer/validator/utils';
 import { ElementValidator } from '@/core/analyzer/validator/types';
-import { ColumnSymbol, PartialInjectionSymbol, TableSymbol } from '@/core/analyzer/validator/symbol/symbols';
-import { createColumnSymbolIndex, createPartialInjectionSymbolIndex, createTableSymbolIndex } from '@/core/analyzer/validator/symbol/symbolIndex';
+import { ColumnSymbol, PartialInjectionSymbol, TableSymbol } from '@/core/analyzer/symbol/symbols';
+import { createColumnSymbolIndex, createPartialInjectionSymbolIndex, createTableSymbolIndex } from '@/core/analyzer/symbol/symbolIndex';
 import {
   isExpressionAQuotedString,
   isExpressionAVariableNode,
   isExpressionAnIdentifierNode,
 } from '@/core/parser/utils';
 import { SyntaxToken } from '@/core/lexer/tokens';
-import SymbolTable from '@/core/analyzer/validator/symbol/symbolTable';
-import { SettingName } from '@/core/types';
+import SymbolTable from '@/core/analyzer/symbol/symbolTable';
+import { SettingName } from '@/core/analyzer/types';
 
 export default class TableValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };

@@ -5,18 +5,18 @@ import {
 } from '@/core/parser/nodes';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import { addSymbolReference, lookupAndBindInScope, pickBinder, scanNonListNodeForBinding } from '../utils';
-import SymbolFactory from '@/core/analyzer/validator/symbol/factory';
+import SymbolFactory from '@/core/analyzer/symbol/factory';
 import {
   destructureCallExpression,
   extractVarNameFromPrimaryVariable,
   getElementKind,
 } from '@/core/utils';
-import { createColumnSymbolIndex, SymbolKind } from '@/core/analyzer/validator/symbol/symbolIndex';
-import { ElementKind } from '@/core/types';
+import { createColumnSymbolIndex, SymbolKind } from '@/core/analyzer/symbol/symbolIndex';
+import { ElementKind } from '@/core/analyzer/types';
 import { isTupleOfVariables } from '@/core/analyzer/validator/utils';
-import { NodeSymbol } from '@/core/analyzer/validator/symbol/symbols';
+import { NodeSymbol } from '@/core/analyzer/symbol/symbols';
 import { getElementNameString } from '@/core/parser/utils';
-import { BinderContext } from '@/core/types';
+import { BinderContext } from '@/core/analyzer/types';
 
 export default class RecordsBinder implements ElementBinder {
   private symbolFactory: SymbolFactory;

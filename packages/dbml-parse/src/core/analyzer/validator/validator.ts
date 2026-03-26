@@ -1,14 +1,14 @@
 import Report from '@/core/report';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import { ElementDeclarationNode, ProgramNode, SyntaxNode, UseDeclarationNode } from '@/core/parser/nodes';
-import { SchemaSymbol } from '@/core/analyzer/validator/symbol/symbols';
-import SymbolFactory from '@/core/analyzer/validator/symbol/factory';
+import { SchemaSymbol } from '@/core/analyzer/symbol/symbols';
+import SymbolFactory from '@/core/analyzer/symbol/factory';
 import { pickElementValidator } from '@/core/analyzer/validator/utils';
-import SymbolTable from '@/core/analyzer/validator/symbol/symbolTable';
+import SymbolTable from '@/core/analyzer/symbol/symbolTable';
 import { SyntaxToken } from '@/core/lexer/tokens';
 import { getElementKind } from '@/core/utils';
-import { ElementKind } from '@/core/types';
-import { NodeToSymbolMap } from '@/core/types';
+import { ElementKind } from '@/core/analyzer/types';
+import { NodeToSymbolMap } from '@/core/analyzer/analyzer';
 import type { Filepath, FilepathId } from '@/compiler/projectLayout';
 import UseDeclarationValidator from '@/core/analyzer/validator/validators/use';
 

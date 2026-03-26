@@ -1,12 +1,12 @@
 import type Compiler from '../../../index';
-import type { AnalysisResult, NodeToSymbolMap, NodeToRefereeMap, SymbolToReferencesMap } from '@/core/types';
+import type { AnalysisResult, NodeToSymbolMap, NodeToRefereeMap, SymbolToReferencesMap } from '@/core/analyzer/analyzer';
 import { Filepath, type FilepathId } from '../../../projectLayout';
 import type { CompileWarning } from '@/core/errors';
 import Binder from '@/core/analyzer/binder/binder';
 import Validator from '@/core/analyzer/validator/validator';
-import SymbolFactory from '@/core/analyzer/validator/symbol/factory';
-import { NodeSymbolIdGenerator, SchemaSymbol } from '@/core/analyzer/validator/symbol/symbols';
-import SymbolTable from '@/core/analyzer/validator/symbol/symbolTable';
+import SymbolFactory from '@/core/analyzer/symbol/factory';
+import { NodeSymbolIdGenerator, SchemaSymbol } from '@/core/analyzer/symbol/symbols';
+import SymbolTable from '@/core/analyzer/symbol/symbolTable';
 import Report from '@/core/report';
 import { CompileError } from '@/core/errors';
 import { ProgramNode, UseDeclarationNode } from '@/core/parser/nodes';

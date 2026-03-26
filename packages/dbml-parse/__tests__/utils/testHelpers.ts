@@ -1,5 +1,5 @@
-import { NodeSymbol } from '@/core/analyzer/validator/symbol/symbols';
-import { AnalysisResult, NodeToRefereeMap, NodeToSymbolMap, SymbolToReferencesMap } from '@/core/types';
+import { NodeSymbol } from '@/core/analyzer/symbol/symbols';
+import { AnalysisResult, NodeToRefereeMap, NodeToSymbolMap, SymbolToReferencesMap } from '@/core/analyzer/analyzer';
 import Report from '@/core/report';
 import { ProgramNode, SyntaxNode } from '@/index';
 import type Compiler from '@/compiler/index';
