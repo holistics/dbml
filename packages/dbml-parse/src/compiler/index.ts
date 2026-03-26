@@ -146,7 +146,7 @@ export default class Compiler {
       const fileRefs = report.getValue().symbolToReferences.get(symbol);
       if (fileRefs) refs.push(...fileRefs);
     }
-    return refs;
+    return [...new Set(refs)];
   }
 
   /* diagnostics */
