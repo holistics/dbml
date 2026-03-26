@@ -1,5 +1,4 @@
 import type Compiler from '../index';
-import type { Filepath } from '../projectLayout';
 import type { NodeSymbol } from '@/core/analyzer/validator/symbol/symbols';
 import { ElementDeclarationNode, ProgramNode } from '@/core/parser/nodes';
 import { SymbolKind, destructureIndex } from '@/core/analyzer/validator/symbol/symbolIndex';
@@ -17,7 +16,7 @@ export function symbolMembers (this: Compiler, ownerSymbol: NodeSymbol) {
   }));
 }
 
-export function symbolOfName (this: Compiler, nameStack: string[], owner: ElementDeclarationNode | ProgramNode, filepath: Filepath) {
+export function symbolOfName (this: Compiler, nameStack: string[], owner: ElementDeclarationNode | ProgramNode) {
   if (nameStack.length === 0) {
     return [];
   }

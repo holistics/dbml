@@ -654,7 +654,7 @@ function suggestMembers (
   const nameStack = fragments.map((f) => extractVariableFromExpression(f).unwrap());
 
   return addQuoteToSuggestionIfNeeded({
-    suggestions: compiler.symbol.ofName(nameStack, compiler.container.element(offset, filepath), filepath)
+    suggestions: compiler.symbol.ofName(nameStack, compiler.container.element(offset, filepath))
       .flatMap(({ symbol }) => compiler.symbol.members(symbol))
       .map(({ kind, name }) => ({
         label: name,
