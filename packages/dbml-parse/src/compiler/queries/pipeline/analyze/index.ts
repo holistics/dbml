@@ -52,17 +52,18 @@ export function validateFile (compiler: Compiler, filepath: Filepath): ValidateF
 
   const symbolIdGenerator = new NodeSymbolIdGenerator();
   const symbolFactory = new SymbolFactory(symbolIdGenerator, filepath);
-  const nodeToSymbol: NodeToSymbolMap = new Map();
-  const fileSymbol = symbolFactory.create(SchemaSymbol, { symbolTable: new SymbolTable() });
-  nodeToSymbol.set(ast, fileSymbol);
 
   const validationReport = new Validator(
-    { ast, filepath, nodeToSymbol },
+    ast,
+    filepath,
     symbolFactory,
   ).validate();
 
+  const { nodeToSymbol } = validationReport.getValue();
+  const rootSymbol = nodeToSymbol.get(ast) as SchemaSymbol;
+
   const result: ValidateFileResult = {
-    symbolTable: fileSymbol.symbolTable,
+    symbolTable: rootSymbol.symbolTable,
     symbolIdGenerator,
     symbolFactory,
     nodeToSymbol,

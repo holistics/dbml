@@ -29,20 +29,17 @@ export default class Validator {
   private nodeToSymbol: NodeToSymbolMap;
 
   constructor (
-    { ast, filepath, nodeToSymbol }: {
-      ast: ProgramNode;
-      filepath: Filepath;
-      nodeToSymbol?: NodeToSymbolMap;
-    },
+    ast: ProgramNode,
+    filepath: Filepath,
     symbolFactory: SymbolFactory,
   ) {
     this.ast = ast;
     this.filepath = filepath;
     this.symbolFactory = symbolFactory;
-    this.nodeToSymbol = nodeToSymbol ?? new Map();
-    this.publicSchemaSymbol = (nodeToSymbol?.get(ast) ?? this.symbolFactory.create(SchemaSymbol, {
+    this.nodeToSymbol = new Map();
+    this.publicSchemaSymbol = this.symbolFactory.create(SchemaSymbol, {
       symbolTable: new SymbolTable(),
-    })) as SchemaSymbol;
+    });
     this.nodeToSymbol.set(this.ast, this.publicSchemaSymbol);
   }
 
