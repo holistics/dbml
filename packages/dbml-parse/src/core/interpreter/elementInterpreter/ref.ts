@@ -11,7 +11,7 @@ import {
   extractColor, extractNamesFromRefOperand, getColumnSymbolsOfRefOperand, getMultiplicities, getRefId, getTokenPosition, isSameEndpoint,
 } from '@/core/interpreter/utils';
 import { extractStringFromIdentifierStream } from '@/core/parser/utils';
-import type Compiler from '@/compiler/index';
+import type Compiler from '@/compiler';
 
 export class RefInterpreter implements ElementInterpreter {
   private compiler: Compiler;
@@ -67,8 +67,8 @@ export class RefInterpreter implements ElementInterpreter {
     const op = (field.callee as InfixExpressionNode).op!.value;
     const { leftExpression, rightExpression } = field.callee as InfixExpressionNode;
 
-    const leftSymbols = getColumnSymbolsOfRefOperand(leftExpression!, this.compiler);
-    const rightSymbols = getColumnSymbolsOfRefOperand(rightExpression!, this.compiler);
+    const leftSymbols = getColumnSymbolsOfRefOperand(leftExpression!, (n) => this.compiler.nodeReferee(n, this.env.filepath));
+    const rightSymbols = getColumnSymbolsOfRefOperand(rightExpression!, (n) => this.compiler.nodeReferee(n, this.env.filepath));
 
     if (isSameEndpoint(leftSymbols, rightSymbols)) {
       return [new CompileError(CompileErrorCode.SAME_ENDPOINT, 'Two endpoints are the same', field)];

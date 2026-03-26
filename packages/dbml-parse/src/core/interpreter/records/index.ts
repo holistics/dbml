@@ -37,7 +37,7 @@ import {
 import { destructureCallExpression, destructureComplexVariable, extractQuotedStringToken, extractVariableFromExpression } from '@/core/utils';
 import { last } from 'lodash-es';
 import { mergeTableAndPartials } from '../utils';
-import type Compiler from '@/compiler/index';
+import type Compiler from '@/compiler';
 
 export class RecordsInterpreter {
   private compiler: Compiler;
@@ -55,7 +55,7 @@ export class RecordsInterpreter {
     const warnings: CompileWarning[] = [];
 
     for (const element of elements) {
-      const { table, mergedColumns } = getTableAndColumnsOfRecords(this.compiler, element, this.env);
+      const { table, mergedColumns } = getTableAndColumnsOfRecords(element, this.compiler, this.env);
       const prevRecord = this.tableToRecordMap.get(table);
       if (prevRecord) {
         errors.push(new CompileError(
@@ -114,7 +114,7 @@ export class RecordsInterpreter {
 //   - `table`: The original interpreted table object that `records` refer to
 //   - `mergedTable`: The interpreted table object merged with its table partials
 //   - `mergedColumns`: The columns of the `mergedTable``
-function getTableAndColumnsOfRecords (compiler: Compiler, records: ElementDeclarationNode, env: InterpreterDatabase): { table: Table; mergedTable: Table; mergedColumns: Column[] } {
+function getTableAndColumnsOfRecords (records: ElementDeclarationNode, compiler: Compiler, env: InterpreterDatabase): { table: Table; mergedTable: Table; mergedColumns: Column[] } {
   const nameNode = records.name;
   const parent = records.parent;
   if (parent instanceof ElementDeclarationNode) {
@@ -133,7 +133,7 @@ function getTableAndColumnsOfRecords (compiler: Compiler, records: ElementDeclar
     };
   }
   const fragments = destructureCallExpression(nameNode!).unwrap();
-  const tableNode = compiler.nodeReferee(last(fragments.variables)!)!.declaration as ElementDeclarationNode;
+  const tableNode = compiler.nodeReferee(last(fragments.variables)!, env.filepath)!.declaration as ElementDeclarationNode;
   const table = env.tables.get(tableNode)!;
   const mergedTable = mergeTableAndPartials(table, env);
   const mergedColumns = fragments.args.map((e) => mergedTable.fields.find((f) => f.name === extractVariableFromExpression(e).unwrap())!);

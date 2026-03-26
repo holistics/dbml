@@ -10,7 +10,7 @@ import { RefInterpreter } from './ref';
 import { TableInterpreter } from './table';
 import { TableGroupInterpreter } from './tableGroup';
 import { TablePartialInterpreter } from './tablePartial';
-import type Compiler from '@/compiler/index';
+import type Compiler from '@/compiler';
 
 export class ProjectInterpreter implements ElementInterpreter {
   private compiler: Compiler;

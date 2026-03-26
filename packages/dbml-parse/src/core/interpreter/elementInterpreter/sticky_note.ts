@@ -8,13 +8,16 @@ import {
 } from '@/core/interpreter/utils';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import { aggregateSettingList } from '@/core/analyzer/validator/utils';
+import type Compiler from '@/compiler';
 
 export class StickyNoteInterpreter implements ElementInterpreter {
+  private compiler: Compiler;
   private declarationNode: ElementDeclarationNode;
   private env: InterpreterDatabase;
   private note: Partial<Note>;
 
-  constructor (declarationNode: ElementDeclarationNode, env: InterpreterDatabase) {
+  constructor (compiler: Compiler, declarationNode: ElementDeclarationNode, env: InterpreterDatabase) {
+    this.compiler = compiler;
     this.declarationNode = declarationNode;
     this.env = env;
     this.note = { name: undefined, content: undefined, token: undefined };

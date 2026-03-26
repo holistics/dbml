@@ -9,13 +9,16 @@ import {
   extractElementName, getTokenPosition, normalizeNoteContent, extractColor,
 } from '@/core/interpreter/utils';
 import { aggregateSettingList } from '@/core/analyzer/validator/utils';
+import type Compiler from '@/compiler';
 
 export class TableGroupInterpreter implements ElementInterpreter {
+  private compiler: Compiler;
   private declarationNode: ElementDeclarationNode;
   private env: InterpreterDatabase;
   private tableGroup: Partial<TableGroup>;
 
-  constructor (declarationNode: ElementDeclarationNode, env: InterpreterDatabase) {
+  constructor (compiler: Compiler, declarationNode: ElementDeclarationNode, env: InterpreterDatabase) {
+    this.compiler = compiler;
     this.declarationNode = declarationNode;
     this.env = env;
     this.tableGroup = { tables: [] };
@@ -92,7 +95,7 @@ export class TableGroupInterpreter implements ElementInterpreter {
       }
 
       const lastNode = destructureMemberAccessExpression((field as FunctionApplicationNode).callee!).unwrap().pop()!;
-      const tableid = this.env.nodeToReferee.get(lastNode)!.id;
+      const tableid = this.compiler.nodeReferee(lastNode, this.env.filepath)!.id;
       if (this.env.tableOwnerGroup[tableid]) {
         const tableGroup = this.env.tableOwnerGroup[tableid];
         const { schemaName, name } = this.env.tableGroups.get(tableGroup)!;
