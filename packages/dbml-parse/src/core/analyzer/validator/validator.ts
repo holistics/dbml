@@ -20,7 +20,7 @@ export default class Validator {
   private nodeToSymbol: NodeToSymbolMap;
 
   constructor (
-    { ast }: { ast: ProgramNode },
+    ast: ProgramNode,
     symbolFactory: SymbolFactory,
   ) {
     this.ast = ast;
