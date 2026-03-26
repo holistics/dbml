@@ -4,13 +4,13 @@ import { describe, expect, it } from 'vitest';
 import { DEFAULT_ENTRY } from '@/compiler/constants';
 import Lexer from '@/core/lexer/lexer';
 import Parser from '@/core/parser/parser';
-import { NodeSymbolIdGenerator } from '@/core/validator/symbol/symbols';
+import { NodeSymbolIdGenerator } from '@/core/analyzer/validator/symbol/symbols';
 import { SyntaxNodeIdGenerator } from '@/core/parser/nodes';
-import Validator from '@/core/validator/validator';
-import Binder from '@/core/binder/binder';
-import SymbolFactory from '@/core/validator/symbol/factory';
-import SymbolTable from '@/core/validator/symbol/symbolTable';
-import { SchemaSymbol } from '@/core/validator/symbol/symbols';
+import Validator from '@/core/analyzer/validator/validator';
+import Binder from '@/core/analyzer/binder/binder';
+import SymbolFactory from '@/core/analyzer/validator/symbol/factory';
+import SymbolTable from '@/core/analyzer/validator/symbol/symbolTable';
+import { SchemaSymbol } from '@/core/analyzer/validator/symbol/symbols';
 import { serializeAnalysis, scanTestNames } from '@tests/utils';
 
 describe('[snapshot] binder', () => {

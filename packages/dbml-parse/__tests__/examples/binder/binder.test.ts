@@ -1,8 +1,8 @@
 import { describe, expect } from 'vitest';
 import { SyntaxNodeKind, ElementDeclarationNode, BlockExpressionNode } from '@/core/parser/nodes';
-import { TableSymbol, EnumSymbol, TableGroupSymbol, TablePartialSymbol, ColumnSymbol, EnumFieldSymbol, SchemaSymbol } from '@/core/validator/symbol/symbols';
+import { TableSymbol, EnumSymbol, TableGroupSymbol, TablePartialSymbol, ColumnSymbol, EnumFieldSymbol, SchemaSymbol } from '@/core/analyzer/validator/symbol/symbols';
 import { SyntaxNode } from '@/core/parser/nodes';
-import { NodeSymbol } from '@/core/validator/symbol/symbols';
+import { NodeSymbol } from '@/core/analyzer/validator/symbol/symbols';
 import { SymbolToReferencesMap } from '@/core/types';
 import { analyze } from '@tests/utils';
 

@@ -1,5 +1,5 @@
-import { NodeSymbol } from '@/core/validator/symbol/symbols';
-import SymbolTable from '@/core/validator/symbol/symbolTable';
+import { NodeSymbol } from '@/core/analyzer/validator/symbol/symbols';
+import SymbolTable from '@/core/analyzer/validator/symbol/symbolTable';
 import { AnalysisResult, NodeToRefereeMap, NodeToSymbolMap, SymbolToReferencesMap } from '@/core/types';
 import Report from '@/core/report';
 import { ProgramNode, SyntaxNode } from '@/index';

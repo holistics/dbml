@@ -1,6 +1,6 @@
 import { last, zip, uniqBy } from 'lodash-es';
 
-import { ColumnSymbol } from '@/core/validator/symbol/symbols';
+import { ColumnSymbol } from '@/core/analyzer/validator/symbol/symbols';
 import { NodeToRefereeMap } from '@/core/types';
 import {
   destructureComplexVariableTuple, destructureComplexVariable, destructureMemberAccessExpression, extractQuotedStringToken,
@@ -20,7 +20,7 @@ import { isDotDelimitedIdentifier, isExpressionAnIdentifierNode, isExpressionAQu
 import Report from '@/core/report';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import { getNumberTextFromExpression, parseNumber } from '@/core/utils';
-import { isExpressionASignedNumberExpression, isValidPartialInjection } from '@/core/validator/utils';
+import { isExpressionASignedNumberExpression, isValidPartialInjection } from '@/core/analyzer/validator/utils';
 
 export function extractNamesFromRefOperand (operand: SyntaxNode, owner?: Table): { schemaName: string | null; tableName: string; fieldNames: string[] } {
   const { variables, tupleElements } = destructureComplexVariableTuple(operand).unwrap();

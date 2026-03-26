@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest';
-import { TableSymbol, EnumSymbol, ColumnSymbol, EnumFieldSymbol, SchemaSymbol } from '@/core/validator/symbol/symbols';
+import { TableSymbol, EnumSymbol, ColumnSymbol, EnumFieldSymbol, SchemaSymbol } from '@/core/analyzer/validator/symbol/symbols';
 import { SyntaxNode } from '@/core/parser/nodes';
-import { NodeSymbol } from '@/core/validator/symbol/symbols';
+import { NodeSymbol } from '@/core/analyzer/validator/symbol/symbols';
 import { SymbolToReferencesMap } from '@/core/types';
 import { analyze } from '@tests/utils';
 

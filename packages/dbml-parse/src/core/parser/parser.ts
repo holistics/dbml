@@ -189,13 +189,17 @@ export default class Parser {
     return new Report({ ast: program, tokens: this.tokens }, this.errors);
   }
 
+  // Visit all elements in the program, and assign element.parent
   private assignParents (program: ProgramNode) {
+    // All top-level elements have program node as the parent
     program.body.forEach((element) => {
       element.parent = program;
+      // Visit all sub-elements to assign sub-elements' parent as the containing element
       this.assignElementParents(element);
     });
   }
 
+  // Visit the body of an element, look for its subelements and assign element to subelement.parent
   private assignElementParents (element: ElementDeclarationNode) {
     if (element.body instanceof BlockExpressionNode) {
       element.body.body.forEach((sub) => {

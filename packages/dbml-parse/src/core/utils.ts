@@ -21,9 +21,9 @@ import {
   isExpressionAVariableNode,
 } from '@/core/parser/utils';
 import { ElementKind, NodeToRefereeMap, NodeToSymbolMap } from '@/core/types';
-import { isRelationshipOp, isTupleOfVariables } from '@/core/validator/utils';
-import { NodeSymbolIndex, isPublicSchemaIndex } from '@/core/validator/symbol/symbolIndex';
-import { NodeSymbol } from '@/core/validator/symbol/symbols';
+import { isRelationshipOp, isTupleOfVariables } from '@/core/analyzer/validator/utils';
+import { NodeSymbolIndex, isPublicSchemaIndex } from '@/core/analyzer/validator/symbol/symbolIndex';
+import { NodeSymbol } from '@/core/analyzer/validator/symbol/symbols';
 
 export function isAlphaOrUnderscore (char: string): boolean {
   // Match any letters, accents (some characters are denormalized so the accent and the main character are two separate characters) and underscore

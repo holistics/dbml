@@ -1,5 +1,5 @@
 import { destructureComplexVariable, extractVariableFromExpression } from '@/core/utils';
-import { aggregateSettingList } from '@/core/validator/utils';
+import { aggregateSettingList } from '@/core/analyzer/validator/utils';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, IdentiferStreamNode, InfixExpressionNode, ListExpressionNode, SyntaxNode,
@@ -11,14 +11,21 @@ import {
   extractColor, extractNamesFromRefOperand, getColumnSymbolsOfRefOperand, getMultiplicities, getRefId, getTokenPosition, isSameEndpoint,
 } from '@/core/interpreter/utils';
 import { extractStringFromIdentifierStream } from '@/core/parser/utils';
+import type Compiler from '@/compiler/index';
 
 export class RefInterpreter implements ElementInterpreter {
+  private compiler: Compiler;
   private declarationNode: ElementDeclarationNode;
   private env: InterpreterDatabase;
   private container: Partial<Table> | undefined;
   private ref: Partial<Ref>;
 
-  constructor (declarationNode: ElementDeclarationNode, env: InterpreterDatabase) {
+  constructor (
+    compiler: Compiler,
+    declarationNode: ElementDeclarationNode,
+    env: InterpreterDatabase,
+  ) {
+    this.compiler = compiler;
     this.declarationNode = declarationNode;
     this.env = env;
     this.container = this.declarationNode.parent instanceof ElementDeclarationNode ? this.env.tables.get(this.declarationNode.parent) : undefined;
@@ -60,8 +67,8 @@ export class RefInterpreter implements ElementInterpreter {
     const op = (field.callee as InfixExpressionNode).op!.value;
     const { leftExpression, rightExpression } = field.callee as InfixExpressionNode;
 
-    const leftSymbols = getColumnSymbolsOfRefOperand(leftExpression!, this.env.nodeToReferee);
-    const rightSymbols = getColumnSymbolsOfRefOperand(rightExpression!, this.env.nodeToReferee);
+    const leftSymbols = getColumnSymbolsOfRefOperand(leftExpression!, this.compiler);
+    const rightSymbols = getColumnSymbolsOfRefOperand(rightExpression!, this.compiler);
 
     if (isSameEndpoint(leftSymbols, rightSymbols)) {
       return [new CompileError(CompileErrorCode.SAME_ENDPOINT, 'Two endpoints are the same', field)];

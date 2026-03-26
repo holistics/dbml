@@ -8,7 +8,7 @@ import { ElementInterpreter, InterpreterDatabase, TableGroup } from '@/core/inte
 import {
   extractElementName, getTokenPosition, normalizeNoteContent, extractColor,
 } from '@/core/interpreter/utils';
-import { aggregateSettingList } from '@/core/validator/utils';
+import { aggregateSettingList } from '@/core/analyzer/validator/utils';
 
 export class TableGroupInterpreter implements ElementInterpreter {
   private declarationNode: ElementDeclarationNode;

@@ -5,7 +5,7 @@ import {
   SyntaxNode,
 } from '@/core/parser/nodes';
 import { isExpressionAnIdentifierNode } from '@/core/parser/utils';
-import { isExpressionASignedNumberExpression } from '@/core/validator/utils';
+import { isExpressionASignedNumberExpression } from '@/core/analyzer/validator/utils';
 import { destructureComplexVariable, extractQuotedStringToken, extractNumericLiteral } from '@/core/utils';
 import { last } from 'lodash-es';
 import { DateTime } from 'luxon';

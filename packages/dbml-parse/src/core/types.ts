@@ -1,5 +1,5 @@
 import { type SyntaxNode, type ProgramNode } from '@/core/parser/nodes';
-import type { NodeSymbol } from '@/core/validator/symbol/symbols';
+import type { NodeSymbol } from '@/core/analyzer/validator/symbol/symbols';
 import type { Filepath } from '@/compiler/projectLayout/filepath';
 
 export interface Position {

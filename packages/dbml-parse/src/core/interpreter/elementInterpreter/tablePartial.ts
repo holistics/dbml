@@ -17,8 +17,8 @@ import {
   extractVariableFromExpression,
 } from '@/core/utils';
 import { CompileError, CompileErrorCode } from '@/core/errors';
-import { aggregateSettingList } from '@/core/validator/utils';
-import { ColumnSymbol } from '@/core/validator/symbol/symbols';
+import { aggregateSettingList } from '@/core/analyzer/validator/utils';
+import { ColumnSymbol } from '@/core/analyzer/validator/symbol/symbols';
 import { ElementKind, SettingName } from '@/core/types';
 
 export class TablePartialInterpreter implements ElementInterpreter {

@@ -12,6 +12,8 @@ export {
   scanTestNames,
   serializeAst,
   serializeAnalysis,
+  serializeValidation,
+  createJsonReplacer,
 } from './testHelpers';
 
 // Compiler utilities for property testing

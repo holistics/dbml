@@ -1,10 +1,10 @@
 import type Compiler from '../index';
 import type { Filepath } from '../projectLayout';
-import type { NodeSymbol } from '@/core/validator/symbol/symbols';
+import type { NodeSymbol } from '@/core/analyzer/validator/symbol/symbols';
 import { ElementDeclarationNode, ProgramNode } from '@/core/parser/nodes';
-import { SymbolKind, destructureIndex } from '@/core/validator/symbol/symbolIndex';
-import { generatePossibleIndexes } from '@/core/validator/symbol/utils';
-import SymbolTable from '@/core/validator/symbol/symbolTable';
+import { SymbolKind, destructureIndex } from '@/core/analyzer/validator/symbol/symbolIndex';
+import { generatePossibleIndexes } from '@/core/analyzer/validator/symbol/utils';
+import SymbolTable from '@/core/analyzer/validator/symbol/symbolTable';
 
 export function symbolMembers (this: Compiler, ownerSymbol: NodeSymbol) {
   if (!ownerSymbol.symbolTable) {
