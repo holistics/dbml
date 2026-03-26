@@ -1,6 +1,6 @@
-import { NormalizedModel } from './database';
 import Element, { Token } from './element';
 import Field from './field';
+import { NormalizedModel } from './model';
 import Table from './table';
 import TablePartial from './tablePartial';
 
@@ -40,7 +40,7 @@ declare class Check extends Element {
 
 export interface NormalizedCheck {
     id: number;
-    filepath: string;
+    filepath?: string;
     name: string;
     expression: string;
     tableId: number;

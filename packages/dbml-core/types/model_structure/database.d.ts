@@ -3,16 +3,12 @@ import Ref, { NormalizedRefIdMap } from './ref';
 import Enum, { NormalizedEnumIdMap } from './enum';
 import TableGroup, { NormalizedTableGroupIdMap } from './tableGroup';
 import Table, { NormalizedTableIdMap } from './table';
-import StickyNote, { NormalizedNoteIdMap } from './stickyNote';
+import StickyNote from './stickyNote';
 import Element, { RawNote, Token } from './element';
 import DbState from './dbState';
-import { NormalizedEndpointIdMap } from './endpoint';
-import { NormalizedEnumValueIdMap } from './enumValue';
-import { NormalizedFieldIdMap } from './field';
-import { NormalizedIndexColumnIdMap } from './indexColumn';
-import { NormalizedIndexIdMap } from './indexes';
-import { NormalizedCheckIdMap } from './check';
-import TablePartial, { NormalizedTablePartialIdMap } from './tablePartial';
+import TablePartial from './tablePartial';
+import { NormalizedModel } from './model';
+
 export interface Project {
     note: RawNote;
     database_type: string;
@@ -289,7 +285,7 @@ declare class Database extends Element {
 }
 export interface NormalizedDatabase {
     id: number;
-    filepath: string;
+    filepath?: string;
     hasDefaultSchema: boolean;
     note: string | null;
     databaseType: string;
@@ -302,21 +298,4 @@ export interface NormalizedDatabaseIdMap {
     [_id: number]: NormalizedDatabase;
 }
 
-export interface NormalizedModel {
-    database: NormalizedDatabaseIdMap;
-    schemas: NormalizedSchemaIdMap;
-    endpoints: NormalizedEndpointIdMap;
-    refs: NormalizedRefIdMap;
-    fields: NormalizedFieldIdMap;
-    tables: NormalizedTableIdMap;
-    tableGroups: NormalizedTableGroupIdMap;
-    enums: NormalizedEnumIdMap;
-    enumValues: NormalizedEnumValueIdMap;
-    indexes: NormalizedIndexIdMap;
-    indexColumns: NormalizedIndexColumnIdMap;
-    notes: NormalizedNoteIdMap;
-    checks: NormalizedCheckIdMap;
-    tablePartials: NormalizedTablePartialIdMap;
-    records: NormalizedRecordIdMap;
-}
 export default Database;

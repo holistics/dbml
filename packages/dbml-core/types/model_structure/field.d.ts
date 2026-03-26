@@ -1,4 +1,3 @@
-import { NormalizedModel } from './database';
 import DbState from './dbState';
 import Element, { Token, RawNote } from './element';
 import Endpoint from './endpoint';
@@ -6,6 +5,7 @@ import Enum from './enum';
 import Table from './table';
 import TablePartial from './tablePartial';
 import Check from './check';
+import { NormalizedModel } from './model';
 
 export interface InlineRef {
     schemaName: string | null;
@@ -91,7 +91,7 @@ declare class Field extends Element {
 
 export interface NormalizedField {
     id: number;
-    filepath: string;
+    filepath?: string;
     name: string;
     type: {
         schemaName: string | null;

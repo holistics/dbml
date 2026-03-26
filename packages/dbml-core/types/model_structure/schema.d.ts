@@ -3,8 +3,9 @@ import Element, { RawNote, Token } from './element';
 import Enum from './enum';
 import TableGroup from './tableGroup';
 import Ref from './ref';
-import Database, { NormalizedModel } from './database';
+import Database from './database';
 import DbState from './dbState';
+import { NormalizedModel } from './model';
 export interface RawSchema {
     name: string;
     alias?: string;
@@ -176,7 +177,7 @@ declare class Schema extends Element {
 }
 export interface NormalizedSchema {
     id: number;
-    filepath: string;
+    filepath?: string;
     name: string;
     note: string | null;
     alias: string;

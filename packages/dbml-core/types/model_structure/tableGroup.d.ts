@@ -1,6 +1,6 @@
-import { NormalizedModel } from './database';
 import DbState from './dbState';
 import Element, { RawNote, Token} from './element';
+import { NormalizedModel } from './model';
 import Schema from './schema';
 import Table from './table';
 
@@ -57,7 +57,7 @@ declare class TableGroup extends Element {
 }
 export interface NormalizedTableGroup {
     id: number;
-    filepath: string;
+    filepath?: string;
     name: string;
     note: string | null;
     color: string;

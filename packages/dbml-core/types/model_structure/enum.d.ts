@@ -1,8 +1,8 @@
-import { NormalizedModel } from './database';
 import DbState from './dbState';
 import Element, { Token, RawNote } from './element';
 import EnumValue from './enumValue';
 import Field from './field';
+import { NormalizedModel } from './model';
 import Schema from './schema';
 interface RawEnum {
     name: string;
@@ -57,7 +57,7 @@ declare class Enum extends Element {
 }
 export interface NormalizedEnum {
     id: number;
-    filepath: string;
+    filepath?: string;
     name: string;
     note: string | null;
     valueIds: number[];

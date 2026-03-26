@@ -2,8 +2,9 @@ import Element, { Token } from './element';
 import Endpoint from './endpoint';
 import Schema from './schema';
 import DbState from './dbState';
-import Database, { NormalizedModel } from './database';
+import Database from './database';
 import TablePartial from './tablePartial';
+import { NormalizedModel } from './model';
 interface RawRef {
     name: string;
     color?: string;
@@ -64,7 +65,7 @@ declare class Ref extends Element {
 }
 export interface NormalizedRef {
     id: number;
-    filepath: string;
+    filepath?: string;
     name: string | null;
     color?: string;
     onUpdate?: string;

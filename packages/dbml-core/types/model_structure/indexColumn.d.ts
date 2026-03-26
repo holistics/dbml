@@ -1,7 +1,7 @@
-import { NormalizedModel } from './database';
 import DbState from './dbState';
 import Element from './element';
 import Index from './indexes';
+import { NormalizedModel } from './model';
 declare class IndexColumn extends Element {
     type: any;
     value: any;
@@ -28,7 +28,7 @@ declare class IndexColumn extends Element {
 }
 export interface NormalizedIndexColumn {
     id: number;
-    filepath: string;
+    filepath?: string;
     type: string;
     value: string;
     indexId: number;

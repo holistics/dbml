@@ -3,7 +3,7 @@ import Field from './field';
 import Index from './indexes';
 import Check from './check';
 import DbState from './dbState';
-import { NormalizedModel } from './database';
+import { NormalizedModel } from './model';
 
 interface RawTablePartial {
     name: string;
@@ -88,7 +88,7 @@ declare class TablePartial extends Element {
 
 export interface NormalizedTablePartial {
     id: number;
-    filepath: string;
+    filepath?: string;
     name: string;
     note: string;
     headerColor: string;

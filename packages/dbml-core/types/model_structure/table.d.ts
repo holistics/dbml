@@ -6,7 +6,7 @@ import Schema from './schema';
 import DbState from './dbState';
 import TableGroup from './tableGroup';
 import TablePartial from './tablePartial';
-import { NormalizedModel } from './database';
+import { NormalizedModel } from './model';
 
 interface RawTable {
     name: string;
@@ -121,7 +121,7 @@ declare class Table extends Element {
 
 export interface NormalizedTable {
     id: number;
-    filepath: string;
+    filepath?: string;
     name: string;
     alias: string | null;
     note: string | null;

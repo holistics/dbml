@@ -1,7 +1,7 @@
-import { NormalizedModel } from './database';
 import DbState from './dbState';
 import Element, { RawNote, Token } from './element';
 import IndexColumn from './indexColumn';
+import { NormalizedModel } from './model';
 import Table from './table';
 import TablePartial from './tablePartial';
 interface RawIndex {
@@ -66,7 +66,7 @@ declare class Index extends Element {
 }
 export interface NormalizedIndex {
     id: number;
-    filepath: string;
+    filepath?: string;
     name: string | null;
     type: any;
     unique: boolean;
