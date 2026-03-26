@@ -10,7 +10,6 @@ import {
   conflictingSettingsArbitrary,
   malformedInputArbitrary,
   tableWithZeroSettingsArbitrary,
-  charSubstitutionArbitrary,
 } from '../utils/arbitraries';
 import { interpret, analyze } from '../utils';
 
@@ -560,7 +559,7 @@ describe('[fuzz] interpreter - special patterns', () => {
         const result = interpret(source);
         const db = result.getValue();
 
-        if (db && result.getErrors().length === 0) {
+        if (db) {
           expect(db.tables.length).toBeGreaterThanOrEqual(2);
         }
       }),
