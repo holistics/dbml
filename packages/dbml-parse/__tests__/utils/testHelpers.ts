@@ -106,11 +106,12 @@ export function serializeAnalysis (compiler: Compiler, pretty?: boolean): string
 export function serializeAnalysis (reportOrCompiler: Readonly<Report<AnalysisResult>> | Compiler, pretty = false): string {
   if (reportOrCompiler instanceof Compiler) {
     const compiler = reportOrCompiler;
-    const { ast } = compiler.parseFile(DEFAULT_ENTRY);
+    const parseReport = compiler.parseFile(DEFAULT_ENTRY);
+    const { ast } = parseReport.getValue();
     const analysisReport = compiler.analyzeFile(DEFAULT_ENTRY);
     const { nodeToSymbol, nodeToReferee, symbolToReferences } = analysisReport.getValue();
-    const errors = [...compiler.parseFile(DEFAULT_ENTRY).errors, ...analysisReport.getErrors()];
-    const warnings = [...compiler.parseFile(DEFAULT_ENTRY).warnings, ...analysisReport.getWarnings()];
+    const errors = [...parseReport.getErrors(), ...analysisReport.getErrors()];
+    const warnings = [...parseReport.getWarnings(), ...analysisReport.getWarnings()];
     const syntheticReport = {
       value: ast,
       errors,
@@ -130,9 +131,10 @@ export function serializeAnalysis (reportOrCompiler: Readonly<Report<AnalysisRes
 }
 
 export function serializeValidation (compiler: Compiler, pretty = false): string {
-  const { ast } = compiler.parseFile(DEFAULT_ENTRY);
+  const parseReport = compiler.parseFile(DEFAULT_ENTRY);
+  const { ast } = parseReport.getValue();
   const validated = validateFile(compiler, DEFAULT_ENTRY);
-  const errors = [...compiler.parseFile(DEFAULT_ENTRY).errors, ...validated.errors];
+  const errors = [...parseReport.getErrors(), ...validated.errors];
   const syntheticReport = { value: ast, errors };
   return JSON.stringify(syntheticReport, astReplacer(validated.nodeToSymbol, undefined), pretty ? 2 : 0);
 }

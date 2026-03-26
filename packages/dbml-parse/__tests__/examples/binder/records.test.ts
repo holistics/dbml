@@ -22,8 +22,8 @@ describe('[example] records binder', () => {
       }
     `;
     const compiler = createCompiler(source);
-    const { ast } = compiler.parseFile(DEFAULT_ENTRY);
-    expect(compiler.parseFile(DEFAULT_ENTRY).errors.length).toBe(0);
+    const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
+    expect(compiler.parseFile(DEFAULT_ENTRY).getErrors().length).toBe(0);
 
     const schemaSymbol = compiler.resolvedSymbol(ast) as SchemaSymbol;
     const tableSymbol = schemaSymbol.symbolTable.get('Table:users') as TableSymbol;
@@ -54,8 +54,8 @@ describe('[example] records binder', () => {
       }
     `;
     const compiler = createCompiler(source);
-    const { ast } = compiler.parseFile(DEFAULT_ENTRY);
-    expect(compiler.parseFile(DEFAULT_ENTRY).errors.length).toBe(0);
+    const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
+    expect(compiler.parseFile(DEFAULT_ENTRY).getErrors().length).toBe(0);
 
     const publicSchema = compiler.resolvedSymbol(ast) as SchemaSymbol;
     const authSchema = publicSchema.symbolTable.get('Schema:auth') as SchemaSymbol;
@@ -121,8 +121,8 @@ describe('[example] records binder', () => {
       }
     `;
     const compiler = createCompiler(source);
-    const { ast } = compiler.parseFile(DEFAULT_ENTRY);
-    expect(compiler.parseFile(DEFAULT_ENTRY).errors.length).toBe(0);
+    const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
+    expect(compiler.parseFile(DEFAULT_ENTRY).getErrors().length).toBe(0);
 
     const schemaSymbol = compiler.resolvedSymbol(ast) as SchemaSymbol;
     const tableSymbol = schemaSymbol.symbolTable.get('Table:users') as TableSymbol;
@@ -151,8 +151,8 @@ describe('[example] records binder', () => {
       }
     `;
     const compiler = createCompiler(source);
-    const { ast } = compiler.parseFile(DEFAULT_ENTRY);
-    expect(compiler.parseFile(DEFAULT_ENTRY).errors.length).toBe(0);
+    const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
+    expect(compiler.parseFile(DEFAULT_ENTRY).getErrors().length).toBe(0);
 
     const schemaSymbol = compiler.resolvedSymbol(ast) as SchemaSymbol;
     const enumSymbol = schemaSymbol.symbolTable.get('Enum:status') as EnumSymbol;
@@ -177,8 +177,8 @@ describe('[example] records binder', () => {
       }
     `;
     const compiler = createCompiler(source);
-    const { ast } = compiler.parseFile(DEFAULT_ENTRY);
-    expect(compiler.parseFile(DEFAULT_ENTRY).errors.length).toBe(0);
+    const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
+    expect(compiler.parseFile(DEFAULT_ENTRY).getErrors().length).toBe(0);
 
     const schemaSymbol = compiler.resolvedSymbol(ast) as SchemaSymbol;
     const tableSymbol = schemaSymbol.symbolTable.get('Table:users') as TableSymbol;
@@ -206,8 +206,8 @@ describe('[example] records binder', () => {
       }
     `;
     const compiler = createCompiler(source);
-    const { ast } = compiler.parseFile(DEFAULT_ENTRY);
-    expect(compiler.parseFile(DEFAULT_ENTRY).errors.length).toBe(0);
+    const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
+    expect(compiler.parseFile(DEFAULT_ENTRY).getErrors().length).toBe(0);
 
     const publicSchema = compiler.resolvedSymbol(ast) as SchemaSymbol;
     const authSchema = publicSchema.symbolTable.get('Schema:auth') as SchemaSymbol;
@@ -276,8 +276,8 @@ describe('[example] records binder', () => {
       }
     `;
     const compiler = createCompiler(source);
-    const { ast } = compiler.parseFile(DEFAULT_ENTRY);
-    expect(compiler.parseFile(DEFAULT_ENTRY).errors.length).toBe(0);
+    const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
+    expect(compiler.parseFile(DEFAULT_ENTRY).getErrors().length).toBe(0);
 
     const schemaSymbol = compiler.resolvedSymbol(ast) as SchemaSymbol;
     const enumSymbol = schemaSymbol.symbolTable.get('Enum:status') as EnumSymbol;

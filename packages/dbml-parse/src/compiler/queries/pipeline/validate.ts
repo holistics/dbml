@@ -6,10 +6,10 @@ const DBML_EXT = '.dbml';
 
 // Scan use declarations from the parsed AST to extract external file dependencies.
 export function localFileDependencies (this: Compiler, filepath: Filepath): ReadonlyMap<FilepathId, UseDeclarationNode> {
-  const fileIndex = this.parseFile(filepath);
+  const { ast } = this.parseFile(filepath).getValue();
   const deps = new Map<FilepathId, UseDeclarationNode>();
 
-  for (const node of fileIndex.ast.body) {
+  for (const node of ast.body) {
     if (!(node instanceof UseDeclarationNode) || !node.path) continue;
     const resolved = Filepath.resolve(filepath.dirname, node.path.value);
     const resolvedPath = resolved.absolute.endsWith(DBML_EXT) ? resolved : Filepath.from(resolved.absolute + DBML_EXT);

@@ -9,7 +9,7 @@ describe('[example] binder', () => {
     test('should create TableSymbol with correct properties', () => {
       const compiler = new Compiler();
       compiler.setSource('Table users { id int }');
-      const { ast } = compiler.parseFile(DEFAULT_ENTRY);
+      const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
       const elements = ast.body.filter((n): n is ElementDeclarationNode => n.kind === SyntaxNodeKind.ELEMENT_DECLARATION);
       const tableNode = elements[0];
       const tableSymbol = compiler.resolvedSymbol(tableNode) as TableSymbol;
@@ -45,7 +45,7 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const { ast } = compiler.parseFile(DEFAULT_ENTRY);
+      const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
       const tableNode = ast.body[0] as ElementDeclarationNode;
       const tableSymbol = compiler.resolvedSymbol(tableNode) as TableSymbol;
       const tableBody = tableNode.body as BlockExpressionNode;
@@ -76,11 +76,11 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const parseErrors = compiler.parseFile(DEFAULT_ENTRY).errors;
+      const parseErrors = compiler.parseFile(DEFAULT_ENTRY).getErrors();
       const analyzeErrors = compiler.analyzeFile(DEFAULT_ENTRY).getErrors();
       expect([...parseErrors, ...analyzeErrors]).toHaveLength(0);
 
-      const { ast } = compiler.parseFile(DEFAULT_ENTRY);
+      const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
       const schemaSymbol = compiler.resolvedSymbol(ast) as SchemaSymbol;
       expect(schemaSymbol.symbolTable.get('Table:users')).toBeInstanceOf(TableSymbol);
       expect(schemaSymbol.symbolTable.get('Table:posts')).toBeInstanceOf(TableSymbol);
@@ -100,7 +100,7 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).errors, ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
 
       expect(errors).toHaveLength(1);
       expect(errors[0].diagnostic).toBe("Table name 'users' already exists in schema 'public'");
@@ -113,10 +113,10 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).errors, ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
       expect(errors).toHaveLength(0);
 
-      const { ast } = compiler.parseFile(DEFAULT_ENTRY);
+      const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
       const schemaSymbol = compiler.resolvedSymbol(ast) as SchemaSymbol;
 
       // Root has auth schema and public.users table
@@ -136,10 +136,10 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).errors, ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
       expect(errors).toHaveLength(0);
 
-      const { ast } = compiler.parseFile(DEFAULT_ENTRY);
+      const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
       const elements = ast.body.filter((n): n is ElementDeclarationNode => n.kind === SyntaxNodeKind.ELEMENT_DECLARATION);
       const usersSymbol = compiler.resolvedSymbol(elements[0]) as TableSymbol;
 
@@ -160,10 +160,10 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).errors, ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
       expect(errors).toHaveLength(0);
 
-      const { ast } = compiler.parseFile(DEFAULT_ENTRY);
+      const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
       const elements = ast.body.filter((n): n is ElementDeclarationNode => n.kind === SyntaxNodeKind.ELEMENT_DECLARATION);
       const employeesSymbol = compiler.resolvedSymbol(elements[0]) as TableSymbol;
 
@@ -175,18 +175,18 @@ describe('[example] binder', () => {
     test('should handle deeply nested schema names and quoted identifiers', () => {
       const compiler1 = new Compiler();
       compiler1.setSource('Table a.b.c { id int }');
-      const errors1 = [...compiler1.parseFile(DEFAULT_ENTRY).errors, ...compiler1.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors1 = [...compiler1.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler1.analyzeFile(DEFAULT_ENTRY).getErrors()];
       expect(errors1).toHaveLength(0);
-      const { ast: ast1 } = compiler1.parseFile(DEFAULT_ENTRY);
+      const { ast: ast1 } = compiler1.parseFile(DEFAULT_ENTRY).getValue();
       const schemaSymbol1 = compiler1.resolvedSymbol(ast1) as SchemaSymbol;
       expect(schemaSymbol1.symbolTable.get('Schema:a')).toBeInstanceOf(SchemaSymbol);
 
       const compiler2 = new Compiler();
 
       compiler2.setSource('Table "user-table" { "user-id" int }');
-      const errors2 = [...compiler2.parseFile(DEFAULT_ENTRY).errors, ...compiler2.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors2 = [...compiler2.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler2.analyzeFile(DEFAULT_ENTRY).getErrors()];
       expect(errors2).toHaveLength(0);
-      const { ast: ast2 } = compiler2.parseFile(DEFAULT_ENTRY);
+      const { ast: ast2 } = compiler2.parseFile(DEFAULT_ENTRY).getValue();
       const schemaSymbol2 = compiler2.resolvedSymbol(ast2) as SchemaSymbol;
       expect(schemaSymbol2.symbolTable.get('Table:user-table')).toBeInstanceOf(TableSymbol);
     });
@@ -197,7 +197,7 @@ describe('[example] binder', () => {
       const source = 'Table users { id int [pk] }';
       const compiler = new Compiler();
       compiler.setSource(source);
-      const { ast } = compiler.parseFile(DEFAULT_ENTRY);
+      const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
       const tableElement = ast.body[0] as ElementDeclarationNode;
       const tableBody = tableElement.body as BlockExpressionNode;
       const columnNode = tableBody.body[0] as ElementDeclarationNode;
@@ -222,7 +222,7 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).errors, ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
 
       expect(errors).toHaveLength(2);
       expect(errors[0].diagnostic).toBe('Duplicate column id');
@@ -240,10 +240,10 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).errors, ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
       expect(errors).toHaveLength(0);
 
-      const { ast } = compiler.parseFile(DEFAULT_ENTRY);
+      const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
       const tableElement = ast.body[0] as ElementDeclarationNode;
       const tableSymbol = compiler.resolvedSymbol(tableElement) as TableSymbol;
 
@@ -260,7 +260,7 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const { ast } = compiler.parseFile(DEFAULT_ENTRY);
+      const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
       const elements = ast.body.filter((n): n is ElementDeclarationNode => n.kind === SyntaxNodeKind.ELEMENT_DECLARATION);
       const usersTable = elements[0];
       const tableBody = usersTable.body as BlockExpressionNode;
@@ -281,7 +281,7 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const { ast } = compiler.parseFile(DEFAULT_ENTRY);
+      const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
       const elements = ast.body.filter((n): n is ElementDeclarationNode => n.kind === SyntaxNodeKind.ELEMENT_DECLARATION);
       const usersTable = elements[0];
       const usersSymbol = compiler.resolvedSymbol(usersTable) as TableSymbol;
@@ -316,10 +316,10 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).errors, ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
       expect(errors).toHaveLength(0);
 
-      const { ast } = compiler.parseFile(DEFAULT_ENTRY);
+      const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
       const tableSymbol = compiler.resolvedSymbol(ast.body[0] as ElementDeclarationNode) as TableSymbol;
       expect(tableSymbol.symbolTable.get('Column:id')).toBeInstanceOf(ColumnSymbol);
       expect(tableSymbol.symbolTable.get('Column:email')).toBeInstanceOf(ColumnSymbol);
@@ -336,7 +336,7 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).errors, ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
 
       expect(errors).toHaveLength(1);
       expect(errors[0].diagnostic).toBe("No column named 'nonexistent_column' inside Table 'users'");
@@ -356,10 +356,10 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).errors, ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
       expect(errors).toHaveLength(0);
 
-      const { ast } = compiler.parseFile(DEFAULT_ENTRY);
+      const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
       const tableSymbol = compiler.resolvedSymbol(ast.body[0] as ElementDeclarationNode) as TableSymbol;
       expect(tableSymbol.symbolTable.get('Column:first_name')).toBeInstanceOf(ColumnSymbol);
       expect(tableSymbol.symbolTable.get('Column:last_name')).toBeInstanceOf(ColumnSymbol);
@@ -377,7 +377,7 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const { ast } = compiler.parseFile(DEFAULT_ENTRY);
+      const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
       const elements = ast.body.filter((n): n is ElementDeclarationNode => n.kind === SyntaxNodeKind.ELEMENT_DECLARATION);
       const enumNode = elements[0];
       const enumSymbol = compiler.resolvedSymbol(enumNode) as EnumSymbol;
@@ -403,10 +403,10 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).errors, ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
       expect(errors).toHaveLength(0);
 
-      const { ast } = compiler.parseFile(DEFAULT_ENTRY);
+      const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
       const enumElement = ast.body[0] as ElementDeclarationNode;
       const enumSymbol = compiler.resolvedSymbol(enumElement) as EnumSymbol;
 
@@ -432,7 +432,7 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).errors, ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
 
       expect(errors).toHaveLength(2);
       expect(errors[0].diagnostic).toBe('Duplicate enum field active');
@@ -446,10 +446,10 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).errors, ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
       expect(errors).toHaveLength(0);
 
-      const { ast } = compiler.parseFile(DEFAULT_ENTRY);
+      const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
       const schemaSymbol = compiler.resolvedSymbol(ast) as SchemaSymbol;
 
       const enumA = schemaSymbol.symbolTable.get('Enum:a') as EnumSymbol;
@@ -473,10 +473,10 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).errors, ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
       expect(errors).toHaveLength(0);
 
-      const { ast } = compiler.parseFile(DEFAULT_ENTRY);
+      const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
       const schemaSymbol = compiler.resolvedSymbol(ast) as SchemaSymbol;
       expect(schemaSymbol.symbolTable.get('Enum:status')).toBeInstanceOf(EnumSymbol);
       expect(schemaSymbol.symbolTable.get('Table:users')).toBeInstanceOf(TableSymbol);
@@ -495,10 +495,10 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).errors, ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
       expect(errors).toHaveLength(0);
 
-      const { ast } = compiler.parseFile(DEFAULT_ENTRY);
+      const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
       const schemaSymbol = compiler.resolvedSymbol(ast) as SchemaSymbol;
       const typesSchema = schemaSymbol.symbolTable.get('Schema:types') as SchemaSymbol;
       expect(typesSchema.symbolTable.get('Enum:status')).toBeInstanceOf(EnumSymbol);
@@ -513,10 +513,10 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).errors, ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
       expect(errors).toHaveLength(0);
 
-      const { ast } = compiler.parseFile(DEFAULT_ENTRY);
+      const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
       const schemaSymbol = compiler.resolvedSymbol(ast) as SchemaSymbol;
       expect(schemaSymbol.symbolTable.get('Table:users')).toBeInstanceOf(TableSymbol);
       expect(schemaSymbol.symbolTable.get('Enum:status_enum')).toBeInstanceOf(EnumSymbol);
@@ -536,10 +536,10 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).errors, ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
       expect(errors).toHaveLength(0);
 
-      const { ast } = compiler.parseFile(DEFAULT_ENTRY);
+      const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
       const schemaSymbol = compiler.resolvedSymbol(ast) as SchemaSymbol;
       const enumSymbol = schemaSymbol.symbolTable.get('Enum:order_status') as EnumSymbol;
       const pendingField = enumSymbol.symbolTable.get('Enum field:pending') as EnumFieldSymbol;
@@ -563,10 +563,10 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).errors, ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
       expect(errors).toHaveLength(0);
 
-      const { ast } = compiler.parseFile(DEFAULT_ENTRY);
+      const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
       const publicSchema = compiler.resolvedSymbol(ast) as SchemaSymbol;
       const typesSchema = publicSchema.symbolTable.get('Schema:types') as SchemaSymbol;
       const enumSymbol = typesSchema.symbolTable.get('Enum:status') as EnumSymbol;
@@ -586,7 +586,7 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).errors, ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
       expect(errors.length).toBe(1);
       expect(errors[0].diagnostic).toBe("Enum field 'nonexistent' does not exist in Enum 'status'");
     });
@@ -599,7 +599,7 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).errors, ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
       expect(errors.length).toBe(1);
       expect(errors[0].diagnostic).toBe("Enum 'nonexistent_enum' does not exist in Schema 'public'");
     });
@@ -612,7 +612,7 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).errors, ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
       expect(errors).toHaveLength(0);
     });
 
@@ -624,7 +624,7 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).errors, ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
       expect(errors).toHaveLength(0);
     });
 
@@ -636,7 +636,7 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).errors, ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
       expect(errors).toHaveLength(0);
     });
 
@@ -648,7 +648,7 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).errors, ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
       expect(errors).toHaveLength(0);
     });
 
@@ -660,7 +660,7 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).errors, ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
       expect(errors).toHaveLength(0);
     });
 
@@ -673,7 +673,7 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).errors, ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
       expect(errors.length).toBe(1);
       expect(errors[0].diagnostic).toBe("Enum 'true' does not exist in Schema 'public'");
     });
@@ -689,7 +689,7 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).errors, ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
       expect(errors.length).toBe(1);
       expect(errors[0].diagnostic).toBe("Enum field 'value' does not exist in Enum 'true'");
     });
@@ -706,11 +706,11 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).errors, ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
       expect(errors).toHaveLength(0);
 
       // Verify the binding
-      const { ast } = compiler.parseFile(DEFAULT_ENTRY);
+      const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
       const schemaSymbol = compiler.resolvedSymbol(ast) as SchemaSymbol;
       const enumSymbol = schemaSymbol.symbolTable.get('Enum:true') as EnumSymbol;
       const valueField = enumSymbol.symbolTable.get('Enum field:value') as EnumFieldSymbol;
@@ -730,7 +730,7 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).errors, ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
       expect(errors.length).toBe(1);
       expect(errors[0].diagnostic).toBe("Enum 'hello' does not exist in Schema 'public'");
     });
@@ -745,10 +745,10 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).errors, ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
       expect(errors).toHaveLength(0);
 
-      const { ast } = compiler.parseFile(DEFAULT_ENTRY);
+      const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
       const elements = ast.body.filter((n): n is ElementDeclarationNode => n.kind === SyntaxNodeKind.ELEMENT_DECLARATION);
       const usersSymbol = compiler.resolvedSymbol(elements[0]) as TableSymbol;
       const postsSymbol = compiler.resolvedSymbol(elements[1]) as TableSymbol;
@@ -769,10 +769,10 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).errors, ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
       expect(errors).toHaveLength(0);
 
-      const { ast } = compiler.parseFile(DEFAULT_ENTRY);
+      const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
       const elements = ast.body.filter((n): n is ElementDeclarationNode => n.kind === SyntaxNodeKind.ELEMENT_DECLARATION);
       const usersTable = elements[0];
       const usersSymbol = compiler.resolvedSymbol(usersTable) as TableSymbol;
@@ -792,7 +792,7 @@ describe('[example] binder', () => {
     test('should detect unknown table and column references', () => {
       const compiler1 = new Compiler();
       compiler1.setSource('Ref: nonexistent.id > also_nonexistent.id');
-      const errors1 = [...compiler1.parseFile(DEFAULT_ENTRY).errors, ...compiler1.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors1 = [...compiler1.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler1.analyzeFile(DEFAULT_ENTRY).getErrors()];
       expect(errors1).toHaveLength(2);
       expect(errors1[0].diagnostic).toBe("Table 'nonexistent' does not exist in Schema 'public'");
       expect(errors1[1].diagnostic).toBe("Table 'also_nonexistent' does not exist in Schema 'public'");
@@ -803,7 +803,7 @@ describe('[example] binder', () => {
       `;
       const compiler2 = new Compiler();
       compiler2.setSource(source2);
-      const errors2 = [...compiler2.parseFile(DEFAULT_ENTRY).errors, ...compiler2.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors2 = [...compiler2.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler2.analyzeFile(DEFAULT_ENTRY).getErrors()];
       expect(errors2).toHaveLength(1);
       expect(errors2[0].diagnostic).toBe("Column 'nonexistent' does not exist in Table 'users'");
     });
@@ -816,10 +816,10 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).errors, ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
       expect(errors).toHaveLength(0);
 
-      const { ast } = compiler.parseFile(DEFAULT_ENTRY);
+      const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
       const elements = ast.body.filter((n): n is ElementDeclarationNode => n.kind === SyntaxNodeKind.ELEMENT_DECLARATION);
       const usersSymbol = compiler.resolvedSymbol(elements[0]) as TableSymbol;
 
@@ -841,10 +841,10 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).errors, ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
       expect(errors).toHaveLength(0);
 
-      const { ast } = compiler.parseFile(DEFAULT_ENTRY);
+      const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
       const schemaSymbol = compiler.resolvedSymbol(ast) as SchemaSymbol;
 
       const usersSymbol = schemaSymbol.symbolTable.get('Table:users') as TableSymbol;
@@ -867,10 +867,10 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).errors, ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
       expect(errors).toHaveLength(0);
 
-      const { ast } = compiler.parseFile(DEFAULT_ENTRY);
+      const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
       const schemaSymbol = compiler.resolvedSymbol(ast) as SchemaSymbol;
       expect(schemaSymbol.symbolTable.get('Table:users')).toBeInstanceOf(TableSymbol);
       expect(schemaSymbol.symbolTable.get('Table:posts')).toBeInstanceOf(TableSymbol);
@@ -884,7 +884,7 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const { ast } = compiler.parseFile(DEFAULT_ENTRY);
+      const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
       const elements = ast.body.filter((n): n is ElementDeclarationNode => n.kind === SyntaxNodeKind.ELEMENT_DECLARATION);
       const usersSymbol = compiler.resolvedSymbol(elements[0]) as TableSymbol;
 
@@ -909,10 +909,10 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).errors, ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
       expect(errors).toHaveLength(0);
 
-      const { ast } = compiler.parseFile(DEFAULT_ENTRY);
+      const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
       const schemaSymbol = compiler.resolvedSymbol(ast) as SchemaSymbol;
       const merchantsSymbol = schemaSymbol.symbolTable.get('Table:merchants') as TableSymbol;
       const ordersSymbol = schemaSymbol.symbolTable.get('Table:orders') as TableSymbol;
@@ -952,10 +952,10 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).errors, ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
       expect(errors).toHaveLength(0);
 
-      const { ast } = compiler.parseFile(DEFAULT_ENTRY);
+      const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
       const publicSchema = compiler.resolvedSymbol(ast) as SchemaSymbol;
       const shopSchema = publicSchema.symbolTable.get('Schema:shop') as SchemaSymbol;
       const productsSymbol = shopSchema.symbolTable.get('Table:products') as TableSymbol;
@@ -973,7 +973,7 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).errors, ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
       expect(errors.length).toBe(2);
       expect(errors[0].diagnostic).toBe("Column 'nonexistent' does not exist in Table 'posts'");
       expect(errors[1].diagnostic).toBe("Column 'also_nonexistent' does not exist in Table 'users'");
@@ -984,7 +984,7 @@ describe('[example] binder', () => {
     test('should create TablePartialSymbol with correct properties', () => {
       const compiler = new Compiler();
       compiler.setSource('TablePartial timestamps { created_at timestamp }');
-      const { ast } = compiler.parseFile(DEFAULT_ENTRY);
+      const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
       const elements = ast.body.filter((n): n is ElementDeclarationNode => n.kind === SyntaxNodeKind.ELEMENT_DECLARATION);
       const partialNode = elements[0];
       const partialSymbol = compiler.resolvedSymbol(partialNode) as TablePartialSymbol;
@@ -1009,10 +1009,10 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).errors, ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
       expect(errors).toHaveLength(0);
 
-      const { ast } = compiler.parseFile(DEFAULT_ENTRY);
+      const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
       const elements = ast.body.filter((n): n is ElementDeclarationNode => n.kind === SyntaxNodeKind.ELEMENT_DECLARATION);
       const partial = elements.find((e) => e.type?.value === 'TablePartial');
       const partialSymbol = compiler.resolvedSymbol(partial!) as TablePartialSymbol;
@@ -1031,7 +1031,7 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).errors, ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
 
       expect(errors).toHaveLength(1);
       expect(errors[0].diagnostic).toBe("TablePartial 'nonexistent_partial' does not exist in Schema 'public'");
@@ -1049,10 +1049,10 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).errors, ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
       expect(errors).toHaveLength(0);
 
-      const { ast } = compiler.parseFile(DEFAULT_ENTRY);
+      const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
       const schemaSymbol = compiler.resolvedSymbol(ast) as SchemaSymbol;
 
       const timestampsSymbol = schemaSymbol.symbolTable.get('TablePartial:timestamps') as TablePartialSymbol;
@@ -1074,10 +1074,10 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).errors, ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
       expect(errors).toHaveLength(0);
 
-      const { ast } = compiler.parseFile(DEFAULT_ENTRY);
+      const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
       const schemaSymbol = compiler.resolvedSymbol(ast) as SchemaSymbol;
       const baseSymbol = schemaSymbol.symbolTable.get('TablePartial:base') as TablePartialSymbol;
       const derivedSymbol = schemaSymbol.symbolTable.get('Table:derived') as TableSymbol;
@@ -1098,10 +1098,10 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).errors, ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
       expect(errors).toHaveLength(0);
 
-      const { ast } = compiler.parseFile(DEFAULT_ENTRY);
+      const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
       const schemaSymbol = compiler.resolvedSymbol(ast) as SchemaSymbol;
       expect(schemaSymbol.symbolTable.get('Table:users')).toBeInstanceOf(TableSymbol);
       expect(schemaSymbol.symbolTable.get('TablePartial:timestamps')).toBeInstanceOf(TablePartialSymbol);
@@ -1118,7 +1118,7 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).errors, ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
       expect(errors.length).toEqual(1);
       expect(errors[0].diagnostic).toBe("TablePartial 'p2' does not exist in Schema 'public'");
     });
@@ -1137,7 +1137,7 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).errors, ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
       expect(errors.length).toBe(4);
 
       const errorDiagnostics = errors.map((e) => e.diagnostic);
@@ -1155,7 +1155,7 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).errors, ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
       // Self-referential refs in table partials are allowed
       expect(errors.length).toBe(0);
     });
@@ -1174,7 +1174,7 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).errors, ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
       // Circular refs via table partials are allowed
       expect(errors.length).toBe(0);
     });
@@ -1196,10 +1196,10 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).errors, ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
       expect(errors).toHaveLength(0);
 
-      const { ast } = compiler.parseFile(DEFAULT_ENTRY);
+      const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
       const schemaSymbol = compiler.resolvedSymbol(ast) as SchemaSymbol;
       const usersSymbol = schemaSymbol.symbolTable.get('Table:users') as TableSymbol;
       const idColumn = usersSymbol.symbolTable.get('Column:id') as ColumnSymbol;
@@ -1220,7 +1220,7 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const { ast } = compiler.parseFile(DEFAULT_ENTRY);
+      const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
       const elements = ast.body.filter((n): n is ElementDeclarationNode => n.kind === SyntaxNodeKind.ELEMENT_DECLARATION);
       const tableGroup = elements.find((e) => e.type?.value === 'TableGroup');
       const groupSymbol = compiler.resolvedSymbol(tableGroup!) as TableGroupSymbol;
@@ -1246,10 +1246,10 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).errors, ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
       expect(errors).toHaveLength(0);
 
-      const { ast } = compiler.parseFile(DEFAULT_ENTRY);
+      const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
       const elements = ast.body.filter((n): n is ElementDeclarationNode => n.kind === SyntaxNodeKind.ELEMENT_DECLARATION);
       const usersSymbol = compiler.resolvedSymbol(elements[0]) as TableSymbol;
       const postsSymbol = compiler.resolvedSymbol(elements[1]) as TableSymbol;
@@ -1274,10 +1274,10 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).errors, ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
       expect(errors).toHaveLength(0);
 
-      const { ast } = compiler.parseFile(DEFAULT_ENTRY);
+      const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
       const schemaSymbol = compiler.resolvedSymbol(ast) as SchemaSymbol;
       expect(schemaSymbol.symbolTable.get('Table:users')).toBeInstanceOf(TableSymbol);
     });

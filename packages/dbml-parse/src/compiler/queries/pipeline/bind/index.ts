@@ -34,35 +34,36 @@ const validateFileCache = new WeakMap<ProgramNode, ValidateFileResult>();
 // Validate a single file locally (no cross-file resolution).
 // Cached so that the same syntax nodes always map to the same symbols.
 export function validateFile (compiler: Compiler, filepath: Filepath): ValidateFileResult {
-  const fileIndex = compiler.parseFile(filepath);
+  const parseReport = compiler.parseFile(filepath);
+  const { ast } = parseReport.getValue();
 
-  const cached = validateFileCache.get(fileIndex.ast);
+  const cached = validateFileCache.get(ast);
   if (cached) return cached;
 
   const symbolIdGenerator = new NodeSymbolIdGenerator();
   const symbolFactory = new SymbolFactory(symbolIdGenerator, filepath);
   const nodeToSymbol: NodeToSymbolMap = new Map();
   const fileSymbol = symbolFactory.create(SchemaSymbol, { symbolTable: new SymbolTable() });
-  nodeToSymbol.set(fileIndex.ast, fileSymbol);
+  nodeToSymbol.set(ast, fileSymbol);
 
-  const validationReport = new Validator({ ast: fileIndex.ast, filepath, nodeToSymbol }, symbolFactory).validate();
+  const validationReport = new Validator({ ast, filepath, nodeToSymbol }, symbolFactory).validate();
 
   const result: ValidateFileResult = {
     symbolTable: fileSymbol.symbolTable,
     symbolIdGenerator,
     symbolFactory,
     nodeToSymbol,
-    errors: [...fileIndex.errors, ...validationReport.getErrors()],
-    warnings: [...fileIndex.warnings, ...validationReport.getWarnings()],
+    errors: [...parseReport.getErrors(), ...validationReport.getErrors()],
+    warnings: [...parseReport.getWarnings(), ...validationReport.getWarnings()],
   };
 
-  validateFileCache.set(fileIndex.ast, result);
+  validateFileCache.set(ast, result);
   return result;
 }
 
 // Validate, resolve external symbols, and bind references for a single file.
 export function analyzeFile (this: Compiler, filepath: Filepath): Report<AnalyzeResult> {
-  const fileIndex = this.parseFile(filepath);
+  const { ast } = this.parseFile(filepath).getValue();
   const { symbolTable, symbolIdGenerator, symbolFactory, nodeToSymbol, errors: validationErrors, warnings: validationWarnings } = validateFile(this, filepath);
 
   const errors: CompileError[] = [...validationErrors];
@@ -75,12 +76,12 @@ export function analyzeFile (this: Compiler, filepath: Filepath): Report<Analyze
   });
   errors.push(...resolved.getErrors());
 
-  nodeToSymbol.set(fileIndex.ast, symbolFactory.create(SchemaSymbol, { symbolTable: resolved.getValue() }));
+  nodeToSymbol.set(ast, symbolFactory.create(SchemaSymbol, { symbolTable: resolved.getValue() }));
 
   const nodeToReferee: NodeToRefereeMap = new WeakMap();
   const symbolToReferences: SymbolToReferencesMap = new Map();
   const bindingReport = new Binder(
-    { ast: fileIndex.ast, nodeToSymbol, nodeToReferee, symbolToReferences },
+    { ast, nodeToSymbol, nodeToReferee, symbolToReferences },
     symbolFactory,
   ).resolve();
   errors.push(...bindingReport.getErrors());

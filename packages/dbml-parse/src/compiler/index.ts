@@ -99,7 +99,7 @@ export default class Compiler {
   }
 
   ast (filePath: Filepath) {
-    return this.parseFile(filePath).ast;
+    return this.parseFile(filePath).getValue().ast;
   }
 
   getSource (filePath: Filepath): string | undefined {
@@ -172,13 +172,13 @@ export default class Compiler {
     /** @deprecated Use `compiler.getSource(filepath)` */
     source: () => this.getSource(DEFAULT_ENTRY) ?? '',
     /** @deprecated Use `compiler.parseFile(filepath).ast` */
-    ast: () => this.parseFile(DEFAULT_ENTRY).ast,
+    ast: () => this.parseFile(DEFAULT_ENTRY).getValue().ast,
     /** @deprecated Use `compiler.fileErrors(filepath)` */
     errors: () => this.fileErrors(DEFAULT_ENTRY),
     /** @deprecated Use `compiler.fileWarnings(filepath)` */
     warnings: () => this.fileWarnings(DEFAULT_ENTRY),
     /** @deprecated Use `compiler.parseFile(filepath).tokens` */
-    tokens: () => this.parseFile(DEFAULT_ENTRY).tokens,
+    tokens: () => this.parseFile(DEFAULT_ENTRY).getValue().tokens,
     /** @deprecated Use `compiler.interpretFile(filepath).getValue().databases[0]` */
     rawDb: () => this.interpretFile(DEFAULT_ENTRY).getValue().databases[0],
   };
