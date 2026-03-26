@@ -108,8 +108,8 @@ export function serializeAnalysis (reportOrCompiler: Readonly<Report<AnalysisRes
     const compiler = reportOrCompiler;
     const { ast } = compiler.parseFile().getValue();
     const { nodeToSymbol, nodeToReferee, symbolToReferences } = compiler.analyzeFile().getValue();
-    const errors = [...compiler.parseFile().getErrors(), ...compiler.analyzeFile().getErrors()];
-    const warnings = [...compiler.parseFile().getWarnings(), ...compiler.analyzeFile().getWarnings()];
+    const errors = compiler.analyzeFile().getErrors();
+    const warnings = compiler.analyzeFile().getWarnings();
     const report = { value: ast, errors, ...(warnings.length ? { warnings } : {}) };
     return JSON.stringify(report, createJsonReplacer(nodeToSymbol, nodeToReferee, symbolToReferences), pretty ? 2 : 0);
   }
