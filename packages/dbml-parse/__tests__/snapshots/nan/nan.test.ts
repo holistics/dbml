@@ -2,7 +2,7 @@ import { readFileSync } from 'fs';
 import path from 'path';
 import { describe, expect, it } from 'vitest';
 import { Compiler } from '@/index';
-import Interpreter from '@/core/interpreter/interpreter';
+import { DEFAULT_ENTRY } from '@/compiler/constants';
 import { scanTestNames } from '../../utils';
 
 describe('[snapshot] interpreter (NaN cases)', () => {
@@ -12,31 +12,21 @@ describe('[snapshot] interpreter (NaN cases)', () => {
     const program = readFileSync(path.resolve(__dirname, `./input/${testName}.in.dbml`), 'utf-8');
     const compiler = new Compiler();
     compiler.setSource(program);
+    const res = compiler.interpretFile(DEFAULT_ENTRY);
     let output: any;
 
-    const analyzeReport = compiler.analyzeFile();
-
-    if (analyzeReport.getErrors().length !== 0) {
+    if (res.getErrors().length > 0) {
       output = JSON.stringify(
-        analyzeReport.getErrors(),
-        (key, value) => (['symbol', 'references', 'referee', 'parent'].includes(key) ? undefined : value),
+        res.getErrors(),
+        (key, value) => (['symbol', 'references', 'referee', 'parent', 'filepath'].includes(key) ? undefined : value),
         2,
       );
     } else {
-      const res = new Interpreter(compiler).interpret();
-      if (res.getErrors().length > 0) {
-        output = JSON.stringify(
-          res.getErrors(),
-          (key, value) => (['symbol', 'references', 'referee', 'parent'].includes(key) ? undefined : value),
-          2,
-        );
-      } else {
-        output = JSON.stringify(
-          res.getValue(),
-          (key, value) => (['symbol', 'references', 'referee'].includes(key) ? undefined : value),
-          2,
-        );
-      }
+      output = JSON.stringify(
+        res.getValue().databases[0],
+        (key, value) => (['symbol', 'references', 'referee', 'filepath'].includes(key) ? undefined : value),
+        2,
+      );
     }
 
     it(testName, () => expect(output).toMatchFileSnapshot(path.resolve(__dirname, `./output/${testName}.out.json`)));
