@@ -1,4 +1,0 @@
-use { table users } from './bad.dbml'
-Table orders {
-  id int [pk]
-}

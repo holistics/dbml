@@ -1,6 +1,0 @@
-use { table users } from './common.dbml'
-Table orders {
-  id int [pk]
-  user_id int
-}
-Ref: orders.user_id > users.id
