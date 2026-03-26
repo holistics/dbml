@@ -5,7 +5,7 @@ import { DEFAULT_ENTRY } from './constants';
 import type { SyntaxNode } from '@/core/parser/nodes';
 import type { NodeSymbol } from '@/core/analyzer/symbol/symbols';
 import { DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLReferencesProvider, DBMLDiagnosticsProvider } from '@/services/index';
-import { parseFile, localFileDependencies, analyzeFile, interpretFile } from './queries/pipeline';
+import { parseFile, localFileDependencies, analyzeFile, analyzeProject, interpretFile, interpretProject } from './queries/pipeline';
 import { flatStream, invalidStream } from './queries/token';
 import { symbolOfName, symbolMembers } from './queries/symbol';
 import { containerStack, containerToken, containerElement, containerScope, containerScopeKind } from './queries/container';
@@ -121,8 +121,10 @@ export default class Compiler {
   // Resolve external symbols + bind references for a single file.
   // Global because it depends on cross-file resolution.
   analyzeFile = this.globalQuery(analyzeFile);
+  analyzeProject = analyzeProject.bind(this);
 
   interpretFile = this.globalQuery(interpretFile);
+  interpretProject = interpretProject.bind(this);
 
   /* utility queries */
 
@@ -134,12 +136,17 @@ export default class Compiler {
     return this.analyzeFile(node.filepath).getValue().nodeToReferee.get(node);
   }
 
-  // Warning: this query may return missing references if some files that `use` this node but are not included in the compilation path from the entrypoint file
   nodeReferences (node: SyntaxNode): SyntaxNode[] {
-    const { nodeToSymbol, symbolToReferences } = this.analyzeFile(node.filepath).getValue();
-    const symbol = nodeToSymbol.get(node);
+    const symbol = this.resolvedSymbol(node);
     if (!symbol) return [];
-    return symbolToReferences.get(symbol) ?? [];
+
+    const refs: SyntaxNode[] = [];
+    for (const [, report] of this.analyzeProject()) {
+      if (report.getErrors().length > 0) continue;
+      const fileRefs = report.getValue().symbolToReferences.get(symbol);
+      if (fileRefs) refs.push(...fileRefs);
+    }
+    return refs;
   }
 
   /* diagnostics */

@@ -5,6 +5,13 @@ import type { CompileError, CompileWarning } from '@/core/errors';
 import Interpreter from '@/core/interpreter/interpreter';
 import Report from '@/core/report';
 
+// Interpret all files in the project.
+export function interpretProject (this: Compiler): Report<Model> {
+  const allFiles = this.layout().listAllFiles();
+  if (allFiles.length === 0) return new Report({ databases: [] }, [], []);
+  return this.interpretFile(allFiles[0]);
+}
+
 export function interpretFile (this: Compiler, filepath: Filepath): Report<Model> {
   // 1. Collect all files in dependency graph (entry file first)
   const visited = new Set<FilepathId>();

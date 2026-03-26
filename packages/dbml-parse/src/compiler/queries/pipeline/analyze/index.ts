@@ -73,6 +73,15 @@ export function validateFile (compiler: Compiler, filepath: Filepath): Report<Va
   return result;
 }
 
+// Analyze all files in the project. Returns a map of filepath → AnalysisResult.
+export function analyzeProject (this: Compiler): Map<Filepath, Report<AnalysisResult>> {
+  const results = new Map<Filepath, Report<AnalysisResult>>();
+  for (const fp of this.layout().listAllFiles()) {
+    results.set(fp, this.analyzeFile(fp));
+  }
+  return results;
+}
+
 // Validate, resolve external symbols, and bind references for a single file.
 export function analyzeFile (this: Compiler, filepath: Filepath): Report<AnalysisResult> {
   const { ast } = this.parseFile(filepath).getValue();
