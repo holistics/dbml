@@ -46,7 +46,10 @@ export function validateFile (compiler: Compiler, filepath: Filepath): ValidateF
   const fileSymbol = symbolFactory.create(SchemaSymbol, { symbolTable: new SymbolTable() });
   nodeToSymbol.set(ast, fileSymbol);
 
-  const validationReport = new Validator({ ast, filepath, nodeToSymbol }, symbolFactory).validate();
+  const validationReport = new Validator(
+    { ast, filepath, nodeToSymbol },
+    symbolFactory,
+  ).validate();
 
   const result: ValidateFileResult = {
     symbolTable: fileSymbol.symbolTable,

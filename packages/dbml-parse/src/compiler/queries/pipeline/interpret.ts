@@ -51,7 +51,11 @@ function interpretSingle (compiler: Compiler, filepath: Filepath): {
   }
 
   const { nodeToSymbol, nodeToReferee, symbolToReferences } = bound.getValue();
-  const interpretReport = new Interpreter(compiler, filepath, { ast, nodeToSymbol, nodeToReferee, symbolToReferences }).interpret();
+  const interpretReport = new Interpreter(
+    compiler,
+    filepath,
+    { ast, nodeToSymbol, nodeToReferee, symbolToReferences },
+  ).interpret();
 
   return {
     db: interpretReport.getValue(),
