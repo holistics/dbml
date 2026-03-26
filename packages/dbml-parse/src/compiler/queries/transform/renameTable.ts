@@ -232,7 +232,7 @@ export function renameTable (
   filepath: Filepath,
 ): string {
   const source = this.getSource(filepath) ?? '';
-  const symbolTable = this.resolvedSymbol(this.ast(filepath), filepath)?.symbolTable;
+  const symbolTable = this.resolvedSymbol(this.ast(filepath))?.symbolTable;
   if (!symbolTable) return source;
 
   const normalizedOld = normalizeTableName(oldName);

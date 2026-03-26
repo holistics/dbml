@@ -884,7 +884,7 @@ function suggestInCallExpression (
     if (!(c instanceof FunctionApplicationNode)) continue;
     if (c.callee !== container) continue;
     if (extractVariableFromExpression(container.callee).unwrap_or('').toLowerCase() !== ElementKind.Records) continue;
-    const tableSymbol = compiler.resolvedSymbol(compiler.container.element(offset), filepath);
+    const tableSymbol = compiler.resolvedSymbol(compiler.container.element(offset, filepath));
     if (!tableSymbol) return noSuggestions();
     const suggestions = suggestMembersOfSymbol(compiler, tableSymbol, [SymbolKind.Column]);
     const { argumentList } = container;
@@ -900,7 +900,7 @@ function suggestInTableGroupField (compiler: Compiler, filepath: Filepath): Comp
   return {
     suggestions: [
       ...addQuoteToSuggestionIfNeeded({
-        suggestions: [...(compiler.resolvedSymbol(compiler.ast(filepath), filepath)?.symbolTable?.entries() ?? [])].flatMap(([index]) => {
+        suggestions: [...(compiler.resolvedSymbol(compiler.ast(filepath))?.symbolTable?.entries() ?? [])].flatMap(([index]) => {
           const res = destructureIndex(index).unwrap_or(undefined);
           if (res === undefined) return [];
           const { kind, name } = res;
