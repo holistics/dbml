@@ -4,8 +4,7 @@ import Report from '@/core/report';
 import Interpreter from '@/core/interpreter/interpreter';
 
 export function interpretFile (this: Compiler): Report<Readonly<Database> | undefined> {
-  const pipeline = this.parseFile()
-    .chain(() => this.analyzeFile());
+  const pipeline = this.analyzeFile();
 
   if (pipeline.getErrors().length > 0) {
     return pipeline.map(() => undefined);
