@@ -9,6 +9,7 @@ import { NodeSymbolIdGenerator, SchemaSymbol } from '@/core/analyzer/validator/s
 import SymbolTable from '@/core/analyzer/validator/symbol/symbolTable';
 import Report from '@/core/report';
 import { CompileError } from '@/core/errors';
+import { ProgramNode } from '@/core/parser/nodes';
 import { resolveExternalDependencies } from './utils';
 
 export type AnalyzeResult = {
@@ -18,9 +19,26 @@ export type AnalyzeResult = {
   readonly symbolToReferences: SymbolToReferencesMap;
 };
 
-// Validate, resolve external symbols, and bind references for a single file.
-export function analyzeFile (this: Compiler, filepath: Filepath): Report<AnalyzeResult> {
-  const fileIndex = this.parseFile(filepath);
+export type ValidateFileResult = {
+  readonly symbolTable: SymbolTable;
+  readonly symbolIdGenerator: NodeSymbolIdGenerator;
+  readonly symbolFactory: SymbolFactory;
+  readonly nodeToSymbol: NodeToSymbolMap;
+  readonly errors: readonly CompileError[];
+  readonly warnings: readonly CompileWarning[];
+};
+
+// Cached per AST node — same file always yields the same symbols.
+const validateFileCache = new WeakMap<ProgramNode, ValidateFileResult>();
+
+// Validate a single file locally (no cross-file resolution).
+// Cached so that the same syntax nodes always map to the same symbols.
+export function validateFile (compiler: Compiler, filepath: Filepath): ValidateFileResult {
+  const fileIndex = compiler.parseFile(filepath);
+
+  const cached = validateFileCache.get(fileIndex.ast);
+  if (cached) return cached;
+
   const symbolIdGenerator = new NodeSymbolIdGenerator();
   const symbolFactory = new SymbolFactory(symbolIdGenerator, filepath);
   const nodeToSymbol: NodeToSymbolMap = new Map();
@@ -28,11 +46,30 @@ export function analyzeFile (this: Compiler, filepath: Filepath): Report<Analyze
   nodeToSymbol.set(fileIndex.ast, fileSymbol);
 
   const validationReport = new Validator({ ast: fileIndex.ast, filepath, nodeToSymbol }, symbolFactory).validate();
-  const errors: CompileError[] = [...fileIndex.errors, ...validationReport.getErrors()];
-  const warnings: CompileWarning[] = [...fileIndex.warnings, ...validationReport.getWarnings()];
+
+  const result: ValidateFileResult = {
+    symbolTable: fileSymbol.symbolTable,
+    symbolIdGenerator,
+    symbolFactory,
+    nodeToSymbol,
+    errors: [...fileIndex.errors, ...validationReport.getErrors()],
+    warnings: [...fileIndex.warnings, ...validationReport.getWarnings()],
+  };
+
+  validateFileCache.set(fileIndex.ast, result);
+  return result;
+}
+
+// Validate, resolve external symbols, and bind references for a single file.
+export function analyzeFile (this: Compiler, filepath: Filepath): Report<AnalyzeResult> {
+  const fileIndex = this.parseFile(filepath);
+  const { symbolTable, symbolIdGenerator, symbolFactory, nodeToSymbol, errors: validationErrors, warnings: validationWarnings } = validateFile(this, filepath);
+
+  const errors: CompileError[] = [...validationErrors];
+  const warnings: CompileWarning[] = [...validationWarnings];
 
   const resolved = resolveExternalDependencies(this, filepath, {
-    symbolTable: fileSymbol.symbolTable,
+    symbolTable,
     symbolIdGenerator,
     nodeToSymbol,
   });

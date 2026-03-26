@@ -1,16 +1,15 @@
 import type Compiler from '../../../index';
 import { Filepath } from '../../../projectLayout';
-import { ExternalSymbol, NodeSymbol, SchemaSymbol, TableGroupSymbol, NodeSymbolIdGenerator } from '@/core/analyzer/validator/symbol/symbols';
+import { ExternalSymbol, NodeSymbol, NodeSymbolIdGenerator, SchemaSymbol, TableGroupSymbol } from '@/core/analyzer/validator/symbol/symbols';
 import { BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode } from '@/core/parser/nodes';
 import { destructureComplexVariable } from '@/core/utils';
 import { registerSchemaStack } from '@/core/analyzer/validator/utils';
-import Validator from '@/core/analyzer/validator/validator';
 import SymbolFactory from '@/core/analyzer/validator/symbol/factory';
 import { createNodeSymbolIndex, destructureIndex, SymbolKind } from '@/core/analyzer/validator/symbol/symbolIndex';
 import SymbolTable from '@/core/analyzer/validator/symbol/symbolTable';
 import Report from '@/core/report';
 import { CompileError, CompileErrorCode } from '@/core/errors';
-import type { NodeToSymbolMap } from '@/core/types';
+import { validateFile } from './index';
 
 function lookupSymbol (
   table: Readonly<SymbolTable>,
@@ -26,27 +25,6 @@ function lookupSymbol (
     current = symbol.symbolTable;
   }
   return undefined;
-}
-
-// Validate a single file locally (no cross-file resolution).
-// Used to get the local symbol table of external files during dependency resolution.
-function validateFileLocal (compiler: Compiler, filepath: Filepath): {
-  symbolTable: SymbolTable;
-  errors: CompileError[];
-} {
-  const fileIndex = compiler.parseFile(filepath);
-  const symbolIdGenerator = new NodeSymbolIdGenerator();
-  const symbolFactory = new SymbolFactory(symbolIdGenerator, filepath);
-  const nodeToSymbol: NodeToSymbolMap = new Map();
-  const fileSymbol = symbolFactory.create(SchemaSymbol, { symbolTable: new SymbolTable() });
-  nodeToSymbol.set(fileIndex.ast, fileSymbol);
-
-  const validationReport = new Validator({ ast: fileIndex.ast, filepath, nodeToSymbol }, symbolFactory).validate();
-
-  return {
-    symbolTable: fileSymbol.symbolTable,
-    errors: [...fileIndex.errors, ...validationReport.getErrors()],
-  };
 }
 
 // Resolve all `use` declarations for a file. Clones the local table and returns the resolved copy.
@@ -65,7 +43,7 @@ export function resolveExternalDependencies (
 
   for (const [filepathKey, useNode] of externalFilepaths) {
     const externalFilepath = Filepath.from(filepathKey);
-    const externalLocal = validateFileLocal(compiler, externalFilepath);
+    const externalLocal = validateFile(compiler, externalFilepath);
 
     if (externalLocal.errors.length > 0) continue;
 
