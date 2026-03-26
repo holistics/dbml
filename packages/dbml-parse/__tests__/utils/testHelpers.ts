@@ -134,7 +134,7 @@ export function serializeAnalysis (reportOrCompiler: Readonly<Report<AnalysisRes
 export function serializeValidation (compiler: Compiler, pretty = false): string {
   const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
   const validated = validateFile(compiler, DEFAULT_ENTRY);
-  const errors = [...validated.errors];
+  const errors = [...validated.getErrors()];
   const report = { value: ast, errors };
-  return JSON.stringify(report, createJsonReplacer(validated.nodeToSymbol, undefined), pretty ? 2 : 0);
+  return JSON.stringify(report, createJsonReplacer(validated.getValue().nodeToSymbol, undefined), pretty ? 2 : 0);
 }

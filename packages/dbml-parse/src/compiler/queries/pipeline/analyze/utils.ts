@@ -39,11 +39,11 @@ export function resolveExternalDependencies (
 
   for (const [filepathKey, useNode] of externalFilepaths) {
     const externalFilepath = Filepath.from(filepathKey);
-    const externalLocal = validateFile(compiler, externalFilepath);
+    const externalReport = validateFile(compiler, externalFilepath);
 
-    if (externalLocal.errors.length > 0) continue;
+    if (externalReport.getErrors().length > 0) continue;
 
-    const externalTable = externalLocal.symbolTable;
+    const externalTable = externalReport.getValue().symbolTable;
 
     if (!useNode.specifiers) {
       errors.push(...resolveWholeFileUse({ target: local.symbolTable, externalTable, externalFilepath, symbolFactory }));
