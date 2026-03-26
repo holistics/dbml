@@ -40,7 +40,7 @@ import TablePartialValidator from './validators/tablePartial';
 import ChecksValidator from './validators/checks';
 import RecordsValidator from './validators/records';
 
-export function pickElementValidator (element: ElementDeclarationNode) {
+export function pickValidator (element: ElementDeclarationNode) {
   switch (element.type?.value.toLowerCase()) {
     case ElementKind.Enum:
       return EnumValidator;

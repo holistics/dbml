@@ -1,13 +1,13 @@
 import { partition } from 'lodash-es';
 import SymbolFactory from '@/core/analyzer/symbol/factory';
-import { NodeToSymbolMap } from '@/core/analyzer/types';
+import { NodeToSymbolMap } from '@/core/analyzer/analyzer';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import {
   BlockExpressionNode, CallExpressionNode, CommaExpressionNode, ElementDeclarationNode, EmptyNode, FunctionApplicationNode, FunctionExpressionNode, ListExpressionNode, ProgramNode, SyntaxNode,
 } from '@/core/parser/nodes';
 import { SyntaxToken } from '@/core/lexer/tokens';
 import { ElementValidator } from '@/core/analyzer/validator/types';
-import { isExpressionASignedNumberExpression, isTupleOfVariables, isValidName, pickElementValidator } from '@/core/analyzer/validator/utils';
+import { isExpressionASignedNumberExpression, isTupleOfVariables, isValidName, pickValidator } from '@/core/analyzer/validator/utils';
 import SymbolTable from '@/core/analyzer/symbol/symbolTable';
 import { destructureComplexVariable, getElementKind } from '@/core/utils';
 import { ElementKind } from '@/core/analyzer/types';
@@ -62,7 +62,8 @@ export default class RecordsValidator implements ElementValidator {
     return [new CompileError(
       CompileErrorCode.INVALID_RECORDS_CONTEXT,
       'Records can only appear at top-level or inside a Table',
-      this.declarationNode)];
+      this.declarationNode,
+    )];
   }
 
   private validateName (nameNode?: SyntaxNode): CompileError[] {
@@ -84,7 +85,8 @@ export default class RecordsValidator implements ElementValidator {
       return [new CompileError(
         CompileErrorCode.INVALID_RECORDS_NAME,
         'Records at top-level must have a name in the form of table(col1, col2, ...) or schema.table(col1, col2, ...)',
-        nameNode || this.declarationNode.type)];
+        nameNode || this.declarationNode.type,
+      )];
     }
 
     const errors: CompileError[] = [];
@@ -94,7 +96,8 @@ export default class RecordsValidator implements ElementValidator {
       errors.push(new CompileError(
         CompileErrorCode.INVALID_RECORDS_NAME,
         'Records table reference must be a valid table name',
-        nameNode.callee || nameNode));
+        nameNode.callee || nameNode,
+      ));
     }
 
     // Validate argument list is a tuple of simple variables
@@ -102,7 +105,8 @@ export default class RecordsValidator implements ElementValidator {
       errors.push(new CompileError(
         CompileErrorCode.INVALID_RECORDS_NAME,
         'Records column list must be simple column names',
-        nameNode.argumentList || nameNode));
+        nameNode.argumentList || nameNode,
+      ));
     }
 
     return errors;
@@ -117,7 +121,8 @@ export default class RecordsValidator implements ElementValidator {
       return [new CompileError(
         CompileErrorCode.INVALID_RECORDS_NAME,
         'Records inside a Table can only have a column list like (col1, col2, ...)',
-        nameNode)];
+        nameNode,
+      )];
     }
 
     return [];
@@ -182,7 +187,8 @@ export default class RecordsValidator implements ElementValidator {
       errors.push(new CompileError(
         CompileErrorCode.INVALID_RECORDS_FIELD,
         'Invalid record row structure',
-        row));
+        row,
+      ));
       return errors;
     }
 
@@ -194,7 +200,8 @@ export default class RecordsValidator implements ElementValidator {
           errors.push(new CompileError(
             CompileErrorCode.INVALID_RECORDS_FIELD,
             'Records can only contain simple values (literals, null, true, false, or enum references). Complex expressions are not allowed.',
-            value));
+            value,
+          ));
         }
       }
     } else {
@@ -203,7 +210,8 @@ export default class RecordsValidator implements ElementValidator {
         errors.push(new CompileError(
           CompileErrorCode.INVALID_RECORDS_FIELD,
           'Records can only contain simple values (literals, null, true, false, or enum references). Complex expressions are not allowed.',
-          row.callee));
+          row.callee,
+        ));
       }
     }
 
@@ -252,7 +260,7 @@ export default class RecordsValidator implements ElementValidator {
       if (!sub.type) {
         return [];
       }
-      const _Validator = pickElementValidator(sub as ElementDeclarationNode & { type: SyntaxToken });
+      const _Validator = pickValidator(sub as ElementDeclarationNode & { type: SyntaxToken });
       const validator = new _Validator(
         sub as ElementDeclarationNode & { type: SyntaxToken },
         this.publicSymbolTable,

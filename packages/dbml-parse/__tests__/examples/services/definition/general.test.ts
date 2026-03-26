@@ -373,7 +373,7 @@ Ref: (orders.merchant_id, orders.country) > (merchants.id, merchants.country_cod
       const position = createPosition(11, 72);
       const definitions = definitionProvider.provideDefinition(model, position);
 
-      expect(definitions).toMatchInlineSnapshot(`[]`);
+      expect(definitions).toMatchInlineSnapshot('[]');
 
       expect(Array.isArray(definitions)).toBeTruthy();
       if (!Array.isArray(definitions)) return;
@@ -1879,7 +1879,7 @@ Ref: posts.user_id >`;
       const position = createPosition(9, 7);
       const definitions = definitionProvider.provideDefinition(model, position);
 
-      expect(definitions).toMatchInlineSnapshot(`[]`);
+      expect(definitions).toMatchInlineSnapshot('[]');
 
       expect(Array.isArray(definitions)).toBeTruthy();
       if (!Array.isArray(definitions)) return;
@@ -1980,7 +1980,7 @@ TableGroup my_group {
       const position = createPosition(5, 4);
       const definitions = definitionProvider.provideDefinition(model, position);
 
-      expect(definitions).toMatchInlineSnapshot(`[]`);
+      expect(definitions).toMatchInlineSnapshot('[]');
 
       expect(Array.isArray(definitions)).toBeTruthy();
       if (!Array.isArray(definitions)) return;

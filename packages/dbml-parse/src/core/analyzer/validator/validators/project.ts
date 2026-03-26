@@ -6,7 +6,7 @@ import {
 } from '@/core/parser/nodes';
 import { SyntaxToken } from '@/core/lexer/tokens';
 import { ElementValidator } from '@/core/analyzer/validator/types';
-import { isSimpleName, pickElementValidator } from '@/core/analyzer/validator/utils';
+import { isSimpleName, pickValidator } from '@/core/analyzer/validator/utils';
 import SymbolTable from '@/core/analyzer/symbol/symbolTable';
 import { NodeToSymbolMap } from '@/core/analyzer/analyzer';
 
@@ -88,7 +88,7 @@ export default class ProjectValidator implements ElementValidator {
       if (!sub.type) {
         return [];
       }
-      const _Validator = pickElementValidator(sub as ElementDeclarationNode & { type: SyntaxToken });
+      const _Validator = pickValidator(sub as ElementDeclarationNode & { type: SyntaxToken });
       const validator = new _Validator(
         sub as ElementDeclarationNode & { type: SyntaxToken },
         this.publicSymbolTable,

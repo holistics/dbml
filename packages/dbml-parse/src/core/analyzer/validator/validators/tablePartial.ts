@@ -23,7 +23,7 @@ import {
   isValidDefaultValue,
   isVoid,
   registerSchemaStack,
-  pickElementValidator,
+  pickValidator,
 } from '@/core/analyzer/validator/utils';
 import { ElementValidator } from '@/core/analyzer/validator/types';
 import { ColumnSymbol, TablePartialSymbol } from '@/core/analyzer/symbol/symbols';
@@ -74,7 +74,8 @@ export default class TablePartialValidator implements ElementValidator {
       return [new CompileError(
         CompileErrorCode.INVALID_TABLE_PARTIAL_CONTEXT,
         'TablePartial must appear top-level',
-        this.declarationNode)];
+        this.declarationNode,
+      )];
     }
     return [];
   }
@@ -84,13 +85,15 @@ export default class TablePartialValidator implements ElementValidator {
       return [new CompileError(
         CompileErrorCode.NAME_NOT_FOUND,
         'A TablePartial must have a name',
-        this.declarationNode)];
+        this.declarationNode,
+      )];
     }
     if (!isSimpleName(nameNode)) {
       return [new CompileError(
         CompileErrorCode.INVALID_NAME,
         'A TablePartial name must be an identifier or a quoted identifer',
-        nameNode)];
+        nameNode,
+      )];
     }
 
     return [];
@@ -101,7 +104,8 @@ export default class TablePartialValidator implements ElementValidator {
       return [new CompileError(
         CompileErrorCode.UNEXPECTED_ALIAS,
         'A TablePartial shouldn\'t have an alias',
-        aliasNode)];
+        aliasNode,
+      )];
     }
 
     return [];
@@ -267,7 +271,8 @@ export default class TablePartialValidator implements ElementValidator {
       errors.push(...[...pkAttrs, ...pkeyAttrs].map((attr) => new CompileError(
         CompileErrorCode.DUPLICATE_COLUMN_SETTING,
         'Either one of \'primary key\' and \'pk\' can appear',
-        attr)));
+        attr,
+      )));
     }
 
     forIn(settingMap, (attrs, name) => {
@@ -322,7 +327,8 @@ export default class TablePartialValidator implements ElementValidator {
             errors.push(...[...attrs, ...nullAttrs].map((attr) => new CompileError(
               CompileErrorCode.CONFLICTING_SETTING,
               '\'not null\' and \'null\' can not be set at the same time',
-              attr)));
+              attr,
+            )));
           }
           attrs.forEach((attr) => {
             if (!isVoid(attr.value)) {
@@ -374,7 +380,8 @@ export default class TablePartialValidator implements ElementValidator {
               errors.push(new CompileError(
                 CompileErrorCode.INVALID_COLUMN_SETTING_VALUE,
                 `'${name}' must be a string literal, number literal, function expression, true, false or null`,
-                attr.value || attr.name!));
+                attr.value || attr.name!,
+              ));
             }
           });
           break;
@@ -399,7 +406,7 @@ export default class TablePartialValidator implements ElementValidator {
       if (!sub.type) {
         return [];
       }
-      const _Validator = pickElementValidator(sub as ElementDeclarationNode & { type: SyntaxToken });
+      const _Validator = pickValidator(sub as ElementDeclarationNode & { type: SyntaxToken });
       const validator = new _Validator(
         sub as ElementDeclarationNode & { type: SyntaxToken },
         this.publicSymbolTable,

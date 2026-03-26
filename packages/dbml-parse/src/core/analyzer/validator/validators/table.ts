@@ -28,7 +28,7 @@ import {
   isValidName,
   isValidPartialInjection,
   isVoid,
-  pickElementValidator,
+  pickValidator,
   registerSchemaStack,
 } from '@/core/analyzer/validator/utils';
 import { ElementValidator } from '@/core/analyzer/validator/types';
@@ -411,7 +411,8 @@ export default class TableValidator implements ElementValidator {
               errors.push(new CompileError(
                 CompileErrorCode.INVALID_COLUMN_SETTING_VALUE,
                 '\'default\' must be an enum value, a string literal, number literal, function expression, true, false or null',
-                attr.value || attr.name!));
+                attr.value || attr.name!,
+              ));
             }
           });
           break;
@@ -435,7 +436,7 @@ export default class TableValidator implements ElementValidator {
       if (!sub.type) {
         return [];
       }
-      const _Validator = pickElementValidator(sub as ElementDeclarationNode & { type: SyntaxToken });
+      const _Validator = pickValidator(sub as ElementDeclarationNode & { type: SyntaxToken });
       const validator = new _Validator(
         sub as ElementDeclarationNode & { type: SyntaxToken },
         this.publicSymbolTable,

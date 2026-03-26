@@ -10,7 +10,7 @@ import { SyntaxToken } from '@/core/lexer/tokens';
 import { ElementValidator } from '@/core/analyzer/validator/types';
 import {
   aggregateSettingList } from '@/core/analyzer/validator/utils';
-import { isValidName, pickElementValidator } from '@/core/analyzer/validator/utils';
+import { isValidName, pickValidator } from '@/core/analyzer/validator/utils';
 import { registerSchemaStack } from '@/core/analyzer/validator/utils';
 import { createEnumFieldSymbolIndex, createEnumSymbolIndex } from '@/core/analyzer/symbol/symbolIndex';
 import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '@/core/utils';
@@ -176,7 +176,7 @@ export default class EnumValidator implements ElementValidator {
       if (!sub.type) {
         return [];
       }
-      const _Validator = pickElementValidator(sub as ElementDeclarationNode & { type: SyntaxToken });
+      const _Validator = pickValidator(sub as ElementDeclarationNode & { type: SyntaxToken });
       const validator = new _Validator(
         sub as ElementDeclarationNode & { type: SyntaxToken },
         this.publicSymbolTable,

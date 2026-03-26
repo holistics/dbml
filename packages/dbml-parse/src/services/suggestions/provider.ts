@@ -223,7 +223,8 @@ function suggestMembersOfSymbol (
   acceptedKinds: SymbolKind[],
 ): CompletionList {
   return addQuoteToSuggestionIfNeeded({
-    suggestions: compiler.symbol.members(symbol)
+    suggestions: compiler.symbol
+      .members(symbol)
       .filter(({ kind }) => acceptedKinds.includes(kind))
       .map(({ name, kind }) => ({
         label: name,

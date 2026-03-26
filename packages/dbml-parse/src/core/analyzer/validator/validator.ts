@@ -3,7 +3,7 @@ import { CompileError, CompileErrorCode } from '@/core/errors';
 import { ElementDeclarationNode, ProgramNode, SyntaxNode, UseDeclarationNode } from '@/core/parser/nodes';
 import { SchemaSymbol } from '@/core/analyzer/symbol/symbols';
 import SymbolFactory from '@/core/analyzer/symbol/factory';
-import { pickElementValidator } from '@/core/analyzer/validator/utils';
+import { pickValidator } from '@/core/analyzer/validator/utils';
 import SymbolTable from '@/core/analyzer/symbol/symbolTable';
 import { SyntaxToken } from '@/core/lexer/tokens';
 import { getElementKind } from '@/core/utils';
@@ -54,7 +54,7 @@ export default class Validator {
     this.ast.body.forEach((decl) => {
       if (decl instanceof ElementDeclarationNode) {
         if (decl.type === undefined) return;
-        const Val = pickElementValidator(decl as ElementDeclarationNode & { type: SyntaxToken });
+        const Val = pickValidator(decl as ElementDeclarationNode & { type: SyntaxToken });
         const validatorObject = new Val(
           decl as ElementDeclarationNode & { type: SyntaxToken },
           this.publicSchemaSymbol.symbolTable,

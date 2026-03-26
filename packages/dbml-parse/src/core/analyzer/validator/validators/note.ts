@@ -1,6 +1,6 @@
 import { partition } from 'lodash-es';
 import SymbolFactory from '@/core/analyzer/symbol/factory';
-import { NodeToSymbolMap } from '@/core/analyzer/types';
+import { NodeToSymbolMap } from '@/core/analyzer/analyzer';
 import { NodeSymbol } from '@/core/analyzer/symbol/symbols';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import {
@@ -9,7 +9,7 @@ import {
 import { SyntaxToken } from '@/core/lexer/tokens';
 import { ElementValidator } from '@/core/analyzer/validator/types';
 import { isExpressionAQuotedString } from '@/core/parser/utils';
-import { pickElementValidator } from '@/core/analyzer/validator/utils';
+import { pickValidator } from '@/core/analyzer/validator/utils';
 import SymbolTable from '@/core/analyzer/symbol/symbolTable';
 import { ElementKind } from '@/core/analyzer/types';
 import { destructureComplexVariable, getElementKind } from '@/core/utils';
@@ -59,7 +59,8 @@ export default class NoteValidator implements ElementValidator {
       return [new CompileError(
         CompileErrorCode.INVALID_NOTE_CONTEXT,
         'A Note can only appear inside a Table, a TableGroup, a TablePartial or a Project. Sticky note can only appear at the global scope.',
-        this.declarationNode)];
+        this.declarationNode,
+      )];
     }
 
     return [];
@@ -145,7 +146,7 @@ export default class NoteValidator implements ElementValidator {
       if (!sub.type) {
         return [];
       }
-      const _Validator = pickElementValidator(sub as ElementDeclarationNode & { type: SyntaxToken });
+      const _Validator = pickValidator(sub as ElementDeclarationNode & { type: SyntaxToken });
       const validator = new _Validator(
         sub as ElementDeclarationNode & { type: SyntaxToken },
         this.publicSymbolTable,

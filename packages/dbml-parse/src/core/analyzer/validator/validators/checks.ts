@@ -1,6 +1,6 @@
 import { last, partition } from 'lodash-es';
 import SymbolFactory from '@/core/analyzer/symbol/factory';
-import { NodeToSymbolMap } from '@/core/analyzer/types';
+import { NodeToSymbolMap } from '@/core/analyzer/analyzer';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import {
   BlockExpressionNode,
@@ -12,7 +12,7 @@ import {
   SyntaxNode,
 } from '@/core/parser/nodes';
 import { isExpressionAQuotedString } from '@/core/parser/utils';
-import { aggregateSettingList, pickElementValidator } from '@/core/analyzer/validator/utils';
+import { aggregateSettingList, pickValidator } from '@/core/analyzer/validator/utils';
 import { SyntaxToken } from '@/core/lexer/tokens';
 import { ElementValidator } from '@/core/analyzer/validator/types';
 import { getElementKind } from '@/core/utils';
@@ -51,7 +51,8 @@ export default class ChecksValidator implements ElementValidator {
     const invalidContextError = new CompileError(
       CompileErrorCode.INVALID_CHECKS_CONTEXT,
       'A Checks can only appear inside a Table or a TablePartial',
-      this.declarationNode);
+      this.declarationNode,
+    );
     if (this.declarationNode.parent instanceof ProgramNode) return [invalidContextError];
 
     const elementKind = getElementKind(this.declarationNode.parent).unwrap_or(undefined);
@@ -146,7 +147,7 @@ export default class ChecksValidator implements ElementValidator {
       if (!sub.type) {
         return [];
       }
-      const _Validator = pickElementValidator(sub as ElementDeclarationNode & { type: SyntaxToken });
+      const _Validator = pickValidator(sub as ElementDeclarationNode & { type: SyntaxToken });
       const validator = new _Validator(
         sub as ElementDeclarationNode & { type: SyntaxToken },
         this.publicSymbolTable,

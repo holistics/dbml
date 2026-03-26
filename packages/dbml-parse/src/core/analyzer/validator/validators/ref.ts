@@ -11,7 +11,7 @@ import {
   isExpressionAVariableNode,
 } from '@/core/parser/utils';
 import { ElementValidator } from '@/core/analyzer/validator/types';
-import { isSimpleName, isValidColor, pickElementValidator, aggregateSettingList } from '@/core/analyzer/validator/utils';
+import { isSimpleName, isValidColor, pickValidator, aggregateSettingList } from '@/core/analyzer/validator/utils';
 import { destructureComplexVariable, destructureComplexVariableTuple, isBinaryRelationship, isEqualTupleOperands } from '@/core/utils';
 import SymbolTable from '@/core/analyzer/symbol/symbolTable';
 
@@ -180,7 +180,7 @@ export default class RefValidator implements ElementValidator {
       if (!sub.type) {
         return [];
       }
-      const _Validator = pickElementValidator(sub as ElementDeclarationNode & { type: SyntaxToken });
+      const _Validator = pickValidator(sub as ElementDeclarationNode & { type: SyntaxToken });
       const validator = new _Validator(
         sub as ElementDeclarationNode & { type: SyntaxToken },
         this.publicSymbolTable,

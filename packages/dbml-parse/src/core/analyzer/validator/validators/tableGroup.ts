@@ -1,7 +1,7 @@
 import { forIn, partition } from 'lodash-es';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import {
-  isSimpleName, pickElementValidator } from '@/core/analyzer/validator/utils';
+  isSimpleName, pickValidator } from '@/core/analyzer/validator/utils';
 import { isValidColor, registerSchemaStack, aggregateSettingList } from '@/core/analyzer/validator/utils';
 import { ElementValidator } from '@/core/analyzer/validator/types';
 import SymbolTable from '@/core/analyzer/symbol/symbolTable';
@@ -50,7 +50,8 @@ export default class TableGroupValidator implements ElementValidator {
       return [new CompileError(
         CompileErrorCode.INVALID_TABLEGROUP_CONTEXT,
         'TableGroup must appear top-level',
-        this.declarationNode)];
+        this.declarationNode,
+      )];
     }
     return [];
   }
@@ -60,13 +61,15 @@ export default class TableGroupValidator implements ElementValidator {
       return [new CompileError(
         CompileErrorCode.NAME_NOT_FOUND,
         'A TableGroup must have a name',
-        this.declarationNode)];
+        this.declarationNode,
+      )];
     }
     if (!isSimpleName(nameNode)) {
       return [new CompileError(
         CompileErrorCode.INVALID_NAME,
         'A TableGroup name must be a single identifier',
-        nameNode)];
+        nameNode,
+      )];
     }
     return [];
   }
@@ -76,7 +79,8 @@ export default class TableGroupValidator implements ElementValidator {
       return [new CompileError(
         CompileErrorCode.UNEXPECTED_ALIAS,
         'A TableGroup shouldn\'t have an alias',
-        aliasNode)];
+        aliasNode,
+      )];
     }
 
     return [];
@@ -113,14 +117,16 @@ export default class TableGroupValidator implements ElementValidator {
             errors.push(...attrs.map((attr) => new CompileError(
               CompileErrorCode.DUPLICATE_TABLE_SETTING,
               '\'color\' can only appear once',
-              attr)));
+              attr,
+            )));
           }
           attrs.forEach((attr) => {
             if (!isValidColor(attr.value)) {
               errors.push(new CompileError(
                 CompileErrorCode.INVALID_TABLE_SETTING_VALUE,
                 '\'color\' must be a color literal',
-                attr.value || attr.name!));
+                attr.value || attr.name!,
+              ));
             }
           });
           break;
@@ -129,7 +135,8 @@ export default class TableGroupValidator implements ElementValidator {
             errors.push(...attrs.map((attr) => new CompileError(
               CompileErrorCode.DUPLICATE_TABLE_SETTING,
               '\'note\' can only appear once',
-              attr)));
+              attr,
+            )));
           }
           attrs
             .filter((attr) => !isExpressionAQuotedString(attr.value))
@@ -137,14 +144,16 @@ export default class TableGroupValidator implements ElementValidator {
               errors.push(new CompileError(
                 CompileErrorCode.INVALID_TABLE_SETTING_VALUE,
                 '\'note\' must be a string literal',
-                attr.value || attr.name!));
+                attr.value || attr.name!,
+              ));
             });
           break;
         default:
           errors.push(...attrs.map((attr) => new CompileError(
             CompileErrorCode.UNKNOWN_TABLE_SETTING,
             `Unknown '${name}' setting`,
-            attr)));
+            attr,
+          )));
           break;
       }
     });
@@ -158,7 +167,8 @@ export default class TableGroupValidator implements ElementValidator {
       return [new CompileError(
         CompileErrorCode.UNEXPECTED_SIMPLE_BODY,
         'A TableGroup\'s body must be a block',
-        body)];
+        body,
+      )];
     }
 
     const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
@@ -190,7 +200,7 @@ export default class TableGroupValidator implements ElementValidator {
       if (!sub.type) {
         return [];
       }
-      const _Validator = pickElementValidator(sub as ElementDeclarationNode & { type: SyntaxToken });
+      const _Validator = pickValidator(sub as ElementDeclarationNode & { type: SyntaxToken });
       const validator = new _Validator(
         sub as ElementDeclarationNode & { type: SyntaxToken },
         this.publicSymbolTable,
