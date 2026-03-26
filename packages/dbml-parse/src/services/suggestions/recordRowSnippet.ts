@@ -63,7 +63,7 @@ function suggestRecordRowInTopLevelRecords (
   if (!(recordsElement.name instanceof CallExpressionNode)) return noSuggestions();
 
   const columnElements = recordsElement.name.argumentList?.elementList || [];
-  const columnSymbols = columnElements.map((e) => extractReferee(compiler, filepath, e));
+  const columnSymbols = columnElements.map((e) => extractReferee(compiler, e));
   if (!columnSymbols || columnSymbols.length === 0) return noSuggestions();
 
   const columns = columnElements
@@ -119,7 +119,7 @@ function suggestRecordRowInNestedRecords (
     // Explicit columns from tuple: records (col1, col2)
     const columnElements = recordsElement.name.elementList;
     const columnSymbols = columnElements
-      .map((e) => extractReferee(compiler, filepath, e))
+      .map((e) => extractReferee(compiler, e))
       .filter((s) => s !== undefined);
 
     columns = columnElements

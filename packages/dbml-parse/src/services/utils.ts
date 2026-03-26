@@ -20,12 +20,12 @@ export function getFilepathFromModel (model: TextModel): Filepath {
 
 // Extract referee from a simple variable (x) or complex variable (a.b.c)
 // For complex variables, returns the referee of the rightmost part
-export function extractReferee (compiler: Compiler, filepath: Filepath, node: SyntaxNode | undefined): NodeSymbol | undefined {
+export function extractReferee (compiler: Compiler, node: SyntaxNode | undefined): NodeSymbol | undefined {
   if (!node) return undefined;
 
   // Complex variable: a.b.c - get referee from rightmost part
   if (node instanceof InfixExpressionNode && node.op?.value === '.') {
-    return extractReferee(compiler, filepath, node.rightExpression);
+    return extractReferee(compiler, node.rightExpression);
   }
 
   return compiler.nodeReferee(node);
