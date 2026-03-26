@@ -37,12 +37,17 @@ export function suggestRecordRowSnippet (
   const filepath = getFilepathFromModel(model);
   const element = compiler.container.element(offset, filepath);
 
+  // If not in an ElementDeclarationNode, fallthrough
   if (!(element instanceof ElementDeclarationNode)) return null;
 
+  // If not in a Records element, fallthrough
   const elementKind = getElementKind(element).unwrap_or(undefined);
   if (elementKind !== ElementKind.Records || !(element.body instanceof BlockExpressionNode)) return null;
+
+  // If we're not within the body, fallthrough
   if (!element.body || !isOffsetWithinSpan(offset, element.body)) return null;
 
+  // Not on an empty line - fallthrough to allow other completions in Records body
   const lineContent = model.getLineContent(position.lineNumber);
   if (lineContent.trim() !== '') return null;
 
