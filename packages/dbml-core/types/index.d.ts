@@ -36,4 +36,5 @@ export {
   tryExtractEnum,
   addDoubleQuoteIfNeeded,
   formatRecordValue,
+  Filepath, MemoryProjectLayout,
 } from '@dbml/parse';

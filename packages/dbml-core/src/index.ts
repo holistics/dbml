@@ -20,7 +20,6 @@ export {
 
 // Re-export project layout types from @dbml/parse
 export { Filepath, MemoryProjectLayout } from '@dbml/parse';
-export type { DbmlProjectLayout } from '@dbml/parse';
 
 // Re-export types and utilities from @dbml/parse
 export {

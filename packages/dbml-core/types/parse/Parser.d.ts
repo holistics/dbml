@@ -1,4 +1,4 @@
-import { Compiler, type DbmlProjectLayout } from '@dbml/parse';
+import { Compiler, Filepath, type DbmlProjectLayout } from '@dbml/parse';
 import Database, { RawDatabase } from '../model_structure/database';
 import Model from '../model_structure/model';
 
@@ -30,7 +30,7 @@ declare class Parser {
     static parseMSSQLToJSONv2(str: string): RawDatabase;
     static parseSnowflakeToJSON(str: string): RawDatabase;
     static parseOracleToJSON(str: string): RawDatabase;
-    static parseDbmlProject(layout: DbmlProjectLayout, entry: string): Model;
+    static parseDbmlProject(layout: DbmlProjectLayout, entry: Filepath): Model;
     /**
      * Should use parse() instance method instead of this static method whenever possible
      */

@@ -1,4 +1,4 @@
-import { Compiler, Filepath } from '@dbml/parse';
+import { Compiler } from '@dbml/parse';
 import Database from '../model_structure/database';
 import Model from '../model_structure/model';
 import { parse } from './ANTLR/ASTGeneration';
@@ -102,8 +102,7 @@ class Parser {
 
   static parseDbmlProject (layout, entry) {
     const compiler = new Compiler(layout);
-    const entryFilepath = Filepath.from(entry);
-    const report = compiler.interpretFile(entryFilepath);
+    const report = compiler.interpretFile(entry);
 
     const diags = report.getErrors().map((error) => ({
       message: error.diagnostic,
