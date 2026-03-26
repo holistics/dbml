@@ -1,6 +1,6 @@
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import Report from '@/core/report';
-import { isAlphaOrUnderscore, isAlphaNumeric, isDigit } from '@/core/analyzer/utils';
+import { isAlphaOrUnderscore, isAlphaNumeric, isDigit } from '@/core/utils';
 import {
   SyntaxToken, SyntaxTokenKind, isOp, isTriviaToken,
 } from '@/core/lexer/tokens';

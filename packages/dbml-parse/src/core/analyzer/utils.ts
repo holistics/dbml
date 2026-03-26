@@ -1,121 +1,28 @@
 import { last } from 'lodash-es';
 import { None, Option, Some } from '@/core/option';
-import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
-import { getTokenFullEnd, getTokenFullStart } from '@/core/lexer/utils';
+import { NodeToRefereeMap, NodeToSymbolMap } from '@/core/analyzer/analyzer';
 import {
-  CallExpressionNode,
   ElementDeclarationNode,
   FunctionExpressionNode,
   InfixExpressionNode,
   LiteralNode,
-  PrefixExpressionNode,
   PrimaryExpressionNode,
   ProgramNode,
   SyntaxNode,
   TupleExpressionNode,
   VariableNode,
+  CallExpressionNode,
 } from '@/core/parser/nodes';
+import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
+import { isRelationshipOp, isTupleOfVariables } from '@/core/analyzer/validator/utils';
+import { NodeSymbolIndex, isPublicSchemaIndex } from '@/core/analyzer/symbol/symbolIndex';
+import { NodeSymbol } from '@/core/analyzer/symbol/symbols';
 import {
   isAccessExpression,
   isExpressionAQuotedString,
   isExpressionAVariableNode,
 } from '@/core/parser/utils';
 import { ElementKind } from '@/core/analyzer/types';
-import { NodeToRefereeMap, NodeToSymbolMap } from '@/core/analyzer/analyzer';
-import { isRelationshipOp, isTupleOfVariables } from '@/core/analyzer/validator/utils';
-import { NodeSymbolIndex, isPublicSchemaIndex } from '@/core/analyzer/symbol/symbolIndex';
-import { NodeSymbol } from '@/core/analyzer/symbol/symbols';
-
-export function isAlphaOrUnderscore (char: string): boolean {
-  // Match any letters, accents (some characters are denormalized so the accent and the main character are two separate characters) and underscore
-  // \p{L} is used to match letters
-  // \p{M} is used to match accents
-  // References:
-  //   https://unicode.org/Public/UCD/latest/ucd/PropertyValueAliases.txt
-  //   https://www.compart.com/en/unicode/category/Mn
-  //   https://www.compart.com/en/unicode/category/Me
-  //   https://www.compart.com/en/unicode/category/Mc
-  return !!char.match(/(\p{L}|_|\p{M})/gu);
-}
-
-export function isDigit (char: string): boolean {
-  if (!char) return false;
-  const c = char[0];
-
-  return c >= '0' && c <= '9';
-}
-
-// Check if a character is a valid hexadecimal character
-export function isHexChar (char: string): boolean {
-  const [c] = char;
-
-  return isDigit(c) || (isAlphaOrUnderscore(c) && c.toLowerCase() >= 'a' && c.toLowerCase() <= 'f');
-}
-
-export function isAlphaNumeric (char: string): boolean {
-  return isAlphaOrUnderscore(char) || isDigit(char);
-}
-
-export function alternateLists<T, S> (firstList: T[], secondList: S[]): (T | S)[] {
-  const res: (T | S)[] = [];
-  const minLength = Math.min(firstList.length, secondList.length);
-  for (let i = 0; i < minLength; i += 1) {
-    res.push(firstList[i], secondList[i]);
-  }
-  res.push(...firstList.slice(minLength), ...secondList.slice(minLength));
-
-  return res;
-}
-
-export function isOffsetWithinFullSpan (
-  offset: number,
-  nodeOrToken: SyntaxNode | SyntaxToken,
-): boolean {
-  if (nodeOrToken instanceof SyntaxToken) {
-    return offset >= getTokenFullStart(nodeOrToken) && offset < getTokenFullEnd(nodeOrToken);
-  }
-
-  return offset >= nodeOrToken.fullStart && offset < nodeOrToken.fullEnd;
-}
-
-export function isOffsetWithinSpan (offset: number, nodeOrToken: SyntaxNode | SyntaxToken): boolean {
-  return offset >= nodeOrToken.start && offset < nodeOrToken.end;
-}
-
-export function returnIfIsOffsetWithinFullSpan (
-  offset: number,
-  node?: SyntaxNode,
-): SyntaxNode | undefined;
-export function returnIfIsOffsetWithinFullSpan (
-  offset: number,
-  token?: SyntaxToken,
-): SyntaxToken | undefined;
-export function returnIfIsOffsetWithinFullSpan (
-  offset: number,
-  nodeOrToken?: SyntaxNode | SyntaxToken,
-): SyntaxNode | SyntaxToken | undefined {
-  if (!nodeOrToken) {
-    return undefined;
-  }
-
-  return isOffsetWithinFullSpan(offset, nodeOrToken) ? nodeOrToken : undefined;
-}
-
-export function getNumberTextFromExpression (node: PrimaryExpressionNode | PrefixExpressionNode): string {
-  if (node instanceof PrefixExpressionNode) {
-    return `${node.op?.value}${getNumberTextFromExpression(node.expression!)}`;
-  }
-  return (node.expression as LiteralNode).literal!.value;
-}
-
-export function parseNumber (node: PrefixExpressionNode | PrimaryExpressionNode): number {
-  if (node instanceof PrefixExpressionNode) {
-    const op = node.op?.value;
-    if (op === '-') return -parseNumber(node.expression!);
-    return parseNumber(node.expression!);
-  }
-  return Number.parseFloat((node.expression as LiteralNode).literal!.value);
-}
 
 export function getElementKind (node?: ElementDeclarationNode): Option<ElementKind> {
   const kind = node?.type?.value.toLowerCase();
@@ -271,19 +178,6 @@ export function extractNumericLiteral (node?: SyntaxNode): number | null {
     }
   }
   return null;
-}
-
-// Extract referee from a simple variable (x) or complex variable (a.b.c)
-// For complex variables, returns the referee of the rightmost part
-export function extractReferee (node: SyntaxNode | undefined, nodeToReferee: NodeToRefereeMap): NodeSymbol | undefined {
-  if (!node) return undefined;
-
-  // Complex variable: a.b.c - get referee from rightmost part
-  if (node instanceof InfixExpressionNode && node.op?.value === '.') {
-    return extractReferee(node.rightExpression, nodeToReferee);
-  }
-
-  return nodeToReferee.get(node);
 }
 
 export function isBinaryRelationship (value?: SyntaxNode): value is InfixExpressionNode {

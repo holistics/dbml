@@ -9,7 +9,7 @@ import {
 } from '@/core/parser/utils';
 import Compiler, { ScopeKind } from '@/compiler';
 import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
-import { isOffsetWithinSpan } from '@/core/analyzer/utils';
+import { isOffsetWithinSpan } from '@/core/utils';
 import {
   type CompletionItem,
   type CompletionList,

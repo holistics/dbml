@@ -7,7 +7,7 @@ import {
   tryExtractString,
   tryExtractDateTime,
 } from '@/core/interpreter/records/utils';
-import { isAlphaOrUnderscore, isDigit } from '@/core/analyzer/utils';
+import { isAlphaOrUnderscore, isDigit } from '@/core/utils';
 
 /**
  * Checks if an identifier is valid (can be used without quotes in DBML).

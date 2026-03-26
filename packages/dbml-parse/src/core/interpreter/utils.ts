@@ -19,7 +19,7 @@ import { SyntaxTokenKind } from '@/core/lexer/tokens';
 import { isDotDelimitedIdentifier, isExpressionAnIdentifierNode, isExpressionAQuotedString } from '@/core/parser/utils';
 import Report from '@/core/report';
 import { CompileError, CompileErrorCode } from '@/core/errors';
-import { getNumberTextFromExpression, parseNumber } from '@/core/analyzer/utils';
+import { getNumberTextFromExpression, parseNumber } from '@/core/utils';
 import { isExpressionASignedNumberExpression, isValidPartialInjection } from '../analyzer/validator/utils';
 
 export function extractNamesFromRefOperand (operand: SyntaxNode, owner?: Table): { schemaName: string | null; tableName: string; fieldNames: string[] } {

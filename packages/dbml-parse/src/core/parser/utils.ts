@@ -1,7 +1,7 @@
 import { last } from 'lodash-es';
 import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
 import { None, Option, Some } from '@/core/option';
-import { alternateLists } from '@/core/analyzer/utils';
+import { alternateLists } from '@/core/utils';
 import NodeFactory from '@/core/parser/factory';
 import {
   ArrayNode,
