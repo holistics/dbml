@@ -41,7 +41,6 @@ export function interpretFile (this: Compiler, filepath: Filepath): Report<Model
 function interpretSingle (compiler: Compiler, filepath: Filepath): {
   db: Database; errors: CompileError[]; warnings: CompileWarning[];
 } {
-  const { ast } = compiler.parseFile(filepath).getValue();
   const bound = compiler.analyzeFile(filepath);
   const errors = [...bound.getErrors()];
   const warnings = [...bound.getWarnings()];
@@ -50,11 +49,11 @@ function interpretSingle (compiler: Compiler, filepath: Filepath): {
     return { db: emptyDatabase(filepath), errors, warnings };
   }
 
-  const { nodeToSymbol, nodeToReferee, symbolToReferences } = bound.getValue();
+  const analysisResult = bound.getValue();
   const interpretReport = new Interpreter(
     compiler,
     filepath,
-    { ast, nodeToSymbol, nodeToReferee, symbolToReferences },
+    analysisResult,
   ).interpret();
 
   return {

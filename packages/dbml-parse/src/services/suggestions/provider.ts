@@ -328,8 +328,11 @@ function suggestCrossFileSymbols (
 
     const relativePath = externalFile.relativeTo(currentFilepath.dirname);
     const importPath = relativePath.startsWith('.') ? relativePath : `./${relativePath}`;
+    const { ast: externalAst, nodeToSymbol: externalNodeToSymbol } = externalAnalysis.getValue();
+    const externalSymbolTable = externalNodeToSymbol.get(externalAst)?.symbolTable;
+    if (!externalSymbolTable) continue;
 
-    for (const [symbolId, symbol] of externalAnalysis.getValue().symbolTable.entries()) {
+    for (const [symbolId, symbol] of externalSymbolTable.entries()) {
       if (symbol instanceof ExternalSymbol) continue;
 
       const info = destructureIndex(symbolId).unwrap_or(undefined);

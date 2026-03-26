@@ -1,5 +1,5 @@
 import type Compiler from '../../../index';
-import type { NodeToSymbolMap, NodeToRefereeMap, SymbolToReferencesMap } from '@/core/types';
+import type { AnalysisResult, NodeToSymbolMap, NodeToRefereeMap, SymbolToReferencesMap } from '@/core/types';
 import { Filepath } from '../../../projectLayout';
 import type { CompileWarning } from '@/core/errors';
 import Binder from '@/core/analyzer/binder/binder';
@@ -11,13 +11,6 @@ import Report from '@/core/report';
 import { CompileError } from '@/core/errors';
 import { ProgramNode } from '@/core/parser/nodes';
 import { resolveExternalDependencies } from './utils';
-
-export type AnalyzeResult = {
-  readonly symbolTable: Readonly<SymbolTable>;
-  readonly nodeToSymbol: NodeToSymbolMap;
-  readonly nodeToReferee: NodeToRefereeMap;
-  readonly symbolToReferences: SymbolToReferencesMap;
-};
 
 export type ValidateFileResult = {
   readonly symbolTable: SymbolTable;
@@ -65,7 +58,7 @@ export function validateFile (compiler: Compiler, filepath: Filepath): ValidateF
 }
 
 // Validate, resolve external symbols, and bind references for a single file.
-export function analyzeFile (this: Compiler, filepath: Filepath): Report<AnalyzeResult> {
+export function analyzeFile (this: Compiler, filepath: Filepath): Report<AnalysisResult> {
   const { ast } = this.parseFile(filepath).getValue();
   const { symbolTable, symbolIdGenerator, symbolFactory, nodeToSymbol, errors: validationErrors, warnings: validationWarnings } = validateFile(this, filepath);
 
@@ -90,7 +83,7 @@ export function analyzeFile (this: Compiler, filepath: Filepath): Report<Analyze
 
   return new Report(
     {
-      symbolTable,
+      ast,
       nodeToSymbol,
       nodeToReferee,
       symbolToReferences,

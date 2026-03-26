@@ -1,11 +1,6 @@
 import Lexer from '@/core/lexer/lexer';
 import Parser from '@/core/parser/parser';
-import { type AnalysisResult, type SymbolToReferencesMap } from '@/core/types';
-import Validator from '@/core/analyzer/validator/validator';
-import Binder from '@/core/analyzer/binder/binder';
-import SymbolFactory from '@/core/analyzer/validator/symbol/factory';
-import SymbolTable from '@/core/analyzer/validator/symbol/symbolTable';
-import { SchemaSymbol } from '@/core/analyzer/validator/symbol/symbols';
+import { AnalysisResult } from '@/core/types';
 import {
   ProgramNode,
   SyntaxNode,
@@ -32,7 +27,6 @@ import {
   UseSpecifierListNode,
   UseSpecifierNode,
 } from '@/core/parser/nodes';
-import { NodeSymbolIdGenerator } from '@/core/analyzer/validator/symbol/symbols';
 import Report from '@/core/report';
 import { Compiler, SyntaxToken } from '@/index';
 import { Database } from '@/core/interpreter/types';
@@ -47,15 +41,10 @@ export function parse (source: string): Report<{ ast: ProgramNode; tokens: Synta
 }
 
 export function analyze (source: string): Report<AnalysisResult> {
-  return parse(source).chain(({ ast }) => {
-    const symbolFactory = new SymbolFactory(new NodeSymbolIdGenerator(), DEFAULT_ENTRY);
-    const nodeToSymbol = new Map();
-    nodeToSymbol.set(ast, symbolFactory.create(SchemaSymbol, { symbolTable: new SymbolTable() }));
-    return new Validator({ ast, filepath: DEFAULT_ENTRY, nodeToSymbol }, symbolFactory).validate().chain(({ nodeToSymbol: nts }) => {
-      const symbolToReferences: SymbolToReferencesMap = new Map();
-      return new Binder({ ast, nodeToSymbol: nts, symbolToReferences }, symbolFactory).resolve().map((nodeToReferee) => ({ ast, nodeToSymbol: nts, nodeToReferee, symbolToReferences }));
-    });
-  });
+  const compiler = new Compiler();
+  compiler.setSource(source);
+  return compiler.parseFile(DEFAULT_ENTRY)
+    .chain(() => compiler.analyzeFile(DEFAULT_ENTRY));
 }
 
 export function interpret (source: string): Report<Database | undefined> {
