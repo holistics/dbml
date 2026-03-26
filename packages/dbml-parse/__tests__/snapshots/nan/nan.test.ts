@@ -1,65 +1,32 @@
 import { readFileSync } from 'fs';
 import path from 'path';
 import { describe, expect, it } from 'vitest';
+import { Compiler } from '@/index';
 import { DEFAULT_ENTRY } from '@/compiler/constants';
 import { scanTestNames } from '../../utils';
-import { NodeSymbolIdGenerator } from '@/core/analyzer/validator/symbol/symbols';
-import { SyntaxNodeIdGenerator } from '@/core/parser/nodes';
-import Lexer from '@/core/lexer/lexer';
-import Parser from '@/core/parser/parser';
-import Validator from '@/core/analyzer/validator/validator';
-import Binder from '@/core/analyzer/binder/binder';
-import SymbolFactory from '@/core/analyzer/validator/symbol/factory';
-import SymbolTable from '@/core/analyzer/validator/symbol/symbolTable';
-import { SchemaSymbol } from '@/core/analyzer/validator/symbol/symbols';
-import Interpreter from '@/core/interpreter/interpreter';
-import Compiler from '@/compiler';
 
 describe('[snapshot] interpreter (NaN cases)', () => {
   const testNames = scanTestNames(path.resolve(__dirname, './input/'));
 
   testNames.forEach((testName) => {
     const program = readFileSync(path.resolve(__dirname, `./input/${testName}.in.dbml`), 'utf-8');
-    const symbolIdGenerator = new NodeSymbolIdGenerator();
-    const nodeIdGenerator = new SyntaxNodeIdGenerator();
+    const compiler = new Compiler();
+    compiler.setSource(program);
+    const res = compiler.interpretFile(DEFAULT_ENTRY);
     let output: any;
-    const report = new Lexer(program, DEFAULT_ENTRY)
-      .lex()
-      .chain((tokens) => {
-        return new Parser(DEFAULT_ENTRY, program, tokens, nodeIdGenerator).parse();
-      })
-      .chain(({ ast }) => {
-        const symbolFactory = new SymbolFactory(symbolIdGenerator, DEFAULT_ENTRY);
-        const nodeToSymbol = new Map();
-        nodeToSymbol.set(ast, symbolFactory.create(SchemaSymbol, { symbolTable: new SymbolTable() }));
-        return new Validator({ ast, filepath: DEFAULT_ENTRY, nodeToSymbol }, symbolFactory).validate().chain(({ nodeToSymbol: nts }) => {
-          return new Binder({ ast, nodeToSymbol: nts, symbolToReferences: new Map() }, symbolFactory).resolve().map((nodeToReferee) => ({ ast, nodeToSymbol: nts, nodeToReferee, symbolToReferences: new Map() }));
-        });
-      });
 
-    if (report.getErrors().length !== 0) {
+    if (res.getErrors().length > 0) {
       output = JSON.stringify(
-        report.getErrors(),
+        res.getErrors(),
         (key, value) => (['symbol', 'references', 'referee', 'parent', 'filepath'].includes(key) ? undefined : value),
         2,
       );
     } else {
-      const compiler = new Compiler();
-      compiler.setSource(program);
-      const res = new Interpreter(compiler, DEFAULT_ENTRY, report.getValue()).interpret();
-      if (res.getErrors().length > 0) {
-        output = JSON.stringify(
-          res.getErrors(),
-          (key, value) => (['symbol', 'references', 'referee', 'parent', 'filepath'].includes(key) ? undefined : value),
-          2,
-        );
-      } else {
-        output = JSON.stringify(
-          res.getValue(),
-          (key, value) => (['symbol', 'references', 'referee', 'filepath'].includes(key) ? undefined : value),
-          2,
-        );
-      }
+      output = JSON.stringify(
+        res.getValue().databases[0],
+        (key, value) => (['symbol', 'references', 'referee', 'filepath'].includes(key) ? undefined : value),
+        2,
+      );
     }
 
     it(testName, () => expect(output).toMatchFileSnapshot(path.resolve(__dirname, `./output/${testName}.out.json`)));

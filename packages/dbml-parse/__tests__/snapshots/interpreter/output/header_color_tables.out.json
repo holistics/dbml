@@ -1,4 +1,7 @@
 {
+  "filepath": {
+    "path": "/main.dbml"
+  },
   "schemas": [],
   "tables": [
     {
@@ -14,6 +17,9 @@
             "args": null
           },
           "token": {
+            "filepath": {
+              "path": "/main.dbml"
+            },
             "start": {
               "offset": 75,
               "line": 2,
@@ -37,6 +43,9 @@
             "args": null
           },
           "token": {
+            "filepath": {
+              "path": "/main.dbml"
+            },
             "start": {
               "offset": 93,
               "line": 3,
@@ -60,6 +69,9 @@
             "args": null
           },
           "token": {
+            "filepath": {
+              "path": "/main.dbml"
+            },
             "start": {
               "offset": 106,
               "line": 4,
@@ -83,6 +95,9 @@
             "args": null
           },
           "token": {
+            "filepath": {
+              "path": "/main.dbml"
+            },
             "start": {
               "offset": 122,
               "line": 5,
@@ -100,6 +115,9 @@
         }
       ],
       "token": {
+        "filepath": {
+          "path": "/main.dbml"
+        },
         "start": {
           "offset": 0,
           "line": 1,

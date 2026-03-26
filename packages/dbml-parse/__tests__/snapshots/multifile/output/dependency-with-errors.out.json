@@ -1,76 +1,136 @@
 {
-  "databases": [
+  "errors": [
     {
-      "schemas": [],
-      "tables": [
-        {
-          "name": "orders",
-          "schemaName": null,
-          "alias": null,
-          "fields": [
-            {
-              "name": "id",
-              "type": {
-                "schemaName": null,
-                "type_name": "int",
-                "args": null
-              },
-              "token": {
-                "start": {
-                  "offset": 55,
-                  "line": 3,
-                  "column": 3
-                },
-                "end": {
-                  "offset": 66,
-                  "line": 3,
-                  "column": 14
-                }
-              },
-              "inline_refs": [],
-              "pk": true,
-              "increment": false,
-              "unique": false,
-              "checks": []
-            }
-          ],
-          "token": {
-            "start": {
-              "offset": 38,
-              "line": 2,
-              "column": 1
-            },
-            "end": {
-              "offset": 68,
-              "line": 4,
-              "column": 2
-            }
-          },
-          "indexes": [],
-          "partials": [],
-          "checks": []
-        }
-      ],
-      "notes": [],
-      "refs": [],
-      "enums": [],
-      "tableGroups": [],
-      "aliases": [],
-      "project": {},
-      "tablePartials": [],
-      "records": []
+      "code": 1005,
+      "diagnostic": "Expect a closing bracket ']'",
+      "nodeOrToken": {
+        "kind": "<eof>",
+        "startPos": {
+          "offset": 27,
+          "line": 2,
+          "column": 0
+        },
+        "endPos": {
+          "offset": 27,
+          "line": 2,
+          "column": 0
+        },
+        "value": "",
+        "leadingTrivia": [],
+        "trailingTrivia": [],
+        "leadingInvalid": [],
+        "trailingInvalid": [],
+        "isInvalid": false,
+        "start": 27,
+        "end": 27
+      },
+      "start": 27,
+      "end": 27,
+      "name": "CompileError"
     },
     {
-      "schemas": [],
-      "tables": [],
-      "notes": [],
-      "refs": [],
-      "enums": [],
-      "tableGroups": [],
-      "aliases": [],
-      "project": {},
-      "tablePartials": [],
-      "records": []
+      "code": 1005,
+      "diagnostic": "Expect a closing brace '}'",
+      "nodeOrToken": {
+        "kind": "<eof>",
+        "startPos": {
+          "offset": 27,
+          "line": 2,
+          "column": 0
+        },
+        "endPos": {
+          "offset": 27,
+          "line": 2,
+          "column": 0
+        },
+        "value": "",
+        "leadingTrivia": [],
+        "trailingTrivia": [],
+        "leadingInvalid": [],
+        "trailingInvalid": [],
+        "isInvalid": false,
+        "start": 27,
+        "end": 27
+      },
+      "start": 27,
+      "end": 27,
+      "name": "CompileError"
     }
-  ]
+  ],
+  "model": {
+    "databases": [
+      {
+        "schemas": [],
+        "tables": [
+          {
+            "name": "orders",
+            "schemaName": null,
+            "alias": null,
+            "fields": [
+              {
+                "name": "id",
+                "type": {
+                  "schemaName": null,
+                  "type_name": "int",
+                  "args": null
+                },
+                "token": {
+                  "start": {
+                    "offset": 55,
+                    "line": 3,
+                    "column": 3
+                  },
+                  "end": {
+                    "offset": 66,
+                    "line": 3,
+                    "column": 14
+                  }
+                },
+                "inline_refs": [],
+                "pk": true,
+                "increment": false,
+                "unique": false,
+                "checks": []
+              }
+            ],
+            "token": {
+              "start": {
+                "offset": 38,
+                "line": 2,
+                "column": 1
+              },
+              "end": {
+                "offset": 68,
+                "line": 4,
+                "column": 2
+              }
+            },
+            "indexes": [],
+            "partials": [],
+            "checks": []
+          }
+        ],
+        "notes": [],
+        "refs": [],
+        "enums": [],
+        "tableGroups": [],
+        "aliases": [],
+        "project": {},
+        "tablePartials": [],
+        "records": []
+      },
+      {
+        "schemas": [],
+        "tables": [],
+        "notes": [],
+        "refs": [],
+        "enums": [],
+        "tableGroups": [],
+        "aliases": [],
+        "project": {},
+        "tablePartials": [],
+        "records": []
+      }
+    ]
+  }
 }

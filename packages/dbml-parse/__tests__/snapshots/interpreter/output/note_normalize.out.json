@@ -1,4 +1,7 @@
 {
+  "filepath": {
+    "path": "/main.dbml"
+  },
   "schemas": [],
   "tables": [
     {
@@ -14,6 +17,9 @@
             "args": null
           },
           "token": {
+            "filepath": {
+              "path": "/main.dbml"
+            },
             "start": {
               "offset": 105,
               "line": 5,
@@ -37,6 +43,9 @@
             "args": null
           },
           "token": {
+            "filepath": {
+              "path": "/main.dbml"
+            },
             "start": {
               "offset": 133,
               "line": 6,
@@ -60,6 +69,9 @@
             "args": null
           },
           "token": {
+            "filepath": {
+              "path": "/main.dbml"
+            },
             "start": {
               "offset": 160,
               "line": 7,
@@ -77,6 +89,9 @@
         }
       ],
       "token": {
+        "filepath": {
+          "path": "/main.dbml"
+        },
         "start": {
           "offset": 87,
           "line": 4,
@@ -94,6 +109,9 @@
       "note": {
         "value": "# Heading 1\n    code block\n# Heading 2\n  * 1\n  * 1\n",
         "token": {
+          "filepath": {
+            "path": "/main.dbml"
+          },
           "start": {
             "offset": 185,
             "line": 9,
@@ -120,6 +138,9 @@
             "args": null
           },
           "token": {
+            "filepath": {
+              "path": "/main.dbml"
+            },
             "start": {
               "offset": 301,
               "line": 19,
@@ -145,6 +166,9 @@
             "args": null
           },
           "token": {
+            "filepath": {
+              "path": "/main.dbml"
+            },
             "start": {
               "offset": 328,
               "line": 20,
@@ -168,6 +192,9 @@
             "args": null
           },
           "token": {
+            "filepath": {
+              "path": "/main.dbml"
+            },
             "start": {
               "offset": 347,
               "line": 21,
@@ -191,6 +218,9 @@
             "args": null
           },
           "token": {
+            "filepath": {
+              "path": "/main.dbml"
+            },
             "start": {
               "offset": 362,
               "line": 22,
@@ -208,6 +238,9 @@
         }
       ],
       "token": {
+        "filepath": {
+          "path": "/main.dbml"
+        },
         "start": {
           "offset": 285,
           "line": 18,
@@ -225,6 +258,9 @@
       "note": {
         "value": "# Heading 1\n    code block\n# Heading 2\n  * 1\n  * 2\n",
         "token": {
+          "filepath": {
+            "path": "/main.dbml"
+          },
           "start": {
             "offset": 386,
             "line": 24,
@@ -251,6 +287,9 @@
             "args": null
           },
           "token": {
+            "filepath": {
+              "path": "/main.dbml"
+            },
             "start": {
               "offset": 509,
               "line": 36,
@@ -276,6 +315,9 @@
             "args": null
           },
           "token": {
+            "filepath": {
+              "path": "/main.dbml"
+            },
             "start": {
               "offset": 536,
               "line": 37,
@@ -299,6 +341,9 @@
             "args": null
           },
           "token": {
+            "filepath": {
+              "path": "/main.dbml"
+            },
             "start": {
               "offset": 552,
               "line": 38,
@@ -317,6 +362,9 @@
           "note": {
             "value": "# Heading 1\n    code block\n# Heading 2\n  * 1\n  * 2\n  ",
             "token": {
+              "filepath": {
+                "path": "/main.dbml"
+              },
               "start": {
                 "offset": 563,
                 "line": 38,
@@ -339,6 +387,9 @@
             "args": null
           },
           "token": {
+            "filepath": {
+              "path": "/main.dbml"
+            },
             "start": {
               "offset": 636,
               "line": 46,
@@ -362,6 +413,9 @@
             "args": null
           },
           "token": {
+            "filepath": {
+              "path": "/main.dbml"
+            },
             "start": {
               "offset": 654,
               "line": 47,
@@ -385,6 +439,9 @@
             "args": null
           },
           "token": {
+            "filepath": {
+              "path": "/main.dbml"
+            },
             "start": {
               "offset": 671,
               "line": 48,
@@ -402,6 +459,9 @@
         }
       ],
       "token": {
+        "filepath": {
+          "path": "/main.dbml"
+        },
         "start": {
           "offset": 493,
           "line": 35,
@@ -419,6 +479,9 @@
       "note": {
         "value": "# Heading 1\n    code block\n# Heading 2\n  * 1\n    * 1.1\n    * 1.2\n  * 2\n",
         "token": {
+          "filepath": {
+            "path": "/main.dbml"
+          },
           "start": {
             "offset": 695,
             "line": 50,
@@ -437,6 +500,9 @@
   "refs": [
     {
       "token": {
+        "filepath": {
+          "path": "/main.dbml"
+        },
         "start": {
           "offset": 855,
           "line": 61,
@@ -459,6 +525,9 @@
           "schemaName": null,
           "relation": "*",
           "token": {
+            "filepath": {
+              "path": "/main.dbml"
+            },
             "start": {
               "offset": 860,
               "line": 61,
@@ -479,6 +548,9 @@
           "schemaName": null,
           "relation": "1",
           "token": {
+            "filepath": {
+              "path": "/main.dbml"
+            },
             "start": {
               "offset": 876,
               "line": 61,
@@ -495,6 +567,9 @@
     },
     {
       "token": {
+        "filepath": {
+          "path": "/main.dbml"
+        },
         "start": {
           "offset": 901,
           "line": 63,
@@ -517,6 +592,9 @@
           "schemaName": null,
           "relation": "1",
           "token": {
+            "filepath": {
+              "path": "/main.dbml"
+            },
             "start": {
               "offset": 906,
               "line": 63,
@@ -537,6 +615,9 @@
           "schemaName": null,
           "relation": "*",
           "token": {
+            "filepath": {
+              "path": "/main.dbml"
+            },
             "start": {
               "offset": 917,
               "line": 63,
@@ -553,6 +634,9 @@
     },
     {
       "token": {
+        "filepath": {
+          "path": "/main.dbml"
+        },
         "start": {
           "offset": 944,
           "line": 65,
@@ -575,6 +659,9 @@
           "schemaName": null,
           "relation": "1",
           "token": {
+            "filepath": {
+              "path": "/main.dbml"
+            },
             "start": {
               "offset": 949,
               "line": 65,
@@ -595,6 +682,9 @@
           "schemaName": null,
           "relation": "*",
           "token": {
+            "filepath": {
+              "path": "/main.dbml"
+            },
             "start": {
               "offset": 960,
               "line": 65,

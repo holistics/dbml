@@ -2,7 +2,9 @@ import { NodeSymbol } from '@/core/analyzer/validator/symbol/symbols';
 import SymbolTable from '@/core/analyzer/validator/symbol/symbolTable';
 import { AnalysisResult, NodeToRefereeMap, NodeToSymbolMap, SymbolToReferencesMap } from '@/core/types';
 import Report from '@/core/report';
-import { ProgramNode, SyntaxNode } from '@/index';
+import { Compiler, ProgramNode, SyntaxNode } from '@/index';
+import { DEFAULT_ENTRY } from '@/compiler/constants';
+import { validateFile } from '@/compiler/queries/pipeline/bind';
 import fs from 'fs';
 
 export function scanTestNames (_path: any) {
@@ -99,7 +101,25 @@ export function serializeAst (report: Readonly<Report<ProgramNode>>, pretty = fa
  * Symbol and referee data are injected back into nodes during traversal so the
  * output format matches the pre-immutability snapshots.
  */
-export function serializeAnalysis (report: Readonly<Report<AnalysisResult>>, pretty = false): string {
+export function serializeAnalysis (report: Readonly<Report<AnalysisResult>>, pretty?: boolean): string;
+export function serializeAnalysis (compiler: Compiler, pretty?: boolean): string;
+export function serializeAnalysis (reportOrCompiler: Readonly<Report<AnalysisResult>> | Compiler, pretty = false): string {
+  if (reportOrCompiler instanceof Compiler) {
+    const compiler = reportOrCompiler;
+    const { ast } = compiler.parseFile(DEFAULT_ENTRY);
+    const analysisReport = compiler.analyzeFile(DEFAULT_ENTRY);
+    const { nodeToSymbol, nodeToReferee, symbolToReferences } = analysisReport.getValue();
+    const errors = [...compiler.parseFile(DEFAULT_ENTRY).errors, ...analysisReport.getErrors()];
+    const warnings = [...compiler.parseFile(DEFAULT_ENTRY).warnings, ...analysisReport.getWarnings()];
+    const syntheticReport = {
+      value: ast,
+      errors,
+      ...(warnings.length ? { warnings } : {}),
+    };
+    return JSON.stringify(syntheticReport, astReplacer(nodeToSymbol, nodeToReferee, symbolToReferences), pretty ? 2 : 0);
+  }
+
+  const report = reportOrCompiler;
   const { ast, nodeToSymbol, nodeToReferee, symbolToReferences } = report.getValue();
   const syntheticReport = {
     value: ast,
@@ -107,4 +127,12 @@ export function serializeAnalysis (report: Readonly<Report<AnalysisResult>>, pre
     ...(report.getWarnings().length ? { warnings: report.getWarnings() } : {}),
   };
   return JSON.stringify(syntheticReport, astReplacer(nodeToSymbol, nodeToReferee, symbolToReferences), pretty ? 2 : 0);
+}
+
+export function serializeValidation (compiler: Compiler, pretty = false): string {
+  const { ast } = compiler.parseFile(DEFAULT_ENTRY);
+  const validated = validateFile(compiler, DEFAULT_ENTRY);
+  const errors = [...compiler.parseFile(DEFAULT_ENTRY).errors, ...validated.errors];
+  const syntheticReport = { value: ast, errors };
+  return JSON.stringify(syntheticReport, astReplacer(validated.nodeToSymbol, undefined), pretty ? 2 : 0);
 }
