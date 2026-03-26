@@ -46,6 +46,7 @@ Example of a database definition of a simple blogging site:
 * [Emacs Mode for DBML by ccod](https://github.com/ccod/dbd-mode)
 * [Vim Plugin for DBML by jidn](https://github.com/jidn/vim-dbml)
 * [VSCode Plugin for DBML by duynvu](https://marketplace.visualstudio.com/items?itemName=duynvu.dbml-language)
+* [Jetbrains IDEs (Intellij/PyCharm/Datagrip etc.) Plugin for DBML by LiamClarkeNZ](https://plugins.jetbrains.com/plugin/30905-dbml)
 * [Python parser for DBML by Vanderhoof](https://github.com/Vanderhoof/PyDBML)
 * [FloorPlan: Android's Room to DBML by julioz](https://github.com/julioz/FloorPlan)
 * [Go parser for DBML by duythinht](https://github.com/duythinht/dbml-go)
