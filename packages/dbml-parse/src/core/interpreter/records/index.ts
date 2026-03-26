@@ -34,7 +34,7 @@ import {
   validateForeignKeys,
   isSerialType,
 } from './utils';
-import { destructureCallExpression, destructureComplexVariable, extractQuotedStringToken, extractVariableFromExpression } from '@/core/utils';
+import { destructureCallExpression, destructureComplexVariable, extractQuotedStringToken, extractVariableFromExpression } from '@/core/analyzer/utils';
 import { last } from 'lodash-es';
 import { mergeTableAndPartials } from '../utils';
 import type Compiler from '@/compiler';

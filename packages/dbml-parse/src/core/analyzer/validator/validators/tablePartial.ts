@@ -13,7 +13,7 @@ import {
   PrimaryExpressionNode,
   SyntaxNode,
 } from '@/core/parser/nodes';
-import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '@/core/utils';
+import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '@/core/analyzer/utils';
 import {
   aggregateSettingList,
   isSimpleName,

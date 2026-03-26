@@ -9,7 +9,7 @@ import { ElementBinder } from '../types';
 import { SyntaxToken } from '@/core/lexer/tokens';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import { addSymbolReference, pickBinder, scanNonListNodeForBinding } from '../utils';
-import { destructureComplexVariable, extractVarNameFromPrimaryVariable, getElementKind } from '@/core/utils';
+import { destructureComplexVariable, extractVarNameFromPrimaryVariable, getElementKind } from '@/core/analyzer/utils';
 import { ElementKind } from '@/core/analyzer/types';
 import { BinderContext } from '@/core/analyzer/analyzer';
 import { createColumnSymbolIndex } from '@/core/analyzer/symbol/symbolIndex';

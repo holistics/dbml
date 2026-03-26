@@ -6,11 +6,11 @@ import {
 } from '@/core/parser/nodes';
 import { isExpressionAnIdentifierNode } from '@/core/parser/utils';
 import { isExpressionASignedNumberExpression } from '@/core/analyzer/validator/utils';
-import { destructureComplexVariable, extractQuotedStringToken, extractNumericLiteral } from '@/core/utils';
+import { destructureComplexVariable, extractQuotedStringToken, extractNumericLiteral } from '@/core/analyzer/utils';
 import { last } from 'lodash-es';
 import { DateTime } from 'luxon';
 
-export { extractNumericLiteral } from '@/core/utils';
+export { extractNumericLiteral } from '@/core/analyzer/utils';
 
 // Check if value is a NULL literal/Empty node
 export function isNullish (value: SyntaxNode): boolean {

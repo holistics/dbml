@@ -1,7 +1,7 @@
 import { last } from 'lodash-es';
 import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
 import { None, Option, Some } from '@/core/option';
-import { alternateLists } from '@/core/utils';
+import { alternateLists } from '@/core/analyzer/utils';
 import NodeFactory from '@/core/parser/factory';
 import {
   ArrayNode,
@@ -31,7 +31,7 @@ import {
   UseDeclarationNode,
   VariableNode,
 } from '@/core/parser/nodes';
-import { destructureComplexVariable } from '@/core/utils';
+import { destructureComplexVariable } from '@/core/analyzer/utils';
 
 // Try to interpret a function application as an element
 export function convertFuncAppToElem (

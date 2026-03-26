@@ -11,7 +11,7 @@ import RefBinder from './elementBinder/ref';
 import TableBinder from './elementBinder/table';
 import TableGroupBinder from './elementBinder/tableGroup';
 import TablePartialBinder from './elementBinder/tablePartial';
-import { destructureComplexVariableTuple, extractVarNameFromPrimaryVariable } from '@/core/utils';
+import { destructureComplexVariableTuple, extractVarNameFromPrimaryVariable } from '@/core/analyzer/utils';
 import { SymbolKind, createNodeSymbolIndex } from '@/core/analyzer/symbol/symbolIndex';
 import { getSymbolKind } from '@/core/analyzer/symbol/utils';
 import { getElementNameString, isExpressionAVariableNode } from '@/core/parser/utils';

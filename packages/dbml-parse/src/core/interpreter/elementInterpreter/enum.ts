@@ -1,4 +1,4 @@
-import { extractQuotedStringToken, extractVariableFromExpression } from '@/core/utils';
+import { extractQuotedStringToken, extractVariableFromExpression } from '@/core/analyzer/utils';
 import { aggregateSettingList } from '@/core/analyzer/validator/utils';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import {

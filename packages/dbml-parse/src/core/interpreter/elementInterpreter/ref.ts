@@ -1,4 +1,4 @@
-import { destructureComplexVariable, extractVariableFromExpression } from '@/core/utils';
+import { destructureComplexVariable, extractVariableFromExpression } from '@/core/analyzer/utils';
 import { aggregateSettingList } from '@/core/analyzer/validator/utils';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import {

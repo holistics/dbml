@@ -8,7 +8,7 @@ import { CompileError } from '@/core/errors';
 import { lookupAndBindInScope, pickBinder, scanNonListNodeForBinding } from '../utils';
 import { aggregateSettingList, isValidPartialInjection } from '@/core/analyzer/validator/utils';
 import { SymbolKind, createColumnSymbolIndex } from '@/core/analyzer/symbol/symbolIndex';
-import { destructureComplexVariableTuple, extractVariableFromExpression } from '@/core/utils';
+import { destructureComplexVariableTuple, extractVariableFromExpression } from '@/core/analyzer/utils';
 import { TablePartialInjectedColumnSymbol, TablePartialSymbol } from '@/core/analyzer/symbol/symbols';
 import SymbolFactory from '@/core/analyzer/symbol/factory';
 import { isExpressionAQuotedString, isExpressionAVariableNode } from '@/core/parser/utils';

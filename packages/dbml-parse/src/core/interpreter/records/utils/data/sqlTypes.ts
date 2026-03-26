@@ -2,7 +2,7 @@ import {
   CallExpressionNode,
   FunctionApplicationNode,
 } from '@/core/parser/nodes';
-import { extractNumericLiteral } from '@/core/utils';
+import { extractNumericLiteral } from '@/core/analyzer/utils';
 import { ColumnSymbol } from '@/core/analyzer/symbol/symbols';
 
 export type SqlDialect = 'mysql' | 'postgres' | 'mssql' | 'oracle' | 'snowflake';

@@ -1,5 +1,5 @@
 import { partition } from 'lodash-es';
-import { destructureComplexVariable, destructureMemberAccessExpression, extractQuotedStringToken } from '@/core/utils';
+import { destructureComplexVariable, destructureMemberAccessExpression, extractQuotedStringToken } from '@/core/analyzer/utils';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, SyntaxNode, ListExpressionNode,

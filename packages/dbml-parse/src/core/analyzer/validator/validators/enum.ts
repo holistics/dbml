@@ -13,7 +13,7 @@ import {
 import { isValidName, pickValidator } from '@/core/analyzer/validator/utils';
 import { registerSchemaStack } from '@/core/analyzer/validator/utils';
 import { createEnumFieldSymbolIndex, createEnumSymbolIndex } from '@/core/analyzer/symbol/symbolIndex';
-import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '@/core/utils';
+import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '@/core/analyzer/utils';
 import SymbolTable from '@/core/analyzer/symbol/symbolTable';
 import { EnumFieldSymbol, EnumSymbol } from '@/core/analyzer/symbol/symbols';
 import { NodeToSymbolMap } from '@/core/analyzer/analyzer';

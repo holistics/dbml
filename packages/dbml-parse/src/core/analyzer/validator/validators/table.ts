@@ -16,7 +16,7 @@ import {
   SyntaxNode,
 } from '@/core/parser/nodes';
 import { NodeToSymbolMap } from '@/core/analyzer/analyzer';
-import { destructureComplexVariable, extractVariableFromExpression, extractVarNameFromPrimaryVariable } from '@/core/utils';
+import { destructureComplexVariable, extractVariableFromExpression, extractVarNameFromPrimaryVariable } from '@/core/analyzer/utils';
 import {
   aggregateSettingList,
   isSimpleName,

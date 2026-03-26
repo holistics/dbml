@@ -2,14 +2,14 @@ import {
   destructureMemberAccessExpression,
   extractVariableFromExpression,
   getElementKind,
-} from '@/core/utils';
+} from '@/core/analyzer/utils';
 import {
   extractStringFromIdentifierStream,
   isExpressionAVariableNode,
 } from '@/core/parser/utils';
 import Compiler, { ScopeKind } from '@/compiler';
 import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
-import { isOffsetWithinSpan } from '@/core/utils';
+import { isOffsetWithinSpan } from '@/core/analyzer/utils';
 import {
   type CompletionItem,
   type CompletionList,

@@ -12,7 +12,7 @@ import {
 } from '@/core/parser/utils';
 import { ElementValidator } from '@/core/analyzer/validator/types';
 import { isSimpleName, isValidColor, pickValidator, aggregateSettingList } from '@/core/analyzer/validator/utils';
-import { destructureComplexVariable, destructureComplexVariableTuple, isBinaryRelationship, isEqualTupleOperands } from '@/core/utils';
+import { destructureComplexVariable, destructureComplexVariableTuple, isBinaryRelationship, isEqualTupleOperands } from '@/core/analyzer/utils';
 import SymbolTable from '@/core/analyzer/symbol/symbolTable';
 
 export default class RefValidator implements ElementValidator {

@@ -18,7 +18,7 @@ import { aggregateSettingList } from '@/core/analyzer/validator/utils';
 import { isVoid, pickValidator } from '@/core/analyzer/validator/utils';
 import { SyntaxToken } from '@/core/lexer/tokens';
 import { ElementValidator } from '@/core/analyzer/validator/types';
-import { destructureIndexNode, getElementKind } from '@/core/utils';
+import { destructureIndexNode, getElementKind } from '@/core/analyzer/utils';
 import SymbolTable from '@/core/analyzer/symbol/symbolTable';
 import { ElementKind } from '@/core/analyzer/types';
 

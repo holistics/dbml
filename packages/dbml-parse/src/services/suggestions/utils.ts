@@ -6,7 +6,7 @@ import { SyntaxNode, TupleExpressionNode, FunctionApplicationNode } from '@/core
 import Compiler from '@/compiler';
 import type { Filepath } from '@/compiler/projectLayout';
 import { ColumnSymbol, TablePartialInjectedColumnSymbol, TablePartialSymbol, TableSymbol } from '@/core/analyzer/symbol/symbols';
-import { extractVariableFromExpression } from '@/core/utils';
+import { extractVariableFromExpression } from '@/core/analyzer/utils';
 import { addDoubleQuoteIfNeeded } from '@/compiler/queries/utils';
 
 export function pickCompletionItemKind (symbolKind: SymbolKind): CompletionItemKind {

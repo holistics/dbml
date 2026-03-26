@@ -10,7 +10,7 @@ import {
   destructureCallExpression,
   extractVarNameFromPrimaryVariable,
   getElementKind,
-} from '@/core/utils';
+} from '@/core/analyzer/utils';
 import { createColumnSymbolIndex, SymbolKind } from '@/core/analyzer/symbol/symbolIndex';
 import { ElementKind } from '@/core/analyzer/types';
 import { isTupleOfVariables } from '@/core/analyzer/validator/utils';

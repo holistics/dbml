@@ -5,7 +5,7 @@ import {
   destructureComplexVariableTuple, destructureComplexVariable, destructureMemberAccessExpression, extractQuotedStringToken,
   extractVariableFromExpression,
   extractVarNameFromPrimaryVariable,
-} from '@/core/utils';
+} from '@/core/analyzer/utils';
 import {
   ArrayNode, BlockExpressionNode, CallExpressionNode, FunctionExpressionNode, FunctionApplicationNode, LiteralNode,
   PrimaryExpressionNode, SyntaxNode, TupleExpressionNode,
@@ -18,7 +18,7 @@ import { SyntaxTokenKind } from '@/core/lexer/tokens';
 import { isDotDelimitedIdentifier, isExpressionAnIdentifierNode, isExpressionAQuotedString } from '@/core/parser/utils';
 import Report from '@/core/report';
 import { CompileError, CompileErrorCode } from '@/core/errors';
-import { getNumberTextFromExpression, parseNumber } from '@/core/utils';
+import { getNumberTextFromExpression, parseNumber } from '@/core/analyzer/utils';
 import { isExpressionASignedNumberExpression, isValidPartialInjection } from '@/core/analyzer/validator/utils';
 
 export function extractNamesFromRefOperand (operand: SyntaxNode, owner?: Table): { schemaName: string | null; tableName: string; fieldNames: string[] } {

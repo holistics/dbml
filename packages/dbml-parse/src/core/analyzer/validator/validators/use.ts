@@ -4,7 +4,7 @@ import SymbolTable from '@/core/analyzer/symbol/symbolTable';
 import { isValidName, registerSchemaStack } from '@/core/analyzer/validator/utils';
 import { ExternalSymbol, SchemaSymbol, type NodeSymbol } from '@/core/analyzer/symbol/symbols';
 import { createNodeSymbolIndex, SymbolKind } from '@/core/analyzer/symbol/symbolIndex';
-import { destructureComplexVariable } from '@/core/utils';
+import { destructureComplexVariable } from '@/core/analyzer/utils';
 import SymbolFactory from '@/core/analyzer/symbol/factory';
 import { Filepath, type FilepathId } from '@/compiler/projectLayout';
 import { DBML_EXT } from '@/compiler/constants';

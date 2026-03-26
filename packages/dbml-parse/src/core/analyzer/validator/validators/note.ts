@@ -12,7 +12,7 @@ import { isExpressionAQuotedString } from '@/core/parser/utils';
 import { pickValidator } from '@/core/analyzer/validator/utils';
 import SymbolTable from '@/core/analyzer/symbol/symbolTable';
 import { ElementKind } from '@/core/analyzer/types';
-import { destructureComplexVariable, getElementKind } from '@/core/utils';
+import { destructureComplexVariable, getElementKind } from '@/core/analyzer/utils';
 import { createStickyNoteSymbolIndex } from '@/core/analyzer/symbol/symbolIndex';
 
 export default class NoteValidator implements ElementValidator {

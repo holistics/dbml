@@ -1,7 +1,7 @@
 import {
   extractVariableFromExpression,
   getElementKind,
-} from '@/core/utils';
+} from '@/core/analyzer/utils';
 import {
   BlockExpressionNode,
   CallExpressionNode,
@@ -25,7 +25,7 @@ import {
   getColumnsFromTableSymbol,
   extractNameAndTypeOfColumnSymbol,
 } from '@/services/suggestions/utils';
-import { isOffsetWithinSpan } from '@/core/utils';
+import { isOffsetWithinSpan } from '@/core/analyzer/utils';
 
 export function suggestRecordRowSnippet (
   compiler: Compiler,

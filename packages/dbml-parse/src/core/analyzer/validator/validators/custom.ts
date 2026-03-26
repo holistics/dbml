@@ -7,7 +7,7 @@ import { SyntaxToken } from '@/core/lexer/tokens';
 import { ElementValidator } from '@/core/analyzer/validator/types';
 import { isExpressionAQuotedString } from '@/core/parser/utils';
 import SymbolTable from '@/core/analyzer/symbol/symbolTable';
-import { getElementKind } from '@/core/utils';
+import { getElementKind } from '@/core/analyzer/utils';
 import { ElementKind } from '@/core/analyzer/types';
 import { NodeToSymbolMap } from '@/core/analyzer/analyzer';
 
