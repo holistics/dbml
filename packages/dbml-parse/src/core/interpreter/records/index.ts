@@ -55,17 +55,19 @@ export class RecordsInterpreter {
     const warnings: CompileWarning[] = [];
 
     for (const element of elements) {
-      const { table, mergedColumns } = getTableAndColumnsOfRecords(element, this.compiler, this.env);
+      const { table, mergedColumns } = getTableAndColumnsOfRecords(this.compiler, element, this.env);
       const prevRecord = this.tableToRecordMap.get(table);
       if (prevRecord) {
         errors.push(new CompileError(
           CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE,
           `Duplicate Records blocks for the same Table '${table.name}' - A Table can only have one Records block`,
-          prevRecord));
+          prevRecord,
+        ));
         errors.push(new CompileError(
           CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE,
           `Duplicate Records blocks for the same Table '${table.name}' - A Table can only have one Records block`,
-          element));
+          element,
+        ));
         continue;
       }
       this.tableToRecordMap.set(table, element);
@@ -114,7 +116,7 @@ export class RecordsInterpreter {
 //   - `table`: The original interpreted table object that `records` refer to
 //   - `mergedTable`: The interpreted table object merged with its table partials
 //   - `mergedColumns`: The columns of the `mergedTable``
-function getTableAndColumnsOfRecords (records: ElementDeclarationNode, compiler: Compiler, env: InterpreterDatabase): { table: Table; mergedTable: Table; mergedColumns: Column[] } {
+function getTableAndColumnsOfRecords (compiler: Compiler, records: ElementDeclarationNode, env: InterpreterDatabase): { table: Table; mergedTable: Table; mergedColumns: Column[] } {
   const nameNode = records.name;
   const parent = records.parent;
   if (parent instanceof ElementDeclarationNode) {
@@ -161,7 +163,8 @@ function extractDataFromRow (
     errors.push(new CompileError(
       CompileErrorCode.INVALID_RECORDS_FIELD,
       `Expected ${mergedColumns.length} values but got ${args.length}`,
-      row));
+      row,
+    ));
     return new Report({ row: null, columnNodes: {} }, errors, warnings);
   }
 
@@ -221,7 +224,8 @@ function extractValue (
       return new Report({ value: null, type: valueType }, [], [new CompileWarning(
         CompileErrorCode.INVALID_RECORDS_FIELD,
         `NULL not allowed for non-nullable column '${column.name}' without default and increment`,
-        node)]);
+        node,
+      )]);
     }
     return new Report({ value: null, type: valueType }, [], []);
   }
@@ -237,7 +241,8 @@ function extractValue (
       return new Report({ value: enumValue, type: valueType }, [], [new CompileWarning(
         CompileErrorCode.INVALID_RECORDS_FIELD,
         `Invalid enum value for column '${column.name}'`,
-        node)]);
+        node,
+      )]);
     }
 
     return new Report({ value: enumValue, type: valueType }, [], []);
@@ -253,7 +258,8 @@ function extractValue (
         [new CompileWarning(
           CompileErrorCode.INVALID_RECORDS_FIELD,
           `Invalid numeric value for column '${column.name}'`,
-          node)],
+          node,
+        )],
       );
     }
 
@@ -262,7 +268,8 @@ function extractValue (
       return new Report({ value: Math.floor(numValue), type: valueType }, [], [new CompileWarning(
         CompileErrorCode.INVALID_RECORDS_FIELD,
         `Invalid integer value ${numValue} for column '${column.name}': expected integer, got decimal`,
-        node)]);
+        node,
+      )]);
     }
 
     // Decimal/numeric type: validate precision and scale
@@ -280,14 +287,16 @@ function extractValue (
         return new Report({ value: numValue, type: valueType }, [], [new CompileWarning(
           CompileErrorCode.INVALID_RECORDS_FIELD,
           `Numeric value ${numValue} for column '${column.name}' exceeds precision: expected at most ${precision} total digits, got ${totalDigits}`,
-          node)]);
+          node,
+        )]);
       }
 
       if (decimalDigits > scale) {
         return new Report({ value: numValue, type: valueType }, [], [new CompileWarning(
           CompileErrorCode.INVALID_RECORDS_FIELD,
           `Numeric value ${numValue} for column '${column.name}' exceeds scale: expected at most ${scale} decimal digits, got ${decimalDigits}`,
-          node)]);
+          node,
+        )]);
       }
     }
 
@@ -304,7 +313,8 @@ function extractValue (
         [new CompileWarning(
           CompileErrorCode.INVALID_RECORDS_FIELD,
           `Invalid boolean value for column '${column.name}'`,
-          node)],
+          node,
+        )],
       );
     }
     return new Report({ value: boolValue, type: valueType }, [], []);
@@ -320,7 +330,8 @@ function extractValue (
         [new CompileWarning(
           CompileErrorCode.INVALID_RECORDS_FIELD,
           `Invalid datetime value for column '${column.name}', expected valid datetime format (e.g., 'YYYY-MM-DD', 'HH:MM:SS', 'YYYY-MM-DD HH:MM:SS', 'MM/DD/YYYY', 'D MMM YYYY', or 'MMM D, YYYY')`,
-          node)],
+          node,
+        )],
       );
     }
     return new Report({ value: dtValue, type: valueType }, [], []);
@@ -336,7 +347,8 @@ function extractValue (
         [new CompileWarning(
           CompileErrorCode.INVALID_RECORDS_FIELD,
           `Invalid string value for column '${column.name}'`,
-          node)],
+          node,
+        )],
       );
     }
 
@@ -350,7 +362,8 @@ function extractValue (
         return new Report({ value: strValue, type: valueType }, [], [new CompileWarning(
           CompileErrorCode.INVALID_RECORDS_FIELD,
           `String value for column '${column.name}' exceeds maximum length: expected at most ${length} bytes (UTF-8), got ${actualByteLength} bytes`,
-          node)]);
+          node,
+        )]);
       }
     }
 
