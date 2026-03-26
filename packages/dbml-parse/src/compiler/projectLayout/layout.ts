@@ -58,11 +58,14 @@ export class MemoryProjectLayout implements DbmlProjectLayout {
     const abs = filePath.absolute;
     if (this.files.has(abs)) return true;
     const prefix = abs + '/';
-    return [...this.files.keys()].some((f) => f.startsWith(prefix));
+    for (const f of this.files.keys()) {
+      if (f.startsWith(prefix)) return true;
+    }
+    return false;
   }
 
-  listDirectory (dirPath: Filepath): Filepath[] {
-    const base = dirPath.absolute;
+  listDirectory (dirPath?: Filepath): Filepath[] {
+    const base = dirPath?.absolute ?? '/';
     const prefix = base.endsWith('/') ? base : base + '/';
     const entries = new Set<string>();
 
@@ -76,12 +79,12 @@ export class MemoryProjectLayout implements DbmlProjectLayout {
     return [...entries].sort().map(Filepath.from);
   }
 
-  listAllFiles (dirPath: Filepath): Filepath[] {
-    const base = dirPath.absolute;
+  listAllFiles (dirPath?: Filepath): Filepath[] {
+    const base = dirPath?.absolute ?? '/';
     const prefix = base.endsWith('/') ? base : base + '/';
     return [...this.files.keys()]
       .filter((f) => f.startsWith(prefix))
-      .map((f) => Filepath.from(f))
+      .map(Filepath.from)
       .sort((a, b) => a.absolute.localeCompare(b.absolute));
   }
 }

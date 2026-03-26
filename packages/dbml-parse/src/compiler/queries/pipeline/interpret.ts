@@ -25,21 +25,17 @@ export function interpretFile (this: Compiler, filepath: Filepath): Report<Model
 
   // 2. Interpret each file independently
   const databases: Database[] = [];
-  let entryErrors: CompileError[] = [];
-  let entryWarnings: CompileWarning[] = [];
-  const entryId = filepath.intern();
+  const allErrors: CompileError[] = [];
+  const allWarnings: CompileWarning[] = [];
 
   for (const fp of fileOrder) {
     const { db, errors, warnings } = interpretSingle(this, fp);
     databases.push(db);
-
-    if (fp.intern() === entryId) {
-      entryErrors = errors;
-      entryWarnings = warnings;
-    }
+    allErrors.push(...errors);
+    allWarnings.push(...warnings);
   }
 
-  return new Report({ databases }, entryErrors, entryWarnings);
+  return new Report({ databases }, allErrors, allWarnings);
 }
 
 function interpretSingle (compiler: Compiler, filepath: Filepath): {

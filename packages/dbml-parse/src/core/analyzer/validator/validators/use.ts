@@ -128,6 +128,9 @@ export default class UseDeclarationValidator {
       if (resolved) {
         errors.push(...this.registerExternalFilepath(resolved));
         if (errors.length > 0) return errors;
+      } else {
+        errors.push(new CompileError(CompileErrorCode.INVALID_USE_SPECIFIER_NAME, 'A use specifier requires a \'from\' path', specifier));
+        return errors;
       }
       errors.push(...this.registerSpecifierSymbol(specifier, symbolKind, resolved));
     }
@@ -135,7 +138,7 @@ export default class UseDeclarationValidator {
     return errors;
   }
 
-  private registerSpecifierSymbol (specifier: UseSpecifierNode, symbolKind: SymbolKind, externalFilepath?: Filepath): CompileError[] {
+  private registerSpecifierSymbol (specifier: UseSpecifierNode, symbolKind: SymbolKind, externalFilepath: Filepath): CompileError[] {
     const nameFragments = [...destructureComplexVariable(specifier.name).unwrap()];
 
     switch (symbolKind) {
@@ -165,20 +168,18 @@ export default class UseDeclarationValidator {
     const existingSymbol = symbolTable.get(symbolId);
     if (existingSymbol) {
       // Schema symbols from external files should be merged, not treated as conflicts
-      if (symbolKind === SymbolKind.Schema && existingSymbol instanceof SchemaSymbol && externalFilepath) {
+      if (symbolKind === SymbolKind.Schema && existingSymbol instanceof SchemaSymbol) {
         if (!existingSymbol.externalFilepaths.some((fp) => fp.intern() === externalFilepath.intern())) {
           existingSymbol.externalFilepaths.push(externalFilepath);
         }
         return [];
       }
       // Duplicate use of the same symbol from the same file is allowed
-      if (externalFilepath) {
-        const existingSource = existingSymbol instanceof ExternalSymbol
-          ? existingSymbol.externalFilepath.intern()
-          : existingSymbol.filepath.intern();
-        if (existingSource === externalFilepath.intern()) {
-          return [];
-        }
+      const existingSource = existingSymbol instanceof ExternalSymbol
+        ? existingSymbol.externalFilepath.intern()
+        : existingSymbol.filepath.intern();
+      if (existingSource === externalFilepath.intern()) {
+        return [];
       }
       return [new CompileError(CompileErrorCode.DUPLICATE_NAME, `'${itemName}' is already defined`, specifier.name!)];
     }
@@ -187,7 +188,7 @@ export default class UseDeclarationValidator {
       declaration: specifier,
       kind: symbolKind,
       name: itemName,
-      externalFilepath: externalFilepath!,
+      externalFilepath,
     });
     this.declarations.set(specifier, symbol);
     symbolTable.set(symbolId, symbol);

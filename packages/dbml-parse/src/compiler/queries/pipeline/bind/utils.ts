@@ -88,8 +88,8 @@ function resolveWholeFileUse ({ resolvedTable, externalTable, externalFilepath, 
   symbolFactory: SymbolFactory;
   clonedSchemas: WeakSet<SchemaSymbol>;
 }): CompileError[] {
-  replacePlaceholders(resolvedTable, externalTable, externalFilepath);
-  return mergeSymbolTables({ target: resolvedTable, source: externalTable, symbolFactory, clonedSchemas });
+  const placeholderErrors = replacePlaceholders(resolvedTable, externalTable, externalFilepath);
+  return [...placeholderErrors, ...mergeSymbolTables({ target: resolvedTable, source: externalTable, symbolFactory, clonedSchemas })];
 }
 
 function resolveSelectiveUse ({ resolvedTable, externalTable, externalFilepath, symbolFactory, clonedSchemas }: {
@@ -101,7 +101,7 @@ function resolveSelectiveUse ({ resolvedTable, externalTable, externalFilepath, 
 }): CompileError[] {
   const errors: CompileError[] = [];
 
-  replacePlaceholders(resolvedTable, externalTable, externalFilepath);
+  errors.push(...replacePlaceholders(resolvedTable, externalTable, externalFilepath));
   pullTableGroupMembers(resolvedTable, externalTable, symbolFactory);
 
   for (const [symbolId, symbol] of resolvedTable.entries()) {
@@ -177,19 +177,30 @@ function replacePlaceholders (
   table: SymbolTable,
   externalTable: Readonly<SymbolTable>,
   externalFilepath: Filepath,
-): void {
+): CompileError[] {
+  const errors: CompileError[] = [];
   for (const [symbolId, symbol] of table.entries()) {
     if (symbol instanceof ExternalSymbol && symbol.externalFilepath.equals(externalFilepath)) {
       const realId = createNodeSymbolIndex(symbol.name, symbol.kind);
       const realSymbol = externalTable.get(realId);
-      if (realSymbol) table.set(symbolId, realSymbol);
+      if (realSymbol) {
+        table.set(symbolId, realSymbol);
+      } else {
+        table.delete(symbolId);
+        errors.push(new CompileError(
+          CompileErrorCode.BINDING_ERROR,
+          `'${symbol.name}' (${symbol.kind}) not found in '${externalFilepath.absolute}'`,
+          symbol.declaration!,
+        ));
+      }
     } else if (symbol instanceof SchemaSymbol) {
       const externalSchema = externalTable.get(symbolId);
       if (externalSchema instanceof SchemaSymbol) {
-        replacePlaceholders(symbol.symbolTable, externalSchema.symbolTable, externalFilepath);
+        errors.push(...replacePlaceholders(symbol.symbolTable, externalSchema.symbolTable, externalFilepath));
       }
     }
   }
+  return errors;
 }
 
 function pullTableGroupMembers (

@@ -58,7 +58,7 @@ export default class Validator {
           this.symbolFactory,
         );
         errors.push(...validatorObject.validate());
-      } else {
+      } else if (decl instanceof UseDeclarationNode) {
         errors.push(...new UseDeclarationValidator(
           { node: decl, filepath: this.filepath, publicSymbolTable: this.publicSchemaSymbol.symbolTable, declarations: this.nodeToSymbol },
           this.symbolFactory,

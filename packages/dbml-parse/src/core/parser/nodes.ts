@@ -123,6 +123,10 @@ export class ProgramNode extends SyntaxNode {
 
   source: string;
 
+  private _declarations?: ElementDeclarationNode[];
+
+  private _useDeclarations?: UseDeclarationNode[];
+
   constructor (
     { body = [], eof, source }: { body?: (UseDeclarationNode | ElementDeclarationNode)[]; eof?: SyntaxToken; source: string },
     id: SyntaxNodeId,
@@ -135,11 +139,13 @@ export class ProgramNode extends SyntaxNode {
   }
 
   get declarations (): ElementDeclarationNode[] {
-    return this.body.filter((s): s is ElementDeclarationNode => s.kind === SyntaxNodeKind.ELEMENT_DECLARATION);
+    this._declarations ??= this.body.filter((s): s is ElementDeclarationNode => s.kind === SyntaxNodeKind.ELEMENT_DECLARATION);
+    return this._declarations;
   }
 
   get useDeclarations (): UseDeclarationNode[] {
-    return this.body.filter((s): s is UseDeclarationNode => s.kind === SyntaxNodeKind.USE_DECLARATION);
+    this._useDeclarations ??= this.body.filter((s): s is UseDeclarationNode => s.kind === SyntaxNodeKind.USE_DECLARATION);
+    return this._useDeclarations;
   }
 }
 
