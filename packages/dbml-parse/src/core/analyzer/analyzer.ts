@@ -4,7 +4,7 @@ import type { Filepath } from '@/compiler/projectLayout/filepath';
 
 export type NodeToSymbolMap = Map<SyntaxNode, NodeSymbol>;
 export type NodeToRefereeMap = WeakMap<SyntaxNode, NodeSymbol>;
-export type SymbolToReferencesMap = Map<NodeSymbol, SyntaxNode[]>;
+export type SymbolToReferencesMap = WeakMap<NodeSymbol, SyntaxNode[]>;
 
 export type AnalysisResult = {
   ast: ProgramNode;

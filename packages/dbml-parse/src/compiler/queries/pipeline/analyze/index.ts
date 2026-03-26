@@ -91,7 +91,7 @@ export function analyzeFile (this: Compiler, filepath: Filepath): Report<Analysi
   errors.push(...resolveReport.getErrors());
 
   const nodeToReferee: NodeToRefereeMap = new WeakMap();
-  const symbolToReferences: SymbolToReferencesMap = new Map();
+  const symbolToReferences: SymbolToReferencesMap = new WeakMap();
   const bindingReport = new Binder(
     { ast, nodeToSymbol, nodeToReferee, symbolToReferences },
     symbolFactory,
