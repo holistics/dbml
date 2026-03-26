@@ -1,8 +1,8 @@
 import { NodeSymbol } from '@/core/analyzer/validator/symbol/symbols';
-import SymbolTable from '@/core/analyzer/validator/symbol/symbolTable';
 import { AnalysisResult, NodeToRefereeMap, NodeToSymbolMap, SymbolToReferencesMap } from '@/core/types';
 import Report from '@/core/report';
-import { Compiler, ProgramNode, SyntaxNode } from '@/index';
+import { ProgramNode, SyntaxNode } from '@/index';
+import type Compiler from '@/compiler/index';
 import { DEFAULT_ENTRY } from '@/compiler/constants';
 import { validateFile } from '@/compiler/queries/pipeline/bind';
 import fs from 'fs';
@@ -13,9 +13,7 @@ export function scanTestNames (_path: any) {
   return files.filter((fn) => fn.match(/\.in\./)).map((fn) => fn.split('.in.')[0]);
 }
 
-// Shared replacer logic for AST serialization.
-// Handles circular refs (parent, declaration → id), symbol/referee compaction, etc.
-function astReplacer (
+export function createJsonReplacer (
   nodeToSymbol: NodeToSymbolMap | undefined,
   nodeToReferee: NodeToRefereeMap | undefined,
   symbolToReferences?: SymbolToReferencesMap,
@@ -39,17 +37,21 @@ function astReplacer (
       return (value as NodeSymbol)?.id;
     }
 
-    // Don't include source or filepath in the serialized output
-    if (key === 'source' || key === 'filepath') {
+    // Don't include source or filepath in the serialized AST
+    if (this instanceof ProgramNode && key === 'source') {
+      return undefined;
+    }
+    if (key === 'filepath') {
       return undefined;
     }
 
-    // For root node symbol: output full symbol table with references
+    // For root node symbol: output full symbol table with reference IDs
     if (key === 'symbol') {
       return {
         symbolTable: (value as NodeSymbol)?.symbolTable,
         id: (value as NodeSymbol)?.id,
-        references: symbolToReferences?.get(value as NodeSymbol) ?? [],
+        references: (symbolToReferences?.get(value as NodeSymbol) ?? []).map((ref) => ref.id),
+        declaration: (value as NodeSymbol)?.declaration?.id,
       };
     }
 
@@ -68,19 +70,19 @@ function astReplacer (
       return (value as SyntaxNode)?.id;
     }
 
-    // For symbol tables: convert Map to Object, injecting references into each symbol entry
-    if (key === 'symbolTable' && value instanceof SymbolTable) {
-      const entries = [...(value as any).table.entries()].map(
-        ([k, sym]: [string, NodeSymbol]) => {
-          if (!sym) return [k, undefined];
-          return [k, {
-            references: symbolToReferences?.get(sym) ?? [],
-            id: sym.id,
-            symbolTable: sym.symbolTable,
-            declaration: sym.declaration,
-          }];
-        },
-      );
+    // For symbol tables: convert Map to Object for JSON serialization,
+    // injecting references from SymbolToReferencesMap into each symbol entry
+    if (key === 'symbolTable') {
+      if (value == null || !(value as any).table) {
+        return value;
+      }
+      const entries: [string, any][] = [...(value as any).table].map(([k, sym]: [string, NodeSymbol]) => {
+        if (!sym) {
+          return [k, sym];
+        }
+        const refs = symbolToReferences?.get(sym) ?? [];
+        return [k, { references: refs, id: sym.id, symbolTable: sym.symbolTable, declaration: sym.declaration }];
+      });
       return Object.fromEntries(entries);
     }
 
@@ -93,7 +95,7 @@ function astReplacer (
  * Nodes carry no symbol/referee data; only the AST structure and errors are emitted.
  */
 export function serializeAst (report: Readonly<Report<ProgramNode>>, pretty = false): string {
-  return JSON.stringify(report, astReplacer(undefined, undefined), pretty ? 2 : 0);
+  return JSON.stringify(report, createJsonReplacer(undefined, undefined), pretty ? 2 : 0);
 }
 
 /**
@@ -104,21 +106,17 @@ export function serializeAst (report: Readonly<Report<ProgramNode>>, pretty = fa
 export function serializeAnalysis (report: Readonly<Report<AnalysisResult>>, pretty?: boolean): string;
 export function serializeAnalysis (compiler: Compiler, pretty?: boolean): string;
 export function serializeAnalysis (reportOrCompiler: Readonly<Report<AnalysisResult>> | Compiler, pretty = false): string {
-  if (reportOrCompiler instanceof Compiler) {
+  if ('parseFile' in reportOrCompiler) {
+    // Compiler overload
     const compiler = reportOrCompiler;
     const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
-    const analysisReport = compiler.analyzeFile(DEFAULT_ENTRY);
-    const { nodeToSymbol, nodeToReferee, symbolToReferences } = analysisReport.getValue();
-    const errors = analysisReport.getErrors();
-    const warnings = analysisReport.getWarnings();
-    const syntheticReport = {
-      value: ast,
-      errors,
-      ...(warnings.length ? { warnings } : {}),
-    };
-    return JSON.stringify(syntheticReport, astReplacer(nodeToSymbol, nodeToReferee, symbolToReferences), pretty ? 2 : 0);
+    const { nodeToSymbol, nodeToReferee, symbolToReferences } = compiler.analyzeFile(DEFAULT_ENTRY).getValue();
+    const errors = compiler.analyzeFile(DEFAULT_ENTRY).getErrors();
+    const warnings = compiler.analyzeFile(DEFAULT_ENTRY).getWarnings();
+    const report = { value: ast, errors, ...(warnings.length ? { warnings } : {}) };
+    return JSON.stringify(report, createJsonReplacer(nodeToSymbol, nodeToReferee, symbolToReferences), pretty ? 2 : 0);
   }
-
+  // Report overload (legacy)
   const report = reportOrCompiler;
   const { ast, nodeToSymbol, nodeToReferee, symbolToReferences } = report.getValue();
   const syntheticReport = {
@@ -126,13 +124,17 @@ export function serializeAnalysis (reportOrCompiler: Readonly<Report<AnalysisRes
     errors: report.getErrors(),
     ...(report.getWarnings().length ? { warnings: report.getWarnings() } : {}),
   };
-  return JSON.stringify(syntheticReport, astReplacer(nodeToSymbol, nodeToReferee, symbolToReferences), pretty ? 2 : 0);
+  return JSON.stringify(syntheticReport, createJsonReplacer(nodeToSymbol, nodeToReferee, symbolToReferences), pretty ? 2 : 0);
 }
 
+/**
+ * Serializes validation-only results from a Compiler to JSON.
+ * Only includes nodeToSymbol (no binding/referee data).
+ */
 export function serializeValidation (compiler: Compiler, pretty = false): string {
   const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
   const validated = validateFile(compiler, DEFAULT_ENTRY);
   const errors = [...validated.errors];
-  const syntheticReport = { value: ast, errors };
-  return JSON.stringify(syntheticReport, astReplacer(validated.nodeToSymbol, undefined), pretty ? 2 : 0);
+  const report = { value: ast, errors };
+  return JSON.stringify(report, createJsonReplacer(validated.nodeToSymbol, undefined), pretty ? 2 : 0);
 }
