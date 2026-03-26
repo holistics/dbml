@@ -261,7 +261,12 @@ export default class RecordsValidator implements ElementValidator {
         return [];
       }
       const _Validator = pickValidator(sub as ElementDeclarationNode & { type: SyntaxToken });
-      const validator = new _Validator(sub as ElementDeclarationNode & { type: SyntaxToken }, this.publicSymbolTable, this.nodeToSymbol, this.symbolFactory);
+      const validator = new _Validator(
+        sub as ElementDeclarationNode & { type: SyntaxToken },
+        this.publicSymbolTable,
+        this.nodeToSymbol,
+        this.symbolFactory,
+      );
       return validator.validate();
     });
   }

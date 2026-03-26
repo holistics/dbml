@@ -34,19 +34,28 @@ export default class Analyzer {
 
   // Analyzing: Invoking both the validator and binder
   analyze (): Report<AnalysisResult> {
-    const validator = new Validator({ ast: this.ast }, this.symbolFactory);
+    const validator = new Validator(
+      { ast: this.ast },
+      this.symbolFactory,
+    );
     const ast = this.ast;
 
     return validator.validate().chain((nodeToSymbol) => {
       const symbolToReferences: SymbolToReferencesMap = new Map();
-      const binder = new Binder({ ast, nodeToSymbol, symbolToReferences }, this.symbolFactory);
+      const binder = new Binder(
+        { ast, nodeToSymbol, symbolToReferences },
+        this.symbolFactory,
+      );
       return binder.resolve().map((nodeToReferee) => ({ ast, nodeToSymbol, nodeToReferee, symbolToReferences }));
     });
   }
 
   // For invoking the validator only
   validate (): Report<NodeToSymbolMap> {
-    const validator = new Validator({ ast: this.ast }, this.symbolFactory);
+    const validator = new Validator(
+      { ast: this.ast },
+      this.symbolFactory,
+    );
 
     return validator.validate();
   }
@@ -54,7 +63,10 @@ export default class Analyzer {
   // For invoking the binder only
   bind (nodeToSymbol: NodeToSymbolMap, symbolToReferences?: SymbolToReferencesMap): Report<{ nodeToReferee: NodeToRefereeMap; symbolToReferences: SymbolToReferencesMap }> {
     const refs = symbolToReferences ?? new Map();
-    const binder = new Binder({ ast: this.ast, nodeToSymbol, symbolToReferences: refs }, this.symbolFactory);
+    const binder = new Binder(
+      { ast: this.ast, nodeToSymbol, symbolToReferences: refs },
+      this.symbolFactory,
+    );
 
     return binder.resolve().map((nodeToReferee) => ({ nodeToReferee, symbolToReferences: refs }));
   }

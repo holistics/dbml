@@ -100,19 +100,47 @@ export default class Interpreter {
     const errors = this.ast.body.flatMap((element) => {
       switch (getElementKind(element).unwrap_or(undefined)) {
         case ElementKind.Table:
-          return (new TableInterpreter(this.compiler, element, this.env)).interpret();
+          return (new TableInterpreter(
+            this.compiler,
+            element,
+            this.env,
+          )).interpret();
         case ElementKind.Note:
-          return (new StickyNoteInterpreter(this.compiler, element, this.env)).interpret();
+          return (new StickyNoteInterpreter(
+            this.compiler,
+            element,
+            this.env,
+          )).interpret();
         case ElementKind.Ref:
-          return (new RefInterpreter(this.compiler, element, this.env)).interpret();
+          return (new RefInterpreter(
+            this.compiler,
+            element,
+            this.env,
+          )).interpret();
         case ElementKind.TableGroup:
-          return (new TableGroupInterpreter(this.compiler, element, this.env)).interpret();
+          return (new TableGroupInterpreter(
+            this.compiler,
+            element,
+            this.env,
+          )).interpret();
         case ElementKind.TablePartial:
-          return (new TablePartialInterpreter(this.compiler, element, this.env)).interpret();
+          return (new TablePartialInterpreter(
+            this.compiler,
+            element,
+            this.env,
+          )).interpret();
         case ElementKind.Enum:
-          return (new EnumInterpreter(this.compiler, element, this.env)).interpret();
+          return (new EnumInterpreter(
+            this.compiler,
+            element,
+            this.env,
+          )).interpret();
         case ElementKind.Project:
-          return (new ProjectInterpreter(this.compiler, element, this.env)).interpret();
+          return (new ProjectInterpreter(
+            this.compiler,
+            element,
+            this.env,
+          )).interpret();
         case ElementKind.Records:
           // Defer records interpretation - collect for later
           this.env.recordsElements.push(element);
@@ -126,7 +154,10 @@ export default class Interpreter {
     if (this.env.recordsElements.length) {
     // Second pass: interpret all records elements grouped by table
     // Now that all tables, enums, etc. are interpreted, we can validate records properly
-      const recordsResult = new RecordsInterpreter(this.compiler, this.env).interpret(this.env.recordsElements);
+      const recordsResult = new RecordsInterpreter(
+        this.compiler,
+        this.env,
+      ).interpret(this.env.recordsElements);
       errors.push(...recordsResult.getErrors());
       warnings.push(...recordsResult.getWarnings());
     }

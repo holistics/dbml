@@ -76,7 +76,11 @@ export default class TableGroupBinder implements ElementBinder {
         return [];
       }
       const _Binder = pickBinder(sub as ElementDeclarationNode & { type: SyntaxToken });
-      const binder = new _Binder(sub as ElementDeclarationNode & { type: SyntaxToken }, this.context, this.symbolFactory);
+      const binder = new _Binder(
+        sub as ElementDeclarationNode & { type: SyntaxToken },
+        this.context,
+        this.symbolFactory,
+      );
 
       return binder.bind();
     });
