@@ -16,7 +16,11 @@ export class StickyNoteInterpreter implements ElementInterpreter {
   private env: InterpreterDatabase;
   private note: Partial<Note>;
 
-  constructor (compiler: Compiler, declarationNode: ElementDeclarationNode, env: InterpreterDatabase) {
+  constructor (
+    compiler: Compiler,
+    declarationNode: ElementDeclarationNode,
+    env: InterpreterDatabase,
+  ) {
     this.compiler = compiler;
     this.declarationNode = declarationNode;
     this.env = env;

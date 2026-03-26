@@ -436,7 +436,12 @@ export default class TableValidator implements ElementValidator {
         return [];
       }
       const _Validator = pickElementValidator(sub as ElementDeclarationNode & { type: SyntaxToken });
-      const validator = new _Validator(sub as ElementDeclarationNode & { type: SyntaxToken }, this.publicSymbolTable, this.nodeToSymbol, this.symbolFactory);
+      const validator = new _Validator(
+        sub as ElementDeclarationNode & { type: SyntaxToken },
+        this.publicSymbolTable,
+        this.nodeToSymbol,
+        this.symbolFactory,
+      );
       return validator.validate();
     });
 

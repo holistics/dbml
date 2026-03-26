@@ -28,7 +28,12 @@ export default class IndexesValidator implements ElementValidator {
   private symbolFactory: SymbolFactory;
   private nodeToSymbol: NodeToSymbolMap;
 
-  constructor (declarationNode: ElementDeclarationNode & { type: SyntaxToken }, publicSymbolTable: SymbolTable, nodeToSymbol: NodeToSymbolMap, symbolFactory: SymbolFactory) {
+  constructor (
+    declarationNode: ElementDeclarationNode & { type: SyntaxToken },
+    publicSymbolTable: SymbolTable,
+    nodeToSymbol: NodeToSymbolMap,
+    symbolFactory: SymbolFactory,
+  ) {
     this.declarationNode = declarationNode;
     this.publicSymbolTable = publicSymbolTable;
     this.symbolFactory = symbolFactory;
@@ -179,7 +184,12 @@ export default class IndexesValidator implements ElementValidator {
         return [];
       }
       const _Validator = pickElementValidator(sub as ElementDeclarationNode & { type: SyntaxToken });
-      const validator = new _Validator(sub as ElementDeclarationNode & { type: SyntaxToken }, this.publicSymbolTable, this.nodeToSymbol, this.symbolFactory);
+      const validator = new _Validator(
+        sub as ElementDeclarationNode & { type: SyntaxToken },
+        this.publicSymbolTable,
+        this.nodeToSymbol,
+        this.symbolFactory,
+      );
       return validator.validate();
     });
   }

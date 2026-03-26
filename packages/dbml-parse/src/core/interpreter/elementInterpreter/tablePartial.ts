@@ -29,7 +29,11 @@ export class TablePartialInterpreter implements ElementInterpreter {
   private tablePartial: Partial<TablePartial>;
   private pkColumns: Column[];
 
-  constructor (compiler: Compiler, declarationNode: ElementDeclarationNode, env: InterpreterDatabase) {
+  constructor (
+    compiler: Compiler,
+    declarationNode: ElementDeclarationNode,
+    env: InterpreterDatabase,
+  ) {
     this.compiler = compiler;
     this.declarationNode = declarationNode;
     this.env = env;

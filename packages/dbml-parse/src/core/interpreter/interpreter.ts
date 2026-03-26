@@ -76,7 +76,11 @@ export default class Interpreter {
   ast: ProgramNode;
   env: InterpreterDatabase;
 
-  constructor (compiler: Compiler, filepath: Filepath, { ast, nodeToSymbol, nodeToReferee }: AnalysisResult) {
+  constructor (
+    compiler: Compiler,
+    filepath: Filepath,
+    { ast, nodeToSymbol, nodeToReferee }: AnalysisResult,
+  ) {
     this.compiler = compiler;
     this.filepath = filepath;
     this.ast = ast;

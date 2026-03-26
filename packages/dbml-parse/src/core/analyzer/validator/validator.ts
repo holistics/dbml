@@ -29,7 +29,11 @@ export default class Validator {
   private nodeToSymbol: NodeToSymbolMap;
 
   constructor (
-    { ast, filepath, nodeToSymbol }: { ast: ProgramNode; filepath: Filepath; nodeToSymbol?: NodeToSymbolMap },
+    { ast, filepath, nodeToSymbol }: {
+      ast: ProgramNode;
+      filepath: Filepath;
+      nodeToSymbol?: NodeToSymbolMap;
+    },
     symbolFactory: SymbolFactory,
   ) {
     this.ast = ast;

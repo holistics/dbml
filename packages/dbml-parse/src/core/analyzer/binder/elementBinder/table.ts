@@ -20,7 +20,11 @@ export default class TableBinder implements ElementBinder {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
   private context: BinderContext;
 
-  constructor (declarationNode: ElementDeclarationNode & { type: SyntaxToken }, context: BinderContext, symbolFactory: SymbolFactory) {
+  constructor (
+    declarationNode: ElementDeclarationNode & { type: SyntaxToken },
+    context: BinderContext,
+    symbolFactory: SymbolFactory,
+  ) {
     this.declarationNode = declarationNode;
     this.symbolFactory = symbolFactory;
     this.context = context;
@@ -211,7 +215,11 @@ export default class TableBinder implements ElementBinder {
         return [];
       }
       const _Binder = pickBinder(sub as ElementDeclarationNode & { type: SyntaxToken });
-      const binder = new _Binder(sub as ElementDeclarationNode & { type: SyntaxToken }, this.context, this.symbolFactory);
+      const binder = new _Binder(
+        sub as ElementDeclarationNode & { type: SyntaxToken },
+        this.context,
+        this.symbolFactory,
+      );
 
       return binder.bind();
     });

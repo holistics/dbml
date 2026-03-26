@@ -17,7 +17,11 @@ export class TableGroupInterpreter implements ElementInterpreter {
   private env: InterpreterDatabase;
   private tableGroup: Partial<TableGroup>;
 
-  constructor (compiler: Compiler, declarationNode: ElementDeclarationNode, env: InterpreterDatabase) {
+  constructor (
+    compiler: Compiler,
+    declarationNode: ElementDeclarationNode,
+    env: InterpreterDatabase,
+  ) {
     this.compiler = compiler;
     this.declarationNode = declarationNode;
     this.env = env;
