@@ -4,7 +4,7 @@ import Report from '@/core/report';
 import { ProgramNode, SyntaxNode } from '@/index';
 import type Compiler from '@/compiler/index';
 import { DEFAULT_ENTRY } from '@/compiler/constants';
-import { validateFile } from '@/compiler/queries/pipeline/bind';
+import { validateFile } from '@/compiler/queries/pipeline/analyze';
 import fs from 'fs';
 
 export function scanTestNames (_path: any) {
