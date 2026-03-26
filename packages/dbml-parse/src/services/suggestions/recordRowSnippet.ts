@@ -19,7 +19,6 @@ import {
 import { ColumnSymbol, TablePartialInjectedColumnSymbol, TableSymbol } from '@/core/analyzer/symbol/symbols';
 import { ElementKind } from '@/core/analyzer/types';
 import Compiler from '@/compiler';
-import type { Filepath } from '@/compiler/projectLayout';
 import { extractReferee, getFilepathFromModel } from '@/services/utils';
 import {
   noSuggestions,
@@ -53,16 +52,15 @@ export function suggestRecordRowSnippet (
 
   // On an empty line in Records body - provide record row snippet
   if (element.parent instanceof ProgramNode) {
-    return suggestRecordRowInTopLevelRecords(compiler, element, filepath);
+    return suggestRecordRowInTopLevelRecords(compiler, element);
   } else {
-    return suggestRecordRowInNestedRecords(compiler, element, filepath);
+    return suggestRecordRowInNestedRecords(compiler, element);
   }
 }
 
 function suggestRecordRowInTopLevelRecords (
   compiler: Compiler,
   recordsElement: ElementDeclarationNode,
-  filepath: Filepath,
 ): CompletionList {
   // Top-level Records only work with explicit column list: Records users(id, name) { }
   if (!(recordsElement.name instanceof CallExpressionNode)) return noSuggestions();
@@ -105,7 +103,6 @@ function suggestRecordRowInTopLevelRecords (
 function suggestRecordRowInNestedRecords (
   compiler: Compiler,
   recordsElement: ElementDeclarationNode,
-  filepath: Filepath,
 ): CompletionList {
   // Get parent table element
   const parent = recordsElement.parent;
