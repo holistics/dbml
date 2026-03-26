@@ -59,22 +59,24 @@ export default class Compiler {
   parseFile = this.query(parseFile);
   analyzeFile = this.query(analyzeFile);
 
-  resolvedSymbol (node: SyntaxNode): NodeSymbol | undefined {
-    return this.analyzeFile().getValue().nodeToSymbol.get(node);
+  resolvedSymbol (node?: SyntaxNode): NodeSymbol | undefined {
+    return node && this.analyzeFile().getValue().nodeToSymbol.get(node);
   }
 
-  nodeReferee (node: SyntaxNode): NodeSymbol | undefined {
-    return this.analyzeFile().getValue().nodeToReferee.get(node);
+  nodeReferee (node?: SyntaxNode): NodeSymbol | undefined {
+    return node && this.analyzeFile().getValue().nodeToReferee.get(node);
   }
 
-  nodeReferences (node: SyntaxNode): SyntaxNode[] {
+  nodeReferences (node?: SyntaxNode): SyntaxNode[] {
+    if (!node) return [];
     const { nodeToSymbol, symbolToReferences } = this.analyzeFile().getValue();
     const symbol = nodeToSymbol.get(node);
     if (!symbol) return [];
     return symbolToReferences.get(symbol) ?? [];
   }
 
-  symbolReferences (symbol: NodeSymbol): SyntaxNode[] {
+  symbolReferences (symbol?: NodeSymbol): SyntaxNode[] {
+    if (!symbol) return [];
     const { symbolToReferences } = this.analyzeFile().getValue();
     return symbolToReferences.get(symbol) ?? [];
   }

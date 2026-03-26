@@ -270,7 +270,7 @@ function suggestInTuple (compiler: Compiler, offset: number, tupleContainer: Tup
     && !(element.name instanceof CallExpressionNode)
     && isOffsetWithinElementHeader(offset, element)
   ) {
-    const tableSymbol = (element.parent ? compiler.resolvedSymbol(element.parent) : undefined) || (element.name ? compiler.nodeReferee(element.name) : undefined);
+    const tableSymbol = compiler.resolvedSymbol(element.parent) || compiler.nodeReferee(element.name);
     if (tableSymbol) {
       const suggestions = suggestMembersOfSymbol(compiler, tableSymbol, [SymbolKind.Column]);
       // If the user already typed some columns, we do not suggest "all columns" anymore
