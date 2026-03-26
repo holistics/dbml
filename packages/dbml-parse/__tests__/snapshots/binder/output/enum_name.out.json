@@ -5173,61 +5173,11 @@
           "declaration": 89
         }
       },
-      "id": 20,
+      "id": 0,
       "references": []
     }
   },
   "errors": [
-    {
-      "code": 1009,
-      "diagnostic": "Invalid start of operand \"}\"",
-      "nodeOrToken": {
-        "kind": "<rbrace>",
-        "startPos": {
-          "offset": 170,
-          "line": 8,
-          "column": 0
-        },
-        "endPos": {
-          "offset": 171,
-          "line": 8,
-          "column": 1
-        },
-        "value": "}",
-        "leadingTrivia": [],
-        "trailingTrivia": [
-          {
-            "kind": "<newline>",
-            "startPos": {
-              "offset": 172,
-              "line": 8,
-              "column": 2
-            },
-            "endPos": {
-              "offset": 173,
-              "line": 9,
-              "column": 0
-            },
-            "value": "\n",
-            "leadingTrivia": [],
-            "trailingTrivia": [],
-            "leadingInvalid": [],
-            "trailingInvalid": [],
-            "isInvalid": false,
-            "start": 172,
-            "end": 173
-          }
-        ],
-        "leadingInvalid": [],
-        "trailingInvalid": [],
-        "isInvalid": false,
-        "start": 170,
-        "end": 171
-      },
-      "start": 170,
-      "end": 171,
-      "name": "CompileError"
-    },
     {
       "code": 1009,
       "diagnostic": "Invalid start of operand \"}\"",

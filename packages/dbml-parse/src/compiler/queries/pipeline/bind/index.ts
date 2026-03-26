@@ -69,14 +69,12 @@ export function analyzeFile (this: Compiler, filepath: Filepath): Report<Analyze
   const errors: CompileError[] = [...validationErrors];
   const warnings: CompileWarning[] = [...validationWarnings];
 
-  const resolved = resolveExternalDependencies(this, filepath, {
+  const resolveReport = resolveExternalDependencies(this, filepath, {
     symbolTable,
     symbolIdGenerator,
     nodeToSymbol,
   });
-  errors.push(...resolved.getErrors());
-
-  nodeToSymbol.set(ast, symbolFactory.create(SchemaSymbol, { symbolTable: resolved.getValue() }));
+  errors.push(...resolveReport.getErrors());
 
   const nodeToReferee: NodeToRefereeMap = new WeakMap();
   const symbolToReferences: SymbolToReferencesMap = new Map();
@@ -89,7 +87,7 @@ export function analyzeFile (this: Compiler, filepath: Filepath): Report<Analyze
 
   return new Report(
     {
-      symbolTable: resolved.getValue(),
+      symbolTable,
       nodeToSymbol,
       nodeToReferee,
       symbolToReferences,

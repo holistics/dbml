@@ -106,12 +106,11 @@ export function serializeAnalysis (compiler: Compiler, pretty?: boolean): string
 export function serializeAnalysis (reportOrCompiler: Readonly<Report<AnalysisResult>> | Compiler, pretty = false): string {
   if (reportOrCompiler instanceof Compiler) {
     const compiler = reportOrCompiler;
-    const parseReport = compiler.parseFile(DEFAULT_ENTRY);
-    const { ast } = parseReport.getValue();
+    const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
     const analysisReport = compiler.analyzeFile(DEFAULT_ENTRY);
     const { nodeToSymbol, nodeToReferee, symbolToReferences } = analysisReport.getValue();
-    const errors = [...parseReport.getErrors(), ...analysisReport.getErrors()];
-    const warnings = [...parseReport.getWarnings(), ...analysisReport.getWarnings()];
+    const errors = analysisReport.getErrors();
+    const warnings = analysisReport.getWarnings();
     const syntheticReport = {
       value: ast,
       errors,
@@ -131,10 +130,9 @@ export function serializeAnalysis (reportOrCompiler: Readonly<Report<AnalysisRes
 }
 
 export function serializeValidation (compiler: Compiler, pretty = false): string {
-  const parseReport = compiler.parseFile(DEFAULT_ENTRY);
-  const { ast } = parseReport.getValue();
+  const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
   const validated = validateFile(compiler, DEFAULT_ENTRY);
-  const errors = [...parseReport.getErrors(), ...validated.errors];
+  const errors = [...validated.errors];
   const syntheticReport = { value: ast, errors };
   return JSON.stringify(syntheticReport, astReplacer(validated.nodeToSymbol, undefined), pretty ? 2 : 0);
 }

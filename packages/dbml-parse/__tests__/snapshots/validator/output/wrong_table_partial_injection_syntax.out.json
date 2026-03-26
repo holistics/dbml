@@ -1445,56 +1445,6 @@
       "name": "CompileError"
     },
     {
-      "code": 1009,
-      "diagnostic": "Invalid start of operand \"}\"",
-      "nodeOrToken": {
-        "kind": "<rbrace>",
-        "startPos": {
-          "offset": 73,
-          "line": 9,
-          "column": 0
-        },
-        "endPos": {
-          "offset": 74,
-          "line": 9,
-          "column": 1
-        },
-        "value": "}",
-        "leadingTrivia": [],
-        "trailingTrivia": [
-          {
-            "kind": "<newline>",
-            "startPos": {
-              "offset": 75,
-              "line": 9,
-              "column": 2
-            },
-            "endPos": {
-              "offset": 76,
-              "line": 10,
-              "column": 0
-            },
-            "value": "\n",
-            "leadingTrivia": [],
-            "trailingTrivia": [],
-            "leadingInvalid": [],
-            "trailingInvalid": [],
-            "isInvalid": false,
-            "start": 75,
-            "end": 76
-          }
-        ],
-        "leadingInvalid": [],
-        "trailingInvalid": [],
-        "isInvalid": false,
-        "start": 73,
-        "end": 74
-      },
-      "start": 73,
-      "end": 74,
-      "name": "CompileError"
-    },
-    {
       "code": 3019,
       "diagnostic": "A column must have a type",
       "nodeOrToken": {

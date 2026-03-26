@@ -27,18 +27,14 @@ function lookupSymbol (
   return undefined;
 }
 
-// Resolve all `use` declarations for a file. Clones the local table and returns the resolved copy.
+// Resolve all `use` declarations for a file by mutating the local symbol table in place.
 export function resolveExternalDependencies (
   compiler: Compiler,
   currentFilepath: Filepath,
-  local: { symbolTable: Readonly<SymbolTable>; symbolIdGenerator: NodeSymbolIdGenerator; nodeToSymbol: NodeToSymbolMap },
+  local: { symbolTable: SymbolTable; symbolIdGenerator: NodeSymbolIdGenerator; nodeToSymbol: NodeToSymbolMap },
 ): Report<SymbolTable> {
   const externalFilepaths = compiler.localFileDependencies(currentFilepath);
-  const ctx = {
-    symbolFactory: new SymbolFactory(local.symbolIdGenerator, currentFilepath),
-    clonedSchemas: new WeakSet<SchemaSymbol>(),
-  };
-  const resolvedTable = local.symbolTable.clone();
+  const symbolFactory = new SymbolFactory(local.symbolIdGenerator, currentFilepath);
   const errors: CompileError[] = [];
 
   for (const [filepathKey, useNode] of externalFilepaths) {
@@ -50,39 +46,37 @@ export function resolveExternalDependencies (
     const externalTable = externalLocal.symbolTable;
 
     if (!useNode.specifiers) {
-      errors.push(...resolveWholeFileUse({ resolvedTable, externalTable, externalFilepath, ...ctx }));
+      errors.push(...resolveWholeFileUse({ target: local.symbolTable, externalTable, externalFilepath, symbolFactory }));
     } else {
-      errors.push(...resolveSelectiveUse({ resolvedTable, externalTable, externalFilepath, ...ctx }));
+      errors.push(...resolveSelectiveUse({ target: local.symbolTable, externalTable, externalFilepath, symbolFactory }));
     }
   }
 
-  return new Report(resolvedTable, errors);
+  return new Report(local.symbolTable, errors);
 }
 
-function resolveWholeFileUse ({ resolvedTable, externalTable, externalFilepath, symbolFactory, clonedSchemas }: {
-  resolvedTable: SymbolTable;
-  externalTable: Readonly<SymbolTable>;
+function resolveWholeFileUse ({ target, externalTable, externalFilepath, symbolFactory }: {
+  target: SymbolTable;
+  externalTable: SymbolTable;
   externalFilepath: Filepath;
   symbolFactory: SymbolFactory;
-  clonedSchemas: WeakSet<SchemaSymbol>;
 }): CompileError[] {
-  const placeholderErrors = replacePlaceholders(resolvedTable, externalTable, externalFilepath);
-  return [...placeholderErrors, ...mergeSymbolTables({ target: resolvedTable, source: externalTable, symbolFactory, clonedSchemas })];
+  const placeholderErrors = replacePlaceholders(target, externalTable, externalFilepath);
+  return [...placeholderErrors, ...mergeSymbolTables({ target, source: externalTable, symbolFactory })];
 }
 
-function resolveSelectiveUse ({ resolvedTable, externalTable, externalFilepath, symbolFactory, clonedSchemas }: {
-  resolvedTable: SymbolTable;
-  externalTable: Readonly<SymbolTable>;
+function resolveSelectiveUse ({ target, externalTable, externalFilepath, symbolFactory }: {
+  target: SymbolTable;
+  externalTable: SymbolTable;
   externalFilepath: Filepath;
   symbolFactory: SymbolFactory;
-  clonedSchemas: WeakSet<SchemaSymbol>;
 }): CompileError[] {
   const errors: CompileError[] = [];
 
-  errors.push(...replacePlaceholders(resolvedTable, externalTable, externalFilepath));
-  pullTableGroupMembers(resolvedTable, externalTable, symbolFactory);
+  errors.push(...replacePlaceholders(target, externalTable, externalFilepath));
+  pullTableGroupMembers(target, externalTable, symbolFactory);
 
-  for (const [symbolId, symbol] of resolvedTable.entries()) {
+  for (const [symbolId, symbol] of target.entries()) {
     if (!(symbol instanceof SchemaSymbol)) continue;
     if (!symbol.externalFilepaths.some((fp) => fp.equals(externalFilepath))) continue;
 
@@ -90,25 +84,17 @@ function resolveSelectiveUse ({ resolvedTable, externalTable, externalFilepath, 
     if (!(externalSchema instanceof SchemaSymbol)) continue;
 
     const name = destructureIndex(symbolId).unwrap_or(undefined)?.name ?? symbolId;
-    let schema = symbol;
-    if (!clonedSchemas.has(symbol)) {
-      schema = symbolFactory.create(SchemaSymbol, { symbolTable: symbol.symbolTable.clone() });
-      schema.externalFilepaths = [...symbol.externalFilepaths];
-      resolvedTable.set(symbolId, schema);
-      clonedSchemas.add(schema);
-    }
-    errors.push(...mergeSymbolTables({ target: schema.symbolTable, source: externalSchema.symbolTable, schemaPath: name, symbolFactory, clonedSchemas }));
+    errors.push(...mergeSymbolTables({ target: symbol.symbolTable, source: externalSchema.symbolTable, schemaPath: name, symbolFactory }));
   }
 
   return errors;
 }
 
-function mergeSymbolTables ({ target, source, schemaPath, symbolFactory, clonedSchemas }: {
+function mergeSymbolTables ({ target, source, schemaPath, symbolFactory }: {
   target: SymbolTable;
-  source: Readonly<SymbolTable>;
+  source: SymbolTable;
   schemaPath?: string;
   symbolFactory: SymbolFactory;
-  clonedSchemas: WeakSet<SchemaSymbol>;
 }): CompileError[] {
   const errors: CompileError[] = [];
 
@@ -124,15 +110,8 @@ function mergeSymbolTables ({ target, source, schemaPath, symbolFactory, clonedS
 
     if (existing instanceof SchemaSymbol && entrySymbol instanceof SchemaSymbol) {
       const nestedName = destructureIndex(entryId).unwrap_or(undefined)?.name ?? entryId;
-      let nested = existing;
-      if (!clonedSchemas.has(existing)) {
-        nested = symbolFactory.create(SchemaSymbol, { symbolTable: existing.symbolTable.clone() });
-        nested.externalFilepaths = [...existing.externalFilepaths];
-        target.set(entryId, nested);
-        clonedSchemas.add(nested);
-      }
       const nestedPath = schemaPath ? `${schemaPath}.${nestedName}` : nestedName;
-      errors.push(...mergeSymbolTables({ target: nested.symbolTable, source: entrySymbol.symbolTable, schemaPath: nestedPath, symbolFactory, clonedSchemas }));
+      errors.push(...mergeSymbolTables({ target: existing.symbolTable, source: entrySymbol.symbolTable, schemaPath: nestedPath, symbolFactory }));
       continue;
     }
 
