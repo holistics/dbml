@@ -1544,9 +1544,11 @@
     "symbol": {
       "symbolTable": {
         "TablePartial:common": {
+          "references": [],
           "id": 1,
           "symbolTable": {
             "Column:name": {
+              "references": [],
               "id": 2,
               "declaration": 6
             }
@@ -1554,13 +1556,16 @@
           "declaration": 8
         },
         "Table:Users": {
+          "references": [],
           "id": 3,
           "symbolTable": {
             "Column:id": {
+              "references": [],
               "id": 4,
               "declaration": 15
             },
             "PartialInjection:common": {
+              "references": [],
               "id": 5,
               "symbolTable": {},
               "declaration": 19

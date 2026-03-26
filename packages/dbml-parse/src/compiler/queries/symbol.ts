@@ -1,26 +1,10 @@
 import type Compiler from '../index';
 import type { Filepath } from '../projectLayout';
-import type { SyntaxNode } from '@/core/parser/nodes';
 import type { NodeSymbol } from '@/core/validator/symbol/symbols';
 import { ElementDeclarationNode, ProgramNode } from '@/core/parser/nodes';
 import { SymbolKind, destructureIndex } from '@/core/validator/symbol/symbolIndex';
 import { generatePossibleIndexes } from '@/core/validator/symbol/utils';
 import SymbolTable from '@/core/validator/symbol/symbolTable';
-
-export function nodeSymbol (this: Compiler, node: SyntaxNode, filepath: Filepath): NodeSymbol | undefined {
-  return this.bindFile(filepath).getValue().nodeToSymbol.get(node);
-}
-
-export function nodeReferences (this: Compiler, node: SyntaxNode, filepath: Filepath): SyntaxNode[] {
-  const bound = this.bindFile(filepath).getValue();
-  const symbol = bound.nodeToSymbol.get(node);
-  if (!symbol) return [];
-  return bound.symbolToReferences.get(symbol) ?? [];
-}
-
-export function nodeReferee (this: Compiler, node: SyntaxNode, filepath: Filepath): NodeSymbol | undefined {
-  return this.bindFile(filepath).getValue().nodeToReferee.get(node);
-}
 
 export function symbolMembers (this: Compiler, ownerSymbol: NodeSymbol) {
   if (!ownerSymbol.symbolTable) {
@@ -47,7 +31,7 @@ export function symbolOfName (this: Compiler, nameStack: string[], owner: Elemen
       ? currentOwner.parent
       : undefined
   ) {
-    const ownerSymbol = this.symbol.nodeSymbol(currentOwner, filepath);
+    const ownerSymbol = this.resolvedSymbol(currentOwner, filepath);
     if (!ownerSymbol?.symbolTable) {
       continue;
     }

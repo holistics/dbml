@@ -2861,17 +2861,21 @@
     "symbol": {
       "symbolTable": {
         "Table:T1": {
+          "references": [],
           "id": 1,
           "symbolTable": {
             "Column:col1": {
+              "references": [],
               "id": 2,
               "declaration": 12
             },
             "Column:col2": {
+              "references": [],
               "id": 3,
               "declaration": 26
             },
             "Column:col3": {
+              "references": [],
               "id": 4,
               "declaration": 40
             }
@@ -2879,9 +2883,11 @@
           "declaration": 42
         },
         "Table:T2": {
+          "references": [],
           "id": 5,
           "symbolTable": {
             "Column:col": {
+              "references": [],
               "id": 6,
               "declaration": 55
             }

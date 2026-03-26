@@ -232,7 +232,7 @@ export function renameTable (
   filepath: Filepath,
 ): string {
   const source = this.getSource(filepath) ?? '';
-  const symbolTable = this.symbol.nodeSymbol(this.ast(filepath), filepath)?.symbolTable;
+  const symbolTable = this.resolvedSymbol(this.ast(filepath), filepath)?.symbolTable;
   if (!symbolTable) return source;
 
   const normalizedOld = normalizeTableName(oldName);
@@ -268,7 +268,7 @@ export function renameTable (
     }
   }
 
-  const references = this.bindFile(filepath).getValue().symbolToReferences.get(tableSymbol) ?? [];
+  const references = this.analyzeFile(filepath).getValue().symbolToReferences.get(tableSymbol) ?? [];
   for (const ref of references) {
     const refText = source.substring(ref.start, ref.end);
     const cleanRefText = refText.replace(/"/g, '');

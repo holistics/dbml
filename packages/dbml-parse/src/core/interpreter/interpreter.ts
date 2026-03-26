@@ -1,3 +1,4 @@
+import type Compiler from '@/compiler';
 import type { Filepath } from '@/compiler/projectLayout';
 import { ProgramNode } from '@/core/parser/nodes';
 import { Database, InterpreterDatabase, Table, TablePartial, TableRecord } from '@/core/interpreter/types';
@@ -70,10 +71,14 @@ function convertEnvToDb (env: InterpreterDatabase): Database {
 
 // The interpreted format follows the old parser
 export default class Interpreter {
+  compiler: Compiler;
+  filepath: Filepath;
   ast: ProgramNode;
   env: InterpreterDatabase;
 
-  constructor ({ ast, nodeToSymbol, nodeToReferee }: AnalysisResult) {
+  constructor (compiler: Compiler, filepath: Filepath, { ast, nodeToSymbol, nodeToReferee }: AnalysisResult) {
+    this.compiler = compiler;
+    this.filepath = filepath;
     this.ast = ast;
     this.env = {
       filepath: ast.filepath,

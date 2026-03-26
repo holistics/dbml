@@ -8518,41 +8518,51 @@
     "symbol": {
       "symbolTable": {
         "Table:customer": {
+          "references": [],
           "id": 1,
           "symbolTable": {
             "Column:customer_id": {
+              "references": [],
               "id": 2,
               "declaration": 13
             },
             "Column:store_id": {
+              "references": [],
               "id": 3,
               "declaration": 21
             },
             "Column:first_name": {
+              "references": [],
               "id": 4,
               "declaration": 33
             },
             "Column:last_name": {
+              "references": [],
               "id": 5,
               "declaration": 49
             },
             "Column:email": {
+              "references": [],
               "id": 6,
               "declaration": 63
             },
             "Column:address_id": {
+              "references": [],
               "id": 7,
               "declaration": 71
             },
             "Column:active": {
+              "references": [],
               "id": 8,
               "declaration": 83
             },
             "Column:create_date": {
+              "references": [],
               "id": 9,
               "declaration": 91
             },
             "Column:last_update": {
+              "references": [],
               "id": 10,
               "declaration": 100
             }
@@ -8560,17 +8570,21 @@
           "declaration": 102
         },
         "Table:cities": {
+          "references": [],
           "id": 11,
           "symbolTable": {
             "Column:id": {
+              "references": [],
               "id": 12,
               "declaration": 112
             },
             "Column:name": {
+              "references": [],
               "id": 13,
               "declaration": 122
             },
             "Column:country_id": {
+              "references": [],
               "id": 14,
               "declaration": 127
             }
@@ -8578,13 +8592,16 @@
           "declaration": 133
         },
         "Table:country": {
+          "references": [],
           "id": 15,
           "symbolTable": {
             "Column:id": {
+              "references": [],
               "id": 16,
               "declaration": 140
             },
             "Column:cities": {
+              "references": [],
               "id": 17,
               "declaration": 147
             }
@@ -8592,13 +8609,16 @@
           "declaration": 149
         },
         "Table:citites": {
+          "references": [],
           "id": 18,
           "symbolTable": {
             "Column:id": {
+              "references": [],
               "id": 19,
               "declaration": 156
             },
             "Column:name": {
+              "references": [],
               "id": 20,
               "declaration": 161
             }

@@ -261,7 +261,7 @@ function suggestNamesInScope (
   const localNames = new Set<string>();
 
   while (curElement) {
-    const symbol = compiler.symbol.nodeSymbol(curElement, filepath);
+    const symbol = compiler.resolvedSymbol(curElement, filepath);
     if (symbol?.symbolTable) {
       const members = suggestMembersOfSymbol(compiler, symbol, acceptedKinds);
       for (const s of members.suggestions) {
@@ -323,13 +323,13 @@ function suggestCrossFileSymbols (
   for (const externalFile of allFiles) {
     if (externalFile.intern() === currentId) continue;
 
-    const externalValidation = compiler.validateFile(externalFile);
-    if (externalValidation.errors.length > 0) continue;
+    const externalAnalysis = compiler.analyzeFile(externalFile);
+    if (externalAnalysis.getErrors().length > 0) continue;
 
     const relativePath = externalFile.relativeTo(currentFilepath.dirname);
     const importPath = relativePath.startsWith('.') ? relativePath : `./${relativePath}`;
 
-    for (const [symbolId, symbol] of externalValidation.symbolTable.entries()) {
+    for (const [symbolId, symbol] of externalAnalysis.getValue().symbolTable.entries()) {
       if (symbol instanceof ExternalSymbol) continue;
 
       const info = destructureIndex(symbolId).unwrap_or(undefined);
@@ -385,7 +385,7 @@ function suggestInTuple (compiler: Compiler, offset: number, tupleContainer: Tup
     && !(element.name instanceof CallExpressionNode)
     && isOffsetWithinElementHeader(offset, element)
   ) {
-    const tableSymbol = (element.parent ? compiler.symbol.nodeSymbol(element.parent, filepath) : undefined) || (element.name ? compiler.symbol.nodeReferee(element.name, filepath) : undefined);
+    const tableSymbol = (element.parent ? compiler.resolvedSymbol(element.parent, filepath) : undefined) || (element.name ? compiler.nodeReferee(element.name, filepath) : undefined);
     if (tableSymbol) {
       const suggestions = suggestMembersOfSymbol(compiler, tableSymbol, [SymbolKind.Column]);
       // If the user already typed some columns, we do not suggest "all columns" anymore
@@ -859,7 +859,7 @@ function suggestInCallExpression (
 
     const fragments = destructureMemberAccessExpression(callee).unwrap_or([callee]);
     const rightmostExpr = fragments[fragments.length - 1];
-    const tableSymbol = rightmostExpr ? compiler.symbol.nodeReferee(rightmostExpr, filepath) : undefined;
+    const tableSymbol = rightmostExpr ? compiler.nodeReferee(rightmostExpr, filepath) : undefined;
 
     if (!tableSymbol) return noSuggestions();
     const suggestions = suggestMembersOfSymbol(compiler, tableSymbol, [SymbolKind.Column]);
@@ -880,7 +880,7 @@ function suggestInCallExpression (
     if (!(c instanceof FunctionApplicationNode)) continue;
     if (c.callee !== container) continue;
     if (extractVariableFromExpression(container.callee).unwrap_or('').toLowerCase() !== ElementKind.Records) continue;
-    const tableSymbol = compiler.symbol.nodeSymbol(compiler.container.element(offset, filepath), filepath);
+    const tableSymbol = compiler.resolvedSymbol(compiler.container.element(offset, filepath), filepath);
     if (!tableSymbol) return noSuggestions();
     const suggestions = suggestMembersOfSymbol(compiler, tableSymbol, [SymbolKind.Column]);
     const { argumentList } = container;
@@ -896,7 +896,7 @@ function suggestInTableGroupField (compiler: Compiler, filepath: Filepath): Comp
   return {
     suggestions: [
       ...addQuoteToSuggestionIfNeeded({
-        suggestions: [...(compiler.symbol.nodeSymbol(compiler.ast(filepath), filepath)?.symbolTable?.entries() ?? [])].flatMap(([index]) => {
+        suggestions: [...(compiler.resolvedSymbol(compiler.ast(filepath), filepath)?.symbolTable?.entries() ?? [])].flatMap(([index]) => {
           const res = destructureIndex(index).unwrap_or(undefined);
           if (res === undefined) return [];
           const { kind, name } = res;
@@ -1005,7 +1005,7 @@ function suggestColumnType (compiler: Compiler, offset: number, filepath: Filepa
 function suggestColumnNameInIndexes (compiler: Compiler, offset: number, filepath: Filepath): CompletionList {
   const indexesNode = compiler.container.element(offset, filepath);
   const tableNode = (indexesNode as any)?.parent;
-  const tableSymbol = tableNode ? compiler.symbol.nodeSymbol(tableNode, filepath) : undefined;
+  const tableSymbol = tableNode ? compiler.resolvedSymbol(tableNode, filepath) : undefined;
   if (!(tableSymbol instanceof TableSymbol)) {
     return noSuggestions();
   }

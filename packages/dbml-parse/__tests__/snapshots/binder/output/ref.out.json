@@ -1526,13 +1526,16 @@
     "symbol": {
       "symbolTable": {
         "Table:Users": {
+          "references": [],
           "id": 1,
           "symbolTable": {
             "Column:id": {
+              "references": [],
               "id": 2,
               "declaration": 6
             },
             "Column:referrer_id": {
+              "references": [],
               "id": 3,
               "declaration": 11
             }

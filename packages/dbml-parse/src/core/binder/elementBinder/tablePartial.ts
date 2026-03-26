@@ -3,7 +3,7 @@ import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, ProgramNode, SyntaxNode,
 } from '@/core/parser/nodes';
 import { SyntaxToken } from '@/core/lexer/tokens';
-import { ElementBinder, ElementBinderArgs, ElementBinderResult } from '../types';
+import { ElementBinder } from '../types';
 import { CompileError } from '@/core/errors';
 import { aggregateSettingList } from '@/core/validator/utils';
 import { destructureComplexVariableTuple } from '@/core/utils';
@@ -17,18 +17,18 @@ export default class TablePartialBinder implements ElementBinder {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
   private context: BinderContext;
 
-  constructor ({ declarationNode, context }: ElementBinderArgs, symbolFactory: SymbolFactory) {
+  constructor (declarationNode: ElementDeclarationNode & { type: SyntaxToken }, context: BinderContext, symbolFactory: SymbolFactory) {
     this.declarationNode = declarationNode;
     this.symbolFactory = symbolFactory;
     this.context = context;
   }
 
-  bind (): ElementBinderResult {
+  bind (): CompileError[] {
     if (!(this.declarationNode.body instanceof BlockExpressionNode)) {
-      return { errors: [] };
+      return [];
     }
 
-    return { errors: this.bindBody(this.declarationNode.body) };
+    return this.bindBody(this.declarationNode.body);
   }
 
   private bindBody (body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {
@@ -118,9 +118,9 @@ export default class TablePartialBinder implements ElementBinder {
         return [];
       }
       const _Binder = pickBinder(sub as ElementDeclarationNode & { type: SyntaxToken });
-      const binder = new _Binder({ declarationNode: sub as ElementDeclarationNode & { type: SyntaxToken }, context: this.context }, this.symbolFactory);
+      const binder = new _Binder(sub as ElementDeclarationNode & { type: SyntaxToken }, this.context, this.symbolFactory);
 
-      return binder.bind().errors;
+      return binder.bind();
     });
   }
 }

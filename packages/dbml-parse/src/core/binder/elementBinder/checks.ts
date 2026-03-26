@@ -1,7 +1,7 @@
 import { ElementDeclarationNode, ProgramNode, SyntaxToken } from '@/core/..';
 import { CompileError } from '@/core/errors';
 import SymbolFactory from '@/core/validator/symbol/factory';
-import { ElementBinder, ElementBinderArgs, ElementBinderResult } from '../types';
+import { ElementBinder } from '../types';
 import { BinderContext } from '@/core/types';
 
 export default class ChecksBinder implements ElementBinder {
@@ -9,13 +9,13 @@ export default class ChecksBinder implements ElementBinder {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
   private context: BinderContext;
 
-  constructor ({ declarationNode, context }: ElementBinderArgs, symbolFactory: SymbolFactory) {
+  constructor (declarationNode: ElementDeclarationNode & { type: SyntaxToken }, context: BinderContext, symbolFactory: SymbolFactory) {
     this.declarationNode = declarationNode;
     this.symbolFactory = symbolFactory;
     this.context = context;
   }
 
-  bind (): ElementBinderResult {
-    return { errors: [] };
+  bind (): CompileError[] {
+    return [];
   }
 }

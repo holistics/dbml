@@ -4792,33 +4792,41 @@
     "symbol": {
       "symbolTable": {
         "Table:Users": {
+          "references": [],
           "id": 1,
           "symbolTable": {
             "Column:id": {
+              "references": [],
               "id": 2,
               "declaration": 6
             },
             "Column:status1": {
+              "references": [],
               "id": 3,
               "declaration": 14
             },
             "Column:status2": {
+              "references": [],
               "id": 4,
               "declaration": 22
             },
             "Column:status3": {
+              "references": [],
               "id": 5,
               "declaration": 30
             },
             "Column:status4": {
+              "references": [],
               "id": 6,
               "declaration": 38
             },
             "Column:status5": {
+              "references": [],
               "id": 7,
               "declaration": 45
             },
             "Column:status6": {
+              "references": [],
               "id": 8,
               "declaration": 52
             }
@@ -4826,25 +4834,30 @@
           "declaration": 54
         },
         "Schema:v2": {
+          "references": [],
           "id": 10,
-          "externalFilepaths": [],
           "symbolTable": {
             "Enum:status": {
+              "references": [],
               "id": 9,
               "symbolTable": {
                 "Enum field:churn": {
+                  "references": [],
                   "id": 11,
                   "declaration": 62
                 },
                 "Enum field:new": {
+                  "references": [],
                   "id": 12,
                   "declaration": 65
                 },
                 "Enum field:active": {
+                  "references": [],
                   "id": 13,
                   "declaration": 68
                 },
                 "Enum field:tenant": {
+                  "references": [],
                   "id": 14,
                   "declaration": 71
                 }
@@ -4854,21 +4867,26 @@
           }
         },
         "Enum:status": {
+          "references": [],
           "id": 15,
           "symbolTable": {
             "Enum field:churn": {
+              "references": [],
               "id": 16,
               "declaration": 78
             },
             "Enum field:new": {
+              "references": [],
               "id": 17,
               "declaration": 81
             },
             "Enum field:active": {
+              "references": [],
               "id": 18,
               "declaration": 84
             },
             "Enum field:tenant": {
+              "references": [],
               "id": 19,
               "declaration": 87
             }

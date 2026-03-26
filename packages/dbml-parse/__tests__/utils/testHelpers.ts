@@ -1,4 +1,5 @@
 import { NodeSymbol } from '@/core/validator/symbol/symbols';
+import SymbolTable from '@/core/validator/symbol/symbolTable';
 import { AnalysisResult, NodeToRefereeMap, NodeToSymbolMap, SymbolToReferencesMap } from '@/core/types';
 import Report from '@/core/report';
 import { ProgramNode, SyntaxNode } from '@/index';
@@ -41,13 +42,12 @@ function astReplacer (
       return undefined;
     }
 
-    // For root node symbol: output full symbol table with reference IDs
+    // For root node symbol: output full symbol table with references
     if (key === 'symbol') {
       return {
         symbolTable: (value as NodeSymbol)?.symbolTable,
         id: (value as NodeSymbol)?.id,
-        references: (symbolToReferences?.get(value as NodeSymbol) ?? []).map((ref) => ref.id),
-        declaration: (value as NodeSymbol)?.declaration?.id,
+        references: symbolToReferences?.get(value as NodeSymbol) ?? [],
       };
     }
 
@@ -66,9 +66,20 @@ function astReplacer (
       return (value as SyntaxNode)?.id;
     }
 
-    // For symbol tables: convert Map to Object for JSON serialization
-    if (key === 'symbolTable') {
-      return Object.fromEntries((value as any).table);
+    // For symbol tables: convert Map to Object, injecting references into each symbol entry
+    if (key === 'symbolTable' && value instanceof SymbolTable) {
+      const entries = [...(value as any).table.entries()].map(
+        ([k, sym]: [string, NodeSymbol]) => {
+          if (!sym) return [k, undefined];
+          return [k, {
+            references: symbolToReferences?.get(sym) ?? [],
+            id: sym.id,
+            symbolTable: sym.symbolTable,
+            declaration: sym.declaration,
+          }];
+        },
+      );
+      return Object.fromEntries(entries);
     }
 
     return value;

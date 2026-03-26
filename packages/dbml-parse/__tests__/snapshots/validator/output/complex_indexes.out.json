@@ -9113,21 +9113,26 @@
     "symbol": {
       "symbolTable": {
         "TablePartial:bookingPartial": {
+          "references": [],
           "id": 1,
           "symbolTable": {
             "Column:id": {
+              "references": [],
               "id": 2,
               "declaration": 6
             },
             "Column:country": {
+              "references": [],
               "id": 3,
               "declaration": 11
             },
             "Column:booking_date": {
+              "references": [],
               "id": 4,
               "declaration": 16
             },
             "Column:created_at": {
+              "references": [],
               "id": 5,
               "declaration": 21
             }
@@ -9135,21 +9140,26 @@
           "declaration": 81
         },
         "Table:bookings": {
+          "references": [],
           "id": 6,
           "symbolTable": {
             "Column:id": {
+              "references": [],
               "id": 7,
               "declaration": 88
             },
             "Column:country": {
+              "references": [],
               "id": 8,
               "declaration": 93
             },
             "Column:booking_date": {
+              "references": [],
               "id": 9,
               "declaration": 98
             },
             "Column:created_at": {
+              "references": [],
               "id": 10,
               "declaration": 103
             }

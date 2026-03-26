@@ -12,6 +12,7 @@ import SymbolFactory from '@/core/validator/symbol/factory';
 import SymbolTable from '@/core/validator/symbol/symbolTable';
 import { SchemaSymbol } from '@/core/validator/symbol/symbols';
 import Interpreter from '@/core/interpreter/interpreter';
+import Compiler from '@/compiler';
 import { scanTestNames } from '@tests/utils';
 
 describe('[snapshot] interpreter', () => {
@@ -43,7 +44,9 @@ describe('[snapshot] interpreter', () => {
         2,
       );
     } else {
-      const res = new Interpreter(report.getValue()).interpret();
+      const compiler = new Compiler();
+      compiler.setSource(program);
+      const res = new Interpreter(compiler, DEFAULT_ENTRY, report.getValue()).interpret();
       if (res.getErrors().length > 0) {
         output = JSON.stringify(
           res.getErrors(),

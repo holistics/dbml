@@ -1120,23 +1120,28 @@
     "symbol": {
       "symbolTable": {
         "TablePartial:p1": {
+          "references": [],
           "id": 1,
           "symbolTable": {},
           "declaration": 3
         },
         "Table:t1": {
+          "references": [],
           "id": 2,
           "symbolTable": {
             "Column:id": {
+              "references": [],
               "id": 3,
               "declaration": 10
             },
             "PartialInjection:p1": {
+              "references": [],
               "id": 4,
               "symbolTable": {},
               "declaration": 14
             },
             "PartialInjection:p2": {
+              "references": [],
               "id": 5,
               "symbolTable": {},
               "declaration": 18

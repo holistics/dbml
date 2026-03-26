@@ -3537,17 +3537,20 @@
     "symbol": {
       "symbolTable": {
         "Schema:v1": {
+          "references": [],
           "id": 2,
-          "externalFilepaths": [],
           "symbolTable": {
             "Table:Users": {
+              "references": [],
               "id": 1,
               "symbolTable": {
                 "Column:id": {
+                  "references": [],
                   "id": 3,
                   "declaration": 11
                 },
                 "Column:status": {
+                  "references": [],
                   "id": 4,
                   "declaration": 30
                 }
@@ -3557,25 +3560,30 @@
           }
         },
         "Schema:v2": {
+          "references": [],
           "id": 6,
-          "externalFilepaths": [],
           "symbolTable": {
             "Enum:Status": {
+              "references": [],
               "id": 5,
               "symbolTable": {
                 "Enum field:new": {
+                  "references": [],
                   "id": 7,
                   "declaration": 43
                 },
                 "Enum field:churn": {
+                  "references": [],
                   "id": 8,
                   "declaration": 46
                 },
                 "Enum field:active": {
+                  "references": [],
                   "id": 9,
                   "declaration": 49
                 },
                 "Enum field:tenant": {
+                  "references": [],
                   "id": 10,
                   "declaration": 52
                 }

@@ -3608,13 +3608,16 @@
     "symbol": {
       "symbolTable": {
         "Table:b": {
+          "references": [],
           "id": 1,
           "symbolTable": {
             "Column:id": {
+              "references": [],
               "id": 2,
               "declaration": 11
             },
             "Column:c_id": {
+              "references": [],
               "id": 3,
               "declaration": 16
             }
@@ -3622,13 +3625,16 @@
           "declaration": 18
         },
         "Table:c": {
+          "references": [],
           "id": 4,
           "symbolTable": {
             "Column:id": {
+              "references": [],
               "id": 5,
               "declaration": 25
             },
             "Column:b_id": {
+              "references": [],
               "id": 6,
               "declaration": 30
             }

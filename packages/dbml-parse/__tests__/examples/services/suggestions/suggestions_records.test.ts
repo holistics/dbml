@@ -189,7 +189,7 @@ describe('[example] Suggestions Utils - Records', () => {
 
       const ast = compiler.ast(DEFAULT_ENTRY);
       const tableElement = ast.body[2]; // users table is the third element
-      const tableSymbol = compiler.symbol.nodeSymbol(tableElement, DEFAULT_ENTRY);
+      const tableSymbol = compiler.resolvedSymbol(tableElement, DEFAULT_ENTRY);
 
       if (tableSymbol instanceof TableSymbol) {
         const columns = getColumnsFromTableSymbol(tableSymbol);
@@ -225,7 +225,7 @@ describe('[example] Suggestions Utils - Records', () => {
 
       const ast = compiler.ast(DEFAULT_ENTRY);
       const tableElement = ast.body[1];
-      const tableSymbol = compiler.symbol.nodeSymbol(tableElement, DEFAULT_ENTRY);
+      const tableSymbol = compiler.resolvedSymbol(tableElement, DEFAULT_ENTRY);
 
       if (tableSymbol instanceof TableSymbol) {
         const columns = getColumnsFromTableSymbol(tableSymbol);
@@ -257,7 +257,7 @@ describe('[example] Suggestions Utils - Records', () => {
 
       const ast = compiler.ast(DEFAULT_ENTRY);
       const tableElement = ast.body[1];
-      const tableSymbol = compiler.symbol.nodeSymbol(tableElement, DEFAULT_ENTRY);
+      const tableSymbol = compiler.resolvedSymbol(tableElement, DEFAULT_ENTRY);
 
       if (tableSymbol instanceof TableSymbol) {
         const columns = getColumnsFromTableSymbol(tableSymbol);
@@ -289,7 +289,7 @@ describe('[example] Suggestions Utils - Records', () => {
       // Get the table symbol
       const ast = compiler.ast(DEFAULT_ENTRY);
       const tableElement = ast.body[0];
-      const tableSymbol = compiler.symbol.nodeSymbol(tableElement, DEFAULT_ENTRY);
+      const tableSymbol = compiler.resolvedSymbol(tableElement, DEFAULT_ENTRY);
 
       expect(tableSymbol).toBeInstanceOf(TableSymbol);
 
@@ -324,7 +324,7 @@ describe('[example] Suggestions Utils - Records', () => {
 
       const ast = compiler.ast(DEFAULT_ENTRY);
       const tableElement = ast.body[0];
-      const tableSymbol = compiler.symbol.nodeSymbol(tableElement, DEFAULT_ENTRY);
+      const tableSymbol = compiler.resolvedSymbol(tableElement, DEFAULT_ENTRY);
 
       if (tableSymbol instanceof TableSymbol) {
         const columns = getColumnsFromTableSymbol(tableSymbol);
@@ -359,7 +359,7 @@ describe('[example] Suggestions Utils - Records', () => {
 
       const ast = compiler.ast(DEFAULT_ENTRY);
       const tableElement = ast.body[0];
-      const tableSymbol = compiler.symbol.nodeSymbol(tableElement, DEFAULT_ENTRY);
+      const tableSymbol = compiler.resolvedSymbol(tableElement, DEFAULT_ENTRY);
 
       if (tableSymbol instanceof TableSymbol) {
         const columns = getColumnsFromTableSymbol(tableSymbol);
@@ -386,7 +386,7 @@ describe('[example] Suggestions Utils - Records', () => {
 
       const ast = compiler.ast(DEFAULT_ENTRY);
       const tableElement = ast.body[0];
-      const tableSymbol = compiler.symbol.nodeSymbol(tableElement, DEFAULT_ENTRY);
+      const tableSymbol = compiler.resolvedSymbol(tableElement, DEFAULT_ENTRY);
 
       if (tableSymbol instanceof TableSymbol) {
         const columns = getColumnsFromTableSymbol(tableSymbol);
@@ -414,7 +414,7 @@ describe('[example] Suggestions Utils - Records', () => {
 
       const ast = compiler.ast(DEFAULT_ENTRY);
       const tableElement = ast.body[0];
-      const tableSymbol = compiler.symbol.nodeSymbol(tableElement, DEFAULT_ENTRY);
+      const tableSymbol = compiler.resolvedSymbol(tableElement, DEFAULT_ENTRY);
 
       if (tableSymbol instanceof TableSymbol) {
         const columns = getColumnsFromTableSymbol(tableSymbol);
@@ -441,7 +441,7 @@ describe('[example] Suggestions Utils - Records', () => {
 
       const ast = compiler.ast(DEFAULT_ENTRY);
       const tableElement = ast.body[0];
-      const tableSymbol = compiler.symbol.nodeSymbol(tableElement, DEFAULT_ENTRY);
+      const tableSymbol = compiler.resolvedSymbol(tableElement, DEFAULT_ENTRY);
 
       if (tableSymbol instanceof TableSymbol) {
         const columns = getColumnsFromTableSymbol(tableSymbol);
@@ -470,7 +470,7 @@ describe('[example] Suggestions Utils - Records', () => {
 
       const ast = compiler.ast(DEFAULT_ENTRY);
       const tableElement = ast.body[0];
-      const tableSymbol = compiler.symbol.nodeSymbol(tableElement, DEFAULT_ENTRY);
+      const tableSymbol = compiler.resolvedSymbol(tableElement, DEFAULT_ENTRY);
 
       if (tableSymbol instanceof TableSymbol) {
         const columns = getColumnsFromTableSymbol(tableSymbol);

@@ -4618,9 +4618,11 @@
     "symbol": {
       "symbolTable": {
         "Table:Users": {
+          "references": [],
           "id": 1,
           "symbolTable": {
             "Column:balance": {
+              "references": [],
               "id": 2,
               "declaration": 8
             }
@@ -4628,9 +4630,11 @@
           "declaration": 38
         },
         "TablePartial:Users": {
+          "references": [],
           "id": 3,
           "symbolTable": {
             "Column:balance": {
+              "references": [],
               "id": 4,
               "declaration": 45
             }

@@ -3622,9 +3622,11 @@
     "symbol": {
       "symbolTable": {
         "Table:t1": {
+          "references": [],
           "id": 1,
           "symbolTable": {
             "Column:id": {
+              "references": [],
               "id": 2,
               "declaration": 6
             }
@@ -3632,9 +3634,11 @@
           "declaration": 8
         },
         "TableGroup:g1": {
+          "references": [],
           "id": 3,
           "symbolTable": {
             "TableGroup field:t1": {
+              "references": [],
               "id": 4,
               "declaration": 30
             }
@@ -3642,9 +3646,11 @@
           "declaration": 32
         },
         "Table:table2": {
+          "references": [],
           "id": 5,
           "symbolTable": {
             "Column:id": {
+              "references": [],
               "id": 6,
               "declaration": 42
             }
@@ -3652,9 +3658,11 @@
           "declaration": 44
         },
         "TableGroup:group2": {
+          "references": [],
           "id": 7,
           "symbolTable": {
             "TableGroup field:table2": {
+              "references": [],
               "id": 8,
               "declaration": 54
             }

@@ -820,9 +820,11 @@
     "symbol": {
       "symbolTable": {
         "Enum:status": {
+          "references": [],
           "id": 1,
           "symbolTable": {
             "Enum field:churn": {
+              "references": [],
               "id": 2,
               "declaration": 4
             }

@@ -1,6 +1,10 @@
 import type { TextModel, Position } from '@/services/types';
 import { Filepath } from '@/compiler/projectLayout';
 import { DEFAULT_ENTRY } from '@/compiler/constants';
+import type Compiler from '@/compiler';
+import type { SyntaxNode } from '@/core/parser/nodes';
+import { InfixExpressionNode } from '@/core/parser/nodes';
+import type { NodeSymbol } from '@/core/validator/symbol/symbols';
 
 export function getOffsetFromMonacoPosition (model: TextModel, position: Position): number {
   return model.getOffsetAt(position);
@@ -12,4 +16,17 @@ export function getFilepathFromModel (model: TextModel): Filepath {
   } catch {
     return DEFAULT_ENTRY;
   }
+}
+
+// Extract referee from a simple variable (x) or complex variable (a.b.c)
+// For complex variables, returns the referee of the rightmost part
+export function extractReferee (compiler: Compiler, filepath: Filepath, node: SyntaxNode | undefined): NodeSymbol | undefined {
+  if (!node) return undefined;
+
+  // Complex variable: a.b.c - get referee from rightmost part
+  if (node instanceof InfixExpressionNode && node.op?.value === '.') {
+    return extractReferee(compiler, filepath, node.rightExpression);
+  }
+
+  return compiler.nodeReferee(node, filepath);
 }

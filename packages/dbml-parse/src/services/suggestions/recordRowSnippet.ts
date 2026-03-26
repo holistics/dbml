@@ -1,5 +1,4 @@
 import {
-  extractReferee,
   extractVariableFromExpression,
   getElementKind,
 } from '@/core/utils';
@@ -21,7 +20,7 @@ import { ColumnSymbol, TablePartialInjectedColumnSymbol, TableSymbol } from '@/c
 import { ElementKind } from '@/core/types';
 import Compiler from '@/compiler';
 import type { Filepath } from '@/compiler/projectLayout';
-import { getFilepathFromModel } from '@/services/utils';
+import { extractReferee, getFilepathFromModel } from '@/services/utils';
 import {
   noSuggestions,
   getColumnsFromTableSymbol,
@@ -64,8 +63,7 @@ function suggestRecordRowInTopLevelRecords (
   if (!(recordsElement.name instanceof CallExpressionNode)) return noSuggestions();
 
   const columnElements = recordsElement.name.argumentList?.elementList || [];
-  const nodeToReferee = compiler.bindFile(filepath).getValue().nodeToReferee;
-  const columnSymbols = columnElements.map((e) => extractReferee(e, nodeToReferee));
+  const columnSymbols = columnElements.map((e) => extractReferee(compiler, filepath, e));
   if (!columnSymbols || columnSymbols.length === 0) return noSuggestions();
 
   const columns = columnElements
@@ -110,8 +108,7 @@ function suggestRecordRowInNestedRecords (
     return noSuggestions();
   }
 
-  const { nodeToReferee } = compiler.bindFile(filepath).getValue();
-  const tableSymbol = compiler.symbol.nodeSymbol(parent, filepath);
+  const tableSymbol = compiler.resolvedSymbol(parent, filepath);
   if (!(tableSymbol instanceof TableSymbol)) {
     return noSuggestions();
   }
@@ -122,7 +119,7 @@ function suggestRecordRowInNestedRecords (
     // Explicit columns from tuple: records (col1, col2)
     const columnElements = recordsElement.name.elementList;
     const columnSymbols = columnElements
-      .map((e) => extractReferee(e, nodeToReferee))
+      .map((e) => extractReferee(compiler, filepath, e))
       .filter((s) => s !== undefined);
 
     columns = columnElements

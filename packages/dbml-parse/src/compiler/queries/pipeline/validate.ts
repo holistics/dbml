@@ -1,47 +1,20 @@
 import type Compiler from '../../index';
-import type { SyntaxNode, UseDeclarationNode } from '@/core/parser/nodes';
-import type { NodeToSymbolMap } from '@/core/types';
-import type { CompileError, CompileWarning } from '@/core/errors';
-import type { Filepath, FilepathId } from '../../projectLayout';
-import Validator from '@/core/validator/validator';
-import { NodeSymbolIdGenerator, SchemaSymbol } from '@/core/validator/symbol/symbols';
-import SymbolFactory from '@/core/validator/symbol/factory';
-import SymbolTable from '@/core/validator/symbol/symbolTable';
+import { UseDeclarationNode } from '@/core/parser/nodes';
+import { Filepath, type FilepathId } from '../../projectLayout';
 
-// WARNING: symbolTable contains unresolved ExternalSymbols.
-// Most consumers should use bindFile instead.
-export type FileLocalSymbolIndex = {
-  readonly path: Readonly<Filepath>;
-  readonly symbolTable: Readonly<SymbolTable>;
-  readonly symbolIdGenerator: NodeSymbolIdGenerator;
-  readonly nodeToSymbol: NodeToSymbolMap;
-  readonly externalFilepaths: ReadonlyMap<FilepathId, UseDeclarationNode>;
-  readonly errors: readonly CompileError[];
-  readonly warnings: readonly CompileWarning[];
-};
+const DBML_EXT = '.dbml';
 
-export function localSymbolTable (this: Compiler, filepath: Filepath): Readonly<SymbolTable> {
-  return this.validateFile(filepath).symbolTable;
-}
-
+// Scan use declarations from the parsed AST to extract external file dependencies.
 export function localFileDependencies (this: Compiler, filepath: Filepath): ReadonlyMap<FilepathId, UseDeclarationNode> {
-  return this.validateFile(filepath).externalFilepaths;
-}
-
-export function validateFile (this: Compiler, filepath: Filepath): FileLocalSymbolIndex {
   const fileIndex = this.parseFile(filepath);
-  const symbolIdGenerator = new NodeSymbolIdGenerator();
-  const symbolFactory = new SymbolFactory(symbolIdGenerator, filepath);
-  const nodeToSymbol: NodeToSymbolMap = new Map();
-  const fileSymbol = symbolFactory.create(SchemaSymbol, { symbolTable: new SymbolTable() });
-  nodeToSymbol.set(fileIndex.ast, fileSymbol);
+  const deps = new Map<FilepathId, UseDeclarationNode>();
 
-  const validationReport = new Validator({ ast: fileIndex.ast, filepath, nodeToSymbol }, symbolFactory).validate();
-  const { externalFilepaths } = validationReport.getValue();
+  for (const node of fileIndex.ast.body) {
+    if (!(node instanceof UseDeclarationNode) || !node.path) continue;
+    const resolved = Filepath.resolve(filepath.dirname, node.path.value);
+    const resolvedPath = resolved.absolute.endsWith(DBML_EXT) ? resolved : Filepath.from(resolved.absolute + DBML_EXT);
+    deps.set(resolvedPath.intern(), node);
+  }
 
-  return {
-    path: fileIndex.path, symbolTable: fileSymbol.symbolTable, symbolIdGenerator, nodeToSymbol, externalFilepaths,
-    errors: [...fileIndex.errors, ...validationReport.getErrors()],
-    warnings: [...fileIndex.warnings, ...validationReport.getWarnings()],
-  };
+  return deps;
 }

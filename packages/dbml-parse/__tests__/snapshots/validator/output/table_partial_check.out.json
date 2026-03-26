@@ -5065,17 +5065,21 @@
     "symbol": {
       "symbolTable": {
         "TablePartial:Users": {
+          "references": [],
           "id": 1,
           "symbolTable": {
             "Column:balance": {
+              "references": [],
               "id": 2,
               "declaration": 10
             },
             "Column:dependents": {
+              "references": [],
               "id": 3,
               "declaration": 22
             },
             "Column:invalid_col": {
+              "references": [],
               "id": 4,
               "declaration": 48
             }

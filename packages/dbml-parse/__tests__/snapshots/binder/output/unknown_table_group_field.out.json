@@ -928,18 +928,22 @@
     "symbol": {
       "symbolTable": {
         "Table:Users": {
+          "references": [],
           "id": 1,
           "symbolTable": {},
           "declaration": 3
         },
         "TableGroup:Group": {
+          "references": [],
           "id": 2,
           "symbolTable": {
             "TableGroup field:Users": {
+              "references": [],
               "id": 3,
               "declaration": 8
             },
             "TableGroup field:Products": {
+              "references": [],
               "id": 4,
               "declaration": 11
             }

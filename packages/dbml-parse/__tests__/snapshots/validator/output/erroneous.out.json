@@ -5579,9 +5579,11 @@
     "symbol": {
       "symbolTable": {
         "Table:users": {
+          "references": [],
           "id": 1,
           "symbolTable": {
             "Column:id": {
+              "references": [],
               "id": 2,
               "declaration": 13
             }
@@ -5589,9 +5591,11 @@
           "declaration": 15
         },
         "Table:U": {
+          "references": [],
           "id": 1,
           "symbolTable": {
             "Column:id": {
+              "references": [],
               "id": 2,
               "declaration": 13
             }
@@ -5599,17 +5603,21 @@
           "declaration": 15
         },
         "Table:user_role_in_diagram": {
+          "references": [],
           "id": 3,
           "symbolTable": {
             "Column:user_id": {
+              "references": [],
               "id": 4,
               "declaration": 22
             },
             "Column:diagram_id": {
+              "references": [],
               "id": 5,
               "declaration": 27
             },
             "Column:role": {
+              "references": [],
               "id": 6,
               "declaration": 39
             }
@@ -5617,13 +5625,16 @@
           "declaration": 41
         },
         "Table:permissions": {
+          "references": [],
           "id": 7,
           "symbolTable": {
             "Column:bit": {
+              "references": [],
               "id": 8,
               "declaration": 52
             },
             "Column:name": {
+              "references": [],
               "id": 9,
               "declaration": 57
             }
@@ -5631,9 +5642,11 @@
           "declaration": 59
         },
         "Table:diagrams": {
+          "references": [],
           "id": 10,
           "symbolTable": {
             "Column:id": {
+              "references": [],
               "id": 11,
               "declaration": 71
             }

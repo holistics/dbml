@@ -2644,17 +2644,21 @@
     "symbol": {
       "symbolTable": {
         "Table:Users": {
+          "references": [],
           "id": 1,
           "symbolTable": {
             "Column:id": {
+              "references": [],
               "id": 2,
               "declaration": 6
             },
             "Column:status": {
+              "references": [],
               "id": 3,
               "declaration": 19
             },
             "Column:referrer": {
+              "references": [],
               "id": 4,
               "declaration": 30
             }
@@ -2662,17 +2666,20 @@
           "declaration": 32
         },
         "Schema:v2": {
+          "references": [],
           "id": 6,
-          "externalFilepaths": [],
           "symbolTable": {
             "Enum:status": {
+              "references": [],
               "id": 5,
               "symbolTable": {
                 "Enum field:churn": {
+                  "references": [],
                   "id": 7,
                   "declaration": 40
                 },
                 "Enum field:new": {
+                  "references": [],
                   "id": 8,
                   "declaration": 48
                 }

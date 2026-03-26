@@ -52,14 +52,12 @@ export default class Validator {
         if (decl.type === undefined) return;
         const Val = pickElementValidator(decl as ElementDeclarationNode & { type: SyntaxToken });
         const validatorObject = new Val(
-          {
-            declarationNode: decl as ElementDeclarationNode & { type: SyntaxToken },
-            publicSymbolTable: this.publicSchemaSymbol.symbolTable,
-            nodeToSymbol: this.nodeToSymbol,
-          },
+          decl as ElementDeclarationNode & { type: SyntaxToken },
+          this.publicSchemaSymbol.symbolTable,
+          this.nodeToSymbol,
           this.symbolFactory,
         );
-        errors.push(...validatorObject.validate().errors);
+        errors.push(...validatorObject.validate());
       } else {
         errors.push(...new UseDeclarationValidator(
           { node: decl, filepath: this.filepath, publicSymbolTable: this.publicSchemaSymbol.symbolTable, declarations: this.nodeToSymbol },

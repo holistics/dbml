@@ -3396,13 +3396,16 @@
     "symbol": {
       "symbolTable": {
         "Table:A": {
+          "references": [],
           "id": 1,
           "symbolTable": {
             "Column:id": {
+              "references": [],
               "id": 2,
               "declaration": 6
             },
             "Column:code": {
+              "references": [],
               "id": 3,
               "declaration": 11
             }
@@ -3410,13 +3413,16 @@
           "declaration": 13
         },
         "Table:B": {
+          "references": [],
           "id": 4,
           "symbolTable": {
             "Column:id": {
+              "references": [],
               "id": 5,
               "declaration": 20
             },
             "Column:code": {
+              "references": [],
               "id": 6,
               "declaration": 25
             }
@@ -3424,13 +3430,16 @@
           "declaration": 27
         },
         "Table:C": {
+          "references": [],
           "id": 7,
           "symbolTable": {
             "Column:id": {
+              "references": [],
               "id": 8,
               "declaration": 34
             },
             "Column:code": {
+              "references": [],
               "id": 9,
               "declaration": 39
             }

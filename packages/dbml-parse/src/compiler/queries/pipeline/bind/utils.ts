@@ -1,18 +1,17 @@
 import type Compiler from '../../../index';
 import { Filepath } from '../../../projectLayout';
-import { ExternalSymbol, NodeSymbol, SchemaSymbol, TableGroupSymbol } from '@/core/validator/symbol/symbols';
+import { ExternalSymbol, NodeSymbol, SchemaSymbol, TableGroupSymbol, NodeSymbolIdGenerator } from '@/core/validator/symbol/symbols';
 import { BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode } from '@/core/parser/nodes';
 import { destructureComplexVariable } from '@/core/utils';
 import { registerSchemaStack } from '@/core/validator/utils';
+import Validator from '@/core/validator/validator';
 import SymbolFactory from '@/core/validator/symbol/factory';
 import { createNodeSymbolIndex, destructureIndex, SymbolKind } from '@/core/validator/symbol/symbolIndex';
 import SymbolTable from '@/core/validator/symbol/symbolTable';
 import Report from '@/core/report';
 import { CompileError, CompileErrorCode } from '@/core/errors';
+import type { NodeToSymbolMap } from '@/core/types';
 
-// Walk a path of { name, kind } steps from a starting symbol table.
-// Each intermediate step must resolve to a symbol with a sub-table.
-// Returns the final symbol, or undefined if any step fails.
 function lookupSymbol (
   table: Readonly<SymbolTable>,
   path: { name: string; kind: SymbolKind }[],
@@ -29,36 +28,59 @@ function lookupSymbol (
   return undefined;
 }
 
+// Validate a single file locally (no cross-file resolution).
+// Used to get the local symbol table of external files during dependency resolution.
+function validateFileLocal (compiler: Compiler, filepath: Filepath): {
+  symbolTable: SymbolTable;
+  errors: CompileError[];
+} {
+  const fileIndex = compiler.parseFile(filepath);
+  const symbolIdGenerator = new NodeSymbolIdGenerator();
+  const symbolFactory = new SymbolFactory(symbolIdGenerator, filepath);
+  const nodeToSymbol: NodeToSymbolMap = new Map();
+  const fileSymbol = symbolFactory.create(SchemaSymbol, { symbolTable: new SymbolTable() });
+  nodeToSymbol.set(fileIndex.ast, fileSymbol);
+
+  const validationReport = new Validator({ ast: fileIndex.ast, filepath, nodeToSymbol }, symbolFactory).validate();
+
+  return {
+    symbolTable: fileSymbol.symbolTable,
+    errors: [...fileIndex.errors, ...validationReport.getErrors()],
+  };
+}
+
 // Resolve all `use` declarations for a file. Clones the local table and returns the resolved copy.
 export function resolveExternalDependencies (
   compiler: Compiler,
   currentFilepath: Filepath,
+  local: { symbolTable: Readonly<SymbolTable>; symbolIdGenerator: NodeSymbolIdGenerator; nodeToSymbol: NodeToSymbolMap },
 ): Report<SymbolTable> {
-  const { symbolTable: localTable, symbolIdGenerator, externalFilepaths } = compiler.validateFile(currentFilepath);
+  const externalFilepaths = compiler.localFileDependencies(currentFilepath);
   const ctx = {
-    symbolFactory: new SymbolFactory(symbolIdGenerator, currentFilepath),
+    symbolFactory: new SymbolFactory(local.symbolIdGenerator, currentFilepath),
     clonedSchemas: new WeakSet<SchemaSymbol>(),
   };
-  const resolvedTable = localTable.clone();
+  const resolvedTable = local.symbolTable.clone();
   const errors: CompileError[] = [];
 
   for (const [filepathKey, useNode] of externalFilepaths) {
     const externalFilepath = Filepath.from(filepathKey);
-    const externalLocal = compiler.validateFile(externalFilepath);
+    const externalLocal = validateFileLocal(compiler, externalFilepath);
 
     if (externalLocal.errors.length > 0) continue;
 
+    const externalTable = externalLocal.symbolTable;
+
     if (!useNode.specifiers) {
-      errors.push(...resolveWholeFileUse({ resolvedTable, externalTable: externalLocal.symbolTable, externalFilepath, ...ctx }));
+      errors.push(...resolveWholeFileUse({ resolvedTable, externalTable, externalFilepath, ...ctx }));
     } else {
-      errors.push(...resolveSelectiveUse({ resolvedTable, externalTable: externalLocal.symbolTable, externalFilepath, ...ctx }));
+      errors.push(...resolveSelectiveUse({ resolvedTable, externalTable, externalFilepath, ...ctx }));
     }
   }
 
   return new Report(resolvedTable, errors);
 }
 
-// `use './b.dbml'`: merge all symbols from the external file (except its own imports).
 function resolveWholeFileUse ({ resolvedTable, externalTable, externalFilepath, symbolFactory, clonedSchemas }: {
   resolvedTable: SymbolTable;
   externalTable: Readonly<SymbolTable>;
@@ -70,9 +92,6 @@ function resolveWholeFileUse ({ resolvedTable, externalTable, externalFilepath, 
   return mergeSymbolTables({ target: resolvedTable, source: externalTable, symbolFactory, clonedSchemas });
 }
 
-// `use { table T } from './b.dbml'`:
-//  - Replace ExternalSymbol placeholders with the real symbols.
-//  - For `use { schema S }`, merge the external schema's contents into the local one.
 function resolveSelectiveUse ({ resolvedTable, externalTable, externalFilepath, symbolFactory, clonedSchemas }: {
   resolvedTable: SymbolTable;
   externalTable: Readonly<SymbolTable>;
@@ -82,13 +101,9 @@ function resolveSelectiveUse ({ resolvedTable, externalTable, externalFilepath, 
 }): CompileError[] {
   const errors: CompileError[] = [];
 
-  // Replace placeholders (recurses into schema sub-tables)
   replacePlaceholders(resolvedTable, externalTable, externalFilepath);
-
-  // Pull member tables of imported tablegroups into scope
   pullTableGroupMembers(resolvedTable, externalTable, symbolFactory);
 
-  // Merge imported schemas
   for (const [symbolId, symbol] of resolvedTable.entries()) {
     if (!(symbol instanceof SchemaSymbol)) continue;
     if (!symbol.externalFilepaths.some((fp) => fp.equals(externalFilepath))) continue;
@@ -110,10 +125,6 @@ function resolveSelectiveUse ({ resolvedTable, externalTable, externalFilepath, 
   return errors;
 }
 
-// Recursively merge source into target, skipping ExternalSymbols.
-//  - New entries: inserted directly.
-//  - Both schemas: clone on write, recurse.
-//  - Other duplicates: report error.
 function mergeSymbolTables ({ target, source, schemaPath, symbolFactory, clonedSchemas }: {
   target: SymbolTable;
   source: Readonly<SymbolTable>;
@@ -128,13 +139,11 @@ function mergeSymbolTables ({ target, source, schemaPath, symbolFactory, clonedS
 
     const existing = target.get(entryId);
 
-    // New entry - insert
     if (existing === undefined) {
       target.set(entryId, entrySymbol);
       continue;
     }
 
-    // Both schemas - clone on write, recurse
     if (existing instanceof SchemaSymbol && entrySymbol instanceof SchemaSymbol) {
       const nestedName = destructureIndex(entryId).unwrap_or(undefined)?.name ?? entryId;
       let nested = existing;
@@ -149,7 +158,6 @@ function mergeSymbolTables ({ target, source, schemaPath, symbolFactory, clonedS
       continue;
     }
 
-    // Same symbol by reference or from the same source file — skip
     if (existing === entrySymbol || existing.filepath.intern() === entrySymbol.filepath.intern()) {
       continue;
     }
@@ -165,9 +173,6 @@ function mergeSymbolTables ({ target, source, schemaPath, symbolFactory, clonedS
   return errors;
 }
 
-// Replace ExternalSymbol placeholders with real symbols from the external file.
-// Recurses into SchemaSymbol sub-tables since ExternalSymbols can be nested
-// (e.g. `use { table S.T } from './b.dbml'` places the placeholder inside schema S).
 function replacePlaceholders (
   table: SymbolTable,
   externalTable: Readonly<SymbolTable>,
@@ -187,9 +192,6 @@ function replacePlaceholders (
   }
 }
 
-// When a TableGroup is imported, also pull its member tables into scope.
-// Traverses the tablegroup's declaration AST to extract field names (simple or schema-qualified),
-// then looks up the corresponding table in the external file and inserts it into the resolved table.
 function pullTableGroupMembers (
   resolvedTable: SymbolTable,
   externalTable: Readonly<SymbolTable>,
@@ -209,7 +211,6 @@ function pullTableGroupMembers (
       const tableName = fragments.pop()!;
       const schemaNames = fragments;
 
-      // Look up the table in the external file
       const path = [
         ...schemaNames.map((name) => ({ name, kind: SymbolKind.Schema })),
         { name: tableName, kind: SymbolKind.Table },
@@ -217,7 +218,6 @@ function pullTableGroupMembers (
       const tableSymbol = lookupSymbol(externalTable, path);
       if (!tableSymbol) continue;
 
-      // Ensure parent schemas exist in the resolved table, then insert the table
       const targetTable = registerSchemaStack(schemaNames, resolvedTable, symbolFactory);
       const tableId = createNodeSymbolIndex(tableName, SymbolKind.Table);
       if (!targetTable.has(tableId)) {
