@@ -3,16 +3,11 @@ import { SyntaxNodeKind, ElementDeclarationNode, BlockExpressionNode } from '@/c
 import { TableSymbol, EnumSymbol, TableGroupSymbol, TablePartialSymbol, ColumnSymbol, EnumFieldSymbol, SchemaSymbol } from '@/core/analyzer/symbol/symbols';
 import { Compiler } from '@/index';
 
-function createCompiler (source: string): Compiler {
-  const compiler = new Compiler();
-  compiler.setSource(source);
-  return compiler;
-}
-
 describe('[example] binder', () => {
   describe('Table', () => {
     test('should create TableSymbol with correct properties', () => {
-      const compiler = createCompiler('Table users { id int }');
+      const compiler = new Compiler();
+      compiler.setSource('Table users { id int }');
       const { ast } = compiler.parseFile().getValue();
       const elements = ast.body.filter((n): n is ElementDeclarationNode => n.kind === SyntaxNodeKind.ELEMENT_DECLARATION);
       const tableNode = elements[0];
@@ -47,7 +42,8 @@ describe('[example] binder', () => {
           email varchar
         }
       `;
-      const compiler = createCompiler(source);
+      const compiler = new Compiler();
+      compiler.setSource(source);
       const { ast } = compiler.parseFile().getValue();
       const tableNode = ast.body[0] as ElementDeclarationNode;
       const tableSymbol = compiler.resolvedSymbol(tableNode) as TableSymbol;
@@ -77,7 +73,8 @@ describe('[example] binder', () => {
         Table users { id int\n name varchar }
         Table posts { id int\n name varchar }
       `;
-      const compiler = createCompiler(source);
+      const compiler = new Compiler();
+      compiler.setSource(source);
       const parseErrors = compiler.parseFile().getErrors();
       const analyzeErrors = compiler.analyzeFile().getErrors();
       expect([...parseErrors, ...analyzeErrors]).toHaveLength(0);
@@ -100,7 +97,8 @@ describe('[example] binder', () => {
         Table users { id int }
         Table users { email varchar }
       `;
-      const compiler = createCompiler(source);
+      const compiler = new Compiler();
+      compiler.setSource(source);
       const errors = [...compiler.parseFile().getErrors(), ...compiler.analyzeFile().getErrors()];
 
       expect(errors).toHaveLength(1);
@@ -112,7 +110,8 @@ describe('[example] binder', () => {
         Table auth.users { id int }
         Table public.users { id int }
       `;
-      const compiler = createCompiler(source);
+      const compiler = new Compiler();
+      compiler.setSource(source);
       const errors = [...compiler.parseFile().getErrors(), ...compiler.analyzeFile().getErrors()];
       expect(errors).toHaveLength(0);
 
@@ -134,7 +133,8 @@ describe('[example] binder', () => {
         TableGroup g1 { U }
         Ref: U.id < U.id
       `;
-      const compiler = createCompiler(source);
+      const compiler = new Compiler();
+      compiler.setSource(source);
       const errors = [...compiler.parseFile().getErrors(), ...compiler.analyzeFile().getErrors()];
       expect(errors).toHaveLength(0);
 
@@ -157,7 +157,8 @@ describe('[example] binder', () => {
           manager_id int [ref: > employees.id]
         }
       `;
-      const compiler = createCompiler(source);
+      const compiler = new Compiler();
+      compiler.setSource(source);
       const errors = [...compiler.parseFile().getErrors(), ...compiler.analyzeFile().getErrors()];
       expect(errors).toHaveLength(0);
 
@@ -171,14 +172,17 @@ describe('[example] binder', () => {
     });
 
     test('should handle deeply nested schema names and quoted identifiers', () => {
-      const compiler1 = createCompiler('Table a.b.c { id int }');
+      const compiler1 = new Compiler();
+      compiler1.setSource('Table a.b.c { id int }');
       const errors1 = [...compiler1.parseFile().getErrors(), ...compiler1.analyzeFile().getErrors()];
       expect(errors1).toHaveLength(0);
       const { ast: ast1 } = compiler1.parseFile().getValue();
       const schemaSymbol1 = compiler1.resolvedSymbol(ast1) as SchemaSymbol;
       expect(schemaSymbol1.symbolTable.get('Schema:a')).toBeInstanceOf(SchemaSymbol);
 
-      const compiler2 = createCompiler('Table "user-table" { "user-id" int }');
+      const compiler2 = new Compiler();
+
+      compiler2.setSource('Table "user-table" { "user-id" int }');
       const errors2 = [...compiler2.parseFile().getErrors(), ...compiler2.analyzeFile().getErrors()];
       expect(errors2).toHaveLength(0);
       const { ast: ast2 } = compiler2.parseFile().getValue();
@@ -190,7 +194,8 @@ describe('[example] binder', () => {
   describe('Column', () => {
     test('should create ColumnSymbol with correct properties', () => {
       const source = 'Table users { id int [pk] }';
-      const compiler = createCompiler(source);
+      const compiler = new Compiler();
+      compiler.setSource(source);
       const { ast } = compiler.parseFile().getValue();
       const tableElement = ast.body[0] as ElementDeclarationNode;
       const tableBody = tableElement.body as BlockExpressionNode;
@@ -214,7 +219,8 @@ describe('[example] binder', () => {
           id varchar
         }
       `;
-      const compiler = createCompiler(source);
+      const compiler = new Compiler();
+      compiler.setSource(source);
       const errors = [...compiler.parseFile().getErrors(), ...compiler.analyzeFile().getErrors()];
 
       expect(errors).toHaveLength(2);
@@ -231,7 +237,8 @@ describe('[example] binder', () => {
           status varchar [not null, unique]
         }
       `;
-      const compiler = createCompiler(source);
+      const compiler = new Compiler();
+      compiler.setSource(source);
       const errors = [...compiler.parseFile().getErrors(), ...compiler.analyzeFile().getErrors()];
       expect(errors).toHaveLength(0);
 
@@ -250,7 +257,8 @@ describe('[example] binder', () => {
         Table users { id int [pk] }
         Table posts { user_id int [ref: > users.id] }
       `;
-      const compiler = createCompiler(source);
+      const compiler = new Compiler();
+      compiler.setSource(source);
       const { ast } = compiler.parseFile().getValue();
       const elements = ast.body.filter((n): n is ElementDeclarationNode => n.kind === SyntaxNodeKind.ELEMENT_DECLARATION);
       const usersTable = elements[0];
@@ -270,7 +278,8 @@ describe('[example] binder', () => {
         Table comments { user_id int [ref: > users.id] }
         Table likes { user_id int [ref: > users.id] }
       `;
-      const compiler = createCompiler(source);
+      const compiler = new Compiler();
+      compiler.setSource(source);
       const { ast } = compiler.parseFile().getValue();
       const elements = ast.body.filter((n): n is ElementDeclarationNode => n.kind === SyntaxNodeKind.ELEMENT_DECLARATION);
       const usersTable = elements[0];
@@ -304,7 +313,8 @@ describe('[example] binder', () => {
           }
         }
       `;
-      const compiler = createCompiler(source);
+      const compiler = new Compiler();
+      compiler.setSource(source);
       const errors = [...compiler.parseFile().getErrors(), ...compiler.analyzeFile().getErrors()];
       expect(errors).toHaveLength(0);
 
@@ -323,7 +333,8 @@ describe('[example] binder', () => {
           }
         }
       `;
-      const compiler = createCompiler(source);
+      const compiler = new Compiler();
+      compiler.setSource(source);
       const errors = [...compiler.parseFile().getErrors(), ...compiler.analyzeFile().getErrors()];
 
       expect(errors).toHaveLength(1);
@@ -342,7 +353,8 @@ describe('[example] binder', () => {
           }
         }
       `;
-      const compiler = createCompiler(source);
+      const compiler = new Compiler();
+      compiler.setSource(source);
       const errors = [...compiler.parseFile().getErrors(), ...compiler.analyzeFile().getErrors()];
       expect(errors).toHaveLength(0);
 
@@ -362,7 +374,8 @@ describe('[example] binder', () => {
           inactive
         }
       `;
-      const compiler = createCompiler(source);
+      const compiler = new Compiler();
+      compiler.setSource(source);
       const { ast } = compiler.parseFile().getValue();
       const elements = ast.body.filter((n): n is ElementDeclarationNode => n.kind === SyntaxNodeKind.ELEMENT_DECLARATION);
       const enumNode = elements[0];
@@ -387,7 +400,8 @@ describe('[example] binder', () => {
           rejected
         }
       `;
-      const compiler = createCompiler(source);
+      const compiler = new Compiler();
+      compiler.setSource(source);
       const errors = [...compiler.parseFile().getErrors(), ...compiler.analyzeFile().getErrors()];
       expect(errors).toHaveLength(0);
 
@@ -415,7 +429,8 @@ describe('[example] binder', () => {
           active
         }
       `;
-      const compiler = createCompiler(source);
+      const compiler = new Compiler();
+      compiler.setSource(source);
       const errors = [...compiler.parseFile().getErrors(), ...compiler.analyzeFile().getErrors()];
 
       expect(errors).toHaveLength(2);
@@ -428,7 +443,8 @@ describe('[example] binder', () => {
         Enum a { val1\n val2 }
         Enum b { val1\n val2 }
       `;
-      const compiler = createCompiler(source);
+      const compiler = new Compiler();
+      compiler.setSource(source);
       const errors = [...compiler.parseFile().getErrors(), ...compiler.analyzeFile().getErrors()];
       expect(errors).toHaveLength(0);
 
@@ -454,7 +470,8 @@ describe('[example] binder', () => {
           status status
         }
       `;
-      const compiler = createCompiler(source);
+      const compiler = new Compiler();
+      compiler.setSource(source);
       const errors = [...compiler.parseFile().getErrors(), ...compiler.analyzeFile().getErrors()];
       expect(errors).toHaveLength(0);
 
@@ -475,7 +492,8 @@ describe('[example] binder', () => {
           status types.status
         }
       `;
-      const compiler = createCompiler(source);
+      const compiler = new Compiler();
+      compiler.setSource(source);
       const errors = [...compiler.parseFile().getErrors(), ...compiler.analyzeFile().getErrors()];
       expect(errors).toHaveLength(0);
 
@@ -492,7 +510,8 @@ describe('[example] binder', () => {
         }
         Enum status_enum { active\n inactive }
       `;
-      const compiler = createCompiler(source);
+      const compiler = new Compiler();
+      compiler.setSource(source);
       const errors = [...compiler.parseFile().getErrors(), ...compiler.analyzeFile().getErrors()];
       expect(errors).toHaveLength(0);
 
@@ -514,7 +533,8 @@ describe('[example] binder', () => {
           status order_status [default: order_status.pending]
         }
       `;
-      const compiler = createCompiler(source);
+      const compiler = new Compiler();
+      compiler.setSource(source);
       const errors = [...compiler.parseFile().getErrors(), ...compiler.analyzeFile().getErrors()];
       expect(errors).toHaveLength(0);
 
@@ -540,7 +560,8 @@ describe('[example] binder', () => {
           status types.status [default: types.status.active]
         }
       `;
-      const compiler = createCompiler(source);
+      const compiler = new Compiler();
+      compiler.setSource(source);
       const errors = [...compiler.parseFile().getErrors(), ...compiler.analyzeFile().getErrors()];
       expect(errors).toHaveLength(0);
 
@@ -562,7 +583,8 @@ describe('[example] binder', () => {
           status status [default: status.nonexistent]
         }
       `;
-      const compiler = createCompiler(source);
+      const compiler = new Compiler();
+      compiler.setSource(source);
       const errors = [...compiler.parseFile().getErrors(), ...compiler.analyzeFile().getErrors()];
       expect(errors.length).toBe(1);
       expect(errors[0].diagnostic).toBe("Enum field 'nonexistent' does not exist in Enum 'status'");
@@ -574,7 +596,8 @@ describe('[example] binder', () => {
           status varchar [default: nonexistent_enum.value]
         }
       `;
-      const compiler = createCompiler(source);
+      const compiler = new Compiler();
+      compiler.setSource(source);
       const errors = [...compiler.parseFile().getErrors(), ...compiler.analyzeFile().getErrors()];
       expect(errors.length).toBe(1);
       expect(errors[0].diagnostic).toBe("Enum 'nonexistent_enum' does not exist in Schema 'public'");
@@ -586,7 +609,8 @@ describe('[example] binder', () => {
           name varchar [default: "hello"]
         }
       `;
-      const compiler = createCompiler(source);
+      const compiler = new Compiler();
+      compiler.setSource(source);
       const errors = [...compiler.parseFile().getErrors(), ...compiler.analyzeFile().getErrors()];
       expect(errors).toHaveLength(0);
     });
@@ -597,7 +621,8 @@ describe('[example] binder', () => {
           name varchar [default: \`hello\`]
         }
       `;
-      const compiler = createCompiler(source);
+      const compiler = new Compiler();
+      compiler.setSource(source);
       const errors = [...compiler.parseFile().getErrors(), ...compiler.analyzeFile().getErrors()];
       expect(errors).toHaveLength(0);
     });
@@ -608,7 +633,8 @@ describe('[example] binder', () => {
           name varchar [default: null]
         }
       `;
-      const compiler = createCompiler(source);
+      const compiler = new Compiler();
+      compiler.setSource(source);
       const errors = [...compiler.parseFile().getErrors(), ...compiler.analyzeFile().getErrors()];
       expect(errors).toHaveLength(0);
     });
@@ -619,7 +645,8 @@ describe('[example] binder', () => {
           active boolean [default: true]
         }
       `;
-      const compiler = createCompiler(source);
+      const compiler = new Compiler();
+      compiler.setSource(source);
       const errors = [...compiler.parseFile().getErrors(), ...compiler.analyzeFile().getErrors()];
       expect(errors).toHaveLength(0);
     });
@@ -630,7 +657,8 @@ describe('[example] binder', () => {
           active boolean [default: false]
         }
       `;
-      const compiler = createCompiler(source);
+      const compiler = new Compiler();
+      compiler.setSource(source);
       const errors = [...compiler.parseFile().getErrors(), ...compiler.analyzeFile().getErrors()];
       expect(errors).toHaveLength(0);
     });
@@ -642,7 +670,8 @@ describe('[example] binder', () => {
           status varchar [default: true.value]
         }
       `;
-      const compiler = createCompiler(source);
+      const compiler = new Compiler();
+      compiler.setSource(source);
       const errors = [...compiler.parseFile().getErrors(), ...compiler.analyzeFile().getErrors()];
       expect(errors.length).toBe(1);
       expect(errors[0].diagnostic).toBe("Enum 'true' does not exist in Schema 'public'");
@@ -657,7 +686,8 @@ describe('[example] binder', () => {
           status true [default: true.value]
         }
       `;
-      const compiler = createCompiler(source);
+      const compiler = new Compiler();
+      compiler.setSource(source);
       const errors = [...compiler.parseFile().getErrors(), ...compiler.analyzeFile().getErrors()];
       expect(errors.length).toBe(1);
       expect(errors[0].diagnostic).toBe("Enum field 'value' does not exist in Enum 'true'");
@@ -673,7 +703,8 @@ describe('[example] binder', () => {
           status true [default: true.value]
         }
       `;
-      const compiler = createCompiler(source);
+      const compiler = new Compiler();
+      compiler.setSource(source);
       const errors = [...compiler.parseFile().getErrors(), ...compiler.analyzeFile().getErrors()];
       expect(errors).toHaveLength(0);
 
@@ -696,7 +727,8 @@ describe('[example] binder', () => {
           status varchar [default: "hello".abc]
         }
       `;
-      const compiler = createCompiler(source);
+      const compiler = new Compiler();
+      compiler.setSource(source);
       const errors = [...compiler.parseFile().getErrors(), ...compiler.analyzeFile().getErrors()];
       expect(errors.length).toBe(1);
       expect(errors[0].diagnostic).toBe("Enum 'hello' does not exist in Schema 'public'");
@@ -710,7 +742,8 @@ describe('[example] binder', () => {
         Table posts { user_id int }
         Ref: posts.user_id > users.id
       `;
-      const compiler = createCompiler(source);
+      const compiler = new Compiler();
+      compiler.setSource(source);
       const errors = [...compiler.parseFile().getErrors(), ...compiler.analyzeFile().getErrors()];
       expect(errors).toHaveLength(0);
 
@@ -733,7 +766,8 @@ describe('[example] binder', () => {
         Table users { id int [pk] }
         Table posts { user_id int [ref: > users.id] }
       `;
-      const compiler = createCompiler(source);
+      const compiler = new Compiler();
+      compiler.setSource(source);
       const errors = [...compiler.parseFile().getErrors(), ...compiler.analyzeFile().getErrors()];
       expect(errors).toHaveLength(0);
 
@@ -755,7 +789,8 @@ describe('[example] binder', () => {
     });
 
     test('should detect unknown table and column references', () => {
-      const compiler1 = createCompiler('Ref: nonexistent.id > also_nonexistent.id');
+      const compiler1 = new Compiler();
+      compiler1.setSource('Ref: nonexistent.id > also_nonexistent.id');
       const errors1 = [...compiler1.parseFile().getErrors(), ...compiler1.analyzeFile().getErrors()];
       expect(errors1).toHaveLength(2);
       expect(errors1[0].diagnostic).toBe("Table 'nonexistent' does not exist in Schema 'public'");
@@ -765,7 +800,8 @@ describe('[example] binder', () => {
         Table users { id int }
         Table posts { user_id int [ref: > users.nonexistent] }
       `;
-      const compiler2 = createCompiler(source2);
+      const compiler2 = new Compiler();
+      compiler2.setSource(source2);
       const errors2 = [...compiler2.parseFile().getErrors(), ...compiler2.analyzeFile().getErrors()];
       expect(errors2).toHaveLength(1);
       expect(errors2[0].diagnostic).toBe("Column 'nonexistent' does not exist in Table 'users'");
@@ -777,7 +813,8 @@ describe('[example] binder', () => {
         Table public.posts { user_id int [ref: > auth.users.id] }
         Ref: auth.users.id < auth.users.id
       `;
-      const compiler = createCompiler(source);
+      const compiler = new Compiler();
+      compiler.setSource(source);
       const errors = [...compiler.parseFile().getErrors(), ...compiler.analyzeFile().getErrors()];
       expect(errors).toHaveLength(0);
 
@@ -801,7 +838,8 @@ describe('[example] binder', () => {
           post_id int [ref: > posts.id]
         }
       `;
-      const compiler = createCompiler(source);
+      const compiler = new Compiler();
+      compiler.setSource(source);
       const errors = [...compiler.parseFile().getErrors(), ...compiler.analyzeFile().getErrors()];
       expect(errors).toHaveLength(0);
 
@@ -826,7 +864,8 @@ describe('[example] binder', () => {
         Table users { id int }
         Table posts { user_id int }
       `;
-      const compiler = createCompiler(source);
+      const compiler = new Compiler();
+      compiler.setSource(source);
       const errors = [...compiler.parseFile().getErrors(), ...compiler.analyzeFile().getErrors()];
       expect(errors).toHaveLength(0);
 
@@ -842,7 +881,8 @@ describe('[example] binder', () => {
         Ref r1: users.id < users.id
         Ref r2: users.id < users.id
       `;
-      const compiler = createCompiler(source);
+      const compiler = new Compiler();
+      compiler.setSource(source);
       const { ast } = compiler.parseFile().getValue();
       const elements = ast.body.filter((n): n is ElementDeclarationNode => n.kind === SyntaxNodeKind.ELEMENT_DECLARATION);
       const usersSymbol = compiler.resolvedSymbol(elements[0]) as TableSymbol;
@@ -866,7 +906,8 @@ describe('[example] binder', () => {
         }
         Ref: orders.(merchant_id, country) > merchants.(id, country_code)
       `;
-      const compiler = createCompiler(source);
+      const compiler = new Compiler();
+      compiler.setSource(source);
       const errors = [...compiler.parseFile().getErrors(), ...compiler.analyzeFile().getErrors()];
       expect(errors).toHaveLength(0);
 
@@ -908,7 +949,8 @@ describe('[example] binder', () => {
         }
         Ref: shop.orders.(product_id, category) > shop.products.(id, category_id)
       `;
-      const compiler = createCompiler(source);
+      const compiler = new Compiler();
+      compiler.setSource(source);
       const errors = [...compiler.parseFile().getErrors(), ...compiler.analyzeFile().getErrors()];
       expect(errors).toHaveLength(0);
 
@@ -928,7 +970,8 @@ describe('[example] binder', () => {
         Table posts { user_id int }
         Ref: posts.(user_id, nonexistent) > users.(id, also_nonexistent)
       `;
-      const compiler = createCompiler(source);
+      const compiler = new Compiler();
+      compiler.setSource(source);
       const errors = [...compiler.parseFile().getErrors(), ...compiler.analyzeFile().getErrors()];
       expect(errors.length).toBe(2);
       expect(errors[0].diagnostic).toBe("Column 'nonexistent' does not exist in Table 'posts'");
@@ -938,7 +981,8 @@ describe('[example] binder', () => {
 
   describe('TablePartial', () => {
     test('should create TablePartialSymbol with correct properties', () => {
-      const compiler = createCompiler('TablePartial timestamps { created_at timestamp }');
+      const compiler = new Compiler();
+      compiler.setSource('TablePartial timestamps { created_at timestamp }');
       const { ast } = compiler.parseFile().getValue();
       const elements = ast.body.filter((n): n is ElementDeclarationNode => n.kind === SyntaxNodeKind.ELEMENT_DECLARATION);
       const partialNode = elements[0];
@@ -962,7 +1006,8 @@ describe('[example] binder', () => {
           ~timestamps
         }
       `;
-      const compiler = createCompiler(source);
+      const compiler = new Compiler();
+      compiler.setSource(source);
       const errors = [...compiler.parseFile().getErrors(), ...compiler.analyzeFile().getErrors()];
       expect(errors).toHaveLength(0);
 
@@ -983,7 +1028,8 @@ describe('[example] binder', () => {
           ~nonexistent_partial
         }
       `;
-      const compiler = createCompiler(source);
+      const compiler = new Compiler();
+      compiler.setSource(source);
       const errors = [...compiler.parseFile().getErrors(), ...compiler.analyzeFile().getErrors()];
 
       expect(errors).toHaveLength(1);
@@ -1000,7 +1046,8 @@ describe('[example] binder', () => {
           ~audit
         }
       `;
-      const compiler = createCompiler(source);
+      const compiler = new Compiler();
+      compiler.setSource(source);
       const errors = [...compiler.parseFile().getErrors(), ...compiler.analyzeFile().getErrors()];
       expect(errors).toHaveLength(0);
 
@@ -1024,7 +1071,8 @@ describe('[example] binder', () => {
         TablePartial base { id int }
         Table derived { ~base }
       `;
-      const compiler = createCompiler(source);
+      const compiler = new Compiler();
+      compiler.setSource(source);
       const errors = [...compiler.parseFile().getErrors(), ...compiler.analyzeFile().getErrors()];
       expect(errors).toHaveLength(0);
 
@@ -1047,7 +1095,8 @@ describe('[example] binder', () => {
         }
         TablePartial timestamps { created_at timestamp }
       `;
-      const compiler = createCompiler(source);
+      const compiler = new Compiler();
+      compiler.setSource(source);
       const errors = [...compiler.parseFile().getErrors(), ...compiler.analyzeFile().getErrors()];
       expect(errors).toHaveLength(0);
 
@@ -1066,7 +1115,8 @@ describe('[example] binder', () => {
           ~p2
         }
       `;
-      const compiler = createCompiler(source);
+      const compiler = new Compiler();
+      compiler.setSource(source);
       const errors = [...compiler.parseFile().getErrors(), ...compiler.analyzeFile().getErrors()];
       expect(errors.length).toEqual(1);
       expect(errors[0].diagnostic).toBe("TablePartial 'p2' does not exist in Schema 'public'");
@@ -1084,7 +1134,8 @@ describe('[example] binder', () => {
           col type [ref: > un_col]
         }
       `;
-      const compiler = createCompiler(source);
+      const compiler = new Compiler();
+      compiler.setSource(source);
       const errors = [...compiler.parseFile().getErrors(), ...compiler.analyzeFile().getErrors()];
       expect(errors.length).toBe(4);
 
@@ -1101,7 +1152,8 @@ describe('[example] binder', () => {
           col type [ref: > col]
         }
       `;
-      const compiler = createCompiler(source);
+      const compiler = new Compiler();
+      compiler.setSource(source);
       const errors = [...compiler.parseFile().getErrors(), ...compiler.analyzeFile().getErrors()];
       // Self-referential refs in table partials are allowed
       expect(errors.length).toBe(0);
@@ -1119,7 +1171,8 @@ describe('[example] binder', () => {
           col2 type [ref: > col3]
         }
       `;
-      const compiler = createCompiler(source);
+      const compiler = new Compiler();
+      compiler.setSource(source);
       const errors = [...compiler.parseFile().getErrors(), ...compiler.analyzeFile().getErrors()];
       // Circular refs via table partials are allowed
       expect(errors.length).toBe(0);
@@ -1140,7 +1193,8 @@ describe('[example] binder', () => {
           ~common
         }
       `;
-      const compiler = createCompiler(source);
+      const compiler = new Compiler();
+      compiler.setSource(source);
       const errors = [...compiler.parseFile().getErrors(), ...compiler.analyzeFile().getErrors()];
       expect(errors).toHaveLength(0);
 
@@ -1163,7 +1217,8 @@ describe('[example] binder', () => {
           users
         }
       `;
-      const compiler = createCompiler(source);
+      const compiler = new Compiler();
+      compiler.setSource(source);
       const { ast } = compiler.parseFile().getValue();
       const elements = ast.body.filter((n): n is ElementDeclarationNode => n.kind === SyntaxNodeKind.ELEMENT_DECLARATION);
       const tableGroup = elements.find((e) => e.type?.value === 'TableGroup');
@@ -1188,7 +1243,8 @@ describe('[example] binder', () => {
           posts
         }
       `;
-      const compiler = createCompiler(source);
+      const compiler = new Compiler();
+      compiler.setSource(source);
       const errors = [...compiler.parseFile().getErrors(), ...compiler.analyzeFile().getErrors()];
       expect(errors).toHaveLength(0);
 
@@ -1215,7 +1271,8 @@ describe('[example] binder', () => {
         }
         Table users { id int }
       `;
-      const compiler = createCompiler(source);
+      const compiler = new Compiler();
+      compiler.setSource(source);
       const errors = [...compiler.parseFile().getErrors(), ...compiler.analyzeFile().getErrors()];
       expect(errors).toHaveLength(0);
 

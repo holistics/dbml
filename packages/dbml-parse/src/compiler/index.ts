@@ -82,10 +82,6 @@ export default class Compiler {
     return renameTable.call(this, oldName, newName);
   }
 
-  applyTextEdits (edits: TextEdit[]): string {
-    return applyTextEdits(this.parse.source(), edits);
-  }
-
   readonly token = {
     invalidStream: this.query(invalidStream),
     flatStream: this.query(flatStream),
