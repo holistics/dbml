@@ -4,16 +4,16 @@ import {
   ElementDeclarationNode,
   FunctionApplicationNode,
   ProgramNode,
-} from '@/core/parser/nodes';
+} from '../../../parser/nodes';
 import { ElementBinder } from '../types';
-import { SyntaxToken } from '@/core/lexer/tokens';
-import { CompileError, CompileErrorCode } from '@/core/errors';
+import { SyntaxToken } from '../../../lexer/tokens';
+import { CompileError, CompileErrorCode } from '../../../errors';
 import { addSymbolReference, pickBinder, scanNonListNodeForBinding } from '../utils';
-import { destructureComplexVariable, extractVarNameFromPrimaryVariable, getElementKind } from '@/core/analyzer/utils';
-import { ElementKind } from '@/core/analyzer/types';
+import { destructureComplexVariable, extractVarNameFromPrimaryVariable, getElementKind } from '../../utils';
+import { ElementKind } from '../../types';
+import { createColumnSymbolIndex } from '../../symbol/symbolIndex';
+import SymbolFactory from '../../symbol/factory';
 import { BinderContext } from '@/core/analyzer/analyzer';
-import { createColumnSymbolIndex } from '@/core/analyzer/symbol/symbolIndex';
-import SymbolFactory from '@/core/analyzer/symbol/factory';
 
 export default class IndexesBinder implements ElementBinder {
   private symbolFactory: SymbolFactory;

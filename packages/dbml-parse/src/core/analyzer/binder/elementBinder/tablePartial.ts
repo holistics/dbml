@@ -1,15 +1,15 @@
 import { last, partition } from 'lodash-es';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, ProgramNode, SyntaxNode,
-} from '@/core/parser/nodes';
-import { SyntaxToken } from '@/core/lexer/tokens';
+} from '../../../parser/nodes';
+import { SyntaxToken } from '../../../lexer/tokens';
 import { ElementBinder } from '../types';
-import { CompileError } from '@/core/errors';
-import { aggregateSettingList } from '@/core/analyzer/validator/utils';
-import { destructureComplexVariableTuple } from '@/core/analyzer/utils';
+import { CompileError } from '../../../errors';
+import { aggregateSettingList } from '../../validator/utils';
+import { destructureComplexVariableTuple } from '../../utils';
 import { lookupAndBindInScope, pickBinder, scanNonListNodeForBinding } from '../utils';
-import { SymbolKind } from '@/core/analyzer/symbol/symbolIndex';
-import SymbolFactory from '@/core/analyzer/symbol/factory';
+import { SymbolKind } from '../../symbol/symbolIndex';
+import SymbolFactory from '../../symbol/factory';
 import { BinderContext } from '@/core/analyzer/analyzer';
 
 export default class TablePartialBinder implements ElementBinder {

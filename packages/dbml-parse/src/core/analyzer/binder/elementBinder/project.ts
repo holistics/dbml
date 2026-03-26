@@ -1,11 +1,11 @@
-import { SyntaxToken } from '@/core/lexer/tokens';
+import { SyntaxToken } from '../../../lexer/tokens';
 import { ElementBinder } from '../types';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ProgramNode,
-} from '@/core/parser/nodes';
-import { CompileError } from '@/core/errors';
+} from '../../../parser/nodes';
+import { CompileError } from '../../../errors';
 import { pickBinder } from '../utils';
-import SymbolFactory from '@/core/analyzer/symbol/factory';
+import SymbolFactory from '../../symbol/factory';
 import { BinderContext } from '@/core/analyzer/analyzer';
 
 export default class ProjectBinder implements ElementBinder {

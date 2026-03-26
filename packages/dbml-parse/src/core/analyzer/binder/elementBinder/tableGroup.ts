@@ -1,13 +1,13 @@
 import { partition } from 'lodash-es';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ProgramNode,
-} from '@/core/parser/nodes';
+} from '../../../parser/nodes';
 import { ElementBinder } from '../types';
-import { SyntaxToken } from '@/core/lexer/tokens';
-import { CompileError, CompileErrorCode } from '@/core/errors';
+import { SyntaxToken } from '../../../lexer/tokens';
+import { CompileError } from '../../../errors';
 import { lookupAndBindInScope, pickBinder, scanNonListNodeForBinding } from '../utils';
-import { SymbolKind } from '@/core/analyzer/symbol/symbolIndex';
-import SymbolFactory from '@/core/analyzer/symbol/factory';
+import { SymbolKind } from '../../symbol/symbolIndex';
+import SymbolFactory from '../../symbol/factory';
 import { BinderContext } from '@/core/analyzer/analyzer';
 
 export default class TableGroupBinder implements ElementBinder {
@@ -62,19 +62,10 @@ export default class TableGroupBinder implements ElementBinder {
         }
         const schemaBindees = bindee.variables;
 
-        const errors = lookupAndBindInScope(this.context.ast, [
+        return lookupAndBindInScope(this.context.ast, [
           ...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })),
           { node: tableBindee, kind: SymbolKind.Table },
         ], this.context);
-        if (errors.length > 0) return errors;
-
-        // A tablegroup can only contain tables defined in the current file
-        const boundSymbol = this.context.nodeToReferee.get(tableBindee);
-        if (boundSymbol?.isExternal(this.context.filepath)) {
-          return [new CompileError(CompileErrorCode.BINDING_ERROR, 'A TableGroup can only contain locally defined tables', tableBindee)];
-        }
-
-        return [];
       });
     });
   }

@@ -1,6 +1,6 @@
-import { ElementDeclarationNode, ProgramNode, SyntaxToken } from '@/core/..';
-import { CompileError } from '@/core/errors';
-import SymbolFactory from '@/core/analyzer/symbol/factory';
+import { ElementDeclarationNode, ProgramNode, SyntaxToken } from '../../../..';
+import { CompileError } from '../../../errors';
+import SymbolFactory from '../../symbol/factory';
 import { ElementBinder } from '../types';
 import { BinderContext } from '@/core/analyzer/analyzer';
 

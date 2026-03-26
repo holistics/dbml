@@ -1,22 +1,22 @@
-import { SyntaxToken } from '@/core/lexer/tokens';
+import { SyntaxToken } from '../../../lexer/tokens';
 import { ElementBinder } from '../types';
 import {
   BlockExpressionNode, CommaExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ProgramNode, SyntaxNode,
-} from '@/core/parser/nodes';
-import { CompileError, CompileErrorCode } from '@/core/errors';
+} from '../../../parser/nodes';
+import { CompileError, CompileErrorCode } from '../../../errors';
 import { addSymbolReference, lookupAndBindInScope, pickBinder, scanNonListNodeForBinding } from '../utils';
-import SymbolFactory from '@/core/analyzer/symbol/factory';
+import SymbolFactory from '../../symbol/factory';
 import {
   destructureCallExpression,
   extractVarNameFromPrimaryVariable,
   getElementKind,
-} from '@/core/analyzer/utils';
-import { createColumnSymbolIndex, SymbolKind } from '@/core/analyzer/symbol/symbolIndex';
-import { ElementKind } from '@/core/analyzer/types';
-import { isTupleOfVariables } from '@/core/analyzer/validator/utils';
-import { NodeSymbol } from '@/core/analyzer/symbol/symbols';
+} from '../../utils';
+import { createColumnSymbolIndex, SymbolKind } from '../../symbol/symbolIndex';
+import { ElementKind } from '../../types';
+import { isTupleOfVariables } from '../../validator/utils';
+import { NodeSymbol } from '../../symbol/symbols';
 import { getElementNameString } from '@/core/parser/utils';
-import { BinderContext } from '@/core/analyzer/types';
+import { BinderContext } from '@/core/analyzer/analyzer';
 
 export default class RecordsBinder implements ElementBinder {
   private symbolFactory: SymbolFactory;
@@ -90,8 +90,6 @@ export default class RecordsBinder implements ElementBinder {
       return [];
     }
 
-    this.context.nodeToSymbol.set(this.declarationNode, tableReferee);
-
     const tableName = getElementNameString(tableReferee.declaration).unwrap_or('<invalid name>');
 
     const errors: CompileError[] = [];
@@ -104,7 +102,8 @@ export default class RecordsBinder implements ElementBinder {
         errors.push(new CompileError(
           CompileErrorCode.BINDING_ERROR,
           `Column '${columnName}' does not exist in Table '${tableName}'`,
-          columnBindee));
+          columnBindee,
+        ));
         continue;
       }
       this.context.nodeToReferee.set(columnBindee, columnSymbol);
@@ -115,11 +114,13 @@ export default class RecordsBinder implements ElementBinder {
         errors.push(new CompileError(
           CompileErrorCode.DUPLICATE_COLUMN_REFERENCES_IN_RECORDS,
           `Column '${columnName}' is referenced more than once in a Records for Table '${tableName}'`,
-          originalBindee));
+          originalBindee,
+        ));
         errors.push(new CompileError(
           CompileErrorCode.DUPLICATE_COLUMN_REFERENCES_IN_RECORDS,
           `Column '${columnName}' is referenced more than once in a Records for Table '${tableName}'`,
-          columnBindee));
+          columnBindee,
+        ));
       }
       this.boundColumns.set(columnSymbol, columnBindee);
     }
@@ -163,7 +164,8 @@ export default class RecordsBinder implements ElementBinder {
         errors.push(new CompileError(
           CompileErrorCode.BINDING_ERROR,
           `Column '${columnName}' does not exist in Table '${tableName}'`,
-          columnBindee));
+          columnBindee,
+        ));
         continue;
       }
 

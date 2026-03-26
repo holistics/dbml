@@ -1,4 +1,4 @@
-import { CompileError } from '@/core/errors';
+import { CompileError } from '../../errors';
 
 export interface ElementBinder {
   bind(): CompileError[];

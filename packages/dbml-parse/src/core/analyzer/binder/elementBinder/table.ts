@@ -1,17 +1,17 @@
 import { last, partition } from 'lodash-es';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, PrefixExpressionNode, ProgramNode, SyntaxNode,
-} from '@/core/parser/nodes';
+} from '../../../parser/nodes';
 import { ElementBinder } from '../types';
-import { SyntaxToken } from '@/core/lexer/tokens';
-import { CompileError } from '@/core/errors';
+import { SyntaxToken } from '../../../lexer/tokens';
+import { CompileError } from '../../../errors';
 import { lookupAndBindInScope, pickBinder, scanNonListNodeForBinding } from '../utils';
-import { aggregateSettingList, isValidPartialInjection } from '@/core/analyzer/validator/utils';
-import { SymbolKind, createColumnSymbolIndex } from '@/core/analyzer/symbol/symbolIndex';
-import { destructureComplexVariableTuple, extractVariableFromExpression } from '@/core/analyzer/utils';
-import { TablePartialInjectedColumnSymbol, TablePartialSymbol } from '@/core/analyzer/symbol/symbols';
-import SymbolFactory from '@/core/analyzer/symbol/factory';
-import { isExpressionAQuotedString, isExpressionAVariableNode } from '@/core/parser/utils';
+import { aggregateSettingList, isValidPartialInjection } from '../../validator/utils';
+import { SymbolKind, createColumnSymbolIndex } from '../../symbol/symbolIndex';
+import { destructureComplexVariableTuple, extractVariableFromExpression } from '../../utils';
+import { TablePartialInjectedColumnSymbol, TablePartialSymbol } from '../../symbol/symbols';
+import SymbolFactory from '../../symbol/factory';
+import { isExpressionAQuotedString, isExpressionAVariableNode } from '../../../parser/utils';
 import { KEYWORDS_OF_DEFAULT_SETTING } from '@/constants';
 import { BinderContext } from '@/core/analyzer/analyzer';
 

@@ -1,11 +1,11 @@
-import { CompileError } from '@/core/errors';
+import { CompileError } from '../../../errors';
 import { ElementBinder } from '../types';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ProgramNode,
-} from '@/core/parser/nodes';
-import { SyntaxToken } from '@/core/lexer/tokens';
+} from '../../../parser/nodes';
+import { SyntaxToken } from '../../../lexer/tokens';
 import { pickBinder } from '../utils';
-import SymbolFactory from '@/core/analyzer/symbol/factory';
+import SymbolFactory from '../../symbol/factory';
 import { BinderContext } from '@/core/analyzer/analyzer';
 
 export default class CustomBinder implements ElementBinder {

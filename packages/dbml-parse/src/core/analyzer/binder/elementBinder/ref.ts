@@ -4,16 +4,16 @@ import {
   ElementDeclarationNode,
   FunctionApplicationNode,
   ProgramNode,
-} from '@/core/parser/nodes';
+} from '../../../parser/nodes';
 import { ElementBinder } from '../types';
-import { SyntaxToken } from '@/core/lexer/tokens';
-import { CompileError } from '@/core/errors';
+import { SyntaxToken } from '../../../lexer/tokens';
+import { CompileError } from '../../../errors';
 import { lookupAndBindInScope, pickBinder, scanNonListNodeForBinding } from '../utils';
-import { getElementKind } from '@/core/analyzer/utils';
-import { ElementKind } from '@/core/analyzer/types';
-import { SymbolKind } from '@/core/analyzer/symbol/symbolIndex';
-import SymbolFactory from '@/core/analyzer/symbol/factory';
-import { BinderContext } from '@/core/analyzer/types';
+import { getElementKind } from '../../utils';
+import { ElementKind } from '../../types';
+import { SymbolKind } from '../../symbol/symbolIndex';
+import SymbolFactory from '../../symbol/factory';
+import { BinderContext } from '@/core/analyzer/analyzer';
 
 export default class RefBinder implements ElementBinder {
   private symbolFactory: SymbolFactory;
