@@ -1,7 +1,6 @@
 import type Compiler from '../../index';
 import { Filepath, type FilepathId } from '../../projectLayout';
 import { UseDeclarationNode } from '@/core/parser/nodes';
-import { CompileError, CompileErrorCode } from '@/core/errors';
 
 const DBML_EXT = '.dbml';
 

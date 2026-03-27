@@ -66,6 +66,10 @@ export function analyzeProject (this: Compiler): Map<Filepath, Report<AnalysisRe
 }
 
 // Validate, resolve external symbols, and bind references for a single file.
+// Note: symbolToReferences in the result only contains references found within
+// this file and its transitive dependencies. Files that import symbols from this
+// file but are not reachable from it will not have their references included.
+// Use compiler.nodeReferences() for project-wide reference lookup.
 export function analyzeFile (this: Compiler, filepath: Filepath): Report<AnalysisResult> {
   const { ast } = this.parseFile(filepath).getValue();
   const validationReport = validateFile(this, filepath);
