@@ -78,7 +78,7 @@ export function analyzeFile (this: Compiler, filepath: Filepath): Report<Analysi
   const errors: CompileError[] = [...validationReport.getErrors()];
   const warnings: CompileWarning[] = [...validationReport.getWarnings()];
 
-  const resolveReport = resolveExternalDependencies(this, filepath, {
+  const resolveReport = resolveExternalDependencies(this, ast, {
     symbolTable,
     symbolIdGenerator,
     nodeToSymbol,

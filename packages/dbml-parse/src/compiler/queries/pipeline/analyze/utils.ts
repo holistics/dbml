@@ -1,7 +1,7 @@
 import type Compiler from '../../../index';
 import { Filepath } from '../../../projectLayout';
 import { ExternalSymbol, NodeSymbol, NodeSymbolIdGenerator, SchemaSymbol, TableGroupSymbol } from '@/core/analyzer/symbol/symbols';
-import { BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode } from '@/core/parser/nodes';
+import { BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ProgramNode } from '@/core/parser/nodes';
 import { destructureComplexVariable } from '@/core/analyzer/utils';
 import { registerSchemaStack } from '@/core/analyzer/validator/utils';
 import SymbolFactory from '@/core/analyzer/symbol/factory';
@@ -11,6 +11,8 @@ import Report from '@/core/report';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import { validateFile } from './index';
 import { NodeToSymbolMap } from '@/core/analyzer/analyzer';
+
+const DBML_EXT = '.dbml';
 
 function lookupSymbol (
   table: Readonly<SymbolTable>,
@@ -31,26 +33,27 @@ function lookupSymbol (
 // Resolve all `use` declarations for a file by mutating the local symbol table in place.
 export function resolveExternalDependencies (
   compiler: Compiler,
-  currentFilepath: Filepath,
+  ast: ProgramNode,
   local: {
     symbolTable: SymbolTable;
     symbolIdGenerator: NodeSymbolIdGenerator;
     nodeToSymbol: NodeToSymbolMap;
   },
 ): Report<SymbolTable> {
-  const externalFilepaths = compiler.localFileDependencies(currentFilepath);
-  const symbolFactory = new SymbolFactory(local.symbolIdGenerator, currentFilepath);
+  const symbolFactory = new SymbolFactory(local.symbolIdGenerator, ast.filepath);
   const errors: CompileError[] = [];
 
-  for (const filepathKey of externalFilepaths) {
-    const externalFilepath = Filepath.from(filepathKey);
-    const externalReport = validateFile(compiler, externalFilepath);
+  for (const node of ast.useDeclarations) {
+    if (!node.path || !Filepath.isRelative(node.path.value)) continue;
+    const resolved = Filepath.resolve(ast.filepath.dirname, node.path.value);
+    const externalFilepath = resolved.absolute.endsWith(DBML_EXT) ? resolved : Filepath.from(resolved.absolute + DBML_EXT);
 
+    const externalReport = validateFile(compiler, externalFilepath);
     if (externalReport.getErrors().length > 0) continue;
 
     const externalTable = externalReport.getValue().symbolTable;
 
-    if (hasPlaceholdersFor(local.symbolTable, externalFilepath)) {
+    if (node.specifiers) {
       errors.push(...resolveSelectiveUse({ target: local.symbolTable, externalTable, externalFilepath, symbolFactory }));
     } else {
       errors.push(...resolveWholeFileUse({ target: local.symbolTable, externalTable, externalFilepath, symbolFactory }));
@@ -67,7 +70,7 @@ function resolveWholeFileUse ({ target, externalTable, externalFilepath, symbolF
   symbolFactory: SymbolFactory;
 }): CompileError[] {
   const placeholderErrors = replacePlaceholders(target, externalTable, externalFilepath);
-  return [...placeholderErrors, ...mergeSymbolTables({ target, source: externalTable, symbolFactory })];
+  return [...placeholderErrors, ...pullFromExternalSymbolTables({ localTable: target, externalTable: externalTable, symbolFactory })];
 }
 
 function resolveSelectiveUse ({ target, externalTable, externalFilepath, symbolFactory }: {
@@ -89,34 +92,43 @@ function resolveSelectiveUse ({ target, externalTable, externalFilepath, symbolF
     if (!(externalSchema instanceof SchemaSymbol)) continue;
 
     const name = destructureIndex(symbolId).unwrap_or(undefined)?.name ?? symbolId;
-    errors.push(...mergeSymbolTables({ target: symbol.symbolTable, source: externalSchema.symbolTable, schemaPath: name, symbolFactory }));
+    errors.push(...pullFromExternalSymbolTables({ localTable: symbol.symbolTable, externalTable: externalSchema.symbolTable, schemaPath: name, symbolFactory }));
   }
 
   return errors;
 }
 
-function mergeSymbolTables ({ target, source, schemaPath, symbolFactory }: {
-  target: SymbolTable;
-  source: SymbolTable;
+function pullFromExternalSymbolTables ({
+  localTable,
+  externalTable,
+  schemaPath,
+  symbolFactory,
+}: {
+  localTable: SymbolTable;
+  externalTable: SymbolTable;
   schemaPath?: string;
   symbolFactory: SymbolFactory;
 }): CompileError[] {
   const errors: CompileError[] = [];
 
-  for (const [entryId, entrySymbol] of source.entries()) {
+  for (const [entryId, entrySymbol] of externalTable.entries()) {
+    // We do not support transitive imports
     if (entrySymbol instanceof ExternalSymbol) continue;
 
-    const existing = target.get(entryId);
+    // We do not support transitive imports
+    if (entrySymbol.isExternal(entrySymbol.filepath)) continue;
+
+    const existing = localTable.get(entryId);
 
     if (existing === undefined) {
-      target.set(entryId, entrySymbol);
+      localTable.set(entryId, entrySymbol);
       continue;
     }
 
     if (existing instanceof SchemaSymbol && entrySymbol instanceof SchemaSymbol) {
       const nestedName = destructureIndex(entryId).unwrap_or(undefined)?.name ?? entryId;
       const nestedPath = schemaPath ? `${schemaPath}.${nestedName}` : nestedName;
-      errors.push(...mergeSymbolTables({ target: existing.symbolTable, source: entrySymbol.symbolTable, schemaPath: nestedPath, symbolFactory }));
+      errors.push(...pullFromExternalSymbolTables({ localTable: existing.symbolTable, externalTable: entrySymbol.symbolTable, schemaPath: nestedPath, symbolFactory }));
       continue;
     }
 
@@ -164,15 +176,6 @@ function replacePlaceholders (
   }
   return errors;
 }
-
-function hasPlaceholdersFor (table: SymbolTable, externalFilepath: Filepath): boolean {
-  for (const [, symbol] of table.entries()) {
-    if (symbol instanceof ExternalSymbol && symbol.externalFilepath.equals(externalFilepath)) return true;
-    if (symbol instanceof SchemaSymbol && hasPlaceholdersFor(symbol.symbolTable, externalFilepath)) return true;
-  }
-  return false;
-}
-
 function pullTableGroupMembers (
   resolvedTable: SymbolTable,
   externalTable: Readonly<SymbolTable>,
