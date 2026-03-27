@@ -113,7 +113,7 @@ export default class Compiler {
     return renameTable.call(this, oldName, newName, DEFAULT_ENTRY);
   }
 
-  /* pipeline — low-level cached queries, prefer the utility methods below */
+  /* pipeline - low-level cached queries, prefer the utility methods below */
 
   /** @internal */ parseFile = this.localQuery(parseFile);
   /** @internal */ localFileDependencies = this.localQuery(localFileDependencies);

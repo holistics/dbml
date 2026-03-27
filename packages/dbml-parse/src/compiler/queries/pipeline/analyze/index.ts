@@ -66,9 +66,10 @@ export function analyzeProject (this: Compiler): Map<Filepath, Report<AnalysisRe
 }
 
 // Validate, resolve external symbols, and bind references for a single file.
-// symbolToReferences only covers this file and its dependencies — not files that
-// import from it. E.g. if b.dbml imports from a.dbml, analyzeFile('a.dbml') won't
-// include b's references. Use compiler.nodeReferences() for project-wide lookup.
+// AnalysisResult's symbolToReferences only covers this file and its dependencies, not files that import from it.
+// Example: b.dbml imports from a.dbml, then
+// analyzeFile('a.dbml') won't include b's references because a.dbml cannot know that b.dbml imports from it.
+// Use compiler.nodeReferences() for project-wide lookup.
 export function analyzeFile (this: Compiler, filepath: Filepath): Report<AnalysisResult> {
   const { ast } = this.parseFile(filepath).getValue();
   const validationReport = validateFile(this, filepath);
