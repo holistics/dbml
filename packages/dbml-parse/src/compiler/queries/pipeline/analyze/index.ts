@@ -37,7 +37,7 @@ export function validateFile (compiler: Compiler, filepath: Filepath): Report<Va
   ).validate();
 
   const { nodeToSymbol } = validationReport.getValue();
-  const rootSymbol = nodeToSymbol.get(ast) as SchemaSymbol;
+  const rootSymbol = nodeToSymbol.get(ast.intern()) as SchemaSymbol;
 
   const result = new Report(
     {
@@ -81,8 +81,8 @@ export function analyzeFile (this: Compiler, filepath: Filepath): Report<Analysi
   });
   errors.push(...resolveReport.getErrors());
 
-  const nodeToReferee: NodeToRefereeMap = new WeakMap();
-  const symbolToReferences: SymbolToReferencesMap = new WeakMap();
+  const nodeToReferee: NodeToRefereeMap = new Map();
+  const symbolToReferences: SymbolToReferencesMap = new Map();
   const bindingReport = new Binder(
     { ast, nodeToSymbol, nodeToReferee, symbolToReferences },
     symbolFactory,

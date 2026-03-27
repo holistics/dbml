@@ -32,8 +32,8 @@ export default class Binder {
     this.ast = ast;
     this.symbolFactory = symbolFactory;
     this.nodeToSymbol = nodeToSymbol;
-    this.nodeToReferee = nodeToReferee ?? new WeakMap();
-    this.symbolToReferences = symbolToReferences ?? new WeakMap();
+    this.nodeToReferee = nodeToReferee ?? new Map();
+    this.symbolToReferences = symbolToReferences ?? new Map();
   }
 
   private resolvePartialInjections (context: BinderContext): CompileError[] {

@@ -36,7 +36,7 @@ export default class Validator {
     this.publicSchemaSymbol = this.symbolFactory.create(SchemaSymbol, {
       symbolTable: new SymbolTable(),
     });
-    this.nodeToSymbol.set(this.ast, this.publicSchemaSymbol);
+    this.nodeToSymbol.set(this.ast.intern(), this.publicSchemaSymbol);
   }
 
   validate (): Report<ValidatorResult> {

@@ -282,7 +282,7 @@ export function findSymbol (
   const isPublicSchema = isPublicSchemaIndex(id);
 
   while (curElement) {
-    const sym = nodeToSymbol.get(curElement);
+    const sym = nodeToSymbol.get(curElement.intern());
     if (sym?.symbolTable?.has(id)) {
       return sym.symbolTable?.get(id);
     }

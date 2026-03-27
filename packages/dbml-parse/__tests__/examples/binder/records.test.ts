@@ -62,7 +62,7 @@ describe('[example] records binder', () => {
     const tableSymbol = authSchema.symbolTable.get('Table:users') as TableSymbol;
 
     // Schema should have reference from records
-    const authSchemaRefs = compiler.analyzeFile(DEFAULT_ENTRY).getValue().symbolToReferences.get(authSchema) ?? [];
+    const authSchemaRefs = compiler.analyzeFile(DEFAULT_ENTRY).getValue().symbolToReferences.get(authSchema.intern()) ?? [];
     expect(authSchemaRefs.length).toBe(1);
     expect(compiler.nodeReferee(authSchemaRefs[0])).toBe(authSchema);
     // Table should have exactly 1 reference from records

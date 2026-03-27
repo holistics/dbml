@@ -129,11 +129,11 @@ export default class Compiler {
   /* utility queries */
 
   resolvedSymbol (node: SyntaxNode): NodeSymbol | undefined {
-    return this.analyzeFile(node.filepath).getValue().nodeToSymbol.get(node);
+    return this.analyzeFile(node.filepath).getValue().nodeToSymbol.get(node.intern());
   }
 
   nodeReferee (node: SyntaxNode): NodeSymbol | undefined {
-    return this.analyzeFile(node.filepath).getValue().nodeToReferee.get(node);
+    return this.analyzeFile(node.filepath).getValue().nodeToReferee.get(node.intern());
   }
 
   nodeReferences (node: SyntaxNode): SyntaxNode[] {
@@ -143,7 +143,7 @@ export default class Compiler {
     const refs: SyntaxNode[] = [];
     for (const [, report] of this.analyzeProject()) {
       if (report.getErrors().length > 0) continue;
-      const fileRefs = report.getValue().symbolToReferences.get(symbol);
+      const fileRefs = report.getValue().symbolToReferences.get(symbol.intern());
       if (fileRefs) refs.push(...fileRefs);
     }
     return [...new Set(refs)];

@@ -85,7 +85,7 @@ export default class RecordsBinder implements ElementBinder {
       return tableErrors;
     }
 
-    const tableReferee = this.context.nodeToReferee.get(tableBindee);
+    const tableReferee = this.context.nodeToReferee.get(tableBindee.intern());
     if (!tableReferee?.symbolTable) {
       return [];
     }
@@ -106,7 +106,7 @@ export default class RecordsBinder implements ElementBinder {
         ));
         continue;
       }
-      this.context.nodeToReferee.set(columnBindee, columnSymbol);
+      this.context.nodeToReferee.set(columnBindee.intern(), columnSymbol);
       addSymbolReference(this.context.symbolToReferences, columnSymbol, columnBindee);
 
       const originalBindee = this.boundColumns.get(columnSymbol);
@@ -142,7 +142,7 @@ export default class RecordsBinder implements ElementBinder {
       return [];
     }
 
-    const tableSymbol = this.context.nodeToSymbol.get(parent);
+    const tableSymbol = this.context.nodeToSymbol.get(parent.intern());
     const tableSymbolTable = tableSymbol?.symbolTable;
     if (!tableSymbolTable) {
       return [];
@@ -169,7 +169,7 @@ export default class RecordsBinder implements ElementBinder {
         continue;
       }
 
-      this.context.nodeToReferee.set(columnBindee, columnSymbol);
+      this.context.nodeToReferee.set(columnBindee.intern(), columnSymbol);
       addSymbolReference(this.context.symbolToReferences, columnSymbol, columnBindee);
     }
 

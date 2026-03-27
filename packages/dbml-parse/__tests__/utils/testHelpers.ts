@@ -22,8 +22,8 @@ export function createJsonReplacer (
     // Inject symbol/referee from maps into SyntaxNode instances.
     // Guards: 'parent' and 'declaration' must output just the node ID, not a subtree.
     if (nodeToSymbol && value instanceof SyntaxNode && key !== 'parent' && key !== 'declaration') {
-      const sym = nodeToSymbol.get(value);
-      const ref = nodeToReferee?.get(value);
+      const sym = nodeToSymbol.get((value as SyntaxNode).intern());
+      const ref = nodeToReferee?.get((value as SyntaxNode).intern());
       if (sym !== undefined || ref !== undefined) {
         const augmented = Object.assign(Object.create(Object.getPrototypeOf(value)), value);
         if (sym !== undefined) augmented.symbol = sym;
@@ -50,7 +50,7 @@ export function createJsonReplacer (
       return {
         symbolTable: (value as NodeSymbol)?.symbolTable,
         id: (value as NodeSymbol)?.id,
-        references: (symbolToReferences?.get(value as NodeSymbol) ?? []).map((ref) => ref.id),
+        references: (symbolToReferences?.get((value as NodeSymbol).intern()) ?? []).map((ref) => ref.id),
         declaration: (value as NodeSymbol)?.declaration?.id,
       };
     }
@@ -80,7 +80,7 @@ export function createJsonReplacer (
         if (!sym) {
           return [k, sym];
         }
-        const refs = symbolToReferences?.get(sym) ?? [];
+        const refs = symbolToReferences?.get(sym.intern()) ?? [];
         return [k, { references: refs, id: sym.id, symbolTable: sym.symbolTable, declaration: sym.declaration }];
       });
       return Object.fromEntries(entries);
