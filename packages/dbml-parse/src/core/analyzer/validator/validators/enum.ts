@@ -77,7 +77,7 @@ export default class EnumValidator implements ElementValidator {
   registerElement (): CompileError[] {
     const errors: CompileError[] = [];
     const enumSymbol = this.symbolFactory.create(EnumSymbol, { declaration: this.declarationNode, symbolTable: new SymbolTable() });
-    this.nodeToSymbol.set(this.declarationNode.intern(), enumSymbol);
+    this.nodeToSymbol.set(this.declarationNode, enumSymbol);
     const { name } = this.declarationNode;
 
     const maybeNameFragments = destructureComplexVariable(name);
@@ -193,9 +193,9 @@ export default class EnumValidator implements ElementValidator {
       const enumFieldId = createEnumFieldSymbolIndex(enumFieldName);
 
       const enumFieldSymbol = this.symbolFactory.create(EnumFieldSymbol, { declaration: field });
-      this.nodeToSymbol.set(field.intern(), enumFieldSymbol);
+      this.nodeToSymbol.set(field, enumFieldSymbol);
 
-      const symbolTable = (this.nodeToSymbol.get(this.declarationNode.intern()) as EnumSymbol)!.symbolTable!;
+      const symbolTable = (this.nodeToSymbol.get(this.declarationNode) as EnumSymbol)!.symbolTable!;
       if (symbolTable.has(enumFieldId)) {
         const symbol = symbolTable.get(enumFieldId);
         return [

@@ -89,7 +89,7 @@ export default class TableGroupValidator implements ElementValidator {
   registerElement (): CompileError[] {
     const { name } = this.declarationNode;
     const tableGroupSymbol = this.symbolFactory.create(TableGroupSymbol, { declaration: this.declarationNode, symbolTable: new SymbolTable() });
-    this.nodeToSymbol.set(this.declarationNode.intern(), tableGroupSymbol);
+    this.nodeToSymbol.set(this.declarationNode, tableGroupSymbol);
     const maybeNameFragments = destructureComplexVariable(name);
     if (maybeNameFragments.isOk()) {
       const nameFragments = maybeNameFragments.unwrap();
@@ -221,9 +221,9 @@ export default class TableGroupValidator implements ElementValidator {
       const tableGroupFieldId = createTableGroupFieldSymbolIndex(tableGroupField);
 
       const tableGroupFieldSymbol = this.symbolFactory.create(TableGroupFieldSymbol, { declaration: field });
-      this.nodeToSymbol.set(field.intern(), tableGroupFieldSymbol);
+      this.nodeToSymbol.set(field, tableGroupFieldSymbol);
 
-      const symbolTable = (this.nodeToSymbol.get(this.declarationNode.intern()) as TableGroupSymbol)!.symbolTable!;
+      const symbolTable = (this.nodeToSymbol.get(this.declarationNode) as TableGroupSymbol)!.symbolTable!;
       if (symbolTable.has(tableGroupFieldId)) {
         const symbol = symbolTable.get(tableGroupFieldId);
         return [

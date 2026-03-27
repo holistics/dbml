@@ -22,11 +22,11 @@ import { SymbolToReferencesMap, BinderContext } from '@/core/analyzer/analyzer';
 import { NodeSymbol } from '@/core/analyzer/symbol/symbols';
 
 export function addSymbolReference (symbolToReferences: SymbolToReferencesMap, symbol: NodeSymbol, node: SyntaxNode): void {
-  const refs = symbolToReferences.get(symbol.intern());
+  const refs = symbolToReferences.get(symbol);
   if (refs) {
     refs.push(node);
   } else {
-    symbolToReferences.set(symbol.intern(), [node]);
+    symbolToReferences.set(symbol, [node]);
   }
 }
 
@@ -105,7 +105,7 @@ export function lookupAndBindInScope (
   context: BinderContext,
 ): CompileError[] {
   const { nodeToSymbol, nodeToReferee, symbolToReferences } = context;
-  const initialSymbol = nodeToSymbol.get(initialScope.intern());
+  const initialSymbol = nodeToSymbol.get(initialScope);
   if (!initialSymbol?.symbolTable) {
     throw new Error('lookupAndBindInScope should only be called with initial scope having a symbol table');
   }
@@ -131,7 +131,7 @@ export function lookupAndBindInScope (
     if (!symbol) {
       return [new CompileError(CompileErrorCode.BINDING_ERROR, `${kind} '${name}' does not exist in ${curName === undefined ? 'global scope' : `${curKind} '${curName}'`}`, node)];
     }
-    nodeToReferee.set(node.intern(), symbol);
+    nodeToReferee.set(node, symbol);
     addSymbolReference(symbolToReferences, symbol, node);
 
     curName = name;

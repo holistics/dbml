@@ -17,6 +17,7 @@ import { isTupleOfVariables } from '../../validator/utils';
 import { NodeSymbol } from '../../symbol/symbols';
 import { getElementNameString } from '@/core/parser/utils';
 import { BinderContext } from '@/core/analyzer/analyzer';
+import { InternedMap } from '@/core/internable';
 
 export default class RecordsBinder implements ElementBinder {
   private symbolFactory: SymbolFactory;
@@ -24,7 +25,7 @@ export default class RecordsBinder implements ElementBinder {
   private context: BinderContext;
   // A mapping from bound column symbols to the referencing primary expressions nodes of column
   // Example: Records (col1, col2) -> Map symbol of `col1` to the `col1` in `Records (col1, col2)``
-  private boundColumns: Map<NodeSymbol, SyntaxNode>;
+  private boundColumns: InternedMap<NodeSymbol, SyntaxNode>;
 
   constructor (
     declarationNode: ElementDeclarationNode & { type: SyntaxToken },
@@ -34,7 +35,7 @@ export default class RecordsBinder implements ElementBinder {
     this.declarationNode = declarationNode;
     this.symbolFactory = symbolFactory;
     this.context = context;
-    this.boundColumns = new Map();
+    this.boundColumns = new InternedMap();
   }
 
   bind (): CompileError[] {
@@ -85,7 +86,7 @@ export default class RecordsBinder implements ElementBinder {
       return tableErrors;
     }
 
-    const tableReferee = this.context.nodeToReferee.get(tableBindee.intern());
+    const tableReferee = this.context.nodeToReferee.get(tableBindee);
     if (!tableReferee?.symbolTable) {
       return [];
     }
@@ -106,7 +107,7 @@ export default class RecordsBinder implements ElementBinder {
         ));
         continue;
       }
-      this.context.nodeToReferee.set(columnBindee.intern(), columnSymbol);
+      this.context.nodeToReferee.set(columnBindee, columnSymbol);
       addSymbolReference(this.context.symbolToReferences, columnSymbol, columnBindee);
 
       const originalBindee = this.boundColumns.get(columnSymbol);
@@ -142,7 +143,7 @@ export default class RecordsBinder implements ElementBinder {
       return [];
     }
 
-    const tableSymbol = this.context.nodeToSymbol.get(parent.intern());
+    const tableSymbol = this.context.nodeToSymbol.get(parent);
     const tableSymbolTable = tableSymbol?.symbolTable;
     if (!tableSymbolTable) {
       return [];
@@ -169,7 +170,7 @@ export default class RecordsBinder implements ElementBinder {
         continue;
       }
 
-      this.context.nodeToReferee.set(columnBindee.intern(), columnSymbol);
+      this.context.nodeToReferee.set(columnBindee, columnSymbol);
       addSymbolReference(this.context.symbolToReferences, columnSymbol, columnBindee);
     }
 

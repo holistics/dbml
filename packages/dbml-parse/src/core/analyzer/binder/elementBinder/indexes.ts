@@ -65,7 +65,7 @@ export default class IndexesBinder implements ElementBinder {
       ).map(
         (fragments) => fragments.join('.'),
       ).unwrap_or('<unnamed>');
-      const ownerTableSymbol = this.context.nodeToSymbol.get(this.declarationNode.parent!.intern());
+      const ownerTableSymbol = this.context.nodeToSymbol.get(this.declarationNode.parent!);
       const ownerTableSymbolTable = ownerTableSymbol!.symbolTable!;
 
       const args = [field.callee, ...field.args];
@@ -89,7 +89,7 @@ export default class IndexesBinder implements ElementBinder {
         if (!column) {
           return new CompileError(CompileErrorCode.BINDING_ERROR, `No column named '${columnName}' inside Table '${ownerTableName}'`, bindee);
         }
-        this.context.nodeToReferee.set(bindee.intern(), column);
+        this.context.nodeToReferee.set(bindee, column);
         addSymbolReference(this.context.symbolToReferences, column, bindee);
 
         return [];

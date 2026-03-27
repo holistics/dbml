@@ -9,6 +9,7 @@ import { SyntaxToken } from '@/core/lexer/tokens';
 import { getElementKind } from '@/core/analyzer/utils';
 import { ElementKind } from '@/core/analyzer/types';
 import { NodeToSymbolMap } from '@/core/analyzer/analyzer';
+import { InternedMap } from '@/core/internable';
 import type { FilepathId } from '@/compiler/projectLayout';
 import UseDeclarationValidator from '@/core/analyzer/validator/validators/use';
 
@@ -32,11 +33,11 @@ export default class Validator {
   ) {
     this.ast = ast;
     this.symbolFactory = symbolFactory;
-    this.nodeToSymbol = new Map();
+    this.nodeToSymbol = new InternedMap();
     this.publicSchemaSymbol = this.symbolFactory.create(SchemaSymbol, {
       symbolTable: new SymbolTable(),
     });
-    this.nodeToSymbol.set(this.ast.intern(), this.publicSchemaSymbol);
+    this.nodeToSymbol.set(this.ast, this.publicSchemaSymbol);
   }
 
   validate (): Report<ValidatorResult> {

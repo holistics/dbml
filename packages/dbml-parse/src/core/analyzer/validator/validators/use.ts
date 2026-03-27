@@ -1,5 +1,6 @@
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import { ElementDeclarationNode, UseDeclarationNode, UseSpecifierNode, type SyntaxNode } from '@/core/parser/nodes';
+import type { NodeToSymbolMap } from '@/core/analyzer/analyzer';
 import SymbolTable from '@/core/analyzer/symbol/symbolTable';
 import { isValidName, registerSchemaStack } from '@/core/analyzer/validator/utils';
 import { ExternalSymbol, SchemaSymbol, type NodeSymbol } from '@/core/analyzer/symbol/symbols';
@@ -25,7 +26,7 @@ export default class UseDeclarationValidator {
 
   private publicSymbolTable: SymbolTable;
 
-  private declarations: WeakMap<SyntaxNode, NodeSymbol>;
+  private declarations: NodeToSymbolMap;
 
   private symbolFactory: SymbolFactory;
 
@@ -36,7 +37,7 @@ export default class UseDeclarationValidator {
       node: UseDeclarationNode;
       filepath: Filepath;
       publicSymbolTable: SymbolTable;
-      declarations: WeakMap<SyntaxNode, NodeSymbol>;
+      declarations: NodeToSymbolMap;
     },
     symbolFactory: SymbolFactory,
     externalFilepaths: Map<FilepathId, UseDeclarationNode>,

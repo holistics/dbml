@@ -65,7 +65,7 @@ export default class TableBinder implements ElementBinder {
           { node: tablePartialBindee, kind: SymbolKind.TablePartial },
         ], this.context);
         if (errors.length) return errors;
-        const tablePartialReferee = this.context.nodeToReferee.get(tablePartialBindee.intern());
+        const tablePartialReferee = this.context.nodeToReferee.get(tablePartialBindee);
         tablePartialReferee?.symbolTable?.forEach((value) => {
           const columnName = extractVariableFromExpression((value.declaration as FunctionApplicationNode).callee).unwrap_or(undefined);
           if (columnName === undefined) return;
@@ -74,7 +74,7 @@ export default class TableBinder implements ElementBinder {
             { declaration: i, tablePartialSymbol: tablePartialReferee as TablePartialSymbol },
           );
           const columnSymbolId = createColumnSymbolIndex(columnName);
-          const declarationSymbol = this.context.nodeToSymbol.get(this.declarationNode.intern());
+          const declarationSymbol = this.context.nodeToSymbol.get(this.declarationNode);
           const symbolTable = declarationSymbol?.symbolTable;
           if (symbolTable?.has(columnSymbolId)) return;
           symbolTable?.set(columnSymbolId, injectedColumnSymbol);

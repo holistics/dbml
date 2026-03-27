@@ -1,9 +1,10 @@
-import { ProgramNode, SyntaxNode, type SyntaxNodeKey } from '@/core/parser/nodes';
-import type { NodeSymbol, NodeSymbolKey } from '@/core/analyzer/symbol/symbols';
+import { ProgramNode, SyntaxNode } from '@/core/parser/nodes';
+import type { NodeSymbol } from '@/core/analyzer/symbol/symbols';
+import { InternedMap } from '@/core/internable';
 
-export type NodeToSymbolMap = Map<SyntaxNodeKey, NodeSymbol>;
-export type NodeToRefereeMap = Map<SyntaxNodeKey, NodeSymbol>;
-export type SymbolToReferencesMap = Map<NodeSymbolKey, SyntaxNode[]>;
+export type NodeToSymbolMap = InternedMap<SyntaxNode, NodeSymbol>;
+export type NodeToRefereeMap = InternedMap<SyntaxNode, NodeSymbol>;
+export type SymbolToReferencesMap = InternedMap<NodeSymbol, SyntaxNode[]>;
 
 export type AnalysisResult = {
   ast: ProgramNode;

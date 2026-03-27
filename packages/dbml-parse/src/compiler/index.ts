@@ -65,7 +65,7 @@ export default class Compiler {
     };
   }
 
-  private globalQuery<Args extends (Primitive | Primitive[] | Internable<unknown>)[], Return> (
+  private globalQuery<Args extends (Primitive | Primitive[] | Internable<Primitive>)[], Return> (
     fn: (this: Compiler, ...args: Args) => Return,
   ): (...args: Args) => Return {
     const cacheKey = Symbol();
@@ -129,11 +129,11 @@ export default class Compiler {
   /* utility queries */
 
   resolvedSymbol (node: SyntaxNode): NodeSymbol | undefined {
-    return this.analyzeFile(node.filepath).getValue().nodeToSymbol.get(node.intern());
+    return this.analyzeFile(node.filepath).getValue().nodeToSymbol.get(node);
   }
 
   nodeReferee (node: SyntaxNode): NodeSymbol | undefined {
-    return this.analyzeFile(node.filepath).getValue().nodeToReferee.get(node.intern());
+    return this.analyzeFile(node.filepath).getValue().nodeToReferee.get(node);
   }
 
   nodeReferences (node: SyntaxNode): SyntaxNode[] {
@@ -143,7 +143,7 @@ export default class Compiler {
     const refs: SyntaxNode[] = [];
     for (const [, report] of this.analyzeProject()) {
       if (report.getErrors().length > 0) continue;
-      const fileRefs = report.getValue().symbolToReferences.get(symbol.intern());
+      const fileRefs = report.getValue().symbolToReferences.get(symbol);
       if (fileRefs) refs.push(...fileRefs);
     }
     return [...new Set(refs)];

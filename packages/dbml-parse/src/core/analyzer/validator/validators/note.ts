@@ -91,7 +91,7 @@ export default class NoteValidator implements ElementValidator {
       return [new CompileError(CompileErrorCode.DUPLICATE_NAME, `Sticky note "${trueName}" has already been defined`, nameNode)];
     }
 
-    this.publicSymbolTable.set(noteId, this.nodeToSymbol.get(this.declarationNode.intern()) as NodeSymbol);
+    this.publicSymbolTable.set(noteId, this.nodeToSymbol.get(this.declarationNode) as NodeSymbol);
 
     return [];
   }

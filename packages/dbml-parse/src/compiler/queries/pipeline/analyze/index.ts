@@ -1,5 +1,6 @@
 import type Compiler from '../../../index';
 import type { AnalysisResult, NodeToSymbolMap, NodeToRefereeMap, SymbolToReferencesMap } from '@/core/analyzer/analyzer';
+import { InternedMap } from '@/core/internable';
 import { Filepath } from '../../../projectLayout';
 import type { CompileWarning } from '@/core/errors';
 import Binder from '@/core/analyzer/binder/binder';
@@ -37,7 +38,7 @@ export function validateFile (compiler: Compiler, filepath: Filepath): Report<Va
   ).validate();
 
   const { nodeToSymbol } = validationReport.getValue();
-  const rootSymbol = nodeToSymbol.get(ast.intern()) as SchemaSymbol;
+  const rootSymbol = nodeToSymbol.get(ast) as SchemaSymbol;
 
   const result = new Report(
     {
@@ -81,8 +82,8 @@ export function analyzeFile (this: Compiler, filepath: Filepath): Report<Analysi
   });
   errors.push(...resolveReport.getErrors());
 
-  const nodeToReferee: NodeToRefereeMap = new Map();
-  const symbolToReferences: SymbolToReferencesMap = new Map();
+  const nodeToReferee: NodeToRefereeMap = new InternedMap();
+  const symbolToReferences: SymbolToReferencesMap = new InternedMap();
   const bindingReport = new Binder(
     { ast, nodeToSymbol, nodeToReferee, symbolToReferences },
     symbolFactory,

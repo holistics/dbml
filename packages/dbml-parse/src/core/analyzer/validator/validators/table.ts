@@ -142,7 +142,7 @@ export default class TableValidator implements ElementValidator {
   registerElement (): CompileError[] {
     const errors: CompileError[] = [];
     const tableSymbol = this.symbolFactory.create(TableSymbol, { declaration: this.declarationNode, symbolTable: new SymbolTable() });
-    this.nodeToSymbol.set(this.declarationNode.intern(), tableSymbol);
+    this.nodeToSymbol.set(this.declarationNode, tableSymbol);
 
     const { name, alias } = this.declarationNode;
 
@@ -225,7 +225,7 @@ export default class TableValidator implements ElementValidator {
         const injectedTablePartialName = extractVariableFromExpression(field.callee.expression).unwrap_or('');
         const partialInjectionSymbol = this.symbolFactory.create(PartialInjectionSymbol, { symbolTable: new SymbolTable(), declaration: field });
         const partialInjectionSymbolId = createPartialInjectionSymbolIndex(injectedTablePartialName);
-        const symbolTable = (this.nodeToSymbol.get(this.declarationNode.intern()) as TableSymbol)!.symbolTable!;
+        const symbolTable = (this.nodeToSymbol.get(this.declarationNode) as TableSymbol)!.symbolTable!;
         if (symbolTable.has(partialInjectionSymbolId)) {
           const symbol = symbolTable.get(partialInjectionSymbolId);
           return [
@@ -254,9 +254,9 @@ export default class TableValidator implements ElementValidator {
       const columnId = createColumnSymbolIndex(columnName);
 
       const columnSymbol = this.symbolFactory.create(ColumnSymbol, { declaration: field });
-      this.nodeToSymbol.set(field.intern(), columnSymbol);
+      this.nodeToSymbol.set(field, columnSymbol);
 
-      const symbolTable = (this.nodeToSymbol.get(this.declarationNode.intern()) as TableSymbol)!.symbolTable!;
+      const symbolTable = (this.nodeToSymbol.get(this.declarationNode) as TableSymbol)!.symbolTable!;
       if (symbolTable.has(columnId)) {
         const symbol = symbolTable.get(columnId);
         return [

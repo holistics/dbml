@@ -7,6 +7,7 @@ import SymbolFactory from '@/core/analyzer/symbol/factory';
 import { getElementKind } from '@/core/analyzer/utils';
 import { ElementKind } from '@/core/analyzer/types';
 import { NodeToSymbolMap, NodeToRefereeMap, SymbolToReferencesMap, BinderContext } from '@/core/analyzer/analyzer';
+import { InternedMap } from '@/core/internable';
 import TableBinder from './elementBinder/table';
 
 export default class Binder {
@@ -32,8 +33,8 @@ export default class Binder {
     this.ast = ast;
     this.symbolFactory = symbolFactory;
     this.nodeToSymbol = nodeToSymbol;
-    this.nodeToReferee = nodeToReferee ?? new Map();
-    this.symbolToReferences = symbolToReferences ?? new Map();
+    this.nodeToReferee = nodeToReferee ?? new InternedMap();
+    this.symbolToReferences = symbolToReferences ?? new InternedMap();
   }
 
   private resolvePartialInjections (context: BinderContext): CompileError[] {
