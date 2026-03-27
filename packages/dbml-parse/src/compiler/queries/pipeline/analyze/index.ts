@@ -18,7 +18,7 @@ export type ValidateFileResult = {
   readonly nodeToSymbol: NodeToSymbolMap;
 };
 
-// Cached per AST node — same file always yields the same symbols.
+// Cached per AST node: same AST always yields the same symbols.
 const validateFileCache = new WeakMap<ProgramNode, Report<ValidateFileResult>>();
 
 // Validate a single file locally (no cross-file resolution).
@@ -56,7 +56,7 @@ export function validateFile (compiler: Compiler, filepath: Filepath): Report<Va
   return result;
 }
 
-// Analyze all files in the project. Returns a map of filepath → AnalysisResult.
+// Analyze all files in the project. Returns a map of filepath -> AnalysisResult.
 export function analyzeProject (this: Compiler): Map<Filepath, Report<AnalysisResult>> {
   const results = new Map<Filepath, Report<AnalysisResult>>();
   for (const fp of this.layout().listAllFiles()) {
@@ -66,15 +66,9 @@ export function analyzeProject (this: Compiler): Map<Filepath, Report<AnalysisRe
 }
 
 // Validate, resolve external symbols, and bind references for a single file.
-// Note: symbolToReferences in the result only contains references found within
-// this file and its transitive dependencies. Files that import symbols from this
-// file but are not reachable from it will not have their references included.
-// Use compiler.nodeReferences() for project-wide reference lookup.
-//
-// Example: given a.dbml defines Table users, and b.dbml has `use { table users } from './a'`,
-// analyzeFile('a.dbml').symbolToReferences will NOT include the reference from b.dbml,
-// because b.dbml is not a dependency of a.dbml. However, compiler.nodeReferences(usersNode)
-// will find it by scanning all project files.
+// symbolToReferences only covers this file and its dependencies — not files that
+// import from it. E.g. if b.dbml imports from a.dbml, analyzeFile('a.dbml') won't
+// include b's references. Use compiler.nodeReferences() for project-wide lookup.
 export function analyzeFile (this: Compiler, filepath: Filepath): Report<AnalysisResult> {
   const { ast } = this.parseFile(filepath).getValue();
   const validationReport = validateFile(this, filepath);
