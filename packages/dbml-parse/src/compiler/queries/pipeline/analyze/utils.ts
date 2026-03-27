@@ -156,7 +156,6 @@ function replacePlaceholders (
 ): CompileError[] {
   const errors: CompileError[] = [];
   for (const [symbolId, symbol] of table.entries()) {
-    console.log('DEBUG replacePlaceholders:', symbolId, symbol.constructor.name, 'isExternal:', symbol instanceof ExternalSymbol);
     if (symbol instanceof ExternalSymbol && symbol.externalFilepath.equals(externalFilepath)) {
       const realId = createNodeSymbolIndex(symbol.name, symbol.kind);
       const realSymbol = externalTable.get(realId);

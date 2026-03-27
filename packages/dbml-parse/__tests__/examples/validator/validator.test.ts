@@ -547,7 +547,7 @@ describe('[example] validator', () => {
 
       // Two errors - one for each project
       expect(errors).toHaveLength(2);
-      expect(errors[0].diagnostic).toBe('Only one project can exist');
+      expect(errors[0].diagnostic).toBe('Only one Project element can exist across all files');
     });
   });
 

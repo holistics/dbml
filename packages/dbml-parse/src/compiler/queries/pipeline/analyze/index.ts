@@ -8,6 +8,9 @@ import SymbolFactory from '@/core/analyzer/symbol/factory';
 import { SchemaSymbol } from '@/core/analyzer/symbol/symbols';
 import SymbolTable from '@/core/analyzer/symbol/symbolTable';
 import Report from '@/core/report';
+import { CompileError, CompileErrorCode } from '@/core/errors';
+import { ElementKind } from '@/core/analyzer/types';
+import { getElementKind } from '@/core/analyzer/utils';
 import { resolveExternalDependencies } from './utils';
 
 export type ValidateFileResult = {
@@ -64,6 +67,18 @@ export function analyzeProject (this: Compiler, entrypoint?: Filepath): Report<A
     ),
   );
 
+  // Enforce at most one Project element across all files
+  const allProjects = files.flatMap((file) => {
+    const { ast } = this.parseFile(file).getValue();
+    return ast.declarations.filter((e) => getElementKind(e).unwrap_or(undefined) === ElementKind.Project);
+  });
+  const projectErrors: CompileError[] = [];
+  if (allProjects.length > 1) {
+    allProjects.forEach((project) => projectErrors.push(
+      new CompileError(CompileErrorCode.PROJECT_REDEFINED, 'Only one Project element can exist across all files', project),
+    ));
+  }
+
   // Resolve external dependencies (use declarations)
   const resolveReport = Report.concat(
     ...files.map((file) => {
@@ -105,6 +120,6 @@ export function analyzeProject (this: Compiler, entrypoint?: Filepath): Report<A
     }),
   );
 
-  return Report.concat<unknown>(validateReport, resolveReport, partialInjectionReport, bindReport)
+  return Report.concat<unknown>(validateReport, new Report(undefined, projectErrors), resolveReport, partialInjectionReport, bindReport)
     .map(() => ({ nodeToSymbol, nodeToReferee, symbolToReferences }));
 }

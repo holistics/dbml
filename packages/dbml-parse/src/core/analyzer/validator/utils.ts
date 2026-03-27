@@ -26,7 +26,7 @@ import RefValidator from './validators/ref';
 import TableValidator from './validators/table';
 import TableGroupValidator from './validators/tableGroup';
 import { createSchemaSymbolIndex } from '@/core/analyzer/symbol/symbolIndex';
-import { SchemaSymbol } from '@/core/analyzer/symbol/symbols';
+import { ExternalSymbol, SchemaSymbol } from '@/core/analyzer/symbol/symbols';
 import SymbolTable from '@/core/analyzer/symbol/symbolTable';
 import SymbolFactory from '@/core/analyzer/symbol/factory';
 import {
@@ -134,9 +134,18 @@ export function registerSchemaStack (
       const curSymbol = symbolFactory.create(SchemaSymbol, { symbolTable: curSchema });
       prevSchema.set(curId, curSymbol);
     } else {
-      curSchema = prevSchema.get(curId)?.symbolTable;
+      const existing = prevSchema.get(curId);
+      curSchema = existing?.symbolTable;
       if (!curSchema) {
-        throw new Error('Expect a symbol table in a schema symbol');
+        // The existing symbol may be an ExternalSymbol placeholder (no symbolTable).
+        // Replace it with a real SchemaSymbol so local declarations can be registered.
+        // Preserve externalFilepaths so the resolution step can merge external contents.
+        curSchema = new SymbolTable();
+        const curSymbol = symbolFactory.create(SchemaSymbol, { symbolTable: curSchema });
+        if (existing instanceof ExternalSymbol) {
+          curSymbol.externalFilepaths.push(existing.externalFilepath);
+        }
+        prevSchema.set(curId, curSymbol);
       }
     }
     prevSchema = curSchema;

@@ -1,7 +1,8 @@
 import type Compiler from '@/compiler/index';
 import { Filepath } from '@/compiler/projectLayout';
-import type { Database, Model } from '@/core/interpreter/types';
+import type { Database, Model, TablePartial } from '@/core/interpreter/types';
 import type { CompileError, CompileWarning } from '@/core/errors';
+import { ElementDeclarationNode } from '@/core/parser/nodes';
 import Interpreter from '@/core/interpreter/interpreter';
 import Report from '@/core/report';
 import { collectTransitiveDependencies } from './analyze/index';
@@ -27,20 +28,32 @@ export function interpretProject (this: Compiler, entrypoint?: Filepath): Report
     );
   }
 
+  // Shared tablePartials map across all files (like shared maps in analyzeProject)
+  const tablePartials = new Map<ElementDeclarationNode, TablePartial>();
+
   const databases: Database[] = [];
   const allErrors: CompileError[] = [];
   const allWarnings: CompileWarning[] = [...analysisReport.getWarnings()];
 
-  for (const file of files) {
+  // Interpret dependencies before the files that import them,
+  // so shared tablePartials are populated before injection.
+  const databaseMap = new Map<string, Database>();
+  for (const file of [...files].reverse()) {
     const { ast } = this.parseFile(file).getValue();
     const interpretReport = new Interpreter(
       this,
       { ast, ...analysisResult },
+      { tablePartials },
     ).interpret();
 
-    databases.push(interpretReport.getValue());
+    databaseMap.set(file.intern(), interpretReport.getValue());
     allErrors.push(...interpretReport.getErrors());
     allWarnings.push(...interpretReport.getWarnings());
+  }
+
+  // Preserve original file order in output
+  for (const file of files) {
+    databases.push(databaseMap.get(file.intern())!);
   }
 
   return new Report({ databases }, allErrors, allWarnings);

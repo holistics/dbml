@@ -1,18 +1,8 @@
 import { describe, expect, test } from 'vitest';
 import Compiler from '@/compiler/index';
-import { Filepath } from '@/compiler/projectLayout';
-import { MemoryProjectLayout } from '@/compiler/projectLayout';
+import { Filepath, MemoryProjectLayout } from '@/compiler/projectLayout';
 import { DEFAULT_ENTRY } from '@/compiler/constants';
-import { Model } from '@/index';
-import Report from '@/core/report';
-
-function compileFile (entry: Filepath, project: Record<string, string>): Report<Model> {
-  const entries: Record<string, string> = {};
-  for (const [path, content] of Object.entries(project)) {
-    entries[Filepath.from(path).intern()] = content;
-  }
-  return new Compiler(new MemoryProjectLayout(entries)).interpretProject(entry);
-}
+import { compileFile } from '@tests/utils/multifile';
 
 describe('[example] multi-file compilation', () => {
   describe('validation - valid imports', () => {
@@ -127,6 +117,47 @@ describe('[example] multi-file compilation', () => {
   });
 
   describe('validation - errors', () => {
+    test('only one Project element allowed across all files', () => {
+      const report = compileFile(DEFAULT_ENTRY, {
+        '/main.dbml': `
+          use * from './common.dbml'
+          Project myproject { database_type: 'PostgreSQL' }
+          Table users { id int [pk] }
+        `,
+        '/common.dbml': `
+          Project otherproject { database_type: 'MySQL' }
+          Table orders { id int [pk] }
+        `,
+      });
+      const projectErrors = report.getErrors().filter((e) => e.message.includes('Project'));
+      expect(projectErrors.length).toBe(2);
+      expect(projectErrors[0].message).toContain('Only one Project element can exist across all files');
+    });
+
+    test('single Project across files is valid', () => {
+      expect(compileFile(DEFAULT_ENTRY, {
+        '/main.dbml': `
+          use * from './common.dbml'
+          Project myproject { database_type: 'PostgreSQL' }
+          Table users { id int [pk] }
+        `,
+        '/common.dbml': 'Table orders { id int [pk] }',
+      }).getErrors()).toHaveLength(0);
+    });
+
+    test('Project in dependency file only is valid', () => {
+      expect(compileFile(DEFAULT_ENTRY, {
+        '/main.dbml': `
+          use * from './common.dbml'
+          Table users { id int [pk] }
+        `,
+        '/common.dbml': `
+          Project shared { database_type: 'PostgreSQL' }
+          Table orders { id int [pk] }
+        `,
+      }).getErrors()).toHaveLength(0);
+    });
+
     test('duplicate symbol from use', () => {
       expect(compileFile(DEFAULT_ENTRY, {
         '/main.dbml': `

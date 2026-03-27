@@ -1,13 +1,11 @@
 import Report from '@/core/report';
-import { CompileError, CompileErrorCode } from '@/core/errors';
+import { CompileError } from '@/core/errors';
 import { ElementDeclarationNode, ProgramNode, SyntaxNode, UseDeclarationNode } from '@/core/parser/nodes';
 import { SchemaSymbol } from '@/core/analyzer/symbol/symbols';
 import SymbolFactory from '@/core/analyzer/symbol/factory';
 import { pickValidator } from '@/core/analyzer/validator/utils';
 import SymbolTable from '@/core/analyzer/symbol/symbolTable';
 import { SyntaxToken } from '@/core/lexer/tokens';
-import { getElementKind } from '@/core/analyzer/utils';
-import { ElementKind } from '@/core/analyzer/types';
 import { NodeToSymbolMap } from '@/core/analyzer/analyzer';
 import { InternedMap } from '@/core/internable';
 import type { FilepathId } from '@/compiler/projectLayout';
@@ -68,11 +66,6 @@ export default class Validator {
         ).validate());
       }
     });
-
-    const projects = this.ast.declarations.filter((e) => getElementKind(e).unwrap_or(undefined) === ElementKind.Project);
-    if (projects.length > 1) {
-      projects.forEach((project) => errors.push(new CompileError(CompileErrorCode.PROJECT_REDEFINED, 'Only one project can exist', project)));
-    }
 
     return new Report({ nodeToSymbol: this.nodeToSymbol, externalFilepaths }, errors);
   }

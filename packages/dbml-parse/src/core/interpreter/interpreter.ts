@@ -78,6 +78,9 @@ export default class Interpreter {
   constructor (
     compiler: Compiler,
     { ast, nodeToSymbol, nodeToReferee }: AnalysisResult & { ast: ProgramNode },
+    { tablePartials }: {
+      tablePartials?: InterpreterDatabase['tablePartials'];
+    } = {},
   ) {
     this.compiler = compiler;
     this.ast = ast;
@@ -92,7 +95,7 @@ export default class Interpreter {
       tableGroups: new Map(),
       aliases: [],
       project: new Map(),
-      tablePartials: new Map(),
+      tablePartials: tablePartials ?? new Map(),
       records: new Map(),
       recordsElements: [],
       cachedMergedTables: new Map(),
