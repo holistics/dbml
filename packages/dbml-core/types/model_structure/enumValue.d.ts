@@ -2,7 +2,7 @@ import { NormalizedModel } from './database';
 import DbState from './dbState';
 import Element, { Token, RawNote } from './element';
 import Enum from './enum';
-interface RawEnumValue {
+export interface RawEnumValue {
     name: string;
     token: Token;
     note: RawNote;

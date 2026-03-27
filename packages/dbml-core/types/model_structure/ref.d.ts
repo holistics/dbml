@@ -4,7 +4,7 @@ import Schema from './schema';
 import DbState from './dbState';
 import Database, { NormalizedModel } from './database';
 import TablePartial from './tablePartial';
-interface RawRef {
+export interface RawRef {
     name: string;
     color?: string;
     endpoints: Endpoint[];
