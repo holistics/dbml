@@ -559,7 +559,7 @@ describe('[fuzz] interpreter - special patterns', () => {
         const result = interpret(source);
         const db = result.getValue();
 
-        if (db) {
+        if (db && result.getErrors().length === 0) {
           expect(db.tables.length).toBeGreaterThanOrEqual(2);
         }
       }),

@@ -1976,7 +1976,8 @@
             "end": 142
           }
         },
-        "parent": 93
+        "parent": 93,
+        "symbol": 4
       },
       {
         "id": 44,
@@ -2796,7 +2797,8 @@
             "end": 210
           }
         },
-        "parent": 93
+        "parent": 93,
+        "symbol": 5
       },
       {
         "id": 58,
@@ -4180,7 +4182,8 @@
             "end": 361
           }
         },
-        "parent": 93
+        "parent": 93,
+        "symbol": 6
       },
       {
         "id": 92,
@@ -4930,7 +4933,8 @@
             "end": 444
           }
         },
-        "parent": 93
+        "parent": 93,
+        "symbol": 7
       }
     ],
     "eof": {
@@ -4972,6 +4976,26 @@
             }
           },
           "declaration": 30
+        },
+        "Note:note2": {
+          "references": [],
+          "id": 4,
+          "declaration": 37
+        },
+        "Note:note3": {
+          "references": [],
+          "id": 5,
+          "declaration": 51
+        },
+        "Note:schema.note4": {
+          "references": [],
+          "id": 6,
+          "declaration": 77
+        },
+        "Note:schema.note5": {
+          "references": [],
+          "id": 7,
+          "declaration": 92
         }
       },
       "id": 0,

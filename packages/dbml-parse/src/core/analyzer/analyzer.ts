@@ -7,7 +7,6 @@ export type NodeToRefereeMap = InternedMap<SyntaxNode, NodeSymbol>;
 export type SymbolToReferencesMap = InternedMap<NodeSymbol, SyntaxNode[]>;
 
 export type AnalysisResult = {
-  ast: ProgramNode;
   nodeToSymbol: NodeToSymbolMap;
   nodeToReferee: NodeToRefereeMap;
   symbolToReferences: SymbolToReferencesMap;

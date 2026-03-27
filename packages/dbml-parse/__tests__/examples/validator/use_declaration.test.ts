@@ -2,23 +2,30 @@ import { describe, expect, test } from 'vitest';
 import { CompileErrorCode } from '@/core/errors';
 import { analyze } from '@tests/utils';
 
+// These tests validate the `use` declaration syntax only.
+// Resolution errors (e.g. "not found in external file") are filtered out
+// since the external files don't exist in the single-file test setup.
+function validationErrors (source: string) {
+  return analyze(source).getErrors().filter((e) => e.code !== CompileErrorCode.BINDING_ERROR);
+}
+
 describe('[example] validator - use statement', () => {
   describe('valid use statements', () => {
     test('should accept simple identifier name', () => {
       const source = "use { table users } from './schema'";
-      const errors = analyze(source).getErrors();
+      const errors = validationErrors(source);
       expect(errors).toHaveLength(0);
     });
 
     test('should accept dot-delimited name (schema.table)', () => {
       const source = "use { table public.users } from './schema'";
-      const errors = analyze(source).getErrors();
+      const errors = validationErrors(source);
       expect(errors).toHaveLength(0);
     });
 
     test('should accept multi-level dot-delimited name', () => {
       const source = "use { table a.b.c } from './schema'";
-      const errors = analyze(source).getErrors();
+      const errors = validationErrors(source);
       expect(errors).toHaveLength(0);
     });
 
@@ -26,7 +33,7 @@ describe('[example] validator - use statement', () => {
       const kinds = ['table', 'enum', 'tablegroup', 'tablepartial'];
       for (const kind of kinds) {
         const source = `use { ${kind} foo } from './schema'`;
-        const errors = analyze(source).getErrors();
+        const errors = validationErrors(source);
         expect(errors).toHaveLength(0);
       }
     });
@@ -42,31 +49,31 @@ describe('[example] validator - use statement', () => {
 
     test('should accept note as a valid element kind', () => {
       const source = "use { note my_note } from './schema'";
-      const errors = analyze(source).getErrors();
+      const errors = validationErrors(source);
       expect(errors).toHaveLength(0);
     });
 
     test('should accept quoted name', () => {
       const source = 'use { table "user accounts" } from \'./schema\'';
-      const errors = analyze(source).getErrors();
+      const errors = validationErrors(source);
       expect(errors).toHaveLength(0);
     });
 
     test('should accept multiple specifiers', () => {
       const source = "use { table users, enum status, table public.orders } from './schema'";
-      const errors = analyze(source).getErrors();
+      const errors = validationErrors(source);
       expect(errors).toHaveLength(0);
     });
 
     test('should accept empty specifier list', () => {
       const source = "use { } from './schema'";
-      const errors = analyze(source).getErrors();
+      const errors = validationErrors(source);
       expect(errors).toHaveLength(0);
     });
 
     test('should accept case-insensitive element kind', () => {
       const source = "use { Table users } from './schema'";
-      const errors = analyze(source).getErrors();
+      const errors = validationErrors(source);
       expect(errors).toHaveLength(0);
     });
   });
@@ -101,7 +108,7 @@ describe('[example] validator - use statement', () => {
         "use { widget foo } from './a'",
         "use { table users } from './b'",
       ].join('\n');
-      const errors = analyze(source).getErrors();
+      const errors = validationErrors(source);
       expect(errors).toHaveLength(1);
       expect(errors[0].code).toBe(CompileErrorCode.INVALID_USE_SPECIFIER_KIND);
     });

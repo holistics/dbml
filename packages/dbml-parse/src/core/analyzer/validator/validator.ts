@@ -28,12 +28,17 @@ export default class Validator {
   private nodeToSymbol: NodeToSymbolMap;
 
   constructor (
-    ast: ProgramNode,
+    { ast }: {
+      ast: ProgramNode;
+    },
+    { nodeToSymbol }: {
+      nodeToSymbol: NodeToSymbolMap;
+    },
     symbolFactory: SymbolFactory,
   ) {
     this.ast = ast;
     this.symbolFactory = symbolFactory;
-    this.nodeToSymbol = new InternedMap();
+    this.nodeToSymbol = nodeToSymbol;
     this.publicSchemaSymbol = this.symbolFactory.create(SchemaSymbol, {
       symbolTable: new SymbolTable(),
     });
@@ -50,9 +55,8 @@ export default class Validator {
         if (decl.type === undefined) return;
         const Val = pickValidator(decl as ElementDeclarationNode & { type: SyntaxToken });
         const validatorObject = new Val(
-          decl as ElementDeclarationNode & { type: SyntaxToken },
-          this.publicSchemaSymbol.symbolTable,
-          this.nodeToSymbol,
+          { declarationNode: decl as ElementDeclarationNode & { type: SyntaxToken }, publicSymbolTable: this.publicSchemaSymbol.symbolTable },
+          { nodeToSymbol: this.nodeToSymbol },
           this.symbolFactory,
         );
         errors.push(...validatorObject.validate());

@@ -18,9 +18,13 @@ export default class CustomValidator implements ElementValidator {
   private nodeToSymbol: NodeToSymbolMap;
 
   constructor (
-    declarationNode: ElementDeclarationNode & { type: SyntaxToken },
-    publicSymbolTable: SymbolTable,
-    nodeToSymbol: NodeToSymbolMap,
+    { declarationNode, publicSymbolTable }: {
+      declarationNode: ElementDeclarationNode & { type: SyntaxToken };
+      publicSymbolTable: SymbolTable;
+    },
+    { nodeToSymbol }: {
+      nodeToSymbol: NodeToSymbolMap;
+    },
     symbolFactory: SymbolFactory,
   ) {
     this.declarationNode = declarationNode;

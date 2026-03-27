@@ -75,7 +75,7 @@ describe('[example] multi-file compilation', () => {
     test('schema, tablegroup, note imports', () => {
       expect(compileFile(DEFAULT_ENTRY, {
         '/main.dbml': `
-          use { schema public } from './common.dbml'
+          use { table public.users } from './common.dbml'
         `,
         '/common.dbml': 'Table public.users { id int }',
       }).getErrors()).toHaveLength(0);

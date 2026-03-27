@@ -44,7 +44,7 @@ export function analyze (source: string): Report<AnalysisResult> {
   const compiler = new Compiler();
   compiler.setSource(source);
   return compiler.parseFile(DEFAULT_ENTRY)
-    .chain(() => compiler.analyzeProject(DEFAULT_ENTRY).get(DEFAULT_ENTRY.intern())!);
+    .chain(() => compiler.analyzeProject(DEFAULT_ENTRY));
 }
 
 export function interpret (source: string): Report<Database | undefined> {

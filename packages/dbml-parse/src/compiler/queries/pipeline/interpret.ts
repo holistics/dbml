@@ -1,42 +1,46 @@
 import type Compiler from '@/compiler/index';
-import { Filepath, type FilepathId } from '@/compiler/projectLayout';
+import { Filepath } from '@/compiler/projectLayout';
 import type { Database, Model } from '@/core/interpreter/types';
 import type { CompileError, CompileWarning } from '@/core/errors';
 import Interpreter from '@/core/interpreter/interpreter';
 import Report from '@/core/report';
+import { collectTransitiveDependencies } from './analyze/index';
 
 // Interpret files in the project.
 // If entrypoint is provided, only that file and its transitive dependencies are interpreted.
 // If entrypoint is undefined, all files in the project are interpreted.
 export function interpretProject (this: Compiler, entrypoint?: Filepath): Report<Model> {
-  const analysisMap = this.analyzeProject(entrypoint);
+  const files = entrypoint
+    ? collectTransitiveDependencies(this, entrypoint)
+    : this.layout().listAllFiles();
 
-  if (analysisMap.size === 0) return new Report({ databases: [] }, [], []);
+  if (files.length === 0) return new Report({ databases: [] }, [], []);
+
+  const analysisReport = this.analyzeProject(entrypoint);
+  const analysisResult = analysisReport.getValue();
+
+  if (analysisReport.getErrors().length > 0) {
+    return new Report(
+      { databases: files.map((fp) => emptyDatabase(fp)) },
+      analysisReport.getErrors(),
+      analysisReport.getWarnings(),
+    );
+  }
 
   const databases: Database[] = [];
   const allErrors: CompileError[] = [];
-  const allWarnings: CompileWarning[] = [];
+  const allWarnings: CompileWarning[] = [...analysisReport.getWarnings()];
 
-  for (const [, report] of analysisMap) {
-    const errors = [...report.getErrors()];
-    const warnings = [...report.getWarnings()];
-
-    if (errors.length > 0) {
-      databases.push(emptyDatabase(report.getValue().ast.filepath));
-      allErrors.push(...errors);
-      allWarnings.push(...warnings);
-      continue;
-    }
-
-    const analysisResult = report.getValue();
+  for (const file of files) {
+    const { ast } = this.parseFile(file).getValue();
     const interpretReport = new Interpreter(
       this,
-      analysisResult,
+      { ast, ...analysisResult },
     ).interpret();
 
     databases.push(interpretReport.getValue());
-    allErrors.push(...errors, ...interpretReport.getErrors());
-    allWarnings.push(...warnings, ...interpretReport.getWarnings());
+    allErrors.push(...interpretReport.getErrors());
+    allWarnings.push(...interpretReport.getWarnings());
   }
 
   return new Report({ databases }, allErrors, allWarnings);

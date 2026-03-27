@@ -77,7 +77,7 @@ export default class Interpreter {
 
   constructor (
     compiler: Compiler,
-    { ast, nodeToSymbol, nodeToReferee }: AnalysisResult,
+    { ast, nodeToSymbol, nodeToReferee }: AnalysisResult & { ast: ProgramNode },
   ) {
     this.compiler = compiler;
     this.ast = ast;

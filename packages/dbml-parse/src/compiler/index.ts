@@ -121,30 +121,24 @@ export default class Compiler {
 
   parseFile = this.localQuery(parseFile);
   localFileDependencies = this.localQuery(localFileDependencies);
-  analyzeProject = analyzeProject.bind(this);
+  analyzeProject = this.globalQuery(analyzeProject);
   interpretProject = interpretProject.bind(this);
 
   /* utility queries */
 
   resolvedSymbol (node: SyntaxNode): NodeSymbol | undefined {
-    return this.analyzeProject(node.filepath).get(node.filepath.intern())?.getValue().nodeToSymbol.get(node);
+    return this.analyzeProject(node.filepath).getValue().nodeToSymbol.get(node);
   }
 
   nodeReferee (node: SyntaxNode): NodeSymbol | undefined {
-    return this.analyzeProject(node.filepath).get(node.filepath.intern())?.getValue().nodeToReferee.get(node);
+    return this.analyzeProject(node.filepath).getValue().nodeToReferee.get(node);
   }
 
   nodeReferences (node: SyntaxNode): SyntaxNode[] {
     const symbol = this.resolvedSymbol(node);
     if (!symbol) return [];
 
-    const refs: SyntaxNode[] = [];
-    for (const report of this.analyzeProject().values()) {
-      if (report.getErrors().length > 0) continue;
-      const fileRefs = report.getValue().symbolToReferences.get(symbol);
-      if (fileRefs) refs.push(...fileRefs);
-    }
-    return [...new Set(refs)];
+    return this.analyzeProject(node.filepath).getValue().symbolToReferences.get(symbol) ?? [];
   }
 
   /* diagnostics */

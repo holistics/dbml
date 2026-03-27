@@ -1,7 +1,7 @@
 import { partition } from 'lodash-es';
 import SymbolFactory from '@/core/analyzer/symbol/factory';
 import { NodeToSymbolMap } from '@/core/analyzer/analyzer';
-import { NodeSymbol } from '@/core/analyzer/symbol/symbols';
+import { StickyNoteSymbol } from '@/core/analyzer/symbol/symbols';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, ProgramNode, SyntaxNode,
@@ -22,9 +22,13 @@ export default class NoteValidator implements ElementValidator {
   private nodeToSymbol: NodeToSymbolMap;
 
   constructor (
-    declarationNode: ElementDeclarationNode & { type: SyntaxToken },
-    publicSymbolTable: SymbolTable,
-    nodeToSymbol: NodeToSymbolMap,
+    { declarationNode, publicSymbolTable }: {
+      declarationNode: ElementDeclarationNode & { type: SyntaxToken };
+      publicSymbolTable: SymbolTable;
+    },
+    { nodeToSymbol }: {
+      nodeToSymbol: NodeToSymbolMap;
+    },
     symbolFactory: SymbolFactory,
   ) {
     this.declarationNode = declarationNode;
@@ -91,7 +95,9 @@ export default class NoteValidator implements ElementValidator {
       return [new CompileError(CompileErrorCode.DUPLICATE_NAME, `Sticky note "${trueName}" has already been defined`, nameNode)];
     }
 
-    this.publicSymbolTable.set(noteId, this.nodeToSymbol.get(this.declarationNode) as NodeSymbol);
+    const noteSymbol = this.symbolFactory.create(StickyNoteSymbol, { declaration: this.declarationNode });
+    this.nodeToSymbol.set(this.declarationNode, noteSymbol);
+    this.publicSymbolTable.set(noteId, noteSymbol);
 
     return [];
   }
@@ -148,9 +154,8 @@ export default class NoteValidator implements ElementValidator {
       }
       const _Validator = pickValidator(sub as ElementDeclarationNode & { type: SyntaxToken });
       const validator = new _Validator(
-        sub as ElementDeclarationNode & { type: SyntaxToken },
-        this.publicSymbolTable,
-        this.nodeToSymbol,
+        { declarationNode: sub as ElementDeclarationNode & { type: SyntaxToken }, publicSymbolTable: this.publicSymbolTable },
+        { nodeToSymbol: this.nodeToSymbol },
         this.symbolFactory,
       );
       return validator.validate();

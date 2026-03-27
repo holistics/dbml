@@ -19,11 +19,12 @@ export default class SymbolTable {
   get (id: NodeSymbolIndex): NodeSymbol | undefined;
   get (id: NodeSymbolIndex, defaultValue: NodeSymbol): NodeSymbol;
   get (id: NodeSymbolIndex, defaultValue?: NodeSymbol): NodeSymbol | undefined {
-    return (
-      this.table.get(id)
-      || (defaultValue !== undefined && this.set(id, defaultValue))
-      || defaultValue
-    );
+    if (this.table.has(id)) return this.table.get(id);
+    if (defaultValue !== undefined) {
+      this.table.set(id, defaultValue);
+      return defaultValue;
+    }
+    return undefined;
   }
 
   delete (id: NodeSymbolIndex): boolean {

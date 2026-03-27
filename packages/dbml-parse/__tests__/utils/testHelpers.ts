@@ -1,5 +1,5 @@
 import { NodeSymbol } from '@/core/analyzer/symbol/symbols';
-import { AnalysisResult, NodeToRefereeMap, NodeToSymbolMap, SymbolToReferencesMap } from '@/core/analyzer/analyzer';
+import { NodeToRefereeMap, NodeToSymbolMap, SymbolToReferencesMap } from '@/core/analyzer/analyzer';
 import Report from '@/core/report';
 import { ProgramNode, SyntaxNode } from '@/index';
 import type Compiler from '@/compiler/index';
@@ -103,29 +103,14 @@ export function serializeAst (report: Readonly<Report<ProgramNode>>, pretty = fa
  * Symbol and referee data are injected back into nodes during traversal so the
  * output format matches the pre-immutability snapshots.
  */
-export function serializeAnalysis (report: Readonly<Report<AnalysisResult>>, pretty?: boolean): string;
-export function serializeAnalysis (compiler: Compiler, pretty?: boolean): string;
-export function serializeAnalysis (reportOrCompiler: Readonly<Report<AnalysisResult>> | Compiler, pretty = false): string {
-  if ('parseFile' in reportOrCompiler) {
-    // Compiler overload
-    const compiler = reportOrCompiler;
-    const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
-    const analysisReport = compiler.analyzeProject(DEFAULT_ENTRY).get(DEFAULT_ENTRY.intern())!;
-    const { nodeToSymbol, nodeToReferee, symbolToReferences } = analysisReport.getValue();
-    const errors = analysisReport.getErrors();
-    const warnings = analysisReport.getWarnings();
-    const report = { value: ast, errors, ...(warnings.length ? { warnings } : {}) };
-    return JSON.stringify(report, createJsonReplacer(nodeToSymbol, nodeToReferee, symbolToReferences), pretty ? 2 : 0);
-  }
-  // Report overload (legacy)
-  const report = reportOrCompiler;
-  const { ast, nodeToSymbol, nodeToReferee, symbolToReferences } = report.getValue();
-  const syntheticReport = {
-    value: ast,
-    errors: report.getErrors(),
-    ...(report.getWarnings().length ? { warnings: report.getWarnings() } : {}),
-  };
-  return JSON.stringify(syntheticReport, createJsonReplacer(nodeToSymbol, nodeToReferee, symbolToReferences), pretty ? 2 : 0);
+export function serializeAnalysis (compiler: Compiler, pretty = false): string {
+  const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
+  const analysisReport = compiler.analyzeProject(DEFAULT_ENTRY);
+  const { nodeToSymbol, nodeToReferee, symbolToReferences } = analysisReport.getValue();
+  const errors = analysisReport.getErrors();
+  const warnings = analysisReport.getWarnings();
+  const report = { value: ast, errors, ...(warnings.length ? { warnings } : {}) };
+  return JSON.stringify(report, createJsonReplacer(nodeToSymbol, nodeToReferee, symbolToReferences), pretty ? 2 : 0);
 }
 
 /**

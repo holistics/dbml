@@ -10,7 +10,9 @@ export default class ChecksBinder implements ElementBinder {
   private context: BinderContext;
 
   constructor (
-    declarationNode: ElementDeclarationNode & { type: SyntaxToken },
+    { declarationNode }: {
+      declarationNode: ElementDeclarationNode & { type: SyntaxToken };
+    },
     context: BinderContext,
     symbolFactory: SymbolFactory,
   ) {

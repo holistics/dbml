@@ -17,9 +17,13 @@ export default class ProjectValidator implements ElementValidator {
   private nodeToSymbol: NodeToSymbolMap;
 
   constructor (
-    declarationNode: ElementDeclarationNode & { type: SyntaxToken },
-    publicSymbolTable: SymbolTable,
-    nodeToSymbol: NodeToSymbolMap,
+    { declarationNode, publicSymbolTable }: {
+      declarationNode: ElementDeclarationNode & { type: SyntaxToken };
+      publicSymbolTable: SymbolTable;
+    },
+    { nodeToSymbol }: {
+      nodeToSymbol: NodeToSymbolMap;
+    },
     symbolFactory: SymbolFactory,
   ) {
     this.declarationNode = declarationNode;
@@ -90,9 +94,8 @@ export default class ProjectValidator implements ElementValidator {
       }
       const _Validator = pickValidator(sub as ElementDeclarationNode & { type: SyntaxToken });
       const validator = new _Validator(
-        sub as ElementDeclarationNode & { type: SyntaxToken },
-        this.publicSymbolTable,
-        this.nodeToSymbol,
+        { declarationNode: sub as ElementDeclarationNode & { type: SyntaxToken }, publicSymbolTable: this.publicSymbolTable },
+        { nodeToSymbol: this.nodeToSymbol },
         this.symbolFactory,
       );
       return validator.validate();

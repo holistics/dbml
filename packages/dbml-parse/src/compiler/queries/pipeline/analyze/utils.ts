@@ -9,7 +9,6 @@ import { createNodeSymbolIndex, destructureIndex, SymbolKind } from '@/core/anal
 import SymbolTable from '@/core/analyzer/symbol/symbolTable';
 import Report from '@/core/report';
 import { CompileError, CompileErrorCode } from '@/core/errors';
-import { validateFile } from './index';
 import { NodeToSymbolMap } from '@/core/analyzer/analyzer';
 
 const DBML_EXT = '.dbml';
@@ -47,10 +46,14 @@ export function resolveExternalDependencies (
     const resolved = Filepath.resolve(ast.filepath.dirname, node.path.value);
     const externalFilepath = resolved.absolute.endsWith(DBML_EXT) ? resolved : Filepath.from(resolved.absolute + DBML_EXT);
 
-    const externalReport = validateFile(compiler, externalFilepath);
-    if (externalReport.getErrors().length > 0) continue;
+    const externalParseReport = compiler.parseFile(externalFilepath);
+    if (externalParseReport.getErrors().length > 0) continue;
 
-    const externalTable = externalReport.getValue().symbolTable;
+    const externalAst = externalParseReport.getValue().ast;
+    const externalRootSymbol = local.nodeToSymbol.get(externalAst);
+    if (!(externalRootSymbol instanceof SchemaSymbol)) continue;
+
+    const externalTable = externalRootSymbol.symbolTable;
 
     if (node.specifiers) {
       errors.push(...resolveSelectiveUse({ target: local.symbolTable, externalTable, externalFilepath, symbolFactory }));
@@ -153,6 +156,7 @@ function replacePlaceholders (
 ): CompileError[] {
   const errors: CompileError[] = [];
   for (const [symbolId, symbol] of table.entries()) {
+    console.log('DEBUG replacePlaceholders:', symbolId, symbol.constructor.name, 'isExternal:', symbol instanceof ExternalSymbol);
     if (symbol instanceof ExternalSymbol && symbol.externalFilepath.equals(externalFilepath)) {
       const realId = createNodeSymbolIndex(symbol.name, symbol.kind);
       const realSymbol = externalTable.get(realId);

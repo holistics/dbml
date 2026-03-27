@@ -28,6 +28,13 @@ export default class Report<T> {
     return this.warnings || [];
   }
 
+  static concat<T> (...reports: Report<T>[]): Report<T[]> {
+    const values = reports.map((r) => r.value);
+    const errors = reports.flatMap((r) => r.errors);
+    const warnings = reports.flatMap((r) => r.getWarnings());
+    return new Report<T[]>(values, errors, warnings.length ? warnings : undefined);
+  }
+
   chain<U>(fn: (_: T) => Report<U>): Report<U> {
     const res = fn(this.value);
     const errors = [...this.errors, ...res.errors];

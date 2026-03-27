@@ -22,8 +22,10 @@ export default class Binder {
   private symbolToReferences: SymbolToReferencesMap;
 
   constructor (
-    { ast, nodeToSymbol, nodeToReferee, symbolToReferences }: {
+    { ast }: {
       ast: ProgramNode;
+    },
+    { nodeToSymbol, nodeToReferee, symbolToReferences }: {
       nodeToSymbol: NodeToSymbolMap;
       nodeToReferee?: NodeToRefereeMap;
       symbolToReferences?: SymbolToReferencesMap;
@@ -37,10 +39,10 @@ export default class Binder {
     this.symbolToReferences = symbolToReferences ?? new InternedMap();
   }
 
-  private resolvePartialInjections (context: BinderContext): CompileError[] {
+  resolvePartialInjections (context: BinderContext): CompileError[] {
     return this.ast.declarations.filter((e) => getElementKind(e).unwrap_or('') === ElementKind.Table).flatMap((t) => {
       const binder = new TableBinder(
-        t as ElementDeclarationNode & { type: SyntaxToken },
+        { declarationNode: t as ElementDeclarationNode & { type: SyntaxToken } },
         context,
         this.symbolFactory,
       );
@@ -57,14 +59,11 @@ export default class Binder {
       symbolToReferences: this.symbolToReferences,
     };
 
-    // Must call this before binding
-    errors.push(...this.resolvePartialInjections(context));
-
     for (const element of this.ast.declarations) {
       if (element.type) {
         const _Binder = pickBinder(element as ElementDeclarationNode & { type: SyntaxToken });
         const binder = new _Binder(
-          element as ElementDeclarationNode & { type: SyntaxToken },
+          { declarationNode: element as ElementDeclarationNode & { type: SyntaxToken } },
           context,
           this.symbolFactory,
         );

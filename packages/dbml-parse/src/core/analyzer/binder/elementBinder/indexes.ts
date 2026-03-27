@@ -21,7 +21,9 @@ export default class IndexesBinder implements ElementBinder {
   private context: BinderContext;
 
   constructor (
-    declarationNode: ElementDeclarationNode & { type: SyntaxToken },
+    { declarationNode }: {
+      declarationNode: ElementDeclarationNode & { type: SyntaxToken };
+    },
     context: BinderContext,
     symbolFactory: SymbolFactory,
   ) {
@@ -104,7 +106,7 @@ export default class IndexesBinder implements ElementBinder {
       }
       const _Binder = pickBinder(sub as ElementDeclarationNode & { type: SyntaxToken });
       const binder = new _Binder(
-        sub as ElementDeclarationNode & { type: SyntaxToken },
+        { declarationNode: sub as ElementDeclarationNode & { type: SyntaxToken } },
         this.context,
         this.symbolFactory,
       );

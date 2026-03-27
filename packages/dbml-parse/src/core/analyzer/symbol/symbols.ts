@@ -135,6 +135,16 @@ export class TableGroupFieldSymbol extends NodeSymbol {
   }
 }
 
+// A symbol for a sticky note (top-level named Note)
+export class StickyNoteSymbol extends NodeSymbol {
+  declaration: SyntaxNode;
+
+  constructor ({ filepath, declaration }: { filepath: Filepath; declaration: SyntaxNode }, id: NodeSymbolId) {
+    super(id, filepath);
+    this.declaration = declaration;
+  }
+}
+
 // A symbol for a table partial, contains the table partial's symbol table
 // which is used to hold all the column symbols of the table partial
 export class TablePartialSymbol extends NodeSymbol {
