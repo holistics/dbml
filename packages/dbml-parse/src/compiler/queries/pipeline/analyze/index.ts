@@ -70,6 +70,11 @@ export function analyzeProject (this: Compiler): Map<Filepath, Report<AnalysisRe
 // this file and its transitive dependencies. Files that import symbols from this
 // file but are not reachable from it will not have their references included.
 // Use compiler.nodeReferences() for project-wide reference lookup.
+//
+// Example: given a.dbml defines Table users, and b.dbml has `use { table users } from './a'`,
+// analyzeFile('a.dbml').symbolToReferences will NOT include the reference from b.dbml,
+// because b.dbml is not a dependency of a.dbml. However, compiler.nodeReferences(usersNode)
+// will find it by scanning all project files.
 export function analyzeFile (this: Compiler, filepath: Filepath): Report<AnalysisResult> {
   const { ast } = this.parseFile(filepath).getValue();
   const validationReport = validateFile(this, filepath);
