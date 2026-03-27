@@ -37,7 +37,7 @@ export function resolveExternalDependencies (
   const symbolFactory = new SymbolFactory(local.symbolIdGenerator, currentFilepath);
   const errors: CompileError[] = [];
 
-  for (const [filepathKey, useNode] of externalFilepaths) {
+  for (const filepathKey of externalFilepaths) {
     const externalFilepath = Filepath.from(filepathKey);
     const externalReport = validateFile(compiler, externalFilepath);
 
@@ -45,10 +45,10 @@ export function resolveExternalDependencies (
 
     const externalTable = externalReport.getValue().symbolTable;
 
-    if (!useNode.specifiers) {
-      errors.push(...resolveWholeFileUse({ target: local.symbolTable, externalTable, externalFilepath, symbolFactory }));
-    } else {
+    if (hasPlaceholdersFor(local.symbolTable, externalFilepath)) {
       errors.push(...resolveSelectiveUse({ target: local.symbolTable, externalTable, externalFilepath, symbolFactory }));
+    } else {
+      errors.push(...resolveWholeFileUse({ target: local.symbolTable, externalTable, externalFilepath, symbolFactory }));
     }
   }
 
@@ -158,6 +158,14 @@ function replacePlaceholders (
     }
   }
   return errors;
+}
+
+function hasPlaceholdersFor (table: SymbolTable, externalFilepath: Filepath): boolean {
+  for (const [, symbol] of table.entries()) {
+    if (symbol instanceof ExternalSymbol && symbol.externalFilepath.equals(externalFilepath)) return true;
+    if (symbol instanceof SchemaSymbol && hasPlaceholdersFor(symbol.symbolTable, externalFilepath)) return true;
+  }
+  return false;
 }
 
 function pullTableGroupMembers (

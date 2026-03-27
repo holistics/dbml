@@ -23,8 +23,7 @@ export function interpretFile (this: Compiler, filepath: Filepath): Report<Model
     visited.add(id);
     fileOrder.push(fp);
 
-    const deps = this.localFileDependencies(fp);
-    for (const [depId] of deps) {
+    for (const depId of this.localFileDependencies(fp)) {
       collectDependencies(Filepath.from(depId));
     }
   };
