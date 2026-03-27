@@ -1,6 +1,6 @@
 import type Compiler from '../../../index';
 import type { AnalysisResult, NodeToSymbolMap, NodeToRefereeMap, SymbolToReferencesMap } from '@/core/analyzer/analyzer';
-import { Filepath, type FilepathId } from '../../../projectLayout';
+import { Filepath } from '../../../projectLayout';
 import type { CompileWarning } from '@/core/errors';
 import Binder from '@/core/analyzer/binder/binder';
 import Validator from '@/core/analyzer/validator/validator';
@@ -9,25 +9,8 @@ import { NodeSymbolIdGenerator, SchemaSymbol } from '@/core/analyzer/symbol/symb
 import SymbolTable from '@/core/analyzer/symbol/symbolTable';
 import Report from '@/core/report';
 import { CompileError } from '@/core/errors';
-import { ProgramNode, UseDeclarationNode } from '@/core/parser/nodes';
+import { ProgramNode } from '@/core/parser/nodes';
 import { resolveExternalDependencies } from './utils';
-
-const DBML_EXT = '.dbml';
-
-// Scan use declarations from the parsed AST to extract external file dependencies.
-export function localFileDependencies (this: Compiler, filepath: Filepath): ReadonlyMap<FilepathId, UseDeclarationNode> {
-  const { ast } = this.parseFile(filepath).getValue();
-  const deps = new Map<FilepathId, UseDeclarationNode>();
-
-  for (const node of ast.body) {
-    if (!(node instanceof UseDeclarationNode) || !node.path) continue;
-    const resolved = Filepath.resolve(filepath.dirname, node.path.value);
-    const resolvedPath = resolved.absolute.endsWith(DBML_EXT) ? resolved : Filepath.from(resolved.absolute + DBML_EXT);
-    deps.set(resolvedPath.intern(), node);
-  }
-
-  return deps;
-}
 
 export type ValidateFileResult = {
   readonly symbolTable: SymbolTable;
