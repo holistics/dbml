@@ -113,18 +113,14 @@ export default class Compiler {
     return renameTable.call(this, oldName, newName, DEFAULT_ENTRY);
   }
 
-  /* pipeline */
+  /* pipeline — low-level cached queries, prefer the utility methods below */
 
-  parseFile = this.localQuery(parseFile);
-  localFileDependencies = this.localQuery(localFileDependencies);
-
-  // Resolve external symbols + bind references for a single file.
-  // Global because it depends on cross-file resolution.
-  analyzeFile = this.globalQuery(analyzeFile);
-  analyzeProject = analyzeProject.bind(this);
-
-  interpretFile = this.globalQuery(interpretFile);
-  interpretProject = interpretProject.bind(this);
+  /** @internal */ parseFile = this.localQuery(parseFile);
+  /** @internal */ localFileDependencies = this.localQuery(localFileDependencies);
+  /** @internal */ analyzeFile = this.globalQuery(analyzeFile);
+  /** @internal */ analyzeProject = analyzeProject.bind(this);
+  /** @internal */ interpretFile = this.globalQuery(interpretFile);
+  /** @internal */ interpretProject = interpretProject.bind(this);
 
   /* utility queries */
 
