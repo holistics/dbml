@@ -11,7 +11,7 @@ function compileFile (entry: Filepath, project: Record<string, string>): Report<
   for (const [path, content] of Object.entries(project)) {
     entries[Filepath.from(path).intern()] = content;
   }
-  return new Compiler(new MemoryProjectLayout(entries)).interpretFile(entry);
+  return new Compiler(new MemoryProjectLayout(entries)).interpretProject(entry);
 }
 
 describe('[example] multi-file compilation', () => {
@@ -510,17 +510,17 @@ describe('[example] multi-file compilation', () => {
         entries[Filepath.from(path).intern()] = content;
       }
       const compiler = new Compiler(new MemoryProjectLayout(entries));
-      expect(compiler.interpretFile(Filepath.from('/main.dbml')).getValue().databases).toHaveLength(2);
+      expect(compiler.interpretProject(Filepath.from('/main.dbml')).getValue().databases).toHaveLength(2);
 
       compiler.setSource(`
         Table users { id int }
         Table products { id int }
       `, Filepath.from('/common.dbml'));
-      const updated = compiler.interpretFile(Filepath.from('/main.dbml')).getValue().databases;
+      const updated = compiler.interpretProject(Filepath.from('/main.dbml')).getValue().databases;
       expect(updated.find((db) => db.tables.some((t) => t.name === 'products'))?.tables).toHaveLength(2);
 
       compiler.deleteSource(Filepath.from('/common.dbml'));
-      expect(compiler.interpretFile(Filepath.from('/main.dbml')).getValue().databases.length).toBeGreaterThanOrEqual(1);
+      expect(compiler.interpretProject(Filepath.from('/main.dbml')).getValue().databases.length).toBeGreaterThanOrEqual(1);
     });
   });
 });

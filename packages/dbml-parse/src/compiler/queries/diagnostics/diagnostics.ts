@@ -5,11 +5,11 @@ import type { CompileError, CompileWarning } from '@/core/errors';
 // Per-file diagnostics (includes lex, parse, validate, bind, and interpret errors/warnings)
 
 export function fileErrors (this: Compiler, filepath: Filepath): readonly CompileError[] {
-  return this.interpretFile(filepath).getErrors();
+  return this.interpretProject(filepath).getErrors();
 }
 
 export function fileWarnings (this: Compiler, filepath: Filepath): readonly CompileWarning[] {
-  return this.interpretFile(filepath).getWarnings();
+  return this.interpretProject(filepath).getWarnings();
 }
 
 // Project-wide diagnostics (aggregated across all files)

@@ -320,12 +320,12 @@ function suggestCrossFileSymbols (
   for (const externalFile of allFiles) {
     if (externalFile.intern() === currentId) continue;
 
-    const externalAnalysis = compiler.analyzeFile(externalFile);
-    if (externalAnalysis.getErrors().length > 0) continue;
+    const externalReport = compiler.analyzeProject(externalFile).get(externalFile.intern());
+    if (!externalReport || externalReport.getErrors().length > 0) continue;
 
     const relativePath = externalFile.relativeTo(currentFilepath.dirname);
     const importPath = relativePath.startsWith('.') ? relativePath : `./${relativePath}`;
-    const { ast: externalAst, nodeToSymbol: externalNodeToSymbol } = externalAnalysis.getValue();
+    const { ast: externalAst, nodeToSymbol: externalNodeToSymbol } = externalReport.getValue();
     const externalSymbolTable = externalNodeToSymbol.get(externalAst)?.symbolTable;
     if (!externalSymbolTable) continue;
 

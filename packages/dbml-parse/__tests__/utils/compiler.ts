@@ -44,13 +44,13 @@ export function analyze (source: string): Report<AnalysisResult> {
   const compiler = new Compiler();
   compiler.setSource(source);
   return compiler.parseFile(DEFAULT_ENTRY)
-    .chain(() => compiler.analyzeFile(DEFAULT_ENTRY));
+    .chain(() => compiler.analyzeProject(DEFAULT_ENTRY).get(DEFAULT_ENTRY.intern())!);
 }
 
 export function interpret (source: string): Report<Database | undefined> {
   const compiler = new Compiler();
   compiler.setSource(source);
-  const modelReport = compiler.interpretFile(DEFAULT_ENTRY);
+  const modelReport = compiler.interpretProject(DEFAULT_ENTRY);
   const model = modelReport.getValue();
   return new Report(
     model.databases[0],

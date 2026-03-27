@@ -110,9 +110,10 @@ export function serializeAnalysis (reportOrCompiler: Readonly<Report<AnalysisRes
     // Compiler overload
     const compiler = reportOrCompiler;
     const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
-    const { nodeToSymbol, nodeToReferee, symbolToReferences } = compiler.analyzeFile(DEFAULT_ENTRY).getValue();
-    const errors = compiler.analyzeFile(DEFAULT_ENTRY).getErrors();
-    const warnings = compiler.analyzeFile(DEFAULT_ENTRY).getWarnings();
+    const analysisReport = compiler.analyzeProject(DEFAULT_ENTRY).get(DEFAULT_ENTRY.intern())!;
+    const { nodeToSymbol, nodeToReferee, symbolToReferences } = analysisReport.getValue();
+    const errors = analysisReport.getErrors();
+    const warnings = analysisReport.getWarnings();
     const report = { value: ast, errors, ...(warnings.length ? { warnings } : {}) };
     return JSON.stringify(report, createJsonReplacer(nodeToSymbol, nodeToReferee, symbolToReferences), pretty ? 2 : 0);
   }

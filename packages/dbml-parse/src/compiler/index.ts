@@ -6,7 +6,7 @@ import { type SyntaxNode, SyntaxNodeIdGenerator } from '@/core/parser/nodes';
 import type { NodeSymbol } from '@/core/analyzer/symbol/symbols';
 import { NodeSymbolIdGenerator } from '@/core/analyzer/symbol/symbols';
 import { DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLReferencesProvider, DBMLDiagnosticsProvider } from '@/services/index';
-import { parseFile, localFileDependencies, analyzeFile, analyzeProject, interpretFile, interpretProject } from './queries/pipeline';
+import { parseFile, localFileDependencies, analyzeProject, interpretProject } from './queries/pipeline';
 import { flatStream, invalidStream } from './queries/token';
 import { symbolOfName, symbolMembers } from './queries/symbol';
 import { containerStack, containerToken, containerElement, containerScope, containerScopeKind } from './queries/container';
@@ -117,23 +117,21 @@ export default class Compiler {
     return renameTable.call(this, oldName, newName, DEFAULT_ENTRY);
   }
 
-  /* pipeline - low-level cached queries, prefer the utility methods below */
+  /* pipeline */
 
-  /** @internal */ parseFile = this.localQuery(parseFile);
-  /** @internal */ localFileDependencies = this.localQuery(localFileDependencies);
-  /** @internal */ analyzeFile = this.globalQuery(analyzeFile);
-  /** @internal */ analyzeProject = analyzeProject.bind(this);
-  /** @internal */ interpretFile = this.globalQuery(interpretFile);
-  /** @internal */ interpretProject = interpretProject.bind(this);
+  parseFile = this.localQuery(parseFile);
+  localFileDependencies = this.localQuery(localFileDependencies);
+  analyzeProject = analyzeProject.bind(this);
+  interpretProject = interpretProject.bind(this);
 
   /* utility queries */
 
   resolvedSymbol (node: SyntaxNode): NodeSymbol | undefined {
-    return this.analyzeFile(node.filepath).getValue().nodeToSymbol.get(node);
+    return this.analyzeProject(node.filepath).get(node.filepath.intern())?.getValue().nodeToSymbol.get(node);
   }
 
   nodeReferee (node: SyntaxNode): NodeSymbol | undefined {
-    return this.analyzeFile(node.filepath).getValue().nodeToReferee.get(node);
+    return this.analyzeProject(node.filepath).get(node.filepath.intern())?.getValue().nodeToReferee.get(node);
   }
 
   nodeReferences (node: SyntaxNode): SyntaxNode[] {
@@ -141,7 +139,7 @@ export default class Compiler {
     if (!symbol) return [];
 
     const refs: SyntaxNode[] = [];
-    for (const [, report] of this.analyzeProject()) {
+    for (const report of this.analyzeProject().values()) {
       if (report.getErrors().length > 0) continue;
       const fileRefs = report.getValue().symbolToReferences.get(symbol);
       if (fileRefs) refs.push(...fileRefs);
@@ -174,7 +172,7 @@ export default class Compiler {
     scopeKind: this.globalQuery(containerScopeKind),
   };
 
-  /** @deprecated Use parseFile/fileErrors/fileWarnings/interpretFile with explicit filepath instead. */
+  /** @deprecated Use parseFile/fileErrors/fileWarnings/interpretProject with explicit entrypoint instead. */
   readonly parse = {
     /** @deprecated Use `compiler.getSource(filepath)` */
     source: () => this.getSource(DEFAULT_ENTRY) ?? '',
@@ -186,8 +184,8 @@ export default class Compiler {
     warnings: () => this.fileWarnings(DEFAULT_ENTRY),
     /** @deprecated Use `compiler.parseFile(filepath).tokens` */
     tokens: () => this.parseFile(DEFAULT_ENTRY).getValue().tokens,
-    /** @deprecated Use `compiler.interpretFile(filepath).getValue().databases[0]` */
-    rawDb: () => this.interpretFile(DEFAULT_ENTRY).getValue().databases[0],
+    /** @deprecated Use `compiler.interpretProject(entrypoint).getValue().databases[0]` */
+    rawDb: () => this.interpretProject(DEFAULT_ENTRY).getValue().databases[0],
   };
 
   initMonacoServices () {

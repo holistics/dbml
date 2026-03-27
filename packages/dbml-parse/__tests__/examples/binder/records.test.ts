@@ -62,7 +62,7 @@ describe('[example] records binder', () => {
     const tableSymbol = authSchema.symbolTable.get('Table:users') as TableSymbol;
 
     // Schema should have reference from records
-    const authSchemaRefs = compiler.analyzeFile(DEFAULT_ENTRY).getValue().symbolToReferences.get(authSchema) ?? [];
+    const authSchemaRefs = compiler.analyzeProject(DEFAULT_ENTRY).get(DEFAULT_ENTRY.intern())!.getValue().symbolToReferences.get(authSchema) ?? [];
     expect(authSchemaRefs.length).toBe(1);
     expect(compiler.nodeReferee(authSchemaRefs[0])).toBe(authSchema);
     // Table should have exactly 1 reference from records
@@ -86,7 +86,7 @@ describe('[example] records binder', () => {
     `;
     const compiler = createCompiler(source);
     compiler.parseFile(DEFAULT_ENTRY);
-    const errors = compiler.analyzeFile(DEFAULT_ENTRY).getErrors();
+    const errors = compiler.analyzeProject(DEFAULT_ENTRY).get(DEFAULT_ENTRY.intern())!.getErrors();
     expect(errors.length).toBe(1);
     expect(errors[0].diagnostic).toBe("Table 'nonexistent' does not exist in Schema 'public'");
   });
@@ -102,7 +102,7 @@ describe('[example] records binder', () => {
     `;
     const compiler = createCompiler(source);
     compiler.parseFile(DEFAULT_ENTRY);
-    const errors = compiler.analyzeFile(DEFAULT_ENTRY).getErrors();
+    const errors = compiler.analyzeProject(DEFAULT_ENTRY).get(DEFAULT_ENTRY.intern())!.getErrors();
     expect(errors.length).toBe(1);
     expect(errors[0].diagnostic).toBe("Column 'nonexistent' does not exist in Table 'users'");
   });
@@ -238,7 +238,7 @@ describe('[example] records binder', () => {
     `;
     const compiler = createCompiler(source);
     compiler.parseFile(DEFAULT_ENTRY);
-    const errors = compiler.analyzeFile(DEFAULT_ENTRY).getErrors();
+    const errors = compiler.analyzeProject(DEFAULT_ENTRY).get(DEFAULT_ENTRY.intern())!.getErrors();
     expect(errors.length).toBe(1);
     expect(errors[0].diagnostic).toBe("Enum 'unknown_enum' does not exist in Schema 'public'");
   });
@@ -256,7 +256,7 @@ describe('[example] records binder', () => {
     `;
     const compiler = createCompiler(source);
     compiler.parseFile(DEFAULT_ENTRY);
-    const errors = compiler.analyzeFile(DEFAULT_ENTRY).getErrors();
+    const errors = compiler.analyzeProject(DEFAULT_ENTRY).get(DEFAULT_ENTRY.intern())!.getErrors();
     expect(errors.length).toBe(1);
     expect(errors[0].diagnostic).toBe("Enum field 'unknown_field' does not exist in Enum 'status'");
   });
@@ -311,7 +311,7 @@ describe('[example] records binder', () => {
     `;
     const compiler = createCompiler(source);
     compiler.parseFile(DEFAULT_ENTRY);
-    const errors = compiler.analyzeFile(DEFAULT_ENTRY).getErrors();
+    const errors = compiler.analyzeProject(DEFAULT_ENTRY).get(DEFAULT_ENTRY.intern())!.getErrors();
     expect(errors.length).toBe(4);
     expect(errors[0].message).toBe('Column \'id\' is referenced more than once in a Records for Table \'tasks\'');
     expect(errors[1].message).toBe('Column \'id\' is referenced more than once in a Records for Table \'tasks\'');

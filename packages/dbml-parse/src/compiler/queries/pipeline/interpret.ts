@@ -5,67 +5,41 @@ import type { CompileError, CompileWarning } from '@/core/errors';
 import Interpreter from '@/core/interpreter/interpreter';
 import Report from '@/core/report';
 
-// Interpret all files in the project.
-export function interpretProject (this: Compiler): Report<Model> {
-  const allFiles = this.layout().listAllFiles();
-  if (allFiles.length === 0) return new Report({ databases: [] }, [], []);
-  return this.interpretFile(allFiles[0]);
-}
+// Interpret files in the project.
+// If entrypoint is provided, only that file and its transitive dependencies are interpreted.
+// If entrypoint is undefined, all files in the project are interpreted.
+export function interpretProject (this: Compiler, entrypoint?: Filepath): Report<Model> {
+  const analysisMap = this.analyzeProject(entrypoint);
 
-export function interpretFile (this: Compiler, filepath: Filepath): Report<Model> {
-  // 1. Collect all files in dependency graph (entry file first)
-  const visited = new Set<FilepathId>();
-  const fileOrder: Filepath[] = [];
+  if (analysisMap.size === 0) return new Report({ databases: [] }, [], []);
 
-  const collectDependencies = (fp: Filepath) => {
-    const id = fp.intern();
-    if (visited.has(id)) return;
-    visited.add(id);
-    fileOrder.push(fp);
-
-    for (const depId of this.localFileDependencies(fp)) {
-      collectDependencies(Filepath.from(depId));
-    }
-  };
-  collectDependencies(filepath);
-
-  // 2. Interpret each file independently
   const databases: Database[] = [];
   const allErrors: CompileError[] = [];
   const allWarnings: CompileWarning[] = [];
 
-  for (const fp of fileOrder) {
-    const { db, errors, warnings } = interpretSingle(this, fp);
-    databases.push(db);
-    allErrors.push(...errors);
-    allWarnings.push(...warnings);
+  for (const [, report] of analysisMap) {
+    const errors = [...report.getErrors()];
+    const warnings = [...report.getWarnings()];
+
+    if (errors.length > 0) {
+      databases.push(emptyDatabase(report.getValue().ast.filepath));
+      allErrors.push(...errors);
+      allWarnings.push(...warnings);
+      continue;
+    }
+
+    const analysisResult = report.getValue();
+    const interpretReport = new Interpreter(
+      this,
+      analysisResult,
+    ).interpret();
+
+    databases.push(interpretReport.getValue());
+    allErrors.push(...errors, ...interpretReport.getErrors());
+    allWarnings.push(...warnings, ...interpretReport.getWarnings());
   }
 
   return new Report({ databases }, allErrors, allWarnings);
-}
-
-function interpretSingle (compiler: Compiler, filepath: Filepath): {
-  db: Database; errors: CompileError[]; warnings: CompileWarning[];
-} {
-  const bound = compiler.analyzeFile(filepath);
-  const errors = [...bound.getErrors()];
-  const warnings = [...bound.getWarnings()];
-
-  if (errors.length > 0) {
-    return { db: emptyDatabase(filepath), errors, warnings };
-  }
-
-  const analysisResult = bound.getValue();
-  const interpretReport = new Interpreter(
-    compiler,
-    analysisResult,
-  ).interpret();
-
-  return {
-    db: interpretReport.getValue(),
-    errors: [...errors, ...interpretReport.getErrors()],
-    warnings: [...warnings, ...interpretReport.getWarnings()],
-  };
 }
 
 function emptyDatabase (filepath: Filepath): Database {

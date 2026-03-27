@@ -268,7 +268,7 @@ export function renameTable (
     }
   }
 
-  const references = this.analyzeFile(filepath).getValue().symbolToReferences.get(tableSymbol) ?? [];
+  const references = this.analyzeProject(filepath).get(filepath.intern())?.getValue().symbolToReferences.get(tableSymbol) ?? [];
   for (const ref of references) {
     const refText = source.substring(ref.start, ref.end);
     const cleanRefText = refText.replace(/"/g, '');

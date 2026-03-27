@@ -77,7 +77,7 @@ describe('[example] binder', () => {
       const compiler = new Compiler();
       compiler.setSource(source);
       const parseErrors = compiler.parseFile(DEFAULT_ENTRY).getErrors();
-      const analyzeErrors = compiler.analyzeFile(DEFAULT_ENTRY).getErrors();
+      const analyzeErrors = compiler.analyzeProject(DEFAULT_ENTRY).get(DEFAULT_ENTRY.intern())!.getErrors();
       expect([...parseErrors, ...analyzeErrors]).toHaveLength(0);
 
       const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
@@ -100,7 +100,7 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeProject(DEFAULT_ENTRY).get(DEFAULT_ENTRY.intern())!.getErrors()];
 
       expect(errors).toHaveLength(1);
       expect(errors[0].diagnostic).toBe("Table name 'users' already exists in schema 'public'");
@@ -113,7 +113,7 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeProject(DEFAULT_ENTRY).get(DEFAULT_ENTRY.intern())!.getErrors()];
       expect(errors).toHaveLength(0);
 
       const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
@@ -136,7 +136,7 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeProject(DEFAULT_ENTRY).get(DEFAULT_ENTRY.intern())!.getErrors()];
       expect(errors).toHaveLength(0);
 
       const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
@@ -160,7 +160,7 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeProject(DEFAULT_ENTRY).get(DEFAULT_ENTRY.intern())!.getErrors()];
       expect(errors).toHaveLength(0);
 
       const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
@@ -175,7 +175,7 @@ describe('[example] binder', () => {
     test('should handle deeply nested schema names and quoted identifiers', () => {
       const compiler1 = new Compiler();
       compiler1.setSource('Table a.b.c { id int }');
-      const errors1 = [...compiler1.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler1.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors1 = [...compiler1.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler1.analyzeProject(DEFAULT_ENTRY).get(DEFAULT_ENTRY.intern())!.getErrors()];
       expect(errors1).toHaveLength(0);
       const { ast: ast1 } = compiler1.parseFile(DEFAULT_ENTRY).getValue();
       const schemaSymbol1 = compiler1.resolvedSymbol(ast1) as SchemaSymbol;
@@ -184,7 +184,7 @@ describe('[example] binder', () => {
       const compiler2 = new Compiler();
 
       compiler2.setSource('Table "user-table" { "user-id" int }');
-      const errors2 = [...compiler2.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler2.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors2 = [...compiler2.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler2.analyzeProject(DEFAULT_ENTRY).get(DEFAULT_ENTRY.intern())!.getErrors()];
       expect(errors2).toHaveLength(0);
       const { ast: ast2 } = compiler2.parseFile(DEFAULT_ENTRY).getValue();
       const schemaSymbol2 = compiler2.resolvedSymbol(ast2) as SchemaSymbol;
@@ -222,7 +222,7 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeProject(DEFAULT_ENTRY).get(DEFAULT_ENTRY.intern())!.getErrors()];
 
       expect(errors).toHaveLength(2);
       expect(errors[0].diagnostic).toBe('Duplicate column id');
@@ -240,7 +240,7 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeProject(DEFAULT_ENTRY).get(DEFAULT_ENTRY.intern())!.getErrors()];
       expect(errors).toHaveLength(0);
 
       const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
@@ -316,7 +316,7 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeProject(DEFAULT_ENTRY).get(DEFAULT_ENTRY.intern())!.getErrors()];
       expect(errors).toHaveLength(0);
 
       const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
@@ -336,7 +336,7 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeProject(DEFAULT_ENTRY).get(DEFAULT_ENTRY.intern())!.getErrors()];
 
       expect(errors).toHaveLength(1);
       expect(errors[0].diagnostic).toBe("No column named 'nonexistent_column' inside Table 'users'");
@@ -356,7 +356,7 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeProject(DEFAULT_ENTRY).get(DEFAULT_ENTRY.intern())!.getErrors()];
       expect(errors).toHaveLength(0);
 
       const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
@@ -403,7 +403,7 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeProject(DEFAULT_ENTRY).get(DEFAULT_ENTRY.intern())!.getErrors()];
       expect(errors).toHaveLength(0);
 
       const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
@@ -432,7 +432,7 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeProject(DEFAULT_ENTRY).get(DEFAULT_ENTRY.intern())!.getErrors()];
 
       expect(errors).toHaveLength(2);
       expect(errors[0].diagnostic).toBe('Duplicate enum field active');
@@ -446,7 +446,7 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeProject(DEFAULT_ENTRY).get(DEFAULT_ENTRY.intern())!.getErrors()];
       expect(errors).toHaveLength(0);
 
       const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
@@ -473,7 +473,7 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeProject(DEFAULT_ENTRY).get(DEFAULT_ENTRY.intern())!.getErrors()];
       expect(errors).toHaveLength(0);
 
       const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
@@ -495,7 +495,7 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeProject(DEFAULT_ENTRY).get(DEFAULT_ENTRY.intern())!.getErrors()];
       expect(errors).toHaveLength(0);
 
       const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
@@ -513,7 +513,7 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeProject(DEFAULT_ENTRY).get(DEFAULT_ENTRY.intern())!.getErrors()];
       expect(errors).toHaveLength(0);
 
       const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
@@ -536,7 +536,7 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeProject(DEFAULT_ENTRY).get(DEFAULT_ENTRY.intern())!.getErrors()];
       expect(errors).toHaveLength(0);
 
       const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
@@ -563,7 +563,7 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeProject(DEFAULT_ENTRY).get(DEFAULT_ENTRY.intern())!.getErrors()];
       expect(errors).toHaveLength(0);
 
       const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
@@ -586,7 +586,7 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeProject(DEFAULT_ENTRY).get(DEFAULT_ENTRY.intern())!.getErrors()];
       expect(errors.length).toBe(1);
       expect(errors[0].diagnostic).toBe("Enum field 'nonexistent' does not exist in Enum 'status'");
     });
@@ -599,7 +599,7 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeProject(DEFAULT_ENTRY).get(DEFAULT_ENTRY.intern())!.getErrors()];
       expect(errors.length).toBe(1);
       expect(errors[0].diagnostic).toBe("Enum 'nonexistent_enum' does not exist in Schema 'public'");
     });
@@ -612,7 +612,7 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeProject(DEFAULT_ENTRY).get(DEFAULT_ENTRY.intern())!.getErrors()];
       expect(errors).toHaveLength(0);
     });
 
@@ -624,7 +624,7 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeProject(DEFAULT_ENTRY).get(DEFAULT_ENTRY.intern())!.getErrors()];
       expect(errors).toHaveLength(0);
     });
 
@@ -636,7 +636,7 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeProject(DEFAULT_ENTRY).get(DEFAULT_ENTRY.intern())!.getErrors()];
       expect(errors).toHaveLength(0);
     });
 
@@ -648,7 +648,7 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeProject(DEFAULT_ENTRY).get(DEFAULT_ENTRY.intern())!.getErrors()];
       expect(errors).toHaveLength(0);
     });
 
@@ -660,7 +660,7 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeProject(DEFAULT_ENTRY).get(DEFAULT_ENTRY.intern())!.getErrors()];
       expect(errors).toHaveLength(0);
     });
 
@@ -673,7 +673,7 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeProject(DEFAULT_ENTRY).get(DEFAULT_ENTRY.intern())!.getErrors()];
       expect(errors.length).toBe(1);
       expect(errors[0].diagnostic).toBe("Enum 'true' does not exist in Schema 'public'");
     });
@@ -689,7 +689,7 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeProject(DEFAULT_ENTRY).get(DEFAULT_ENTRY.intern())!.getErrors()];
       expect(errors.length).toBe(1);
       expect(errors[0].diagnostic).toBe("Enum field 'value' does not exist in Enum 'true'");
     });
@@ -706,7 +706,7 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeProject(DEFAULT_ENTRY).get(DEFAULT_ENTRY.intern())!.getErrors()];
       expect(errors).toHaveLength(0);
 
       // Verify the binding
@@ -730,7 +730,7 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeProject(DEFAULT_ENTRY).get(DEFAULT_ENTRY.intern())!.getErrors()];
       expect(errors.length).toBe(1);
       expect(errors[0].diagnostic).toBe("Enum 'hello' does not exist in Schema 'public'");
     });
@@ -745,7 +745,7 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeProject(DEFAULT_ENTRY).get(DEFAULT_ENTRY.intern())!.getErrors()];
       expect(errors).toHaveLength(0);
 
       const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
@@ -769,7 +769,7 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeProject(DEFAULT_ENTRY).get(DEFAULT_ENTRY.intern())!.getErrors()];
       expect(errors).toHaveLength(0);
 
       const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
@@ -792,7 +792,7 @@ describe('[example] binder', () => {
     test('should detect unknown table and column references', () => {
       const compiler1 = new Compiler();
       compiler1.setSource('Ref: nonexistent.id > also_nonexistent.id');
-      const errors1 = [...compiler1.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler1.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors1 = [...compiler1.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler1.analyzeProject(DEFAULT_ENTRY).get(DEFAULT_ENTRY.intern())!.getErrors()];
       expect(errors1).toHaveLength(2);
       expect(errors1[0].diagnostic).toBe("Table 'nonexistent' does not exist in Schema 'public'");
       expect(errors1[1].diagnostic).toBe("Table 'also_nonexistent' does not exist in Schema 'public'");
@@ -803,7 +803,7 @@ describe('[example] binder', () => {
       `;
       const compiler2 = new Compiler();
       compiler2.setSource(source2);
-      const errors2 = [...compiler2.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler2.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors2 = [...compiler2.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler2.analyzeProject(DEFAULT_ENTRY).get(DEFAULT_ENTRY.intern())!.getErrors()];
       expect(errors2).toHaveLength(1);
       expect(errors2[0].diagnostic).toBe("Column 'nonexistent' does not exist in Table 'users'");
     });
@@ -816,7 +816,7 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeProject(DEFAULT_ENTRY).get(DEFAULT_ENTRY.intern())!.getErrors()];
       expect(errors).toHaveLength(0);
 
       const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
@@ -841,7 +841,7 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeProject(DEFAULT_ENTRY).get(DEFAULT_ENTRY.intern())!.getErrors()];
       expect(errors).toHaveLength(0);
 
       const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
@@ -867,7 +867,7 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeProject(DEFAULT_ENTRY).get(DEFAULT_ENTRY.intern())!.getErrors()];
       expect(errors).toHaveLength(0);
 
       const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
@@ -909,7 +909,7 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeProject(DEFAULT_ENTRY).get(DEFAULT_ENTRY.intern())!.getErrors()];
       expect(errors).toHaveLength(0);
 
       const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
@@ -952,7 +952,7 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeProject(DEFAULT_ENTRY).get(DEFAULT_ENTRY.intern())!.getErrors()];
       expect(errors).toHaveLength(0);
 
       const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
@@ -973,7 +973,7 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeProject(DEFAULT_ENTRY).get(DEFAULT_ENTRY.intern())!.getErrors()];
       expect(errors.length).toBe(2);
       expect(errors[0].diagnostic).toBe("Column 'nonexistent' does not exist in Table 'posts'");
       expect(errors[1].diagnostic).toBe("Column 'also_nonexistent' does not exist in Table 'users'");
@@ -1009,7 +1009,7 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeProject(DEFAULT_ENTRY).get(DEFAULT_ENTRY.intern())!.getErrors()];
       expect(errors).toHaveLength(0);
 
       const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
@@ -1031,7 +1031,7 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeProject(DEFAULT_ENTRY).get(DEFAULT_ENTRY.intern())!.getErrors()];
 
       expect(errors).toHaveLength(1);
       expect(errors[0].diagnostic).toBe("TablePartial 'nonexistent_partial' does not exist in Schema 'public'");
@@ -1049,7 +1049,7 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeProject(DEFAULT_ENTRY).get(DEFAULT_ENTRY.intern())!.getErrors()];
       expect(errors).toHaveLength(0);
 
       const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
@@ -1074,7 +1074,7 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeProject(DEFAULT_ENTRY).get(DEFAULT_ENTRY.intern())!.getErrors()];
       expect(errors).toHaveLength(0);
 
       const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
@@ -1098,7 +1098,7 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeProject(DEFAULT_ENTRY).get(DEFAULT_ENTRY.intern())!.getErrors()];
       expect(errors).toHaveLength(0);
 
       const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
@@ -1118,7 +1118,7 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeProject(DEFAULT_ENTRY).get(DEFAULT_ENTRY.intern())!.getErrors()];
       expect(errors.length).toEqual(1);
       expect(errors[0].diagnostic).toBe("TablePartial 'p2' does not exist in Schema 'public'");
     });
@@ -1137,7 +1137,7 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeProject(DEFAULT_ENTRY).get(DEFAULT_ENTRY.intern())!.getErrors()];
       expect(errors.length).toBe(4);
 
       const errorDiagnostics = errors.map((e) => e.diagnostic);
@@ -1155,7 +1155,7 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeProject(DEFAULT_ENTRY).get(DEFAULT_ENTRY.intern())!.getErrors()];
       // Self-referential refs in table partials are allowed
       expect(errors.length).toBe(0);
     });
@@ -1174,7 +1174,7 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeProject(DEFAULT_ENTRY).get(DEFAULT_ENTRY.intern())!.getErrors()];
       // Circular refs via table partials are allowed
       expect(errors.length).toBe(0);
     });
@@ -1196,7 +1196,7 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeProject(DEFAULT_ENTRY).get(DEFAULT_ENTRY.intern())!.getErrors()];
       expect(errors).toHaveLength(0);
 
       const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
@@ -1246,7 +1246,7 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeProject(DEFAULT_ENTRY).get(DEFAULT_ENTRY.intern())!.getErrors()];
       expect(errors).toHaveLength(0);
 
       const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
@@ -1274,7 +1274,7 @@ describe('[example] binder', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(source);
-      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeFile(DEFAULT_ENTRY).getErrors()];
+      const errors = [...compiler.parseFile(DEFAULT_ENTRY).getErrors(), ...compiler.analyzeProject(DEFAULT_ENTRY).get(DEFAULT_ENTRY.intern())!.getErrors()];
       expect(errors).toHaveLength(0);
 
       const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
