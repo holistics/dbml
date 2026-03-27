@@ -5,7 +5,9 @@ import { getTokenFullEnd, getTokenFullStart } from '@/core/lexer/utils';
 import type { Internable } from '@/core/internable';
 import type { Filepath } from '@/compiler/projectLayout';
 
+declare const __syntaxNodeKeyBrand: unique symbol;
 export type SyntaxNodeId = number;
+export type SyntaxNodeKey = string & { [__syntaxNodeKeyBrand]: true };
 export class SyntaxNodeIdGenerator {
   private id = 0;
 
@@ -18,13 +20,13 @@ export class SyntaxNodeIdGenerator {
   }
 }
 
-export class SyntaxNode implements Internable<SyntaxNodeId> {
+export class SyntaxNode implements Internable<SyntaxNodeKey> {
   id: Readonly<SyntaxNodeId>;
   kind: SyntaxNodeKind;
   readonly filepath: Filepath;
 
-  intern (): SyntaxNodeId {
-    return this.id;
+  intern (): SyntaxNodeKey {
+    return `${this.filepath.intern()}:${this.id}` as SyntaxNodeKey;
   }
 
   startPos: Readonly<Position>;
