@@ -2,8 +2,9 @@ import { type DbmlProjectLayout, Filepath, MemoryProjectLayout } from './project
 import { type FilepathId } from './projectLayout';
 import { intern, Internable, Primitive } from '@/core/internable';
 import { DEFAULT_ENTRY } from './constants';
-import type { SyntaxNode } from '@/core/parser/nodes';
+import { type SyntaxNode, SyntaxNodeIdGenerator } from '@/core/parser/nodes';
 import type { NodeSymbol } from '@/core/analyzer/symbol/symbols';
+import { NodeSymbolIdGenerator } from '@/core/analyzer/symbol/symbols';
 import { DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLReferencesProvider, DBMLDiagnosticsProvider } from '@/services/index';
 import { parseFile, localFileDependencies, analyzeFile, analyzeProject, interpretFile, interpretProject } from './queries/pipeline';
 import { flatStream, invalidStream } from './queries/token';
@@ -27,6 +28,9 @@ export default class Compiler {
 
   private globalQueryCache = new Map<symbol, any>();
   private localQueryCache = new Map<symbol, any>();
+
+  readonly nodeIdGenerator = new SyntaxNodeIdGenerator();
+  readonly symbolIdGenerator = new NodeSymbolIdGenerator();
 
   constructor (layout?: DbmlProjectLayout) {
     this._layout = layout ?? new MemoryProjectLayout();

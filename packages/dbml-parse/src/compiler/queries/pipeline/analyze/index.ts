@@ -5,7 +5,7 @@ import type { CompileWarning } from '@/core/errors';
 import Binder from '@/core/analyzer/binder/binder';
 import Validator from '@/core/analyzer/validator/validator';
 import SymbolFactory from '@/core/analyzer/symbol/factory';
-import { NodeSymbolIdGenerator, SchemaSymbol } from '@/core/analyzer/symbol/symbols';
+import { SchemaSymbol } from '@/core/analyzer/symbol/symbols';
 import SymbolTable from '@/core/analyzer/symbol/symbolTable';
 import Report from '@/core/report';
 import { CompileError } from '@/core/errors';
@@ -14,7 +14,6 @@ import { resolveExternalDependencies } from './utils';
 
 export type ValidateFileResult = {
   readonly symbolTable: SymbolTable;
-  readonly symbolIdGenerator: NodeSymbolIdGenerator;
   readonly nodeToSymbol: NodeToSymbolMap;
 };
 
@@ -30,8 +29,7 @@ export function validateFile (compiler: Compiler, filepath: Filepath): Report<Va
   const cached = validateFileCache.get(ast);
   if (cached) return cached;
 
-  const symbolIdGenerator = new NodeSymbolIdGenerator();
-  const symbolFactory = new SymbolFactory(symbolIdGenerator, filepath);
+  const symbolFactory = new SymbolFactory(compiler.symbolIdGenerator, filepath);
 
   const validationReport = new Validator(
     ast,
@@ -44,7 +42,6 @@ export function validateFile (compiler: Compiler, filepath: Filepath): Report<Va
   const result = new Report(
     {
       symbolTable: rootSymbol.symbolTable,
-      symbolIdGenerator,
       nodeToSymbol,
     },
     [...parseReport.getErrors(), ...validationReport.getErrors()],
@@ -72,15 +69,14 @@ export function analyzeProject (this: Compiler): Map<Filepath, Report<AnalysisRe
 export function analyzeFile (this: Compiler, filepath: Filepath): Report<AnalysisResult> {
   const { ast } = this.parseFile(filepath).getValue();
   const validationReport = validateFile(this, filepath);
-  const { symbolTable, symbolIdGenerator, nodeToSymbol } = validationReport.getValue();
-  const symbolFactory = new SymbolFactory(symbolIdGenerator, filepath);
+  const { symbolTable, nodeToSymbol } = validationReport.getValue();
+  const symbolFactory = new SymbolFactory(this.symbolIdGenerator, filepath);
 
   const errors: CompileError[] = [...validationReport.getErrors()];
   const warnings: CompileWarning[] = [...validationReport.getWarnings()];
 
   const resolveReport = resolveExternalDependencies(this, ast, {
     symbolTable,
-    symbolIdGenerator,
     nodeToSymbol,
   });
   errors.push(...resolveReport.getErrors());

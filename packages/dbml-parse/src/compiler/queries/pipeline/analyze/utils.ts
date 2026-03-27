@@ -1,6 +1,6 @@
 import type Compiler from '../../../index';
 import { Filepath } from '../../../projectLayout';
-import { ExternalSymbol, NodeSymbol, NodeSymbolIdGenerator, SchemaSymbol, TableGroupSymbol } from '@/core/analyzer/symbol/symbols';
+import { ExternalSymbol, NodeSymbol, SchemaSymbol, TableGroupSymbol } from '@/core/analyzer/symbol/symbols';
 import { BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ProgramNode } from '@/core/parser/nodes';
 import { destructureComplexVariable } from '@/core/analyzer/utils';
 import { registerSchemaStack } from '@/core/analyzer/validator/utils';
@@ -36,11 +36,10 @@ export function resolveExternalDependencies (
   ast: ProgramNode,
   local: {
     symbolTable: SymbolTable;
-    symbolIdGenerator: NodeSymbolIdGenerator;
     nodeToSymbol: NodeToSymbolMap;
   },
 ): Report<SymbolTable> {
-  const symbolFactory = new SymbolFactory(local.symbolIdGenerator, ast.filepath);
+  const symbolFactory = new SymbolFactory(compiler.symbolIdGenerator, ast.filepath);
   const errors: CompileError[] = [];
 
   for (const node of ast.useDeclarations) {
