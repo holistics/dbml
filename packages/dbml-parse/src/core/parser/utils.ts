@@ -360,6 +360,15 @@ export function isExpressionAVariableNode (
   );
 }
 
+// Return true if an expression node is a wildcard (*)
+export function isWildcardExpression (node: SyntaxNode | undefined): boolean {
+  if (!node) return false;
+  if (node instanceof PrimaryExpressionNode && node.expression instanceof VariableNode) {
+    return node.expression.variable?.value === '*';
+  }
+  return false;
+}
+
 // Return true if an expression node is a primary expression
 // with an identifier-like variable node
 export function isExpressionAnIdentifierNode (value?: unknown): value is PrimaryExpressionNode & {

@@ -1,21 +1,11 @@
 import { partition } from 'lodash-es';
 import { destructureComplexVariable, extractReferee } from '@/core/analyzer/utils';
 import { CompileError } from '@/core/errors';
-import { BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, PrimaryExpressionNode, SyntaxNode, VariableNode } from '@/core/parser/nodes';
+import { BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, SyntaxNode } from '@/core/parser/nodes';
+import { isWildcardExpression } from '@/core/parser/utils';
 import { ElementInterpreter, InterpreterDatabase, DiagramView } from '@/core/interpreter/types';
 import { getTokenPosition } from '@/core/interpreter/utils';
 import { DEFAULT_SCHEMA_NAME } from '@/constants';
-
-/**
- * Check if a node is a wildcard expression (*)
- */
-function isWildcardExpression (node: SyntaxNode | undefined): boolean {
-  if (!node) return false;
-  if (node instanceof PrimaryExpressionNode && node.expression instanceof VariableNode) {
-    return node.expression.variable?.value === '*';
-  }
-  return false;
-}
 
 export class DiagramViewInterpreter implements ElementInterpreter {
   private declarationNode: ElementDeclarationNode;

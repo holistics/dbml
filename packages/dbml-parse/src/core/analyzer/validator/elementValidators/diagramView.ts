@@ -14,18 +14,7 @@ import SymbolFactory from '@/core/analyzer/symbol/factory';
 import { createDiagramViewFieldSymbolIndex, createDiagramViewSymbolIndex } from '@/core/analyzer/symbol/symbolIndex';
 import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '@/core/analyzer/utils';
 import { DiagramViewFieldSymbol, DiagramViewSymbol } from '@/core/analyzer/symbol/symbols';
-import { isExpressionAVariableNode } from '@/core/parser/utils';
-
-/**
- * Check if a node is a wildcard expression (*)
- */
-function isWildcardExpression (node: SyntaxNode | undefined): boolean {
-  if (!node) return false;
-  if (node instanceof PrimaryExpressionNode && node.expression instanceof VariableNode) {
-    return node.expression.variable?.value === '*';
-  }
-  return false;
-}
+import { isExpressionAVariableNode, isWildcardExpression } from '@/core/parser/utils';
 
 export default class DiagramViewValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
