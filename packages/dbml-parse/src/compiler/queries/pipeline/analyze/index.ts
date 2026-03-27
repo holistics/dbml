@@ -35,7 +35,6 @@ export function validateFile (compiler: Compiler, filepath: Filepath): Report<Va
 
   const validationReport = new Validator(
     ast,
-    filepath,
     symbolFactory,
   ).validate();
 

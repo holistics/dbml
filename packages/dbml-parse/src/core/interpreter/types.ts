@@ -14,7 +14,6 @@ export interface ElementInterpreter {
 }
 
 export interface InterpreterDatabase {
-  filepath: Filepath;
   schema: [];
   tables: Map<ElementDeclarationNode, Table>;
   notes: Map<ElementDeclarationNode, Note>;

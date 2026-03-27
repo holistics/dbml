@@ -31,7 +31,7 @@ function processColumnInDb<T extends Table | TablePartial> (table: T): T {
   };
 }
 
-function convertEnvToDb (env: InterpreterDatabase): Database {
+function convertEnvToDb (env: InterpreterDatabase, filepath: Filepath): Database {
   // Convert records Map to array of TableRecord
   const records: TableRecord[] = [];
   for (const [table, block] of env.records) {
@@ -55,7 +55,7 @@ function convertEnvToDb (env: InterpreterDatabase): Database {
   }
 
   return {
-    filepath: env.filepath,
+    filepath,
     schemas: [],
     tables: Array.from(env.tables.values()).map(processColumnInDb),
     notes: Array.from(env.notes.values()),
@@ -72,20 +72,16 @@ function convertEnvToDb (env: InterpreterDatabase): Database {
 // The interpreted format follows the old parser
 export default class Interpreter {
   compiler: Compiler;
-  filepath: Filepath;
   ast: ProgramNode;
   env: InterpreterDatabase;
 
   constructor (
     compiler: Compiler,
-    filepath: Filepath,
     { ast, nodeToSymbol, nodeToReferee }: AnalysisResult,
   ) {
     this.compiler = compiler;
-    this.filepath = filepath;
     this.ast = ast;
     this.env = {
-      filepath: ast.filepath,
       schema: [],
       tables: new Map(),
       notes: new Map(),
@@ -171,6 +167,6 @@ export default class Interpreter {
       warnings.push(...recordsResult.getWarnings());
     }
 
-    return new Report(convertEnvToDb(this.env), errors, warnings);
+    return new Report(convertEnvToDb(this.env, this.ast.filepath), errors, warnings);
   }
 }

@@ -9,7 +9,7 @@ import { SyntaxToken } from '@/core/lexer/tokens';
 import { getElementKind } from '@/core/analyzer/utils';
 import { ElementKind } from '@/core/analyzer/types';
 import { NodeToSymbolMap } from '@/core/analyzer/analyzer';
-import type { Filepath, FilepathId } from '@/compiler/projectLayout';
+import type { FilepathId } from '@/compiler/projectLayout';
 import UseDeclarationValidator from '@/core/analyzer/validator/validators/use';
 
 export type ValidatorResult = {
@@ -20,8 +20,6 @@ export type ValidatorResult = {
 export default class Validator {
   private ast: ProgramNode;
 
-  private filepath: Filepath;
-
   private publicSchemaSymbol: SchemaSymbol;
 
   private symbolFactory: SymbolFactory;
@@ -30,11 +28,9 @@ export default class Validator {
 
   constructor (
     ast: ProgramNode,
-    filepath: Filepath,
     symbolFactory: SymbolFactory,
   ) {
     this.ast = ast;
-    this.filepath = filepath;
     this.symbolFactory = symbolFactory;
     this.nodeToSymbol = new Map();
     this.publicSchemaSymbol = this.symbolFactory.create(SchemaSymbol, {
@@ -61,7 +57,7 @@ export default class Validator {
         errors.push(...validatorObject.validate());
       } else if (decl instanceof UseDeclarationNode) {
         errors.push(...new UseDeclarationValidator(
-          { node: decl, filepath: this.filepath, publicSymbolTable: this.publicSchemaSymbol.symbolTable, declarations: this.nodeToSymbol },
+          { node: decl, filepath: this.ast.filepath, publicSymbolTable: this.publicSchemaSymbol.symbolTable, declarations: this.nodeToSymbol },
           this.symbolFactory,
           externalFilepaths,
         ).validate());

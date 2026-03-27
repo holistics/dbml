@@ -58,7 +58,6 @@ function interpretSingle (compiler: Compiler, filepath: Filepath): {
   const analysisResult = bound.getValue();
   const interpretReport = new Interpreter(
     compiler,
-    filepath,
     analysisResult,
   ).interpret();
 

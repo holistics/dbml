@@ -50,7 +50,6 @@ export default class Binder {
   resolve (): Report<NodeToRefereeMap> {
     const errors: CompileError[] = [];
     const context: BinderContext = {
-      filepath: this.symbolFactory.filepath,
       ast: this.ast,
       nodeToSymbol: this.nodeToSymbol,
       nodeToReferee: this.nodeToReferee,
