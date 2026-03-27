@@ -53,9 +53,9 @@ export default class Compiler {
   }
 
   private localQuery<T> (fn: (this: Compiler, filepath: Filepath) => T): (filepath: Filepath) => T {
-    const cacheKey = Symbol();
+    const queryKey = Symbol();
     const cache = new Map<FilepathId, T>();
-    this.localQueryCache.set(cacheKey, cache);
+    this.localQueryCache.set(queryKey, cache);
     return (filepath: Filepath): T => {
       const fileId = filepath.intern();
       if (cache.has(fileId)) return cache.get(fileId)!;
@@ -68,16 +68,16 @@ export default class Compiler {
   private globalQuery<Args extends (Primitive | Primitive[] | Internable<Primitive>)[], Return> (
     fn: (this: Compiler, ...args: Args) => Return,
   ): (...args: Args) => Return {
-    const cacheKey = Symbol();
+    const queryKey = Symbol();
     return ((...args: Args): Return => {
       const argKey = args.map((a) => intern(a)).join('\0');
-      let subCache = this.globalQueryCache.get(cacheKey);
+      let subCache = this.globalQueryCache.get(queryKey);
       if (subCache instanceof Map && subCache.has(argKey)) return subCache.get(argKey);
 
       const result = fn.apply(this, args);
       if (!(subCache instanceof Map)) {
         subCache = new Map();
-        this.globalQueryCache.set(cacheKey, subCache);
+        this.globalQueryCache.set(queryKey, subCache);
       }
       subCache.set(argKey, result);
       return result;
