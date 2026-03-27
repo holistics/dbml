@@ -10,6 +10,7 @@ import SymbolTable from '@/core/analyzer/symbol/symbolTable';
 import Report from '@/core/report';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import { validateFile } from './index';
+import { NodeToSymbolMap } from '@/core/analyzer/analyzer';
 
 function lookupSymbol (
   table: Readonly<SymbolTable>,
@@ -31,7 +32,11 @@ function lookupSymbol (
 export function resolveExternalDependencies (
   compiler: Compiler,
   currentFilepath: Filepath,
-  local: { symbolTable: SymbolTable; symbolIdGenerator: NodeSymbolIdGenerator; nodeToSymbol: NodeToSymbolMap },
+  local: {
+    symbolTable: SymbolTable;
+    symbolIdGenerator: NodeSymbolIdGenerator;
+    nodeToSymbol: NodeToSymbolMap;
+  },
 ): Report<SymbolTable> {
   const externalFilepaths = compiler.localFileDependencies(currentFilepath);
   const symbolFactory = new SymbolFactory(local.symbolIdGenerator, currentFilepath);

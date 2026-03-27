@@ -26,6 +26,10 @@ export default class SymbolTable {
     );
   }
 
+  delete (id: NodeSymbolIndex): boolean {
+    return this.table.delete(id);
+  }
+
   entries (): IterableIterator<[NodeSymbolIndex, NodeSymbol]> {
     return this.table.entries();
   }
