@@ -8,9 +8,14 @@ import { SchemaSymbol } from '@/core/binder/symbol/symbols';
 import SymbolTable from '@/core/binder/symbol/symbolTable';
 import Report from '@/core/report';
 
+export type FileValidateIndex = {
+  readonly symbolTable: SymbolTable;
+  readonly nodeToSymbol: NodeToSymbolMap;
+};
+
 // NOTE: nodeToSymbol returned here is incomplete - partial-injected symbols are not yet resolved.
 // For authoritative node->symbol lookup, use bindFile.nodeToSymbol instead.
-export function validateFile (this: Compiler, filepath: Filepath): Report<{ symbolTable: SymbolTable; nodeToSymbol: NodeToSymbolMap }> {
+export function validateFile (this: Compiler, filepath: Filepath): Report<FileValidateIndex> {
   const nodeToSymbol: NodeToSymbolMap = new InternedMap();
   return this.parseFile(filepath).chain(({ ast }) => {
     const symbolFactory = new SymbolFactory(this.symbolIdGenerator, filepath);

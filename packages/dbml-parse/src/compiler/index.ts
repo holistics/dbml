@@ -20,7 +20,7 @@ import { splitQualifiedIdentifier, unescapeString, escapeString, formatRecordVal
 
 export { ScopeKind } from './types';
 export type { TextEdit, TableNameInput };
-export type { FileParseIndex } from './queries/pipeline';
+export type { FileParseIndex, FileValidateIndex } from './queries/pipeline';
 export { splitQualifiedIdentifier, unescapeString, escapeString, formatRecordValue, isValidIdentifier, addDoubleQuoteIfNeeded };
 
 export default class Compiler {
