@@ -38,7 +38,7 @@ export default class Compiler {
 
   setSource (source: string, filePath?: Filepath): this {
     if (filePath === undefined) {
-      this._layout = new MemoryProjectLayout({ [DEFAULT_ENTRY.intern()]: source });
+      this._layout = new MemoryProjectLayout({ [DEFAULT_ENTRY.absolute]: source });
     } else {
       this._layout.setSource(filePath, source);
     }
@@ -121,6 +121,8 @@ export default class Compiler {
 
   parseFile = this.localQuery(parseFile);
   localFileDependencies = this.localQuery(localFileDependencies);
+  // NOTE: validateFile.nodeToSymbol is incomplete - partial-injected symbols are not yet resolved.
+  // For authoritative node->symbol lookup, use bindFile.nodeToSymbol instead.
   validateFile = this.localQuery(validateFile);
   bindFile = this.localQuery(bindFile);
   validateProject = this.globalQuery(validateProject);

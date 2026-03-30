@@ -9,7 +9,7 @@ import { createPosition, createMockTextModel } from '../../utils';
 function createCompiler (files: Record<string, string>): Compiler {
   const entries: Record<string, string> = {};
   for (const [path, content] of Object.entries(files)) {
-    entries[Filepath.from(path).intern()] = content;
+    entries[Filepath.from(path).absolute] = content;
   }
   return new Compiler(new MemoryProjectLayout(entries));
 }

@@ -530,7 +530,7 @@ describe('[example] multi-file compilation', () => {
         `,
         '/common.dbml': 'Table users { id int }',
       })) {
-        entries[Filepath.from(path).intern()] = content;
+        entries[Filepath.from(path).absolute] = content;
       }
       const compiler = new Compiler(new MemoryProjectLayout(entries));
       expect(compiler.interpretProject().getValue().databases).toHaveLength(2);
