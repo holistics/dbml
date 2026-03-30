@@ -1,4 +1,5 @@
 export * from './parse';
 export * from './dependencies';
-export * from './analyze';
+export * from './validate';
+export * from './binder';
 export * from './interpret';

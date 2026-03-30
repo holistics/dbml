@@ -2,9 +2,9 @@ import { DEFAULT_SCHEMA_NAME } from '@/constants';
 import type Compiler from '../../index';
 import type { Filepath } from '../../projectLayout';
 import { SyntaxNode } from '@/core/parser/nodes';
-import SymbolTable from '@/core/analyzer/symbol/symbolTable';
-import { TableSymbol } from '@/core/analyzer/symbol/symbols';
-import { createSchemaSymbolIndex, createTableSymbolIndex } from '@/core/analyzer/symbol/symbolIndex';
+import SymbolTable from '@/core/binder/symbol/symbolTable';
+import { TableSymbol } from '@/core/binder/symbol/symbols';
+import { createSchemaSymbolIndex, createTableSymbolIndex } from '@/core/binder/symbol/symbolIndex';
 import { applyTextEdits, TextEdit } from './applyTextEdits';
 import { isAlphaOrUnderscore, isDigit } from '@/core/utils';
 import { normalizeTableName, lookupTableSymbol, stripQuotes, type TableNameInput } from './utils';
@@ -268,7 +268,7 @@ export function renameTable (
     }
   }
 
-  const references = this.analyzeProject(filepath).getValue().symbolToReferences.get(tableSymbol) ?? [];
+  const references = this.bindProject().getValue().symbolToReferences.get(tableSymbol) ?? [];
   for (const ref of references) {
     const refText = source.substring(ref.start, ref.end);
     const cleanRefText = refText.replace(/"/g, '');

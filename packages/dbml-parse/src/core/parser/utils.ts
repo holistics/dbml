@@ -31,7 +31,7 @@ import {
   UseDeclarationNode,
   VariableNode,
 } from '@/core/parser/nodes';
-import { destructureComplexVariable } from '@/core/analyzer/utils';
+import { destructureComplexVariable } from '@/core/binder/utils';
 
 // Try to interpret a function application as an element
 export function convertFuncAppToElem (

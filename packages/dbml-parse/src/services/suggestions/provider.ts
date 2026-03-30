@@ -2,7 +2,7 @@ import {
   destructureMemberAccessExpression,
   extractVariableFromExpression,
   getElementKind,
-} from '@/core/analyzer/utils';
+} from '@/core/binder/utils';
 import {
   extractStringFromIdentifierStream,
   isExpressionAVariableNode,
@@ -19,8 +19,8 @@ import {
   CompletionItemKind,
   CompletionItemInsertTextRule,
 } from '@/services/types';
-import { TableSymbol, type NodeSymbol } from '@/core/analyzer/symbol/symbols';
-import { SymbolKind, destructureIndex } from '@/core/analyzer/symbol/symbolIndex';
+import { TableSymbol, type NodeSymbol } from '@/core/binder/symbol/symbols';
+import { SymbolKind, destructureIndex } from '@/core/binder/symbol/symbolIndex';
 import {
   pickCompletionItemKind,
   shouldPrependSpace,
@@ -49,9 +49,9 @@ import {
 import { getOffsetFromMonacoPosition, getFilepathFromModel } from '@/services/utils';
 import type { Filepath } from '@/compiler/projectLayout';
 import { ROOT } from '@/compiler/constants';
-import { ExternalSymbol } from '@/core/analyzer/symbol/symbols';
+import { ExternalSymbol } from '@/core/binder/symbol/symbols';
 import { isComment } from '@/core/lexer/utils';
-import { ElementKind, SettingName } from '@/core/analyzer/types';
+import { ElementKind, SettingName } from '@/core/binder/types';
 
 export default class DBMLCompletionItemProvider implements CompletionItemProvider {
   private compiler: Compiler;
@@ -320,7 +320,7 @@ function suggestCrossFileSymbols (
   for (const externalFile of allFiles) {
     if (externalFile.intern() === currentId) continue;
 
-    const externalReport = compiler.analyzeProject(externalFile);
+    const externalReport = compiler.bindProject();
     if (externalReport.getErrors().length > 0) continue;
 
     const relativePath = externalFile.relativeTo(currentFilepath.dirname);

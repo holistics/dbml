@@ -16,12 +16,12 @@ import {
 import {
   destructureComplexVariable, destructureIndexNode, extractQuotedStringToken, extractVarNameFromPrimaryVariable,
   extractVariableFromExpression,
-} from '@/core/analyzer/utils';
+} from '@/core/binder/utils';
 import { CompileError, CompileErrorCode } from '@/core/errors';
-import { aggregateSettingList, isValidPartialInjection } from '@/core/analyzer/validator/utils';
-import { ColumnSymbol } from '@/core/analyzer/symbol/symbols';
-import { destructureIndex, SymbolKind } from '@/core/analyzer/symbol/symbolIndex';
-import { ElementKind, SettingName } from '@/core/analyzer/types';
+import { aggregateSettingList, isValidPartialInjection } from '@/core/binder/validator/utils';
+import { ColumnSymbol } from '@/core/binder/symbol/symbols';
+import { destructureIndex, SymbolKind } from '@/core/binder/symbol/symbolIndex';
+import { ElementKind, SettingName } from '@/core/binder/types';
 import type Compiler from '@/compiler/index';
 
 export class TableInterpreter implements ElementInterpreter {

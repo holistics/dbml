@@ -15,11 +15,11 @@ import {
 import {
   destructureComplexVariable, destructureIndexNode, extractQuotedStringToken, extractVarNameFromPrimaryVariable,
   extractVariableFromExpression,
-} from '@/core/analyzer/utils';
+} from '@/core/binder/utils';
 import { CompileError, CompileErrorCode } from '@/core/errors';
-import { aggregateSettingList } from '@/core/analyzer/validator/utils';
-import { ColumnSymbol } from '@/core/analyzer/symbol/symbols';
-import { ElementKind, SettingName } from '@/core/analyzer/types';
+import { aggregateSettingList } from '@/core/binder/validator/utils';
+import { ColumnSymbol } from '@/core/binder/symbol/symbols';
+import { ElementKind, SettingName } from '@/core/binder/types';
 import type Compiler from '@/compiler/index';
 
 export class TablePartialInterpreter implements ElementInterpreter {

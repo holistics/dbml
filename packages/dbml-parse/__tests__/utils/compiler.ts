@@ -1,6 +1,6 @@
 import Lexer from '@/core/lexer/lexer';
 import Parser from '@/core/parser/parser';
-import { AnalysisResult } from '@/core/analyzer/analyzer';
+import { AnalysisResult } from '@/core/binder/analyzer';
 import {
   ProgramNode,
   SyntaxNode,
@@ -44,13 +44,13 @@ export function analyze (source: string): Report<AnalysisResult> {
   const compiler = new Compiler();
   compiler.setSource(source);
   return compiler.parseFile(DEFAULT_ENTRY)
-    .chain(() => compiler.analyzeProject(DEFAULT_ENTRY));
+    .chain(() => compiler.bindProject());
 }
 
 export function interpret (source: string): Report<Database | undefined> {
   const compiler = new Compiler();
   compiler.setSource(source);
-  const modelReport = compiler.interpretProject(DEFAULT_ENTRY);
+  const modelReport = compiler.interpretProject();
   const model = modelReport.getValue();
   return new Report(
     model.databases[0],

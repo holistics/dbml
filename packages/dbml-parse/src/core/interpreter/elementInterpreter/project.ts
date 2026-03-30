@@ -1,4 +1,4 @@
-import { extractQuotedStringToken } from '@/core/analyzer/utils';
+import { extractQuotedStringToken } from '@/core/binder/utils';
 import { CompileError } from '@/core/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, SyntaxNode,

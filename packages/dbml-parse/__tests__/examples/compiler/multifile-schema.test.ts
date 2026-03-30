@@ -6,7 +6,7 @@ import { compileFile } from '@tests/utils/multifile';
 describe('[example] multi-file: use { schema ... }', () => {
   describe('valid schema imports', () => {
     test('import schema and ref into its table', () => {
-      const report = compileFile(DEFAULT_ENTRY, {
+      const report = compileFile({
         '/main.dbml': `
           use { schema auth } from './auth.dbml'
           Table public.orders {
@@ -24,7 +24,7 @@ describe('[example] multi-file: use { schema ... }', () => {
     });
 
     test('import schema containing multiple tables', () => {
-      const report = compileFile(DEFAULT_ENTRY, {
+      const report = compileFile({
         '/main.dbml': `
           use { schema inventory } from './inventory.dbml'
           Table public.orders {
@@ -45,7 +45,7 @@ describe('[example] multi-file: use { schema ... }', () => {
     });
 
     test('import multiple schemas from different files', () => {
-      const report = compileFile(DEFAULT_ENTRY, {
+      const report = compileFile({
         '/main.dbml': `
           use { schema auth } from './auth.dbml'
           use { schema billing } from './billing.dbml'
@@ -64,7 +64,7 @@ describe('[example] multi-file: use { schema ... }', () => {
     });
 
     test('import schema with enums', () => {
-      const report = compileFile(DEFAULT_ENTRY, {
+      const report = compileFile({
         '/main.dbml': `
           use { schema auth } from './auth.dbml'
           Table public.users {
@@ -81,7 +81,7 @@ describe('[example] multi-file: use { schema ... }', () => {
     });
 
     test('whole-file import includes schema tables', () => {
-      const report = compileFile(DEFAULT_ENTRY, {
+      const report = compileFile({
         '/main.dbml': `
           use * from './auth.dbml'
           Table public.orders {
@@ -98,7 +98,7 @@ describe('[example] multi-file: use { schema ... }', () => {
 
   describe('schema import errors', () => {
     test('importing non-existent schema from file', () => {
-      const report = compileFile(DEFAULT_ENTRY, {
+      const report = compileFile({
         '/main.dbml': `
           use { schema billing } from './auth.dbml'
         `,
@@ -108,7 +108,7 @@ describe('[example] multi-file: use { schema ... }', () => {
     });
 
     test('local and imported schemas merge when no member conflicts', () => {
-      const report = compileFile(DEFAULT_ENTRY, {
+      const report = compileFile({
         '/main.dbml': `
           use { schema auth } from './auth.dbml'
           Table auth.local_users { id int [pk] }
@@ -119,7 +119,7 @@ describe('[example] multi-file: use { schema ... }', () => {
     });
 
     test('conflicting member in merged schema reports error', () => {
-      const report = compileFile(DEFAULT_ENTRY, {
+      const report = compileFile({
         '/main.dbml': `
           use { schema auth } from './auth.dbml'
           Table auth.users { id int [pk] }
@@ -133,7 +133,7 @@ describe('[example] multi-file: use { schema ... }', () => {
 
   describe('schema import with refs', () => {
     test('inline ref to imported schema table', () => {
-      const report = compileFile(DEFAULT_ENTRY, {
+      const report = compileFile({
         '/main.dbml': `
           use { schema auth } from './auth.dbml'
           Table public.orders {
@@ -150,7 +150,7 @@ describe('[example] multi-file: use { schema ... }', () => {
     });
 
     test('explicit ref to imported schema table', () => {
-      const report = compileFile(DEFAULT_ENTRY, {
+      const report = compileFile({
         '/main.dbml': `
           use { schema auth } from './auth.dbml'
           Table public.orders {

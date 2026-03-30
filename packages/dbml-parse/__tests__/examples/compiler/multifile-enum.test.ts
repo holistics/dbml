@@ -6,7 +6,7 @@ import { compileFile } from '@tests/utils/multifile';
 describe('[example] multi-file: use { enum ... }', () => {
   describe('basic enum import', () => {
     test('import enum and use as column type', () => {
-      const report = compileFile(DEFAULT_ENTRY, {
+      const report = compileFile({
         '/main.dbml': `
           use { enum status } from './enums.dbml'
           Table users {
@@ -23,7 +23,7 @@ describe('[example] multi-file: use { enum ... }', () => {
     });
 
     test('imported enum values are available in dependency database', () => {
-      const report = compileFile(DEFAULT_ENTRY, {
+      const report = compileFile({
         '/main.dbml': `
           use { enum role } from './enums.dbml'
           Table users {
@@ -40,7 +40,7 @@ describe('[example] multi-file: use { enum ... }', () => {
     });
 
     test('import multiple enums from same file', () => {
-      const report = compileFile(DEFAULT_ENTRY, {
+      const report = compileFile({
         '/main.dbml': `
           use { enum status, enum role } from './enums.dbml'
           Table users {
@@ -58,7 +58,7 @@ describe('[example] multi-file: use { enum ... }', () => {
     });
 
     test('import enums from different files', () => {
-      const report = compileFile(DEFAULT_ENTRY, {
+      const report = compileFile({
         '/main.dbml': `
           use { enum status } from './status.dbml'
           use { enum role } from './role.dbml'
@@ -75,7 +75,7 @@ describe('[example] multi-file: use { enum ... }', () => {
     });
 
     test('whole-file import includes enums', () => {
-      const report = compileFile(DEFAULT_ENTRY, {
+      const report = compileFile({
         '/main.dbml': `
           use * from './enums.dbml'
           Table users {
@@ -91,7 +91,7 @@ describe('[example] multi-file: use { enum ... }', () => {
 
   describe('schema-qualified enum import', () => {
     test('import schema containing enum and use as column type', () => {
-      const report = compileFile(DEFAULT_ENTRY, {
+      const report = compileFile({
         '/main.dbml': `
           use { schema auth } from './auth.dbml'
           Table public.users {
@@ -105,7 +105,7 @@ describe('[example] multi-file: use { enum ... }', () => {
     });
 
     test('schema-qualified enum values are correct', () => {
-      const report = compileFile(DEFAULT_ENTRY, {
+      const report = compileFile({
         '/main.dbml': `
           use { schema billing } from './billing.dbml'
           Table public.orders {
@@ -125,7 +125,7 @@ describe('[example] multi-file: use { enum ... }', () => {
 
   describe('enum import errors', () => {
     test('duplicate enum: local definition conflicts with import', () => {
-      const report = compileFile(DEFAULT_ENTRY, {
+      const report = compileFile({
         '/main.dbml': `
           use { enum status } from './enums.dbml'
           Enum status { active\n inactive }
@@ -136,7 +136,7 @@ describe('[example] multi-file: use { enum ... }', () => {
     });
 
     test('importing non-existent enum from file', () => {
-      const report = compileFile(DEFAULT_ENTRY, {
+      const report = compileFile({
         '/main.dbml': `
           use { enum missing } from './enums.dbml'
           Table users { id int [pk] }
@@ -150,7 +150,7 @@ describe('[example] multi-file: use { enum ... }', () => {
 
   describe('enum with default values', () => {
     test('column with imported enum type and string default', () => {
-      const report = compileFile(DEFAULT_ENTRY, {
+      const report = compileFile({
         '/main.dbml': `
           use { enum status } from './enums.dbml'
           Table users {

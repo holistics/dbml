@@ -12,7 +12,7 @@ describe('[snapshot] interpreter', () => {
     const program = readFileSync(path.resolve(__dirname, `./input/${testName}.in.dbml`), 'utf-8');
     const compiler = new Compiler();
     compiler.setSource(program);
-    const res = compiler.interpretProject(DEFAULT_ENTRY);
+    const res = compiler.interpretProject();
     let output: any;
 
     if (res.getErrors().length > 0) {

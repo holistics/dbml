@@ -7,7 +7,7 @@ import { compileFile } from '@tests/utils/multifile';
 describe('[example] multi-file compilation', () => {
   describe('validation - valid imports', () => {
     test('selective import', () => {
-      expect(compileFile(DEFAULT_ENTRY, {
+      expect(compileFile({
         '/main.dbml': `
           use { table users } from './common.dbml'
           Table orders { id int [pk] }
@@ -17,7 +17,7 @@ describe('[example] multi-file compilation', () => {
     });
 
     test('whole-file import', () => {
-      expect(compileFile(DEFAULT_ENTRY, {
+      expect(compileFile({
         '/main.dbml': `
           use * from './common.dbml'
           Table orders { id int [pk] }
@@ -27,7 +27,7 @@ describe('[example] multi-file compilation', () => {
     });
 
     test('enum import', () => {
-      expect(compileFile(DEFAULT_ENTRY, {
+      expect(compileFile({
         '/main.dbml': `
           use { enum status } from './common.dbml'
           Table users {
@@ -45,7 +45,7 @@ describe('[example] multi-file compilation', () => {
     });
 
     test('tablepartial import', () => {
-      expect(compileFile(DEFAULT_ENTRY, {
+      expect(compileFile({
         '/main.dbml': `
           use { tablepartial timestamps } from './common.dbml'
           Table users {
@@ -63,14 +63,14 @@ describe('[example] multi-file compilation', () => {
     });
 
     test('schema, tablegroup, note imports', () => {
-      expect(compileFile(DEFAULT_ENTRY, {
+      expect(compileFile({
         '/main.dbml': `
           use { table public.users } from './common.dbml'
         `,
         '/common.dbml': 'Table public.users { id int }',
       }).getErrors()).toHaveLength(0);
 
-      expect(compileFile(DEFAULT_ENTRY, {
+      expect(compileFile({
         '/main.dbml': `
           use { tablegroup g } from './common.dbml'
         `,
@@ -80,7 +80,7 @@ describe('[example] multi-file compilation', () => {
         `,
       }).getErrors()).toHaveLength(0);
 
-      expect(compileFile(DEFAULT_ENTRY, {
+      expect(compileFile({
         '/main.dbml': `
           use { note my_note } from './common.dbml'
         `,
@@ -89,7 +89,7 @@ describe('[example] multi-file compilation', () => {
     });
 
     test('duplicate and overlapping imports are allowed', () => {
-      expect(compileFile(DEFAULT_ENTRY, {
+      expect(compileFile({
         '/main.dbml': `
           use * from './common.dbml'
           use * from './common.dbml'
@@ -97,7 +97,7 @@ describe('[example] multi-file compilation', () => {
         '/common.dbml': 'Table users { id int }',
       }).getErrors()).toHaveLength(0);
 
-      expect(compileFile(DEFAULT_ENTRY, {
+      expect(compileFile({
         '/main.dbml': `
           use * from './common.dbml'
           use { table users } from './common.dbml'
@@ -105,7 +105,7 @@ describe('[example] multi-file compilation', () => {
         '/common.dbml': 'Table users { id int }',
       }).getErrors()).toHaveLength(0);
 
-      expect(compileFile(DEFAULT_ENTRY, {
+      expect(compileFile({
         '/main.dbml': `
           use { table users } from './common.dbml'
           use { table users } from './common.dbml'
@@ -118,7 +118,7 @@ describe('[example] multi-file compilation', () => {
 
   describe('validation - errors', () => {
     test('only one Project element allowed across all files', () => {
-      const report = compileFile(DEFAULT_ENTRY, {
+      const report = compileFile({
         '/main.dbml': `
           use * from './common.dbml'
           Project myproject { database_type: 'PostgreSQL' }
@@ -135,7 +135,7 @@ describe('[example] multi-file compilation', () => {
     });
 
     test('single Project across files is valid', () => {
-      expect(compileFile(DEFAULT_ENTRY, {
+      expect(compileFile({
         '/main.dbml': `
           use * from './common.dbml'
           Project myproject { database_type: 'PostgreSQL' }
@@ -146,7 +146,7 @@ describe('[example] multi-file compilation', () => {
     });
 
     test('Project in dependency file only is valid', () => {
-      expect(compileFile(DEFAULT_ENTRY, {
+      expect(compileFile({
         '/main.dbml': `
           use * from './common.dbml'
           Table users { id int [pk] }
@@ -159,7 +159,7 @@ describe('[example] multi-file compilation', () => {
     });
 
     test('duplicate symbol from use', () => {
-      expect(compileFile(DEFAULT_ENTRY, {
+      expect(compileFile({
         '/main.dbml': `
           use { table users } from './common.dbml'
           Table users { id int [pk] }
@@ -169,7 +169,7 @@ describe('[example] multi-file compilation', () => {
     });
 
     test('invalid use specifier kind', () => {
-      expect(compileFile(DEFAULT_ENTRY, {
+      expect(compileFile({
         '/main.dbml': `
           use { ref my_ref } from './common.dbml'
         `,
@@ -178,9 +178,7 @@ describe('[example] multi-file compilation', () => {
     });
 
     test('dependency errors are not reported in entry file', () => {
-      const errors = compileFile(
-        Filepath.from('/bad.dbml'),
-        {
+      const errors = compileFile({
           '/main.dbml': `
             use { table users } from './bad.dbml'
             Table orders { id int }
@@ -194,7 +192,7 @@ describe('[example] multi-file compilation', () => {
 
   describe('binding - cross-file resolution', () => {
     test('ref, inline ref, enum type, whole-file ref', () => {
-      expect(compileFile(DEFAULT_ENTRY, {
+      expect(compileFile({
         '/main.dbml': `
           use { table users } from './common.dbml'
           Table orders {
@@ -206,7 +204,7 @@ describe('[example] multi-file compilation', () => {
         '/common.dbml': 'Table users { id int [pk] }',
       }).getErrors()).toHaveLength(0);
 
-      expect(compileFile(DEFAULT_ENTRY, {
+      expect(compileFile({
         '/main.dbml': `
           use { table users } from './common.dbml'
           Table orders {
@@ -217,7 +215,7 @@ describe('[example] multi-file compilation', () => {
         '/common.dbml': 'Table users { id int [pk] }',
       }).getErrors()).toHaveLength(0);
 
-      expect(compileFile(DEFAULT_ENTRY, {
+      expect(compileFile({
         '/main.dbml': `
           use { enum user_status } from './enums.dbml'
           Table users {
@@ -233,7 +231,7 @@ describe('[example] multi-file compilation', () => {
         `,
       }).getErrors()).toHaveLength(0);
 
-      expect(compileFile(DEFAULT_ENTRY, {
+      expect(compileFile({
         '/main.dbml': `
           use * from './common.dbml'
           Table orders {
@@ -247,7 +245,7 @@ describe('[example] multi-file compilation', () => {
     });
 
     test('tablepartial injection and schema-qualified import', () => {
-      expect(compileFile(DEFAULT_ENTRY, {
+      expect(compileFile({
         '/main.dbml': `
           use { tablepartial timestamps } from './partials.dbml'
           Table users {
@@ -263,7 +261,7 @@ describe('[example] multi-file compilation', () => {
         `,
       }).getErrors()).toHaveLength(0);
 
-      expect(compileFile(DEFAULT_ENTRY, {
+      expect(compileFile({
         '/main.dbml': `
           use { schema auth } from './auth.dbml'
           Table public.orders {
@@ -276,7 +274,7 @@ describe('[example] multi-file compilation', () => {
     });
 
     test('ref to non-imported table errors', () => {
-      expect(compileFile(DEFAULT_ENTRY, {
+      expect(compileFile({
         '/main.dbml': `
           Table orders {
             id int [pk]
@@ -289,7 +287,7 @@ describe('[example] multi-file compilation', () => {
     });
 
     test('no transitive symbol leaking', () => {
-      expect(compileFile(Filepath.from('/a.dbml'), {
+      expect(compileFile({
         '/a.dbml': `
           use { table B } from './b.dbml'
           Table A {
@@ -308,16 +306,14 @@ describe('[example] multi-file compilation', () => {
 
   describe('interpretation', () => {
     test('single file produces 1 database', () => {
-      const model = compileFile(
-        Filepath.from('/main.dbml'),
-        { '/main.dbml': 'Table users { id int [pk] }' },
+      const model = compileFile({ '/main.dbml': 'Table users { id int [pk] }' },
       ).getValue();
       expect(model.databases).toHaveLength(1);
       expect(model.databases[0].tables[0].name).toBe('users');
     });
 
     test('import produces multiple databases, entry first', () => {
-      const model = compileFile(Filepath.from('/main.dbml'), {
+      const model = compileFile({
         '/main.dbml': `
           use { table users } from './common.dbml'
           Table orders { id int [pk] }
@@ -330,7 +326,7 @@ describe('[example] multi-file compilation', () => {
     });
 
     test('cross-file refs are correct', () => {
-      const mainDb = compileFile(Filepath.from('/main.dbml'), {
+      const mainDb = compileFile({
         '/main.dbml': `
           use { table users } from './common.dbml'
           Table orders {
@@ -347,7 +343,7 @@ describe('[example] multi-file compilation', () => {
     });
 
     test('each file interpreted independently', () => {
-      const model = compileFile(Filepath.from('/main.dbml'), {
+      const model = compileFile({
         '/main.dbml': `
           use { table users } from './common.dbml'
           Table orders { id int [pk] }
@@ -363,7 +359,7 @@ describe('[example] multi-file compilation', () => {
 
   describe('dependency graph', () => {
     test('diamond deduplicates', () => {
-      const model = compileFile(Filepath.from('/main.dbml'), {
+      const model = compileFile({
         '/main.dbml': `
           use { table users } from './a.dbml'
           use { table orders } from './b.dbml'
@@ -377,24 +373,24 @@ describe('[example] multi-file compilation', () => {
     });
 
     test('circular, 3-way circular, self-import do not loop', () => {
-      expect(compileFile(Filepath.from('/a.dbml'), {
+      expect(compileFile({
         '/a.dbml': 'use { table B } from \'./b.dbml\'\nTable A { id int [pk] }',
         '/b.dbml': 'use { table A } from \'./a.dbml\'\nTable B { id int [pk] }',
       }).getValue().databases.length).toBeGreaterThanOrEqual(2);
 
-      expect(compileFile(Filepath.from('/a.dbml'), {
+      expect(compileFile({
         '/a.dbml': 'use { table B } from \'./b.dbml\'\nTable A { id int }',
         '/b.dbml': 'use { table C } from \'./c.dbml\'\nTable B { id int }',
         '/c.dbml': 'use { table A } from \'./a.dbml\'\nTable C { id int }',
       }).getValue().databases).toHaveLength(3);
 
-      expect(compileFile(Filepath.from('/self.dbml'), {
+      expect(compileFile({
         '/self.dbml': 'use { table X } from \'./self.dbml\'\nTable X { id int }',
       }).getValue().databases).toBeDefined();
     });
 
     test('deep chain and fan-out', () => {
-      expect(compileFile(Filepath.from('/a.dbml'), {
+      expect(compileFile({
         '/a.dbml': `
           use { table B } from './b.dbml'
           Table A { id int [pk] }
@@ -406,7 +402,7 @@ describe('[example] multi-file compilation', () => {
         '/c.dbml': 'Table C { id int [pk] }',
       }).getValue().databases).toHaveLength(3);
 
-      expect(compileFile(Filepath.from('/main.dbml'), {
+      expect(compileFile({
         '/main.dbml': `
           use { table A } from './a.dbml'
           use { table B } from './b.dbml'
@@ -432,34 +428,30 @@ describe('[example] multi-file compilation', () => {
 
   describe('edge cases', () => {
     test('empty file, comments only, use-only file', () => {
-      expect(compileFile(Filepath.from('/main.dbml'),
-        { '/main.dbml': '' }).getValue().databases).toHaveLength(1);
+      expect(compileFile({ '/main.dbml': '' }).getValue().databases).toHaveLength(1);
 
-      expect(compileFile(Filepath.from('/main.dbml'),
-        { '/main.dbml': '// just a comment' }).getValue().databases[0].tables).toHaveLength(0);
+      expect(compileFile({ '/main.dbml': '// just a comment' }).getValue().databases[0].tables).toHaveLength(0);
 
-      expect(compileFile(Filepath.from('/main.dbml'), {
+      expect(compileFile({
         '/main.dbml': 'use * from \'./common.dbml\'',
         '/common.dbml': 'Table users { id int [pk] }',
       }).getValue().databases).toHaveLength(2);
     });
 
     test('parse errors, missing dep, bad dep still produce a model', () => {
-      const r1 = compileFile(
-        Filepath.from('/main.dbml'),
-        { '/main.dbml': 'Table users { id int [pk' },
+      const r1 = compileFile({ '/main.dbml': 'Table users { id int [pk' },
       );
       expect(r1.getErrors().length).toBeGreaterThan(0);
       expect(r1.getValue().databases).toHaveLength(1);
 
-      expect(compileFile(Filepath.from('/main.dbml'), {
+      expect(compileFile({
         '/main.dbml': `
           use { table users } from './missing.dbml'
           Table orders { id int [pk] }
         `,
       }).getValue().databases).toBeDefined();
 
-      expect(compileFile(Filepath.from('/main.dbml'), {
+      expect(compileFile({
         '/main.dbml': `
           use { table users } from './bad.dbml'
           Table orders { id int [pk] }
@@ -469,7 +461,7 @@ describe('[example] multi-file compilation', () => {
     });
 
     test('relative path going up directories', () => {
-      expect(compileFile(Filepath.from('/sub/main.dbml'), {
+      expect(compileFile({
         '/sub/main.dbml': `
           use { table users } from '../common.dbml'
           Table orders { id int }
@@ -481,7 +473,7 @@ describe('[example] multi-file compilation', () => {
 
   describe('extensionless import paths', () => {
     test('resolves with and without .dbml extension', () => {
-      expect(compileFile(DEFAULT_ENTRY, {
+      expect(compileFile({
         '/main.dbml': `
           use { table users } from './common'
           Table orders { id int }
@@ -489,12 +481,12 @@ describe('[example] multi-file compilation', () => {
         '/common.dbml': 'Table users { id int }',
       }).getErrors()).toHaveLength(0);
 
-      expect(compileFile(DEFAULT_ENTRY, {
+      expect(compileFile({
         '/main.dbml': 'use * from \'./common\'\nTable orders { id int }',
         '/common.dbml': 'Table users { id int }',
       }).getErrors()).toHaveLength(0);
 
-      expect(compileFile(DEFAULT_ENTRY, {
+      expect(compileFile({
         '/main.dbml': `
           use { table users } from './common'
           Table orders {
@@ -508,7 +500,7 @@ describe('[example] multi-file compilation', () => {
     });
 
     test('./common and ./common.dbml resolve to same file', () => {
-      const model = compileFile(Filepath.from('/main.dbml'), {
+      const model = compileFile({
         '/a.dbml': `
           use { table shared } from './shared'
           Table A { id int }'
@@ -541,17 +533,17 @@ describe('[example] multi-file compilation', () => {
         entries[Filepath.from(path).intern()] = content;
       }
       const compiler = new Compiler(new MemoryProjectLayout(entries));
-      expect(compiler.interpretProject(Filepath.from('/main.dbml')).getValue().databases).toHaveLength(2);
+      expect(compiler.interpretProject().getValue().databases).toHaveLength(2);
 
       compiler.setSource(`
         Table users { id int }
         Table products { id int }
       `, Filepath.from('/common.dbml'));
-      const updated = compiler.interpretProject(Filepath.from('/main.dbml')).getValue().databases;
+      const updated = compiler.interpretProject().getValue().databases;
       expect(updated.find((db) => db.tables.some((t) => t.name === 'products'))?.tables).toHaveLength(2);
 
       compiler.deleteSource(Filepath.from('/common.dbml'));
-      expect(compiler.interpretProject(Filepath.from('/main.dbml')).getValue().databases.length).toBeGreaterThanOrEqual(1);
+      expect(compiler.interpretProject().getValue().databases.length).toBeGreaterThanOrEqual(1);
     });
   });
 });

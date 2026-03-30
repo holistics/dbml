@@ -4,7 +4,7 @@ import * as services from '@/services/index';
 // Export the types that playground and other consumers need
 export {
   ElementKind,
-} from '@/core/analyzer/types';
+} from '@/core/binder/types';
 
 export * from '@/core/interpreter/records/utils';
 
@@ -32,7 +32,7 @@ export {
 export {
   // Position interface
   type Position,
-} from '@/core/analyzer/types';
+} from '@/core/binder/types';
 
 export {
   // Scope kinds from compiler

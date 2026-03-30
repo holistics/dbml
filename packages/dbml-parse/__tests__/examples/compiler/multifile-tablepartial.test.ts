@@ -6,7 +6,7 @@ import { compileFile } from '@tests/utils/multifile';
 describe('[example] multi-file: use { tablepartial ... } and inject', () => {
   describe('basic cross-file injection', () => {
     test('imported tablepartial is available in the entry database', () => {
-      const report = compileFile(DEFAULT_ENTRY, {
+      const report = compileFile({
         '/main.dbml': `
           use { tablepartial timestamps } from './partials.dbml'
           Table users {
@@ -32,7 +32,7 @@ describe('[example] multi-file: use { tablepartial ... } and inject', () => {
     });
 
     test('inject into multiple tables from same import', () => {
-      const report = compileFile(DEFAULT_ENTRY, {
+      const report = compileFile({
         '/main.dbml': `
           use { tablepartial timestamps } from './partials.dbml'
           Table users {
@@ -60,7 +60,7 @@ describe('[example] multi-file: use { tablepartial ... } and inject', () => {
     });
 
     test('import multiple tablepartials from same file', () => {
-      const report = compileFile(DEFAULT_ENTRY, {
+      const report = compileFile({
         '/main.dbml': `
           use { tablepartial timestamps, tablepartial soft_delete } from './partials.dbml'
           Table users {
@@ -87,7 +87,7 @@ describe('[example] multi-file: use { tablepartial ... } and inject', () => {
     });
 
     test('import tablepartials from different files', () => {
-      const report = compileFile(DEFAULT_ENTRY, {
+      const report = compileFile({
         '/main.dbml': `
           use { tablepartial timestamps } from './time.dbml'
           use { tablepartial audit } from './audit.dbml'
@@ -118,7 +118,7 @@ describe('[example] multi-file: use { tablepartial ... } and inject', () => {
     });
 
     test('whole-file import includes tablepartials', () => {
-      const report = compileFile(DEFAULT_ENTRY, {
+      const report = compileFile({
         '/main.dbml': `
           use * from './partials.dbml'
           Table users {
@@ -142,7 +142,7 @@ describe('[example] multi-file: use { tablepartial ... } and inject', () => {
 
   describe('tablepartial import with table partial fields', () => {
     test('imported partial fields have correct types', () => {
-      const report = compileFile(DEFAULT_ENTRY, {
+      const report = compileFile({
         '/main.dbml': `
           use { tablepartial typed_fields } from './partials.dbml'
           Table users {
@@ -166,7 +166,7 @@ describe('[example] multi-file: use { tablepartial ... } and inject', () => {
     });
 
     test('imported partial with indexes', () => {
-      const report = compileFile(DEFAULT_ENTRY, {
+      const report = compileFile({
         '/main.dbml': `
           use { tablepartial with_indexes } from './partials.dbml'
           Table users {
@@ -191,7 +191,7 @@ describe('[example] multi-file: use { tablepartial ... } and inject', () => {
 
   describe('tablepartial import errors', () => {
     test('inject non-existent tablepartial from import', () => {
-      const report = compileFile(DEFAULT_ENTRY, {
+      const report = compileFile({
         '/main.dbml': `
           use { tablepartial missing } from './partials.dbml'
           Table users {
@@ -211,7 +211,7 @@ describe('[example] multi-file: use { tablepartial ... } and inject', () => {
 
   describe('circular tablepartial imports', () => {
     test('two files importing each others tablepartials', () => {
-      const report = compileFile(Filepath.from('/a.dbml'), {
+      const report = compileFile({
         '/a.dbml': `
           use { tablepartial bp } from './b.dbml'
           TablePartial ap { a_field int }
@@ -239,7 +239,7 @@ describe('[example] multi-file: use { tablepartial ... } and inject', () => {
     });
 
     test('self-referential tablepartial import produces duplicate name error', () => {
-      const report = compileFile(Filepath.from('/self.dbml'), {
+      const report = compileFile({
         '/self.dbml': `
           use { tablepartial tp } from './self.dbml'
           TablePartial tp { some_field int }
@@ -250,7 +250,7 @@ describe('[example] multi-file: use { tablepartial ... } and inject', () => {
     });
 
     test('3-way circular tablepartial import does not loop', () => {
-      const report = compileFile(Filepath.from('/a.dbml'), {
+      const report = compileFile({
         '/a.dbml': `
           use { tablepartial cp } from './c.dbml'
           TablePartial ap { a_col int }
@@ -278,7 +278,7 @@ describe('[example] multi-file: use { tablepartial ... } and inject', () => {
     });
 
     test('chain: A imports partial from B, B imports partial from C', () => {
-      const report = compileFile(Filepath.from('/a.dbml'), {
+      const report = compileFile({
         '/a.dbml': `
           use { tablepartial bp } from './b.dbml'
           Table A { id int [pk]\n~bp }
@@ -312,7 +312,7 @@ describe('[example] multi-file: use { tablepartial ... } and inject', () => {
       // a.dbml: Table users, refs orders.user_id
       // b.dbml: Table orders, injects ~user_ref from p.dbml
       // p.dbml: TablePartial user_ref { user_id int [ref: > users.id] }, imports users from a.dbml
-      const report = compileFile(Filepath.from('/a.dbml'), {
+      const report = compileFile({
         '/a.dbml': `
           use { table orders } from './b.dbml'
           Table users {
@@ -358,7 +358,7 @@ describe('[example] multi-file: use { tablepartial ... } and inject', () => {
     });
 
     test('partial with inline ref to table in another file via whole-file import', () => {
-      const report = compileFile(Filepath.from('/main.dbml'), {
+      const report = compileFile({
         '/main.dbml': `
           use * from './partials.dbml'
           use * from './tables.dbml'
@@ -388,7 +388,7 @@ describe('[example] multi-file: use { tablepartial ... } and inject', () => {
     });
 
     test('diamond: two tables inject partials that both ref the same external table', () => {
-      const report = compileFile(Filepath.from('/main.dbml'), {
+      const report = compileFile({
         '/main.dbml': `
           use { table shared } from './shared.dbml'
           use { tablepartial ref_shared } from './partials.dbml'

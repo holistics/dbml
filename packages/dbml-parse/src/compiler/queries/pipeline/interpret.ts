@@ -5,19 +5,26 @@ import type { CompileError, CompileWarning } from '@/core/errors';
 import { ElementDeclarationNode } from '@/core/parser/nodes';
 import Interpreter from '@/core/interpreter/interpreter';
 import Report from '@/core/report';
-import { collectTransitiveDependencies } from './analyze/index';
 
-// Interpret files in the project.
-// If entrypoint is provided, only that file and its transitive dependencies are interpreted.
-// If entrypoint is undefined, all files in the project are interpreted.
-export function interpretProject (this: Compiler, entrypoint?: Filepath): Report<Model> {
-  const files = entrypoint
-    ? collectTransitiveDependencies(this, entrypoint)
-    : this.layout().listAllFiles();
+export function interpretFile (this: Compiler, filepath: Filepath): Report<Database> {
+  const analysisReport = this.bindProject();
+
+  if (analysisReport.getErrors().length > 0) {
+    return new Report(emptyDatabase(filepath), analysisReport.getErrors(), analysisReport.getWarnings());
+  }
+
+  const { ast } = this.parseFile(filepath).getValue();
+  const tablePartials = new Map<ElementDeclarationNode, TablePartial>();
+
+  return new Interpreter(this, { ast, ...analysisReport.getValue() }, { tablePartials }).interpret();
+}
+
+export function interpretProject (this: Compiler): Report<Model> {
+  const files = this.layout().listAllFiles();
 
   if (files.length === 0) return new Report({ databases: [] }, [], []);
 
-  const analysisReport = this.analyzeProject(entrypoint);
+  const analysisReport = this.bindProject();
   const analysisResult = analysisReport.getValue();
 
   if (analysisReport.getErrors().length > 0) {
@@ -28,10 +35,9 @@ export function interpretProject (this: Compiler, entrypoint?: Filepath): Report
     );
   }
 
-  // Shared tablePartials map across all files (like shared maps in analyzeProject)
+  // Shared tablePartials map across all files
   const tablePartials = new Map<ElementDeclarationNode, TablePartial>();
 
-  const databases: Database[] = [];
   const allErrors: CompileError[] = [];
   const allWarnings: CompileWarning[] = [...analysisReport.getWarnings()];
 
@@ -51,7 +57,7 @@ export function interpretProject (this: Compiler, entrypoint?: Filepath): Report
     allWarnings.push(...interpretReport.getWarnings());
   }
 
-  // Preserve original file order in output
+  const databases: Database[] = [];
   for (const file of files) {
     databases.push(databaseMap.get(file.intern())!);
   }
