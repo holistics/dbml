@@ -3,7 +3,7 @@ import { last, partition } from 'lodash-es';
 import SymbolFactory from '@/core/analyzer/symbol/factory';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import {
-  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode,
+  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode, WildcardNode,
 } from '@/core/parser/nodes';
 import { isExpressionAQuotedString, isExpressionAVariableNode } from '@/core/parser/utils';
 import { SyntaxToken } from '@/core/lexer/tokens';
@@ -50,6 +50,9 @@ export default class EnumValidator implements ElementValidator {
   private validateName (nameNode?: SyntaxNode): CompileError[] {
     if (!nameNode) {
       return [new CompileError(CompileErrorCode.NAME_NOT_FOUND, 'An Enum must have a name', this.declarationNode)];
+    }
+    if (nameNode instanceof WildcardNode) {
+      return [new CompileError(CompileErrorCode.INVALID_NAME, 'Wildcard (*) is not allowed as an Enum name', nameNode)];
     }
     if (!isValidName(nameNode)) {
       return [new CompileError(CompileErrorCode.INVALID_NAME, 'An Enum name must be of the form <enum> or <schema>.<enum>', nameNode)];

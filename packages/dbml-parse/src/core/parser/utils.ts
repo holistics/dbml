@@ -27,6 +27,7 @@ import {
   SyntaxNode,
   TupleExpressionNode,
   VariableNode,
+  WildcardNode,
 } from '@/core/parser/nodes';
 import { destructureComplexVariable } from '@/core/analyzer/utils';
 
@@ -305,6 +306,10 @@ export function getMemberChain (node: SyntaxNode): Readonly<(SyntaxNode | Syntax
     );
   }
 
+  if (node instanceof WildcardNode) {
+    return filterUndefined(node.token);
+  }
+
   if (node instanceof GroupExpressionNode) {
     throw new Error('This case is already handled by TupleExpressionNode');
   }
@@ -363,10 +368,7 @@ export function isExpressionAVariableNode (
 // Return true if an expression node is a wildcard (*)
 export function isWildcardExpression (node: SyntaxNode | undefined): boolean {
   if (!node) return false;
-  if (node instanceof PrimaryExpressionNode && node.expression instanceof VariableNode) {
-    return node.expression.variable?.value === '*';
-  }
-  return false;
+  return node instanceof WildcardNode;
 }
 
 // Return true if an expression node is a primary expression

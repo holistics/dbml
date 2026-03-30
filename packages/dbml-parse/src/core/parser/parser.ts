@@ -33,6 +33,7 @@ import {
   SyntaxNodeIdGenerator,
   TupleExpressionNode,
   VariableNode,
+  WildcardNode,
 } from '@/core/parser/nodes';
 import NodeFactory from '@/core/parser/factory';
 import { hasTrailingNewLines, hasTrailingSpaces, isAtStartOfLine } from '@/core/lexer/utils';
@@ -656,14 +657,7 @@ export default class Parser {
   private leftExpression_bp (): NormalExpressionNode {
     let leftExpression: NormalExpressionNode | undefined;
 
-    // Allow * as a wildcard identifier (e.g. DiagramView Tables { * })
-    // Must be handled before the isOpToken branch to avoid "Unexpected '*'" error
-    if (this.check(SyntaxTokenKind.OP) && this.peek().value === '*') {
-      this.advance();
-      leftExpression = this.nodeFactory.create(PrimaryExpressionNode, {
-        expression: this.nodeFactory.create(VariableNode, { variable: this.previous() }),
-      });
-    } else if (isOpToken(this.peek())) {
+    if (isOpToken(this.peek())) {
       const args: {
         op?: SyntaxToken;
         expression?: NormalExpressionNode;
@@ -726,7 +720,15 @@ export default class Parser {
     | BlockExpressionNode
     | TupleExpressionNode
     | FunctionExpressionNode
-    | GroupExpressionNode {
+    | GroupExpressionNode
+    | WildcardNode {
+    if (this.check(SyntaxTokenKind.WILDCARD)) {
+      this.advance();
+      return this.nodeFactory.create(WildcardNode, {
+        token: this.previous(),
+      });
+    }
+
     if (
       this.check(
         SyntaxTokenKind.NUMERIC_LITERAL,
@@ -1203,7 +1205,6 @@ const infixBindingPowerMap: {
   [index: string]: { left: number; right: number } | undefined;
 } = {
   '+': { left: 9, right: 10 },
-  '*': { left: 11, right: 12 },
   '-': { left: 9, right: 10 },
   '/': { left: 11, right: 12 },
   '%': { left: 11, right: 12 },

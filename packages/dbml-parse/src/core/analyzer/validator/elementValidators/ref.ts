@@ -3,7 +3,7 @@ import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
 import SymbolFactory from '@/core/analyzer/symbol/factory';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import {
-  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, IdentiferStreamNode, ListExpressionNode, ProgramNode, SyntaxNode,
+  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, IdentiferStreamNode, ListExpressionNode, ProgramNode, SyntaxNode, WildcardNode,
 } from '@/core/parser/nodes';
 import {
   extractStringFromIdentifierStream,
@@ -45,6 +45,9 @@ export default class RefValidator implements ElementValidator {
   private validateName (nameNode?: SyntaxNode): CompileError[] {
     if (!nameNode) {
       return [];
+    }
+    if (nameNode instanceof WildcardNode) {
+      return [new CompileError(CompileErrorCode.INVALID_NAME, 'Wildcard (*) is not allowed as a Ref name', nameNode)];
     }
 
     if (!isSimpleName(nameNode)) {

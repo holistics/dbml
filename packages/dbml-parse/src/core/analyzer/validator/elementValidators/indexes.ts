@@ -11,6 +11,7 @@ import {
   ProgramNode,
   SyntaxNode,
   VariableNode,
+  WildcardNode,
 } from '@/core/parser/nodes';
 import { isExpressionAQuotedString, isExpressionAVariableNode } from '@/core/parser/utils';
 import { aggregateSettingList } from '@/core/analyzer/validator/utils';
@@ -57,6 +58,9 @@ export default class IndexesValidator implements ElementValidator {
   }
 
   private validateName (nameNode?: SyntaxNode): CompileError[] {
+    if (nameNode instanceof WildcardNode) {
+      return [new CompileError(CompileErrorCode.INVALID_NAME, 'Wildcard (*) is not allowed as an Indexes name', nameNode)];
+    }
     if (nameNode) {
       return [new CompileError(CompileErrorCode.UNEXPECTED_NAME, 'An Indexes shouldn\'t have a name', nameNode)];
     }

@@ -11,6 +11,7 @@ import {
   ListExpressionNode,
   PrimaryExpressionNode,
   SyntaxNode,
+  WildcardNode,
 } from '@/core/parser/nodes';
 import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '@/core/analyzer/utils';
 import {
@@ -82,6 +83,9 @@ export default class TablePartialValidator implements ElementValidator {
         'A TablePartial must have a name',
         this.declarationNode,
       )];
+    }
+    if (nameNode instanceof WildcardNode) {
+      return [new CompileError(CompileErrorCode.INVALID_NAME, 'Wildcard (*) is not allowed as a TablePartial name', nameNode)];
     }
     if (!isSimpleName(nameNode)) {
       return [new CompileError(

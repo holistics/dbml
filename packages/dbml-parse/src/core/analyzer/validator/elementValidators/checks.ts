@@ -9,6 +9,7 @@ import {
   ListExpressionNode,
   ProgramNode,
   SyntaxNode,
+  WildcardNode,
 } from '@/core/parser/nodes';
 import { isExpressionAQuotedString } from '@/core/parser/utils';
 import { aggregateSettingList, pickValidator } from '@/core/analyzer/validator/utils';
@@ -54,6 +55,9 @@ export default class ChecksValidator implements ElementValidator {
   }
 
   private validateName (nameNode?: SyntaxNode): CompileError[] {
+    if (nameNode instanceof WildcardNode) {
+      return [new CompileError(CompileErrorCode.INVALID_NAME, 'Wildcard (*) is not allowed as a Checks name', nameNode)];
+    }
     if (nameNode) {
       return [new CompileError(CompileErrorCode.UNEXPECTED_NAME, 'A Checks shouldn\'t have a name', nameNode)];
     }

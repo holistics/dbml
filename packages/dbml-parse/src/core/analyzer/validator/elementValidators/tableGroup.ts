@@ -7,7 +7,7 @@ import { ElementValidator } from '@/core/analyzer/validator/types';
 import SymbolTable from '@/core/analyzer/symbol/symbolTable';
 import { SyntaxToken } from '@/core/lexer/tokens';
 import {
-  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode,
+  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode, WildcardNode,
 } from '@/core/parser/nodes';
 import SymbolFactory from '@/core/analyzer/symbol/factory';
 import { createTableGroupFieldSymbolIndex, createTableGroupSymbolIndex } from '@/core/analyzer/symbol/symbolIndex';
@@ -55,6 +55,9 @@ export default class TableGroupValidator implements ElementValidator {
         'A TableGroup must have a name',
         this.declarationNode,
       )];
+    }
+    if (nameNode instanceof WildcardNode) {
+      return [new CompileError(CompileErrorCode.INVALID_NAME, 'Wildcard (*) is not allowed as a TableGroup name', nameNode)];
     }
     if (!isSimpleName(nameNode)) {
       return [new CompileError(

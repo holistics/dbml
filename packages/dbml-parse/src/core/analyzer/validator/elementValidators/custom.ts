@@ -1,6 +1,6 @@
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import {
-  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, ProgramNode, SyntaxNode,
+  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, ProgramNode, SyntaxNode, WildcardNode,
 } from '@/core/parser/nodes';
 import SymbolFactory from '@/core/analyzer/symbol/factory';
 import { SyntaxToken } from '@/core/lexer/tokens';
@@ -39,6 +39,9 @@ export default class CustomValidator implements ElementValidator {
   }
 
   private validateName (nameNode?: SyntaxNode): CompileError[] {
+    if (nameNode instanceof WildcardNode) {
+      return [new CompileError(CompileErrorCode.INVALID_NAME, 'Wildcard (*) is not allowed as a Custom element name', nameNode)];
+    }
     if (nameNode) {
       return [new CompileError(CompileErrorCode.UNEXPECTED_NAME, 'A Custom element shouldn\'t have a name', nameNode)];
     }
