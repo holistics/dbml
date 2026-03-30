@@ -1,11 +1,26 @@
-import { NodeSymbol } from '@/core/analyzer/symbol/symbols';
+import { NodeSymbol, SchemaSymbol } from '@/core/analyzer/symbol/symbols';
 import { NodeToRefereeMap, NodeToSymbolMap, SymbolToReferencesMap } from '@/core/analyzer/analyzer';
 import Report from '@/core/report';
 import { ProgramNode, SyntaxNode } from '@/index';
 import type Compiler from '@/compiler/index';
 import { DEFAULT_ENTRY } from '@/compiler/constants';
-import { validateFile } from '@/compiler/queries/pipeline/analyze';
+import { InternedMap } from '@/core/internable';
+import { Filepath } from '@/compiler/projectLayout';
+import Validator from '@/core/analyzer/validator/validator';
+import SymbolFactory from '@/core/analyzer/symbol/factory';
+import SymbolTable from '@/core/analyzer/symbol/symbolTable';
 import fs from 'fs';
+
+function validateFile (compiler: Compiler, filepath: Filepath): Report<{ symbolTable: SymbolTable; nodeToSymbol: NodeToSymbolMap }> {
+  const nodeToSymbol: NodeToSymbolMap = new InternedMap();
+  return compiler.parseFile(filepath).chain(({ ast }) => {
+    const symbolFactory = new SymbolFactory(compiler.symbolIdGenerator, filepath);
+    return new Validator({ ast }, { nodeToSymbol }, symbolFactory).validate().map(({ nodeToSymbol: ntm }) => {
+      const rootSymbol = ntm.get(ast) as SchemaSymbol;
+      return { symbolTable: rootSymbol.symbolTable, nodeToSymbol: ntm };
+    });
+  });
+}
 
 export function scanTestNames (_path: any) {
   const files = fs.readdirSync(_path);

@@ -6,28 +6,11 @@ import Validator from '@/core/analyzer/validator/validator';
 import Binder from '@/core/analyzer/binder/binder';
 import SymbolFactory from '@/core/analyzer/symbol/factory';
 import { SchemaSymbol } from '@/core/analyzer/symbol/symbols';
-import SymbolTable from '@/core/analyzer/symbol/symbolTable';
 import Report from '@/core/report';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import { ElementKind } from '@/core/analyzer/types';
 import { getElementKind } from '@/core/analyzer/utils';
 import { resolveExternalDependencies } from './utils';
-
-export type ValidateFileResult = {
-  readonly symbolTable: SymbolTable;
-  readonly nodeToSymbol: NodeToSymbolMap;
-};
-
-export function validateFile (compiler: Compiler, filepath: Filepath): Report<ValidateFileResult> {
-  const nodeToSymbol: NodeToSymbolMap = new InternedMap();
-  return compiler.parseFile(filepath).chain(({ ast }) => {
-    const symbolFactory = new SymbolFactory(compiler.symbolIdGenerator, filepath);
-    return new Validator({ ast }, { nodeToSymbol }, symbolFactory).validate().map(({ nodeToSymbol: ntm }) => {
-      const rootSymbol = ntm.get(ast) as SchemaSymbol;
-      return { symbolTable: rootSymbol.symbolTable, nodeToSymbol: ntm };
-    });
-  });
-}
 
 // Collect a file and all its transitive dependencies in dependency order.
 export function collectTransitiveDependencies (compiler: Compiler, entrypoint: Filepath): Filepath[] {
