@@ -32,7 +32,7 @@ export {
 export {
   // Position interface
   type Position,
-} from '@/core/binder/types';
+} from '@/core/types';
 
 export {
   // Scope kinds from compiler
