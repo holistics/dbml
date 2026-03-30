@@ -121,5 +121,5 @@ export function serializeValidation (compiler: Compiler, pretty = false): string
   const validated = compiler.validateFile(DEFAULT_ENTRY);
   const errors = [...validated.getErrors()];
   const report = { value: ast, errors };
-  return JSON.stringify(report, createJsonReplacer(validated.getValue().nodeToSymbol, undefined), pretty ? 2 : 0);
+  return JSON.stringify(report, createJsonReplacer(validated.getValue().publicSchemaSymbol.getNodeSymbolMapping(), undefined), pretty ? 2 : 0);
 }

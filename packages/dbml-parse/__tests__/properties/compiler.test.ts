@@ -79,7 +79,7 @@ describe('[property] compiler - single-file intern stability', () => {
         // Call parseFile first to fix node IDs, then validate both ways
         const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
 
-        const fileMap = nodeSymbolPairs(ast, compiler.validateFile(DEFAULT_ENTRY).getValue().nodeToSymbol);
+        const fileMap = nodeSymbolPairs(ast, compiler.validateFile(DEFAULT_ENTRY).getValue().publicSchemaSymbol.getNodeSymbolMapping());
         const projectMap = nodeSymbolPairs(ast, compiler.validateProject().getValue().nodeToSymbol);
 
         expect(Object.keys(fileMap)).toEqual(Object.keys(projectMap));
@@ -101,7 +101,7 @@ describe('[property] compiler - single-file intern stability', () => {
         compiler.setSource(source);
         const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
 
-        const fileMap = nodeSymbolPairs(ast, compiler.validateFile(DEFAULT_ENTRY).getValue().nodeToSymbol);
+        const fileMap = nodeSymbolPairs(ast, compiler.validateFile(DEFAULT_ENTRY).getValue().publicSchemaSymbol.getNodeSymbolMapping());
         const projectMap = nodeSymbolPairs(ast, compiler.bindProject().getValue().nodeToSymbol);
 
         expect(Object.keys(fileMap)).toEqual(Object.keys(projectMap));
@@ -316,7 +316,7 @@ describe('[property] compiler - cross-file use declarations', () => {
             [fpB.absolute]: withUseA(sB),
           }));
           const ast = compiler.parseFile(fpB).getValue().ast;
-          const vPairs = nodeSymbolPairs(ast, compiler.validateFile(fpB).getValue().nodeToSymbol);
+          const vPairs = nodeSymbolPairs(ast, compiler.validateFile(fpB).getValue().publicSchemaSymbol.getNodeSymbolMapping());
           const bPairs = nodeSymbolPairs(ast, compiler.bindFile(fpB).getValue().nodeToSymbol);
           // bindFile may map additional nodes (partial injections), but the common keys must agree
           for (const key of Object.keys(vPairs)) {

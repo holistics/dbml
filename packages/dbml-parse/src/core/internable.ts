@@ -48,6 +48,19 @@ export class InternedMap<K extends Internable<P>, V, P extends Primitive = Retur
     return this.map.size;
   }
 
+  getIntern (key: P): V | undefined {
+    return this.map.get(key);
+  }
+
+  setIntern (key: P, value: V): this {
+    this.map.set(key, value);
+    return this;
+  }
+
+  entries (): IterableIterator<[P, V]> {
+    return this.map[Symbol.iterator]();
+  }
+
   [Symbol.iterator] (): IterableIterator<[P, V]> {
     return this.map[Symbol.iterator]();
   }

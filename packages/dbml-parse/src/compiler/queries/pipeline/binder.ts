@@ -301,15 +301,15 @@ export function bindProject (this: Compiler): Report<AnalysisResult> {
 export function bindFile (this: Compiler, filepath: Filepath): Report<AnalysisResult> {
   const { ast } = this.parseFile(filepath).getValue();
   const validationReport = this.validateFile(filepath);
-  // Deep clone symbolTable so resolveExternalDependencies doesn't mutate the cached validateFile result
-  const symbolTable = validationReport.getValue().symbolTable.deepClone();
-  const nodeToSymbol = symbolTable.getNodeSymbolMapping();
+  // Deep clone publicSchemaSymbol so resolveExternalDependencies doesn't mutate the cached validateFile result
+  const clonedRoot = validationReport.getValue().publicSchemaSymbol.deepClone();
+  const nodeToSymbol = clonedRoot.getNodeSymbolMapping();
   const symbolFactory = new SymbolFactory(this.symbolIdGenerator, filepath);
 
   const errors: CompileError[] = [...validationReport.getErrors()];
   const warnings: CompileWarning[] = [...validationReport.getWarnings()];
 
-  const resolveReport = resolveExternalDependencies(this, ast, { symbolTable, nodeToSymbol });
+  const resolveReport = resolveExternalDependencies(this, ast, { symbolTable: clonedRoot.symbolTable, nodeToSymbol });
   errors.push(...resolveReport.getErrors());
 
   const nodeToReferee: NodeToRefereeMap = new InternedMap();

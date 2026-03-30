@@ -3,6 +3,8 @@ import { type SyntaxNode } from '@/core/parser/nodes';
 import { SymbolKind } from './symbolIndex';
 import type { Filepath } from '@/compiler/projectLayout/filepath';
 import type { Internable } from '@/core/internable';
+import { InternedMap } from '@/core/internable';
+import type { NodeToSymbolMap } from '@/core/binder/analyzer';
 
 // Locally unique numeric id (unique within a file, not across files).
 export type NodeSymbolId = number;
@@ -54,6 +56,34 @@ export class SchemaSymbol extends NodeSymbol {
   constructor ({ filepath, symbolTable }: { filepath: Filepath; symbolTable: SymbolTable }, id: NodeSymbolId) {
     super(id, filepath);
     this.symbolTable = symbolTable;
+  }
+
+  deepClone (): SchemaSymbol {
+    const clone = new SchemaSymbol({ filepath: this.filepath, symbolTable: this.symbolTable.deepClone() }, this.id);
+    clone.declaration = this.declaration;
+    clone.externalFilepaths = [...this.externalFilepaths];
+    return clone;
+  }
+
+  getNodeSymbolMapping (): NodeToSymbolMap {
+    const map: NodeToSymbolMap = new InternedMap();
+
+    function collectNodeSymbols (table: SymbolTable): void {
+      for (const [, symbol] of table.entries()) {
+        if (symbol.declaration) {
+          map.set(symbol.declaration, symbol);
+        }
+        if (symbol.symbolTable) {
+          collectNodeSymbols(symbol.symbolTable);
+        }
+      }
+    }
+
+    collectNodeSymbols(this.symbolTable);
+    if (this.declaration) {
+      map.set(this.declaration, this);
+    }
+    return map;
   }
 }
 

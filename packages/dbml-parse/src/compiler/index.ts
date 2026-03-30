@@ -126,7 +126,7 @@ export default class Compiler {
 
   parseFile = this.localQuery(parseFile);
   localFileDependencies = this.localQuery(localFileDependencies);
-  // NOTE: validateFile.nodeToSymbol is incomplete - partial-injected symbols are not yet resolved.
+  // NOTE: validateFile is incomplete - partial-injected symbols are not yet resolved.
   // For authoritative node->symbol lookup, use bindFile.nodeToSymbol instead.
   validateFile = this.localQuery(validateFile);
   bindFile = this.localQuery(bindFile);
