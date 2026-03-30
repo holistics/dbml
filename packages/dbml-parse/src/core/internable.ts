@@ -55,4 +55,11 @@ export class InternedMap<K extends Internable<P>, V, P extends Primitive = Retur
   [Symbol.iterator] (): IterableIterator<[P, V]> {
     return this.map[Symbol.iterator]();
   }
+
+  merge (other: InternedMap<K, V, P>): this {
+    for (const [k, v] of other.map) {
+      this.map.set(k, v);
+    }
+    return this;
+  }
 }

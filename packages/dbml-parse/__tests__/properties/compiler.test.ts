@@ -71,29 +71,6 @@ describe('[property] compiler - single-file intern stability', () => {
     );
   });
 
-  it('validateFile and validateProject agree on interned node -> interned symbol mapping', () => {
-    fc.assert(
-      fc.property(dbmlSchemaArbitrary, (source) => {
-        const compiler = new Compiler();
-        compiler.setSource(source);
-        // Call parseFile first to fix node IDs, then validate both ways
-        const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
-
-        const fileMap = nodeSymbolPairs(ast, compiler.validateFile(DEFAULT_ENTRY).getValue().publicSchemaSymbol.getNodeSymbolMapping());
-        const projectMap = nodeSymbolPairs(ast, compiler.validateProject().getValue().nodeToSymbol);
-
-        expect(Object.keys(fileMap)).toEqual(Object.keys(projectMap));
-        // Same nodes should be mapped (to symbols from same file, same name structure)
-        for (const key of Object.keys(fileMap)) {
-          const [filePath] = fileMap[key].split(':');
-          const [projectPath] = projectMap[key].split(':');
-          expect(filePath).toBe(projectPath);
-        }
-      }),
-      { numRuns: RUNS },
-    );
-  });
-
   it('validateFile and bindProject agree on node -> symbol intern keys for file nodes', () => {
     fc.assert(
       fc.property(dbmlSchemaArbitrary, (source) => {
@@ -181,33 +158,6 @@ describe('[property] compiler - multi-file intern isolation', () => {
           const resultA2 = compiler.validateFile(fpA);
 
           expect(resultA1).toBe(resultA2);
-        },
-      ),
-      { numRuns: RUNS },
-    );
-  });
-
-  it('validateProject and bindProject agree on node->symbol keys for all files', () => {
-    fc.assert(
-      fc.property(
-        fc.tuple(dbmlSchemaArbitrary, dbmlSchemaArbitrary),
-        ([sourceA, sourceB]) => {
-          const fpA = Filepath.from('/a.dbml');
-          const fpB = Filepath.from('/b.dbml');
-          const compiler = new Compiler(new MemoryProjectLayout({
-            [fpA.absolute]: sourceA,
-            [fpB.absolute]: sourceB,
-          }));
-
-          const { nodeToSymbol: validateMap } = compiler.validateProject().getValue();
-          const { nodeToSymbol: bindMap } = compiler.bindProject().getValue();
-
-          for (const fp of [fpA, fpB]) {
-            const ast = compiler.parseFile(fp).getValue().ast;
-            const vPairs = nodeSymbolPairs(ast, validateMap);
-            const bPairs = nodeSymbolPairs(ast, bindMap);
-            expect(Object.keys(vPairs)).toEqual(Object.keys(bPairs));
-          }
         },
       ),
       { numRuns: RUNS },

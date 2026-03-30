@@ -6,7 +6,7 @@ import { type SyntaxNode, SyntaxNodeIdGenerator } from '@/core/parser/nodes';
 import type { NodeSymbol } from '@/core/binder/symbol/symbols';
 import { NodeSymbolIdGenerator } from '@/core/binder/symbol/symbols';
 import { DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLReferencesProvider, DBMLDiagnosticsProvider } from '@/services/index';
-import { parseFile, localFileDependencies, validateFile, bindFile, validateProject, bindProject, interpretFile, interpretProject } from './queries/pipeline';
+import { parseFile, localFileDependencies, validateFile, bindFile, bindProject, interpretFile, interpretProject } from './queries/pipeline';
 import { flatStream, invalidStream } from './queries/token';
 import { symbolOfName, symbolMembers } from './queries/symbol';
 import { containerStack, containerToken, containerElement, containerScope, containerScopeKind } from './queries/container';
@@ -130,7 +130,6 @@ export default class Compiler {
   // For authoritative node->symbol lookup, use bindFile.nodeToSymbol instead.
   validateFile = this.localQuery(validateFile);
   bindFile = this.localQuery(bindFile);
-  validateProject = this.globalQuery(validateProject);
   bindProject = this.globalQuery(bindProject);
   interpretFile = this.globalQuery(interpretFile);
   interpretProject = this.globalQuery(interpretProject);

@@ -2,7 +2,6 @@ import type Compiler from '../../index';
 import { Filepath, FilepathId } from '../../projectLayout';
 import { AnalysisResult, NodeToSymbolMap, NodeToRefereeMap, SymbolToReferencesMap } from '@/core/binder/analyzer';
 import { InternedMap } from '@/core/internable';
-import Validator from '@/core/binder/validator/validator';
 import Binder from '@/core/binder/binder/binder';
 import SymbolFactory from '@/core/binder/symbol/factory';
 import { ExternalSymbol, NodeSymbol, SchemaSymbol, TableGroupSymbol } from '@/core/binder/symbol/symbols';
@@ -226,20 +225,21 @@ function lookupSymbol (
   return undefined;
 }
 
-// Validate all files in the project with a shared symbol map.
-// Enforces at most one Project element across all files.
-export function validateProject (this: Compiler): Report<{ nodeToSymbol: NodeToSymbolMap }> {
+// Validate, resolve external symbols, and bind references for all files in the project.
+export function bindProject (this: Compiler): Report<AnalysisResult> {
   const files = this.layout().listAllFiles();
-  const nodeToSymbol: NodeToSymbolMap = new InternedMap();
 
-  const validateReport = Report.concat(
-    ...files.map((file) =>
-      this.parseFile(file).chain(({ ast }) => {
-        const symbolFactory = new SymbolFactory(this.symbolIdGenerator, file);
-        return new Validator({ ast }, { nodeToSymbol }, symbolFactory).validate();
-      }),
-    ),
-  );
+  const nodeToSymbol: NodeToSymbolMap = new InternedMap();
+  const nodeToReferee: NodeToRefereeMap = new InternedMap();
+  const symbolToReferences: SymbolToReferencesMap = new InternedMap();
+
+  const fileReports = files.map((file) => this.bindFile(file));
+  for (const report of fileReports) {
+    const result = report.getValue();
+    nodeToSymbol.merge(result.nodeToSymbol);
+    nodeToReferee.merge(result.nodeToReferee);
+    symbolToReferences.merge(result.symbolToReferences);
+  }
 
   const allProjects = files.flatMap((file) => {
     const { ast } = this.parseFile(file).getValue();
@@ -252,46 +252,7 @@ export function validateProject (this: Compiler): Report<{ nodeToSymbol: NodeToS
     ));
   }
 
-  return Report.concat<unknown>(validateReport, new Report(undefined, projectErrors))
-    .map(() => ({ nodeToSymbol }));
-}
-
-// Validate, resolve external symbols, and bind references for all files in the project.
-export function bindProject (this: Compiler): Report<AnalysisResult> {
-  const files = this.layout().listAllFiles();
-  const validateReport = this.validateProject();
-  const { nodeToSymbol } = validateReport.getValue();
-
-  const resolveReport = Report.concat(
-    ...files.map((file) => {
-      const { ast } = this.parseFile(file).getValue();
-      const rootSymbol = nodeToSymbol.get(ast) as SchemaSymbol;
-      return resolveExternalDependencies(this, ast, { symbolTable: rootSymbol.symbolTable, nodeToSymbol });
-    }),
-  );
-
-  const nodeToReferee: NodeToRefereeMap = new InternedMap();
-  const symbolToReferences: SymbolToReferencesMap = new InternedMap();
-
-  const partialInjectionReport = Report.concat(
-    ...files.map((file) => {
-      const { ast } = this.parseFile(file).getValue();
-      const symbolFactory = new SymbolFactory(this.symbolIdGenerator, file);
-      const binder = new Binder({ ast }, { nodeToSymbol, nodeToReferee, symbolToReferences }, symbolFactory);
-      return new Report(undefined, binder.resolvePartialInjections({ ast, nodeToSymbol, nodeToReferee, symbolToReferences }));
-    }),
-  );
-
-  const bindReport = Report.concat(
-    ...files.map((file) => {
-      const { ast } = this.parseFile(file).getValue();
-      const symbolFactory = new SymbolFactory(this.symbolIdGenerator, file);
-      const binder = new Binder({ ast }, { nodeToSymbol, nodeToReferee, symbolToReferences }, symbolFactory);
-      return binder.resolve();
-    }),
-  );
-
-  return Report.concat<unknown>(validateReport, resolveReport, partialInjectionReport, bindReport)
+  return Report.concat<unknown>(...fileReports, new Report(undefined, projectErrors))
     .map(() => ({ nodeToSymbol, nodeToReferee, symbolToReferences }));
 }
 
