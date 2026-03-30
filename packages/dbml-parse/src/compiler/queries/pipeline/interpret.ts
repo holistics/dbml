@@ -1,10 +1,30 @@
 import type Compiler from '@/compiler/index';
 import { Filepath } from '@/compiler/projectLayout';
-import type { Database, Model, TablePartial } from '@/core/interpreter/types';
+import type { Database, InterpreterDatabase, Model, TablePartial } from '@/core/interpreter/types';
 import type { CompileError, CompileWarning } from '@/core/errors';
 import { ElementDeclarationNode } from '@/core/parser/nodes';
 import Interpreter from '@/core/interpreter/interpreter';
 import Report from '@/core/report';
+
+function createEnv (source: string, tablePartials?: InterpreterDatabase['tablePartials']): InterpreterDatabase {
+  return {
+    schema: [],
+    tables: new Map(),
+    notes: new Map(),
+    refIds: {},
+    ref: new Map(),
+    enums: new Map(),
+    tableOwnerGroup: {},
+    tableGroups: new Map(),
+    aliases: [],
+    project: new Map(),
+    tablePartials: tablePartials ?? new Map(),
+    records: new Map(),
+    recordsElements: [],
+    cachedMergedTables: new Map(),
+    source,
+  };
+}
 
 export function interpretFile (this: Compiler, filepath: Filepath): Report<Database> {
   const analysisReport = this.bindProject();
@@ -14,9 +34,8 @@ export function interpretFile (this: Compiler, filepath: Filepath): Report<Datab
   }
 
   const { ast } = this.parseFile(filepath).getValue();
-  const tablePartials = new Map<ElementDeclarationNode, TablePartial>();
 
-  return new Interpreter(this, { ast, ...analysisReport.getValue() }, { tablePartials }).interpret();
+  return new Interpreter(this, ast, createEnv(ast.source)).interpret();
 }
 
 export function interpretProject (this: Compiler): Report<Model> {
@@ -25,7 +44,6 @@ export function interpretProject (this: Compiler): Report<Model> {
   if (files.length === 0) return new Report({ databases: [] }, [], []);
 
   const analysisReport = this.bindProject();
-  const analysisResult = analysisReport.getValue();
 
   if (analysisReport.getErrors().length > 0) {
     return new Report(
@@ -46,11 +64,7 @@ export function interpretProject (this: Compiler): Report<Model> {
   const databaseMap = new Map<string, Database>();
   for (const file of [...files].reverse()) {
     const { ast } = this.parseFile(file).getValue();
-    const interpretReport = new Interpreter(
-      this,
-      { ast, ...analysisResult },
-      { tablePartials },
-    ).interpret();
+    const interpretReport = new Interpreter(this, ast, createEnv(ast.source, tablePartials)).interpret();
 
     databaseMap.set(file.intern(), interpretReport.getValue());
     allErrors.push(...interpretReport.getErrors());

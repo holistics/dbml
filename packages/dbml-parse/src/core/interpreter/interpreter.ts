@@ -2,7 +2,6 @@ import type Compiler from '@/compiler/index';
 import type { Filepath } from '@/compiler/projectLayout';
 import { ProgramNode } from '@/core/parser/nodes';
 import { Database, InterpreterDatabase, Table, TablePartial, TableRecord } from '@/core/interpreter/types';
-import { AnalysisResult } from '@/core/binder/analyzer';
 import { TableInterpreter } from '@/core/interpreter/elementInterpreter/table';
 import { StickyNoteInterpreter } from '@/core/interpreter/elementInterpreter/sticky_note';
 import { RefInterpreter } from '@/core/interpreter/elementInterpreter/ref';
@@ -77,30 +76,12 @@ export default class Interpreter {
 
   constructor (
     compiler: Compiler,
-    { ast, nodeToSymbol, nodeToReferee }: AnalysisResult & { ast: ProgramNode },
-    { tablePartials }: {
-      tablePartials?: InterpreterDatabase['tablePartials'];
-    } = {},
+    ast: ProgramNode,
+    env: InterpreterDatabase,
   ) {
     this.compiler = compiler;
     this.ast = ast;
-    this.env = {
-      schema: [],
-      tables: new Map(),
-      notes: new Map(),
-      refIds: { },
-      ref: new Map(),
-      enums: new Map(),
-      tableOwnerGroup: { },
-      tableGroups: new Map(),
-      aliases: [],
-      project: new Map(),
-      tablePartials: tablePartials ?? new Map(),
-      records: new Map(),
-      recordsElements: [],
-      cachedMergedTables: new Map(),
-      source: ast.source,
-    };
+    this.env = env;
   }
 
   interpret (): Report<Database> {
