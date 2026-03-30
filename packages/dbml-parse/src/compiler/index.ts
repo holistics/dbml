@@ -117,6 +117,11 @@ export default class Compiler {
     return renameTable.call(this, oldName, newName, DEFAULT_ENTRY);
   }
 
+  // NOTE: SyntaxNode and NodeSymbol instances are NOT stable across compiler calls - the same
+  // logical node or symbol may be a different object after re-parsing or re-binding.
+  // Only their interned keys (node.intern(), symbol.intern()) are stable.
+  // Always key maps with InternedMap (not plain Map) when storing nodes or symbols.
+
   /* pipeline */
 
   parseFile = this.localQuery(parseFile);
