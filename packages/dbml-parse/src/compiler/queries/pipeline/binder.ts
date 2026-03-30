@@ -303,7 +303,7 @@ export function bindFile (this: Compiler, filepath: Filepath): Report<AnalysisRe
   const validationReport = this.validateFile(filepath);
   // Deep clone symbolTable so resolveExternalDependencies doesn't mutate the cached validateFile result
   const symbolTable = validationReport.getValue().symbolTable.deepClone();
-  const { nodeToSymbol } = validationReport.getValue();
+  const nodeToSymbol = symbolTable.getNodeSymbolMapping();
   const symbolFactory = new SymbolFactory(this.symbolIdGenerator, filepath);
 
   const errors: CompileError[] = [...validationReport.getErrors()];

@@ -47,4 +47,8 @@ export class InternedMap<K extends Internable<P>, V, P extends Primitive = Retur
   get size (): number {
     return this.map.size;
   }
+
+  [Symbol.iterator] (): IterableIterator<[P, V]> {
+    return this.map[Symbol.iterator]();
+  }
 }

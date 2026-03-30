@@ -1,3 +1,5 @@
+import { InternedMap } from '@/core/internable';
+import { NodeToSymbolMap } from '../analyzer';
 import { NodeSymbolIndex } from './symbolIndex';
 import { NodeSymbol } from './symbols';
 
@@ -61,5 +63,25 @@ export default class SymbolTable {
       }
     }
     return copy;
+  }
+
+  getNodeSymbolMapping (): NodeToSymbolMap {
+    const map: NodeToSymbolMap = new InternedMap();
+
+    for (const [, symbol] of this.table) {
+      if (symbol.declaration) {
+        map.set(symbol.declaration, symbol);
+      }
+      if (symbol.symbolTable) {
+        const subMap = symbol.symbolTable.getNodeSymbolMapping();
+        for (const [, subSymbol] of subMap) {
+          if (subSymbol.declaration) {
+            map.set(subSymbol.declaration, subSymbol);
+          }
+        }
+      }
+    }
+
+    return map;
   }
 }
