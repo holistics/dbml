@@ -1,5 +1,5 @@
 import { forIn, partition } from 'lodash-es';
-import { CompileError, CompileErrorCode } from '@/core/errors';
+import { CompileError, CompileErrorCode, CompileWarning } from '@/core/errors';
 import {
   isSimpleName, pickValidator } from '@/core/analyzer/validator/utils';
 import { isValidColor, registerSchemaStack, aggregateSettingList } from '@/core/analyzer/validator/utils';
@@ -26,15 +26,18 @@ export default class TableGroupValidator implements ElementValidator {
     this.symbolFactory = symbolFactory;
   }
 
-  validate (): CompileError[] {
-    return [
-      ...this.validateContext(),
-      ...this.validateName(this.declarationNode.name),
-      ...this.validateAlias(this.declarationNode.alias),
-      ...this.validateSettingList(this.declarationNode.attributeList),
-      ...this.registerElement(),
-      ...this.validateBody(this.declarationNode.body),
-    ];
+  validate (): { errors: CompileError[], warnings: CompileWarning[] } {
+    return {
+      errors: [
+        ...this.validateContext(),
+        ...this.validateName(this.declarationNode.name),
+        ...this.validateAlias(this.declarationNode.alias),
+        ...this.validateSettingList(this.declarationNode.attributeList),
+        ...this.registerElement(),
+        ...this.validateBody(this.declarationNode.body),
+      ],
+      warnings: [],
+    };
   }
 
   private validateContext (): CompileError[] {
@@ -197,7 +200,7 @@ export default class TableGroupValidator implements ElementValidator {
       }
       const _Validator = pickValidator(sub as ElementDeclarationNode & { type: SyntaxToken });
       const validator = new _Validator(sub as ElementDeclarationNode & { type: SyntaxToken }, this.publicSymbolTable, this.symbolFactory);
-      return validator.validate();
+      return validator.validate().errors;
     });
 
     const notes = subs.filter((sub) => sub.type?.value.toLowerCase() === 'note');

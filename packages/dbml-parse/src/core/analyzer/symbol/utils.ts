@@ -4,6 +4,8 @@ import {
   createColumnSymbolIndex,
   createEnumFieldSymbolIndex,
   createEnumSymbolIndex,
+  createDiagramViewFieldSymbolIndex,
+  createDiagramViewSymbolIndex,
   createPartialInjectionSymbolIndex,
   createSchemaSymbolIndex,
   createTableGroupFieldSymbolIndex,
@@ -24,6 +26,8 @@ import {
   TablePartialSymbol,
   PartialInjectionSymbol,
   StickyNoteSymbol,
+  DiagramViewSymbol,
+  DiagramViewFieldSymbol,
 } from './symbols';
 
 // Given `name`, generate indexes with `name` and all possible kind
@@ -39,6 +43,8 @@ export function generatePossibleIndexes (name: string): NodeSymbolIndex[] {
     createTableGroupFieldSymbolIndex,
     createTablePartialSymbolIndex,
     createPartialInjectionSymbolIndex,
+    createDiagramViewSymbolIndex,
+    createDiagramViewFieldSymbolIndex,
   ].map((f) => f(name));
 }
 
@@ -75,6 +81,12 @@ export function getSymbolKind (symbol: NodeSymbol): SymbolKind {
   }
   if (symbol instanceof StickyNoteSymbol) {
     return SymbolKind.Note;
+  }
+  if (symbol instanceof DiagramViewSymbol) {
+    return SymbolKind.DiagramView;
+  }
+  if (symbol instanceof DiagramViewFieldSymbol) {
+    return SymbolKind.DiagramViewField;
   }
   throw new Error('No other possible symbol kind in getSymbolKind');
 }

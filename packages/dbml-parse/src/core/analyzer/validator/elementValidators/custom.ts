@@ -1,4 +1,4 @@
-import { CompileError, CompileErrorCode } from '@/core/errors';
+import { CompileError, CompileErrorCode, CompileWarning } from '@/core/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, ProgramNode, SyntaxNode, WildcardNode,
 } from '@/core/parser/nodes';
@@ -21,14 +21,17 @@ export default class CustomValidator implements ElementValidator {
     this.symbolFactory = symbolFactory;
   }
 
-  validate (): CompileError[] {
-    return [
-      ...this.validateContext(),
-      ...this.validateName(this.declarationNode.name),
-      ...this.validateAlias(this.declarationNode.alias),
-      ...this.validateSettingList(this.declarationNode.attributeList),
-      ...this.validateBody(this.declarationNode.body),
-    ];
+  validate (): { errors: CompileError[], warnings: CompileWarning[] } {
+    return {
+      errors: [
+        ...this.validateContext(),
+        ...this.validateName(this.declarationNode.name),
+        ...this.validateAlias(this.declarationNode.alias),
+        ...this.validateSettingList(this.declarationNode.attributeList),
+        ...this.validateBody(this.declarationNode.body),
+      ],
+      warnings: [],
+    };
   }
 
   private validateContext (): CompileError[] {

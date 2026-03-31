@@ -3,6 +3,7 @@ import Lexer from '@/core/lexer/lexer';
 import Parser from '@/core/parser/parser';
 import { SyntaxNodeIdGenerator } from '@/core/parser/nodes';
 import { destructureComplexVariable } from '@/core/analyzer/utils';
+import { DEFAULT_SCHEMA_NAME } from '@/constants';
 
 export interface DiagramViewSyncOperation {
   operation: 'create' | 'update' | 'delete';
@@ -75,7 +76,7 @@ function generateDiagramViewBlock (
       lines.push('  Tables { * }');
     } else {
       const tableNames = visibleEntities.tables.map((t) =>
-        t.schemaName === 'public' ? t.name : `${t.schemaName}.${t.name}`,
+        t.schemaName === DEFAULT_SCHEMA_NAME ? t.name : `${t.schemaName}.${t.name}`,
       );
       lines.push('  Tables {');
       tableNames.forEach((n) => lines.push(`    ${n}`));

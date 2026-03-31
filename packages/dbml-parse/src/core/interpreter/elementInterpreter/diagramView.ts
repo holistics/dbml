@@ -1,6 +1,6 @@
 import { partition } from 'lodash-es';
 import { destructureComplexVariable, extractReferee } from '@/core/analyzer/utils';
-import { CompileError } from '@/core/errors';
+import { CompileError, CompileErrorCode } from '@/core/errors';
 import { BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, SyntaxNode } from '@/core/parser/nodes';
 import { isWildcardExpression } from '@/core/parser/utils';
 import { ElementInterpreter, InterpreterDatabase, DiagramView } from '@/core/interpreter/types';
@@ -22,8 +22,6 @@ export class DiagramViewInterpreter implements ElementInterpreter {
         tableGroups: null,
         schemas: null,
       },
-      _explicitWildcards: new Set(),
-      _explicitlySet: new Set(),
     };
   }
 
@@ -31,11 +29,9 @@ export class DiagramViewInterpreter implements ElementInterpreter {
     const errors: CompileError[] = [];
     this.diagramView.token = getTokenPosition(this.declarationNode);
 
-    // Initialize diagramViews map if not exists
-    if (!this.env.diagramViews) {
-      this.env.diagramViews = new Map();
-    }
     this.env.diagramViews.set(this.declarationNode, this.diagramView as DiagramView);
+    this.env.diagramViewWildcards.set(this.diagramView as DiagramView, new Set());
+    this.env.diagramViewExplicitlySet.set(this.diagramView as DiagramView, new Set());
 
     // Interpret name
     if (this.declarationNode.name) {
@@ -67,8 +63,8 @@ export class DiagramViewInterpreter implements ElementInterpreter {
       const first = body.body[0];
       if (first instanceof FunctionApplicationNode && isWildcardExpression(first.callee)) {
         this.diagramView.visibleEntities = { tables: [], stickyNotes: [], tableGroups: [], schemas: [] };
-        this.diagramView._explicitWildcards = new Set(['tables', 'stickyNotes', 'tableGroups', 'schemas']);
-        this.diagramView._explicitlySet = new Set(['tables', 'stickyNotes', 'tableGroups', 'schemas']);
+        this.env.diagramViewWildcards.set(this.diagramView as DiagramView, new Set(['tables', 'stickyNotes', 'tableGroups', 'schemas']));
+        this.env.diagramViewExplicitlySet.set(this.diagramView as DiagramView, new Set(['tables', 'stickyNotes', 'tableGroups', 'schemas']));
         return [];
       }
     }
@@ -99,10 +95,11 @@ export class DiagramViewInterpreter implements ElementInterpreter {
     }
 
     // Store which dims were explicitly declared (normalize block type names to FilterConfig keys)
-    if (explicitlySet.has('tables')) this.diagramView._explicitlySet!.add('tables');
-    if (explicitlySet.has('tablegroups')) this.diagramView._explicitlySet!.add('tableGroups');
-    if (explicitlySet.has('schemas')) this.diagramView._explicitlySet!.add('schemas');
-    if (explicitlySet.has('notes')) this.diagramView._explicitlySet!.add('stickyNotes');
+    const envExplicitlySet = this.env.diagramViewExplicitlySet.get(this.diagramView as DiagramView)!;
+    if (explicitlySet.has('tables')) envExplicitlySet.add('tables');
+    if (explicitlySet.has('tablegroups')) envExplicitlySet.add('tableGroups');
+    if (explicitlySet.has('schemas')) envExplicitlySet.add('schemas');
+    if (explicitlySet.has('notes')) envExplicitlySet.add('stickyNotes');
 
     return [];
   }
@@ -117,22 +114,23 @@ export class DiagramViewInterpreter implements ElementInterpreter {
 
     if (hasWildcard) {
       // Show all for this entity type
+      const envWildcards = this.env.diagramViewWildcards.get(this.diagramView as DiagramView)!;
       switch (blockType) {
         case 'tables':
           this.diagramView.visibleEntities!.tables = [];
-          this.diagramView._explicitWildcards!.add('tables');
+          envWildcards.add('tables');
           break;
         case 'notes':
           this.diagramView.visibleEntities!.stickyNotes = [];
-          this.diagramView._explicitWildcards!.add('stickyNotes');
+          envWildcards.add('stickyNotes');
           break;
         case 'tablegroups':
           this.diagramView.visibleEntities!.tableGroups = [];
-          this.diagramView._explicitWildcards!.add('tableGroups');
+          envWildcards.add('tableGroups');
           break;
         case 'schemas':
           this.diagramView.visibleEntities!.schemas = [];
-          this.diagramView._explicitWildcards!.add('schemas');
+          envWildcards.add('schemas');
           break;
       }
       return;

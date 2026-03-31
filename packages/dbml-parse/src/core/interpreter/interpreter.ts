@@ -35,20 +35,16 @@ function processColumnInDb<T extends Table | TablePartial> (table: T): T {
  * to the concrete list of table group names.
  *
  * Only expands when:
- * 1. The user wrote `TableGroups { * }` (tracked via _explicitWildcards)
+ * 1. The user wrote `TableGroups { * }` (tracked via diagramViewWildcards)
  * 2. No other Trinity dim (Tables, Schemas) is explicitly set —
  *    i.e. tableGroups is the only Trinity dim declared.
  *    When other Trinity dims are also declared, [] keeps its "show all" meaning.
- *
- * Also cleans up internal markers (_explicitWildcards, _explicitlySet) before output.
  */
 function expandDiagramViewWildcards (env: InterpreterDatabase): void {
-  if (!env.diagramViews) return;
-
   for (const view of env.diagramViews.values()) {
     const ve = view.visibleEntities;
-    const wildcards = view._explicitWildcards;
-    const explicitlySet = view._explicitlySet;
+    const wildcards = env.diagramViewWildcards.get(view);
+    const explicitlySet = env.diagramViewExplicitlySet.get(view);
     if (!wildcards || !explicitlySet) continue;
 
     if (wildcards.has('tableGroups') && ve.tableGroups && ve.tableGroups.length === 0) {
@@ -59,10 +55,6 @@ function expandDiagramViewWildcards (env: InterpreterDatabase): void {
         }));
       }
     }
-
-    // Clean up internal markers before output
-    delete view._explicitWildcards;
-    delete view._explicitlySet;
   }
 }
 
@@ -100,7 +92,7 @@ function convertEnvToDb (env: InterpreterDatabase): Database {
     project: Array.from(env.project.values())[0] || {},
     tablePartials: Array.from(env.tablePartials.values()).map(processColumnInDb),
     records,
-    diagramViews: env.diagramViews ? Array.from(env.diagramViews.values()) : [],
+    diagramViews: Array.from(env.diagramViews.values()),
   };
 }
 
@@ -128,6 +120,8 @@ export default class Interpreter {
       cachedMergedTables: new Map(),
       source: ast.source,
       diagramViews: new Map(),
+      diagramViewWildcards: new Map(),
+      diagramViewExplicitlySet: new Map(),
     };
   }
 
@@ -152,7 +146,6 @@ export default class Interpreter {
         case ElementKind.DiagramView:
           return (new DiagramViewInterpreter(element, this.env)).interpret();
         case ElementKind.Records:
-          // Defer records interpretation - collect for later
           this.env.recordsElements.push(element);
           return [];
         default:
@@ -161,6 +154,7 @@ export default class Interpreter {
     });
 
     const warnings: CompileWarning[] = [];
+
     if (this.env.recordsElements.length) {
     // Second pass: interpret all records elements grouped by table
     // Now that all tables, enums, etc. are interpreted, we can validate records properly

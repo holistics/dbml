@@ -29,10 +29,6 @@ export interface DiagramView {
   schemaName: string | null;
   visibleEntities: FilterConfig;
   token: TokenPosition;
-  /** Internal: tracks which dims used explicit wildcard (*). Stripped before output. */
-  _explicitWildcards?: Set<string>;
-  /** Internal: tracks which dims were explicitly declared in the DBML. Stripped before output. */
-  _explicitlySet?: Set<string>;
 }
 
 export interface InterpreterDatabase {
@@ -52,7 +48,9 @@ export interface InterpreterDatabase {
   recordsElements: ElementDeclarationNode[];
   cachedMergedTables: Map<Table, Table>; // map Table to Table that has been merged with table partials
   source: string;
-  diagramViews?: Map<ElementDeclarationNode, DiagramView>;
+  diagramViews: Map<ElementDeclarationNode, DiagramView>;
+  diagramViewWildcards: Map<DiagramView, Set<string>>;
+  diagramViewExplicitlySet: Map<DiagramView, Set<string>>;
 }
 
 // Record value type

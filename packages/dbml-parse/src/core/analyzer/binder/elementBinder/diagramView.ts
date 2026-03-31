@@ -178,14 +178,7 @@ export default class DiagramViewBinder implements ElementBinder {
       const bindees = scanNonListNodeForBinding(field.callee);
 
       return bindees.flatMap((bindee) => {
-        const schemaBindee = bindee.variables.pop();
-        if (!schemaBindee) {
-          return [];
-        }
-
-        return lookupAndBindInScope(this.ast, [
-          { node: schemaBindee, kind: SymbolKind.Schema },
-        ]);
+        return lookupAndBindInScope(this.ast, bindee.variables.map((b) => ({ node: b, kind: SymbolKind.Schema })));
       });
     });
   }

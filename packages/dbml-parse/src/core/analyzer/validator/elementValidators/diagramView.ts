@@ -27,15 +27,17 @@ export default class DiagramViewValidator implements ElementValidator {
     this.symbolFactory = symbolFactory;
   }
 
-  validate (): CompileError[] {
-    return [
+  validate (): { errors: CompileError[], warnings: CompileWarning[] } {
+    const errors: CompileError[] = [
       ...this.validateContext(),
       ...this.validateName(this.declarationNode.name),
       ...this.validateAlias(this.declarationNode.alias),
       ...this.validateSettingList(this.declarationNode.attributeList),
       ...this.registerElement(),
-      ...this.validateBody(this.declarationNode.body) as CompileError[],
     ];
+    const bodyResult = this.validateBody(this.declarationNode.body);
+    errors.push(...bodyResult.errors);
+    return { errors, warnings: bodyResult.warnings };
   }
 
   private validateContext (): CompileError[] {
@@ -113,31 +115,42 @@ export default class DiagramViewValidator implements ElementValidator {
     return errors;
   }
 
-  validateBody (body?: FunctionApplicationNode | BlockExpressionNode): (CompileError | CompileWarning)[] {
-    if (!body) return [];
+  validateBody (body?: FunctionApplicationNode | BlockExpressionNode): { errors: CompileError[], warnings: CompileWarning[] } {
+    if (!body) return { errors: [], warnings: [] };
 
     if (body instanceof FunctionApplicationNode) {
-      return [new CompileError(
-        CompileErrorCode.UNEXPECTED_SIMPLE_BODY,
-        'A DiagramView\'s body must be a block',
-        body,
-      )];
+      return {
+        errors: [new CompileError(
+          CompileErrorCode.UNEXPECTED_SIMPLE_BODY,
+          'A DiagramView\'s body must be a block',
+          body,
+        )],
+        warnings: [],
+      };
     }
 
     const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
-    return [
-      ...this.validateFields(fields as FunctionApplicationNode[]),
-      ...this.validateSubElements(subs as ElementDeclarationNode[]),
-    ];
+    const subResult = this.validateSubElements(subs as ElementDeclarationNode[]);
+    return {
+      errors: [...this.validateFields(fields as FunctionApplicationNode[]), ...subResult.errors],
+      warnings: subResult.warnings,
+    };
   }
 
-  validateFields (fields: FunctionApplicationNode[]): (CompileError | CompileWarning)[] {
+  validateFields (fields: FunctionApplicationNode[]): CompileError[] {
     return fields.flatMap((field) => {
       // Body-level {*} is valid shorthand for "show all entities"
       if (isWildcardExpression(field.callee)) {
+        if (field.args.length > 0) {
+          return field.args.map((arg) => new CompileError(
+            CompileErrorCode.INVALID_DIAGRAMVIEW_FIELD,
+            'DiagramView field should only have a single name',
+            arg,
+          ));
+        }
         return [];
       }
-      const errors: (CompileError | CompileWarning)[] = [];
+      const errors: CompileError[] = [];
       // Fields at the top level of DiagramView are not allowed
       errors.push(new CompileError(
         CompileErrorCode.INVALID_DIAGRAMVIEW_FIELD,
@@ -148,10 +161,10 @@ export default class DiagramViewValidator implements ElementValidator {
     });
   }
 
-  private validateSubElements (subs: ElementDeclarationNode[]): (CompileError | CompileWarning)[] {
-    const errors: (CompileError | CompileWarning)[] = [];
+  private validateSubElements (subs: ElementDeclarationNode[]): { errors: CompileError[], warnings: CompileWarning[] } {
+    const errors: CompileError[] = [];
+    const warnings: CompileWarning[] = [];
 
-    // Validate allowed sub-blocks: Tables, Notes, TableGroups, Schemas
     const allowedBlocks = ['tables', 'notes', 'tablegroups', 'schemas'];
 
     for (const sub of subs) {
@@ -170,26 +183,24 @@ export default class DiagramViewValidator implements ElementValidator {
         continue;
       }
 
-      // Validate the sub-block body
-      errors.push(...this.validateSubBlock(sub));
-
-      // Register fields in the sub-block
-      errors.push(...this.registerSubBlockFields(sub));
+      const subBlockResult = this.validateSubBlock(sub);
+      errors.push(...subBlockResult.errors);
+      warnings.push(...subBlockResult.warnings);
     }
 
-    return errors;
+    return { errors, warnings };
   }
 
-  private validateSubBlock (sub: ElementDeclarationNode): (CompileError | CompileWarning)[] {
-    const errors: (CompileError | CompileWarning)[] = [];
+  private validateSubBlock (sub: ElementDeclarationNode): { errors: CompileError[], warnings: CompileWarning[] } {
+    const errors: CompileError[] = [];
+    const warnings: CompileWarning[] = [];
 
     if (!sub.body || !(sub.body instanceof BlockExpressionNode)) {
-      return errors;
+      return { errors, warnings };
     }
 
     const body = sub.body as BlockExpressionNode;
 
-    // Check for * combined with specific items (warning)
     const hasWildcard = body.body.some(
       (e) => e instanceof FunctionApplicationNode && isWildcardExpression(e.callee),
     );
@@ -198,14 +209,16 @@ export default class DiagramViewValidator implements ElementValidator {
     );
 
     if (hasWildcard && hasSpecificItems) {
-      errors.push(new CompileWarning(
+      warnings.push(new CompileWarning(
         CompileErrorCode.INVALID_DIAGRAMVIEW_FIELD,
         `Wildcard (*) combined with specific items in ${sub.type?.value} block. Specific items will be ignored.`,
         sub,
       ));
     }
 
-    return errors;
+    errors.push(...this.registerSubBlockFields(sub));
+
+    return { errors, warnings };
   }
 
   registerSubBlockFields (sub: ElementDeclarationNode): CompileError[] {
