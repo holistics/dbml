@@ -60,9 +60,9 @@ export {
   type FilterConfig,
 } from '@/core/interpreter/types';
 
-// Export syncDiagramView transform
-export { syncDiagramView } from '@/compiler/queries/transform/syncDiagramView';
-export type { DiagramViewSyncOperation } from '@/compiler/queries/transform/syncDiagramView';
+// DiagramView types (methods exposed via Compiler)
+export type { DiagramViewSyncOperation, DiagramViewBlock } from '@/compiler/queries/transform/syncDiagramView';
+export type { TextEdit } from '@/compiler/queries/transform/applyTextEdits';
 
 export { dbmlMonarchTokensProvider } from '@/services/monarch';
 

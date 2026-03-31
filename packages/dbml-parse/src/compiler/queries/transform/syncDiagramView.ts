@@ -16,13 +16,13 @@ export interface DiagramViewSyncOperation {
   };
 }
 
-interface DiagramViewBlock {
+export interface DiagramViewBlock {
   name: string;
   startIndex: number;
   endIndex: number;
 }
 
-function findDiagramViewBlocks (source: string): DiagramViewBlock[] {
+export function findDiagramViewBlocks (source: string): DiagramViewBlock[] {
   const blocks: DiagramViewBlock[] = [];
   const lexerResult = new Lexer(source).lex();
   if (lexerResult.getErrors().length > 0) return blocks;
@@ -131,59 +131,77 @@ function generateDiagramViewBlock (
  *
  * @param dbml - The original DBML source code
  * @param operations - Array of operations to apply (create, update, delete)
- * @returns Object containing the new DBML source code
+ * @param blocks - Optional pre-parsed blocks from findDiagramViewBlocks. If not provided, parses internally.
+ * @returns Object containing the new DBML source code and the text edits applied
  */
 export function syncDiagramView (
   dbml: string,
   operations: DiagramViewSyncOperation[],
-): { newDbml: string } {
+  blocks?: DiagramViewBlock[],
+): { newDbml: string; edits: TextEdit[] } {
+  let currentBlocks = blocks ?? findDiagramViewBlocks(dbml);
   let currentDbml = dbml;
+  const allEdits: TextEdit[] = [];
 
   for (const op of operations) {
-    currentDbml = applyOperation(currentDbml, op);
+    const { dbml: newDbml, edits } = applyOperation(currentDbml, op, currentBlocks);
+    allEdits.push(...edits);
+    currentDbml = newDbml;
+    // Re-parse blocks after each operation since positions shifted
+    if (edits.length > 0) {
+      currentBlocks = findDiagramViewBlocks(currentDbml);
+    }
   }
 
-  return { newDbml: currentDbml };
+  return { newDbml: currentDbml, edits: allEdits };
 }
 
-function applyOperation (dbml: string, operation: DiagramViewSyncOperation): string {
+function applyOperation (
+  dbml: string,
+  operation: DiagramViewSyncOperation,
+  blocks: DiagramViewBlock[],
+): { dbml: string; edits: TextEdit[] } {
   switch (operation.operation) {
     case 'create':
-      return applyCreate(dbml, operation);
-    case 'update': {
-      const blocks = findDiagramViewBlocks(dbml);
+      return applyCreate(dbml, operation, blocks);
+    case 'update':
       return applyUpdate(dbml, operation, blocks);
-    }
-    case 'delete': {
-      const blocks = findDiagramViewBlocks(dbml);
+    case 'delete':
       return applyDelete(dbml, operation, blocks);
-    }
     default:
-      return dbml;
+      return { dbml, edits: [] };
   }
 }
 
-function applyCreate (dbml: string, operation: DiagramViewSyncOperation): string {
+function applyCreate (
+  dbml: string,
+  operation: DiagramViewSyncOperation,
+  blocks: DiagramViewBlock[],
+): { dbml: string; edits: TextEdit[] } {
   // If a block with this name already exists, treat as update to avoid duplicate blocks
-  const blocks = findDiagramViewBlocks(dbml);
   const existing = blocks.find((b) => b.name === operation.name);
   if (existing) {
     return applyUpdate(dbml, operation, blocks);
   }
 
   const newBlock = generateDiagramViewBlock(operation.name, operation.visibleEntities);
+  const appendText = '\n\n' + newBlock + '\n';
+  const edit: TextEdit = {
+    start: dbml.length,
+    end: dbml.length,
+    newText: appendText,
+  };
 
-  // Append at end of file
-  return dbml.trimEnd() + '\n\n' + newBlock + '\n';
+  return { dbml: dbml + appendText, edits: [edit] };
 }
 
 function applyUpdate (
   dbml: string,
   operation: DiagramViewSyncOperation,
   blocks: DiagramViewBlock[],
-): string {
+): { dbml: string; edits: TextEdit[] } {
   const block = blocks.find((b) => b.name === operation.name);
-  if (!block) return dbml;
+  if (!block) return { dbml, edits: [] };
 
   const edits: TextEdit[] = [];
 
@@ -200,43 +218,47 @@ function applyUpdate (
     });
   }
 
-  return applyTextEdits(dbml, edits);
+  return { dbml: applyTextEdits(dbml, edits), edits };
 }
 
 function applyDelete (
   dbml: string,
   operation: DiagramViewSyncOperation,
   blocks: DiagramViewBlock[],
-): string {
+): { dbml: string; edits: TextEdit[] } {
   const block = blocks.find((b) => b.name === operation.name);
-  if (!block) return dbml;
+  if (!block) return { dbml, edits: [] };
 
-  // Remove block and surrounding whitespace
-  const lines = dbml.split('\n');
-  let startLine = 0;
-  let endLine = lines.length - 1;
+  // Expand range to include surrounding whitespace/newlines
+  let start = block.startIndex;
+  let end = block.endIndex;
 
-  // Find line boundaries
-  let currentPos = 0;
-  for (let i = 0; i < lines.length; i++) {
-    const lineStart = currentPos;
-    const lineEnd = currentPos + lines[i].length;
-
-    if (lineStart <= block.startIndex && block.startIndex <= lineEnd) {
-      startLine = i;
+  // Expand backwards to consume preceding blank lines
+  while (start > 0 && dbml[start - 1] === '\n') {
+    start--;
+    // Also consume \r for CRLF
+    if (start > 0 && dbml[start - 1] === '\r') {
+      start--;
     }
-    if (lineStart <= block.endIndex && block.endIndex <= lineEnd) {
-      endLine = i;
+    // Check if the line before is blank — if not, stop
+    const prevLineStart = dbml.lastIndexOf('\n', start - 1) + 1;
+    const prevLine = dbml.substring(prevLineStart, start);
+    if (prevLine.trim() !== '') {
+      // Not a blank line, restore position
+      start = block.startIndex;
+      // But still consume one newline before the block
+      if (start > 0 && dbml[start - 1] === '\n') {
+        start--;
+        if (start > 0 && dbml[start - 1] === '\r') start--;
+      }
+      break;
     }
-
-    currentPos = lineEnd + 1; // +1 for newline
   }
 
-  // Remove lines and clean up extra blank lines
-  const newLines = [
-    ...lines.slice(0, startLine),
-    ...lines.slice(endLine + 1),
-  ];
+  // Expand forward to consume trailing newline
+  if (end < dbml.length && dbml[end] === '\r') end++;
+  if (end < dbml.length && dbml[end] === '\n') end++;
 
-  return newLines.join('\n');
+  const edit: TextEdit = { start, end, newText: '' };
+  return { dbml: applyTextEdits(dbml, [edit]), edits: [edit] };
 }

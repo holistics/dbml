@@ -15,14 +15,18 @@ import { containerStack, containerToken, containerElement, containerScope, conta
 import {
   renameTable,
   applyTextEdits,
+  syncDiagramView,
+  findDiagramViewBlocks,
   type TextEdit,
   type TableNameInput,
+  type DiagramViewSyncOperation,
+  type DiagramViewBlock,
 } from './queries/transform';
 import { splitQualifiedIdentifier, unescapeString, escapeString, formatRecordValue, isValidIdentifier, addDoubleQuoteIfNeeded } from './queries/utils';
 
 // Re-export types
 export { ScopeKind } from './types';
-export type { TextEdit, TableNameInput };
+export type { TextEdit, TableNameInput, DiagramViewSyncOperation, DiagramViewBlock };
 
 // Re-export utilities
 export { splitQualifiedIdentifier, unescapeString, escapeString, formatRecordValue, isValidIdentifier, addDoubleQuoteIfNeeded };
@@ -87,6 +91,17 @@ export default class Compiler {
     newName: TableNameInput,
   ): string {
     return renameTable.call(this, oldName, newName);
+  }
+
+  syncDiagramView (
+    operations: DiagramViewSyncOperation[],
+    blocks?: DiagramViewBlock[],
+  ): { newDbml: string; edits: TextEdit[] } {
+    return syncDiagramView(this.parse.source(), operations, blocks);
+  }
+
+  findDiagramViewBlocks (): DiagramViewBlock[] {
+    return findDiagramViewBlocks(this.parse.source());
   }
 
   applyTextEdits (edits: TextEdit[]): string {

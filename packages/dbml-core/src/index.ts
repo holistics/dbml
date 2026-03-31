@@ -5,6 +5,8 @@ import importer from './import';
 import exporter from './export';
 import {
   renameTable,
+  syncDiagramView,
+  findDiagramViewBlocks,
 } from './transform';
 import { VERSION } from './utils/version';
 
@@ -12,6 +14,8 @@ export {
   importer,
   exporter,
   renameTable,
+  syncDiagramView,
+  findDiagramViewBlocks,
   ModelExporter,
   CompilerError,
   Parser,
@@ -36,8 +40,6 @@ export {
   tryExtractEnum,
   addDoubleQuoteIfNeeded,
   formatRecordValue,
-  // DiagramView exports
-  syncDiagramView,
   // Monaco editor syntax highlighting
   dbmlMonarchTokensProvider,
 } from '@dbml/parse';
@@ -45,6 +47,8 @@ export {
 // Re-export types
 export type {
   DiagramViewSyncOperation,
+  DiagramViewBlock,
   DiagramView,
   FilterConfig,
+  TextEdit,
 } from '@dbml/parse';
