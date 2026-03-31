@@ -6,44 +6,19 @@ import Table, { NormalizedTableIdMap } from './table';
 import StickyNote, { NormalizedNoteIdMap } from './stickyNote';
 import Element, { RawNote, Token } from './element';
 import DbState from './dbState';
-import { NormalizedEndpointIdMap } from './endpoint';
-import { NormalizedEnumValueIdMap } from './enumValue';
-import { NormalizedFieldIdMap } from './field';
-import { NormalizedIndexColumnIdMap } from './indexColumn';
-import { NormalizedIndexIdMap } from './indexes';
-import { NormalizedCheckIdMap } from './check';
 import TablePartial, { NormalizedTablePartialIdMap } from './tablePartial';
+import TableRecord, { NormalizedRecordIdMap, RawTableRecord } from './records';
+import { NormalizedEndpointIdMap } from './endpoint';
+import { NormalizedFieldIdMap } from './field';
+import { NormalizedEnumValueIdMap } from './enumValue';
+import { NormalizedIndexIdMap } from './indexes';
+import { NormalizedIndexColumnIdMap } from './indexColumn';
+import { NormalizedCheckIdMap } from './check';
+
 export interface Project {
     note: RawNote;
     database_type: string;
     name: string;
-}
-
-export type RecordValueType = 'string' | 'bool' | 'integer' | 'real' | 'date' | 'time' | 'datetime' | string;
-
-export interface RecordValue {
-    value: any;
-    type: RecordValueType;
-}
-
-export interface RawTableRecord {
-    schemaName: string | undefined;
-    tableName: string;
-    columns: string[];
-    values: {
-        value: any;
-        type: RecordValueType;
-    }[][];
-}
-
-export interface TableRecord extends RawTableRecord {
-    id: number;
-}
-
-export type NormalizedRecord = TableRecord;
-
-export interface NormalizedRecordIdMap {
-    [_id: number]: NormalizedRecord;
 }
 
 export interface RawDatabase {
@@ -57,6 +32,7 @@ export interface RawDatabase {
     records: RawTableRecord[];
     tablePartials: TablePartial[];
 }
+
 declare class Database extends Element {
     dbState: DbState;
     hasDefaultSchema: boolean;
