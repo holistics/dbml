@@ -1,7 +1,7 @@
 import {
   extractVariableFromExpression,
   getElementKind,
-} from '@/core/binder/utils';
+} from '@/core/analyzer/utils';
 import {
   BlockExpressionNode,
   CallExpressionNode,
@@ -16,8 +16,8 @@ import {
   CompletionItemKind,
   CompletionItemInsertTextRule,
 } from '@/services/types';
-import { ColumnSymbol, TablePartialInjectedColumnSymbol, TableSymbol } from '@/core/binder/symbol/symbols';
-import { ElementKind } from '@/core/binder/types';
+import { ColumnSymbol, TablePartialInjectedColumnSymbol, TableSymbol } from '@/core/analyzer/symbol/symbols';
+import { ElementKind } from '@/core/analyzer/types';
 import Compiler from '@/compiler';
 import { extractReferee, getFilepathFromModel } from '@/services/utils';
 import {

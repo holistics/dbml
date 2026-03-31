@@ -31,7 +31,7 @@ import {
   UseDeclarationNode,
   VariableNode,
 } from '@/core/parser/nodes';
-import { destructureComplexVariable } from '@/core/binder/utils';
+import { destructureComplexVariable } from '@/core/analyzer/utils';
 
 // Try to interpret a function application as an element
 export function convertFuncAppToElem (
@@ -125,6 +125,13 @@ export function isFromKeyword (
   token?: SyntaxToken,
 ): token is SyntaxToken & { kind: SyntaxTokenKind.IDENTIFIER } {
   return token?.kind === SyntaxTokenKind.IDENTIFIER && token.value.toLowerCase() === 'from';
+}
+
+// Check if a token is the `reuse` keyword (case-insensitive)
+export function isReuseKeyword (
+  token?: SyntaxToken,
+): token is SyntaxToken & { kind: SyntaxTokenKind.IDENTIFIER } {
+  return token?.kind === SyntaxTokenKind.IDENTIFIER && token.value.toLowerCase() === 'reuse';
 }
 
 export function markInvalid (nodeOrToken?: SyntaxNode | SyntaxToken) {

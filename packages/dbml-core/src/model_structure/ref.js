@@ -96,7 +96,6 @@ class Ref extends Element {
     model.refs[this.id] = {
       id: this.id,
       ...this.shallowExport(),
-      filepath: this.token?.filepath?.toString(),
       ...this.exportChildIds(),
       ...this.exportParentIds(),
     };

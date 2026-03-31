@@ -1,13 +1,16 @@
-import Schema, { NormalizedSchemaIdMap, RawSchema } from './schema';
-import Ref, { NormalizedRefIdMap } from './ref';
-import Enum, { NormalizedEnumIdMap } from './enum';
-import TableGroup, { NormalizedTableGroupIdMap } from './tableGroup';
-import Table, { NormalizedTableIdMap } from './table';
-import StickyNote from './stickyNote';
+import Schema, { RawSchema } from './schema';
+import Ref from './ref';
+import Enum from './enum';
+import TableGroup from './tableGroup';
+import Table from './table';
+import StickyNote, { NormalizedNote } from './stickyNote';
 import Element, { RawNote, Token } from './element';
 import DbState from './dbState';
 import TablePartial from './tablePartial';
 import { NormalizedModel } from './model';
+import { RawTableRecord } from './records';
+import TableRecord from './records';
+import { Filepath, Imports as RawImports, Import as RawImport } from '@dbml/parse';
 
 export interface Project {
     note: RawNote;
@@ -15,31 +18,14 @@ export interface Project {
     name: string;
 }
 
-export type RecordValueType = 'string' | 'bool' | 'integer' | 'real' | 'date' | 'time' | 'datetime' | string;
-
-export interface RecordValue {
-    value: any;
-    type: RecordValueType;
-}
-
-export interface RawTableRecord {
-    schemaName: string | undefined;
-    tableName: string;
-    columns: string[];
-    values: {
-        value: any;
-        type: RecordValueType;
-    }[][];
-}
-
-export interface TableRecord extends RawTableRecord {
-    id: number;
-}
-
-export type NormalizedRecord = TableRecord;
-
-export interface NormalizedRecordIdMap {
-    [_id: number]: NormalizedRecord;
+export interface RawFileManifest {
+    filepath: Filepath;
+    imports: RawImports;
+    tables: { name: string; schemaName: string | null }[];
+    enums: { name: string; schemaName: string | null }[];
+    tableGroups: { name: string; schemaName: string | null }[];
+    tablePartials: { name: string }[];
+    notes: { name: string }[];
 }
 
 export interface RawDatabase {
@@ -52,7 +38,35 @@ export interface RawDatabase {
     project: Project;
     records: RawTableRecord[];
     tablePartials: TablePartial[];
+    files: RawFileManifest[];
 }
+
+export interface NormalizedImport {
+    name: string;
+    schemaName: string | null;
+    alias?: string;
+    reexport: boolean;
+    id: number;
+}
+
+export interface NormalizedImports {
+  tables: NormalizedImport[];
+  tablegroups: NormalizedImport[];
+  enums: NormalizedImport[];
+  tablepartials: NormalizedImport[];
+  notes: NormalizedImport[];
+}
+
+export interface NormalizedFileManifest {
+  filepath: string;
+  tables: { name: string; schemaName: string | null }[];
+  enums: { name: string; schemaName: string | null }[];
+  tableGroups: { name: string; schemaName: string | null }[];
+  tablePartials: { name: string }[];
+  notes: { name: string }[];
+  imports: NormalizedImports;
+}
+
 declare class Database extends Element {
     dbState: DbState;
     hasDefaultSchema: boolean;

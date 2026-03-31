@@ -7,39 +7,39 @@ import { test, expect, describe, beforeAll } from 'vitest';
 describe('@dbml/core - Model', () => {
   describe('constructor', () => {
     test('creates Model from raw database input', () => {
-      const model = new Model({ database: [jsonDb] });
+      const model = new Model({ databases: [jsonDb] });
 
-      expect(model.database).toHaveLength(1);
-      expect(model.database[0]).toBeInstanceOf(Database);
+      expect(model.databases).toHaveLength(1);
+      expect(model.databases[0]).toBeInstanceOf(Database);
     });
 
     test('creates Model with multiple databases', () => {
-      const model = new Model({ database: [jsonDb, jsonDb] });
+      const model = new Model({ databases: [jsonDb, jsonDb] });
 
-      expect(model.database).toHaveLength(2);
-      model.database.forEach((db: any) => {
+      expect(model.databases).toHaveLength(2);
+      model.databases.forEach((db: any) => {
         expect(db).toBeInstanceOf(Database);
       });
     });
 
     test('creates Model with empty database array', () => {
-      const model = new Model({ database: [] });
+      const model = new Model({ databases: [] });
 
-      expect(model.database).toHaveLength(0);
+      expect(model.databases).toHaveLength(0);
     });
 
     test('all databases share the same dbState', () => {
-      const model = new Model({ database: [jsonDb, jsonDb] });
+      const model = new Model({ databases: [jsonDb, jsonDb] });
 
       expect(model.dbState).toBeDefined();
-      expect(model.database[0].dbState).toBe(model.dbState);
-      expect(model.database[1].dbState).toBe(model.dbState);
+      expect(model.databases[0].dbState).toBe(model.dbState);
+      expect(model.databases[1].dbState).toBe(model.dbState);
     });
 
     test('databases in the same Model have unique ids', () => {
-      const model = new Model({ database: [jsonDb, jsonDb] });
+      const model = new Model({ databases: [jsonDb, jsonDb] });
 
-      const ids = model.database.map((db: any) => db.id);
+      const ids = model.databases.map((db: any) => db.id);
       expect(new Set(ids).size).toBe(ids.length);
     });
   });
@@ -52,7 +52,7 @@ describe('@dbml/core - Model', () => {
       const database = new Database(jsonDb as any);
       databaseNormalized = database.normalize();
 
-      const model = new Model({ database: [jsonDb] });
+      const model = new Model({ databases: [jsonDb] });
       modelNormalized = model.normalize();
     });
 
@@ -92,12 +92,12 @@ describe('@dbml/core - Model', () => {
     });
 
     test('merges multiple databases', () => {
-      const model = new Model({ database: [jsonDb, jsonDb] });
+      const model = new Model({ databases: [jsonDb, jsonDb] });
       const normalized = model.normalize();
 
       expect(Object.keys(normalized.database)).toHaveLength(2);
 
-      const singleModel = new Model({ database: [jsonDb] });
+      const singleModel = new Model({ databases: [jsonDb] });
       const singleNormalized = singleModel.normalize();
 
       expect(Object.keys(normalized.schemas).length).toBe(
@@ -112,7 +112,7 @@ describe('@dbml/core - Model', () => {
     });
 
     test('merged databases have no id collisions', () => {
-      const model = new Model({ database: [jsonDb, jsonDb] });
+      const model = new Model({ databases: [jsonDb, jsonDb] });
       const normalized = model.normalize();
 
       // All table ids should be unique
@@ -125,7 +125,7 @@ describe('@dbml/core - Model', () => {
     });
 
     test('empty model normalizes to empty collections', () => {
-      const model = new Model({ database: [] });
+      const model = new Model({ databases: [] });
       const normalized = model.normalize();
 
       Object.values(normalized).forEach((collection) => {

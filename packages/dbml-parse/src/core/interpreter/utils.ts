@@ -1,12 +1,12 @@
 import { last, zip, uniqBy } from 'lodash-es';
 
-import { ColumnSymbol } from '@/core/binder/symbol/symbols';
+import { ColumnSymbol } from '@/core/analyzer/symbol/symbols';
 import type Compiler from '@/compiler/index';
 import {
   destructureComplexVariableTuple, destructureComplexVariable, destructureMemberAccessExpression, extractQuotedStringToken,
   extractVariableFromExpression,
   extractVarNameFromPrimaryVariable,
-} from '@/core/binder/utils';
+} from '@/core/analyzer/utils';
 import {
   ArrayNode, BlockExpressionNode, CallExpressionNode, FunctionExpressionNode, FunctionApplicationNode, LiteralNode,
   PrimaryExpressionNode, SyntaxNode, TupleExpressionNode,
@@ -20,7 +20,7 @@ import { isDotDelimitedIdentifier, isExpressionAnIdentifierNode, isExpressionAQu
 import Report from '@/core/report';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import { getNumberTextFromExpression, parseNumber } from '@/core/utils';
-import { isExpressionASignedNumberExpression, isValidPartialInjection } from '../binder/validator/utils';
+import { isExpressionASignedNumberExpression, isValidPartialInjection } from '../analyzer/validator/utils';
 
 export function extractNamesFromRefOperand (operand: SyntaxNode, owner?: Table): { schemaName: string | null; tableName: string; fieldNames: string[] } {
   const { variables, tupleElements } = destructureComplexVariableTuple(operand).unwrap();

@@ -41,7 +41,6 @@ class TablePartial extends Element {
     model.tablePartials[this.id] = {
       id: this.id,
       ...this.shallowExport(),
-      filepath: this.token?.filepath?.toString(),
     };
   }
 }

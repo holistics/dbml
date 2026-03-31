@@ -1,28 +1,31 @@
 import { partition } from 'lodash-es';
-import { destructureComplexVariable, destructureMemberAccessExpression, extractQuotedStringToken } from '@/core/binder/utils';
+import { destructureComplexVariable, destructureMemberAccessExpression, extractQuotedStringToken } from '@/core/analyzer/utils';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import {
-  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, SyntaxNode, ListExpressionNode,
+  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ProgramNode, SyntaxNode, ListExpressionNode,
 } from '@/core/parser/nodes';
 import { ElementInterpreter, InterpreterDatabase, TableGroup } from '@/core/interpreter/types';
 import {
   extractElementName, getTokenPosition, normalizeNoteContent, extractColor,
 } from '@/core/interpreter/utils';
-import { aggregateSettingList } from '@/core/binder/validator/utils';
+import { aggregateSettingList } from '@/core/analyzer/validator/utils';
 import type Compiler from '@/compiler/index';
 
 export class TableGroupInterpreter implements ElementInterpreter {
   private compiler: Compiler;
+  private ast: ProgramNode;
   private declarationNode: ElementDeclarationNode;
   private env: InterpreterDatabase;
   private tableGroup: Partial<TableGroup>;
 
   constructor (
     compiler: Compiler,
+    ast: ProgramNode,
     declarationNode: ElementDeclarationNode,
     env: InterpreterDatabase,
   ) {
     this.compiler = compiler;
+    this.ast = ast;
     this.declarationNode = declarationNode;
     this.env = env;
     this.tableGroup = { tables: [] };

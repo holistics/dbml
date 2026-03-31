@@ -29,7 +29,6 @@ class StickyNote extends Element {
     model.notes[this.id] = {
       id: this.id,
       ...this.export(),
-      filepath: this.token?.filepath?.toString(),
     };
   }
 }

@@ -43,7 +43,6 @@ class Check extends Element {
     model.checks[this.id] = {
       id: this.id,
       ...this.shallowExport(),
-      filepath: this.token?.filepath?.toString(),
       ...this.exportParentIds(),
     };
   }

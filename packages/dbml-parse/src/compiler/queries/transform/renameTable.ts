@@ -2,9 +2,9 @@ import { DEFAULT_SCHEMA_NAME } from '@/constants';
 import type Compiler from '../../index';
 import type { Filepath } from '../../projectLayout';
 import { SyntaxNode } from '@/core/parser/nodes';
-import SymbolTable from '@/core/binder/symbol/symbolTable';
-import { TableSymbol } from '@/core/binder/symbol/symbols';
-import { createSchemaSymbolIndex, createTableSymbolIndex } from '@/core/binder/symbol/symbolIndex';
+import SymbolTable from '@/core/analyzer/symbol/symbolTable';
+import { TableSymbol } from '@/core/analyzer/symbol/symbols';
+import { createSchemaSymbolIndex, createTableSymbolIndex } from '@/core/analyzer/symbol/symbolIndex';
 import { applyTextEdits, TextEdit } from './applyTextEdits';
 import { isAlphaOrUnderscore, isDigit } from '@/core/utils';
 import { normalizeTableName, lookupTableSymbol, stripQuotes, type TableNameInput } from './utils';
@@ -231,7 +231,7 @@ export function renameTable (
   newName: TableNameInput,
   filepath: Filepath,
 ): string {
-  const source = this.getSource(filepath) ?? '';
+  const source = this.getFile(filepath) ?? '';
   const symbolTable = this.resolvedSymbol(this.ast(filepath))?.symbolTable;
   if (!symbolTable) return source;
 

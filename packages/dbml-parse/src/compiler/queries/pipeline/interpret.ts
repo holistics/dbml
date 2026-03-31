@@ -1,84 +1,97 @@
 import type Compiler from '@/compiler/index';
 import { Filepath } from '@/compiler/projectLayout';
-import type { Database, InterpreterDatabase, Model, TablePartial } from '@/core/interpreter/types';
+import type { Database, MasterDatabase } from '@/core/interpreter/types';
+import { InterpreterDatabase } from '@/core/interpreter/types';
 import type { CompileError, CompileWarning } from '@/core/errors';
-import { ElementDeclarationNode } from '@/core/parser/nodes';
 import Interpreter from '@/core/interpreter/interpreter';
 import Report from '@/core/report';
+import { collectTransitiveDependencies } from '../utils';
 
-function createEnv (source: string, tablePartials?: InterpreterDatabase['tablePartials']): InterpreterDatabase {
-  return {
-    schema: [],
-    tables: new Map(),
-    notes: new Map(),
-    refIds: {},
-    ref: new Map(),
-    enums: new Map(),
-    tableOwnerGroup: {},
-    tableGroups: new Map(),
+const emptyMaster: MasterDatabase = {
+  files: {},
+  items: {
+    schemas: [],
+    tables: [],
+    notes: [],
+    refs: [],
+    enums: [],
+    tableGroups: [],
     aliases: [],
-    project: new Map(),
-    tablePartials: tablePartials ?? new Map(),
-    records: new Map(),
-    recordsElements: [],
-    cachedMergedTables: new Map(),
-    source,
-  };
+    project: {},
+    tablePartials: [],
+    records: [],
+  },
+} as const;
+
+export function interpretProject (this: Compiler): Report<MasterDatabase> {
+  const analysisReport = this.bindProject();
+
+  if (analysisReport.getErrors().length > 0) {
+    return new Report(emptyMaster, analysisReport.getErrors(), analysisReport.getWarnings());
+  }
+
+  const visited = new Set<string>();
+  const allFiles: Filepath[] = [];
+  for (const entry of this.layout().getEntryPoints()) {
+    for (const file of collectTransitiveDependencies(this, entry)) {
+      if (visited.has(file.intern())) continue;
+      visited.add(file.intern());
+      allFiles.push(file);
+    }
+  }
+
+  if (allFiles.length === 0) return new Report(emptyMaster, [], []);
+
+  const env = new InterpreterDatabase();
+
+  const errors: CompileError[] = [];
+  const warnings: CompileWarning[] = [...analysisReport.getWarnings()];
+
+  for (const file of [...allFiles].reverse()) {
+    const { ast } = this.parseFile(file).getValue();
+    const report = new Interpreter(this, ast, env).interpret();
+    errors.push(...report.getErrors());
+    warnings.push(...report.getWarnings());
+  }
+
+  collectImports(this, allFiles, analysisReport.getValue(), env);
+
+  return new Report(env.toMasterDatabase(), errors, warnings);
 }
 
 export function interpretFile (this: Compiler, filepath: Filepath): Report<Database> {
-  const analysisReport = this.bindProject();
+  const masterReport = this.interpretProject();
+  const master = masterReport.getValue();
 
-  if (analysisReport.getErrors().length > 0) {
-    return new Report(emptyDatabase(filepath), analysisReport.getErrors(), analysisReport.getWarnings());
-  }
+  // Get the file index for this filepath
+  const thisFileIndex = master.files[filepath.intern()];
 
-  const { ast } = this.parseFile(filepath).getValue();
+  // tablesInFile = tables defined in file + imported tables
+  const tablesInFile = new Set([
+    ...(thisFileIndex?.tables ?? []).map((r) => r.aliasedName ?? r.name),
+    ...(thisFileIndex?.imports ?? []).map((r) => r.aliasedName ?? r.name),
+  ]);
 
-  return new Interpreter(this, ast, createEnv(ast.source)).interpret();
-}
+  const filteredRefs = master.items.refs.filter((ref) =>
+    ref.endpoints.every((endpoint) => tablesInFile.has(endpoint.tableName)),
+  );
 
-export function interpretProject (this: Compiler): Report<Model> {
-  const files = this.layout().listAllFiles();
+  const filteredRecords = items.records.filter((rec) => tablesInFile.has(rec.tableName));
 
-  if (files.length === 0) return new Report({ databases: [] }, [], []);
-
-  const analysisReport = this.bindProject();
-
-  if (analysisReport.getErrors().length > 0) {
-    return new Report(
-      { databases: files.map((fp) => emptyDatabase(fp)) },
-      analysisReport.getErrors(),
-      analysisReport.getWarnings(),
-    );
-  }
-
-  // Shared tablePartials map across all files
-  const tablePartials = new Map<ElementDeclarationNode, TablePartial>();
-
-  const allErrors: CompileError[] = [];
-  const allWarnings: CompileWarning[] = [...analysisReport.getWarnings()];
-
-  // Interpret dependencies before the files that import them,
-  // so shared tablePartials are populated before injection.
-  const databaseMap = new Map<string, Database>();
-  for (const file of [...files].reverse()) {
-    const { ast } = this.parseFile(file).getValue();
-    const interpretReport = new Interpreter(this, ast, createEnv(ast.source, tablePartials)).interpret();
-
-    databaseMap.set(file.intern(), interpretReport.getValue());
-    allErrors.push(...interpretReport.getErrors());
-    allWarnings.push(...interpretReport.getWarnings());
-  }
-
-  const databases: Database[] = [];
-  for (const file of files) {
-    databases.push(databaseMap.get(file.intern())!);
-  }
-
-  return new Report({ databases }, allErrors, allWarnings);
-}
-
-function emptyDatabase (filepath: Filepath): Database {
-  return { filepath, schemas: [], tables: [], notes: [], refs: [], enums: [], tableGroups: [], aliases: [], project: {}, tablePartials: [], records: [] };
+  return new Report(
+    {
+      schemas: [],
+      tables: items.tables.filter(definedInFile),
+      notes: items.notes.filter(definedInFile),
+      refs: filteredRefs,
+      enums: items.enums.filter(definedInFile),
+      tableGroups: items.tableGroups.filter(definedInFile),
+      aliases: items.aliases,
+      project: items.project,
+      tablePartials: items.tablePartials.filter(definedInFile),
+      records: filteredRecords,
+    },
+    masterReport.getErrors().filter((e) => e.nodeOrToken?.filepath?.equals(filepath)),
+    masterReport.getWarnings().filter((w) => w.nodeOrToken?.filepath?.equals(filepath)),
+  );
 }

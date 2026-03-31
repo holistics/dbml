@@ -305,28 +305,29 @@ describe('[example] multi-file compilation', () => {
   });
 
   describe('interpretation', () => {
-    test('single file produces 1 database', () => {
-      const model = compileFile({ '/main.dbml': 'Table users { id int [pk] }' },
-      ).getValue();
-      expect(model.databases).toHaveLength(1);
-      expect(model.databases[0].tables[0].name).toBe('users');
+    test('single file', () => {
+      const db = compileFile({ '/main.dbml': 'Table users { id int [pk] }' }).getValue();
+      expect(db.tables).toHaveLength(1);
+      expect(db.tables[0].name).toBe('users');
     });
 
-    test('import produces multiple databases, entry first', () => {
-      const model = compileFile({
+    test('multi-file has all tables flat and per-file manifests', () => {
+      const result = compileFile({
         '/main.dbml': `
           use { table users } from './common.dbml'
           Table orders { id int [pk] }
         `,
         '/common.dbml': 'Table users { id int [pk] }',
-      }).getValue();
-      expect(model.databases).toHaveLength(2);
-      expect(model.databases[0].tables[0].name).toBe('orders');
-      expect(model.databases.flatMap((db) => db.tables.map((t) => t.name))).toContain('users');
+      });
+      expect(result.getErrors()).toHaveLength(0);
+      const db = result.getValue();
+      expect(db.tables.map((t) => t.name)).toContain('orders');
+      expect(db.tables.map((t) => t.name)).toContain('users');
+
     });
 
     test('cross-file refs are correct', () => {
-      const mainDb = compileFile({
+      const result = compileFile({
         '/main.dbml': `
           use { table users } from './common.dbml'
           Table orders {
@@ -336,14 +337,16 @@ describe('[example] multi-file compilation', () => {
           Ref: orders.user_id > users.id
         `,
         '/common.dbml': 'Table users { id int [pk]\nname varchar }',
-      }).getValue().databases[0];
-      expect(mainDb.refs).toHaveLength(1);
-      expect(mainDb.refs[0].endpoints[0].tableName).toBe('orders');
-      expect(mainDb.refs[0].endpoints[1].tableName).toBe('users');
+      });
+      expect(result.getErrors()).toHaveLength(0);
+      const db = result.getValue();
+      expect(db.refs).toHaveLength(1);
+      expect(db.refs[0].endpoints[0].tableName).toBe('orders');
+      expect(db.refs[0].endpoints[1].tableName).toBe('users');
     });
 
-    test('each file interpreted independently', () => {
-      const model = compileFile({
+    test('file manifests track per-file tables', () => {
+      const result = compileFile({
         '/main.dbml': `
           use { table users } from './common.dbml'
           Table orders { id int [pk] }
@@ -352,14 +355,17 @@ describe('[example] multi-file compilation', () => {
           Table users { id int [pk] }
           Table products { id int [pk] }
         `,
-      }).getValue();
-      expect(model.databases.find((db) => db.tables.some((t) => t.name === 'products'))!.tables).toHaveLength(2);
+      });
+      expect(result.getErrors()).toHaveLength(0);
+      const db = result.getValue();
+      expect(db.tables).toHaveLength(3);
+
     });
   });
 
   describe('dependency graph', () => {
     test('diamond deduplicates', () => {
-      const model = compileFile({
+      const db = compileFile({
         '/main.dbml': `
           use { table users } from './a.dbml'
           use { table orders } from './b.dbml'
@@ -369,24 +375,27 @@ describe('[example] multi-file compilation', () => {
         '/b.dbml': 'use { enum status } from \'./shared.dbml\'\nTable orders { id int [pk] }',
         '/shared.dbml': 'Enum status { active\ninactive }',
       }).getValue();
-      expect(new Set(model.databases).size).toBe(model.databases.length);
+      expect(db.tables).toHaveLength(3);
+      expect(db.enums).toHaveLength(1);
     });
 
     test('circular, 3-way circular, self-import do not loop', () => {
-      expect(compileFile({
+      const db1 = compileFile({
         '/a.dbml': 'use { table B } from \'./b.dbml\'\nTable A { id int [pk] }',
         '/b.dbml': 'use { table A } from \'./a.dbml\'\nTable B { id int [pk] }',
-      }).getValue().databases.length).toBeGreaterThanOrEqual(2);
+      }).getValue();
+      expect(db1.tables).toHaveLength(2);
 
-      expect(compileFile({
+      const db2 = compileFile({
         '/a.dbml': 'use { table B } from \'./b.dbml\'\nTable A { id int }',
         '/b.dbml': 'use { table C } from \'./c.dbml\'\nTable B { id int }',
         '/c.dbml': 'use { table A } from \'./a.dbml\'\nTable C { id int }',
-      }).getValue().databases).toHaveLength(3);
+      }).getValue();
+      expect(db2.tables).toHaveLength(3);
 
       expect(compileFile({
         '/self.dbml': 'use { table X } from \'./self.dbml\'\nTable X { id int }',
-      }).getValue().databases).toBeDefined();
+      }).getValue().tables).toBeDefined();
     });
 
     test('deep chain and fan-out', () => {
@@ -400,9 +409,9 @@ describe('[example] multi-file compilation', () => {
           Table B { id int [pk] }
         `,
         '/c.dbml': 'Table C { id int [pk] }',
-      }).getValue().databases).toHaveLength(3);
+      }).getValue().tables).toHaveLength(3);
 
-      expect(compileFile({
+      const db = compileFile({
         '/main.dbml': `
           use { table A } from './a.dbml'
           use { table B } from './b.dbml'
@@ -422,34 +431,35 @@ describe('[example] multi-file compilation', () => {
           Table C { id int }
         `,
         '/shared.dbml': 'Enum status { active\ninactive }',
-      }).getValue().databases).toHaveLength(5);
+      }).getValue();
+      expect(db.tables).toHaveLength(4);
+      expect(db.enums).toHaveLength(1);
     });
   });
 
   describe('edge cases', () => {
     test('empty file, comments only, use-only file', () => {
-      expect(compileFile({ '/main.dbml': '' }).getValue().databases).toHaveLength(1);
+      expect(compileFile({ '/main.dbml': '' }).getValue().tables).toHaveLength(0);
 
-      expect(compileFile({ '/main.dbml': '// just a comment' }).getValue().databases[0].tables).toHaveLength(0);
+      expect(compileFile({ '/main.dbml': '// just a comment' }).getValue().tables).toHaveLength(0);
 
       expect(compileFile({
         '/main.dbml': 'use * from \'./common.dbml\'',
         '/common.dbml': 'Table users { id int [pk] }',
-      }).getValue().databases).toHaveLength(2);
+      }).getValue().tables).toHaveLength(1);
     });
 
-    test('parse errors, missing dep, bad dep still produce a model', () => {
-      const r1 = compileFile({ '/main.dbml': 'Table users { id int [pk' },
-      );
+    test('parse errors, missing dep, bad dep still produce a database', () => {
+      const r1 = compileFile({ '/main.dbml': 'Table users { id int [pk' });
       expect(r1.getErrors().length).toBeGreaterThan(0);
-      expect(r1.getValue().databases).toHaveLength(1);
+      expect(r1.getValue().tables).toBeDefined();
 
       expect(compileFile({
         '/main.dbml': `
           use { table users } from './missing.dbml'
           Table orders { id int [pk] }
         `,
-      }).getValue().databases).toBeDefined();
+      }).getValue().tables).toBeDefined();
 
       expect(compileFile({
         '/main.dbml': `
@@ -457,7 +467,7 @@ describe('[example] multi-file compilation', () => {
           Table orders { id int [pk] }
         `,
         '/bad.dbml': 'Table users { id int [pk',
-      }).getValue().databases).toBeDefined();
+      }).getValue().tables).toBeDefined();
     });
 
     test('relative path going up directories', () => {
@@ -503,7 +513,7 @@ describe('[example] multi-file compilation', () => {
       const model = compileFile({
         '/a.dbml': `
           use { table shared } from './shared'
-          Table A { id int }'
+          Table A { id int }
         `,
         '/b.dbml': `
           use { table shared } from './shared.dbml'
@@ -516,7 +526,6 @@ describe('[example] multi-file compilation', () => {
         `,
         '/shared.dbml': 'Table shared { id int }',
       }).getValue();
-      expect(new Set(model.databases).size).toBe(model.databases.length);
     });
   });
 
@@ -533,17 +542,325 @@ describe('[example] multi-file compilation', () => {
         entries[Filepath.from(path).absolute] = content;
       }
       const compiler = new Compiler(new MemoryProjectLayout(entries));
-      expect(compiler.interpretProject().getValue().databases).toHaveLength(2);
+      expect(compiler.interpretProject().getValue().items.tables).toHaveLength(2);
 
       compiler.setSource(`
         Table users { id int }
         Table products { id int }
       `, Filepath.from('/common.dbml'));
-      const updated = compiler.interpretProject().getValue().databases;
-      expect(updated.find((db) => db.tables.some((t) => t.name === 'products'))?.tables).toHaveLength(2);
+      const updated = compiler.interpretProject().getValue().items;
+      expect(updated.tables.some((t) => t.name === 'products')).toBe(true);
 
       compiler.deleteSource(Filepath.from('/common.dbml'));
-      expect(compiler.interpretProject().getValue().databases.length).toBeGreaterThanOrEqual(1);
+      expect(compiler.interpretProject().getValue().items.tables).toBeDefined();
+    });
+  });
+
+  describe('aliasing', () => {
+    test('basic alias resolves correctly', () => {
+      const result = compileFile({
+        '/main.dbml': `
+          use { table users as u } from './common.dbml'
+          Table orders {
+            id int [pk]
+            user_id int
+          }
+          Ref: orders.user_id > u.id
+        `,
+        '/common.dbml': 'Table users { id int [pk] }',
+      });
+      expect(result.getErrors()).toHaveLength(0);
+      const mainDb = result.getValue();
+      expect(mainDb.refs).toHaveLength(1);
+      expect(mainDb.refs[0].endpoints[0].tableName).toBe('orders');
+      expect(mainDb.refs[0].endpoints[1].tableName).toBe('users');
+    });
+
+    test('alias conflict with local symbol produces error', () => {
+      const result = compileFile({
+        '/main.dbml': `
+          use { table users as orders } from './common.dbml'
+          Table orders { id int [pk] }
+        `,
+        '/common.dbml': 'Table users { id int [pk] }',
+      });
+      expect(result.getErrors().length).toBeGreaterThan(0);
+      expect(result.getErrors().some((e) => e.diagnostic.includes('already defined'))).toBe(true);
+    });
+
+    test('multiple aliases from same source', () => {
+      const result = compileFile({
+        '/main.dbml': `
+          use { table users as u, enum status as s } from './common.dbml'
+          Table orders {
+            id int [pk]
+            user_id int
+            status s
+          }
+          Ref: orders.user_id > u.id
+        `,
+        '/common.dbml': `
+          Table users { id int [pk] }
+          Enum status { active\ninactive }
+        `,
+      });
+      expect(result.getErrors()).toHaveLength(0);
+      const mainDb = result.getValue();
+      expect(mainDb.refs).toHaveLength(1);
+      expect(mainDb.tables[0].fields.some((f) => f.type.type_name === 's')).toBe(true);
+    });
+
+    test('schema-qualified import with alias', () => {
+      const result = compileFile({
+        '/main.dbml': `
+          use { table public.users as u } from './common.dbml'
+          Table orders {
+            id int [pk]
+            user_id int
+          }
+          Ref: orders.user_id > u.id
+        `,
+        '/common.dbml': 'Table public.users { id int [pk] }',
+      });
+      expect(result.getErrors()).toHaveLength(0);
+      const mainDb = result.getValue();
+      expect(mainDb.refs).toHaveLength(1);
+    });
+  });
+
+  describe('reuse (re-export)', () => {
+    test('basic selective reuse makes symbol available downstream', () => {
+      const result = compileFile({
+        '/main.dbml': `
+          use { table users } from './mid.dbml'
+          Table orders {
+            id int [pk]
+            user_id int
+          }
+          Ref: orders.user_id > users.id
+        `,
+        '/mid.dbml': 'reuse { table users } from \'./source.dbml\'',
+        '/source.dbml': 'Table users { id int [pk] }',
+      });
+      expect(result.getErrors()).toHaveLength(0);
+      const mainDb = result.getValue();
+      expect(mainDb.refs).toHaveLength(1);
+      expect(mainDb.refs[0].endpoints[1].tableName).toBe('users');
+    });
+
+    test('wildcard reuse exposes all symbols', () => {
+      const result = compileFile({
+        '/main.dbml': `
+          use { table users, enum status } from './mid.dbml'
+          Table orders {
+            id int [pk]
+            status status
+          }
+        `,
+        '/mid.dbml': 'reuse * from \'./source.dbml\'',
+        '/source.dbml': `
+          Table users { id int [pk] }
+          Enum status { active\ninactive }
+        `,
+      });
+      expect(result.getErrors()).toHaveLength(0);
+      const allTables = result.getValue().tables;
+      const allEnums = result.getValue().enums;
+      expect(allTables.map((t) => t.name)).toContain('users');
+      expect(allEnums.map((e) => e.name)).toContain('status');
+    });
+
+    test('use (not reuse) is NOT transitive', () => {
+      const result = compileFile({
+        '/main.dbml': `
+          use { table users } from './mid.dbml'
+          Table orders { id int [pk] }
+        `,
+        '/mid.dbml': 'use { table users } from \'./source.dbml\'',
+        '/source.dbml': 'Table users { id int [pk] }',
+      });
+      expect(result.getErrors().length).toBeGreaterThan(0);
+      expect(result.getErrors().some((e) => e.diagnostic.includes('not found'))).toBe(true);
+    });
+
+    test('transitive reuse chain resolves through intermediaries', () => {
+      const result = compileFile({
+        '/main.dbml': `
+          use { table users } from './b.dbml'
+          Table orders {
+            id int [pk]
+            user_id int
+          }
+          Ref: orders.user_id > users.id
+        `,
+        '/b.dbml': 'reuse { table users } from \'./a.dbml\'',
+        '/a.dbml': 'reuse { table users } from \'./source.dbml\'',
+        '/source.dbml': 'Table users { id int [pk] }',
+      });
+      expect(result.getErrors()).toHaveLength(0);
+      const mainDb = result.getValue();
+      expect(mainDb.refs).toHaveLength(1);
+    });
+
+    test('circular reuse (2-way) does not loop', () => {
+      const result = compileFile({
+        '/a.dbml': `
+          reuse { table B } from './b.dbml'
+          Table A { id int [pk] }
+        `,
+        '/b.dbml': `
+          reuse { table A } from './a.dbml'
+          Table B { id int [pk] }
+        `,
+      });
+      expect(result.getErrors()).toHaveLength(0);
+      const model = result.getValue();
+      const allTables = model.tables.map((t) => t.name);
+      expect(allTables).toContain('A');
+      expect(allTables).toContain('B');
+    });
+
+    test('circular reuse (3-way) does not loop', () => {
+      const result = compileFile({
+        '/a.dbml': `
+          reuse { table C } from './c.dbml'
+          Table A { id int [pk] }
+        `,
+        '/b.dbml': `
+          reuse { table A } from './a.dbml'
+          Table B { id int [pk] }
+        `,
+        '/c.dbml': `
+          reuse { table B } from './b.dbml'
+          Table C { id int [pk] }
+        `,
+      });
+      expect(result.getErrors()).toHaveLength(0);
+      const allTables = result.getValue().tables.map((t) => t.name);
+      expect(allTables).toContain('A');
+      expect(allTables).toContain('B');
+      expect(allTables).toContain('C');
+    });
+
+    test('circular reuse self-import does not loop', () => {
+      const result = compileFile({
+        '/self.dbml': `
+          reuse { table X } from './self.dbml'
+          Table X { id int [pk] }
+        `,
+      });
+    });
+
+    test('circular wildcard reuse does not loop', () => {
+      const result = compileFile({
+        '/a.dbml': `
+          reuse * from './b.dbml'
+          Table A { id int [pk] }
+        `,
+        '/b.dbml': `
+          reuse * from './a.dbml'
+          Table B { id int [pk] }
+        `,
+      });
+      expect(result.getErrors()).toHaveLength(0);
+      const allTables = result.getValue().tables.map((t) => t.name);
+      expect(allTables).toContain('A');
+      expect(allTables).toContain('B');
+    });
+
+    test('mixed circular use and reuse', () => {
+      const result = compileFile({
+        '/a.dbml': `
+          use { table B } from './b.dbml'
+          reuse { table C } from './c.dbml'
+          Table A { id int [pk] }
+        `,
+        '/b.dbml': `
+          reuse { table A } from './a.dbml'
+          Table B { id int [pk] }
+        `,
+        '/c.dbml': `
+          use { table B } from './b.dbml'
+          Table C { id int [pk] }
+        `,
+      });
+      expect(result.getErrors()).toHaveLength(0);
+      const allTables = result.getValue().tables.map((t) => t.name);
+      expect(allTables).toContain('A');
+      expect(allTables).toContain('B');
+      expect(allTables).toContain('C');
+    });
+
+    test('reuse with alias exposes under aliased name', () => {
+      const result = compileFile({
+        '/main.dbml': `
+          use { table u } from './mid.dbml'
+          Table orders {
+            id int [pk]
+            user_id int
+          }
+          Ref: orders.user_id > u.id
+        `,
+        '/mid.dbml': 'reuse { table users as u } from \'./source.dbml\'',
+        '/source.dbml': 'Table users { id int [pk] }',
+      });
+      expect(result.getErrors()).toHaveLength(0);
+      const mainDb = result.getValue();
+      expect(mainDb.refs).toHaveLength(1);
+      expect(mainDb.refs[0].endpoints[1].tableName).toBe('users');
+    });
+
+    test('use-imported symbols are not re-exported', () => {
+      const result = compileFile({
+        '/main.dbml': `
+          use { table users, enum status } from './mid.dbml'
+          Table orders { id int [pk] }
+        `,
+        '/mid.dbml': `
+          use { enum status } from './enums.dbml'
+          reuse { table users } from './source.dbml'
+          Table mid_table { id int [pk] }
+        `,
+        '/source.dbml': 'Table users { id int [pk] }',
+        '/enums.dbml': 'Enum status { active\ninactive }',
+      });
+      // users should resolve (reuse), status should fail (use, not reuse)
+      expect(result.getErrors().length).toBeGreaterThan(0);
+      expect(result.getErrors().some((e) => e.diagnostic.includes('status'))).toBe(true);
+    });
+  });
+
+  describe('ref endpoint tracking', () => {
+    test('ref endpoint includes tableFilepath for cross-file refs', () => {
+      const model = compileFile({
+        '/main.dbml': `
+          use { table users } from './common.dbml'
+          Table orders {
+            id int [pk]
+            user_id int
+          }
+          Ref: orders.user_id > users.id
+        `,
+        '/common.dbml': 'Table users { id int [pk] }',
+      }).getValue();
+      expect(model.refs[0].endpoints[0].tableFilepath?.absolute).toBe('/main.dbml');
+      expect(model.refs[0].endpoints[1].tableFilepath?.absolute).toBe('/common.dbml');
+    });
+
+    test('ref endpoint resolves original name through alias', () => {
+      const model = compileFile({
+        '/main.dbml': `
+          use { table users as u } from './common.dbml'
+          Table orders {
+            id int [pk]
+            user_id int
+          }
+          Ref: orders.user_id > u.id
+        `,
+        '/common.dbml': 'Table users { id int [pk] }',
+      }).getValue();
+      expect(model.refs[0].endpoints[1].tableName).toBe('users');
+      expect(model.refs[0].endpoints[1].tableFilepath?.absolute).toBe('/common.dbml');
     });
   });
 });

@@ -14,6 +14,7 @@ export { default as TableGroup } from './tableGroup';
 export { default as StickyNote } from './stickyNote';
 export { default as Check } from './check';
 export { default as TablePartial } from './tablePartial';
+export { default as TableRecord } from './records';
 
 export * from './database';
 export * from './schema';
@@ -30,3 +31,4 @@ export * from './stickyNote';
 export * from './tablePartial';
 export * from './check';
 export * from './element';
+export * from './records';

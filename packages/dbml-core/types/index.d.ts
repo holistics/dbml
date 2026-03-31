@@ -38,3 +38,5 @@ export {
   formatRecordValue,
   Filepath, MemoryProjectLayout,
 } from '@dbml/parse';
+export type { DbmlProjectLayout } from '@dbml/parse';
+export type { ParseFormat, ProjectFormat } from './parse/Parser';

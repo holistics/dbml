@@ -636,11 +636,17 @@
               "line": 54,
               "column": 36
             }
+          },
+          "tableFilepath": {
+            "path": "/main.dbml"
           }
         },
         {
           "schemaName": null,
           "tableName": "customer",
+          "tableFilepath": {
+            "path": "/main.dbml"
+          },
           "fieldNames": [
             "email"
           ],

@@ -6,7 +6,7 @@ import {
 import {
   BlockExpressionNode, CallExpressionNode, ElementDeclarationNode, FunctionApplicationNode,
   FunctionExpressionNode,
-  ListExpressionNode, PrefixExpressionNode, SyntaxNode,
+  ListExpressionNode, PrefixExpressionNode, ProgramNode, SyntaxNode,
 } from '@/core/parser/nodes';
 import {
   extractColor, extractElementName, getColumnSymbolsOfRefOperand, getTokenPosition,
@@ -15,15 +15,16 @@ import {
 import {
   destructureComplexVariable, destructureIndexNode, extractQuotedStringToken, extractVarNameFromPrimaryVariable,
   extractVariableFromExpression,
-} from '@/core/binder/utils';
+} from '@/core/analyzer/utils';
 import { CompileError, CompileErrorCode } from '@/core/errors';
-import { aggregateSettingList } from '@/core/binder/validator/utils';
-import { ColumnSymbol } from '@/core/binder/symbol/symbols';
-import { ElementKind, SettingName } from '@/core/binder/types';
+import { aggregateSettingList } from '@/core/analyzer/validator/utils';
+import { ColumnSymbol } from '@/core/analyzer/symbol/symbols';
+import { ElementKind, SettingName } from '@/core/analyzer/types';
 import type Compiler from '@/compiler/index';
 
 export class TablePartialInterpreter implements ElementInterpreter {
   private compiler: Compiler;
+  private ast: ProgramNode;
   private declarationNode: ElementDeclarationNode;
   private env: InterpreterDatabase;
   private tablePartial: Partial<TablePartial>;
@@ -31,10 +32,12 @@ export class TablePartialInterpreter implements ElementInterpreter {
 
   constructor (
     compiler: Compiler,
+    ast: ProgramNode,
     declarationNode: ElementDeclarationNode,
     env: InterpreterDatabase,
   ) {
     this.compiler = compiler;
+    this.ast = ast;
     this.declarationNode = declarationNode;
     this.env = env;
     this.tablePartial = {

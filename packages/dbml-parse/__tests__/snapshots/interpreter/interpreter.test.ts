@@ -2,7 +2,6 @@ import { readFileSync } from 'fs';
 import path from 'path';
 import { describe, expect, it } from 'vitest';
 import { Compiler } from '@/index';
-import { DEFAULT_ENTRY } from '@/compiler/constants';
 import { scanTestNames } from '@tests/utils';
 
 describe('[snapshot] interpreter', () => {
@@ -23,7 +22,7 @@ describe('[snapshot] interpreter', () => {
       );
     } else {
       output = JSON.stringify(
-        res.getValue().databases[0],
+        res.getValue().items,
         (key, value) => (['symbol', 'references', 'referee', 'filepath'].includes(key) ? undefined : value),
         2,
       );

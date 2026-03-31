@@ -1,5 +1,6 @@
 import ModelExporter from './export/ModelExporter';
 import Parser from './parse/Parser';
+import type { ParseFormat, ProjectFormat } from './parse/Parser';
 import { CompilerError } from './parse/error';
 import importer from './import';
 import exporter from './export';
@@ -18,8 +19,11 @@ export {
   VERSION,
 };
 
+export type { ParseFormat, ProjectFormat };
+
 // Re-export project layout types from @dbml/parse
 export { Filepath, MemoryProjectLayout } from '@dbml/parse';
+export type { DbmlProjectLayout } from '@dbml/parse';
 
 // Re-export types and utilities from @dbml/parse
 export {

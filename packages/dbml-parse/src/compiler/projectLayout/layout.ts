@@ -1,31 +1,21 @@
 import { Filepath } from './filepath';
 
 export interface DbmlProjectLayout {
-  // Override the content of a file in-memory without touching the underlying source
   setSource (filePath: Filepath, content: string): void;
 
-  // Read a file at the given path
   getSource (filePath: Filepath): string | undefined;
 
-  // Remove a file entirely from the layout
   deleteSource (filePath: Filepath): void;
 
-  // Remove all files from the layout
   clearSource (): void;
 
-  // Return true if a file or directory exists at the given path
   exists (filePath: Filepath): boolean;
 
-  // List immediate entries inside a directory, defaults to project root
   listDirectory (dirPath?: Filepath): Filepath[];
 
-  // List all files recursively under the given directory, defaults to project root
-  listAllFiles (dirPath?: Filepath): Filepath[];
+  getEntryPoints (): Filepath[];
 }
 
-// All files are provided up front; no lazy loading
-// This one is mainly used for testing
-// Or webapps where there's no native filesystem
 export class MemoryProjectLayout implements DbmlProjectLayout {
   private files: Map<string, string>;
 
@@ -79,11 +69,8 @@ export class MemoryProjectLayout implements DbmlProjectLayout {
     return [...entries].sort().map(Filepath.from);
   }
 
-  listAllFiles (dirPath?: Filepath): Filepath[] {
-    const base = dirPath?.absolute ?? '/';
-    const prefix = base.endsWith('/') ? base : base + '/';
+  getEntryPoints (): Filepath[] {
     return [...this.files.keys()]
-      .filter((f) => f.startsWith(prefix))
       .map(Filepath.from)
       .sort((a, b) => a.absolute.localeCompare(b.absolute));
   }

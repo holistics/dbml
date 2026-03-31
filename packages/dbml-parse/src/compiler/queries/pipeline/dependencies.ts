@@ -1,8 +1,7 @@
 import type Compiler from '../../index';
 import { Filepath, type FilepathId } from '../../projectLayout';
 import { UseDeclarationNode } from '@/core/parser/nodes';
-
-const DBML_EXT = '.dbml';
+import { DBML_EXT } from '@/compiler/constants';
 
 // Scan use declarations from the parsed AST to extract external file dependencies.
 // Returns a set of resolved filepath IDs. Validates that paths are relative and appends .dbml if missing.

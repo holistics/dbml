@@ -42,8 +42,7 @@
   "dependencies": {
     "lodash-es": "^4.17.21",
     "luxon": "^3.7.2",
-    "pathe": "^2.0.3",
-    "threads": "^1.7.0"
+    "pathe": "^2.0.3"
   },
   "engines": {
     "node": ">=18"

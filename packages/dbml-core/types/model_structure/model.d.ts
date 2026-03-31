@@ -1,4 +1,3 @@
-import Database from './database';
 import { NormalizedSchemaIdMap } from './schema';
 import { NormalizedRefIdMap } from './ref';
 import { NormalizedEnumIdMap } from './enum';
@@ -12,20 +11,7 @@ import { NormalizedIndexColumnIdMap } from './indexColumn';
 import { NormalizedIndexIdMap } from './indexes';
 import { NormalizedCheckIdMap } from './check';
 import { NormalizedTablePartialIdMap } from './tablePartial';
-import { NormalizedRecordIdMap, NormalizedDatabaseIdMap, RawDatabase } from './database';
-import DbState from './dbState';
-
-export interface RawModel {
-    databases: RawDatabase[];
-}
-
-declare class Model {
-    dbState: DbState;
-    databases: Database[];
-
-    constructor({ databases }: RawModel);
-    normalize(): NormalizedModel;
-}
+import { NormalizedRecordIdMap, NormalizedDatabaseIdMap, NormalizedFileManifest } from './database';
 
 export interface NormalizedModel {
     database: NormalizedDatabaseIdMap;
@@ -43,6 +29,5 @@ export interface NormalizedModel {
     checks: NormalizedCheckIdMap;
     tablePartials: NormalizedTablePartialIdMap;
     records: NormalizedRecordIdMap;
+    files: NormalizedFileManifest[];
 }
-
-export default Model;

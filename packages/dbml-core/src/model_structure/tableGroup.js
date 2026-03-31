@@ -90,7 +90,6 @@ class TableGroup extends Element {
     model.tableGroups[this.id] = {
       id: this.id,
       ...this.shallowExport(),
-      filepath: this.token?.filepath?.toString(),
       ...this.exportChildIds(),
       ...this.exportParentIds(),
     };

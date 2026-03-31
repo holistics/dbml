@@ -4,7 +4,7 @@ import * as services from '@/services/index';
 // Export the types that playground and other consumers need
 export {
   ElementKind,
-} from '@/core/binder/types';
+} from '@/core/analyzer/types';
 
 export * from '@/core/interpreter/records/utils';
 
@@ -49,7 +49,7 @@ export {
 // Export interpreted types for structured data
 export {
   type Database,
-  type Model,
+  type FileManifest,
   type Table,
   type Column,
   type Enum,
@@ -57,6 +57,8 @@ export {
   type Project,
   type TableGroup,
   type TablePartial,
+  type Imports,
+  type Import,
 } from '@/core/interpreter/types';
 
 export { Compiler, services };

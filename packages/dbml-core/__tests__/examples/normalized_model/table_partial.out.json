@@ -48,6 +48,7 @@
     "1": {
       "id": 1,
       "name": null,
+      "filepath": "/main.dbml",
       "endpointIds": [
         1,
         2
@@ -57,6 +58,7 @@
     "2": {
       "id": 2,
       "injectedPartialId": 5,
+      "filepath": "/main.dbml",
       "endpointIds": [
         3,
         4
@@ -73,11 +75,13 @@
       "alias": null,
       "note": null,
       "partials": [],
+      "filepath": "/main.dbml",
       "fieldIds": [
         1,
         2
       ],
       "indexIds": [],
+      "checkIds": [],
       "schemaId": 1,
       "groupId": null
     },
@@ -87,11 +91,13 @@
       "alias": null,
       "note": null,
       "partials": [],
+      "filepath": "/main.dbml",
       "fieldIds": [
         3,
         4
       ],
       "indexIds": [],
+      "checkIds": [],
       "schemaId": 2,
       "groupId": null
     },
@@ -105,6 +111,9 @@
         {
           "order": 7,
           "token": {
+            "filepath": {
+              "path": "/main.dbml"
+            },
             "start": {
               "offset": 823,
               "line": 55,
@@ -122,6 +131,9 @@
         {
           "order": 6,
           "token": {
+            "filepath": {
+              "path": "/main.dbml"
+            },
             "start": {
               "offset": 815,
               "line": 54,
@@ -139,6 +151,9 @@
         {
           "order": 4,
           "token": {
+            "filepath": {
+              "path": "/main.dbml"
+            },
             "start": {
               "offset": 759,
               "line": 52,
@@ -156,6 +171,9 @@
         {
           "order": 3,
           "token": {
+            "filepath": {
+              "path": "/main.dbml"
+            },
             "start": {
               "offset": 746,
               "line": 51,
@@ -173,6 +191,9 @@
         {
           "order": 1,
           "token": {
+            "filepath": {
+              "path": "/main.dbml"
+            },
             "start": {
               "offset": 716,
               "line": 49,
@@ -190,6 +211,9 @@
         {
           "order": 0,
           "token": {
+            "filepath": {
+              "path": "/main.dbml"
+            },
             "start": {
               "offset": 699,
               "line": 48,
@@ -205,6 +229,7 @@
           "id": 1
         }
       ],
+      "filepath": "/main.dbml",
       "fieldIds": [
         11,
         12,
@@ -222,6 +247,7 @@
         3,
         4
       ],
+      "checkIds": [],
       "schemaId": 1,
       "groupId": null
     },
@@ -234,6 +260,9 @@
         {
           "order": 1,
           "token": {
+            "filepath": {
+              "path": "/main.dbml"
+            },
             "start": {
               "offset": 1133,
               "line": 65,
@@ -249,12 +278,14 @@
           "id": 7
         }
       ],
+      "filepath": "/main.dbml",
       "fieldIds": [
         14,
         15,
         16
       ],
       "indexIds": [],
+      "checkIds": [],
       "schemaId": 1,
       "groupId": null
     },
@@ -267,6 +298,9 @@
         {
           "order": 0,
           "token": {
+            "filepath": {
+              "path": "/main.dbml"
+            },
             "start": {
               "offset": 1200,
               "line": 69,
@@ -282,12 +316,14 @@
           "id": 3
         }
       ],
+      "filepath": "/main.dbml",
       "fieldIds": [
         17
       ],
       "indexIds": [
         5
       ],
+      "checkIds": [],
       "schemaId": 1,
       "groupId": null
     }
@@ -297,10 +333,12 @@
       "id": 1,
       "schemaName": null,
       "tableName": "a",
+      "tableFilepath": "/main.dbml",
       "fieldNames": [
         "id2"
       ],
       "relation": "1",
+      "filepath": "/main.dbml",
       "refId": 1,
       "fieldIds": [
         2
@@ -310,10 +348,12 @@
       "id": 2,
       "schemaName": null,
       "tableName": "users",
+      "tableFilepath": "/main.dbml",
       "fieldNames": [
         "refColumn1"
       ],
       "relation": "*",
+      "filepath": "/main.dbml",
       "refId": 1,
       "fieldIds": [
         6
@@ -323,10 +363,12 @@
       "id": 3,
       "schemaName": "public",
       "tableName": "users",
+      "tableFilepath": null,
       "fieldNames": [
         "refColumn2"
       ],
       "relation": "*",
+      "filepath": "/main.dbml",
       "refId": 2,
       "fieldIds": [
         7
@@ -336,10 +378,12 @@
       "id": 4,
       "schemaName": "a",
       "tableName": "a",
+      "tableFilepath": null,
       "fieldNames": [
         "id"
       ],
       "relation": "1",
+      "filepath": "/main.dbml",
       "refId": 2,
       "fieldIds": [
         3
@@ -354,6 +398,7 @@
       "pk": false,
       "note": null,
       "injectedPartialId": 6,
+      "filepath": "/main.dbml",
       "columnIds": [
         1
       ],
@@ -365,6 +410,7 @@
       "pk": true,
       "note": null,
       "injectedPartialId": 6,
+      "filepath": "/main.dbml",
       "columnIds": [
         2
       ],
@@ -376,6 +422,7 @@
       "pk": false,
       "note": null,
       "injectedPartialId": 6,
+      "filepath": "/main.dbml",
       "columnIds": [
         3,
         4
@@ -388,6 +435,7 @@
       "pk": false,
       "note": null,
       "injectedPartialId": 3,
+      "filepath": "/main.dbml",
       "columnIds": [
         5
       ],
@@ -399,6 +447,7 @@
       "pk": false,
       "note": null,
       "injectedPartialId": 3,
+      "filepath": "/main.dbml",
       "columnIds": [
         6
       ],
@@ -410,39 +459,46 @@
       "id": 1,
       "type": "column",
       "value": "email",
+      "filepath": "/main.dbml",
       "indexId": 1
     },
     "2": {
       "id": 2,
       "type": "column",
       "value": "id",
+      "filepath": "/main.dbml",
       "indexId": 2
     },
     "3": {
       "id": 3,
       "type": "column",
       "value": "email",
+      "filepath": "/main.dbml",
       "indexId": 3
     },
     "4": {
       "id": 4,
       "type": "column",
       "value": "id",
+      "filepath": "/main.dbml",
       "indexId": 3
     },
     "5": {
       "id": 5,
       "type": "column",
       "value": "email",
+      "filepath": "/main.dbml",
       "indexId": 4
     },
     "6": {
       "id": 6,
       "type": "column",
       "value": "email",
+      "filepath": "/main.dbml",
       "indexId": 5
     }
   },
+  "checks": {},
   "fields": {
     "1": {
       "id": 1,
@@ -455,6 +511,9 @@
       "unique": false,
       "pk": false,
       "note": null,
+      "injectedPartialId": null,
+      "checkIds": [],
+      "filepath": "/main.dbml",
       "endpointIds": [],
       "tableId": 1,
       "enumId": null
@@ -470,6 +529,9 @@
       "unique": false,
       "pk": false,
       "note": null,
+      "injectedPartialId": null,
+      "checkIds": [],
+      "filepath": "/main.dbml",
       "endpointIds": [
         1
       ],
@@ -487,6 +549,9 @@
       "unique": false,
       "pk": false,
       "note": null,
+      "injectedPartialId": null,
+      "checkIds": [],
+      "filepath": "/main.dbml",
       "endpointIds": [
         4
       ],
@@ -504,6 +569,9 @@
       "unique": false,
       "pk": false,
       "note": null,
+      "injectedPartialId": null,
+      "checkIds": [],
+      "filepath": "/main.dbml",
       "endpointIds": [],
       "tableId": 2,
       "enumId": null
@@ -519,6 +587,9 @@
       "unique": false,
       "pk": false,
       "note": null,
+      "injectedPartialId": null,
+      "checkIds": [],
+      "filepath": "/main.dbml",
       "endpointIds": [],
       "tableId": 3,
       "enumId": null
@@ -535,6 +606,9 @@
       "pk": false,
       "note": null,
       "increment": false,
+      "injectedPartialId": null,
+      "checkIds": [],
+      "filepath": "/main.dbml",
       "endpointIds": [
         2
       ],
@@ -554,6 +628,8 @@
       "note": null,
       "increment": false,
       "injectedPartialId": 5,
+      "checkIds": [],
+      "filepath": "/main.dbml",
       "endpointIds": [
         3
       ],
@@ -574,6 +650,8 @@
       "note": null,
       "increment": false,
       "injectedPartialId": 2,
+      "checkIds": [],
+      "filepath": "/main.dbml",
       "endpointIds": [],
       "tableId": 3,
       "enumId": null
@@ -595,6 +673,8 @@
       },
       "increment": false,
       "injectedPartialId": 2,
+      "checkIds": [],
+      "filepath": "/main.dbml",
       "endpointIds": [],
       "tableId": 3,
       "enumId": null
@@ -612,6 +692,8 @@
       "note": null,
       "increment": false,
       "injectedPartialId": 3,
+      "checkIds": [],
+      "filepath": "/main.dbml",
       "endpointIds": [],
       "tableId": 3,
       "enumId": null
@@ -630,6 +712,8 @@
       "note": null,
       "increment": false,
       "injectedPartialId": 1,
+      "checkIds": [],
+      "filepath": "/main.dbml",
       "endpointIds": [],
       "tableId": 3,
       "enumId": null
@@ -651,6 +735,8 @@
       },
       "increment": false,
       "injectedPartialId": 1,
+      "checkIds": [],
+      "filepath": "/main.dbml",
       "endpointIds": [],
       "tableId": 3,
       "enumId": null
@@ -672,6 +758,8 @@
       },
       "increment": false,
       "injectedPartialId": 1,
+      "checkIds": [],
+      "filepath": "/main.dbml",
       "endpointIds": [],
       "tableId": 3,
       "enumId": null
@@ -687,6 +775,9 @@
       "unique": false,
       "pk": false,
       "note": null,
+      "injectedPartialId": null,
+      "checkIds": [],
+      "filepath": "/main.dbml",
       "endpointIds": [],
       "tableId": 4,
       "enumId": null
@@ -704,6 +795,8 @@
       "note": "simple column with call expression as type",
       "increment": false,
       "injectedPartialId": 7,
+      "checkIds": [],
+      "filepath": "/main.dbml",
       "endpointIds": [],
       "tableId": 4,
       "enumId": null
@@ -725,6 +818,8 @@
       },
       "increment": false,
       "injectedPartialId": 7,
+      "checkIds": [],
+      "filepath": "/main.dbml",
       "endpointIds": [],
       "tableId": 4,
       "enumId": null
@@ -742,6 +837,8 @@
       "note": null,
       "increment": false,
       "injectedPartialId": 3,
+      "checkIds": [],
+      "filepath": "/main.dbml",
       "endpointIds": [],
       "tableId": 5,
       "enumId": null
@@ -763,6 +860,9 @@
             "args": null
           },
           "token": {
+            "filepath": {
+              "path": "/main.dbml"
+            },
             "start": {
               "offset": 120,
               "line": 12,
@@ -778,7 +878,8 @@
           "pk": true,
           "increment": false,
           "unique": false,
-          "not_null": true
+          "not_null": true,
+          "checks": []
         },
         {
           "name": "created_at",
@@ -788,6 +889,9 @@
             "args": null
           },
           "token": {
+            "filepath": {
+              "path": "/main.dbml"
+            },
             "start": {
               "offset": 144,
               "line": 13,
@@ -806,7 +910,8 @@
           "dbdefault": {
             "value": "now()",
             "type": "expression"
-          }
+          },
+          "checks": []
         },
         {
           "name": "updated_at",
@@ -816,6 +921,9 @@
             "args": null
           },
           "token": {
+            "filepath": {
+              "path": "/main.dbml"
+            },
             "start": {
               "offset": 186,
               "line": 14,
@@ -834,10 +942,12 @@
           "dbdefault": {
             "value": "now()",
             "type": "expression"
-          }
+          },
+          "checks": []
         }
       ],
-      "indexes": []
+      "indexes": [],
+      "filepath": "/main.dbml"
     },
     "2": {
       "id": 2,
@@ -852,6 +962,9 @@
             "args": null
           },
           "token": {
+            "filepath": {
+              "path": "/main.dbml"
+            },
             "start": {
               "offset": 267,
               "line": 18,
@@ -867,7 +980,8 @@
           "pk": false,
           "increment": false,
           "unique": false,
-          "not_null": true
+          "not_null": true,
+          "checks": []
         },
         {
           "name": "deleted_at",
@@ -877,6 +991,9 @@
             "args": null
           },
           "token": {
+            "filepath": {
+              "path": "/main.dbml"
+            },
             "start": {
               "offset": 302,
               "line": 19,
@@ -895,10 +1012,12 @@
           "dbdefault": {
             "value": "now()",
             "type": "expression"
-          }
+          },
+          "checks": []
         }
       ],
-      "indexes": []
+      "indexes": [],
+      "filepath": "/main.dbml"
     },
     "3": {
       "id": 3,
@@ -913,6 +1032,9 @@
             "args": null
           },
           "token": {
+            "filepath": {
+              "path": "/main.dbml"
+            },
             "start": {
               "offset": 374,
               "line": 23,
@@ -927,7 +1049,8 @@
           "inline_refs": [],
           "pk": false,
           "increment": false,
-          "unique": true
+          "unique": true,
+          "checks": []
         }
       ],
       "indexes": [
@@ -937,6 +1060,9 @@
               "value": "email",
               "type": "column",
               "token": {
+                "filepath": {
+                  "path": "/main.dbml"
+                },
                 "start": {
                   "offset": 414,
                   "line": 26,
@@ -951,6 +1077,9 @@
             }
           ],
           "token": {
+            "filepath": {
+              "path": "/main.dbml"
+            },
             "start": {
               "offset": 414,
               "line": 26,
@@ -965,7 +1094,8 @@
           "pk": false,
           "unique": true
         }
-      ]
+      ],
+      "filepath": "/main.dbml"
     },
     "4": {
       "id": 4,
@@ -980,6 +1110,9 @@
             "args": null
           },
           "token": {
+            "filepath": {
+              "path": "/main.dbml"
+            },
             "start": {
               "offset": 458,
               "line": 31,
@@ -1000,6 +1133,9 @@
               ],
               "relation": ">",
               "token": {
+                "filepath": {
+                  "path": "/main.dbml"
+                },
                 "start": {
                   "offset": 474,
                   "line": 31,
@@ -1015,7 +1151,8 @@
           ],
           "pk": false,
           "increment": false,
-          "unique": false
+          "unique": false,
+          "checks": []
         },
         {
           "name": "refColumn2",
@@ -1025,6 +1162,9 @@
             "args": null
           },
           "token": {
+            "filepath": {
+              "path": "/main.dbml"
+            },
             "start": {
               "offset": 489,
               "line": 32,
@@ -1045,6 +1185,9 @@
               ],
               "relation": ">",
               "token": {
+                "filepath": {
+                  "path": "/main.dbml"
+                },
                 "start": {
                   "offset": 509,
                   "line": 32,
@@ -1060,10 +1203,12 @@
           ],
           "pk": false,
           "increment": false,
-          "unique": false
+          "unique": false,
+          "checks": []
         }
       ],
-      "indexes": []
+      "indexes": [],
+      "filepath": "/main.dbml"
     },
     "5": {
       "id": 5,
@@ -1078,6 +1223,9 @@
             "args": null
           },
           "token": {
+            "filepath": {
+              "path": "/main.dbml"
+            },
             "start": {
               "offset": 548,
               "line": 36,
@@ -1098,6 +1246,9 @@
               ],
               "relation": ">",
               "token": {
+                "filepath": {
+                  "path": "/main.dbml"
+                },
                 "start": {
                   "offset": 565,
                   "line": 36,
@@ -1113,10 +1264,12 @@
           ],
           "pk": false,
           "increment": false,
-          "unique": false
+          "unique": false,
+          "checks": []
         }
       ],
-      "indexes": []
+      "indexes": [],
+      "filepath": "/main.dbml"
     },
     "6": {
       "id": 6,
@@ -1130,6 +1283,9 @@
               "value": "email",
               "type": "column",
               "token": {
+                "filepath": {
+                  "path": "/main.dbml"
+                },
                 "start": {
                   "offset": 624,
                   "line": 41,
@@ -1144,6 +1300,9 @@
             }
           ],
           "token": {
+            "filepath": {
+              "path": "/main.dbml"
+            },
             "start": {
               "offset": 624,
               "line": 41,
@@ -1164,6 +1323,9 @@
               "value": "id",
               "type": "column",
               "token": {
+                "filepath": {
+                  "path": "/main.dbml"
+                },
                 "start": {
                   "offset": 643,
                   "line": 42,
@@ -1178,6 +1340,9 @@
             }
           ],
           "token": {
+            "filepath": {
+              "path": "/main.dbml"
+            },
             "start": {
               "offset": 643,
               "line": 42,
@@ -1198,6 +1363,9 @@
               "value": "email",
               "type": "column",
               "token": {
+                "filepath": {
+                  "path": "/main.dbml"
+                },
                 "start": {
                   "offset": 656,
                   "line": 43,
@@ -1214,6 +1382,9 @@
               "value": "id",
               "type": "column",
               "token": {
+                "filepath": {
+                  "path": "/main.dbml"
+                },
                 "start": {
                   "offset": 663,
                   "line": 43,
@@ -1228,6 +1399,9 @@
             }
           ],
           "token": {
+            "filepath": {
+              "path": "/main.dbml"
+            },
             "start": {
               "offset": 655,
               "line": 43,
@@ -1242,7 +1416,8 @@
           "pk": false,
           "unique": true
         }
-      ]
+      ],
+      "filepath": "/main.dbml"
     },
     "7": {
       "id": 7,
@@ -1257,6 +1432,9 @@
             "args": "4"
           },
           "token": {
+            "filepath": {
+              "path": "/main.dbml"
+            },
             "start": {
               "offset": 874,
               "line": 59,
@@ -1275,6 +1453,9 @@
           "note": {
             "value": "simple column with call expression as type",
             "token": {
+              "filepath": {
+                "path": "/main.dbml"
+              },
               "start": {
                 "offset": 900,
                 "line": 59,
@@ -1286,7 +1467,8 @@
                 "column": 79
               }
             }
-          }
+          },
+          "checks": []
         },
         {
           "name": "callExpColInTest2",
@@ -1296,6 +1478,9 @@
             "args": "10,2"
           },
           "token": {
+            "filepath": {
+              "path": "/main.dbml"
+            },
             "start": {
               "offset": 954,
               "line": 60,
@@ -1318,6 +1503,9 @@
           "note": {
             "value": "column with type that have arguments and default value being a float number",
             "token": {
+              "filepath": {
+                "path": "/main.dbml"
+              },
               "start": {
                 "offset": 1002,
                 "line": 60,
@@ -1329,10 +1517,72 @@
                 "column": 134
               }
             }
-          }
+          },
+          "checks": []
         }
       ],
-      "indexes": []
+      "indexes": [],
+      "filepath": "/main.dbml"
     }
-  }
+  },
+  "files": [
+    {
+      "filepath": "/main.dbml",
+      "tables": [
+        {
+          "name": "a",
+          "schemaName": null
+        },
+        {
+          "name": "a",
+          "schemaName": "a"
+        },
+        {
+          "name": "users",
+          "schemaName": null
+        },
+        {
+          "name": "testColWithTypeHaveArgs",
+          "schemaName": null
+        },
+        {
+          "name": "table_no_column_with_partial",
+          "schemaName": null
+        }
+      ],
+      "enums": [],
+      "tableGroups": [],
+      "tablePartials": [
+        {
+          "name": "base_template"
+        },
+        {
+          "name": "soft_delete_template"
+        },
+        {
+          "name": "email_index"
+        },
+        {
+          "name": "test"
+        },
+        {
+          "name": "test2"
+        },
+        {
+          "name": "testIndex"
+        },
+        {
+          "name": "testColWithTypeHaveArgs"
+        }
+      ],
+      "notes": [],
+      "imports": {
+        "tables": [],
+        "enums": [],
+        "tablegroups": [],
+        "tablepartials": [],
+        "notes": []
+      }
+    }
+  ]
 }

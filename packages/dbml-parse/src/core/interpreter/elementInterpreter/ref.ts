@@ -1,8 +1,8 @@
-import { destructureComplexVariable, extractVariableFromExpression } from '@/core/binder/utils';
-import { aggregateSettingList } from '@/core/binder/validator/utils';
+import { destructureComplexVariable, extractVariableFromExpression } from '@/core/analyzer/utils';
+import { aggregateSettingList } from '@/core/analyzer/validator/utils';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import {
-  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, IdentiferStreamNode, InfixExpressionNode, ListExpressionNode, SyntaxNode,
+  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, IdentiferStreamNode, InfixExpressionNode, ListExpressionNode, ProgramNode, SyntaxNode,
 } from '@/core/parser/nodes';
 import {
   ElementInterpreter, InterpreterDatabase, Ref, Table,
@@ -15,6 +15,7 @@ import type Compiler from '@/compiler/index';
 
 export class RefInterpreter implements ElementInterpreter {
   private compiler: Compiler;
+  private ast: ProgramNode;
   private declarationNode: ElementDeclarationNode;
   private env: InterpreterDatabase;
   private container: Partial<Table> | undefined;
@@ -22,10 +23,12 @@ export class RefInterpreter implements ElementInterpreter {
 
   constructor (
     compiler: Compiler,
+    ast: ProgramNode,
     declarationNode: ElementDeclarationNode,
     env: InterpreterDatabase,
   ) {
     this.compiler = compiler;
+    this.ast = ast;
     this.declarationNode = declarationNode;
     this.env = env;
     this.container = this.declarationNode.parent instanceof ElementDeclarationNode ? this.env.tables.get(this.declarationNode.parent) : undefined;

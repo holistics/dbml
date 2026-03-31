@@ -40,7 +40,6 @@ class IndexColumn extends Element {
     model.indexColumns[this.id] = {
       id: this.id,
       ...this.shallowExport(),
-      filepath: this.token?.filepath?.toString(),
       ...this.exportParentIds(),
     };
   }

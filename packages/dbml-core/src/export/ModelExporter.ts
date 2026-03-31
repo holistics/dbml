@@ -5,80 +5,86 @@ import JsonExporter from './JsonExporter';
 import SqlServerExporter from './SqlServerExporter';
 import OracleExporter from './OracleExporter';
 import Database from '../model_structure/database';
-import Model from '../model_structure/model';
 import type { NormalizedModel } from '../../types/model_structure/model';
 import { ExportOptions, ExportFormat, normalizeExportOptions } from './index';
 
 class ModelExporter {
-  /**
-   * @deprecated Passing a boolean as the third argument is deprecated. Use `ExportOptions` instead.
-   */
+  // DBML format: returns per-file mapping when >1 file
   static export (
-    model: Database | Model | NormalizedModel,
-    format: ExportFormat,
-    options: boolean,
+    model: Database | NormalizedModel,
+    format: 'dbml',
+    options?: ExportOptions | boolean,
+  ): string | Record<string, string>;
+
+  // Non-DBML formats: always returns string (throws if >1 file)
+  static export (
+    model: Database | NormalizedModel,
+    format: Exclude<ExportFormat, 'dbml'>,
+    options?: ExportOptions | boolean,
   ): string;
 
   static export (
-    model: Database | Model | NormalizedModel,
+    model: Database | NormalizedModel,
     format: ExportFormat,
-    options?: ExportOptions,
-  ): string;
+    options?: ExportOptions | boolean,
+  ): string | Record<string, string>;
 
   static export (
-    model: Database | Model | NormalizedModel,
+    model: Database | NormalizedModel,
     format: ExportFormat,
-    // Some code uses `ModelExporter` directly, so we still need to provide a default value here
     options: ExportOptions | boolean = {
       isNormalized: true,
       includeRecords: true,
     },
-  ): string {
+  ): string | Record<string, string> {
     const {
       isNormalized,
       includeRecords,
     } = normalizeExportOptions(options);
 
     let normalizedModel: NormalizedModel;
-    if (model instanceof Model) {
-      normalizedModel = model.normalize();
-    } else if (model instanceof Database) {
+    if (model instanceof Database) {
       normalizedModel = model.normalize();
     } else {
       normalizedModel = model;
     }
 
-    let res = '';
-    switch (format) {
-      case 'dbml':
-        res = DbmlExporter.export(normalizedModel, { includeRecords });
-        break;
+    const multiFile = normalizedModel.files.length > 1;
 
-      case 'mysql':
-        res = MysqlExporter.export(normalizedModel);
-        break;
-
-      case 'postgres':
-        res = PostgresExporter.export(normalizedModel);
-        break;
-
-      case 'json':
-        res = JsonExporter.export(model, { isNormalized });
-        break;
-
-      case 'mssql':
-        res = SqlServerExporter.export(normalizedModel);
-        break;
-
-      case 'oracle':
-        res = OracleExporter.export(normalizedModel);
-        break;
-
-      default:
-        break;
+    // DBML multi-file: return per-file mapping
+    if (format === 'dbml' && multiFile) {
+      const result: Record<string, string> = {};
+      for (const file of normalizedModel.files) {
+        // TODO: filter normalizedModel to this file's scope and export
+        result[file.filepath] = DbmlExporter.export(normalizedModel, { includeRecords });
+      }
+      return result;
     }
 
-    return res;
+    // Non-DBML/JSON with >1 file: error
+    if (multiFile && format !== 'json') {
+      throw new Error(
+        `Cannot export ${format} with multiple files. `
+        + 'Use Parser.parseProject with an entrypoint, or use interpretFile to get a single-file Database.',
+      );
+    }
+
+    switch (format) {
+      case 'dbml':
+        return DbmlExporter.export(normalizedModel, { includeRecords });
+      case 'mysql':
+        return MysqlExporter.export(normalizedModel);
+      case 'postgres':
+        return PostgresExporter.export(normalizedModel);
+      case 'json':
+        return JsonExporter.export(model, { isNormalized });
+      case 'mssql':
+        return SqlServerExporter.export(normalizedModel);
+      case 'oracle':
+        return OracleExporter.export(normalizedModel);
+      default:
+        return '';
+    }
   }
 }
 

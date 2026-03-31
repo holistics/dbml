@@ -23,7 +23,7 @@ describe('[snapshot] interpreter (NaN cases)', () => {
       );
     } else {
       output = JSON.stringify(
-        res.getValue().databases[0],
+        res.getValue().items,
         (key, value) => (['symbol', 'references', 'referee', 'filepath'].includes(key) ? undefined : value),
         2,
       );

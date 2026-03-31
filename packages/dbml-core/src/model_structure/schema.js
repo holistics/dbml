@@ -163,7 +163,6 @@ class Schema extends Element {
     model.schemas[this.id] = {
       id: this.id,
       ...this.shallowExport(),
-      filepath: this.token?.filepath?.toString(),
       ...this.exportChildIds(),
       ...this.exportParentIds(),
     };

@@ -3,24 +3,25 @@ import { type FilepathId } from './projectLayout';
 import { intern, Internable, Primitive } from '@/core/internable';
 import { DEFAULT_ENTRY } from './constants';
 import { type SyntaxNode, SyntaxNodeIdGenerator } from '@/core/parser/nodes';
-import type { NodeSymbol } from '@/core/binder/symbol/symbols';
-import { NodeSymbolIdGenerator } from '@/core/binder/symbol/symbols';
+import type { NodeSymbol } from '@/core/analyzer/symbol/symbols';
+import { NodeSymbolIdGenerator } from '@/core/analyzer/symbol/symbols';
 import { DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLReferencesProvider, DBMLDiagnosticsProvider } from '@/services/index';
-import { parseFile, localFileDependencies, validateFile, bindFile, bindProject, interpretFile, interpretProject } from './queries/pipeline';
+import { parseFile, localFileDependencies, interpretProject, interpretFile, bindProject } from './queries/pipeline';
 import { flatStream, invalidStream } from './queries/token';
 import { symbolOfName, symbolMembers } from './queries/symbol';
 import { containerStack, containerToken, containerElement, containerScope, containerScopeKind } from './queries/container';
-import { fileErrors, fileWarnings, projectErrors, projectWarnings } from './queries/diagnostics';
+import { fileErrors, fileWarnings } from './queries/diagnostics';
 import {
   renameTable,
   type TextEdit,
   type TableNameInput,
 } from './queries/transform';
 import { splitQualifiedIdentifier, unescapeString, escapeString, formatRecordValue, isValidIdentifier, addDoubleQuoteIfNeeded } from './queries/utils';
+import { SyntaxToken } from '@/core/lexer/tokens';
 
 export { ScopeKind } from './types';
 export type { TextEdit, TableNameInput };
-export type { FileParseIndex, FileValidateIndex } from './queries/pipeline';
+export type { FileParseIndex } from './queries/pipeline';
 export { splitQualifiedIdentifier, unescapeString, escapeString, formatRecordValue, isValidIdentifier, addDoubleQuoteIfNeeded };
 
 export default class Compiler {
@@ -106,7 +107,12 @@ export default class Compiler {
     return this.parseFile(filePath).getValue().ast;
   }
 
-  getSource (filePath: Filepath): string | undefined {
+  source (tokenOrNode: SyntaxNode | SyntaxToken) {
+    const fileSource = this.getFile(tokenOrNode.filepath) ?? '';
+    return fileSource.slice(tokenOrNode.start, tokenOrNode.end);
+  }
+
+  getFile (filePath: Filepath): string | undefined {
     return this._layout.getSource(filePath);
   }
 
@@ -126,13 +132,9 @@ export default class Compiler {
 
   parseFile = this.localQuery(parseFile);
   localFileDependencies = this.localQuery(localFileDependencies);
-  // NOTE: validateFile is incomplete - partial-injected symbols are not yet resolved.
-  // For authoritative node->symbol lookup, use bindFile.nodeToSymbol instead.
-  validateFile = this.localQuery(validateFile);
-  bindFile = this.localQuery(bindFile);
   bindProject = this.globalQuery(bindProject);
-  interpretFile = this.globalQuery(interpretFile);
   interpretProject = this.globalQuery(interpretProject);
+  interpretFile = this.globalQuery(interpretFile);
 
   /* utility queries */
 
@@ -155,8 +157,6 @@ export default class Compiler {
 
   fileErrors = this.globalQuery(fileErrors);
   fileWarnings = this.globalQuery(fileWarnings);
-  projectErrors = this.globalQuery(projectErrors);
-  projectWarnings = this.globalQuery(projectWarnings);
 
   readonly token = {
     flatStream: this.localQuery(flatStream),
@@ -179,7 +179,7 @@ export default class Compiler {
   /** @deprecated Use parseFile/fileErrors/fileWarnings/interpretProject instead. */
   readonly parse = {
     /** @deprecated Use `compiler.getSource(filepath)` */
-    source: () => this.getSource(DEFAULT_ENTRY) ?? '',
+    source: () => this.getFile(DEFAULT_ENTRY) ?? '',
     /** @deprecated Use `compiler.parseFile(filepath).ast` */
     ast: () => this.parseFile(DEFAULT_ENTRY).getValue().ast,
     /** @deprecated Use `compiler.fileErrors(filepath)` */
@@ -188,8 +188,8 @@ export default class Compiler {
     warnings: () => this.fileWarnings(DEFAULT_ENTRY),
     /** @deprecated Use `compiler.parseFile(filepath).tokens` */
     tokens: () => this.parseFile(DEFAULT_ENTRY).getValue().tokens,
-    /** @deprecated Use `compiler.interpretFile(filepath).getValue()` */
-    rawDb: () => this.interpretFile(DEFAULT_ENTRY).getValue(),
+    /** @deprecated */
+    rawDb: () => this.interpretProject().getValue().items,
   };
 
   initMonacoServices () {

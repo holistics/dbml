@@ -1,7 +1,7 @@
-import { extractQuotedStringToken } from '@/core/binder/utils';
+import { extractQuotedStringToken } from '@/core/analyzer/utils';
 import { CompileError } from '@/core/errors';
 import {
-  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, SyntaxNode,
+  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ProgramNode, SyntaxNode,
 } from '@/core/parser/nodes';
 import { ElementInterpreter, InterpreterDatabase, Project } from '@/core/interpreter/types';
 import { extractElementName, getTokenPosition, normalizeNoteContent } from '@/core/interpreter/utils';
@@ -14,16 +14,19 @@ import type Compiler from '@/compiler/index';
 
 export class ProjectInterpreter implements ElementInterpreter {
   private compiler: Compiler;
+  private ast: ProgramNode;
   private declarationNode: ElementDeclarationNode;
   private env: InterpreterDatabase;
   private project: Partial<Project>;
 
   constructor (
     compiler: Compiler,
+    ast: ProgramNode,
     declarationNode: ElementDeclarationNode,
     env: InterpreterDatabase,
   ) {
     this.compiler = compiler;
+    this.ast = ast;
     this.declarationNode = declarationNode;
     this.env = env;
     this.project = {
@@ -59,6 +62,7 @@ export class ProjectInterpreter implements ElementInterpreter {
         case 'table': {
           const errors = (new TableInterpreter(
             this.compiler,
+            this.ast,
             sub,
             this.env,
           )).interpret();
@@ -69,6 +73,7 @@ export class ProjectInterpreter implements ElementInterpreter {
         case 'ref': {
           const errors = (new RefInterpreter(
             this.compiler,
+            this.ast,
             sub,
             this.env,
           )).interpret();
@@ -79,6 +84,7 @@ export class ProjectInterpreter implements ElementInterpreter {
         case 'tablegroup': {
           const errors = (new TableGroupInterpreter(
             this.compiler,
+            this.ast,
             sub,
             this.env,
           )).interpret();
@@ -89,6 +95,7 @@ export class ProjectInterpreter implements ElementInterpreter {
         case 'enum': {
           const errors = (new EnumInterpreter(
             this.compiler,
+            this.ast,
             sub,
             this.env,
           )).interpret();
@@ -110,6 +117,7 @@ export class ProjectInterpreter implements ElementInterpreter {
         case 'tablepartial': {
           const errors = (new TablePartialInterpreter(
             this.compiler,
+            this.ast,
             sub,
             this.env,
           )).interpret();

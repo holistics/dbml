@@ -2,7 +2,7 @@ import {
   destructureMemberAccessExpression,
   extractVariableFromExpression,
   getElementKind,
-} from '@/core/binder/utils';
+} from '@/core/analyzer/utils';
 import {
   extractStringFromIdentifierStream,
   isExpressionAVariableNode,
@@ -19,8 +19,8 @@ import {
   CompletionItemKind,
   CompletionItemInsertTextRule,
 } from '@/services/types';
-import { TableSymbol, type NodeSymbol } from '@/core/binder/symbol/symbols';
-import { SymbolKind, destructureIndex } from '@/core/binder/symbol/symbolIndex';
+import { TableSymbol, type NodeSymbol } from '@/core/analyzer/symbol/symbols';
+import { SymbolKind, destructureIndex } from '@/core/analyzer/symbol/symbolIndex';
 import {
   pickCompletionItemKind,
   shouldPrependSpace,
@@ -49,9 +49,8 @@ import {
 import { getOffsetFromMonacoPosition, getFilepathFromModel } from '@/services/utils';
 import type { Filepath } from '@/compiler/projectLayout';
 import { ROOT } from '@/compiler/constants';
-import { ExternalSymbol } from '@/core/binder/symbol/symbols';
 import { isComment } from '@/core/lexer/utils';
-import { ElementKind, SettingName } from '@/core/binder/types';
+import { ElementKind, SettingName } from '@/core/analyzer/types';
 
 export default class DBMLCompletionItemProvider implements CompletionItemProvider {
   private compiler: Compiler;
@@ -300,15 +299,10 @@ function suggestCrossFileSymbols (
   const crossFileKinds = acceptedKinds.filter((k) => IMPORTABLE_KINDS.has(k));
   if (crossFileKinds.length === 0) return results;
 
-  let allFiles: Filepath[];
-  try {
-    allFiles = compiler.layout().listAllFiles(ROOT);
-  } catch {
-    return results;
-  }
+  const allFiles = compiler.layout().getEntryPoints();
 
   const ast = compiler.ast(currentFilepath);
-  const source = compiler.getSource(currentFilepath) ?? '';
+  const source = compiler.getFile(currentFilepath) ?? '';
   const useDeclarations = ast.useDeclarations;
   const insertOffset = useDeclarations.length > 0
     ? useDeclarations[useDeclarations.length - 1].end
@@ -316,23 +310,20 @@ function suggestCrossFileSymbols (
   const insertPos = offsetToPosition(source, insertOffset);
 
   const currentId = currentFilepath.intern();
+  const bindReport = compiler.bindProject();
+  if (bindReport.getErrors().length > 0) return results;
+  const { nodeToSymbol: projectNodeToSymbol } = bindReport.getValue();
 
   for (const externalFile of allFiles) {
     if (externalFile.intern() === currentId) continue;
 
-    const externalReport = compiler.bindProject();
-    if (externalReport.getErrors().length > 0) continue;
-
     const relativePath = externalFile.relativeTo(currentFilepath.dirname);
     const importPath = relativePath.startsWith('.') ? relativePath : `./${relativePath}`;
-    const { nodeToSymbol: externalNodeToSymbol } = externalReport.getValue();
     const externalAst = compiler.parseFile(externalFile).getValue().ast;
-    const externalSymbolTable = externalNodeToSymbol.get(externalAst)?.symbolTable;
+    const externalSymbolTable = projectNodeToSymbol.get(externalAst)?.symbolTable;
     if (!externalSymbolTable) continue;
 
     for (const [symbolId, symbol] of externalSymbolTable.entries()) {
-      if (symbol instanceof ExternalSymbol) continue;
-
       const info = destructureIndex(symbolId).unwrap_or(undefined);
       if (!info) continue;
 

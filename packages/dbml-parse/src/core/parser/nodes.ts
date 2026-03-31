@@ -667,23 +667,35 @@ export class ArrayNode extends SyntaxNode {
   }
 }
 
-// Form: <kind> <name>
+// Form: <kind> <name> [as <alias>]
 // A single specifier inside a use statement
 // e.g. table users
 // e.g. enum status
+// e.g. table users as u
 export class UseSpecifierNode extends SyntaxNode {
   elementKind?: SyntaxToken;
 
   name?: NormalExpressionNode;
 
+  asKeyword?: SyntaxToken;
+
+  alias?: NormalExpressionNode;
+
   constructor (
-    { elementKind, name }: { elementKind?: SyntaxToken; name?: NormalExpressionNode },
+    { elementKind, name, asKeyword, alias }: {
+      elementKind?: SyntaxToken;
+      name?: NormalExpressionNode;
+      asKeyword?: SyntaxToken;
+      alias?: NormalExpressionNode;
+    },
     id: SyntaxNodeId,
     filepath: Filepath,
   ) {
-    super(id, SyntaxNodeKind.USE_SPECIFIER, [elementKind, name], filepath);
+    super(id, SyntaxNodeKind.USE_SPECIFIER, [elementKind, name, asKeyword, alias], filepath);
     this.elementKind = elementKind;
     this.name = name;
+    this.asKeyword = asKeyword;
+    this.alias = alias;
   }
 }
 
@@ -724,11 +736,14 @@ export class UseSpecifierListNode extends SyntaxNode {
 
 // Form: use { <specifiers> } from <path>  (selective)
 //    or: use * from <path>                (entire-file)
+//    or: reuse { <specifiers> } from <path>  (selective re-export)
+//    or: reuse * from <path>                 (entire-file re-export)
 // A top-level import statement bringing named elements into scope
 // e.g. use { table users, enum status } from './schema'
 // e.g. use * from './common'
+// e.g. reuse { table users } from './schema'
 export class UseDeclarationNode extends SyntaxNode {
-  useKeyword?: SyntaxToken;
+  useKeyword?: SyntaxToken; // 'use' or 'reuse'
 
   star?: SyntaxToken; // The '*' token for entire-file imports
 
@@ -763,6 +778,10 @@ export class UseDeclarationNode extends SyntaxNode {
     this.specifiers = specifiers;
     this.fromKeyword = fromKeyword;
     this.path = path;
+  }
+
+  get isReuse (): boolean {
+    return this.useKeyword?.value.toLowerCase() === 'reuse';
   }
 }
 

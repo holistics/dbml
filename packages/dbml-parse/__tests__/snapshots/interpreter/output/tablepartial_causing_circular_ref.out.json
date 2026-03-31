@@ -123,11 +123,17 @@
               "line": 8,
               "column": 25
             }
+          },
+          "tableFilepath": {
+            "path": "/main.dbml"
           }
         },
         {
           "schemaName": null,
           "tableName": "T",
+          "tableFilepath": {
+            "path": "/main.dbml"
+          },
           "fieldNames": [
             "col2"
           ],

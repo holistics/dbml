@@ -4,6 +4,7 @@ import {
   ElementDeclarationNode,
   FunctionApplicationNode,
   FunctionExpressionNode,
+  ProgramNode,
   SyntaxNode,
   TupleExpressionNode,
 } from '@/core/parser/nodes';
@@ -34,18 +35,20 @@ import {
   validateForeignKeys,
   isSerialType,
 } from './utils';
-import { destructureCallExpression, destructureComplexVariable, extractQuotedStringToken, extractVariableFromExpression } from '@/core/binder/utils';
+import { destructureCallExpression, destructureComplexVariable, extractQuotedStringToken, extractVariableFromExpression } from '@/core/analyzer/utils';
 import { last } from 'lodash-es';
 import { mergeTableAndPartials } from '../utils';
 import type Compiler from '@/compiler/index';
 
 export class RecordsInterpreter {
   private compiler: Compiler;
+  private ast: ProgramNode;
   private env: InterpreterDatabase;
   private tableToRecordMap: Map<Table, ElementDeclarationNode>;
 
-  constructor (compiler: Compiler, env: InterpreterDatabase) {
+  constructor (compiler: Compiler, ast: ProgramNode, env: InterpreterDatabase) {
     this.compiler = compiler;
+    this.ast = ast;
     this.env = env;
     this.tableToRecordMap = new Map();
   }
@@ -73,7 +76,7 @@ export class RecordsInterpreter {
       this.tableToRecordMap.set(table, element);
       for (const row of (element.body as BlockExpressionNode).body) {
         const rowNode = row as FunctionApplicationNode;
-        const result = extractDataFromRow(rowNode, mergedColumns, this.env);
+        const result = extractDataFromRow(rowNode, mergedColumns, this.env, this.ast.source);
         errors.push(...result.getErrors());
         warnings.push(...result.getWarnings());
         const rowData = result.getValue();
@@ -152,6 +155,7 @@ function extractDataFromRow (
   row: FunctionApplicationNode,
   mergedColumns: Column[],
   env: InterpreterDatabase,
+  source: string,
 ): Report<RowData> {
   const errors: CompileError[] = [];
   const warnings: CompileWarning[] = [];
@@ -172,7 +176,7 @@ function extractDataFromRow (
     const arg = args[i];
     const column = mergedColumns[i];
     columnNodes[column.name] = arg;
-    const result = extractValue(arg, column, env);
+    const result = extractValue(arg, column, env, source);
     errors.push(...result.getErrors());
     warnings.push(...result.getWarnings());
     const value = result.getValue();
@@ -199,6 +203,7 @@ function extractValue (
   node: SyntaxNode,
   column: Column,
   env: InterpreterDatabase,
+  source: string,
 ): Report<RecordValue | null> {
   // FIXME: Make this more precise
   const type = column.type.type_name.split('(')[0];
@@ -206,7 +211,7 @@ function extractValue (
   const isEnum = column.type.isEnum || false;
   const valueType = getRecordValueType(type, isEnum);
   const rawString = tryExtractString(node);
-  const fallbackValue = rawString !== null ? rawString : getNodeSourceText(node, env.source);
+  const fallbackValue = rawString !== null ? rawString : getNodeSourceText(node, source);
   const fallbackType = rawString !== null ? valueType : 'expression';
 
   if (node instanceof FunctionExpressionNode) {

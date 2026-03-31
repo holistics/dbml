@@ -11,6 +11,8 @@ export declare type ParseFormat = 'json'
     | 'snowflake'
     | 'oracle';
 
+export declare type ProjectFormat = 'dbmlv2';
+
 declare class Parser {
     public DBMLCompiler: Compiler;
     constructor(dbmlCompiler?: Compiler);
@@ -30,13 +32,10 @@ declare class Parser {
     static parseMSSQLToJSONv2(str: string): RawDatabase;
     static parseSnowflakeToJSON(str: string): RawDatabase;
     static parseOracleToJSON(str: string): RawDatabase;
-    static parseDbmlProject(layout: DbmlProjectLayout, entry: Filepath): Model;
-    /**
-     * Should use parse() instance method instead of this static method whenever possible
-     */
-    static parse(str: string, format: ParseFormat): Database | Model;
-    static parse(str: RawDatabase, format: 'json'): Database | Model;
-    parse(str: string, format: ParseFormat): Database | Model;
-    parse(str: RawDatabase, format: 'json'): Database | Model;
+    static parseProject(layout: DbmlProjectLayout, entrypoint: Filepath, format?: ProjectFormat): Database;
+    static parse(str: string, format: ParseFormat): Database;
+    static parse(str: RawDatabase, format: 'json'): Database;
+    parse(str: string, format: ParseFormat): Database;
+    parse(str: RawDatabase, format: 'json'): Database;
 }
 export default Parser;

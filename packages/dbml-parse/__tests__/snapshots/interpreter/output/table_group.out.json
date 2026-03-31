@@ -312,11 +312,17 @@
               "line": 13,
               "column": 28
             }
+          },
+          "tableFilepath": {
+            "path": "/main.dbml"
           }
         },
         {
           "schemaName": null,
           "tableName": "merchants",
+          "tableFilepath": {
+            "path": "/main.dbml"
+          },
           "fieldNames": [
             "admin_id"
           ],

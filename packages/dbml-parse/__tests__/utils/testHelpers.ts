@@ -1,5 +1,5 @@
-import { NodeSymbol } from '@/core/binder/symbol/symbols';
-import { NodeToRefereeMap, NodeToSymbolMap, SymbolToReferencesMap } from '@/core/binder/analyzer';
+import { NodeSymbol } from '@/core/analyzer/symbol/symbols';
+import { NodeToRefereeMap, NodeToSymbolMap, SymbolToReferencesMap } from '@/core/analyzer/analyzer';
 import Report from '@/core/report';
 import { ProgramNode, SyntaxNode } from '@/index';
 import type Compiler from '@/compiler/index';

@@ -1,6 +1,6 @@
 import { describe, expect } from 'vitest';
 import { SyntaxNodeKind, ElementDeclarationNode, BlockExpressionNode } from '@/core/parser/nodes';
-import { TableSymbol, EnumSymbol, TableGroupSymbol, TablePartialSymbol, ColumnSymbol, EnumFieldSymbol, SchemaSymbol } from '@/core/binder/symbol/symbols';
+import { TableSymbol, EnumSymbol, TableGroupSymbol, TablePartialSymbol, ColumnSymbol, EnumFieldSymbol, SchemaSymbol } from '@/core/analyzer/symbol/symbols';
 import { Compiler } from '@/index';
 import { DEFAULT_ENTRY } from '@/compiler/constants';
 

@@ -1,8 +1,8 @@
-import { extractQuotedStringToken, extractVariableFromExpression } from '@/core/binder/utils';
-import { aggregateSettingList } from '@/core/binder/validator/utils';
+import { extractQuotedStringToken, extractVariableFromExpression } from '@/core/analyzer/utils';
+import { aggregateSettingList } from '@/core/analyzer/validator/utils';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import {
-  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode,
+  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, ProgramNode, SyntaxNode,
 } from '@/core/parser/nodes';
 import {
   ElementInterpreter, Enum, EnumField, InterpreterDatabase,
@@ -12,16 +12,19 @@ import type Compiler from '@/compiler/index';
 
 export class EnumInterpreter implements ElementInterpreter {
   private compiler: Compiler;
+  private ast: ProgramNode;
   private declarationNode: ElementDeclarationNode;
   private env: InterpreterDatabase;
   private enum: Partial<Enum>;
 
   constructor (
     compiler: Compiler,
+    ast: ProgramNode,
     declarationNode: ElementDeclarationNode,
     env: InterpreterDatabase,
   ) {
     this.compiler = compiler;
+    this.ast = ast;
     this.declarationNode = declarationNode;
     this.env = env;
     this.enum = { values: [] };

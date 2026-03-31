@@ -6,7 +6,7 @@ import {
 import {
   AttributeNode, BlockExpressionNode, CallExpressionNode, ElementDeclarationNode,
   FunctionApplicationNode, FunctionExpressionNode, ListExpressionNode, PrefixExpressionNode,
-  SyntaxNode,
+  ProgramNode, SyntaxNode,
 } from '@/core/parser/nodes';
 import {
   extractColor, extractElementName, getColumnSymbolsOfRefOperand, getMultiplicities,
@@ -16,16 +16,17 @@ import {
 import {
   destructureComplexVariable, destructureIndexNode, extractQuotedStringToken, extractVarNameFromPrimaryVariable,
   extractVariableFromExpression,
-} from '@/core/binder/utils';
+} from '@/core/analyzer/utils';
 import { CompileError, CompileErrorCode } from '@/core/errors';
-import { aggregateSettingList, isValidPartialInjection } from '@/core/binder/validator/utils';
-import { ColumnSymbol } from '@/core/binder/symbol/symbols';
-import { destructureIndex, SymbolKind } from '@/core/binder/symbol/symbolIndex';
-import { ElementKind, SettingName } from '@/core/binder/types';
+import { aggregateSettingList, isValidPartialInjection } from '@/core/analyzer/validator/utils';
+import { ColumnSymbol } from '@/core/analyzer/symbol/symbols';
+import { destructureIndex, SymbolKind } from '@/core/analyzer/symbol/symbolIndex';
+import { ElementKind, SettingName } from '@/core/analyzer/types';
 import type Compiler from '@/compiler/index';
 
 export class TableInterpreter implements ElementInterpreter {
   private compiler: Compiler;
+  private ast: ProgramNode;
   private declarationNode: ElementDeclarationNode;
   private env: InterpreterDatabase;
   private table: Partial<Table>;
@@ -33,10 +34,12 @@ export class TableInterpreter implements ElementInterpreter {
 
   constructor (
     compiler: Compiler,
+    ast: ProgramNode,
     declarationNode: ElementDeclarationNode,
     env: InterpreterDatabase,
   ) {
     this.compiler = compiler;
+    this.ast = ast;
     this.declarationNode = declarationNode;
     this.env = env;
     this.table = {
@@ -424,11 +427,13 @@ export class TableInterpreter implements ElementInterpreter {
       endpoints: [
         {
           ...inlineRef,
+          tableFilepath: referredSymbol.filepath,
           relation: multiplicities[1],
         },
         {
           schemaName: this.table.schemaName!,
           tableName: this.table.name!,
+          tableFilepath: this.declarationNode.filepath,
           fieldNames: [extractVariableFromExpression(column.callee!).unwrap()],
           token: getTokenPosition(column),
           relation: multiplicities[0],

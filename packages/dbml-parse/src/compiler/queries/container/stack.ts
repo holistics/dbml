@@ -52,7 +52,7 @@ export function containerStack (this: Compiler, offset: number, filepath: Filepa
     const lastContainer = last(res)!;
 
     if (lastContainer instanceof FunctionApplicationNode) {
-      const source = this.getSource(filepath) ?? '';
+      const source = this.getFile(filepath) ?? '';
       for (let i = lastContainer.end; i < offset; i += 1) {
         if (source[i] === '\n') {
           res.pop();

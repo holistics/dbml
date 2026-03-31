@@ -2,7 +2,7 @@ import { describe, expect, test } from 'vitest';
 import { SyntaxNodeKind, UseSpecifierListNode } from '@/core/parser/nodes';
 import { CompileErrorCode } from '@/core/errors';
 import { parse } from '@tests/utils';
-import { extractVariableFromExpression } from '@/core/binder/utils';
+import { extractVariableFromExpression } from '@/core/analyzer/utils';
 
 describe('[example] parser - use statement', () => {
   test('selective use: parses specifiers, fromKeyword, path, AST structure', () => {

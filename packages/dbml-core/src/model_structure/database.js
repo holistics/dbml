@@ -24,10 +24,9 @@ class Database extends Element {
     aliases = [],
     records = [],
     tablePartials = [],
-    dbState,
   }) {
     super();
-    this.dbState = dbState || new DbState();
+    this.dbState = new DbState();
     this.generateId();
     this.hasDefaultSchema = false;
     this.schemas = [];
@@ -250,7 +249,6 @@ class Database extends Element {
         [this.id]: {
           id: this.id,
           ...this.shallowExport(),
-          filepath: this.token?.filepath?.toString(),
           ...this.exportChildIds(),
         },
       },

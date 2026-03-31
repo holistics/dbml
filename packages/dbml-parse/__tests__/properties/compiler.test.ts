@@ -3,7 +3,7 @@ import * as fc from 'fast-check';
 import Compiler from '@/compiler/index';
 import { DEFAULT_ENTRY } from '@/compiler/constants';
 import { Filepath, MemoryProjectLayout } from '@/compiler/projectLayout';
-import { NodeToSymbolMap } from '@/core/binder/analyzer';
+import { NodeToSymbolMap } from '@/core/analyzer/analyzer';
 import { ElementDeclarationNode, ProgramNode } from '@/core/parser/nodes';
 import { dbmlSchemaArbitrary } from '../utils/arbitraries';
 
@@ -63,8 +63,8 @@ describe('[property] compiler - single-file intern stability', () => {
       fc.property(dbmlSchemaArbitrary, (source) => {
         const compiler = new Compiler();
         compiler.setSource(source);
-        const r1 = compiler.bindFile(DEFAULT_ENTRY);
-        const r2 = compiler.bindFile(DEFAULT_ENTRY);
+        const r1 = compiler.bindProject();
+        const r2 = compiler.bindProject();
         expect(r1).toBe(r2);
       }),
       { numRuns: RUNS },
@@ -129,9 +129,9 @@ describe('[property] compiler - multi-file intern isolation', () => {
             [fpB.absolute]: sourceB,
           }));
 
-          const resultA1 = compiler.bindFile(fpA);
-          compiler.bindFile(fpB);
-          const resultA2 = compiler.bindFile(fpA);
+          const resultA1 = compiler.bindProject();
+          compiler.bindProject();
+          const resultA2 = compiler.bindProject();
 
           expect(resultA1).toBe(resultA2);
         },
@@ -211,7 +211,7 @@ describe('[property] compiler - cross-file use declarations', () => {
             [fpA.absolute]: sA,
             [fpB.absolute]: withUseA(sB),
           }));
-          expect(compiler.bindFile(fpB)).toBe(compiler.bindFile(fpB));
+          expect(compiler.bindProject()).toBe(compiler.bindProject());
         },
       ),
       { numRuns: RUNS },
@@ -227,9 +227,9 @@ describe('[property] compiler - cross-file use declarations', () => {
             [fpA.absolute]: sA,
             [fpB.absolute]: withUseA(sB),
           }));
-          const r1 = compiler.bindFile(fpA);
-          compiler.bindFile(fpB);
-          expect(compiler.bindFile(fpA)).toBe(r1);
+          const r1 = compiler.bindProject();
+          compiler.bindProject();
+          expect(compiler.bindProject()).toBe(r1);
         },
       ),
       { numRuns: RUNS },
@@ -246,7 +246,7 @@ describe('[property] compiler - cross-file use declarations', () => {
             [fpB.absolute]: withUseA(sB),
           }));
           const v1 = compiler.validateFile(fpB);
-          compiler.bindFile(fpB);
+          compiler.bindProject();
           expect(compiler.validateFile(fpB)).toBe(v1);
         },
       ),
@@ -267,7 +267,7 @@ describe('[property] compiler - cross-file use declarations', () => {
           }));
           const ast = compiler.parseFile(fpB).getValue().ast;
           const vPairs = nodeSymbolPairs(ast, compiler.validateFile(fpB).getValue().publicSchemaSymbol.getNodeSymbolMapping());
-          const bPairs = nodeSymbolPairs(ast, compiler.bindFile(fpB).getValue().nodeToSymbol);
+          const bPairs = nodeSymbolPairs(ast, compiler.bindProject().getValue().nodeToSymbol);
           // bindFile may map additional nodes (partial injections), but the common keys must agree
           for (const key of Object.keys(vPairs)) {
             expect(bPairs[key]).toBe(vPairs[key]);
@@ -291,7 +291,7 @@ describe('[property] compiler - cross-file use declarations', () => {
           }));
           const astA = compiler.parseFile(fpA).getValue().ast;
           // Use bindFile (not validateFile) for authoritative nodeToSymbol
-          const filePairs = nodeSymbolPairs(astA, compiler.bindFile(fpA).getValue().nodeToSymbol);
+          const filePairs = nodeSymbolPairs(astA, compiler.bindProject().getValue().nodeToSymbol);
           const projectPairs = nodeSymbolPairs(astA, compiler.bindProject().getValue().nodeToSymbol);
           expect(Object.keys(filePairs)).toEqual(Object.keys(projectPairs));
           for (const key of Object.keys(filePairs)) {
@@ -317,7 +317,7 @@ describe('[property] compiler - cross-file use declarations', () => {
           }));
           const astB = compiler.parseFile(fpB).getValue().ast;
           // Use bindFile (not validateFile) for authoritative nodeToSymbol
-          const bPairs = nodeSymbolPairs(astB, compiler.bindFile(fpB).getValue().nodeToSymbol);
+          const bPairs = nodeSymbolPairs(astB, compiler.bindProject().getValue().nodeToSymbol);
           for (const symIntern of Object.values(bPairs)) {
             expect(symIntern.split(':')[0]).toBe(fpB.absolute);
           }

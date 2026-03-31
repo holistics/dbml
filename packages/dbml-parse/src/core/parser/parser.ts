@@ -4,6 +4,7 @@ import {
   convertFuncAppToElem,
   isAsKeyword,
   isFromKeyword,
+  isReuseKeyword,
   isUseKeyword,
   markInvalid,
 } from '@/core/parser/utils';
@@ -216,7 +217,7 @@ export default class Parser {
   private program (): (UseDeclarationNode | ElementDeclarationNode)[] {
     const statements: (UseDeclarationNode | ElementDeclarationNode)[] = [];
     while (!this.isAtEnd()) {
-      if (isUseKeyword(this.peek())) {
+      if (isUseKeyword(this.peek()) || isReuseKeyword(this.peek())) {
         try {
           statements.push(this.useDeclaration());
         } catch (e) {
@@ -360,7 +361,12 @@ export default class Parser {
   }
 
   private useSpecifier (): UseSpecifierNode {
-    const args: { elementKind?: SyntaxToken; name?: NormalExpressionNode } = {};
+    const args: {
+      elementKind?: SyntaxToken;
+      name?: NormalExpressionNode;
+      asKeyword?: SyntaxToken;
+      alias?: NormalExpressionNode;
+    } = {};
     const buildNode = () => this.nodeFactory.create(UseSpecifierNode, args);
 
     try {
@@ -391,6 +397,30 @@ export default class Parser {
         throw e;
       }
       throw new PartialParsingError(e.token, buildNode(), e.handlerContext);
+    }
+
+    // Optional: as <alias>
+    if (isAsKeyword(this.peek())) {
+      args.asKeyword = this.advance();
+      try {
+        if (
+          this.peek().kind !== SyntaxTokenKind.IDENTIFIER
+          && this.peek().kind !== SyntaxTokenKind.QUOTED_STRING
+        ) {
+          this.logError(this.peek(), CompileErrorCode.UNEXPECTED_TOKEN, "Expect an alias name after 'as'");
+          throw new PartialParsingError(
+            this.peek(),
+            buildNode(),
+            this.contextStack.findHandlerContext(this.tokens, this.current),
+          );
+        }
+        args.alias = this.normalExpression();
+      } catch (e) {
+        if (!(e instanceof PartialParsingError)) {
+          throw e;
+        }
+        throw new PartialParsingError(e.token, buildNode(), e.handlerContext);
+      }
     }
 
     return buildNode();
