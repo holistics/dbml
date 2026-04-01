@@ -53,11 +53,6 @@ export function findDiagramViewBlocks (source: string): DiagramViewBlock[] {
   return blocks;
 }
 
-/** Returns true if the name requires double-quote wrapping in DBML. */
-function needsQuoting (name: string): boolean {
-  return !/^[a-zA-Z_][a-zA-Z0-9_]*$/.test(name);
-}
-
 function generateDiagramViewBlock (
   name: string,
   visibleEntities: DiagramViewSyncOperation['visibleEntities'],
