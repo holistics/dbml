@@ -34,7 +34,7 @@ function buildTableInfoMap (env: InterpreterDatabase): Map<string, TableInfo> {
 
   for (const table of env.tables.values()) {
     const key = makeTableKey(table.schemaName, table.name);
-    const rows = env.records.get(table) || [];
+    const rows = env.records.get(table)?.rows || [];
 
     if (!env.cachedMergedTables.has(table)) {
       env.cachedMergedTables.set(table, mergeTableAndPartials(table, env));
