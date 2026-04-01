@@ -14,7 +14,7 @@ const getConstraintType = (columnCount: number) =>
   columnCount > 1 ? 'Composite UNIQUE' : 'UNIQUE';
 
 export function validateUnique (env: InterpreterDatabase): CompileError[] {
-  return flatMap(Array.from(env.records), ([table, rows]) => {
+  return flatMap(Array.from(env.records), ([table, { rows }]) => {
     if (!env.cachedMergedTables.has(table)) {
       env.cachedMergedTables.set(table, mergeTableAndPartials(table, env));
     }

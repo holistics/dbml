@@ -68,6 +68,10 @@ export class RecordsInterpreter {
         continue;
       }
       this.tableToRecordMap.set(table, element);
+      if (!this.env.records.has(table)) {
+        this.env.records.set(table, { element, rows: [] });
+      }
+      const tableRecords = this.env.records.get(table)!;
       for (const row of (element.body as BlockExpressionNode).body) {
         const rowNode = row as FunctionApplicationNode;
         const result = extractDataFromRow(rowNode, mergedColumns, this.env);
@@ -75,11 +79,7 @@ export class RecordsInterpreter {
         warnings.push(...result.getWarnings());
         const rowData = result.getValue();
         if (!rowData.row) continue;
-        if (!this.env.records.has(table)) {
-          this.env.records.set(table, []);
-        }
-        const tableRecords = this.env.records.get(table);
-        tableRecords!.push({
+        tableRecords.rows.push({
           values: rowData.row,
           node: rowNode,
           columnNodes: rowData.columnNodes,
