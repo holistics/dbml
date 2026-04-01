@@ -136,69 +136,64 @@ export function syncDiagramView (
   operations: DiagramViewSyncOperation[],
   blocks?: DiagramViewBlock[],
 ): { newDbml: string; edits: TextEdit[] } {
-  let currentBlocks = blocks ?? findDiagramViewBlocks(dbml);
-  let currentDbml = dbml;
+  const originalBlocks = blocks ?? findDiagramViewBlocks(dbml);
   const allEdits: TextEdit[] = [];
 
   for (const op of operations) {
-    const { dbml: newDbml, edits } = applyOperation(currentDbml, op, currentBlocks);
+    const edits = applyOperation(dbml, op, originalBlocks);
     allEdits.push(...edits);
-    currentDbml = newDbml;
-    // Re-parse blocks after each operation since positions shifted
-    if (edits.length > 0) {
-      currentBlocks = findDiagramViewBlocks(currentDbml);
-    }
   }
 
-  return { newDbml: currentDbml, edits: allEdits };
+  // Sort edits descending by start position for tail-first application
+  allEdits.sort((a, b) => b.start - a.start);
+  const newDbml = applyTextEdits(dbml, allEdits, true);
+  return { newDbml, edits: allEdits };
 }
 
 function applyOperation (
   dbml: string,
   operation: DiagramViewSyncOperation,
   blocks: DiagramViewBlock[],
-): { dbml: string; edits: TextEdit[] } {
+): TextEdit[] {
   switch (operation.operation) {
     case 'create':
-      return applyCreate(dbml, operation, blocks);
+      return computeCreateEdit(dbml, operation, blocks);
     case 'update':
-      return applyUpdate(dbml, operation, blocks);
+      return computeUpdateEdit(dbml, operation, blocks);
     case 'delete':
-      return applyDelete(dbml, operation, blocks);
+      return computeDeleteEdit(dbml, operation, blocks);
     default:
-      return { dbml, edits: [] };
+      return [];
   }
 }
 
-function applyCreate (
+function computeCreateEdit (
   dbml: string,
   operation: DiagramViewSyncOperation,
   blocks: DiagramViewBlock[],
-): { dbml: string; edits: TextEdit[] } {
+): TextEdit[] {
   // If a block with this name already exists, treat as update to avoid duplicate blocks
   const existing = blocks.find((b) => b.name === operation.name);
   if (existing) {
-    return applyUpdate(dbml, operation, blocks);
+    return computeUpdateEdit(dbml, operation, blocks);
   }
 
   const newBlock = generateDiagramViewBlock(operation.name, operation.visibleEntities);
   const appendText = '\n\n' + newBlock + '\n';
-  const edit: TextEdit = {
+  return [{
     start: dbml.length,
     end: dbml.length,
     newText: appendText,
-  };
-
-  return { dbml: dbml + appendText, edits: [edit] };
+  }];
 }
 
-function applyUpdate (
+function computeUpdateEdit (
   dbml: string,
   operation: DiagramViewSyncOperation,
   blocks: DiagramViewBlock[],
-): { dbml: string; edits: TextEdit[] } {
+): TextEdit[] {
   const block = blocks.find((b) => b.name === operation.name);
-  if (!block) return { dbml, edits: [] };
+  if (!block) return [];
 
   const edits: TextEdit[] = [];
 
@@ -215,16 +210,16 @@ function applyUpdate (
     });
   }
 
-  return { dbml: applyTextEdits(dbml, edits), edits };
+  return edits;
 }
 
-function applyDelete (
+function computeDeleteEdit (
   dbml: string,
   operation: DiagramViewSyncOperation,
   blocks: DiagramViewBlock[],
-): { dbml: string; edits: TextEdit[] } {
+): TextEdit[] {
   const block = blocks.find((b) => b.name === operation.name);
-  if (!block) return { dbml, edits: [] };
+  if (!block) return [];
 
   // Expand range to include surrounding whitespace/newlines
   let start = block.startIndex;
@@ -256,6 +251,5 @@ function applyDelete (
   if (end < dbml.length && dbml[end] === '\r') end++;
   if (end < dbml.length && dbml[end] === '\n') end++;
 
-  const edit: TextEdit = { start, end, newText: '' };
-  return { dbml: applyTextEdits(dbml, [edit]), edits: [edit] };
+  return [{ start, end, newText: '' }];
 }
