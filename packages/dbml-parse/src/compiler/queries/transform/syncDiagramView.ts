@@ -1,9 +1,11 @@
-import { applyTextEdits, TextEdit } from './applyTextEdits';
 import Lexer from '@/core/lexer/lexer';
 import Parser from '@/core/parser/parser';
+import { ElementKind } from '@/core/analyzer/types';
+import { DEFAULT_SCHEMA_NAME } from '@/constants';
 import { SyntaxNodeIdGenerator } from '@/core/parser/nodes';
 import { destructureComplexVariable } from '@/core/analyzer/utils';
-import { DEFAULT_SCHEMA_NAME } from '@/constants';
+import { applyTextEdits, TextEdit } from './applyTextEdits';
+import { addDoubleQuoteIfNeeded } from '../utils';
 
 export interface DiagramViewSyncOperation {
   operation: 'create' | 'update' | 'delete';
@@ -35,7 +37,7 @@ export function findDiagramViewBlocks (source: string): DiagramViewBlock[] {
   const program = ast.getValue().ast;
 
   for (const element of program.body) {
-    if (element.type?.value === 'DiagramView') {
+    if (element.type?.value === ElementKind.DiagramView) {
       const fragments = element.name
         ? destructureComplexVariable(element.name).unwrap_or([])
         : [];
@@ -56,17 +58,11 @@ function needsQuoting (name: string): boolean {
   return !/^[a-zA-Z_][a-zA-Z0-9_]*$/.test(name);
 }
 
-/** Wraps name in double quotes and escapes internal double quotes if needed. */
-function quoteName (name: string): string {
-  if (!needsQuoting(name)) return name;
-  return `"${name.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"`;
-}
-
 function generateDiagramViewBlock (
   name: string,
   visibleEntities: DiagramViewSyncOperation['visibleEntities'],
 ): string {
-  const lines: string[] = [`DiagramView ${quoteName(name)} {`];
+  const lines: string[] = [`DiagramView ${addDoubleQuoteIfNeeded(name)} {`];
 
   // Tables
   if (visibleEntities?.tables !== undefined) {
