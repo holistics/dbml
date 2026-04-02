@@ -54,8 +54,8 @@ const DBML_LANGUAGE_CONFIG: monaco.languages.LanguageConfiguration = {
  */
 const DBML_TOKEN_PROVIDER: monaco.languages.IMonarchLanguage = {
   keywords: [
-    'Table', 'Enum', 'Ref', 'Project', 'TableGroup', 'Note',
-    'indexes', 'Indexes', 'enum', 'table', 'ref', 'project', 'tablegroup', 'note',
+    'Table', 'Enum', 'Ref', 'Project', 'TableGroup', 'Note', 'Records',
+    'indexes', 'Indexes', 'enum', 'table', 'ref', 'project', 'tablegroup', 'note', 'records',
   ],
   typeKeywords: [
     'int', 'integer', 'bigint', 'smallint', 'tinyint',

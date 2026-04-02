@@ -24,7 +24,7 @@ export interface InterpreterDatabase {
   tablePartials: Map<ElementDeclarationNode, TablePartial>;
   aliases: Alias[];
   project: Map<ElementDeclarationNode, Project>;
-  records: Map<Table, TableRecordRow[]>;
+  records: Map<Table, { element: ElementDeclarationNode; rows: TableRecordRow[] }>;
   recordsElements: ElementDeclarationNode[];
   cachedMergedTables: Map<Table, Table>; // map Table to Table that has been merged with table partials
   source: string;
@@ -58,6 +58,7 @@ export interface TableRecord {
   tableName: string;
   columns: string[];
   values: RecordValue[][];
+  token: TokenPosition;
 }
 
 export interface Database {

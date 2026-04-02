@@ -80,7 +80,7 @@ class Database extends Element {
 
   processRecords (rawRecords) {
     rawRecords.forEach(({
-      schemaName, tableName, columns, values,
+      schemaName, tableName, columns, values, token,
     }) => {
       this.records.push({
         id: this.dbState.generateId('recordId'),
@@ -88,6 +88,7 @@ class Database extends Element {
         tableName,
         columns,
         values,
+        token,
       });
     });
   }
