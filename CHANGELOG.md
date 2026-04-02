@@ -1,3 +1,16 @@
+## v6.6.0 (2026-04-02)
+
+#### :memo: Documentation
+* [#848](https://github.com/holistics/dbml/pull/848) Add Jetbrains plugin to README.md ([@LiamClarkeNZ](https://github.com/LiamClarkeNZ))
+
+#### :rocket: New Feature
+* `dbml-core`, `dbml-parse`
+  * [#850](https://github.com/holistics/dbml/pull/850) feat: add token position to TableRecord for source location tracking ([@nguyenalter](https://github.com/nguyenalter))
+
+#### Committers: 2
+- Liam Clarke-Hutchinson ([@LiamClarkeNZ](https://github.com/LiamClarkeNZ))
+- Nguyen Hoang ([@nguyenalter](https://github.com/nguyenalter))
+
 ## v6.5.0 (2026-03-24)
 
 #### :memo: Documentation
