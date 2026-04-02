@@ -16,7 +16,7 @@ const getConstraintType = (columnCount: number) =>
   columnCount > 1 ? 'Composite PK' : 'PK';
 
 export function validatePrimaryKey (env: InterpreterDatabase): CompileError[] {
-  return flatMap(Array.from(env.records), ([table, rows]) => {
+  return flatMap(Array.from(env.records), ([table, { rows }]) => {
     if (isEmpty(rows)) return [];
 
     if (!env.cachedMergedTables.has(table)) {
