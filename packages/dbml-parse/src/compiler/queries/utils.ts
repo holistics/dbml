@@ -6,8 +6,8 @@ import {
   tryExtractNumeric,
   tryExtractString,
   tryExtractDateTime,
-} from '@/core/interpreter/records/utils';
-import { isAlphaOrUnderscore, isDigit } from '@/core/utils';
+} from '@/core/global_modules/records/utils/data';
+import { isAlphaOrUnderscore, isDigit } from '@/core/utils/chars';
 
 /**
  * Checks if an identifier is valid (can be used without quotes in DBML).

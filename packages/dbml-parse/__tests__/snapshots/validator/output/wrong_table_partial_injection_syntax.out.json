@@ -353,8 +353,10 @@
                     "isInvalid": false,
                     "start": 17,
                     "end": 19
-                  }
-                }
+                  },
+                  "symbol": 3
+                },
+                "symbol": 4
               },
               "args": [
                 {
@@ -433,11 +435,13 @@
                       "isInvalid": false,
                       "start": 20,
                       "end": 23
-                    }
-                  }
+                    },
+                    "symbol": 5
+                  },
+                  "symbol": 6
                 }
               ],
-              "symbol": 2
+              "symbol": 7
             },
             {
               "id": 16,
@@ -796,9 +800,12 @@
                           "isInvalid": false,
                           "start": 30,
                           "end": 36
-                        }
-                      }
-                    }
+                        },
+                        "symbol": 8
+                      },
+                      "symbol": 9
+                    },
+                    "symbol": 10
                   },
                   "rightExpression": {
                     "id": 11,
@@ -876,9 +883,12 @@
                         "isInvalid": false,
                         "start": 41,
                         "end": 47
-                      }
-                    }
-                  }
+                      },
+                      "symbol": 11
+                    },
+                    "symbol": 12
+                  },
+                  "symbol": 13
                 },
                 "rightExpression": {
                   "id": 14,
@@ -956,11 +966,15 @@
                       "isInvalid": false,
                       "start": 52,
                       "end": 58
-                    }
-                  }
-                }
+                    },
+                    "symbol": 14
+                  },
+                  "symbol": 15
+                },
+                "symbol": 16
               },
-              "args": []
+              "args": [],
+              "symbol": 17
             },
             {
               "id": 20,
@@ -1157,11 +1171,15 @@
                       "isInvalid": false,
                       "start": 65,
                       "end": 66
-                    }
-                  }
-                }
+                    },
+                    "symbol": 18
+                  },
+                  "symbol": 19
+                },
+                "symbol": 20
               },
-              "args": []
+              "args": [],
+              "symbol": 21
             },
             {
               "id": 24,
@@ -1299,10 +1317,13 @@
                   },
                   "fullEnd": 74,
                   "start": 74,
-                  "end": 74
-                }
+                  "end": 74,
+                  "symbol": 22
+                },
+                "symbol": 23
               },
-              "args": []
+              "args": [],
+              "symbol": 24
             }
           ],
           "blockCloseBrace": {
@@ -1350,7 +1371,7 @@
           }
         },
         "parent": 27,
-        "symbol": 1
+        "symbol": 2
       }
     ],
     "eof": {
@@ -1378,12 +1399,27 @@
       "symbolTable": {
         "Table:Users": {
           "references": [],
-          "id": 1,
+          "id": 2,
           "symbolTable": {
             "Column:id": {
               "references": [],
-              "id": 2,
+              "id": 7,
               "declaration": 6
+            },
+            "Column:17": {
+              "references": [],
+              "id": 17,
+              "declaration": 16
+            },
+            "Column:21": {
+              "references": [],
+              "id": 21,
+              "declaration": 20
+            },
+            "Column:24": {
+              "references": [],
+              "id": 24,
+              "declaration": 24
             }
           },
           "declaration": 26
@@ -1787,9 +1823,12 @@
                   "isInvalid": false,
                   "start": 30,
                   "end": 36
-                }
-              }
-            }
+                },
+                "symbol": 8
+              },
+              "symbol": 9
+            },
+            "symbol": 10
           },
           "rightExpression": {
             "id": 11,
@@ -1867,9 +1906,12 @@
                 "isInvalid": false,
                 "start": 41,
                 "end": 47
-              }
-            }
-          }
+              },
+              "symbol": 11
+            },
+            "symbol": 12
+          },
+          "symbol": 13
         },
         "rightExpression": {
           "id": 14,
@@ -1947,9 +1989,12 @@
               "isInvalid": false,
               "start": 52,
               "end": 58
-            }
-          }
-        }
+            },
+            "symbol": 14
+          },
+          "symbol": 15
+        },
+        "symbol": 16
       },
       "start": 29,
       "end": 58,
@@ -2298,9 +2343,12 @@
                   "isInvalid": false,
                   "start": 30,
                   "end": 36
-                }
-              }
-            }
+                },
+                "symbol": 8
+              },
+              "symbol": 9
+            },
+            "symbol": 10
           },
           "rightExpression": {
             "id": 11,
@@ -2378,9 +2426,12 @@
                 "isInvalid": false,
                 "start": 41,
                 "end": 47
-              }
-            }
-          }
+              },
+              "symbol": 11
+            },
+            "symbol": 12
+          },
+          "symbol": 13
         },
         "rightExpression": {
           "id": 14,
@@ -2458,9 +2509,12 @@
               "isInvalid": false,
               "start": 52,
               "end": 58
-            }
-          }
-        }
+            },
+            "symbol": 14
+          },
+          "symbol": 15
+        },
+        "symbol": 16
       },
       "start": 29,
       "end": 58,
@@ -2647,9 +2701,12 @@
               "isInvalid": false,
               "start": 65,
               "end": 66
-            }
-          }
-        }
+            },
+            "symbol": 18
+          },
+          "symbol": 19
+        },
+        "symbol": 20
       },
       "start": 64,
       "end": 66,
@@ -2777,8 +2834,10 @@
           },
           "fullEnd": 74,
           "start": 74,
-          "end": 74
-        }
+          "end": 74,
+          "symbol": 22
+        },
+        "symbol": 23
       },
       "start": 70,
       "end": 74,

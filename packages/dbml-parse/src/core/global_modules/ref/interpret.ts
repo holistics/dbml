@@ -1,44 +1,81 @@
-import { destructureComplexVariable, extractVariableFromExpression } from '@/core/analyzer/utils';
-import { aggregateSettingList } from '@/core/analyzer/validator/utils';
+import { destructureComplexVariable, extractVariableFromExpression } from '@/core/utils/expression';
+import { aggregateSettingList } from '@/core/utils/validate';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, IdentiferStreamNode, InfixExpressionNode, ListExpressionNode, SyntaxNode,
 } from '@/core/parser/nodes';
+import type { Ref, RefEndpoint, RelationCardinality, TokenPosition } from '@/core/types/schemaJson';
 import {
-  ElementInterpreter, InterpreterDatabase, Ref, Table,
-} from '@/core/interpreter/types';
-import {
-  extractColor, extractNamesFromRefOperand, getColumnSymbolsOfRefOperand, getMultiplicities, getRefId, getTokenPosition, isSameEndpoint,
-} from '@/core/interpreter/utils';
-import { extractStringFromIdentifierStream } from '@/core/parser/utils';
+  extractColor, extractNamesFromRefOperand, getMultiplicities, getTokenPosition,
+} from '../utils';
 
-export class RefInterpreter implements ElementInterpreter {
+function buildRefEndpoint (
+  names: { schemaName: string | null; tableName: string; fieldNames: string[] },
+  relation: RelationCardinality,
+  token: TokenPosition,
+): RefEndpoint {
+  // Composite refs (multiple fields) use {tableName, schemaName, fieldNames} order
+  // Single-field refs use {fieldNames, tableName, schemaName} order
+  if (names.fieldNames.length > 1) {
+    return {
+      tableName: names.tableName,
+      schemaName: names.schemaName,
+      fieldNames: names.fieldNames,
+      relation,
+      token,
+    };
+  }
+  return {
+    fieldNames: names.fieldNames,
+    tableName: names.tableName,
+    schemaName: names.schemaName,
+    relation,
+    token,
+  };
+}
+import { extractStringFromIdentifierStream } from '@/core/utils/expression';
+import Compiler from '@/compiler';
+import Report from '@/core/report';
+import { ElementKind } from '@/core/types/keywords';
+import { UNHANDLED } from '@/constants';
+
+export class RefInterpreter {
   private declarationNode: ElementDeclarationNode;
-  private env: InterpreterDatabase;
-  private container: Partial<Table> | undefined;
+  private compiler: Compiler;
   private ref: Partial<Ref>;
+  private container: { schemaName: string | null; tableName: string } | undefined;
 
-  constructor (declarationNode: ElementDeclarationNode, env: InterpreterDatabase) {
+  constructor (compiler: Compiler, declarationNode: ElementDeclarationNode) {
     this.declarationNode = declarationNode;
-    this.env = env;
-    this.container = this.declarationNode.parent instanceof ElementDeclarationNode ? this.env.tables.get(this.declarationNode.parent) : undefined;
+    this.compiler = compiler;
     this.ref = { };
+    const parent = this.declarationNode.parent;
+    if (parent instanceof ElementDeclarationNode && parent.isKind(ElementKind.Table)) {
+      const fnResult = compiler.fullname(parent);
+      if (!fnResult.hasValue(UNHANDLED)) {
+        const segments = fnResult.getValue();
+        if (segments && segments.length > 0) {
+          const tableName = segments[segments.length - 1];
+          const schemaName = segments.length > 1 ? segments.slice(0, -1).join('.') : null;
+          this.container = { schemaName, tableName };
+        }
+      }
+    }
   }
 
-  interpret (): CompileError[] {
+  interpret (): Report<Ref> {
     this.ref.token = getTokenPosition(this.declarationNode);
-    this.env.ref.set(this.declarationNode, this.ref as Ref);
     const errors = [
       ...this.interpretName(this.declarationNode.name!),
       ...this.interpretBody(this.declarationNode.body!),
     ];
-    return errors;
+    return new Report(this.ref as Ref, errors);
   }
 
   private interpretName (_nameNode: SyntaxNode): CompileError[] {
     const errors: CompileError[] = [];
 
-    const fragments = destructureComplexVariable(this.declarationNode.name!).unwrap_or([]);
+    const fragments = destructureComplexVariable(this.declarationNode.name!) ?? [];
     this.ref.name = fragments.pop() || null;
     if (fragments.length > 1) {
       errors.push(new CompileError(CompileErrorCode.UNSUPPORTED, 'Nested schema is not supported', this.declarationNode.name!));
@@ -60,53 +97,31 @@ export class RefInterpreter implements ElementInterpreter {
     const op = (field.callee as InfixExpressionNode).op!.value;
     const { leftExpression, rightExpression } = field.callee as InfixExpressionNode;
 
-    const leftSymbols = getColumnSymbolsOfRefOperand(leftExpression!);
-    const rightSymbols = getColumnSymbolsOfRefOperand(rightExpression!);
-
-    if (isSameEndpoint(leftSymbols, rightSymbols)) {
-      return [new CompileError(CompileErrorCode.SAME_ENDPOINT, 'Two endpoints are the same', field)];
-    }
-
-    const refId = getRefId(leftSymbols, rightSymbols);
-    if (this.env.refIds[refId]) {
-      return [
-        new CompileError(CompileErrorCode.CIRCULAR_REF, 'References with same endpoints exist', this.declarationNode),
-        new CompileError(CompileErrorCode.CIRCULAR_REF, 'References with same endpoints exist', this.env.refIds[refId]),
-      ];
-    }
-
     if (field.args[0]) {
       const settingMap = aggregateSettingList(field.args[0] as ListExpressionNode).getValue();
 
       const deleteSetting = settingMap.delete?.at(0)?.value;
       this.ref.onDelete = deleteSetting instanceof IdentiferStreamNode
-        ? extractStringFromIdentifierStream(deleteSetting).unwrap_or(undefined)
-        : extractVariableFromExpression(deleteSetting).unwrap_or(undefined) as string;
+        ? extractStringFromIdentifierStream(deleteSetting) ?? undefined
+        : extractVariableFromExpression(deleteSetting) as string;
 
       const updateSetting = settingMap.update?.at(0)?.value;
       this.ref.onUpdate = updateSetting instanceof IdentiferStreamNode
-        ? extractStringFromIdentifierStream(updateSetting).unwrap_or(undefined)
-        : extractVariableFromExpression(updateSetting).unwrap_or(undefined) as string;
+        ? extractStringFromIdentifierStream(updateSetting) ?? undefined
+        : extractVariableFromExpression(updateSetting) as string;
 
       this.ref.color = settingMap.color?.length ? extractColor(settingMap.color?.at(0)?.value as any) : undefined;
     }
 
     const multiplicities = getMultiplicities(op);
+    if (!multiplicities) return [];
 
+    const leftNames = extractNamesFromRefOperand(leftExpression!, this.container);
+    const rightNames = extractNamesFromRefOperand(rightExpression!, this.container);
     this.ref.endpoints = [
-      {
-        ...extractNamesFromRefOperand(leftExpression!, this.container as Table | undefined),
-        relation: multiplicities[0],
-        token: getTokenPosition(leftExpression!),
-      },
-      {
-        ...extractNamesFromRefOperand(rightExpression!, this.container as Table | undefined),
-        relation: multiplicities[1],
-        token: getTokenPosition(rightExpression!),
-      },
+      buildRefEndpoint(leftNames, multiplicities[0], getTokenPosition(leftExpression!)),
+      buildRefEndpoint(rightNames, multiplicities[1], getTokenPosition(rightExpression!)),
     ];
-
-    this.env.refIds[refId] = this.declarationNode;
 
     return [];
   }

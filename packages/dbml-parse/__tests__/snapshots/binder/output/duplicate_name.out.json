@@ -284,7 +284,7 @@
           }
         },
         "parent": 8,
-        "symbol": 1
+        "symbol": 2
       },
       {
         "id": 7,
@@ -637,7 +637,7 @@
           }
         },
         "parent": 8,
-        "symbol": 2
+        "symbol": 3
       }
     ],
     "eof": {
@@ -665,7 +665,7 @@
       "symbolTable": {
         "Table:AB": {
           "references": [],
-          "id": 2,
+          "id": 3,
           "symbolTable": {},
           "declaration": 7
         }

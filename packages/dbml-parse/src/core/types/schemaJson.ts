@@ -1,64 +1,8 @@
-import { ElementDeclarationNode, FunctionApplicationNode, SyntaxNode } from '@/core/parser/nodes';
-import { Position } from '@/core/types';
-import { CompileError } from '@/core/errors';
+import type { Position } from './position';
 
 export interface TokenPosition {
   start: Position;
   end: Position;
-}
-
-export interface ElementInterpreter {
-  interpret(): CompileError[];
-}
-
-export interface InterpreterDatabase {
-  schema: [];
-  tables: Map<ElementDeclarationNode, Table>;
-  notes: Map<ElementDeclarationNode, Note>;
-  // for keeping track of circular refs
-  refIds: { [refid: string]: ElementDeclarationNode };
-  ref: Map<ElementDeclarationNode, Ref>;
-  enums: Map<ElementDeclarationNode, Enum>;
-  tableOwnerGroup: { [tableid: string]: ElementDeclarationNode };
-  tableGroups: Map<ElementDeclarationNode, TableGroup>;
-  tablePartials: Map<ElementDeclarationNode, TablePartial>;
-  aliases: Alias[];
-  project: Map<ElementDeclarationNode, Project>;
-  records: Map<Table, { element: ElementDeclarationNode; rows: TableRecordRow[] }>;
-  recordsElements: ElementDeclarationNode[];
-  cachedMergedTables: Map<Table, Table>; // map Table to Table that has been merged with table partials
-  source: string;
-}
-
-// Record value type
-export type RecordValueType = 'string' | 'bool' | 'integer' | 'real' | 'date' | 'time' | 'datetime' | string;
-
-export interface RecordValue {
-  value: any;
-  type: RecordValueType;
-}
-
-export interface TableRecordRow {
-  values: Record<string, {
-    value: any;
-    type: RecordValueType;
-    node?: SyntaxNode; // The specific node for this column value
-  }>;
-  node: FunctionApplicationNode;
-  columnNodes: Record<string, SyntaxNode>; // Map of column name to its value node
-}
-
-export interface TableRecordsData {
-  table: Table;
-  rows: TableRecordRow[];
-}
-
-export interface TableRecord {
-  schemaName: string | undefined;
-  tableName: string;
-  columns: string[];
-  values: RecordValue[][];
-  token: TokenPosition;
 }
 
 export interface Database {
@@ -69,14 +13,15 @@ export interface Database {
   enums: Enum[];
   tableGroups: TableGroup[];
   aliases: Alias[];
-  project: Project;
+  project?: Project;
   tablePartials: TablePartial[];
   records: TableRecord[];
+  token: TokenPosition;
 }
 
 export interface Table {
   name: string;
-  schemaName: null | string;
+  schemaName: string | null;
   alias: string | null;
   fields: Column[]; // The order of fields must match the order of declaration
   checks: Check[];
@@ -228,8 +173,8 @@ export interface TablePartial {
   fields: Column[];
   token: TokenPosition;
   indexes: Index[];
-  headerColor?: string;
   checks: Check[];
+  headerColor?: string;
   note?: {
     value: string;
     token: TokenPosition;
@@ -239,6 +184,22 @@ export interface TablePartial {
 export interface TablePartialInjection {
   name: string;
   order: number;
+  token: TokenPosition;
+}
+
+// Record value type
+export type RecordValueType = 'string' | 'bool' | 'integer' | 'real' | 'date' | 'time' | 'datetime' | string;
+
+export interface RecordValue {
+  value: any;
+  type: RecordValueType;
+}
+
+export interface TableRecord {
+  schemaName: string | undefined;
+  tableName: string;
+  columns: string[];
+  values: RecordValue[][];
   token: TokenPosition;
 }
 
@@ -260,3 +221,25 @@ export type Project =
     index: string & Omit<any, 'name' | 'tables' | 'refs' | 'enums' | 'tableGroups' | 'note' | 'tablePartials' | 'records'>
     ]: string;
   };
+
+export type SchemaElement =
+  | Database
+  | Project
+  | Table
+  | Note
+  | Column
+  | ColumnType
+  | Index
+  | Check
+  | InlineRef
+  | Ref
+  | RefEndpoint
+  | Enum
+  | EnumField
+  | TableGroup
+  | TableGroupField
+  | Alias
+  | TablePartial
+  | TablePartialInjection
+  | TableRecord
+  | RecordValue;

@@ -1,12 +1,11 @@
 import Compiler from '@/compiler/index';
-import * as services from '@/services/index';
+// TODO: migrate services
+// import * as services from '@/services/index';
 
 // Export the types that playground and other consumers need
 export {
   ElementKind,
-} from '@/core/analyzer/types';
-
-export * from '@/core/interpreter/records/utils';
+} from '@/core/types/keywords';
 
 export {
   // Core AST node types
@@ -14,7 +13,6 @@ export {
   ElementDeclarationNode,
   ProgramNode,
   SyntaxNodeKind,
-  type SyntaxNodeId,
 } from '@/core/parser/nodes';
 
 export {
@@ -30,11 +28,6 @@ export {
 } from '@/core/errors';
 
 export {
-  // Position interface
-  type Position,
-} from '@/core/types';
-
-export {
   // Scope kinds from compiler
   ScopeKind,
   // Utilities
@@ -46,16 +39,4 @@ export {
   addDoubleQuoteIfNeeded,
 } from '@/compiler/index';
 
-// Export interpreted types for structured data
-export {
-  type Database,
-  type Table,
-  type Column,
-  type Enum,
-  type Ref,
-  type Project,
-  type TableGroup,
-  type TablePartial,
-} from '@/core/interpreter/types';
-
-export { Compiler, services };
+export { Compiler };

@@ -1,14 +1,24 @@
-import { RecordValue, Column, TableRecordRow } from '@/core/interpreter/types';
+import type { RecordValue, Column, TableRecord } from '@/core/types/schemaJson';
+import { CompileWarning, CompileErrorCode } from '@/core/errors';
 import { isSerialType } from '../data';
-import { CompileError, CompileErrorCode } from '@/core/errors';
+
+export function buildColumnIndex (record: TableRecord): Map<string, number> {
+  const index = new Map<string, number>();
+  for (let i = 0; i < record.columns.length; i++) {
+    index.set(record.columns[i], i);
+  }
+  return index;
+}
 
 export function extractKeyValueWithDefault (
-  row: Record<string, RecordValue>,
+  row: RecordValue[],
   columnNames: string[],
+  columnIndex: Map<string, number>,
   columns?: (Column | undefined)[],
 ): string {
   return columnNames.map((name, idx) => {
-    const value = row[name]?.value;
+    const colIdx = columnIndex.get(name);
+    const value = colIdx !== undefined ? row[colIdx]?.value : undefined;
 
     if ((value === null || value === undefined) && columns && columns[idx]) {
       const column = columns[idx];
@@ -22,12 +32,14 @@ export function extractKeyValueWithDefault (
 }
 
 export function hasNullWithoutDefaultInKey (
-  row: Record<string, RecordValue>,
+  row: RecordValue[],
   columnNames: string[],
+  columnIndex: Map<string, number>,
   columns?: (Column | undefined)[],
 ): boolean {
   return columnNames.some((name, idx) => {
-    const value = row[name]?.value;
+    const colIdx = columnIndex.get(name);
+    const value = colIdx !== undefined ? row[colIdx]?.value : undefined;
 
     if ((value === null || value === undefined) && columns && columns[idx]) {
       const column = columns[idx];
@@ -49,7 +61,7 @@ export function hasNotNullWithDefault (column: Column): boolean {
 }
 
 export function formatFullColumnName (
-  schemaName: string | null,
+  schemaName: string | null | undefined,
   tableName: string,
   columnName: string,
 ): string {
@@ -60,7 +72,7 @@ export function formatFullColumnName (
 }
 
 export function formatFullColumnNames (
-  schemaName: string | null,
+  schemaName: string | null | undefined,
   tableName: string,
   columnNames: string[],
 ): string {
@@ -76,38 +88,34 @@ export function formatFullColumnNames (
 // e.g. 'a' -> '"a"'
 // e.g. 1, 'a' -> '(1, "a")'
 export function formatValues (
-  row: Record<string, RecordValue>,
+  row: RecordValue[],
   columnNames: string[],
+  columnIndex: Map<string, number>,
 ): string {
   if (columnNames.length === 1) {
-    return JSON.stringify(row[columnNames[0]]?.value);
+    const colIdx = columnIndex.get(columnNames[0]);
+    return JSON.stringify(colIdx !== undefined ? row[colIdx]?.value : null);
   }
-  const values = columnNames.map((col) => JSON.stringify(row[col]?.value)).join(', ');
+  const values = columnNames.map((col) => {
+    const colIdx = columnIndex.get(col);
+    return JSON.stringify(colIdx !== undefined ? row[colIdx]?.value : null);
+  }).join(', ');
   return `(${values})`;
 }
 
-// For a row and a set of columns
-// Add one compile error for each cell in the row corresponding to each column in the set
-export function createConstraintErrors (
-  row: TableRecordRow,
-  columnNames: string[],
+export { createConstraintWarnings as createConstraintErrors };
+
+/**
+ * Create constraint warnings for a record.
+ * Uses the record's token as location since we don't have per-row nodes.
+ */
+export function createConstraintWarnings (
+  record: TableRecord,
   message: string,
-): CompileError[] {
-  const errorNodes = columnNames
-    .map((col) => row.columnNodes[col])
-    .filter(Boolean);
-
-  if (errorNodes.length > 0) {
-    return errorNodes.map((node) => new CompileError(
-      CompileErrorCode.INVALID_RECORDS_FIELD,
-      message,
-      node,
-    ));
-  }
-
-  return [new CompileError(
+): CompileWarning[] {
+  return [new CompileWarning(
     CompileErrorCode.INVALID_RECORDS_FIELD,
     message,
-    row.node,
+    record as any,
   )];
 }

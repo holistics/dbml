@@ -1740,7 +1740,7 @@
                   }
                 }
               ],
-              "symbol": 2
+              "symbol": 5
             },
             {
               "id": 30,
@@ -2338,7 +2338,7 @@
                   }
                 }
               ],
-              "symbol": 3
+              "symbol": 6
             },
             {
               "id": 48,
@@ -3251,7 +3251,7 @@
                   }
                 }
               ],
-              "symbol": 4
+              "symbol": 7
             },
             {
               "id": 67,
@@ -4173,7 +4173,7 @@
                   }
                 }
               ],
-              "symbol": 5
+              "symbol": 8
             },
             {
               "id": 79,
@@ -4719,7 +4719,7 @@
                   }
                 }
               ],
-              "symbol": 6
+              "symbol": 9
             }
           ],
           "blockCloseBrace": {
@@ -4767,7 +4767,7 @@
           }
         },
         "parent": 110,
-        "symbol": 1
+        "symbol": 3
       },
       {
         "id": 100,
@@ -5269,7 +5269,7 @@
                 }
               },
               "args": [],
-              "symbol": 9
+              "symbol": 10
             },
             {
               "id": 92,
@@ -5453,7 +5453,7 @@
                 }
               },
               "args": [],
-              "symbol": 10
+              "symbol": 11
             },
             {
               "id": 95,
@@ -5637,7 +5637,7 @@
                 }
               },
               "args": [],
-              "symbol": 11
+              "symbol": 12
             },
             {
               "id": 98,
@@ -5821,7 +5821,7 @@
                 }
               },
               "args": [],
-              "symbol": 12
+              "symbol": 13
             }
           ],
           "blockCloseBrace": {
@@ -5869,7 +5869,7 @@
           }
         },
         "parent": 110,
-        "symbol": 7
+        "symbol": 14
       },
       {
         "id": 109,
@@ -6271,8 +6271,10 @@
                     "isInvalid": false,
                     "start": 492,
                     "end": 497
-                  }
-                }
+                  },
+                  "symbol": 15
+                },
+                "symbol": 16
               },
               "args": [
                 {
@@ -6351,11 +6353,13 @@
                       "isInvalid": false,
                       "start": 498,
                       "end": 502
-                    }
-                  }
+                    },
+                    "symbol": 17
+                  },
+                  "symbol": 18
                 }
               ],
-              "symbol": 14
+              "symbol": 19
             }
           ],
           "blockCloseBrace": {
@@ -6403,7 +6407,7 @@
           }
         },
         "parent": 110,
-        "symbol": 13
+        "symbol": 4
       }
     ],
     "eof": {
@@ -6431,62 +6435,74 @@
       "symbolTable": {
         "TablePartial:userPartial": {
           "references": [],
-          "id": 1,
+          "id": 3,
           "symbolTable": {
             "Column:id": {
               "references": [],
-              "id": 2,
+              "id": 5,
               "declaration": 22
             },
             "Column:name": {
               "references": [],
-              "id": 3,
+              "id": 6,
               "declaration": 30
             },
             "Column:age": {
               "references": [],
-              "id": 4,
+              "id": 7,
               "declaration": 48
             },
             "Column:status": {
               "references": [],
-              "id": 5,
+              "id": 8,
               "declaration": 67
             },
             "Column:dob": {
               "references": [],
-              "id": 6,
+              "id": 9,
               "declaration": 79
             }
           },
           "declaration": 81
         },
+        "Table:Users": {
+          "references": [],
+          "id": 4,
+          "symbolTable": {
+            "Column:email": {
+              "references": [],
+              "id": 19,
+              "declaration": 107
+            }
+          },
+          "declaration": 109
+        },
         "Schema:v2": {
           "references": [],
-          "id": 8,
+          "id": 2,
           "symbolTable": {
             "Enum:status": {
               "references": [],
-              "id": 7,
+              "id": 14,
               "symbolTable": {
                 "Enum field:churn": {
                   "references": [],
-                  "id": 9,
+                  "id": 10,
                   "declaration": 89
                 },
                 "Enum field:new": {
                   "references": [],
-                  "id": 10,
+                  "id": 11,
                   "declaration": 92
                 },
                 "Enum field:active": {
                   "references": [],
-                  "id": 11,
+                  "id": 12,
                   "declaration": 95
                 },
                 "Enum field:tenant": {
                   "references": [],
-                  "id": 12,
+                  "id": 13,
                   "declaration": 98
                 }
               },
@@ -6494,17 +6510,32 @@
             }
           }
         },
-        "Table:Users": {
+        "Enum:status": {
           "references": [],
-          "id": 13,
+          "id": 14,
           "symbolTable": {
-            "Column:email": {
+            "Enum field:churn": {
               "references": [],
-              "id": 14,
-              "declaration": 107
+              "id": 10,
+              "declaration": 89
+            },
+            "Enum field:new": {
+              "references": [],
+              "id": 11,
+              "declaration": 92
+            },
+            "Enum field:active": {
+              "references": [],
+              "id": 12,
+              "declaration": 95
+            },
+            "Enum field:tenant": {
+              "references": [],
+              "id": 13,
+              "declaration": 98
             }
           },
-          "declaration": 109
+          "declaration": 100
         }
       },
       "id": 0,

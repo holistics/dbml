@@ -1,23 +1,19 @@
 import { partition } from 'lodash-es';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ProgramNode,
-} from '../../../parser/nodes';
-import { ElementBinder } from '../types';
-import { SyntaxToken } from '../../../lexer/tokens';
-import { CompileError } from '../../../errors';
-import { lookupAndBindInScope, pickBinder, scanNonListNodeForBinding } from '../utils';
-import { SymbolKind } from '../../symbol/symbolIndex';
-import SymbolFactory from '../../symbol/factory';
+} from '../../parser/nodes';
+import { SyntaxToken } from '../../lexer/tokens';
+import { CompileError } from '../../errors';
+import { scanNonListNodeForBinding } from '../utils';
+import Compiler from '@/compiler';
 
-export default class TableGroupBinder implements ElementBinder {
-  private symbolFactory: SymbolFactory;
+export default class TableGroupBinder {
+  private compiler: Compiler;
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
-  private ast: ProgramNode;
 
-  constructor (declarationNode: ElementDeclarationNode & { type: SyntaxToken }, ast: ProgramNode, symbolFactory: SymbolFactory) {
+  constructor (compiler: Compiler, declarationNode: ElementDeclarationNode & { type: SyntaxToken }) {
     this.declarationNode = declarationNode;
-    this.ast = ast;
-    this.symbolFactory = symbolFactory;
+    this.compiler = compiler;
   }
 
   bind (): CompileError[] {
@@ -57,10 +53,7 @@ export default class TableGroupBinder implements ElementBinder {
         }
         const schemaBindees = bindee.variables;
 
-        return lookupAndBindInScope(this.ast, [
-          ...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })),
-          { node: tableBindee, kind: SymbolKind.Table },
-        ]);
+        return this.compiler.nodeReferee(tableBindee).getErrors();
       });
     });
   }
@@ -70,10 +63,8 @@ export default class TableGroupBinder implements ElementBinder {
       if (!sub.type) {
         return [];
       }
-      const _Binder = pickBinder(sub as ElementDeclarationNode & { type: SyntaxToken });
-      const binder = new _Binder(sub as ElementDeclarationNode & { type: SyntaxToken }, this.ast, this.symbolFactory);
 
-      return binder.bind();
+      return this.compiler.bind(sub).getErrors();
     });
   }
 }

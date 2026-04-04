@@ -262,7 +262,7 @@
           }
         },
         "parent": 14,
-        "symbol": 1
+        "symbol": 2
       },
       {
         "id": 13,
@@ -719,7 +719,8 @@
                     "start": 44,
                     "end": 45
                   }
-                }
+                },
+                "referee": 2
               },
               "args": [],
               "symbol": 4
@@ -770,7 +771,7 @@
           }
         },
         "parent": 14,
-        "symbol": 2
+        "symbol": 3
       }
     ],
     "eof": {
@@ -797,28 +798,25 @@
     "symbol": {
       "symbolTable": {
         "Table:A": {
-          "references": [],
-          "id": 1,
+          "references": [
+            10
+          ],
+          "id": 2,
           "symbolTable": {},
           "declaration": 3
         },
-        "Schema:schema": {
+        "TableGroup:3": {
           "references": [],
           "id": 3,
           "symbolTable": {
-            "TableGroup:alphabet": {
+            "TableGroup field:A": {
               "references": [],
-              "id": 2,
-              "symbolTable": {
-                "TableGroup field:A": {
-                  "references": [],
-                  "id": 4,
-                  "declaration": 11
-                }
-              },
-              "declaration": 13
+              "id": 4,
+              "symbolTable": {},
+              "declaration": 11
             }
-          }
+          },
+          "declaration": 13
         }
       },
       "id": 0,

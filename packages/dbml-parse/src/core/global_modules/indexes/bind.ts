@@ -4,29 +4,26 @@ import {
   ElementDeclarationNode,
   FunctionApplicationNode,
   ProgramNode,
-} from '../../../parser/nodes';
-import { ElementBinder } from '../types';
-import { SyntaxToken } from '../../../lexer/tokens';
-import { CompileError, CompileErrorCode } from '../../../errors';
-import { pickBinder, scanNonListNodeForBinding } from '../utils';
-import { destructureComplexVariable, extractVarNameFromPrimaryVariable, getElementKind } from '../../utils';
+} from '../../parser/nodes';
+import { SyntaxToken } from '../../lexer/tokens';
+import { CompileError, CompileErrorCode } from '../../errors';
+import { scanNonListNodeForBinding } from '../utils';
+import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '../../utils/expression';
 import { ElementKind } from '../../types';
-import { createColumnSymbolIndex } from '../../symbol/symbolIndex';
-import SymbolFactory from '../../symbol/factory';
+import Compiler from '@/compiler';
+import { UNHANDLED } from '@/constants';
 
-export default class IndexesBinder implements ElementBinder {
-  private symbolFactory: SymbolFactory;
+export default class IndexesBinder {
+  private compiler: Compiler;
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
-  private ast: ProgramNode;
 
-  constructor (declarationNode: ElementDeclarationNode & { type: SyntaxToken }, ast: ProgramNode, symbolFactory: SymbolFactory) {
+  constructor (compiler: Compiler, declarationNode: ElementDeclarationNode & { type: SyntaxToken }) {
     this.declarationNode = declarationNode;
-    this.ast = ast;
-    this.symbolFactory = symbolFactory;
+    this.compiler = compiler;
   }
 
   bind (): CompileError[] {
-    if (!(this.declarationNode.parent instanceof ElementDeclarationNode) || getElementKind(this.declarationNode.parent).unwrap_or(undefined) !== ElementKind.Table) {
+    if (!(this.declarationNode.parent instanceof ElementDeclarationNode) || !this.declarationNode.parent.isKind(ElementKind.Table)) {
       return [];
     }
 
@@ -57,10 +54,9 @@ export default class IndexesBinder implements ElementBinder {
       }
       const ownerTableName = destructureComplexVariable(
         (this.declarationNode.parent! as ElementDeclarationNode).name,
-      ).map(
-        (fragments) => fragments.join('.'),
-      ).unwrap_or('<unnamed>');
-      const ownerTableSymbolTable = this.declarationNode.parent!.symbol!.symbolTable!;
+      )
+        ?.join('.')
+        || '<unnamed>';
 
       const args = [field.callee, ...field.args];
       const bindees = args.flatMap(scanNonListNodeForBinding)
@@ -76,15 +72,12 @@ export default class IndexesBinder implements ElementBinder {
         });
 
       return bindees.flatMap((bindee) => {
-        const columnName = extractVarNameFromPrimaryVariable(bindee).unwrap_or(undefined);
+        const columnName = extractVarNameFromPrimaryVariable(bindee);
         if (columnName === undefined) return [];
-        const columnIndex = createColumnSymbolIndex(columnName);
-        const column = ownerTableSymbolTable.get(columnIndex);
-        if (!column) {
+        const column = this.compiler.nodeReferee(bindee);
+        if (!column.getValue() || column.hasValue(UNHANDLED)) {
           return new CompileError(CompileErrorCode.BINDING_ERROR, `No column named '${columnName}' inside Table '${ownerTableName}'`, bindee);
         }
-        bindee.referee = column;
-        column.references.push(bindee);
 
         return [];
       });
@@ -96,10 +89,8 @@ export default class IndexesBinder implements ElementBinder {
       if (!sub.type) {
         return [];
       }
-      const _Binder = pickBinder(sub as ElementDeclarationNode & { type: SyntaxToken });
-      const binder = new _Binder(sub as ElementDeclarationNode & { type: SyntaxToken }, this.ast, this.symbolFactory);
 
-      return binder.bind();
+      return this.compiler.bind(sub).getErrors();
     });
   }
 }

@@ -1,6 +1,6 @@
 {
   "value": {
-    "id": 25,
+    "id": 24,
     "kind": "<program>",
     "startPos": {
       "offset": 0,
@@ -18,7 +18,7 @@
     "end": 202,
     "body": [
       {
-        "id": 15,
+        "id": 14,
         "kind": "<element-declaration>",
         "startPos": {
           "offset": 0,
@@ -157,7 +157,7 @@
           }
         },
         "body": {
-          "id": 14,
+          "id": 13,
           "kind": "<block-expression>",
           "startPos": {
             "offset": 8,
@@ -481,7 +481,8 @@
                 },
                 "args": []
               },
-              "parent": 15
+              "parent": 14,
+              "symbol": 1
             },
             {
               "id": 12,
@@ -1086,7 +1087,8 @@
                   "end": 106
                 }
               },
-              "parent": 15
+              "parent": 14,
+              "symbol": 2
             }
           ],
           "blockCloseBrace": {
@@ -1133,11 +1135,11 @@
             "end": 109
           }
         },
-        "parent": 25,
-        "symbol": 1
+        "parent": 24,
+        "symbol": 3
       },
       {
-        "id": 20,
+        "id": 19,
         "kind": "<element-declaration>",
         "startPos": {
           "offset": 113,
@@ -1219,7 +1221,7 @@
           "end": 117
         },
         "body": {
-          "id": 19,
+          "id": 18,
           "kind": "<block-expression>",
           "startPos": {
             "offset": 118,
@@ -1280,7 +1282,7 @@
           },
           "body": [
             {
-              "id": 18,
+              "id": 17,
               "kind": "<function-application>",
               "startPos": {
                 "offset": 125,
@@ -1297,7 +1299,7 @@
               "start": 125,
               "end": 148,
               "callee": {
-                "id": 17,
+                "id": 16,
                 "kind": "<primary-expression>",
                 "startPos": {
                   "offset": 125,
@@ -1314,7 +1316,7 @@
                 "start": 125,
                 "end": 148,
                 "expression": {
-                  "id": 16,
+                  "id": 15,
                   "kind": "<literal>",
                   "startPos": {
                     "offset": 125,
@@ -1507,10 +1509,11 @@
             "end": 151
           }
         },
-        "parent": 25
+        "parent": 24,
+        "symbol": 4
       },
       {
-        "id": 24,
+        "id": 23,
         "kind": "<element-declaration>",
         "startPos": {
           "offset": 155,
@@ -1613,7 +1616,7 @@
           "end": 160
         },
         "body": {
-          "id": 23,
+          "id": 22,
           "kind": "<function-application>",
           "startPos": {
             "offset": 161,
@@ -1630,7 +1633,7 @@
           "start": 161,
           "end": 202,
           "callee": {
-            "id": 22,
+            "id": 21,
             "kind": "<primary-expression>",
             "startPos": {
               "offset": 161,
@@ -1647,7 +1650,7 @@
             "start": 161,
             "end": 202,
             "expression": {
-              "id": 21,
+              "id": 20,
               "kind": "<literal>",
               "startPos": {
                 "offset": 161,
@@ -1688,7 +1691,8 @@
           },
           "args": []
         },
-        "parent": 25
+        "parent": 24,
+        "symbol": 5
       }
     ],
     "eof": {
@@ -1716,9 +1720,32 @@
       "symbolTable": {
         "Table:A": {
           "references": [],
-          "id": 1,
+          "id": 3,
+          "symbolTable": {
+            "Column:1": {
+              "references": [],
+              "id": 1,
+              "declaration": 5
+            },
+            "Column:2": {
+              "references": [],
+              "id": 2,
+              "declaration": 12
+            }
+          },
+          "declaration": 14
+        },
+        "Note:4": {
+          "references": [],
+          "id": 4,
           "symbolTable": {},
-          "declaration": 15
+          "declaration": 19
+        },
+        "Note:5": {
+          "references": [],
+          "id": 5,
+          "symbolTable": {},
+          "declaration": 23
         }
       },
       "id": 0,
@@ -1993,7 +2020,8 @@
           },
           "args": []
         },
-        "parent": 15
+        "parent": 14,
+        "symbol": 1
       },
       "start": 15,
       "end": 49,
@@ -2605,7 +2633,8 @@
             "end": 106
           }
         },
-        "parent": 15
+        "parent": 14,
+        "symbol": 2
       },
       "start": 55,
       "end": 106,
@@ -2615,7 +2644,7 @@
       "code": 3000,
       "diagnostic": "Sticky note must have a name",
       "nodeOrToken": {
-        "id": 20,
+        "id": 19,
         "kind": "<element-declaration>",
         "startPos": {
           "offset": 113,
@@ -2697,7 +2726,7 @@
           "end": 117
         },
         "body": {
-          "id": 19,
+          "id": 18,
           "kind": "<block-expression>",
           "startPos": {
             "offset": 118,
@@ -2758,7 +2787,7 @@
           },
           "body": [
             {
-              "id": 18,
+              "id": 17,
               "kind": "<function-application>",
               "startPos": {
                 "offset": 125,
@@ -2775,7 +2804,7 @@
               "start": 125,
               "end": 148,
               "callee": {
-                "id": 17,
+                "id": 16,
                 "kind": "<primary-expression>",
                 "startPos": {
                   "offset": 125,
@@ -2792,7 +2821,7 @@
                 "start": 125,
                 "end": 148,
                 "expression": {
-                  "id": 16,
+                  "id": 15,
                   "kind": "<literal>",
                   "startPos": {
                     "offset": 125,
@@ -2985,7 +3014,8 @@
             "end": 151
           }
         },
-        "parent": 25
+        "parent": 24,
+        "symbol": 4
       },
       "start": 113,
       "end": 151,
@@ -2995,7 +3025,7 @@
       "code": 3000,
       "diagnostic": "Sticky note must have a name",
       "nodeOrToken": {
-        "id": 24,
+        "id": 23,
         "kind": "<element-declaration>",
         "startPos": {
           "offset": 155,
@@ -3098,7 +3128,7 @@
           "end": 160
         },
         "body": {
-          "id": 23,
+          "id": 22,
           "kind": "<function-application>",
           "startPos": {
             "offset": 161,
@@ -3115,7 +3145,7 @@
           "start": 161,
           "end": 202,
           "callee": {
-            "id": 22,
+            "id": 21,
             "kind": "<primary-expression>",
             "startPos": {
               "offset": 161,
@@ -3132,7 +3162,7 @@
             "start": 161,
             "end": 202,
             "expression": {
-              "id": 21,
+              "id": 20,
               "kind": "<literal>",
               "startPos": {
                 "offset": 161,
@@ -3173,7 +3203,8 @@
           },
           "args": []
         },
-        "parent": 25
+        "parent": 24,
+        "symbol": 5
       },
       "start": 155,
       "end": 202,

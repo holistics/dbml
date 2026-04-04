@@ -1,25 +1,21 @@
 import { last, partition } from 'lodash-es';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, ProgramNode, SyntaxNode,
-} from '../../../parser/nodes';
-import { SyntaxToken } from '../../../lexer/tokens';
-import { ElementBinder } from '../types';
-import { CompileError } from '../../../errors';
-import { aggregateSettingList } from '../../validator/utils';
-import { destructureComplexVariableTuple } from '../../utils';
-import { lookupAndBindInScope, pickBinder, scanNonListNodeForBinding } from '../utils';
-import { SymbolKind } from '../../symbol/symbolIndex';
-import SymbolFactory from '../../symbol/factory';
+} from '../../parser/nodes';
+import { SyntaxToken } from '../../lexer/tokens';
+import { CompileError } from '../../errors';
+import { aggregateSettingList } from '../../utils/validate';
+import { destructureComplexVariableTuple } from '../../utils/expression';
+import { scanNonListNodeForBinding } from '../utils';
+import Compiler from '@/compiler';
 
-export default class TablePartialBinder implements ElementBinder {
-  private symbolFactory: SymbolFactory;
+export default class TablePartialBinder {
+  private compiler: Compiler;
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
-  private ast: ProgramNode;
 
-  constructor (declarationNode: ElementDeclarationNode & { type: SyntaxToken }, ast: ProgramNode, symbolFactory: SymbolFactory) {
+  constructor (compiler: Compiler, declarationNode: ElementDeclarationNode & { type: SyntaxToken }) {
     this.declarationNode = declarationNode;
-    this.ast = ast;
-    this.symbolFactory = symbolFactory;
+    this.compiler = compiler;
   }
 
   bind (): CompileError[] {
@@ -69,23 +65,20 @@ export default class TablePartialBinder implements ElementBinder {
     });
   }
 
-  private tryToBindColumnType (typeNode: SyntaxNode) {
-    const fragments = destructureComplexVariableTuple(typeNode).unwrap_or(undefined);
+  private tryToBindColumnType (typeNode: SyntaxNode): CompileError[] {
+    const fragments = destructureComplexVariableTuple(typeNode);
     if (!fragments) {
-      return;
+      return [];
     }
 
     const enumBindee = fragments.variables.pop();
     const schemaBindees = fragments.variables;
 
     if (!enumBindee) {
-      return;
+      return [];
     }
 
-    lookupAndBindInScope(this.ast, [
-      ...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })),
-      { node: enumBindee, kind: SymbolKind.Enum },
-    ]);
+    return this.compiler.nodeReferee(enumBindee).getErrors();
   }
 
   private bindInlineRef (ref: SyntaxNode): CompileError[] {
@@ -97,17 +90,22 @@ export default class TablePartialBinder implements ElementBinder {
       if (!columnBindee) {
         return [];
       }
-      const schemaBindees = bindee.variables;
 
-      return tableBindee
-        ? lookupAndBindInScope(this.ast, [
-            ...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })),
-            { node: tableBindee, kind: SymbolKind.Table },
-            { node: columnBindee, kind: SymbolKind.Column },
-          ])
-        : lookupAndBindInScope(this.declarationNode, [
-            { node: columnBindee, kind: SymbolKind.Column },
-          ]);
+      if (tableBindee) {
+        const errors: CompileError[] = [];
+        const schemaBindees = bindee.variables;
+        for (const schemaBind of schemaBindees) {
+          errors.push(...this.compiler.nodeReferee(schemaBind).getErrors());
+        }
+        const tableResult = this.compiler.nodeReferee(tableBindee);
+        errors.push(...tableResult.getErrors());
+        // Only resolve column if table resolved successfully
+        if (tableResult.getValue()) {
+          errors.push(...this.compiler.nodeReferee(columnBindee).getErrors());
+        }
+        return errors;
+      }
+      return this.compiler.nodeReferee(columnBindee).getErrors();
     });
   }
 
@@ -116,10 +114,7 @@ export default class TablePartialBinder implements ElementBinder {
       if (!sub.type) {
         return [];
       }
-      const _Binder = pickBinder(sub as ElementDeclarationNode & { type: SyntaxToken });
-      const binder = new _Binder(sub as ElementDeclarationNode & { type: SyntaxToken }, this.ast, this.symbolFactory);
-
-      return binder.bind();
+      return this.compiler.bind(sub).getErrors();
     });
   }
 }

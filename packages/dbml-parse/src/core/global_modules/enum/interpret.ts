@@ -1,31 +1,35 @@
-import { extractQuotedStringToken, extractVariableFromExpression } from '@/core/analyzer/utils';
-import { aggregateSettingList } from '@/core/analyzer/validator/utils';
+import { extractQuotedStringToken, extractVariableFromExpression } from '@/core/utils/expression';
+import { aggregateSettingList } from '@/core/utils/validate';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode,
 } from '@/core/parser/nodes';
-import {
-  ElementInterpreter, Enum, EnumField, InterpreterDatabase,
-} from '@/core/interpreter/types';
-import { extractElementName, getTokenPosition, normalizeNoteContent } from '@/core/interpreter/utils';
+import type {
+  Enum, EnumField,
+} from '@/core/types/schemaJson';
+import { extractElementName, getTokenPosition, normalizeNoteContent } from '../utils';
+import Compiler from '@/compiler';
+import Report from '@/core/report';
 
-export class EnumInterpreter implements ElementInterpreter {
+export default class EnumInterpreter {
   private declarationNode: ElementDeclarationNode;
-  private env: InterpreterDatabase;
   private enum: Partial<Enum>;
+  private compiler: Compiler;
 
-  constructor (declarationNode: ElementDeclarationNode, env: InterpreterDatabase) {
+  constructor (compiler: Compiler, declarationNode: ElementDeclarationNode) {
+    this.compiler = compiler;
     this.declarationNode = declarationNode;
-    this.env = env;
     this.enum = { values: [] };
   }
 
-  interpret (): CompileError[] {
+  interpret (): Report<Enum> {
     this.enum.token = getTokenPosition(this.declarationNode);
-    this.env.enums.set(this.declarationNode, this.enum as Enum);
     const errors = [...this.interpretName(this.declarationNode.name!), ...this.interpretBody(this.declarationNode.body as BlockExpressionNode)];
 
-    return errors;
+    return Report.create(
+      this.enum as Enum,
+      errors,
+    );
   }
 
   private interpretName (nameNode: SyntaxNode): CompileError[] {
@@ -51,12 +55,12 @@ export class EnumInterpreter implements ElementInterpreter {
       const enumField: Partial<EnumField> = { };
 
       enumField.token = getTokenPosition(field);
-      enumField.name = extractVariableFromExpression(field.callee).unwrap();
+      enumField.name = extractVariableFromExpression(field.callee);
 
       const settingMap = aggregateSettingList(field.args[0] as ListExpressionNode).getValue();
       const noteNode = settingMap.note?.at(0);
       enumField.note = noteNode && {
-        value: extractQuotedStringToken(noteNode.value).map(normalizeNoteContent).unwrap(),
+        value: normalizeNoteContent(extractQuotedStringToken(noteNode.value)!),
         token: getTokenPosition(noteNode),
       };
 

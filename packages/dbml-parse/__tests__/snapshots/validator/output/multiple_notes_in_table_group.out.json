@@ -1,6 +1,6 @@
 {
   "value": {
-    "id": 35,
+    "id": 34,
     "kind": "<program>",
     "startPos": {
       "offset": 0,
@@ -353,8 +353,10 @@
                     "isInvalid": false,
                     "start": 17,
                     "end": 19
-                  }
-                }
+                  },
+                  "symbol": 4
+                },
+                "symbol": 5
               },
               "args": [
                 {
@@ -433,8 +435,10 @@
                       "isInvalid": false,
                       "start": 20,
                       "end": 23
-                    }
-                  }
+                    },
+                    "symbol": 6
+                  },
+                  "symbol": 7
                 },
                 {
                   "id": 8,
@@ -531,8 +535,10 @@
                             "start": 25,
                             "end": 27
                           }
-                        ]
-                      }
+                        ],
+                        "symbol": 8
+                      },
+                      "symbol": 9
                     }
                   ],
                   "commaList": [],
@@ -578,10 +584,11 @@
                     "isInvalid": false,
                     "start": 27,
                     "end": 28
-                  }
+                  },
+                  "symbol": 10
                 }
               ],
-              "symbol": 2
+              "symbol": 11
             }
           ],
           "blockCloseBrace": {
@@ -628,11 +635,11 @@
             "end": 30
           }
         },
-        "parent": 35,
-        "symbol": 1
+        "parent": 34,
+        "symbol": 2
       },
       {
-        "id": 34,
+        "id": 33,
         "kind": "<element-declaration>",
         "startPos": {
           "offset": 32,
@@ -793,7 +800,7 @@
           }
         },
         "body": {
-          "id": 33,
+          "id": 32,
           "kind": "<block-expression>",
           "startPos": {
             "offset": 50,
@@ -1075,7 +1082,8 @@
                 },
                 "args": []
               },
-              "parent": 34
+              "parent": 33,
+              "symbol": 12
             },
             {
               "id": 20,
@@ -1214,10 +1222,11 @@
                     "start": 76,
                     "end": 82
                   }
-                }
+                },
+                "referee": 2
               },
               "args": [],
-              "symbol": 4
+              "symbol": 13
             },
             {
               "id": 24,
@@ -1441,7 +1450,8 @@
                 },
                 "args": []
               },
-              "parent": 34
+              "parent": 33,
+              "symbol": 14
             },
             {
               "id": 31,
@@ -1899,7 +1909,8 @@
                   "end": 259
                 }
               },
-              "parent": 34
+              "parent": 33,
+              "symbol": 15
             }
           ],
           "blockCloseBrace": {
@@ -1946,7 +1957,7 @@
             "end": 261
           }
         },
-        "parent": 35,
+        "parent": 34,
         "symbol": 3
       }
     ],
@@ -1974,12 +1985,14 @@
     "symbol": {
       "symbolTable": {
         "Table:table1": {
-          "references": [],
-          "id": 1,
+          "references": [
+            19
+          ],
+          "id": 2,
           "symbolTable": {
             "Column:id": {
               "references": [],
-              "id": 2,
+              "id": 11,
               "declaration": 9
             }
           },
@@ -1989,13 +2002,32 @@
           "references": [],
           "id": 3,
           "symbolTable": {
+            "Note:12": {
+              "references": [],
+              "id": 12,
+              "symbolTable": {},
+              "declaration": 17
+            },
             "TableGroup field:table1": {
               "references": [],
-              "id": 4,
+              "id": 13,
+              "symbolTable": {},
               "declaration": 20
+            },
+            "Note:14": {
+              "references": [],
+              "id": 14,
+              "symbolTable": {},
+              "declaration": 24
+            },
+            "Note:15": {
+              "references": [],
+              "id": 15,
+              "symbolTable": {},
+              "declaration": 31
             }
           },
-          "declaration": 34
+          "declaration": 33
         }
       },
       "id": 0,
@@ -2228,7 +2260,8 @@
           },
           "args": []
         },
-        "parent": 34
+        "parent": 33,
+        "symbol": 12
       },
       "start": 54,
       "end": 73,
@@ -2459,7 +2492,8 @@
           },
           "args": []
         },
-        "parent": 34
+        "parent": 33,
+        "symbol": 14
       },
       "start": 85,
       "end": 227,
@@ -2924,7 +2958,8 @@
             "end": 259
           }
         },
-        "parent": 34
+        "parent": 33,
+        "symbol": 15
       },
       "start": 231,
       "end": 259,

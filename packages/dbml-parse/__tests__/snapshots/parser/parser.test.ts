@@ -6,7 +6,9 @@ import Parser from '@/core/parser/parser';
 import { SyntaxNodeIdGenerator } from '@/core/parser/nodes';
 import { scanTestNames } from '@tests/utils';
 
-describe('[snapshot] parser', () => {
+// The legacy snapshot tests are very prone to breakage
+// Do not add more tests here
+describe('[legacy - snapshot] parser', () => {
   const testNames = scanTestNames(path.resolve(__dirname, './input/'));
 
   testNames.forEach((testName) => {
@@ -19,7 +21,7 @@ describe('[snapshot] parser', () => {
         return parser.parse().map((_) => _.ast);
       }),
       (key: string, value: any) => {
-        if (key === 'source') return undefined;
+        if (key === 'source' || key === 'parentNode') return undefined;
         return value;
       },
       2,

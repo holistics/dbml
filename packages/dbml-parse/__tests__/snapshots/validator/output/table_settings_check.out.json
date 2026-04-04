@@ -353,8 +353,10 @@
                     "isInvalid": false,
                     "start": 16,
                     "end": 23
-                  }
-                }
+                  },
+                  "symbol": 3
+                },
+                "symbol": 4
               },
               "args": [
                 {
@@ -433,8 +435,10 @@
                       "isInvalid": false,
                       "start": 24,
                       "end": 27
-                    }
-                  }
+                    },
+                    "symbol": 5
+                  },
+                  "symbol": 6
                 },
                 {
                   "id": 9,
@@ -531,7 +535,8 @@
                             "start": 29,
                             "end": 34
                           }
-                        ]
+                        ],
+                        "symbol": 7
                       },
                       "value": {
                         "id": 7,
@@ -570,7 +575,8 @@
                           "isInvalid": false,
                           "start": 36,
                           "end": 49
-                        }
+                        },
+                        "symbol": 8
                       },
                       "colon": {
                         "kind": "<colon>",
@@ -614,7 +620,8 @@
                         "isInvalid": false,
                         "start": 34,
                         "end": 35
-                      }
+                      },
+                      "symbol": 9
                     }
                   ],
                   "commaList": [],
@@ -660,10 +667,11 @@
                     "isInvalid": false,
                     "start": 49,
                     "end": 50
-                  }
+                  },
+                  "symbol": 10
                 }
               ],
-              "symbol": 2
+              "symbol": 11
             },
             {
               "id": 22,
@@ -801,8 +809,10 @@
                     "isInvalid": false,
                     "start": 53,
                     "end": 63
-                  }
-                }
+                  },
+                  "symbol": 12
+                },
+                "symbol": 13
               },
               "args": [
                 {
@@ -881,8 +891,10 @@
                       "isInvalid": false,
                       "start": 64,
                       "end": 67
-                    }
-                  }
+                    },
+                    "symbol": 14
+                  },
+                  "symbol": 15
                 },
                 {
                   "id": 21,
@@ -979,7 +991,8 @@
                             "start": 69,
                             "end": 74
                           }
-                        ]
+                        ],
+                        "symbol": 16
                       },
                       "value": {
                         "id": 16,
@@ -1018,7 +1031,8 @@
                           "isInvalid": false,
                           "start": 76,
                           "end": 93
-                        }
+                        },
+                        "symbol": 17
                       },
                       "colon": {
                         "kind": "<colon>",
@@ -1062,7 +1076,8 @@
                         "isInvalid": false,
                         "start": 74,
                         "end": 75
-                      }
+                      },
+                      "symbol": 18
                     },
                     {
                       "id": 20,
@@ -1120,7 +1135,8 @@
                             "start": 95,
                             "end": 100
                           }
-                        ]
+                        ],
+                        "symbol": 19
                       },
                       "value": {
                         "id": 19,
@@ -1159,7 +1175,8 @@
                           "isInvalid": false,
                           "start": 102,
                           "end": 119
-                        }
+                        },
+                        "symbol": 20
                       },
                       "colon": {
                         "kind": "<colon>",
@@ -1203,7 +1220,8 @@
                         "isInvalid": false,
                         "start": 100,
                         "end": 101
-                      }
+                      },
+                      "symbol": 21
                     }
                   ],
                   "commaList": [
@@ -1293,10 +1311,11 @@
                     "isInvalid": false,
                     "start": 119,
                     "end": 120
-                  }
+                  },
+                  "symbol": 22
                 }
               ],
-              "symbol": 3
+              "symbol": 23
             },
             {
               "id": 48,
@@ -1497,8 +1516,10 @@
                     "isInvalid": false,
                     "start": 126,
                     "end": 137
-                  }
-                }
+                  },
+                  "symbol": 24
+                },
+                "symbol": 25
               },
               "args": [
                 {
@@ -1577,8 +1598,10 @@
                       "isInvalid": false,
                       "start": 138,
                       "end": 150
-                    }
-                  }
+                    },
+                    "symbol": 26
+                  },
+                  "symbol": 27
                 },
                 {
                   "id": 47,
@@ -1675,7 +1698,8 @@
                             "start": 152,
                             "end": 157
                           }
-                        ]
+                        ],
+                        "symbol": 28
                       },
                       "value": {
                         "id": 29,
@@ -1731,8 +1755,10 @@
                             "isInvalid": false,
                             "start": 159,
                             "end": 176
-                          }
-                        }
+                          },
+                          "symbol": 29
+                        },
+                        "symbol": 30
                       },
                       "colon": {
                         "kind": "<colon>",
@@ -1776,7 +1802,8 @@
                         "isInvalid": false,
                         "start": 157,
                         "end": 158
-                      }
+                      },
+                      "symbol": 31
                     },
                     {
                       "id": 34,
@@ -2423,7 +2450,8 @@
                             "start": 206,
                             "end": 211
                           }
-                        ]
+                        ],
+                        "symbol": 32
                       },
                       "value": {
                         "id": 33,
@@ -2479,8 +2507,10 @@
                             "isInvalid": false,
                             "start": 213,
                             "end": 230
-                          }
-                        }
+                          },
+                          "symbol": 33
+                        },
+                        "symbol": 34
                       },
                       "colon": {
                         "kind": "<colon>",
@@ -2524,7 +2554,8 @@
                         "isInvalid": false,
                         "start": 211,
                         "end": 212
-                      }
+                      },
+                      "symbol": 35
                     },
                     {
                       "id": 38,
@@ -3171,7 +3202,8 @@
                             "start": 260,
                             "end": 265
                           }
-                        ]
+                        ],
+                        "symbol": 36
                       },
                       "value": {
                         "id": 37,
@@ -3227,8 +3259,10 @@
                             "isInvalid": false,
                             "start": 267,
                             "end": 268
-                          }
-                        }
+                          },
+                          "symbol": 37
+                        },
+                        "symbol": 38
                       },
                       "colon": {
                         "kind": "<colon>",
@@ -3272,7 +3306,8 @@
                         "isInvalid": false,
                         "start": 265,
                         "end": 266
-                      }
+                      },
+                      "symbol": 39
                     },
                     {
                       "id": 42,
@@ -3919,7 +3954,8 @@
                             "start": 298,
                             "end": 303
                           }
-                        ]
+                        ],
+                        "symbol": 40
                       },
                       "value": {
                         "id": 41,
@@ -3975,8 +4011,10 @@
                             "isInvalid": false,
                             "start": 305,
                             "end": 310
-                          }
-                        }
+                          },
+                          "symbol": 41
+                        },
+                        "symbol": 42
                       },
                       "colon": {
                         "kind": "<colon>",
@@ -4020,7 +4058,8 @@
                         "isInvalid": false,
                         "start": 303,
                         "end": 304
-                      }
+                      },
+                      "symbol": 43
                     },
                     {
                       "id": 46,
@@ -4667,7 +4706,8 @@
                             "start": 340,
                             "end": 345
                           }
-                        ]
+                        ],
+                        "symbol": 44
                       },
                       "value": {
                         "id": 45,
@@ -4723,8 +4763,10 @@
                             "isInvalid": false,
                             "start": 347,
                             "end": 351
-                          }
-                        }
+                          },
+                          "symbol": 45
+                        },
+                        "symbol": 46
                       },
                       "colon": {
                         "kind": "<colon>",
@@ -4768,7 +4810,8 @@
                         "isInvalid": false,
                         "start": 345,
                         "end": 346
-                      }
+                      },
+                      "symbol": 47
                     }
                   ],
                   "commaList": [
@@ -4987,10 +5030,11 @@
                     "isInvalid": false,
                     "start": 351,
                     "end": 352
-                  }
+                  },
+                  "symbol": 48
                 }
               ],
-              "symbol": 4
+              "symbol": 49
             }
           ],
           "blockCloseBrace": {
@@ -5038,7 +5082,7 @@
           }
         },
         "parent": 51,
-        "symbol": 1
+        "symbol": 2
       }
     ],
     "eof": {
@@ -5066,21 +5110,21 @@
       "symbolTable": {
         "Table:Users": {
           "references": [],
-          "id": 1,
+          "id": 2,
           "symbolTable": {
             "Column:balance": {
               "references": [],
-              "id": 2,
+              "id": 11,
               "declaration": 10
             },
             "Column:dependents": {
               "references": [],
-              "id": 3,
+              "id": 23,
               "declaration": 22
             },
             "Column:invalid_col": {
               "references": [],
-              "id": 4,
+              "id": 49,
               "declaration": 48
             }
           },
@@ -5149,8 +5193,10 @@
             "isInvalid": false,
             "start": 159,
             "end": 176
-          }
-        }
+          },
+          "symbol": 29
+        },
+        "symbol": 30
       },
       "start": 159,
       "end": 176,
@@ -5213,8 +5259,10 @@
             "isInvalid": false,
             "start": 213,
             "end": 230
-          }
-        }
+          },
+          "symbol": 33
+        },
+        "symbol": 34
       },
       "start": 213,
       "end": 230,
@@ -5277,8 +5325,10 @@
             "isInvalid": false,
             "start": 267,
             "end": 268
-          }
-        }
+          },
+          "symbol": 37
+        },
+        "symbol": 38
       },
       "start": 267,
       "end": 268,
@@ -5341,8 +5391,10 @@
             "isInvalid": false,
             "start": 305,
             "end": 310
-          }
-        }
+          },
+          "symbol": 41
+        },
+        "symbol": 42
       },
       "start": 305,
       "end": 310,
@@ -5405,8 +5457,10 @@
             "isInvalid": false,
             "start": 347,
             "end": 351
-          }
-        }
+          },
+          "symbol": 45
+        },
+        "symbol": 46
       },
       "start": 347,
       "end": 351,

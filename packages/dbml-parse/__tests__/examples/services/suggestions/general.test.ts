@@ -2593,7 +2593,7 @@ describe('[example] CompletionItemProvider - Records Row Snippets', () => {
       expect(result).toBeDefined();
       const recordSnippet = result?.suggestions?.find((s) => s.label === 'Record row snippet');
       expect(recordSnippet).toBeDefined();
-      expect(recordSnippet?.insertText).toEqual('${1:age (int)}, ${2:email (varchar)}, ${3:name (varchar)}, ${4:id (int)}');
+      expect(recordSnippet?.insertText).toEqual('${1:id (int)}, ${2:email (varchar)}, ${3:name (varchar)}, ${4:age (int)}');
     });
 
     it('- should work with explicit column list in records with partial table injection', () => {

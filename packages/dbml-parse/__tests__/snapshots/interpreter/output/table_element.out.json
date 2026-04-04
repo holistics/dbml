@@ -254,7 +254,7 @@
     "code": 3044,
     "diagnostic": "Duplicate notes are defined",
     "nodeOrToken": {
-      "id": 68,
+      "id": 66,
       "kind": "<element-declaration>",
       "startPos": {
         "offset": 227,
@@ -378,7 +378,7 @@
         "end": 231
       },
       "body": {
-        "id": 67,
+        "id": 65,
         "kind": "<block-expression>",
         "startPos": {
           "offset": 232,
@@ -439,7 +439,7 @@
         },
         "body": [
           {
-            "id": 66,
+            "id": 64,
             "kind": "<function-application>",
             "startPos": {
               "offset": 238,
@@ -456,7 +456,7 @@
             "start": 238,
             "end": 401,
             "callee": {
-              "id": 65,
+              "id": 63,
               "kind": "<primary-expression>",
               "startPos": {
                 "offset": 238,
@@ -473,7 +473,7 @@
               "start": 238,
               "end": 401,
               "expression": {
-                "id": 64,
+                "id": 62,
                 "kind": "<literal>",
                 "startPos": {
                   "offset": 238,

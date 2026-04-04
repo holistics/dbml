@@ -1,17 +1,17 @@
-import { ElementDeclarationNode, ProgramNode, SyntaxToken } from '../../../..';
-import { CompileError } from '../../../errors';
-import SymbolFactory from '../../symbol/factory';
-import { ElementBinder } from '../types';
+import { ElementDeclarationNode, ProgramNode } from '../../parser/nodes';
+import { SyntaxToken } from '../../lexer/tokens';
+import { CompileError } from '../../errors';
+import Compiler from '@/compiler';
 
-export default class ChecksBinder implements ElementBinder {
-  private symbolFactory: SymbolFactory;
+export default class ChecksBinder {
+  private compiler: Compiler;
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
-  private ast: ProgramNode;
+  private ast: ProgramNode | undefined;
 
-  constructor (declarationNode: ElementDeclarationNode & { type: SyntaxToken }, ast: ProgramNode, symbolFactory: SymbolFactory) {
+  constructor (declarationNode: ElementDeclarationNode & { type: SyntaxToken }, compiler: Compiler) {
     this.declarationNode = declarationNode;
-    this.ast = ast;
-    this.symbolFactory = symbolFactory;
+    this.ast = undefined;
+    this.compiler = compiler;
   }
 
   bind (): CompileError[] {

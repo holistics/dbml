@@ -406,7 +406,7 @@
           }
         },
         "parent": 18,
-        "symbol": 1
+        "symbol": 0
       },
       {
         "id": 11,
@@ -819,7 +819,7 @@
           }
         },
         "parent": 18,
-        "symbol": 2
+        "symbol": 1
       },
       {
         "id": 17,
@@ -1294,7 +1294,7 @@
           }
         },
         "parent": 18,
-        "symbol": 3
+        "symbol": 2
       }
     ],
     "eof": {
@@ -1322,205 +1322,20 @@
       "symbolTable": {
         "Table:Users": {
           "references": [],
-          "id": 2,
-          "symbolTable": {},
-          "declaration": 11
-        },
-        "Table:U1": {
-          "references": [],
-          "id": 3,
-          "symbolTable": {},
-          "declaration": 17
-        },
-        "Table:U2": {
-          "references": [],
-          "id": 2,
+          "id": 1,
           "symbolTable": {},
           "declaration": 11
         },
         "Table:Products": {
           "references": [],
-          "id": 3,
+          "id": 2,
           "symbolTable": {},
           "declaration": 17
         }
       },
-      "id": 0,
+      "id": 3,
       "references": []
     }
   },
-  "errors": [
-    {
-      "code": 3003,
-      "diagnostic": "Table name 'Users' already exists in schema 'public'",
-      "nodeOrToken": {
-        "id": 7,
-        "kind": "<primary-expression>",
-        "startPos": {
-          "offset": 34,
-          "line": 4,
-          "column": 6
-        },
-        "fullStart": 34,
-        "endPos": {
-          "offset": 39,
-          "line": 4,
-          "column": 11
-        },
-        "fullEnd": 40,
-        "start": 34,
-        "end": 39,
-        "expression": {
-          "id": 6,
-          "kind": "<variable>",
-          "startPos": {
-            "offset": 34,
-            "line": 4,
-            "column": 6
-          },
-          "fullStart": 34,
-          "endPos": {
-            "offset": 39,
-            "line": 4,
-            "column": 11
-          },
-          "fullEnd": 40,
-          "start": 34,
-          "end": 39,
-          "variable": {
-            "kind": "<identifier>",
-            "startPos": {
-              "offset": 34,
-              "line": 4,
-              "column": 6
-            },
-            "endPos": {
-              "offset": 39,
-              "line": 4,
-              "column": 11
-            },
-            "value": "Users",
-            "leadingTrivia": [],
-            "trailingTrivia": [
-              {
-                "kind": "<space>",
-                "startPos": {
-                  "offset": 39,
-                  "line": 4,
-                  "column": 11
-                },
-                "endPos": {
-                  "offset": 40,
-                  "line": 4,
-                  "column": 12
-                },
-                "value": " ",
-                "leadingTrivia": [],
-                "trailingTrivia": [],
-                "leadingInvalid": [],
-                "trailingInvalid": [],
-                "isInvalid": false,
-                "start": 39,
-                "end": 40
-              }
-            ],
-            "leadingInvalid": [],
-            "trailingInvalid": [],
-            "isInvalid": false,
-            "start": 34,
-            "end": 39
-          }
-        }
-      },
-      "start": 34,
-      "end": 39,
-      "name": "CompileError"
-    },
-    {
-      "code": 3003,
-      "diagnostic": "Table name 'U1' already exists",
-      "nodeOrToken": {
-        "id": 13,
-        "kind": "<primary-expression>",
-        "startPos": {
-          "offset": 62,
-          "line": 8,
-          "column": 6
-        },
-        "fullStart": 62,
-        "endPos": {
-          "offset": 70,
-          "line": 8,
-          "column": 14
-        },
-        "fullEnd": 71,
-        "start": 62,
-        "end": 70,
-        "expression": {
-          "id": 12,
-          "kind": "<variable>",
-          "startPos": {
-            "offset": 62,
-            "line": 8,
-            "column": 6
-          },
-          "fullStart": 62,
-          "endPos": {
-            "offset": 70,
-            "line": 8,
-            "column": 14
-          },
-          "fullEnd": 71,
-          "start": 62,
-          "end": 70,
-          "variable": {
-            "kind": "<identifier>",
-            "startPos": {
-              "offset": 62,
-              "line": 8,
-              "column": 6
-            },
-            "endPos": {
-              "offset": 70,
-              "line": 8,
-              "column": 14
-            },
-            "value": "Products",
-            "leadingTrivia": [],
-            "trailingTrivia": [
-              {
-                "kind": "<space>",
-                "startPos": {
-                  "offset": 70,
-                  "line": 8,
-                  "column": 14
-                },
-                "endPos": {
-                  "offset": 71,
-                  "line": 8,
-                  "column": 15
-                },
-                "value": " ",
-                "leadingTrivia": [],
-                "trailingTrivia": [],
-                "leadingInvalid": [],
-                "trailingInvalid": [],
-                "isInvalid": false,
-                "start": 70,
-                "end": 71
-              }
-            ],
-            "leadingInvalid": [],
-            "trailingInvalid": [],
-            "isInvalid": false,
-            "start": 62,
-            "end": 70
-          }
-        }
-      },
-      "start": 62,
-      "end": 70,
-      "name": "CompileError"
-    }
-  ]
+  "errors": []
 }

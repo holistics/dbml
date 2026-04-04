@@ -1,11 +1,9 @@
 import { DEFAULT_SCHEMA_NAME } from '@/constants';
 import type Compiler from '../../index';
 import { SyntaxNode } from '@/core/parser/nodes';
-import SymbolTable from '@/core/analyzer/symbol/symbolTable';
-import { TableSymbol } from '@/core/analyzer/symbol/symbols';
-import { createSchemaSymbolIndex, createTableSymbolIndex } from '@/core/analyzer/symbol/symbolIndex';
+import { NodeSymbol } from '@/core/types/symbols';
 import { applyTextEdits, TextEdit } from './applyTextEdits';
-import { isAlphaOrUnderscore, isDigit } from '@/core/utils';
+import { isAlphaOrUnderscore, isDigit } from '@/core/utils/chars';
 import { normalizeTableName, lookupTableSymbol, stripQuotes, type TableNameInput } from './utils';
 
 interface FormattedTableName {
@@ -30,7 +28,7 @@ function isValidIdentifier (name: string): boolean {
  * the source text at the declaration node position.
  */
 function checkIfTableDeclarationUsesQuotes (
-  tableSymbol: TableSymbol,
+  tableSymbol: NodeSymbol,
   source: string,
 ): boolean {
   if (!tableSymbol.declaration) {
@@ -77,38 +75,15 @@ function formatTableName (
  * Checks if renaming would cause a name collision.
  */
 function checkForNameCollision (
-  symbolTable: Readonly<SymbolTable>,
+  compiler: Compiler,
   oldSchema: string,
   oldTable: string,
   newSchema: string,
   newTable: string,
 ): boolean {
-  const tableSymbolIndex = createTableSymbolIndex(newTable);
-  let existingTableSymbol;
-
-  if (newSchema === DEFAULT_SCHEMA_NAME) {
-    existingTableSymbol = symbolTable.get(tableSymbolIndex);
-  } else {
-    const schemaSymbolIndex = createSchemaSymbolIndex(newSchema);
-    const schemaSymbol = symbolTable.get(schemaSymbolIndex);
-
-    if (!schemaSymbol || !schemaSymbol.symbolTable) {
-      return false;
-    }
-
-    existingTableSymbol = schemaSymbol.symbolTable.get(tableSymbolIndex);
-  }
-
-  if (!existingTableSymbol) {
-    return false;
-  }
-
-  // Not a collision if renaming to the same name
-  if (oldSchema === newSchema && oldTable === newTable) {
-    return false;
-  }
-
-  return true;
+  if (oldSchema === newSchema && oldTable === newTable) return false;
+  const existing = lookupTableSymbol(compiler, newSchema, newTable);
+  return existing !== null;
 }
 
 /**
@@ -230,7 +205,6 @@ export function renameTable (
   newName: TableNameInput,
 ): string {
   const source = this.parse.source();
-  const symbolTable = this.parse.publicSymbolTable();
 
   const normalizedOld = normalizeTableName(oldName);
   const normalizedNew = normalizeTableName(newName);
@@ -241,13 +215,13 @@ export function renameTable (
   const newTable = normalizedNew.table;
 
   // Look up the table symbol
-  const tableSymbol = lookupTableSymbol(symbolTable, oldSchema, oldTable);
+  const tableSymbol = lookupTableSymbol(this, oldSchema, oldTable);
   if (!tableSymbol) {
     return source;
   }
 
   // Check for name collision
-  if (checkForNameCollision(symbolTable, oldSchema, oldTable, newSchema, newTable)) {
+  if (checkForNameCollision(this, oldSchema, oldTable, newSchema, newTable)) {
     return source;
   }
 
@@ -265,7 +239,9 @@ export function renameTable (
     }
   }
 
-  for (const ref of tableSymbol.references) {
+  const referencesReport = this.symbolReferences(tableSymbol);
+  const references = referencesReport.getValue();
+  for (const ref of references) {
     const refText = source.substring(ref.start, ref.end);
     const cleanRefText = refText.replace(/"/g, '');
     if (cleanRefText === oldTable) {

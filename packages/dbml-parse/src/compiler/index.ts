@@ -1,114 +1,132 @@
-import { SyntaxNodeIdGenerator, ProgramNode } from '@/core/parser/nodes';
-import { NodeSymbolIdGenerator } from '@/core/analyzer/symbol/symbols';
-import { SyntaxToken } from '@/core/lexer/tokens';
-import { Database } from '@/core/interpreter/types';
-import Report from '@/core/report';
-import Lexer from '@/core/lexer/lexer';
-import Parser from '@/core/parser/parser';
-import Analyzer from '@/core/analyzer/analyzer';
-import Interpreter from '@/core/interpreter/interpreter';
-import { DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLReferencesProvider, DBMLDiagnosticsProvider } from '@/services/index';
-import { ast, errors, warnings, tokens, rawDb, publicSymbolTable } from './queries/parse';
+// Lazy import: services depend on modules not yet migrated
+// import { DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLReferencesProvider, DBMLDiagnosticsProvider } from '@/services/index';
 import { invalidStream, flatStream } from './queries/token';
-import { symbolOfName, symbolOfNameToKey, symbolMembers } from './queries/symbol';
-import { containerStack, containerToken, containerElement, containerScope, containerScopeKind } from './queries/container';
-import {
-  renameTable,
-  applyTextEdits,
-  type TextEdit,
-  type TableNameInput,
-} from './queries/transform';
 import { splitQualifiedIdentifier, unescapeString, escapeString, formatRecordValue, isValidIdentifier, addDoubleQuoteIfNeeded } from './queries/utils';
-
-// Re-export types
+import { parseFile } from './queries/pipeline';
+import { containerStack, containerToken, containerElement, containerScope, containerScopeKind } from './queries/container';
+import { renameTable, type TableNameInput } from './queries/transform';
 export { ScopeKind } from './types';
-export type { TextEdit, TableNameInput };
+export { type TextEdit, type TableNameInput } from './queries/transform';
+import {
+  nodeSymbol,
+  symbolMembers,
+  nodeReferee,
+  nestedSymbols,
+  bind,
+  interpret,
+} from '@/core/global_modules';
+import { symbolReferences } from './queries/symbolReferences';
+import { intern, Internable, Primitive } from '@/core/types/internable';
+import { DEFAULT_SCHEMA_NAME, UNHANDLED } from '@/constants';
+import { alias, nodeFullname as fullname, settings, validate } from '@/core/local_modules';
+import { NodeSymbolIdGenerator, SchemaSymbol, NodeSymbol } from '@/core/types/symbols';
+import SymbolFactory from '@/core/types/symbolFactory';
+import { lookupMembers } from './queries/lookupMembers';
+import { symbolName } from './queries/symbolName';
 
 // Re-export utilities
 export { splitQualifiedIdentifier, unescapeString, escapeString, formatRecordValue, isValidIdentifier, addDoubleQuoteIfNeeded };
 
+const COMPUTING = Symbol('COMPUTING');
+
 export default class Compiler {
   private source = '';
   private cache = new Map<symbol, any>();
-  private nodeIdGenerator = new SyntaxNodeIdGenerator();
   private symbolIdGenerator = new NodeSymbolIdGenerator();
+  symbolFactory = new SymbolFactory(this.symbolIdGenerator);
 
   setSource (source: string) {
     this.source = source;
     this.cache.clear();
-    this.nodeIdGenerator.reset();
     this.symbolIdGenerator.reset();
   }
 
-  private query<Args extends unknown[], Return> (
+  private query<Args extends (Primitive | Primitive[] | Internable<Primitive>)[], Return> (
     fn: (this: Compiler, ...args: Args) => Return,
-    toKey?: (...args: Args) => unknown,
   ): (...args: Args) => Return {
-    const cacheKey = Symbol();
+    const queryKey = Symbol();
     return ((...args: Args): Return => {
-      if (args.length === 0) {
-        if (this.cache.has(cacheKey)) return this.cache.get(cacheKey);
-        const result = fn.apply(this, args);
-        this.cache.set(cacheKey, result);
-        return result;
+      const argKey = args.map((a) => intern(a)).join('\0');
+      let subCache = this.cache.get(queryKey);
+      if (subCache instanceof Map) {
+        if (subCache.has(argKey)) {
+          const cached = subCache.get(argKey);
+          if (cached === COMPUTING) {
+            throw new Error(`Cycle detected in query: ${fn.name}(${argKey})`);
+          }
+          return cached;
+        }
       }
 
-      const key = toKey ? toKey(...args) : args[0];
-      let mapCache = this.cache.get(cacheKey);
-      if (mapCache instanceof Map && mapCache.has(key)) return mapCache.get(key);
+      if (!(subCache instanceof Map)) {
+        subCache = new Map();
+        this.cache.set(queryKey, subCache);
+      }
+      subCache.set(argKey, COMPUTING);
 
       const result = fn.apply(this, args);
-      if (!(mapCache instanceof Map)) {
-        mapCache = new Map();
-        this.cache.set(cacheKey, mapCache);
-      }
-      mapCache.set(key, result);
+      subCache.set(argKey, result);
       return result;
     }) as (...args: Args) => Return;
   }
 
-  private interpret (): Report<{ ast: ProgramNode; tokens: SyntaxToken[]; rawDb?: Database }> {
-    const parseRes: Report<{ ast: ProgramNode; tokens: SyntaxToken[] }> = new Lexer(this.source)
-      .lex()
-      .chain((lexedTokens) => new Parser(this.source, lexedTokens as SyntaxToken[], this.nodeIdGenerator).parse())
-      .chain(({ ast, tokens }) => new Analyzer(ast, this.symbolIdGenerator).analyze().map(() => ({ ast, tokens })));
+  parseFile = this.query(parseFile);
+  nodeSymbol = this.query(nodeSymbol);
+  symbolMembers = this.query(symbolMembers);
+  lookupMembers = this.query(lookupMembers);
+  symbolReferences = this.query(symbolReferences);
+  nodeReferee = this.query(nodeReferee);
+  nestedSymbols = this.query(nestedSymbols);
+  bind = this.query(bind);
+  interpret = this.query(interpret);
 
-    if (parseRes.getErrors().length > 0) {
-      return parseRes as Report<{ ast: ProgramNode; tokens: SyntaxToken[]; rawDb?: Database }>;
-    }
-
-    return parseRes.chain(({ ast, tokens }) =>
-      new Interpreter(ast).interpret().map((rawDb) => ({ ast, tokens, rawDb })),
-    );
-  }
-
-  renameTable (
-    oldName: TableNameInput,
-    newName: TableNameInput,
-  ): string {
+  renameTable (oldName: TableNameInput, newName: TableNameInput): string {
     return renameTable.call(this, oldName, newName);
   }
 
-  applyTextEdits (edits: TextEdit[]): string {
-    return applyTextEdits(this.parse.source(), edits);
-  }
+  validate = this.query(validate);
+  fullname = this.query(fullname);
+  symbolName = this.query(symbolName);
+  alias = this.query(alias);
+  settings = this.query(settings);
 
   readonly token = {
     invalidStream: this.query(invalidStream),
     flatStream: this.query(flatStream),
   };
 
+  // @deprecated - legacy APIs for services compatibility
   readonly parse = {
     source: () => this.source as Readonly<string>,
-    _: this.query(this.interpret),
-    ast: this.query(ast),
-    errors: this.query(errors),
-    warnings: this.query(warnings),
-    tokens: this.query(tokens),
-    rawDb: this.query(rawDb),
-    publicSymbolTable: this.query(publicSymbolTable),
+    ast: () => this.parseFile().getValue().ast,
+    _: () => {
+      const ast = this.parseFile().getValue().ast;
+      this.bind(ast);
+      return this.interpret(ast);
+    },
+    publicSymbolTable: () => {
+      const ast = this.parseFile().getValue().ast;
+      const sym = this.nodeSymbol(ast);
+      if (sym.hasValue(UNHANDLED)) return undefined;
+      const programMembers = this.symbolMembers(sym.getValue());
+      if (programMembers.hasValue(UNHANDLED)) return undefined;
+
+      // Program symbolMembers flattens public schema, but we also need non-public schema contents
+      const result: NodeSymbol[] = [];
+      for (const member of programMembers.getValue()) {
+        result.push(member);
+        if (member instanceof SchemaSymbol && member.name !== DEFAULT_SCHEMA_NAME) {
+          const schemaMembers = this.symbolMembers(member);
+          if (!schemaMembers.hasValue(UNHANDLED)) {
+            result.push(...schemaMembers.getValue());
+          }
+        }
+      }
+      return result;
+    },
   };
 
+  // @deprecated
   readonly container = {
     stack: this.query(containerStack),
     token: this.query(containerToken),
@@ -117,12 +135,8 @@ export default class Compiler {
     scopeKind: this.query(containerScopeKind),
   };
 
-  readonly symbol = {
-    ofName: this.query(symbolOfName, symbolOfNameToKey),
-    members: this.query(symbolMembers),
-  };
-
-  initMonacoServices () {
+  async initMonacoServices () {
+    const { DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLReferencesProvider, DBMLDiagnosticsProvider } = await import('@/services/index');
     return {
       definitionProvider: new DBMLDefinitionProvider(this),
       referenceProvider: new DBMLReferencesProvider(this),

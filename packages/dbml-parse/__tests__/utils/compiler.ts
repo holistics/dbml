@@ -1,10 +1,8 @@
 import Lexer from '@/core/lexer/lexer';
 import Parser from '@/core/parser/parser';
-import Analyzer from '@/core/analyzer/analyzer';
 import {
   ProgramNode,
   SyntaxNode,
-  SyntaxNodeIdGenerator,
   SyntaxNodeKind,
   ElementDeclarationNode,
   AttributeNode,
@@ -23,11 +21,11 @@ import {
   VariableNode,
   PrimaryExpressionNode,
   ArrayNode,
+  SyntaxNodeIdGenerator,
 } from '@/core/parser/nodes';
-import { NodeSymbolIdGenerator } from '@/core/analyzer/symbol/symbols';
 import Report from '@/core/report';
 import { Compiler, SyntaxToken } from '@/index';
-import { Database } from '@/core/interpreter/types';
+import type { Database } from '@/core/types/schemaJson';
 
 export function lex (source: string): Report<SyntaxToken[]> {
   return new Lexer(source).lex();
@@ -37,14 +35,45 @@ export function parse (source: string): Report<{ ast: ProgramNode; tokens: Synta
   return new Lexer(source).lex().chain((tokens) => new Parser(source, tokens, new SyntaxNodeIdGenerator()).parse());
 }
 
-export function analyze (source: string): Report<ProgramNode> {
-  return parse(source).chain(({ ast }) => new Analyzer(ast, new NodeSymbolIdGenerator()).analyze());
+export function analyze (source: string) {
+  const compiler = new Compiler();
+  compiler.setSource(source);
+
+  const parseResult = compiler.parseFile();
+  const ast = parseResult.getValue().ast;
+
+  const bindResult = compiler.bind(ast);
+
+  const errors = [...parseResult.getErrors(), ...bindResult.getErrors()];
+  const warnings = [...parseResult.getWarnings(), ...bindResult.getWarnings()];
+
+  return Report.create(
+    {
+      ast,
+      compiler,
+    },
+    errors,
+    warnings,
+  );
 }
 
 export function interpret (source: string): Report<Database | undefined> {
   const compiler = new Compiler();
   compiler.setSource(source);
-  return compiler.parse._().map(({ rawDb }) => rawDb);
+
+  const parseResult = compiler.parseFile();
+  const ast = parseResult.getValue().ast;
+
+  const bindResult = compiler.bind(ast);
+
+  const interpretResult = compiler.interpret(ast);
+  const db = interpretResult.getValue();
+
+  return new Report(
+    db ? db as Database : undefined,
+    [...parseResult.getErrors(), ...bindResult.getErrors(), ...interpretResult.getErrors()],
+    [...parseResult.getWarnings(), ...bindResult.getWarnings(), ...interpretResult.getWarnings()],
+  );
 }
 
 export function flattenTokens (token: SyntaxToken): SyntaxToken[] {

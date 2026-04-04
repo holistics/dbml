@@ -4,6 +4,7 @@ import {
 import { getOffsetFromMonacoPosition } from '@/services/utils';
 import Compiler from '@/compiler';
 import { SyntaxNode, SyntaxNodeKind } from '@/core/parser/nodes';
+import { UNHANDLED } from '@/constants';
 
 export default class DBMLDefinitionProvider implements DefinitionProvider {
   private compiler: Compiler;
@@ -18,18 +19,22 @@ export default class DBMLDefinitionProvider implements DefinitionProvider {
     const containers = [...this.compiler.container.stack(offset)];
     while (containers.length !== 0) {
       const node = containers.pop();
+      if (!node) continue;
 
-      if (!node?.referee) continue;
+      const refereeResult = this.compiler.nodeReferee(node);
+      if (refereeResult.hasValue(UNHANDLED)) continue;
+      const referee = refereeResult.getValue();
+      if (!referee) continue;
 
       let declaration: SyntaxNode | undefined;
       if (
-        node.referee?.declaration
+        referee.declaration
         && [
           SyntaxNodeKind.PRIMARY_EXPRESSION,
           SyntaxNodeKind.VARIABLE,
-        ].includes(node?.kind)
+        ].includes(node.kind)
       ) {
-        ({ declaration } = node.referee);
+        ({ declaration } = referee);
       }
 
       if (declaration) {

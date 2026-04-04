@@ -240,7 +240,7 @@
           }
         },
         "parent": 21,
-        "symbol": 1
+        "symbol": 2
       },
       {
         "id": 20,
@@ -600,8 +600,10 @@
                     "isInvalid": false,
                     "start": 33,
                     "end": 35
-                  }
-                }
+                  },
+                  "symbol": 7
+                },
+                "symbol": 8
               },
               "args": [
                 {
@@ -680,11 +682,13 @@
                       "isInvalid": false,
                       "start": 36,
                       "end": 39
-                    }
-                  }
+                    },
+                    "symbol": 9
+                  },
+                  "symbol": 10
                 }
               ],
-              "symbol": 3
+              "symbol": 4
             },
             {
               "id": 14,
@@ -860,12 +864,16 @@
                       "isInvalid": false,
                       "start": 43,
                       "end": 45
-                    }
+                    },
+                    "symbol": 11
                   },
-                  "referee": 1
-                }
+                  "symbol": 12,
+                  "referee": 2
+                },
+                "symbol": 13
               },
-              "args": []
+              "args": [],
+              "symbol": 5
             },
             {
               "id": 18,
@@ -1041,11 +1049,15 @@
                       "isInvalid": false,
                       "start": 49,
                       "end": 51
-                    }
-                  }
-                }
+                    },
+                    "symbol": 14
+                  },
+                  "symbol": 15
+                },
+                "symbol": 16
               },
-              "args": []
+              "args": [],
+              "symbol": 6
             }
           ],
           "blockCloseBrace": {
@@ -1093,7 +1105,7 @@
           }
         },
         "parent": 21,
-        "symbol": 2
+        "symbol": 3
       }
     ],
     "eof": {
@@ -1121,110 +1133,29 @@
       "symbolTable": {
         "TablePartial:p1": {
           "references": [
-            {
-              "id": 12,
-              "kind": "<primary-expression>",
-              "startPos": {
-                "offset": 43,
-                "line": 4,
-                "column": 3
-              },
-              "fullStart": 43,
-              "endPos": {
-                "offset": 45,
-                "line": 4,
-                "column": 5
-              },
-              "fullEnd": 46,
-              "start": 43,
-              "end": 45,
-              "expression": {
-                "id": 11,
-                "kind": "<variable>",
-                "startPos": {
-                  "offset": 43,
-                  "line": 4,
-                  "column": 3
-                },
-                "fullStart": 43,
-                "endPos": {
-                  "offset": 45,
-                  "line": 4,
-                  "column": 5
-                },
-                "fullEnd": 46,
-                "start": 43,
-                "end": 45,
-                "variable": {
-                  "kind": "<identifier>",
-                  "startPos": {
-                    "offset": 43,
-                    "line": 4,
-                    "column": 3
-                  },
-                  "endPos": {
-                    "offset": 45,
-                    "line": 4,
-                    "column": 5
-                  },
-                  "value": "p1",
-                  "leadingTrivia": [],
-                  "trailingTrivia": [
-                    {
-                      "kind": "<newline>",
-                      "startPos": {
-                        "offset": 45,
-                        "line": 4,
-                        "column": 5
-                      },
-                      "endPos": {
-                        "offset": 46,
-                        "line": 5,
-                        "column": 0
-                      },
-                      "value": "\n",
-                      "leadingTrivia": [],
-                      "trailingTrivia": [],
-                      "leadingInvalid": [],
-                      "trailingInvalid": [],
-                      "isInvalid": false,
-                      "start": 45,
-                      "end": 46
-                    }
-                  ],
-                  "leadingInvalid": [],
-                  "trailingInvalid": [],
-                  "isInvalid": false,
-                  "start": 43,
-                  "end": 45
-                }
-              },
-              "referee": 1
-            }
+            12
           ],
-          "id": 1,
+          "id": 2,
           "symbolTable": {},
           "declaration": 3
         },
         "Table:t1": {
           "references": [],
-          "id": 2,
+          "id": 3,
           "symbolTable": {
             "Column:id": {
               "references": [],
-              "id": 3,
+              "id": 4,
               "declaration": 10
             },
-            "PartialInjection:p1": {
-              "references": [],
-              "id": 4,
-              "symbolTable": {},
-              "declaration": 14
-            },
-            "PartialInjection:p2": {
+            "Column:5": {
               "references": [],
               "id": 5,
-              "symbolTable": {},
+              "declaration": 14
+            },
+            "Column:6": {
+              "references": [],
+              "id": 6,
               "declaration": 18
             }
           },
@@ -1315,8 +1246,10 @@
             "isInvalid": false,
             "start": 49,
             "end": 51
-          }
-        }
+          },
+          "symbol": 14
+        },
+        "symbol": 15
       },
       "start": 49,
       "end": 51,

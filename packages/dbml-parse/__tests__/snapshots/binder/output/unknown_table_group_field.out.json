@@ -284,7 +284,7 @@
           }
         },
         "parent": 14,
-        "symbol": 1
+        "symbol": 2
       },
       {
         "id": 13,
@@ -688,10 +688,10 @@
                     "end": 51
                   }
                 },
-                "referee": 1
+                "referee": 2
               },
               "args": [],
-              "symbol": 3
+              "symbol": 4
             },
             {
               "id": 11,
@@ -875,7 +875,7 @@
                 }
               },
               "args": [],
-              "symbol": 4
+              "symbol": 5
             }
           ],
           "blockCloseBrace": {
@@ -901,7 +901,7 @@
           }
         },
         "parent": 14,
-        "symbol": 2
+        "symbol": 3
       }
     ],
     "eof": {
@@ -929,188 +929,26 @@
       "symbolTable": {
         "Table:Users": {
           "references": [
-            {
-              "id": 7,
-              "kind": "<primary-expression>",
-              "startPos": {
-                "offset": 46,
-                "line": 5,
-                "column": 4
-              },
-              "fullStart": 42,
-              "endPos": {
-                "offset": 51,
-                "line": 5,
-                "column": 9
-              },
-              "fullEnd": 53,
-              "start": 46,
-              "end": 51,
-              "expression": {
-                "id": 6,
-                "kind": "<variable>",
-                "startPos": {
-                  "offset": 46,
-                  "line": 5,
-                  "column": 4
-                },
-                "fullStart": 42,
-                "endPos": {
-                  "offset": 51,
-                  "line": 5,
-                  "column": 9
-                },
-                "fullEnd": 53,
-                "start": 46,
-                "end": 51,
-                "variable": {
-                  "kind": "<identifier>",
-                  "startPos": {
-                    "offset": 46,
-                    "line": 5,
-                    "column": 4
-                  },
-                  "endPos": {
-                    "offset": 51,
-                    "line": 5,
-                    "column": 9
-                  },
-                  "value": "Users",
-                  "leadingTrivia": [
-                    {
-                      "kind": "<space>",
-                      "startPos": {
-                        "offset": 42,
-                        "line": 5,
-                        "column": 0
-                      },
-                      "endPos": {
-                        "offset": 43,
-                        "line": 5,
-                        "column": 1
-                      },
-                      "value": " ",
-                      "leadingTrivia": [],
-                      "trailingTrivia": [],
-                      "leadingInvalid": [],
-                      "trailingInvalid": [],
-                      "isInvalid": false,
-                      "start": 42,
-                      "end": 43
-                    },
-                    {
-                      "kind": "<space>",
-                      "startPos": {
-                        "offset": 43,
-                        "line": 5,
-                        "column": 1
-                      },
-                      "endPos": {
-                        "offset": 44,
-                        "line": 5,
-                        "column": 2
-                      },
-                      "value": " ",
-                      "leadingTrivia": [],
-                      "trailingTrivia": [],
-                      "leadingInvalid": [],
-                      "trailingInvalid": [],
-                      "isInvalid": false,
-                      "start": 43,
-                      "end": 44
-                    },
-                    {
-                      "kind": "<space>",
-                      "startPos": {
-                        "offset": 44,
-                        "line": 5,
-                        "column": 2
-                      },
-                      "endPos": {
-                        "offset": 45,
-                        "line": 5,
-                        "column": 3
-                      },
-                      "value": " ",
-                      "leadingTrivia": [],
-                      "trailingTrivia": [],
-                      "leadingInvalid": [],
-                      "trailingInvalid": [],
-                      "isInvalid": false,
-                      "start": 44,
-                      "end": 45
-                    },
-                    {
-                      "kind": "<space>",
-                      "startPos": {
-                        "offset": 45,
-                        "line": 5,
-                        "column": 3
-                      },
-                      "endPos": {
-                        "offset": 46,
-                        "line": 5,
-                        "column": 4
-                      },
-                      "value": " ",
-                      "leadingTrivia": [],
-                      "trailingTrivia": [],
-                      "leadingInvalid": [],
-                      "trailingInvalid": [],
-                      "isInvalid": false,
-                      "start": 45,
-                      "end": 46
-                    }
-                  ],
-                  "trailingTrivia": [
-                    {
-                      "kind": "<newline>",
-                      "startPos": {
-                        "offset": 52,
-                        "line": 5,
-                        "column": 10
-                      },
-                      "endPos": {
-                        "offset": 53,
-                        "line": 6,
-                        "column": 0
-                      },
-                      "value": "\n",
-                      "leadingTrivia": [],
-                      "trailingTrivia": [],
-                      "leadingInvalid": [],
-                      "trailingInvalid": [],
-                      "isInvalid": false,
-                      "start": 52,
-                      "end": 53
-                    }
-                  ],
-                  "leadingInvalid": [],
-                  "trailingInvalid": [],
-                  "isInvalid": false,
-                  "start": 46,
-                  "end": 51
-                }
-              },
-              "referee": 1
-            }
+            7
           ],
-          "id": 1,
+          "id": 2,
           "symbolTable": {},
           "declaration": 3
         },
         "TableGroup:Group": {
           "references": [],
-          "id": 2,
+          "id": 3,
           "symbolTable": {
             "TableGroup field:Users": {
               "references": [],
-              "id": 3,
+              "id": 4,
+              "symbolTable": {},
               "declaration": 8
             },
             "TableGroup field:Products": {
               "references": [],
-              "id": 4,
+              "id": 5,
+              "symbolTable": {},
               "declaration": 11
             }
           },

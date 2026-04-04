@@ -4,7 +4,9 @@ import { describe, expect, it } from 'vitest';
 import Lexer from '@/core/lexer/lexer';
 import { scanTestNames } from '@tests/utils';
 
-describe('[snapshot] lexer', () => {
+// The legacy snapshot tests are very prone to breakage
+// Do not add more tests here
+describe('[legacy - snapshot] lexer', () => {
   const testNames = scanTestNames(path.resolve(__dirname, './input/'));
 
   testNames.forEach((testName) => {

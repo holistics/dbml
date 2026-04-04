@@ -1,6 +1,6 @@
 {
   "value": {
-    "id": 25,
+    "id": 22,
     "kind": "<program>",
     "startPos": {
       "offset": 0,
@@ -18,7 +18,7 @@
     "end": 98,
     "body": [
       {
-        "id": 24,
+        "id": 21,
         "kind": "<element-declaration>",
         "startPos": {
           "offset": 0,
@@ -157,7 +157,7 @@
           }
         },
         "body": {
-          "id": 23,
+          "id": 20,
           "kind": "<block-expression>",
           "startPos": {
             "offset": 10,
@@ -652,11 +652,11 @@
                   "end": 35
                 }
               },
-              "parent": 24,
-              "symbol": 1
+              "parent": 21,
+              "symbol": 0
             },
             {
-              "id": 14,
+              "id": 13,
               "kind": "<element-declaration>",
               "startPos": {
                 "offset": 43,
@@ -822,7 +822,7 @@
                 "end": 48
               },
               "name": {
-                "id": 12,
+                "id": 11,
                 "kind": "<primary-expression>",
                 "startPos": {
                   "offset": 49,
@@ -839,7 +839,7 @@
                 "start": 49,
                 "end": 50,
                 "expression": {
-                  "id": 11,
+                  "id": 10,
                   "kind": "<variable>",
                   "startPos": {
                     "offset": 49,
@@ -901,7 +901,7 @@
                 }
               },
               "body": {
-                "id": 13,
+                "id": 12,
                 "kind": "<block-expression>",
                 "startPos": {
                   "offset": 51,
@@ -1111,11 +1111,11 @@
                   "end": 61
                 }
               },
-              "parent": 24,
-              "symbol": 2
+              "parent": 21,
+              "symbol": 1
             },
             {
-              "id": 21,
+              "id": 19,
               "kind": "<element-declaration>",
               "startPos": {
                 "offset": 69,
@@ -1281,7 +1281,7 @@
                 "end": 74
               },
               "name": {
-                "id": 19,
+                "id": 17,
                 "kind": "<primary-expression>",
                 "startPos": {
                   "offset": 75,
@@ -1298,7 +1298,7 @@
                 "start": 75,
                 "end": 76,
                 "expression": {
-                  "id": 18,
+                  "id": 16,
                   "kind": "<variable>",
                   "startPos": {
                     "offset": 75,
@@ -1360,7 +1360,7 @@
                 }
               },
               "body": {
-                "id": 20,
+                "id": 18,
                 "kind": "<block-expression>",
                 "startPos": {
                   "offset": 77,
@@ -1738,8 +1738,8 @@
                   "end": 95
                 }
               },
-              "parent": 24,
-              "symbol": 3
+              "parent": 21,
+              "symbol": 2
             }
           ],
           "blockCloseBrace": {
@@ -1764,7 +1764,8 @@
             "end": 98
           }
         },
-        "parent": 25
+        "parent": 22,
+        "symbol": 3
       }
     ],
     "eof": {
@@ -1790,20 +1791,27 @@
     },
     "symbol": {
       "symbolTable": {
-        "Table:A": {
-          "references": [],
-          "id": 2,
-          "symbolTable": {},
-          "declaration": 14
-        },
-        "Table:B": {
+        "Project:B": {
           "references": [],
           "id": 3,
-          "symbolTable": {},
+          "symbolTable": {
+            "Table:A": {
+              "references": [],
+              "id": 1,
+              "symbolTable": {},
+              "declaration": 13
+            },
+            "Table:B": {
+              "references": [],
+              "id": 2,
+              "symbolTable": {},
+              "declaration": 19
+            }
+          },
           "declaration": 21
         }
       },
-      "id": 0,
+      "id": 4,
       "references": []
     }
   },
@@ -2246,8 +2254,8 @@
             "end": 35
           }
         },
-        "parent": 24,
-        "symbol": 1
+        "parent": 21,
+        "symbol": 0
       },
       "start": 17,
       "end": 35,
@@ -2257,7 +2265,7 @@
       "code": 3010,
       "diagnostic": "Table must appear top-level",
       "nodeOrToken": {
-        "id": 14,
+        "id": 13,
         "kind": "<element-declaration>",
         "startPos": {
           "offset": 43,
@@ -2423,7 +2431,7 @@
           "end": 48
         },
         "name": {
-          "id": 12,
+          "id": 11,
           "kind": "<primary-expression>",
           "startPos": {
             "offset": 49,
@@ -2440,7 +2448,7 @@
           "start": 49,
           "end": 50,
           "expression": {
-            "id": 11,
+            "id": 10,
             "kind": "<variable>",
             "startPos": {
               "offset": 49,
@@ -2502,7 +2510,7 @@
           }
         },
         "body": {
-          "id": 13,
+          "id": 12,
           "kind": "<block-expression>",
           "startPos": {
             "offset": 51,
@@ -2712,104 +2720,18 @@
             "end": 61
           }
         },
-        "parent": 24,
-        "symbol": 2
+        "parent": 21,
+        "symbol": 1
       },
       "start": 43,
       "end": 61,
       "name": "CompileError"
     },
     {
-      "code": 3003,
-      "diagnostic": "Table name 'A' already exists in schema 'public'",
-      "nodeOrToken": {
-        "id": 12,
-        "kind": "<primary-expression>",
-        "startPos": {
-          "offset": 49,
-          "line": 5,
-          "column": 10
-        },
-        "fullStart": 49,
-        "endPos": {
-          "offset": 50,
-          "line": 5,
-          "column": 11
-        },
-        "fullEnd": 51,
-        "start": 49,
-        "end": 50,
-        "expression": {
-          "id": 11,
-          "kind": "<variable>",
-          "startPos": {
-            "offset": 49,
-            "line": 5,
-            "column": 10
-          },
-          "fullStart": 49,
-          "endPos": {
-            "offset": 50,
-            "line": 5,
-            "column": 11
-          },
-          "fullEnd": 51,
-          "start": 49,
-          "end": 50,
-          "variable": {
-            "kind": "<identifier>",
-            "startPos": {
-              "offset": 49,
-              "line": 5,
-              "column": 10
-            },
-            "endPos": {
-              "offset": 50,
-              "line": 5,
-              "column": 11
-            },
-            "value": "A",
-            "leadingTrivia": [],
-            "trailingTrivia": [
-              {
-                "kind": "<space>",
-                "startPos": {
-                  "offset": 50,
-                  "line": 5,
-                  "column": 11
-                },
-                "endPos": {
-                  "offset": 51,
-                  "line": 5,
-                  "column": 12
-                },
-                "value": " ",
-                "leadingTrivia": [],
-                "trailingTrivia": [],
-                "leadingInvalid": [],
-                "trailingInvalid": [],
-                "isInvalid": false,
-                "start": 50,
-                "end": 51
-              }
-            ],
-            "leadingInvalid": [],
-            "trailingInvalid": [],
-            "isInvalid": false,
-            "start": 49,
-            "end": 50
-          }
-        }
-      },
-      "start": 49,
-      "end": 50,
-      "name": "CompileError"
-    },
-    {
       "code": 3010,
       "diagnostic": "Table must appear top-level",
       "nodeOrToken": {
-        "id": 21,
+        "id": 19,
         "kind": "<element-declaration>",
         "startPos": {
           "offset": 69,
@@ -2975,7 +2897,7 @@
           "end": 74
         },
         "name": {
-          "id": 19,
+          "id": 17,
           "kind": "<primary-expression>",
           "startPos": {
             "offset": 75,
@@ -2992,7 +2914,7 @@
           "start": 75,
           "end": 76,
           "expression": {
-            "id": 18,
+            "id": 16,
             "kind": "<variable>",
             "startPos": {
               "offset": 75,
@@ -3054,7 +2976,7 @@
           }
         },
         "body": {
-          "id": 20,
+          "id": 18,
           "kind": "<block-expression>",
           "startPos": {
             "offset": 77,
@@ -3432,8 +3354,8 @@
             "end": 95
           }
         },
-        "parent": 24,
-        "symbol": 3
+        "parent": 21,
+        "symbol": 2
       },
       "start": 69,
       "end": 95,

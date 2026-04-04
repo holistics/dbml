@@ -607,6 +607,238 @@
       "schemaName": null,
       "token": {
         "start": {
+          "offset": 112,
+          "line": 3,
+          "column": 23
+        },
+        "end": {
+          "offset": 126,
+          "line": 3,
+          "column": 37
+        }
+      },
+      "endpoints": [
+        {
+          "schemaName": null,
+          "tableName": "user",
+          "fieldNames": [
+            "id"
+          ],
+          "relation": "1",
+          "token": {
+            "start": {
+              "offset": 112,
+              "line": 3,
+              "column": 23
+            },
+            "end": {
+              "offset": 126,
+              "line": 3,
+              "column": 37
+            }
+          }
+        },
+        {
+          "schemaName": null,
+          "tableName": "user",
+          "fieldNames": [
+            "to_table_ref"
+          ],
+          "token": {
+            "start": {
+              "offset": 92,
+              "line": 3,
+              "column": 3
+            },
+            "end": {
+              "offset": 127,
+              "line": 3,
+              "column": 38
+            }
+          },
+          "relation": "*"
+        }
+      ]
+    },
+    {
+      "name": null,
+      "schemaName": null,
+      "token": {
+        "start": {
+          "offset": 112,
+          "line": 3,
+          "column": 23
+        },
+        "end": {
+          "offset": 126,
+          "line": 3,
+          "column": 37
+        }
+      },
+      "endpoints": [
+        {
+          "schemaName": null,
+          "tableName": "user",
+          "fieldNames": [
+            "id"
+          ],
+          "relation": "1",
+          "token": {
+            "start": {
+              "offset": 112,
+              "line": 3,
+              "column": 23
+            },
+            "end": {
+              "offset": 126,
+              "line": 3,
+              "column": 37
+            }
+          }
+        },
+        {
+          "schemaName": null,
+          "tableName": "country",
+          "fieldNames": [
+            "to_table_ref"
+          ],
+          "token": {
+            "start": {
+              "offset": 92,
+              "line": 3,
+              "column": 3
+            },
+            "end": {
+              "offset": 127,
+              "line": 3,
+              "column": 38
+            }
+          },
+          "relation": "*"
+        }
+      ]
+    },
+    {
+      "name": null,
+      "schemaName": null,
+      "token": {
+        "start": {
+          "offset": 112,
+          "line": 3,
+          "column": 23
+        },
+        "end": {
+          "offset": 126,
+          "line": 3,
+          "column": 37
+        }
+      },
+      "endpoints": [
+        {
+          "schemaName": null,
+          "tableName": "user",
+          "fieldNames": [
+            "id"
+          ],
+          "relation": "1",
+          "token": {
+            "start": {
+              "offset": 112,
+              "line": 3,
+              "column": 23
+            },
+            "end": {
+              "offset": 126,
+              "line": 3,
+              "column": 37
+            }
+          }
+        },
+        {
+          "schemaName": null,
+          "tableName": "product",
+          "fieldNames": [
+            "to_table_ref"
+          ],
+          "token": {
+            "start": {
+              "offset": 92,
+              "line": 3,
+              "column": 3
+            },
+            "end": {
+              "offset": 127,
+              "line": 3,
+              "column": 38
+            }
+          },
+          "relation": "*"
+        }
+      ]
+    },
+    {
+      "name": null,
+      "schemaName": null,
+      "token": {
+        "start": {
+          "offset": 112,
+          "line": 3,
+          "column": 23
+        },
+        "end": {
+          "offset": 126,
+          "line": 3,
+          "column": 37
+        }
+      },
+      "endpoints": [
+        {
+          "schemaName": null,
+          "tableName": "user",
+          "fieldNames": [
+            "id"
+          ],
+          "relation": "1",
+          "token": {
+            "start": {
+              "offset": 112,
+              "line": 3,
+              "column": 23
+            },
+            "end": {
+              "offset": 126,
+              "line": 3,
+              "column": 37
+            }
+          }
+        },
+        {
+          "schemaName": null,
+          "tableName": "merchant",
+          "fieldNames": [
+            "to_table_ref"
+          ],
+          "token": {
+            "start": {
+              "offset": 92,
+              "line": 3,
+              "column": 3
+            },
+            "end": {
+              "offset": 127,
+              "line": 3,
+              "column": 38
+            }
+          },
+          "relation": "*"
+        }
+      ]
+    },
+    {
+      "name": null,
+      "schemaName": null,
+      "token": {
+        "start": {
           "offset": 1007,
           "line": 54,
           "column": 19

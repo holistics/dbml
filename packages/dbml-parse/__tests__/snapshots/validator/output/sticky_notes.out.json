@@ -597,8 +597,10 @@
                     "isInvalid": false,
                     "start": 39,
                     "end": 41
-                  }
-                }
+                  },
+                  "symbol": 10
+                },
+                "symbol": 11
               },
               "args": [
                 {
@@ -677,8 +679,10 @@
                       "isInvalid": false,
                       "start": 42,
                       "end": 49
-                    }
-                  }
+                    },
+                    "symbol": 12
+                  },
+                  "symbol": 13
                 },
                 {
                   "id": 13,
@@ -818,8 +822,10 @@
                             "start": 59,
                             "end": 62
                           }
-                        ]
-                      }
+                        ],
+                        "symbol": 14
+                      },
+                      "symbol": 15
                     }
                   ],
                   "commaList": [],
@@ -865,10 +871,11 @@
                     "isInvalid": false,
                     "start": 62,
                     "end": 63
-                  }
+                  },
+                  "symbol": 16
                 }
               ],
-              "symbol": 2
+              "symbol": 17
             },
             {
               "id": 28,
@@ -1006,8 +1013,10 @@
                     "isInvalid": false,
                     "start": 66,
                     "end": 74
-                  }
-                }
+                  },
+                  "symbol": 18
+                },
+                "symbol": 19
               },
               "args": [
                 {
@@ -1081,8 +1090,10 @@
                         "isInvalid": false,
                         "start": 75,
                         "end": 82
-                      }
-                    }
+                      },
+                      "symbol": 20
+                    },
+                    "symbol": 21
                   },
                   "argumentList": {
                     "id": 21,
@@ -1177,8 +1188,10 @@
                             "isInvalid": false,
                             "start": 83,
                             "end": 86
-                          }
-                        }
+                          },
+                          "symbol": 22
+                        },
+                        "symbol": 23
                       }
                     ],
                     "commaList": [],
@@ -1224,8 +1237,10 @@
                       "isInvalid": false,
                       "start": 86,
                       "end": 87
-                    }
-                  }
+                    },
+                    "symbol": 24
+                  },
+                  "symbol": 25
                 },
                 {
                   "id": 27,
@@ -1365,8 +1380,10 @@
                             "start": 93,
                             "end": 97
                           }
-                        ]
-                      }
+                        ],
+                        "symbol": 26
+                      },
+                      "symbol": 27
                     },
                     {
                       "id": 26,
@@ -1424,8 +1441,10 @@
                             "start": 99,
                             "end": 105
                           }
-                        ]
-                      }
+                        ],
+                        "symbol": 28
+                      },
+                      "symbol": 29
                     }
                   ],
                   "commaList": [
@@ -1515,10 +1534,11 @@
                     "isInvalid": false,
                     "start": 105,
                     "end": 106
-                  }
+                  },
+                  "symbol": 30
                 }
               ],
-              "symbol": 3
+              "symbol": 31
             }
           ],
           "blockCloseBrace": {
@@ -1566,7 +1586,7 @@
           }
         },
         "parent": 93,
-        "symbol": 1
+        "symbol": 3
       },
       {
         "id": 37,
@@ -1976,7 +1996,8 @@
             "end": 142
           }
         },
-        "parent": 93
+        "parent": 93,
+        "symbol": 4
       },
       {
         "id": 44,
@@ -2386,7 +2407,8 @@
             "end": 176
           }
         },
-        "parent": 93
+        "parent": 93,
+        "symbol": 5
       },
       {
         "id": 51,
@@ -2796,7 +2818,8 @@
             "end": 210
           }
         },
-        "parent": 93
+        "parent": 93,
+        "symbol": 6
       },
       {
         "id": 58,
@@ -3206,7 +3229,8 @@
             "end": 246
           }
         },
-        "parent": 93
+        "parent": 93,
+        "symbol": 7
       },
       {
         "id": 70,
@@ -3792,7 +3816,8 @@
             "end": 304
           }
         },
-        "parent": 93
+        "parent": 93,
+        "symbol": 8
       },
       {
         "id": 77,
@@ -4180,7 +4205,8 @@
             "end": 361
           }
         },
-        "parent": 93
+        "parent": 93,
+        "symbol": 9
       },
       {
         "id": 92,
@@ -4930,7 +4956,8 @@
             "end": 444
           }
         },
-        "parent": 93
+        "parent": 93,
+        "symbol": 32
       }
     ],
     "eof": {
@@ -4958,20 +4985,62 @@
       "symbolTable": {
         "Table:users": {
           "references": [],
-          "id": 1,
+          "id": 3,
           "symbolTable": {
             "Column:id": {
               "references": [],
-              "id": 2,
+              "id": 17,
               "declaration": 14
             },
             "Column:username": {
               "references": [],
-              "id": 3,
+              "id": 31,
               "declaration": 28
             }
           },
           "declaration": 30
+        },
+        "Note:note2": {
+          "references": [],
+          "id": 5,
+          "symbolTable": {},
+          "declaration": 44
+        },
+        "Note:note3": {
+          "references": [],
+          "id": 7,
+          "symbolTable": {},
+          "declaration": 58
+        },
+        "Note:8": {
+          "references": [],
+          "id": 8,
+          "symbolTable": {},
+          "declaration": 70
+        },
+        "Note:schema.note4": {
+          "references": [],
+          "id": 9,
+          "symbolTable": {},
+          "declaration": 77
+        },
+        "Schema:schema": {
+          "references": [],
+          "id": 2,
+          "symbolTable": {
+            "Note:note5": {
+              "references": [],
+              "id": 32,
+              "symbolTable": {},
+              "declaration": 92
+            }
+          }
+        },
+        "Note:note5": {
+          "references": [],
+          "id": 32,
+          "symbolTable": {},
+          "declaration": 92
         }
       },
       "id": 0,
@@ -4979,178 +5048,6 @@
     }
   },
   "errors": [
-    {
-      "code": 3003,
-      "diagnostic": "Sticky note \"note2\" has already been defined",
-      "nodeOrToken": {
-        "id": 39,
-        "kind": "<primary-expression>",
-        "startPos": {
-          "offset": 149,
-          "line": 9,
-          "column": 5
-        },
-        "fullStart": 149,
-        "endPos": {
-          "offset": 154,
-          "line": 9,
-          "column": 10
-        },
-        "fullEnd": 155,
-        "start": 149,
-        "end": 154,
-        "expression": {
-          "id": 38,
-          "kind": "<variable>",
-          "startPos": {
-            "offset": 149,
-            "line": 9,
-            "column": 5
-          },
-          "fullStart": 149,
-          "endPos": {
-            "offset": 154,
-            "line": 9,
-            "column": 10
-          },
-          "fullEnd": 155,
-          "start": 149,
-          "end": 154,
-          "variable": {
-            "kind": "<identifier>",
-            "startPos": {
-              "offset": 149,
-              "line": 9,
-              "column": 5
-            },
-            "endPos": {
-              "offset": 154,
-              "line": 9,
-              "column": 10
-            },
-            "value": "note2",
-            "leadingTrivia": [],
-            "trailingTrivia": [
-              {
-                "kind": "<space>",
-                "startPos": {
-                  "offset": 154,
-                  "line": 9,
-                  "column": 10
-                },
-                "endPos": {
-                  "offset": 155,
-                  "line": 9,
-                  "column": 11
-                },
-                "value": " ",
-                "leadingTrivia": [],
-                "trailingTrivia": [],
-                "leadingInvalid": [],
-                "trailingInvalid": [],
-                "isInvalid": false,
-                "start": 154,
-                "end": 155
-              }
-            ],
-            "leadingInvalid": [],
-            "trailingInvalid": [],
-            "isInvalid": false,
-            "start": 149,
-            "end": 154
-          }
-        }
-      },
-      "start": 149,
-      "end": 154,
-      "name": "CompileError"
-    },
-    {
-      "code": 3003,
-      "diagnostic": "Sticky note \"note3\" has already been defined",
-      "nodeOrToken": {
-        "id": 53,
-        "kind": "<primary-expression>",
-        "startPos": {
-          "offset": 217,
-          "line": 17,
-          "column": 5
-        },
-        "fullStart": 217,
-        "endPos": {
-          "offset": 224,
-          "line": 17,
-          "column": 12
-        },
-        "fullEnd": 225,
-        "start": 217,
-        "end": 224,
-        "expression": {
-          "id": 52,
-          "kind": "<variable>",
-          "startPos": {
-            "offset": 217,
-            "line": 17,
-            "column": 5
-          },
-          "fullStart": 217,
-          "endPos": {
-            "offset": 224,
-            "line": 17,
-            "column": 12
-          },
-          "fullEnd": 225,
-          "start": 217,
-          "end": 224,
-          "variable": {
-            "kind": "<variable>",
-            "startPos": {
-              "offset": 217,
-              "line": 17,
-              "column": 5
-            },
-            "endPos": {
-              "offset": 224,
-              "line": 17,
-              "column": 12
-            },
-            "value": "note3",
-            "leadingTrivia": [],
-            "trailingTrivia": [
-              {
-                "kind": "<space>",
-                "startPos": {
-                  "offset": 224,
-                  "line": 17,
-                  "column": 12
-                },
-                "endPos": {
-                  "offset": 225,
-                  "line": 17,
-                  "column": 13
-                },
-                "value": " ",
-                "leadingTrivia": [],
-                "trailingTrivia": [],
-                "leadingInvalid": [],
-                "trailingInvalid": [],
-                "isInvalid": false,
-                "start": 224,
-                "end": 225
-              }
-            ],
-            "leadingInvalid": [],
-            "trailingInvalid": [],
-            "isInvalid": false,
-            "start": 217,
-            "end": 224
-          }
-        }
-      },
-      "start": 217,
-      "end": 224,
-      "name": "CompileError"
-    },
     {
       "code": 3000,
       "diagnostic": "Invalid name for sticky note ",
@@ -5738,7 +5635,8 @@
             "end": 304
           }
         },
-        "parent": 93
+        "parent": 93,
+        "symbol": 8
       },
       "start": 248,
       "end": 304,

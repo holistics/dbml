@@ -395,8 +395,10 @@
                     "isInvalid": false,
                     "start": 17,
                     "end": 19
-                  }
-                }
+                  },
+                  "symbol": 3
+                },
+                "symbol": 4
               },
               "args": [
                 {
@@ -475,11 +477,13 @@
                       "isInvalid": false,
                       "start": 20,
                       "end": 23
-                    }
-                  }
+                    },
+                    "symbol": 5
+                  },
+                  "symbol": 6
                 }
               ],
-              "symbol": 2
+              "symbol": 7
             },
             {
               "id": 15,
@@ -659,8 +663,10 @@
                     "isInvalid": false,
                     "start": 28,
                     "end": 34
-                  }
-                }
+                  },
+                  "symbol": 8
+                },
+                "symbol": 9
               },
               "args": [
                 {
@@ -734,8 +740,10 @@
                         "isInvalid": false,
                         "start": 35,
                         "end": 45
-                      }
-                    }
+                      },
+                      "symbol": 10
+                    },
+                    "symbol": 11
                   },
                   "argumentList": {
                     "id": 13,
@@ -830,8 +838,10 @@
                             "isInvalid": false,
                             "start": 46,
                             "end": 49
-                          }
-                        }
+                          },
+                          "symbol": 12
+                        },
+                        "symbol": 13
                       }
                     ],
                     "commaList": [],
@@ -877,11 +887,13 @@
                       "isInvalid": false,
                       "start": 49,
                       "end": 50
-                    }
-                  }
+                    },
+                    "symbol": 14
+                  },
+                  "symbol": 15
                 }
               ],
-              "symbol": 3
+              "symbol": 16
             },
             {
               "id": 24,
@@ -1061,8 +1073,10 @@
                     "isInvalid": false,
                     "start": 55,
                     "end": 59
-                  }
-                }
+                  },
+                  "symbol": 17
+                },
+                "symbol": 18
               },
               "args": [
                 {
@@ -1136,8 +1150,10 @@
                         "isInvalid": false,
                         "start": 60,
                         "end": 67
-                      }
-                    }
+                      },
+                      "symbol": 19
+                    },
+                    "symbol": 20
                   },
                   "argumentList": {
                     "id": 22,
@@ -1232,8 +1248,10 @@
                             "isInvalid": false,
                             "start": 68,
                             "end": 73
-                          }
-                        }
+                          },
+                          "symbol": 21
+                        },
+                        "symbol": 22
                       }
                     ],
                     "commaList": [],
@@ -1279,11 +1297,13 @@
                       "isInvalid": false,
                       "start": 73,
                       "end": 74
-                    }
-                  }
+                    },
+                    "symbol": 23
+                  },
+                  "symbol": 24
                 }
               ],
-              "symbol": 4
+              "symbol": 25
             },
             {
               "id": 33,
@@ -1463,8 +1483,10 @@
                     "isInvalid": false,
                     "start": 79,
                     "end": 83
-                  }
-                }
+                  },
+                  "symbol": 26
+                },
+                "symbol": 27
               },
               "args": [
                 {
@@ -1538,8 +1560,10 @@
                         "isInvalid": false,
                         "start": 84,
                         "end": 93
-                      }
-                    }
+                      },
+                      "symbol": 28
+                    },
+                    "symbol": 29
                   },
                   "argumentList": {
                     "id": 31,
@@ -1634,8 +1658,10 @@
                             "isInvalid": false,
                             "start": 94,
                             "end": 99
-                          }
-                        }
+                          },
+                          "symbol": 30
+                        },
+                        "symbol": 31
                       }
                     ],
                     "commaList": [],
@@ -1681,11 +1707,13 @@
                       "isInvalid": false,
                       "start": 99,
                       "end": 100
-                    }
-                  }
+                    },
+                    "symbol": 32
+                  },
+                  "symbol": 33
                 }
               ],
-              "symbol": 5
+              "symbol": 34
             },
             {
               "id": 42,
@@ -1865,8 +1893,10 @@
                     "isInvalid": false,
                     "start": 105,
                     "end": 109
-                  }
-                }
+                  },
+                  "symbol": 35
+                },
+                "symbol": 36
               },
               "args": [
                 {
@@ -1940,8 +1970,10 @@
                         "isInvalid": false,
                         "start": 110,
                         "end": 113
-                      }
-                    }
+                      },
+                      "symbol": 37
+                    },
+                    "symbol": 38
                   },
                   "argumentList": {
                     "id": 40,
@@ -2036,8 +2068,10 @@
                             "isInvalid": false,
                             "start": 114,
                             "end": 116
-                          }
-                        }
+                          },
+                          "symbol": 39
+                        },
+                        "symbol": 40
                       }
                     ],
                     "commaList": [],
@@ -2083,11 +2117,13 @@
                       "isInvalid": false,
                       "start": 116,
                       "end": 117
-                    }
-                  }
+                    },
+                    "symbol": 41
+                  },
+                  "symbol": 42
                 }
               ],
-              "symbol": 6
+              "symbol": 43
             }
           ],
           "blockCloseBrace": {
@@ -2113,7 +2149,7 @@
           }
         },
         "parent": 45,
-        "symbol": 1
+        "symbol": 2
       }
     ],
     "eof": {
@@ -2141,31 +2177,31 @@
       "symbolTable": {
         "Table:User": {
           "references": [],
-          "id": 1,
+          "id": 2,
           "symbolTable": {
             "Column:id": {
               "references": [],
-              "id": 2,
+              "id": 7,
               "declaration": 6
             },
             "Column:secret": {
               "references": [],
-              "id": 3,
+              "id": 16,
               "declaration": 15
             },
             "Column:name": {
               "references": [],
-              "id": 4,
+              "id": 25,
               "declaration": 24
             },
             "Column:code": {
               "references": [],
-              "id": 5,
+              "id": 34,
               "declaration": 33
             },
             "Column:ssid": {
               "references": [],
-              "id": 6,
+              "id": 43,
               "declaration": 42
             }
           },

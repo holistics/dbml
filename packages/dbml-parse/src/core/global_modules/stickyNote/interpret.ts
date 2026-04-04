@@ -1,42 +1,47 @@
-import { partition, get } from 'lodash-es';
-import { ElementInterpreter, InterpreterDatabase, Note } from '@/core/interpreter/types';
+import { partition } from 'lodash-es';
+import type { Note } from '@/core/types/schemaJson';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode,
 } from '@/core/parser/nodes';
 import {
   extractColor, extractElementName, getTokenPosition, normalizeNoteContent,
-} from '@/core/interpreter/utils';
+} from '../utils';
 import { CompileError, CompileErrorCode } from '@/core/errors';
-import { aggregateSettingList } from '@/core/analyzer/validator/utils';
+import { aggregateSettingList } from '@/core/utils/validate';
+import Compiler from '@/compiler';
+import Report from '@/core/report';
+import { extractQuotedStringToken } from '@/core/utils/expression';
+import { SettingName } from '@/core/types/keywords';
 
-export class StickyNoteInterpreter implements ElementInterpreter {
+export class StickyNoteInterpreter {
   private declarationNode: ElementDeclarationNode;
-  private env: InterpreterDatabase;
+  private compiler: Compiler;
   private note: Partial<Note>;
 
-  constructor (declarationNode: ElementDeclarationNode, env: InterpreterDatabase) {
+  constructor (compiler: Compiler, declarationNode: ElementDeclarationNode) {
     this.declarationNode = declarationNode;
-    this.env = env;
+    this.compiler = compiler;
     this.note = { name: undefined, content: undefined, token: undefined };
   }
 
-  interpret (): CompileError[] {
+  interpret (): Report<Note> {
     this.note.token = getTokenPosition(this.declarationNode);
-    this.env.notes.set(this.declarationNode, this.note as Note);
-
     const errors = [
-      ...this.interpretName(this.declarationNode.name!),
+      ...this.interpretName(this.declarationNode.name),
       ...this.interpretSettingList(this.declarationNode.attributeList),
       ...this.interpretBody(this.declarationNode.body as BlockExpressionNode),
     ];
 
-    return errors;
+    return new Report(this.note as Note, errors);
   }
 
-  private interpretName (nameNode: SyntaxNode): CompileError[] {
-    const { name } = extractElementName(nameNode);
-
-    this.note.name = name;
+  private interpretName (nameNode?: SyntaxNode): CompileError[] {
+    if (nameNode) {
+      const { name } = extractElementName(nameNode);
+      this.note.name = name;
+    } else {
+      this.note.name = '';
+    }
 
     return [];
   }
@@ -44,7 +49,7 @@ export class StickyNoteInterpreter implements ElementInterpreter {
   private interpretSettingList (settings?: ListExpressionNode): CompileError[] {
     const settingMap = aggregateSettingList(settings).getValue();
 
-    this.note.headerColor = settingMap.headercolor?.length ? extractColor(settingMap.headercolor?.at(0)?.value as any) : undefined;
+    this.note.headerColor = settingMap[SettingName.HeaderColor]?.length ? extractColor(settingMap[SettingName.HeaderColor]?.at(0)?.value as any) : undefined;
 
     return [];
   }
@@ -62,7 +67,7 @@ export class StickyNoteInterpreter implements ElementInterpreter {
   }
 
   private interpretNote (note: FunctionApplicationNode): CompileError[] {
-    const noteContent = get(note, 'callee.expression.literal.value', '');
+    const noteContent = extractQuotedStringToken(note.callee) ?? '';
 
     this.note.content = normalizeNoteContent(noteContent);
     return [];

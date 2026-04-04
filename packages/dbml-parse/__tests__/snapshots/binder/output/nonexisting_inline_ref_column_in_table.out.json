@@ -353,8 +353,10 @@
                     "isInvalid": false,
                     "start": 13,
                     "end": 17
-                  }
-                }
+                  },
+                  "symbol": 8
+                },
+                "symbol": 9
               },
               "args": [
                 {
@@ -433,8 +435,10 @@
                       "isInvalid": false,
                       "start": 18,
                       "end": 22
-                    }
-                  }
+                    },
+                    "symbol": 10
+                  },
+                  "symbol": 11
                 },
                 {
                   "id": 11,
@@ -531,7 +535,8 @@
                             "start": 24,
                             "end": 27
                           }
-                        ]
+                        ],
+                        "symbol": 12
                       },
                       "value": {
                         "id": 9,
@@ -647,9 +652,12 @@
                               "isInvalid": false,
                               "start": 31,
                               "end": 38
-                            }
-                          }
-                        }
+                            },
+                            "symbol": 13
+                          },
+                          "symbol": 14
+                        },
+                        "symbol": 15
                       },
                       "colon": {
                         "kind": "<colon>",
@@ -693,7 +701,8 @@
                         "isInvalid": false,
                         "start": 27,
                         "end": 28
-                      }
+                      },
+                      "symbol": 16
                     }
                   ],
                   "commaList": [],
@@ -739,7 +748,8 @@
                     "isInvalid": false,
                     "start": 38,
                     "end": 39
-                  }
+                  },
+                  "symbol": 17
                 }
               ],
               "symbol": 2
@@ -880,8 +890,10 @@
                     "isInvalid": false,
                     "start": 42,
                     "end": 46
-                  }
-                }
+                  },
+                  "symbol": 18
+                },
+                "symbol": 19
               },
               "args": [
                 {
@@ -960,8 +972,10 @@
                       "isInvalid": false,
                       "start": 47,
                       "end": 51
-                    }
-                  }
+                    },
+                    "symbol": 20
+                  },
+                  "symbol": 21
                 },
                 {
                   "id": 25,
@@ -1058,7 +1072,8 @@
                             "start": 53,
                             "end": 56
                           }
-                        ]
+                        ],
+                        "symbol": 22
                       },
                       "value": {
                         "id": 23,
@@ -1212,9 +1227,11 @@
                                 "isInvalid": false,
                                 "start": 60,
                                 "end": 62
-                              }
+                              },
+                              "symbol": 23
                             },
-                            "referee": 5
+                            "symbol": 24,
+                            "referee": 6
                           },
                           "rightExpression": {
                             "id": 21,
@@ -1270,10 +1287,14 @@
                                 "isInvalid": false,
                                 "start": 63,
                                 "end": 70
-                              }
-                            }
-                          }
-                        }
+                              },
+                              "symbol": 25
+                            },
+                            "symbol": 26
+                          },
+                          "symbol": 27
+                        },
+                        "symbol": 28
                       },
                       "colon": {
                         "kind": "<colon>",
@@ -1317,7 +1338,8 @@
                         "isInvalid": false,
                         "start": 56,
                         "end": 57
-                      }
+                      },
+                      "symbol": 29
                     }
                   ],
                   "commaList": [],
@@ -1363,7 +1385,8 @@
                     "isInvalid": false,
                     "start": 70,
                     "end": 71
-                  }
+                  },
+                  "symbol": 30
                 }
               ],
               "symbol": 3
@@ -1504,8 +1527,10 @@
                     "isInvalid": false,
                     "start": 74,
                     "end": 78
-                  }
-                }
+                  },
+                  "symbol": 31
+                },
+                "symbol": 32
               },
               "args": [
                 {
@@ -1584,8 +1609,10 @@
                       "isInvalid": false,
                       "start": 79,
                       "end": 83
-                    }
-                  }
+                    },
+                    "symbol": 33
+                  },
+                  "symbol": 34
                 },
                 {
                   "id": 39,
@@ -1682,7 +1709,8 @@
                             "start": 85,
                             "end": 88
                           }
-                        ]
+                        ],
+                        "symbol": 35
                       },
                       "value": {
                         "id": 37,
@@ -1836,8 +1864,10 @@
                                 "isInvalid": false,
                                 "start": 92,
                                 "end": 96
-                              }
-                            }
+                              },
+                              "symbol": 36
+                            },
+                            "symbol": 37
                           },
                           "rightExpression": {
                             "id": 35,
@@ -1893,10 +1923,14 @@
                                 "isInvalid": false,
                                 "start": 97,
                                 "end": 104
-                              }
-                            }
-                          }
-                        }
+                              },
+                              "symbol": 38
+                            },
+                            "symbol": 39
+                          },
+                          "symbol": 40
+                        },
+                        "symbol": 41
                       },
                       "colon": {
                         "kind": "<colon>",
@@ -1940,7 +1974,8 @@
                         "isInvalid": false,
                         "start": 88,
                         "end": 89
-                      }
+                      },
+                      "symbol": 42
                     }
                   ],
                   "commaList": [],
@@ -1986,7 +2021,8 @@
                     "isInvalid": false,
                     "start": 104,
                     "end": 105
-                  }
+                  },
+                  "symbol": 43
                 }
               ],
               "symbol": 4
@@ -2397,8 +2433,10 @@
                     "isInvalid": false,
                     "start": 122,
                     "end": 125
-                  }
-                }
+                  },
+                  "symbol": 44
+                },
+                "symbol": 45
               },
               "args": [
                 {
@@ -2477,8 +2515,10 @@
                       "isInvalid": false,
                       "start": 126,
                       "end": 130
-                    }
-                  }
+                    },
+                    "symbol": 46
+                  },
+                  "symbol": 47
                 },
                 {
                   "id": 54,
@@ -2575,7 +2615,8 @@
                             "start": 132,
                             "end": 135
                           }
-                        ]
+                        ],
+                        "symbol": 48
                       },
                       "value": {
                         "id": 52,
@@ -2691,9 +2732,12 @@
                               "isInvalid": false,
                               "start": 139,
                               "end": 145
-                            }
-                          }
-                        }
+                            },
+                            "symbol": 49
+                          },
+                          "symbol": 50
+                        },
+                        "symbol": 51
                       },
                       "colon": {
                         "kind": "<colon>",
@@ -2737,7 +2781,8 @@
                         "isInvalid": false,
                         "start": 135,
                         "end": 136
-                      }
+                      },
+                      "symbol": 52
                     }
                   ],
                   "commaList": [],
@@ -2783,10 +2828,11 @@
                     "isInvalid": false,
                     "start": 145,
                     "end": 146
-                  }
+                  },
+                  "symbol": 53
                 }
               ],
-              "symbol": 6
+              "symbol": 7
             }
           ],
           "blockCloseBrace": {
@@ -2834,7 +2880,7 @@
           }
         },
         "parent": 58,
-        "symbol": 5
+        "symbol": 6
       }
     ],
     "eof": {
@@ -2884,70 +2930,13 @@
         },
         "Table:T2": {
           "references": [
-            {
-              "id": 19,
-              "kind": "<primary-expression>",
-              "startPos": {
-                "offset": 60,
-                "line": 2,
-                "column": 20
-              },
-              "fullStart": 60,
-              "endPos": {
-                "offset": 62,
-                "line": 2,
-                "column": 22
-              },
-              "fullEnd": 62,
-              "start": 60,
-              "end": 62,
-              "expression": {
-                "id": 18,
-                "kind": "<variable>",
-                "startPos": {
-                  "offset": 60,
-                  "line": 2,
-                  "column": 20
-                },
-                "fullStart": 60,
-                "endPos": {
-                  "offset": 62,
-                  "line": 2,
-                  "column": 22
-                },
-                "fullEnd": 62,
-                "start": 60,
-                "end": 62,
-                "variable": {
-                  "kind": "<identifier>",
-                  "startPos": {
-                    "offset": 60,
-                    "line": 2,
-                    "column": 20
-                  },
-                  "endPos": {
-                    "offset": 62,
-                    "line": 2,
-                    "column": 22
-                  },
-                  "value": "T2",
-                  "leadingTrivia": [],
-                  "trailingTrivia": [],
-                  "leadingInvalid": [],
-                  "trailingInvalid": [],
-                  "isInvalid": false,
-                  "start": 60,
-                  "end": 62
-                }
-              },
-              "referee": 5
-            }
+            19
           ],
-          "id": 5,
+          "id": 6,
           "symbolTable": {
             "Column:col": {
               "references": [],
-              "id": 6,
+              "id": 7,
               "declaration": 55
             }
           },
@@ -3016,8 +3005,10 @@
             "isInvalid": false,
             "start": 31,
             "end": 38
-          }
-        }
+          },
+          "symbol": 13
+        },
+        "symbol": 14
       },
       "start": 31,
       "end": 38,
@@ -3080,8 +3071,10 @@
             "isInvalid": false,
             "start": 63,
             "end": 70
-          }
-        }
+          },
+          "symbol": 25
+        },
+        "symbol": 26
       },
       "start": 63,
       "end": 70,
@@ -3144,8 +3137,10 @@
             "isInvalid": false,
             "start": 92,
             "end": 96
-          }
-        }
+          },
+          "symbol": 36
+        },
+        "symbol": 37
       },
       "start": 92,
       "end": 96,
@@ -3208,8 +3203,10 @@
             "isInvalid": false,
             "start": 139,
             "end": 145
-          }
-        }
+          },
+          "symbol": 49
+        },
+        "symbol": 50
       },
       "start": 139,
       "end": 145,

@@ -357,7 +357,7 @@
                 }
               },
               "args": [],
-              "symbol": 2
+              "symbol": 5
             },
             {
               "id": 7,
@@ -499,7 +499,7 @@
                 }
               },
               "args": [],
-              "symbol": 3
+              "symbol": 6
             },
             {
               "id": 10,
@@ -641,7 +641,7 @@
                 }
               },
               "args": [],
-              "symbol": 4
+              "symbol": 7
             }
           ],
           "blockCloseBrace": {
@@ -689,7 +689,7 @@
           }
         },
         "parent": 155,
-        "symbol": 1
+        "symbol": 3
       },
       {
         "id": 25,
@@ -1149,7 +1149,7 @@
                 }
               },
               "args": [],
-              "symbol": 7
+              "symbol": 10
             },
             {
               "id": 23,
@@ -1291,7 +1291,7 @@
                 }
               },
               "args": [],
-              "symbol": 8
+              "symbol": 11
             }
           ],
           "blockCloseBrace": {
@@ -1339,7 +1339,7 @@
           }
         },
         "parent": 155,
-        "symbol": 5
+        "symbol": 8
       },
       {
         "id": 47,
@@ -1799,7 +1799,7 @@
                 }
               },
               "args": [],
-              "symbol": 10
+              "symbol": 12
             },
             {
               "id": 36,
@@ -1941,7 +1941,7 @@
                 }
               },
               "args": [],
-              "symbol": 11
+              "symbol": 13
             },
             {
               "id": 39,
@@ -2083,7 +2083,7 @@
                 }
               },
               "args": [],
-              "symbol": 12
+              "symbol": 14
             },
             {
               "id": 42,
@@ -2225,7 +2225,7 @@
                 }
               },
               "args": [],
-              "symbol": 13
+              "symbol": 15
             },
             {
               "id": 45,
@@ -2367,7 +2367,7 @@
                 }
               },
               "args": [],
-              "symbol": 14
+              "symbol": 16
             }
           ],
           "blockCloseBrace": {
@@ -2775,8 +2775,10 @@
                     "isInvalid": false,
                     "start": 197,
                     "end": 201
-                  }
-                }
+                  },
+                  "symbol": 25
+                },
+                "symbol": 26
               },
               "args": [
                 {
@@ -2855,11 +2857,13 @@
                       "isInvalid": false,
                       "start": 202,
                       "end": 206
-                    }
-                  }
+                    },
+                    "symbol": 27
+                  },
+                  "symbol": 28
                 }
               ],
-              "symbol": 16
+              "symbol": 17
             },
             {
               "id": 59,
@@ -2997,8 +3001,10 @@
                     "isInvalid": false,
                     "start": 209,
                     "end": 211
-                  }
-                }
+                  },
+                  "symbol": 29
+                },
+                "symbol": 30
               },
               "args": [
                 {
@@ -3077,11 +3083,13 @@
                       "isInvalid": false,
                       "start": 212,
                       "end": 215
-                    }
-                  }
+                    },
+                    "symbol": 31
+                  },
+                  "symbol": 32
                 }
               ],
-              "symbol": 17
+              "symbol": 18
             },
             {
               "id": 72,
@@ -3219,8 +3227,10 @@
                     "isInvalid": false,
                     "start": 218,
                     "end": 224
-                  }
-                }
+                  },
+                  "symbol": 33
+                },
+                "symbol": 34
               },
               "args": [
                 {
@@ -3299,9 +3309,11 @@
                       "isInvalid": false,
                       "start": 225,
                       "end": 231
-                    }
+                    },
+                    "symbol": 35
                   },
-                  "referee": 1
+                  "symbol": 36,
+                  "referee": 3
                 },
                 {
                   "id": 71,
@@ -3398,7 +3410,8 @@
                             "start": 233,
                             "end": 240
                           }
-                        ]
+                        ],
+                        "symbol": 37
                       },
                       "value": {
                         "id": 69,
@@ -3492,9 +3505,11 @@
                               "isInvalid": false,
                               "start": 242,
                               "end": 248
-                            }
+                            },
+                            "symbol": 38
                           },
-                          "referee": 1
+                          "symbol": 39,
+                          "referee": 3
                         },
                         "rightExpression": {
                           "id": 68,
@@ -3550,10 +3565,13 @@
                               "isInvalid": false,
                               "start": 249,
                               "end": 255
-                            }
+                            },
+                            "symbol": 40
                           },
-                          "referee": 2
-                        }
+                          "symbol": 41,
+                          "referee": 5
+                        },
+                        "symbol": 42
                       },
                       "colon": {
                         "kind": "<colon>",
@@ -3597,7 +3615,8 @@
                         "isInvalid": false,
                         "start": 240,
                         "end": 241
-                      }
+                      },
+                      "symbol": 43
                     }
                   ],
                   "commaList": [],
@@ -3643,10 +3662,11 @@
                     "isInvalid": false,
                     "start": 255,
                     "end": 256
-                  }
+                  },
+                  "symbol": 44
                 }
               ],
-              "symbol": 18
+              "symbol": 19
             },
             {
               "id": 91,
@@ -3784,8 +3804,10 @@
                     "isInvalid": false,
                     "start": 259,
                     "end": 265
-                  }
-                }
+                  },
+                  "symbol": 45
+                },
+                "symbol": 46
               },
               "args": [
                 {
@@ -3880,9 +3902,11 @@
                         "isInvalid": false,
                         "start": 266,
                         "end": 277
-                      }
+                      },
+                      "symbol": 47
                     },
-                    "referee": 6
+                    "symbol": 48,
+                    "referee": 2
                   },
                   "rightExpression": {
                     "id": 78,
@@ -3960,10 +3984,13 @@
                         "isInvalid": false,
                         "start": 278,
                         "end": 284
-                      }
+                      },
+                      "symbol": 49
                     },
-                    "referee": 5
-                  }
+                    "symbol": 50,
+                    "referee": 8
+                  },
+                  "symbol": 51
                 },
                 {
                   "id": 90,
@@ -4060,7 +4087,8 @@
                             "start": 286,
                             "end": 293
                           }
-                        ]
+                        ],
+                        "symbol": 52
                       },
                       "value": {
                         "id": 88,
@@ -4192,9 +4220,11 @@
                                 "isInvalid": false,
                                 "start": 295,
                                 "end": 306
-                              }
+                              },
+                              "symbol": 53
                             },
-                            "referee": 6
+                            "symbol": 54,
+                            "referee": 2
                           },
                           "rightExpression": {
                             "id": 84,
@@ -4250,10 +4280,13 @@
                                 "isInvalid": false,
                                 "start": 307,
                                 "end": 313
-                              }
+                              },
+                              "symbol": 55
                             },
-                            "referee": 5
-                          }
+                            "symbol": 56,
+                            "referee": 8
+                          },
+                          "symbol": 57
                         },
                         "rightExpression": {
                           "id": 87,
@@ -4309,10 +4342,13 @@
                               "isInvalid": false,
                               "start": 314,
                               "end": 318
-                            }
+                            },
+                            "symbol": 58
                           },
-                          "referee": 7
-                        }
+                          "symbol": 59,
+                          "referee": 10
+                        },
+                        "symbol": 60
                       },
                       "colon": {
                         "kind": "<colon>",
@@ -4356,7 +4392,8 @@
                         "isInvalid": false,
                         "start": 293,
                         "end": 294
-                      }
+                      },
+                      "symbol": 61
                     }
                   ],
                   "commaList": [],
@@ -4402,10 +4439,11 @@
                     "isInvalid": false,
                     "start": 318,
                     "end": 319
-                  }
+                  },
+                  "symbol": 62
                 }
               ],
-              "symbol": 19
+              "symbol": 20
             },
             {
               "id": 110,
@@ -4543,8 +4581,10 @@
                     "isInvalid": false,
                     "start": 322,
                     "end": 330
-                  }
-                }
+                  },
+                  "symbol": 63
+                },
+                "symbol": 64
               },
               "args": [
                 {
@@ -4639,9 +4679,11 @@
                         "isInvalid": false,
                         "start": 331,
                         "end": 342
-                      }
+                      },
+                      "symbol": 65
                     },
-                    "referee": 6
+                    "symbol": 66,
+                    "referee": 2
                   },
                   "rightExpression": {
                     "id": 97,
@@ -4719,10 +4761,13 @@
                         "isInvalid": false,
                         "start": 343,
                         "end": 356
-                      }
+                      },
+                      "symbol": 67
                     },
+                    "symbol": 68,
                     "referee": 9
-                  }
+                  },
+                  "symbol": 69
                 },
                 {
                   "id": 109,
@@ -4819,7 +4864,8 @@
                             "start": 358,
                             "end": 365
                           }
-                        ]
+                        ],
+                        "symbol": 70
                       },
                       "value": {
                         "id": 107,
@@ -4951,9 +4997,11 @@
                                 "isInvalid": false,
                                 "start": 367,
                                 "end": 378
-                              }
+                              },
+                              "symbol": 71
                             },
-                            "referee": 6
+                            "symbol": 72,
+                            "referee": 2
                           },
                           "rightExpression": {
                             "id": 103,
@@ -5009,10 +5057,13 @@
                                 "isInvalid": false,
                                 "start": 379,
                                 "end": 392
-                              }
+                              },
+                              "symbol": 73
                             },
+                            "symbol": 74,
                             "referee": 9
-                          }
+                          },
+                          "symbol": 75
                         },
                         "rightExpression": {
                           "id": 106,
@@ -5068,10 +5119,13 @@
                               "isInvalid": false,
                               "start": 393,
                               "end": 404
-                            }
+                            },
+                            "symbol": 76
                           },
-                          "referee": 13
-                        }
+                          "symbol": 77,
+                          "referee": 15
+                        },
+                        "symbol": 78
                       },
                       "colon": {
                         "kind": "<colon>",
@@ -5115,7 +5169,8 @@
                         "isInvalid": false,
                         "start": 365,
                         "end": 366
-                      }
+                      },
+                      "symbol": 79
                     }
                   ],
                   "commaList": [],
@@ -5161,10 +5216,11 @@
                     "isInvalid": false,
                     "start": 404,
                     "end": 405
-                  }
+                  },
+                  "symbol": 80
                 }
               ],
-              "symbol": 20
+              "symbol": 21
             },
             {
               "id": 120,
@@ -5323,8 +5379,10 @@
                     "isInvalid": false,
                     "start": 409,
                     "end": 429
-                  }
-                }
+                  },
+                  "symbol": 81
+                },
+                "symbol": 82
               },
               "args": [
                 {
@@ -5403,8 +5461,10 @@
                       "isInvalid": false,
                       "start": 430,
                       "end": 442
-                    }
-                  }
+                    },
+                    "symbol": 83
+                  },
+                  "symbol": 84
                 },
                 {
                   "id": 119,
@@ -5501,7 +5561,8 @@
                             "start": 444,
                             "end": 451
                           }
-                        ]
+                        ],
+                        "symbol": 85
                       },
                       "value": {
                         "id": 117,
@@ -5557,8 +5618,10 @@
                             "isInvalid": false,
                             "start": 453,
                             "end": 466
-                          }
-                        }
+                          },
+                          "symbol": 86
+                        },
+                        "symbol": 87
                       },
                       "colon": {
                         "kind": "<colon>",
@@ -5602,7 +5665,8 @@
                         "isInvalid": false,
                         "start": 451,
                         "end": 452
-                      }
+                      },
+                      "symbol": 88
                     }
                   ],
                   "commaList": [],
@@ -5648,10 +5712,11 @@
                     "isInvalid": false,
                     "start": 466,
                     "end": 467
-                  }
+                  },
+                  "symbol": 89
                 }
               ],
-              "symbol": 21
+              "symbol": 22
             },
             {
               "id": 139,
@@ -5789,8 +5854,10 @@
                     "isInvalid": false,
                     "start": 470,
                     "end": 491
-                  }
-                }
+                  },
+                  "symbol": 90
+                },
+                "symbol": 91
               },
               "args": [
                 {
@@ -5869,8 +5936,10 @@
                       "isInvalid": false,
                       "start": 492,
                       "end": 504
-                    }
-                  }
+                    },
+                    "symbol": 92
+                  },
+                  "symbol": 93
                 },
                 {
                   "id": 138,
@@ -5967,7 +6036,8 @@
                             "start": 506,
                             "end": 513
                           }
-                        ]
+                        ],
+                        "symbol": 94
                       },
                       "value": {
                         "id": 136,
@@ -6137,8 +6207,10 @@
                                   "isInvalid": false,
                                   "start": 515,
                                   "end": 521
-                                }
-                              }
+                                },
+                                "symbol": 95
+                              },
+                              "symbol": 96
                             },
                             "rightExpression": {
                               "id": 129,
@@ -6194,9 +6266,12 @@
                                   "isInvalid": false,
                                   "start": 522,
                                   "end": 528
-                                }
-                              }
-                            }
+                                },
+                                "symbol": 97
+                              },
+                              "symbol": 98
+                            },
+                            "symbol": 99
                           },
                           "rightExpression": {
                             "id": 132,
@@ -6252,9 +6327,12 @@
                                 "isInvalid": false,
                                 "start": 529,
                                 "end": 535
-                              }
-                            }
-                          }
+                              },
+                              "symbol": 100
+                            },
+                            "symbol": 101
+                          },
+                          "symbol": 102
                         },
                         "rightExpression": {
                           "id": 135,
@@ -6310,9 +6388,12 @@
                               "isInvalid": false,
                               "start": 536,
                               "end": 542
-                            }
-                          }
-                        }
+                            },
+                            "symbol": 103
+                          },
+                          "symbol": 104
+                        },
+                        "symbol": 105
                       },
                       "colon": {
                         "kind": "<colon>",
@@ -6356,7 +6437,8 @@
                         "isInvalid": false,
                         "start": 513,
                         "end": 514
-                      }
+                      },
+                      "symbol": 106
                     }
                   ],
                   "commaList": [],
@@ -6402,10 +6484,11 @@
                     "isInvalid": false,
                     "start": 542,
                     "end": 543
-                  }
+                  },
+                  "symbol": 107
                 }
               ],
-              "symbol": 22
+              "symbol": 23
             },
             {
               "id": 152,
@@ -6543,8 +6626,10 @@
                     "isInvalid": false,
                     "start": 546,
                     "end": 562
-                  }
-                }
+                  },
+                  "symbol": 108
+                },
+                "symbol": 109
               },
               "args": [
                 {
@@ -6623,8 +6708,10 @@
                       "isInvalid": false,
                       "start": 563,
                       "end": 575
-                    }
-                  }
+                    },
+                    "symbol": 110
+                  },
+                  "symbol": 111
                 },
                 {
                   "id": 151,
@@ -6721,7 +6808,8 @@
                             "start": 577,
                             "end": 584
                           }
-                        ]
+                        ],
+                        "symbol": 112
                       },
                       "value": {
                         "id": 149,
@@ -6815,8 +6903,10 @@
                               "isInvalid": false,
                               "start": 586,
                               "end": 598
-                            }
-                          }
+                            },
+                            "symbol": 113
+                          },
+                          "symbol": 114
                         },
                         "rightExpression": {
                           "id": 148,
@@ -6872,9 +6962,12 @@
                               "isInvalid": false,
                               "start": 599,
                               "end": 612
-                            }
-                          }
-                        }
+                            },
+                            "symbol": 115
+                          },
+                          "symbol": 116
+                        },
+                        "symbol": 117
                       },
                       "colon": {
                         "kind": "<colon>",
@@ -6918,7 +7011,8 @@
                         "isInvalid": false,
                         "start": 584,
                         "end": 585
-                      }
+                      },
+                      "symbol": 118
                     }
                   ],
                   "commaList": [],
@@ -6964,10 +7058,11 @@
                     "isInvalid": false,
                     "start": 612,
                     "end": 613
-                  }
+                  },
+                  "symbol": 119
                 }
               ],
-              "symbol": 23
+              "symbol": 24
             }
           ],
           "blockCloseBrace": {
@@ -7015,7 +7110,7 @@
           }
         },
         "parent": 155,
-        "symbol": 15
+        "symbol": 4
       }
     ],
     "eof": {
@@ -7043,671 +7138,104 @@
       "symbolTable": {
         "Enum:status": {
           "references": [
-            {
-              "id": 66,
-              "kind": "<primary-expression>",
-              "startPos": {
-                "offset": 242,
-                "line": 22,
-                "column": 26
-              },
-              "fullStart": 242,
-              "endPos": {
-                "offset": 248,
-                "line": 22,
-                "column": 32
-              },
-              "fullEnd": 248,
-              "start": 242,
-              "end": 248,
-              "expression": {
-                "id": 65,
-                "kind": "<variable>",
-                "startPos": {
-                  "offset": 242,
-                  "line": 22,
-                  "column": 26
-                },
-                "fullStart": 242,
-                "endPos": {
-                  "offset": 248,
-                  "line": 22,
-                  "column": 32
-                },
-                "fullEnd": 248,
-                "start": 242,
-                "end": 248,
-                "variable": {
-                  "kind": "<identifier>",
-                  "startPos": {
-                    "offset": 242,
-                    "line": 22,
-                    "column": 26
-                  },
-                  "endPos": {
-                    "offset": 248,
-                    "line": 22,
-                    "column": 32
-                  },
-                  "value": "status",
-                  "leadingTrivia": [],
-                  "trailingTrivia": [],
-                  "leadingInvalid": [],
-                  "trailingInvalid": [],
-                  "isInvalid": false,
-                  "start": 242,
-                  "end": 248
-                }
-              },
-              "referee": 1
-            },
-            {
-              "id": 63,
-              "kind": "<primary-expression>",
-              "startPos": {
-                "offset": 225,
-                "line": 22,
-                "column": 9
-              },
-              "fullStart": 225,
-              "endPos": {
-                "offset": 231,
-                "line": 22,
-                "column": 15
-              },
-              "fullEnd": 232,
-              "start": 225,
-              "end": 231,
-              "expression": {
-                "id": 62,
-                "kind": "<variable>",
-                "startPos": {
-                  "offset": 225,
-                  "line": 22,
-                  "column": 9
-                },
-                "fullStart": 225,
-                "endPos": {
-                  "offset": 231,
-                  "line": 22,
-                  "column": 15
-                },
-                "fullEnd": 232,
-                "start": 225,
-                "end": 231,
-                "variable": {
-                  "kind": "<identifier>",
-                  "startPos": {
-                    "offset": 225,
-                    "line": 22,
-                    "column": 9
-                  },
-                  "endPos": {
-                    "offset": 231,
-                    "line": 22,
-                    "column": 15
-                  },
-                  "value": "status",
-                  "leadingTrivia": [],
-                  "trailingTrivia": [
-                    {
-                      "kind": "<space>",
-                      "startPos": {
-                        "offset": 231,
-                        "line": 22,
-                        "column": 15
-                      },
-                      "endPos": {
-                        "offset": 232,
-                        "line": 22,
-                        "column": 16
-                      },
-                      "value": " ",
-                      "leadingTrivia": [],
-                      "trailingTrivia": [],
-                      "leadingInvalid": [],
-                      "trailingInvalid": [],
-                      "isInvalid": false,
-                      "start": 231,
-                      "end": 232
-                    }
-                  ],
-                  "leadingInvalid": [],
-                  "trailingInvalid": [],
-                  "isInvalid": false,
-                  "start": 225,
-                  "end": 231
-                }
-              },
-              "referee": 1
-            }
+            63,
+            66
           ],
-          "id": 1,
+          "id": 3,
           "symbolTable": {
             "Enum field:active": {
               "references": [
-                {
-                  "id": 68,
-                  "kind": "<primary-expression>",
-                  "startPos": {
-                    "offset": 249,
-                    "line": 22,
-                    "column": 33
-                  },
-                  "fullStart": 249,
-                  "endPos": {
-                    "offset": 255,
-                    "line": 22,
-                    "column": 39
-                  },
-                  "fullEnd": 255,
-                  "start": 249,
-                  "end": 255,
-                  "expression": {
-                    "id": 67,
-                    "kind": "<variable>",
-                    "startPos": {
-                      "offset": 249,
-                      "line": 22,
-                      "column": 33
-                    },
-                    "fullStart": 249,
-                    "endPos": {
-                      "offset": 255,
-                      "line": 22,
-                      "column": 39
-                    },
-                    "fullEnd": 255,
-                    "start": 249,
-                    "end": 255,
-                    "variable": {
-                      "kind": "<identifier>",
-                      "startPos": {
-                        "offset": 249,
-                        "line": 22,
-                        "column": 33
-                      },
-                      "endPos": {
-                        "offset": 255,
-                        "line": 22,
-                        "column": 39
-                      },
-                      "value": "active",
-                      "leadingTrivia": [],
-                      "trailingTrivia": [],
-                      "leadingInvalid": [],
-                      "trailingInvalid": [],
-                      "isInvalid": false,
-                      "start": 249,
-                      "end": 255
-                    }
-                  },
-                  "referee": 2
-                }
+                68
               ],
-              "id": 2,
+              "id": 5,
               "declaration": 4
             },
             "Enum field:churned": {
               "references": [],
-              "id": 3,
+              "id": 6,
               "declaration": 7
             },
             "Enum field:inactive": {
               "references": [],
-              "id": 4,
+              "id": 7,
               "declaration": 10
             }
           },
           "declaration": 12
         },
+        "Table:user": {
+          "references": [],
+          "id": 4,
+          "symbolTable": {
+            "Column:name": {
+              "references": [],
+              "id": 17,
+              "declaration": 54
+            },
+            "Column:id": {
+              "references": [],
+              "id": 18,
+              "declaration": 59
+            },
+            "Column:status": {
+              "references": [],
+              "id": 19,
+              "declaration": 72
+            },
+            "Column:gender": {
+              "references": [],
+              "id": 20,
+              "declaration": 91
+            },
+            "Column:age_type": {
+              "references": [],
+              "id": 21,
+              "declaration": 110
+            },
+            "Column:invalid_validate_col": {
+              "references": [],
+              "id": 22,
+              "declaration": 120
+            },
+            "Column:invalid_validate_col2": {
+              "references": [],
+              "id": 23,
+              "declaration": 139
+            },
+            "Column:invalid_bind_col": {
+              "references": [],
+              "id": 24,
+              "declaration": 152
+            }
+          },
+          "declaration": 154
+        },
         "Schema:demographic": {
           "references": [
-            {
-              "id": 82,
-              "kind": "<primary-expression>",
-              "startPos": {
-                "offset": 295,
-                "line": 23,
-                "column": 38
-              },
-              "fullStart": 295,
-              "endPos": {
-                "offset": 306,
-                "line": 23,
-                "column": 49
-              },
-              "fullEnd": 306,
-              "start": 295,
-              "end": 306,
-              "expression": {
-                "id": 81,
-                "kind": "<variable>",
-                "startPos": {
-                  "offset": 295,
-                  "line": 23,
-                  "column": 38
-                },
-                "fullStart": 295,
-                "endPos": {
-                  "offset": 306,
-                  "line": 23,
-                  "column": 49
-                },
-                "fullEnd": 306,
-                "start": 295,
-                "end": 306,
-                "variable": {
-                  "kind": "<identifier>",
-                  "startPos": {
-                    "offset": 295,
-                    "line": 23,
-                    "column": 38
-                  },
-                  "endPos": {
-                    "offset": 306,
-                    "line": 23,
-                    "column": 49
-                  },
-                  "value": "demographic",
-                  "leadingTrivia": [],
-                  "trailingTrivia": [],
-                  "leadingInvalid": [],
-                  "trailingInvalid": [],
-                  "isInvalid": false,
-                  "start": 295,
-                  "end": 306
-                }
-              },
-              "referee": 6
-            },
-            {
-              "id": 76,
-              "kind": "<primary-expression>",
-              "startPos": {
-                "offset": 266,
-                "line": 23,
-                "column": 9
-              },
-              "fullStart": 266,
-              "endPos": {
-                "offset": 277,
-                "line": 23,
-                "column": 20
-              },
-              "fullEnd": 277,
-              "start": 266,
-              "end": 277,
-              "expression": {
-                "id": 75,
-                "kind": "<variable>",
-                "startPos": {
-                  "offset": 266,
-                  "line": 23,
-                  "column": 9
-                },
-                "fullStart": 266,
-                "endPos": {
-                  "offset": 277,
-                  "line": 23,
-                  "column": 20
-                },
-                "fullEnd": 277,
-                "start": 266,
-                "end": 277,
-                "variable": {
-                  "kind": "<identifier>",
-                  "startPos": {
-                    "offset": 266,
-                    "line": 23,
-                    "column": 9
-                  },
-                  "endPos": {
-                    "offset": 277,
-                    "line": 23,
-                    "column": 20
-                  },
-                  "value": "demographic",
-                  "leadingTrivia": [],
-                  "trailingTrivia": [],
-                  "leadingInvalid": [],
-                  "trailingInvalid": [],
-                  "isInvalid": false,
-                  "start": 266,
-                  "end": 277
-                }
-              },
-              "referee": 6
-            },
-            {
-              "id": 101,
-              "kind": "<primary-expression>",
-              "startPos": {
-                "offset": 367,
-                "line": 24,
-                "column": 47
-              },
-              "fullStart": 367,
-              "endPos": {
-                "offset": 378,
-                "line": 24,
-                "column": 58
-              },
-              "fullEnd": 378,
-              "start": 367,
-              "end": 378,
-              "expression": {
-                "id": 100,
-                "kind": "<variable>",
-                "startPos": {
-                  "offset": 367,
-                  "line": 24,
-                  "column": 47
-                },
-                "fullStart": 367,
-                "endPos": {
-                  "offset": 378,
-                  "line": 24,
-                  "column": 58
-                },
-                "fullEnd": 378,
-                "start": 367,
-                "end": 378,
-                "variable": {
-                  "kind": "<identifier>",
-                  "startPos": {
-                    "offset": 367,
-                    "line": 24,
-                    "column": 47
-                  },
-                  "endPos": {
-                    "offset": 378,
-                    "line": 24,
-                    "column": 58
-                  },
-                  "value": "demographic",
-                  "leadingTrivia": [],
-                  "trailingTrivia": [],
-                  "leadingInvalid": [],
-                  "trailingInvalid": [],
-                  "isInvalid": false,
-                  "start": 367,
-                  "end": 378
-                }
-              },
-              "referee": 6
-            },
-            {
-              "id": 95,
-              "kind": "<primary-expression>",
-              "startPos": {
-                "offset": 331,
-                "line": 24,
-                "column": 11
-              },
-              "fullStart": 331,
-              "endPos": {
-                "offset": 342,
-                "line": 24,
-                "column": 22
-              },
-              "fullEnd": 342,
-              "start": 331,
-              "end": 342,
-              "expression": {
-                "id": 94,
-                "kind": "<variable>",
-                "startPos": {
-                  "offset": 331,
-                  "line": 24,
-                  "column": 11
-                },
-                "fullStart": 331,
-                "endPos": {
-                  "offset": 342,
-                  "line": 24,
-                  "column": 22
-                },
-                "fullEnd": 342,
-                "start": 331,
-                "end": 342,
-                "variable": {
-                  "kind": "<identifier>",
-                  "startPos": {
-                    "offset": 331,
-                    "line": 24,
-                    "column": 11
-                  },
-                  "endPos": {
-                    "offset": 342,
-                    "line": 24,
-                    "column": 22
-                  },
-                  "value": "demographic",
-                  "leadingTrivia": [],
-                  "trailingTrivia": [],
-                  "leadingInvalid": [],
-                  "trailingInvalid": [],
-                  "isInvalid": false,
-                  "start": 331,
-                  "end": 342
-                }
-              },
-              "referee": 6
-            }
+            76,
+            82,
+            95,
+            101
           ],
-          "id": 6,
+          "id": 2,
           "symbolTable": {
             "Enum:gender": {
               "references": [
-                {
-                  "id": 84,
-                  "kind": "<primary-expression>",
-                  "startPos": {
-                    "offset": 307,
-                    "line": 23,
-                    "column": 50
-                  },
-                  "fullStart": 307,
-                  "endPos": {
-                    "offset": 313,
-                    "line": 23,
-                    "column": 56
-                  },
-                  "fullEnd": 313,
-                  "start": 307,
-                  "end": 313,
-                  "expression": {
-                    "id": 83,
-                    "kind": "<variable>",
-                    "startPos": {
-                      "offset": 307,
-                      "line": 23,
-                      "column": 50
-                    },
-                    "fullStart": 307,
-                    "endPos": {
-                      "offset": 313,
-                      "line": 23,
-                      "column": 56
-                    },
-                    "fullEnd": 313,
-                    "start": 307,
-                    "end": 313,
-                    "variable": {
-                      "kind": "<identifier>",
-                      "startPos": {
-                        "offset": 307,
-                        "line": 23,
-                        "column": 50
-                      },
-                      "endPos": {
-                        "offset": 313,
-                        "line": 23,
-                        "column": 56
-                      },
-                      "value": "gender",
-                      "leadingTrivia": [],
-                      "trailingTrivia": [],
-                      "leadingInvalid": [],
-                      "trailingInvalid": [],
-                      "isInvalid": false,
-                      "start": 307,
-                      "end": 313
-                    }
-                  },
-                  "referee": 5
-                },
-                {
-                  "id": 78,
-                  "kind": "<primary-expression>",
-                  "startPos": {
-                    "offset": 278,
-                    "line": 23,
-                    "column": 21
-                  },
-                  "fullStart": 278,
-                  "endPos": {
-                    "offset": 284,
-                    "line": 23,
-                    "column": 27
-                  },
-                  "fullEnd": 285,
-                  "start": 278,
-                  "end": 284,
-                  "expression": {
-                    "id": 77,
-                    "kind": "<variable>",
-                    "startPos": {
-                      "offset": 278,
-                      "line": 23,
-                      "column": 21
-                    },
-                    "fullStart": 278,
-                    "endPos": {
-                      "offset": 284,
-                      "line": 23,
-                      "column": 27
-                    },
-                    "fullEnd": 285,
-                    "start": 278,
-                    "end": 284,
-                    "variable": {
-                      "kind": "<identifier>",
-                      "startPos": {
-                        "offset": 278,
-                        "line": 23,
-                        "column": 21
-                      },
-                      "endPos": {
-                        "offset": 284,
-                        "line": 23,
-                        "column": 27
-                      },
-                      "value": "gender",
-                      "leadingTrivia": [],
-                      "trailingTrivia": [
-                        {
-                          "kind": "<space>",
-                          "startPos": {
-                            "offset": 284,
-                            "line": 23,
-                            "column": 27
-                          },
-                          "endPos": {
-                            "offset": 285,
-                            "line": 23,
-                            "column": 28
-                          },
-                          "value": " ",
-                          "leadingTrivia": [],
-                          "trailingTrivia": [],
-                          "leadingInvalid": [],
-                          "trailingInvalid": [],
-                          "isInvalid": false,
-                          "start": 284,
-                          "end": 285
-                        }
-                      ],
-                      "leadingInvalid": [],
-                      "trailingInvalid": [],
-                      "isInvalid": false,
-                      "start": 278,
-                      "end": 284
-                    }
-                  },
-                  "referee": 5
-                }
+                78,
+                84
               ],
-              "id": 5,
+              "id": 8,
               "symbolTable": {
                 "Enum field:male": {
                   "references": [
-                    {
-                      "id": 87,
-                      "kind": "<primary-expression>",
-                      "startPos": {
-                        "offset": 314,
-                        "line": 23,
-                        "column": 57
-                      },
-                      "fullStart": 314,
-                      "endPos": {
-                        "offset": 318,
-                        "line": 23,
-                        "column": 61
-                      },
-                      "fullEnd": 318,
-                      "start": 314,
-                      "end": 318,
-                      "expression": {
-                        "id": 86,
-                        "kind": "<variable>",
-                        "startPos": {
-                          "offset": 314,
-                          "line": 23,
-                          "column": 57
-                        },
-                        "fullStart": 314,
-                        "endPos": {
-                          "offset": 318,
-                          "line": 23,
-                          "column": 61
-                        },
-                        "fullEnd": 318,
-                        "start": 314,
-                        "end": 318,
-                        "variable": {
-                          "kind": "<identifier>",
-                          "startPos": {
-                            "offset": 314,
-                            "line": 23,
-                            "column": 57
-                          },
-                          "endPos": {
-                            "offset": 318,
-                            "line": 23,
-                            "column": 61
-                          },
-                          "value": "male",
-                          "leadingTrivia": [],
-                          "trailingTrivia": [],
-                          "leadingInvalid": [],
-                          "trailingInvalid": [],
-                          "isInvalid": false,
-                          "start": 314,
-                          "end": 318
-                        }
-                      },
-                      "referee": 7
-                    }
+                    87
                   ],
-                  "id": 7,
+                  "id": 10,
                   "declaration": 20
                 },
                 "Enum field:female": {
                   "references": [],
-                  "id": 8,
+                  "id": 11,
                   "declaration": 23
                 }
               },
@@ -7715,229 +7243,36 @@
             },
             "Enum:age segment": {
               "references": [
-                {
-                  "id": 103,
-                  "kind": "<primary-expression>",
-                  "startPos": {
-                    "offset": 379,
-                    "line": 24,
-                    "column": 59
-                  },
-                  "fullStart": 379,
-                  "endPos": {
-                    "offset": 392,
-                    "line": 24,
-                    "column": 72
-                  },
-                  "fullEnd": 392,
-                  "start": 379,
-                  "end": 392,
-                  "expression": {
-                    "id": 102,
-                    "kind": "<variable>",
-                    "startPos": {
-                      "offset": 379,
-                      "line": 24,
-                      "column": 59
-                    },
-                    "fullStart": 379,
-                    "endPos": {
-                      "offset": 392,
-                      "line": 24,
-                      "column": 72
-                    },
-                    "fullEnd": 392,
-                    "start": 379,
-                    "end": 392,
-                    "variable": {
-                      "kind": "<variable>",
-                      "startPos": {
-                        "offset": 379,
-                        "line": 24,
-                        "column": 59
-                      },
-                      "endPos": {
-                        "offset": 392,
-                        "line": 24,
-                        "column": 72
-                      },
-                      "value": "age segment",
-                      "leadingTrivia": [],
-                      "trailingTrivia": [],
-                      "leadingInvalid": [],
-                      "trailingInvalid": [],
-                      "isInvalid": false,
-                      "start": 379,
-                      "end": 392
-                    }
-                  },
-                  "referee": 9
-                },
-                {
-                  "id": 97,
-                  "kind": "<primary-expression>",
-                  "startPos": {
-                    "offset": 343,
-                    "line": 24,
-                    "column": 23
-                  },
-                  "fullStart": 343,
-                  "endPos": {
-                    "offset": 356,
-                    "line": 24,
-                    "column": 36
-                  },
-                  "fullEnd": 357,
-                  "start": 343,
-                  "end": 356,
-                  "expression": {
-                    "id": 96,
-                    "kind": "<variable>",
-                    "startPos": {
-                      "offset": 343,
-                      "line": 24,
-                      "column": 23
-                    },
-                    "fullStart": 343,
-                    "endPos": {
-                      "offset": 356,
-                      "line": 24,
-                      "column": 36
-                    },
-                    "fullEnd": 357,
-                    "start": 343,
-                    "end": 356,
-                    "variable": {
-                      "kind": "<variable>",
-                      "startPos": {
-                        "offset": 343,
-                        "line": 24,
-                        "column": 23
-                      },
-                      "endPos": {
-                        "offset": 356,
-                        "line": 24,
-                        "column": 36
-                      },
-                      "value": "age segment",
-                      "leadingTrivia": [],
-                      "trailingTrivia": [
-                        {
-                          "kind": "<space>",
-                          "startPos": {
-                            "offset": 356,
-                            "line": 24,
-                            "column": 36
-                          },
-                          "endPos": {
-                            "offset": 357,
-                            "line": 24,
-                            "column": 37
-                          },
-                          "value": " ",
-                          "leadingTrivia": [],
-                          "trailingTrivia": [],
-                          "leadingInvalid": [],
-                          "trailingInvalid": [],
-                          "isInvalid": false,
-                          "start": 356,
-                          "end": 357
-                        }
-                      ],
-                      "leadingInvalid": [],
-                      "trailingInvalid": [],
-                      "isInvalid": false,
-                      "start": 343,
-                      "end": 356
-                    }
-                  },
-                  "referee": 9
-                }
+                97,
+                103
               ],
               "id": 9,
               "symbolTable": {
                 "Enum field:toddler": {
                   "references": [],
-                  "id": 10,
+                  "id": 12,
                   "declaration": 33
                 },
                 "Enum field:children": {
                   "references": [],
-                  "id": 11,
+                  "id": 13,
                   "declaration": 36
                 },
                 "Enum field:teenager": {
                   "references": [],
-                  "id": 12,
+                  "id": 14,
                   "declaration": 39
                 },
                 "Enum field:young_adult": {
                   "references": [
-                    {
-                      "id": 106,
-                      "kind": "<primary-expression>",
-                      "startPos": {
-                        "offset": 393,
-                        "line": 24,
-                        "column": 73
-                      },
-                      "fullStart": 393,
-                      "endPos": {
-                        "offset": 404,
-                        "line": 24,
-                        "column": 84
-                      },
-                      "fullEnd": 404,
-                      "start": 393,
-                      "end": 404,
-                      "expression": {
-                        "id": 105,
-                        "kind": "<variable>",
-                        "startPos": {
-                          "offset": 393,
-                          "line": 24,
-                          "column": 73
-                        },
-                        "fullStart": 393,
-                        "endPos": {
-                          "offset": 404,
-                          "line": 24,
-                          "column": 84
-                        },
-                        "fullEnd": 404,
-                        "start": 393,
-                        "end": 404,
-                        "variable": {
-                          "kind": "<identifier>",
-                          "startPos": {
-                            "offset": 393,
-                            "line": 24,
-                            "column": 73
-                          },
-                          "endPos": {
-                            "offset": 404,
-                            "line": 24,
-                            "column": 84
-                          },
-                          "value": "young_adult",
-                          "leadingTrivia": [],
-                          "trailingTrivia": [],
-                          "leadingInvalid": [],
-                          "trailingInvalid": [],
-                          "isInvalid": false,
-                          "start": 393,
-                          "end": 404
-                        }
-                      },
-                      "referee": 13
-                    }
+                    106
                   ],
-                  "id": 13,
+                  "id": 15,
                   "declaration": 42
                 },
                 "Enum field:elder": {
                   "references": [],
-                  "id": 14,
+                  "id": 16,
                   "declaration": 45
                 }
               },
@@ -7945,52 +7280,64 @@
             }
           }
         },
-        "Table:user": {
-          "references": [],
-          "id": 15,
+        "Enum:gender": {
+          "references": [
+            78,
+            84
+          ],
+          "id": 8,
           "symbolTable": {
-            "Column:name": {
-              "references": [],
-              "id": 16,
-              "declaration": 54
+            "Enum field:male": {
+              "references": [
+                87
+              ],
+              "id": 10,
+              "declaration": 20
             },
-            "Column:id": {
+            "Enum field:female": {
               "references": [],
-              "id": 17,
-              "declaration": 59
-            },
-            "Column:status": {
-              "references": [],
-              "id": 18,
-              "declaration": 72
-            },
-            "Column:gender": {
-              "references": [],
-              "id": 19,
-              "declaration": 91
-            },
-            "Column:age_type": {
-              "references": [],
-              "id": 20,
-              "declaration": 110
-            },
-            "Column:invalid_validate_col": {
-              "references": [],
-              "id": 21,
-              "declaration": 120
-            },
-            "Column:invalid_validate_col2": {
-              "references": [],
-              "id": 22,
-              "declaration": 139
-            },
-            "Column:invalid_bind_col": {
-              "references": [],
-              "id": 23,
-              "declaration": 152
+              "id": 11,
+              "declaration": 23
             }
           },
-          "declaration": 154
+          "declaration": 25
+        },
+        "Enum:age segment": {
+          "references": [
+            97,
+            103
+          ],
+          "id": 9,
+          "symbolTable": {
+            "Enum field:toddler": {
+              "references": [],
+              "id": 12,
+              "declaration": 33
+            },
+            "Enum field:children": {
+              "references": [],
+              "id": 13,
+              "declaration": 36
+            },
+            "Enum field:teenager": {
+              "references": [],
+              "id": 14,
+              "declaration": 39
+            },
+            "Enum field:young_adult": {
+              "references": [
+                106
+              ],
+              "id": 15,
+              "declaration": 42
+            },
+            "Enum field:elder": {
+              "references": [],
+              "id": 16,
+              "declaration": 45
+            }
+          },
+          "declaration": 47
         }
       },
       "id": 0,
@@ -8055,8 +7402,10 @@
             "isInvalid": false,
             "start": 453,
             "end": 466
-          }
-        }
+          },
+          "symbol": 86
+        },
+        "symbol": 87
       },
       "start": 453,
       "end": 466,
@@ -8233,8 +7582,10 @@
                   "isInvalid": false,
                   "start": 515,
                   "end": 521
-                }
-              }
+                },
+                "symbol": 95
+              },
+              "symbol": 96
             },
             "rightExpression": {
               "id": 129,
@@ -8290,9 +7641,12 @@
                   "isInvalid": false,
                   "start": 522,
                   "end": 528
-                }
-              }
-            }
+                },
+                "symbol": 97
+              },
+              "symbol": 98
+            },
+            "symbol": 99
           },
           "rightExpression": {
             "id": 132,
@@ -8348,9 +7702,12 @@
                 "isInvalid": false,
                 "start": 529,
                 "end": 535
-              }
-            }
-          }
+              },
+              "symbol": 100
+            },
+            "symbol": 101
+          },
+          "symbol": 102
         },
         "rightExpression": {
           "id": 135,
@@ -8406,20 +7763,89 @@
               "isInvalid": false,
               "start": 536,
               "end": 542
-            }
-          }
-        }
+            },
+            "symbol": 103
+          },
+          "symbol": 104
+        },
+        "symbol": 105
       },
       "start": 515,
       "end": 542,
       "name": "CompileError"
     },
     {
-      "code": 4000,
-      "diagnostic": "Schema 'field1' does not exist in Schema 'public'",
+      "code": 3025,
+      "diagnostic": "'default' must be an enum value, a string literal, number literal, function expression, true, false or null",
       "nodeOrToken": {
-        "id": 127,
+        "id": 117,
         "kind": "<primary-expression>",
+        "startPos": {
+          "offset": 453,
+          "line": 26,
+          "column": 46
+        },
+        "fullStart": 453,
+        "endPos": {
+          "offset": 466,
+          "line": 26,
+          "column": 59
+        },
+        "fullEnd": 466,
+        "start": 453,
+        "end": 466,
+        "expression": {
+          "id": 116,
+          "kind": "<variable>",
+          "startPos": {
+            "offset": 453,
+            "line": 26,
+            "column": 46
+          },
+          "fullStart": 453,
+          "endPos": {
+            "offset": 466,
+            "line": 26,
+            "column": 59
+          },
+          "fullEnd": 466,
+          "start": 453,
+          "end": 466,
+          "variable": {
+            "kind": "<identifier>",
+            "startPos": {
+              "offset": 453,
+              "line": 26,
+              "column": 46
+            },
+            "endPos": {
+              "offset": 466,
+              "line": 26,
+              "column": 59
+            },
+            "value": "invalid_value",
+            "leadingTrivia": [],
+            "trailingTrivia": [],
+            "leadingInvalid": [],
+            "trailingInvalid": [],
+            "isInvalid": false,
+            "start": 453,
+            "end": 466
+          },
+          "symbol": 86
+        },
+        "symbol": 87
+      },
+      "start": 453,
+      "end": 466,
+      "name": "CompileError"
+    },
+    {
+      "code": 3025,
+      "diagnostic": "'default' must be an enum value, a string literal, number literal, function expression, true, false or null",
+      "nodeOrToken": {
+        "id": 136,
+        "kind": "<infix-expression>",
         "startPos": {
           "offset": 515,
           "line": 27,
@@ -8427,16 +7853,37 @@
         },
         "fullStart": 515,
         "endPos": {
-          "offset": 521,
+          "offset": 542,
           "line": 27,
-          "column": 53
+          "column": 74
         },
-        "fullEnd": 521,
+        "fullEnd": 542,
         "start": 515,
-        "end": 521,
-        "expression": {
-          "id": 126,
-          "kind": "<variable>",
+        "end": 542,
+        "op": {
+          "kind": "<op>",
+          "startPos": {
+            "offset": 535,
+            "line": 27,
+            "column": 67
+          },
+          "endPos": {
+            "offset": 536,
+            "line": 27,
+            "column": 68
+          },
+          "value": ".",
+          "leadingTrivia": [],
+          "trailingTrivia": [],
+          "leadingInvalid": [],
+          "trailingInvalid": [],
+          "isInvalid": false,
+          "start": 535,
+          "end": 536
+        },
+        "leftExpression": {
+          "id": 133,
+          "kind": "<infix-expression>",
           "startPos": {
             "offset": 515,
             "line": 27,
@@ -8444,38 +7891,316 @@
           },
           "fullStart": 515,
           "endPos": {
-            "offset": 521,
+            "offset": 535,
             "line": 27,
-            "column": 53
+            "column": 67
           },
-          "fullEnd": 521,
+          "fullEnd": 535,
           "start": 515,
-          "end": 521,
-          "variable": {
-            "kind": "<identifier>",
+          "end": 535,
+          "op": {
+            "kind": "<op>",
             "startPos": {
-              "offset": 515,
+              "offset": 528,
               "line": 27,
-              "column": 47
+              "column": 60
             },
             "endPos": {
-              "offset": 521,
+              "offset": 529,
               "line": 27,
-              "column": 53
+              "column": 61
             },
-            "value": "field1",
+            "value": ".",
             "leadingTrivia": [],
             "trailingTrivia": [],
             "leadingInvalid": [],
             "trailingInvalid": [],
             "isInvalid": false,
+            "start": 528,
+            "end": 529
+          },
+          "leftExpression": {
+            "id": 130,
+            "kind": "<infix-expression>",
+            "startPos": {
+              "offset": 515,
+              "line": 27,
+              "column": 47
+            },
+            "fullStart": 515,
+            "endPos": {
+              "offset": 528,
+              "line": 27,
+              "column": 60
+            },
+            "fullEnd": 528,
             "start": 515,
-            "end": 521
-          }
-        }
+            "end": 528,
+            "op": {
+              "kind": "<op>",
+              "startPos": {
+                "offset": 521,
+                "line": 27,
+                "column": 53
+              },
+              "endPos": {
+                "offset": 522,
+                "line": 27,
+                "column": 54
+              },
+              "value": ".",
+              "leadingTrivia": [],
+              "trailingTrivia": [],
+              "leadingInvalid": [],
+              "trailingInvalid": [],
+              "isInvalid": false,
+              "start": 521,
+              "end": 522
+            },
+            "leftExpression": {
+              "id": 127,
+              "kind": "<primary-expression>",
+              "startPos": {
+                "offset": 515,
+                "line": 27,
+                "column": 47
+              },
+              "fullStart": 515,
+              "endPos": {
+                "offset": 521,
+                "line": 27,
+                "column": 53
+              },
+              "fullEnd": 521,
+              "start": 515,
+              "end": 521,
+              "expression": {
+                "id": 126,
+                "kind": "<variable>",
+                "startPos": {
+                  "offset": 515,
+                  "line": 27,
+                  "column": 47
+                },
+                "fullStart": 515,
+                "endPos": {
+                  "offset": 521,
+                  "line": 27,
+                  "column": 53
+                },
+                "fullEnd": 521,
+                "start": 515,
+                "end": 521,
+                "variable": {
+                  "kind": "<identifier>",
+                  "startPos": {
+                    "offset": 515,
+                    "line": 27,
+                    "column": 47
+                  },
+                  "endPos": {
+                    "offset": 521,
+                    "line": 27,
+                    "column": 53
+                  },
+                  "value": "field1",
+                  "leadingTrivia": [],
+                  "trailingTrivia": [],
+                  "leadingInvalid": [],
+                  "trailingInvalid": [],
+                  "isInvalid": false,
+                  "start": 515,
+                  "end": 521
+                },
+                "symbol": 95
+              },
+              "symbol": 96
+            },
+            "rightExpression": {
+              "id": 129,
+              "kind": "<primary-expression>",
+              "startPos": {
+                "offset": 522,
+                "line": 27,
+                "column": 54
+              },
+              "fullStart": 522,
+              "endPos": {
+                "offset": 528,
+                "line": 27,
+                "column": 60
+              },
+              "fullEnd": 528,
+              "start": 522,
+              "end": 528,
+              "expression": {
+                "id": 128,
+                "kind": "<variable>",
+                "startPos": {
+                  "offset": 522,
+                  "line": 27,
+                  "column": 54
+                },
+                "fullStart": 522,
+                "endPos": {
+                  "offset": 528,
+                  "line": 27,
+                  "column": 60
+                },
+                "fullEnd": 528,
+                "start": 522,
+                "end": 528,
+                "variable": {
+                  "kind": "<identifier>",
+                  "startPos": {
+                    "offset": 522,
+                    "line": 27,
+                    "column": 54
+                  },
+                  "endPos": {
+                    "offset": 528,
+                    "line": 27,
+                    "column": 60
+                  },
+                  "value": "field2",
+                  "leadingTrivia": [],
+                  "trailingTrivia": [],
+                  "leadingInvalid": [],
+                  "trailingInvalid": [],
+                  "isInvalid": false,
+                  "start": 522,
+                  "end": 528
+                },
+                "symbol": 97
+              },
+              "symbol": 98
+            },
+            "symbol": 99
+          },
+          "rightExpression": {
+            "id": 132,
+            "kind": "<primary-expression>",
+            "startPos": {
+              "offset": 529,
+              "line": 27,
+              "column": 61
+            },
+            "fullStart": 529,
+            "endPos": {
+              "offset": 535,
+              "line": 27,
+              "column": 67
+            },
+            "fullEnd": 535,
+            "start": 529,
+            "end": 535,
+            "expression": {
+              "id": 131,
+              "kind": "<variable>",
+              "startPos": {
+                "offset": 529,
+                "line": 27,
+                "column": 61
+              },
+              "fullStart": 529,
+              "endPos": {
+                "offset": 535,
+                "line": 27,
+                "column": 67
+              },
+              "fullEnd": 535,
+              "start": 529,
+              "end": 535,
+              "variable": {
+                "kind": "<identifier>",
+                "startPos": {
+                  "offset": 529,
+                  "line": 27,
+                  "column": 61
+                },
+                "endPos": {
+                  "offset": 535,
+                  "line": 27,
+                  "column": 67
+                },
+                "value": "field3",
+                "leadingTrivia": [],
+                "trailingTrivia": [],
+                "leadingInvalid": [],
+                "trailingInvalid": [],
+                "isInvalid": false,
+                "start": 529,
+                "end": 535
+              },
+              "symbol": 100
+            },
+            "symbol": 101
+          },
+          "symbol": 102
+        },
+        "rightExpression": {
+          "id": 135,
+          "kind": "<primary-expression>",
+          "startPos": {
+            "offset": 536,
+            "line": 27,
+            "column": 68
+          },
+          "fullStart": 536,
+          "endPos": {
+            "offset": 542,
+            "line": 27,
+            "column": 74
+          },
+          "fullEnd": 542,
+          "start": 536,
+          "end": 542,
+          "expression": {
+            "id": 134,
+            "kind": "<variable>",
+            "startPos": {
+              "offset": 536,
+              "line": 27,
+              "column": 68
+            },
+            "fullStart": 536,
+            "endPos": {
+              "offset": 542,
+              "line": 27,
+              "column": 74
+            },
+            "fullEnd": 542,
+            "start": 536,
+            "end": 542,
+            "variable": {
+              "kind": "<identifier>",
+              "startPos": {
+                "offset": 536,
+                "line": 27,
+                "column": 68
+              },
+              "endPos": {
+                "offset": 542,
+                "line": 27,
+                "column": 74
+              },
+              "value": "field4",
+              "leadingTrivia": [],
+              "trailingTrivia": [],
+              "leadingInvalid": [],
+              "trailingInvalid": [],
+              "isInvalid": false,
+              "start": 536,
+              "end": 542
+            },
+            "symbol": 103
+          },
+          "symbol": 104
+        },
+        "symbol": 105
       },
       "start": 515,
-      "end": 521,
+      "end": 542,
       "name": "CompileError"
     },
     {
@@ -8535,8 +8260,10 @@
             "isInvalid": false,
             "start": 586,
             "end": 598
-          }
-        }
+          },
+          "symbol": 113
+        },
+        "symbol": 114
       },
       "start": 586,
       "end": 598,

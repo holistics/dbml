@@ -262,7 +262,7 @@
           }
         },
         "parent": 4,
-        "symbol": 1
+        "symbol": 0
       }
     ],
     "eof": {
@@ -290,12 +290,12 @@
       "symbolTable": {
         "Table:empty_table": {
           "references": [],
-          "id": 1,
+          "id": 0,
           "symbolTable": {},
           "declaration": 3
         }
       },
-      "id": 0,
+      "id": 1,
       "references": []
     }
   },

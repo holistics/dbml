@@ -3,7 +3,7 @@
     "code": 3003,
     "diagnostic": "Table name 'users' already exists in schema 'public'",
     "nodeOrToken": {
-      "id": 65,
+      "id": 64,
       "kind": "<primary-expression>",
       "startPos": {
         "offset": 232,
@@ -20,7 +20,7 @@
       "start": 232,
       "end": 237,
       "expression": {
-        "id": 64,
+        "id": 63,
         "kind": "<variable>",
         "startPos": {
           "offset": 232,

@@ -2,23 +2,17 @@ import { CompileError, CompileErrorCode } from '@/core/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, ProgramNode, SyntaxNode,
 } from '@/core/parser/nodes';
-import SymbolFactory from '@/core/analyzer/symbol/factory';
-import { SyntaxToken } from '@/core/lexer/tokens';
-import { ElementValidator } from '@/core/analyzer/validator/types';
-import { isExpressionAQuotedString } from '@/core/parser/utils';
-import SymbolTable from '@/core/analyzer/symbol/symbolTable';
-import { getElementKind } from '@/core/analyzer/utils';
-import { ElementKind } from '@/core/analyzer/types';
+import Compiler from '@/compiler';
+import { isExpressionAQuotedString } from '@/core/utils/expression';
+import { ElementKind } from '@/core/types/keywords';
 
-export default class CustomValidator implements ElementValidator {
-  private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
-  private publicSymbolTable: SymbolTable;
-  private symbolFactory: SymbolFactory;
+export default class CustomValidator {
+  private compiler: Compiler;
+  private declarationNode: ElementDeclarationNode;
 
-  constructor (declarationNode: ElementDeclarationNode & { type: SyntaxToken }, publicSymbolTable: SymbolTable, symbolFactory: SymbolFactory) {
+  constructor (compiler: Compiler, declarationNode: ElementDeclarationNode) {
     this.declarationNode = declarationNode;
-    this.publicSymbolTable = publicSymbolTable;
-    this.symbolFactory = symbolFactory;
+    this.compiler = compiler;
   }
 
   validate (): CompileError[] {
@@ -32,7 +26,7 @@ export default class CustomValidator implements ElementValidator {
   }
 
   private validateContext (): CompileError[] {
-    if (this.declarationNode.parent instanceof ProgramNode || getElementKind(this.declarationNode.parent).unwrap_or(undefined) !== ElementKind.Project) {
+    if (this.declarationNode.parent instanceof ProgramNode || !this.declarationNode.parent?.isKind(ElementKind.Project)) {
       return [new CompileError(CompileErrorCode.INVALID_CUSTOM_CONTEXT, 'A Custom element can only appear in a Project', this.declarationNode)];
     }
     return [];

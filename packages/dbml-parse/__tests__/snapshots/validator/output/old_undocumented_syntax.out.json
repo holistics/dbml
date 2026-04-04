@@ -1,6 +1,6 @@
 {
   "value": {
-    "id": 174,
+    "id": 173,
     "kind": "<program>",
     "startPos": {
       "offset": 0,
@@ -353,8 +353,10 @@
                     "isInvalid": false,
                     "start": 21,
                     "end": 34
-                  }
-                }
+                  },
+                  "symbol": 9
+                },
+                "symbol": 10
               },
               "args": [
                 {
@@ -433,8 +435,10 @@
                       "isInvalid": false,
                       "start": 35,
                       "end": 43
-                    }
-                  }
+                    },
+                    "symbol": 11
+                  },
+                  "symbol": 12
                 },
                 {
                   "id": 12,
@@ -531,8 +535,10 @@
                             "start": 45,
                             "end": 47
                           }
-                        ]
-                      }
+                        ],
+                        "symbol": 13
+                      },
+                      "symbol": 14
                     },
                     {
                       "id": 9,
@@ -633,8 +639,10 @@
                             "start": 53,
                             "end": 57
                           }
-                        ]
-                      }
+                        ],
+                        "symbol": 15
+                      },
+                      "symbol": 16
                     },
                     {
                       "id": 11,
@@ -692,8 +700,10 @@
                             "start": 59,
                             "end": 68
                           }
-                        ]
-                      }
+                        ],
+                        "symbol": 17
+                      },
+                      "symbol": 18
                     }
                   ],
                   "commaList": [
@@ -826,10 +836,11 @@
                     "isInvalid": false,
                     "start": 68,
                     "end": 69
-                  }
+                  },
+                  "symbol": 19
                 }
               ],
-              "symbol": 2
+              "symbol": 20
             },
             {
               "id": 21,
@@ -967,8 +978,10 @@
                     "isInvalid": false,
                     "start": 72,
                     "end": 82
-                  }
-                }
+                  },
+                  "symbol": 21
+                },
+                "symbol": 22
               },
               "args": [
                 {
@@ -1047,8 +1060,10 @@
                       "isInvalid": false,
                       "start": 83,
                       "end": 90
-                    }
-                  }
+                    },
+                    "symbol": 23
+                  },
+                  "symbol": 24
                 },
                 {
                   "id": 20,
@@ -1188,8 +1203,10 @@
                             "start": 96,
                             "end": 100
                           }
-                        ]
-                      }
+                        ],
+                        "symbol": 25
+                      },
+                      "symbol": 26
                     }
                   ],
                   "commaList": [],
@@ -1235,10 +1252,11 @@
                     "isInvalid": false,
                     "start": 100,
                     "end": 101
-                  }
+                  },
+                  "symbol": 27
                 }
               ],
-              "symbol": 3
+              "symbol": 28
             },
             {
               "id": 33,
@@ -1376,8 +1394,10 @@
                     "isInvalid": false,
                     "start": 104,
                     "end": 116
-                  }
-                }
+                  },
+                  "symbol": 29
+                },
+                "symbol": 30
               },
               "args": [
                 {
@@ -1451,8 +1471,10 @@
                         "isInvalid": false,
                         "start": 117,
                         "end": 124
-                      }
-                    }
+                      },
+                      "symbol": 31
+                    },
+                    "symbol": 32
                   },
                   "argumentList": {
                     "id": 28,
@@ -1547,8 +1569,10 @@
                             "isInvalid": false,
                             "start": 125,
                             "end": 127
-                          }
-                        }
+                          },
+                          "symbol": 33
+                        },
+                        "symbol": 34
                       }
                     ],
                     "commaList": [],
@@ -1594,8 +1618,10 @@
                       "isInvalid": false,
                       "start": 127,
                       "end": 128
-                    }
-                  }
+                    },
+                    "symbol": 35
+                  },
+                  "symbol": 36
                 },
                 {
                   "id": 32,
@@ -1735,8 +1761,10 @@
                             "start": 134,
                             "end": 138
                           }
-                        ]
-                      }
+                        ],
+                        "symbol": 37
+                      },
+                      "symbol": 38
                     }
                   ],
                   "commaList": [],
@@ -1782,10 +1810,11 @@
                     "isInvalid": false,
                     "start": 138,
                     "end": 139
-                  }
+                  },
+                  "symbol": 39
                 }
               ],
-              "symbol": 4
+              "symbol": 40
             },
             {
               "id": 49,
@@ -1923,8 +1952,10 @@
                     "isInvalid": false,
                     "start": 142,
                     "end": 153
-                  }
-                }
+                  },
+                  "symbol": 41
+                },
+                "symbol": 42
               },
               "args": [
                 {
@@ -1998,8 +2029,10 @@
                         "isInvalid": false,
                         "start": 154,
                         "end": 161
-                      }
-                    }
+                      },
+                      "symbol": 43
+                    },
+                    "symbol": 44
                   },
                   "argumentList": {
                     "id": 40,
@@ -2094,8 +2127,10 @@
                             "isInvalid": false,
                             "start": 162,
                             "end": 164
-                          }
-                        }
+                          },
+                          "symbol": 45
+                        },
+                        "symbol": 46
                       }
                     ],
                     "commaList": [],
@@ -2141,8 +2176,10 @@
                       "isInvalid": false,
                       "start": 164,
                       "end": 165
-                    }
-                  }
+                    },
+                    "symbol": 47
+                  },
+                  "symbol": 48
                 },
                 {
                   "id": 48,
@@ -2282,8 +2319,10 @@
                             "start": 171,
                             "end": 175
                           }
-                        ]
-                      }
+                        ],
+                        "symbol": 49
+                      },
+                      "symbol": 50
                     },
                     {
                       "id": 47,
@@ -2341,7 +2380,8 @@
                             "start": 177,
                             "end": 184
                           }
-                        ]
+                        ],
+                        "symbol": 51
                       },
                       "value": {
                         "id": 46,
@@ -2397,8 +2437,10 @@
                             "isInvalid": false,
                             "start": 186,
                             "end": 191
-                          }
-                        }
+                          },
+                          "symbol": 52
+                        },
+                        "symbol": 53
                       },
                       "colon": {
                         "kind": "<colon>",
@@ -2442,7 +2484,8 @@
                         "isInvalid": false,
                         "start": 184,
                         "end": 185
-                      }
+                      },
+                      "symbol": 54
                     }
                   ],
                   "commaList": [
@@ -2532,10 +2575,11 @@
                     "isInvalid": false,
                     "start": 191,
                     "end": 192
-                  }
+                  },
+                  "symbol": 55
                 }
               ],
-              "symbol": 5
+              "symbol": 56
             },
             {
               "id": 63,
@@ -2673,8 +2717,10 @@
                     "isInvalid": false,
                     "start": 195,
                     "end": 202
-                  }
-                }
+                  },
+                  "symbol": 57
+                },
+                "symbol": 58
               },
               "args": [
                 {
@@ -2748,8 +2794,10 @@
                         "isInvalid": false,
                         "start": 203,
                         "end": 210
-                      }
-                    }
+                      },
+                      "symbol": 59
+                    },
+                    "symbol": 60
                   },
                   "argumentList": {
                     "id": 56,
@@ -2844,8 +2892,10 @@
                             "isInvalid": false,
                             "start": 211,
                             "end": 213
-                          }
-                        }
+                          },
+                          "symbol": 61
+                        },
+                        "symbol": 62
                       }
                     ],
                     "commaList": [],
@@ -2891,8 +2941,10 @@
                       "isInvalid": false,
                       "start": 213,
                       "end": 214
-                    }
-                  }
+                    },
+                    "symbol": 63
+                  },
+                  "symbol": 64
                 },
                 {
                   "id": 62,
@@ -2989,7 +3041,8 @@
                             "start": 216,
                             "end": 223
                           }
-                        ]
+                        ],
+                        "symbol": 65
                       },
                       "value": {
                         "id": 60,
@@ -3045,8 +3098,10 @@
                             "isInvalid": false,
                             "start": 225,
                             "end": 229
-                          }
-                        }
+                          },
+                          "symbol": 66
+                        },
+                        "symbol": 67
                       },
                       "colon": {
                         "kind": "<colon>",
@@ -3090,7 +3145,8 @@
                         "isInvalid": false,
                         "start": 223,
                         "end": 224
-                      }
+                      },
+                      "symbol": 68
                     }
                   ],
                   "commaList": [],
@@ -3136,10 +3192,11 @@
                     "isInvalid": false,
                     "start": 229,
                     "end": 230
-                  }
+                  },
+                  "symbol": 69
                 }
               ],
-              "symbol": 6
+              "symbol": 70
             },
             {
               "id": 71,
@@ -3277,8 +3334,10 @@
                     "isInvalid": false,
                     "start": 233,
                     "end": 245
-                  }
-                }
+                  },
+                  "symbol": 71
+                },
+                "symbol": 72
               },
               "args": [
                 {
@@ -3357,8 +3416,10 @@
                       "isInvalid": false,
                       "start": 246,
                       "end": 254
-                    }
-                  }
+                    },
+                    "symbol": 73
+                  },
+                  "symbol": 74
                 },
                 {
                   "id": 70,
@@ -3498,8 +3559,10 @@
                             "start": 260,
                             "end": 264
                           }
-                        ]
-                      }
+                        ],
+                        "symbol": 75
+                      },
+                      "symbol": 76
                     }
                   ],
                   "commaList": [],
@@ -3545,10 +3608,11 @@
                     "isInvalid": false,
                     "start": 264,
                     "end": 265
-                  }
+                  },
+                  "symbol": 77
                 }
               ],
-              "symbol": 7
+              "symbol": 78
             },
             {
               "id": 83,
@@ -3686,8 +3750,10 @@
                     "isInvalid": false,
                     "start": 268,
                     "end": 276
-                  }
-                }
+                  },
+                  "symbol": 79
+                },
+                "symbol": 80
               },
               "args": [
                 {
@@ -3766,8 +3832,10 @@
                       "isInvalid": false,
                       "start": 277,
                       "end": 284
-                    }
-                  }
+                    },
+                    "symbol": 81
+                  },
+                  "symbol": 82
                 },
                 {
                   "id": 82,
@@ -3907,8 +3975,10 @@
                             "start": 290,
                             "end": 294
                           }
-                        ]
-                      }
+                        ],
+                        "symbol": 83
+                      },
+                      "symbol": 84
                     },
                     {
                       "id": 81,
@@ -3966,7 +4036,8 @@
                             "start": 296,
                             "end": 303
                           }
-                        ]
+                        ],
+                        "symbol": 85
                       },
                       "value": {
                         "id": 80,
@@ -4022,8 +4093,10 @@
                             "isInvalid": false,
                             "start": 305,
                             "end": 309
-                          }
-                        }
+                          },
+                          "symbol": 86
+                        },
+                        "symbol": 87
                       },
                       "colon": {
                         "kind": "<colon>",
@@ -4067,7 +4140,8 @@
                         "isInvalid": false,
                         "start": 303,
                         "end": 304
-                      }
+                      },
+                      "symbol": 88
                     }
                   ],
                   "commaList": [
@@ -4157,10 +4231,11 @@
                     "isInvalid": false,
                     "start": 309,
                     "end": 310
-                  }
+                  },
+                  "symbol": 89
                 }
               ],
-              "symbol": 8
+              "symbol": 90
             },
             {
               "id": 91,
@@ -4298,8 +4373,10 @@
                     "isInvalid": false,
                     "start": 313,
                     "end": 326
-                  }
-                }
+                  },
+                  "symbol": 91
+                },
+                "symbol": 92
               },
               "args": [
                 {
@@ -4378,8 +4455,10 @@
                       "isInvalid": false,
                       "start": 327,
                       "end": 335
-                    }
-                  }
+                    },
+                    "symbol": 93
+                  },
+                  "symbol": 94
                 },
                 {
                   "id": 90,
@@ -4519,8 +4598,10 @@
                             "start": 341,
                             "end": 345
                           }
-                        ]
-                      }
+                        ],
+                        "symbol": 95
+                      },
+                      "symbol": 96
                     }
                   ],
                   "commaList": [],
@@ -4566,10 +4647,11 @@
                     "isInvalid": false,
                     "start": 345,
                     "end": 346
-                  }
+                  },
+                  "symbol": 97
                 }
               ],
-              "symbol": 9
+              "symbol": 98
             },
             {
               "id": 100,
@@ -4707,8 +4789,10 @@
                     "isInvalid": false,
                     "start": 349,
                     "end": 362
-                  }
-                }
+                  },
+                  "symbol": 99
+                },
+                "symbol": 100
               },
               "args": [
                 {
@@ -4787,8 +4871,10 @@
                       "isInvalid": false,
                       "start": 363,
                       "end": 372
-                    }
-                  }
+                    },
+                    "symbol": 101
+                  },
+                  "symbol": 102
                 },
                 {
                   "id": 99,
@@ -4885,7 +4971,8 @@
                             "start": 374,
                             "end": 381
                           }
-                        ]
+                        ],
+                        "symbol": 103
                       },
                       "value": {
                         "id": 97,
@@ -4924,7 +5011,8 @@
                           "isInvalid": false,
                           "start": 383,
                           "end": 402
-                        }
+                        },
+                        "symbol": 104
                       },
                       "colon": {
                         "kind": "<colon>",
@@ -4968,7 +5056,8 @@
                         "isInvalid": false,
                         "start": 381,
                         "end": 382
-                      }
+                      },
+                      "symbol": 105
                     }
                   ],
                   "commaList": [],
@@ -5014,10 +5103,11 @@
                     "isInvalid": false,
                     "start": 402,
                     "end": 403
-                  }
+                  },
+                  "symbol": 106
                 }
               ],
-              "symbol": 10
+              "symbol": 107
             }
           ],
           "blockCloseBrace": {
@@ -5064,8 +5154,8 @@
             "end": 405
           }
         },
-        "parent": 174,
-        "symbol": 1
+        "parent": 173,
+        "symbol": 2
       },
       {
         "id": 133,
@@ -5425,8 +5515,10 @@
                     "isInvalid": false,
                     "start": 424,
                     "end": 426
-                  }
-                }
+                  },
+                  "symbol": 108
+                },
+                "symbol": 109
               },
               "args": [
                 {
@@ -5505,8 +5597,10 @@
                       "isInvalid": false,
                       "start": 427,
                       "end": 434
-                    }
-                  }
+                    },
+                    "symbol": 110
+                  },
+                  "symbol": 111
                 },
                 {
                   "id": 111,
@@ -5646,8 +5740,10 @@
                             "start": 444,
                             "end": 447
                           }
-                        ]
-                      }
+                        ],
+                        "symbol": 112
+                      },
+                      "symbol": 113
                     }
                   ],
                   "commaList": [],
@@ -5693,10 +5789,11 @@
                     "isInvalid": false,
                     "start": 447,
                     "end": 448
-                  }
+                  },
+                  "symbol": 114
                 }
               ],
-              "symbol": 12
+              "symbol": 115
             },
             {
               "id": 122,
@@ -5834,8 +5931,10 @@
                     "isInvalid": false,
                     "start": 451,
                     "end": 455
-                  }
-                }
+                  },
+                  "symbol": 116
+                },
+                "symbol": 117
               },
               "args": [
                 {
@@ -5914,8 +6013,10 @@
                       "isInvalid": false,
                       "start": 456,
                       "end": 457
-                    }
-                  }
+                    },
+                    "symbol": 118
+                  },
+                  "symbol": 119
                 },
                 {
                   "id": 121,
@@ -6012,7 +6113,8 @@
                             "start": 459,
                             "end": 466
                           }
-                        ]
+                        ],
+                        "symbol": 120
                       },
                       "value": {
                         "id": 119,
@@ -6068,8 +6170,10 @@
                             "isInvalid": false,
                             "start": 468,
                             "end": 475
-                          }
-                        }
+                          },
+                          "symbol": 121
+                        },
+                        "symbol": 122
                       },
                       "colon": {
                         "kind": "<colon>",
@@ -6113,7 +6217,8 @@
                         "isInvalid": false,
                         "start": 466,
                         "end": 467
-                      }
+                      },
+                      "symbol": 123
                     }
                   ],
                   "commaList": [],
@@ -6159,10 +6264,11 @@
                     "isInvalid": false,
                     "start": 475,
                     "end": 476
-                  }
+                  },
+                  "symbol": 124
                 }
               ],
-              "symbol": 13
+              "symbol": 125
             },
             {
               "id": 127,
@@ -6300,8 +6406,10 @@
                     "isInvalid": false,
                     "start": 479,
                     "end": 489
-                  }
-                }
+                  },
+                  "symbol": 126
+                },
+                "symbol": 127
               },
               "args": [
                 {
@@ -6380,11 +6488,13 @@
                       "isInvalid": false,
                       "start": 490,
                       "end": 497
-                    }
-                  }
+                    },
+                    "symbol": 128
+                  },
+                  "symbol": 129
                 }
               ],
-              "symbol": 14
+              "symbol": 130
             },
             {
               "id": 131,
@@ -6608,7 +6718,8 @@
                 },
                 "args": []
               },
-              "parent": 133
+              "parent": 133,
+              "symbol": 131
             }
           ],
           "blockCloseBrace": {
@@ -6655,8 +6766,8 @@
             "end": 516
           }
         },
-        "parent": 174,
-        "symbol": 11
+        "parent": 173,
+        "symbol": 3
       },
       {
         "id": 149,
@@ -6995,8 +7106,10 @@
                     "isInvalid": false,
                     "start": 535,
                     "end": 537
-                  }
-                }
+                  },
+                  "symbol": 132
+                },
+                "symbol": 133
               },
               "args": [
                 {
@@ -7075,11 +7188,13 @@
                       "isInvalid": false,
                       "start": 538,
                       "end": 545
-                    }
-                  }
+                    },
+                    "symbol": 134
+                  },
+                  "symbol": 135
                 }
               ],
-              "symbol": 16
+              "symbol": 136
             },
             {
               "id": 147,
@@ -7196,8 +7311,10 @@
                     "isInvalid": false,
                     "start": 547,
                     "end": 553
-                  }
-                }
+                  },
+                  "symbol": 137
+                },
+                "symbol": 138
               },
               "args": [
                 {
@@ -7271,8 +7388,10 @@
                         "isInvalid": false,
                         "start": 554,
                         "end": 560
-                      }
-                    }
+                      },
+                      "symbol": 139
+                    },
+                    "symbol": 140
                   },
                   "indexer": {
                     "id": 145,
@@ -7356,11 +7475,13 @@
                       "isInvalid": false,
                       "start": 561,
                       "end": 562
-                    }
-                  }
+                    },
+                    "symbol": 141
+                  },
+                  "symbol": 142
                 }
               ],
-              "symbol": 17
+              "symbol": 143
             }
           ],
           "blockCloseBrace": {
@@ -7407,11 +7528,11 @@
             "end": 564
           }
         },
-        "parent": 174,
-        "symbol": 15
+        "parent": 173,
+        "symbol": 4
       },
       {
-        "id": 173,
+        "id": 172,
         "kind": "<element-declaration>",
         "startPos": {
           "offset": 566,
@@ -7572,7 +7693,7 @@
           }
         },
         "body": {
-          "id": 172,
+          "id": 171,
           "kind": "<block-expression>",
           "startPos": {
             "offset": 580,
@@ -7747,8 +7868,10 @@
                     "isInvalid": false,
                     "start": 583,
                     "end": 585
-                  }
-                }
+                  },
+                  "symbol": 144
+                },
+                "symbol": 145
               },
               "args": [
                 {
@@ -7827,11 +7950,13 @@
                       "isInvalid": false,
                       "start": 586,
                       "end": 593
-                    }
-                  }
+                    },
+                    "symbol": 146
+                  },
+                  "symbol": 147
                 }
               ],
-              "symbol": 19
+              "symbol": 6
             },
             {
               "id": 161,
@@ -7948,8 +8073,10 @@
                     "isInvalid": false,
                     "start": 595,
                     "end": 599
-                  }
-                }
+                  },
+                  "symbol": 148
+                },
+                "symbol": 149
               },
               "args": [
                 {
@@ -8028,11 +8155,13 @@
                       "isInvalid": false,
                       "start": 600,
                       "end": 606
-                    }
-                  }
+                    },
+                    "symbol": 150
+                  },
+                  "symbol": 151
                 }
               ],
-              "symbol": 20
+              "symbol": 7
             },
             {
               "id": 170,
@@ -8314,7 +8443,8 @@
                           "start": 620,
                           "end": 622
                         }
-                      }
+                      },
+                      "referee": 6
                     },
                     "args": [
                       {
@@ -8394,7 +8524,8 @@
                             "start": 623,
                             "end": 627
                           }
-                        }
+                        },
+                        "referee": 7
                       }
                     ]
                   }
@@ -8465,7 +8596,8 @@
                   "end": 630
                 }
               },
-              "parent": 173
+              "parent": 172,
+              "symbol": 8
             }
           ],
           "blockCloseBrace": {
@@ -8490,8 +8622,8 @@
             "end": 632
           }
         },
-        "parent": 174,
-        "symbol": 18
+        "parent": 173,
+        "symbol": 5
       }
     ],
     "eof": {
@@ -8519,51 +8651,51 @@
       "symbolTable": {
         "Table:customer": {
           "references": [],
-          "id": 1,
+          "id": 2,
           "symbolTable": {
             "Column:customer_id": {
               "references": [],
-              "id": 2,
+              "id": 20,
               "declaration": 13
             },
             "Column:store_id": {
               "references": [],
-              "id": 3,
+              "id": 28,
               "declaration": 21
             },
             "Column:first_name": {
               "references": [],
-              "id": 4,
+              "id": 40,
               "declaration": 33
             },
             "Column:last_name": {
               "references": [],
-              "id": 5,
+              "id": 56,
               "declaration": 49
             },
             "Column:email": {
               "references": [],
-              "id": 6,
+              "id": 70,
               "declaration": 63
             },
             "Column:address_id": {
               "references": [],
-              "id": 7,
+              "id": 78,
               "declaration": 71
             },
             "Column:active": {
               "references": [],
-              "id": 8,
+              "id": 90,
               "declaration": 83
             },
             "Column:create_date": {
               "references": [],
-              "id": 9,
+              "id": 98,
               "declaration": 91
             },
             "Column:last_update": {
               "references": [],
-              "id": 10,
+              "id": 107,
               "declaration": 100
             }
           },
@@ -8571,38 +8703,43 @@
         },
         "Table:cities": {
           "references": [],
-          "id": 11,
+          "id": 3,
           "symbolTable": {
             "Column:id": {
               "references": [],
-              "id": 12,
+              "id": 115,
               "declaration": 112
             },
             "Column:name": {
               "references": [],
-              "id": 13,
+              "id": 125,
               "declaration": 122
             },
             "Column:country_id": {
               "references": [],
-              "id": 14,
+              "id": 130,
               "declaration": 127
+            },
+            "Column:131": {
+              "references": [],
+              "id": 131,
+              "declaration": 131
             }
           },
           "declaration": 133
         },
         "Table:country": {
           "references": [],
-          "id": 15,
+          "id": 4,
           "symbolTable": {
             "Column:id": {
               "references": [],
-              "id": 16,
+              "id": 136,
               "declaration": 140
             },
             "Column:cities": {
               "references": [],
-              "id": 17,
+              "id": 143,
               "declaration": 147
             }
           },
@@ -8610,20 +8747,29 @@
         },
         "Table:citites": {
           "references": [],
-          "id": 18,
+          "id": 5,
           "symbolTable": {
             "Column:id": {
-              "references": [],
-              "id": 19,
+              "references": [
+                165
+              ],
+              "id": 6,
               "declaration": 156
             },
             "Column:name": {
-              "references": [],
-              "id": 20,
+              "references": [
+                167
+              ],
+              "id": 7,
               "declaration": 161
+            },
+            "Column:8": {
+              "references": [],
+              "id": 8,
+              "declaration": 170
             }
           },
-          "declaration": 173
+          "declaration": 172
         }
       },
       "id": 0,

@@ -1,15 +1,14 @@
 import {
   destructureMemberAccessExpression,
   extractVariableFromExpression,
-  getElementKind,
-} from '@/core/analyzer/utils';
+} from '@/core/utils/expression';
 import {
   extractStringFromIdentifierStream,
   isExpressionAVariableNode,
-} from '@/core/parser/utils';
+} from '@/core/utils/expression';
 import Compiler, { ScopeKind } from '@/compiler';
 import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
-import { isOffsetWithinSpan } from '@/core/utils';
+import { isOffsetWithinSpan } from '@/core/utils/span';
 import {
   type CompletionList,
   type TextModel,
@@ -18,8 +17,8 @@ import {
   CompletionItemKind,
   CompletionItemInsertTextRule,
 } from '@/services/types';
-import { TableSymbol, type NodeSymbol } from '@/core/analyzer/symbol/symbols';
-import { SymbolKind, destructureIndex } from '@/core/analyzer/symbol/symbolIndex';
+import { type NodeSymbol, SchemaSymbol } from '@/core/types/symbols';
+import { SymbolKind } from '@/core/types/symbols';
 import {
   pickCompletionItemKind,
   shouldPrependSpace,
@@ -47,7 +46,8 @@ import {
 } from '@/core/parser/nodes';
 import { getOffsetFromMonacoPosition } from '@/services/utils';
 import { isComment } from '@/core/lexer/utils';
-import { ElementKind, SettingName } from '@/core/analyzer/types';
+import { ElementKind, SettingName } from '@/core/types/keywords';
+import { UNHANDLED, DEFAULT_SCHEMA_NAME } from '@/constants';
 
 export default class DBMLCompletionItemProvider implements CompletionItemProvider {
   private compiler: Compiler;
@@ -206,23 +206,46 @@ function suggestOnRelOp (
   return noSuggestions();
 }
 
+function getMemberName (compiler: Compiler, member: NodeSymbol): { name: string; fullname: string[] | undefined } {
+  const name = compiler.symbolName(member) ?? '';
+  if (member instanceof SchemaSymbol) {
+    return { name, fullname: [name] };
+  }
+  const nameResult = member.declaration ? compiler.fullname(member.declaration) : undefined;
+  const fullname = (nameResult && !nameResult.hasValue(UNHANDLED)) ? nameResult.getValue() : undefined;
+  return { name, fullname: fullname ?? undefined };
+}
+
 function suggestMembersOfSymbol (
   compiler: Compiler,
   symbol: NodeSymbol,
   acceptedKinds: SymbolKind[],
 ): CompletionList {
+  const members = compiler.symbolMembers(symbol).getFiltered(UNHANDLED);
+  if (!members) return noSuggestions();
   return addQuoteToSuggestionIfNeeded({
-    suggestions: compiler.symbol
-      .members(symbol)
-      .filter(({ kind }) => acceptedKinds.includes(kind))
-      .map(({ name, kind }) => ({
-        label: name,
-        insertText: name,
-        insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
-        kind: pickCompletionItemKind(kind),
-        sortText: pickCompletionItemKind(kind).toString().padStart(2, '0'),
-        range: undefined as any,
-      })),
+    suggestions: members
+      .filter((member) => acceptedKinds.includes(member.kind))
+      .filter((member) => {
+        // Schema-qualified members (fullname.length > 1) should only be accessed
+        // through their schema, not shown as direct suggestions at the parent scope.
+        // Also exclude the default 'public' schema since it's implicit.
+        if (member instanceof SchemaSymbol && member.name === DEFAULT_SCHEMA_NAME) return false;
+        const { fullname } = getMemberName(compiler, member);
+        return !fullname || fullname.length <= 1;
+      })
+      .map((member) => {
+        const { name } = getMemberName(compiler, member);
+        return {
+          label: name,
+          insertText: name,
+          insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
+          kind: pickCompletionItemKind(member.kind),
+          sortText: pickCompletionItemKind(member.kind).toString().padStart(2, '0'),
+          range: undefined as any,
+        };
+      })
+      .filter((s) => s.label !== ''),
   });
 }
 
@@ -239,11 +262,20 @@ function suggestNamesInScope (
   let curElement: SyntaxNode | undefined = parent;
   const res: CompletionList = { suggestions: [] };
   while (curElement) {
-    if (curElement?.symbol?.symbolTable) {
-      const { symbol } = curElement;
-      res.suggestions.push(
-        ...suggestMembersOfSymbol(compiler, symbol, acceptedKinds).suggestions,
-      );
+    const symbol = compiler.nodeSymbol(curElement).getFiltered(UNHANDLED);
+    if (symbol) {
+      const memberSuggestions = suggestMembersOfSymbol(compiler, symbol, acceptedKinds).suggestions;
+      // Sort within each scope level: columns first, then schemas, then tables/other
+      const kindPriority = (kind: number): number => {
+        switch (kind) {
+          case CompletionItemKind.Field: return 0; // Column
+          case CompletionItemKind.Module: return 1; // Schema
+          case CompletionItemKind.Class: return 2; // Table
+          default: return 3;
+        }
+      };
+      memberSuggestions.sort((a, b) => kindPriority(a.kind) - kindPriority(b.kind));
+      res.suggestions.push(...memberSuggestions);
     }
     curElement = curElement instanceof ElementDeclarationNode ? curElement.parent : undefined;
   }
@@ -266,11 +298,14 @@ function suggestInTuple (compiler: Compiler, offset: number, tupleContainer: Tup
   // Check if we're in a Records element header
   if (
     element instanceof ElementDeclarationNode
-    && getElementKind(element).unwrap_or(undefined) === ElementKind.Records
+    && element.isKind(ElementKind.Records)
     && !(element.name instanceof CallExpressionNode)
     && isOffsetWithinElementHeader(offset, element)
   ) {
-    const tableSymbol = element.parent?.symbol || element.name?.referee;
+    const parentSymbol = element.parent ? compiler.nodeSymbol(element.parent).getFiltered(UNHANDLED) : undefined;
+    const refereeSymbol = element.name ? compiler.nodeReferee(element.name).getFiltered(UNHANDLED) : undefined;
+
+    const tableSymbol = parentSymbol || refereeSymbol;
     if (tableSymbol) {
       const suggestions = suggestMembersOfSymbol(compiler, tableSymbol, [SymbolKind.Column]);
       // If the user already typed some columns, we do not suggest "all columns" anymore
@@ -342,7 +377,7 @@ function suggestInAttribute (
     const res = suggestAttributeValue(
       compiler,
       offset,
-      extractStringFromIdentifierStream(container.name).unwrap_or(''),
+      extractStringFromIdentifierStream(container.name) ?? '',
     );
 
     return (token?.kind === SyntaxTokenKind.COLON && shouldPrependSpace(token, offset)) ? prependSpace(res) : res;
@@ -517,29 +552,69 @@ function suggestAttributeValue (
   return noSuggestions();
 }
 
+// Resolve a name stack (e.g. ['schema', 'table']) to matching symbols
+// by walking from the scope element's symbol through its members
+function resolveNameStack (
+  compiler: Compiler,
+  nameStack: string[],
+  scopeElement: SyntaxNode | undefined,
+): NodeSymbol[] {
+  if (!scopeElement) return [];
+
+  // Collect all symbols from the scope hierarchy
+  let candidates: NodeSymbol[] = [];
+  let curElement: SyntaxNode | undefined = scopeElement;
+  while (curElement) {
+    const symbol = compiler.nodeSymbol(curElement).getFiltered(UNHANDLED);
+    if (symbol) {
+      const members = compiler.symbolMembers(symbol).getFiltered(UNHANDLED);
+      candidates.push(...members || []);
+    }
+    curElement = curElement instanceof ElementDeclarationNode ? curElement.parent : undefined;
+  }
+
+  // Walk through the name stack
+  for (const name of nameStack) {
+    const matching = candidates.filter((member) => {
+      const { name: memberName } = getMemberName(compiler, member);
+      return memberName === name;
+    });
+    if (matching.length === 0) return [];
+    candidates = matching;
+  }
+
+  return candidates;
+}
+
 function suggestMembers (
   compiler: Compiler,
   offset: number,
   container: InfixExpressionNode & { op: SyntaxToken },
 ): CompletionList {
-  const fragments = destructureMemberAccessExpression(container).unwrap_or([]);
+  const fragments = destructureMemberAccessExpression(container) ?? [];
   fragments.pop(); // The last fragment is not used in suggestions: v1.table.a<>
   if (fragments.some((f) => !isExpressionAVariableNode(f))) {
     return noSuggestions();
   }
 
-  const nameStack = fragments.map((f) => extractVariableFromExpression(f).unwrap());
+  const nameStack = fragments.map((f) => extractVariableFromExpression(f)!);
+
+  // Resolve the name stack by walking from the scope's symbol through members
+  const resolvedSymbols = resolveNameStack(compiler, nameStack, compiler.container.element(offset));
 
   return addQuoteToSuggestionIfNeeded({
-    suggestions: compiler.symbol
-      .ofName(nameStack, compiler.container.element(offset))
-      .flatMap(({ symbol }) => compiler.symbol.members(symbol))
-      .map(({ kind, name }) => ({
-        label: name,
-        insertText: name,
-        kind: pickCompletionItemKind(kind),
-        range: undefined as any,
-      })),
+    suggestions: resolvedSymbols
+      .flatMap((symbol) => compiler.symbolMembers(symbol).getFiltered(UNHANDLED) || [])
+      .map((member) => {
+        const { name } = getMemberName(compiler, member);
+        return {
+          label: name,
+          insertText: name,
+          kind: pickCompletionItemKind(member.kind),
+          range: undefined as any,
+        };
+      })
+      .filter((s) => s.label !== ''),
   });
 }
 
@@ -697,8 +772,7 @@ function suggestInElementHeader (
   offset: number,
   container: ElementDeclarationNode,
 ): CompletionList {
-  const elementKind = getElementKind(container).unwrap_or(undefined);
-  if (elementKind === ElementKind.Records) {
+  if (container.isKind(ElementKind.Records)) {
     return suggestNamesInScope(compiler, offset, container.parent, [
       SymbolKind.Schema,
       SymbolKind.Table,
@@ -721,7 +795,7 @@ function suggestInCallExpression (
   // Check if we're in a Records element header (top-level Records)
   if (
     element instanceof ElementDeclarationNode
-    && getElementKind(element).unwrap_or(undefined) === ElementKind.Records
+    && element.isKind(ElementKind.Records)
     && isOffsetWithinElementHeader(offset, element)
   ) {
     if (inCallee) return suggestNamesInScope(compiler, offset, element.parent, [
@@ -733,9 +807,9 @@ function suggestInCallExpression (
     const callee = container.callee;
     if (!callee) return noSuggestions();
 
-    const fragments = destructureMemberAccessExpression(callee).unwrap_or([callee]);
+    const fragments = destructureMemberAccessExpression(callee) ?? [callee];
     const rightmostExpr = fragments[fragments.length - 1];
-    const tableSymbol = rightmostExpr?.referee;
+    const tableSymbol = rightmostExpr ? compiler.nodeReferee(rightmostExpr).getFiltered(UNHANDLED) : undefined;
 
     if (!tableSymbol) return noSuggestions();
     const suggestions = suggestMembersOfSymbol(compiler, tableSymbol, [SymbolKind.Column]);
@@ -755,8 +829,8 @@ function suggestInCallExpression (
     if (!inArgs) continue;
     if (!(c instanceof FunctionApplicationNode)) continue;
     if (c.callee !== container) continue;
-    if (extractVariableFromExpression(container.callee).unwrap_or('').toLowerCase() !== ElementKind.Records) continue;
-    const tableSymbol = compiler.container.element(offset).symbol;
+    if ((extractVariableFromExpression(container.callee) ?? '').toLowerCase() !== ElementKind.Records) continue;
+    const tableSymbol = compiler.nodeSymbol(compiler.container.element(offset)).getFiltered(UNHANDLED);
     if (!tableSymbol) return noSuggestions();
     const suggestions = suggestMembersOfSymbol(compiler, tableSymbol, [SymbolKind.Column]);
     const { argumentList } = container;
@@ -769,20 +843,24 @@ function suggestInCallExpression (
 }
 
 function suggestInTableGroupField (compiler: Compiler): CompletionList {
+  const publicMembers = compiler.parse.publicSymbolTable() ?? [];
   return {
     suggestions: [
       ...addQuoteToSuggestionIfNeeded({
-        suggestions: [...compiler.parse.publicSymbolTable().entries()].flatMap(([index]) => {
-          const res = destructureIndex(index).unwrap_or(undefined);
-          if (res === undefined) return [];
-          const { kind, name } = res;
-          if (kind !== SymbolKind.Table && kind !== SymbolKind.Schema) return [];
+        suggestions: publicMembers.flatMap((member) => {
+          if (member.kind !== SymbolKind.Table && member.kind !== SymbolKind.Schema) return [];
+          const { name, fullname } = getMemberName(compiler, member);
+          if (!name) return [];
+          // Skip schema-qualified members (accessible via their schema)
+          if (fullname && fullname.length > 1) return [];
+          // Skip the default 'public' schema
+          if (member instanceof SchemaSymbol && member.name === DEFAULT_SCHEMA_NAME) return [];
 
           return {
             label: name,
             insertText: name,
             insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
-            kind: pickCompletionItemKind(kind),
+            kind: pickCompletionItemKind(member.kind),
             range: undefined as any,
           };
         }),
@@ -881,19 +959,19 @@ function suggestColumnType (compiler: Compiler, offset: number): CompletionList 
 function suggestColumnNameInIndexes (compiler: Compiler, offset: number): CompletionList {
   const indexesNode = compiler.container.element(offset);
   const tableNode = (indexesNode as any)?.parent;
-  if (!(tableNode?.symbol instanceof TableSymbol)) {
+  const tableSymbol = tableNode ? compiler.nodeSymbol(tableNode).getFiltered(UNHANDLED) : undefined;
+  if (!tableSymbol || !tableSymbol?.isKind(SymbolKind.Table)) {
     return noSuggestions();
   }
 
-  const { symbolTable } = tableNode.symbol;
+  const members = compiler.symbolMembers(tableSymbol).getFiltered(UNHANDLED);
+  if (!members) return noSuggestions();
 
   return addQuoteToSuggestionIfNeeded({
-    suggestions: [...symbolTable.entries()].flatMap(([index]) => {
-      const res = destructureIndex(index).unwrap_or(undefined);
-      if (res === undefined) {
-        return [];
-      }
-      const { name } = res;
+    suggestions: members.flatMap((member) => {
+      const nameResult = member.declaration ? compiler.fullname(member.declaration) : undefined;
+      const name = (nameResult && !nameResult.hasValue(UNHANDLED)) ? nameResult.getValue()?.at(-1) : undefined;
+      if (!name) return [];
 
       return {
         label: name,

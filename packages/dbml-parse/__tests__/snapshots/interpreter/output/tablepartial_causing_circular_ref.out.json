@@ -94,6 +94,122 @@
       "schemaName": null,
       "token": {
         "start": {
+          "offset": 30,
+          "line": 2,
+          "column": 14
+        },
+        "end": {
+          "offset": 43,
+          "line": 2,
+          "column": 27
+        }
+      },
+      "endpoints": [
+        {
+          "schemaName": null,
+          "tableName": "T",
+          "fieldNames": [
+            "col1"
+          ],
+          "relation": "1",
+          "token": {
+            "start": {
+              "offset": 30,
+              "line": 2,
+              "column": 14
+            },
+            "end": {
+              "offset": 43,
+              "line": 2,
+              "column": 27
+            }
+          }
+        },
+        {
+          "schemaName": null,
+          "tableName": "T",
+          "fieldNames": [
+            "col1"
+          ],
+          "token": {
+            "start": {
+              "offset": 19,
+              "line": 2,
+              "column": 3
+            },
+            "end": {
+              "offset": 44,
+              "line": 2,
+              "column": 28
+            }
+          },
+          "relation": "*"
+        }
+      ]
+    },
+    {
+      "name": null,
+      "schemaName": null,
+      "token": {
+        "start": {
+          "offset": 58,
+          "line": 3,
+          "column": 14
+        },
+        "end": {
+          "offset": 71,
+          "line": 3,
+          "column": 27
+        }
+      },
+      "endpoints": [
+        {
+          "schemaName": null,
+          "tableName": "T",
+          "fieldNames": [
+            "col2"
+          ],
+          "relation": "1",
+          "token": {
+            "start": {
+              "offset": 58,
+              "line": 3,
+              "column": 14
+            },
+            "end": {
+              "offset": 71,
+              "line": 3,
+              "column": 27
+            }
+          }
+        },
+        {
+          "schemaName": null,
+          "tableName": "T",
+          "fieldNames": [
+            "col3"
+          ],
+          "token": {
+            "start": {
+              "offset": 47,
+              "line": 3,
+              "column": 3
+            },
+            "end": {
+              "offset": 72,
+              "line": 3,
+              "column": 28
+            }
+          },
+          "relation": "*"
+        }
+      ]
+    },
+    {
+      "name": null,
+      "schemaName": null,
+      "token": {
+        "start": {
           "offset": 104,
           "line": 8,
           "column": 14

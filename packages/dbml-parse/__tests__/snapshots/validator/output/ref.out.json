@@ -857,7 +857,8 @@
             }
           ]
         },
-        "parent": 19
+        "parent": 19,
+        "symbol": 2
       }
     ],
     "eof": {
@@ -882,7 +883,14 @@
       "end": 50
     },
     "symbol": {
-      "symbolTable": {},
+      "symbolTable": {
+        "Ref:a": {
+          "references": [],
+          "id": 2,
+          "symbolTable": {},
+          "declaration": 18
+        }
+      },
       "id": 0,
       "references": []
     }

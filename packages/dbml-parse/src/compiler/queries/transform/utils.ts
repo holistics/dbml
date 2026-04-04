@@ -1,8 +1,7 @@
-import { DEFAULT_SCHEMA_NAME } from '@/constants';
+import { DEFAULT_SCHEMA_NAME, UNHANDLED } from '@/constants';
 import { splitQualifiedIdentifier } from '../utils';
-import { createTableSymbolIndex, createSchemaSymbolIndex } from '@/core/analyzer/symbol/symbolIndex';
-import type SymbolTable from '@/core/analyzer/symbol/symbolTable';
-import { TableSymbol } from '@/core/analyzer/symbol/symbols';
+import type Compiler from '../../index';
+import { NodeSymbol, SymbolKind } from '@/core/types/symbols';
 
 export type TableNameInput = string | { schema?: string; table: string };
 
@@ -51,29 +50,46 @@ export function normalizeTableName (input: TableNameInput): { schema: string; ta
 }
 
 /**
- * Looks up a table symbol from the symbol table.
+ * Looks up a table symbol by matching its full qualified name.
  */
 export function lookupTableSymbol (
-  symbolTable: Readonly<SymbolTable>,
+  compiler: Compiler,
   schema: string,
   table: string,
-): TableSymbol | null {
-  const tableSymbolIndex = createTableSymbolIndex(table);
+): NodeSymbol | null {
+  const publicSymbols = compiler.parse.publicSymbolTable();
+  if (!publicSymbols) return null;
 
+  // Build the expected fullname
+  const expectedFullname = schema === DEFAULT_SCHEMA_NAME ? [table] : [schema, table];
+
+  // First try by table name
+  const byName = publicSymbols.find((sym) => {
+    if (!sym.isKind(SymbolKind.Table)) return false;
+    if (!sym.declaration) return false;
+    const fn = compiler.fullname(sym.declaration);
+    if (fn.hasValue(UNHANDLED)) return false;
+    const parts = fn.getValue();
+    if (!parts) return false;
+    const lastName = parts.at(-1);
+    const schemaPrefix = parts.length >= 2 ? parts[0] : DEFAULT_SCHEMA_NAME;
+    return lastName === table && schemaPrefix === schema;
+  });
+  if (byName) return byName;
+
+  // Fall back to alias lookup (aliases are schema-independent)
   if (schema === DEFAULT_SCHEMA_NAME) {
-    const symbol = symbolTable.get(tableSymbolIndex);
-    return symbol instanceof TableSymbol ? symbol : null;
+    const byAlias = publicSymbols.find((sym) => {
+      if (!sym.isKind(SymbolKind.Table)) return false;
+      if (!sym.declaration) return false;
+      const aliasResult = compiler.alias(sym.declaration);
+      if (aliasResult.hasValue(UNHANDLED)) return false;
+      return aliasResult.getValue() === table;
+    });
+    if (byAlias) return byAlias;
   }
 
-  const schemaSymbolIndex = createSchemaSymbolIndex(schema);
-  const schemaSymbol = symbolTable.get(schemaSymbolIndex);
-
-  if (!schemaSymbol || !schemaSymbol.symbolTable) {
-    return null;
-  }
-
-  const symbol = schemaSymbol.symbolTable.get(tableSymbolIndex);
-  return symbol instanceof TableSymbol ? symbol : null;
+  return null;
 }
 
 /**

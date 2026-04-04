@@ -1,0 +1,1 @@
+export { parseFile } from './parse';

@@ -1,6 +1,7 @@
-import { CompileError } from '@/core/errors';
-import { InterpreterDatabase, Ref, RefEndpoint, Table, TableRecordRow } from '@/core/interpreter/types';
+import type { CompileWarning } from '@/core/errors';
+import type { Ref, RefEndpoint, Table, TableRecord } from '@/core/types/schemaJson';
 import {
+  buildColumnIndex,
   extractKeyValueWithDefault,
   hasNullWithoutDefaultInKey,
   formatFullColumnNames,
@@ -8,43 +9,20 @@ import {
   createConstraintErrors,
 } from './helper';
 import { DEFAULT_SCHEMA_NAME } from '@/constants';
-import { mergeTableAndPartials, extractInlineRefsFromTablePartials } from '@/core/interpreter/utils';
 import { isEmpty, flatMap } from 'lodash-es';
 
+type CompileError = CompileWarning;
+
 type TableInfo = {
-  rows: TableRecordRow[];
+  rows: TableRecord;
   mergedTable: Table;
 };
 
-export function validateForeignKeys (env: InterpreterDatabase): CompileError[] {
-  // Collect all refs: explicit refs + inline refs from table partials
-  const refs = [
-    ...env.ref.values(),
-    ...flatMap(Array.from(env.tables.values()), (t) => extractInlineRefsFromTablePartials(t, env)),
-  ];
-
-  // Build table info map
-  const tableInfoMap = buildTableInfoMap(env);
-
-  return flatMap(refs, (ref) => validateRef(ref, tableInfoMap));
-}
-
-function buildTableInfoMap (env: InterpreterDatabase): Map<string, TableInfo> {
-  const tableInfoMap = new Map<string, TableInfo>();
-
-  for (const table of env.tables.values()) {
-    const key = makeTableKey(table.schemaName, table.name);
-    const rows = env.records.get(table)?.rows || [];
-
-    if (!env.cachedMergedTables.has(table)) {
-      env.cachedMergedTables.set(table, mergeTableAndPartials(table, env));
-    }
-    const mergedTable = env.cachedMergedTables.get(table)!;
-
-    tableInfoMap.set(key, { mergedTable, rows });
-  }
-
-  return tableInfoMap;
+export function validateForeignKeys (
+  allRefs: Ref[],
+  allRecords: Map<string, TableInfo>,
+): CompileError[] {
+  return flatMap(allRefs, (ref) => validateRef(ref, allRecords));
 }
 
 function makeTableKey (schema: string | null | undefined, table: string): string {
@@ -58,21 +36,26 @@ function validateFkSourceToTarget (
   sourceEndpoint: RefEndpoint,
   targetEndpoint: RefEndpoint,
 ): CompileError[] {
-  if (isEmpty(sourceTable.rows)) return [];
+  if (isEmpty(sourceTable.rows.values)) return [];
+
+  const sourceColumnIndex = buildColumnIndex(sourceTable.rows);
+  const targetColumnIndex = buildColumnIndex(targetTable.rows);
 
   // Build set of valid target values for FK reference check
   const validFkValues = new Set(
-    targetTable.rows.map((row) => extractKeyValueWithDefault(row.values, targetEndpoint.fieldNames)),
+    targetTable.rows.values.map((row) =>
+      extractKeyValueWithDefault(row, targetEndpoint.fieldNames, targetColumnIndex),
+    ),
   );
 
   // Filter rows with NULL values (optional relationships)
-  const rowsWithValues = sourceTable.rows.filter((row) =>
-    !hasNullWithoutDefaultInKey(row.values, sourceEndpoint.fieldNames),
+  const rowsWithValues = sourceTable.rows.values.filter((row) =>
+    !hasNullWithoutDefaultInKey(row, sourceEndpoint.fieldNames, sourceColumnIndex),
   );
 
   // Find rows with FK values that don't exist in target
   const invalidRows = rowsWithValues.filter((row) => {
-    const fkValue = extractKeyValueWithDefault(row.values, sourceEndpoint.fieldNames);
+    const fkValue = extractKeyValueWithDefault(row, sourceEndpoint.fieldNames, sourceColumnIndex);
     return !validFkValues.has(fkValue);
   });
 
@@ -88,10 +71,11 @@ function validateFkSourceToTarget (
       targetTable.mergedTable.name,
       targetEndpoint.fieldNames,
     );
-    const valueStr = formatValues(row.values, sourceEndpoint.fieldNames);
+    const valueStr = formatValues(row, sourceEndpoint.fieldNames, sourceColumnIndex);
     const message = `FK violation: ${sourceColumnRef} = ${valueStr} does not exist in ${targetColumnRef}`;
 
-    return createConstraintErrors(row, sourceEndpoint.fieldNames, message);
+    // Create one error per FK column in the source endpoint
+    return sourceEndpoint.fieldNames.flatMap(() => createConstraintErrors(sourceTable.rows, message));
   });
 }
 
@@ -99,8 +83,10 @@ function validateRef (ref: Ref, tableInfoMap: Map<string, TableInfo>): CompileEr
   if (!ref.endpoints) return [];
 
   const [endpoint1, endpoint2] = ref.endpoints;
-  const table1 = tableInfoMap.get(makeTableKey(endpoint1.schemaName, endpoint1.tableName));
-  const table2 = tableInfoMap.get(makeTableKey(endpoint2.schemaName, endpoint2.tableName));
+  const key1 = makeTableKey(endpoint1.schemaName, endpoint1.tableName);
+  const key2 = makeTableKey(endpoint2.schemaName, endpoint2.tableName);
+  const table1 = tableInfoMap.get(key1);
+  const table2 = tableInfoMap.get(key2);
 
   if (!table1 || !table2) return [];
 

@@ -1,6 +1,14 @@
 import type Compiler from '../../index';
-import type SymbolTable from '@/core/analyzer/symbol/symbolTable';
+import { NodeSymbol } from '@/core/types/symbols';
+import { UNHANDLED } from '@/constants';
 
-export function containerScope (this: Compiler, offset: number): Readonly<SymbolTable> | undefined {
-  return this.container.element(offset)?.symbol?.symbolTable;
+// @deprecated - returns the members of the element at offset
+export function containerScope (this: Compiler, offset: number): NodeSymbol[] | undefined {
+  const element = this.container.element(offset);
+  if (!element) return undefined;
+  const sym = this.nodeSymbol(element);
+  if (sym.hasValue(UNHANDLED)) return undefined;
+  const members = this.symbolMembers(sym.getValue());
+  if (members.hasValue(UNHANDLED)) return undefined;
+  return members.getValue();
 }

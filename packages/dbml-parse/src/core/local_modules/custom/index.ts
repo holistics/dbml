@@ -1,0 +1,46 @@
+import { CompileError, CompileErrorCode } from '@/core/errors';
+import {
+  ElementDeclarationNode, SyntaxNode,
+} from '@/core/parser/nodes';
+import type { LocalModule } from '../types';
+import { PASS_THROUGH, type PassThrough } from '@/constants';
+import Report from '@/core/report';
+import type Compiler from '@/compiler';
+import CustomValidator from './validate';
+import { Settings } from '@/core/utils/validate';
+
+function isCustomElement (node: SyntaxNode): node is ElementDeclarationNode {
+  return node instanceof ElementDeclarationNode && !!node.type?.value;
+}
+
+export const customModule: LocalModule = {
+  validate (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
+    if (!isCustomElement(node)) return Report.create(PASS_THROUGH);
+    const validator = new CustomValidator(compiler, node);
+    return Report.create(undefined, validator.validate());
+  },
+
+  fullname (compiler: Compiler, node: SyntaxNode): Report<string[] | undefined> | Report<PassThrough> {
+    if (!isCustomElement(node)) return Report.create(PASS_THROUGH);
+    if (node.name) {
+      return new Report(undefined, [new CompileError(CompileErrorCode.UNEXPECTED_NAME, 'A custom field shouldn\'t have a name', node.name)]);
+    }
+    return new Report(undefined);
+  },
+
+  alias (compiler: Compiler, node: SyntaxNode): Report<string | undefined> | Report<PassThrough> {
+    if (!isCustomElement(node)) return Report.create(PASS_THROUGH);
+    if (node.alias) {
+      return new Report(undefined, [new CompileError(CompileErrorCode.UNEXPECTED_NAME, 'A custom field shouldn\'t have an alias', node.alias)]);
+    }
+    return new Report(undefined);
+  },
+
+  settings (compiler: Compiler, node: SyntaxNode): Report<Settings> | Report<PassThrough> {
+    if (!isCustomElement(node)) return Report.create(PASS_THROUGH);
+    if (node.attributeList) {
+      return new Report({}, [new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'A custom field shouldn\'t have a setting list', node.attributeList)]);
+    }
+    return new Report({});
+  },
+};

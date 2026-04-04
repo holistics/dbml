@@ -1,10 +1,3 @@
-import {
-  CallExpressionNode,
-  FunctionApplicationNode,
-} from '@/core/parser/nodes';
-import { extractNumericLiteral } from '@/core/analyzer/utils';
-import { ColumnSymbol } from '@/core/analyzer/symbol/symbols';
-
 export type SqlDialect = 'mysql' | 'postgres' | 'mssql' | 'oracle' | 'snowflake';
 
 // Dialect-specific type mappings
@@ -74,7 +67,6 @@ export function isIntegerType (type: string, dialect?: SqlDialect): boolean {
   if (dialect) {
     return DIALECT_INTEGER_TYPES[dialect].has(normalized);
   }
-  // Check if any dialect has this type
   return Object.values(DIALECT_INTEGER_TYPES).some((set) => set.has(normalized));
 }
 
@@ -83,7 +75,6 @@ export function isFloatType (type: string, dialect?: SqlDialect): boolean {
   if (dialect) {
     return DIALECT_FLOAT_TYPES[dialect].has(normalized);
   }
-  // Check if any dialect has this type
   return Object.values(DIALECT_FLOAT_TYPES).some((set) => set.has(normalized));
 }
 
@@ -96,7 +87,6 @@ export function isBooleanType (type: string, dialect?: SqlDialect): boolean {
   if (dialect) {
     return DIALECT_BOOL_TYPES[dialect].has(normalized);
   }
-  // Check if any dialect has this type
   return Object.values(DIALECT_BOOL_TYPES).some((set) => set.has(normalized));
 }
 
@@ -105,7 +95,6 @@ export function isStringType (type: string, dialect?: SqlDialect): boolean {
   if (dialect) {
     return DIALECT_STRING_TYPES[dialect].has(normalized);
   }
-  // Check if any dialect has this type
   return Object.values(DIALECT_STRING_TYPES).some((set) => set.has(normalized));
 }
 
@@ -114,7 +103,6 @@ export function isBinaryType (type: string, dialect?: SqlDialect): boolean {
   if (dialect) {
     return DIALECT_BINARY_TYPES[dialect].has(normalized);
   }
-  // Check if any dialect has this type
   return Object.values(DIALECT_BINARY_TYPES).some((set) => set.has(normalized));
 }
 
@@ -123,7 +111,6 @@ export function isDateTimeType (type: string, dialect?: SqlDialect): boolean {
   if (dialect) {
     return DIALECT_DATETIME_TYPES[dialect].has(normalized);
   }
-  // Check if any dialect has this type
   return Object.values(DIALECT_DATETIME_TYPES).some((set) => set.has(normalized));
 }
 
@@ -132,42 +119,7 @@ export function isSerialType (type: string, dialect?: SqlDialect): boolean {
   if (dialect) {
     return DIALECT_SERIAL_TYPES[dialect].has(normalized);
   }
-  // Check if any dialect has this type
   return Object.values(DIALECT_SERIAL_TYPES).some((set) => set.has(normalized));
-}
-
-// Get type node from a column symbol's declaration
-function getTypeNode (columnSymbol: ColumnSymbol) {
-  const declaration = columnSymbol.declaration;
-  if (!(declaration instanceof FunctionApplicationNode)) {
-    return null;
-  }
-  return declaration.args[0] || null;
-}
-
-// Get numeric type parameters (precision, scale) from a column (e.g., decimal(10, 2))
-export function getNumericTypeParams (columnSymbol: ColumnSymbol): { precision?: number; scale?: number } {
-  const typeNode = getTypeNode(columnSymbol);
-  if (!(typeNode instanceof CallExpressionNode)) return {};
-  if (!typeNode.argumentList || typeNode.argumentList.elementList.length !== 2) return {};
-
-  const precision = extractNumericLiteral(typeNode.argumentList.elementList[0]);
-  const scale = extractNumericLiteral(typeNode.argumentList.elementList[1]);
-  if (precision === null || scale === null) return {};
-
-  return { precision: Math.trunc(precision), scale: Math.trunc(scale) };
-}
-
-// Get length type parameter from a column (e.g., varchar(255))
-export function getLengthTypeParam (columnSymbol: ColumnSymbol): { length?: number } {
-  const typeNode = getTypeNode(columnSymbol);
-  if (!(typeNode instanceof CallExpressionNode)) return {};
-  if (!typeNode.argumentList || typeNode.argumentList.elementList.length !== 1) return {};
-
-  const length = extractNumericLiteral(typeNode.argumentList.elementList[0]);
-  if (length === null) return {};
-
-  return { length: Math.trunc(length) };
 }
 
 // Get the record value type based on SQL type

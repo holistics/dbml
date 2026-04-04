@@ -663,7 +663,7 @@
                   }
                 }
               ],
-              "symbol": 2
+              "symbol": 3
             },
             {
               "id": 22,
@@ -1296,7 +1296,7 @@
                   }
                 }
               ],
-              "symbol": 3
+              "symbol": 4
             },
             {
               "id": 48,
@@ -4990,7 +4990,7 @@
                   }
                 }
               ],
-              "symbol": 4
+              "symbol": 5
             }
           ],
           "blockCloseBrace": {
@@ -5038,7 +5038,7 @@
           }
         },
         "parent": 51,
-        "symbol": 1
+        "symbol": 2
       }
     ],
     "eof": {
@@ -5066,21 +5066,21 @@
       "symbolTable": {
         "TablePartial:Users": {
           "references": [],
-          "id": 1,
+          "id": 2,
           "symbolTable": {
             "Column:balance": {
               "references": [],
-              "id": 2,
+              "id": 3,
               "declaration": 10
             },
             "Column:dependents": {
               "references": [],
-              "id": 3,
+              "id": 4,
               "declaration": 22
             },
             "Column:invalid_col": {
               "references": [],
-              "id": 4,
+              "id": 5,
               "declaration": 48
             }
           },

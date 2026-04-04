@@ -818,7 +818,19 @@ TableGroup group1 {
       const position = createPosition(7, 21);
       const definitions = definitionProvider.provideDefinition(model, position);
 
-      expect(definitions).toMatchInlineSnapshot('[]');
+      expect(definitions).toMatchInlineSnapshot(`
+        [
+          {
+            "range": {
+              "endColumn": 17,
+              "endLineNumber": 4,
+              "startColumn": 3,
+              "startLineNumber": 4,
+            },
+            "uri": "",
+          },
+        ]
+      `);
     });
 
     it('- should find column in named index', () => {
@@ -928,10 +940,10 @@ Ref: users.created_at > logs.timestamp`;
         [
           {
             "range": {
-              "endColumn": 19,
-              "endLineNumber": 8,
+              "endColumn": 23,
+              "endLineNumber": 2,
               "startColumn": 3,
-              "startLineNumber": 8,
+              "startLineNumber": 2,
             },
             "uri": "",
           },
@@ -1317,6 +1329,7 @@ Ref: orders.user_id > myproject.ecommerce.users.id`;
       const position = createPosition(9, 44);
       const definitions = definitionProvider.provideDefinition(model, position);
 
+      // Long qualified names (3+ segments) now resolve through nested schemas
       expect(definitions).toMatchInlineSnapshot(`
         [
           {

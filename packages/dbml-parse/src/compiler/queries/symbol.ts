@@ -1,20 +1,7 @@
 import type Compiler from '../index';
 import { ElementDeclarationNode, ProgramNode } from '@/core/parser/nodes';
-import { NodeSymbol } from '@/core/analyzer/symbol/symbols';
-import { SymbolKind, destructureIndex } from '@/core/analyzer/symbol/symbolIndex';
-import { generatePossibleIndexes } from '@/core/analyzer/symbol/utils';
-import SymbolTable from '@/core/analyzer/symbol/symbolTable';
-
-export function symbolMembers (this: Compiler, ownerSymbol: NodeSymbol) {
-  if (!ownerSymbol.symbolTable) {
-    return [];
-  }
-
-  return [...ownerSymbol.symbolTable.entries()].map(([index, symbol]) => ({
-    ...destructureIndex(index).unwrap(),
-    symbol,
-  }));
-}
+import { NodeSymbol, SymbolKind } from '@/core/types/symbols';
+import { UNHANDLED } from '@/constants';
 
 export function symbolOfName (this: Compiler, nameStack: string[], owner: ElementDeclarationNode | ProgramNode) {
   if (nameStack.length === 0) {
@@ -30,34 +17,39 @@ export function symbolOfName (this: Compiler, nameStack: string[], owner: Elemen
       ? currentOwner.parent
       : undefined
   ) {
-    if (!currentOwner.symbol?.symbolTable) {
+    const symResult = this.nodeSymbol(currentOwner);
+    if (symResult.hasValue(UNHANDLED)) {
       continue;
     }
 
-    const { symbolTable } = currentOwner.symbol;
-    let currentPossibleSymbolTables: SymbolTable[] = [symbolTable];
-    let currentPossibleSymbols: { symbol: NodeSymbol; kind: SymbolKind; name: string }[] = [];
-
-    for (const name of nameStack) {
-      currentPossibleSymbols = currentPossibleSymbolTables.flatMap((st) =>
-        generatePossibleIndexes(name).flatMap((index) => {
-          const symbol = st.get(index);
-          const desRes = destructureIndex(index).unwrap_or(undefined);
-
-          return !symbol || !desRes ? [] : { ...desRes, symbol };
-        }),
-      );
-      currentPossibleSymbolTables = currentPossibleSymbols.flatMap((e) =>
-        e.symbol.symbolTable ? e.symbol.symbolTable : [],
-      );
+    const ownerSymbol = symResult.getValue();
+    const membersResult = this.symbolMembers(ownerSymbol);
+    if (membersResult.hasValue(UNHANDLED)) {
+      continue;
     }
 
-    res.push(...currentPossibleSymbols);
+    let currentPossibleSymbols: NodeSymbol[] = membersResult.getValue();
+    let matchedSymbols: { symbol: NodeSymbol; kind: SymbolKind; name: string }[] = [];
+
+    for (const name of nameStack) {
+      matchedSymbols = currentPossibleSymbols
+        .filter((s) => this.symbolName(s) === name)
+        .map((symbol) => ({
+          symbol,
+          kind: symbol.kind,
+          name,
+        }));
+
+      // Descend into matched symbols' children for the next name segment
+      currentPossibleSymbols = matchedSymbols.flatMap((entry) => {
+        const childResult = this.symbolMembers(entry.symbol);
+        if (childResult.hasValue(UNHANDLED)) return [];
+        return childResult.getValue();
+      });
+    }
+
+    res.push(...matchedSymbols);
   }
 
   return res;
-}
-
-export function symbolOfNameToKey (nameStack: string[], owner: { id: number }): string {
-  return `${nameStack.join('.')}@${owner.id}`;
 }

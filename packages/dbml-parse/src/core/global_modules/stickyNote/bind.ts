@@ -1,21 +1,17 @@
-import { CompileError } from '../../../errors';
-import { ElementBinder } from '../types';
+import Compiler from '@/compiler';
+import { CompileError } from '../../errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ProgramNode,
-} from '../../../parser/nodes';
-import { SyntaxToken } from '../../../lexer/tokens';
-import { pickBinder } from '../utils';
-import SymbolFactory from '../../symbol/factory';
+} from '../../parser/nodes';
+import { SyntaxToken } from '../../lexer/tokens';
 
-export default class NoteBinder implements ElementBinder {
-  private symbolFactory: SymbolFactory;
+export default class NoteBinder {
+  private compiler: Compiler;
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
-  private ast: ProgramNode;
 
-  constructor (declarationNode: ElementDeclarationNode & { type: SyntaxToken }, ast: ProgramNode, symbolFactory: SymbolFactory) {
+  constructor (compiler: Compiler, declarationNode: ElementDeclarationNode & { type: SyntaxToken }) {
     this.declarationNode = declarationNode;
-    this.ast = ast;
-    this.symbolFactory = symbolFactory;
+    this.compiler = compiler;
   }
 
   bind (): CompileError[] {
@@ -40,10 +36,8 @@ export default class NoteBinder implements ElementBinder {
       if (!sub.type) {
         return [];
       }
-      const _Binder = pickBinder(sub as ElementDeclarationNode & { type: SyntaxToken });
-      const binder = new _Binder(sub as ElementDeclarationNode & { type: SyntaxToken }, this.ast, this.symbolFactory);
 
-      return binder.bind();
+      return this.compiler.bind(sub).getErrors();
     });
   }
 }

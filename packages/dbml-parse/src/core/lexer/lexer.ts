@@ -1,11 +1,9 @@
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import Report from '@/core/report';
-import { isAlphaOrUnderscore, isAlphaNumeric, isDigit } from '@/core/utils';
-import {
-  SyntaxToken, SyntaxTokenKind, isOp, isTriviaToken,
-} from '@/core/lexer/tokens';
-import { Position } from '@/core/types';
+import { Position } from '@/core/types/position';
 import { isInvalidToken } from '@/core/parser/utils';
+import { isOp, isTriviaToken, SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
+import { isAlphaNumeric, isAlphaOrUnderscore, isDigit } from '@/core/utils/chars';
 
 export default class Lexer {
   private start: Position = {
@@ -233,7 +231,7 @@ export default class Lexer {
   }
 
   gatherInvalid () {
-    let i;
+    let i: number;
     const newTokenList: SyntaxToken[] = [];
 
     const leadingInvalidList: SyntaxToken[] = [];

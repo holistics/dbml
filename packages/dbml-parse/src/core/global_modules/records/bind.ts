@@ -1,34 +1,29 @@
-import { SyntaxToken } from '../../../lexer/tokens';
-import { ElementBinder } from '../types';
+import { SyntaxToken } from '../../lexer/tokens';
 import {
   BlockExpressionNode, CommaExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ProgramNode, SyntaxNode,
-} from '../../../parser/nodes';
-import { CompileError, CompileErrorCode } from '../../../errors';
-import { lookupAndBindInScope, pickBinder, scanNonListNodeForBinding } from '../utils';
-import SymbolFactory from '../../symbol/factory';
+} from '../../parser/nodes';
+import { CompileError, CompileErrorCode } from '../../errors';
+import { scanNonListNodeForBinding } from '../utils';
 import {
   destructureCallExpression,
   extractVarNameFromPrimaryVariable,
-  getElementKind,
-} from '../../utils';
-import { createColumnSymbolIndex, SymbolKind } from '../../symbol/symbolIndex';
-import { ElementKind } from '../../types';
-import { isTupleOfVariables } from '../../validator/utils';
-import { NodeSymbol } from '../../symbol/symbols';
-import { getElementNameString } from '@/core/parser/utils';
+} from '../../utils/expression';
+import { ElementKind, NodeSymbol } from '../../types';
+import { isTupleOfVariables } from '../../utils/expression';
+import { getElementNameString } from '@/core/utils/expression';
+import Compiler from '@/compiler';
+import { UNHANDLED } from '@/constants';
 
-export default class RecordsBinder implements ElementBinder {
-  private symbolFactory: SymbolFactory;
+export default class RecordsBinder {
+  private compiler: Compiler;
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
-  private ast: ProgramNode;
   // A mapping from bound column symbols to the referencing primary expressions nodes of column
   // Example: Records (col1, col2) -> Map symbol of `col1` to the `col1` in `Records (col1, col2)``
   private boundColumns: Map<NodeSymbol, SyntaxNode>;
 
-  constructor (declarationNode: ElementDeclarationNode & { type: SyntaxToken }, ast: ProgramNode, symbolFactory: SymbolFactory) {
+  constructor (compiler: Compiler, declarationNode: ElementDeclarationNode & { type: SyntaxToken }) {
     this.declarationNode = declarationNode;
-    this.ast = ast;
-    this.symbolFactory = symbolFactory;
+    this.compiler = compiler;
     this.boundColumns = new Map();
   }
 
@@ -59,7 +54,7 @@ export default class RecordsBinder implements ElementBinder {
   //   records users(id, name) { }           // binds: Table[users], Column[id], Column[name]
   //   records myschema.users(id, name) { }  // binds: Schema[myschema], Table[users], Column[id], Column[name]
   private bindTopLevelName (nameNode: SyntaxNode): CompileError[] {
-    const fragments = destructureCallExpression(nameNode).unwrap_or(undefined);
+    const fragments = destructureCallExpression(nameNode);
     if (!fragments) {
       return [];
     }
@@ -71,29 +66,25 @@ export default class RecordsBinder implements ElementBinder {
       return [];
     }
 
-    const tableErrors = lookupAndBindInScope(this.ast, [
-      ...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })),
-      { node: tableBindee, kind: SymbolKind.Table },
-    ]);
+    const tableErrors = this.compiler.nodeReferee(tableBindee).getErrors();
 
     if (tableErrors.length > 0) {
       return tableErrors;
     }
 
-    const tableSymbol = tableBindee.referee;
-    if (!tableSymbol?.symbolTable) {
+    const tableSymbol = this.compiler.nodeReferee(tableBindee).getValue();
+    if (!tableSymbol || tableSymbol === UNHANDLED) {
       return [];
     }
 
-    const tableName = getElementNameString(tableBindee.referee?.declaration).unwrap_or('<invalid name>');
+    const tableName = getElementNameString(tableSymbol.declaration) || '<invalid name>';
 
-    const errors: CompileError[] = [];
+    const errors: CompileError[] = schemaBindees.flatMap((b) => this.compiler.nodeReferee(b).getErrors());
     for (const columnBindee of fragments.args) {
-      const columnName = extractVarNameFromPrimaryVariable(columnBindee).unwrap_or('<unnamed>');
-      const columnIndex = createColumnSymbolIndex(columnName);
-      const columnSymbol = tableSymbol.symbolTable.get(columnIndex);
+      const columnName = extractVarNameFromPrimaryVariable(columnBindee) || '<unnamed>';
+      const columnSymbol = this.compiler.nodeReferee(columnBindee).getValue();
 
-      if (!columnSymbol) {
+      if (!columnSymbol || columnSymbol === UNHANDLED) {
         errors.push(new CompileError(
           CompileErrorCode.BINDING_ERROR,
           `Column '${columnName}' does not exist in Table '${tableName}'`,
@@ -101,8 +92,6 @@ export default class RecordsBinder implements ElementBinder {
         ));
         continue;
       }
-      columnBindee.referee = columnSymbol;
-      columnSymbol.references.push(columnBindee);
 
       const originalBindee = this.boundColumns.get(columnSymbol);
       if (originalBindee) {
@@ -132,13 +121,12 @@ export default class RecordsBinder implements ElementBinder {
       return [];
     }
 
-    const elementKind = getElementKind(parent).unwrap_or(undefined);
-    if (elementKind !== ElementKind.Table) {
+    if (!parent.isKind(ElementKind.Table)) {
       return [];
     }
 
-    const tableSymbolTable = parent.symbol?.symbolTable;
-    if (!tableSymbolTable) {
+    const tableSymbol = this.compiler.nodeSymbol(parent).getValue();
+    if (!tableSymbol || tableSymbol === UNHANDLED) {
       return [];
     }
 
@@ -146,15 +134,14 @@ export default class RecordsBinder implements ElementBinder {
       return [];
     }
 
-    const tableName = getElementNameString(parent).unwrap_or('<invalid name>');
+    const tableName = getElementNameString(parent) || '<invalid name>';
 
     const errors: CompileError[] = [];
     for (const columnBindee of nameNode.elementList) {
-      const columnName = extractVarNameFromPrimaryVariable(columnBindee).unwrap_or('<unnamed>');
-      const columnIndex = createColumnSymbolIndex(columnName);
-      const columnSymbol = tableSymbolTable.get(columnIndex);
+      const columnName = extractVarNameFromPrimaryVariable(columnBindee) || '<unnamed>';
+      const columnSymbol = this.compiler.nodeReferee(columnBindee).getValue();
 
-      if (!columnSymbol) {
+      if (!columnSymbol || columnSymbol === UNHANDLED) {
         errors.push(new CompileError(
           CompileErrorCode.BINDING_ERROR,
           `Column '${columnName}' does not exist in Table '${tableName}'`,
@@ -162,9 +149,6 @@ export default class RecordsBinder implements ElementBinder {
         ));
         continue;
       }
-
-      columnBindee.referee = columnSymbol;
-      columnSymbol.references.push(columnBindee);
     }
 
     return errors;
@@ -219,11 +203,18 @@ export default class RecordsBinder implements ElementBinder {
 
       const schemaBindees = bindee.variables;
 
-      return lookupAndBindInScope(this.ast, [
-        ...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })),
-        { node: enumBindee, kind: SymbolKind.Enum },
-        { node: enumFieldBindee, kind: SymbolKind.EnumField },
-      ]);
+      const errors: CompileError[] = [];
+      // Bind schemas first (leftmost to rightmost)
+      for (const schemaBind of schemaBindees) {
+        errors.push(...this.compiler.nodeReferee(schemaBind).getErrors());
+      }
+      // Bind enum name
+      if (enumBindee) {
+        errors.push(...this.compiler.nodeReferee(enumBindee).getErrors());
+      }
+      // Bind enum field
+      errors.push(...this.compiler.nodeReferee(enumFieldBindee).getErrors());
+      return errors;
     });
   }
 
@@ -232,10 +223,8 @@ export default class RecordsBinder implements ElementBinder {
       if (!sub.type) {
         return [];
       }
-      const _Binder = pickBinder(sub as ElementDeclarationNode & { type: SyntaxToken });
-      const binder = new _Binder(sub as ElementDeclarationNode & { type: SyntaxToken }, this.ast, this.symbolFactory);
 
-      return binder.bind();
+      return this.compiler.bind(sub).getErrors();
     });
   }
 }

@@ -4,29 +4,24 @@ import {
   ElementDeclarationNode,
   FunctionApplicationNode,
   ProgramNode,
-} from '../../../parser/nodes';
-import { ElementBinder } from '../types';
-import { SyntaxToken } from '../../../lexer/tokens';
-import { CompileError } from '../../../errors';
-import { lookupAndBindInScope, pickBinder, scanNonListNodeForBinding } from '../utils';
-import { getElementKind } from '../../utils';
+} from '../../parser/nodes';
+import { SyntaxToken } from '../../lexer/tokens';
+import { CompileError } from '../../errors';
+import { scanNonListNodeForBinding } from '../utils';
 import { ElementKind } from '../../types';
-import { SymbolKind } from '../../symbol/symbolIndex';
-import SymbolFactory from '../../symbol/factory';
+import Compiler from '@/compiler';
 
-export default class RefBinder implements ElementBinder {
-  private symbolFactory: SymbolFactory;
+export default class RefBinder {
+  private compiler: Compiler;
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
-  private ast: ProgramNode;
 
-  constructor (declarationNode: ElementDeclarationNode & { type: SyntaxToken }, ast: ProgramNode, symbolFactory: SymbolFactory) {
+  constructor (compiler: Compiler, declarationNode: ElementDeclarationNode & { type: SyntaxToken }) {
+    this.compiler = compiler;
     this.declarationNode = declarationNode;
-    this.ast = ast;
-    this.symbolFactory = symbolFactory;
   }
 
   bind (): CompileError[] {
-    if (!(this.declarationNode.parent instanceof ProgramNode) && getElementKind(this.declarationNode.parent).unwrap_or(undefined) !== ElementKind.Project) {
+    if (!(this.declarationNode.parent instanceof ProgramNode) && !this.declarationNode.parent?.isKind(ElementKind.Project)) {
       return [];
     }
 
@@ -67,11 +62,7 @@ export default class RefBinder implements ElementBinder {
 
         const schemaBindees = bindee.variables;
 
-        return columnBindees.flatMap((columnBindee) => lookupAndBindInScope(this.ast, [
-          ...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })),
-          { node: tableBindee, kind: SymbolKind.Table },
-          { node: columnBindee, kind: SymbolKind.Column },
-        ]));
+        return [...schemaBindees, tableBindee, ...columnBindees].flatMap((b) => this.compiler.nodeReferee(b).getErrors());
       });
     });
   }
@@ -81,10 +72,8 @@ export default class RefBinder implements ElementBinder {
       if (!sub.type) {
         return [];
       }
-      const _Binder = pickBinder(sub as ElementDeclarationNode & { type: SyntaxToken });
-      const binder = new _Binder(sub as ElementDeclarationNode & { type: SyntaxToken }, this.ast, this.symbolFactory);
 
-      return binder.bind();
+      return this.compiler.bind(sub).getErrors();
     });
   }
 }

@@ -1,5 +1,4 @@
-import { DEFAULT_SCHEMA_NAME } from '@/constants';
-import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
+import { SyntaxToken, SyntaxTokenKind } from '../lexer/tokens';
 import {
   AttributeNode,
   BlockExpressionNode,
@@ -14,62 +13,19 @@ import {
   VariableNode,
   CallExpressionNode,
   ArrayNode,
-} from '@/core/parser/nodes';
-import { isHexChar } from '@/core/utils';
-import { destructureComplexVariable, destructureMemberAccessExpression } from '@/core/analyzer/utils';
-import CustomValidator from './elementValidators/custom';
-import EnumValidator from './elementValidators/enum';
-import IndexesValidator from './elementValidators/indexes';
-import NoteValidator from './elementValidators/note';
-import ProjectValidator from './elementValidators/project';
-import RefValidator from './elementValidators/ref';
-import TableValidator from './elementValidators/table';
-import TableGroupValidator from './elementValidators/tableGroup';
-import { createSchemaSymbolIndex } from '@/core/analyzer/symbol/symbolIndex';
-import { SchemaSymbol } from '@/core/analyzer/symbol/symbols';
-import SymbolTable from '@/core/analyzer/symbol/symbolTable';
-import SymbolFactory from '@/core/analyzer/symbol/factory';
-import {
+} from '../parser/nodes';
+import { isHexChar } from './chars';
+import { destructureComplexVariable, destructureMemberAccessExpression,
   extractStringFromIdentifierStream, isAccessExpression, isDotDelimitedIdentifier, isExpressionAQuotedString, isExpressionAVariableNode, isExpressionAnIdentifierNode,
-} from '@/core/parser/utils';
+} from './expression';
 import { NUMERIC_LITERAL_PREFIX } from '@/constants';
-import Report from '@/core/report';
-import { CompileError, CompileErrorCode } from '@/core/errors';
-import { ElementKind } from '@/core/analyzer/types';
-import TablePartialValidator from './elementValidators/tablePartial';
-import ChecksValidator from './elementValidators/checks';
-import RecordsValidator from './elementValidators/records';
-
-export function pickValidator (element: ElementDeclarationNode & { type: SyntaxToken }) {
-  switch (element.type.value.toLowerCase() as ElementKind) {
-    case ElementKind.Enum:
-      return EnumValidator;
-    case ElementKind.Table:
-      return TableValidator;
-    case ElementKind.TableGroup:
-      return TableGroupValidator;
-    case ElementKind.Project:
-      return ProjectValidator;
-    case ElementKind.Ref:
-      return RefValidator;
-    case ElementKind.Note:
-      return NoteValidator;
-    case ElementKind.Indexes:
-      return IndexesValidator;
-    case ElementKind.TablePartial:
-      return TablePartialValidator;
-    case ElementKind.Check:
-      return ChecksValidator;
-    case ElementKind.Records:
-      return RecordsValidator;
-    default:
-      return CustomValidator;
-  }
-}
+import Report from '../report';
+import { CompileError, CompileErrorCode } from '../errors';
+import { SettingName } from '../types/keywords';
 
 // Is the name valid (either simple or complex)
 export function isValidName (nameNode: SyntaxNode): boolean {
-  return !!destructureComplexVariable(nameNode).unwrap_or(false);
+  return !!destructureComplexVariable(nameNode);
 }
 
 // Is the alias valid (only simple name is allowed)
@@ -111,38 +67,6 @@ export function isValidPartialInjection (
   node?: SyntaxNode,
 ): node is PrefixExpressionNode & { op: { value: '~' } } {
   return node instanceof PrefixExpressionNode && node.op?.value === '~' && isExpressionAVariableNode(node.expression);
-}
-// Register the `variables` array as a stack of schema, the following nested within the former
-export function registerSchemaStack (
-  variables: string[],
-  globalSchema: SymbolTable,
-  symbolFactory: SymbolFactory,
-): SymbolTable {
-  // public schema is already global schema
-  if (variables[0] === DEFAULT_SCHEMA_NAME) {
-    variables = variables.slice(1);
-  }
-
-  let prevSchema = globalSchema;
-
-  for (const curName of variables) {
-    let curSchema: SymbolTable | undefined;
-    const curId = createSchemaSymbolIndex(curName);
-
-    if (!prevSchema.has(curId)) {
-      curSchema = new SymbolTable();
-      const curSymbol = symbolFactory.create(SchemaSymbol, { symbolTable: curSchema });
-      prevSchema.set(curId, curSymbol);
-    } else {
-      curSchema = prevSchema.get(curId)?.symbolTable;
-      if (!curSchema) {
-        throw new Error('Expect a symbol table in a schema symbol');
-      }
-    }
-    prevSchema = curSchema;
-  }
-
-  return prevSchema;
 }
 
 export function isRelationshipOp (op?: string): boolean {
@@ -212,8 +136,8 @@ export function isValidDefaultValue (value?: SyntaxNode): boolean {
 
   if (!value) return false;
   if (!isDotDelimitedIdentifier(value)) return false;
-  const fragments = destructureMemberAccessExpression(value).unwrap();
-  return fragments.length === 2 || fragments.length === 3;
+  const fragments = destructureMemberAccessExpression(value);
+  return fragments?.length === 2 || fragments?.length === 3;
 }
 
 export type SignedNumberExpression =
@@ -240,7 +164,7 @@ export function isUnaryRelationship (value?: SyntaxNode): value is PrefixExpress
     return false;
   }
 
-  const variables = destructureComplexVariable(value.expression).unwrap_or(undefined);
+  const variables = destructureComplexVariable(value.expression);
 
   return variables !== undefined && variables.length > 0;
 }
@@ -287,17 +211,21 @@ export function isValidColumnType (type: SyntaxNode): boolean {
     }
   }
 
-  const variables = destructureComplexVariable(type).unwrap_or(undefined);
+  const variables = destructureComplexVariable(type);
 
   return variables !== undefined && variables.length > 0;
 }
 
-export function aggregateSettingList (settingList?: ListExpressionNode): Report<{ [index: string]: AttributeNode[] }> {
-  const map: { [index: string]: AttributeNode[] } = {};
+export type Settings = Record<SettingName | string, AttributeNode[]>;
+
+export function aggregateSettingList (settingList?: ListExpressionNode): Report<Settings> {
+  const map: Settings = {};
   const errors: CompileError[] = [];
+
   if (!settingList) {
-    return new Report({});
+    return new Report(map);
   }
+
   settingList.elementList.forEach((attribute) => {
     if (!attribute.name) return;
 
@@ -306,13 +234,14 @@ export function aggregateSettingList (settingList?: ListExpressionNode): Report<
       return;
     }
 
-    const name = extractStringFromIdentifierStream(attribute.name).unwrap_or(undefined)?.toLowerCase();
+    const name = extractStringFromIdentifierStream(attribute.name)?.toLowerCase();
     if (!name) return;
 
-    if (map[name] === undefined) {
-      map[name] = [attribute];
+    const existing = map[name];
+    if (existing) {
+      existing.push(attribute);
     } else {
-      map[name].push(attribute);
+      map[name] = [attribute];
     }
   });
 

@@ -1,5 +1,5 @@
 import { last, partition } from 'lodash-es';
-import SymbolFactory from '@/core/analyzer/symbol/factory';
+import Compiler from '@/compiler';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import {
   BlockExpressionNode,
@@ -10,23 +10,17 @@ import {
   ProgramNode,
   SyntaxNode,
 } from '@/core/parser/nodes';
-import { isExpressionAQuotedString } from '@/core/parser/utils';
-import { aggregateSettingList, pickValidator } from '@/core/analyzer/validator/utils';
-import { SyntaxToken } from '@/core/lexer/tokens';
-import { ElementValidator } from '@/core/analyzer/validator/types';
-import { getElementKind } from '@/core/analyzer/utils';
-import SymbolTable from '@/core/analyzer/symbol/symbolTable';
-import { ElementKind } from '@/core/analyzer/types';
+import { isExpressionAQuotedString } from '@/core/utils/expression';
+import { aggregateSettingList } from '@/core/utils/validate';
+import { ElementKind } from '@/core/types/keywords';
 
-export default class ChecksValidator implements ElementValidator {
-  private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
-  private publicSymbolTable: SymbolTable;
-  private symbolFactory: SymbolFactory;
+export default class ChecksValidator {
+  private compiler: Compiler;
+  private declarationNode: ElementDeclarationNode;
 
-  constructor (declarationNode: ElementDeclarationNode & { type: SyntaxToken }, publicSymbolTable: SymbolTable, symbolFactory: SymbolFactory) {
+  constructor (compiler: Compiler, declarationNode: ElementDeclarationNode) {
+    this.compiler = compiler;
     this.declarationNode = declarationNode;
-    this.publicSymbolTable = publicSymbolTable;
-    this.symbolFactory = symbolFactory;
   }
 
   validate (): CompileError[] {
@@ -47,8 +41,7 @@ export default class ChecksValidator implements ElementValidator {
     );
     if (this.declarationNode.parent instanceof ProgramNode) return [invalidContextError];
 
-    const elementKind = getElementKind(this.declarationNode.parent).unwrap_or(undefined);
-    return (elementKind && [ElementKind.Table, ElementKind.TablePartial].includes(elementKind))
+    return (this.declarationNode.parent?.isKind(ElementKind.Table, ElementKind.TablePartial))
       ? []
       : [invalidContextError];
   }
@@ -114,8 +107,7 @@ export default class ChecksValidator implements ElementValidator {
     const errors = aggReport.getErrors();
     const settingMap = aggReport.getValue();
 
-    for (const name in settingMap) {
-      const attrs = settingMap[name];
+    for (const [name, attrs] of Object.entries(settingMap)) {
       switch (name) {
         case 'name':
           if (attrs.length > 1) {
@@ -136,13 +128,10 @@ export default class ChecksValidator implements ElementValidator {
 
   private validateSubElements (subs: ElementDeclarationNode[]): CompileError[] {
     return subs.flatMap((sub) => {
-      sub.parent = this.declarationNode;
       if (!sub.type) {
         return [];
       }
-      const _Validator = pickValidator(sub as ElementDeclarationNode & { type: SyntaxToken });
-      const validator = new _Validator(sub as ElementDeclarationNode & { type: SyntaxToken }, this.publicSymbolTable, this.symbolFactory);
-      return validator.validate();
+      return this.compiler.validate(sub).getErrors();
     });
   }
 }

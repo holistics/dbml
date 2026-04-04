@@ -1,6 +1,5 @@
 import { partition, last } from 'lodash-es';
-import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
-import SymbolFactory from '@/core/analyzer/symbol/factory';
+import Compiler from '@/compiler';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, IdentiferStreamNode, ListExpressionNode, ProgramNode, SyntaxNode,
@@ -8,21 +7,21 @@ import {
 import {
   extractStringFromIdentifierStream,
   isExpressionAVariableNode,
-} from '@/core/parser/utils';
-import { ElementValidator } from '@/core/analyzer/validator/types';
-import { isSimpleName, isValidColor, pickValidator, aggregateSettingList } from '@/core/analyzer/validator/utils';
-import { destructureComplexVariable, destructureComplexVariableTuple, isBinaryRelationship, isEqualTupleOperands } from '@/core/analyzer/utils';
-import SymbolTable from '@/core/analyzer/symbol/symbolTable';
+} from '@/core/utils/expression';
+import { aggregateSettingList, isValidColor, Settings } from '@/core/utils/validate';
+import { destructureComplexVariable, destructureComplexVariableTuple, isBinaryRelationship, isEqualTupleOperands } from '@/core/utils/expression';
+import { SyntaxTokenKind } from '@/core/lexer/tokens';
+import Report from '@/core/report';
+import { SettingName } from '@/core/types/keywords';
+import { TupleExpressionNode } from '@/core/parser/nodes';
 
-export default class RefValidator implements ElementValidator {
-  private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
-  private publicSymbolTable: SymbolTable;
-  private symbolFactory: SymbolFactory;
+export default class RefValidator {
+  private compiler: Compiler;
+  private declarationNode: ElementDeclarationNode;
 
-  constructor (declarationNode: ElementDeclarationNode & { type: SyntaxToken }, publicSymbolTable: SymbolTable, symbolFactory: SymbolFactory) {
+  constructor (compiler: Compiler, declarationNode: ElementDeclarationNode) {
+    this.compiler = compiler;
     this.declarationNode = declarationNode;
-    this.publicSymbolTable = publicSymbolTable;
-    this.symbolFactory = symbolFactory;
   }
 
   validate (): CompileError[] {
@@ -43,15 +42,7 @@ export default class RefValidator implements ElementValidator {
   }
 
   private validateName (nameNode?: SyntaxNode): CompileError[] {
-    if (!nameNode) {
-      return [];
-    }
-
-    if (!isSimpleName(nameNode)) {
-      return [new CompileError(CompileErrorCode.INVALID_NAME, 'A Ref\'s name is optional or must be an identifier or a quoted identifer', nameNode)];
-    }
-
-    return [];
+    return this.compiler.fullname(this.declarationNode).getErrors();
   }
 
   private validateAlias (aliasNode?: SyntaxNode): CompileError[] {
@@ -98,14 +89,12 @@ export default class RefValidator implements ElementValidator {
       }
 
       if (field.callee && isBinaryRelationship(field.callee)) {
-        const leftFragment = destructureComplexVariableTuple(field.callee.leftExpression).unwrap_or({ variables: [], tupleElements: [] });
-        const leftFragmentCount = leftFragment.variables.length + Math.min(leftFragment.tupleElements.length, 1);
-        const rightFragment = destructureComplexVariableTuple(field.callee.rightExpression).unwrap_or({ variables: [], tupleElements: [] });
-        const rightFragmentCount = rightFragment.variables.length + Math.min(rightFragment.tupleElements.length, 1);
-        if (leftFragmentCount < 2) {
+        const leftOk = this.isValidRefColumnReference(field.callee.leftExpression);
+        const rightOk = this.isValidRefColumnReference(field.callee.rightExpression);
+        if (!leftOk) {
           errors.push(new CompileError(CompileErrorCode.INVALID_REF_FIELD, 'Invalid column reference', field.callee.leftExpression || field.callee));
         }
-        if (rightFragmentCount < 2) {
+        if (!rightOk) {
           errors.push(new CompileError(CompileErrorCode.INVALID_REF_FIELD, 'Invalid column reference', field.callee.rightExpression || field.callee));
         }
       }
@@ -116,11 +105,11 @@ export default class RefValidator implements ElementValidator {
 
       const args = [...field.args];
       if (last(args) instanceof ListExpressionNode) {
-        const errs = this.validateFieldSettings(last(args) as ListExpressionNode);
-        errors.push(...errs);
+        const errs = validateFieldSettings(last(args) as ListExpressionNode);
+        errors.push(...errs.getErrors());
         args.pop();
       } else if (args[0] instanceof ListExpressionNode) {
-        errors.push(...this.validateFieldSettings(args[0]));
+        errors.push(...validateFieldSettings(args[0]).getErrors());
         args.shift();
       }
 
@@ -132,52 +121,69 @@ export default class RefValidator implements ElementValidator {
     return errors;
   }
 
-  validateFieldSettings (settings: ListExpressionNode): CompileError[] {
-    const aggReport = aggregateSettingList(settings);
-    const errors = aggReport.getErrors();
-    const settingMap = aggReport.getValue();
-    for (const name in settingMap) {
-      const attrs = settingMap[name];
-      switch (name) {
-        case 'delete':
-        case 'update':
-          if (attrs.length > 1) {
-            attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.DUPLICATE_REF_SETTING, `'${name}' can only appear once`, attr)));
-          }
-          attrs.forEach((attr) => {
-            if (!isValidPolicy(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_REF_SETTING_VALUE, `'${name}' can only have values "cascade", "no action", "set null", "set default" or "restrict"`, attr));
-            }
-          });
-          break;
-        case 'color':
-          if (attrs.length > 1) {
-            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_REF_SETTING, '\'color\' can only appear once', attr)));
-          }
-          attrs.forEach((attr) => {
-            if (!isValidColor(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_REF_SETTING_VALUE, '\'color\' must be a color literal', attr!));
-            }
-          });
-          break;
-        default:
-          attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.UNKNOWN_REF_SETTING, `Unknown ref setting '${name}'`, attr)));
-      }
+  private isValidRefColumnReference (node?: SyntaxNode): boolean {
+    if (!node) return false;
+    const fragment = destructureComplexVariableTuple(node);
+    if (fragment) {
+      const count = fragment.variables.length + Math.min(fragment.tupleElements.length, 1);
+      return count >= 2;
     }
-    return errors;
+    // Standalone tuple of dotted chains
+    if (node instanceof TupleExpressionNode) {
+      return node.elementList.length > 0 && node.elementList.every((e) => {
+        const v = destructureComplexVariable(e);
+        return v !== undefined && v.length >= 2;
+      });
+    }
+    return false;
   }
 
   private validateSubElements (subs: ElementDeclarationNode[]): CompileError[] {
     return subs.flatMap((sub) => {
-      sub.parent = this.declarationNode;
       if (!sub.type) {
         return [];
       }
-      const _Validator = pickValidator(sub as ElementDeclarationNode & { type: SyntaxToken });
-      const validator = new _Validator(sub as ElementDeclarationNode & { type: SyntaxToken }, this.publicSymbolTable, this.symbolFactory);
-      return validator.validate();
+      return this.compiler.validate(sub).getErrors();
     });
   }
+}
+
+export function validateFieldSettings (settings: ListExpressionNode): Report<Settings> {
+  const aggReport = aggregateSettingList(settings);
+  const errors = aggReport.getErrors();
+  const settingMap = aggReport.getValue();
+  const clean: Settings = {};
+
+  for (const [name, attrs] of Object.entries(settingMap)) {
+    switch (name) {
+      case SettingName.Delete:
+      case SettingName.Update:
+        if (attrs.length > 1) {
+          attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.DUPLICATE_REF_SETTING, `'${name}' can only appear once`, attr)));
+        }
+        attrs.forEach((attr) => {
+          if (!isValidPolicy(attr.value)) {
+            errors.push(new CompileError(CompileErrorCode.INVALID_REF_SETTING_VALUE, `'${name}' can only have values "cascade", "no action", "set null", "set default" or "restrict"`, attr));
+          }
+        });
+        clean[name] = attrs;
+        break;
+      case SettingName.Color:
+        if (attrs.length > 1) {
+          errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_REF_SETTING, '\'color\' can only appear once', attr)));
+        }
+        attrs.forEach((attr) => {
+          if (!isValidColor(attr.value)) {
+            errors.push(new CompileError(CompileErrorCode.INVALID_REF_SETTING_VALUE, '\'color\' must be a color literal', attr!));
+          }
+        });
+        clean[name] = attrs;
+        break;
+      default:
+        attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.UNKNOWN_REF_SETTING, `Unknown ref setting '${name}'`, attr)));
+    }
+  }
+  return new Report(clean, errors);
 }
 
 function isValidPolicy (value?: SyntaxNode): boolean {
@@ -193,7 +199,7 @@ function isValidPolicy (value?: SyntaxNode): boolean {
 
   let extractedString: string | undefined;
   if (value instanceof IdentiferStreamNode) {
-    extractedString = extractStringFromIdentifierStream(value).unwrap_or('');
+    extractedString = extractStringFromIdentifierStream(value) ?? '';
   } else {
     extractedString = value.expression.variable.value;
   }

@@ -1,0 +1,34 @@
+import Report from '@/core/report';
+import { CompileError, CompileErrorCode } from '@/core/errors';
+import { ElementDeclarationNode, ProgramNode } from '@/core/parser/nodes';
+import Compiler from '@/compiler';
+import { SyntaxToken } from '@/core/lexer/tokens';
+import { ElementKind } from '@/core/types/keywords';
+
+export default class ProgramValidator {
+  private ast: ProgramNode;
+
+  private compiler: Compiler;
+
+  constructor (ast: ProgramNode, compiler: Compiler) {
+    this.ast = ast;
+    this.compiler = compiler;
+  }
+
+  validate (): Report<ProgramNode> {
+    const errors: CompileError[] = [];
+
+    this.ast.body.forEach((element) => {
+      if (element.type === undefined) {
+        return;
+      }
+
+      const validatorReport = this.compiler.validate(
+        element as ElementDeclarationNode & { type: SyntaxToken },
+      );
+      errors.push(...validatorReport.getErrors());
+    });
+
+    return new Report(this.ast, errors);
+  }
+}

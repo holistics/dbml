@@ -1,27 +1,22 @@
 import { partition } from 'lodash-es';
-import SymbolFactory from '@/core/analyzer/symbol/factory';
+import Compiler from '@/compiler';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import {
   BlockExpressionNode, CallExpressionNode, CommaExpressionNode, ElementDeclarationNode, EmptyNode, FunctionApplicationNode, FunctionExpressionNode, ListExpressionNode, ProgramNode, SyntaxNode,
 } from '@/core/parser/nodes';
-import { SyntaxToken } from '@/core/lexer/tokens';
-import { ElementValidator } from '@/core/analyzer/validator/types';
-import { isExpressionASignedNumberExpression, isTupleOfVariables, isValidName, pickValidator } from '@/core/analyzer/validator/utils';
-import SymbolTable from '@/core/analyzer/symbol/symbolTable';
-import { destructureComplexVariable, getElementKind } from '@/core/analyzer/utils';
-import { ElementKind } from '@/core/analyzer/types';
-import { isAccessExpression, isExpressionAQuotedString, isExpressionAVariableNode } from '@/core/parser/utils';
+import { isExpressionASignedNumberExpression, isTupleOfVariables, isValidName } from '@/core/utils/validate';
+import { destructureComplexVariable } from '@/core/utils/expression';
+import { ElementKind } from '@/core/types/keywords';
+import { isAccessExpression, isExpressionAQuotedString, isExpressionAVariableNode } from '@/core/utils/expression';
 import { KEYWORDS_OF_DEFAULT_SETTING } from '@/constants';
 
-export default class RecordsValidator implements ElementValidator {
-  private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
-  private publicSymbolTable: SymbolTable;
-  private symbolFactory: SymbolFactory;
+export default class RecordsValidator {
+  private declarationNode: ElementDeclarationNode;
+  private compiler: Compiler;
 
-  constructor (declarationNode: ElementDeclarationNode & { type: SyntaxToken }, publicSymbolTable: SymbolTable, symbolFactory: SymbolFactory) {
+  constructor (compiler: Compiler, declarationNode: ElementDeclarationNode) {
     this.declarationNode = declarationNode;
-    this.publicSymbolTable = publicSymbolTable;
-    this.symbolFactory = symbolFactory;
+    this.compiler = compiler;
   }
 
   validate (): CompileError[] {
@@ -45,8 +40,7 @@ export default class RecordsValidator implements ElementValidator {
 
     // Check if parent is a table
     if (parent instanceof ElementDeclarationNode) {
-      const elementKind = getElementKind(parent).unwrap_or(undefined);
-      if (elementKind === ElementKind.Table) {
+      if (parent.isKind(ElementKind.Table)) {
         return [];
       }
     }
@@ -77,7 +71,7 @@ export default class RecordsValidator implements ElementValidator {
       return [new CompileError(
         CompileErrorCode.INVALID_RECORDS_NAME,
         'Records at top-level must have a name in the form of table(col1, col2, ...) or schema.table(col1, col2, ...)',
-        nameNode || this.declarationNode.type,
+        nameNode || this.declarationNode.type || this.declarationNode,
       )];
     }
 
@@ -240,7 +234,7 @@ export default class RecordsValidator implements ElementValidator {
 
     // Member access for enum field references: status.active, myschema.status.pending
     if (isAccessExpression(value)) {
-      const fragments = destructureComplexVariable(value).unwrap_or(undefined);
+      const fragments = destructureComplexVariable(value);
       return fragments !== undefined && fragments.length > 0;
     }
 
@@ -249,13 +243,10 @@ export default class RecordsValidator implements ElementValidator {
 
   private validateSubElements (subs: ElementDeclarationNode[]): CompileError[] {
     return subs.flatMap((sub) => {
-      sub.parent = this.declarationNode;
       if (!sub.type) {
         return [];
       }
-      const _Validator = pickValidator(sub as ElementDeclarationNode & { type: SyntaxToken });
-      const validator = new _Validator(sub as ElementDeclarationNode & { type: SyntaxToken }, this.publicSymbolTable, this.symbolFactory);
-      return validator.validate();
+      return this.compiler.validate(sub).getErrors();
     });
   }
 }

@@ -1,16 +1,15 @@
+import type { SyntaxNode } from '@/core/parser/nodes';
 import {
-  EmptyNode,
   FunctionExpressionNode,
   PrefixExpressionNode,
-  SyntaxNode,
+  EmptyNode,
 } from '@/core/parser/nodes';
-import { isExpressionAnIdentifierNode } from '@/core/parser/utils';
-import { isExpressionASignedNumberExpression } from '@/core/analyzer/validator/utils';
-import { destructureComplexVariable, extractQuotedStringToken, extractNumericLiteral } from '@/core/analyzer/utils';
+import { isExpressionAnIdentifierNode, isExpressionASignedNumberExpression } from '@/core/utils/expression';
+import { destructureComplexVariable, extractQuotedStringToken, extractNumericLiteral } from '@/core/utils/expression';
 import { last } from 'lodash-es';
 import { DateTime } from 'luxon';
 
-export { extractNumericLiteral } from '@/core/analyzer/utils';
+export { extractNumericLiteral } from '@/core/utils/expression';
 
 // Check if value is a NULL literal/Empty node
 export function isNullish (value: SyntaxNode): boolean {
@@ -22,7 +21,7 @@ export function isNullish (value: SyntaxNode): boolean {
 }
 
 export function isEmptyStringLiteral (value: SyntaxNode): boolean {
-  return extractQuotedStringToken(value).unwrap_or(undefined) === '';
+  return extractQuotedStringToken(value) === '';
 }
 
 export function isFunctionExpression (value: SyntaxNode): value is FunctionExpressionNode {
@@ -51,12 +50,9 @@ export function extractSignedNumber (node: SyntaxNode): number | null {
 }
 
 // Try to extract a numeric value from a syntax node or primitive
-// Example: 0, 1, '0', '1', "2", -2, "-2"
 export function tryExtractNumeric (value: SyntaxNode | number | string | boolean | undefined | null): number | null {
-  // Handle null/undefined
   if (value === null || value === undefined) return null;
 
-  // Handle primitive types
   if (typeof value === 'number') return value;
   if (typeof value === 'string') {
     const parsed = Number(value);
@@ -64,12 +60,10 @@ export function tryExtractNumeric (value: SyntaxNode | number | string | boolean
   }
   if (typeof value === 'boolean') return value ? 1 : 0;
 
-  // Numeric literal or signed number
   const num = extractSignedNumber(value);
   if (num !== null) return num;
 
-  // Quoted string containing number: "42", '3.14'
-  const strValue = extractQuotedStringToken(value).unwrap_or(undefined);
+  const strValue = extractQuotedStringToken(value);
   if (strValue !== undefined) {
     const parsed = Number(strValue);
     if (!isNaN(parsed)) {
@@ -82,36 +76,28 @@ export function tryExtractNumeric (value: SyntaxNode | number | string | boolean
 
 // Try to extract an integer value from a syntax node or primitive
 // Rejects decimal values
-// Example: 0, 1, '0', '1', "2", -2, "-2"
 export function tryExtractInteger (value: SyntaxNode | number | string | boolean | undefined | null): number | null {
-  // Handle null/undefined
   if (value === null || value === undefined) return null;
 
-  // Handle primitive types
   if (typeof value === 'number') {
-    // Reject if it has a decimal part
     if (!Number.isInteger(value)) return null;
     return value;
   }
   if (typeof value === 'string') {
     const parsed = Number(value);
     if (isNaN(parsed)) return null;
-    // Reject if it has a decimal part
     if (!Number.isInteger(parsed)) return null;
     return parsed;
   }
   if (typeof value === 'boolean') return value ? 1 : 0;
 
-  // Numeric literal or signed number
   const num = extractSignedNumber(value);
   if (num !== null) {
-    // Reject if it has a decimal part
     if (!Number.isInteger(num)) return null;
     return num;
   }
 
-  // Quoted string containing number: "42", '3.14'
-  const strValue = extractQuotedStringToken(value).unwrap_or(undefined);
+  const strValue = extractQuotedStringToken(value);
   if (strValue !== undefined) {
     const parsed = Number(strValue);
     if (!isNaN(parsed) && Number.isInteger(parsed)) {
@@ -126,12 +112,9 @@ export const TRUTHY_VALUES = ['true', 'yes', 'y', 't', '1'];
 export const FALSY_VALUES = ['false', 'no', 'n', 'f', '0'];
 
 // Try to extract a boolean value from a syntax node or primitive
-// Example: 't', 'f', 'y', 'n', 'true', 'false', true, false, 'yes', 'no', 1, 0, '1', '0'
 export function tryExtractBoolean (value: SyntaxNode | number | string | boolean | undefined | null): boolean | null {
-  // Handle null/undefined
   if (value === null || value === undefined) return null;
 
-  // Handle primitive types
   if (typeof value === 'boolean') return value;
   if (typeof value === 'number') {
     if (value === 0) return false;
@@ -157,8 +140,8 @@ export function tryExtractBoolean (value: SyntaxNode | number | string | boolean
   if (numVal === 0) return false;
   if (numVal === 1) return true;
 
-  // Quoted string: 'true', 'false', 'yes', 'no', 'y', 'n', 't', 'f', '0', '1'
-  const strValue = extractQuotedStringToken(value)?.unwrap_or('').toLowerCase();
+  // Quoted string: 'true', 'false', 'yes', 'no', etc.
+  const strValue = extractQuotedStringToken(value)?.toLowerCase();
   if (strValue) {
     if (TRUTHY_VALUES.includes(strValue)) return true;
     if (FALSY_VALUES.includes(strValue)) return false;
@@ -170,39 +153,34 @@ export function tryExtractBoolean (value: SyntaxNode | number | string | boolean
 // Try to extract an enum value from a syntax node or primitive
 // Either enum references or string are ok
 export function tryExtractEnum (value: SyntaxNode | string | undefined | null): string | null {
-  // Handle null/undefined
   if (value === null || value === undefined) return null;
 
-  // Handle primitive string
   if (typeof value === 'string') return value;
 
   // Enum field reference: gender.male
-  const fragments = destructureComplexVariable(value).unwrap_or(undefined);
+  const fragments = destructureComplexVariable(value);
   if (fragments) {
     return last(fragments)!;
   }
 
   // Quoted string: 'male'
-  return extractQuotedStringToken(value).unwrap_or(null);
+  return extractQuotedStringToken(value) ?? null;
 }
 
 // Try to extract a string value from a syntax node or primitive
-// Example: "abc", 'abc'
 export function tryExtractString (value: SyntaxNode | string | boolean | number | undefined | null): string | null {
-  // Handle null/undefined
   if (value === null || value === undefined) return null;
 
-  // Handle primitive string
   if (typeof value === 'string') return value;
   if (typeof value === 'number') return value.toString();
   if (typeof value === 'boolean') return value.toString();
 
-  // Quoted string: 'hello', "world"
-  const res = extractQuotedStringToken(value).unwrap_or(null) ?? tryExtractNumeric(value) ?? tryExtractBoolean(value); // Important: DO NOT move extractNumeric to after extractBoolean, as `1` is extracted as `true`
-  return res === null ? null : res.toString();
+  // Important: DO NOT move extractNumeric to after extractBoolean, as `1` is extracted as `true`
+  const res = extractQuotedStringToken(value) ?? tryExtractNumeric(value) ?? tryExtractBoolean(value);
+  return res === null || res === undefined ? null : res.toString();
 }
 
-// Supported datetime formats using luxon format tokens (excluding ISO 8601 which is handled separately)
+// Supported datetime formats using luxon format tokens
 const SUPPORTED_DATE_FORMATS = [
   'yyyy-MM-dd', // ISO date: 2023-12-31
   'M/d/yyyy', // MM/dd/yyyy: 12/31/2023 or 1/5/2023
@@ -225,26 +203,17 @@ const SUPPORTED_TIME_FORMATS = [
 ];
 
 // Try to extract a datetime value from a syntax node or primitive & normalized to ISO 8601
-// Supports:
-//   - ISO 8601: date (YYYY-MM-DD), time (HH:MM:SS), datetime (YYYY-MM-DDTHH:MM:SS)
-//   - MM/dd/yyyy: 12/31/2023
-//   - d MMM yyyy: 31 Dec 2023
-//   - MMM d, yyyy: Dec 31, 2023
-//   - yyyy-MM-dd HH:mm:ss: 2023-12-31 23:59:59
-// Example: '2024-01-15', '10:30:00', '2024-01-15T10:30:00Z', '12/31/2023', '31 Dec 2023'
 export function tryExtractDateTime (value: SyntaxNode | string | undefined | null): string | null {
-  // Handle null/undefined
   if (value === null || value === undefined) return null;
 
-  const extractedValue = typeof value === 'string' ? value : extractQuotedStringToken(value).unwrap_or(null);
+  const extractedValue = typeof value === 'string' ? value : extractQuotedStringToken(value);
 
-  if (extractedValue === null) return null;
+  if (extractedValue === null || extractedValue === undefined) return null;
 
-  // We prioritize more specific formats, like time-only & date-only before ISO-8601, which includes both date and time
+  // We prioritize more specific formats, like time-only & date-only before ISO-8601
   for (const format of SUPPORTED_TIME_FORMATS) {
     const dt = DateTime.fromFormat(extractedValue, format, { setZone: true });
     if (dt.isValid) {
-      // https://moment.github.io/luxon/api-docs/index.html#datetimetoisotime
       return dt.toISOTime({ suppressMilliseconds: true, includeOffset: hasExplicitTimeZone(dt) });
     }
   }
@@ -252,7 +221,6 @@ export function tryExtractDateTime (value: SyntaxNode | string | undefined | nul
   for (const format of SUPPORTED_DATE_FORMATS) {
     const dt = DateTime.fromFormat(extractedValue, format, { setZone: true });
     if (dt.isValid) {
-      // https://moment.github.io/luxon/api-docs/index.html#datetimetoisodate
       return dt.toISODate();
     }
   }
@@ -260,21 +228,18 @@ export function tryExtractDateTime (value: SyntaxNode | string | undefined | nul
   for (const format of SUPPORTED_DATETIME_FORMATS) {
     const dt = DateTime.fromFormat(extractedValue, format, { setZone: true });
     if (dt.isValid) {
-      // https://moment.github.io/luxon/api-docs/index.html#datetimetoiso
       return dt.toISO({ suppressMilliseconds: true, includeOffset: hasExplicitTimeZone(dt) });
     }
   }
 
   const isoDate = DateTime.fromISO(extractedValue, { setZone: true });
   if (isoDate.isValid) {
-    // https://moment.github.io/luxon/api-docs/index.html#datetimetoiso
     return isoDate.toISO({ suppressMilliseconds: true, includeOffset: hasExplicitTimeZone(isoDate) });
   }
 
   return null;
 
   function hasExplicitTimeZone (dt: DateTime): boolean {
-    // https://github.com/moment/luxon/blob/master/docs/zones.md#specifying-a-zone
     return dt.zone.type !== 'system';
   }
 }

@@ -395,8 +395,10 @@
                     "isInvalid": false,
                     "start": 15,
                     "end": 17
-                  }
-                }
+                  },
+                  "symbol": 6
+                },
+                "symbol": 7
               },
               "args": [
                 {
@@ -475,11 +477,13 @@
                       "isInvalid": false,
                       "start": 18,
                       "end": 25
-                    }
-                  }
+                    },
+                    "symbol": 8
+                  },
+                  "symbol": 9
                 }
               ],
-              "symbol": 2
+              "symbol": 10
             }
           ],
           "blockCloseBrace": {
@@ -527,7 +531,7 @@
           }
         },
         "parent": 57,
-        "symbol": 1
+        "symbol": 2
       },
       {
         "id": 32,
@@ -2165,10 +2169,11 @@
                     "start": 150,
                     "end": 152
                   }
-                }
+                },
+                "referee": 2
               },
               "args": [],
-              "symbol": 4
+              "symbol": 11
             }
           ],
           "blockCloseBrace": {
@@ -2576,8 +2581,10 @@
                     "isInvalid": false,
                     "start": 173,
                     "end": 175
-                  }
-                }
+                  },
+                  "symbol": 12
+                },
+                "symbol": 13
               },
               "args": [
                 {
@@ -2656,8 +2663,10 @@
                       "isInvalid": false,
                       "start": 176,
                       "end": 179
-                    }
-                  }
+                    },
+                    "symbol": 14
+                  },
+                  "symbol": 15
                 },
                 {
                   "id": 41,
@@ -2754,8 +2763,10 @@
                             "start": 181,
                             "end": 183
                           }
-                        ]
-                      }
+                        ],
+                        "symbol": 16
+                      },
+                      "symbol": 17
                     }
                   ],
                   "commaList": [],
@@ -2801,10 +2812,11 @@
                     "isInvalid": false,
                     "start": 183,
                     "end": 184
-                  }
+                  },
+                  "symbol": 18
                 }
               ],
-              "symbol": 6
+              "symbol": 19
             }
           ],
           "blockCloseBrace": {
@@ -2852,7 +2864,7 @@
           }
         },
         "parent": 57,
-        "symbol": 5
+        "symbol": 4
       },
       {
         "id": 56,
@@ -3544,10 +3556,11 @@
                     "start": 227,
                     "end": 233
                   }
-                }
+                },
+                "referee": 4
               },
               "args": [],
-              "symbol": 8
+              "symbol": 20
             }
           ],
           "blockCloseBrace": {
@@ -3595,7 +3608,7 @@
           }
         },
         "parent": 57,
-        "symbol": 7
+        "symbol": 5
       }
     ],
     "eof": {
@@ -3622,12 +3635,14 @@
     "symbol": {
       "symbolTable": {
         "Table:t1": {
-          "references": [],
-          "id": 1,
+          "references": [
+            29
+          ],
+          "id": 2,
           "symbolTable": {
             "Column:id": {
               "references": [],
-              "id": 2,
+              "id": 10,
               "declaration": 6
             }
           },
@@ -3639,19 +3654,22 @@
           "symbolTable": {
             "TableGroup field:t1": {
               "references": [],
-              "id": 4,
+              "id": 11,
+              "symbolTable": {},
               "declaration": 30
             }
           },
           "declaration": 32
         },
         "Table:table2": {
-          "references": [],
-          "id": 5,
+          "references": [
+            53
+          ],
+          "id": 4,
           "symbolTable": {
             "Column:id": {
               "references": [],
-              "id": 6,
+              "id": 19,
               "declaration": 42
             }
           },
@@ -3659,11 +3677,12 @@
         },
         "TableGroup:group2": {
           "references": [],
-          "id": 7,
+          "id": 5,
           "symbolTable": {
             "TableGroup field:table2": {
               "references": [],
-              "id": 8,
+              "id": 20,
+              "symbolTable": {},
               "declaration": 54
             }
           },

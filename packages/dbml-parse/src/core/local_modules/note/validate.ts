@@ -1,27 +1,19 @@
 import { partition } from 'lodash-es';
-import SymbolFactory from '@/core/analyzer/symbol/factory';
+import Compiler from '@/compiler';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, ProgramNode, SyntaxNode,
 } from '@/core/parser/nodes';
-import { SyntaxToken } from '@/core/lexer/tokens';
-import { ElementValidator } from '@/core/analyzer/validator/types';
-import { isExpressionAQuotedString } from '@/core/parser/utils';
-import { pickValidator } from '@/core/analyzer/validator/utils';
-import SymbolTable from '@/core/analyzer/symbol/symbolTable';
-import { ElementKind } from '@/core/analyzer/types';
-import { destructureComplexVariable, getElementKind } from '@/core/analyzer/utils';
-import { createStickyNoteSymbolIndex } from '@/core/analyzer/symbol/symbolIndex';
+import { ElementKind } from '@/core/types/keywords';
+import { isExpressionAQuotedString } from '@/core/utils/expression';
 
-export default class NoteValidator implements ElementValidator {
-  private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
-  private publicSymbolTable: SymbolTable;
-  private symbolFactory: SymbolFactory;
+export default class NoteValidator {
+  private compiler: Compiler;
+  private declarationNode: ElementDeclarationNode;
 
-  constructor (declarationNode: ElementDeclarationNode & { type: SyntaxToken }, publicSymbolTable: SymbolTable, symbolFactory: SymbolFactory) {
+  constructor (compiler: Compiler, declarationNode: ElementDeclarationNode) {
+    this.compiler = compiler;
     this.declarationNode = declarationNode;
-    this.publicSymbolTable = publicSymbolTable;
-    this.symbolFactory = symbolFactory;
   }
 
   validate (): CompileError[] {
@@ -35,17 +27,15 @@ export default class NoteValidator implements ElementValidator {
   }
 
   private validateContext (): CompileError[] {
+    const parent = this.declarationNode.parent;
     if (
-      !(this.declarationNode.parent instanceof ProgramNode)
-      && !(
-        [
-          ElementKind.Table,
-          ElementKind.TableGroup,
-          ElementKind.TablePartial,
-          ElementKind.Project,
-        ] as (ElementKind | undefined)[]
-      )
-        .includes(getElementKind(this.declarationNode.parent).unwrap_or(undefined))
+      !(parent instanceof ProgramNode)
+      && !(parent instanceof ElementDeclarationNode && parent.isKind(
+        ElementKind.Table,
+        ElementKind.TableGroup,
+        ElementKind.TablePartial,
+        ElementKind.Project,
+      ))
     ) {
       return [new CompileError(
         CompileErrorCode.INVALID_NOTE_CONTEXT,
@@ -58,33 +48,7 @@ export default class NoteValidator implements ElementValidator {
   }
 
   private validateName (nameNode?: SyntaxNode): CompileError[] {
-    if (!(this.declarationNode.parent instanceof ProgramNode)) {
-      if (nameNode) {
-        return [new CompileError(CompileErrorCode.UNEXPECTED_NAME, 'A Note shouldn\'t have a name', nameNode)];
-      }
-      return [];
-    }
-
-    if (!nameNode) {
-      return [new CompileError(CompileErrorCode.INVALID_NAME, 'Sticky note must have a name', this.declarationNode)];
-    }
-
-    const nameFragments = destructureComplexVariable(nameNode);
-    if (!nameFragments.isOk()) return [new CompileError(CompileErrorCode.INVALID_NAME, 'Invalid name for sticky note ', this.declarationNode)];
-
-    const names = nameFragments.unwrap();
-
-    const trueName = names.join('.');
-
-    const noteId = createStickyNoteSymbolIndex(trueName);
-
-    if (this.publicSymbolTable.has(noteId)) {
-      return [new CompileError(CompileErrorCode.DUPLICATE_NAME, `Sticky note "${trueName}" has already been defined`, nameNode)];
-    }
-
-    this.publicSymbolTable.set(noteId, this.declarationNode.symbol!);
-
-    return [];
+    return this.compiler.fullname(this.declarationNode).getErrors();
   }
 
   private validateAlias (aliasNode?: SyntaxNode): CompileError[] {
@@ -134,13 +98,10 @@ export default class NoteValidator implements ElementValidator {
 
   private validateSubElements (subs: ElementDeclarationNode[]): CompileError[] {
     return subs.flatMap((sub) => {
-      sub.parent = this.declarationNode;
       if (!sub.type) {
         return [];
       }
-      const _Validator = pickValidator(sub as ElementDeclarationNode & { type: SyntaxToken });
-      const validator = new _Validator(sub as ElementDeclarationNode & { type: SyntaxToken }, this.publicSymbolTable, this.symbolFactory);
-      return validator.validate();
+      return this.compiler.validate(sub).getErrors();
     });
   }
 }

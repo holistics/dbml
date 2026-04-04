@@ -7,7 +7,7 @@ export enum ElementKind {
   Indexes = 'indexes',
   TableGroup = 'tablegroup',
   TablePartial = 'tablepartial',
-  Check = 'checks',
+  Checks = 'checks',
   Records = 'records',
 }
 

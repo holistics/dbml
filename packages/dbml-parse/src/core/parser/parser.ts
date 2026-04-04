@@ -1,11 +1,11 @@
 import { last } from 'lodash-es';
 import {
   convertFuncAppToElem,
-  isAsKeyword,
+  getMemberChain,
   markInvalid,
 } from '@/core/parser/utils';
 import { CompileError, CompileErrorCode } from '@/core/errors';
-import { SyntaxToken, SyntaxTokenKind, isOpToken } from '@/core/lexer/tokens';
+import { type SyntaxToken, SyntaxTokenKind, isOpToken } from '@/core/lexer/tokens';
 import Report from '@/core/report';
 import { ParsingContext, ParsingContextStack } from '@/core/parser/contextStack';
 import {
@@ -14,8 +14,8 @@ import {
   BlockExpressionNode,
   CallExpressionNode,
   CommaExpressionNode,
-  EmptyNode,
   ElementDeclarationNode,
+  EmptyNode,
   ExpressionNode,
   FunctionApplicationNode,
   FunctionExpressionNode,
@@ -30,12 +30,13 @@ import {
   PrimaryExpressionNode,
   ProgramNode,
   SyntaxNode,
-  SyntaxNodeIdGenerator,
   TupleExpressionNode,
   VariableNode,
+  SyntaxNodeIdGenerator,
 } from '@/core/parser/nodes';
 import NodeFactory from '@/core/parser/factory';
 import { hasTrailingNewLines, hasTrailingSpaces, isAtStartOfLine } from '@/core/lexer/utils';
+import { isAsKeyword } from '@/core/utils/expression';
 
 // A class of errors that represent a parsing failure and contain the node that was partially parsed
 class PartialParsingError<T extends SyntaxNode> {
@@ -178,8 +179,19 @@ export default class Parser {
     const eof = this.advance();
     const program = this.nodeFactory.create(ProgramNode, { body, eof, source: this.source });
     this.gatherInvalid();
+    this.assignParents(program);
 
     return new Report({ ast: program, tokens: this.tokens }, this.errors);
+  }
+
+  // Visit all nodes in the program and assign their parent
+  private assignParents (node: SyntaxNode) {
+    getMemberChain(node).forEach((child) => {
+      if (child instanceof SyntaxNode) {
+        child.parentNode = node;
+        this.assignParents(child);
+      }
+    });
   }
 
   /* Parsing and synchronizing ProgramNode */
@@ -407,9 +419,8 @@ export default class Parser {
 
     // Try interpreting the function application as an element declaration expression
     // if fail, fall back to the generic function application
-    const buildExpression = () => convertFuncAppToElem(args.callee, args.args, this.nodeFactory).unwrap_or(
-      this.nodeFactory.create(FunctionApplicationNode, args),
-    );
+    const buildExpression = () => convertFuncAppToElem(args.callee, args.args, this.nodeFactory)
+      ?? this.nodeFactory.create(FunctionApplicationNode, args);
 
     try {
       args.callee = this.commaExpression();

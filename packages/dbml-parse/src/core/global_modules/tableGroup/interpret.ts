@@ -1,30 +1,31 @@
 import { partition } from 'lodash-es';
-import { destructureComplexVariable, destructureMemberAccessExpression, extractQuotedStringToken } from '@/core/analyzer/utils';
+import { extractQuotedStringToken, destructureComplexVariable } from '@/core/utils/expression';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, SyntaxNode, ListExpressionNode,
 } from '@/core/parser/nodes';
-import { ElementInterpreter, InterpreterDatabase, TableGroup } from '@/core/interpreter/types';
+import type { TableGroup, TableGroupField } from '@/core/types/schemaJson';
 import {
   extractElementName, getTokenPosition, normalizeNoteContent, extractColor,
-} from '@/core/interpreter/utils';
-import { aggregateSettingList } from '@/core/analyzer/validator/utils';
+} from '../utils';
+import { aggregateSettingList } from '@/core/utils/validate';
+import Compiler from '@/compiler';
+import Report from '@/core/report';
 
-export class TableGroupInterpreter implements ElementInterpreter {
+export class TableGroupInterpreter {
   private declarationNode: ElementDeclarationNode;
-  private env: InterpreterDatabase;
+  private compiler: Compiler;
   private tableGroup: Partial<TableGroup>;
 
-  constructor (declarationNode: ElementDeclarationNode, env: InterpreterDatabase) {
+  constructor (compiler: Compiler, declarationNode: ElementDeclarationNode) {
     this.declarationNode = declarationNode;
-    this.env = env;
+    this.compiler = compiler;
     this.tableGroup = { tables: [] };
   }
 
-  interpret (): CompileError[] {
+  interpret (): Report<TableGroup> {
     const errors: CompileError[] = [];
     this.tableGroup.token = getTokenPosition(this.declarationNode);
-    this.env.tableGroups.set(this.declarationNode, this.tableGroup as TableGroup);
 
     errors.push(
       ...this.interpretName(this.declarationNode.name!),
@@ -32,7 +33,7 @@ export class TableGroupInterpreter implements ElementInterpreter {
       ...this.interpretBody(this.declarationNode.body as BlockExpressionNode),
     );
 
-    return errors;
+    return new Report(this.tableGroup as TableGroup, errors);
   }
 
   private interpretName (nameNode: SyntaxNode): CompileError[] {
@@ -63,13 +64,11 @@ export class TableGroupInterpreter implements ElementInterpreter {
       switch (sub.type?.value.toLowerCase()) {
         case 'note':
           this.tableGroup.note = {
-            value: extractQuotedStringToken(
+            value: normalizeNoteContent(extractQuotedStringToken(
               sub.body instanceof BlockExpressionNode
                 ? (sub.body.body[0] as FunctionApplicationNode).callee
                 : sub.body!.callee,
-            )
-              .map(normalizeNoteContent)
-              .unwrap(),
+            )!),
             token: getTokenPosition(sub),
           };
           break;
@@ -85,26 +84,10 @@ export class TableGroupInterpreter implements ElementInterpreter {
   private interpretFields (fields: FunctionApplicationNode[]): CompileError[] {
     const errors: CompileError[] = [];
     this.tableGroup.tables = fields.map((field) => {
-      const fragments = destructureComplexVariable((field as FunctionApplicationNode).callee).unwrap();
-
-      if (fragments.length > 2) {
-        errors.push(new CompileError(CompileErrorCode.UNSUPPORTED, 'Nested schema is not supported', field));
-      }
-
-      const tableid = destructureMemberAccessExpression((field as FunctionApplicationNode).callee!).unwrap().pop()!.referee!.id;
-      if (this.env.tableOwnerGroup[tableid]) {
-        const tableGroup = this.env.tableOwnerGroup[tableid];
-        const { schemaName, name } = this.env.tableGroups.get(tableGroup)!;
-        const groupName = schemaName ? `${schemaName}.${name}` : name;
-        errors.push(new CompileError(CompileErrorCode.TABLE_REAPPEAR_IN_TABLEGROUP, `Table "${fragments.join('.')}" already appears in group "${groupName}"`, field));
-      } else {
-        this.env.tableOwnerGroup[tableid] = this.declarationNode;
-      }
-
-      return {
-        name: fragments.pop()!,
-        schemaName: fragments.join('.'),
-      };
+      const fragments = destructureComplexVariable(field.callee!) ?? [];
+      const name = fragments.pop() ?? '';
+      const schemaName = fragments.join('.') || '';
+      return { name, schemaName } as TableGroupField;
     });
 
     return errors;
@@ -114,12 +97,12 @@ export class TableGroupInterpreter implements ElementInterpreter {
     const settingMap = aggregateSettingList(settings).getValue();
 
     this.tableGroup.color = settingMap.color?.length
-      ? extractColor(settingMap.color?.at(0)?.value as any)
+      ? extractColor(settingMap.color?.at(0)?.value)
       : undefined;
 
     const [noteNode] = settingMap.note || [];
     this.tableGroup.note = noteNode && {
-      value: extractQuotedStringToken(noteNode?.value).map(normalizeNoteContent).unwrap(),
+      value: normalizeNoteContent(extractQuotedStringToken(noteNode?.value)!),
       token: getTokenPosition(noteNode),
     };
 

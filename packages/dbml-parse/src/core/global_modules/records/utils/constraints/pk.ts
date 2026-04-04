@@ -1,6 +1,7 @@
-import { CompileError, CompileErrorCode } from '@/core/errors';
-import { InterpreterDatabase, Table, Column, TableRecordRow } from '@/core/interpreter/types';
+import { CompileWarning, CompileErrorCode } from '@/core/errors';
+import type { Table, Column, TableRecord } from '@/core/types/schemaJson';
 import {
+  buildColumnIndex,
   extractKeyValueWithDefault,
   hasNullWithoutDefaultInKey,
   isAutoIncrementColumn,
@@ -8,70 +9,68 @@ import {
   formatValues,
   createConstraintErrors,
 } from './helper';
-import { mergeTableAndPartials } from '@/core/interpreter/utils';
 import { isSerialType } from '../data';
-import { keyBy, groupBy, partition, compact, isEmpty, difference, filter, flatMap } from 'lodash-es';
+import { groupBy, partition, compact, isEmpty, difference, filter, flatMap } from 'lodash-es';
 
 const getConstraintType = (columnCount: number) =>
   columnCount > 1 ? 'Composite PK' : 'PK';
 
-export function validatePrimaryKey (env: InterpreterDatabase): CompileError[] {
-  return flatMap(Array.from(env.records), ([table, { rows }]) => {
-    if (isEmpty(rows)) return [];
+export function validatePrimaryKey (record: TableRecord, mergedTable: Table): CompileWarning[] {
+  const rows = record.values;
+  if (isEmpty(rows)) return [];
 
-    if (!env.cachedMergedTables.has(table)) {
-      env.cachedMergedTables.set(table, mergeTableAndPartials(table, env));
-    }
-    const mergedTable = env.cachedMergedTables.get(table)!;
+  const pkConstraints = collectPkConstraints(mergedTable);
+  const columnIndex = buildColumnIndex(record);
+  const availableColumns = collectAvailableColumns(record);
+  const columnMap = new Map(mergedTable.fields.map((f) => [f.name, f]));
 
-    const pkConstraints = collectPkConstraints(mergedTable);
-    const availableColumns = collectAvailableColumns(rows);
-    const columnMap = keyBy(mergedTable.fields, 'name');
-
-    return flatMap(pkConstraints, (pkColumns) =>
-      validatePkConstraint(pkColumns, rows, availableColumns, columnMap, mergedTable),
-    );
-  });
+  return flatMap(pkConstraints, (pkColumns) =>
+    validatePkConstraint(pkColumns, record, availableColumns, columnMap, columnIndex, mergedTable),
+  );
 }
 
 function validatePkConstraint (
   pkColumns: string[],
-  rows: TableRecordRow[],
+  record: TableRecord,
   availableColumns: Set<string>,
-  columnMap: Record<string, Column>,
+  columnMap: Map<string, Column>,
+  columnIndex: Map<string, number>,
   mergedTable: Table,
-): CompileError[] {
+): CompileWarning[] {
   // Check for missing columns
   const missingErrors = checkMissingPkColumns(
     pkColumns,
     availableColumns,
     columnMap,
     mergedTable,
-    rows,
+    record,
   );
   if (!isEmpty(missingErrors)) return missingErrors;
 
   // Get column definitions
-  const pkColumnFields = compact(pkColumns.map((col) => columnMap[col]));
+  const pkColumnFields = compact(pkColumns.map((col) => columnMap.get(col)));
   const areAllColumnsAutoIncrement = pkColumnFields.every((col) =>
     col && isAutoIncrementColumn(col),
   );
 
   // Partition rows into those with NULL and those without
-  const [rowsWithNull, rowsWithoutNull] = partition(rows, (row) =>
-    hasNullWithoutDefaultInKey(row.values, pkColumns, pkColumnFields),
+  const rowIndices = record.values.map((_, i) => i);
+  const [rowsWithNull, rowsWithoutNull] = partition(rowIndices, (i) =>
+    hasNullWithoutDefaultInKey(record.values[i], pkColumns, columnIndex, pkColumnFields),
   );
 
   // Validate NULL rows (only error if not all columns are auto-increment)
   const nullErrors = areAllColumnsAutoIncrement
     ? []
-    : createNullErrors(rowsWithNull, pkColumns, mergedTable);
+    : createNullErrors(rowsWithNull, pkColumns, mergedTable, record);
 
   // Find duplicate rows using groupBy
   const duplicateErrors = findDuplicateErrors(
     rowsWithoutNull,
+    record,
     pkColumns,
     pkColumnFields,
+    columnIndex,
     mergedTable,
   );
 
@@ -79,10 +78,11 @@ function validatePkConstraint (
 }
 
 function createNullErrors (
-  rowsWithNull: TableRecordRow[],
+  rowsWithNull: number[],
   pkColumns: string[],
   mergedTable: Table,
-): CompileError[] {
+  record: TableRecord,
+): CompileWarning[] {
   if (isEmpty(rowsWithNull)) return [];
 
   const constraintType = getConstraintType(pkColumns.length);
@@ -93,20 +93,23 @@ function createNullErrors (
   );
   const message = `NULL in ${constraintType}: ${columnRef} cannot be NULL`;
 
-  return flatMap(rowsWithNull, (row) =>
-    createConstraintErrors(row, pkColumns, message),
+  // Report one warning per PK column per NULL row
+  return flatMap(rowsWithNull, () =>
+    pkColumns.flatMap(() => createConstraintErrors(record, message)),
   );
 }
 
 function findDuplicateErrors (
-  rows: TableRecordRow[],
+  rows: number[],
+  record: TableRecord,
   pkColumns: string[],
   pkColumnFields: Column[],
+  columnIndex: Map<string, number>,
   mergedTable: Table,
-): CompileError[] {
+): CompileWarning[] {
   // Group rows by their PK value
-  const rowsByKeyValue = groupBy(rows, (row) =>
-    extractKeyValueWithDefault(row.values, pkColumns, pkColumnFields),
+  const rowsByKeyValue = groupBy(rows, (idx) =>
+    extractKeyValueWithDefault(record.values[idx], pkColumns, columnIndex, pkColumnFields),
   );
 
   // Find groups with more than 1 row (duplicates)
@@ -121,11 +124,11 @@ function findDuplicateErrors (
       pkColumns,
     );
 
-    // Skip first occurrence, report rest as duplicates
-    return flatMap(duplicateRows.slice(1), (row) => {
-      const valueStr = formatValues(row.values, pkColumns);
+    // Report all rows in the duplicate group
+    return flatMap(duplicateRows, (idx) => {
+      const valueStr = formatValues(record.values[idx], pkColumns, columnIndex);
       const message = `Duplicate ${constraintType}: ${columnRef} = ${valueStr}`;
-      return createConstraintErrors(row, pkColumns, message);
+      return createConstraintErrors(record, message);
     });
   });
 }
@@ -137,25 +140,25 @@ function collectPkConstraints (mergedTable: Table): string[][] {
   ];
 }
 
-function collectAvailableColumns (rows: TableRecordRow[]): Set<string> {
-  return new Set(rows.flatMap((row) => Object.keys(row.values)));
+function collectAvailableColumns (record: TableRecord): Set<string> {
+  return new Set(record.columns);
 }
 
 function checkMissingPkColumns (
   pkColumns: string[],
   availableColumns: Set<string>,
-  columnMap: Record<string, Column>,
+  columnMap: Map<string, Column>,
   mergedTable: Table,
-  rows: TableRecordRow[],
-): CompileError[] {
+  record: TableRecord,
+): CompileWarning[] {
   // Use difference to find missing columns
   const missingColumns = difference(pkColumns, Array.from(availableColumns));
   if (isEmpty(missingColumns)) return [];
 
   // Filter to only those without defaults
   const hasNoDefaultValue = (colName: string): boolean => {
-    const col = columnMap[colName];
-    return col && !col.increment && !isSerialType(col.type.type_name) && !col.dbdefault;
+    const col = columnMap.get(colName);
+    return !!(col && !col.increment && !isSerialType(col.type.type_name) && !col.dbdefault);
   };
 
   const missingWithoutDefaults = missingColumns.filter(hasNoDefaultValue);
@@ -169,9 +172,9 @@ function checkMissingPkColumns (
   );
   const message = `${constraintType}: Column ${columnRef} is missing from record and has no default value`;
 
-  return rows.map((row) => new CompileError(
+  return record.values.map(() => new CompileWarning(
     CompileErrorCode.INVALID_RECORDS_FIELD,
     message,
-    row.node,
+    record as any,
   ));
 }
