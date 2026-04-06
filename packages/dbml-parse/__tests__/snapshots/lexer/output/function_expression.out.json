@@ -1,7 +1,13 @@
 {
-  "value": [
+  "tokens": [
     {
+      "context": {
+        "id": "<function-expression>:id * 2@[L0:C0, L0:C8]",
+        "snippet": "`id * 2`"
+      },
+      "isInvalid": false,
       "kind": "<function-expression>",
+      "value": "id * 2",
       "startPos": {
         "offset": 0,
         "line": 0,
@@ -12,39 +18,23 @@
         "line": 0,
         "column": 8
       },
-      "value": "id * 2",
+      "start": 0,
+      "end": 8,
       "leadingTrivia": [],
       "trailingTrivia": [
-        {
-          "kind": "<space>",
-          "startPos": {
-            "offset": 8,
-            "line": 0,
-            "column": 8
-          },
-          "endPos": {
-            "offset": 9,
-            "line": 0,
-            "column": 9
-          },
-          "value": " ",
-          "leadingTrivia": [],
-          "trailingTrivia": [],
-          "leadingInvalid": [],
-          "trailingInvalid": [],
-          "isInvalid": false,
-          "start": 8,
-          "end": 9
-        }
+        " "
       ],
       "leadingInvalid": [],
-      "trailingInvalid": [],
-      "isInvalid": false,
-      "start": 0,
-      "end": 8
+      "trailingInvalid": []
     },
     {
+      "context": {
+        "id": "<function-expression>:id@[L0:C9, L0:C13]",
+        "snippet": "`id`"
+      },
+      "isInvalid": false,
       "kind": "<function-expression>",
+      "value": "id",
       "startPos": {
         "offset": 9,
         "line": 0,
@@ -55,60 +45,24 @@
         "line": 0,
         "column": 13
       },
-      "value": "id",
+      "start": 9,
+      "end": 13,
       "leadingTrivia": [],
       "trailingTrivia": [
-        {
-          "kind": "<space>",
-          "startPos": {
-            "offset": 13,
-            "line": 0,
-            "column": 13
-          },
-          "endPos": {
-            "offset": 14,
-            "line": 0,
-            "column": 14
-          },
-          "value": " ",
-          "leadingTrivia": [],
-          "trailingTrivia": [],
-          "leadingInvalid": [],
-          "trailingInvalid": [],
-          "isInvalid": false,
-          "start": 13,
-          "end": 14
-        },
-        {
-          "kind": "<newline>",
-          "startPos": {
-            "offset": 15,
-            "line": 0,
-            "column": 15
-          },
-          "endPos": {
-            "offset": 16,
-            "line": 1,
-            "column": 0
-          },
-          "value": "\n",
-          "leadingTrivia": [],
-          "trailingTrivia": [],
-          "leadingInvalid": [],
-          "trailingInvalid": [],
-          "isInvalid": false,
-          "start": 15,
-          "end": 16
-        }
+        " ",
+        "\n"
       ],
       "leadingInvalid": [],
-      "trailingInvalid": [],
-      "isInvalid": false,
-      "start": 9,
-      "end": 13
+      "trailingInvalid": []
     },
     {
+      "context": {
+        "id": "<function-expression>:\r\n    id * 3\r\n@[L2:C0, L4:C1]",
+        "snippet": "`\r\n    id * 3\r\n`"
+      },
+      "isInvalid": false,
       "kind": "<function-expression>",
+      "value": "\r\n    id * 3\r\n",
       "startPos": {
         "offset": 18,
         "line": 2,
@@ -119,61 +73,25 @@
         "line": 4,
         "column": 1
       },
-      "value": "\r\n    id * 3\r\n",
+      "start": 18,
+      "end": 34,
       "leadingTrivia": [
-        {
-          "kind": "<newline>",
-          "startPos": {
-            "offset": 17,
-            "line": 1,
-            "column": 1
-          },
-          "endPos": {
-            "offset": 18,
-            "line": 2,
-            "column": 0
-          },
-          "value": "\n",
-          "leadingTrivia": [],
-          "trailingTrivia": [],
-          "leadingInvalid": [],
-          "trailingInvalid": [],
-          "isInvalid": false,
-          "start": 17,
-          "end": 18
-        }
+        "\n"
       ],
       "trailingTrivia": [
-        {
-          "kind": "<newline>",
-          "startPos": {
-            "offset": 35,
-            "line": 4,
-            "column": 2
-          },
-          "endPos": {
-            "offset": 36,
-            "line": 5,
-            "column": 0
-          },
-          "value": "\n",
-          "leadingTrivia": [],
-          "trailingTrivia": [],
-          "leadingInvalid": [],
-          "trailingInvalid": [],
-          "isInvalid": false,
-          "start": 35,
-          "end": 36
-        }
+        "\n"
       ],
       "leadingInvalid": [],
-      "trailingInvalid": [],
-      "isInvalid": false,
-      "start": 18,
-      "end": 34
+      "trailingInvalid": []
     },
     {
+      "context": {
+        "id": "<function-expression>:no escaped supported! this is an error! \\@[L6:C0, L6:C43]",
+        "snippet": "`no escape... error! \\`"
+      },
+      "isInvalid": false,
       "kind": "<function-expression>",
+      "value": "no escaped supported! this is an error! \\",
       "startPos": {
         "offset": 38,
         "line": 6,
@@ -184,61 +102,25 @@
         "line": 6,
         "column": 43
       },
-      "value": "no escaped supported! this is an error! \\",
+      "start": 38,
+      "end": 81,
       "leadingTrivia": [
-        {
-          "kind": "<newline>",
-          "startPos": {
-            "offset": 37,
-            "line": 5,
-            "column": 1
-          },
-          "endPos": {
-            "offset": 38,
-            "line": 6,
-            "column": 0
-          },
-          "value": "\n",
-          "leadingTrivia": [],
-          "trailingTrivia": [],
-          "leadingInvalid": [],
-          "trailingInvalid": [],
-          "isInvalid": false,
-          "start": 37,
-          "end": 38
-        }
+        "\n"
       ],
       "trailingTrivia": [],
       "leadingInvalid": [],
       "trailingInvalid": [
-        {
-          "kind": "<function-expression>",
-          "startPos": {
-            "offset": 81,
-            "line": 6,
-            "column": 43
-          },
-          "endPos": {
-            "offset": 84,
-            "line": 7,
-            "column": 0
-          },
-          "value": "`\r\n",
-          "leadingTrivia": [],
-          "trailingTrivia": [],
-          "leadingInvalid": [],
-          "trailingInvalid": [],
-          "isInvalid": true,
-          "start": 81,
-          "end": 84
-        }
-      ],
-      "isInvalid": false,
-      "start": 38,
-      "end": 81
+        "`\r\n"
+      ]
     },
     {
+      "context": {
+        "id": "<eof>:@[L7:C0, L7:C0]",
+        "snippet": ""
+      },
+      "isInvalid": false,
       "kind": "<eof>",
+      "value": "",
       "startPos": {
         "offset": 84,
         "line": 7,
@@ -249,22 +131,30 @@
         "line": 7,
         "column": 0
       },
-      "value": "",
+      "start": 84,
+      "end": 84,
       "leadingTrivia": [],
       "trailingTrivia": [],
       "leadingInvalid": [],
-      "trailingInvalid": [],
-      "isInvalid": false,
-      "start": 84,
-      "end": 84
+      "trailingInvalid": []
     }
   ],
   "errors": [
     {
-      "code": 1002,
+      "level": "error",
+      "code": {
+        "value": 1002,
+        "name": "UNEXPECTED_EOF"
+      },
       "diagnostic": "EOF reached while parsing",
-      "nodeOrToken": {
+      "token": {
+        "context": {
+          "id": "<function-expression>:`\r\n@[L6:C43, L7:C0]",
+          "snippet": "`\r\n"
+        },
+        "isInvalid": true,
         "kind": "<function-expression>",
+        "value": "`\r\n",
         "startPos": {
           "offset": 81,
           "line": 6,
@@ -275,18 +165,16 @@
           "line": 7,
           "column": 0
         },
-        "value": "`\r\n",
+        "start": 81,
+        "end": 84,
         "leadingTrivia": [],
         "trailingTrivia": [],
         "leadingInvalid": [],
-        "trailingInvalid": [],
-        "isInvalid": true,
-        "start": 81,
-        "end": 84
+        "trailingInvalid": []
       },
       "start": 81,
-      "end": 84,
-      "name": "CompileError"
+      "end": 84
     }
-  ]
+  ],
+  "warnings": []
 }

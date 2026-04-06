@@ -1,75 +1,275 @@
-import { NodeSymbol } from '@/core/analyzer/symbol/symbols';
-import Report from '@/core/report';
-import { ProgramNode, SyntaxNode } from '@/index';
-import fs from 'fs';
+import fs from 'node:fs';
+import type { NodeSymbol } from '@/core/analyzer/symbol/symbols';
+import { SyntaxToken } from '@/core/lexer/tokens';
+import { ElementDeclarationNode, LiteralNode, SyntaxNode, VariableNode } from '@/core/parser/nodes';
+import { getElementNameString } from '@/core/parser/utils';
+import { CompileError, CompileErrorCode, CompileWarning } from '@/core/errors';
+import type Compiler from '@/compiler';
 
-export function scanTestNames (_path: any) {
-  const files = fs.readdirSync(_path);
+export function scanTestNames (path: string) {
+  const files = fs.readdirSync(path);
 
   return files.filter((fn) => fn.match(/\.in\./)).map((fn) => fn.split('.in.')[0]);
 }
 
-/**
- * Serializes a compiler report to JSON, handling circular references and
- * reducing verbosity by outputting IDs instead of full objects where appropriate.
- *
- * The serializer handles special keys:
- * - 'symbol': For non-root nodes, outputs only the symbol ID. For root nodes,
- *   outputs the full symbol table with references as IDs.
- * - 'referee': Outputs only the referenced symbol's ID
- * - 'parent': Outputs only the parent node's ID
- * - 'declaration': Outputs only the declaration node's ID
- * - 'symbolTable': Converts Map to Object for JSON compatibility
- */
-export function serialize (
-  report: Readonly<Report<ProgramNode>>,
-  pretty: boolean = false,
-): string {
-  return JSON.stringify(
-    report,
-    function (key: string, value: any) {
-      // For non-root nodes: output just the symbol's ID (avoids circular refs)
-      if (!(this instanceof ProgramNode) && key === 'symbol') {
-        return (value as NodeSymbol)?.id;
-      }
+function getNameHint (node: SyntaxNode | SyntaxToken): string {
+  if (node instanceof SyntaxToken) {
+    return `:${node.value}`;
+  }
+  if (node instanceof VariableNode) {
+    return `:${node.variable?.value || ''}`;
+  }
+  if (node instanceof LiteralNode) {
+    return `:${node.literal?.value || ''}`;
+  }
+  if (node instanceof ElementDeclarationNode) {
+    return `:${getElementNameString(node).unwrap_or(undefined) || ''}`;
+  }
+  return '';
+}
 
-      // Don't include source in the serialized AST
-      if (this instanceof ProgramNode && key === 'source') {
-        return undefined;
-      }
+// Output a human-readable id for node/token/symbol to:
+// - Avoid snapshot brittleness
+// - Easy for verification
+function getReadableId (nodeOrSymbol: SyntaxNode | SyntaxToken | NodeSymbol): string | undefined {
+  const node = (nodeOrSymbol instanceof SyntaxNode) || (nodeOrSymbol instanceof SyntaxToken) ? nodeOrSymbol : nodeOrSymbol?.declaration;
+  if (!node) return undefined;
 
-      // For root node symbol: output full symbol table with reference IDs
-      if (key === 'symbol') {
-        return {
-          symbolTable: (value as NodeSymbol)?.symbolTable,
-          id: (value as NodeSymbol)?.id,
-          references: (value as NodeSymbol)?.references.map((ref) => ref.id),
-          declaration: (value as NodeSymbol)?.declaration?.id,
-        };
-      }
+  const start = `L${node.startPos.line}:C${node.startPos.column}`;
+  const end = `L${node.endPos.line}:C${node.endPos.column}`;
+  const nameHint = getNameHint(node);
 
-      // For referee references: output only the symbol ID
-      if (key === 'referee') {
-        return (value as NodeSymbol)?.id;
-      }
+  return `${node.kind}${nameHint}@[${start}, ${end}]`;
+}
 
-      // For parent references: output only the node ID (avoids circular refs)
-      if (key === 'parent') {
-        return (value as SyntaxNode)?.id;
-      }
+// Output the code snippet for a node or a symbol for easy verfication
+function getCodeSnippet (nodeOrSymbol: SyntaxNode | SyntaxToken | NodeSymbol, source: string): string | undefined {
+  const node = (nodeOrSymbol instanceof SyntaxNode) || (nodeOrSymbol instanceof SyntaxToken) ? nodeOrSymbol : nodeOrSymbol?.declaration;
 
-      // For declaration references: output only the node ID
-      if (key === 'declaration') {
-        return (value as SyntaxNode)?.id;
-      }
+  if (!node) return undefined;
 
-      // For symbol tables: convert Map to Object for JSON serialization
-      if (key === 'symbolTable') {
-        return Object.fromEntries((value as any).table);
-      }
+  const text = source.slice(node.start, node.end);
+  if (text.length <= 20) {
+    return text;
+  }
 
-      return value;
+  return `${text.slice(0, 10)}...${text.slice(-10)}`;
+}
+
+export type Snappable =
+  | string | number | null | undefined | boolean | bigint | symbol
+  | CompileWarning
+  | CompileError
+  | SyntaxNode
+  | SyntaxToken
+  | NodeSymbol
+  | Snappable[]
+  | Record<string, unknown>;
+
+export function toSnapshot (
+  compiler: Compiler,
+  value: Snappable,
+): unknown {
+  if (Array.isArray(value)) {
+    return value.map((v) => toSnapshot(compiler, v));
+  }
+  if (value instanceof CompileWarning) {
+    return warningToSnapshot(compiler, value);
+  }
+  if (value instanceof CompileError) {
+    return errorToSnapshot(compiler, value);
+  }
+  if (value instanceof SyntaxToken) {
+    return syntaxTokenToSnapshot(compiler, value);
+  }
+  if (value instanceof SyntaxNode) {
+    return syntaxNodeToSnapshot(compiler, value);
+  }
+  if (value === null) {
+    return 'null';
+  }
+  // An adhoc check for NodeSymbol
+  // because it's just an interface
+  if (
+    typeof value === 'object' && value !== null
+    && 'id' in value
+  ) {
+    return symbolToSnapshot(compiler, value as NodeSymbol);
+  }
+  if (typeof value === 'object') {
+    return Object.fromEntries(Object.entries(value).map(([key, value]) => [key, toSnapshot(compiler, value as Snappable)]));
+  }
+  return value;
+}
+
+export function errorToSnapshot (
+  compiler: Compiler,
+  error: CompileError,
+): unknown {
+  const {
+    code,
+    diagnostic,
+    nodeOrToken,
+    start,
+    end,
+  } = error;
+  return {
+    level: 'error',
+    code: {
+      value: code,
+      name: CompileErrorCode[code],
     },
-    pretty ? 2 : 0,
-  );
+    diagnostic,
+    ...(nodeOrToken instanceof SyntaxNode
+      ? { node: syntaxNodeToSnapshot(compiler, nodeOrToken) }
+      : { token: syntaxTokenToSnapshot(compiler, nodeOrToken as SyntaxToken) }),
+    start,
+    end,
+  };
+}
+
+export function warningToSnapshot (
+  compiler: Compiler,
+  warning: CompileWarning,
+): unknown {
+  const {
+    code,
+    diagnostic,
+    nodeOrToken,
+    start,
+    end,
+  } = warning;
+  return {
+    level: 'warning',
+    code: {
+      value: code,
+      name: CompileErrorCode[code],
+    },
+    diagnostic,
+    ...(nodeOrToken instanceof SyntaxNode
+      ? { node: syntaxNodeToSnapshot(compiler, nodeOrToken) }
+      : { token: syntaxTokenToSnapshot(compiler, nodeOrToken as SyntaxToken) }),
+    start,
+    end,
+  };
+}
+
+export function syntaxTokenToSnapshot (
+  compiler: Compiler,
+  token: SyntaxToken,
+): unknown {
+  const tokenReadableId = getReadableId(token);
+  const snippet = getCodeSnippet(token, compiler.parse.source());
+  const {
+    kind,
+    value,
+    leadingTrivia,
+    trailingTrivia,
+    leadingInvalid,
+    trailingInvalid,
+    startPos,
+    start,
+    endPos,
+    end,
+    isInvalid,
+  } = token;
+  const result = {
+    context: {
+      id: tokenReadableId,
+      snippet,
+    },
+    isInvalid,
+    kind,
+    value,
+    startPos,
+    endPos,
+    start,
+    end,
+    leadingTrivia: leadingTrivia.map((t) => t.value),
+    trailingTrivia: trailingTrivia.map((t) => t.value),
+    leadingInvalid: leadingInvalid.map((t) => t.value),
+    trailingInvalid: trailingInvalid.map((t) => t.value),
+  };
+  return result;
+}
+
+export function syntaxNodeToSnapshot (
+  compiler: Compiler,
+  node: SyntaxNode,
+): unknown {
+  const nodeReadableId = getReadableId(node);
+  const snippet = getCodeSnippet(node, compiler.parse.source());
+  const {
+    kind,
+    startPos,
+    endPos,
+    start,
+    end,
+    fullStart,
+    fullEnd,
+    symbol,
+    referee,
+    ...props
+  } = node;
+  if (node instanceof ElementDeclarationNode) {
+    const parent = node.parent;
+    if (parent && 'parent' in props) {
+      props['parent'] = {
+        id: getReadableId(parent),
+        snippet: getCodeSnippet(parent, compiler.parse.source()),
+      };
+    }
+  }
+  const result = {
+    context: {
+      id: nodeReadableId,
+      snippet,
+    },
+    kind,
+    startPos,
+    endPos,
+    start,
+    end,
+    fullStart,
+    fullEnd,
+    symbol: symbol && symbolToSnapshot(compiler, symbol),
+    referee: referee && symbolToSnapshot(compiler, referee),
+    children: Object.fromEntries(
+      Object.entries(props)
+        .map(
+          ([key, value]) =>
+            [key, toSnapshot(compiler, value)],
+        ),
+    ),
+  };
+  return result;
+}
+
+export function symbolToSnapshot (
+  compiler: Compiler,
+  symbol?: NodeSymbol,
+): unknown {
+  if (!symbol) return undefined;
+  const symbolReadableId = getReadableId(symbol);
+  const snippet = getCodeSnippet(symbol, compiler.parse.source());
+  const {
+    symbolTable,
+    declaration,
+    references,
+  } = symbol;
+  return {
+    context: {
+      id: symbolReadableId,
+      snippet,
+    },
+    members: symbolTable && [...symbolTable.entries()].map(([, value]) => symbolToSnapshot(compiler, value)),
+    declaration: declaration && {
+      id: getReadableId(declaration),
+      snippet: getCodeSnippet(declaration, compiler.parse.source()),
+    },
+    references: references?.map((r) => ({
+      id: getReadableId(r),
+      snippet: getCodeSnippet(r, compiler.parse.source()),
+    })),
+  };
 }

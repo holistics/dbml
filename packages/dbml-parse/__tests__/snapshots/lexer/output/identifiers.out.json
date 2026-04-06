@@ -1,7 +1,13 @@
 {
-  "value": [
+  "tokens": [
     {
+      "context": {
+        "id": "<identifier>:Table@[L0:C0, L0:C5]",
+        "snippet": "Table"
+      },
+      "isInvalid": false,
       "kind": "<identifier>",
+      "value": "Table",
       "startPos": {
         "offset": 0,
         "line": 0,
@@ -12,39 +18,23 @@
         "line": 0,
         "column": 5
       },
-      "value": "Table",
+      "start": 0,
+      "end": 5,
       "leadingTrivia": [],
       "trailingTrivia": [
-        {
-          "kind": "<space>",
-          "startPos": {
-            "offset": 5,
-            "line": 0,
-            "column": 5
-          },
-          "endPos": {
-            "offset": 6,
-            "line": 0,
-            "column": 6
-          },
-          "value": " ",
-          "leadingTrivia": [],
-          "trailingTrivia": [],
-          "leadingInvalid": [],
-          "trailingInvalid": [],
-          "isInvalid": false,
-          "start": 5,
-          "end": 6
-        }
+        " "
       ],
       "leadingInvalid": [],
-      "trailingInvalid": [],
-      "isInvalid": false,
-      "start": 0,
-      "end": 5
+      "trailingInvalid": []
     },
     {
+      "context": {
+        "id": "<identifier>:TableGroup@[L0:C6, L0:C16]",
+        "snippet": "TableGroup"
+      },
+      "isInvalid": false,
       "kind": "<identifier>",
+      "value": "TableGroup",
       "startPos": {
         "offset": 6,
         "line": 0,
@@ -55,39 +45,23 @@
         "line": 0,
         "column": 16
       },
-      "value": "TableGroup",
+      "start": 6,
+      "end": 16,
       "leadingTrivia": [],
       "trailingTrivia": [
-        {
-          "kind": "<newline>",
-          "startPos": {
-            "offset": 17,
-            "line": 0,
-            "column": 17
-          },
-          "endPos": {
-            "offset": 18,
-            "line": 1,
-            "column": 0
-          },
-          "value": "\n",
-          "leadingTrivia": [],
-          "trailingTrivia": [],
-          "leadingInvalid": [],
-          "trailingInvalid": [],
-          "isInvalid": false,
-          "start": 17,
-          "end": 18
-        }
+        "\n"
       ],
       "leadingInvalid": [],
-      "trailingInvalid": [],
-      "isInvalid": false,
-      "start": 6,
-      "end": 16
+      "trailingInvalid": []
     },
     {
+      "context": {
+        "id": "<identifier>:as@[L1:C0, L1:C2]",
+        "snippet": "as"
+      },
+      "isInvalid": false,
       "kind": "<identifier>",
+      "value": "as",
       "startPos": {
         "offset": 18,
         "line": 1,
@@ -98,39 +72,23 @@
         "line": 1,
         "column": 2
       },
-      "value": "as",
+      "start": 18,
+      "end": 20,
       "leadingTrivia": [],
       "trailingTrivia": [
-        {
-          "kind": "<newline>",
-          "startPos": {
-            "offset": 21,
-            "line": 1,
-            "column": 3
-          },
-          "endPos": {
-            "offset": 22,
-            "line": 2,
-            "column": 0
-          },
-          "value": "\n",
-          "leadingTrivia": [],
-          "trailingTrivia": [],
-          "leadingInvalid": [],
-          "trailingInvalid": [],
-          "isInvalid": false,
-          "start": 21,
-          "end": 22
-        }
+        "\n"
       ],
       "leadingInvalid": [],
-      "trailingInvalid": [],
-      "isInvalid": false,
-      "start": 18,
-      "end": 20
+      "trailingInvalid": []
     },
     {
+      "context": {
+        "id": "<identifier>:indexes@[L2:C0, L2:C7]",
+        "snippet": "indexes"
+      },
+      "isInvalid": false,
       "kind": "<identifier>",
+      "value": "indexes",
       "startPos": {
         "offset": 22,
         "line": 2,
@@ -141,39 +99,23 @@
         "line": 2,
         "column": 7
       },
-      "value": "indexes",
+      "start": 22,
+      "end": 29,
       "leadingTrivia": [],
       "trailingTrivia": [
-        {
-          "kind": "<space>",
-          "startPos": {
-            "offset": 29,
-            "line": 2,
-            "column": 7
-          },
-          "endPos": {
-            "offset": 30,
-            "line": 2,
-            "column": 8
-          },
-          "value": " ",
-          "leadingTrivia": [],
-          "trailingTrivia": [],
-          "leadingInvalid": [],
-          "trailingInvalid": [],
-          "isInvalid": false,
-          "start": 29,
-          "end": 30
-        }
+        " "
       ],
       "leadingInvalid": [],
-      "trailingInvalid": [],
-      "isInvalid": false,
-      "start": 22,
-      "end": 29
+      "trailingInvalid": []
     },
     {
+      "context": {
+        "id": "<identifier>:Note@[L2:C8, L2:C12]",
+        "snippet": "Note"
+      },
+      "isInvalid": false,
       "kind": "<identifier>",
+      "value": "Note",
       "startPos": {
         "offset": 30,
         "line": 2,
@@ -184,39 +126,23 @@
         "line": 2,
         "column": 12
       },
-      "value": "Note",
+      "start": 30,
+      "end": 34,
       "leadingTrivia": [],
       "trailingTrivia": [
-        {
-          "kind": "<newline>",
-          "startPos": {
-            "offset": 35,
-            "line": 2,
-            "column": 13
-          },
-          "endPos": {
-            "offset": 36,
-            "line": 3,
-            "column": 0
-          },
-          "value": "\n",
-          "leadingTrivia": [],
-          "trailingTrivia": [],
-          "leadingInvalid": [],
-          "trailingInvalid": [],
-          "isInvalid": false,
-          "start": 35,
-          "end": 36
-        }
+        "\n"
       ],
       "leadingInvalid": [],
-      "trailingInvalid": [],
-      "isInvalid": false,
-      "start": 30,
-      "end": 34
+      "trailingInvalid": []
     },
     {
+      "context": {
+        "id": "<identifier>:_ab@[L3:C0, L3:C3]",
+        "snippet": "_ab"
+      },
+      "isInvalid": false,
       "kind": "<identifier>",
+      "value": "_ab",
       "startPos": {
         "offset": 36,
         "line": 3,
@@ -227,17 +153,21 @@
         "line": 3,
         "column": 3
       },
-      "value": "_ab",
+      "start": 36,
+      "end": 39,
       "leadingTrivia": [],
       "trailingTrivia": [],
       "leadingInvalid": [],
-      "trailingInvalid": [],
-      "isInvalid": false,
-      "start": 36,
-      "end": 39
+      "trailingInvalid": []
     },
     {
+      "context": {
+        "id": "<eof>:@[L3:C3, L3:C3]",
+        "snippet": ""
+      },
+      "isInvalid": false,
       "kind": "<eof>",
+      "value": "",
       "startPos": {
         "offset": 39,
         "line": 3,
@@ -248,15 +178,14 @@
         "line": 3,
         "column": 3
       },
-      "value": "",
+      "start": 39,
+      "end": 39,
       "leadingTrivia": [],
       "trailingTrivia": [],
       "leadingInvalid": [],
-      "trailingInvalid": [],
-      "isInvalid": false,
-      "start": 39,
-      "end": 39
+      "trailingInvalid": []
     }
   ],
-  "errors": []
+  "errors": [],
+  "warnings": []
 }

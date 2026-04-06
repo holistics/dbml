@@ -1,88 +1,90 @@
-[
-  {
-    "code": 3003,
-    "diagnostic": "Table name 'users' already exists in schema 'public'",
-    "nodeOrToken": {
-      "id": 65,
-      "kind": "<primary-expression>",
-      "startPos": {
-        "offset": 232,
-        "line": 15,
-        "column": 6
+{
+  "errors": [
+    {
+      "level": "error",
+      "code": {
+        "value": 3003,
+        "name": "DUPLICATE_NAME"
       },
-      "fullStart": 232,
-      "endPos": {
-        "offset": 237,
-        "line": 15,
-        "column": 11
-      },
-      "fullEnd": 238,
-      "start": 232,
-      "end": 237,
-      "expression": {
-        "id": 64,
-        "kind": "<variable>",
+      "diagnostic": "Table name 'users' already exists in schema 'public'",
+      "node": {
+        "context": {
+          "id": "<primary-expression>@[L15:C6, L15:C11]",
+          "snippet": "users"
+        },
+        "kind": "<primary-expression>",
         "startPos": {
           "offset": 232,
           "line": 15,
           "column": 6
         },
-        "fullStart": 232,
         "endPos": {
           "offset": 237,
           "line": 15,
           "column": 11
         },
-        "fullEnd": 238,
         "start": 232,
         "end": 237,
-        "variable": {
-          "kind": "<identifier>",
-          "startPos": {
-            "offset": 232,
-            "line": 15,
-            "column": 6
-          },
-          "endPos": {
-            "offset": 237,
-            "line": 15,
-            "column": 11
-          },
-          "value": "users",
-          "leadingTrivia": [],
-          "trailingTrivia": [
-            {
-              "kind": "<space>",
-              "startPos": {
-                "offset": 237,
-                "line": 15,
-                "column": 11
-              },
-              "endPos": {
-                "offset": 238,
-                "line": 15,
-                "column": 12
-              },
-              "value": " ",
-              "leadingTrivia": [],
-              "trailingTrivia": [],
-              "leadingInvalid": [],
-              "trailingInvalid": [],
-              "isInvalid": false,
-              "start": 237,
-              "end": 238
+        "fullStart": 232,
+        "fullEnd": 238,
+        "children": {
+          "id": 65,
+          "expression": {
+            "context": {
+              "id": "<variable>:users@[L15:C6, L15:C11]",
+              "snippet": "users"
+            },
+            "kind": "<variable>",
+            "startPos": {
+              "offset": 232,
+              "line": 15,
+              "column": 6
+            },
+            "endPos": {
+              "offset": 237,
+              "line": 15,
+              "column": 11
+            },
+            "start": 232,
+            "end": 237,
+            "fullStart": 232,
+            "fullEnd": 238,
+            "children": {
+              "id": 64,
+              "variable": {
+                "context": {
+                  "id": "<identifier>:users@[L15:C6, L15:C11]",
+                  "snippet": "users"
+                },
+                "isInvalid": false,
+                "kind": "<identifier>",
+                "value": "users",
+                "startPos": {
+                  "offset": 232,
+                  "line": 15,
+                  "column": 6
+                },
+                "endPos": {
+                  "offset": 237,
+                  "line": 15,
+                  "column": 11
+                },
+                "start": 232,
+                "end": 237,
+                "leadingTrivia": [],
+                "trailingTrivia": [
+                  " "
+                ],
+                "leadingInvalid": [],
+                "trailingInvalid": []
+              }
             }
-          ],
-          "leadingInvalid": [],
-          "trailingInvalid": [],
-          "isInvalid": false,
-          "start": 232,
-          "end": 237
+          }
         }
-      }
-    },
-    "start": 232,
-    "end": 237,
-    "name": "CompileError"
-  }
-]
+      },
+      "start": 232,
+      "end": 237
+    }
+  ],
+  "warnings": []
+}

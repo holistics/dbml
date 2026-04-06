@@ -1,60 +1,470 @@
-[
-  {
-    "code": 5005,
-    "diagnostic": "Table \"follows\" already appears in group \"A1\"",
-    "nodeOrToken": {
-      "id": 73,
-      "kind": "<function-application>",
-      "startPos": {
-        "offset": 289,
-        "line": 22,
-        "column": 2
+{
+  "database": {
+    "schemas": [],
+    "tables": [
+      {
+        "name": "follows",
+        "schemaName": "null",
+        "alias": "null",
+        "fields": [
+          {
+            "name": "following_user_id",
+            "type": {
+              "schemaName": "null",
+              "type_name": "integer",
+              "args": "null"
+            },
+            "token": {
+              "start": {
+                "offset": 18,
+                "line": 2,
+                "column": 3
+              },
+              "end": {
+                "offset": 43,
+                "line": 2,
+                "column": 28
+              }
+            },
+            "inline_refs": [],
+            "pk": false,
+            "unique": false
+          },
+          {
+            "name": "followed_user_id",
+            "type": {
+              "schemaName": "null",
+              "type_name": "integer",
+              "args": "null"
+            },
+            "token": {
+              "start": {
+                "offset": 46,
+                "line": 3,
+                "column": 3
+              },
+              "end": {
+                "offset": 70,
+                "line": 3,
+                "column": 27
+              }
+            },
+            "inline_refs": [],
+            "pk": false,
+            "unique": false
+          },
+          {
+            "name": "created_at",
+            "type": {
+              "schemaName": "null",
+              "type_name": "timestamp",
+              "args": "null"
+            },
+            "token": {
+              "start": {
+                "offset": 73,
+                "line": 4,
+                "column": 3
+              },
+              "end": {
+                "offset": 93,
+                "line": 4,
+                "column": 23
+              }
+            },
+            "inline_refs": [],
+            "pk": false,
+            "unique": false
+          }
+        ],
+        "token": {
+          "start": {
+            "offset": 0,
+            "line": 1,
+            "column": 1
+          },
+          "end": {
+            "offset": 96,
+            "line": 5,
+            "column": 2
+          }
+        },
+        "indexes": [],
+        "partials": [],
+        "checks": []
       },
-      "fullStart": 287,
-      "endPos": {
-        "offset": 296,
-        "line": 22,
-        "column": 9
+      {
+        "name": "users",
+        "schemaName": "null",
+        "alias": "U",
+        "fields": [
+          {
+            "name": "id",
+            "type": {
+              "schemaName": "null",
+              "type_name": "integer",
+              "args": "null"
+            },
+            "token": {
+              "start": {
+                "offset": 119,
+                "line": 8,
+                "column": 3
+              },
+              "end": {
+                "offset": 143,
+                "line": 8,
+                "column": 27
+              }
+            },
+            "inline_refs": [],
+            "pk": true,
+            "increment": false,
+            "unique": false,
+            "checks": []
+          },
+          {
+            "name": "username",
+            "type": {
+              "schemaName": "null",
+              "type_name": "varchar",
+              "args": "null"
+            },
+            "token": {
+              "start": {
+                "offset": 146,
+                "line": 9,
+                "column": 3
+              },
+              "end": {
+                "offset": 162,
+                "line": 9,
+                "column": 19
+              }
+            },
+            "inline_refs": [],
+            "pk": false,
+            "unique": false
+          },
+          {
+            "name": "role",
+            "type": {
+              "schemaName": "null",
+              "type_name": "varchar",
+              "args": "null"
+            },
+            "token": {
+              "start": {
+                "offset": 165,
+                "line": 10,
+                "column": 3
+              },
+              "end": {
+                "offset": 177,
+                "line": 10,
+                "column": 15
+              }
+            },
+            "inline_refs": [],
+            "pk": false,
+            "unique": false
+          },
+          {
+            "name": "created_at",
+            "type": {
+              "schemaName": "null",
+              "type_name": "timestamp",
+              "args": "null"
+            },
+            "token": {
+              "start": {
+                "offset": 180,
+                "line": 11,
+                "column": 3
+              },
+              "end": {
+                "offset": 200,
+                "line": 11,
+                "column": 23
+              }
+            },
+            "inline_refs": [],
+            "pk": false,
+            "unique": false
+          }
+        ],
+        "token": {
+          "start": {
+            "offset": 98,
+            "line": 7,
+            "column": 1
+          },
+          "end": {
+            "offset": 202,
+            "line": 12,
+            "column": 2
+          }
+        },
+        "indexes": [],
+        "partials": [],
+        "checks": []
       },
-      "fullEnd": 297,
-      "start": 289,
-      "end": 296,
-      "callee": {
-        "id": 72,
-        "kind": "<primary-expression>",
+      {
+        "name": "users",
+        "schemaName": "A",
+        "alias": "U2",
+        "fields": [
+          {
+            "name": "id",
+            "type": {
+              "schemaName": "null",
+              "type_name": "integer",
+              "args": "null"
+            },
+            "token": {
+              "start": {
+                "offset": 228,
+                "line": 15,
+                "column": 3
+              },
+              "end": {
+                "offset": 238,
+                "line": 15,
+                "column": 13
+              }
+            },
+            "inline_refs": [],
+            "pk": false,
+            "unique": false
+          }
+        ],
+        "token": {
+          "start": {
+            "offset": 204,
+            "line": 14,
+            "column": 1
+          },
+          "end": {
+            "offset": 240,
+            "line": 16,
+            "column": 2
+          }
+        },
+        "indexes": [],
+        "partials": [],
+        "checks": []
+      }
+    ],
+    "notes": [],
+    "refs": [],
+    "enums": [],
+    "tableGroups": [
+      {
+        "tables": [
+          {
+            "name": "follows",
+            "schemaName": ""
+          }
+        ],
+        "token": {
+          "start": {
+            "offset": 242,
+            "line": 18,
+            "column": 1
+          },
+          "end": {
+            "offset": 269,
+            "line": 20,
+            "column": 2
+          }
+        },
+        "name": "A1",
+        "schemaName": "null"
+      },
+      {
+        "tables": [
+          {
+            "name": "follows",
+            "schemaName": ""
+          },
+          {
+            "name": "users",
+            "schemaName": ""
+          }
+        ],
+        "token": {
+          "start": {
+            "offset": 271,
+            "line": 22,
+            "column": 1
+          },
+          "end": {
+            "offset": 306,
+            "line": 25,
+            "column": 2
+          }
+        },
+        "name": "A2",
+        "schemaName": "null"
+      },
+      {
+        "tables": [
+          {
+            "name": "users",
+            "schemaName": ""
+          }
+        ],
+        "token": {
+          "start": {
+            "offset": 308,
+            "line": 27,
+            "column": 1
+          },
+          "end": {
+            "offset": 333,
+            "line": 29,
+            "column": 2
+          }
+        },
+        "name": "A3",
+        "schemaName": "null"
+      },
+      {
+        "tables": [
+          {
+            "name": "U",
+            "schemaName": ""
+          }
+        ],
+        "token": {
+          "start": {
+            "offset": 335,
+            "line": 31,
+            "column": 1
+          },
+          "end": {
+            "offset": 358,
+            "line": 33,
+            "column": 2
+          }
+        },
+        "name": "A4",
+        "schemaName": "null"
+      },
+      {
+        "tables": [
+          {
+            "name": "U2",
+            "schemaName": ""
+          }
+        ],
+        "token": {
+          "start": {
+            "offset": 360,
+            "line": 35,
+            "column": 1
+          },
+          "end": {
+            "offset": 382,
+            "line": 37,
+            "column": 2
+          }
+        },
+        "name": "A5",
+        "schemaName": "null"
+      },
+      {
+        "tables": [
+          {
+            "name": "users",
+            "schemaName": "A"
+          }
+        ],
+        "token": {
+          "start": {
+            "offset": 384,
+            "line": 39,
+            "column": 1
+          },
+          "end": {
+            "offset": 411,
+            "line": 41,
+            "column": 2
+          }
+        },
+        "name": "A6",
+        "schemaName": "null"
+      }
+    ],
+    "aliases": [
+      {
+        "name": "U",
+        "kind": "table",
+        "value": {
+          "tableName": "users",
+          "schemaName": "null"
+        }
+      },
+      {
+        "name": "U2",
+        "kind": "table",
+        "value": {
+          "tableName": "users",
+          "schemaName": "A"
+        }
+      }
+    ],
+    "project": {},
+    "tablePartials": [],
+    "records": []
+  },
+  "errors": [
+    {
+      "level": "error",
+      "code": {
+        "value": 5005,
+        "name": "TABLE_REAPPEAR_IN_TABLEGROUP"
+      },
+      "diagnostic": "Table \"follows\" already appears in group \"A1\"",
+      "node": {
+        "context": {
+          "id": "<function-application>@[L22:C2, L22:C9]",
+          "snippet": "follows"
+        },
+        "kind": "<function-application>",
         "startPos": {
           "offset": 289,
           "line": 22,
           "column": 2
         },
-        "fullStart": 287,
         "endPos": {
           "offset": 296,
           "line": 22,
           "column": 9
         },
-        "fullEnd": 297,
         "start": 289,
         "end": 296,
-        "expression": {
-          "id": 71,
-          "kind": "<variable>",
-          "startPos": {
-            "offset": 289,
-            "line": 22,
-            "column": 2
+        "fullStart": 287,
+        "fullEnd": 297,
+        "symbol": {
+          "context": {
+            "id": "<function-application>@[L22:C2, L22:C9]",
+            "snippet": "follows"
           },
-          "fullStart": 287,
-          "endPos": {
-            "offset": 296,
-            "line": 22,
-            "column": 9
+          "declaration": {
+            "id": "<function-application>@[L22:C2, L22:C9]",
+            "snippet": "follows"
           },
-          "fullEnd": 297,
-          "start": 289,
-          "end": 296,
-          "variable": {
-            "kind": "<identifier>",
+          "references": []
+        },
+        "children": {
+          "id": 73,
+          "callee": {
+            "context": {
+              "id": "<primary-expression>@[L22:C2, L22:C9]",
+              "snippet": "follows"
+            },
+            "kind": "<primary-expression>",
             "startPos": {
               "offset": 289,
               "line": 22,
@@ -65,144 +475,175 @@
               "line": 22,
               "column": 9
             },
-            "value": "follows",
-            "leadingTrivia": [
-              {
-                "kind": "<space>",
-                "startPos": {
-                  "offset": 287,
-                  "line": 22,
-                  "column": 0
-                },
-                "endPos": {
-                  "offset": 288,
-                  "line": 22,
-                  "column": 1
-                },
-                "value": " ",
-                "leadingTrivia": [],
-                "trailingTrivia": [],
-                "leadingInvalid": [],
-                "trailingInvalid": [],
-                "isInvalid": false,
-                "start": 287,
-                "end": 288
+            "start": 289,
+            "end": 296,
+            "fullStart": 287,
+            "fullEnd": 297,
+            "referee": {
+              "context": {
+                "id": "<element-declaration>:follows@[L0:C0, L4:C1]",
+                "snippet": "Table foll...mestamp \n}"
               },
-              {
-                "kind": "<space>",
-                "startPos": {
-                  "offset": 288,
-                  "line": 22,
-                  "column": 1
+              "members": [
+                {
+                  "context": {
+                    "id": "<function-application>@[L1:C2, L1:C27]",
+                    "snippet": "following_...id integer"
+                  },
+                  "declaration": {
+                    "id": "<function-application>@[L1:C2, L1:C27]",
+                    "snippet": "following_...id integer"
+                  },
+                  "references": []
                 },
-                "endPos": {
+                {
+                  "context": {
+                    "id": "<function-application>@[L2:C2, L2:C26]",
+                    "snippet": "followed_u...id integer"
+                  },
+                  "declaration": {
+                    "id": "<function-application>@[L2:C2, L2:C26]",
+                    "snippet": "followed_u...id integer"
+                  },
+                  "references": []
+                },
+                {
+                  "context": {
+                    "id": "<function-application>@[L3:C2, L3:C22]",
+                    "snippet": "created_at timestamp"
+                  },
+                  "declaration": {
+                    "id": "<function-application>@[L3:C2, L3:C22]",
+                    "snippet": "created_at timestamp"
+                  },
+                  "references": []
+                }
+              ],
+              "declaration": {
+                "id": "<element-declaration>:follows@[L0:C0, L4:C1]",
+                "snippet": "Table foll...mestamp \n}"
+              },
+              "references": [
+                {
+                  "id": "<primary-expression>@[L18:C2, L18:C9]",
+                  "snippet": "follows"
+                },
+                {
+                  "id": "<primary-expression>@[L22:C2, L22:C9]",
+                  "snippet": "follows"
+                }
+              ]
+            },
+            "children": {
+              "id": 72,
+              "expression": {
+                "context": {
+                  "id": "<variable>:follows@[L22:C2, L22:C9]",
+                  "snippet": "follows"
+                },
+                "kind": "<variable>",
+                "startPos": {
                   "offset": 289,
                   "line": 22,
                   "column": 2
                 },
-                "value": " ",
-                "leadingTrivia": [],
-                "trailingTrivia": [],
-                "leadingInvalid": [],
-                "trailingInvalid": [],
-                "isInvalid": false,
-                "start": 288,
-                "end": 289
-              }
-            ],
-            "trailingTrivia": [
-              {
-                "kind": "<newline>",
-                "startPos": {
+                "endPos": {
                   "offset": 296,
                   "line": 22,
                   "column": 9
                 },
-                "endPos": {
-                  "offset": 297,
-                  "line": 23,
-                  "column": 0
-                },
-                "value": "\n",
-                "leadingTrivia": [],
-                "trailingTrivia": [],
-                "leadingInvalid": [],
-                "trailingInvalid": [],
-                "isInvalid": false,
-                "start": 296,
-                "end": 297
+                "start": 289,
+                "end": 296,
+                "fullStart": 287,
+                "fullEnd": 297,
+                "children": {
+                  "id": 71,
+                  "variable": {
+                    "context": {
+                      "id": "<identifier>:follows@[L22:C2, L22:C9]",
+                      "snippet": "follows"
+                    },
+                    "isInvalid": false,
+                    "kind": "<identifier>",
+                    "value": "follows",
+                    "startPos": {
+                      "offset": 289,
+                      "line": 22,
+                      "column": 2
+                    },
+                    "endPos": {
+                      "offset": 296,
+                      "line": 22,
+                      "column": 9
+                    },
+                    "start": 289,
+                    "end": 296,
+                    "leadingTrivia": [
+                      " ",
+                      " "
+                    ],
+                    "trailingTrivia": [
+                      "\n"
+                    ],
+                    "leadingInvalid": [],
+                    "trailingInvalid": []
+                  }
+                }
               }
-            ],
-            "leadingInvalid": [],
-            "trailingInvalid": [],
-            "isInvalid": false,
-            "start": 289,
-            "end": 296
-          }
+            }
+          },
+          "args": []
         }
       },
-      "args": []
+      "start": 289,
+      "end": 296
     },
-    "start": 289,
-    "end": 296,
-    "name": "CompileError"
-  },
-  {
-    "code": 5005,
-    "diagnostic": "Table \"users\" already appears in group \"A2\"",
-    "nodeOrToken": {
-      "id": 83,
-      "kind": "<function-application>",
-      "startPos": {
-        "offset": 326,
-        "line": 27,
-        "column": 2
+    {
+      "level": "error",
+      "code": {
+        "value": 5005,
+        "name": "TABLE_REAPPEAR_IN_TABLEGROUP"
       },
-      "fullStart": 324,
-      "endPos": {
-        "offset": 331,
-        "line": 27,
-        "column": 7
-      },
-      "fullEnd": 332,
-      "start": 326,
-      "end": 331,
-      "callee": {
-        "id": 82,
-        "kind": "<primary-expression>",
+      "diagnostic": "Table \"users\" already appears in group \"A2\"",
+      "node": {
+        "context": {
+          "id": "<function-application>@[L27:C2, L27:C7]",
+          "snippet": "users"
+        },
+        "kind": "<function-application>",
         "startPos": {
           "offset": 326,
           "line": 27,
           "column": 2
         },
-        "fullStart": 324,
         "endPos": {
           "offset": 331,
           "line": 27,
           "column": 7
         },
-        "fullEnd": 332,
         "start": 326,
         "end": 331,
-        "expression": {
-          "id": 81,
-          "kind": "<variable>",
-          "startPos": {
-            "offset": 326,
-            "line": 27,
-            "column": 2
+        "fullStart": 324,
+        "fullEnd": 332,
+        "symbol": {
+          "context": {
+            "id": "<function-application>@[L27:C2, L27:C7]",
+            "snippet": "users"
           },
-          "fullStart": 324,
-          "endPos": {
-            "offset": 331,
-            "line": 27,
-            "column": 7
+          "declaration": {
+            "id": "<function-application>@[L27:C2, L27:C7]",
+            "snippet": "users"
           },
-          "fullEnd": 332,
-          "start": 326,
-          "end": 331,
-          "variable": {
-            "kind": "<identifier>",
+          "references": []
+        },
+        "children": {
+          "id": 83,
+          "callee": {
+            "context": {
+              "id": "<primary-expression>@[L27:C2, L27:C7]",
+              "snippet": "users"
+            },
+            "kind": "<primary-expression>",
             "startPos": {
               "offset": 326,
               "line": 27,
@@ -213,144 +654,190 @@
               "line": 27,
               "column": 7
             },
-            "value": "users",
-            "leadingTrivia": [
-              {
-                "kind": "<space>",
-                "startPos": {
-                  "offset": 324,
-                  "line": 27,
-                  "column": 0
-                },
-                "endPos": {
-                  "offset": 325,
-                  "line": 27,
-                  "column": 1
-                },
-                "value": " ",
-                "leadingTrivia": [],
-                "trailingTrivia": [],
-                "leadingInvalid": [],
-                "trailingInvalid": [],
-                "isInvalid": false,
-                "start": 324,
-                "end": 325
+            "start": 326,
+            "end": 331,
+            "fullStart": 324,
+            "fullEnd": 332,
+            "referee": {
+              "context": {
+                "id": "<element-declaration>:users@[L6:C0, L11:C1]",
+                "snippet": "Table user...imestamp\n}"
               },
-              {
-                "kind": "<space>",
-                "startPos": {
-                  "offset": 325,
-                  "line": 27,
-                  "column": 1
+              "members": [
+                {
+                  "context": {
+                    "id": "<function-application>@[L7:C2, L7:C26]",
+                    "snippet": "id integer...imary key]"
+                  },
+                  "declaration": {
+                    "id": "<function-application>@[L7:C2, L7:C26]",
+                    "snippet": "id integer...imary key]"
+                  },
+                  "references": []
                 },
-                "endPos": {
+                {
+                  "context": {
+                    "id": "<function-application>@[L8:C2, L8:C18]",
+                    "snippet": "username varchar"
+                  },
+                  "declaration": {
+                    "id": "<function-application>@[L8:C2, L8:C18]",
+                    "snippet": "username varchar"
+                  },
+                  "references": []
+                },
+                {
+                  "context": {
+                    "id": "<function-application>@[L9:C2, L9:C14]",
+                    "snippet": "role varchar"
+                  },
+                  "declaration": {
+                    "id": "<function-application>@[L9:C2, L9:C14]",
+                    "snippet": "role varchar"
+                  },
+                  "references": []
+                },
+                {
+                  "context": {
+                    "id": "<function-application>@[L10:C2, L10:C22]",
+                    "snippet": "created_at timestamp"
+                  },
+                  "declaration": {
+                    "id": "<function-application>@[L10:C2, L10:C22]",
+                    "snippet": "created_at timestamp"
+                  },
+                  "references": []
+                }
+              ],
+              "declaration": {
+                "id": "<element-declaration>:users@[L6:C0, L11:C1]",
+                "snippet": "Table user...imestamp\n}"
+              },
+              "references": [
+                {
+                  "id": "<primary-expression>@[L23:C2, L23:C7]",
+                  "snippet": "users"
+                },
+                {
+                  "id": "<primary-expression>@[L27:C2, L27:C7]",
+                  "snippet": "users"
+                },
+                {
+                  "id": "<primary-expression>@[L31:C4, L31:C5]",
+                  "snippet": "U"
+                }
+              ]
+            },
+            "children": {
+              "id": 82,
+              "expression": {
+                "context": {
+                  "id": "<variable>:users@[L27:C2, L27:C7]",
+                  "snippet": "users"
+                },
+                "kind": "<variable>",
+                "startPos": {
                   "offset": 326,
                   "line": 27,
                   "column": 2
                 },
-                "value": " ",
-                "leadingTrivia": [],
-                "trailingTrivia": [],
-                "leadingInvalid": [],
-                "trailingInvalid": [],
-                "isInvalid": false,
-                "start": 325,
-                "end": 326
-              }
-            ],
-            "trailingTrivia": [
-              {
-                "kind": "<newline>",
-                "startPos": {
+                "endPos": {
                   "offset": 331,
                   "line": 27,
                   "column": 7
                 },
-                "endPos": {
-                  "offset": 332,
-                  "line": 28,
-                  "column": 0
-                },
-                "value": "\n",
-                "leadingTrivia": [],
-                "trailingTrivia": [],
-                "leadingInvalid": [],
-                "trailingInvalid": [],
-                "isInvalid": false,
-                "start": 331,
-                "end": 332
+                "start": 326,
+                "end": 331,
+                "fullStart": 324,
+                "fullEnd": 332,
+                "children": {
+                  "id": 81,
+                  "variable": {
+                    "context": {
+                      "id": "<identifier>:users@[L27:C2, L27:C7]",
+                      "snippet": "users"
+                    },
+                    "isInvalid": false,
+                    "kind": "<identifier>",
+                    "value": "users",
+                    "startPos": {
+                      "offset": 326,
+                      "line": 27,
+                      "column": 2
+                    },
+                    "endPos": {
+                      "offset": 331,
+                      "line": 27,
+                      "column": 7
+                    },
+                    "start": 326,
+                    "end": 331,
+                    "leadingTrivia": [
+                      " ",
+                      " "
+                    ],
+                    "trailingTrivia": [
+                      "\n"
+                    ],
+                    "leadingInvalid": [],
+                    "trailingInvalid": []
+                  }
+                }
               }
-            ],
-            "leadingInvalid": [],
-            "trailingInvalid": [],
-            "isInvalid": false,
-            "start": 326,
-            "end": 331
-          }
+            }
+          },
+          "args": []
         }
       },
-      "args": []
+      "start": 326,
+      "end": 331
     },
-    "start": 326,
-    "end": 331,
-    "name": "CompileError"
-  },
-  {
-    "code": 5005,
-    "diagnostic": "Table \"U\" already appears in group \"A2\"",
-    "nodeOrToken": {
-      "id": 90,
-      "kind": "<function-application>",
-      "startPos": {
-        "offset": 355,
-        "line": 31,
-        "column": 4
+    {
+      "level": "error",
+      "code": {
+        "value": 5005,
+        "name": "TABLE_REAPPEAR_IN_TABLEGROUP"
       },
-      "fullStart": 351,
-      "endPos": {
-        "offset": 356,
-        "line": 31,
-        "column": 5
-      },
-      "fullEnd": 357,
-      "start": 355,
-      "end": 356,
-      "callee": {
-        "id": 89,
-        "kind": "<primary-expression>",
+      "diagnostic": "Table \"U\" already appears in group \"A2\"",
+      "node": {
+        "context": {
+          "id": "<function-application>@[L31:C4, L31:C5]",
+          "snippet": "U"
+        },
+        "kind": "<function-application>",
         "startPos": {
           "offset": 355,
           "line": 31,
           "column": 4
         },
-        "fullStart": 351,
         "endPos": {
           "offset": 356,
           "line": 31,
           "column": 5
         },
-        "fullEnd": 357,
         "start": 355,
         "end": 356,
-        "expression": {
-          "id": 88,
-          "kind": "<variable>",
-          "startPos": {
-            "offset": 355,
-            "line": 31,
-            "column": 4
+        "fullStart": 351,
+        "fullEnd": 357,
+        "symbol": {
+          "context": {
+            "id": "<function-application>@[L31:C4, L31:C5]",
+            "snippet": "U"
           },
-          "fullStart": 351,
-          "endPos": {
-            "offset": 356,
-            "line": 31,
-            "column": 5
+          "declaration": {
+            "id": "<function-application>@[L31:C4, L31:C5]",
+            "snippet": "U"
           },
-          "fullEnd": 357,
-          "start": 355,
-          "end": 356,
-          "variable": {
-            "kind": "<identifier>",
+          "references": []
+        },
+        "children": {
+          "id": 90,
+          "callee": {
+            "context": {
+              "id": "<primary-expression>@[L31:C4, L31:C5]",
+              "snippet": "U"
+            },
+            "kind": "<primary-expression>",
             "startPos": {
               "offset": 355,
               "line": 31,
@@ -361,372 +848,458 @@
               "line": 31,
               "column": 5
             },
-            "value": "U",
-            "leadingTrivia": [
-              {
-                "kind": "<space>",
-                "startPos": {
-                  "offset": 351,
-                  "line": 31,
-                  "column": 0
-                },
-                "endPos": {
-                  "offset": 352,
-                  "line": 31,
-                  "column": 1
-                },
-                "value": " ",
-                "leadingTrivia": [],
-                "trailingTrivia": [],
-                "leadingInvalid": [],
-                "trailingInvalid": [],
-                "isInvalid": false,
-                "start": 351,
-                "end": 352
+            "start": 355,
+            "end": 356,
+            "fullStart": 351,
+            "fullEnd": 357,
+            "referee": {
+              "context": {
+                "id": "<element-declaration>:users@[L6:C0, L11:C1]",
+                "snippet": "Table user...imestamp\n}"
               },
-              {
-                "kind": "<space>",
-                "startPos": {
-                  "offset": 352,
-                  "line": 31,
-                  "column": 1
+              "members": [
+                {
+                  "context": {
+                    "id": "<function-application>@[L7:C2, L7:C26]",
+                    "snippet": "id integer...imary key]"
+                  },
+                  "declaration": {
+                    "id": "<function-application>@[L7:C2, L7:C26]",
+                    "snippet": "id integer...imary key]"
+                  },
+                  "references": []
                 },
-                "endPos": {
-                  "offset": 353,
-                  "line": 31,
-                  "column": 2
+                {
+                  "context": {
+                    "id": "<function-application>@[L8:C2, L8:C18]",
+                    "snippet": "username varchar"
+                  },
+                  "declaration": {
+                    "id": "<function-application>@[L8:C2, L8:C18]",
+                    "snippet": "username varchar"
+                  },
+                  "references": []
                 },
-                "value": " ",
-                "leadingTrivia": [],
-                "trailingTrivia": [],
-                "leadingInvalid": [],
-                "trailingInvalid": [],
-                "isInvalid": false,
-                "start": 352,
-                "end": 353
+                {
+                  "context": {
+                    "id": "<function-application>@[L9:C2, L9:C14]",
+                    "snippet": "role varchar"
+                  },
+                  "declaration": {
+                    "id": "<function-application>@[L9:C2, L9:C14]",
+                    "snippet": "role varchar"
+                  },
+                  "references": []
+                },
+                {
+                  "context": {
+                    "id": "<function-application>@[L10:C2, L10:C22]",
+                    "snippet": "created_at timestamp"
+                  },
+                  "declaration": {
+                    "id": "<function-application>@[L10:C2, L10:C22]",
+                    "snippet": "created_at timestamp"
+                  },
+                  "references": []
+                }
+              ],
+              "declaration": {
+                "id": "<element-declaration>:users@[L6:C0, L11:C1]",
+                "snippet": "Table user...imestamp\n}"
               },
-              {
-                "kind": "<space>",
+              "references": [
+                {
+                  "id": "<primary-expression>@[L23:C2, L23:C7]",
+                  "snippet": "users"
+                },
+                {
+                  "id": "<primary-expression>@[L27:C2, L27:C7]",
+                  "snippet": "users"
+                },
+                {
+                  "id": "<primary-expression>@[L31:C4, L31:C5]",
+                  "snippet": "U"
+                }
+              ]
+            },
+            "children": {
+              "id": 89,
+              "expression": {
+                "context": {
+                  "id": "<variable>:U@[L31:C4, L31:C5]",
+                  "snippet": "U"
+                },
+                "kind": "<variable>",
                 "startPos": {
-                  "offset": 353,
-                  "line": 31,
-                  "column": 2
-                },
-                "endPos": {
-                  "offset": 354,
-                  "line": 31,
-                  "column": 3
-                },
-                "value": " ",
-                "leadingTrivia": [],
-                "trailingTrivia": [],
-                "leadingInvalid": [],
-                "trailingInvalid": [],
-                "isInvalid": false,
-                "start": 353,
-                "end": 354
-              },
-              {
-                "kind": "<space>",
-                "startPos": {
-                  "offset": 354,
-                  "line": 31,
-                  "column": 3
-                },
-                "endPos": {
                   "offset": 355,
                   "line": 31,
                   "column": 4
                 },
-                "value": " ",
-                "leadingTrivia": [],
-                "trailingTrivia": [],
-                "leadingInvalid": [],
-                "trailingInvalid": [],
-                "isInvalid": false,
-                "start": 354,
-                "end": 355
-              }
-            ],
-            "trailingTrivia": [
-              {
-                "kind": "<newline>",
-                "startPos": {
+                "endPos": {
                   "offset": 356,
                   "line": 31,
                   "column": 5
                 },
-                "endPos": {
-                  "offset": 357,
-                  "line": 32,
-                  "column": 0
-                },
-                "value": "\n",
-                "leadingTrivia": [],
-                "trailingTrivia": [],
-                "leadingInvalid": [],
-                "trailingInvalid": [],
-                "isInvalid": false,
-                "start": 356,
-                "end": 357
+                "start": 355,
+                "end": 356,
+                "fullStart": 351,
+                "fullEnd": 357,
+                "children": {
+                  "id": 88,
+                  "variable": {
+                    "context": {
+                      "id": "<identifier>:U@[L31:C4, L31:C5]",
+                      "snippet": "U"
+                    },
+                    "isInvalid": false,
+                    "kind": "<identifier>",
+                    "value": "U",
+                    "startPos": {
+                      "offset": 355,
+                      "line": 31,
+                      "column": 4
+                    },
+                    "endPos": {
+                      "offset": 356,
+                      "line": 31,
+                      "column": 5
+                    },
+                    "start": 355,
+                    "end": 356,
+                    "leadingTrivia": [
+                      " ",
+                      " ",
+                      " ",
+                      " "
+                    ],
+                    "trailingTrivia": [
+                      "\n"
+                    ],
+                    "leadingInvalid": [],
+                    "trailingInvalid": []
+                  }
+                }
               }
-            ],
-            "leadingInvalid": [],
-            "trailingInvalid": [],
-            "isInvalid": false,
-            "start": 355,
-            "end": 356
-          }
+            }
+          },
+          "args": []
         }
       },
-      "args": []
+      "start": 355,
+      "end": 356
     },
-    "start": 355,
-    "end": 356,
-    "name": "CompileError"
-  },
-  {
-    "code": 5005,
-    "diagnostic": "Table \"A.users\" already appears in group \"A5\"",
-    "nodeOrToken": {
-      "id": 107,
-      "kind": "<function-application>",
-      "startPos": {
-        "offset": 402,
-        "line": 39,
-        "column": 2
+    {
+      "level": "error",
+      "code": {
+        "value": 5005,
+        "name": "TABLE_REAPPEAR_IN_TABLEGROUP"
       },
-      "fullStart": 400,
-      "endPos": {
-        "offset": 409,
-        "line": 39,
-        "column": 9
-      },
-      "fullEnd": 410,
-      "start": 402,
-      "end": 409,
-      "callee": {
-        "id": 106,
-        "kind": "<infix-expression>",
+      "diagnostic": "Table \"A.users\" already appears in group \"A5\"",
+      "node": {
+        "context": {
+          "id": "<function-application>@[L39:C2, L39:C9]",
+          "snippet": "A.users"
+        },
+        "kind": "<function-application>",
         "startPos": {
           "offset": 402,
           "line": 39,
           "column": 2
         },
-        "fullStart": 400,
         "endPos": {
           "offset": 409,
           "line": 39,
           "column": 9
         },
-        "fullEnd": 410,
         "start": 402,
         "end": 409,
-        "op": {
-          "kind": "<op>",
-          "startPos": {
-            "offset": 403,
-            "line": 39,
-            "column": 3
-          },
-          "endPos": {
-            "offset": 404,
-            "line": 39,
-            "column": 4
-          },
-          "value": ".",
-          "leadingTrivia": [],
-          "trailingTrivia": [],
-          "leadingInvalid": [],
-          "trailingInvalid": [],
-          "isInvalid": false,
-          "start": 403,
-          "end": 404
-        },
-        "leftExpression": {
-          "id": 103,
-          "kind": "<primary-expression>",
-          "startPos": {
-            "offset": 402,
-            "line": 39,
-            "column": 2
-          },
-          "fullStart": 400,
-          "endPos": {
-            "offset": 403,
-            "line": 39,
-            "column": 3
-          },
-          "fullEnd": 403,
-          "start": 402,
-          "end": 403,
-          "expression": {
-            "id": 102,
-            "kind": "<variable>",
+        "fullStart": 400,
+        "fullEnd": 410,
+        "children": {
+          "id": 107,
+          "callee": {
+            "context": {
+              "id": "<infix-expression>@[L39:C2, L39:C9]",
+              "snippet": "A.users"
+            },
+            "kind": "<infix-expression>",
             "startPos": {
               "offset": 402,
               "line": 39,
               "column": 2
             },
-            "fullStart": 400,
-            "endPos": {
-              "offset": 403,
-              "line": 39,
-              "column": 3
-            },
-            "fullEnd": 403,
-            "start": 402,
-            "end": 403,
-            "variable": {
-              "kind": "<identifier>",
-              "startPos": {
-                "offset": 402,
-                "line": 39,
-                "column": 2
-              },
-              "endPos": {
-                "offset": 403,
-                "line": 39,
-                "column": 3
-              },
-              "value": "A",
-              "leadingTrivia": [
-                {
-                  "kind": "<space>",
-                  "startPos": {
-                    "offset": 400,
-                    "line": 39,
-                    "column": 0
-                  },
-                  "endPos": {
-                    "offset": 401,
-                    "line": 39,
-                    "column": 1
-                  },
-                  "value": " ",
-                  "leadingTrivia": [],
-                  "trailingTrivia": [],
-                  "leadingInvalid": [],
-                  "trailingInvalid": [],
-                  "isInvalid": false,
-                  "start": 400,
-                  "end": 401
-                },
-                {
-                  "kind": "<space>",
-                  "startPos": {
-                    "offset": 401,
-                    "line": 39,
-                    "column": 1
-                  },
-                  "endPos": {
-                    "offset": 402,
-                    "line": 39,
-                    "column": 2
-                  },
-                  "value": " ",
-                  "leadingTrivia": [],
-                  "trailingTrivia": [],
-                  "leadingInvalid": [],
-                  "trailingInvalid": [],
-                  "isInvalid": false,
-                  "start": 401,
-                  "end": 402
-                }
-              ],
-              "trailingTrivia": [],
-              "leadingInvalid": [],
-              "trailingInvalid": [],
-              "isInvalid": false,
-              "start": 402,
-              "end": 403
-            }
-          }
-        },
-        "rightExpression": {
-          "id": 105,
-          "kind": "<primary-expression>",
-          "startPos": {
-            "offset": 404,
-            "line": 39,
-            "column": 4
-          },
-          "fullStart": 404,
-          "endPos": {
-            "offset": 409,
-            "line": 39,
-            "column": 9
-          },
-          "fullEnd": 410,
-          "start": 404,
-          "end": 409,
-          "expression": {
-            "id": 104,
-            "kind": "<variable>",
-            "startPos": {
-              "offset": 404,
-              "line": 39,
-              "column": 4
-            },
-            "fullStart": 404,
             "endPos": {
               "offset": 409,
               "line": 39,
               "column": 9
             },
-            "fullEnd": 410,
-            "start": 404,
+            "start": 402,
             "end": 409,
-            "variable": {
-              "kind": "<identifier>",
-              "startPos": {
-                "offset": 404,
-                "line": 39,
-                "column": 4
+            "fullStart": 400,
+            "fullEnd": 410,
+            "children": {
+              "id": 106,
+              "op": {
+                "context": {
+                  "id": "<op>:.@[L39:C3, L39:C4]",
+                  "snippet": "."
+                },
+                "isInvalid": false,
+                "kind": "<op>",
+                "value": ".",
+                "startPos": {
+                  "offset": 403,
+                  "line": 39,
+                  "column": 3
+                },
+                "endPos": {
+                  "offset": 404,
+                  "line": 39,
+                  "column": 4
+                },
+                "start": 403,
+                "end": 404,
+                "leadingTrivia": [],
+                "trailingTrivia": [],
+                "leadingInvalid": [],
+                "trailingInvalid": []
               },
-              "endPos": {
-                "offset": 409,
-                "line": 39,
-                "column": 9
-              },
-              "value": "users",
-              "leadingTrivia": [],
-              "trailingTrivia": [
-                {
-                  "kind": "<newline>",
-                  "startPos": {
-                    "offset": 409,
-                    "line": 39,
-                    "column": 9
-                  },
-                  "endPos": {
-                    "offset": 410,
-                    "line": 40,
-                    "column": 0
-                  },
-                  "value": "\n",
-                  "leadingTrivia": [],
-                  "trailingTrivia": [],
-                  "leadingInvalid": [],
-                  "trailingInvalid": [],
-                  "isInvalid": false,
-                  "start": 409,
-                  "end": 410
+              "leftExpression": {
+                "context": {
+                  "id": "<primary-expression>@[L39:C2, L39:C3]",
+                  "snippet": "A"
+                },
+                "kind": "<primary-expression>",
+                "startPos": {
+                  "offset": 402,
+                  "line": 39,
+                  "column": 2
+                },
+                "endPos": {
+                  "offset": 403,
+                  "line": 39,
+                  "column": 3
+                },
+                "start": 402,
+                "end": 403,
+                "fullStart": 400,
+                "fullEnd": 403,
+                "referee": {
+                  "context": {},
+                  "members": [
+                    {
+                      "context": {
+                        "id": "<element-declaration>:A.users@[L13:C0, L15:C1]",
+                        "snippet": "Table A.us... integer\n}"
+                      },
+                      "members": [
+                        {
+                          "context": {
+                            "id": "<function-application>@[L14:C2, L14:C12]",
+                            "snippet": "id integer"
+                          },
+                          "declaration": {
+                            "id": "<function-application>@[L14:C2, L14:C12]",
+                            "snippet": "id integer"
+                          },
+                          "references": []
+                        }
+                      ],
+                      "declaration": {
+                        "id": "<element-declaration>:A.users@[L13:C0, L15:C1]",
+                        "snippet": "Table A.us... integer\n}"
+                      },
+                      "references": [
+                        {
+                          "id": "<primary-expression>@[L35:C2, L35:C4]",
+                          "snippet": "U2"
+                        },
+                        {
+                          "id": "<primary-expression>@[L39:C4, L39:C9]",
+                          "snippet": "users"
+                        }
+                      ]
+                    }
+                  ],
+                  "references": [
+                    {
+                      "id": "<primary-expression>@[L39:C2, L39:C3]",
+                      "snippet": "A"
+                    }
+                  ]
+                },
+                "children": {
+                  "id": 103,
+                  "expression": {
+                    "context": {
+                      "id": "<variable>:A@[L39:C2, L39:C3]",
+                      "snippet": "A"
+                    },
+                    "kind": "<variable>",
+                    "startPos": {
+                      "offset": 402,
+                      "line": 39,
+                      "column": 2
+                    },
+                    "endPos": {
+                      "offset": 403,
+                      "line": 39,
+                      "column": 3
+                    },
+                    "start": 402,
+                    "end": 403,
+                    "fullStart": 400,
+                    "fullEnd": 403,
+                    "children": {
+                      "id": 102,
+                      "variable": {
+                        "context": {
+                          "id": "<identifier>:A@[L39:C2, L39:C3]",
+                          "snippet": "A"
+                        },
+                        "isInvalid": false,
+                        "kind": "<identifier>",
+                        "value": "A",
+                        "startPos": {
+                          "offset": 402,
+                          "line": 39,
+                          "column": 2
+                        },
+                        "endPos": {
+                          "offset": 403,
+                          "line": 39,
+                          "column": 3
+                        },
+                        "start": 402,
+                        "end": 403,
+                        "leadingTrivia": [
+                          " ",
+                          " "
+                        ],
+                        "trailingTrivia": [],
+                        "leadingInvalid": [],
+                        "trailingInvalid": []
+                      }
+                    }
+                  }
                 }
-              ],
-              "leadingInvalid": [],
-              "trailingInvalid": [],
-              "isInvalid": false,
-              "start": 404,
-              "end": 409
+              },
+              "rightExpression": {
+                "context": {
+                  "id": "<primary-expression>@[L39:C4, L39:C9]",
+                  "snippet": "users"
+                },
+                "kind": "<primary-expression>",
+                "startPos": {
+                  "offset": 404,
+                  "line": 39,
+                  "column": 4
+                },
+                "endPos": {
+                  "offset": 409,
+                  "line": 39,
+                  "column": 9
+                },
+                "start": 404,
+                "end": 409,
+                "fullStart": 404,
+                "fullEnd": 410,
+                "referee": {
+                  "context": {
+                    "id": "<element-declaration>:A.users@[L13:C0, L15:C1]",
+                    "snippet": "Table A.us... integer\n}"
+                  },
+                  "members": [
+                    {
+                      "context": {
+                        "id": "<function-application>@[L14:C2, L14:C12]",
+                        "snippet": "id integer"
+                      },
+                      "declaration": {
+                        "id": "<function-application>@[L14:C2, L14:C12]",
+                        "snippet": "id integer"
+                      },
+                      "references": []
+                    }
+                  ],
+                  "declaration": {
+                    "id": "<element-declaration>:A.users@[L13:C0, L15:C1]",
+                    "snippet": "Table A.us... integer\n}"
+                  },
+                  "references": [
+                    {
+                      "id": "<primary-expression>@[L35:C2, L35:C4]",
+                      "snippet": "U2"
+                    },
+                    {
+                      "id": "<primary-expression>@[L39:C4, L39:C9]",
+                      "snippet": "users"
+                    }
+                  ]
+                },
+                "children": {
+                  "id": 105,
+                  "expression": {
+                    "context": {
+                      "id": "<variable>:users@[L39:C4, L39:C9]",
+                      "snippet": "users"
+                    },
+                    "kind": "<variable>",
+                    "startPos": {
+                      "offset": 404,
+                      "line": 39,
+                      "column": 4
+                    },
+                    "endPos": {
+                      "offset": 409,
+                      "line": 39,
+                      "column": 9
+                    },
+                    "start": 404,
+                    "end": 409,
+                    "fullStart": 404,
+                    "fullEnd": 410,
+                    "children": {
+                      "id": 104,
+                      "variable": {
+                        "context": {
+                          "id": "<identifier>:users@[L39:C4, L39:C9]",
+                          "snippet": "users"
+                        },
+                        "isInvalid": false,
+                        "kind": "<identifier>",
+                        "value": "users",
+                        "startPos": {
+                          "offset": 404,
+                          "line": 39,
+                          "column": 4
+                        },
+                        "endPos": {
+                          "offset": 409,
+                          "line": 39,
+                          "column": 9
+                        },
+                        "start": 404,
+                        "end": 409,
+                        "leadingTrivia": [],
+                        "trailingTrivia": [
+                          "\n"
+                        ],
+                        "leadingInvalid": [],
+                        "trailingInvalid": []
+                      }
+                    }
+                  }
+                }
+              }
             }
-          }
+          },
+          "args": []
         }
       },
-      "args": []
-    },
-    "start": 402,
-    "end": 409,
-    "name": "CompileError"
-  }
-]
+      "start": 402,
+      "end": 409
+    }
+  ],
+  "warnings": []
+}
