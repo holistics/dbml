@@ -1,262 +1,181 @@
 {
-  "value": [
+  "errors": [],
+  "tokens": [
     {
-      "kind": "<identifier>",
-      "startPos": {
-        "offset": 0,
-        "line": 0,
-        "column": 0
+      "context": {
+        "id": "<identifier>:Table@[L0:C0, L0:C5]",
+        "snippet": "Table"
       },
+      "end": 5,
       "endPos": {
         "offset": 5,
         "line": 0,
         "column": 5
       },
-      "value": "Table",
-      "leadingTrivia": [],
-      "trailingTrivia": [
-        {
-          "kind": "<space>",
-          "startPos": {
-            "offset": 5,
-            "line": 0,
-            "column": 5
-          },
-          "endPos": {
-            "offset": 6,
-            "line": 0,
-            "column": 6
-          },
-          "value": " ",
-          "leadingTrivia": [],
-          "trailingTrivia": [],
-          "leadingInvalid": [],
-          "trailingInvalid": [],
-          "isInvalid": false,
-          "start": 5,
-          "end": 6
-        }
-      ],
-      "leadingInvalid": [],
-      "trailingInvalid": [],
       "isInvalid": false,
+      "kind": "<identifier>",
+      "leadingInvalid": "",
+      "leadingTrivia": "",
       "start": 0,
-      "end": 5
+      "startPos": {
+        "offset": 0,
+        "line": 0,
+        "column": 0
+      },
+      "trailingInvalid": "",
+      "trailingTrivia": " ",
+      "value": "Table"
     },
     {
-      "kind": "<identifier>",
-      "startPos": {
-        "offset": 6,
-        "line": 0,
-        "column": 6
+      "context": {
+        "id": "<identifier>:TableGroup@[L0:C6, L0:C16]",
+        "snippet": "TableGroup"
       },
+      "end": 16,
       "endPos": {
         "offset": 16,
         "line": 0,
         "column": 16
       },
-      "value": "TableGroup",
-      "leadingTrivia": [],
-      "trailingTrivia": [
-        {
-          "kind": "<newline>",
-          "startPos": {
-            "offset": 17,
-            "line": 0,
-            "column": 17
-          },
-          "endPos": {
-            "offset": 18,
-            "line": 1,
-            "column": 0
-          },
-          "value": "\n",
-          "leadingTrivia": [],
-          "trailingTrivia": [],
-          "leadingInvalid": [],
-          "trailingInvalid": [],
-          "isInvalid": false,
-          "start": 17,
-          "end": 18
-        }
-      ],
-      "leadingInvalid": [],
-      "trailingInvalid": [],
       "isInvalid": false,
+      "kind": "<identifier>",
+      "leadingInvalid": "",
+      "leadingTrivia": "",
       "start": 6,
-      "end": 16
+      "startPos": {
+        "offset": 6,
+        "line": 0,
+        "column": 6
+      },
+      "trailingInvalid": "",
+      "trailingTrivia": "\n",
+      "value": "TableGroup"
     },
     {
-      "kind": "<identifier>",
-      "startPos": {
-        "offset": 18,
-        "line": 1,
-        "column": 0
+      "context": {
+        "id": "<identifier>:as@[L1:C0, L1:C2]",
+        "snippet": "as"
       },
+      "end": 20,
       "endPos": {
         "offset": 20,
         "line": 1,
         "column": 2
       },
-      "value": "as",
-      "leadingTrivia": [],
-      "trailingTrivia": [
-        {
-          "kind": "<newline>",
-          "startPos": {
-            "offset": 21,
-            "line": 1,
-            "column": 3
-          },
-          "endPos": {
-            "offset": 22,
-            "line": 2,
-            "column": 0
-          },
-          "value": "\n",
-          "leadingTrivia": [],
-          "trailingTrivia": [],
-          "leadingInvalid": [],
-          "trailingInvalid": [],
-          "isInvalid": false,
-          "start": 21,
-          "end": 22
-        }
-      ],
-      "leadingInvalid": [],
-      "trailingInvalid": [],
       "isInvalid": false,
-      "start": 18,
-      "end": 20
-    },
-    {
       "kind": "<identifier>",
+      "leadingInvalid": "",
+      "leadingTrivia": "",
+      "start": 18,
       "startPos": {
-        "offset": 22,
-        "line": 2,
+        "offset": 18,
+        "line": 1,
         "column": 0
       },
+      "trailingInvalid": "",
+      "trailingTrivia": "\n",
+      "value": "as"
+    },
+    {
+      "context": {
+        "id": "<identifier>:indexes@[L2:C0, L2:C7]",
+        "snippet": "indexes"
+      },
+      "end": 29,
       "endPos": {
         "offset": 29,
         "line": 2,
         "column": 7
       },
-      "value": "indexes",
-      "leadingTrivia": [],
-      "trailingTrivia": [
-        {
-          "kind": "<space>",
-          "startPos": {
-            "offset": 29,
-            "line": 2,
-            "column": 7
-          },
-          "endPos": {
-            "offset": 30,
-            "line": 2,
-            "column": 8
-          },
-          "value": " ",
-          "leadingTrivia": [],
-          "trailingTrivia": [],
-          "leadingInvalid": [],
-          "trailingInvalid": [],
-          "isInvalid": false,
-          "start": 29,
-          "end": 30
-        }
-      ],
-      "leadingInvalid": [],
-      "trailingInvalid": [],
       "isInvalid": false,
+      "kind": "<identifier>",
+      "leadingInvalid": "",
+      "leadingTrivia": "",
       "start": 22,
-      "end": 29
+      "startPos": {
+        "offset": 22,
+        "line": 2,
+        "column": 0
+      },
+      "trailingInvalid": "",
+      "trailingTrivia": " ",
+      "value": "indexes"
     },
     {
-      "kind": "<identifier>",
-      "startPos": {
-        "offset": 30,
-        "line": 2,
-        "column": 8
+      "context": {
+        "id": "<identifier>:Note@[L2:C8, L2:C12]",
+        "snippet": "Note"
       },
+      "end": 34,
       "endPos": {
         "offset": 34,
         "line": 2,
         "column": 12
       },
-      "value": "Note",
-      "leadingTrivia": [],
-      "trailingTrivia": [
-        {
-          "kind": "<newline>",
-          "startPos": {
-            "offset": 35,
-            "line": 2,
-            "column": 13
-          },
-          "endPos": {
-            "offset": 36,
-            "line": 3,
-            "column": 0
-          },
-          "value": "\n",
-          "leadingTrivia": [],
-          "trailingTrivia": [],
-          "leadingInvalid": [],
-          "trailingInvalid": [],
-          "isInvalid": false,
-          "start": 35,
-          "end": 36
-        }
-      ],
-      "leadingInvalid": [],
-      "trailingInvalid": [],
       "isInvalid": false,
+      "kind": "<identifier>",
+      "leadingInvalid": "",
+      "leadingTrivia": "",
       "start": 30,
-      "end": 34
+      "startPos": {
+        "offset": 30,
+        "line": 2,
+        "column": 8
+      },
+      "trailingInvalid": "",
+      "trailingTrivia": "\n",
+      "value": "Note"
     },
     {
+      "context": {
+        "id": "<identifier>:_ab@[L3:C0, L3:C3]",
+        "snippet": "_ab"
+      },
+      "end": 39,
+      "endPos": {
+        "offset": 39,
+        "line": 3,
+        "column": 3
+      },
+      "isInvalid": false,
       "kind": "<identifier>",
+      "leadingInvalid": "",
+      "leadingTrivia": "",
+      "start": 36,
       "startPos": {
         "offset": 36,
         "line": 3,
         "column": 0
       },
+      "trailingInvalid": "",
+      "trailingTrivia": "",
+      "value": "_ab"
+    },
+    {
+      "context": {
+        "id": "<eof>:@[L3:C3, L3:C3]",
+        "snippet": ""
+      },
+      "end": 39,
       "endPos": {
         "offset": 39,
         "line": 3,
         "column": 3
       },
-      "value": "_ab",
-      "leadingTrivia": [],
-      "trailingTrivia": [],
-      "leadingInvalid": [],
-      "trailingInvalid": [],
       "isInvalid": false,
-      "start": 36,
-      "end": 39
-    },
-    {
       "kind": "<eof>",
+      "leadingInvalid": "",
+      "leadingTrivia": "",
+      "start": 39,
       "startPos": {
         "offset": 39,
         "line": 3,
         "column": 3
       },
-      "endPos": {
-        "offset": 39,
-        "line": 3,
-        "column": 3
-      },
-      "value": "",
-      "leadingTrivia": [],
-      "trailingTrivia": [],
-      "leadingInvalid": [],
-      "trailingInvalid": [],
-      "isInvalid": false,
-      "start": 39,
-      "end": 39
+      "trailingInvalid": "",
+      "trailingTrivia": "",
+      "value": ""
     }
   ],
-  "errors": []
+  "warnings": []
 }
