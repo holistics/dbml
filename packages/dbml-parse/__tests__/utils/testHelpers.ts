@@ -129,7 +129,7 @@ function sortArray (array: unknown[]): unknown[] {
 // Get a stable snapshot of the value
 export function toSnapshot (
   compiler: Compiler,
-  value: Readonly<Snappable | Readonly<Snappable>[] | Record<string, Readonly<Snappable> | Readonly<Snappable[]>>>,
+  value: Readonly<Snappable | Readonly<Snappable>[] | Record<string, Readonly<Snappable> | Readonly<Snappable>[]>>,
   { simple = false }: { simple?: boolean } = {},
 ): unknown {
   if (Array.isArray(value)) {
