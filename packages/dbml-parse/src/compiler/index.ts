@@ -17,7 +17,7 @@ import {
 } from '@/core/global_modules';
 import { symbolReferences } from './queries/symbolReferences';
 import { intern, type Internable, type Primitive } from '@/core/types/internable';
-import { DEFAULT_SCHEMA_NAME, UNHANDLED } from '@/constants';
+import { DEFAULT_ENTRY, DEFAULT_SCHEMA_NAME, UNHANDLED } from '@/constants';
 import { alias, nodeFullname as fullname, settings, validate } from '@/core/local_modules';
 import { NodeSymbolIdGenerator, SchemaSymbol, type NodeSymbol } from '@/core/types/symbols';
 import SymbolFactory from '@/core/types/symbolFactory';
@@ -102,14 +102,14 @@ export default class Compiler {
   // @deprecated - legacy APIs for services compatibility
   readonly parse = {
     source: () => this.source as Readonly<string>,
-    ast: () => this.parseFile().getValue().ast,
+    ast: () => this.parseFile(DEFAULT_ENTRY).getValue().ast,
     _: () => {
-      const ast = this.parseFile().getValue().ast;
+      const ast = this.parseFile(DEFAULT_ENTRY).getValue().ast;
       this.bind(ast);
       return this.interpret(ast);
     },
     publicSymbolTable: () => {
-      const ast = this.parseFile().getValue().ast;
+      const ast = this.parseFile(DEFAULT_ENTRY).getValue().ast;
       const sym = this.nodeSymbol(ast);
       if (sym.hasValue(UNHANDLED)) return undefined;
       const programMembers = this.symbolMembers(sym.getValue());
