@@ -97,7 +97,7 @@ jobs:
         run: yarn install --frozen-lockfile
       - name: Build packages
         run: yarn build
-      - name: Run unit test and coverage
+      - name: Run coverage
         run: yarn coverage
       - name: Generate coverage report
         id: coverage
