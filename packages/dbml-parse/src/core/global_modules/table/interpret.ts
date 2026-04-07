@@ -221,7 +221,7 @@ export class TableInterpreter {
 
     column.name = extractVarNameFromPrimaryVariable(field.callee as any) ?? '';
 
-    column.type = interpretColumnType(field.args[0], errors);
+    column.type = interpretColumnType(field.args[0]);
 
     // Check if type resolves to an enum
     if (field.args[0]) {
@@ -272,7 +272,7 @@ export class TableInterpreter {
       };
 
       const refs = settingMap[SettingName.Ref] || [];
-      column.inline_refs = interpretInlineRefs(refs, errors);
+      column.inline_refs = interpretInlineRefs(refs);
 
       const checkNodes = settingMap[SettingName.Check] || [];
       column.checks = checkNodes.map((checkNode) => {
