@@ -921,7 +921,7 @@ export class EmptyNode extends SyntaxNode {
     id: SyntaxNodeId,
     filepath: Filepath,
   ) {
-    const nextToken = SyntaxToken.create(SyntaxTokenKind.SPACE, prevToken.endPos, prevToken.endPos, ' ', false);
+    const nextToken = SyntaxToken.create(SyntaxTokenKind.SPACE, filepath, prevToken.endPos, prevToken.endPos, ' ', false);
     super(
       id,
       SyntaxNodeKind.EMPTY,

@@ -12,6 +12,7 @@ import { tableGroupModule } from './tableGroup';
 import { tablePartialModule } from './tablePartial';
 import { noteModule } from './note';
 import { programModule } from './program';
+import { useModule } from './use';
 import type Compiler from '@/compiler';
 import type { SyntaxNode } from '@/core/parser/nodes';
 import Report from '@/core/report';
@@ -29,6 +30,7 @@ export const modules: LocalModule[] = [
   tablePartialModule,
   noteModule,
   programModule,
+  useModule,
   customModule,
 ];
 

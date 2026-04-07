@@ -5,6 +5,7 @@ export enum ImportKind {
   TableGroup = 'tableGroup',
   TablePartial = 'tablePartial',
   Note = 'note',
+  Schema = 'schema',
 }
 
 export enum ElementKind {

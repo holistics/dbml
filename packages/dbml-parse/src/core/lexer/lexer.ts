@@ -1,9 +1,12 @@
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import Report from '@/core/report';
-import { Position } from '@/core/types/position';
+import { isAlphaOrUnderscore, isAlphaNumeric, isDigit } from '@/core/utils/chars';
+import {
+  SyntaxToken, SyntaxTokenKind, isOp, isTriviaToken,
+} from '@/core/lexer/tokens';
+import type { Position } from '@/core/types';
 import { isInvalidToken } from '@/core/parser/utils';
-import { isOp, isTriviaToken, SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
-import { isAlphaNumeric, isAlphaOrUnderscore, isDigit } from '@/core/utils/chars';
+import { Filepath } from '../types/filepath';
 
 export default class Lexer {
   private start: Position = {
@@ -20,12 +23,15 @@ export default class Lexer {
 
   private text: string;
 
+  private filepath: Filepath;
+
   private tokens: SyntaxToken[] = []; // list of lexed tokens, not including invalid tokens
 
   private errors: CompileError[] = []; // list of errors during lexing
 
-  constructor (text: string) {
+  constructor (text: string, filepath: Filepath) {
     this.text = text;
+    this.filepath = filepath;
   }
 
   private isAtEnd (): boolean {
@@ -83,6 +89,7 @@ export default class Lexer {
   private createToken (kind: SyntaxTokenKind, isInvalid: boolean = false): SyntaxToken {
     return SyntaxToken.create(
       kind,
+      this.filepath,
       this.start,
       this.current,
       this.text.substring(this.start.offset, this.current.offset),
@@ -92,7 +99,7 @@ export default class Lexer {
 
   lex (): Report<SyntaxToken[]> {
     this.scanTokens();
-    this.tokens.push(SyntaxToken.create(SyntaxTokenKind.EOF, this.start, this.current, '', false));
+    this.tokens.push(SyntaxToken.create(SyntaxTokenKind.EOF, this.filepath, this.start, this.current, '', false));
     this.gatherTrivia();
     this.gatherInvalid();
 
@@ -304,7 +311,7 @@ export default class Lexer {
     if (consumeStopSequence) {
       this.match(stopSequence);
     }
-    this.tokens.push(SyntaxToken.create(tokenKind, this.start, this.current, string, false));
+    this.tokens.push(SyntaxToken.create(tokenKind, this.filepath, this.start, this.current, string, false));
   }
 
   singleLineStringLiteral () {
@@ -525,7 +532,7 @@ export default class Lexer {
             this.errors.push(new CompileError(
               CompileErrorCode.INVALID_ESCAPE_SEQUENCE,
               `Invalid unicode escape sequence '\\u${hex}', only unicode escape sequences of the form '\\uHHHH' where H is a hexadecimal number are allowed`,
-              SyntaxToken.create(SyntaxTokenKind.STRING_LITERAL, prevPos, this.current, `\\u${hex}`, true),
+              SyntaxToken.create(SyntaxTokenKind.STRING_LITERAL, this.filepath, prevPos, this.current, `\\u${hex}`, true),
             ));
 
             return `\\u${hex}`;

@@ -1,5 +1,6 @@
 import { SyntaxToken } from '@/core/lexer/tokens';
 import { SyntaxNode } from './parser/nodes';
+import { Filepath } from './types/filepath';
 
 export enum CompileErrorCode {
   UNKNOWN_SYMBOL = 1000,
@@ -115,6 +116,7 @@ export enum CompileErrorCode {
   DUPLICATE_COLUMN_REFERENCES_IN_RECORDS,
   DUPLICATE_RECORDS_FOR_TABLE,
 
+  INVALID_USE_CONTEXT,
   INVALID_USE_SPECIFIER_KIND,
   INVALID_USE_SPECIFIER_NAME,
 
@@ -157,6 +159,10 @@ export class CompileError extends Error {
       this.nodeOrToken,
     );
   }
+
+  get filepath (): Filepath {
+    return this.nodeOrToken.filepath;
+  }
 }
 
 export class CompileWarning extends Error {
@@ -179,5 +185,9 @@ export class CompileWarning extends Error {
     this.end = nodeOrToken.end;
     this.name = this.constructor.name;
     Object.setPrototypeOf(this, CompileError.prototype);
+  }
+
+  get filepath (): Filepath {
+    return this.nodeOrToken.filepath;
   }
 }
