@@ -6,22 +6,10 @@
         "id": "<variable>:\n@[L0:C0, L0:C4]",
         "snippet": "\"\\n\""
       },
-      "end": 4,
-      "endPos": {
-        "offset": 4,
-        "line": 0,
-        "column": 4
-      },
       "isInvalid": false,
       "kind": "<variable>",
       "leadingInvalid": "",
       "leadingTrivia": "",
-      "start": 0,
-      "startPos": {
-        "offset": 0,
-        "line": 0,
-        "column": 0
-      },
       "trailingInvalid": "",
       "trailingTrivia": "\n",
       "value": "\n"
@@ -31,22 +19,10 @@
         "id": "<variable>:\r@[L1:C0, L1:C4]",
         "snippet": "\"\\r\""
       },
-      "end": 9,
-      "endPos": {
-        "offset": 9,
-        "line": 1,
-        "column": 4
-      },
       "isInvalid": false,
       "kind": "<variable>",
       "leadingInvalid": "",
       "leadingTrivia": "",
-      "start": 5,
-      "startPos": {
-        "offset": 5,
-        "line": 1,
-        "column": 0
-      },
       "trailingInvalid": "",
       "trailingTrivia": "\n",
       "value": "\r"
@@ -56,22 +32,10 @@
         "id": "<variable>:ꯎ@[L2:C0, L2:C8]",
         "snippet": "\"\\uabce\""
       },
-      "end": 18,
-      "endPos": {
-        "offset": 18,
-        "line": 2,
-        "column": 8
-      },
       "isInvalid": false,
       "kind": "<variable>",
       "leadingInvalid": "",
       "leadingTrivia": "",
-      "start": 10,
-      "startPos": {
-        "offset": 10,
-        "line": 2,
-        "column": 0
-      },
       "trailingInvalid": "",
       "trailingTrivia": "\n",
       "value": "ꯎ"
@@ -81,22 +45,10 @@
         "id": "<variable>:ሿ@[L3:C0, L3:C8]",
         "snippet": "\"\\u123F\""
       },
-      "end": 27,
-      "endPos": {
-        "offset": 27,
-        "line": 3,
-        "column": 8
-      },
       "isInvalid": false,
       "kind": "<variable>",
       "leadingInvalid": "",
       "leadingTrivia": "",
-      "start": 19,
-      "startPos": {
-        "offset": 19,
-        "line": 3,
-        "column": 0
-      },
       "trailingInvalid": "",
       "trailingTrivia": "\n",
       "value": "ሿ"
@@ -106,22 +58,10 @@
         "id": "<variable>:ꯍ@[L4:C0, L4:C8]",
         "snippet": "\"\\uABCD\""
       },
-      "end": 36,
-      "endPos": {
-        "offset": 36,
-        "line": 4,
-        "column": 8
-      },
       "isInvalid": false,
       "kind": "<variable>",
       "leadingInvalid": "",
       "leadingTrivia": "",
-      "start": 28,
-      "startPos": {
-        "offset": 28,
-        "line": 4,
-        "column": 0
-      },
       "trailingInvalid": "",
       "trailingTrivia": "\n",
       "value": "ꯍ"
@@ -131,22 +71,10 @@
         "id": "<variable>:\t@[L5:C0, L5:C4]",
         "snippet": "\"\\t\""
       },
-      "end": 41,
-      "endPos": {
-        "offset": 41,
-        "line": 5,
-        "column": 4
-      },
       "isInvalid": false,
       "kind": "<variable>",
       "leadingInvalid": "",
       "leadingTrivia": "",
-      "start": 37,
-      "startPos": {
-        "offset": 37,
-        "line": 5,
-        "column": 0
-      },
       "trailingInvalid": "",
       "trailingTrivia": "\n",
       "value": "\t"
@@ -156,22 +84,10 @@
         "id": "<variable>:\u000b@[L6:C0, L6:C4]",
         "snippet": "\"\\v\""
       },
-      "end": 46,
-      "endPos": {
-        "offset": 46,
-        "line": 6,
-        "column": 4
-      },
       "isInvalid": false,
       "kind": "<variable>",
       "leadingInvalid": "",
       "leadingTrivia": "",
-      "start": 42,
-      "startPos": {
-        "offset": 42,
-        "line": 6,
-        "column": 0
-      },
       "trailingInvalid": "",
       "trailingTrivia": "\n",
       "value": "\u000b"
@@ -181,22 +97,10 @@
         "id": "<string>:This is a single line ''' @[L7:C0, L7:C33]",
         "snippet": "'''This is...e \\''' '''"
       },
-      "end": 80,
-      "endPos": {
-        "offset": 80,
-        "line": 7,
-        "column": 33
-      },
       "isInvalid": false,
       "kind": "<string>",
       "leadingInvalid": "",
       "leadingTrivia": "",
-      "start": 47,
-      "startPos": {
-        "offset": 47,
-        "line": 7,
-        "column": 0
-      },
       "trailingInvalid": "",
       "trailingTrivia": "\n",
       "value": "This is a single line ''' "
@@ -206,22 +110,10 @@
         "id": "<string>:This is a single line here!@[L8:C0, L9:C8]",
         "snippet": "'''This is...\\\nhere!'''"
       },
-      "end": 116,
-      "endPos": {
-        "offset": 116,
-        "line": 9,
-        "column": 8
-      },
       "isInvalid": false,
       "kind": "<string>",
       "leadingInvalid": "",
       "leadingTrivia": "",
-      "start": 81,
-      "startPos": {
-        "offset": 81,
-        "line": 8,
-        "column": 0
-      },
       "trailingInvalid": "",
       "trailingTrivia": "\n",
       "value": "This is a single line here!"
@@ -231,22 +123,10 @@
         "id": "<string>:This is not a single line \\ !@[L11:C0, L11:C35]",
         "snippet": "'''This is...ine \\ !'''"
       },
-      "end": 153,
-      "endPos": {
-        "offset": 153,
-        "line": 11,
-        "column": 35
-      },
       "isInvalid": false,
       "kind": "<string>",
       "leadingInvalid": "",
       "leadingTrivia": "\n",
-      "start": 118,
-      "startPos": {
-        "offset": 118,
-        "line": 11,
-        "column": 0
-      },
       "trailingInvalid": "",
       "trailingTrivia": "\n",
       "value": "This is not a single line \\ !"
@@ -256,22 +136,10 @@
         "id": "<string>:This is also not a single line \\    \nas there are spaces after \\@[L12:C0, L13:C31]",
         "snippet": "'''This is...fter \\\\'''"
       },
-      "end": 225,
-      "endPos": {
-        "offset": 225,
-        "line": 13,
-        "column": 31
-      },
       "isInvalid": false,
       "kind": "<string>",
       "leadingInvalid": "",
       "leadingTrivia": "",
-      "start": 154,
-      "startPos": {
-        "offset": 154,
-        "line": 12,
-        "column": 0
-      },
       "trailingInvalid": "",
       "trailingTrivia": "\n",
       "value": "This is also not a single line \\    \nas there are spaces after \\"
@@ -281,22 +149,10 @@
         "id": "<function-expression>:This is single line\n\n\n@[L14:C0, L17:C1]",
         "snippet": "`This is s...e line\n\n\n`"
       },
-      "end": 250,
-      "endPos": {
-        "offset": 250,
-        "line": 17,
-        "column": 1
-      },
       "isInvalid": false,
       "kind": "<function-expression>",
       "leadingInvalid": "",
       "leadingTrivia": "",
-      "start": 226,
-      "startPos": {
-        "offset": 226,
-        "line": 14,
-        "column": 0
-      },
       "trailingInvalid": "",
       "trailingTrivia": "\n",
       "value": "This is single line\n\n\n"
@@ -306,22 +162,10 @@
         "id": "<eof>:@[L18:C0, L18:C0]",
         "snippet": ""
       },
-      "end": 251,
-      "endPos": {
-        "offset": 251,
-        "line": 18,
-        "column": 0
-      },
       "isInvalid": false,
       "kind": "<eof>",
       "leadingInvalid": "",
       "leadingTrivia": "",
-      "start": 251,
-      "startPos": {
-        "offset": 251,
-        "line": 18,
-        "column": 0
-      },
       "trailingInvalid": "",
       "trailingTrivia": "",
       "value": ""

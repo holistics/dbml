@@ -3,9 +3,7 @@
     {
       "code": "UNEXPECTED_TOKEN",
       "diagnostic": "Expect a variable or literal",
-      "end": 44,
       "level": "error",
-      "start": 43,
       "token": {
         "context": {
           "id": "<rbrace>:}@[L2:C0, L2:C1]",

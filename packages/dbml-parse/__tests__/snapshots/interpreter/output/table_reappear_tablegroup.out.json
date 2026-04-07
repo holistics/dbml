@@ -422,54 +422,46 @@
     {
       "code": "TABLE_REAPPEAR_IN_TABLEGROUP",
       "diagnostic": "Table \"follows\" already appears in group \"A1\"",
-      "end": 296,
       "level": "error",
       "node": {
         "context": {
           "id": "<function-application>@[L22:C2, L22:C9]",
           "snippet": "follows"
         }
-      },
-      "start": 289
+      }
     },
     {
       "code": "TABLE_REAPPEAR_IN_TABLEGROUP",
       "diagnostic": "Table \"users\" already appears in group \"A2\"",
-      "end": 331,
       "level": "error",
       "node": {
         "context": {
           "id": "<function-application>@[L27:C2, L27:C7]",
           "snippet": "users"
         }
-      },
-      "start": 326
+      }
     },
     {
       "code": "TABLE_REAPPEAR_IN_TABLEGROUP",
       "diagnostic": "Table \"U\" already appears in group \"A2\"",
-      "end": 356,
       "level": "error",
       "node": {
         "context": {
           "id": "<function-application>@[L31:C4, L31:C5]",
           "snippet": "U"
         }
-      },
-      "start": 355
+      }
     },
     {
       "code": "TABLE_REAPPEAR_IN_TABLEGROUP",
       "diagnostic": "Table \"A.users\" already appears in group \"A5\"",
-      "end": 409,
       "level": "error",
       "node": {
         "context": {
           "id": "<function-application>@[L39:C2, L39:C9]",
           "snippet": "A.users"
         }
-      },
-      "start": 402
+      }
     }
   ],
   "warnings": []

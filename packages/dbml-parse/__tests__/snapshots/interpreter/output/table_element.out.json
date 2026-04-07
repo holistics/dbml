@@ -3,28 +3,24 @@
     {
       "code": "NOTE_REDEFINED",
       "diagnostic": "Duplicate notes are defined",
-      "end": 141,
       "level": "error",
       "node": {
         "context": {
           "id": "<element-declaration>:@[L6:C2, L6:C20]",
           "snippet": "Note: 'Short note'"
         }
-      },
-      "start": 123
+      }
     },
     {
       "code": "NOTE_REDEFINED",
       "diagnostic": "Duplicate notes are defined",
-      "end": 405,
       "level": "error",
       "node": {
         "context": {
           "id": "<element-declaration>:@[L18:C2, L27:C3]",
           "snippet": "Note {\n   ...   '''\n  }"
         }
-      },
-      "start": 227
+      }
     }
   ],
   "warnings": []

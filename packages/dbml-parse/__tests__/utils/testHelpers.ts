@@ -174,8 +174,6 @@ export function errorToSnapshot (
     code,
     diagnostic,
     nodeOrToken,
-    start,
-    end,
   } = error;
   if (simple) {
     return sortObject({
@@ -191,8 +189,6 @@ export function errorToSnapshot (
     ...(nodeOrToken instanceof SyntaxNode
       ? { node: syntaxNodeToSnapshot(compiler, nodeOrToken, { simple: true }) }
       : { token: syntaxTokenToSnapshot(compiler, nodeOrToken as SyntaxToken, { simple: true }) }),
-    start,
-    end,
   });
 }
 
@@ -205,8 +201,6 @@ export function warningToSnapshot (
     code,
     diagnostic,
     nodeOrToken,
-    start,
-    end,
   } = warning;
   if (simple) {
     return sortObject({
@@ -222,8 +216,6 @@ export function warningToSnapshot (
     ...(nodeOrToken instanceof SyntaxNode
       ? { node: syntaxNodeToSnapshot(compiler, nodeOrToken, { simple: true }) }
       : { token: syntaxTokenToSnapshot(compiler, nodeOrToken as SyntaxToken, { simple: true }) }),
-    start,
-    end,
   });
 }
 
@@ -241,10 +233,6 @@ export function syntaxTokenToSnapshot (
     trailingTrivia,
     leadingInvalid,
     trailingInvalid,
-    startPos,
-    start,
-    endPos,
-    end,
     isInvalid,
   } = token;
   if (simple) {
@@ -265,10 +253,6 @@ export function syntaxTokenToSnapshot (
       isInvalid,
       kind,
       value,
-      startPos,
-      endPos,
-      start,
-      end,
       leadingTrivia: leadingTrivia.map((t) => t.value).join(''),
       trailingTrivia: trailingTrivia.map((t) => t.value).join(''),
       leadingInvalid: leadingInvalid.map((t) => t.value).join(''),
@@ -287,13 +271,6 @@ export function syntaxNodeToSnapshot (
   const snippet = getCodeSnippet(node, compiler.parse.source());
   const {
     id, // Filter this out
-    kind,
-    startPos,
-    endPos,
-    start,
-    end,
-    fullStart,
-    fullEnd,
     symbol,
     referee,
     ...props
@@ -318,13 +295,6 @@ export function syntaxNodeToSnapshot (
       snippet,
     },
     ...sortObject({
-      kind,
-      startPos,
-      endPos,
-      start,
-      end,
-      fullStart,
-      fullEnd,
       symbol: symbol && symbolToSnapshot(compiler, symbol),
       referee: referee && symbolToSnapshot(compiler, referee, { simple: true }),
       children: sortObject(Object.fromEntries(

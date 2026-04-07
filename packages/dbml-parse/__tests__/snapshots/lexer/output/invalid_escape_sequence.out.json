@@ -3,9 +3,7 @@
     {
       "code": "INVALID_ESCAPE_SEQUENCE",
       "diagnostic": "Invalid unicode escape sequence '\\u', only unicode escape sequences of the form '\\uHHHH' where H is a hexadecimal number are allowed",
-      "end": 3,
       "level": "error",
-      "start": 1,
       "token": {
         "context": {
           "id": "<string>:\\u@[L0:C1, L0:C3]",
@@ -17,9 +15,7 @@
     {
       "code": "INVALID_ESCAPE_SEQUENCE",
       "diagnostic": "Invalid unicode escape sequence '\\u1', only unicode escape sequences of the form '\\uHHHH' where H is a hexadecimal number are allowed",
-      "end": 14,
       "level": "error",
-      "start": 11,
       "token": {
         "context": {
           "id": "<string>:\\u1@[L2:C1, L2:C4]",
@@ -31,9 +27,7 @@
     {
       "code": "INVALID_ESCAPE_SEQUENCE",
       "diagnostic": "Invalid unicode escape sequence '\\u12', only unicode escape sequences of the form '\\uHHHH' where H is a hexadecimal number are allowed",
-      "end": 21,
       "level": "error",
-      "start": 17,
       "token": {
         "context": {
           "id": "<string>:\\u12@[L3:C1, L3:C5]",
@@ -45,9 +39,7 @@
     {
       "code": "INVALID_ESCAPE_SEQUENCE",
       "diagnostic": "Invalid unicode escape sequence '\\uab', only unicode escape sequences of the form '\\uHHHH' where H is a hexadecimal number are allowed",
-      "end": 28,
       "level": "error",
-      "start": 24,
       "token": {
         "context": {
           "id": "<string>:\\uab@[L4:C1, L4:C5]",
@@ -59,9 +51,7 @@
     {
       "code": "INVALID_ESCAPE_SEQUENCE",
       "diagnostic": "Invalid unicode escape sequence '\\ua1', only unicode escape sequences of the form '\\uHHHH' where H is a hexadecimal number are allowed",
-      "end": 35,
       "level": "error",
-      "start": 31,
       "token": {
         "context": {
           "id": "<string>:\\ua1@[L5:C1, L5:C5]",
@@ -77,22 +67,10 @@
         "id": "<variable>:\\u@[L0:C0, L0:C4]",
         "snippet": "\"\\u\""
       },
-      "end": 4,
-      "endPos": {
-        "offset": 4,
-        "line": 0,
-        "column": 4
-      },
       "isInvalid": false,
       "kind": "<variable>",
       "leadingInvalid": "",
       "leadingTrivia": "",
-      "start": 0,
-      "startPos": {
-        "offset": 0,
-        "line": 0,
-        "column": 0
-      },
       "trailingInvalid": "",
       "trailingTrivia": "\n",
       "value": "\\u"
@@ -102,22 +80,10 @@
         "id": "<variable>:a@[L1:C0, L1:C4]",
         "snippet": "\"\\a\""
       },
-      "end": 9,
-      "endPos": {
-        "offset": 9,
-        "line": 1,
-        "column": 4
-      },
       "isInvalid": false,
       "kind": "<variable>",
       "leadingInvalid": "",
       "leadingTrivia": "",
-      "start": 5,
-      "startPos": {
-        "offset": 5,
-        "line": 1,
-        "column": 0
-      },
       "trailingInvalid": "",
       "trailingTrivia": "\n",
       "value": "a"
@@ -127,22 +93,10 @@
         "id": "<variable>:\\u1@[L2:C0, L2:C5]",
         "snippet": "\"\\u1\""
       },
-      "end": 15,
-      "endPos": {
-        "offset": 15,
-        "line": 2,
-        "column": 5
-      },
       "isInvalid": false,
       "kind": "<variable>",
       "leadingInvalid": "",
       "leadingTrivia": "",
-      "start": 10,
-      "startPos": {
-        "offset": 10,
-        "line": 2,
-        "column": 0
-      },
       "trailingInvalid": "",
       "trailingTrivia": "\n",
       "value": "\\u1"
@@ -152,22 +106,10 @@
         "id": "<variable>:\\u12@[L3:C0, L3:C6]",
         "snippet": "\"\\u12\""
       },
-      "end": 22,
-      "endPos": {
-        "offset": 22,
-        "line": 3,
-        "column": 6
-      },
       "isInvalid": false,
       "kind": "<variable>",
       "leadingInvalid": "",
       "leadingTrivia": "",
-      "start": 16,
-      "startPos": {
-        "offset": 16,
-        "line": 3,
-        "column": 0
-      },
       "trailingInvalid": "",
       "trailingTrivia": "\n",
       "value": "\\u12"
@@ -177,22 +119,10 @@
         "id": "<variable>:\\uab@[L4:C0, L4:C6]",
         "snippet": "\"\\uab\""
       },
-      "end": 29,
-      "endPos": {
-        "offset": 29,
-        "line": 4,
-        "column": 6
-      },
       "isInvalid": false,
       "kind": "<variable>",
       "leadingInvalid": "",
       "leadingTrivia": "",
-      "start": 23,
-      "startPos": {
-        "offset": 23,
-        "line": 4,
-        "column": 0
-      },
       "trailingInvalid": "",
       "trailingTrivia": "\n",
       "value": "\\uab"
@@ -202,22 +132,10 @@
         "id": "<variable>:\\ua1@[L5:C0, L5:C6]",
         "snippet": "\"\\ua1\""
       },
-      "end": 36,
-      "endPos": {
-        "offset": 36,
-        "line": 5,
-        "column": 6
-      },
       "isInvalid": false,
       "kind": "<variable>",
       "leadingInvalid": "",
       "leadingTrivia": "",
-      "start": 30,
-      "startPos": {
-        "offset": 30,
-        "line": 5,
-        "column": 0
-      },
       "trailingInvalid": "",
       "trailingTrivia": "",
       "value": "\\ua1"
@@ -227,22 +145,10 @@
         "id": "<eof>:@[L5:C6, L5:C6]",
         "snippet": ""
       },
-      "end": 36,
-      "endPos": {
-        "offset": 36,
-        "line": 5,
-        "column": 6
-      },
       "isInvalid": false,
       "kind": "<eof>",
       "leadingInvalid": "",
       "leadingTrivia": "",
-      "start": 36,
-      "startPos": {
-        "offset": 36,
-        "line": 5,
-        "column": 6
-      },
       "trailingInvalid": "",
       "trailingTrivia": "",
       "value": ""

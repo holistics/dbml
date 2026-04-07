@@ -3,9 +3,7 @@
     {
       "code": "UNEXPECTED_NEWLINE",
       "diagnostic": "Invalid newline encountered while parsing",
-      "end": 191,
       "level": "error",
-      "start": 156,
       "token": {
         "context": {
           "id": "<variable>:\"This is an unclosed quoted string\r@[L8:C0, L8:C35]",
@@ -17,9 +15,7 @@
     {
       "code": "UNEXPECTED_NEWLINE",
       "diagnostic": "Invalid newline encountered while parsing",
-      "end": 230,
       "level": "error",
-      "start": 194,
       "token": {
         "context": {
           "id": "<string>:'This is an unclosed string literal\r@[L10:C0, L10:C36]",
@@ -31,9 +27,7 @@
     {
       "code": "UNEXPECTED_EOF",
       "diagnostic": "EOF reached while parsing",
-      "end": 312,
       "level": "error",
-      "start": 271,
       "token": {
         "context": {
           "id": "<string>:'''This is an unclosed multiline string\r\n@[L15:C0, L16:C0]",
@@ -49,22 +43,10 @@
         "id": "<variable>:This is a quoted string@[L0:C0, L0:C25]",
         "snippet": "\"This is a...ed string\""
       },
-      "end": 25,
-      "endPos": {
-        "offset": 25,
-        "line": 0,
-        "column": 25
-      },
       "isInvalid": false,
       "kind": "<variable>",
       "leadingInvalid": "",
       "leadingTrivia": "",
-      "start": 0,
-      "startPos": {
-        "offset": 0,
-        "line": 0,
-        "column": 0
-      },
       "trailingInvalid": "",
       "trailingTrivia": "\n",
       "value": "This is a quoted string"
@@ -74,22 +56,10 @@
         "id": "<variable>:This is a quoted string \nwith a newline\n@[L2:C0, L2:C44]",
         "snippet": "\"This is a...newline\\n\""
       },
-      "end": 73,
-      "endPos": {
-        "offset": 73,
-        "line": 2,
-        "column": 44
-      },
       "isInvalid": false,
       "kind": "<variable>",
       "leadingInvalid": "",
       "leadingTrivia": "\n",
-      "start": 29,
-      "startPos": {
-        "offset": 29,
-        "line": 2,
-        "column": 0
-      },
       "trailingInvalid": "",
       "trailingTrivia": "\n",
       "value": "This is a quoted string \nwith a newline\n"
@@ -99,22 +69,10 @@
         "id": "<string>:This is a string literal@[L4:C0, L4:C26]",
         "snippet": "'This is a...g literal'"
       },
-      "end": 103,
-      "endPos": {
-        "offset": 103,
-        "line": 4,
-        "column": 26
-      },
       "isInvalid": false,
       "kind": "<string>",
       "leadingInvalid": "",
       "leadingTrivia": "\n",
-      "start": 77,
-      "startPos": {
-        "offset": 77,
-        "line": 4,
-        "column": 0
-      },
       "trailingInvalid": "",
       "trailingTrivia": "\n",
       "value": "This is a string literal"
@@ -124,22 +82,10 @@
         "id": "<string>:This is a string literal \nwith a newline\n@[L6:C0, L6:C45]",
         "snippet": "'This is a...newline\\n'"
       },
-      "end": 152,
-      "endPos": {
-        "offset": 152,
-        "line": 6,
-        "column": 45
-      },
       "isInvalid": false,
       "kind": "<string>",
       "leadingInvalid": "",
       "leadingTrivia": "\n",
-      "start": 107,
-      "startPos": {
-        "offset": 107,
-        "line": 6,
-        "column": 0
-      },
       "trailingInvalid": "\"This is an unclosed quoted string\r'This is an unclosed string literal\r",
       "trailingTrivia": "\n",
       "value": "This is a string literal \nwith a newline\n"
@@ -149,22 +95,10 @@
         "id": "<string>:This is a multiline string\r\n@[L12:C0, L13:C3]",
         "snippet": "'''This is...tring\r\n'''"
       },
-      "end": 267,
-      "endPos": {
-        "offset": 267,
-        "line": 13,
-        "column": 3
-      },
       "isInvalid": false,
       "kind": "<string>",
       "leadingInvalid": "",
       "leadingTrivia": "\n",
-      "start": 233,
-      "startPos": {
-        "offset": 233,
-        "line": 12,
-        "column": 0
-      },
       "trailingInvalid": "'''This is an unclosed multiline string\r\n",
       "trailingTrivia": "\n",
       "value": "This is a multiline string\r\n"
@@ -174,22 +108,10 @@
         "id": "<eof>:@[L16:C0, L16:C0]",
         "snippet": ""
       },
-      "end": 312,
-      "endPos": {
-        "offset": 312,
-        "line": 16,
-        "column": 0
-      },
       "isInvalid": false,
       "kind": "<eof>",
       "leadingInvalid": "",
       "leadingTrivia": "",
-      "start": 312,
-      "startPos": {
-        "offset": 312,
-        "line": 16,
-        "column": 0
-      },
       "trailingInvalid": "",
       "trailingTrivia": "",
       "value": ""
