@@ -1,5 +1,6 @@
 import { SyntaxNode } from '@/core/parser/nodes';
 import type { Internable } from '@/core/types/internable';
+import { Filepath } from './filepath';
 
 export const enum SymbolKind {
   Schema = 'Schema',
@@ -56,6 +57,7 @@ export class NodeSymbol implements Internable<InternedNodeSymbol> {
   id: NodeSymbolId;
   kind: SymbolKind;
   declaration?: SyntaxNode;
+  filepath: Filepath;
 
   constructor ({
     kind,
@@ -63,14 +65,15 @@ export class NodeSymbol implements Internable<InternedNodeSymbol> {
   }: {
     kind: SymbolKind;
     declaration?: SyntaxNode;
-  }, id: NodeSymbolId) {
+  }, id: NodeSymbolId, filepath: Filepath) {
     this.id = id;
     this.kind = kind;
     this.declaration = declaration;
+    this.filepath = filepath;
   }
 
   intern (): InternedNodeSymbol {
-    return `symbol@${this.id}` as InternedNodeSymbol;
+    return `symbol@${this.filepath.intern()}:${this.id}` as InternedNodeSymbol;
   }
 
   isKind (...kinds: SymbolKind[]): boolean {
@@ -84,8 +87,8 @@ export class NodeSymbol implements Internable<InternedNodeSymbol> {
 export class InjectedSymbol extends NodeSymbol {
   name: string;
 
-  constructor ({ kind, declaration, name }: { kind: SymbolKind; declaration?: SyntaxNode; name: string }, id: NodeSymbolId) {
-    super({ kind, declaration }, id);
+  constructor ({ kind, declaration, name }: { kind: SymbolKind; declaration?: SyntaxNode; name: string }, id: NodeSymbolId, filepath: Filepath) {
+    super({ kind, declaration }, id, filepath);
     this.name = name;
   }
 }
@@ -94,8 +97,8 @@ export class SchemaSymbol extends NodeSymbol {
   name: string;
   parent?: SchemaSymbol;
 
-  constructor ({ name, parent }: { name: string; parent?: SchemaSymbol }, id: NodeSymbolId) {
-    super({ kind: SymbolKind.Schema }, id);
+  constructor ({ name, parent }: { name: string; parent?: SchemaSymbol }, id: NodeSymbolId, filepath: Filepath) {
+    super({ kind: SymbolKind.Schema }, id, filepath);
     this.name = name;
     this.parent = parent;
   }

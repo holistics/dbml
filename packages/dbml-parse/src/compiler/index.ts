@@ -25,6 +25,7 @@ import { symbolName } from './queries/symbolName';
 import { SyntaxNodeIdGenerator } from '@/core/parser/nodes';
 import { type DbmlProjectLayout, MemoryProjectLayout } from './projectLayout';
 import { fileDependencies } from './queries/fileDependencies';
+import { Filepath } from '@/core/types/filepath';
 
 // Re-export utilities
 export { splitQualifiedIdentifier, unescapeString, escapeString, formatRecordValue, isValidIdentifier, addDoubleQuoteIfNeeded };
@@ -39,7 +40,10 @@ export default class Compiler {
   nodeIdGenerator = new SyntaxNodeIdGenerator();
 
   symbolIdGenerator = new NodeSymbolIdGenerator();
-  symbolFactory = new SymbolFactory(this.symbolIdGenerator);
+
+  symbolFactory (filepath: Filepath = DEFAULT_ENTRY): SymbolFactory {
+    return new SymbolFactory(this.symbolIdGenerator, filepath);
+  }
 
   setSource (layout: DbmlProjectLayout) {
     this.layout = layout;
