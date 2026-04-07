@@ -37,6 +37,7 @@ import {
 import NodeFactory from '@/core/parser/factory';
 import { hasTrailingNewLines, hasTrailingSpaces, isAtStartOfLine } from '@/core/lexer/utils';
 import { isAsKeyword } from '@/core/utils/expression';
+import { Filepath } from '../types/filepath';
 
 // A class of errors that represent a parsing failure and contain the node that was partially parsed
 class PartialParsingError<T extends SyntaxNode> {
@@ -65,10 +66,13 @@ export default class Parser {
 
   private source: string;
 
-  constructor (source: string, tokens: SyntaxToken[], nodeIdGenerator: SyntaxNodeIdGenerator) {
+  private filepath: Filepath;
+
+  constructor (filepath: Filepath, source: string, tokens: SyntaxToken[], nodeIdGenerator: SyntaxNodeIdGenerator) {
     this.source = source;
     this.tokens = tokens;
-    this.nodeFactory = new NodeFactory(nodeIdGenerator);
+    this.nodeFactory = new NodeFactory(nodeIdGenerator, filepath);
+    this.filepath = filepath;
   }
 
   private isAtEnd (): boolean {
