@@ -17,6 +17,8 @@ import {
   CallExpressionNode,
   UseDeclarationNode,
   UseSpecifierNode,
+  WildcardNode,
+  UseSpecifierListNode,
 } from '@/core/parser/nodes';
 import type { ElementKind, ImportKind, SettingName } from '@/core/types/keywords';
 import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
@@ -199,6 +201,11 @@ export function isUseDeclaration (node: SyntaxNode): node is UseDeclarationNode 
 // Return whether `node` is an UseDeclarationNode with import kind `kind`
 export function isUseSpecifier (node: SyntaxNode, kind?: ImportKind): node is UseSpecifierNode {
   return node instanceof UseSpecifierNode && (kind === undefined || node.isKind(kind));
+}
+
+// Return whether `node` is a WilcardNode inside use all import
+export function isWildcardSpecifier (node: SyntaxNode): node is WildcardNode {
+  return node instanceof WildcardNode && !!node.parentOfKind(UseDeclarationNode) && !node.parentOfKind(UseSpecifierListNode); // inside UseDeclarationNode but outside UseSepcifierListNode
 }
 
 // Return whether `node` is a ProgramNode

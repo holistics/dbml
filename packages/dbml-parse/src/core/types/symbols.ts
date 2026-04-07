@@ -1,6 +1,7 @@
 import { SyntaxNode } from '@/core/parser/nodes';
 import type { Internable } from '@/core/types/internable';
 import { Filepath } from './filepath';
+import { ImportKind } from './keywords';
 
 export const enum SymbolKind {
   Schema = 'Schema',
@@ -33,6 +34,8 @@ export const enum SymbolKind {
   Ref = 'Ref',
 
   Program = 'Program',
+
+  Use = 'Use',
 }
 
 declare const __nodeSymbolBrand: unique symbol;
@@ -87,7 +90,19 @@ export class NodeSymbol implements Internable<InternedNodeSymbol> {
 export class InjectedSymbol extends NodeSymbol {
   name: string;
 
-  constructor ({ kind, declaration, name }: { kind: SymbolKind; declaration?: SyntaxNode; name: string }, id: NodeSymbolId, filepath: Filepath) {
+  constructor (
+    {
+      kind,
+      declaration,
+      name,
+    }: {
+      kind: SymbolKind;
+      declaration?: SyntaxNode;
+      name: string;
+    },
+    id: NodeSymbolId,
+    filepath: Filepath,
+  ) {
     super({ kind, declaration }, id, filepath);
     this.name = name;
   }
@@ -97,7 +112,17 @@ export class SchemaSymbol extends NodeSymbol {
   name: string;
   parent?: SchemaSymbol;
 
-  constructor ({ name, parent }: { name: string; parent?: SchemaSymbol }, id: NodeSymbolId, filepath: Filepath) {
+  constructor (
+    {
+      name,
+      parent,
+    }: {
+      name: string;
+      parent?: SchemaSymbol;
+    },
+    id: NodeSymbolId,
+    filepath: Filepath,
+  ) {
     super({ kind: SymbolKind.Schema }, id, filepath);
     this.name = name;
     this.parent = parent;
@@ -106,5 +131,46 @@ export class SchemaSymbol extends NodeSymbol {
   get qualifiedName (): string[] {
     if (!this.parent) return [this.name];
     return [...this.parent.qualifiedName, this.name];
+  }
+}
+
+export enum UseSpecifierPatternKind {
+  Exact, // Selective use
+  All, // *
+}
+
+// The item pattern
+// e.g. use { <kind> <name> } from <filepath>
+//            ^^^^^^^^^^^^^
+//             pattern "Exact"
+// e.g. use * from <filepath>
+//          ^
+//        pattern "All"
+export type UseSpecifierPattern = {
+  type: UseSpecifierPatternKind.Exact;
+  importKind?: ImportKind;
+  fullname?: string[]; // schema qualified name
+} | {
+  type: UseSpecifierPatternKind.All;
+};
+
+export class UseSymbol extends NodeSymbol {
+  absolutePath?: Filepath;
+  specifier: UseSpecifierPattern;
+
+  constructor (
+    {
+      absolutePath,
+      specifier,
+    }: {
+      absolutePath?: Filepath;
+      specifier: UseSpecifierPattern;
+    },
+    id: NodeSymbolId,
+    filepath: Filepath,
+  ) {
+    super({ kind: SymbolKind.Use }, id, filepath);
+    this.absolutePath = absolutePath;
+    this.specifier = specifier;
   }
 }

@@ -29,6 +29,7 @@ import {
   UseDeclarationNode,
   UseSpecifierListNode,
   UseSpecifierNode,
+  WildcardNode,
 } from '@/core/parser/nodes';
 import { extractVariableNode, isAsKeyword, isExpressionAnIdentifierNode } from '../utils/expression';
 
@@ -196,6 +197,8 @@ function markInvalidNode (node: SyntaxNode) {
   } else if (node instanceof UseSpecifierNode) {
     markInvalid(node.importKind);
     markInvalid(node.name);
+  } else if (node instanceof WildcardNode) {
+    markInvalid(node.token);
   } else if (node instanceof EmptyNode) {
     // DummyNode has no children to mark invalid
   } else {
@@ -321,6 +324,10 @@ export function getMemberChain (node: SyntaxNode): Readonly<(SyntaxNode | Syntax
 
   if (node instanceof UseSpecifierNode) {
     return filterUndefined(node.importKind, node.name);
+  }
+
+  if (node instanceof WildcardNode) {
+    return filterUndefined(node.token);
   }
 
   if (node instanceof GroupExpressionNode) {

@@ -1,6 +1,6 @@
 import {
   CallExpressionNode,
-  FunctionExpressionNode, ListExpressionNode, PrefixExpressionNode,
+  ListExpressionNode, PrefixExpressionNode,
   ArrayNode,
 } from '@/core/parser/nodes';
 import type { SyntaxNode } from '@/core/parser/nodes';
@@ -12,10 +12,9 @@ import {
   isExpressionAQuotedString, isExpressionAVariableNode,
   isExpressionASignedNumberExpression, getNumberTextFromExpression,
 } from '@/core/utils/expression';
-import { CompileError } from '@/core/errors';
 import type { InlineRef, ColumnType } from '@/core/types/schemaJson';
 
-export function interpretColumnType (typeNode?: SyntaxNode, errors?: CompileError[]): ColumnType {
+export function interpretColumnType (typeNode?: SyntaxNode): ColumnType {
   // Skip ListExpressionNode (settings bracket [pk, ...]) - it's not a type
   let rawTypeNode: SyntaxNode | undefined = typeNode instanceof ListExpressionNode ? undefined : typeNode;
   let columnType: ColumnType = { schemaName: null, type_name: '', args: null };
@@ -77,8 +76,8 @@ export function interpretColumnType (typeNode?: SyntaxNode, errors?: CompileErro
   return columnType;
 }
 
-export function interpretInlineRefs (refs: any[], errors: CompileError[]): InlineRef[] {
-  const inline_refs: InlineRef[] = [];
+export function interpretInlineRefs (refs: any[]): InlineRef[] {
+  const inlineRefs: InlineRef[] = [];
 
   for (const ref of refs) {
     if (!ref.value) continue;
@@ -88,19 +87,19 @@ export function interpretInlineRefs (refs: any[], errors: CompileError[]): Inlin
       const rightTuple = destructureComplexVariableTuple(ref.value.rightExpression);
       if (rightTuple && op && isRelationshipOp(op)) {
         const vars = rightTuple.variables;
-        const tableName = vars.map((v: any) => v.expression.variable?.value ?? '').at(-1) ?? '';
-        const schemaName = vars.length > 1 ? vars.slice(0, -1).map((v: any) => v.expression.variable?.value ?? '').join('.') : null;
+        const tableName = vars.map((v) => v.expression.variable?.value ?? '').at(-1) ?? '';
+        const schemaName = vars.length > 1 ? vars.slice(0, -1).map((v) => v.expression.variable?.value ?? '').join('.') : null;
         const fieldNames = rightTuple.tupleElements.length > 0
-          ? rightTuple.tupleElements.map((e: any) => e.expression.variable?.value ?? '')
+          ? rightTuple.tupleElements.map((e) => e.expression.variable?.value ?? '')
           : [];
-        inline_refs.push({ schemaName, tableName, fieldNames, relation: op, token: getTokenPosition(ref) });
+        inlineRefs.push({ schemaName, tableName, fieldNames, relation: op, token: getTokenPosition(ref) });
       }
     } else if (ref.value instanceof PrefixExpressionNode && isRelationshipOp(ref.value.op?.value)) {
       // Handle prefix form: `ref: > users.id`
-      const op = ref.value.op!.value as '>' | '<' | '-' | '<>';
+      const op = ref.value.op.value as '>' | '<' | '-' | '<>';
       const targetTuple = destructureComplexVariableTuple(ref.value.expression);
       if (targetTuple) {
-        const vars = targetTuple.variables.map((v: any) => v.expression.variable?.value ?? '');
+        const vars = targetTuple.variables.map((v) => v.expression.variable?.value ?? '');
         let tableName: string;
         let schemaName: string | null;
         let fieldNames: string[];
@@ -108,17 +107,17 @@ export function interpretInlineRefs (refs: any[], errors: CompileError[]): Inlin
         if (targetTuple.tupleElements.length > 0) {
           tableName = vars.at(-1) ?? '';
           schemaName = vars.length > 1 ? vars.slice(0, -1).join('.') : null;
-          fieldNames = targetTuple.tupleElements.map((e: any) => e.expression.variable?.value ?? '');
+          fieldNames = targetTuple.tupleElements.map((e) => e.expression.variable?.value ?? '');
         } else {
           // table.column or schema.table.column
           fieldNames = vars.length > 0 ? [vars.at(-1)!] : [];
           tableName = vars.length > 1 ? vars.at(-2)! : '';
           schemaName = vars.length > 2 ? vars.slice(0, -2).join('.') : null;
         }
-        inline_refs.push({ schemaName, tableName, fieldNames, relation: op, token: getTokenPosition(ref) });
+        inlineRefs.push({ schemaName, tableName, fieldNames, relation: op, token: getTokenPosition(ref) });
       }
     }
   }
 
-  return inline_refs;
+  return inlineRefs;
 }

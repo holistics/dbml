@@ -25,6 +25,7 @@ import {
   UseDeclarationNode,
   UseSpecifierListNode,
   UseSpecifierNode,
+  WildcardNode,
 } from '@/core/parser/nodes';
 import Report from '@/core/report';
 import { Compiler, SyntaxToken } from '@/index';
@@ -273,6 +274,12 @@ export function print (source: string, ast: SyntaxNode): string {
         const spec = node as UseSpecifierNode;
         if (spec.importKind) collectTokens(spec.importKind);
         if (spec.name) collectTokens(spec.name);
+        break;
+      }
+
+      case SyntaxNodeKind.WILDCARD: {
+        const wildcard = node as WildcardNode;
+        if (wildcard.token) collectTokens(wildcard.token);
         break;
       }
 

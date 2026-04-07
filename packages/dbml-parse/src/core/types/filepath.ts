@@ -1,5 +1,6 @@
 import { basename, dirname, extname, isAbsolute, join, normalize, relative, resolve } from 'pathe';
 import type { Internable } from './internable';
+import { DBML_EXT } from '@/constants';
 
 declare const __filepathIdBrand: unique symbol;
 export type FilepathId = string & { [__filepathIdBrand]: true };
@@ -72,4 +73,13 @@ export class Filepath implements Internable<FilepathId> {
   static isRelative (p: string): boolean {
     return !isAbsolute(p);
   }
+}
+
+// Resolve the relativePath
+// based on the currentFilepath
+// Append `.dbml` if relativePath does not ends with `.dbml`
+export function resolveImportFilepath (currentFilepath: Filepath, relativePath: string): Filepath | undefined {
+  if (!Filepath.isRelative(relativePath)) return undefined;
+  const resolved = Filepath.resolve(currentFilepath.dirname, relativePath);
+  return resolved.absolute.endsWith(DBML_EXT) ? resolved : Filepath.from(resolved.absolute + DBML_EXT);
 }

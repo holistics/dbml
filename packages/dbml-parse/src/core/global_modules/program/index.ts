@@ -16,10 +16,16 @@ export const programModule: GlobalModule = {
       return Report.create(PASS_THROUGH);
     }
 
-    return new Report(compiler.symbolFactory.create(NodeSymbol, {
-      kind: SymbolKind.Program,
-      declaration: node,
-    }, node.filepath));
+    return Report.create(
+      compiler.symbolFactory.create(
+        NodeSymbol,
+        {
+          kind: SymbolKind.Program,
+          declaration: node,
+        },
+        node.filepath,
+      ),
+    );
   },
 
   nestedSymbols (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol[]> | Report<PassThrough> {

@@ -36,6 +36,7 @@ import {
   UseDeclarationNode,
   UseSpecifierListNode,
   UseSpecifierNode,
+  WildcardNode,
 } from '@/core/parser/nodes';
 import NodeFactory from '@/core/parser/factory';
 import { hasTrailingNewLines, hasTrailingSpaces, isAtStartOfLine } from '@/core/lexer/utils';
@@ -238,8 +239,7 @@ export default class Parser {
   private useDeclaration (): UseDeclarationNode {
     const args: {
       useKeyword?: SyntaxToken;
-      star?: SyntaxToken;
-      specifiers?: UseSpecifierListNode;
+      specifiers?: UseSpecifierListNode | WildcardNode;
       fromKeyword?: SyntaxToken;
       importPath?: SyntaxToken;
     } = {};
@@ -251,7 +251,7 @@ export default class Parser {
 
     // Entire-file use: use * from './path.dbml'
     if (this.peek().kind === SyntaxTokenKind.OP && this.peek().value === '*') {
-      args.star = this.advance();
+      args.specifiers = this.extractOperand() as WildcardNode;
     } else {
       // Selective use: use { ... } from './path.dbml'
       try {
@@ -266,7 +266,7 @@ export default class Parser {
     }
 
     // consume 'from' keyword
-    const afterWhat = args.star ? "'*'" : 'specifier list';
+    const afterWhat = args.specifiers instanceof WildcardNode ? "'*'" : 'specifier list';
     if (isFromKeyword(this.peek())) {
       args.fromKeyword = this.advance();
     } else {
@@ -931,7 +931,15 @@ export default class Parser {
     | BlockExpressionNode
     | TupleExpressionNode
     | FunctionExpressionNode
-    | GroupExpressionNode {
+    | GroupExpressionNode
+    | WildcardNode {
+    if (this.check(SyntaxTokenKind.WILDCARD)) {
+      this.advance();
+      return this.nodeFactory.create(WildcardNode, {
+        token: this.previous(),
+      });
+    }
+
     if (
       this.check(
         SyntaxTokenKind.NUMERIC_LITERAL,
@@ -1408,7 +1416,7 @@ const infixBindingPowerMap: {
   [index: string]: { left: number; right: number } | undefined;
 } = {
   '+': { left: 9, right: 10 },
-  '*': { left: 11, right: 12 },
+  // '*': { left: 11, right: 12 },
   '-': { left: 9, right: 10 },
   '/': { left: 11, right: 12 },
   '%': { left: 11, right: 12 },

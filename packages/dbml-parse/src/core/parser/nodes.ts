@@ -151,6 +151,8 @@ export enum SyntaxNodeKind {
   COMMA_EXPRESSION = '<comma-expression>',
   EMPTY = '<dummy>',
   ARRAY = '<array>',
+
+  WILDCARD = '<wildcard>',
 }
 
 // Form: (<element-declaration> | <use-declaration>)*
@@ -206,9 +208,7 @@ export class ProgramNode extends SyntaxNode {
 export class UseDeclarationNode extends SyntaxNode {
   useKeyword?: SyntaxToken; // 'use' or 'reuse'
 
-  star?: SyntaxToken; // The '*' token for entire-file imports
-
-  specifiers?: UseSpecifierListNode;
+  specifiers?: UseSpecifierListNode | WildcardNode;
 
   fromKeyword?: SyntaxToken;
 
@@ -217,14 +217,12 @@ export class UseDeclarationNode extends SyntaxNode {
   constructor (
     {
       useKeyword,
-      star,
       specifiers,
       fromKeyword,
       path,
     }: {
       useKeyword?: SyntaxToken;
-      star?: SyntaxToken;
-      specifiers?: UseSpecifierListNode;
+      specifiers?: UseSpecifierListNode | WildcardNode;
       fromKeyword?: SyntaxToken;
       path?: SyntaxToken;
     },
@@ -235,10 +233,9 @@ export class UseDeclarationNode extends SyntaxNode {
       id,
       SyntaxNodeKind.USE_DECLARATION,
       filepath,
-      [useKeyword, star, specifiers, fromKeyword, path],
+      [useKeyword, specifiers, fromKeyword, path],
     );
     this.useKeyword = useKeyword;
-    this.star = star;
     this.specifiers = specifiers;
     this.fromKeyword = fromKeyword;
     this.importPath = path;
@@ -863,6 +860,26 @@ export class LiteralNode extends SyntaxNode {
       [literal],
     );
     this.literal = literal;
+  }
+}
+
+// A wildcard pattern (*) expression
+// Currently, also support standalone (*)
+export class WildcardNode extends SyntaxNode {
+  token?: SyntaxToken;
+
+  constructor (
+    { token }: { token?: SyntaxToken },
+    id: SyntaxNodeId,
+    filepath: Filepath,
+  ) {
+    super(
+      id,
+      SyntaxNodeKind.WILDCARD,
+      filepath,
+      [token],
+    );
+    this.token = token;
   }
 }
 
