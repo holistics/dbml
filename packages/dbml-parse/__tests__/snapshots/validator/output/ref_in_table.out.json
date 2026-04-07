@@ -58,104 +58,33 @@
       "body": [
         {
           "children": {
-            "type": {
-              "context": {
-                "id": "<identifier>:Table@[L0:C0, L0:C5]",
-                "snippet": "Table"
-              },
-              "end": 5,
-              "endPos": {
-                "offset": 5,
-                "line": 0,
-                "column": 5
-              },
-              "isInvalid": false,
-              "kind": "<identifier>",
-              "leadingInvalid": "",
-              "leadingTrivia": "",
-              "start": 0,
-              "startPos": {
-                "offset": 0,
-                "line": 0,
-                "column": 0
-              },
-              "trailingInvalid": "",
-              "trailingTrivia": " ",
-              "value": "Table"
-            },
-            "name": {
-              "children": {
-                "expression": {
-                  "children": {
-                    "variable": {
-                      "context": {
-                        "id": "<identifier>:A@[L0:C6, L0:C7]",
-                        "snippet": "A"
-                      },
-                      "end": 7,
-                      "endPos": {
-                        "offset": 7,
-                        "line": 0,
-                        "column": 7
-                      },
-                      "isInvalid": false,
-                      "kind": "<identifier>",
-                      "leadingInvalid": "",
-                      "leadingTrivia": "",
-                      "start": 6,
-                      "startPos": {
-                        "offset": 6,
-                        "line": 0,
-                        "column": 6
-                      },
-                      "trailingInvalid": "",
-                      "trailingTrivia": " ",
-                      "value": "A"
-                    }
-                  },
-                  "context": {
-                    "id": "<variable>:A@[L0:C6, L0:C7]",
-                    "snippet": "A"
-                  },
-                  "end": 7,
-                  "endPos": {
-                    "offset": 7,
-                    "line": 0,
-                    "column": 7
-                  },
-                  "fullEnd": 8,
-                  "fullStart": 6,
-                  "kind": "<variable>",
-                  "start": 6,
-                  "startPos": {
-                    "offset": 6,
-                    "line": 0,
-                    "column": 6
-                  }
-                }
-              },
-              "context": {
-                "id": "<primary-expression>@[L0:C6, L0:C7]",
-                "snippet": "A"
-              },
-              "end": 7,
-              "endPos": {
-                "offset": 7,
-                "line": 0,
-                "column": 7
-              },
-              "fullEnd": 8,
-              "fullStart": 6,
-              "kind": "<primary-expression>",
-              "start": 6,
-              "startPos": {
-                "offset": 6,
-                "line": 0,
-                "column": 6
-              }
-            },
             "body": {
               "children": {
+                "blockCloseBrace": {
+                  "context": {
+                    "id": "<rbrace>:}@[L3:C0, L3:C1]",
+                    "snippet": "}"
+                  },
+                  "end": 42,
+                  "endPos": {
+                    "offset": 42,
+                    "line": 3,
+                    "column": 1
+                  },
+                  "isInvalid": false,
+                  "kind": "<rbrace>",
+                  "leadingInvalid": "",
+                  "leadingTrivia": "",
+                  "start": 41,
+                  "startPos": {
+                    "offset": 41,
+                    "line": 3,
+                    "column": 0
+                  },
+                  "trailingInvalid": "",
+                  "trailingTrivia": "\n",
+                  "value": "}"
+                },
                 "blockOpenBrace": {
                   "context": {
                     "id": "<lbrace>:{@[L0:C8, L0:C9]",
@@ -184,77 +113,6 @@
                 "body": [
                   {
                     "children": {
-                      "callee": {
-                        "children": {
-                          "expression": {
-                            "children": {
-                              "variable": {
-                                "context": {
-                                  "id": "<identifier>:id@[L1:C4, L1:C6]",
-                                  "snippet": "id"
-                                },
-                                "end": 16,
-                                "endPos": {
-                                  "offset": 16,
-                                  "line": 1,
-                                  "column": 6
-                                },
-                                "isInvalid": false,
-                                "kind": "<identifier>",
-                                "leadingInvalid": "",
-                                "leadingTrivia": "    ",
-                                "start": 14,
-                                "startPos": {
-                                  "offset": 14,
-                                  "line": 1,
-                                  "column": 4
-                                },
-                                "trailingInvalid": "",
-                                "trailingTrivia": " ",
-                                "value": "id"
-                              }
-                            },
-                            "context": {
-                              "id": "<variable>:id@[L1:C4, L1:C6]",
-                              "snippet": "id"
-                            },
-                            "end": 16,
-                            "endPos": {
-                              "offset": 16,
-                              "line": 1,
-                              "column": 6
-                            },
-                            "fullEnd": 17,
-                            "fullStart": 10,
-                            "kind": "<variable>",
-                            "start": 14,
-                            "startPos": {
-                              "offset": 14,
-                              "line": 1,
-                              "column": 4
-                            }
-                          }
-                        },
-                        "context": {
-                          "id": "<primary-expression>@[L1:C4, L1:C6]",
-                          "snippet": "id"
-                        },
-                        "end": 16,
-                        "endPos": {
-                          "offset": 16,
-                          "line": 1,
-                          "column": 6
-                        },
-                        "fullEnd": 17,
-                        "fullStart": 10,
-                        "kind": "<primary-expression>",
-                        "start": 14,
-                        "startPos": {
-                          "offset": 14,
-                          "line": 1,
-                          "column": 4
-                        }
-                      },
                       "args": [
                         {
                           "children": {
@@ -327,7 +185,78 @@
                             "column": 7
                           }
                         }
-                      ]
+                      ],
+                      "callee": {
+                        "children": {
+                          "expression": {
+                            "children": {
+                              "variable": {
+                                "context": {
+                                  "id": "<identifier>:id@[L1:C4, L1:C6]",
+                                  "snippet": "id"
+                                },
+                                "end": 16,
+                                "endPos": {
+                                  "offset": 16,
+                                  "line": 1,
+                                  "column": 6
+                                },
+                                "isInvalid": false,
+                                "kind": "<identifier>",
+                                "leadingInvalid": "",
+                                "leadingTrivia": "    ",
+                                "start": 14,
+                                "startPos": {
+                                  "offset": 14,
+                                  "line": 1,
+                                  "column": 4
+                                },
+                                "trailingInvalid": "",
+                                "trailingTrivia": " ",
+                                "value": "id"
+                              }
+                            },
+                            "context": {
+                              "id": "<variable>:id@[L1:C4, L1:C6]",
+                              "snippet": "id"
+                            },
+                            "end": 16,
+                            "endPos": {
+                              "offset": 16,
+                              "line": 1,
+                              "column": 6
+                            },
+                            "fullEnd": 17,
+                            "fullStart": 10,
+                            "kind": "<variable>",
+                            "start": 14,
+                            "startPos": {
+                              "offset": 14,
+                              "line": 1,
+                              "column": 4
+                            }
+                          }
+                        },
+                        "context": {
+                          "id": "<primary-expression>@[L1:C4, L1:C6]",
+                          "snippet": "id"
+                        },
+                        "end": 16,
+                        "endPos": {
+                          "offset": 16,
+                          "line": 1,
+                          "column": 6
+                        },
+                        "fullEnd": 17,
+                        "fullStart": 10,
+                        "kind": "<primary-expression>",
+                        "start": 14,
+                        "startPos": {
+                          "offset": 14,
+                          "line": 1,
+                          "column": 4
+                        }
+                      }
                     },
                     "context": {
                       "id": "<function-application>@[L1:C4, L1:C14]",
@@ -362,77 +291,6 @@
                   },
                   {
                     "children": {
-                      "callee": {
-                        "children": {
-                          "expression": {
-                            "children": {
-                              "variable": {
-                                "context": {
-                                  "id": "<identifier>:code@[L2:C4, L2:C8]",
-                                  "snippet": "code"
-                                },
-                                "end": 33,
-                                "endPos": {
-                                  "offset": 33,
-                                  "line": 2,
-                                  "column": 8
-                                },
-                                "isInvalid": false,
-                                "kind": "<identifier>",
-                                "leadingInvalid": "",
-                                "leadingTrivia": "    ",
-                                "start": 29,
-                                "startPos": {
-                                  "offset": 29,
-                                  "line": 2,
-                                  "column": 4
-                                },
-                                "trailingInvalid": "",
-                                "trailingTrivia": " ",
-                                "value": "code"
-                              }
-                            },
-                            "context": {
-                              "id": "<variable>:code@[L2:C4, L2:C8]",
-                              "snippet": "code"
-                            },
-                            "end": 33,
-                            "endPos": {
-                              "offset": 33,
-                              "line": 2,
-                              "column": 8
-                            },
-                            "fullEnd": 34,
-                            "fullStart": 25,
-                            "kind": "<variable>",
-                            "start": 29,
-                            "startPos": {
-                              "offset": 29,
-                              "line": 2,
-                              "column": 4
-                            }
-                          }
-                        },
-                        "context": {
-                          "id": "<primary-expression>@[L2:C4, L2:C8]",
-                          "snippet": "code"
-                        },
-                        "end": 33,
-                        "endPos": {
-                          "offset": 33,
-                          "line": 2,
-                          "column": 8
-                        },
-                        "fullEnd": 34,
-                        "fullStart": 25,
-                        "kind": "<primary-expression>",
-                        "start": 29,
-                        "startPos": {
-                          "offset": 29,
-                          "line": 2,
-                          "column": 4
-                        }
-                      },
                       "args": [
                         {
                           "children": {
@@ -505,7 +363,78 @@
                             "column": 9
                           }
                         }
-                      ]
+                      ],
+                      "callee": {
+                        "children": {
+                          "expression": {
+                            "children": {
+                              "variable": {
+                                "context": {
+                                  "id": "<identifier>:code@[L2:C4, L2:C8]",
+                                  "snippet": "code"
+                                },
+                                "end": 33,
+                                "endPos": {
+                                  "offset": 33,
+                                  "line": 2,
+                                  "column": 8
+                                },
+                                "isInvalid": false,
+                                "kind": "<identifier>",
+                                "leadingInvalid": "",
+                                "leadingTrivia": "    ",
+                                "start": 29,
+                                "startPos": {
+                                  "offset": 29,
+                                  "line": 2,
+                                  "column": 4
+                                },
+                                "trailingInvalid": "",
+                                "trailingTrivia": " ",
+                                "value": "code"
+                              }
+                            },
+                            "context": {
+                              "id": "<variable>:code@[L2:C4, L2:C8]",
+                              "snippet": "code"
+                            },
+                            "end": 33,
+                            "endPos": {
+                              "offset": 33,
+                              "line": 2,
+                              "column": 8
+                            },
+                            "fullEnd": 34,
+                            "fullStart": 25,
+                            "kind": "<variable>",
+                            "start": 29,
+                            "startPos": {
+                              "offset": 29,
+                              "line": 2,
+                              "column": 4
+                            }
+                          }
+                        },
+                        "context": {
+                          "id": "<primary-expression>@[L2:C4, L2:C8]",
+                          "snippet": "code"
+                        },
+                        "end": 33,
+                        "endPos": {
+                          "offset": 33,
+                          "line": 2,
+                          "column": 8
+                        },
+                        "fullEnd": 34,
+                        "fullStart": 25,
+                        "kind": "<primary-expression>",
+                        "start": 29,
+                        "startPos": {
+                          "offset": 29,
+                          "line": 2,
+                          "column": 4
+                        }
+                      }
                     },
                     "context": {
                       "id": "<function-application>@[L2:C4, L2:C15]",
@@ -538,32 +467,7 @@
                       "references": []
                     }
                   }
-                ],
-                "blockCloseBrace": {
-                  "context": {
-                    "id": "<rbrace>:}@[L3:C0, L3:C1]",
-                    "snippet": "}"
-                  },
-                  "end": 42,
-                  "endPos": {
-                    "offset": 42,
-                    "line": 3,
-                    "column": 1
-                  },
-                  "isInvalid": false,
-                  "kind": "<rbrace>",
-                  "leadingInvalid": "",
-                  "leadingTrivia": "",
-                  "start": 41,
-                  "startPos": {
-                    "offset": 41,
-                    "line": 3,
-                    "column": 0
-                  },
-                  "trailingInvalid": "",
-                  "trailingTrivia": "\n",
-                  "value": "}"
-                }
+                ]
               },
               "context": {
                 "id": "<block-expression>@[L0:C8, L3:C1]",
@@ -585,8 +489,104 @@
                 "column": 8
               }
             },
+            "name": {
+              "children": {
+                "expression": {
+                  "children": {
+                    "variable": {
+                      "context": {
+                        "id": "<identifier>:A@[L0:C6, L0:C7]",
+                        "snippet": "A"
+                      },
+                      "end": 7,
+                      "endPos": {
+                        "offset": 7,
+                        "line": 0,
+                        "column": 7
+                      },
+                      "isInvalid": false,
+                      "kind": "<identifier>",
+                      "leadingInvalid": "",
+                      "leadingTrivia": "",
+                      "start": 6,
+                      "startPos": {
+                        "offset": 6,
+                        "line": 0,
+                        "column": 6
+                      },
+                      "trailingInvalid": "",
+                      "trailingTrivia": " ",
+                      "value": "A"
+                    }
+                  },
+                  "context": {
+                    "id": "<variable>:A@[L0:C6, L0:C7]",
+                    "snippet": "A"
+                  },
+                  "end": 7,
+                  "endPos": {
+                    "offset": 7,
+                    "line": 0,
+                    "column": 7
+                  },
+                  "fullEnd": 8,
+                  "fullStart": 6,
+                  "kind": "<variable>",
+                  "start": 6,
+                  "startPos": {
+                    "offset": 6,
+                    "line": 0,
+                    "column": 6
+                  }
+                }
+              },
+              "context": {
+                "id": "<primary-expression>@[L0:C6, L0:C7]",
+                "snippet": "A"
+              },
+              "end": 7,
+              "endPos": {
+                "offset": 7,
+                "line": 0,
+                "column": 7
+              },
+              "fullEnd": 8,
+              "fullStart": 6,
+              "kind": "<primary-expression>",
+              "start": 6,
+              "startPos": {
+                "offset": 6,
+                "line": 0,
+                "column": 6
+              }
+            },
             "parent": {
               "context": {}
+            },
+            "type": {
+              "context": {
+                "id": "<identifier>:Table@[L0:C0, L0:C5]",
+                "snippet": "Table"
+              },
+              "end": 5,
+              "endPos": {
+                "offset": 5,
+                "line": 0,
+                "column": 5
+              },
+              "isInvalid": false,
+              "kind": "<identifier>",
+              "leadingInvalid": "",
+              "leadingTrivia": "",
+              "start": 0,
+              "startPos": {
+                "offset": 0,
+                "line": 0,
+                "column": 0
+              },
+              "trailingInvalid": "",
+              "trailingTrivia": " ",
+              "value": "Table"
             }
           },
           "context": {
@@ -636,104 +636,33 @@
         },
         {
           "children": {
-            "type": {
-              "context": {
-                "id": "<identifier>:Table@[L5:C0, L5:C5]",
-                "snippet": "Table"
-              },
-              "end": 49,
-              "endPos": {
-                "offset": 49,
-                "line": 5,
-                "column": 5
-              },
-              "isInvalid": false,
-              "kind": "<identifier>",
-              "leadingInvalid": "",
-              "leadingTrivia": "\n",
-              "start": 44,
-              "startPos": {
-                "offset": 44,
-                "line": 5,
-                "column": 0
-              },
-              "trailingInvalid": "",
-              "trailingTrivia": " ",
-              "value": "Table"
-            },
-            "name": {
-              "children": {
-                "expression": {
-                  "children": {
-                    "variable": {
-                      "context": {
-                        "id": "<identifier>:B@[L5:C6, L5:C7]",
-                        "snippet": "B"
-                      },
-                      "end": 51,
-                      "endPos": {
-                        "offset": 51,
-                        "line": 5,
-                        "column": 7
-                      },
-                      "isInvalid": false,
-                      "kind": "<identifier>",
-                      "leadingInvalid": "",
-                      "leadingTrivia": "",
-                      "start": 50,
-                      "startPos": {
-                        "offset": 50,
-                        "line": 5,
-                        "column": 6
-                      },
-                      "trailingInvalid": "",
-                      "trailingTrivia": " ",
-                      "value": "B"
-                    }
-                  },
-                  "context": {
-                    "id": "<variable>:B@[L5:C6, L5:C7]",
-                    "snippet": "B"
-                  },
-                  "end": 51,
-                  "endPos": {
-                    "offset": 51,
-                    "line": 5,
-                    "column": 7
-                  },
-                  "fullEnd": 52,
-                  "fullStart": 50,
-                  "kind": "<variable>",
-                  "start": 50,
-                  "startPos": {
-                    "offset": 50,
-                    "line": 5,
-                    "column": 6
-                  }
-                }
-              },
-              "context": {
-                "id": "<primary-expression>@[L5:C6, L5:C7]",
-                "snippet": "B"
-              },
-              "end": 51,
-              "endPos": {
-                "offset": 51,
-                "line": 5,
-                "column": 7
-              },
-              "fullEnd": 52,
-              "fullStart": 50,
-              "kind": "<primary-expression>",
-              "start": 50,
-              "startPos": {
-                "offset": 50,
-                "line": 5,
-                "column": 6
-              }
-            },
             "body": {
               "children": {
+                "blockCloseBrace": {
+                  "context": {
+                    "id": "<rbrace>:}@[L8:C0, L8:C1]",
+                    "snippet": "}"
+                  },
+                  "end": 86,
+                  "endPos": {
+                    "offset": 86,
+                    "line": 8,
+                    "column": 1
+                  },
+                  "isInvalid": false,
+                  "kind": "<rbrace>",
+                  "leadingInvalid": "",
+                  "leadingTrivia": "",
+                  "start": 85,
+                  "startPos": {
+                    "offset": 85,
+                    "line": 8,
+                    "column": 0
+                  },
+                  "trailingInvalid": "",
+                  "trailingTrivia": "\n",
+                  "value": "}"
+                },
                 "blockOpenBrace": {
                   "context": {
                     "id": "<lbrace>:{@[L5:C8, L5:C9]",
@@ -762,77 +691,6 @@
                 "body": [
                   {
                     "children": {
-                      "callee": {
-                        "children": {
-                          "expression": {
-                            "children": {
-                              "variable": {
-                                "context": {
-                                  "id": "<identifier>:id@[L6:C4, L6:C6]",
-                                  "snippet": "id"
-                                },
-                                "end": 60,
-                                "endPos": {
-                                  "offset": 60,
-                                  "line": 6,
-                                  "column": 6
-                                },
-                                "isInvalid": false,
-                                "kind": "<identifier>",
-                                "leadingInvalid": "",
-                                "leadingTrivia": "    ",
-                                "start": 58,
-                                "startPos": {
-                                  "offset": 58,
-                                  "line": 6,
-                                  "column": 4
-                                },
-                                "trailingInvalid": "",
-                                "trailingTrivia": " ",
-                                "value": "id"
-                              }
-                            },
-                            "context": {
-                              "id": "<variable>:id@[L6:C4, L6:C6]",
-                              "snippet": "id"
-                            },
-                            "end": 60,
-                            "endPos": {
-                              "offset": 60,
-                              "line": 6,
-                              "column": 6
-                            },
-                            "fullEnd": 61,
-                            "fullStart": 54,
-                            "kind": "<variable>",
-                            "start": 58,
-                            "startPos": {
-                              "offset": 58,
-                              "line": 6,
-                              "column": 4
-                            }
-                          }
-                        },
-                        "context": {
-                          "id": "<primary-expression>@[L6:C4, L6:C6]",
-                          "snippet": "id"
-                        },
-                        "end": 60,
-                        "endPos": {
-                          "offset": 60,
-                          "line": 6,
-                          "column": 6
-                        },
-                        "fullEnd": 61,
-                        "fullStart": 54,
-                        "kind": "<primary-expression>",
-                        "start": 58,
-                        "startPos": {
-                          "offset": 58,
-                          "line": 6,
-                          "column": 4
-                        }
-                      },
                       "args": [
                         {
                           "children": {
@@ -905,7 +763,78 @@
                             "column": 7
                           }
                         }
-                      ]
+                      ],
+                      "callee": {
+                        "children": {
+                          "expression": {
+                            "children": {
+                              "variable": {
+                                "context": {
+                                  "id": "<identifier>:id@[L6:C4, L6:C6]",
+                                  "snippet": "id"
+                                },
+                                "end": 60,
+                                "endPos": {
+                                  "offset": 60,
+                                  "line": 6,
+                                  "column": 6
+                                },
+                                "isInvalid": false,
+                                "kind": "<identifier>",
+                                "leadingInvalid": "",
+                                "leadingTrivia": "    ",
+                                "start": 58,
+                                "startPos": {
+                                  "offset": 58,
+                                  "line": 6,
+                                  "column": 4
+                                },
+                                "trailingInvalid": "",
+                                "trailingTrivia": " ",
+                                "value": "id"
+                              }
+                            },
+                            "context": {
+                              "id": "<variable>:id@[L6:C4, L6:C6]",
+                              "snippet": "id"
+                            },
+                            "end": 60,
+                            "endPos": {
+                              "offset": 60,
+                              "line": 6,
+                              "column": 6
+                            },
+                            "fullEnd": 61,
+                            "fullStart": 54,
+                            "kind": "<variable>",
+                            "start": 58,
+                            "startPos": {
+                              "offset": 58,
+                              "line": 6,
+                              "column": 4
+                            }
+                          }
+                        },
+                        "context": {
+                          "id": "<primary-expression>@[L6:C4, L6:C6]",
+                          "snippet": "id"
+                        },
+                        "end": 60,
+                        "endPos": {
+                          "offset": 60,
+                          "line": 6,
+                          "column": 6
+                        },
+                        "fullEnd": 61,
+                        "fullStart": 54,
+                        "kind": "<primary-expression>",
+                        "start": 58,
+                        "startPos": {
+                          "offset": 58,
+                          "line": 6,
+                          "column": 4
+                        }
+                      }
                     },
                     "context": {
                       "id": "<function-application>@[L6:C4, L6:C14]",
@@ -940,77 +869,6 @@
                   },
                   {
                     "children": {
-                      "callee": {
-                        "children": {
-                          "expression": {
-                            "children": {
-                              "variable": {
-                                "context": {
-                                  "id": "<identifier>:code@[L7:C4, L7:C8]",
-                                  "snippet": "code"
-                                },
-                                "end": 77,
-                                "endPos": {
-                                  "offset": 77,
-                                  "line": 7,
-                                  "column": 8
-                                },
-                                "isInvalid": false,
-                                "kind": "<identifier>",
-                                "leadingInvalid": "",
-                                "leadingTrivia": "    ",
-                                "start": 73,
-                                "startPos": {
-                                  "offset": 73,
-                                  "line": 7,
-                                  "column": 4
-                                },
-                                "trailingInvalid": "",
-                                "trailingTrivia": " ",
-                                "value": "code"
-                              }
-                            },
-                            "context": {
-                              "id": "<variable>:code@[L7:C4, L7:C8]",
-                              "snippet": "code"
-                            },
-                            "end": 77,
-                            "endPos": {
-                              "offset": 77,
-                              "line": 7,
-                              "column": 8
-                            },
-                            "fullEnd": 78,
-                            "fullStart": 69,
-                            "kind": "<variable>",
-                            "start": 73,
-                            "startPos": {
-                              "offset": 73,
-                              "line": 7,
-                              "column": 4
-                            }
-                          }
-                        },
-                        "context": {
-                          "id": "<primary-expression>@[L7:C4, L7:C8]",
-                          "snippet": "code"
-                        },
-                        "end": 77,
-                        "endPos": {
-                          "offset": 77,
-                          "line": 7,
-                          "column": 8
-                        },
-                        "fullEnd": 78,
-                        "fullStart": 69,
-                        "kind": "<primary-expression>",
-                        "start": 73,
-                        "startPos": {
-                          "offset": 73,
-                          "line": 7,
-                          "column": 4
-                        }
-                      },
                       "args": [
                         {
                           "children": {
@@ -1083,7 +941,78 @@
                             "column": 9
                           }
                         }
-                      ]
+                      ],
+                      "callee": {
+                        "children": {
+                          "expression": {
+                            "children": {
+                              "variable": {
+                                "context": {
+                                  "id": "<identifier>:code@[L7:C4, L7:C8]",
+                                  "snippet": "code"
+                                },
+                                "end": 77,
+                                "endPos": {
+                                  "offset": 77,
+                                  "line": 7,
+                                  "column": 8
+                                },
+                                "isInvalid": false,
+                                "kind": "<identifier>",
+                                "leadingInvalid": "",
+                                "leadingTrivia": "    ",
+                                "start": 73,
+                                "startPos": {
+                                  "offset": 73,
+                                  "line": 7,
+                                  "column": 4
+                                },
+                                "trailingInvalid": "",
+                                "trailingTrivia": " ",
+                                "value": "code"
+                              }
+                            },
+                            "context": {
+                              "id": "<variable>:code@[L7:C4, L7:C8]",
+                              "snippet": "code"
+                            },
+                            "end": 77,
+                            "endPos": {
+                              "offset": 77,
+                              "line": 7,
+                              "column": 8
+                            },
+                            "fullEnd": 78,
+                            "fullStart": 69,
+                            "kind": "<variable>",
+                            "start": 73,
+                            "startPos": {
+                              "offset": 73,
+                              "line": 7,
+                              "column": 4
+                            }
+                          }
+                        },
+                        "context": {
+                          "id": "<primary-expression>@[L7:C4, L7:C8]",
+                          "snippet": "code"
+                        },
+                        "end": 77,
+                        "endPos": {
+                          "offset": 77,
+                          "line": 7,
+                          "column": 8
+                        },
+                        "fullEnd": 78,
+                        "fullStart": 69,
+                        "kind": "<primary-expression>",
+                        "start": 73,
+                        "startPos": {
+                          "offset": 73,
+                          "line": 7,
+                          "column": 4
+                        }
+                      }
                     },
                     "context": {
                       "id": "<function-application>@[L7:C4, L7:C15]",
@@ -1116,32 +1045,7 @@
                       "references": []
                     }
                   }
-                ],
-                "blockCloseBrace": {
-                  "context": {
-                    "id": "<rbrace>:}@[L8:C0, L8:C1]",
-                    "snippet": "}"
-                  },
-                  "end": 86,
-                  "endPos": {
-                    "offset": 86,
-                    "line": 8,
-                    "column": 1
-                  },
-                  "isInvalid": false,
-                  "kind": "<rbrace>",
-                  "leadingInvalid": "",
-                  "leadingTrivia": "",
-                  "start": 85,
-                  "startPos": {
-                    "offset": 85,
-                    "line": 8,
-                    "column": 0
-                  },
-                  "trailingInvalid": "",
-                  "trailingTrivia": "\n",
-                  "value": "}"
-                }
+                ]
               },
               "context": {
                 "id": "<block-expression>@[L5:C8, L8:C1]",
@@ -1163,8 +1067,104 @@
                 "column": 8
               }
             },
+            "name": {
+              "children": {
+                "expression": {
+                  "children": {
+                    "variable": {
+                      "context": {
+                        "id": "<identifier>:B@[L5:C6, L5:C7]",
+                        "snippet": "B"
+                      },
+                      "end": 51,
+                      "endPos": {
+                        "offset": 51,
+                        "line": 5,
+                        "column": 7
+                      },
+                      "isInvalid": false,
+                      "kind": "<identifier>",
+                      "leadingInvalid": "",
+                      "leadingTrivia": "",
+                      "start": 50,
+                      "startPos": {
+                        "offset": 50,
+                        "line": 5,
+                        "column": 6
+                      },
+                      "trailingInvalid": "",
+                      "trailingTrivia": " ",
+                      "value": "B"
+                    }
+                  },
+                  "context": {
+                    "id": "<variable>:B@[L5:C6, L5:C7]",
+                    "snippet": "B"
+                  },
+                  "end": 51,
+                  "endPos": {
+                    "offset": 51,
+                    "line": 5,
+                    "column": 7
+                  },
+                  "fullEnd": 52,
+                  "fullStart": 50,
+                  "kind": "<variable>",
+                  "start": 50,
+                  "startPos": {
+                    "offset": 50,
+                    "line": 5,
+                    "column": 6
+                  }
+                }
+              },
+              "context": {
+                "id": "<primary-expression>@[L5:C6, L5:C7]",
+                "snippet": "B"
+              },
+              "end": 51,
+              "endPos": {
+                "offset": 51,
+                "line": 5,
+                "column": 7
+              },
+              "fullEnd": 52,
+              "fullStart": 50,
+              "kind": "<primary-expression>",
+              "start": 50,
+              "startPos": {
+                "offset": 50,
+                "line": 5,
+                "column": 6
+              }
+            },
             "parent": {
               "context": {}
+            },
+            "type": {
+              "context": {
+                "id": "<identifier>:Table@[L5:C0, L5:C5]",
+                "snippet": "Table"
+              },
+              "end": 49,
+              "endPos": {
+                "offset": 49,
+                "line": 5,
+                "column": 5
+              },
+              "isInvalid": false,
+              "kind": "<identifier>",
+              "leadingInvalid": "",
+              "leadingTrivia": "\n",
+              "start": 44,
+              "startPos": {
+                "offset": 44,
+                "line": 5,
+                "column": 0
+              },
+              "trailingInvalid": "",
+              "trailingTrivia": " ",
+              "value": "Table"
             }
           },
           "context": {
@@ -1214,104 +1214,33 @@
         },
         {
           "children": {
-            "type": {
-              "context": {
-                "id": "<identifier>:Table@[L10:C0, L10:C5]",
-                "snippet": "Table"
-              },
-              "end": 93,
-              "endPos": {
-                "offset": 93,
-                "line": 10,
-                "column": 5
-              },
-              "isInvalid": false,
-              "kind": "<identifier>",
-              "leadingInvalid": "",
-              "leadingTrivia": "\n",
-              "start": 88,
-              "startPos": {
-                "offset": 88,
-                "line": 10,
-                "column": 0
-              },
-              "trailingInvalid": "",
-              "trailingTrivia": " ",
-              "value": "Table"
-            },
-            "name": {
-              "children": {
-                "expression": {
-                  "children": {
-                    "variable": {
-                      "context": {
-                        "id": "<identifier>:C@[L10:C6, L10:C7]",
-                        "snippet": "C"
-                      },
-                      "end": 95,
-                      "endPos": {
-                        "offset": 95,
-                        "line": 10,
-                        "column": 7
-                      },
-                      "isInvalid": false,
-                      "kind": "<identifier>",
-                      "leadingInvalid": "",
-                      "leadingTrivia": "",
-                      "start": 94,
-                      "startPos": {
-                        "offset": 94,
-                        "line": 10,
-                        "column": 6
-                      },
-                      "trailingInvalid": "",
-                      "trailingTrivia": " ",
-                      "value": "C"
-                    }
-                  },
-                  "context": {
-                    "id": "<variable>:C@[L10:C6, L10:C7]",
-                    "snippet": "C"
-                  },
-                  "end": 95,
-                  "endPos": {
-                    "offset": 95,
-                    "line": 10,
-                    "column": 7
-                  },
-                  "fullEnd": 96,
-                  "fullStart": 94,
-                  "kind": "<variable>",
-                  "start": 94,
-                  "startPos": {
-                    "offset": 94,
-                    "line": 10,
-                    "column": 6
-                  }
-                }
-              },
-              "context": {
-                "id": "<primary-expression>@[L10:C6, L10:C7]",
-                "snippet": "C"
-              },
-              "end": 95,
-              "endPos": {
-                "offset": 95,
-                "line": 10,
-                "column": 7
-              },
-              "fullEnd": 96,
-              "fullStart": 94,
-              "kind": "<primary-expression>",
-              "start": 94,
-              "startPos": {
-                "offset": 94,
-                "line": 10,
-                "column": 6
-              }
-            },
             "body": {
               "children": {
+                "blockCloseBrace": {
+                  "context": {
+                    "id": "<rbrace>:}@[L15:C0, L15:C1]",
+                    "snippet": "}"
+                  },
+                  "end": 172,
+                  "endPos": {
+                    "offset": 172,
+                    "line": 15,
+                    "column": 1
+                  },
+                  "isInvalid": false,
+                  "kind": "<rbrace>",
+                  "leadingInvalid": "",
+                  "leadingTrivia": "",
+                  "start": 171,
+                  "startPos": {
+                    "offset": 171,
+                    "line": 15,
+                    "column": 0
+                  },
+                  "trailingInvalid": "",
+                  "trailingTrivia": "",
+                  "value": "}"
+                },
                 "blockOpenBrace": {
                   "context": {
                     "id": "<lbrace>:{@[L10:C8, L10:C9]",
@@ -1340,77 +1269,6 @@
                 "body": [
                   {
                     "children": {
-                      "callee": {
-                        "children": {
-                          "expression": {
-                            "children": {
-                              "variable": {
-                                "context": {
-                                  "id": "<identifier>:id@[L11:C4, L11:C6]",
-                                  "snippet": "id"
-                                },
-                                "end": 104,
-                                "endPos": {
-                                  "offset": 104,
-                                  "line": 11,
-                                  "column": 6
-                                },
-                                "isInvalid": false,
-                                "kind": "<identifier>",
-                                "leadingInvalid": "",
-                                "leadingTrivia": "    ",
-                                "start": 102,
-                                "startPos": {
-                                  "offset": 102,
-                                  "line": 11,
-                                  "column": 4
-                                },
-                                "trailingInvalid": "",
-                                "trailingTrivia": " ",
-                                "value": "id"
-                              }
-                            },
-                            "context": {
-                              "id": "<variable>:id@[L11:C4, L11:C6]",
-                              "snippet": "id"
-                            },
-                            "end": 104,
-                            "endPos": {
-                              "offset": 104,
-                              "line": 11,
-                              "column": 6
-                            },
-                            "fullEnd": 105,
-                            "fullStart": 98,
-                            "kind": "<variable>",
-                            "start": 102,
-                            "startPos": {
-                              "offset": 102,
-                              "line": 11,
-                              "column": 4
-                            }
-                          }
-                        },
-                        "context": {
-                          "id": "<primary-expression>@[L11:C4, L11:C6]",
-                          "snippet": "id"
-                        },
-                        "end": 104,
-                        "endPos": {
-                          "offset": 104,
-                          "line": 11,
-                          "column": 6
-                        },
-                        "fullEnd": 105,
-                        "fullStart": 98,
-                        "kind": "<primary-expression>",
-                        "start": 102,
-                        "startPos": {
-                          "offset": 102,
-                          "line": 11,
-                          "column": 4
-                        }
-                      },
                       "args": [
                         {
                           "children": {
@@ -1483,7 +1341,78 @@
                             "column": 7
                           }
                         }
-                      ]
+                      ],
+                      "callee": {
+                        "children": {
+                          "expression": {
+                            "children": {
+                              "variable": {
+                                "context": {
+                                  "id": "<identifier>:id@[L11:C4, L11:C6]",
+                                  "snippet": "id"
+                                },
+                                "end": 104,
+                                "endPos": {
+                                  "offset": 104,
+                                  "line": 11,
+                                  "column": 6
+                                },
+                                "isInvalid": false,
+                                "kind": "<identifier>",
+                                "leadingInvalid": "",
+                                "leadingTrivia": "    ",
+                                "start": 102,
+                                "startPos": {
+                                  "offset": 102,
+                                  "line": 11,
+                                  "column": 4
+                                },
+                                "trailingInvalid": "",
+                                "trailingTrivia": " ",
+                                "value": "id"
+                              }
+                            },
+                            "context": {
+                              "id": "<variable>:id@[L11:C4, L11:C6]",
+                              "snippet": "id"
+                            },
+                            "end": 104,
+                            "endPos": {
+                              "offset": 104,
+                              "line": 11,
+                              "column": 6
+                            },
+                            "fullEnd": 105,
+                            "fullStart": 98,
+                            "kind": "<variable>",
+                            "start": 102,
+                            "startPos": {
+                              "offset": 102,
+                              "line": 11,
+                              "column": 4
+                            }
+                          }
+                        },
+                        "context": {
+                          "id": "<primary-expression>@[L11:C4, L11:C6]",
+                          "snippet": "id"
+                        },
+                        "end": 104,
+                        "endPos": {
+                          "offset": 104,
+                          "line": 11,
+                          "column": 6
+                        },
+                        "fullEnd": 105,
+                        "fullStart": 98,
+                        "kind": "<primary-expression>",
+                        "start": 102,
+                        "startPos": {
+                          "offset": 102,
+                          "line": 11,
+                          "column": 4
+                        }
+                      }
                     },
                     "context": {
                       "id": "<function-application>@[L11:C4, L11:C14]",
@@ -1518,77 +1447,6 @@
                   },
                   {
                     "children": {
-                      "callee": {
-                        "children": {
-                          "expression": {
-                            "children": {
-                              "variable": {
-                                "context": {
-                                  "id": "<identifier>:code@[L12:C4, L12:C8]",
-                                  "snippet": "code"
-                                },
-                                "end": 121,
-                                "endPos": {
-                                  "offset": 121,
-                                  "line": 12,
-                                  "column": 8
-                                },
-                                "isInvalid": false,
-                                "kind": "<identifier>",
-                                "leadingInvalid": "",
-                                "leadingTrivia": "    ",
-                                "start": 117,
-                                "startPos": {
-                                  "offset": 117,
-                                  "line": 12,
-                                  "column": 4
-                                },
-                                "trailingInvalid": "",
-                                "trailingTrivia": " ",
-                                "value": "code"
-                              }
-                            },
-                            "context": {
-                              "id": "<variable>:code@[L12:C4, L12:C8]",
-                              "snippet": "code"
-                            },
-                            "end": 121,
-                            "endPos": {
-                              "offset": 121,
-                              "line": 12,
-                              "column": 8
-                            },
-                            "fullEnd": 122,
-                            "fullStart": 113,
-                            "kind": "<variable>",
-                            "start": 117,
-                            "startPos": {
-                              "offset": 117,
-                              "line": 12,
-                              "column": 4
-                            }
-                          }
-                        },
-                        "context": {
-                          "id": "<primary-expression>@[L12:C4, L12:C8]",
-                          "snippet": "code"
-                        },
-                        "end": 121,
-                        "endPos": {
-                          "offset": 121,
-                          "line": 12,
-                          "column": 8
-                        },
-                        "fullEnd": 122,
-                        "fullStart": 113,
-                        "kind": "<primary-expression>",
-                        "start": 117,
-                        "startPos": {
-                          "offset": 117,
-                          "line": 12,
-                          "column": 4
-                        }
-                      },
                       "args": [
                         {
                           "children": {
@@ -1661,7 +1519,78 @@
                             "column": 9
                           }
                         }
-                      ]
+                      ],
+                      "callee": {
+                        "children": {
+                          "expression": {
+                            "children": {
+                              "variable": {
+                                "context": {
+                                  "id": "<identifier>:code@[L12:C4, L12:C8]",
+                                  "snippet": "code"
+                                },
+                                "end": 121,
+                                "endPos": {
+                                  "offset": 121,
+                                  "line": 12,
+                                  "column": 8
+                                },
+                                "isInvalid": false,
+                                "kind": "<identifier>",
+                                "leadingInvalid": "",
+                                "leadingTrivia": "    ",
+                                "start": 117,
+                                "startPos": {
+                                  "offset": 117,
+                                  "line": 12,
+                                  "column": 4
+                                },
+                                "trailingInvalid": "",
+                                "trailingTrivia": " ",
+                                "value": "code"
+                              }
+                            },
+                            "context": {
+                              "id": "<variable>:code@[L12:C4, L12:C8]",
+                              "snippet": "code"
+                            },
+                            "end": 121,
+                            "endPos": {
+                              "offset": 121,
+                              "line": 12,
+                              "column": 8
+                            },
+                            "fullEnd": 122,
+                            "fullStart": 113,
+                            "kind": "<variable>",
+                            "start": 117,
+                            "startPos": {
+                              "offset": 117,
+                              "line": 12,
+                              "column": 4
+                            }
+                          }
+                        },
+                        "context": {
+                          "id": "<primary-expression>@[L12:C4, L12:C8]",
+                          "snippet": "code"
+                        },
+                        "end": 121,
+                        "endPos": {
+                          "offset": 121,
+                          "line": 12,
+                          "column": 8
+                        },
+                        "fullEnd": 122,
+                        "fullStart": 113,
+                        "kind": "<primary-expression>",
+                        "start": 117,
+                        "startPos": {
+                          "offset": 117,
+                          "line": 12,
+                          "column": 4
+                        }
+                      }
                     },
                     "context": {
                       "id": "<function-application>@[L12:C4, L12:C15]",
@@ -1696,85 +1625,11 @@
                   },
                   {
                     "children": {
-                      "type": {
-                        "context": {
-                          "id": "<identifier>:Ref@[L13:C4, L13:C7]",
-                          "snippet": "Ref"
-                        },
-                        "end": 136,
-                        "endPos": {
-                          "offset": 136,
-                          "line": 13,
-                          "column": 7
-                        },
-                        "isInvalid": false,
-                        "kind": "<identifier>",
-                        "leadingInvalid": "",
-                        "leadingTrivia": "    ",
-                        "start": 133,
-                        "startPos": {
-                          "offset": 133,
-                          "line": 13,
-                          "column": 4
-                        },
-                        "trailingInvalid": "",
-                        "trailingTrivia": "",
-                        "value": "Ref"
-                      },
-                      "bodyColon": {
-                        "context": {
-                          "id": "<colon>::@[L13:C7, L13:C8]",
-                          "snippet": ":"
-                        },
-                        "end": 137,
-                        "endPos": {
-                          "offset": 137,
-                          "line": 13,
-                          "column": 8
-                        },
-                        "isInvalid": false,
-                        "kind": "<colon>",
-                        "leadingInvalid": "",
-                        "leadingTrivia": "",
-                        "start": 136,
-                        "startPos": {
-                          "offset": 136,
-                          "line": 13,
-                          "column": 7
-                        },
-                        "trailingInvalid": "",
-                        "trailingTrivia": " ",
-                        "value": ":"
-                      },
                       "body": {
                         "children": {
+                          "args": [],
                           "callee": {
                             "children": {
-                              "op": {
-                                "context": {
-                                  "id": "<op>:>@[L13:C12, L13:C13]",
-                                  "snippet": ">"
-                                },
-                                "end": 142,
-                                "endPos": {
-                                  "offset": 142,
-                                  "line": 13,
-                                  "column": 13
-                                },
-                                "isInvalid": false,
-                                "kind": "<op>",
-                                "leadingInvalid": "",
-                                "leadingTrivia": "",
-                                "start": 141,
-                                "startPos": {
-                                  "offset": 141,
-                                  "line": 13,
-                                  "column": 12
-                                },
-                                "trailingInvalid": "",
-                                "trailingTrivia": " ",
-                                "value": ">"
-                              },
                               "leftExpression": {
                                 "children": {
                                   "expression": {
@@ -1846,33 +1701,33 @@
                                   "column": 9
                                 }
                               },
+                              "op": {
+                                "context": {
+                                  "id": "<op>:>@[L13:C12, L13:C13]",
+                                  "snippet": ">"
+                                },
+                                "end": 142,
+                                "endPos": {
+                                  "offset": 142,
+                                  "line": 13,
+                                  "column": 13
+                                },
+                                "isInvalid": false,
+                                "kind": "<op>",
+                                "leadingInvalid": "",
+                                "leadingTrivia": "",
+                                "start": 141,
+                                "startPos": {
+                                  "offset": 141,
+                                  "line": 13,
+                                  "column": 12
+                                },
+                                "trailingInvalid": "",
+                                "trailingTrivia": " ",
+                                "value": ">"
+                              },
                               "rightExpression": {
                                 "children": {
-                                  "op": {
-                                    "context": {
-                                      "id": "<op>:.@[L13:C15, L13:C16]",
-                                      "snippet": "."
-                                    },
-                                    "end": 145,
-                                    "endPos": {
-                                      "offset": 145,
-                                      "line": 13,
-                                      "column": 16
-                                    },
-                                    "isInvalid": false,
-                                    "kind": "<op>",
-                                    "leadingInvalid": "",
-                                    "leadingTrivia": "",
-                                    "start": 144,
-                                    "startPos": {
-                                      "offset": 144,
-                                      "line": 13,
-                                      "column": 15
-                                    },
-                                    "trailingInvalid": "",
-                                    "trailingTrivia": "",
-                                    "value": "."
-                                  },
                                   "leftExpression": {
                                     "children": {
                                       "expression": {
@@ -1943,6 +1798,31 @@
                                       "line": 13,
                                       "column": 14
                                     }
+                                  },
+                                  "op": {
+                                    "context": {
+                                      "id": "<op>:.@[L13:C15, L13:C16]",
+                                      "snippet": "."
+                                    },
+                                    "end": 145,
+                                    "endPos": {
+                                      "offset": 145,
+                                      "line": 13,
+                                      "column": 16
+                                    },
+                                    "isInvalid": false,
+                                    "kind": "<op>",
+                                    "leadingInvalid": "",
+                                    "leadingTrivia": "",
+                                    "start": 144,
+                                    "startPos": {
+                                      "offset": 144,
+                                      "line": 13,
+                                      "column": 15
+                                    },
+                                    "trailingInvalid": "",
+                                    "trailingTrivia": "",
+                                    "value": "."
                                   },
                                   "rightExpression": {
                                     "children": {
@@ -2056,8 +1936,7 @@
                               "line": 13,
                               "column": 9
                             }
-                          },
-                          "args": []
+                          }
                         },
                         "context": {
                           "id": "<function-application>@[L13:C9, L13:C18]",
@@ -2079,8 +1958,58 @@
                           "column": 9
                         }
                       },
+                      "bodyColon": {
+                        "context": {
+                          "id": "<colon>::@[L13:C7, L13:C8]",
+                          "snippet": ":"
+                        },
+                        "end": 137,
+                        "endPos": {
+                          "offset": 137,
+                          "line": 13,
+                          "column": 8
+                        },
+                        "isInvalid": false,
+                        "kind": "<colon>",
+                        "leadingInvalid": "",
+                        "leadingTrivia": "",
+                        "start": 136,
+                        "startPos": {
+                          "offset": 136,
+                          "line": 13,
+                          "column": 7
+                        },
+                        "trailingInvalid": "",
+                        "trailingTrivia": " ",
+                        "value": ":"
+                      },
                       "parent": {
                         "context": {}
+                      },
+                      "type": {
+                        "context": {
+                          "id": "<identifier>:Ref@[L13:C4, L13:C7]",
+                          "snippet": "Ref"
+                        },
+                        "end": 136,
+                        "endPos": {
+                          "offset": 136,
+                          "line": 13,
+                          "column": 7
+                        },
+                        "isInvalid": false,
+                        "kind": "<identifier>",
+                        "leadingInvalid": "",
+                        "leadingTrivia": "    ",
+                        "start": 133,
+                        "startPos": {
+                          "offset": 133,
+                          "line": 13,
+                          "column": 4
+                        },
+                        "trailingInvalid": "",
+                        "trailingTrivia": "",
+                        "value": "Ref"
                       }
                     },
                     "context": {
@@ -2105,85 +2034,11 @@
                   },
                   {
                     "children": {
-                      "type": {
-                        "context": {
-                          "id": "<identifier>:Ref@[L14:C4, L14:C7]",
-                          "snippet": "Ref"
-                        },
-                        "end": 155,
-                        "endPos": {
-                          "offset": 155,
-                          "line": 14,
-                          "column": 7
-                        },
-                        "isInvalid": false,
-                        "kind": "<identifier>",
-                        "leadingInvalid": "",
-                        "leadingTrivia": "    ",
-                        "start": 152,
-                        "startPos": {
-                          "offset": 152,
-                          "line": 14,
-                          "column": 4
-                        },
-                        "trailingInvalid": "",
-                        "trailingTrivia": "",
-                        "value": "Ref"
-                      },
-                      "bodyColon": {
-                        "context": {
-                          "id": "<colon>::@[L14:C7, L14:C8]",
-                          "snippet": ":"
-                        },
-                        "end": 156,
-                        "endPos": {
-                          "offset": 156,
-                          "line": 14,
-                          "column": 8
-                        },
-                        "isInvalid": false,
-                        "kind": "<colon>",
-                        "leadingInvalid": "",
-                        "leadingTrivia": "",
-                        "start": 155,
-                        "startPos": {
-                          "offset": 155,
-                          "line": 14,
-                          "column": 7
-                        },
-                        "trailingInvalid": "",
-                        "trailingTrivia": " ",
-                        "value": ":"
-                      },
                       "body": {
                         "children": {
+                          "args": [],
                           "callee": {
                             "children": {
-                              "op": {
-                                "context": {
-                                  "id": "<op>:>@[L14:C14, L14:C15]",
-                                  "snippet": ">"
-                                },
-                                "end": 163,
-                                "endPos": {
-                                  "offset": 163,
-                                  "line": 14,
-                                  "column": 15
-                                },
-                                "isInvalid": false,
-                                "kind": "<op>",
-                                "leadingInvalid": "",
-                                "leadingTrivia": "",
-                                "start": 162,
-                                "startPos": {
-                                  "offset": 162,
-                                  "line": 14,
-                                  "column": 14
-                                },
-                                "trailingInvalid": "",
-                                "trailingTrivia": " ",
-                                "value": ">"
-                              },
                               "leftExpression": {
                                 "children": {
                                   "expression": {
@@ -2255,33 +2110,33 @@
                                   "column": 9
                                 }
                               },
+                              "op": {
+                                "context": {
+                                  "id": "<op>:>@[L14:C14, L14:C15]",
+                                  "snippet": ">"
+                                },
+                                "end": 163,
+                                "endPos": {
+                                  "offset": 163,
+                                  "line": 14,
+                                  "column": 15
+                                },
+                                "isInvalid": false,
+                                "kind": "<op>",
+                                "leadingInvalid": "",
+                                "leadingTrivia": "",
+                                "start": 162,
+                                "startPos": {
+                                  "offset": 162,
+                                  "line": 14,
+                                  "column": 14
+                                },
+                                "trailingInvalid": "",
+                                "trailingTrivia": " ",
+                                "value": ">"
+                              },
                               "rightExpression": {
                                 "children": {
-                                  "op": {
-                                    "context": {
-                                      "id": "<op>:.@[L14:C17, L14:C18]",
-                                      "snippet": "."
-                                    },
-                                    "end": 166,
-                                    "endPos": {
-                                      "offset": 166,
-                                      "line": 14,
-                                      "column": 18
-                                    },
-                                    "isInvalid": false,
-                                    "kind": "<op>",
-                                    "leadingInvalid": "",
-                                    "leadingTrivia": "",
-                                    "start": 165,
-                                    "startPos": {
-                                      "offset": 165,
-                                      "line": 14,
-                                      "column": 17
-                                    },
-                                    "trailingInvalid": "",
-                                    "trailingTrivia": "",
-                                    "value": "."
-                                  },
                                   "leftExpression": {
                                     "children": {
                                       "expression": {
@@ -2352,6 +2207,31 @@
                                       "line": 14,
                                       "column": 16
                                     }
+                                  },
+                                  "op": {
+                                    "context": {
+                                      "id": "<op>:.@[L14:C17, L14:C18]",
+                                      "snippet": "."
+                                    },
+                                    "end": 166,
+                                    "endPos": {
+                                      "offset": 166,
+                                      "line": 14,
+                                      "column": 18
+                                    },
+                                    "isInvalid": false,
+                                    "kind": "<op>",
+                                    "leadingInvalid": "",
+                                    "leadingTrivia": "",
+                                    "start": 165,
+                                    "startPos": {
+                                      "offset": 165,
+                                      "line": 14,
+                                      "column": 17
+                                    },
+                                    "trailingInvalid": "",
+                                    "trailingTrivia": "",
+                                    "value": "."
                                   },
                                   "rightExpression": {
                                     "children": {
@@ -2465,8 +2345,7 @@
                               "line": 14,
                               "column": 9
                             }
-                          },
-                          "args": []
+                          }
                         },
                         "context": {
                           "id": "<function-application>@[L14:C9, L14:C22]",
@@ -2488,8 +2367,58 @@
                           "column": 9
                         }
                       },
+                      "bodyColon": {
+                        "context": {
+                          "id": "<colon>::@[L14:C7, L14:C8]",
+                          "snippet": ":"
+                        },
+                        "end": 156,
+                        "endPos": {
+                          "offset": 156,
+                          "line": 14,
+                          "column": 8
+                        },
+                        "isInvalid": false,
+                        "kind": "<colon>",
+                        "leadingInvalid": "",
+                        "leadingTrivia": "",
+                        "start": 155,
+                        "startPos": {
+                          "offset": 155,
+                          "line": 14,
+                          "column": 7
+                        },
+                        "trailingInvalid": "",
+                        "trailingTrivia": " ",
+                        "value": ":"
+                      },
                       "parent": {
                         "context": {}
+                      },
+                      "type": {
+                        "context": {
+                          "id": "<identifier>:Ref@[L14:C4, L14:C7]",
+                          "snippet": "Ref"
+                        },
+                        "end": 155,
+                        "endPos": {
+                          "offset": 155,
+                          "line": 14,
+                          "column": 7
+                        },
+                        "isInvalid": false,
+                        "kind": "<identifier>",
+                        "leadingInvalid": "",
+                        "leadingTrivia": "    ",
+                        "start": 152,
+                        "startPos": {
+                          "offset": 152,
+                          "line": 14,
+                          "column": 4
+                        },
+                        "trailingInvalid": "",
+                        "trailingTrivia": "",
+                        "value": "Ref"
                       }
                     },
                     "context": {
@@ -2512,32 +2441,7 @@
                       "column": 4
                     }
                   }
-                ],
-                "blockCloseBrace": {
-                  "context": {
-                    "id": "<rbrace>:}@[L15:C0, L15:C1]",
-                    "snippet": "}"
-                  },
-                  "end": 172,
-                  "endPos": {
-                    "offset": 172,
-                    "line": 15,
-                    "column": 1
-                  },
-                  "isInvalid": false,
-                  "kind": "<rbrace>",
-                  "leadingInvalid": "",
-                  "leadingTrivia": "",
-                  "start": 171,
-                  "startPos": {
-                    "offset": 171,
-                    "line": 15,
-                    "column": 0
-                  },
-                  "trailingInvalid": "",
-                  "trailingTrivia": "",
-                  "value": "}"
-                }
+                ]
               },
               "context": {
                 "id": "<block-expression>@[L10:C8, L15:C1]",
@@ -2559,8 +2463,104 @@
                 "column": 8
               }
             },
+            "name": {
+              "children": {
+                "expression": {
+                  "children": {
+                    "variable": {
+                      "context": {
+                        "id": "<identifier>:C@[L10:C6, L10:C7]",
+                        "snippet": "C"
+                      },
+                      "end": 95,
+                      "endPos": {
+                        "offset": 95,
+                        "line": 10,
+                        "column": 7
+                      },
+                      "isInvalid": false,
+                      "kind": "<identifier>",
+                      "leadingInvalid": "",
+                      "leadingTrivia": "",
+                      "start": 94,
+                      "startPos": {
+                        "offset": 94,
+                        "line": 10,
+                        "column": 6
+                      },
+                      "trailingInvalid": "",
+                      "trailingTrivia": " ",
+                      "value": "C"
+                    }
+                  },
+                  "context": {
+                    "id": "<variable>:C@[L10:C6, L10:C7]",
+                    "snippet": "C"
+                  },
+                  "end": 95,
+                  "endPos": {
+                    "offset": 95,
+                    "line": 10,
+                    "column": 7
+                  },
+                  "fullEnd": 96,
+                  "fullStart": 94,
+                  "kind": "<variable>",
+                  "start": 94,
+                  "startPos": {
+                    "offset": 94,
+                    "line": 10,
+                    "column": 6
+                  }
+                }
+              },
+              "context": {
+                "id": "<primary-expression>@[L10:C6, L10:C7]",
+                "snippet": "C"
+              },
+              "end": 95,
+              "endPos": {
+                "offset": 95,
+                "line": 10,
+                "column": 7
+              },
+              "fullEnd": 96,
+              "fullStart": 94,
+              "kind": "<primary-expression>",
+              "start": 94,
+              "startPos": {
+                "offset": 94,
+                "line": 10,
+                "column": 6
+              }
+            },
             "parent": {
               "context": {}
+            },
+            "type": {
+              "context": {
+                "id": "<identifier>:Table@[L10:C0, L10:C5]",
+                "snippet": "Table"
+              },
+              "end": 93,
+              "endPos": {
+                "offset": 93,
+                "line": 10,
+                "column": 5
+              },
+              "isInvalid": false,
+              "kind": "<identifier>",
+              "leadingInvalid": "",
+              "leadingTrivia": "\n",
+              "start": 88,
+              "startPos": {
+                "offset": 88,
+                "line": 10,
+                "column": 0
+              },
+              "trailingInvalid": "",
+              "trailingTrivia": " ",
+              "value": "Table"
             }
           },
           "context": {

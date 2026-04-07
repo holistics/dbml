@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { scanTestNames, toSnapshot } from '@tests/utils';
+import { scanTestNames, Snappable, toSnapshot } from '@tests/utils';
 import Compiler from '@/compiler';
 import type { Database } from '@/index';
 import type Report from '@/core/report';
@@ -11,7 +11,7 @@ function serializeInterpreterResult (compiler: Compiler, report: Report<Database
   const errors = report.getErrors();
   const warnings = report.getWarnings();
   return JSON.stringify(toSnapshot(compiler, {
-    database: value,
+    database: value as any,
     errors,
     warnings,
   }), null, 2);

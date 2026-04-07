@@ -58,30 +58,472 @@
       "body": [
         {
           "children": {
-            "type": {
+            "body": {
+              "children": {
+                "blockCloseBrace": {
+                  "context": {
+                    "id": "<rbrace>:}@[L5:C0, L5:C1]",
+                    "snippet": "}"
+                  },
+                  "end": 109,
+                  "endPos": {
+                    "offset": 109,
+                    "line": 5,
+                    "column": 1
+                  },
+                  "isInvalid": false,
+                  "kind": "<rbrace>",
+                  "leadingInvalid": "",
+                  "leadingTrivia": "",
+                  "start": 108,
+                  "startPos": {
+                    "offset": 108,
+                    "line": 5,
+                    "column": 0
+                  },
+                  "trailingInvalid": "",
+                  "trailingTrivia": "\n",
+                  "value": "}"
+                },
+                "blockOpenBrace": {
+                  "context": {
+                    "id": "<lbrace>:{@[L0:C8, L0:C9]",
+                    "snippet": "{"
+                  },
+                  "end": 9,
+                  "endPos": {
+                    "offset": 9,
+                    "line": 0,
+                    "column": 9
+                  },
+                  "isInvalid": false,
+                  "kind": "<lbrace>",
+                  "leadingInvalid": "",
+                  "leadingTrivia": "",
+                  "start": 8,
+                  "startPos": {
+                    "offset": 8,
+                    "line": 0,
+                    "column": 8
+                  },
+                  "trailingInvalid": "",
+                  "trailingTrivia": "\n",
+                  "value": "{"
+                },
+                "body": [
+                  {
+                    "children": {
+                      "body": {
+                        "children": {
+                          "args": [],
+                          "callee": {
+                            "children": {
+                              "expression": {
+                                "children": {
+                                  "literal": {
+                                    "context": {
+                                      "id": "<string>: This is a local note @[L1:C10, L1:C38]",
+                                      "snippet": "''' This i...l note '''"
+                                    },
+                                    "end": 49,
+                                    "endPos": {
+                                      "offset": 49,
+                                      "line": 1,
+                                      "column": 38
+                                    },
+                                    "isInvalid": false,
+                                    "kind": "<string>",
+                                    "leadingInvalid": "",
+                                    "leadingTrivia": "",
+                                    "start": 21,
+                                    "startPos": {
+                                      "offset": 21,
+                                      "line": 1,
+                                      "column": 10
+                                    },
+                                    "trailingInvalid": "",
+                                    "trailingTrivia": "\n",
+                                    "value": " This is a local note "
+                                  }
+                                },
+                                "context": {
+                                  "id": "<literal>: This is a local note @[L1:C10, L1:C38]",
+                                  "snippet": "''' This i...l note '''"
+                                },
+                                "end": 49,
+                                "endPos": {
+                                  "offset": 49,
+                                  "line": 1,
+                                  "column": 38
+                                },
+                                "fullEnd": 51,
+                                "fullStart": 21,
+                                "kind": "<literal>",
+                                "start": 21,
+                                "startPos": {
+                                  "offset": 21,
+                                  "line": 1,
+                                  "column": 10
+                                }
+                              }
+                            },
+                            "context": {
+                              "id": "<primary-expression>@[L1:C10, L1:C38]",
+                              "snippet": "''' This i...l note '''"
+                            },
+                            "end": 49,
+                            "endPos": {
+                              "offset": 49,
+                              "line": 1,
+                              "column": 38
+                            },
+                            "fullEnd": 51,
+                            "fullStart": 21,
+                            "kind": "<primary-expression>",
+                            "start": 21,
+                            "startPos": {
+                              "offset": 21,
+                              "line": 1,
+                              "column": 10
+                            }
+                          }
+                        },
+                        "context": {
+                          "id": "<function-application>@[L1:C10, L1:C38]",
+                          "snippet": "''' This i...l note '''"
+                        },
+                        "end": 49,
+                        "endPos": {
+                          "offset": 49,
+                          "line": 1,
+                          "column": 38
+                        },
+                        "fullEnd": 51,
+                        "fullStart": 21,
+                        "kind": "<function-application>",
+                        "start": 21,
+                        "startPos": {
+                          "offset": 21,
+                          "line": 1,
+                          "column": 10
+                        }
+                      },
+                      "bodyColon": {
+                        "context": {
+                          "id": "<colon>::@[L1:C8, L1:C9]",
+                          "snippet": ":"
+                        },
+                        "end": 20,
+                        "endPos": {
+                          "offset": 20,
+                          "line": 1,
+                          "column": 9
+                        },
+                        "isInvalid": false,
+                        "kind": "<colon>",
+                        "leadingInvalid": "",
+                        "leadingTrivia": "",
+                        "start": 19,
+                        "startPos": {
+                          "offset": 19,
+                          "line": 1,
+                          "column": 8
+                        },
+                        "trailingInvalid": "",
+                        "trailingTrivia": " ",
+                        "value": ":"
+                      },
+                      "parent": {
+                        "context": {}
+                      },
+                      "type": {
+                        "context": {
+                          "id": "<identifier>:Note@[L1:C4, L1:C8]",
+                          "snippet": "Note"
+                        },
+                        "end": 19,
+                        "endPos": {
+                          "offset": 19,
+                          "line": 1,
+                          "column": 8
+                        },
+                        "isInvalid": false,
+                        "kind": "<identifier>",
+                        "leadingInvalid": "",
+                        "leadingTrivia": "    ",
+                        "start": 15,
+                        "startPos": {
+                          "offset": 15,
+                          "line": 1,
+                          "column": 4
+                        },
+                        "trailingInvalid": "",
+                        "trailingTrivia": "",
+                        "value": "Note"
+                      }
+                    },
+                    "context": {
+                      "id": "<element-declaration>:@[L1:C4, L1:C38]",
+                      "snippet": "Note: ''' ...l note '''"
+                    },
+                    "end": 49,
+                    "endPos": {
+                      "offset": 49,
+                      "line": 1,
+                      "column": 38
+                    },
+                    "fullEnd": 51,
+                    "fullStart": 11,
+                    "kind": "<element-declaration>",
+                    "start": 15,
+                    "startPos": {
+                      "offset": 15,
+                      "line": 1,
+                      "column": 4
+                    }
+                  },
+                  {
+                    "children": {
+                      "body": {
+                        "children": {
+                          "blockCloseBrace": {
+                            "context": {
+                              "id": "<rbrace>:}@[L4:C4, L4:C5]",
+                              "snippet": "}"
+                            },
+                            "end": 106,
+                            "endPos": {
+                              "offset": 106,
+                              "line": 4,
+                              "column": 5
+                            },
+                            "isInvalid": false,
+                            "kind": "<rbrace>",
+                            "leadingInvalid": "",
+                            "leadingTrivia": "    ",
+                            "start": 105,
+                            "startPos": {
+                              "offset": 105,
+                              "line": 4,
+                              "column": 4
+                            },
+                            "trailingInvalid": "",
+                            "trailingTrivia": "\n",
+                            "value": "}"
+                          },
+                          "blockOpenBrace": {
+                            "context": {
+                              "id": "<lbrace>:{@[L2:C9, L2:C10]",
+                              "snippet": "{"
+                            },
+                            "end": 61,
+                            "endPos": {
+                              "offset": 61,
+                              "line": 2,
+                              "column": 10
+                            },
+                            "isInvalid": false,
+                            "kind": "<lbrace>",
+                            "leadingInvalid": "",
+                            "leadingTrivia": "",
+                            "start": 60,
+                            "startPos": {
+                              "offset": 60,
+                              "line": 2,
+                              "column": 9
+                            },
+                            "trailingInvalid": "",
+                            "trailingTrivia": "\n",
+                            "value": "{"
+                          },
+                          "body": [
+                            {
+                              "children": {
+                                "args": [],
+                                "callee": {
+                                  "children": {
+                                    "expression": {
+                                      "children": {
+                                        "literal": {
+                                          "context": {
+                                            "id": "<string>:This is another local note@[L3:C8, L3:C36]",
+                                            "snippet": "'This is a...ocal note'"
+                                          },
+                                          "end": 99,
+                                          "endPos": {
+                                            "offset": 99,
+                                            "line": 3,
+                                            "column": 36
+                                          },
+                                          "isInvalid": false,
+                                          "kind": "<string>",
+                                          "leadingInvalid": "",
+                                          "leadingTrivia": "        ",
+                                          "start": 71,
+                                          "startPos": {
+                                            "offset": 71,
+                                            "line": 3,
+                                            "column": 8
+                                          },
+                                          "trailingInvalid": "",
+                                          "trailingTrivia": "\n",
+                                          "value": "This is another local note"
+                                        }
+                                      },
+                                      "context": {
+                                        "id": "<literal>:This is another local note@[L3:C8, L3:C36]",
+                                        "snippet": "'This is a...ocal note'"
+                                      },
+                                      "end": 99,
+                                      "endPos": {
+                                        "offset": 99,
+                                        "line": 3,
+                                        "column": 36
+                                      },
+                                      "fullEnd": 101,
+                                      "fullStart": 63,
+                                      "kind": "<literal>",
+                                      "start": 71,
+                                      "startPos": {
+                                        "offset": 71,
+                                        "line": 3,
+                                        "column": 8
+                                      }
+                                    }
+                                  },
+                                  "context": {
+                                    "id": "<primary-expression>@[L3:C8, L3:C36]",
+                                    "snippet": "'This is a...ocal note'"
+                                  },
+                                  "end": 99,
+                                  "endPos": {
+                                    "offset": 99,
+                                    "line": 3,
+                                    "column": 36
+                                  },
+                                  "fullEnd": 101,
+                                  "fullStart": 63,
+                                  "kind": "<primary-expression>",
+                                  "start": 71,
+                                  "startPos": {
+                                    "offset": 71,
+                                    "line": 3,
+                                    "column": 8
+                                  }
+                                }
+                              },
+                              "context": {
+                                "id": "<function-application>@[L3:C8, L3:C36]",
+                                "snippet": "'This is a...ocal note'"
+                              },
+                              "end": 99,
+                              "endPos": {
+                                "offset": 99,
+                                "line": 3,
+                                "column": 36
+                              },
+                              "fullEnd": 101,
+                              "fullStart": 63,
+                              "kind": "<function-application>",
+                              "start": 71,
+                              "startPos": {
+                                "offset": 71,
+                                "line": 3,
+                                "column": 8
+                              }
+                            }
+                          ]
+                        },
+                        "context": {
+                          "id": "<block-expression>@[L2:C9, L4:C5]",
+                          "snippet": "{\r\n       ...te'\r\n    }"
+                        },
+                        "end": 106,
+                        "endPos": {
+                          "offset": 106,
+                          "line": 4,
+                          "column": 5
+                        },
+                        "fullEnd": 108,
+                        "fullStart": 60,
+                        "kind": "<block-expression>",
+                        "start": 60,
+                        "startPos": {
+                          "offset": 60,
+                          "line": 2,
+                          "column": 9
+                        }
+                      },
+                      "parent": {
+                        "context": {}
+                      },
+                      "type": {
+                        "context": {
+                          "id": "<identifier>:Note@[L2:C4, L2:C8]",
+                          "snippet": "Note"
+                        },
+                        "end": 59,
+                        "endPos": {
+                          "offset": 59,
+                          "line": 2,
+                          "column": 8
+                        },
+                        "isInvalid": false,
+                        "kind": "<identifier>",
+                        "leadingInvalid": "",
+                        "leadingTrivia": "    ",
+                        "start": 55,
+                        "startPos": {
+                          "offset": 55,
+                          "line": 2,
+                          "column": 4
+                        },
+                        "trailingInvalid": "",
+                        "trailingTrivia": " ",
+                        "value": "Note"
+                      }
+                    },
+                    "context": {
+                      "id": "<element-declaration>:@[L2:C4, L4:C5]",
+                      "snippet": "Note {\r\n  ...te'\r\n    }"
+                    },
+                    "end": 106,
+                    "endPos": {
+                      "offset": 106,
+                      "line": 4,
+                      "column": 5
+                    },
+                    "fullEnd": 108,
+                    "fullStart": 51,
+                    "kind": "<element-declaration>",
+                    "start": 55,
+                    "startPos": {
+                      "offset": 55,
+                      "line": 2,
+                      "column": 4
+                    }
+                  }
+                ]
+              },
               "context": {
-                "id": "<identifier>:Table@[L0:C0, L0:C5]",
-                "snippet": "Table"
+                "id": "<block-expression>@[L0:C8, L5:C1]",
+                "snippet": "{\r\n    Not...\r\n    }\r\n}"
               },
-              "end": 5,
+              "end": 109,
               "endPos": {
-                "offset": 5,
-                "line": 0,
-                "column": 5
+                "offset": 109,
+                "line": 5,
+                "column": 1
               },
-              "isInvalid": false,
-              "kind": "<identifier>",
-              "leadingInvalid": "",
-              "leadingTrivia": "",
-              "start": 0,
+              "fullEnd": 111,
+              "fullStart": 8,
+              "kind": "<block-expression>",
+              "start": 8,
               "startPos": {
-                "offset": 0,
+                "offset": 8,
                 "line": 0,
-                "column": 0
-              },
-              "trailingInvalid": "",
-              "trailingTrivia": " ",
-              "value": "Table"
+                "column": 8
+              }
             },
             "name": {
               "children": {
@@ -154,475 +596,33 @@
                 "column": 6
               }
             },
-            "body": {
-              "children": {
-                "blockOpenBrace": {
-                  "context": {
-                    "id": "<lbrace>:{@[L0:C8, L0:C9]",
-                    "snippet": "{"
-                  },
-                  "end": 9,
-                  "endPos": {
-                    "offset": 9,
-                    "line": 0,
-                    "column": 9
-                  },
-                  "isInvalid": false,
-                  "kind": "<lbrace>",
-                  "leadingInvalid": "",
-                  "leadingTrivia": "",
-                  "start": 8,
-                  "startPos": {
-                    "offset": 8,
-                    "line": 0,
-                    "column": 8
-                  },
-                  "trailingInvalid": "",
-                  "trailingTrivia": "\n",
-                  "value": "{"
-                },
-                "body": [
-                  {
-                    "children": {
-                      "type": {
-                        "context": {
-                          "id": "<identifier>:Note@[L1:C4, L1:C8]",
-                          "snippet": "Note"
-                        },
-                        "end": 19,
-                        "endPos": {
-                          "offset": 19,
-                          "line": 1,
-                          "column": 8
-                        },
-                        "isInvalid": false,
-                        "kind": "<identifier>",
-                        "leadingInvalid": "",
-                        "leadingTrivia": "    ",
-                        "start": 15,
-                        "startPos": {
-                          "offset": 15,
-                          "line": 1,
-                          "column": 4
-                        },
-                        "trailingInvalid": "",
-                        "trailingTrivia": "",
-                        "value": "Note"
-                      },
-                      "bodyColon": {
-                        "context": {
-                          "id": "<colon>::@[L1:C8, L1:C9]",
-                          "snippet": ":"
-                        },
-                        "end": 20,
-                        "endPos": {
-                          "offset": 20,
-                          "line": 1,
-                          "column": 9
-                        },
-                        "isInvalid": false,
-                        "kind": "<colon>",
-                        "leadingInvalid": "",
-                        "leadingTrivia": "",
-                        "start": 19,
-                        "startPos": {
-                          "offset": 19,
-                          "line": 1,
-                          "column": 8
-                        },
-                        "trailingInvalid": "",
-                        "trailingTrivia": " ",
-                        "value": ":"
-                      },
-                      "body": {
-                        "children": {
-                          "callee": {
-                            "children": {
-                              "expression": {
-                                "children": {
-                                  "literal": {
-                                    "context": {
-                                      "id": "<string>: This is a local note @[L1:C10, L1:C38]",
-                                      "snippet": "''' This i...l note '''"
-                                    },
-                                    "end": 49,
-                                    "endPos": {
-                                      "offset": 49,
-                                      "line": 1,
-                                      "column": 38
-                                    },
-                                    "isInvalid": false,
-                                    "kind": "<string>",
-                                    "leadingInvalid": "",
-                                    "leadingTrivia": "",
-                                    "start": 21,
-                                    "startPos": {
-                                      "offset": 21,
-                                      "line": 1,
-                                      "column": 10
-                                    },
-                                    "trailingInvalid": "",
-                                    "trailingTrivia": "\n",
-                                    "value": " This is a local note "
-                                  }
-                                },
-                                "context": {
-                                  "id": "<literal>: This is a local note @[L1:C10, L1:C38]",
-                                  "snippet": "''' This i...l note '''"
-                                },
-                                "end": 49,
-                                "endPos": {
-                                  "offset": 49,
-                                  "line": 1,
-                                  "column": 38
-                                },
-                                "fullEnd": 51,
-                                "fullStart": 21,
-                                "kind": "<literal>",
-                                "start": 21,
-                                "startPos": {
-                                  "offset": 21,
-                                  "line": 1,
-                                  "column": 10
-                                }
-                              }
-                            },
-                            "context": {
-                              "id": "<primary-expression>@[L1:C10, L1:C38]",
-                              "snippet": "''' This i...l note '''"
-                            },
-                            "end": 49,
-                            "endPos": {
-                              "offset": 49,
-                              "line": 1,
-                              "column": 38
-                            },
-                            "fullEnd": 51,
-                            "fullStart": 21,
-                            "kind": "<primary-expression>",
-                            "start": 21,
-                            "startPos": {
-                              "offset": 21,
-                              "line": 1,
-                              "column": 10
-                            }
-                          },
-                          "args": []
-                        },
-                        "context": {
-                          "id": "<function-application>@[L1:C10, L1:C38]",
-                          "snippet": "''' This i...l note '''"
-                        },
-                        "end": 49,
-                        "endPos": {
-                          "offset": 49,
-                          "line": 1,
-                          "column": 38
-                        },
-                        "fullEnd": 51,
-                        "fullStart": 21,
-                        "kind": "<function-application>",
-                        "start": 21,
-                        "startPos": {
-                          "offset": 21,
-                          "line": 1,
-                          "column": 10
-                        }
-                      },
-                      "parent": {
-                        "context": {}
-                      }
-                    },
-                    "context": {
-                      "id": "<element-declaration>:@[L1:C4, L1:C38]",
-                      "snippet": "Note: ''' ...l note '''"
-                    },
-                    "end": 49,
-                    "endPos": {
-                      "offset": 49,
-                      "line": 1,
-                      "column": 38
-                    },
-                    "fullEnd": 51,
-                    "fullStart": 11,
-                    "kind": "<element-declaration>",
-                    "start": 15,
-                    "startPos": {
-                      "offset": 15,
-                      "line": 1,
-                      "column": 4
-                    }
-                  },
-                  {
-                    "children": {
-                      "type": {
-                        "context": {
-                          "id": "<identifier>:Note@[L2:C4, L2:C8]",
-                          "snippet": "Note"
-                        },
-                        "end": 59,
-                        "endPos": {
-                          "offset": 59,
-                          "line": 2,
-                          "column": 8
-                        },
-                        "isInvalid": false,
-                        "kind": "<identifier>",
-                        "leadingInvalid": "",
-                        "leadingTrivia": "    ",
-                        "start": 55,
-                        "startPos": {
-                          "offset": 55,
-                          "line": 2,
-                          "column": 4
-                        },
-                        "trailingInvalid": "",
-                        "trailingTrivia": " ",
-                        "value": "Note"
-                      },
-                      "body": {
-                        "children": {
-                          "blockOpenBrace": {
-                            "context": {
-                              "id": "<lbrace>:{@[L2:C9, L2:C10]",
-                              "snippet": "{"
-                            },
-                            "end": 61,
-                            "endPos": {
-                              "offset": 61,
-                              "line": 2,
-                              "column": 10
-                            },
-                            "isInvalid": false,
-                            "kind": "<lbrace>",
-                            "leadingInvalid": "",
-                            "leadingTrivia": "",
-                            "start": 60,
-                            "startPos": {
-                              "offset": 60,
-                              "line": 2,
-                              "column": 9
-                            },
-                            "trailingInvalid": "",
-                            "trailingTrivia": "\n",
-                            "value": "{"
-                          },
-                          "body": [
-                            {
-                              "children": {
-                                "callee": {
-                                  "children": {
-                                    "expression": {
-                                      "children": {
-                                        "literal": {
-                                          "context": {
-                                            "id": "<string>:This is another local note@[L3:C8, L3:C36]",
-                                            "snippet": "'This is a...ocal note'"
-                                          },
-                                          "end": 99,
-                                          "endPos": {
-                                            "offset": 99,
-                                            "line": 3,
-                                            "column": 36
-                                          },
-                                          "isInvalid": false,
-                                          "kind": "<string>",
-                                          "leadingInvalid": "",
-                                          "leadingTrivia": "        ",
-                                          "start": 71,
-                                          "startPos": {
-                                            "offset": 71,
-                                            "line": 3,
-                                            "column": 8
-                                          },
-                                          "trailingInvalid": "",
-                                          "trailingTrivia": "\n",
-                                          "value": "This is another local note"
-                                        }
-                                      },
-                                      "context": {
-                                        "id": "<literal>:This is another local note@[L3:C8, L3:C36]",
-                                        "snippet": "'This is a...ocal note'"
-                                      },
-                                      "end": 99,
-                                      "endPos": {
-                                        "offset": 99,
-                                        "line": 3,
-                                        "column": 36
-                                      },
-                                      "fullEnd": 101,
-                                      "fullStart": 63,
-                                      "kind": "<literal>",
-                                      "start": 71,
-                                      "startPos": {
-                                        "offset": 71,
-                                        "line": 3,
-                                        "column": 8
-                                      }
-                                    }
-                                  },
-                                  "context": {
-                                    "id": "<primary-expression>@[L3:C8, L3:C36]",
-                                    "snippet": "'This is a...ocal note'"
-                                  },
-                                  "end": 99,
-                                  "endPos": {
-                                    "offset": 99,
-                                    "line": 3,
-                                    "column": 36
-                                  },
-                                  "fullEnd": 101,
-                                  "fullStart": 63,
-                                  "kind": "<primary-expression>",
-                                  "start": 71,
-                                  "startPos": {
-                                    "offset": 71,
-                                    "line": 3,
-                                    "column": 8
-                                  }
-                                },
-                                "args": []
-                              },
-                              "context": {
-                                "id": "<function-application>@[L3:C8, L3:C36]",
-                                "snippet": "'This is a...ocal note'"
-                              },
-                              "end": 99,
-                              "endPos": {
-                                "offset": 99,
-                                "line": 3,
-                                "column": 36
-                              },
-                              "fullEnd": 101,
-                              "fullStart": 63,
-                              "kind": "<function-application>",
-                              "start": 71,
-                              "startPos": {
-                                "offset": 71,
-                                "line": 3,
-                                "column": 8
-                              }
-                            }
-                          ],
-                          "blockCloseBrace": {
-                            "context": {
-                              "id": "<rbrace>:}@[L4:C4, L4:C5]",
-                              "snippet": "}"
-                            },
-                            "end": 106,
-                            "endPos": {
-                              "offset": 106,
-                              "line": 4,
-                              "column": 5
-                            },
-                            "isInvalid": false,
-                            "kind": "<rbrace>",
-                            "leadingInvalid": "",
-                            "leadingTrivia": "    ",
-                            "start": 105,
-                            "startPos": {
-                              "offset": 105,
-                              "line": 4,
-                              "column": 4
-                            },
-                            "trailingInvalid": "",
-                            "trailingTrivia": "\n",
-                            "value": "}"
-                          }
-                        },
-                        "context": {
-                          "id": "<block-expression>@[L2:C9, L4:C5]",
-                          "snippet": "{\r\n       ...te'\r\n    }"
-                        },
-                        "end": 106,
-                        "endPos": {
-                          "offset": 106,
-                          "line": 4,
-                          "column": 5
-                        },
-                        "fullEnd": 108,
-                        "fullStart": 60,
-                        "kind": "<block-expression>",
-                        "start": 60,
-                        "startPos": {
-                          "offset": 60,
-                          "line": 2,
-                          "column": 9
-                        }
-                      },
-                      "parent": {
-                        "context": {}
-                      }
-                    },
-                    "context": {
-                      "id": "<element-declaration>:@[L2:C4, L4:C5]",
-                      "snippet": "Note {\r\n  ...te'\r\n    }"
-                    },
-                    "end": 106,
-                    "endPos": {
-                      "offset": 106,
-                      "line": 4,
-                      "column": 5
-                    },
-                    "fullEnd": 108,
-                    "fullStart": 51,
-                    "kind": "<element-declaration>",
-                    "start": 55,
-                    "startPos": {
-                      "offset": 55,
-                      "line": 2,
-                      "column": 4
-                    }
-                  }
-                ],
-                "blockCloseBrace": {
-                  "context": {
-                    "id": "<rbrace>:}@[L5:C0, L5:C1]",
-                    "snippet": "}"
-                  },
-                  "end": 109,
-                  "endPos": {
-                    "offset": 109,
-                    "line": 5,
-                    "column": 1
-                  },
-                  "isInvalid": false,
-                  "kind": "<rbrace>",
-                  "leadingInvalid": "",
-                  "leadingTrivia": "",
-                  "start": 108,
-                  "startPos": {
-                    "offset": 108,
-                    "line": 5,
-                    "column": 0
-                  },
-                  "trailingInvalid": "",
-                  "trailingTrivia": "\n",
-                  "value": "}"
-                }
-              },
-              "context": {
-                "id": "<block-expression>@[L0:C8, L5:C1]",
-                "snippet": "{\r\n    Not...\r\n    }\r\n}"
-              },
-              "end": 109,
-              "endPos": {
-                "offset": 109,
-                "line": 5,
-                "column": 1
-              },
-              "fullEnd": 111,
-              "fullStart": 8,
-              "kind": "<block-expression>",
-              "start": 8,
-              "startPos": {
-                "offset": 8,
-                "line": 0,
-                "column": 8
-              }
-            },
             "parent": {
               "context": {}
+            },
+            "type": {
+              "context": {
+                "id": "<identifier>:Table@[L0:C0, L0:C5]",
+                "snippet": "Table"
+              },
+              "end": 5,
+              "endPos": {
+                "offset": 5,
+                "line": 0,
+                "column": 5
+              },
+              "isInvalid": false,
+              "kind": "<identifier>",
+              "leadingInvalid": "",
+              "leadingTrivia": "",
+              "start": 0,
+              "startPos": {
+                "offset": 0,
+                "line": 0,
+                "column": 0
+              },
+              "trailingInvalid": "",
+              "trailingTrivia": " ",
+              "value": "Table"
             }
           },
           "context": {
@@ -659,33 +659,33 @@
         },
         {
           "children": {
-            "type": {
-              "context": {
-                "id": "<identifier>:Note@[L7:C0, L7:C4]",
-                "snippet": "Note"
-              },
-              "end": 117,
-              "endPos": {
-                "offset": 117,
-                "line": 7,
-                "column": 4
-              },
-              "isInvalid": false,
-              "kind": "<identifier>",
-              "leadingInvalid": "",
-              "leadingTrivia": "\n",
-              "start": 113,
-              "startPos": {
-                "offset": 113,
-                "line": 7,
-                "column": 0
-              },
-              "trailingInvalid": "",
-              "trailingTrivia": " ",
-              "value": "Note"
-            },
             "body": {
               "children": {
+                "blockCloseBrace": {
+                  "context": {
+                    "id": "<rbrace>:}@[L9:C0, L9:C1]",
+                    "snippet": "}"
+                  },
+                  "end": 151,
+                  "endPos": {
+                    "offset": 151,
+                    "line": 9,
+                    "column": 1
+                  },
+                  "isInvalid": false,
+                  "kind": "<rbrace>",
+                  "leadingInvalid": "",
+                  "leadingTrivia": "",
+                  "start": 150,
+                  "startPos": {
+                    "offset": 150,
+                    "line": 9,
+                    "column": 0
+                  },
+                  "trailingInvalid": "",
+                  "trailingTrivia": "\n",
+                  "value": "}"
+                },
                 "blockOpenBrace": {
                   "context": {
                     "id": "<lbrace>:{@[L7:C5, L7:C6]",
@@ -714,6 +714,7 @@
                 "body": [
                   {
                     "children": {
+                      "args": [],
                       "callee": {
                         "children": {
                           "expression": {
@@ -784,8 +785,7 @@
                           "line": 8,
                           "column": 4
                         }
-                      },
-                      "args": []
+                      }
                     },
                     "context": {
                       "id": "<function-application>@[L8:C4, L8:C27]",
@@ -807,32 +807,7 @@
                       "column": 4
                     }
                   }
-                ],
-                "blockCloseBrace": {
-                  "context": {
-                    "id": "<rbrace>:}@[L9:C0, L9:C1]",
-                    "snippet": "}"
-                  },
-                  "end": 151,
-                  "endPos": {
-                    "offset": 151,
-                    "line": 9,
-                    "column": 1
-                  },
-                  "isInvalid": false,
-                  "kind": "<rbrace>",
-                  "leadingInvalid": "",
-                  "leadingTrivia": "",
-                  "start": 150,
-                  "startPos": {
-                    "offset": 150,
-                    "line": 9,
-                    "column": 0
-                  },
-                  "trailingInvalid": "",
-                  "trailingTrivia": "\n",
-                  "value": "}"
-                }
+                ]
               },
               "context": {
                 "id": "<block-expression>@[L7:C5, L9:C1]",
@@ -856,6 +831,31 @@
             },
             "parent": {
               "context": {}
+            },
+            "type": {
+              "context": {
+                "id": "<identifier>:Note@[L7:C0, L7:C4]",
+                "snippet": "Note"
+              },
+              "end": 117,
+              "endPos": {
+                "offset": 117,
+                "line": 7,
+                "column": 4
+              },
+              "isInvalid": false,
+              "kind": "<identifier>",
+              "leadingInvalid": "",
+              "leadingTrivia": "\n",
+              "start": 113,
+              "startPos": {
+                "offset": 113,
+                "line": 7,
+                "column": 0
+              },
+              "trailingInvalid": "",
+              "trailingTrivia": " ",
+              "value": "Note"
             }
           },
           "context": {
@@ -880,58 +880,9 @@
         },
         {
           "children": {
-            "type": {
-              "context": {
-                "id": "<identifier>:Note@[L11:C0, L11:C4]",
-                "snippet": "Note"
-              },
-              "end": 159,
-              "endPos": {
-                "offset": 159,
-                "line": 11,
-                "column": 4
-              },
-              "isInvalid": false,
-              "kind": "<identifier>",
-              "leadingInvalid": "",
-              "leadingTrivia": "\n",
-              "start": 155,
-              "startPos": {
-                "offset": 155,
-                "line": 11,
-                "column": 0
-              },
-              "trailingInvalid": "",
-              "trailingTrivia": "",
-              "value": "Note"
-            },
-            "bodyColon": {
-              "context": {
-                "id": "<colon>::@[L11:C4, L11:C5]",
-                "snippet": ":"
-              },
-              "end": 160,
-              "endPos": {
-                "offset": 160,
-                "line": 11,
-                "column": 5
-              },
-              "isInvalid": false,
-              "kind": "<colon>",
-              "leadingInvalid": "",
-              "leadingTrivia": "",
-              "start": 159,
-              "startPos": {
-                "offset": 159,
-                "line": 11,
-                "column": 4
-              },
-              "trailingInvalid": "",
-              "trailingTrivia": " ",
-              "value": ":"
-            },
             "body": {
               "children": {
+                "args": [],
                 "callee": {
                   "children": {
                     "expression": {
@@ -1002,8 +953,7 @@
                     "line": 11,
                     "column": 6
                   }
-                },
-                "args": []
+                }
               },
               "context": {
                 "id": "<function-application>@[L11:C6, L13:C3]",
@@ -1025,8 +975,58 @@
                 "column": 6
               }
             },
+            "bodyColon": {
+              "context": {
+                "id": "<colon>::@[L11:C4, L11:C5]",
+                "snippet": ":"
+              },
+              "end": 160,
+              "endPos": {
+                "offset": 160,
+                "line": 11,
+                "column": 5
+              },
+              "isInvalid": false,
+              "kind": "<colon>",
+              "leadingInvalid": "",
+              "leadingTrivia": "",
+              "start": 159,
+              "startPos": {
+                "offset": 159,
+                "line": 11,
+                "column": 4
+              },
+              "trailingInvalid": "",
+              "trailingTrivia": " ",
+              "value": ":"
+            },
             "parent": {
               "context": {}
+            },
+            "type": {
+              "context": {
+                "id": "<identifier>:Note@[L11:C0, L11:C4]",
+                "snippet": "Note"
+              },
+              "end": 159,
+              "endPos": {
+                "offset": 159,
+                "line": 11,
+                "column": 4
+              },
+              "isInvalid": false,
+              "kind": "<identifier>",
+              "leadingInvalid": "",
+              "leadingTrivia": "\n",
+              "start": 155,
+              "startPos": {
+                "offset": 155,
+                "line": 11,
+                "column": 0
+              },
+              "trailingInvalid": "",
+              "trailingTrivia": "",
+              "value": "Note"
             }
           },
           "context": {

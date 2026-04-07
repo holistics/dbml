@@ -104,6 +104,7 @@ function sortArray (array: unknown[]): unknown[] {
     if (s instanceof SyntaxNode) return s.start;
     if (s instanceof SyntaxToken) return s.start;
     if ((s as any)?.declaration) return getIntraKindRank((s as any).declaration);
+    if ((s as any)?.id) return getIntraKindRank((s as any).id);
     return 0;
   }
 
@@ -124,7 +125,7 @@ function sortArray (array: unknown[]): unknown[] {
 // Get a stable snapshot of the value
 export function toSnapshot (
   compiler: Compiler,
-  value: Snappable | Snappable[] | Record<string, Snappable>,
+  value: Readonly<Snappable | Readonly<Snappable>[] | Record<string, Readonly<Snappable> | Readonly<Snappable>[]>>,
   { simple = false }: { simple?: boolean } = {},
 ): unknown {
   if (Array.isArray(value)) {
@@ -329,13 +330,13 @@ export function syntaxNodeToSnapshot (
     fullEnd,
     symbol: symbol && symbolToSnapshot(compiler, symbol),
     referee: referee && symbolToSnapshot(compiler, referee, { simple: true }),
-    children: Object.fromEntries(
+    children: sortObject(Object.fromEntries(
       Object.entries(props)
         .map(
           ([key, value]) =>
             [key, toSnapshot(compiler, value as Snappable | Snappable[] | Record<string, Snappable>)],
         ),
-    ),
+    )),
   });
   return result;
 }
@@ -367,14 +368,14 @@ export function symbolToSnapshot (
       id: symbolReadableId,
       snippet,
     },
-    members: symbolTable && [...symbolTable.entries()].map(([, value]) => symbolToSnapshot(compiler, value, { simple: true })),
+    members: symbolTable && sortArray([...symbolTable.entries()].map(([, value]) => symbolToSnapshot(compiler, value, { simple: true }))),
     declaration: declaration && {
       id: getReadableId(declaration),
       snippet: getCodeSnippet(declaration, compiler.parse.source()),
     },
-    references: references?.map((r) => ({
+    references: references && sortArray(references.map((r) => ({
       id: getReadableId(r),
       snippet: getCodeSnippet(r, compiler.parse.source()),
-    })),
+    }))),
   });
 }

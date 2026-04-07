@@ -19,31 +19,6 @@
       "body": [
         {
           "children": {
-            "type": {
-              "context": {
-                "id": "<identifier>:Note@[L0:C0, L0:C4]",
-                "snippet": "Note"
-              },
-              "end": 4,
-              "endPos": {
-                "offset": 4,
-                "line": 0,
-                "column": 4
-              },
-              "isInvalid": false,
-              "kind": "<identifier>",
-              "leadingInvalid": "",
-              "leadingTrivia": "",
-              "start": 0,
-              "startPos": {
-                "offset": 0,
-                "line": 0,
-                "column": 0
-              },
-              "trailingInvalid": "",
-              "trailingTrivia": "",
-              "value": "Note"
-            },
             "bodyColon": {
               "context": {
                 "id": "<colon>::@[L0:C4, L0:C5]",
@@ -68,6 +43,31 @@
               "trailingInvalid": "EnumE{}",
               "trailingTrivia": " ",
               "value": ":"
+            },
+            "type": {
+              "context": {
+                "id": "<identifier>:Note@[L0:C0, L0:C4]",
+                "snippet": "Note"
+              },
+              "end": 4,
+              "endPos": {
+                "offset": 4,
+                "line": 0,
+                "column": 4
+              },
+              "isInvalid": false,
+              "kind": "<identifier>",
+              "leadingInvalid": "",
+              "leadingTrivia": "",
+              "start": 0,
+              "startPos": {
+                "offset": 0,
+                "line": 0,
+                "column": 0
+              },
+              "trailingInvalid": "",
+              "trailingTrivia": "",
+              "value": "Note"
             }
           },
           "context": {
