@@ -26,6 +26,9 @@ import {
   SyntaxNode,
   TupleExpressionNode,
   VariableNode,
+  UseDeclarationNode,
+  UseSpecifierListNode,
+  UseSpecifierNode,
 } from '@/core/parser/nodes';
 import { extractVariableNode, isAsKeyword, isExpressionAnIdentifierNode } from '../utils/expression';
 
@@ -180,6 +183,19 @@ function markInvalidNode (node: SyntaxNode) {
   } else if (node instanceof ProgramNode) {
     node.body.forEach(markInvalid);
     markInvalid(node.eof);
+  } else if (node instanceof UseDeclarationNode) {
+    markInvalid(node.useKeyword);
+    markInvalid(node.specifiers);
+    markInvalid(node.fromKeyword);
+    markInvalid(node.path);
+  } else if (node instanceof UseSpecifierListNode) {
+    markInvalid(node.openBrace);
+    node.specifiers.forEach(markInvalid);
+    node.commaList.forEach(markInvalid);
+    markInvalid(node.closeBrace);
+  } else if (node instanceof UseSpecifierNode) {
+    markInvalid(node.elementKind);
+    markInvalid(node.name);
   } else if (node instanceof EmptyNode) {
     // DummyNode has no children to mark invalid
   } else {
@@ -293,6 +309,18 @@ export function getMemberChain (node: SyntaxNode): Readonly<(SyntaxNode | Syntax
 
   if (node instanceof EmptyNode) {
     return [];
+  }
+
+  if (node instanceof UseDeclarationNode) {
+    return filterUndefined(node.useKeyword, node.specifiers, node.fromKeyword, node.path);
+  }
+
+  if (node instanceof UseSpecifierListNode) {
+    return filterUndefined(node.openBrace, ...alternateLists(node.specifiers, node.commaList), node.closeBrace);
+  }
+
+  if (node instanceof UseSpecifierNode) {
+    return filterUndefined(node.elementKind, node.name);
   }
 
   if (node instanceof GroupExpressionNode) {

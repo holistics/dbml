@@ -22,24 +22,28 @@ import {
   PrimaryExpressionNode,
   ArrayNode,
   SyntaxNodeIdGenerator,
+  UseDeclarationNode,
+  UseSpecifierListNode,
+  UseSpecifierNode,
 } from '@/core/parser/nodes';
 import Report from '@/core/report';
 import { Compiler, SyntaxToken } from '@/index';
 import type { Database } from '@/core/types/schemaJson';
+import { DEFAULT_ENTRY } from '@/constants';
 
 export function lex (source: string): Report<SyntaxToken[]> {
   return new Lexer(source).lex();
 }
 
 export function parse (source: string): Report<{ ast: ProgramNode; tokens: SyntaxToken[] }> {
-  return new Lexer(source).lex().chain((tokens) => new Parser(source, tokens, new SyntaxNodeIdGenerator()).parse());
+  return new Lexer(source).lex().chain((tokens) => new Parser(DEFAULT_ENTRY, source, tokens, new SyntaxNodeIdGenerator()).parse());
 }
 
 export function analyze (source: string) {
   const compiler = new Compiler();
   compiler.setSource(source);
 
-  const parseResult = compiler.parseFile();
+  const parseResult = compiler.parseFile(DEFAULT_ENTRY);
   const ast = parseResult.getValue().ast;
 
   const bindResult = compiler.bind(ast);
@@ -61,7 +65,7 @@ export function interpret (source: string): Report<Database | undefined> {
   const compiler = new Compiler();
   compiler.setSource(source);
 
-  const parseResult = compiler.parseFile();
+  const parseResult = compiler.parseFile(DEFAULT_ENTRY);
   const ast = parseResult.getValue().ast;
 
   const bindResult = compiler.bind(ast);
@@ -245,6 +249,32 @@ export function print (source: string, ast: SyntaxNode): string {
       case SyntaxNodeKind.EMPTY:
         // Empty nodes don't contribute to output
         break;
+
+      case SyntaxNodeKind.USE_DECLARATION: {
+        const use = node as UseDeclarationNode;
+        if (use.useKeyword) collectTokens(use.useKeyword);
+        if (use.star) collectTokens(use.star);
+        if (use.specifiers) collectTokens(use.specifiers);
+        if (use.fromKeyword) collectTokens(use.fromKeyword);
+        if (use.path) collectTokens(use.path);
+        break;
+      }
+
+      case SyntaxNodeKind.USE_SPECIFIER: {
+        const list = node as UseSpecifierListNode;
+        if (list.openBrace) collectTokens(list.openBrace);
+        list.specifiers.forEach(collectTokens);
+        list.commaList.forEach(collectTokens);
+        if (list.closeBrace) collectTokens(list.closeBrace);
+        break;
+      }
+
+      case SyntaxNodeKind.USE_SPECIFIER_LIST: {
+        const spec = node as UseSpecifierNode;
+        if (spec.elementKind) collectTokens(spec.elementKind);
+        if (spec.name) collectTokens(spec.name);
+        break;
+      }
 
       default: {
         // TypeScript exhaustiveness check - this should never be reached
