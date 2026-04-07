@@ -15,8 +15,10 @@ import {
   AttributeNode,
   FunctionExpressionNode,
   CallExpressionNode,
+  UseDeclarationNode,
+  UseSpecifierNode,
 } from '@/core/parser/nodes';
-import type { ElementKind, SettingName } from '@/core/types/keywords';
+import type { ElementKind, ImportKind, SettingName } from '@/core/types/keywords';
 import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
 import { last } from 'lodash-es';
 import { NUMERIC_LITERAL_PREFIX } from '@/constants';
@@ -187,6 +189,16 @@ export function getBody (node?: ElementDeclarationNode): (FunctionApplicationNod
 // Return whether `node` is an ElementDeclarationNode of kind `kind`
 export function isElementNode (node: SyntaxNode, kind: ElementKind): node is ElementDeclarationNode {
   return node instanceof ElementDeclarationNode && node.isKind(kind);
+}
+
+// Return whether `node` is a UseDeclarationNode
+export function isUseDeclaration (node: SyntaxNode): node is UseDeclarationNode {
+  return node instanceof UseDeclarationNode;
+}
+
+// Return whether `node` is an UseDeclarationNode with import kind `kind`
+export function isUseSpecifier (node: SyntaxNode, kind?: ImportKind): node is UseSpecifierNode {
+  return node instanceof UseSpecifierNode && (kind === undefined || node.isKind(kind));
 }
 
 // Return whether `node` is a ProgramNode

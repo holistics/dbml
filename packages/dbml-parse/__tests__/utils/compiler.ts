@@ -256,7 +256,7 @@ export function print (source: string, ast: SyntaxNode): string {
         if (use.star) collectTokens(use.star);
         if (use.specifiers) collectTokens(use.specifiers);
         if (use.fromKeyword) collectTokens(use.fromKeyword);
-        if (use.path) collectTokens(use.path);
+        if (use.importPath) collectTokens(use.importPath);
         break;
       }
 
@@ -271,7 +271,7 @@ export function print (source: string, ast: SyntaxNode): string {
 
       case SyntaxNodeKind.USE_SPECIFIER_LIST: {
         const spec = node as UseSpecifierNode;
-        if (spec.elementKind) collectTokens(spec.elementKind);
+        if (spec.importKind) collectTokens(spec.importKind);
         if (spec.name) collectTokens(spec.name);
         break;
       }

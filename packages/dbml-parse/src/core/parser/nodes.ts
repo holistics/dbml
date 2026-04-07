@@ -1,6 +1,6 @@
 import { flatten, zip } from 'lodash-es';
 import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
-import { ElementKind, Internable, Position } from '@/core/types';
+import { ElementKind, ImportKind, Internable, Position } from '@/core/types';
 import { getTokenFullEnd, getTokenFullStart } from '@/core/lexer/utils';
 import { Filepath } from '../types/filepath';
 import { isReuseKeyword } from '../utils/expression';
@@ -212,7 +212,7 @@ export class UseDeclarationNode extends SyntaxNode {
 
   fromKeyword?: SyntaxToken;
 
-  path?: SyntaxToken;
+  importPath?: SyntaxToken;
 
   constructor (
     {
@@ -241,7 +241,7 @@ export class UseDeclarationNode extends SyntaxNode {
     this.star = star;
     this.specifiers = specifiers;
     this.fromKeyword = fromKeyword;
-    this.path = path;
+    this.importPath = path;
   }
 
   get isReExport (): boolean {
@@ -255,7 +255,7 @@ export class UseDeclarationNode extends SyntaxNode {
 // e.g. enum status
 // e.g. table users as u
 export class UseSpecifierNode extends SyntaxNode {
-  elementKind?: SyntaxToken;
+  importKind?: SyntaxToken;
 
   name?: NormalExpressionNode;
 
@@ -264,8 +264,8 @@ export class UseSpecifierNode extends SyntaxNode {
   alias?: NormalExpressionNode;
 
   constructor (
-    { elementKind, name, asKeyword, alias }: {
-      elementKind?: SyntaxToken;
+    { importKind, name, asKeyword, alias }: {
+      importKind?: SyntaxToken;
       name?: NormalExpressionNode;
       asKeyword?: SyntaxToken;
       alias?: NormalExpressionNode;
@@ -277,12 +277,16 @@ export class UseSpecifierNode extends SyntaxNode {
       id,
       SyntaxNodeKind.USE_SPECIFIER,
       filepath,
-      [elementKind, name, asKeyword, alias],
+      [importKind, name, asKeyword, alias],
     );
-    this.elementKind = elementKind;
+    this.importKind = importKind;
     this.name = name;
     this.asKeyword = asKeyword;
     this.alias = alias;
+  }
+
+  isKind (...importKinds: ImportKind[]): boolean {
+    return this.importKind?.value !== undefined && importKinds.map((k) => k.toLowerCase()).includes(this.importKind.value.toLowerCase());
   }
 }
 

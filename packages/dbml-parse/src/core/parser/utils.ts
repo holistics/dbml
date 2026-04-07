@@ -187,14 +187,14 @@ function markInvalidNode (node: SyntaxNode) {
     markInvalid(node.useKeyword);
     markInvalid(node.specifiers);
     markInvalid(node.fromKeyword);
-    markInvalid(node.path);
+    markInvalid(node.importPath);
   } else if (node instanceof UseSpecifierListNode) {
     markInvalid(node.openBrace);
     node.specifiers.forEach(markInvalid);
     node.commaList.forEach(markInvalid);
     markInvalid(node.closeBrace);
   } else if (node instanceof UseSpecifierNode) {
-    markInvalid(node.elementKind);
+    markInvalid(node.importKind);
     markInvalid(node.name);
   } else if (node instanceof EmptyNode) {
     // DummyNode has no children to mark invalid
@@ -312,7 +312,7 @@ export function getMemberChain (node: SyntaxNode): Readonly<(SyntaxNode | Syntax
   }
 
   if (node instanceof UseDeclarationNode) {
-    return filterUndefined(node.useKeyword, node.specifiers, node.fromKeyword, node.path);
+    return filterUndefined(node.useKeyword, node.specifiers, node.fromKeyword, node.importPath);
   }
 
   if (node instanceof UseSpecifierListNode) {
@@ -320,7 +320,7 @@ export function getMemberChain (node: SyntaxNode): Readonly<(SyntaxNode | Syntax
   }
 
   if (node instanceof UseSpecifierNode) {
-    return filterUndefined(node.elementKind, node.name);
+    return filterUndefined(node.importKind, node.name);
   }
 
   if (node instanceof GroupExpressionNode) {
