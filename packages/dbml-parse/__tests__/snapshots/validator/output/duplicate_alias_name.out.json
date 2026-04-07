@@ -1,13 +1,29 @@
 {
   "errors": [],
   "program": {
+    "context": {
+      "id": "<program>@[L0:C0, L14:C1]",
+      "snippet": "Table A as...ary key]\n}"
+    },
     "children": {
       "body": [
         {
+          "context": {
+            "id": "<element-declaration>:A@[L0:C0, L2:C1]",
+            "snippet": "Table A as...ary key]\n}"
+          },
           "children": {
             "alias": {
+              "context": {
+                "id": "<primary-expression>@[L0:C11, L0:C12]",
+                "snippet": "A"
+              },
               "children": {
                 "expression": {
+                  "context": {
+                    "id": "<variable>:A@[L0:C11, L0:C12]",
+                    "snippet": "A"
+                  },
                   "children": {
                     "variable": {
                       "context": {
@@ -35,10 +51,6 @@
                       "value": "A"
                     }
                   },
-                  "context": {
-                    "id": "<variable>:A@[L0:C11, L0:C12]",
-                    "snippet": "A"
-                  },
                   "end": 12,
                   "endPos": {
                     "offset": 12,
@@ -55,10 +67,6 @@
                     "column": 11
                   }
                 }
-              },
-              "context": {
-                "id": "<primary-expression>@[L0:C11, L0:C12]",
-                "snippet": "A"
               },
               "end": 12,
               "endPos": {
@@ -102,6 +110,10 @@
               "value": "as"
             },
             "body": {
+              "context": {
+                "id": "<block-expression>@[L0:C13, L2:C1]",
+                "snippet": "{\n    id i...ary key]\n}"
+              },
               "children": {
                 "blockCloseBrace": {
                   "context": {
@@ -155,11 +167,23 @@
                 },
                 "body": [
                   {
+                    "context": {
+                      "id": "<function-application>@[L1:C4, L1:C24]",
+                      "snippet": "id int [primary key]"
+                    },
                     "children": {
                       "args": [
                         {
+                          "context": {
+                            "id": "<primary-expression>@[L1:C7, L1:C10]",
+                            "snippet": "int"
+                          },
                           "children": {
                             "expression": {
+                              "context": {
+                                "id": "<variable>:int@[L1:C7, L1:C10]",
+                                "snippet": "int"
+                              },
                               "children": {
                                 "variable": {
                                   "context": {
@@ -187,10 +211,6 @@
                                   "value": "int"
                                 }
                               },
-                              "context": {
-                                "id": "<variable>:int@[L1:C7, L1:C10]",
-                                "snippet": "int"
-                              },
                               "end": 25,
                               "endPos": {
                                 "offset": 25,
@@ -207,10 +227,6 @@
                                 "column": 7
                               }
                             }
-                          },
-                          "context": {
-                            "id": "<primary-expression>@[L1:C7, L1:C10]",
-                            "snippet": "int"
                           },
                           "end": 25,
                           "endPos": {
@@ -229,12 +245,24 @@
                           }
                         },
                         {
+                          "context": {
+                            "id": "<list-expression>@[L1:C11, L1:C24]",
+                            "snippet": "[primary key]"
+                          },
                           "children": {
                             "commaList": [],
                             "elementList": [
                               {
+                                "context": {
+                                  "id": "<attribute>@[L1:C12, L1:C23]",
+                                  "snippet": "primary key"
+                                },
                                 "children": {
                                   "name": {
+                                    "context": {
+                                      "id": "<identifer-stream>@[L1:C12, L1:C23]",
+                                      "snippet": "primary key"
+                                    },
                                     "children": {
                                       "identifiers": [
                                         {
@@ -289,10 +317,6 @@
                                         }
                                       ]
                                     },
-                                    "context": {
-                                      "id": "<identifer-stream>@[L1:C12, L1:C23]",
-                                      "snippet": "primary key"
-                                    },
                                     "end": 38,
                                     "endPos": {
                                       "offset": 38,
@@ -309,10 +333,6 @@
                                       "column": 12
                                     }
                                   }
-                                },
-                                "context": {
-                                  "id": "<attribute>@[L1:C12, L1:C23]",
-                                  "snippet": "primary key"
                                 },
                                 "end": 38,
                                 "endPos": {
@@ -382,10 +402,6 @@
                               "value": "["
                             }
                           },
-                          "context": {
-                            "id": "<list-expression>@[L1:C11, L1:C24]",
-                            "snippet": "[primary key]"
-                          },
                           "end": 39,
                           "endPos": {
                             "offset": 39,
@@ -404,8 +420,16 @@
                         }
                       ],
                       "callee": {
+                        "context": {
+                          "id": "<primary-expression>@[L1:C4, L1:C6]",
+                          "snippet": "id"
+                        },
                         "children": {
                           "expression": {
+                            "context": {
+                              "id": "<variable>:id@[L1:C4, L1:C6]",
+                              "snippet": "id"
+                            },
                             "children": {
                               "variable": {
                                 "context": {
@@ -433,10 +457,6 @@
                                 "value": "id"
                               }
                             },
-                            "context": {
-                              "id": "<variable>:id@[L1:C4, L1:C6]",
-                              "snippet": "id"
-                            },
                             "end": 21,
                             "endPos": {
                               "offset": 21,
@@ -454,10 +474,6 @@
                             }
                           }
                         },
-                        "context": {
-                          "id": "<primary-expression>@[L1:C4, L1:C6]",
-                          "snippet": "id"
-                        },
                         "end": 21,
                         "endPos": {
                           "offset": 21,
@@ -474,10 +490,6 @@
                           "column": 4
                         }
                       }
-                    },
-                    "context": {
-                      "id": "<function-application>@[L1:C4, L1:C24]",
-                      "snippet": "id int [primary key]"
                     },
                     "end": 39,
                     "endPos": {
@@ -508,10 +520,6 @@
                   }
                 ]
               },
-              "context": {
-                "id": "<block-expression>@[L0:C13, L2:C1]",
-                "snippet": "{\n    id i...ary key]\n}"
-              },
               "end": 41,
               "endPos": {
                 "offset": 41,
@@ -529,8 +537,16 @@
               }
             },
             "name": {
+              "context": {
+                "id": "<primary-expression>@[L0:C6, L0:C7]",
+                "snippet": "A"
+              },
               "children": {
                 "expression": {
+                  "context": {
+                    "id": "<variable>:A@[L0:C6, L0:C7]",
+                    "snippet": "A"
+                  },
                   "children": {
                     "variable": {
                       "context": {
@@ -558,10 +574,6 @@
                       "value": "A"
                     }
                   },
-                  "context": {
-                    "id": "<variable>:A@[L0:C6, L0:C7]",
-                    "snippet": "A"
-                  },
                   "end": 7,
                   "endPos": {
                     "offset": 7,
@@ -578,10 +590,6 @@
                     "column": 6
                   }
                 }
-              },
-              "context": {
-                "id": "<primary-expression>@[L0:C6, L0:C7]",
-                "snippet": "A"
               },
               "end": 7,
               "endPos": {
@@ -625,10 +633,6 @@
               "value": "Table"
             }
           },
-          "context": {
-            "id": "<element-declaration>:A@[L0:C0, L2:C1]",
-            "snippet": "Table A as...ary key]\n}"
-          },
           "end": 41,
           "endPos": {
             "offset": 41,
@@ -665,10 +669,22 @@
           }
         },
         {
+          "context": {
+            "id": "<element-declaration>:B@[L4:C0, L6:C1]",
+            "snippet": "Table \"B\" ...ary key]\n}"
+          },
           "children": {
             "alias": {
+              "context": {
+                "id": "<primary-expression>@[L4:C13, L4:C14]",
+                "snippet": "B"
+              },
               "children": {
                 "expression": {
+                  "context": {
+                    "id": "<variable>:B@[L4:C13, L4:C14]",
+                    "snippet": "B"
+                  },
                   "children": {
                     "variable": {
                       "context": {
@@ -696,10 +712,6 @@
                       "value": "B"
                     }
                   },
-                  "context": {
-                    "id": "<variable>:B@[L4:C13, L4:C14]",
-                    "snippet": "B"
-                  },
                   "end": 57,
                   "endPos": {
                     "offset": 57,
@@ -716,10 +728,6 @@
                     "column": 13
                   }
                 }
-              },
-              "context": {
-                "id": "<primary-expression>@[L4:C13, L4:C14]",
-                "snippet": "B"
               },
               "end": 57,
               "endPos": {
@@ -763,6 +771,10 @@
               "value": "as"
             },
             "body": {
+              "context": {
+                "id": "<block-expression>@[L4:C15, L6:C1]",
+                "snippet": "{\n    id i...ary key]\n}"
+              },
               "children": {
                 "blockCloseBrace": {
                   "context": {
@@ -816,11 +828,23 @@
                 },
                 "body": [
                   {
+                    "context": {
+                      "id": "<function-application>@[L5:C4, L5:C24]",
+                      "snippet": "id int [primary key]"
+                    },
                     "children": {
                       "args": [
                         {
+                          "context": {
+                            "id": "<primary-expression>@[L5:C7, L5:C10]",
+                            "snippet": "int"
+                          },
                           "children": {
                             "expression": {
+                              "context": {
+                                "id": "<variable>:int@[L5:C7, L5:C10]",
+                                "snippet": "int"
+                              },
                               "children": {
                                 "variable": {
                                   "context": {
@@ -848,10 +872,6 @@
                                   "value": "int"
                                 }
                               },
-                              "context": {
-                                "id": "<variable>:int@[L5:C7, L5:C10]",
-                                "snippet": "int"
-                              },
                               "end": 70,
                               "endPos": {
                                 "offset": 70,
@@ -868,10 +888,6 @@
                                 "column": 7
                               }
                             }
-                          },
-                          "context": {
-                            "id": "<primary-expression>@[L5:C7, L5:C10]",
-                            "snippet": "int"
                           },
                           "end": 70,
                           "endPos": {
@@ -890,12 +906,24 @@
                           }
                         },
                         {
+                          "context": {
+                            "id": "<list-expression>@[L5:C11, L5:C24]",
+                            "snippet": "[primary key]"
+                          },
                           "children": {
                             "commaList": [],
                             "elementList": [
                               {
+                                "context": {
+                                  "id": "<attribute>@[L5:C12, L5:C23]",
+                                  "snippet": "primary key"
+                                },
                                 "children": {
                                   "name": {
+                                    "context": {
+                                      "id": "<identifer-stream>@[L5:C12, L5:C23]",
+                                      "snippet": "primary key"
+                                    },
                                     "children": {
                                       "identifiers": [
                                         {
@@ -950,10 +978,6 @@
                                         }
                                       ]
                                     },
-                                    "context": {
-                                      "id": "<identifer-stream>@[L5:C12, L5:C23]",
-                                      "snippet": "primary key"
-                                    },
                                     "end": 83,
                                     "endPos": {
                                       "offset": 83,
@@ -970,10 +994,6 @@
                                       "column": 12
                                     }
                                   }
-                                },
-                                "context": {
-                                  "id": "<attribute>@[L5:C12, L5:C23]",
-                                  "snippet": "primary key"
                                 },
                                 "end": 83,
                                 "endPos": {
@@ -1043,10 +1063,6 @@
                               "value": "["
                             }
                           },
-                          "context": {
-                            "id": "<list-expression>@[L5:C11, L5:C24]",
-                            "snippet": "[primary key]"
-                          },
                           "end": 84,
                           "endPos": {
                             "offset": 84,
@@ -1065,8 +1081,16 @@
                         }
                       ],
                       "callee": {
+                        "context": {
+                          "id": "<primary-expression>@[L5:C4, L5:C6]",
+                          "snippet": "id"
+                        },
                         "children": {
                           "expression": {
+                            "context": {
+                              "id": "<variable>:id@[L5:C4, L5:C6]",
+                              "snippet": "id"
+                            },
                             "children": {
                               "variable": {
                                 "context": {
@@ -1094,10 +1118,6 @@
                                 "value": "id"
                               }
                             },
-                            "context": {
-                              "id": "<variable>:id@[L5:C4, L5:C6]",
-                              "snippet": "id"
-                            },
                             "end": 66,
                             "endPos": {
                               "offset": 66,
@@ -1115,10 +1135,6 @@
                             }
                           }
                         },
-                        "context": {
-                          "id": "<primary-expression>@[L5:C4, L5:C6]",
-                          "snippet": "id"
-                        },
                         "end": 66,
                         "endPos": {
                           "offset": 66,
@@ -1135,10 +1151,6 @@
                           "column": 4
                         }
                       }
-                    },
-                    "context": {
-                      "id": "<function-application>@[L5:C4, L5:C24]",
-                      "snippet": "id int [primary key]"
                     },
                     "end": 84,
                     "endPos": {
@@ -1169,10 +1181,6 @@
                   }
                 ]
               },
-              "context": {
-                "id": "<block-expression>@[L4:C15, L6:C1]",
-                "snippet": "{\n    id i...ary key]\n}"
-              },
               "end": 86,
               "endPos": {
                 "offset": 86,
@@ -1190,8 +1198,16 @@
               }
             },
             "name": {
+              "context": {
+                "id": "<primary-expression>@[L4:C6, L4:C9]",
+                "snippet": "\"B\""
+              },
               "children": {
                 "expression": {
+                  "context": {
+                    "id": "<variable>:B@[L4:C6, L4:C9]",
+                    "snippet": "\"B\""
+                  },
                   "children": {
                     "variable": {
                       "context": {
@@ -1219,10 +1235,6 @@
                       "value": "B"
                     }
                   },
-                  "context": {
-                    "id": "<variable>:B@[L4:C6, L4:C9]",
-                    "snippet": "\"B\""
-                  },
                   "end": 52,
                   "endPos": {
                     "offset": 52,
@@ -1239,10 +1251,6 @@
                     "column": 6
                   }
                 }
-              },
-              "context": {
-                "id": "<primary-expression>@[L4:C6, L4:C9]",
-                "snippet": "\"B\""
               },
               "end": 52,
               "endPos": {
@@ -1286,10 +1294,6 @@
               "value": "Table"
             }
           },
-          "context": {
-            "id": "<element-declaration>:B@[L4:C0, L6:C1]",
-            "snippet": "Table \"B\" ...ary key]\n}"
-          },
           "end": 86,
           "endPos": {
             "offset": 86,
@@ -1326,10 +1330,22 @@
           }
         },
         {
+          "context": {
+            "id": "<element-declaration>:C@[L8:C0, L10:C1]",
+            "snippet": "Table C as...ary key]\n}"
+          },
           "children": {
             "alias": {
+              "context": {
+                "id": "<primary-expression>@[L8:C11, L8:C14]",
+                "snippet": "\"C\""
+              },
               "children": {
                 "expression": {
+                  "context": {
+                    "id": "<variable>:C@[L8:C11, L8:C14]",
+                    "snippet": "\"C\""
+                  },
                   "children": {
                     "variable": {
                       "context": {
@@ -1357,10 +1373,6 @@
                       "value": "C"
                     }
                   },
-                  "context": {
-                    "id": "<variable>:C@[L8:C11, L8:C14]",
-                    "snippet": "\"C\""
-                  },
                   "end": 102,
                   "endPos": {
                     "offset": 102,
@@ -1377,10 +1389,6 @@
                     "column": 11
                   }
                 }
-              },
-              "context": {
-                "id": "<primary-expression>@[L8:C11, L8:C14]",
-                "snippet": "\"C\""
               },
               "end": 102,
               "endPos": {
@@ -1424,6 +1432,10 @@
               "value": "as"
             },
             "body": {
+              "context": {
+                "id": "<block-expression>@[L8:C15, L10:C1]",
+                "snippet": "{\n    id i...ary key]\n}"
+              },
               "children": {
                 "blockCloseBrace": {
                   "context": {
@@ -1477,11 +1489,23 @@
                 },
                 "body": [
                   {
+                    "context": {
+                      "id": "<function-application>@[L9:C4, L9:C24]",
+                      "snippet": "id int [primary key]"
+                    },
                     "children": {
                       "args": [
                         {
+                          "context": {
+                            "id": "<primary-expression>@[L9:C7, L9:C10]",
+                            "snippet": "int"
+                          },
                           "children": {
                             "expression": {
+                              "context": {
+                                "id": "<variable>:int@[L9:C7, L9:C10]",
+                                "snippet": "int"
+                              },
                               "children": {
                                 "variable": {
                                   "context": {
@@ -1509,10 +1533,6 @@
                                   "value": "int"
                                 }
                               },
-                              "context": {
-                                "id": "<variable>:int@[L9:C7, L9:C10]",
-                                "snippet": "int"
-                              },
                               "end": 115,
                               "endPos": {
                                 "offset": 115,
@@ -1529,10 +1549,6 @@
                                 "column": 7
                               }
                             }
-                          },
-                          "context": {
-                            "id": "<primary-expression>@[L9:C7, L9:C10]",
-                            "snippet": "int"
                           },
                           "end": 115,
                           "endPos": {
@@ -1551,12 +1567,24 @@
                           }
                         },
                         {
+                          "context": {
+                            "id": "<list-expression>@[L9:C11, L9:C24]",
+                            "snippet": "[primary key]"
+                          },
                           "children": {
                             "commaList": [],
                             "elementList": [
                               {
+                                "context": {
+                                  "id": "<attribute>@[L9:C12, L9:C23]",
+                                  "snippet": "primary key"
+                                },
                                 "children": {
                                   "name": {
+                                    "context": {
+                                      "id": "<identifer-stream>@[L9:C12, L9:C23]",
+                                      "snippet": "primary key"
+                                    },
                                     "children": {
                                       "identifiers": [
                                         {
@@ -1611,10 +1639,6 @@
                                         }
                                       ]
                                     },
-                                    "context": {
-                                      "id": "<identifer-stream>@[L9:C12, L9:C23]",
-                                      "snippet": "primary key"
-                                    },
                                     "end": 128,
                                     "endPos": {
                                       "offset": 128,
@@ -1631,10 +1655,6 @@
                                       "column": 12
                                     }
                                   }
-                                },
-                                "context": {
-                                  "id": "<attribute>@[L9:C12, L9:C23]",
-                                  "snippet": "primary key"
                                 },
                                 "end": 128,
                                 "endPos": {
@@ -1704,10 +1724,6 @@
                               "value": "["
                             }
                           },
-                          "context": {
-                            "id": "<list-expression>@[L9:C11, L9:C24]",
-                            "snippet": "[primary key]"
-                          },
                           "end": 129,
                           "endPos": {
                             "offset": 129,
@@ -1726,8 +1742,16 @@
                         }
                       ],
                       "callee": {
+                        "context": {
+                          "id": "<primary-expression>@[L9:C4, L9:C6]",
+                          "snippet": "id"
+                        },
                         "children": {
                           "expression": {
+                            "context": {
+                              "id": "<variable>:id@[L9:C4, L9:C6]",
+                              "snippet": "id"
+                            },
                             "children": {
                               "variable": {
                                 "context": {
@@ -1755,10 +1779,6 @@
                                 "value": "id"
                               }
                             },
-                            "context": {
-                              "id": "<variable>:id@[L9:C4, L9:C6]",
-                              "snippet": "id"
-                            },
                             "end": 111,
                             "endPos": {
                               "offset": 111,
@@ -1776,10 +1796,6 @@
                             }
                           }
                         },
-                        "context": {
-                          "id": "<primary-expression>@[L9:C4, L9:C6]",
-                          "snippet": "id"
-                        },
                         "end": 111,
                         "endPos": {
                           "offset": 111,
@@ -1796,10 +1812,6 @@
                           "column": 4
                         }
                       }
-                    },
-                    "context": {
-                      "id": "<function-application>@[L9:C4, L9:C24]",
-                      "snippet": "id int [primary key]"
                     },
                     "end": 129,
                     "endPos": {
@@ -1830,10 +1842,6 @@
                   }
                 ]
               },
-              "context": {
-                "id": "<block-expression>@[L8:C15, L10:C1]",
-                "snippet": "{\n    id i...ary key]\n}"
-              },
               "end": 131,
               "endPos": {
                 "offset": 131,
@@ -1851,8 +1859,16 @@
               }
             },
             "name": {
+              "context": {
+                "id": "<primary-expression>@[L8:C6, L8:C7]",
+                "snippet": "C"
+              },
               "children": {
                 "expression": {
+                  "context": {
+                    "id": "<variable>:C@[L8:C6, L8:C7]",
+                    "snippet": "C"
+                  },
                   "children": {
                     "variable": {
                       "context": {
@@ -1880,10 +1896,6 @@
                       "value": "C"
                     }
                   },
-                  "context": {
-                    "id": "<variable>:C@[L8:C6, L8:C7]",
-                    "snippet": "C"
-                  },
                   "end": 95,
                   "endPos": {
                     "offset": 95,
@@ -1900,10 +1912,6 @@
                     "column": 6
                   }
                 }
-              },
-              "context": {
-                "id": "<primary-expression>@[L8:C6, L8:C7]",
-                "snippet": "C"
               },
               "end": 95,
               "endPos": {
@@ -1947,10 +1955,6 @@
               "value": "Table"
             }
           },
-          "context": {
-            "id": "<element-declaration>:C@[L8:C0, L10:C1]",
-            "snippet": "Table C as...ary key]\n}"
-          },
           "end": 131,
           "endPos": {
             "offset": 131,
@@ -1987,10 +1991,22 @@
           }
         },
         {
+          "context": {
+            "id": "<element-declaration>:D@[L12:C0, L14:C1]",
+            "snippet": "Table \"D\" ...ary key]\n}"
+          },
           "children": {
             "alias": {
+              "context": {
+                "id": "<primary-expression>@[L12:C13, L12:C16]",
+                "snippet": "\"D\""
+              },
               "children": {
                 "expression": {
+                  "context": {
+                    "id": "<variable>:D@[L12:C13, L12:C16]",
+                    "snippet": "\"D\""
+                  },
                   "children": {
                     "variable": {
                       "context": {
@@ -2018,10 +2034,6 @@
                       "value": "D"
                     }
                   },
-                  "context": {
-                    "id": "<variable>:D@[L12:C13, L12:C16]",
-                    "snippet": "\"D\""
-                  },
                   "end": 149,
                   "endPos": {
                     "offset": 149,
@@ -2038,10 +2050,6 @@
                     "column": 13
                   }
                 }
-              },
-              "context": {
-                "id": "<primary-expression>@[L12:C13, L12:C16]",
-                "snippet": "\"D\""
               },
               "end": 149,
               "endPos": {
@@ -2085,6 +2093,10 @@
               "value": "as"
             },
             "body": {
+              "context": {
+                "id": "<block-expression>@[L12:C17, L14:C1]",
+                "snippet": "{\n    id i...ary key]\n}"
+              },
               "children": {
                 "blockCloseBrace": {
                   "context": {
@@ -2138,11 +2150,23 @@
                 },
                 "body": [
                   {
+                    "context": {
+                      "id": "<function-application>@[L13:C4, L13:C24]",
+                      "snippet": "id int [primary key]"
+                    },
                     "children": {
                       "args": [
                         {
+                          "context": {
+                            "id": "<primary-expression>@[L13:C7, L13:C10]",
+                            "snippet": "int"
+                          },
                           "children": {
                             "expression": {
+                              "context": {
+                                "id": "<variable>:int@[L13:C7, L13:C10]",
+                                "snippet": "int"
+                              },
                               "children": {
                                 "variable": {
                                   "context": {
@@ -2170,10 +2194,6 @@
                                   "value": "int"
                                 }
                               },
-                              "context": {
-                                "id": "<variable>:int@[L13:C7, L13:C10]",
-                                "snippet": "int"
-                              },
                               "end": 162,
                               "endPos": {
                                 "offset": 162,
@@ -2190,10 +2210,6 @@
                                 "column": 7
                               }
                             }
-                          },
-                          "context": {
-                            "id": "<primary-expression>@[L13:C7, L13:C10]",
-                            "snippet": "int"
                           },
                           "end": 162,
                           "endPos": {
@@ -2212,12 +2228,24 @@
                           }
                         },
                         {
+                          "context": {
+                            "id": "<list-expression>@[L13:C11, L13:C24]",
+                            "snippet": "[primary key]"
+                          },
                           "children": {
                             "commaList": [],
                             "elementList": [
                               {
+                                "context": {
+                                  "id": "<attribute>@[L13:C12, L13:C23]",
+                                  "snippet": "primary key"
+                                },
                                 "children": {
                                   "name": {
+                                    "context": {
+                                      "id": "<identifer-stream>@[L13:C12, L13:C23]",
+                                      "snippet": "primary key"
+                                    },
                                     "children": {
                                       "identifiers": [
                                         {
@@ -2272,10 +2300,6 @@
                                         }
                                       ]
                                     },
-                                    "context": {
-                                      "id": "<identifer-stream>@[L13:C12, L13:C23]",
-                                      "snippet": "primary key"
-                                    },
                                     "end": 175,
                                     "endPos": {
                                       "offset": 175,
@@ -2292,10 +2316,6 @@
                                       "column": 12
                                     }
                                   }
-                                },
-                                "context": {
-                                  "id": "<attribute>@[L13:C12, L13:C23]",
-                                  "snippet": "primary key"
                                 },
                                 "end": 175,
                                 "endPos": {
@@ -2365,10 +2385,6 @@
                               "value": "["
                             }
                           },
-                          "context": {
-                            "id": "<list-expression>@[L13:C11, L13:C24]",
-                            "snippet": "[primary key]"
-                          },
                           "end": 176,
                           "endPos": {
                             "offset": 176,
@@ -2387,8 +2403,16 @@
                         }
                       ],
                       "callee": {
+                        "context": {
+                          "id": "<primary-expression>@[L13:C4, L13:C6]",
+                          "snippet": "id"
+                        },
                         "children": {
                           "expression": {
+                            "context": {
+                              "id": "<variable>:id@[L13:C4, L13:C6]",
+                              "snippet": "id"
+                            },
                             "children": {
                               "variable": {
                                 "context": {
@@ -2416,10 +2440,6 @@
                                 "value": "id"
                               }
                             },
-                            "context": {
-                              "id": "<variable>:id@[L13:C4, L13:C6]",
-                              "snippet": "id"
-                            },
                             "end": 158,
                             "endPos": {
                               "offset": 158,
@@ -2437,10 +2457,6 @@
                             }
                           }
                         },
-                        "context": {
-                          "id": "<primary-expression>@[L13:C4, L13:C6]",
-                          "snippet": "id"
-                        },
                         "end": 158,
                         "endPos": {
                           "offset": 158,
@@ -2457,10 +2473,6 @@
                           "column": 4
                         }
                       }
-                    },
-                    "context": {
-                      "id": "<function-application>@[L13:C4, L13:C24]",
-                      "snippet": "id int [primary key]"
                     },
                     "end": 176,
                     "endPos": {
@@ -2491,10 +2503,6 @@
                   }
                 ]
               },
-              "context": {
-                "id": "<block-expression>@[L12:C17, L14:C1]",
-                "snippet": "{\n    id i...ary key]\n}"
-              },
               "end": 178,
               "endPos": {
                 "offset": 178,
@@ -2512,8 +2520,16 @@
               }
             },
             "name": {
+              "context": {
+                "id": "<primary-expression>@[L12:C6, L12:C9]",
+                "snippet": "\"D\""
+              },
               "children": {
                 "expression": {
+                  "context": {
+                    "id": "<variable>:D@[L12:C6, L12:C9]",
+                    "snippet": "\"D\""
+                  },
                   "children": {
                     "variable": {
                       "context": {
@@ -2541,10 +2557,6 @@
                       "value": "D"
                     }
                   },
-                  "context": {
-                    "id": "<variable>:D@[L12:C6, L12:C9]",
-                    "snippet": "\"D\""
-                  },
                   "end": 142,
                   "endPos": {
                     "offset": 142,
@@ -2561,10 +2573,6 @@
                     "column": 6
                   }
                 }
-              },
-              "context": {
-                "id": "<primary-expression>@[L12:C6, L12:C9]",
-                "snippet": "\"D\""
               },
               "end": 142,
               "endPos": {
@@ -2607,10 +2615,6 @@
               "trailingTrivia": " ",
               "value": "Table"
             }
-          },
-          "context": {
-            "id": "<element-declaration>:D@[L12:C0, L14:C1]",
-            "snippet": "Table \"D\" ...ary key]\n}"
           },
           "end": 178,
           "endPos": {
@@ -2673,10 +2677,6 @@
         "trailingTrivia": "",
         "value": ""
       }
-    },
-    "context": {
-      "id": "<program>@[L0:C0, L14:C1]",
-      "snippet": "Table A as...ary key]\n}"
     },
     "end": 178,
     "endPos": {

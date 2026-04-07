@@ -54,11 +54,23 @@
     }
   ],
   "program": {
+    "context": {
+      "id": "<program>@[L0:C0, L13:C3]",
+      "snippet": "Table A {\r... note\r\n'''"
+    },
     "children": {
       "body": [
         {
+          "context": {
+            "id": "<element-declaration>:A@[L0:C0, L5:C1]",
+            "snippet": "Table A {\r...\r\n    }\r\n}"
+          },
           "children": {
             "body": {
+              "context": {
+                "id": "<block-expression>@[L0:C8, L5:C1]",
+                "snippet": "{\r\n    Not...\r\n    }\r\n}"
+              },
               "children": {
                 "blockCloseBrace": {
                   "context": {
@@ -112,13 +124,29 @@
                 },
                 "body": [
                   {
+                    "context": {
+                      "id": "<element-declaration>:@[L1:C4, L1:C38]",
+                      "snippet": "Note: ''' ...l note '''"
+                    },
                     "children": {
                       "body": {
+                        "context": {
+                          "id": "<function-application>@[L1:C10, L1:C38]",
+                          "snippet": "''' This i...l note '''"
+                        },
                         "children": {
                           "args": [],
                           "callee": {
+                            "context": {
+                              "id": "<primary-expression>@[L1:C10, L1:C38]",
+                              "snippet": "''' This i...l note '''"
+                            },
                             "children": {
                               "expression": {
+                                "context": {
+                                  "id": "<literal>: This is a local note @[L1:C10, L1:C38]",
+                                  "snippet": "''' This i...l note '''"
+                                },
                                 "children": {
                                   "literal": {
                                     "context": {
@@ -146,10 +174,6 @@
                                     "value": " This is a local note "
                                   }
                                 },
-                                "context": {
-                                  "id": "<literal>: This is a local note @[L1:C10, L1:C38]",
-                                  "snippet": "''' This i...l note '''"
-                                },
                                 "end": 49,
                                 "endPos": {
                                   "offset": 49,
@@ -167,10 +191,6 @@
                                 }
                               }
                             },
-                            "context": {
-                              "id": "<primary-expression>@[L1:C10, L1:C38]",
-                              "snippet": "''' This i...l note '''"
-                            },
                             "end": 49,
                             "endPos": {
                               "offset": 49,
@@ -187,10 +207,6 @@
                               "column": 10
                             }
                           }
-                        },
-                        "context": {
-                          "id": "<function-application>@[L1:C10, L1:C38]",
-                          "snippet": "''' This i...l note '''"
                         },
                         "end": 49,
                         "endPos": {
@@ -259,10 +275,6 @@
                         "value": "Note"
                       }
                     },
-                    "context": {
-                      "id": "<element-declaration>:@[L1:C4, L1:C38]",
-                      "snippet": "Note: ''' ...l note '''"
-                    },
                     "end": 49,
                     "endPos": {
                       "offset": 49,
@@ -280,8 +292,16 @@
                     }
                   },
                   {
+                    "context": {
+                      "id": "<element-declaration>:@[L2:C4, L4:C5]",
+                      "snippet": "Note {\r\n  ...te'\r\n    }"
+                    },
                     "children": {
                       "body": {
+                        "context": {
+                          "id": "<block-expression>@[L2:C9, L4:C5]",
+                          "snippet": "{\r\n       ...te'\r\n    }"
+                        },
                         "children": {
                           "blockCloseBrace": {
                             "context": {
@@ -335,11 +355,23 @@
                           },
                           "body": [
                             {
+                              "context": {
+                                "id": "<function-application>@[L3:C8, L3:C36]",
+                                "snippet": "'This is a...ocal note'"
+                              },
                               "children": {
                                 "args": [],
                                 "callee": {
+                                  "context": {
+                                    "id": "<primary-expression>@[L3:C8, L3:C36]",
+                                    "snippet": "'This is a...ocal note'"
+                                  },
                                   "children": {
                                     "expression": {
+                                      "context": {
+                                        "id": "<literal>:This is another local note@[L3:C8, L3:C36]",
+                                        "snippet": "'This is a...ocal note'"
+                                      },
                                       "children": {
                                         "literal": {
                                           "context": {
@@ -367,10 +399,6 @@
                                           "value": "This is another local note"
                                         }
                                       },
-                                      "context": {
-                                        "id": "<literal>:This is another local note@[L3:C8, L3:C36]",
-                                        "snippet": "'This is a...ocal note'"
-                                      },
                                       "end": 99,
                                       "endPos": {
                                         "offset": 99,
@@ -387,10 +415,6 @@
                                         "column": 8
                                       }
                                     }
-                                  },
-                                  "context": {
-                                    "id": "<primary-expression>@[L3:C8, L3:C36]",
-                                    "snippet": "'This is a...ocal note'"
                                   },
                                   "end": 99,
                                   "endPos": {
@@ -409,10 +433,6 @@
                                   }
                                 }
                               },
-                              "context": {
-                                "id": "<function-application>@[L3:C8, L3:C36]",
-                                "snippet": "'This is a...ocal note'"
-                              },
                               "end": 99,
                               "endPos": {
                                 "offset": 99,
@@ -430,10 +450,6 @@
                               }
                             }
                           ]
-                        },
-                        "context": {
-                          "id": "<block-expression>@[L2:C9, L4:C5]",
-                          "snippet": "{\r\n       ...te'\r\n    }"
                         },
                         "end": 106,
                         "endPos": {
@@ -477,10 +493,6 @@
                         "value": "Note"
                       }
                     },
-                    "context": {
-                      "id": "<element-declaration>:@[L2:C4, L4:C5]",
-                      "snippet": "Note {\r\n  ...te'\r\n    }"
-                    },
                     "end": 106,
                     "endPos": {
                       "offset": 106,
@@ -499,10 +511,6 @@
                   }
                 ]
               },
-              "context": {
-                "id": "<block-expression>@[L0:C8, L5:C1]",
-                "snippet": "{\r\n    Not...\r\n    }\r\n}"
-              },
               "end": 109,
               "endPos": {
                 "offset": 109,
@@ -520,8 +528,16 @@
               }
             },
             "name": {
+              "context": {
+                "id": "<primary-expression>@[L0:C6, L0:C7]",
+                "snippet": "A"
+              },
               "children": {
                 "expression": {
+                  "context": {
+                    "id": "<variable>:A@[L0:C6, L0:C7]",
+                    "snippet": "A"
+                  },
                   "children": {
                     "variable": {
                       "context": {
@@ -549,10 +565,6 @@
                       "value": "A"
                     }
                   },
-                  "context": {
-                    "id": "<variable>:A@[L0:C6, L0:C7]",
-                    "snippet": "A"
-                  },
                   "end": 7,
                   "endPos": {
                     "offset": 7,
@@ -569,10 +581,6 @@
                     "column": 6
                   }
                 }
-              },
-              "context": {
-                "id": "<primary-expression>@[L0:C6, L0:C7]",
-                "snippet": "A"
               },
               "end": 7,
               "endPos": {
@@ -616,10 +624,6 @@
               "value": "Table"
             }
           },
-          "context": {
-            "id": "<element-declaration>:A@[L0:C0, L5:C1]",
-            "snippet": "Table A {\r...\r\n    }\r\n}"
-          },
           "end": 109,
           "endPos": {
             "offset": 109,
@@ -649,8 +653,16 @@
           }
         },
         {
+          "context": {
+            "id": "<element-declaration>:@[L7:C0, L9:C1]",
+            "snippet": "Note {\r\n  ...l note'\r\n}"
+          },
           "children": {
             "body": {
+              "context": {
+                "id": "<block-expression>@[L7:C5, L9:C1]",
+                "snippet": "{\r\n    'Th...l note'\r\n}"
+              },
               "children": {
                 "blockCloseBrace": {
                   "context": {
@@ -704,11 +716,23 @@
                 },
                 "body": [
                   {
+                    "context": {
+                      "id": "<function-application>@[L8:C4, L8:C27]",
+                      "snippet": "'This is a...obal note'"
+                    },
                     "children": {
                       "args": [],
                       "callee": {
+                        "context": {
+                          "id": "<primary-expression>@[L8:C4, L8:C27]",
+                          "snippet": "'This is a...obal note'"
+                        },
                         "children": {
                           "expression": {
+                            "context": {
+                              "id": "<literal>:This is a global note@[L8:C4, L8:C27]",
+                              "snippet": "'This is a...obal note'"
+                            },
                             "children": {
                               "literal": {
                                 "context": {
@@ -736,10 +760,6 @@
                                 "value": "This is a global note"
                               }
                             },
-                            "context": {
-                              "id": "<literal>:This is a global note@[L8:C4, L8:C27]",
-                              "snippet": "'This is a...obal note'"
-                            },
                             "end": 148,
                             "endPos": {
                               "offset": 148,
@@ -756,10 +776,6 @@
                               "column": 4
                             }
                           }
-                        },
-                        "context": {
-                          "id": "<primary-expression>@[L8:C4, L8:C27]",
-                          "snippet": "'This is a...obal note'"
                         },
                         "end": 148,
                         "endPos": {
@@ -778,10 +794,6 @@
                         }
                       }
                     },
-                    "context": {
-                      "id": "<function-application>@[L8:C4, L8:C27]",
-                      "snippet": "'This is a...obal note'"
-                    },
                     "end": 148,
                     "endPos": {
                       "offset": 148,
@@ -799,10 +811,6 @@
                     }
                   }
                 ]
-              },
-              "context": {
-                "id": "<block-expression>@[L7:C5, L9:C1]",
-                "snippet": "{\r\n    'Th...l note'\r\n}"
               },
               "end": 151,
               "endPos": {
@@ -846,10 +854,6 @@
               "value": "Note"
             }
           },
-          "context": {
-            "id": "<element-declaration>:@[L7:C0, L9:C1]",
-            "snippet": "Note {\r\n  ...l note'\r\n}"
-          },
           "end": 151,
           "endPos": {
             "offset": 151,
@@ -867,13 +871,29 @@
           }
         },
         {
+          "context": {
+            "id": "<element-declaration>:@[L11:C0, L13:C3]",
+            "snippet": "Note: '''\r... note\r\n'''"
+          },
           "children": {
             "body": {
+              "context": {
+                "id": "<function-application>@[L11:C6, L13:C3]",
+                "snippet": "'''\r\n    T... note\r\n'''"
+              },
               "children": {
                 "args": [],
                 "callee": {
+                  "context": {
+                    "id": "<primary-expression>@[L11:C6, L13:C3]",
+                    "snippet": "'''\r\n    T... note\r\n'''"
+                  },
                   "children": {
                     "expression": {
+                      "context": {
+                        "id": "<literal>:\r\n    This is another global note\r\n@[L11:C6, L13:C3]",
+                        "snippet": "'''\r\n    T... note\r\n'''"
+                      },
                       "children": {
                         "literal": {
                           "context": {
@@ -901,10 +921,6 @@
                           "value": "\r\n    This is another global note\r\n"
                         }
                       },
-                      "context": {
-                        "id": "<literal>:\r\n    This is another global note\r\n@[L11:C6, L13:C3]",
-                        "snippet": "'''\r\n    T... note\r\n'''"
-                      },
                       "end": 202,
                       "endPos": {
                         "offset": 202,
@@ -922,10 +938,6 @@
                       }
                     }
                   },
-                  "context": {
-                    "id": "<primary-expression>@[L11:C6, L13:C3]",
-                    "snippet": "'''\r\n    T... note\r\n'''"
-                  },
                   "end": 202,
                   "endPos": {
                     "offset": 202,
@@ -942,10 +954,6 @@
                     "column": 6
                   }
                 }
-              },
-              "context": {
-                "id": "<function-application>@[L11:C6, L13:C3]",
-                "snippet": "'''\r\n    T... note\r\n'''"
               },
               "end": 202,
               "endPos": {
@@ -1014,10 +1022,6 @@
               "value": "Note"
             }
           },
-          "context": {
-            "id": "<element-declaration>:@[L11:C0, L13:C3]",
-            "snippet": "Note: '''\r... note\r\n'''"
-          },
           "end": 202,
           "endPos": {
             "offset": 202,
@@ -1060,10 +1064,6 @@
         "trailingTrivia": "",
         "value": ""
       }
-    },
-    "context": {
-      "id": "<program>@[L0:C0, L13:C3]",
-      "snippet": "Table A {\r... note\r\n'''"
     },
     "end": 202,
     "endPos": {

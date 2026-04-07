@@ -1,11 +1,23 @@
 {
   "errors": [],
   "program": {
+    "context": {
+      "id": "<program>@[L0:C0, L36:C0]",
+      "snippet": "TableParti... program\r\n"
+    },
     "children": {
       "body": [
         {
+          "context": {
+            "id": "<element-declaration>:bookingPartial@[L0:C0, L16:C1]",
+            "snippet": "TableParti...d)\r\n  }\r\n}"
+          },
           "children": {
             "body": {
+              "context": {
+                "id": "<block-expression>@[L0:C28, L16:C1]",
+                "snippet": "{\r\n  id in...d)\r\n  }\r\n}"
+              },
               "children": {
                 "blockCloseBrace": {
                   "context": {
@@ -59,11 +71,23 @@
                 },
                 "body": [
                   {
+                    "context": {
+                      "id": "<function-application>@[L1:C2, L1:C12]",
+                      "snippet": "id integer"
+                    },
                     "children": {
                       "args": [
                         {
+                          "context": {
+                            "id": "<primary-expression>@[L1:C5, L1:C12]",
+                            "snippet": "integer"
+                          },
                           "children": {
                             "expression": {
+                              "context": {
+                                "id": "<variable>:integer@[L1:C5, L1:C12]",
+                                "snippet": "integer"
+                              },
                               "children": {
                                 "variable": {
                                   "context": {
@@ -91,10 +115,6 @@
                                   "value": "integer"
                                 }
                               },
-                              "context": {
-                                "id": "<variable>:integer@[L1:C5, L1:C12]",
-                                "snippet": "integer"
-                              },
                               "end": 43,
                               "endPos": {
                                 "offset": 43,
@@ -111,10 +131,6 @@
                                 "column": 5
                               }
                             }
-                          },
-                          "context": {
-                            "id": "<primary-expression>@[L1:C5, L1:C12]",
-                            "snippet": "integer"
                           },
                           "end": 43,
                           "endPos": {
@@ -134,8 +150,16 @@
                         }
                       ],
                       "callee": {
+                        "context": {
+                          "id": "<primary-expression>@[L1:C2, L1:C4]",
+                          "snippet": "id"
+                        },
                         "children": {
                           "expression": {
+                            "context": {
+                              "id": "<variable>:id@[L1:C2, L1:C4]",
+                              "snippet": "id"
+                            },
                             "children": {
                               "variable": {
                                 "context": {
@@ -163,10 +187,6 @@
                                 "value": "id"
                               }
                             },
-                            "context": {
-                              "id": "<variable>:id@[L1:C2, L1:C4]",
-                              "snippet": "id"
-                            },
                             "end": 35,
                             "endPos": {
                               "offset": 35,
@@ -184,10 +204,6 @@
                             }
                           }
                         },
-                        "context": {
-                          "id": "<primary-expression>@[L1:C2, L1:C4]",
-                          "snippet": "id"
-                        },
                         "end": 35,
                         "endPos": {
                           "offset": 35,
@@ -204,10 +220,6 @@
                           "column": 2
                         }
                       }
-                    },
-                    "context": {
-                      "id": "<function-application>@[L1:C2, L1:C12]",
-                      "snippet": "id integer"
                     },
                     "end": 43,
                     "endPos": {
@@ -237,11 +249,23 @@
                     }
                   },
                   {
+                    "context": {
+                      "id": "<function-application>@[L2:C2, L2:C17]",
+                      "snippet": "country varchar"
+                    },
                     "children": {
                       "args": [
                         {
+                          "context": {
+                            "id": "<primary-expression>@[L2:C10, L2:C17]",
+                            "snippet": "varchar"
+                          },
                           "children": {
                             "expression": {
+                              "context": {
+                                "id": "<variable>:varchar@[L2:C10, L2:C17]",
+                                "snippet": "varchar"
+                              },
                               "children": {
                                 "variable": {
                                   "context": {
@@ -269,10 +293,6 @@
                                   "value": "varchar"
                                 }
                               },
-                              "context": {
-                                "id": "<variable>:varchar@[L2:C10, L2:C17]",
-                                "snippet": "varchar"
-                              },
                               "end": 62,
                               "endPos": {
                                 "offset": 62,
@@ -289,10 +309,6 @@
                                 "column": 10
                               }
                             }
-                          },
-                          "context": {
-                            "id": "<primary-expression>@[L2:C10, L2:C17]",
-                            "snippet": "varchar"
                           },
                           "end": 62,
                           "endPos": {
@@ -312,8 +328,16 @@
                         }
                       ],
                       "callee": {
+                        "context": {
+                          "id": "<primary-expression>@[L2:C2, L2:C9]",
+                          "snippet": "country"
+                        },
                         "children": {
                           "expression": {
+                            "context": {
+                              "id": "<variable>:country@[L2:C2, L2:C9]",
+                              "snippet": "country"
+                            },
                             "children": {
                               "variable": {
                                 "context": {
@@ -341,10 +365,6 @@
                                 "value": "country"
                               }
                             },
-                            "context": {
-                              "id": "<variable>:country@[L2:C2, L2:C9]",
-                              "snippet": "country"
-                            },
                             "end": 54,
                             "endPos": {
                               "offset": 54,
@@ -362,10 +382,6 @@
                             }
                           }
                         },
-                        "context": {
-                          "id": "<primary-expression>@[L2:C2, L2:C9]",
-                          "snippet": "country"
-                        },
                         "end": 54,
                         "endPos": {
                           "offset": 54,
@@ -382,10 +398,6 @@
                           "column": 2
                         }
                       }
-                    },
-                    "context": {
-                      "id": "<function-application>@[L2:C2, L2:C17]",
-                      "snippet": "country varchar"
                     },
                     "end": 62,
                     "endPos": {
@@ -415,11 +427,23 @@
                     }
                   },
                   {
+                    "context": {
+                      "id": "<function-application>@[L3:C2, L3:C19]",
+                      "snippet": "booking_date date"
+                    },
                     "children": {
                       "args": [
                         {
+                          "context": {
+                            "id": "<primary-expression>@[L3:C15, L3:C19]",
+                            "snippet": "date"
+                          },
                           "children": {
                             "expression": {
+                              "context": {
+                                "id": "<variable>:date@[L3:C15, L3:C19]",
+                                "snippet": "date"
+                              },
                               "children": {
                                 "variable": {
                                   "context": {
@@ -447,10 +471,6 @@
                                   "value": "date"
                                 }
                               },
-                              "context": {
-                                "id": "<variable>:date@[L3:C15, L3:C19]",
-                                "snippet": "date"
-                              },
                               "end": 83,
                               "endPos": {
                                 "offset": 83,
@@ -467,10 +487,6 @@
                                 "column": 15
                               }
                             }
-                          },
-                          "context": {
-                            "id": "<primary-expression>@[L3:C15, L3:C19]",
-                            "snippet": "date"
                           },
                           "end": 83,
                           "endPos": {
@@ -490,8 +506,16 @@
                         }
                       ],
                       "callee": {
+                        "context": {
+                          "id": "<primary-expression>@[L3:C2, L3:C14]",
+                          "snippet": "booking_date"
+                        },
                         "children": {
                           "expression": {
+                            "context": {
+                              "id": "<variable>:booking_date@[L3:C2, L3:C14]",
+                              "snippet": "booking_date"
+                            },
                             "children": {
                               "variable": {
                                 "context": {
@@ -519,10 +543,6 @@
                                 "value": "booking_date"
                               }
                             },
-                            "context": {
-                              "id": "<variable>:booking_date@[L3:C2, L3:C14]",
-                              "snippet": "booking_date"
-                            },
                             "end": 78,
                             "endPos": {
                               "offset": 78,
@@ -540,10 +560,6 @@
                             }
                           }
                         },
-                        "context": {
-                          "id": "<primary-expression>@[L3:C2, L3:C14]",
-                          "snippet": "booking_date"
-                        },
                         "end": 78,
                         "endPos": {
                           "offset": 78,
@@ -560,10 +576,6 @@
                           "column": 2
                         }
                       }
-                    },
-                    "context": {
-                      "id": "<function-application>@[L3:C2, L3:C19]",
-                      "snippet": "booking_date date"
                     },
                     "end": 83,
                     "endPos": {
@@ -593,11 +605,23 @@
                     }
                   },
                   {
+                    "context": {
+                      "id": "<function-application>@[L4:C2, L4:C22]",
+                      "snippet": "created_at timestamp"
+                    },
                     "children": {
                       "args": [
                         {
+                          "context": {
+                            "id": "<primary-expression>@[L4:C13, L4:C22]",
+                            "snippet": "timestamp"
+                          },
                           "children": {
                             "expression": {
+                              "context": {
+                                "id": "<variable>:timestamp@[L4:C13, L4:C22]",
+                                "snippet": "timestamp"
+                              },
                               "children": {
                                 "variable": {
                                   "context": {
@@ -625,10 +649,6 @@
                                   "value": "timestamp"
                                 }
                               },
-                              "context": {
-                                "id": "<variable>:timestamp@[L4:C13, L4:C22]",
-                                "snippet": "timestamp"
-                              },
                               "end": 107,
                               "endPos": {
                                 "offset": 107,
@@ -645,10 +665,6 @@
                                 "column": 13
                               }
                             }
-                          },
-                          "context": {
-                            "id": "<primary-expression>@[L4:C13, L4:C22]",
-                            "snippet": "timestamp"
                           },
                           "end": 107,
                           "endPos": {
@@ -668,8 +684,16 @@
                         }
                       ],
                       "callee": {
+                        "context": {
+                          "id": "<primary-expression>@[L4:C2, L4:C12]",
+                          "snippet": "created_at"
+                        },
                         "children": {
                           "expression": {
+                            "context": {
+                              "id": "<variable>:created_at@[L4:C2, L4:C12]",
+                              "snippet": "created_at"
+                            },
                             "children": {
                               "variable": {
                                 "context": {
@@ -697,10 +721,6 @@
                                 "value": "created_at"
                               }
                             },
-                            "context": {
-                              "id": "<variable>:created_at@[L4:C2, L4:C12]",
-                              "snippet": "created_at"
-                            },
                             "end": 97,
                             "endPos": {
                               "offset": 97,
@@ -718,10 +738,6 @@
                             }
                           }
                         },
-                        "context": {
-                          "id": "<primary-expression>@[L4:C2, L4:C12]",
-                          "snippet": "created_at"
-                        },
                         "end": 97,
                         "endPos": {
                           "offset": 97,
@@ -738,10 +754,6 @@
                           "column": 2
                         }
                       }
-                    },
-                    "context": {
-                      "id": "<function-application>@[L4:C2, L4:C22]",
-                      "snippet": "created_at timestamp"
                     },
                     "end": 107,
                     "endPos": {
@@ -771,8 +783,16 @@
                     }
                   },
                   {
+                    "context": {
+                      "id": "<element-declaration>:@[L6:C2, L15:C3]",
+                      "snippet": "indexes {\r...`,id)\r\n  }"
+                    },
                     "children": {
                       "body": {
+                        "context": {
+                          "id": "<block-expression>@[L6:C10, L15:C3]",
+                          "snippet": "{\r\n    (id...`,id)\r\n  }"
+                        },
                         "children": {
                           "blockCloseBrace": {
                             "context": {
@@ -826,15 +846,31 @@
                           },
                           "body": [
                             {
+                              "context": {
+                                "id": "<function-application>@[L7:C4, L7:C22]",
+                                "snippet": "(id, country) [pk]"
+                              },
                               "children": {
                                 "args": [
                                   {
+                                    "context": {
+                                      "id": "<list-expression>@[L7:C18, L7:C22]",
+                                      "snippet": "[pk]"
+                                    },
                                     "children": {
                                       "commaList": [],
                                       "elementList": [
                                         {
+                                          "context": {
+                                            "id": "<attribute>@[L7:C19, L7:C21]",
+                                            "snippet": "pk"
+                                          },
                                           "children": {
                                             "name": {
+                                              "context": {
+                                                "id": "<identifer-stream>@[L7:C19, L7:C21]",
+                                                "snippet": "pk"
+                                              },
                                               "children": {
                                                 "identifiers": [
                                                   {
@@ -864,10 +900,6 @@
                                                   }
                                                 ]
                                               },
-                                              "context": {
-                                                "id": "<identifer-stream>@[L7:C19, L7:C21]",
-                                                "snippet": "pk"
-                                              },
                                               "end": 145,
                                               "endPos": {
                                                 "offset": 145,
@@ -884,10 +916,6 @@
                                                 "column": 19
                                               }
                                             }
-                                          },
-                                          "context": {
-                                            "id": "<attribute>@[L7:C19, L7:C21]",
-                                            "snippet": "pk"
                                           },
                                           "end": 145,
                                           "endPos": {
@@ -957,10 +985,6 @@
                                         "value": "["
                                       }
                                     },
-                                    "context": {
-                                      "id": "<list-expression>@[L7:C18, L7:C22]",
-                                      "snippet": "[pk]"
-                                    },
                                     "end": 146,
                                     "endPos": {
                                       "offset": 146,
@@ -979,6 +1003,10 @@
                                   }
                                 ],
                                 "callee": {
+                                  "context": {
+                                    "id": "<tuple-expression>@[L7:C4, L7:C17]",
+                                    "snippet": "(id, country)"
+                                  },
                                   "children": {
                                     "commaList": [
                                       {
@@ -1009,8 +1037,16 @@
                                     ],
                                     "elementList": [
                                       {
+                                        "context": {
+                                          "id": "<primary-expression>@[L7:C5, L7:C7]",
+                                          "snippet": "id"
+                                        },
                                         "children": {
                                           "expression": {
+                                            "context": {
+                                              "id": "<variable>:id@[L7:C5, L7:C7]",
+                                              "snippet": "id"
+                                            },
                                             "children": {
                                               "variable": {
                                                 "context": {
@@ -1038,10 +1074,6 @@
                                                 "value": "id"
                                               }
                                             },
-                                            "context": {
-                                              "id": "<variable>:id@[L7:C5, L7:C7]",
-                                              "snippet": "id"
-                                            },
                                             "end": 131,
                                             "endPos": {
                                               "offset": 131,
@@ -1058,10 +1090,6 @@
                                               "column": 5
                                             }
                                           }
-                                        },
-                                        "context": {
-                                          "id": "<primary-expression>@[L7:C5, L7:C7]",
-                                          "snippet": "id"
                                         },
                                         "end": 131,
                                         "endPos": {
@@ -1080,8 +1108,16 @@
                                         }
                                       },
                                       {
+                                        "context": {
+                                          "id": "<primary-expression>@[L7:C9, L7:C16]",
+                                          "snippet": "country"
+                                        },
                                         "children": {
                                           "expression": {
+                                            "context": {
+                                              "id": "<variable>:country@[L7:C9, L7:C16]",
+                                              "snippet": "country"
+                                            },
                                             "children": {
                                               "variable": {
                                                 "context": {
@@ -1109,10 +1145,6 @@
                                                 "value": "country"
                                               }
                                             },
-                                            "context": {
-                                              "id": "<variable>:country@[L7:C9, L7:C16]",
-                                              "snippet": "country"
-                                            },
                                             "end": 140,
                                             "endPos": {
                                               "offset": 140,
@@ -1129,10 +1161,6 @@
                                               "column": 9
                                             }
                                           }
-                                        },
-                                        "context": {
-                                          "id": "<primary-expression>@[L7:C9, L7:C16]",
-                                          "snippet": "country"
                                         },
                                         "end": 140,
                                         "endPos": {
@@ -1202,10 +1230,6 @@
                                       "value": "("
                                     }
                                   },
-                                  "context": {
-                                    "id": "<tuple-expression>@[L7:C4, L7:C17]",
-                                    "snippet": "(id, country)"
-                                  },
                                   "end": 141,
                                   "endPos": {
                                     "offset": 141,
@@ -1222,10 +1246,6 @@
                                     "column": 4
                                   }
                                 }
-                              },
-                              "context": {
-                                "id": "<function-application>@[L7:C4, L7:C22]",
-                                "snippet": "(id, country) [pk]"
                               },
                               "end": 146,
                               "endPos": {
@@ -1244,9 +1264,17 @@
                               }
                             },
                             {
+                              "context": {
+                                "id": "<function-application>@[L8:C4, L8:C55]",
+                                "snippet": "created_at...e: 'Date']"
+                              },
                               "children": {
                                 "args": [
                                   {
+                                    "context": {
+                                      "id": "<list-expression>@[L8:C15, L8:C55]",
+                                      "snippet": "[name: 'cr...e: 'Date']"
+                                    },
                                     "children": {
                                       "commaList": [
                                         {
@@ -1277,6 +1305,10 @@
                                       ],
                                       "elementList": [
                                         {
+                                          "context": {
+                                            "id": "<attribute>@[L8:C16, L8:C40]",
+                                            "snippet": "name: 'cre..._at_index'"
+                                          },
                                           "children": {
                                             "colon": {
                                               "context": {
@@ -1304,6 +1336,10 @@
                                               "value": ":"
                                             },
                                             "name": {
+                                              "context": {
+                                                "id": "<identifer-stream>@[L8:C16, L8:C20]",
+                                                "snippet": "name"
+                                              },
                                               "children": {
                                                 "identifiers": [
                                                   {
@@ -1333,10 +1369,6 @@
                                                   }
                                                 ]
                                               },
-                                              "context": {
-                                                "id": "<identifer-stream>@[L8:C16, L8:C20]",
-                                                "snippet": "name"
-                                              },
                                               "end": 193,
                                               "endPos": {
                                                 "offset": 193,
@@ -1354,8 +1386,16 @@
                                               }
                                             },
                                             "value": {
+                                              "context": {
+                                                "id": "<primary-expression>@[L8:C22, L8:C40]",
+                                                "snippet": "'created_at_index'"
+                                              },
                                               "children": {
                                                 "expression": {
+                                                  "context": {
+                                                    "id": "<literal>:created_at_index@[L8:C22, L8:C40]",
+                                                    "snippet": "'created_at_index'"
+                                                  },
                                                   "children": {
                                                     "literal": {
                                                       "context": {
@@ -1383,10 +1423,6 @@
                                                       "value": "created_at_index"
                                                     }
                                                   },
-                                                  "context": {
-                                                    "id": "<literal>:created_at_index@[L8:C22, L8:C40]",
-                                                    "snippet": "'created_at_index'"
-                                                  },
                                                   "end": 213,
                                                   "endPos": {
                                                     "offset": 213,
@@ -1403,10 +1439,6 @@
                                                     "column": 22
                                                   }
                                                 }
-                                              },
-                                              "context": {
-                                                "id": "<primary-expression>@[L8:C22, L8:C40]",
-                                                "snippet": "'created_at_index'"
                                               },
                                               "end": 213,
                                               "endPos": {
@@ -1425,10 +1457,6 @@
                                               }
                                             }
                                           },
-                                          "context": {
-                                            "id": "<attribute>@[L8:C16, L8:C40]",
-                                            "snippet": "name: 'cre..._at_index'"
-                                          },
                                           "end": 213,
                                           "endPos": {
                                             "offset": 213,
@@ -1446,6 +1474,10 @@
                                           }
                                         },
                                         {
+                                          "context": {
+                                            "id": "<attribute>@[L8:C42, L8:C54]",
+                                            "snippet": "note: 'Date'"
+                                          },
                                           "children": {
                                             "colon": {
                                               "context": {
@@ -1473,6 +1505,10 @@
                                               "value": ":"
                                             },
                                             "name": {
+                                              "context": {
+                                                "id": "<identifer-stream>@[L8:C42, L8:C46]",
+                                                "snippet": "note"
+                                              },
                                               "children": {
                                                 "identifiers": [
                                                   {
@@ -1502,10 +1538,6 @@
                                                   }
                                                 ]
                                               },
-                                              "context": {
-                                                "id": "<identifer-stream>@[L8:C42, L8:C46]",
-                                                "snippet": "note"
-                                              },
                                               "end": 219,
                                               "endPos": {
                                                 "offset": 219,
@@ -1523,8 +1555,16 @@
                                               }
                                             },
                                             "value": {
+                                              "context": {
+                                                "id": "<primary-expression>@[L8:C48, L8:C54]",
+                                                "snippet": "'Date'"
+                                              },
                                               "children": {
                                                 "expression": {
+                                                  "context": {
+                                                    "id": "<literal>:Date@[L8:C48, L8:C54]",
+                                                    "snippet": "'Date'"
+                                                  },
                                                   "children": {
                                                     "literal": {
                                                       "context": {
@@ -1552,10 +1592,6 @@
                                                       "value": "Date"
                                                     }
                                                   },
-                                                  "context": {
-                                                    "id": "<literal>:Date@[L8:C48, L8:C54]",
-                                                    "snippet": "'Date'"
-                                                  },
                                                   "end": 227,
                                                   "endPos": {
                                                     "offset": 227,
@@ -1573,10 +1609,6 @@
                                                   }
                                                 }
                                               },
-                                              "context": {
-                                                "id": "<primary-expression>@[L8:C48, L8:C54]",
-                                                "snippet": "'Date'"
-                                              },
                                               "end": 227,
                                               "endPos": {
                                                 "offset": 227,
@@ -1593,10 +1625,6 @@
                                                 "column": 48
                                               }
                                             }
-                                          },
-                                          "context": {
-                                            "id": "<attribute>@[L8:C42, L8:C54]",
-                                            "snippet": "note: 'Date'"
                                           },
                                           "end": 227,
                                           "endPos": {
@@ -1666,10 +1694,6 @@
                                         "value": "["
                                       }
                                     },
-                                    "context": {
-                                      "id": "<list-expression>@[L8:C15, L8:C55]",
-                                      "snippet": "[name: 'cr...e: 'Date']"
-                                    },
                                     "end": 228,
                                     "endPos": {
                                       "offset": 228,
@@ -1688,8 +1712,16 @@
                                   }
                                 ],
                                 "callee": {
+                                  "context": {
+                                    "id": "<primary-expression>@[L8:C4, L8:C14]",
+                                    "snippet": "created_at"
+                                  },
                                   "children": {
                                     "expression": {
+                                      "context": {
+                                        "id": "<variable>:created_at@[L8:C4, L8:C14]",
+                                        "snippet": "created_at"
+                                      },
                                       "children": {
                                         "variable": {
                                           "context": {
@@ -1717,10 +1749,6 @@
                                           "value": "created_at"
                                         }
                                       },
-                                      "context": {
-                                        "id": "<variable>:created_at@[L8:C4, L8:C14]",
-                                        "snippet": "created_at"
-                                      },
                                       "end": 187,
                                       "endPos": {
                                         "offset": 187,
@@ -1737,10 +1765,6 @@
                                         "column": 4
                                       }
                                     }
-                                  },
-                                  "context": {
-                                    "id": "<primary-expression>@[L8:C4, L8:C14]",
-                                    "snippet": "created_at"
                                   },
                                   "end": 187,
                                   "endPos": {
@@ -1759,10 +1783,6 @@
                                   }
                                 }
                               },
-                              "context": {
-                                "id": "<function-application>@[L8:C4, L8:C55]",
-                                "snippet": "created_at...e: 'Date']"
-                              },
                               "end": 228,
                               "endPos": {
                                 "offset": 228,
@@ -1780,11 +1800,23 @@
                               }
                             },
                             {
+                              "context": {
+                                "id": "<function-application>@[L9:C4, L9:C16]",
+                                "snippet": "booking_date"
+                              },
                               "children": {
                                 "args": [],
                                 "callee": {
+                                  "context": {
+                                    "id": "<primary-expression>@[L9:C4, L9:C16]",
+                                    "snippet": "booking_date"
+                                  },
                                   "children": {
                                     "expression": {
+                                      "context": {
+                                        "id": "<variable>:booking_date@[L9:C4, L9:C16]",
+                                        "snippet": "booking_date"
+                                      },
                                       "children": {
                                         "variable": {
                                           "context": {
@@ -1812,10 +1844,6 @@
                                           "value": "booking_date"
                                         }
                                       },
-                                      "context": {
-                                        "id": "<variable>:booking_date@[L9:C4, L9:C16]",
-                                        "snippet": "booking_date"
-                                      },
                                       "end": 246,
                                       "endPos": {
                                         "offset": 246,
@@ -1832,10 +1860,6 @@
                                         "column": 4
                                       }
                                     }
-                                  },
-                                  "context": {
-                                    "id": "<primary-expression>@[L9:C4, L9:C16]",
-                                    "snippet": "booking_date"
                                   },
                                   "end": 246,
                                   "endPos": {
@@ -1854,10 +1878,6 @@
                                   }
                                 }
                               },
-                              "context": {
-                                "id": "<function-application>@[L9:C4, L9:C16]",
-                                "snippet": "booking_date"
-                              },
                               "end": 246,
                               "endPos": {
                                 "offset": 246,
@@ -1875,15 +1895,31 @@
                               }
                             },
                             {
+                              "context": {
+                                "id": "<function-application>@[L10:C4, L10:C36]",
+                                "snippet": "(country, ...) [unique]"
+                              },
                               "children": {
                                 "args": [
                                   {
+                                    "context": {
+                                      "id": "<list-expression>@[L10:C28, L10:C36]",
+                                      "snippet": "[unique]"
+                                    },
                                     "children": {
                                       "commaList": [],
                                       "elementList": [
                                         {
+                                          "context": {
+                                            "id": "<attribute>@[L10:C29, L10:C35]",
+                                            "snippet": "unique"
+                                          },
                                           "children": {
                                             "name": {
+                                              "context": {
+                                                "id": "<identifer-stream>@[L10:C29, L10:C35]",
+                                                "snippet": "unique"
+                                              },
                                               "children": {
                                                 "identifiers": [
                                                   {
@@ -1913,10 +1949,6 @@
                                                   }
                                                 ]
                                               },
-                                              "context": {
-                                                "id": "<identifer-stream>@[L10:C29, L10:C35]",
-                                                "snippet": "unique"
-                                              },
                                               "end": 283,
                                               "endPos": {
                                                 "offset": 283,
@@ -1933,10 +1965,6 @@
                                                 "column": 29
                                               }
                                             }
-                                          },
-                                          "context": {
-                                            "id": "<attribute>@[L10:C29, L10:C35]",
-                                            "snippet": "unique"
                                           },
                                           "end": 283,
                                           "endPos": {
@@ -2006,10 +2034,6 @@
                                         "value": "["
                                       }
                                     },
-                                    "context": {
-                                      "id": "<list-expression>@[L10:C28, L10:C36]",
-                                      "snippet": "[unique]"
-                                    },
                                     "end": 284,
                                     "endPos": {
                                       "offset": 284,
@@ -2028,6 +2052,10 @@
                                   }
                                 ],
                                 "callee": {
+                                  "context": {
+                                    "id": "<tuple-expression>@[L10:C4, L10:C27]",
+                                    "snippet": "(country, ...king_date)"
+                                  },
                                   "children": {
                                     "commaList": [
                                       {
@@ -2058,8 +2086,16 @@
                                     ],
                                     "elementList": [
                                       {
+                                        "context": {
+                                          "id": "<primary-expression>@[L10:C5, L10:C12]",
+                                          "snippet": "country"
+                                        },
                                         "children": {
                                           "expression": {
+                                            "context": {
+                                              "id": "<variable>:country@[L10:C5, L10:C12]",
+                                              "snippet": "country"
+                                            },
                                             "children": {
                                               "variable": {
                                                 "context": {
@@ -2087,10 +2123,6 @@
                                                 "value": "country"
                                               }
                                             },
-                                            "context": {
-                                              "id": "<variable>:country@[L10:C5, L10:C12]",
-                                              "snippet": "country"
-                                            },
                                             "end": 260,
                                             "endPos": {
                                               "offset": 260,
@@ -2107,10 +2139,6 @@
                                               "column": 5
                                             }
                                           }
-                                        },
-                                        "context": {
-                                          "id": "<primary-expression>@[L10:C5, L10:C12]",
-                                          "snippet": "country"
                                         },
                                         "end": 260,
                                         "endPos": {
@@ -2129,8 +2157,16 @@
                                         }
                                       },
                                       {
+                                        "context": {
+                                          "id": "<primary-expression>@[L10:C14, L10:C26]",
+                                          "snippet": "booking_date"
+                                        },
                                         "children": {
                                           "expression": {
+                                            "context": {
+                                              "id": "<variable>:booking_date@[L10:C14, L10:C26]",
+                                              "snippet": "booking_date"
+                                            },
                                             "children": {
                                               "variable": {
                                                 "context": {
@@ -2158,10 +2194,6 @@
                                                 "value": "booking_date"
                                               }
                                             },
-                                            "context": {
-                                              "id": "<variable>:booking_date@[L10:C14, L10:C26]",
-                                              "snippet": "booking_date"
-                                            },
                                             "end": 274,
                                             "endPos": {
                                               "offset": 274,
@@ -2178,10 +2210,6 @@
                                               "column": 14
                                             }
                                           }
-                                        },
-                                        "context": {
-                                          "id": "<primary-expression>@[L10:C14, L10:C26]",
-                                          "snippet": "booking_date"
                                         },
                                         "end": 274,
                                         "endPos": {
@@ -2251,10 +2279,6 @@
                                       "value": "("
                                     }
                                   },
-                                  "context": {
-                                    "id": "<tuple-expression>@[L10:C4, L10:C27]",
-                                    "snippet": "(country, ...king_date)"
-                                  },
                                   "end": 275,
                                   "endPos": {
                                     "offset": 275,
@@ -2271,10 +2295,6 @@
                                     "column": 4
                                   }
                                 }
-                              },
-                              "context": {
-                                "id": "<function-application>@[L10:C4, L10:C36]",
-                                "snippet": "(country, ...) [unique]"
                               },
                               "end": 284,
                               "endPos": {
@@ -2293,13 +2313,25 @@
                               }
                             },
                             {
+                              "context": {
+                                "id": "<function-application>@[L11:C4, L11:C29]",
+                                "snippet": "booking_da...ype: hash]"
+                              },
                               "children": {
                                 "args": [
                                   {
+                                    "context": {
+                                      "id": "<list-expression>@[L11:C17, L11:C29]",
+                                      "snippet": "[type: hash]"
+                                    },
                                     "children": {
                                       "commaList": [],
                                       "elementList": [
                                         {
+                                          "context": {
+                                            "id": "<attribute>@[L11:C18, L11:C28]",
+                                            "snippet": "type: hash"
+                                          },
                                           "children": {
                                             "colon": {
                                               "context": {
@@ -2327,6 +2359,10 @@
                                               "value": ":"
                                             },
                                             "name": {
+                                              "context": {
+                                                "id": "<identifer-stream>@[L11:C18, L11:C22]",
+                                                "snippet": "type"
+                                              },
                                               "children": {
                                                 "identifiers": [
                                                   {
@@ -2356,10 +2392,6 @@
                                                   }
                                                 ]
                                               },
-                                              "context": {
-                                                "id": "<identifer-stream>@[L11:C18, L11:C22]",
-                                                "snippet": "type"
-                                              },
                                               "end": 308,
                                               "endPos": {
                                                 "offset": 308,
@@ -2377,8 +2409,16 @@
                                               }
                                             },
                                             "value": {
+                                              "context": {
+                                                "id": "<primary-expression>@[L11:C24, L11:C28]",
+                                                "snippet": "hash"
+                                              },
                                               "children": {
                                                 "expression": {
+                                                  "context": {
+                                                    "id": "<variable>:hash@[L11:C24, L11:C28]",
+                                                    "snippet": "hash"
+                                                  },
                                                   "children": {
                                                     "variable": {
                                                       "context": {
@@ -2406,10 +2446,6 @@
                                                       "value": "hash"
                                                     }
                                                   },
-                                                  "context": {
-                                                    "id": "<variable>:hash@[L11:C24, L11:C28]",
-                                                    "snippet": "hash"
-                                                  },
                                                   "end": 314,
                                                   "endPos": {
                                                     "offset": 314,
@@ -2427,10 +2463,6 @@
                                                   }
                                                 }
                                               },
-                                              "context": {
-                                                "id": "<primary-expression>@[L11:C24, L11:C28]",
-                                                "snippet": "hash"
-                                              },
                                               "end": 314,
                                               "endPos": {
                                                 "offset": 314,
@@ -2447,10 +2479,6 @@
                                                 "column": 24
                                               }
                                             }
-                                          },
-                                          "context": {
-                                            "id": "<attribute>@[L11:C18, L11:C28]",
-                                            "snippet": "type: hash"
                                           },
                                           "end": 314,
                                           "endPos": {
@@ -2520,10 +2548,6 @@
                                         "value": "["
                                       }
                                     },
-                                    "context": {
-                                      "id": "<list-expression>@[L11:C17, L11:C29]",
-                                      "snippet": "[type: hash]"
-                                    },
                                     "end": 315,
                                     "endPos": {
                                       "offset": 315,
@@ -2542,8 +2566,16 @@
                                   }
                                 ],
                                 "callee": {
+                                  "context": {
+                                    "id": "<primary-expression>@[L11:C4, L11:C16]",
+                                    "snippet": "booking_date"
+                                  },
                                   "children": {
                                     "expression": {
+                                      "context": {
+                                        "id": "<variable>:booking_date@[L11:C4, L11:C16]",
+                                        "snippet": "booking_date"
+                                      },
                                       "children": {
                                         "variable": {
                                           "context": {
@@ -2571,10 +2603,6 @@
                                           "value": "booking_date"
                                         }
                                       },
-                                      "context": {
-                                        "id": "<variable>:booking_date@[L11:C4, L11:C16]",
-                                        "snippet": "booking_date"
-                                      },
                                       "end": 302,
                                       "endPos": {
                                         "offset": 302,
@@ -2591,10 +2619,6 @@
                                         "column": 4
                                       }
                                     }
-                                  },
-                                  "context": {
-                                    "id": "<primary-expression>@[L11:C4, L11:C16]",
-                                    "snippet": "booking_date"
                                   },
                                   "end": 302,
                                   "endPos": {
@@ -2613,10 +2637,6 @@
                                   }
                                 }
                               },
-                              "context": {
-                                "id": "<function-application>@[L11:C4, L11:C29]",
-                                "snippet": "booking_da...ype: hash]"
-                              },
                               "end": 315,
                               "endPos": {
                                 "offset": 315,
@@ -2634,13 +2654,25 @@
                               }
                             },
                             {
+                              "context": {
+                                "id": "<function-application>@[L12:C4, L12:C12]",
+                                "snippet": "(`id*2`)"
+                              },
                               "children": {
                                 "args": [],
                                 "callee": {
+                                  "context": {
+                                    "id": "<group-expression>@[L12:C4, L12:C12]",
+                                    "snippet": "(`id*2`)"
+                                  },
                                   "children": {
                                     "commaList": [],
                                     "elementList": [
                                       {
+                                        "context": {
+                                          "id": "<function-expression>@[L12:C5, L12:C11]",
+                                          "snippet": "`id*2`"
+                                        },
                                         "children": {
                                           "value": {
                                             "context": {
@@ -2667,10 +2699,6 @@
                                             "trailingTrivia": "",
                                             "value": "id*2"
                                           }
-                                        },
-                                        "context": {
-                                          "id": "<function-expression>@[L12:C5, L12:C11]",
-                                          "snippet": "`id*2`"
                                         },
                                         "end": 328,
                                         "endPos": {
@@ -2740,10 +2768,6 @@
                                       "value": "("
                                     }
                                   },
-                                  "context": {
-                                    "id": "<group-expression>@[L12:C4, L12:C12]",
-                                    "snippet": "(`id*2`)"
-                                  },
                                   "end": 329,
                                   "endPos": {
                                     "offset": 329,
@@ -2760,10 +2784,6 @@
                                     "column": 4
                                   }
                                 }
-                              },
-                              "context": {
-                                "id": "<function-application>@[L12:C4, L12:C12]",
-                                "snippet": "(`id*2`)"
                               },
                               "end": 329,
                               "endPos": {
@@ -2782,9 +2802,17 @@
                               }
                             },
                             {
+                              "context": {
+                                "id": "<function-application>@[L13:C4, L13:C24]",
+                                "snippet": "(`id*3`,`getdate()`)"
+                              },
                               "children": {
                                 "args": [],
                                 "callee": {
+                                  "context": {
+                                    "id": "<tuple-expression>@[L13:C4, L13:C24]",
+                                    "snippet": "(`id*3`,`getdate()`)"
+                                  },
                                   "children": {
                                     "commaList": [
                                       {
@@ -2815,6 +2843,10 @@
                                     ],
                                     "elementList": [
                                       {
+                                        "context": {
+                                          "id": "<function-expression>@[L13:C5, L13:C11]",
+                                          "snippet": "`id*3`"
+                                        },
                                         "children": {
                                           "value": {
                                             "context": {
@@ -2842,10 +2874,6 @@
                                             "value": "id*3"
                                           }
                                         },
-                                        "context": {
-                                          "id": "<function-expression>@[L13:C5, L13:C11]",
-                                          "snippet": "`id*3`"
-                                        },
                                         "end": 342,
                                         "endPos": {
                                           "offset": 342,
@@ -2863,6 +2891,10 @@
                                         }
                                       },
                                       {
+                                        "context": {
+                                          "id": "<function-expression>@[L13:C12, L13:C23]",
+                                          "snippet": "`getdate()`"
+                                        },
                                         "children": {
                                           "value": {
                                             "context": {
@@ -2889,10 +2921,6 @@
                                             "trailingTrivia": "",
                                             "value": "getdate()"
                                           }
-                                        },
-                                        "context": {
-                                          "id": "<function-expression>@[L13:C12, L13:C23]",
-                                          "snippet": "`getdate()`"
                                         },
                                         "end": 354,
                                         "endPos": {
@@ -2962,10 +2990,6 @@
                                       "value": "("
                                     }
                                   },
-                                  "context": {
-                                    "id": "<tuple-expression>@[L13:C4, L13:C24]",
-                                    "snippet": "(`id*3`,`getdate()`)"
-                                  },
                                   "end": 355,
                                   "endPos": {
                                     "offset": 355,
@@ -2982,10 +3006,6 @@
                                     "column": 4
                                   }
                                 }
-                              },
-                              "context": {
-                                "id": "<function-application>@[L13:C4, L13:C24]",
-                                "snippet": "(`id*3`,`getdate()`)"
                               },
                               "end": 355,
                               "endPos": {
@@ -3004,9 +3024,17 @@
                               }
                             },
                             {
+                              "context": {
+                                "id": "<function-application>@[L14:C4, L14:C15]",
+                                "snippet": "(`id*3`,id)"
+                              },
                               "children": {
                                 "args": [],
                                 "callee": {
+                                  "context": {
+                                    "id": "<tuple-expression>@[L14:C4, L14:C15]",
+                                    "snippet": "(`id*3`,id)"
+                                  },
                                   "children": {
                                     "commaList": [
                                       {
@@ -3037,6 +3065,10 @@
                                     ],
                                     "elementList": [
                                       {
+                                        "context": {
+                                          "id": "<function-expression>@[L14:C5, L14:C11]",
+                                          "snippet": "`id*3`"
+                                        },
                                         "children": {
                                           "value": {
                                             "context": {
@@ -3064,10 +3096,6 @@
                                             "value": "id*3"
                                           }
                                         },
-                                        "context": {
-                                          "id": "<function-expression>@[L14:C5, L14:C11]",
-                                          "snippet": "`id*3`"
-                                        },
                                         "end": 368,
                                         "endPos": {
                                           "offset": 368,
@@ -3085,8 +3113,16 @@
                                         }
                                       },
                                       {
+                                        "context": {
+                                          "id": "<primary-expression>@[L14:C12, L14:C14]",
+                                          "snippet": "id"
+                                        },
                                         "children": {
                                           "expression": {
+                                            "context": {
+                                              "id": "<variable>:id@[L14:C12, L14:C14]",
+                                              "snippet": "id"
+                                            },
                                             "children": {
                                               "variable": {
                                                 "context": {
@@ -3114,10 +3150,6 @@
                                                 "value": "id"
                                               }
                                             },
-                                            "context": {
-                                              "id": "<variable>:id@[L14:C12, L14:C14]",
-                                              "snippet": "id"
-                                            },
                                             "end": 371,
                                             "endPos": {
                                               "offset": 371,
@@ -3134,10 +3166,6 @@
                                               "column": 12
                                             }
                                           }
-                                        },
-                                        "context": {
-                                          "id": "<primary-expression>@[L14:C12, L14:C14]",
-                                          "snippet": "id"
                                         },
                                         "end": 371,
                                         "endPos": {
@@ -3207,10 +3235,6 @@
                                       "value": "("
                                     }
                                   },
-                                  "context": {
-                                    "id": "<tuple-expression>@[L14:C4, L14:C15]",
-                                    "snippet": "(`id*3`,id)"
-                                  },
                                   "end": 372,
                                   "endPos": {
                                     "offset": 372,
@@ -3227,10 +3251,6 @@
                                     "column": 4
                                   }
                                 }
-                              },
-                              "context": {
-                                "id": "<function-application>@[L14:C4, L14:C15]",
-                                "snippet": "(`id*3`,id)"
                               },
                               "end": 372,
                               "endPos": {
@@ -3249,10 +3269,6 @@
                               }
                             }
                           ]
-                        },
-                        "context": {
-                          "id": "<block-expression>@[L6:C10, L15:C3]",
-                          "snippet": "{\r\n    (id...`,id)\r\n  }"
                         },
                         "end": 377,
                         "endPos": {
@@ -3296,10 +3312,6 @@
                         "value": "indexes"
                       }
                     },
-                    "context": {
-                      "id": "<element-declaration>:@[L6:C2, L15:C3]",
-                      "snippet": "indexes {\r...`,id)\r\n  }"
-                    },
                     "end": 377,
                     "endPos": {
                       "offset": 377,
@@ -3318,10 +3330,6 @@
                   }
                 ]
               },
-              "context": {
-                "id": "<block-expression>@[L0:C28, L16:C1]",
-                "snippet": "{\r\n  id in...d)\r\n  }\r\n}"
-              },
               "end": 380,
               "endPos": {
                 "offset": 380,
@@ -3339,8 +3347,16 @@
               }
             },
             "name": {
+              "context": {
+                "id": "<primary-expression>@[L0:C13, L0:C27]",
+                "snippet": "bookingPartial"
+              },
               "children": {
                 "expression": {
+                  "context": {
+                    "id": "<variable>:bookingPartial@[L0:C13, L0:C27]",
+                    "snippet": "bookingPartial"
+                  },
                   "children": {
                     "variable": {
                       "context": {
@@ -3368,10 +3384,6 @@
                       "value": "bookingPartial"
                     }
                   },
-                  "context": {
-                    "id": "<variable>:bookingPartial@[L0:C13, L0:C27]",
-                    "snippet": "bookingPartial"
-                  },
                   "end": 27,
                   "endPos": {
                     "offset": 27,
@@ -3388,10 +3400,6 @@
                     "column": 13
                   }
                 }
-              },
-              "context": {
-                "id": "<primary-expression>@[L0:C13, L0:C27]",
-                "snippet": "bookingPartial"
               },
               "end": 27,
               "endPos": {
@@ -3434,10 +3442,6 @@
               "trailingTrivia": " ",
               "value": "TablePartial"
             }
-          },
-          "context": {
-            "id": "<element-declaration>:bookingPartial@[L0:C0, L16:C1]",
-            "snippet": "TableParti...d)\r\n  }\r\n}"
           },
           "end": 380,
           "endPos": {
@@ -3493,8 +3497,16 @@
           }
         },
         {
+          "context": {
+            "id": "<element-declaration>:bookings@[L18:C0, L34:C1]",
+            "snippet": "Table book...d)\r\n  }\r\n}"
+          },
           "children": {
             "body": {
+              "context": {
+                "id": "<block-expression>@[L18:C15, L34:C1]",
+                "snippet": "{\r\n  id in...d)\r\n  }\r\n}"
+              },
               "children": {
                 "blockCloseBrace": {
                   "context": {
@@ -3548,11 +3560,23 @@
                 },
                 "body": [
                   {
+                    "context": {
+                      "id": "<function-application>@[L19:C2, L19:C12]",
+                      "snippet": "id integer"
+                    },
                     "children": {
                       "args": [
                         {
+                          "context": {
+                            "id": "<primary-expression>@[L19:C5, L19:C12]",
+                            "snippet": "integer"
+                          },
                           "children": {
                             "expression": {
+                              "context": {
+                                "id": "<variable>:integer@[L19:C5, L19:C12]",
+                                "snippet": "integer"
+                              },
                               "children": {
                                 "variable": {
                                   "context": {
@@ -3580,10 +3604,6 @@
                                   "value": "integer"
                                 }
                               },
-                              "context": {
-                                "id": "<variable>:integer@[L19:C5, L19:C12]",
-                                "snippet": "integer"
-                              },
                               "end": 414,
                               "endPos": {
                                 "offset": 414,
@@ -3600,10 +3620,6 @@
                                 "column": 5
                               }
                             }
-                          },
-                          "context": {
-                            "id": "<primary-expression>@[L19:C5, L19:C12]",
-                            "snippet": "integer"
                           },
                           "end": 414,
                           "endPos": {
@@ -3623,8 +3639,16 @@
                         }
                       ],
                       "callee": {
+                        "context": {
+                          "id": "<primary-expression>@[L19:C2, L19:C4]",
+                          "snippet": "id"
+                        },
                         "children": {
                           "expression": {
+                            "context": {
+                              "id": "<variable>:id@[L19:C2, L19:C4]",
+                              "snippet": "id"
+                            },
                             "children": {
                               "variable": {
                                 "context": {
@@ -3652,10 +3676,6 @@
                                 "value": "id"
                               }
                             },
-                            "context": {
-                              "id": "<variable>:id@[L19:C2, L19:C4]",
-                              "snippet": "id"
-                            },
                             "end": 406,
                             "endPos": {
                               "offset": 406,
@@ -3673,10 +3693,6 @@
                             }
                           }
                         },
-                        "context": {
-                          "id": "<primary-expression>@[L19:C2, L19:C4]",
-                          "snippet": "id"
-                        },
                         "end": 406,
                         "endPos": {
                           "offset": 406,
@@ -3693,10 +3709,6 @@
                           "column": 2
                         }
                       }
-                    },
-                    "context": {
-                      "id": "<function-application>@[L19:C2, L19:C12]",
-                      "snippet": "id integer"
                     },
                     "end": 414,
                     "endPos": {
@@ -3726,11 +3738,23 @@
                     }
                   },
                   {
+                    "context": {
+                      "id": "<function-application>@[L20:C2, L20:C17]",
+                      "snippet": "country varchar"
+                    },
                     "children": {
                       "args": [
                         {
+                          "context": {
+                            "id": "<primary-expression>@[L20:C10, L20:C17]",
+                            "snippet": "varchar"
+                          },
                           "children": {
                             "expression": {
+                              "context": {
+                                "id": "<variable>:varchar@[L20:C10, L20:C17]",
+                                "snippet": "varchar"
+                              },
                               "children": {
                                 "variable": {
                                   "context": {
@@ -3758,10 +3782,6 @@
                                   "value": "varchar"
                                 }
                               },
-                              "context": {
-                                "id": "<variable>:varchar@[L20:C10, L20:C17]",
-                                "snippet": "varchar"
-                              },
                               "end": 433,
                               "endPos": {
                                 "offset": 433,
@@ -3778,10 +3798,6 @@
                                 "column": 10
                               }
                             }
-                          },
-                          "context": {
-                            "id": "<primary-expression>@[L20:C10, L20:C17]",
-                            "snippet": "varchar"
                           },
                           "end": 433,
                           "endPos": {
@@ -3801,8 +3817,16 @@
                         }
                       ],
                       "callee": {
+                        "context": {
+                          "id": "<primary-expression>@[L20:C2, L20:C9]",
+                          "snippet": "country"
+                        },
                         "children": {
                           "expression": {
+                            "context": {
+                              "id": "<variable>:country@[L20:C2, L20:C9]",
+                              "snippet": "country"
+                            },
                             "children": {
                               "variable": {
                                 "context": {
@@ -3830,10 +3854,6 @@
                                 "value": "country"
                               }
                             },
-                            "context": {
-                              "id": "<variable>:country@[L20:C2, L20:C9]",
-                              "snippet": "country"
-                            },
                             "end": 425,
                             "endPos": {
                               "offset": 425,
@@ -3851,10 +3871,6 @@
                             }
                           }
                         },
-                        "context": {
-                          "id": "<primary-expression>@[L20:C2, L20:C9]",
-                          "snippet": "country"
-                        },
                         "end": 425,
                         "endPos": {
                           "offset": 425,
@@ -3871,10 +3887,6 @@
                           "column": 2
                         }
                       }
-                    },
-                    "context": {
-                      "id": "<function-application>@[L20:C2, L20:C17]",
-                      "snippet": "country varchar"
                     },
                     "end": 433,
                     "endPos": {
@@ -3904,11 +3916,23 @@
                     }
                   },
                   {
+                    "context": {
+                      "id": "<function-application>@[L21:C2, L21:C19]",
+                      "snippet": "booking_date date"
+                    },
                     "children": {
                       "args": [
                         {
+                          "context": {
+                            "id": "<primary-expression>@[L21:C15, L21:C19]",
+                            "snippet": "date"
+                          },
                           "children": {
                             "expression": {
+                              "context": {
+                                "id": "<variable>:date@[L21:C15, L21:C19]",
+                                "snippet": "date"
+                              },
                               "children": {
                                 "variable": {
                                   "context": {
@@ -3936,10 +3960,6 @@
                                   "value": "date"
                                 }
                               },
-                              "context": {
-                                "id": "<variable>:date@[L21:C15, L21:C19]",
-                                "snippet": "date"
-                              },
                               "end": 454,
                               "endPos": {
                                 "offset": 454,
@@ -3956,10 +3976,6 @@
                                 "column": 15
                               }
                             }
-                          },
-                          "context": {
-                            "id": "<primary-expression>@[L21:C15, L21:C19]",
-                            "snippet": "date"
                           },
                           "end": 454,
                           "endPos": {
@@ -3979,8 +3995,16 @@
                         }
                       ],
                       "callee": {
+                        "context": {
+                          "id": "<primary-expression>@[L21:C2, L21:C14]",
+                          "snippet": "booking_date"
+                        },
                         "children": {
                           "expression": {
+                            "context": {
+                              "id": "<variable>:booking_date@[L21:C2, L21:C14]",
+                              "snippet": "booking_date"
+                            },
                             "children": {
                               "variable": {
                                 "context": {
@@ -4008,10 +4032,6 @@
                                 "value": "booking_date"
                               }
                             },
-                            "context": {
-                              "id": "<variable>:booking_date@[L21:C2, L21:C14]",
-                              "snippet": "booking_date"
-                            },
                             "end": 449,
                             "endPos": {
                               "offset": 449,
@@ -4029,10 +4049,6 @@
                             }
                           }
                         },
-                        "context": {
-                          "id": "<primary-expression>@[L21:C2, L21:C14]",
-                          "snippet": "booking_date"
-                        },
                         "end": 449,
                         "endPos": {
                           "offset": 449,
@@ -4049,10 +4065,6 @@
                           "column": 2
                         }
                       }
-                    },
-                    "context": {
-                      "id": "<function-application>@[L21:C2, L21:C19]",
-                      "snippet": "booking_date date"
                     },
                     "end": 454,
                     "endPos": {
@@ -4082,11 +4094,23 @@
                     }
                   },
                   {
+                    "context": {
+                      "id": "<function-application>@[L22:C2, L22:C22]",
+                      "snippet": "created_at timestamp"
+                    },
                     "children": {
                       "args": [
                         {
+                          "context": {
+                            "id": "<primary-expression>@[L22:C13, L22:C22]",
+                            "snippet": "timestamp"
+                          },
                           "children": {
                             "expression": {
+                              "context": {
+                                "id": "<variable>:timestamp@[L22:C13, L22:C22]",
+                                "snippet": "timestamp"
+                              },
                               "children": {
                                 "variable": {
                                   "context": {
@@ -4114,10 +4138,6 @@
                                   "value": "timestamp"
                                 }
                               },
-                              "context": {
-                                "id": "<variable>:timestamp@[L22:C13, L22:C22]",
-                                "snippet": "timestamp"
-                              },
                               "end": 478,
                               "endPos": {
                                 "offset": 478,
@@ -4134,10 +4154,6 @@
                                 "column": 13
                               }
                             }
-                          },
-                          "context": {
-                            "id": "<primary-expression>@[L22:C13, L22:C22]",
-                            "snippet": "timestamp"
                           },
                           "end": 478,
                           "endPos": {
@@ -4157,8 +4173,16 @@
                         }
                       ],
                       "callee": {
+                        "context": {
+                          "id": "<primary-expression>@[L22:C2, L22:C12]",
+                          "snippet": "created_at"
+                        },
                         "children": {
                           "expression": {
+                            "context": {
+                              "id": "<variable>:created_at@[L22:C2, L22:C12]",
+                              "snippet": "created_at"
+                            },
                             "children": {
                               "variable": {
                                 "context": {
@@ -4186,10 +4210,6 @@
                                 "value": "created_at"
                               }
                             },
-                            "context": {
-                              "id": "<variable>:created_at@[L22:C2, L22:C12]",
-                              "snippet": "created_at"
-                            },
                             "end": 468,
                             "endPos": {
                               "offset": 468,
@@ -4207,10 +4227,6 @@
                             }
                           }
                         },
-                        "context": {
-                          "id": "<primary-expression>@[L22:C2, L22:C12]",
-                          "snippet": "created_at"
-                        },
                         "end": 468,
                         "endPos": {
                           "offset": 468,
@@ -4227,10 +4243,6 @@
                           "column": 2
                         }
                       }
-                    },
-                    "context": {
-                      "id": "<function-application>@[L22:C2, L22:C22]",
-                      "snippet": "created_at timestamp"
                     },
                     "end": 478,
                     "endPos": {
@@ -4260,8 +4272,16 @@
                     }
                   },
                   {
+                    "context": {
+                      "id": "<element-declaration>:@[L24:C2, L33:C3]",
+                      "snippet": "indexes {\r...`,id)\r\n  }"
+                    },
                     "children": {
                       "body": {
+                        "context": {
+                          "id": "<block-expression>@[L24:C10, L33:C3]",
+                          "snippet": "{\r\n    (id...`,id)\r\n  }"
+                        },
                         "children": {
                           "blockCloseBrace": {
                             "context": {
@@ -4315,15 +4335,31 @@
                           },
                           "body": [
                             {
+                              "context": {
+                                "id": "<function-application>@[L25:C4, L25:C22]",
+                                "snippet": "(id, country) [pk]"
+                              },
                               "children": {
                                 "args": [
                                   {
+                                    "context": {
+                                      "id": "<list-expression>@[L25:C18, L25:C22]",
+                                      "snippet": "[pk]"
+                                    },
                                     "children": {
                                       "commaList": [],
                                       "elementList": [
                                         {
+                                          "context": {
+                                            "id": "<attribute>@[L25:C19, L25:C21]",
+                                            "snippet": "pk"
+                                          },
                                           "children": {
                                             "name": {
+                                              "context": {
+                                                "id": "<identifer-stream>@[L25:C19, L25:C21]",
+                                                "snippet": "pk"
+                                              },
                                               "children": {
                                                 "identifiers": [
                                                   {
@@ -4353,10 +4389,6 @@
                                                   }
                                                 ]
                                               },
-                                              "context": {
-                                                "id": "<identifer-stream>@[L25:C19, L25:C21]",
-                                                "snippet": "pk"
-                                              },
                                               "end": 516,
                                               "endPos": {
                                                 "offset": 516,
@@ -4373,10 +4405,6 @@
                                                 "column": 19
                                               }
                                             }
-                                          },
-                                          "context": {
-                                            "id": "<attribute>@[L25:C19, L25:C21]",
-                                            "snippet": "pk"
                                           },
                                           "end": 516,
                                           "endPos": {
@@ -4446,10 +4474,6 @@
                                         "value": "["
                                       }
                                     },
-                                    "context": {
-                                      "id": "<list-expression>@[L25:C18, L25:C22]",
-                                      "snippet": "[pk]"
-                                    },
                                     "end": 517,
                                     "endPos": {
                                       "offset": 517,
@@ -4468,6 +4492,10 @@
                                   }
                                 ],
                                 "callee": {
+                                  "context": {
+                                    "id": "<tuple-expression>@[L25:C4, L25:C17]",
+                                    "snippet": "(id, country)"
+                                  },
                                   "children": {
                                     "commaList": [
                                       {
@@ -4498,8 +4526,16 @@
                                     ],
                                     "elementList": [
                                       {
+                                        "context": {
+                                          "id": "<primary-expression>@[L25:C5, L25:C7]",
+                                          "snippet": "id"
+                                        },
                                         "children": {
                                           "expression": {
+                                            "context": {
+                                              "id": "<variable>:id@[L25:C5, L25:C7]",
+                                              "snippet": "id"
+                                            },
                                             "children": {
                                               "variable": {
                                                 "context": {
@@ -4527,10 +4563,6 @@
                                                 "value": "id"
                                               }
                                             },
-                                            "context": {
-                                              "id": "<variable>:id@[L25:C5, L25:C7]",
-                                              "snippet": "id"
-                                            },
                                             "end": 502,
                                             "endPos": {
                                               "offset": 502,
@@ -4547,10 +4579,6 @@
                                               "column": 5
                                             }
                                           }
-                                        },
-                                        "context": {
-                                          "id": "<primary-expression>@[L25:C5, L25:C7]",
-                                          "snippet": "id"
                                         },
                                         "end": 502,
                                         "endPos": {
@@ -4569,8 +4597,16 @@
                                         }
                                       },
                                       {
+                                        "context": {
+                                          "id": "<primary-expression>@[L25:C9, L25:C16]",
+                                          "snippet": "country"
+                                        },
                                         "children": {
                                           "expression": {
+                                            "context": {
+                                              "id": "<variable>:country@[L25:C9, L25:C16]",
+                                              "snippet": "country"
+                                            },
                                             "children": {
                                               "variable": {
                                                 "context": {
@@ -4598,10 +4634,6 @@
                                                 "value": "country"
                                               }
                                             },
-                                            "context": {
-                                              "id": "<variable>:country@[L25:C9, L25:C16]",
-                                              "snippet": "country"
-                                            },
                                             "end": 511,
                                             "endPos": {
                                               "offset": 511,
@@ -4618,10 +4650,6 @@
                                               "column": 9
                                             }
                                           }
-                                        },
-                                        "context": {
-                                          "id": "<primary-expression>@[L25:C9, L25:C16]",
-                                          "snippet": "country"
                                         },
                                         "end": 511,
                                         "endPos": {
@@ -4691,10 +4719,6 @@
                                       "value": "("
                                     }
                                   },
-                                  "context": {
-                                    "id": "<tuple-expression>@[L25:C4, L25:C17]",
-                                    "snippet": "(id, country)"
-                                  },
                                   "end": 512,
                                   "endPos": {
                                     "offset": 512,
@@ -4711,10 +4735,6 @@
                                     "column": 4
                                   }
                                 }
-                              },
-                              "context": {
-                                "id": "<function-application>@[L25:C4, L25:C22]",
-                                "snippet": "(id, country) [pk]"
                               },
                               "end": 517,
                               "endPos": {
@@ -4733,9 +4753,17 @@
                               }
                             },
                             {
+                              "context": {
+                                "id": "<function-application>@[L26:C4, L26:C55]",
+                                "snippet": "created_at...e: 'Date']"
+                              },
                               "children": {
                                 "args": [
                                   {
+                                    "context": {
+                                      "id": "<list-expression>@[L26:C15, L26:C55]",
+                                      "snippet": "[name: 'cr...e: 'Date']"
+                                    },
                                     "children": {
                                       "commaList": [
                                         {
@@ -4766,6 +4794,10 @@
                                       ],
                                       "elementList": [
                                         {
+                                          "context": {
+                                            "id": "<attribute>@[L26:C16, L26:C40]",
+                                            "snippet": "name: 'cre..._at_index'"
+                                          },
                                           "children": {
                                             "colon": {
                                               "context": {
@@ -4793,6 +4825,10 @@
                                               "value": ":"
                                             },
                                             "name": {
+                                              "context": {
+                                                "id": "<identifer-stream>@[L26:C16, L26:C20]",
+                                                "snippet": "name"
+                                              },
                                               "children": {
                                                 "identifiers": [
                                                   {
@@ -4822,10 +4858,6 @@
                                                   }
                                                 ]
                                               },
-                                              "context": {
-                                                "id": "<identifer-stream>@[L26:C16, L26:C20]",
-                                                "snippet": "name"
-                                              },
                                               "end": 564,
                                               "endPos": {
                                                 "offset": 564,
@@ -4843,8 +4875,16 @@
                                               }
                                             },
                                             "value": {
+                                              "context": {
+                                                "id": "<primary-expression>@[L26:C22, L26:C40]",
+                                                "snippet": "'created_at_index'"
+                                              },
                                               "children": {
                                                 "expression": {
+                                                  "context": {
+                                                    "id": "<literal>:created_at_index@[L26:C22, L26:C40]",
+                                                    "snippet": "'created_at_index'"
+                                                  },
                                                   "children": {
                                                     "literal": {
                                                       "context": {
@@ -4872,10 +4912,6 @@
                                                       "value": "created_at_index"
                                                     }
                                                   },
-                                                  "context": {
-                                                    "id": "<literal>:created_at_index@[L26:C22, L26:C40]",
-                                                    "snippet": "'created_at_index'"
-                                                  },
                                                   "end": 584,
                                                   "endPos": {
                                                     "offset": 584,
@@ -4892,10 +4928,6 @@
                                                     "column": 22
                                                   }
                                                 }
-                                              },
-                                              "context": {
-                                                "id": "<primary-expression>@[L26:C22, L26:C40]",
-                                                "snippet": "'created_at_index'"
                                               },
                                               "end": 584,
                                               "endPos": {
@@ -4914,10 +4946,6 @@
                                               }
                                             }
                                           },
-                                          "context": {
-                                            "id": "<attribute>@[L26:C16, L26:C40]",
-                                            "snippet": "name: 'cre..._at_index'"
-                                          },
                                           "end": 584,
                                           "endPos": {
                                             "offset": 584,
@@ -4935,6 +4963,10 @@
                                           }
                                         },
                                         {
+                                          "context": {
+                                            "id": "<attribute>@[L26:C42, L26:C54]",
+                                            "snippet": "note: 'Date'"
+                                          },
                                           "children": {
                                             "colon": {
                                               "context": {
@@ -4962,6 +4994,10 @@
                                               "value": ":"
                                             },
                                             "name": {
+                                              "context": {
+                                                "id": "<identifer-stream>@[L26:C42, L26:C46]",
+                                                "snippet": "note"
+                                              },
                                               "children": {
                                                 "identifiers": [
                                                   {
@@ -4991,10 +5027,6 @@
                                                   }
                                                 ]
                                               },
-                                              "context": {
-                                                "id": "<identifer-stream>@[L26:C42, L26:C46]",
-                                                "snippet": "note"
-                                              },
                                               "end": 590,
                                               "endPos": {
                                                 "offset": 590,
@@ -5012,8 +5044,16 @@
                                               }
                                             },
                                             "value": {
+                                              "context": {
+                                                "id": "<primary-expression>@[L26:C48, L26:C54]",
+                                                "snippet": "'Date'"
+                                              },
                                               "children": {
                                                 "expression": {
+                                                  "context": {
+                                                    "id": "<literal>:Date@[L26:C48, L26:C54]",
+                                                    "snippet": "'Date'"
+                                                  },
                                                   "children": {
                                                     "literal": {
                                                       "context": {
@@ -5041,10 +5081,6 @@
                                                       "value": "Date"
                                                     }
                                                   },
-                                                  "context": {
-                                                    "id": "<literal>:Date@[L26:C48, L26:C54]",
-                                                    "snippet": "'Date'"
-                                                  },
                                                   "end": 598,
                                                   "endPos": {
                                                     "offset": 598,
@@ -5062,10 +5098,6 @@
                                                   }
                                                 }
                                               },
-                                              "context": {
-                                                "id": "<primary-expression>@[L26:C48, L26:C54]",
-                                                "snippet": "'Date'"
-                                              },
                                               "end": 598,
                                               "endPos": {
                                                 "offset": 598,
@@ -5082,10 +5114,6 @@
                                                 "column": 48
                                               }
                                             }
-                                          },
-                                          "context": {
-                                            "id": "<attribute>@[L26:C42, L26:C54]",
-                                            "snippet": "note: 'Date'"
                                           },
                                           "end": 598,
                                           "endPos": {
@@ -5155,10 +5183,6 @@
                                         "value": "["
                                       }
                                     },
-                                    "context": {
-                                      "id": "<list-expression>@[L26:C15, L26:C55]",
-                                      "snippet": "[name: 'cr...e: 'Date']"
-                                    },
                                     "end": 599,
                                     "endPos": {
                                       "offset": 599,
@@ -5177,8 +5201,16 @@
                                   }
                                 ],
                                 "callee": {
+                                  "context": {
+                                    "id": "<primary-expression>@[L26:C4, L26:C14]",
+                                    "snippet": "created_at"
+                                  },
                                   "children": {
                                     "expression": {
+                                      "context": {
+                                        "id": "<variable>:created_at@[L26:C4, L26:C14]",
+                                        "snippet": "created_at"
+                                      },
                                       "children": {
                                         "variable": {
                                           "context": {
@@ -5206,10 +5238,6 @@
                                           "value": "created_at"
                                         }
                                       },
-                                      "context": {
-                                        "id": "<variable>:created_at@[L26:C4, L26:C14]",
-                                        "snippet": "created_at"
-                                      },
                                       "end": 558,
                                       "endPos": {
                                         "offset": 558,
@@ -5226,10 +5254,6 @@
                                         "column": 4
                                       }
                                     }
-                                  },
-                                  "context": {
-                                    "id": "<primary-expression>@[L26:C4, L26:C14]",
-                                    "snippet": "created_at"
                                   },
                                   "end": 558,
                                   "endPos": {
@@ -5248,10 +5272,6 @@
                                   }
                                 }
                               },
-                              "context": {
-                                "id": "<function-application>@[L26:C4, L26:C55]",
-                                "snippet": "created_at...e: 'Date']"
-                              },
                               "end": 599,
                               "endPos": {
                                 "offset": 599,
@@ -5269,11 +5289,23 @@
                               }
                             },
                             {
+                              "context": {
+                                "id": "<function-application>@[L27:C4, L27:C16]",
+                                "snippet": "booking_date"
+                              },
                               "children": {
                                 "args": [],
                                 "callee": {
+                                  "context": {
+                                    "id": "<primary-expression>@[L27:C4, L27:C16]",
+                                    "snippet": "booking_date"
+                                  },
                                   "children": {
                                     "expression": {
+                                      "context": {
+                                        "id": "<variable>:booking_date@[L27:C4, L27:C16]",
+                                        "snippet": "booking_date"
+                                      },
                                       "children": {
                                         "variable": {
                                           "context": {
@@ -5301,10 +5333,6 @@
                                           "value": "booking_date"
                                         }
                                       },
-                                      "context": {
-                                        "id": "<variable>:booking_date@[L27:C4, L27:C16]",
-                                        "snippet": "booking_date"
-                                      },
                                       "end": 617,
                                       "endPos": {
                                         "offset": 617,
@@ -5321,10 +5349,6 @@
                                         "column": 4
                                       }
                                     }
-                                  },
-                                  "context": {
-                                    "id": "<primary-expression>@[L27:C4, L27:C16]",
-                                    "snippet": "booking_date"
                                   },
                                   "end": 617,
                                   "endPos": {
@@ -5343,10 +5367,6 @@
                                   }
                                 }
                               },
-                              "context": {
-                                "id": "<function-application>@[L27:C4, L27:C16]",
-                                "snippet": "booking_date"
-                              },
                               "end": 617,
                               "endPos": {
                                 "offset": 617,
@@ -5364,15 +5384,31 @@
                               }
                             },
                             {
+                              "context": {
+                                "id": "<function-application>@[L28:C4, L28:C36]",
+                                "snippet": "(country, ...) [unique]"
+                              },
                               "children": {
                                 "args": [
                                   {
+                                    "context": {
+                                      "id": "<list-expression>@[L28:C28, L28:C36]",
+                                      "snippet": "[unique]"
+                                    },
                                     "children": {
                                       "commaList": [],
                                       "elementList": [
                                         {
+                                          "context": {
+                                            "id": "<attribute>@[L28:C29, L28:C35]",
+                                            "snippet": "unique"
+                                          },
                                           "children": {
                                             "name": {
+                                              "context": {
+                                                "id": "<identifer-stream>@[L28:C29, L28:C35]",
+                                                "snippet": "unique"
+                                              },
                                               "children": {
                                                 "identifiers": [
                                                   {
@@ -5402,10 +5438,6 @@
                                                   }
                                                 ]
                                               },
-                                              "context": {
-                                                "id": "<identifer-stream>@[L28:C29, L28:C35]",
-                                                "snippet": "unique"
-                                              },
                                               "end": 654,
                                               "endPos": {
                                                 "offset": 654,
@@ -5422,10 +5454,6 @@
                                                 "column": 29
                                               }
                                             }
-                                          },
-                                          "context": {
-                                            "id": "<attribute>@[L28:C29, L28:C35]",
-                                            "snippet": "unique"
                                           },
                                           "end": 654,
                                           "endPos": {
@@ -5495,10 +5523,6 @@
                                         "value": "["
                                       }
                                     },
-                                    "context": {
-                                      "id": "<list-expression>@[L28:C28, L28:C36]",
-                                      "snippet": "[unique]"
-                                    },
                                     "end": 655,
                                     "endPos": {
                                       "offset": 655,
@@ -5517,6 +5541,10 @@
                                   }
                                 ],
                                 "callee": {
+                                  "context": {
+                                    "id": "<tuple-expression>@[L28:C4, L28:C27]",
+                                    "snippet": "(country, ...king_date)"
+                                  },
                                   "children": {
                                     "commaList": [
                                       {
@@ -5547,8 +5575,16 @@
                                     ],
                                     "elementList": [
                                       {
+                                        "context": {
+                                          "id": "<primary-expression>@[L28:C5, L28:C12]",
+                                          "snippet": "country"
+                                        },
                                         "children": {
                                           "expression": {
+                                            "context": {
+                                              "id": "<variable>:country@[L28:C5, L28:C12]",
+                                              "snippet": "country"
+                                            },
                                             "children": {
                                               "variable": {
                                                 "context": {
@@ -5576,10 +5612,6 @@
                                                 "value": "country"
                                               }
                                             },
-                                            "context": {
-                                              "id": "<variable>:country@[L28:C5, L28:C12]",
-                                              "snippet": "country"
-                                            },
                                             "end": 631,
                                             "endPos": {
                                               "offset": 631,
@@ -5596,10 +5628,6 @@
                                               "column": 5
                                             }
                                           }
-                                        },
-                                        "context": {
-                                          "id": "<primary-expression>@[L28:C5, L28:C12]",
-                                          "snippet": "country"
                                         },
                                         "end": 631,
                                         "endPos": {
@@ -5618,8 +5646,16 @@
                                         }
                                       },
                                       {
+                                        "context": {
+                                          "id": "<primary-expression>@[L28:C14, L28:C26]",
+                                          "snippet": "booking_date"
+                                        },
                                         "children": {
                                           "expression": {
+                                            "context": {
+                                              "id": "<variable>:booking_date@[L28:C14, L28:C26]",
+                                              "snippet": "booking_date"
+                                            },
                                             "children": {
                                               "variable": {
                                                 "context": {
@@ -5647,10 +5683,6 @@
                                                 "value": "booking_date"
                                               }
                                             },
-                                            "context": {
-                                              "id": "<variable>:booking_date@[L28:C14, L28:C26]",
-                                              "snippet": "booking_date"
-                                            },
                                             "end": 645,
                                             "endPos": {
                                               "offset": 645,
@@ -5667,10 +5699,6 @@
                                               "column": 14
                                             }
                                           }
-                                        },
-                                        "context": {
-                                          "id": "<primary-expression>@[L28:C14, L28:C26]",
-                                          "snippet": "booking_date"
                                         },
                                         "end": 645,
                                         "endPos": {
@@ -5740,10 +5768,6 @@
                                       "value": "("
                                     }
                                   },
-                                  "context": {
-                                    "id": "<tuple-expression>@[L28:C4, L28:C27]",
-                                    "snippet": "(country, ...king_date)"
-                                  },
                                   "end": 646,
                                   "endPos": {
                                     "offset": 646,
@@ -5760,10 +5784,6 @@
                                     "column": 4
                                   }
                                 }
-                              },
-                              "context": {
-                                "id": "<function-application>@[L28:C4, L28:C36]",
-                                "snippet": "(country, ...) [unique]"
                               },
                               "end": 655,
                               "endPos": {
@@ -5782,13 +5802,25 @@
                               }
                             },
                             {
+                              "context": {
+                                "id": "<function-application>@[L29:C4, L29:C29]",
+                                "snippet": "booking_da...ype: hash]"
+                              },
                               "children": {
                                 "args": [
                                   {
+                                    "context": {
+                                      "id": "<list-expression>@[L29:C17, L29:C29]",
+                                      "snippet": "[type: hash]"
+                                    },
                                     "children": {
                                       "commaList": [],
                                       "elementList": [
                                         {
+                                          "context": {
+                                            "id": "<attribute>@[L29:C18, L29:C28]",
+                                            "snippet": "type: hash"
+                                          },
                                           "children": {
                                             "colon": {
                                               "context": {
@@ -5816,6 +5848,10 @@
                                               "value": ":"
                                             },
                                             "name": {
+                                              "context": {
+                                                "id": "<identifer-stream>@[L29:C18, L29:C22]",
+                                                "snippet": "type"
+                                              },
                                               "children": {
                                                 "identifiers": [
                                                   {
@@ -5845,10 +5881,6 @@
                                                   }
                                                 ]
                                               },
-                                              "context": {
-                                                "id": "<identifer-stream>@[L29:C18, L29:C22]",
-                                                "snippet": "type"
-                                              },
                                               "end": 679,
                                               "endPos": {
                                                 "offset": 679,
@@ -5866,8 +5898,16 @@
                                               }
                                             },
                                             "value": {
+                                              "context": {
+                                                "id": "<primary-expression>@[L29:C24, L29:C28]",
+                                                "snippet": "hash"
+                                              },
                                               "children": {
                                                 "expression": {
+                                                  "context": {
+                                                    "id": "<variable>:hash@[L29:C24, L29:C28]",
+                                                    "snippet": "hash"
+                                                  },
                                                   "children": {
                                                     "variable": {
                                                       "context": {
@@ -5895,10 +5935,6 @@
                                                       "value": "hash"
                                                     }
                                                   },
-                                                  "context": {
-                                                    "id": "<variable>:hash@[L29:C24, L29:C28]",
-                                                    "snippet": "hash"
-                                                  },
                                                   "end": 685,
                                                   "endPos": {
                                                     "offset": 685,
@@ -5916,10 +5952,6 @@
                                                   }
                                                 }
                                               },
-                                              "context": {
-                                                "id": "<primary-expression>@[L29:C24, L29:C28]",
-                                                "snippet": "hash"
-                                              },
                                               "end": 685,
                                               "endPos": {
                                                 "offset": 685,
@@ -5936,10 +5968,6 @@
                                                 "column": 24
                                               }
                                             }
-                                          },
-                                          "context": {
-                                            "id": "<attribute>@[L29:C18, L29:C28]",
-                                            "snippet": "type: hash"
                                           },
                                           "end": 685,
                                           "endPos": {
@@ -6009,10 +6037,6 @@
                                         "value": "["
                                       }
                                     },
-                                    "context": {
-                                      "id": "<list-expression>@[L29:C17, L29:C29]",
-                                      "snippet": "[type: hash]"
-                                    },
                                     "end": 686,
                                     "endPos": {
                                       "offset": 686,
@@ -6031,8 +6055,16 @@
                                   }
                                 ],
                                 "callee": {
+                                  "context": {
+                                    "id": "<primary-expression>@[L29:C4, L29:C16]",
+                                    "snippet": "booking_date"
+                                  },
                                   "children": {
                                     "expression": {
+                                      "context": {
+                                        "id": "<variable>:booking_date@[L29:C4, L29:C16]",
+                                        "snippet": "booking_date"
+                                      },
                                       "children": {
                                         "variable": {
                                           "context": {
@@ -6060,10 +6092,6 @@
                                           "value": "booking_date"
                                         }
                                       },
-                                      "context": {
-                                        "id": "<variable>:booking_date@[L29:C4, L29:C16]",
-                                        "snippet": "booking_date"
-                                      },
                                       "end": 673,
                                       "endPos": {
                                         "offset": 673,
@@ -6080,10 +6108,6 @@
                                         "column": 4
                                       }
                                     }
-                                  },
-                                  "context": {
-                                    "id": "<primary-expression>@[L29:C4, L29:C16]",
-                                    "snippet": "booking_date"
                                   },
                                   "end": 673,
                                   "endPos": {
@@ -6102,10 +6126,6 @@
                                   }
                                 }
                               },
-                              "context": {
-                                "id": "<function-application>@[L29:C4, L29:C29]",
-                                "snippet": "booking_da...ype: hash]"
-                              },
                               "end": 686,
                               "endPos": {
                                 "offset": 686,
@@ -6123,13 +6143,25 @@
                               }
                             },
                             {
+                              "context": {
+                                "id": "<function-application>@[L30:C4, L30:C12]",
+                                "snippet": "(`id*2`)"
+                              },
                               "children": {
                                 "args": [],
                                 "callee": {
+                                  "context": {
+                                    "id": "<group-expression>@[L30:C4, L30:C12]",
+                                    "snippet": "(`id*2`)"
+                                  },
                                   "children": {
                                     "commaList": [],
                                     "elementList": [
                                       {
+                                        "context": {
+                                          "id": "<function-expression>@[L30:C5, L30:C11]",
+                                          "snippet": "`id*2`"
+                                        },
                                         "children": {
                                           "value": {
                                             "context": {
@@ -6156,10 +6188,6 @@
                                             "trailingTrivia": "",
                                             "value": "id*2"
                                           }
-                                        },
-                                        "context": {
-                                          "id": "<function-expression>@[L30:C5, L30:C11]",
-                                          "snippet": "`id*2`"
                                         },
                                         "end": 699,
                                         "endPos": {
@@ -6229,10 +6257,6 @@
                                       "value": "("
                                     }
                                   },
-                                  "context": {
-                                    "id": "<group-expression>@[L30:C4, L30:C12]",
-                                    "snippet": "(`id*2`)"
-                                  },
                                   "end": 700,
                                   "endPos": {
                                     "offset": 700,
@@ -6249,10 +6273,6 @@
                                     "column": 4
                                   }
                                 }
-                              },
-                              "context": {
-                                "id": "<function-application>@[L30:C4, L30:C12]",
-                                "snippet": "(`id*2`)"
                               },
                               "end": 700,
                               "endPos": {
@@ -6271,9 +6291,17 @@
                               }
                             },
                             {
+                              "context": {
+                                "id": "<function-application>@[L31:C4, L31:C24]",
+                                "snippet": "(`id*3`,`getdate()`)"
+                              },
                               "children": {
                                 "args": [],
                                 "callee": {
+                                  "context": {
+                                    "id": "<tuple-expression>@[L31:C4, L31:C24]",
+                                    "snippet": "(`id*3`,`getdate()`)"
+                                  },
                                   "children": {
                                     "commaList": [
                                       {
@@ -6304,6 +6332,10 @@
                                     ],
                                     "elementList": [
                                       {
+                                        "context": {
+                                          "id": "<function-expression>@[L31:C5, L31:C11]",
+                                          "snippet": "`id*3`"
+                                        },
                                         "children": {
                                           "value": {
                                             "context": {
@@ -6331,10 +6363,6 @@
                                             "value": "id*3"
                                           }
                                         },
-                                        "context": {
-                                          "id": "<function-expression>@[L31:C5, L31:C11]",
-                                          "snippet": "`id*3`"
-                                        },
                                         "end": 713,
                                         "endPos": {
                                           "offset": 713,
@@ -6352,6 +6380,10 @@
                                         }
                                       },
                                       {
+                                        "context": {
+                                          "id": "<function-expression>@[L31:C12, L31:C23]",
+                                          "snippet": "`getdate()`"
+                                        },
                                         "children": {
                                           "value": {
                                             "context": {
@@ -6378,10 +6410,6 @@
                                             "trailingTrivia": "",
                                             "value": "getdate()"
                                           }
-                                        },
-                                        "context": {
-                                          "id": "<function-expression>@[L31:C12, L31:C23]",
-                                          "snippet": "`getdate()`"
                                         },
                                         "end": 725,
                                         "endPos": {
@@ -6451,10 +6479,6 @@
                                       "value": "("
                                     }
                                   },
-                                  "context": {
-                                    "id": "<tuple-expression>@[L31:C4, L31:C24]",
-                                    "snippet": "(`id*3`,`getdate()`)"
-                                  },
                                   "end": 726,
                                   "endPos": {
                                     "offset": 726,
@@ -6471,10 +6495,6 @@
                                     "column": 4
                                   }
                                 }
-                              },
-                              "context": {
-                                "id": "<function-application>@[L31:C4, L31:C24]",
-                                "snippet": "(`id*3`,`getdate()`)"
                               },
                               "end": 726,
                               "endPos": {
@@ -6493,9 +6513,17 @@
                               }
                             },
                             {
+                              "context": {
+                                "id": "<function-application>@[L32:C4, L32:C15]",
+                                "snippet": "(`id*3`,id)"
+                              },
                               "children": {
                                 "args": [],
                                 "callee": {
+                                  "context": {
+                                    "id": "<tuple-expression>@[L32:C4, L32:C15]",
+                                    "snippet": "(`id*3`,id)"
+                                  },
                                   "children": {
                                     "commaList": [
                                       {
@@ -6526,6 +6554,10 @@
                                     ],
                                     "elementList": [
                                       {
+                                        "context": {
+                                          "id": "<function-expression>@[L32:C5, L32:C11]",
+                                          "snippet": "`id*3`"
+                                        },
                                         "children": {
                                           "value": {
                                             "context": {
@@ -6553,10 +6585,6 @@
                                             "value": "id*3"
                                           }
                                         },
-                                        "context": {
-                                          "id": "<function-expression>@[L32:C5, L32:C11]",
-                                          "snippet": "`id*3`"
-                                        },
                                         "end": 739,
                                         "endPos": {
                                           "offset": 739,
@@ -6574,8 +6602,16 @@
                                         }
                                       },
                                       {
+                                        "context": {
+                                          "id": "<primary-expression>@[L32:C12, L32:C14]",
+                                          "snippet": "id"
+                                        },
                                         "children": {
                                           "expression": {
+                                            "context": {
+                                              "id": "<variable>:id@[L32:C12, L32:C14]",
+                                              "snippet": "id"
+                                            },
                                             "children": {
                                               "variable": {
                                                 "context": {
@@ -6603,10 +6639,6 @@
                                                 "value": "id"
                                               }
                                             },
-                                            "context": {
-                                              "id": "<variable>:id@[L32:C12, L32:C14]",
-                                              "snippet": "id"
-                                            },
                                             "end": 742,
                                             "endPos": {
                                               "offset": 742,
@@ -6623,10 +6655,6 @@
                                               "column": 12
                                             }
                                           }
-                                        },
-                                        "context": {
-                                          "id": "<primary-expression>@[L32:C12, L32:C14]",
-                                          "snippet": "id"
                                         },
                                         "end": 742,
                                         "endPos": {
@@ -6696,10 +6724,6 @@
                                       "value": "("
                                     }
                                   },
-                                  "context": {
-                                    "id": "<tuple-expression>@[L32:C4, L32:C15]",
-                                    "snippet": "(`id*3`,id)"
-                                  },
                                   "end": 743,
                                   "endPos": {
                                     "offset": 743,
@@ -6716,10 +6740,6 @@
                                     "column": 4
                                   }
                                 }
-                              },
-                              "context": {
-                                "id": "<function-application>@[L32:C4, L32:C15]",
-                                "snippet": "(`id*3`,id)"
                               },
                               "end": 743,
                               "endPos": {
@@ -6738,10 +6758,6 @@
                               }
                             }
                           ]
-                        },
-                        "context": {
-                          "id": "<block-expression>@[L24:C10, L33:C3]",
-                          "snippet": "{\r\n    (id...`,id)\r\n  }"
                         },
                         "end": 748,
                         "endPos": {
@@ -6785,10 +6801,6 @@
                         "value": "indexes"
                       }
                     },
-                    "context": {
-                      "id": "<element-declaration>:@[L24:C2, L33:C3]",
-                      "snippet": "indexes {\r...`,id)\r\n  }"
-                    },
                     "end": 748,
                     "endPos": {
                       "offset": 748,
@@ -6807,10 +6819,6 @@
                   }
                 ]
               },
-              "context": {
-                "id": "<block-expression>@[L18:C15, L34:C1]",
-                "snippet": "{\r\n  id in...d)\r\n  }\r\n}"
-              },
               "end": 751,
               "endPos": {
                 "offset": 751,
@@ -6828,8 +6836,16 @@
               }
             },
             "name": {
+              "context": {
+                "id": "<primary-expression>@[L18:C6, L18:C14]",
+                "snippet": "bookings"
+              },
               "children": {
                 "expression": {
+                  "context": {
+                    "id": "<variable>:bookings@[L18:C6, L18:C14]",
+                    "snippet": "bookings"
+                  },
                   "children": {
                     "variable": {
                       "context": {
@@ -6857,10 +6873,6 @@
                       "value": "bookings"
                     }
                   },
-                  "context": {
-                    "id": "<variable>:bookings@[L18:C6, L18:C14]",
-                    "snippet": "bookings"
-                  },
                   "end": 398,
                   "endPos": {
                     "offset": 398,
@@ -6877,10 +6889,6 @@
                     "column": 6
                   }
                 }
-              },
-              "context": {
-                "id": "<primary-expression>@[L18:C6, L18:C14]",
-                "snippet": "bookings"
               },
               "end": 398,
               "endPos": {
@@ -6923,10 +6931,6 @@
               "trailingTrivia": " ",
               "value": "Table"
             }
-          },
-          "context": {
-            "id": "<element-declaration>:bookings@[L18:C0, L34:C1]",
-            "snippet": "Table book...d)\r\n  }\r\n}"
           },
           "end": 751,
           "endPos": {
@@ -7007,10 +7011,6 @@
         "trailingTrivia": "",
         "value": ""
       }
-    },
-    "context": {
-      "id": "<program>@[L0:C0, L36:C0]",
-      "snippet": "TableParti... program\r\n"
     },
     "end": 772,
     "endPos": {

@@ -15,11 +15,23 @@
     }
   ],
   "program": {
+    "context": {
+      "id": "<program>@[L0:C0, L7:C1]",
+      "snippet": "Table User...roducts\r\n}"
+    },
     "children": {
       "body": [
         {
+          "context": {
+            "id": "<element-declaration>:Users@[L0:C0, L2:C1]",
+            "snippet": "Table Users {\r\n\r\n}"
+          },
           "children": {
             "body": {
+              "context": {
+                "id": "<block-expression>@[L0:C12, L2:C1]",
+                "snippet": "{\r\n\r\n}"
+              },
               "children": {
                 "blockCloseBrace": {
                   "context": {
@@ -73,10 +85,6 @@
                 },
                 "body": []
               },
-              "context": {
-                "id": "<block-expression>@[L0:C12, L2:C1]",
-                "snippet": "{\r\n\r\n}"
-              },
               "end": 18,
               "endPos": {
                 "offset": 18,
@@ -94,8 +102,16 @@
               }
             },
             "name": {
+              "context": {
+                "id": "<primary-expression>@[L0:C6, L0:C11]",
+                "snippet": "Users"
+              },
               "children": {
                 "expression": {
+                  "context": {
+                    "id": "<variable>:Users@[L0:C6, L0:C11]",
+                    "snippet": "Users"
+                  },
                   "children": {
                     "variable": {
                       "context": {
@@ -123,10 +139,6 @@
                       "value": "Users"
                     }
                   },
-                  "context": {
-                    "id": "<variable>:Users@[L0:C6, L0:C11]",
-                    "snippet": "Users"
-                  },
                   "end": 11,
                   "endPos": {
                     "offset": 11,
@@ -143,10 +155,6 @@
                     "column": 6
                   }
                 }
-              },
-              "context": {
-                "id": "<primary-expression>@[L0:C6, L0:C11]",
-                "snippet": "Users"
               },
               "end": 11,
               "endPos": {
@@ -190,10 +198,6 @@
               "value": "Table"
             }
           },
-          "context": {
-            "id": "<element-declaration>:Users@[L0:C0, L2:C1]",
-            "snippet": "Table Users {\r\n\r\n}"
-          },
           "end": 18,
           "endPos": {
             "offset": 18,
@@ -228,8 +232,16 @@
           }
         },
         {
+          "context": {
+            "id": "<element-declaration>:Group@[L4:C0, L7:C1]",
+            "snippet": "Tablegroup...roducts\r\n}"
+          },
           "children": {
             "body": {
+              "context": {
+                "id": "<block-expression>@[L4:C17, L7:C1]",
+                "snippet": "{\r\n    Use...roducts\r\n}"
+              },
               "children": {
                 "blockCloseBrace": {
                   "context": {
@@ -283,11 +295,23 @@
                 },
                 "body": [
                   {
+                    "context": {
+                      "id": "<function-application>@[L5:C4, L5:C9]",
+                      "snippet": "Users"
+                    },
                     "children": {
                       "args": [],
                       "callee": {
+                        "context": {
+                          "id": "<primary-expression>@[L5:C4, L5:C9]",
+                          "snippet": "Users"
+                        },
                         "children": {
                           "expression": {
+                            "context": {
+                              "id": "<variable>:Users@[L5:C4, L5:C9]",
+                              "snippet": "Users"
+                            },
                             "children": {
                               "variable": {
                                 "context": {
@@ -315,10 +339,6 @@
                                 "value": "Users"
                               }
                             },
-                            "context": {
-                              "id": "<variable>:Users@[L5:C4, L5:C9]",
-                              "snippet": "Users"
-                            },
                             "end": 51,
                             "endPos": {
                               "offset": 51,
@@ -335,10 +355,6 @@
                               "column": 4
                             }
                           }
-                        },
-                        "context": {
-                          "id": "<primary-expression>@[L5:C4, L5:C9]",
-                          "snippet": "Users"
                         },
                         "end": 51,
                         "endPos": {
@@ -362,10 +378,6 @@
                           "column": 4
                         }
                       }
-                    },
-                    "context": {
-                      "id": "<function-application>@[L5:C4, L5:C9]",
-                      "snippet": "Users"
                     },
                     "end": 51,
                     "endPos": {
@@ -395,11 +407,23 @@
                     }
                   },
                   {
+                    "context": {
+                      "id": "<function-application>@[L6:C4, L6:C12]",
+                      "snippet": "Products"
+                    },
                     "children": {
                       "args": [],
                       "callee": {
+                        "context": {
+                          "id": "<primary-expression>@[L6:C4, L6:C12]",
+                          "snippet": "Products"
+                        },
                         "children": {
                           "expression": {
+                            "context": {
+                              "id": "<variable>:Products@[L6:C4, L6:C12]",
+                              "snippet": "Products"
+                            },
                             "children": {
                               "variable": {
                                 "context": {
@@ -427,10 +451,6 @@
                                 "value": "Products"
                               }
                             },
-                            "context": {
-                              "id": "<variable>:Products@[L6:C4, L6:C12]",
-                              "snippet": "Products"
-                            },
                             "end": 65,
                             "endPos": {
                               "offset": 65,
@@ -448,10 +468,6 @@
                             }
                           }
                         },
-                        "context": {
-                          "id": "<primary-expression>@[L6:C4, L6:C12]",
-                          "snippet": "Products"
-                        },
                         "end": 65,
                         "endPos": {
                           "offset": 65,
@@ -468,10 +484,6 @@
                           "column": 4
                         }
                       }
-                    },
-                    "context": {
-                      "id": "<function-application>@[L6:C4, L6:C12]",
-                      "snippet": "Products"
                     },
                     "end": 65,
                     "endPos": {
@@ -502,10 +514,6 @@
                   }
                 ]
               },
-              "context": {
-                "id": "<block-expression>@[L4:C17, L7:C1]",
-                "snippet": "{\r\n    Use...roducts\r\n}"
-              },
               "end": 68,
               "endPos": {
                 "offset": 68,
@@ -523,8 +531,16 @@
               }
             },
             "name": {
+              "context": {
+                "id": "<primary-expression>@[L4:C11, L4:C16]",
+                "snippet": "Group"
+              },
               "children": {
                 "expression": {
+                  "context": {
+                    "id": "<variable>:Group@[L4:C11, L4:C16]",
+                    "snippet": "Group"
+                  },
                   "children": {
                     "variable": {
                       "context": {
@@ -552,10 +568,6 @@
                       "value": "Group"
                     }
                   },
-                  "context": {
-                    "id": "<variable>:Group@[L4:C11, L4:C16]",
-                    "snippet": "Group"
-                  },
                   "end": 38,
                   "endPos": {
                     "offset": 38,
@@ -572,10 +584,6 @@
                     "column": 11
                   }
                 }
-              },
-              "context": {
-                "id": "<primary-expression>@[L4:C11, L4:C16]",
-                "snippet": "Group"
               },
               "end": 38,
               "endPos": {
@@ -618,10 +626,6 @@
               "trailingTrivia": " ",
               "value": "Tablegroup"
             }
-          },
-          "context": {
-            "id": "<element-declaration>:Group@[L4:C0, L7:C1]",
-            "snippet": "Tablegroup...roducts\r\n}"
           },
           "end": 68,
           "endPos": {
@@ -690,10 +694,6 @@
         "trailingTrivia": "",
         "value": ""
       }
-    },
-    "context": {
-      "id": "<program>@[L0:C0, L7:C1]",
-      "snippet": "Table User...roducts\r\n}"
     },
     "end": 68,
     "endPos": {

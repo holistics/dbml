@@ -41,11 +41,23 @@
     }
   ],
   "program": {
+    "context": {
+      "id": "<program>@[L0:C0, L19:C0]",
+      "snippet": "Table tabl...te'\n  }\n}\n"
+    },
     "children": {
       "body": [
         {
+          "context": {
+            "id": "<element-declaration>:table1@[L0:C0, L2:C1]",
+            "snippet": "Table tabl...int [pk]\n}"
+          },
           "children": {
             "body": {
+              "context": {
+                "id": "<block-expression>@[L0:C13, L2:C1]",
+                "snippet": "{\n  id int [pk]\n}"
+              },
               "children": {
                 "blockCloseBrace": {
                   "context": {
@@ -99,11 +111,23 @@
                 },
                 "body": [
                   {
+                    "context": {
+                      "id": "<function-application>@[L1:C2, L1:C13]",
+                      "snippet": "id int [pk]"
+                    },
                     "children": {
                       "args": [
                         {
+                          "context": {
+                            "id": "<primary-expression>@[L1:C5, L1:C8]",
+                            "snippet": "int"
+                          },
                           "children": {
                             "expression": {
+                              "context": {
+                                "id": "<variable>:int@[L1:C5, L1:C8]",
+                                "snippet": "int"
+                              },
                               "children": {
                                 "variable": {
                                   "context": {
@@ -131,10 +155,6 @@
                                   "value": "int"
                                 }
                               },
-                              "context": {
-                                "id": "<variable>:int@[L1:C5, L1:C8]",
-                                "snippet": "int"
-                              },
                               "end": 23,
                               "endPos": {
                                 "offset": 23,
@@ -151,10 +171,6 @@
                                 "column": 5
                               }
                             }
-                          },
-                          "context": {
-                            "id": "<primary-expression>@[L1:C5, L1:C8]",
-                            "snippet": "int"
                           },
                           "end": 23,
                           "endPos": {
@@ -173,12 +189,24 @@
                           }
                         },
                         {
+                          "context": {
+                            "id": "<list-expression>@[L1:C9, L1:C13]",
+                            "snippet": "[pk]"
+                          },
                           "children": {
                             "commaList": [],
                             "elementList": [
                               {
+                                "context": {
+                                  "id": "<attribute>@[L1:C10, L1:C12]",
+                                  "snippet": "pk"
+                                },
                                 "children": {
                                   "name": {
+                                    "context": {
+                                      "id": "<identifer-stream>@[L1:C10, L1:C12]",
+                                      "snippet": "pk"
+                                    },
                                     "children": {
                                       "identifiers": [
                                         {
@@ -208,10 +236,6 @@
                                         }
                                       ]
                                     },
-                                    "context": {
-                                      "id": "<identifer-stream>@[L1:C10, L1:C12]",
-                                      "snippet": "pk"
-                                    },
                                     "end": 27,
                                     "endPos": {
                                       "offset": 27,
@@ -228,10 +252,6 @@
                                       "column": 10
                                     }
                                   }
-                                },
-                                "context": {
-                                  "id": "<attribute>@[L1:C10, L1:C12]",
-                                  "snippet": "pk"
                                 },
                                 "end": 27,
                                 "endPos": {
@@ -301,10 +321,6 @@
                               "value": "["
                             }
                           },
-                          "context": {
-                            "id": "<list-expression>@[L1:C9, L1:C13]",
-                            "snippet": "[pk]"
-                          },
                           "end": 28,
                           "endPos": {
                             "offset": 28,
@@ -323,8 +339,16 @@
                         }
                       ],
                       "callee": {
+                        "context": {
+                          "id": "<primary-expression>@[L1:C2, L1:C4]",
+                          "snippet": "id"
+                        },
                         "children": {
                           "expression": {
+                            "context": {
+                              "id": "<variable>:id@[L1:C2, L1:C4]",
+                              "snippet": "id"
+                            },
                             "children": {
                               "variable": {
                                 "context": {
@@ -352,10 +376,6 @@
                                 "value": "id"
                               }
                             },
-                            "context": {
-                              "id": "<variable>:id@[L1:C2, L1:C4]",
-                              "snippet": "id"
-                            },
                             "end": 19,
                             "endPos": {
                               "offset": 19,
@@ -373,10 +393,6 @@
                             }
                           }
                         },
-                        "context": {
-                          "id": "<primary-expression>@[L1:C2, L1:C4]",
-                          "snippet": "id"
-                        },
                         "end": 19,
                         "endPos": {
                           "offset": 19,
@@ -393,10 +409,6 @@
                           "column": 2
                         }
                       }
-                    },
-                    "context": {
-                      "id": "<function-application>@[L1:C2, L1:C13]",
-                      "snippet": "id int [pk]"
                     },
                     "end": 28,
                     "endPos": {
@@ -427,10 +439,6 @@
                   }
                 ]
               },
-              "context": {
-                "id": "<block-expression>@[L0:C13, L2:C1]",
-                "snippet": "{\n  id int [pk]\n}"
-              },
               "end": 30,
               "endPos": {
                 "offset": 30,
@@ -448,8 +456,16 @@
               }
             },
             "name": {
+              "context": {
+                "id": "<primary-expression>@[L0:C6, L0:C12]",
+                "snippet": "table1"
+              },
               "children": {
                 "expression": {
+                  "context": {
+                    "id": "<variable>:table1@[L0:C6, L0:C12]",
+                    "snippet": "table1"
+                  },
                   "children": {
                     "variable": {
                       "context": {
@@ -477,10 +493,6 @@
                       "value": "table1"
                     }
                   },
-                  "context": {
-                    "id": "<variable>:table1@[L0:C6, L0:C12]",
-                    "snippet": "table1"
-                  },
                   "end": 12,
                   "endPos": {
                     "offset": 12,
@@ -497,10 +509,6 @@
                     "column": 6
                   }
                 }
-              },
-              "context": {
-                "id": "<primary-expression>@[L0:C6, L0:C12]",
-                "snippet": "table1"
               },
               "end": 12,
               "endPos": {
@@ -544,10 +552,6 @@
               "value": "Table"
             }
           },
-          "context": {
-            "id": "<element-declaration>:table1@[L0:C0, L2:C1]",
-            "snippet": "Table tabl...int [pk]\n}"
-          },
           "end": 30,
           "endPos": {
             "offset": 30,
@@ -584,8 +588,16 @@
           }
         },
         {
+          "context": {
+            "id": "<element-declaration>:group1@[L4:C0, L18:C1]",
+            "snippet": "TableGroup...ote'\n  }\n}"
+          },
           "children": {
             "body": {
+              "context": {
+                "id": "<block-expression>@[L4:C18, L18:C1]",
+                "snippet": "{\n  note: ...ote'\n  }\n}"
+              },
               "children": {
                 "blockCloseBrace": {
                   "context": {
@@ -639,13 +651,29 @@
                 },
                 "body": [
                   {
+                    "context": {
+                      "id": "<element-declaration>:@[L5:C2, L5:C21]",
+                      "snippet": "note: 'inline note'"
+                    },
                     "children": {
                       "body": {
+                        "context": {
+                          "id": "<function-application>@[L5:C8, L5:C21]",
+                          "snippet": "'inline note'"
+                        },
                         "children": {
                           "args": [],
                           "callee": {
+                            "context": {
+                              "id": "<primary-expression>@[L5:C8, L5:C21]",
+                              "snippet": "'inline note'"
+                            },
                             "children": {
                               "expression": {
+                                "context": {
+                                  "id": "<literal>:inline note@[L5:C8, L5:C21]",
+                                  "snippet": "'inline note'"
+                                },
                                 "children": {
                                   "literal": {
                                     "context": {
@@ -673,10 +701,6 @@
                                     "value": "inline note"
                                   }
                                 },
-                                "context": {
-                                  "id": "<literal>:inline note@[L5:C8, L5:C21]",
-                                  "snippet": "'inline note'"
-                                },
                                 "end": 73,
                                 "endPos": {
                                   "offset": 73,
@@ -694,10 +718,6 @@
                                 }
                               }
                             },
-                            "context": {
-                              "id": "<primary-expression>@[L5:C8, L5:C21]",
-                              "snippet": "'inline note'"
-                            },
                             "end": 73,
                             "endPos": {
                               "offset": 73,
@@ -714,10 +734,6 @@
                               "column": 8
                             }
                           }
-                        },
-                        "context": {
-                          "id": "<function-application>@[L5:C8, L5:C21]",
-                          "snippet": "'inline note'"
                         },
                         "end": 73,
                         "endPos": {
@@ -786,10 +802,6 @@
                         "value": "note"
                       }
                     },
-                    "context": {
-                      "id": "<element-declaration>:@[L5:C2, L5:C21]",
-                      "snippet": "note: 'inline note'"
-                    },
                     "end": 73,
                     "endPos": {
                       "offset": 73,
@@ -807,11 +819,23 @@
                     }
                   },
                   {
+                    "context": {
+                      "id": "<function-application>@[L6:C2, L6:C8]",
+                      "snippet": "table1"
+                    },
                     "children": {
                       "args": [],
                       "callee": {
+                        "context": {
+                          "id": "<primary-expression>@[L6:C2, L6:C8]",
+                          "snippet": "table1"
+                        },
                         "children": {
                           "expression": {
+                            "context": {
+                              "id": "<variable>:table1@[L6:C2, L6:C8]",
+                              "snippet": "table1"
+                            },
                             "children": {
                               "variable": {
                                 "context": {
@@ -839,10 +863,6 @@
                                 "value": "table1"
                               }
                             },
-                            "context": {
-                              "id": "<variable>:table1@[L6:C2, L6:C8]",
-                              "snippet": "table1"
-                            },
                             "end": 82,
                             "endPos": {
                               "offset": 82,
@@ -860,10 +880,6 @@
                             }
                           }
                         },
-                        "context": {
-                          "id": "<primary-expression>@[L6:C2, L6:C8]",
-                          "snippet": "table1"
-                        },
                         "end": 82,
                         "endPos": {
                           "offset": 82,
@@ -880,10 +896,6 @@
                           "column": 2
                         }
                       }
-                    },
-                    "context": {
-                      "id": "<function-application>@[L6:C2, L6:C8]",
-                      "snippet": "table1"
                     },
                     "end": 82,
                     "endPos": {
@@ -913,13 +925,29 @@
                     }
                   },
                   {
+                    "context": {
+                      "id": "<element-declaration>:@[L7:C2, L13:C3]",
+                      "snippet": "note: '''\n...syntax\n'''"
+                    },
                     "children": {
                       "body": {
+                        "context": {
+                          "id": "<function-application>@[L7:C8, L13:C3]",
+                          "snippet": "'''\n# Note...syntax\n'''"
+                        },
                         "children": {
                           "args": [],
                           "callee": {
+                            "context": {
+                              "id": "<primary-expression>@[L7:C8, L13:C3]",
+                              "snippet": "'''\n# Note...syntax\n'''"
+                            },
                             "children": {
                               "expression": {
+                                "context": {
+                                  "id": "<literal>:\n# Note\n\n## Objective\n  * Support define element's note inside element body\n  * Make writing long note easier with the new syntax\n@[L7:C8, L13:C3]",
+                                  "snippet": "'''\n# Note...syntax\n'''"
+                                },
                                 "children": {
                                   "literal": {
                                     "context": {
@@ -947,10 +975,6 @@
                                     "value": "\n# Note\n\n## Objective\n  * Support define element's note inside element body\n  * Make writing long note easier with the new syntax\n"
                                   }
                                 },
-                                "context": {
-                                  "id": "<literal>:\n# Note\n\n## Objective\n  * Support define element's note inside element body\n  * Make writing long note easier with the new syntax\n@[L7:C8, L13:C3]",
-                                  "snippet": "'''\n# Note...syntax\n'''"
-                                },
                                 "end": 227,
                                 "endPos": {
                                   "offset": 227,
@@ -968,10 +992,6 @@
                                 }
                               }
                             },
-                            "context": {
-                              "id": "<primary-expression>@[L7:C8, L13:C3]",
-                              "snippet": "'''\n# Note...syntax\n'''"
-                            },
                             "end": 227,
                             "endPos": {
                               "offset": 227,
@@ -988,10 +1008,6 @@
                               "column": 8
                             }
                           }
-                        },
-                        "context": {
-                          "id": "<function-application>@[L7:C8, L13:C3]",
-                          "snippet": "'''\n# Note...syntax\n'''"
                         },
                         "end": 227,
                         "endPos": {
@@ -1060,10 +1076,6 @@
                         "value": "note"
                       }
                     },
-                    "context": {
-                      "id": "<element-declaration>:@[L7:C2, L13:C3]",
-                      "snippet": "note: '''\n...syntax\n'''"
-                    },
                     "end": 227,
                     "endPos": {
                       "offset": 227,
@@ -1081,8 +1093,16 @@
                     }
                   },
                   {
+                    "context": {
+                      "id": "<element-declaration>:@[L15:C2, L17:C3]",
+                      "snippet": "note {\n   ... note'\n  }"
+                    },
                     "children": {
                       "body": {
+                        "context": {
+                          "id": "<block-expression>@[L15:C7, L17:C3]",
+                          "snippet": "{\n    'sim... note'\n  }"
+                        },
                         "children": {
                           "blockCloseBrace": {
                             "context": {
@@ -1136,11 +1156,23 @@
                           },
                           "body": [
                             {
+                              "context": {
+                                "id": "<function-application>@[L16:C4, L16:C17]",
+                                "snippet": "'simple note'"
+                              },
                               "children": {
                                 "args": [],
                                 "callee": {
+                                  "context": {
+                                    "id": "<primary-expression>@[L16:C4, L16:C17]",
+                                    "snippet": "'simple note'"
+                                  },
                                   "children": {
                                     "expression": {
+                                      "context": {
+                                        "id": "<literal>:simple note@[L16:C4, L16:C17]",
+                                        "snippet": "'simple note'"
+                                      },
                                       "children": {
                                         "literal": {
                                           "context": {
@@ -1168,10 +1200,6 @@
                                           "value": "simple note"
                                         }
                                       },
-                                      "context": {
-                                        "id": "<literal>:simple note@[L16:C4, L16:C17]",
-                                        "snippet": "'simple note'"
-                                      },
                                       "end": 255,
                                       "endPos": {
                                         "offset": 255,
@@ -1188,10 +1216,6 @@
                                         "column": 4
                                       }
                                     }
-                                  },
-                                  "context": {
-                                    "id": "<primary-expression>@[L16:C4, L16:C17]",
-                                    "snippet": "'simple note'"
                                   },
                                   "end": 255,
                                   "endPos": {
@@ -1210,10 +1234,6 @@
                                   }
                                 }
                               },
-                              "context": {
-                                "id": "<function-application>@[L16:C4, L16:C17]",
-                                "snippet": "'simple note'"
-                              },
                               "end": 255,
                               "endPos": {
                                 "offset": 255,
@@ -1231,10 +1251,6 @@
                               }
                             }
                           ]
-                        },
-                        "context": {
-                          "id": "<block-expression>@[L15:C7, L17:C3]",
-                          "snippet": "{\n    'sim... note'\n  }"
                         },
                         "end": 259,
                         "endPos": {
@@ -1278,10 +1294,6 @@
                         "value": "note"
                       }
                     },
-                    "context": {
-                      "id": "<element-declaration>:@[L15:C2, L17:C3]",
-                      "snippet": "note {\n   ... note'\n  }"
-                    },
                     "end": 259,
                     "endPos": {
                       "offset": 259,
@@ -1300,10 +1312,6 @@
                   }
                 ]
               },
-              "context": {
-                "id": "<block-expression>@[L4:C18, L18:C1]",
-                "snippet": "{\n  note: ...ote'\n  }\n}"
-              },
               "end": 261,
               "endPos": {
                 "offset": 261,
@@ -1321,8 +1329,16 @@
               }
             },
             "name": {
+              "context": {
+                "id": "<primary-expression>@[L4:C11, L4:C17]",
+                "snippet": "group1"
+              },
               "children": {
                 "expression": {
+                  "context": {
+                    "id": "<variable>:group1@[L4:C11, L4:C17]",
+                    "snippet": "group1"
+                  },
                   "children": {
                     "variable": {
                       "context": {
@@ -1350,10 +1366,6 @@
                       "value": "group1"
                     }
                   },
-                  "context": {
-                    "id": "<variable>:group1@[L4:C11, L4:C17]",
-                    "snippet": "group1"
-                  },
                   "end": 49,
                   "endPos": {
                     "offset": 49,
@@ -1370,10 +1382,6 @@
                     "column": 11
                   }
                 }
-              },
-              "context": {
-                "id": "<primary-expression>@[L4:C11, L4:C17]",
-                "snippet": "group1"
               },
               "end": 49,
               "endPos": {
@@ -1416,10 +1424,6 @@
               "trailingTrivia": " ",
               "value": "TableGroup"
             }
-          },
-          "context": {
-            "id": "<element-declaration>:group1@[L4:C0, L18:C1]",
-            "snippet": "TableGroup...ote'\n  }\n}"
           },
           "end": 261,
           "endPos": {
@@ -1482,10 +1486,6 @@
         "trailingTrivia": "",
         "value": ""
       }
-    },
-    "context": {
-      "id": "<program>@[L0:C0, L19:C0]",
-      "snippet": "Table tabl...te'\n  }\n}\n"
     },
     "end": 262,
     "endPos": {

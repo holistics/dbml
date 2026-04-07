@@ -15,9 +15,17 @@
     }
   ],
   "program": {
+    "context": {
+      "id": "<program>@[L0:C0, L0:C15]",
+      "snippet": "Note: Enum E {}"
+    },
     "children": {
       "body": [
         {
+          "context": {
+            "id": "<element-declaration>:@[L0:C0, L0:C5]",
+            "snippet": "Note:"
+          },
           "children": {
             "bodyColon": {
               "context": {
@@ -70,10 +78,6 @@
               "value": "Note"
             }
           },
-          "context": {
-            "id": "<element-declaration>:@[L0:C0, L0:C5]",
-            "snippet": "Note:"
-          },
           "end": 5,
           "endPos": {
             "offset": 5,
@@ -116,10 +120,6 @@
         "trailingTrivia": "",
         "value": ""
       }
-    },
-    "context": {
-      "id": "<program>@[L0:C0, L0:C15]",
-      "snippet": "Note: Enum E {}"
     },
     "end": 15,
     "endPos": {

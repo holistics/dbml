@@ -30,11 +30,23 @@
     }
   ],
   "program": {
+    "context": {
+      "id": "<program>@[L0:C0, L5:C1]",
+      "snippet": "Test ListE...mpty. ]\r\n}"
+    },
     "children": {
       "body": [
         {
+          "context": {
+            "id": "<element-declaration>:ListExpression@[L0:C0, L5:C1]",
+            "snippet": "Test ListE...mpty. ]\r\n}"
+          },
           "children": {
             "body": {
+              "context": {
+                "id": "<block-expression>@[L0:C20, L5:C1]",
+                "snippet": "{\r\n    id ...mpty. ]\r\n}"
+              },
               "children": {
                 "blockCloseBrace": {
                   "context": {
@@ -88,11 +100,23 @@
                 },
                 "body": [
                   {
+                    "context": {
+                      "id": "<function-application>@[L1:C4, L3:C44]",
+                      "snippet": "id integer...tribute' ]"
+                    },
                     "children": {
                       "args": [
                         {
+                          "context": {
+                            "id": "<primary-expression>@[L1:C7, L1:C14]",
+                            "snippet": "integer"
+                          },
                           "children": {
                             "expression": {
+                              "context": {
+                                "id": "<variable>:integer@[L1:C7, L1:C14]",
+                                "snippet": "integer"
+                              },
                               "children": {
                                 "variable": {
                                   "context": {
@@ -120,10 +144,6 @@
                                   "value": "integer"
                                 }
                               },
-                              "context": {
-                                "id": "<variable>:integer@[L1:C7, L1:C14]",
-                                "snippet": "integer"
-                              },
                               "end": 37,
                               "endPos": {
                                 "offset": 37,
@@ -140,10 +160,6 @@
                                 "column": 7
                               }
                             }
-                          },
-                          "context": {
-                            "id": "<primary-expression>@[L1:C7, L1:C14]",
-                            "snippet": "integer"
                           },
                           "end": 37,
                           "endPos": {
@@ -162,6 +178,10 @@
                           }
                         },
                         {
+                          "context": {
+                            "id": "<list-expression>@[L1:C15, L3:C44]",
+                            "snippet": "[one, two:...tribute' ]"
+                          },
                           "children": {
                             "commaList": [
                               {
@@ -267,8 +287,16 @@
                             ],
                             "elementList": [
                               {
+                                "context": {
+                                  "id": "<attribute>@[L1:C16, L1:C19]",
+                                  "snippet": "one"
+                                },
                                 "children": {
                                   "name": {
+                                    "context": {
+                                      "id": "<identifer-stream>@[L1:C16, L1:C19]",
+                                      "snippet": "one"
+                                    },
                                     "children": {
                                       "identifiers": [
                                         {
@@ -298,10 +326,6 @@
                                         }
                                       ]
                                     },
-                                    "context": {
-                                      "id": "<identifer-stream>@[L1:C16, L1:C19]",
-                                      "snippet": "one"
-                                    },
                                     "end": 42,
                                     "endPos": {
                                       "offset": 42,
@@ -318,10 +342,6 @@
                                       "column": 16
                                     }
                                   }
-                                },
-                                "context": {
-                                  "id": "<attribute>@[L1:C16, L1:C19]",
-                                  "snippet": "one"
                                 },
                                 "end": 42,
                                 "endPos": {
@@ -340,6 +360,10 @@
                                 }
                               },
                               {
+                                "context": {
+                                  "id": "<attribute>@[L1:C21, L1:C31]",
+                                  "snippet": "two: 'two'"
+                                },
                                 "children": {
                                   "colon": {
                                     "context": {
@@ -367,6 +391,10 @@
                                     "value": ":"
                                   },
                                   "name": {
+                                    "context": {
+                                      "id": "<identifer-stream>@[L1:C21, L1:C24]",
+                                      "snippet": "two"
+                                    },
                                     "children": {
                                       "identifiers": [
                                         {
@@ -396,10 +424,6 @@
                                         }
                                       ]
                                     },
-                                    "context": {
-                                      "id": "<identifer-stream>@[L1:C21, L1:C24]",
-                                      "snippet": "two"
-                                    },
                                     "end": 47,
                                     "endPos": {
                                       "offset": 47,
@@ -417,8 +441,16 @@
                                     }
                                   },
                                   "value": {
+                                    "context": {
+                                      "id": "<primary-expression>@[L1:C26, L1:C31]",
+                                      "snippet": "'two'"
+                                    },
                                     "children": {
                                       "expression": {
+                                        "context": {
+                                          "id": "<literal>:two@[L1:C26, L1:C31]",
+                                          "snippet": "'two'"
+                                        },
                                         "children": {
                                           "literal": {
                                             "context": {
@@ -446,10 +478,6 @@
                                             "value": "two"
                                           }
                                         },
-                                        "context": {
-                                          "id": "<literal>:two@[L1:C26, L1:C31]",
-                                          "snippet": "'two'"
-                                        },
                                         "end": 54,
                                         "endPos": {
                                           "offset": 54,
@@ -466,10 +494,6 @@
                                           "column": 26
                                         }
                                       }
-                                    },
-                                    "context": {
-                                      "id": "<primary-expression>@[L1:C26, L1:C31]",
-                                      "snippet": "'two'"
                                     },
                                     "end": 54,
                                     "endPos": {
@@ -488,10 +512,6 @@
                                     }
                                   }
                                 },
-                                "context": {
-                                  "id": "<attribute>@[L1:C21, L1:C31]",
-                                  "snippet": "two: 'two'"
-                                },
                                 "end": 54,
                                 "endPos": {
                                   "offset": 54,
@@ -509,6 +529,10 @@
                                 }
                               },
                               {
+                                "context": {
+                                  "id": "<attribute>@[L2:C16, L2:C30]",
+                                  "snippet": "three: 'three'"
+                                },
                                 "children": {
                                   "colon": {
                                     "context": {
@@ -536,6 +560,10 @@
                                     "value": ":"
                                   },
                                   "name": {
+                                    "context": {
+                                      "id": "<identifer-stream>@[L2:C16, L2:C21]",
+                                      "snippet": "three"
+                                    },
                                     "children": {
                                       "identifiers": [
                                         {
@@ -565,10 +593,6 @@
                                         }
                                       ]
                                     },
-                                    "context": {
-                                      "id": "<identifer-stream>@[L2:C16, L2:C21]",
-                                      "snippet": "three"
-                                    },
                                     "end": 78,
                                     "endPos": {
                                       "offset": 78,
@@ -586,8 +610,16 @@
                                     }
                                   },
                                   "value": {
+                                    "context": {
+                                      "id": "<primary-expression>@[L2:C23, L2:C30]",
+                                      "snippet": "'three'"
+                                    },
                                     "children": {
                                       "expression": {
+                                        "context": {
+                                          "id": "<literal>:three@[L2:C23, L2:C30]",
+                                          "snippet": "'three'"
+                                        },
                                         "children": {
                                           "literal": {
                                             "context": {
@@ -615,10 +647,6 @@
                                             "value": "three"
                                           }
                                         },
-                                        "context": {
-                                          "id": "<literal>:three@[L2:C23, L2:C30]",
-                                          "snippet": "'three'"
-                                        },
                                         "end": 87,
                                         "endPos": {
                                           "offset": 87,
@@ -635,10 +663,6 @@
                                           "column": 23
                                         }
                                       }
-                                    },
-                                    "context": {
-                                      "id": "<primary-expression>@[L2:C23, L2:C30]",
-                                      "snippet": "'three'"
                                     },
                                     "end": 87,
                                     "endPos": {
@@ -657,10 +681,6 @@
                                     }
                                   }
                                 },
-                                "context": {
-                                  "id": "<attribute>@[L2:C16, L2:C30]",
-                                  "snippet": "three: 'three'"
-                                },
                                 "end": 87,
                                 "endPos": {
                                   "offset": 87,
@@ -678,8 +698,16 @@
                                 }
                               },
                               {
+                                "context": {
+                                  "id": "<attribute>@[L2:C32, L3:C19]",
+                                  "snippet": "primary \r\n...       key"
+                                },
                                 "children": {
                                   "name": {
+                                    "context": {
+                                      "id": "<identifer-stream>@[L2:C32, L3:C19]",
+                                      "snippet": "primary \r\n...       key"
+                                    },
                                     "children": {
                                       "identifiers": [
                                         {
@@ -734,10 +762,6 @@
                                         }
                                       ]
                                     },
-                                    "context": {
-                                      "id": "<identifer-stream>@[L2:C32, L3:C19]",
-                                      "snippet": "primary \r\n...       key"
-                                    },
                                     "end": 118,
                                     "endPos": {
                                       "offset": 118,
@@ -754,10 +778,6 @@
                                       "column": 32
                                     }
                                   }
-                                },
-                                "context": {
-                                  "id": "<attribute>@[L2:C32, L3:C19]",
-                                  "snippet": "primary \r\n...       key"
                                 },
                                 "end": 118,
                                 "endPos": {
@@ -776,6 +796,10 @@
                                 }
                               },
                               {
+                                "context": {
+                                  "id": "<attribute>@[L3:C21, L3:C42]",
+                                  "snippet": ": 'invalid...attribute'"
+                                },
                                 "children": {
                                   "colon": {
                                     "context": {
@@ -803,12 +827,12 @@
                                     "value": ":"
                                   },
                                   "name": {
-                                    "children": {
-                                      "identifiers": []
-                                    },
                                     "context": {
                                       "id": "<identifer-stream>@[LNaN:CNaN, LNaN:CNaN]",
                                       "snippet": ""
+                                    },
+                                    "children": {
+                                      "identifiers": []
                                     },
                                     "end": null,
                                     "endPos": {
@@ -827,8 +851,16 @@
                                     }
                                   },
                                   "value": {
+                                    "context": {
+                                      "id": "<primary-expression>@[L3:C23, L3:C42]",
+                                      "snippet": "'invalid-attribute'"
+                                    },
                                     "children": {
                                       "expression": {
+                                        "context": {
+                                          "id": "<literal>:invalid-attribute@[L3:C23, L3:C42]",
+                                          "snippet": "'invalid-attribute'"
+                                        },
                                         "children": {
                                           "literal": {
                                             "context": {
@@ -856,10 +888,6 @@
                                             "value": "invalid-attribute"
                                           }
                                         },
-                                        "context": {
-                                          "id": "<literal>:invalid-attribute@[L3:C23, L3:C42]",
-                                          "snippet": "'invalid-attribute'"
-                                        },
                                         "end": 141,
                                         "endPos": {
                                           "offset": 141,
@@ -877,10 +905,6 @@
                                         }
                                       }
                                     },
-                                    "context": {
-                                      "id": "<primary-expression>@[L3:C23, L3:C42]",
-                                      "snippet": "'invalid-attribute'"
-                                    },
                                     "end": 141,
                                     "endPos": {
                                       "offset": 141,
@@ -897,10 +921,6 @@
                                       "column": 23
                                     }
                                   }
-                                },
-                                "context": {
-                                  "id": "<attribute>@[L3:C21, L3:C42]",
-                                  "snippet": ": 'invalid...attribute'"
                                 },
                                 "end": 141,
                                 "endPos": {
@@ -970,10 +990,6 @@
                               "value": "["
                             }
                           },
-                          "context": {
-                            "id": "<list-expression>@[L1:C15, L3:C44]",
-                            "snippet": "[one, two:...tribute' ]"
-                          },
                           "end": 143,
                           "endPos": {
                             "offset": 143,
@@ -992,8 +1008,16 @@
                         }
                       ],
                       "callee": {
+                        "context": {
+                          "id": "<primary-expression>@[L1:C4, L1:C6]",
+                          "snippet": "id"
+                        },
                         "children": {
                           "expression": {
+                            "context": {
+                              "id": "<variable>:id@[L1:C4, L1:C6]",
+                              "snippet": "id"
+                            },
                             "children": {
                               "variable": {
                                 "context": {
@@ -1021,10 +1045,6 @@
                                 "value": "id"
                               }
                             },
-                            "context": {
-                              "id": "<variable>:id@[L1:C4, L1:C6]",
-                              "snippet": "id"
-                            },
                             "end": 29,
                             "endPos": {
                               "offset": 29,
@@ -1041,10 +1061,6 @@
                               "column": 4
                             }
                           }
-                        },
-                        "context": {
-                          "id": "<primary-expression>@[L1:C4, L1:C6]",
-                          "snippet": "id"
                         },
                         "end": 29,
                         "endPos": {
@@ -1063,10 +1079,6 @@
                         }
                       }
                     },
-                    "context": {
-                      "id": "<function-application>@[L1:C4, L3:C44]",
-                      "snippet": "id integer...tribute' ]"
-                    },
                     "end": 143,
                     "endPos": {
                       "offset": 143,
@@ -1084,11 +1096,23 @@
                     }
                   },
                   {
+                    "context": {
+                      "id": "<function-application>@[L4:C4, L4:C41]",
+                      "snippet": "abc \" gibb...: empty. ]"
+                    },
                     "children": {
                       "args": [
                         {
+                          "context": {
+                            "id": "<primary-expression>@[L4:C8, L4:C26]",
+                            "snippet": "\" gibberish type \""
+                          },
                           "children": {
                             "expression": {
+                              "context": {
+                                "id": "<variable>: gibberish type @[L4:C8, L4:C26]",
+                                "snippet": "\" gibberish type \""
+                              },
                               "children": {
                                 "variable": {
                                   "context": {
@@ -1116,10 +1140,6 @@
                                   "value": " gibberish type "
                                 }
                               },
-                              "context": {
-                                "id": "<variable>: gibberish type @[L4:C8, L4:C26]",
-                                "snippet": "\" gibberish type \""
-                              },
                               "end": 171,
                               "endPos": {
                                 "offset": 171,
@@ -1136,10 +1156,6 @@
                                 "column": 8
                               }
                             }
-                          },
-                          "context": {
-                            "id": "<primary-expression>@[L4:C8, L4:C26]",
-                            "snippet": "\" gibberish type \""
                           },
                           "end": 171,
                           "endPos": {
@@ -1158,10 +1174,18 @@
                           }
                         },
                         {
+                          "context": {
+                            "id": "<list-expression>@[L4:C27, L4:C41]",
+                            "snippet": "[ref: empty. ]"
+                          },
                           "children": {
                             "commaList": [],
                             "elementList": [
                               {
+                                "context": {
+                                  "id": "<attribute>@[L4:C28, L4:C39]",
+                                  "snippet": "ref: empty."
+                                },
                                 "children": {
                                   "colon": {
                                     "context": {
@@ -1189,6 +1213,10 @@
                                     "value": ":"
                                   },
                                   "name": {
+                                    "context": {
+                                      "id": "<identifer-stream>@[L4:C28, L4:C31]",
+                                      "snippet": "ref"
+                                    },
                                     "children": {
                                       "identifiers": [
                                         {
@@ -1218,10 +1246,6 @@
                                         }
                                       ]
                                     },
-                                    "context": {
-                                      "id": "<identifer-stream>@[L4:C28, L4:C31]",
-                                      "snippet": "ref"
-                                    },
                                     "end": 176,
                                     "endPos": {
                                       "offset": 176,
@@ -1239,10 +1263,22 @@
                                     }
                                   },
                                   "value": {
+                                    "context": {
+                                      "id": "<infix-expression>@[L4:C33, L4:C39]",
+                                      "snippet": "empty."
+                                    },
                                     "children": {
                                       "leftExpression": {
+                                        "context": {
+                                          "id": "<primary-expression>@[L4:C33, L4:C38]",
+                                          "snippet": "empty"
+                                        },
                                         "children": {
                                           "expression": {
+                                            "context": {
+                                              "id": "<variable>:empty@[L4:C33, L4:C38]",
+                                              "snippet": "empty"
+                                            },
                                             "children": {
                                               "variable": {
                                                 "context": {
@@ -1270,10 +1306,6 @@
                                                 "value": "empty"
                                               }
                                             },
-                                            "context": {
-                                              "id": "<variable>:empty@[L4:C33, L4:C38]",
-                                              "snippet": "empty"
-                                            },
                                             "end": 183,
                                             "endPos": {
                                               "offset": 183,
@@ -1290,10 +1322,6 @@
                                               "column": 33
                                             }
                                           }
-                                        },
-                                        "context": {
-                                          "id": "<primary-expression>@[L4:C33, L4:C38]",
-                                          "snippet": "empty"
                                         },
                                         "end": 183,
                                         "endPos": {
@@ -1337,11 +1365,11 @@
                                         "value": "."
                                       },
                                       "rightExpression": {
-                                        "children": {},
                                         "context": {
                                           "id": "<dummy>@[L4:C39, L4:C39]",
                                           "snippet": ""
                                         },
+                                        "children": {},
                                         "end": 184,
                                         "endPos": {
                                           "offset": 184,
@@ -1359,10 +1387,6 @@
                                         }
                                       }
                                     },
-                                    "context": {
-                                      "id": "<infix-expression>@[L4:C33, L4:C39]",
-                                      "snippet": "empty."
-                                    },
                                     "end": 184,
                                     "endPos": {
                                       "offset": 184,
@@ -1379,10 +1403,6 @@
                                       "column": 33
                                     }
                                   }
-                                },
-                                "context": {
-                                  "id": "<attribute>@[L4:C28, L4:C39]",
-                                  "snippet": "ref: empty."
                                 },
                                 "end": 184,
                                 "endPos": {
@@ -1452,10 +1472,6 @@
                               "value": "["
                             }
                           },
-                          "context": {
-                            "id": "<list-expression>@[L4:C27, L4:C41]",
-                            "snippet": "[ref: empty. ]"
-                          },
                           "end": 186,
                           "endPos": {
                             "offset": 186,
@@ -1474,8 +1490,16 @@
                         }
                       ],
                       "callee": {
+                        "context": {
+                          "id": "<primary-expression>@[L4:C4, L4:C7]",
+                          "snippet": "abc"
+                        },
                         "children": {
                           "expression": {
+                            "context": {
+                              "id": "<variable>:abc@[L4:C4, L4:C7]",
+                              "snippet": "abc"
+                            },
                             "children": {
                               "variable": {
                                 "context": {
@@ -1503,10 +1527,6 @@
                                 "value": "abc"
                               }
                             },
-                            "context": {
-                              "id": "<variable>:abc@[L4:C4, L4:C7]",
-                              "snippet": "abc"
-                            },
                             "end": 152,
                             "endPos": {
                               "offset": 152,
@@ -1524,10 +1544,6 @@
                             }
                           }
                         },
-                        "context": {
-                          "id": "<primary-expression>@[L4:C4, L4:C7]",
-                          "snippet": "abc"
-                        },
                         "end": 152,
                         "endPos": {
                           "offset": 152,
@@ -1544,10 +1560,6 @@
                           "column": 4
                         }
                       }
-                    },
-                    "context": {
-                      "id": "<function-application>@[L4:C4, L4:C41]",
-                      "snippet": "abc \" gibb...: empty. ]"
                     },
                     "end": 186,
                     "endPos": {
@@ -1567,10 +1579,6 @@
                   }
                 ]
               },
-              "context": {
-                "id": "<block-expression>@[L0:C20, L5:C1]",
-                "snippet": "{\r\n    id ...mpty. ]\r\n}"
-              },
               "end": 189,
               "endPos": {
                 "offset": 189,
@@ -1588,8 +1596,16 @@
               }
             },
             "name": {
+              "context": {
+                "id": "<primary-expression>@[L0:C5, L0:C19]",
+                "snippet": "ListExpression"
+              },
               "children": {
                 "expression": {
+                  "context": {
+                    "id": "<variable>:ListExpression@[L0:C5, L0:C19]",
+                    "snippet": "ListExpression"
+                  },
                   "children": {
                     "variable": {
                       "context": {
@@ -1617,10 +1633,6 @@
                       "value": "ListExpression"
                     }
                   },
-                  "context": {
-                    "id": "<variable>:ListExpression@[L0:C5, L0:C19]",
-                    "snippet": "ListExpression"
-                  },
                   "end": 19,
                   "endPos": {
                     "offset": 19,
@@ -1637,10 +1649,6 @@
                     "column": 5
                   }
                 }
-              },
-              "context": {
-                "id": "<primary-expression>@[L0:C5, L0:C19]",
-                "snippet": "ListExpression"
               },
               "end": 19,
               "endPos": {
@@ -1684,10 +1692,6 @@
               "value": "Test"
             }
           },
-          "context": {
-            "id": "<element-declaration>:ListExpression@[L0:C0, L5:C1]",
-            "snippet": "Test ListE...mpty. ]\r\n}"
-          },
           "end": 189,
           "endPos": {
             "offset": 189,
@@ -1730,10 +1734,6 @@
         "trailingTrivia": "",
         "value": ""
       }
-    },
-    "context": {
-      "id": "<program>@[L0:C0, L5:C1]",
-      "snippet": "Test ListE...mpty. ]\r\n}"
     },
     "end": 189,
     "endPos": {

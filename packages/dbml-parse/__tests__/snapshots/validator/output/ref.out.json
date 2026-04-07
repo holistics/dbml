@@ -1,18 +1,38 @@
 {
   "errors": [],
   "program": {
+    "context": {
+      "id": "<program>@[L0:C0, L0:C50]",
+      "snippet": "Ref a: Use...no action]"
+    },
     "children": {
       "body": [
         {
+          "context": {
+            "id": "<element-declaration>:a@[L0:C0, L0:C50]",
+            "snippet": "Ref a: Use...no action]"
+          },
           "children": {
             "body": {
+              "context": {
+                "id": "<function-application>@[L0:C7, L0:C50]",
+                "snippet": "Users.id <...no action]"
+              },
               "children": {
                 "args": [
                   {
+                    "context": {
+                      "id": "<list-expression>@[L0:C31, L0:C50]",
+                      "snippet": "[update: no action]"
+                    },
                     "children": {
                       "commaList": [],
                       "elementList": [
                         {
+                          "context": {
+                            "id": "<attribute>@[L0:C32, L0:C49]",
+                            "snippet": "update: no action"
+                          },
                           "children": {
                             "colon": {
                               "context": {
@@ -40,6 +60,10 @@
                               "value": ":"
                             },
                             "name": {
+                              "context": {
+                                "id": "<identifer-stream>@[L0:C32, L0:C38]",
+                                "snippet": "update"
+                              },
                               "children": {
                                 "identifiers": [
                                   {
@@ -69,10 +93,6 @@
                                   }
                                 ]
                               },
-                              "context": {
-                                "id": "<identifer-stream>@[L0:C32, L0:C38]",
-                                "snippet": "update"
-                              },
                               "end": 38,
                               "endPos": {
                                 "offset": 38,
@@ -90,6 +110,10 @@
                               }
                             },
                             "value": {
+                              "context": {
+                                "id": "<identifer-stream>@[L0:C40, L0:C49]",
+                                "snippet": "no action"
+                              },
                               "children": {
                                 "identifiers": [
                                   {
@@ -144,10 +168,6 @@
                                   }
                                 ]
                               },
-                              "context": {
-                                "id": "<identifer-stream>@[L0:C40, L0:C49]",
-                                "snippet": "no action"
-                              },
                               "end": 49,
                               "endPos": {
                                 "offset": 49,
@@ -164,10 +184,6 @@
                                 "column": 40
                               }
                             }
-                          },
-                          "context": {
-                            "id": "<attribute>@[L0:C32, L0:C49]",
-                            "snippet": "update: no action"
                           },
                           "end": 49,
                           "endPos": {
@@ -237,10 +253,6 @@
                         "value": "["
                       }
                     },
-                    "context": {
-                      "id": "<list-expression>@[L0:C31, L0:C50]",
-                      "snippet": "[update: no action]"
-                    },
                     "end": 50,
                     "endPos": {
                       "offset": 50,
@@ -259,12 +271,28 @@
                   }
                 ],
                 "callee": {
+                  "context": {
+                    "id": "<infix-expression>@[L0:C7, L0:C30]",
+                    "snippet": "Users.id <...oducts.uid"
+                  },
                   "children": {
                     "leftExpression": {
+                      "context": {
+                        "id": "<infix-expression>@[L0:C7, L0:C15]",
+                        "snippet": "Users.id"
+                      },
                       "children": {
                         "leftExpression": {
+                          "context": {
+                            "id": "<primary-expression>@[L0:C7, L0:C12]",
+                            "snippet": "Users"
+                          },
                           "children": {
                             "expression": {
+                              "context": {
+                                "id": "<variable>:Users@[L0:C7, L0:C12]",
+                                "snippet": "Users"
+                              },
                               "children": {
                                 "variable": {
                                   "context": {
@@ -292,10 +320,6 @@
                                   "value": "Users"
                                 }
                               },
-                              "context": {
-                                "id": "<variable>:Users@[L0:C7, L0:C12]",
-                                "snippet": "Users"
-                              },
                               "end": 12,
                               "endPos": {
                                 "offset": 12,
@@ -312,10 +336,6 @@
                                 "column": 7
                               }
                             }
-                          },
-                          "context": {
-                            "id": "<primary-expression>@[L0:C7, L0:C12]",
-                            "snippet": "Users"
                           },
                           "end": 12,
                           "endPos": {
@@ -359,8 +379,16 @@
                           "value": "."
                         },
                         "rightExpression": {
+                          "context": {
+                            "id": "<primary-expression>@[L0:C13, L0:C15]",
+                            "snippet": "id"
+                          },
                           "children": {
                             "expression": {
+                              "context": {
+                                "id": "<variable>:id@[L0:C13, L0:C15]",
+                                "snippet": "id"
+                              },
                               "children": {
                                 "variable": {
                                   "context": {
@@ -388,10 +416,6 @@
                                   "value": "id"
                                 }
                               },
-                              "context": {
-                                "id": "<variable>:id@[L0:C13, L0:C15]",
-                                "snippet": "id"
-                              },
                               "end": 15,
                               "endPos": {
                                 "offset": 15,
@@ -409,10 +433,6 @@
                               }
                             }
                           },
-                          "context": {
-                            "id": "<primary-expression>@[L0:C13, L0:C15]",
-                            "snippet": "id"
-                          },
                           "end": 15,
                           "endPos": {
                             "offset": 15,
@@ -429,10 +449,6 @@
                             "column": 13
                           }
                         }
-                      },
-                      "context": {
-                        "id": "<infix-expression>@[L0:C7, L0:C15]",
-                        "snippet": "Users.id"
                       },
                       "end": 15,
                       "endPos": {
@@ -476,10 +492,22 @@
                       "value": "<"
                     },
                     "rightExpression": {
+                      "context": {
+                        "id": "<infix-expression>@[L0:C18, L0:C30]",
+                        "snippet": "Products.uid"
+                      },
                       "children": {
                         "leftExpression": {
+                          "context": {
+                            "id": "<primary-expression>@[L0:C18, L0:C26]",
+                            "snippet": "Products"
+                          },
                           "children": {
                             "expression": {
+                              "context": {
+                                "id": "<variable>:Products@[L0:C18, L0:C26]",
+                                "snippet": "Products"
+                              },
                               "children": {
                                 "variable": {
                                   "context": {
@@ -507,10 +535,6 @@
                                   "value": "Products"
                                 }
                               },
-                              "context": {
-                                "id": "<variable>:Products@[L0:C18, L0:C26]",
-                                "snippet": "Products"
-                              },
                               "end": 26,
                               "endPos": {
                                 "offset": 26,
@@ -527,10 +551,6 @@
                                 "column": 18
                               }
                             }
-                          },
-                          "context": {
-                            "id": "<primary-expression>@[L0:C18, L0:C26]",
-                            "snippet": "Products"
                           },
                           "end": 26,
                           "endPos": {
@@ -574,8 +594,16 @@
                           "value": "."
                         },
                         "rightExpression": {
+                          "context": {
+                            "id": "<primary-expression>@[L0:C27, L0:C30]",
+                            "snippet": "uid"
+                          },
                           "children": {
                             "expression": {
+                              "context": {
+                                "id": "<variable>:uid@[L0:C27, L0:C30]",
+                                "snippet": "uid"
+                              },
                               "children": {
                                 "variable": {
                                   "context": {
@@ -603,10 +631,6 @@
                                   "value": "uid"
                                 }
                               },
-                              "context": {
-                                "id": "<variable>:uid@[L0:C27, L0:C30]",
-                                "snippet": "uid"
-                              },
                               "end": 30,
                               "endPos": {
                                 "offset": 30,
@@ -623,10 +647,6 @@
                                 "column": 27
                               }
                             }
-                          },
-                          "context": {
-                            "id": "<primary-expression>@[L0:C27, L0:C30]",
-                            "snippet": "uid"
                           },
                           "end": 30,
                           "endPos": {
@@ -645,10 +665,6 @@
                           }
                         }
                       },
-                      "context": {
-                        "id": "<infix-expression>@[L0:C18, L0:C30]",
-                        "snippet": "Products.uid"
-                      },
                       "end": 30,
                       "endPos": {
                         "offset": 30,
@@ -666,10 +682,6 @@
                       }
                     }
                   },
-                  "context": {
-                    "id": "<infix-expression>@[L0:C7, L0:C30]",
-                    "snippet": "Users.id <...oducts.uid"
-                  },
                   "end": 30,
                   "endPos": {
                     "offset": 30,
@@ -686,10 +698,6 @@
                     "column": 7
                   }
                 }
-              },
-              "context": {
-                "id": "<function-application>@[L0:C7, L0:C50]",
-                "snippet": "Users.id <...no action]"
               },
               "end": 50,
               "endPos": {
@@ -733,8 +741,16 @@
               "value": ":"
             },
             "name": {
+              "context": {
+                "id": "<primary-expression>@[L0:C4, L0:C5]",
+                "snippet": "a"
+              },
               "children": {
                 "expression": {
+                  "context": {
+                    "id": "<variable>:a@[L0:C4, L0:C5]",
+                    "snippet": "a"
+                  },
                   "children": {
                     "variable": {
                       "context": {
@@ -762,10 +778,6 @@
                       "value": "a"
                     }
                   },
-                  "context": {
-                    "id": "<variable>:a@[L0:C4, L0:C5]",
-                    "snippet": "a"
-                  },
                   "end": 5,
                   "endPos": {
                     "offset": 5,
@@ -782,10 +794,6 @@
                     "column": 4
                   }
                 }
-              },
-              "context": {
-                "id": "<primary-expression>@[L0:C4, L0:C5]",
-                "snippet": "a"
               },
               "end": 5,
               "endPos": {
@@ -829,10 +837,6 @@
               "value": "Ref"
             }
           },
-          "context": {
-            "id": "<element-declaration>:a@[L0:C0, L0:C50]",
-            "snippet": "Ref a: Use...no action]"
-          },
           "end": 50,
           "endPos": {
             "offset": 50,
@@ -875,10 +879,6 @@
         "trailingTrivia": "",
         "value": ""
       }
-    },
-    "context": {
-      "id": "<program>@[L0:C0, L0:C50]",
-      "snippet": "Ref a: Use...no action]"
     },
     "end": 50,
     "endPos": {

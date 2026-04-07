@@ -1,11 +1,23 @@
 {
   "errors": [],
   "program": {
+    "context": {
+      "id": "<program>@[L0:C0, L7:C0]",
+      "snippet": "TableParti...mestamp\n}\n"
+    },
     "children": {
       "body": [
         {
+          "context": {
+            "id": "<element-declaration>:with_timestamp@[L0:C0, L2:C1]",
+            "snippet": "TableParti...amp uuid\n}"
+          },
           "children": {
             "body": {
+              "context": {
+                "id": "<block-expression>@[L0:C28, L2:C1]",
+                "snippet": "{\n  timestamp uuid\n}"
+              },
               "children": {
                 "blockCloseBrace": {
                   "context": {
@@ -59,11 +71,23 @@
                 },
                 "body": [
                   {
+                    "context": {
+                      "id": "<function-application>@[L1:C2, L1:C16]",
+                      "snippet": "timestamp uuid"
+                    },
                     "children": {
                       "args": [
                         {
+                          "context": {
+                            "id": "<primary-expression>@[L1:C12, L1:C16]",
+                            "snippet": "uuid"
+                          },
                           "children": {
                             "expression": {
+                              "context": {
+                                "id": "<variable>:uuid@[L1:C12, L1:C16]",
+                                "snippet": "uuid"
+                              },
                               "children": {
                                 "variable": {
                                   "context": {
@@ -91,10 +115,6 @@
                                   "value": "uuid"
                                 }
                               },
-                              "context": {
-                                "id": "<variable>:uuid@[L1:C12, L1:C16]",
-                                "snippet": "uuid"
-                              },
                               "end": 46,
                               "endPos": {
                                 "offset": 46,
@@ -111,10 +131,6 @@
                                 "column": 12
                               }
                             }
-                          },
-                          "context": {
-                            "id": "<primary-expression>@[L1:C12, L1:C16]",
-                            "snippet": "uuid"
                           },
                           "end": 46,
                           "endPos": {
@@ -134,8 +150,16 @@
                         }
                       ],
                       "callee": {
+                        "context": {
+                          "id": "<primary-expression>@[L1:C2, L1:C11]",
+                          "snippet": "timestamp"
+                        },
                         "children": {
                           "expression": {
+                            "context": {
+                              "id": "<variable>:timestamp@[L1:C2, L1:C11]",
+                              "snippet": "timestamp"
+                            },
                             "children": {
                               "variable": {
                                 "context": {
@@ -163,10 +187,6 @@
                                 "value": "timestamp"
                               }
                             },
-                            "context": {
-                              "id": "<variable>:timestamp@[L1:C2, L1:C11]",
-                              "snippet": "timestamp"
-                            },
                             "end": 41,
                             "endPos": {
                               "offset": 41,
@@ -184,10 +204,6 @@
                             }
                           }
                         },
-                        "context": {
-                          "id": "<primary-expression>@[L1:C2, L1:C11]",
-                          "snippet": "timestamp"
-                        },
                         "end": 41,
                         "endPos": {
                           "offset": 41,
@@ -204,10 +220,6 @@
                           "column": 2
                         }
                       }
-                    },
-                    "context": {
-                      "id": "<function-application>@[L1:C2, L1:C16]",
-                      "snippet": "timestamp uuid"
                     },
                     "end": 46,
                     "endPos": {
@@ -227,10 +239,6 @@
                   }
                 ]
               },
-              "context": {
-                "id": "<block-expression>@[L0:C28, L2:C1]",
-                "snippet": "{\n  timestamp uuid\n}"
-              },
               "end": 48,
               "endPos": {
                 "offset": 48,
@@ -248,8 +256,16 @@
               }
             },
             "name": {
+              "context": {
+                "id": "<primary-expression>@[L0:C13, L0:C27]",
+                "snippet": "with_timestamp"
+              },
               "children": {
                 "expression": {
+                  "context": {
+                    "id": "<variable>:with_timestamp@[L0:C13, L0:C27]",
+                    "snippet": "with_timestamp"
+                  },
                   "children": {
                     "variable": {
                       "context": {
@@ -277,10 +293,6 @@
                       "value": "with_timestamp"
                     }
                   },
-                  "context": {
-                    "id": "<variable>:with_timestamp@[L0:C13, L0:C27]",
-                    "snippet": "with_timestamp"
-                  },
                   "end": 27,
                   "endPos": {
                     "offset": 27,
@@ -297,10 +309,6 @@
                     "column": 13
                   }
                 }
-              },
-              "context": {
-                "id": "<primary-expression>@[L0:C13, L0:C27]",
-                "snippet": "with_timestamp"
               },
               "end": 27,
               "endPos": {
@@ -344,10 +352,6 @@
               "value": "TablePartial"
             }
           },
-          "context": {
-            "id": "<element-declaration>:with_timestamp@[L0:C0, L2:C1]",
-            "snippet": "TableParti...amp uuid\n}"
-          },
           "end": 48,
           "endPos": {
             "offset": 48,
@@ -365,8 +369,16 @@
           }
         },
         {
+          "context": {
+            "id": "<element-declaration>:users@[L4:C0, L6:C1]",
+            "snippet": "Table user...imestamp\n}"
+          },
           "children": {
             "body": {
+              "context": {
+                "id": "<block-expression>@[L4:C12, L6:C1]",
+                "snippet": "{\n  ~with_...imestamp\n}"
+              },
               "children": {
                 "blockCloseBrace": {
                   "context": {
@@ -420,13 +432,29 @@
                 },
                 "body": [
                   {
+                    "context": {
+                      "id": "<function-application>@[L5:C2, L5:C17]",
+                      "snippet": "~with_timestamp"
+                    },
                     "children": {
                       "args": [],
                       "callee": {
+                        "context": {
+                          "id": "<prefix-expression>@[L5:C2, L5:C17]",
+                          "snippet": "~with_timestamp"
+                        },
                         "children": {
                           "expression": {
+                            "context": {
+                              "id": "<primary-expression>@[L5:C3, L5:C17]",
+                              "snippet": "with_timestamp"
+                            },
                             "children": {
                               "expression": {
+                                "context": {
+                                  "id": "<variable>:with_timestamp@[L5:C3, L5:C17]",
+                                  "snippet": "with_timestamp"
+                                },
                                 "children": {
                                   "variable": {
                                     "context": {
@@ -454,10 +482,6 @@
                                     "value": "with_timestamp"
                                   }
                                 },
-                                "context": {
-                                  "id": "<variable>:with_timestamp@[L5:C3, L5:C17]",
-                                  "snippet": "with_timestamp"
-                                },
                                 "end": 81,
                                 "endPos": {
                                   "offset": 81,
@@ -474,10 +498,6 @@
                                   "column": 3
                                 }
                               }
-                            },
-                            "context": {
-                              "id": "<primary-expression>@[L5:C3, L5:C17]",
-                              "snippet": "with_timestamp"
                             },
                             "end": 81,
                             "endPos": {
@@ -521,10 +541,6 @@
                             "value": "~"
                           }
                         },
-                        "context": {
-                          "id": "<prefix-expression>@[L5:C2, L5:C17]",
-                          "snippet": "~with_timestamp"
-                        },
                         "end": 81,
                         "endPos": {
                           "offset": 81,
@@ -541,10 +557,6 @@
                           "column": 2
                         }
                       }
-                    },
-                    "context": {
-                      "id": "<function-application>@[L5:C2, L5:C17]",
-                      "snippet": "~with_timestamp"
                     },
                     "end": 81,
                     "endPos": {
@@ -564,10 +576,6 @@
                   }
                 ]
               },
-              "context": {
-                "id": "<block-expression>@[L4:C12, L6:C1]",
-                "snippet": "{\n  ~with_...imestamp\n}"
-              },
               "end": 83,
               "endPos": {
                 "offset": 83,
@@ -585,8 +593,16 @@
               }
             },
             "name": {
+              "context": {
+                "id": "<primary-expression>@[L4:C6, L4:C11]",
+                "snippet": "users"
+              },
               "children": {
                 "expression": {
+                  "context": {
+                    "id": "<variable>:users@[L4:C6, L4:C11]",
+                    "snippet": "users"
+                  },
                   "children": {
                     "variable": {
                       "context": {
@@ -614,10 +630,6 @@
                       "value": "users"
                     }
                   },
-                  "context": {
-                    "id": "<variable>:users@[L4:C6, L4:C11]",
-                    "snippet": "users"
-                  },
                   "end": 61,
                   "endPos": {
                     "offset": 61,
@@ -634,10 +646,6 @@
                     "column": 6
                   }
                 }
-              },
-              "context": {
-                "id": "<primary-expression>@[L4:C6, L4:C11]",
-                "snippet": "users"
               },
               "end": 61,
               "endPos": {
@@ -681,10 +689,6 @@
               "value": "Table"
             }
           },
-          "context": {
-            "id": "<element-declaration>:users@[L4:C0, L6:C1]",
-            "snippet": "Table user...imestamp\n}"
-          },
           "end": 83,
           "endPos": {
             "offset": 83,
@@ -727,10 +731,6 @@
         "trailingTrivia": "",
         "value": ""
       }
-    },
-    "context": {
-      "id": "<program>@[L0:C0, L7:C0]",
-      "snippet": "TableParti...mestamp\n}\n"
     },
     "end": 84,
     "endPos": {

@@ -15,11 +15,23 @@
     }
   ],
   "program": {
+    "context": {
+      "id": "<program>@[L0:C0, L6:C0]",
+      "snippet": "Table A {\n...t {\n  A\n}\n"
+    },
     "children": {
       "body": [
         {
+          "context": {
+            "id": "<element-declaration>:A@[L0:C0, L1:C1]",
+            "snippet": "Table A {\n}"
+          },
           "children": {
             "body": {
+              "context": {
+                "id": "<block-expression>@[L0:C8, L1:C1]",
+                "snippet": "{\n}"
+              },
               "children": {
                 "blockCloseBrace": {
                   "context": {
@@ -73,10 +85,6 @@
                 },
                 "body": []
               },
-              "context": {
-                "id": "<block-expression>@[L0:C8, L1:C1]",
-                "snippet": "{\n}"
-              },
               "end": 11,
               "endPos": {
                 "offset": 11,
@@ -94,8 +102,16 @@
               }
             },
             "name": {
+              "context": {
+                "id": "<primary-expression>@[L0:C6, L0:C7]",
+                "snippet": "A"
+              },
               "children": {
                 "expression": {
+                  "context": {
+                    "id": "<variable>:A@[L0:C6, L0:C7]",
+                    "snippet": "A"
+                  },
                   "children": {
                     "variable": {
                       "context": {
@@ -123,10 +139,6 @@
                       "value": "A"
                     }
                   },
-                  "context": {
-                    "id": "<variable>:A@[L0:C6, L0:C7]",
-                    "snippet": "A"
-                  },
                   "end": 7,
                   "endPos": {
                     "offset": 7,
@@ -143,10 +155,6 @@
                     "column": 6
                   }
                 }
-              },
-              "context": {
-                "id": "<primary-expression>@[L0:C6, L0:C7]",
-                "snippet": "A"
               },
               "end": 7,
               "endPos": {
@@ -190,10 +198,6 @@
               "value": "Table"
             }
           },
-          "context": {
-            "id": "<element-declaration>:A@[L0:C0, L1:C1]",
-            "snippet": "Table A {\n}"
-          },
           "end": 11,
           "endPos": {
             "offset": 11,
@@ -223,8 +227,16 @@
           }
         },
         {
+          "context": {
+            "id": "<element-declaration>:schema.alphabet@[L3:C0, L5:C1]",
+            "snippet": "TableGroup...et {\n  A\n}"
+          },
           "children": {
             "body": {
+              "context": {
+                "id": "<block-expression>@[L3:C27, L5:C1]",
+                "snippet": "{\n  A\n}"
+              },
               "children": {
                 "blockCloseBrace": {
                   "context": {
@@ -278,11 +290,23 @@
                 },
                 "body": [
                   {
+                    "context": {
+                      "id": "<function-application>@[L4:C2, L4:C3]",
+                      "snippet": "A"
+                    },
                     "children": {
                       "args": [],
                       "callee": {
+                        "context": {
+                          "id": "<primary-expression>@[L4:C2, L4:C3]",
+                          "snippet": "A"
+                        },
                         "children": {
                           "expression": {
+                            "context": {
+                              "id": "<variable>:A@[L4:C2, L4:C3]",
+                              "snippet": "A"
+                            },
                             "children": {
                               "variable": {
                                 "context": {
@@ -310,10 +334,6 @@
                                 "value": "A"
                               }
                             },
-                            "context": {
-                              "id": "<variable>:A@[L4:C2, L4:C3]",
-                              "snippet": "A"
-                            },
                             "end": 45,
                             "endPos": {
                               "offset": 45,
@@ -331,10 +351,6 @@
                             }
                           }
                         },
-                        "context": {
-                          "id": "<primary-expression>@[L4:C2, L4:C3]",
-                          "snippet": "A"
-                        },
                         "end": 45,
                         "endPos": {
                           "offset": 45,
@@ -351,10 +367,6 @@
                           "column": 2
                         }
                       }
-                    },
-                    "context": {
-                      "id": "<function-application>@[L4:C2, L4:C3]",
-                      "snippet": "A"
                     },
                     "end": 45,
                     "endPos": {
@@ -385,10 +397,6 @@
                   }
                 ]
               },
-              "context": {
-                "id": "<block-expression>@[L3:C27, L5:C1]",
-                "snippet": "{\n  A\n}"
-              },
               "end": 47,
               "endPos": {
                 "offset": 47,
@@ -406,10 +414,22 @@
               }
             },
             "name": {
+              "context": {
+                "id": "<infix-expression>@[L3:C11, L3:C26]",
+                "snippet": "schema.alphabet"
+              },
               "children": {
                 "leftExpression": {
+                  "context": {
+                    "id": "<primary-expression>@[L3:C11, L3:C17]",
+                    "snippet": "schema"
+                  },
                   "children": {
                     "expression": {
+                      "context": {
+                        "id": "<variable>:schema@[L3:C11, L3:C17]",
+                        "snippet": "schema"
+                      },
                       "children": {
                         "variable": {
                           "context": {
@@ -437,10 +457,6 @@
                           "value": "schema"
                         }
                       },
-                      "context": {
-                        "id": "<variable>:schema@[L3:C11, L3:C17]",
-                        "snippet": "schema"
-                      },
                       "end": 30,
                       "endPos": {
                         "offset": 30,
@@ -457,10 +473,6 @@
                         "column": 11
                       }
                     }
-                  },
-                  "context": {
-                    "id": "<primary-expression>@[L3:C11, L3:C17]",
-                    "snippet": "schema"
                   },
                   "end": 30,
                   "endPos": {
@@ -504,8 +516,16 @@
                   "value": "."
                 },
                 "rightExpression": {
+                  "context": {
+                    "id": "<primary-expression>@[L3:C18, L3:C26]",
+                    "snippet": "alphabet"
+                  },
                   "children": {
                     "expression": {
+                      "context": {
+                        "id": "<variable>:alphabet@[L3:C18, L3:C26]",
+                        "snippet": "alphabet"
+                      },
                       "children": {
                         "variable": {
                           "context": {
@@ -533,10 +553,6 @@
                           "value": "alphabet"
                         }
                       },
-                      "context": {
-                        "id": "<variable>:alphabet@[L3:C18, L3:C26]",
-                        "snippet": "alphabet"
-                      },
                       "end": 39,
                       "endPos": {
                         "offset": 39,
@@ -554,10 +570,6 @@
                       }
                     }
                   },
-                  "context": {
-                    "id": "<primary-expression>@[L3:C18, L3:C26]",
-                    "snippet": "alphabet"
-                  },
                   "end": 39,
                   "endPos": {
                     "offset": 39,
@@ -574,10 +586,6 @@
                     "column": 18
                   }
                 }
-              },
-              "context": {
-                "id": "<infix-expression>@[L3:C11, L3:C26]",
-                "snippet": "schema.alphabet"
               },
               "end": 39,
               "endPos": {
@@ -620,10 +628,6 @@
               "trailingTrivia": " ",
               "value": "TableGroup"
             }
-          },
-          "context": {
-            "id": "<element-declaration>:schema.alphabet@[L3:C0, L5:C1]",
-            "snippet": "TableGroup...et {\n  A\n}"
           },
           "end": 47,
           "endPos": {
@@ -686,10 +690,6 @@
         "trailingTrivia": "",
         "value": ""
       }
-    },
-    "context": {
-      "id": "<program>@[L0:C0, L6:C0]",
-      "snippet": "Table A {\n...t {\n  A\n}\n"
     },
     "end": 48,
     "endPos": {

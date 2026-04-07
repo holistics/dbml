@@ -15,11 +15,23 @@
     }
   ],
   "program": {
+    "context": {
+      "id": "<program>@[L0:C0, L7:C0]",
+      "snippet": "TableParti...1\n  ~p2\n}\n"
+    },
     "children": {
       "body": [
         {
+          "context": {
+            "id": "<element-declaration>:p1@[L0:C0, L0:C18]",
+            "snippet": "TablePartial p1 {}"
+          },
           "children": {
             "body": {
+              "context": {
+                "id": "<block-expression>@[L0:C16, L0:C18]",
+                "snippet": "{}"
+              },
               "children": {
                 "blockCloseBrace": {
                   "context": {
@@ -73,10 +85,6 @@
                 },
                 "body": []
               },
-              "context": {
-                "id": "<block-expression>@[L0:C16, L0:C18]",
-                "snippet": "{}"
-              },
               "end": 18,
               "endPos": {
                 "offset": 18,
@@ -94,8 +102,16 @@
               }
             },
             "name": {
+              "context": {
+                "id": "<primary-expression>@[L0:C13, L0:C15]",
+                "snippet": "p1"
+              },
               "children": {
                 "expression": {
+                  "context": {
+                    "id": "<variable>:p1@[L0:C13, L0:C15]",
+                    "snippet": "p1"
+                  },
                   "children": {
                     "variable": {
                       "context": {
@@ -123,10 +139,6 @@
                       "value": "p1"
                     }
                   },
-                  "context": {
-                    "id": "<variable>:p1@[L0:C13, L0:C15]",
-                    "snippet": "p1"
-                  },
                   "end": 15,
                   "endPos": {
                     "offset": 15,
@@ -143,10 +155,6 @@
                     "column": 13
                   }
                 }
-              },
-              "context": {
-                "id": "<primary-expression>@[L0:C13, L0:C15]",
-                "snippet": "p1"
               },
               "end": 15,
               "endPos": {
@@ -190,10 +198,6 @@
               "value": "TablePartial"
             }
           },
-          "context": {
-            "id": "<element-declaration>:p1@[L0:C0, L0:C18]",
-            "snippet": "TablePartial p1 {}"
-          },
           "end": 18,
           "endPos": {
             "offset": 18,
@@ -228,8 +232,16 @@
           }
         },
         {
+          "context": {
+            "id": "<element-declaration>:t1@[L2:C0, L6:C1]",
+            "snippet": "Table t1 {...p1\n  ~p2\n}"
+          },
           "children": {
             "body": {
+              "context": {
+                "id": "<block-expression>@[L2:C9, L6:C1]",
+                "snippet": "{\n  id int...p1\n  ~p2\n}"
+              },
               "children": {
                 "blockCloseBrace": {
                   "context": {
@@ -283,11 +295,23 @@
                 },
                 "body": [
                   {
+                    "context": {
+                      "id": "<function-application>@[L3:C2, L3:C8]",
+                      "snippet": "id int"
+                    },
                     "children": {
                       "args": [
                         {
+                          "context": {
+                            "id": "<primary-expression>@[L3:C5, L3:C8]",
+                            "snippet": "int"
+                          },
                           "children": {
                             "expression": {
+                              "context": {
+                                "id": "<variable>:int@[L3:C5, L3:C8]",
+                                "snippet": "int"
+                              },
                               "children": {
                                 "variable": {
                                   "context": {
@@ -315,10 +339,6 @@
                                   "value": "int"
                                 }
                               },
-                              "context": {
-                                "id": "<variable>:int@[L3:C5, L3:C8]",
-                                "snippet": "int"
-                              },
                               "end": 39,
                               "endPos": {
                                 "offset": 39,
@@ -335,10 +355,6 @@
                                 "column": 5
                               }
                             }
-                          },
-                          "context": {
-                            "id": "<primary-expression>@[L3:C5, L3:C8]",
-                            "snippet": "int"
                           },
                           "end": 39,
                           "endPos": {
@@ -358,8 +374,16 @@
                         }
                       ],
                       "callee": {
+                        "context": {
+                          "id": "<primary-expression>@[L3:C2, L3:C4]",
+                          "snippet": "id"
+                        },
                         "children": {
                           "expression": {
+                            "context": {
+                              "id": "<variable>:id@[L3:C2, L3:C4]",
+                              "snippet": "id"
+                            },
                             "children": {
                               "variable": {
                                 "context": {
@@ -387,10 +411,6 @@
                                 "value": "id"
                               }
                             },
-                            "context": {
-                              "id": "<variable>:id@[L3:C2, L3:C4]",
-                              "snippet": "id"
-                            },
                             "end": 35,
                             "endPos": {
                               "offset": 35,
@@ -408,10 +428,6 @@
                             }
                           }
                         },
-                        "context": {
-                          "id": "<primary-expression>@[L3:C2, L3:C4]",
-                          "snippet": "id"
-                        },
                         "end": 35,
                         "endPos": {
                           "offset": 35,
@@ -428,10 +444,6 @@
                           "column": 2
                         }
                       }
-                    },
-                    "context": {
-                      "id": "<function-application>@[L3:C2, L3:C8]",
-                      "snippet": "id int"
                     },
                     "end": 39,
                     "endPos": {
@@ -461,13 +473,29 @@
                     }
                   },
                   {
+                    "context": {
+                      "id": "<function-application>@[L4:C2, L4:C5]",
+                      "snippet": "~p1"
+                    },
                     "children": {
                       "args": [],
                       "callee": {
+                        "context": {
+                          "id": "<prefix-expression>@[L4:C2, L4:C5]",
+                          "snippet": "~p1"
+                        },
                         "children": {
                           "expression": {
+                            "context": {
+                              "id": "<primary-expression>@[L4:C3, L4:C5]",
+                              "snippet": "p1"
+                            },
                             "children": {
                               "expression": {
+                                "context": {
+                                  "id": "<variable>:p1@[L4:C3, L4:C5]",
+                                  "snippet": "p1"
+                                },
                                 "children": {
                                   "variable": {
                                     "context": {
@@ -495,10 +523,6 @@
                                     "value": "p1"
                                   }
                                 },
-                                "context": {
-                                  "id": "<variable>:p1@[L4:C3, L4:C5]",
-                                  "snippet": "p1"
-                                },
                                 "end": 45,
                                 "endPos": {
                                   "offset": 45,
@@ -515,10 +539,6 @@
                                   "column": 3
                                 }
                               }
-                            },
-                            "context": {
-                              "id": "<primary-expression>@[L4:C3, L4:C5]",
-                              "snippet": "p1"
                             },
                             "end": 45,
                             "endPos": {
@@ -568,10 +588,6 @@
                             "value": "~"
                           }
                         },
-                        "context": {
-                          "id": "<prefix-expression>@[L4:C2, L4:C5]",
-                          "snippet": "~p1"
-                        },
                         "end": 45,
                         "endPos": {
                           "offset": 45,
@@ -588,10 +604,6 @@
                           "column": 2
                         }
                       }
-                    },
-                    "context": {
-                      "id": "<function-application>@[L4:C2, L4:C5]",
-                      "snippet": "~p1"
                     },
                     "end": 45,
                     "endPos": {
@@ -610,13 +622,29 @@
                     }
                   },
                   {
+                    "context": {
+                      "id": "<function-application>@[L5:C2, L5:C5]",
+                      "snippet": "~p2"
+                    },
                     "children": {
                       "args": [],
                       "callee": {
+                        "context": {
+                          "id": "<prefix-expression>@[L5:C2, L5:C5]",
+                          "snippet": "~p2"
+                        },
                         "children": {
                           "expression": {
+                            "context": {
+                              "id": "<primary-expression>@[L5:C3, L5:C5]",
+                              "snippet": "p2"
+                            },
                             "children": {
                               "expression": {
+                                "context": {
+                                  "id": "<variable>:p2@[L5:C3, L5:C5]",
+                                  "snippet": "p2"
+                                },
                                 "children": {
                                   "variable": {
                                     "context": {
@@ -644,10 +672,6 @@
                                     "value": "p2"
                                   }
                                 },
-                                "context": {
-                                  "id": "<variable>:p2@[L5:C3, L5:C5]",
-                                  "snippet": "p2"
-                                },
                                 "end": 51,
                                 "endPos": {
                                   "offset": 51,
@@ -664,10 +688,6 @@
                                   "column": 3
                                 }
                               }
-                            },
-                            "context": {
-                              "id": "<primary-expression>@[L5:C3, L5:C5]",
-                              "snippet": "p2"
                             },
                             "end": 51,
                             "endPos": {
@@ -711,10 +731,6 @@
                             "value": "~"
                           }
                         },
-                        "context": {
-                          "id": "<prefix-expression>@[L5:C2, L5:C5]",
-                          "snippet": "~p2"
-                        },
                         "end": 51,
                         "endPos": {
                           "offset": 51,
@@ -731,10 +747,6 @@
                           "column": 2
                         }
                       }
-                    },
-                    "context": {
-                      "id": "<function-application>@[L5:C2, L5:C5]",
-                      "snippet": "~p2"
                     },
                     "end": 51,
                     "endPos": {
@@ -754,10 +766,6 @@
                   }
                 ]
               },
-              "context": {
-                "id": "<block-expression>@[L2:C9, L6:C1]",
-                "snippet": "{\n  id int...p1\n  ~p2\n}"
-              },
               "end": 53,
               "endPos": {
                 "offset": 53,
@@ -775,8 +783,16 @@
               }
             },
             "name": {
+              "context": {
+                "id": "<primary-expression>@[L2:C6, L2:C8]",
+                "snippet": "t1"
+              },
               "children": {
                 "expression": {
+                  "context": {
+                    "id": "<variable>:t1@[L2:C6, L2:C8]",
+                    "snippet": "t1"
+                  },
                   "children": {
                     "variable": {
                       "context": {
@@ -804,10 +820,6 @@
                       "value": "t1"
                     }
                   },
-                  "context": {
-                    "id": "<variable>:t1@[L2:C6, L2:C8]",
-                    "snippet": "t1"
-                  },
                   "end": 28,
                   "endPos": {
                     "offset": 28,
@@ -824,10 +836,6 @@
                     "column": 6
                   }
                 }
-              },
-              "context": {
-                "id": "<primary-expression>@[L2:C6, L2:C8]",
-                "snippet": "t1"
               },
               "end": 28,
               "endPos": {
@@ -870,10 +878,6 @@
               "trailingTrivia": " ",
               "value": "Table"
             }
-          },
-          "context": {
-            "id": "<element-declaration>:t1@[L2:C0, L6:C1]",
-            "snippet": "Table t1 {...p1\n  ~p2\n}"
           },
           "end": 53,
           "endPos": {
@@ -948,10 +952,6 @@
         "trailingTrivia": "",
         "value": ""
       }
-    },
-    "context": {
-      "id": "<program>@[L0:C0, L7:C0]",
-      "snippet": "TableParti...1\n  ~p2\n}\n"
     },
     "end": 54,
     "endPos": {

@@ -41,11 +41,23 @@
     }
   ],
   "program": {
+    "context": {
+      "id": "<program>@[L0:C0, L6:C1]",
+      "snippet": "Enum statu...{\r\n    \r\n}"
+    },
     "children": {
       "body": [
         {
+          "context": {
+            "id": "<element-declaration>:status@[L0:C0, L2:C1]",
+            "snippet": "Enum status {\r\n\r\n}"
+          },
           "children": {
             "body": {
+              "context": {
+                "id": "<block-expression>@[L0:C12, L2:C1]",
+                "snippet": "{\r\n\r\n}"
+              },
               "children": {
                 "blockCloseBrace": {
                   "context": {
@@ -99,10 +111,6 @@
                 },
                 "body": []
               },
-              "context": {
-                "id": "<block-expression>@[L0:C12, L2:C1]",
-                "snippet": "{\r\n\r\n}"
-              },
               "end": 18,
               "endPos": {
                 "offset": 18,
@@ -120,8 +128,16 @@
               }
             },
             "name": {
+              "context": {
+                "id": "<primary-expression>@[L0:C5, L0:C11]",
+                "snippet": "status"
+              },
               "children": {
                 "expression": {
+                  "context": {
+                    "id": "<variable>:status@[L0:C5, L0:C11]",
+                    "snippet": "status"
+                  },
                   "children": {
                     "variable": {
                       "context": {
@@ -149,10 +165,6 @@
                       "value": "status"
                     }
                   },
-                  "context": {
-                    "id": "<variable>:status@[L0:C5, L0:C11]",
-                    "snippet": "status"
-                  },
                   "end": 11,
                   "endPos": {
                     "offset": 11,
@@ -169,10 +181,6 @@
                     "column": 5
                   }
                 }
-              },
-              "context": {
-                "id": "<primary-expression>@[L0:C5, L0:C11]",
-                "snippet": "status"
               },
               "end": 11,
               "endPos": {
@@ -216,10 +224,6 @@
               "value": "Enum"
             }
           },
-          "context": {
-            "id": "<element-declaration>:status@[L0:C0, L2:C1]",
-            "snippet": "Enum status {\r\n\r\n}"
-          },
           "end": 18,
           "endPos": {
             "offset": 18,
@@ -249,8 +253,16 @@
           }
         },
         {
+          "context": {
+            "id": "<element-declaration>:public.status@[L4:C0, L6:C1]",
+            "snippet": "Enum publi...{\r\n    \r\n}"
+          },
           "children": {
             "body": {
+              "context": {
+                "id": "<block-expression>@[L4:C19, L6:C1]",
+                "snippet": "{\r\n    \r\n}"
+              },
               "children": {
                 "blockCloseBrace": {
                   "context": {
@@ -304,10 +316,6 @@
                 },
                 "body": []
               },
-              "context": {
-                "id": "<block-expression>@[L4:C19, L6:C1]",
-                "snippet": "{\r\n    \r\n}"
-              },
               "end": 51,
               "endPos": {
                 "offset": 51,
@@ -325,10 +333,22 @@
               }
             },
             "name": {
+              "context": {
+                "id": "<infix-expression>@[L4:C5, L4:C18]",
+                "snippet": "public.status"
+              },
               "children": {
                 "leftExpression": {
+                  "context": {
+                    "id": "<primary-expression>@[L4:C5, L4:C11]",
+                    "snippet": "public"
+                  },
                   "children": {
                     "expression": {
+                      "context": {
+                        "id": "<variable>:public@[L4:C5, L4:C11]",
+                        "snippet": "public"
+                      },
                       "children": {
                         "variable": {
                           "context": {
@@ -356,10 +376,6 @@
                           "value": "public"
                         }
                       },
-                      "context": {
-                        "id": "<variable>:public@[L4:C5, L4:C11]",
-                        "snippet": "public"
-                      },
                       "end": 33,
                       "endPos": {
                         "offset": 33,
@@ -376,10 +392,6 @@
                         "column": 5
                       }
                     }
-                  },
-                  "context": {
-                    "id": "<primary-expression>@[L4:C5, L4:C11]",
-                    "snippet": "public"
                   },
                   "end": 33,
                   "endPos": {
@@ -423,8 +435,16 @@
                   "value": "."
                 },
                 "rightExpression": {
+                  "context": {
+                    "id": "<primary-expression>@[L4:C12, L4:C18]",
+                    "snippet": "status"
+                  },
                   "children": {
                     "expression": {
+                      "context": {
+                        "id": "<variable>:status@[L4:C12, L4:C18]",
+                        "snippet": "status"
+                      },
                       "children": {
                         "variable": {
                           "context": {
@@ -452,10 +472,6 @@
                           "value": "status"
                         }
                       },
-                      "context": {
-                        "id": "<variable>:status@[L4:C12, L4:C18]",
-                        "snippet": "status"
-                      },
                       "end": 40,
                       "endPos": {
                         "offset": 40,
@@ -473,10 +489,6 @@
                       }
                     }
                   },
-                  "context": {
-                    "id": "<primary-expression>@[L4:C12, L4:C18]",
-                    "snippet": "status"
-                  },
                   "end": 40,
                   "endPos": {
                     "offset": 40,
@@ -493,10 +505,6 @@
                     "column": 12
                   }
                 }
-              },
-              "context": {
-                "id": "<infix-expression>@[L4:C5, L4:C18]",
-                "snippet": "public.status"
               },
               "end": 40,
               "endPos": {
@@ -539,10 +547,6 @@
               "trailingTrivia": " ",
               "value": "Enum"
             }
-          },
-          "context": {
-            "id": "<element-declaration>:public.status@[L4:C0, L6:C1]",
-            "snippet": "Enum publi...{\r\n    \r\n}"
           },
           "end": 51,
           "endPos": {
@@ -598,10 +602,6 @@
         "trailingTrivia": "",
         "value": ""
       }
-    },
-    "context": {
-      "id": "<program>@[L0:C0, L6:C1]",
-      "snippet": "Enum statu...{\r\n    \r\n}"
     },
     "end": 51,
     "endPos": {
