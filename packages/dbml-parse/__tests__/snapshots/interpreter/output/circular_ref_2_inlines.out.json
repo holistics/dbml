@@ -190,28 +190,24 @@
     {
       "code": "CIRCULAR_REF",
       "diagnostic": "References with same endpoints exist",
-      "end": 71,
       "level": "error",
       "node": {
         "context": {
           "id": "<attribute>@[L5:C12, L5:C23]",
           "snippet": "ref: > A.id"
         }
-      },
-      "start": 60
+      }
     },
     {
       "code": "CIRCULAR_REF",
       "diagnostic": "References with same endpoints exist",
-      "end": 33,
       "level": "error",
       "node": {
         "context": {
           "id": "<attribute>@[L1:C12, L1:C23]",
           "snippet": "ref: > B.id"
         }
-      },
-      "start": 22
+      }
     }
   ],
   "warnings": []
