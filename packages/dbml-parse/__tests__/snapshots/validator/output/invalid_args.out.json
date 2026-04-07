@@ -482,15 +482,11 @@
                       },
                       "references": [
                         {
-                          "id": "<primary-expression>@[L18:C6, L18:C8]",
-                          "snippet": "id"
-                        },
-                        {
                           "id": "<primary-expression>@[L18:C13, L18:C15]",
                           "snippet": "id"
                         },
                         {
-                          "id": "<primary-expression>@[L22:C6, L22:C8]",
+                          "id": "<primary-expression>@[L18:C6, L18:C8]",
                           "snippet": "id"
                         },
                         {
@@ -498,7 +494,7 @@
                           "snippet": "id"
                         },
                         {
-                          "id": "<primary-expression>@[L26:C6, L26:C8]",
+                          "id": "<primary-expression>@[L22:C6, L22:C8]",
                           "snippet": "id"
                         },
                         {
@@ -506,11 +502,15 @@
                           "snippet": "id"
                         },
                         {
-                          "id": "<primary-expression>@[L30:C6, L30:C8]",
+                          "id": "<primary-expression>@[L26:C6, L26:C8]",
                           "snippet": "id"
                         },
                         {
                           "id": "<primary-expression>@[L30:C13, L30:C15]",
+                          "snippet": "id"
+                        },
+                        {
+                          "id": "<primary-expression>@[L30:C6, L30:C8]",
                           "snippet": "id"
                         }
                       ]
@@ -843,15 +843,11 @@
                 "snippet": "A"
               },
               {
-                "id": "<primary-expression>@[L18:C4, L18:C5]",
-                "snippet": "A"
-              },
-              {
                 "id": "<primary-expression>@[L18:C11, L18:C12]",
                 "snippet": "A"
               },
               {
-                "id": "<primary-expression>@[L22:C4, L22:C5]",
+                "id": "<primary-expression>@[L18:C4, L18:C5]",
                 "snippet": "A"
               },
               {
@@ -859,7 +855,7 @@
                 "snippet": "A"
               },
               {
-                "id": "<primary-expression>@[L26:C4, L26:C5]",
+                "id": "<primary-expression>@[L22:C4, L22:C5]",
                 "snippet": "A"
               },
               {
@@ -867,11 +863,15 @@
                 "snippet": "A"
               },
               {
-                "id": "<primary-expression>@[L30:C4, L30:C5]",
+                "id": "<primary-expression>@[L26:C4, L26:C5]",
                 "snippet": "A"
               },
               {
                 "id": "<primary-expression>@[L30:C11, L30:C12]",
+                "snippet": "A"
+              },
+              {
+                "id": "<primary-expression>@[L30:C4, L30:C5]",
                 "snippet": "A"
               }
             ]

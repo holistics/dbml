@@ -109,6 +109,7 @@ function sortArray (array: unknown[]): unknown[] {
     if (s instanceof SyntaxToken) return s.start;
     if ((s as any)?.declaration) return getIntraKindRank((s as any).declaration);
     if ((s as any)?.token) return ((s as any).token as TokenPosition)?.start?.offset || 0; // possibly a schema element
+    if ((s as any)?.id) return getIntraKindRank((s as any).id);
     return 0;
   }
 
@@ -369,14 +370,14 @@ export function symbolToSnapshot (
       id: symbolReadableId,
       snippet,
     },
-    members: symbolTable?.map((value) => symbolToSnapshot(compiler, value, { simple: true })),
+    members: symbolTable && sortArray([...symbolTable.entries()].map(([, value]) => symbolToSnapshot(compiler, value, { simple: true }))),
     declaration: declaration && {
       id: getReadableId(declaration),
       snippet: getCodeSnippet(declaration, compiler.parse.source()),
     },
-    references: references?.map((r) => ({
+    references: references && sortArray(references.map((r) => ({
       id: getReadableId(r),
       snippet: getCodeSnippet(r, compiler.parse.source()),
-    })),
+    }))),
   });
 }

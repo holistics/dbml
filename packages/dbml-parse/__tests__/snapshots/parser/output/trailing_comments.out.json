@@ -299,10 +299,6 @@
                       },
                       "references": [
                         {
-                          "id": "<primary-expression>@[L7:C7, L7:C9]",
-                          "snippet": "id"
-                        },
-                        {
                           "id": "<primary-expression>@[L12:C7, L12:C9]",
                           "snippet": "id"
                         },
@@ -311,11 +307,15 @@
                           "snippet": "id"
                         },
                         {
+                          "id": "<primary-expression>@[L14:C12, L14:C14]",
+                          "snippet": "id"
+                        },
+                        {
                           "id": "<primary-expression>@[L14:C7, L14:C9]",
                           "snippet": "id"
                         },
                         {
-                          "id": "<primary-expression>@[L14:C12, L14:C14]",
+                          "id": "<primary-expression>@[L7:C7, L7:C9]",
                           "snippet": "id"
                         }
                       ]
@@ -562,11 +562,11 @@
                       },
                       "references": [
                         {
-                          "id": "<primary-expression>@[L7:C11, L7:C18]",
+                          "id": "<primary-expression>@[L10:C7, L10:C14]",
                           "snippet": "country"
                         },
                         {
-                          "id": "<primary-expression>@[L10:C7, L10:C14]",
+                          "id": "<primary-expression>@[L7:C11, L7:C18]",
                           "snippet": "country"
                         }
                       ]
@@ -813,15 +813,15 @@
                       },
                       "references": [
                         {
-                          "id": "<primary-expression>@[L9:C6, L9:C18]",
-                          "snippet": "booking_date"
-                        },
-                        {
                           "id": "<primary-expression>@[L10:C16, L10:C28]",
                           "snippet": "booking_date"
                         },
                         {
                           "id": "<primary-expression>@[L11:C6, L11:C18]",
+                          "snippet": "booking_date"
+                        },
+                        {
+                          "id": "<primary-expression>@[L9:C6, L9:C18]",
                           "snippet": "booking_date"
                         }
                       ]
