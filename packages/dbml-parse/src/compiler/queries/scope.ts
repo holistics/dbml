@@ -14,5 +14,5 @@ export function scope (
     current = current.parent;
   }
 
-  return this.parse.ast();
+  return this._parse.ast();
 }

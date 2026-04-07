@@ -99,7 +99,7 @@ export const tableGroupModule: GlobalModule = {
     // Skip variables inside setting lists
     if (node.parent && isInsideSettingList(node)) return Report.create(PASS_THROUGH);
 
-    const programNode = compiler.parseFile().getValue().ast;
+    const programNode = compiler.parse().getValue().ast;
     const globalSymbol = compiler.nodeSymbol(programNode).getValue();
     if (globalSymbol === UNHANDLED) return Report.create(undefined);
 

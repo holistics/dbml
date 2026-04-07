@@ -39,7 +39,7 @@ export function analyze (source: string) {
   const compiler = new Compiler();
   compiler.setSource(source);
 
-  const parseResult = compiler.parseFile();
+  const parseResult = compiler.parse();
   const ast = parseResult.getValue().ast;
 
   const bindResult = compiler.bind(ast);
@@ -61,7 +61,7 @@ export function interpret (source: string): Report<Database | undefined> {
   const compiler = new Compiler();
   compiler.setSource(source);
 
-  const parseResult = compiler.parseFile();
+  const parseResult = compiler.parse();
   const ast = parseResult.getValue().ast;
 
   const bindResult = compiler.bind(ast);

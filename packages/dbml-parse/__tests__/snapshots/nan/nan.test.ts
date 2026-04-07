@@ -25,7 +25,7 @@ describe('[snapshot] nan', () => {
     const program = readFileSync(path.resolve(__dirname, `./input/${testName}.in.dbml`), 'utf-8');
     const compiler = new Compiler();
     compiler.setSource(program);
-    const report = compiler.parse._().map((v) => v === UNHANDLED ? undefined : v);
+    const report = compiler._parse._().map((v) => v === UNHANDLED ? undefined : v);
 
     it(testName, () => expect(serializeInterpreterResult(compiler, report)).toMatchFileSnapshot(path.resolve(__dirname, `./output/${testName}.out.json`)));
   });

@@ -204,7 +204,7 @@ export function renameTable (
   oldName: TableNameInput,
   newName: TableNameInput,
 ): string {
-  const source = this.parse.source();
+  const source = this._parse.source();
 
   const normalizedOld = normalizeTableName(oldName);
   const normalizedNew = normalizeTableName(newName);

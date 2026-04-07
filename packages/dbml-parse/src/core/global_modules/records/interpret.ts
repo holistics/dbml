@@ -35,7 +35,7 @@ import {
 import { destructureCallExpression, extractQuotedStringToken, extractVariableFromExpression, isExpressionAVariableNode, isElementNode } from '@/core/utils/expression';
 import Compiler from '@/compiler/index';
 import { ElementKind } from '@/core/types/keywords';
-import { SymbolKind } from '@/core/types/symbols';
+import { NodeSymbol, SymbolKind } from '@/core/types/symbols';
 import { PASS_THROUGH, UNHANDLED } from '@/constants';
 import { getTokenPosition, lookupMember, lookupInDefaultSchema } from '../utils';
 import { validatePrimaryKey, validateUnique } from './utils/constraints';
@@ -131,7 +131,7 @@ function getTableAndColumnsOfRecords (records: ElementDeclarationNode, compiler:
   const tableName = tableNameFragments.at(-1) ?? '';
   const schemaName = tableNameFragments.length > 1 ? tableNameFragments.slice(0, -1).join('.') : undefined;
 
-  const ast = compiler.parseFile().getValue().ast;
+  const ast = compiler.parse().getValue().ast;
   const programSymbol = compiler.nodeSymbol(ast);
   if (programSymbol.hasValue(UNHANDLED)) return { table: undefined, mergedColumns: [] };
 

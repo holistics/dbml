@@ -149,7 +149,7 @@ export function lookupMember (
     const parentName = fnResult && !fnResult.hasValue(UNHANDLED) ? fnResult.getValue()?.join('.') : undefined;
     const scopeLabel = parentSymbol instanceof SchemaSymbol ? `Schema '${parentSymbol.name}'` : parentName ? `${parentSymbol.kind} '${parentName}'` : (parentSymbol.isKind(SymbolKind.Program) ? `Schema '${DEFAULT_SCHEMA_NAME}'` : 'global scope');
     return new Report(undefined, [
-      new CompileError(CompileErrorCode.BINDING_ERROR, `${kindLabel} '${name}' does not exist in ${scopeLabel}`, errorNode ?? parentSymbol.declaration ?? compiler.parseFile().getValue().ast),
+      new CompileError(CompileErrorCode.BINDING_ERROR, `${kindLabel} '${name}' does not exist in ${scopeLabel}`, errorNode ?? parentSymbol.declaration ?? compiler.parse().getValue().ast),
     ]);
   }
 

@@ -107,7 +107,7 @@ export function buildTableFromSymbolMembers (tableNode: ElementDeclarationNode, 
 
 // Look up enum field names for a column's enum type via the compiler's symbol graph.
 export function getEnumMembers (column: Column, compiler: Compiler): string[] {
-  const ast = compiler.parseFile().getValue().ast;
+  const ast = compiler.parse().getValue().ast;
   const programSymbol = compiler.nodeSymbol(ast).getFiltered(UNHANDLED);
   if (!programSymbol) return [];
   const schemas = compiler.symbolMembers(programSymbol).getFiltered(UNHANDLED);

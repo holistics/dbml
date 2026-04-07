@@ -185,9 +185,9 @@ describe('[example] Suggestions Utils - Records', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(program);
-      compiler.parse._();
+      compiler._parse._();
 
-      const ast = compiler.parse.ast();
+      const ast = compiler._parse.ast();
       const tableElement = ast.body[2]; // users table is the third element
       const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED);
 
@@ -221,9 +221,9 @@ describe('[example] Suggestions Utils - Records', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(program);
-      compiler.parse._();
+      compiler._parse._();
 
-      const ast = compiler.parse.ast();
+      const ast = compiler._parse.ast();
       const tableElement = ast.body[1];
 
       const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED);
@@ -254,9 +254,9 @@ describe('[example] Suggestions Utils - Records', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(program);
-      compiler.parse._();
+      compiler._parse._();
 
-      const ast = compiler.parse.ast();
+      const ast = compiler._parse.ast();
       const tableElement = ast.body[1];
       const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED);
 
@@ -285,10 +285,10 @@ describe('[example] Suggestions Utils - Records', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(program);
-      compiler.parse._(); // Trigger parsing
+      compiler._parse._(); // Trigger parsing
 
       // Get the table symbol
-      const ast = compiler.parse.ast();
+      const ast = compiler._parse.ast();
       const tableElement = ast.body[0];
       const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED);
 
@@ -319,9 +319,9 @@ describe('[example] Suggestions Utils - Records', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(program);
-      compiler.parse._();
+      compiler._parse._();
 
-      const ast = compiler.parse.ast();
+      const ast = compiler._parse.ast();
       const tableElement = ast.body[0];
       const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED);
 
@@ -354,9 +354,9 @@ describe('[example] Suggestions Utils - Records', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(program);
-      compiler.parse._();
+      compiler._parse._();
 
-      const ast = compiler.parse.ast();
+      const ast = compiler._parse.ast();
       const tableElement = ast.body[0];
       const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED);
 
@@ -381,9 +381,9 @@ describe('[example] Suggestions Utils - Records', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(program);
-      compiler.parse._();
+      compiler._parse._();
 
-      const ast = compiler.parse.ast();
+      const ast = compiler._parse.ast();
       const tableElement = ast.body[0];
       const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED);
 
@@ -409,9 +409,9 @@ describe('[example] Suggestions Utils - Records', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(program);
-      compiler.parse._();
+      compiler._parse._();
 
-      const ast = compiler.parse.ast();
+      const ast = compiler._parse.ast();
       const tableElement = ast.body[0];
       const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED);
 
@@ -436,11 +436,11 @@ describe('[example] Suggestions Utils - Records', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(program);
-      compiler.parse._();
+      compiler._parse._();
 
-      const ast = compiler.parse.ast();
+      const ast = compiler._parse.ast();
       const tableElement = ast.body[0];
-      const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(SymbolKind.Table);
+      const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED);
 
       const columns = getColumnsFromTableSymbol(compiler, tableSymbol as NodeSymbol);
 
@@ -463,9 +463,9 @@ describe('[example] Suggestions Utils - Records', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(program);
-      compiler.parse._();
+      compiler._parse._();
 
-      const ast = compiler.parse.ast();
+      const ast = compiler._parse.ast();
       const tableElement = ast.body[0];
       const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED);
 

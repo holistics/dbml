@@ -130,7 +130,7 @@ function sortArray (array: unknown[]): unknown[] {
 // Get a stable snapshot of the value
 export function toSnapshot (
   compiler: Compiler,
-  value: Readonly<Snappable | Readonly<Snappable>[] | Record<string, Readonly<Snappable> | Readonly<Snappable>[]>>,
+  value: Readonly<Snappable | readonly Readonly<Snappable>[] | Record<string, Readonly<Snappable> | readonly Readonly<Snappable>[]>>,
   { simple = false }: { simple?: boolean } = {},
 ): unknown {
   if (Array.isArray(value)) {
@@ -227,7 +227,7 @@ export function syntaxTokenToSnapshot (
   { simple = false }: { simple?: boolean } = {},
 ): unknown {
   const tokenReadableId = getReadableId(token);
-  const snippet = getCodeSnippet(token, compiler.parse.source());
+  const snippet = getCodeSnippet(token, compiler._parse.source());
   const {
     kind,
     value,
@@ -270,7 +270,7 @@ export function syntaxNodeToSnapshot (
   { simple = false }: { simple?: boolean } = {},
 ): unknown {
   const nodeReadableId = getReadableId(node);
-  const snippet = getCodeSnippet(node, compiler.parse.source());
+  const snippet = getCodeSnippet(node, compiler._parse.source());
   const {
     id, // Filter this out
     parent,
@@ -317,7 +317,7 @@ export function symbolToSnapshot (
 ): unknown {
   if (!symbol) return undefined;
   const symbolReadableId = getReadableId(symbol);
-  const snippet = getCodeSnippet(symbol, compiler.parse.source());
+  const snippet = getCodeSnippet(symbol, compiler._parse.source());
   const {
     id, // Filter this out
     declaration,
@@ -342,11 +342,11 @@ export function symbolToSnapshot (
       members: symbolTable && sortArray([...symbolTable.entries()].map(([, value]) => symbolToSnapshot(compiler, value, { simple: true }))),
       declaration: declaration && {
         id: getReadableId(declaration),
-        snippet: getCodeSnippet(declaration, compiler.parse.source()),
+        snippet: getCodeSnippet(declaration, compiler._parse.source()),
       },
       references: references && sortArray(references.map((r) => ({
         id: getReadableId(r),
-        snippet: getCodeSnippet(r, compiler.parse.source()),
+        snippet: getCodeSnippet(r, compiler._parse.source()),
       }))),
     }),
   };

@@ -103,7 +103,7 @@ export const tableModule: GlobalModule = {
       if (!partialName) continue;
 
       // Look up the TablePartial symbol among direct program elements
-      const ast = compiler.parseFile().getValue().ast;
+      const ast = compiler.parse().getValue().ast;
       if (!(ast instanceof ProgramNode)) continue;
       let partialSymbol: NodeSymbol | undefined;
       for (const programChild of ast.body) {
@@ -117,7 +117,7 @@ export const tableModule: GlobalModule = {
       }
 
       if (!partialSymbol) {
-        errors.push(new CompileError(CompileErrorCode.BINDING_ERROR, `TablePartial '${partialName}' does not exist in Schema 'public'`, partialNameNode));
+        errors.push(new CompileError(CompileErrorCode.BINDING_ERROR, `TablePartial '${partialName}' does not exist in Schema 'public'`, partialNameNode || node));
         continue;
       }
 
@@ -159,7 +159,7 @@ export const tableModule: GlobalModule = {
       return Report.create(PASS_THROUGH);
     }
 
-    const programNode = compiler.parseFile().getValue().ast;
+    const programNode = compiler.parse().getValue().ast;
     const globalSymbol = compiler.nodeSymbol(programNode).getValue();
 
     if (globalSymbol === UNHANDLED) {
