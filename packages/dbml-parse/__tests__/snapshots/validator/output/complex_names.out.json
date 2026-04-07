@@ -147,10 +147,6 @@
                                     "children": {
                                       "expression": {
                                         "children": {
-                                          "parent": {
-                                            "id": "<element-declaration>:v1.Users@[L1:C4, L4:C5]",
-                                            "snippet": "Table v1.U...ew]\r\n    }"
-                                          },
                                           "variable": {
                                             "context": {
                                               "id": "<identifier>:integer@[L2:C11, L2:C18]",
@@ -207,10 +203,6 @@
                                           },
                                           "references": []
                                         }
-                                      },
-                                      "parent": {
-                                        "id": "<element-declaration>:v1.Users@[L1:C4, L4:C5]",
-                                        "snippet": "Table v1.U...ew]\r\n    }"
                                       }
                                     },
                                     "context": {
@@ -249,10 +241,6 @@
                                   "children": {
                                     "expression": {
                                       "children": {
-                                        "parent": {
-                                          "id": "<element-declaration>:v1.Users@[L1:C4, L4:C5]",
-                                          "snippet": "Table v1.U...ew]\r\n    }"
-                                        },
                                         "variable": {
                                           "context": {
                                             "id": "<identifier>:id@[L2:C8, L2:C10]",
@@ -309,10 +297,6 @@
                                         },
                                         "references": []
                                       }
-                                    },
-                                    "parent": {
-                                      "id": "<element-declaration>:v1.Users@[L1:C4, L4:C5]",
-                                      "snippet": "Table v1.U...ew]\r\n    }"
                                     }
                                   },
                                   "context": {
@@ -345,10 +329,6 @@
                                     },
                                     "references": []
                                   }
-                                },
-                                "parent": {
-                                  "id": "<element-declaration>:v1.Users@[L1:C4, L4:C5]",
-                                  "snippet": "Table v1.U...ew]\r\n    }"
                                 }
                               },
                               "context": {
@@ -391,10 +371,6 @@
                                         "children": {
                                           "expression": {
                                             "children": {
-                                              "parent": {
-                                                "id": "<element-declaration>:v1.Users@[L1:C4, L4:C5]",
-                                                "snippet": "Table v1.U...ew]\r\n    }"
-                                              },
                                               "variable": {
                                                 "context": {
                                                   "id": "<identifier>:v2@[L3:C15, L3:C17]",
@@ -451,10 +427,6 @@
                                               },
                                               "references": []
                                             }
-                                          },
-                                          "parent": {
-                                            "id": "<element-declaration>:v1.Users@[L1:C4, L4:C5]",
-                                            "snippet": "Table v1.U...ew]\r\n    }"
                                           }
                                         },
                                         "context": {
@@ -513,18 +485,10 @@
                                         "trailingTrivia": "",
                                         "value": "."
                                       },
-                                      "parent": {
-                                        "id": "<element-declaration>:v1.Users@[L1:C4, L4:C5]",
-                                        "snippet": "Table v1.U...ew]\r\n    }"
-                                      },
                                       "rightExpression": {
                                         "children": {
                                           "expression": {
                                             "children": {
-                                              "parent": {
-                                                "id": "<element-declaration>:v1.Users@[L1:C4, L4:C5]",
-                                                "snippet": "Table v1.U...ew]\r\n    }"
-                                              },
                                               "variable": {
                                                 "context": {
                                                   "id": "<identifier>:Status@[L3:C18, L3:C24]",
@@ -581,10 +545,6 @@
                                               },
                                               "references": []
                                             }
-                                          },
-                                          "parent": {
-                                            "id": "<element-declaration>:v1.Users@[L1:C4, L4:C5]",
-                                            "snippet": "Table v1.U...ew]\r\n    }"
                                           }
                                         },
                                         "context": {
@@ -709,11 +669,7 @@
                                                     "trailingTrivia": "",
                                                     "value": "default"
                                                   }
-                                                ],
-                                                "parent": {
-                                                  "id": "<element-declaration>:v1.Users@[L1:C4, L4:C5]",
-                                                  "snippet": "Table v1.U...ew]\r\n    }"
-                                                }
+                                                ]
                                               },
                                               "context": {
                                                 "id": "<identifer-stream>@[L3:C26, L3:C33]",
@@ -746,10 +702,6 @@
                                                 "references": []
                                               }
                                             },
-                                            "parent": {
-                                              "id": "<element-declaration>:v1.Users@[L1:C4, L4:C5]",
-                                              "snippet": "Table v1.U...ew]\r\n    }"
-                                            },
                                             "value": {
                                               "children": {
                                                 "leftExpression": {
@@ -758,10 +710,6 @@
                                                       "children": {
                                                         "expression": {
                                                           "children": {
-                                                            "parent": {
-                                                              "id": "<element-declaration>:v1.Users@[L1:C4, L4:C5]",
-                                                              "snippet": "Table v1.U...ew]\r\n    }"
-                                                            },
                                                             "variable": {
                                                               "context": {
                                                                 "id": "<identifier>:v2@[L3:C35, L3:C37]",
@@ -818,10 +766,6 @@
                                                             },
                                                             "references": []
                                                           }
-                                                        },
-                                                        "parent": {
-                                                          "id": "<element-declaration>:v1.Users@[L1:C4, L4:C5]",
-                                                          "snippet": "Table v1.U...ew]\r\n    }"
                                                         }
                                                       },
                                                       "context": {
@@ -880,18 +824,10 @@
                                                       "trailingTrivia": "",
                                                       "value": "."
                                                     },
-                                                    "parent": {
-                                                      "id": "<element-declaration>:v1.Users@[L1:C4, L4:C5]",
-                                                      "snippet": "Table v1.U...ew]\r\n    }"
-                                                    },
                                                     "rightExpression": {
                                                       "children": {
                                                         "expression": {
                                                           "children": {
-                                                            "parent": {
-                                                              "id": "<element-declaration>:v1.Users@[L1:C4, L4:C5]",
-                                                              "snippet": "Table v1.U...ew]\r\n    }"
-                                                            },
                                                             "variable": {
                                                               "context": {
                                                                 "id": "<identifier>:Status@[L3:C38, L3:C44]",
@@ -948,10 +884,6 @@
                                                             },
                                                             "references": []
                                                           }
-                                                        },
-                                                        "parent": {
-                                                          "id": "<element-declaration>:v1.Users@[L1:C4, L4:C5]",
-                                                          "snippet": "Table v1.U...ew]\r\n    }"
                                                         }
                                                       },
                                                       "context": {
@@ -1042,18 +974,10 @@
                                                   "trailingTrivia": "",
                                                   "value": "."
                                                 },
-                                                "parent": {
-                                                  "id": "<element-declaration>:v1.Users@[L1:C4, L4:C5]",
-                                                  "snippet": "Table v1.U...ew]\r\n    }"
-                                                },
                                                 "rightExpression": {
                                                   "children": {
                                                     "expression": {
                                                       "children": {
-                                                        "parent": {
-                                                          "id": "<element-declaration>:v1.Users@[L1:C4, L4:C5]",
-                                                          "snippet": "Table v1.U...ew]\r\n    }"
-                                                        },
                                                         "variable": {
                                                           "context": {
                                                             "id": "<identifier>:new@[L3:C45, L3:C48]",
@@ -1110,10 +1034,6 @@
                                                         },
                                                         "references": []
                                                       }
-                                                    },
-                                                    "parent": {
-                                                      "id": "<element-declaration>:v1.Users@[L1:C4, L4:C5]",
-                                                      "snippet": "Table v1.U...ew]\r\n    }"
                                                     }
                                                   },
                                                   "context": {
@@ -1261,10 +1181,6 @@
                                         "trailingInvalid": "",
                                         "trailingTrivia": "",
                                         "value": "["
-                                      },
-                                      "parent": {
-                                        "id": "<element-declaration>:v1.Users@[L1:C4, L4:C5]",
-                                        "snippet": "Table v1.U...ew]\r\n    }"
                                       }
                                     },
                                     "context": {
@@ -1303,10 +1219,6 @@
                                   "children": {
                                     "expression": {
                                       "children": {
-                                        "parent": {
-                                          "id": "<element-declaration>:v1.Users@[L1:C4, L4:C5]",
-                                          "snippet": "Table v1.U...ew]\r\n    }"
-                                        },
                                         "variable": {
                                           "context": {
                                             "id": "<identifier>:status@[L3:C8, L3:C14]",
@@ -1363,10 +1275,6 @@
                                         },
                                         "references": []
                                       }
-                                    },
-                                    "parent": {
-                                      "id": "<element-declaration>:v1.Users@[L1:C4, L4:C5]",
-                                      "snippet": "Table v1.U...ew]\r\n    }"
                                     }
                                   },
                                   "context": {
@@ -1399,10 +1307,6 @@
                                     },
                                     "references": []
                                   }
-                                },
-                                "parent": {
-                                  "id": "<element-declaration>:v1.Users@[L1:C4, L4:C5]",
-                                  "snippet": "Table v1.U...ew]\r\n    }"
                                 }
                               },
                               "context": {
@@ -1436,11 +1340,7 @@
                                 "references": []
                               }
                             }
-                          ],
-                          "parent": {
-                            "id": "<element-declaration>:v1.Users@[L1:C4, L4:C5]",
-                            "snippet": "Table v1.U...ew]\r\n    }"
-                          }
+                          ]
                         },
                         "context": {
                           "id": "<block-expression>@[L1:C19, L4:C5]",
@@ -1468,10 +1368,6 @@
                             "children": {
                               "expression": {
                                 "children": {
-                                  "parent": {
-                                    "id": "<element-declaration>:v1.Users@[L1:C4, L4:C5]",
-                                    "snippet": "Table v1.U...ew]\r\n    }"
-                                  },
                                   "variable": {
                                     "context": {
                                       "id": "<identifier>:v1@[L1:C10, L1:C12]",
@@ -1517,10 +1413,6 @@
                                   "line": 1,
                                   "column": 10
                                 }
-                              },
-                              "parent": {
-                                "id": "<element-declaration>:v1.Users@[L1:C4, L4:C5]",
-                                "snippet": "Table v1.U...ew]\r\n    }"
                               }
                             },
                             "context": {
@@ -1568,18 +1460,10 @@
                             "trailingTrivia": "",
                             "value": "."
                           },
-                          "parent": {
-                            "id": "<element-declaration>:v1.Users@[L1:C4, L4:C5]",
-                            "snippet": "Table v1.U...ew]\r\n    }"
-                          },
                           "rightExpression": {
                             "children": {
                               "expression": {
                                 "children": {
-                                  "parent": {
-                                    "id": "<element-declaration>:v1.Users@[L1:C4, L4:C5]",
-                                    "snippet": "Table v1.U...ew]\r\n    }"
-                                  },
                                   "variable": {
                                     "context": {
                                       "id": "<identifier>:Users@[L1:C13, L1:C18]",
@@ -1625,10 +1509,6 @@
                                   "line": 1,
                                   "column": 13
                                 }
-                              },
-                              "parent": {
-                                "id": "<element-declaration>:v1.Users@[L1:C4, L4:C5]",
-                                "snippet": "Table v1.U...ew]\r\n    }"
                               }
                             },
                             "context": {
@@ -1671,10 +1551,6 @@
                           "line": 1,
                           "column": 10
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:@[L0:C0, L12:C1]",
-                        "snippet": "Project {\r...\r\n    }\r\n}"
                       },
                       "type": {
                         "context": {
@@ -1809,10 +1685,6 @@
                                   "children": {
                                     "expression": {
                                       "children": {
-                                        "parent": {
-                                          "id": "<element-declaration>:v2.Status@[L6:C4, L11:C5]",
-                                          "snippet": "Enum v2.St...ant\r\n    }"
-                                        },
                                         "variable": {
                                           "context": {
                                             "id": "<identifier>:new@[L7:C8, L7:C11]",
@@ -1858,10 +1730,6 @@
                                         "line": 7,
                                         "column": 8
                                       }
-                                    },
-                                    "parent": {
-                                      "id": "<element-declaration>:v2.Status@[L6:C4, L11:C5]",
-                                      "snippet": "Enum v2.St...ant\r\n    }"
                                     }
                                   },
                                   "context": {
@@ -1883,10 +1751,6 @@
                                     "line": 7,
                                     "column": 8
                                   }
-                                },
-                                "parent": {
-                                  "id": "<element-declaration>:v2.Status@[L6:C4, L11:C5]",
-                                  "snippet": "Enum v2.St...ant\r\n    }"
                                 }
                               },
                               "context": {
@@ -1927,10 +1791,6 @@
                                   "children": {
                                     "expression": {
                                       "children": {
-                                        "parent": {
-                                          "id": "<element-declaration>:v2.Status@[L6:C4, L11:C5]",
-                                          "snippet": "Enum v2.St...ant\r\n    }"
-                                        },
                                         "variable": {
                                           "context": {
                                             "id": "<identifier>:churn@[L8:C8, L8:C13]",
@@ -1976,10 +1836,6 @@
                                         "line": 8,
                                         "column": 8
                                       }
-                                    },
-                                    "parent": {
-                                      "id": "<element-declaration>:v2.Status@[L6:C4, L11:C5]",
-                                      "snippet": "Enum v2.St...ant\r\n    }"
                                     }
                                   },
                                   "context": {
@@ -2001,10 +1857,6 @@
                                     "line": 8,
                                     "column": 8
                                   }
-                                },
-                                "parent": {
-                                  "id": "<element-declaration>:v2.Status@[L6:C4, L11:C5]",
-                                  "snippet": "Enum v2.St...ant\r\n    }"
                                 }
                               },
                               "context": {
@@ -2045,10 +1897,6 @@
                                   "children": {
                                     "expression": {
                                       "children": {
-                                        "parent": {
-                                          "id": "<element-declaration>:v2.Status@[L6:C4, L11:C5]",
-                                          "snippet": "Enum v2.St...ant\r\n    }"
-                                        },
                                         "variable": {
                                           "context": {
                                             "id": "<identifier>:active@[L9:C8, L9:C14]",
@@ -2094,10 +1942,6 @@
                                         "line": 9,
                                         "column": 8
                                       }
-                                    },
-                                    "parent": {
-                                      "id": "<element-declaration>:v2.Status@[L6:C4, L11:C5]",
-                                      "snippet": "Enum v2.St...ant\r\n    }"
                                     }
                                   },
                                   "context": {
@@ -2119,10 +1963,6 @@
                                     "line": 9,
                                     "column": 8
                                   }
-                                },
-                                "parent": {
-                                  "id": "<element-declaration>:v2.Status@[L6:C4, L11:C5]",
-                                  "snippet": "Enum v2.St...ant\r\n    }"
                                 }
                               },
                               "context": {
@@ -2163,10 +2003,6 @@
                                   "children": {
                                     "expression": {
                                       "children": {
-                                        "parent": {
-                                          "id": "<element-declaration>:v2.Status@[L6:C4, L11:C5]",
-                                          "snippet": "Enum v2.St...ant\r\n    }"
-                                        },
                                         "variable": {
                                           "context": {
                                             "id": "<identifier>:tenant@[L10:C8, L10:C14]",
@@ -2212,10 +2048,6 @@
                                         "line": 10,
                                         "column": 8
                                       }
-                                    },
-                                    "parent": {
-                                      "id": "<element-declaration>:v2.Status@[L6:C4, L11:C5]",
-                                      "snippet": "Enum v2.St...ant\r\n    }"
                                     }
                                   },
                                   "context": {
@@ -2237,10 +2069,6 @@
                                     "line": 10,
                                     "column": 8
                                   }
-                                },
-                                "parent": {
-                                  "id": "<element-declaration>:v2.Status@[L6:C4, L11:C5]",
-                                  "snippet": "Enum v2.St...ant\r\n    }"
                                 }
                               },
                               "context": {
@@ -2274,11 +2102,7 @@
                                 "references": []
                               }
                             }
-                          ],
-                          "parent": {
-                            "id": "<element-declaration>:v2.Status@[L6:C4, L11:C5]",
-                            "snippet": "Enum v2.St...ant\r\n    }"
-                          }
+                          ]
                         },
                         "context": {
                           "id": "<block-expression>@[L6:C19, L11:C5]",
@@ -2306,10 +2130,6 @@
                             "children": {
                               "expression": {
                                 "children": {
-                                  "parent": {
-                                    "id": "<element-declaration>:v2.Status@[L6:C4, L11:C5]",
-                                    "snippet": "Enum v2.St...ant\r\n    }"
-                                  },
                                   "variable": {
                                     "context": {
                                       "id": "<identifier>:v2@[L6:C9, L6:C11]",
@@ -2355,10 +2175,6 @@
                                   "line": 6,
                                   "column": 9
                                 }
-                              },
-                              "parent": {
-                                "id": "<element-declaration>:v2.Status@[L6:C4, L11:C5]",
-                                "snippet": "Enum v2.St...ant\r\n    }"
                               }
                             },
                             "context": {
@@ -2406,18 +2222,10 @@
                             "trailingTrivia": "",
                             "value": "."
                           },
-                          "parent": {
-                            "id": "<element-declaration>:v2.Status@[L6:C4, L11:C5]",
-                            "snippet": "Enum v2.St...ant\r\n    }"
-                          },
                           "rightExpression": {
                             "children": {
                               "expression": {
                                 "children": {
-                                  "parent": {
-                                    "id": "<element-declaration>:v2.Status@[L6:C4, L11:C5]",
-                                    "snippet": "Enum v2.St...ant\r\n    }"
-                                  },
                                   "variable": {
                                     "context": {
                                       "id": "<identifier>:Status@[L6:C12, L6:C18]",
@@ -2463,10 +2271,6 @@
                                   "line": 6,
                                   "column": 12
                                 }
-                              },
-                              "parent": {
-                                "id": "<element-declaration>:v2.Status@[L6:C4, L11:C5]",
-                                "snippet": "Enum v2.St...ant\r\n    }"
                               }
                             },
                             "context": {
@@ -2509,10 +2313,6 @@
                           "line": 6,
                           "column": 9
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:@[L0:C0, L12:C1]",
-                        "snippet": "Project {\r...\r\n    }\r\n}"
                       },
                       "type": {
                         "context": {
@@ -2597,11 +2397,7 @@
                       "references": []
                     }
                   }
-                ],
-                "parent": {
-                  "id": "<element-declaration>:@[L0:C0, L12:C1]",
-                  "snippet": "Project {\r...\r\n    }\r\n}"
-                }
+                ]
               },
               "context": {
                 "id": "<block-expression>@[L0:C8, L12:C1]",
@@ -2622,10 +2418,6 @@
                 "line": 0,
                 "column": 8
               }
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L12:C1]",
-              "snippet": "Project {\r...\r\n    }\r\n}"
             },
             "type": {
               "context": {

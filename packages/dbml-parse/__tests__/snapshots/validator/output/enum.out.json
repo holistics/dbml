@@ -97,11 +97,7 @@
                   "trailingTrivia": "\n",
                   "value": "{"
                 },
-                "body": [],
-                "parent": {
-                  "id": "<element-declaration>:v.A@[L0:C0, L2:C1]",
-                  "snippet": "enum v.\"A\" {\r\n\r\n}"
-                }
+                "body": []
               },
               "context": {
                 "id": "<block-expression>@[L0:C11, L2:C1]",
@@ -129,10 +125,6 @@
                   "children": {
                     "expression": {
                       "children": {
-                        "parent": {
-                          "id": "<element-declaration>:v.A@[L0:C0, L2:C1]",
-                          "snippet": "enum v.\"A\" {\r\n\r\n}"
-                        },
                         "variable": {
                           "context": {
                             "id": "<identifier>:v@[L0:C5, L0:C6]",
@@ -178,10 +170,6 @@
                         "line": 0,
                         "column": 5
                       }
-                    },
-                    "parent": {
-                      "id": "<element-declaration>:v.A@[L0:C0, L2:C1]",
-                      "snippet": "enum v.\"A\" {\r\n\r\n}"
                     }
                   },
                   "context": {
@@ -229,18 +217,10 @@
                   "trailingTrivia": "",
                   "value": "."
                 },
-                "parent": {
-                  "id": "<element-declaration>:v.A@[L0:C0, L2:C1]",
-                  "snippet": "enum v.\"A\" {\r\n\r\n}"
-                },
                 "rightExpression": {
                   "children": {
                     "expression": {
                       "children": {
-                        "parent": {
-                          "id": "<element-declaration>:v.A@[L0:C0, L2:C1]",
-                          "snippet": "enum v.\"A\" {\r\n\r\n}"
-                        },
                         "variable": {
                           "context": {
                             "id": "<variable>:A@[L0:C7, L0:C10]",
@@ -286,10 +266,6 @@
                         "line": 0,
                         "column": 7
                       }
-                    },
-                    "parent": {
-                      "id": "<element-declaration>:v.A@[L0:C0, L2:C1]",
-                      "snippet": "enum v.\"A\" {\r\n\r\n}"
                     }
                   },
                   "context": {
@@ -332,10 +308,6 @@
                 "line": 0,
                 "column": 5
               }
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L10:C1]",
-              "snippet": "enum v.\"A\"...   \"ab\"\r\n}"
             },
             "type": {
               "context": {
@@ -457,10 +429,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:@[L4:C0, L10:C1]",
-                                "snippet": "enum {\r\n  ...   \"ab\"\r\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<variable>:1@[L5:C4, L5:C7]",
@@ -506,10 +474,6 @@
                               "line": 5,
                               "column": 4
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:@[L4:C0, L10:C1]",
-                            "snippet": "enum {\r\n  ...   \"ab\"\r\n}"
                           }
                         },
                         "context": {
@@ -531,10 +495,6 @@
                           "line": 5,
                           "column": 4
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:@[L4:C0, L10:C1]",
-                        "snippet": "enum {\r\n  ...   \"ab\"\r\n}"
                       }
                     },
                     "context": {
@@ -575,10 +535,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:@[L4:C0, L10:C1]",
-                                "snippet": "enum {\r\n  ...   \"ab\"\r\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<variable>:1@[L6:C4, L6:C7]",
@@ -624,10 +580,6 @@
                               "line": 6,
                               "column": 4
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:@[L4:C0, L10:C1]",
-                            "snippet": "enum {\r\n  ...   \"ab\"\r\n}"
                           }
                         },
                         "context": {
@@ -649,10 +601,6 @@
                           "line": 6,
                           "column": 4
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:@[L4:C0, L10:C1]",
-                        "snippet": "enum {\r\n  ...   \"ab\"\r\n}"
                       }
                     },
                     "context": {
@@ -717,10 +665,6 @@
                                 "trailingInvalid": "",
                                 "trailingTrivia": "\n",
                                 "value": "1"
-                              },
-                              "parent": {
-                                "id": "<element-declaration>:@[L4:C0, L10:C1]",
-                                "snippet": "enum {\r\n  ...   \"ab\"\r\n}"
                               }
                             },
                             "context": {
@@ -742,10 +686,6 @@
                               "line": 7,
                               "column": 4
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:@[L4:C0, L10:C1]",
-                            "snippet": "enum {\r\n  ...   \"ab\"\r\n}"
                           }
                         },
                         "context": {
@@ -767,10 +707,6 @@
                           "line": 7,
                           "column": 4
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:@[L4:C0, L10:C1]",
-                        "snippet": "enum {\r\n  ...   \"ab\"\r\n}"
                       }
                     },
                     "context": {
@@ -811,10 +747,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:@[L4:C0, L10:C1]",
-                                "snippet": "enum {\r\n  ...   \"ab\"\r\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:a@[L8:C4, L8:C5]",
@@ -860,10 +792,6 @@
                               "line": 8,
                               "column": 4
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:@[L4:C0, L10:C1]",
-                            "snippet": "enum {\r\n  ...   \"ab\"\r\n}"
                           }
                         },
                         "context": {
@@ -885,10 +813,6 @@
                           "line": 8,
                           "column": 4
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:@[L4:C0, L10:C1]",
-                        "snippet": "enum {\r\n  ...   \"ab\"\r\n}"
                       }
                     },
                     "context": {
@@ -929,10 +853,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:@[L4:C0, L10:C1]",
-                                "snippet": "enum {\r\n  ...   \"ab\"\r\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<variable>:ab@[L9:C4, L9:C8]",
@@ -978,10 +898,6 @@
                               "line": 9,
                               "column": 4
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:@[L4:C0, L10:C1]",
-                            "snippet": "enum {\r\n  ...   \"ab\"\r\n}"
                           }
                         },
                         "context": {
@@ -1003,10 +919,6 @@
                           "line": 9,
                           "column": 4
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:@[L4:C0, L10:C1]",
-                        "snippet": "enum {\r\n  ...   \"ab\"\r\n}"
                       }
                     },
                     "context": {
@@ -1040,11 +952,7 @@
                       "references": []
                     }
                   }
-                ],
-                "parent": {
-                  "id": "<element-declaration>:@[L4:C0, L10:C1]",
-                  "snippet": "enum {\r\n  ...   \"ab\"\r\n}"
-                }
+                ]
               },
               "context": {
                 "id": "<block-expression>@[L4:C5, L10:C1]",
@@ -1065,10 +973,6 @@
                 "line": 4,
                 "column": 5
               }
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L10:C1]",
-              "snippet": "enum v.\"A\"...   \"ab\"\r\n}"
             },
             "type": {
               "context": {

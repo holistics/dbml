@@ -80,10 +80,6 @@
                         "children": {
                           "commaList": [],
                           "elementList": [],
-                          "parent": {
-                            "id": "<element-declaration>:TupleExpression@[L0:C0, L13:C1]",
-                            "snippet": "Test Tuple...    12)\r\n}"
-                          },
                           "tupleCloseParen": {
                             "context": {
                               "id": "<rparen>:)@[L1:C5, L1:C6]",
@@ -154,10 +150,6 @@
                           "line": 1,
                           "column": 4
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:TupleExpression@[L0:C0, L13:C1]",
-                        "snippet": "Test Tuple...    12)\r\n}"
                       }
                     },
                     "context": {
@@ -187,10 +179,6 @@
                         "children": {
                           "commaList": [],
                           "elementList": [],
-                          "parent": {
-                            "id": "<element-declaration>:TupleExpression@[L0:C0, L13:C1]",
-                            "snippet": "Test Tuple...    12)\r\n}"
-                          },
                           "tupleCloseParen": {
                             "context": {
                               "id": "<rparen>:)@[L4:C4, L4:C5]",
@@ -261,10 +249,6 @@
                           "line": 2,
                           "column": 4
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:TupleExpression@[L0:C0, L13:C1]",
-                        "snippet": "Test Tuple...    12)\r\n}"
                       }
                     },
                     "context": {
@@ -398,10 +382,6 @@
                                       "trailingInvalid": "",
                                       "trailingTrivia": "",
                                       "value": "1"
-                                    },
-                                    "parent": {
-                                      "id": "<element-declaration>:TupleExpression@[L0:C0, L13:C1]",
-                                      "snippet": "Test Tuple...    12)\r\n}"
                                     }
                                   },
                                   "context": {
@@ -423,10 +403,6 @@
                                     "line": 6,
                                     "column": 5
                                   }
-                                },
-                                "parent": {
-                                  "id": "<element-declaration>:TupleExpression@[L0:C0, L13:C1]",
-                                  "snippet": "Test Tuple...    12)\r\n}"
                                 }
                               },
                               "context": {
@@ -477,10 +453,6 @@
                                       "trailingInvalid": "",
                                       "trailingTrivia": "",
                                       "value": "2"
-                                    },
-                                    "parent": {
-                                      "id": "<element-declaration>:TupleExpression@[L0:C0, L13:C1]",
-                                      "snippet": "Test Tuple...    12)\r\n}"
                                     }
                                   },
                                   "context": {
@@ -502,10 +474,6 @@
                                     "line": 7,
                                     "column": 4
                                   }
-                                },
-                                "parent": {
-                                  "id": "<element-declaration>:TupleExpression@[L0:C0, L13:C1]",
-                                  "snippet": "Test Tuple...    12)\r\n}"
                                 }
                               },
                               "context": {
@@ -556,10 +524,6 @@
                                       "trailingInvalid": "",
                                       "trailingTrivia": "",
                                       "value": "3"
-                                    },
-                                    "parent": {
-                                      "id": "<element-declaration>:TupleExpression@[L0:C0, L13:C1]",
-                                      "snippet": "Test Tuple...    12)\r\n}"
                                     }
                                   },
                                   "context": {
@@ -581,10 +545,6 @@
                                     "line": 8,
                                     "column": 4
                                   }
-                                },
-                                "parent": {
-                                  "id": "<element-declaration>:TupleExpression@[L0:C0, L13:C1]",
-                                  "snippet": "Test Tuple...    12)\r\n}"
                                 }
                               },
                               "context": {
@@ -608,12 +568,7 @@
                               }
                             },
                             {
-                              "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:TupleExpression@[L0:C0, L13:C1]",
-                                  "snippet": "Test Tuple...    12)\r\n}"
-                                }
-                              },
+                              "children": {},
                               "context": {
                                 "id": "<dummy>@[L8:C7, L8:C7]",
                                 "snippet": ""
@@ -635,10 +590,6 @@
                               }
                             }
                           ],
-                          "parent": {
-                            "id": "<element-declaration>:TupleExpression@[L0:C0, L13:C1]",
-                            "snippet": "Test Tuple...    12)\r\n}"
-                          },
                           "tupleCloseParen": {
                             "context": {
                               "id": "<rparen>:)@[L8:C6, L8:C7]",
@@ -709,10 +660,6 @@
                           "line": 6,
                           "column": 4
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:TupleExpression@[L0:C0, L13:C1]",
-                        "snippet": "Test Tuple...    12)\r\n}"
                       }
                     },
                     "context": {
@@ -898,10 +845,6 @@
                                           "trailingInvalid": "",
                                           "trailingTrivia": " ",
                                           "value": "1"
-                                        },
-                                        "parent": {
-                                          "id": "<element-declaration>:TupleExpression@[L0:C0, L13:C1]",
-                                          "snippet": "Test Tuple...    12)\r\n}"
                                         }
                                       },
                                       "context": {
@@ -923,10 +866,6 @@
                                         "line": 10,
                                         "column": 5
                                       }
-                                    },
-                                    "parent": {
-                                      "id": "<element-declaration>:TupleExpression@[L0:C0, L13:C1]",
-                                      "snippet": "Test Tuple...    12)\r\n}"
                                     }
                                   },
                                   "context": {
@@ -974,10 +913,6 @@
                                   "trailingTrivia": " ",
                                   "value": "-"
                                 },
-                                "parent": {
-                                  "id": "<element-declaration>:TupleExpression@[L0:C0, L13:C1]",
-                                  "snippet": "Test Tuple...    12)\r\n}"
-                                },
                                 "rightExpression": {
                                   "children": {
                                     "expression": {
@@ -1006,10 +941,6 @@
                                           "trailingInvalid": "",
                                           "trailingTrivia": "",
                                           "value": "2"
-                                        },
-                                        "parent": {
-                                          "id": "<element-declaration>:TupleExpression@[L0:C0, L13:C1]",
-                                          "snippet": "Test Tuple...    12)\r\n}"
                                         }
                                       },
                                       "context": {
@@ -1031,10 +962,6 @@
                                         "line": 10,
                                         "column": 9
                                       }
-                                    },
-                                    "parent": {
-                                      "id": "<element-declaration>:TupleExpression@[L0:C0, L13:C1]",
-                                      "snippet": "Test Tuple...    12)\r\n}"
                                     }
                                   },
                                   "context": {
@@ -1108,10 +1035,6 @@
                                           "trailingInvalid": "",
                                           "trailingTrivia": " ",
                                           "value": "3"
-                                        },
-                                        "parent": {
-                                          "id": "<element-declaration>:TupleExpression@[L0:C0, L13:C1]",
-                                          "snippet": "Test Tuple...    12)\r\n}"
                                         }
                                       },
                                       "context": {
@@ -1133,10 +1056,6 @@
                                         "line": 10,
                                         "column": 12
                                       }
-                                    },
-                                    "parent": {
-                                      "id": "<element-declaration>:TupleExpression@[L0:C0, L13:C1]",
-                                      "snippet": "Test Tuple...    12)\r\n}"
                                     }
                                   },
                                   "context": {
@@ -1184,10 +1103,6 @@
                                   "trailingTrivia": " ",
                                   "value": "*"
                                 },
-                                "parent": {
-                                  "id": "<element-declaration>:TupleExpression@[L0:C0, L13:C1]",
-                                  "snippet": "Test Tuple...    12)\r\n}"
-                                },
                                 "rightExpression": {
                                   "children": {
                                     "expression": {
@@ -1216,10 +1131,6 @@
                                           "trailingInvalid": "",
                                           "trailingTrivia": "",
                                           "value": "4"
-                                        },
-                                        "parent": {
-                                          "id": "<element-declaration>:TupleExpression@[L0:C0, L13:C1]",
-                                          "snippet": "Test Tuple...    12)\r\n}"
                                         }
                                       },
                                       "context": {
@@ -1241,10 +1152,6 @@
                                         "line": 10,
                                         "column": 16
                                       }
-                                    },
-                                    "parent": {
-                                      "id": "<element-declaration>:TupleExpression@[L0:C0, L13:C1]",
-                                      "snippet": "Test Tuple...    12)\r\n}"
                                     }
                                   },
                                   "context": {
@@ -1318,10 +1225,6 @@
                                           "trailingInvalid": "",
                                           "trailingTrivia": " ",
                                           "value": "5"
-                                        },
-                                        "parent": {
-                                          "id": "<element-declaration>:TupleExpression@[L0:C0, L13:C1]",
-                                          "snippet": "Test Tuple...    12)\r\n}"
                                         }
                                       },
                                       "context": {
@@ -1343,10 +1246,6 @@
                                         "line": 10,
                                         "column": 19
                                       }
-                                    },
-                                    "parent": {
-                                      "id": "<element-declaration>:TupleExpression@[L0:C0, L13:C1]",
-                                      "snippet": "Test Tuple...    12)\r\n}"
                                     }
                                   },
                                   "context": {
@@ -1394,10 +1293,6 @@
                                   "trailingTrivia": " ",
                                   "value": "/"
                                 },
-                                "parent": {
-                                  "id": "<element-declaration>:TupleExpression@[L0:C0, L13:C1]",
-                                  "snippet": "Test Tuple...    12)\r\n}"
-                                },
                                 "rightExpression": {
                                   "children": {
                                     "expression": {
@@ -1426,10 +1321,6 @@
                                           "trailingInvalid": "",
                                           "trailingTrivia": "",
                                           "value": "6"
-                                        },
-                                        "parent": {
-                                          "id": "<element-declaration>:TupleExpression@[L0:C0, L13:C1]",
-                                          "snippet": "Test Tuple...    12)\r\n}"
                                         }
                                       },
                                       "context": {
@@ -1451,10 +1342,6 @@
                                         "line": 10,
                                         "column": 23
                                       }
-                                    },
-                                    "parent": {
-                                      "id": "<element-declaration>:TupleExpression@[L0:C0, L13:C1]",
-                                      "snippet": "Test Tuple...    12)\r\n}"
                                     }
                                   },
                                   "context": {
@@ -1528,10 +1415,6 @@
                                           "trailingInvalid": "",
                                           "trailingTrivia": " ",
                                           "value": "1"
-                                        },
-                                        "parent": {
-                                          "id": "<element-declaration>:TupleExpression@[L0:C0, L13:C1]",
-                                          "snippet": "Test Tuple...    12)\r\n}"
                                         }
                                       },
                                       "context": {
@@ -1553,10 +1436,6 @@
                                         "line": 10,
                                         "column": 26
                                       }
-                                    },
-                                    "parent": {
-                                      "id": "<element-declaration>:TupleExpression@[L0:C0, L13:C1]",
-                                      "snippet": "Test Tuple...    12)\r\n}"
                                     }
                                   },
                                   "context": {
@@ -1604,10 +1483,6 @@
                                   "trailingTrivia": " ",
                                   "value": "=="
                                 },
-                                "parent": {
-                                  "id": "<element-declaration>:TupleExpression@[L0:C0, L13:C1]",
-                                  "snippet": "Test Tuple...    12)\r\n}"
-                                },
                                 "rightExpression": {
                                   "children": {
                                     "expression": {
@@ -1636,10 +1511,6 @@
                                           "trailingInvalid": "",
                                           "trailingTrivia": "",
                                           "value": "2"
-                                        },
-                                        "parent": {
-                                          "id": "<element-declaration>:TupleExpression@[L0:C0, L13:C1]",
-                                          "snippet": "Test Tuple...    12)\r\n}"
                                         }
                                       },
                                       "context": {
@@ -1661,10 +1532,6 @@
                                         "line": 10,
                                         "column": 31
                                       }
-                                    },
-                                    "parent": {
-                                      "id": "<element-declaration>:TupleExpression@[L0:C0, L13:C1]",
-                                      "snippet": "Test Tuple...    12)\r\n}"
                                     }
                                   },
                                   "context": {
@@ -1738,10 +1605,6 @@
                                           "trailingInvalid": "",
                                           "trailingTrivia": " ",
                                           "value": "1"
-                                        },
-                                        "parent": {
-                                          "id": "<element-declaration>:TupleExpression@[L0:C0, L13:C1]",
-                                          "snippet": "Test Tuple...    12)\r\n}"
                                         }
                                       },
                                       "context": {
@@ -1763,10 +1626,6 @@
                                         "line": 10,
                                         "column": 34
                                       }
-                                    },
-                                    "parent": {
-                                      "id": "<element-declaration>:TupleExpression@[L0:C0, L13:C1]",
-                                      "snippet": "Test Tuple...    12)\r\n}"
                                     }
                                   },
                                   "context": {
@@ -1814,10 +1673,6 @@
                                   "trailingTrivia": "\n",
                                   "value": ">="
                                 },
-                                "parent": {
-                                  "id": "<element-declaration>:TupleExpression@[L0:C0, L13:C1]",
-                                  "snippet": "Test Tuple...    12)\r\n}"
-                                },
                                 "rightExpression": {
                                   "children": {
                                     "expression": {
@@ -1846,10 +1701,6 @@
                                           "trailingInvalid": "",
                                           "trailingTrivia": "",
                                           "value": "3"
-                                        },
-                                        "parent": {
-                                          "id": "<element-declaration>:TupleExpression@[L0:C0, L13:C1]",
-                                          "snippet": "Test Tuple...    12)\r\n}"
                                         }
                                       },
                                       "context": {
@@ -1871,10 +1722,6 @@
                                         "line": 11,
                                         "column": 4
                                       }
-                                    },
-                                    "parent": {
-                                      "id": "<element-declaration>:TupleExpression@[L0:C0, L13:C1]",
-                                      "snippet": "Test Tuple...    12)\r\n}"
                                     }
                                   },
                                   "context": {
@@ -1948,10 +1795,6 @@
                                           "trailingInvalid": "",
                                           "trailingTrivia": " ",
                                           "value": "1"
-                                        },
-                                        "parent": {
-                                          "id": "<element-declaration>:TupleExpression@[L0:C0, L13:C1]",
-                                          "snippet": "Test Tuple...    12)\r\n}"
                                         }
                                       },
                                       "context": {
@@ -1973,10 +1816,6 @@
                                         "line": 11,
                                         "column": 7
                                       }
-                                    },
-                                    "parent": {
-                                      "id": "<element-declaration>:TupleExpression@[L0:C0, L13:C1]",
-                                      "snippet": "Test Tuple...    12)\r\n}"
                                     }
                                   },
                                   "context": {
@@ -2024,10 +1863,6 @@
                                   "trailingTrivia": "\n",
                                   "value": "<="
                                 },
-                                "parent": {
-                                  "id": "<element-declaration>:TupleExpression@[L0:C0, L13:C1]",
-                                  "snippet": "Test Tuple...    12)\r\n}"
-                                },
                                 "rightExpression": {
                                   "children": {
                                     "expression": {
@@ -2056,10 +1891,6 @@
                                           "trailingInvalid": "",
                                           "trailingTrivia": "",
                                           "value": "12"
-                                        },
-                                        "parent": {
-                                          "id": "<element-declaration>:TupleExpression@[L0:C0, L13:C1]",
-                                          "snippet": "Test Tuple...    12)\r\n}"
                                         }
                                       },
                                       "context": {
@@ -2081,10 +1912,6 @@
                                         "line": 12,
                                         "column": 4
                                       }
-                                    },
-                                    "parent": {
-                                      "id": "<element-declaration>:TupleExpression@[L0:C0, L13:C1]",
-                                      "snippet": "Test Tuple...    12)\r\n}"
                                     }
                                   },
                                   "context": {
@@ -2129,10 +1956,6 @@
                               }
                             }
                           ],
-                          "parent": {
-                            "id": "<element-declaration>:TupleExpression@[L0:C0, L13:C1]",
-                            "snippet": "Test Tuple...    12)\r\n}"
-                          },
                           "tupleCloseParen": {
                             "context": {
                               "id": "<rparen>:)@[L12:C6, L12:C7]",
@@ -2203,10 +2026,6 @@
                           "line": 10,
                           "column": 4
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:TupleExpression@[L0:C0, L13:C1]",
-                        "snippet": "Test Tuple...    12)\r\n}"
                       }
                     },
                     "context": {
@@ -2229,11 +2048,7 @@
                       "column": 4
                     }
                   }
-                ],
-                "parent": {
-                  "id": "<element-declaration>:TupleExpression@[L0:C0, L13:C1]",
-                  "snippet": "Test Tuple...    12)\r\n}"
-                }
+                ]
               },
               "context": {
                 "id": "<block-expression>@[L0:C21, L13:C1]",
@@ -2259,10 +2074,6 @@
               "children": {
                 "expression": {
                   "children": {
-                    "parent": {
-                      "id": "<element-declaration>:TupleExpression@[L0:C0, L13:C1]",
-                      "snippet": "Test Tuple...    12)\r\n}"
-                    },
                     "variable": {
                       "context": {
                         "id": "<identifier>:TupleExpression@[L0:C5, L0:C20]",
@@ -2308,10 +2119,6 @@
                     "line": 0,
                     "column": 5
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:TupleExpression@[L0:C0, L13:C1]",
-                  "snippet": "Test Tuple...    12)\r\n}"
                 }
               },
               "context": {
@@ -2333,10 +2140,6 @@
                 "line": 0,
                 "column": 5
               }
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L13:C1]",
-              "snippet": "Test Tuple...    12)\r\n}"
             },
             "type": {
               "context": {

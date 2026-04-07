@@ -108,10 +108,6 @@
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:E@[L0:C0, L2:C1]",
-                                  "snippet": "Table E {\n... integer\n}"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:integer@[L1:C7, L1:C14]",
@@ -168,10 +164,6 @@
                                 },
                                 "references": []
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:E@[L0:C0, L2:C1]",
-                              "snippet": "Table E {\n... integer\n}"
                             }
                           },
                           "context": {
@@ -210,10 +202,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:E@[L0:C0, L2:C1]",
-                                "snippet": "Table E {\n... integer\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:id@[L1:C4, L1:C6]",
@@ -270,10 +258,6 @@
                               },
                               "references": []
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:E@[L0:C0, L2:C1]",
-                            "snippet": "Table E {\n... integer\n}"
                           }
                         },
                         "context": {
@@ -306,10 +290,6 @@
                           },
                           "references": []
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:E@[L0:C0, L2:C1]",
-                        "snippet": "Table E {\n... integer\n}"
                       }
                     },
                     "context": {
@@ -343,11 +323,7 @@
                       "references": []
                     }
                   }
-                ],
-                "parent": {
-                  "id": "<element-declaration>:E@[L0:C0, L2:C1]",
-                  "snippet": "Table E {\n... integer\n}"
-                }
+                ]
               },
               "context": {
                 "id": "<block-expression>@[L0:C8, L2:C1]",
@@ -373,10 +349,6 @@
               "children": {
                 "expression": {
                   "children": {
-                    "parent": {
-                      "id": "<element-declaration>:E@[L0:C0, L2:C1]",
-                      "snippet": "Table E {\n... integer\n}"
-                    },
                     "variable": {
                       "context": {
                         "id": "<identifier>:E@[L0:C6, L0:C7]",
@@ -422,10 +394,6 @@
                     "line": 0,
                     "column": 6
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:E@[L0:C0, L2:C1]",
-                  "snippet": "Table E {\n... integer\n}"
                 }
               },
               "context": {
@@ -447,10 +415,6 @@
                 "line": 0,
                 "column": 6
               }
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L4:C9]",
-              "snippet": "Table E {\n...\nNote: 12."
             },
             "type": {
               "context": {
@@ -523,12 +487,7 @@
               "children": {
                 "args": [],
                 "callee": {
-                  "children": {
-                    "parent": {
-                      "id": "<element-declaration>:@[L4:C0, L4:C9]",
-                      "snippet": "Note: 12."
-                    }
-                  },
+                  "children": {},
                   "context": {
                     "id": "<dummy>@[L4:C9, L4:C9]",
                     "snippet": ""
@@ -548,10 +507,6 @@
                     "line": 4,
                     "column": 9
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:@[L4:C0, L4:C9]",
-                  "snippet": "Note: 12."
                 }
               },
               "context": {
@@ -598,10 +553,6 @@
               "trailingInvalid": "12.",
               "trailingTrivia": " ",
               "value": ":"
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L4:C9]",
-              "snippet": "Table E {\n...\nNote: 12."
             },
             "type": {
               "context": {

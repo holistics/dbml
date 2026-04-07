@@ -144,10 +144,6 @@
                                     "trailingInvalid": "",
                                     "trailingTrivia": "\n",
                                     "value": " This is a local note "
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:@[L1:C4, L1:C38]",
-                                    "snippet": "Note: ''' ...l note '''"
                                   }
                                 },
                                 "context": {
@@ -169,10 +165,6 @@
                                   "line": 1,
                                   "column": 10
                                 }
-                              },
-                              "parent": {
-                                "id": "<element-declaration>:@[L1:C4, L1:C38]",
-                                "snippet": "Note: ''' ...l note '''"
                               }
                             },
                             "context": {
@@ -194,10 +186,6 @@
                               "line": 1,
                               "column": 10
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:@[L1:C4, L1:C38]",
-                            "snippet": "Note: ''' ...l note '''"
                           }
                         },
                         "context": {
@@ -244,10 +232,6 @@
                         "trailingInvalid": "",
                         "trailingTrivia": " ",
                         "value": ":"
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:A@[L0:C0, L5:C1]",
-                        "snippet": "Table A {\r...\r\n    }\r\n}"
                       },
                       "type": {
                         "context": {
@@ -392,10 +376,6 @@
                                           "trailingInvalid": "",
                                           "trailingTrivia": "\n",
                                           "value": "This is another local note"
-                                        },
-                                        "parent": {
-                                          "id": "<element-declaration>:@[L2:C4, L4:C5]",
-                                          "snippet": "Note {\r\n  ...te'\r\n    }"
                                         }
                                       },
                                       "context": {
@@ -417,10 +397,6 @@
                                         "line": 3,
                                         "column": 8
                                       }
-                                    },
-                                    "parent": {
-                                      "id": "<element-declaration>:@[L2:C4, L4:C5]",
-                                      "snippet": "Note {\r\n  ...te'\r\n    }"
                                     }
                                   },
                                   "context": {
@@ -442,10 +418,6 @@
                                     "line": 3,
                                     "column": 8
                                   }
-                                },
-                                "parent": {
-                                  "id": "<element-declaration>:@[L2:C4, L4:C5]",
-                                  "snippet": "Note {\r\n  ...te'\r\n    }"
                                 }
                               },
                               "context": {
@@ -468,11 +440,7 @@
                                 "column": 8
                               }
                             }
-                          ],
-                          "parent": {
-                            "id": "<element-declaration>:@[L2:C4, L4:C5]",
-                            "snippet": "Note {\r\n  ...te'\r\n    }"
-                          }
+                          ]
                         },
                         "context": {
                           "id": "<block-expression>@[L2:C9, L4:C5]",
@@ -493,10 +461,6 @@
                           "line": 2,
                           "column": 9
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:A@[L0:C0, L5:C1]",
-                        "snippet": "Table A {\r...\r\n    }\r\n}"
                       },
                       "type": {
                         "context": {
@@ -555,11 +519,7 @@
                       "references": []
                     }
                   }
-                ],
-                "parent": {
-                  "id": "<element-declaration>:A@[L0:C0, L5:C1]",
-                  "snippet": "Table A {\r...\r\n    }\r\n}"
-                }
+                ]
               },
               "context": {
                 "id": "<block-expression>@[L0:C8, L5:C1]",
@@ -585,10 +545,6 @@
               "children": {
                 "expression": {
                   "children": {
-                    "parent": {
-                      "id": "<element-declaration>:A@[L0:C0, L5:C1]",
-                      "snippet": "Table A {\r...\r\n    }\r\n}"
-                    },
                     "variable": {
                       "context": {
                         "id": "<identifier>:A@[L0:C6, L0:C7]",
@@ -634,10 +590,6 @@
                     "line": 0,
                     "column": 6
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:A@[L0:C0, L5:C1]",
-                  "snippet": "Table A {\r...\r\n    }\r\n}"
                 }
               },
               "context": {
@@ -659,10 +611,6 @@
                 "line": 0,
                 "column": 6
               }
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L13:C3]",
-              "snippet": "Table A {\r... note\r\n'''"
             },
             "type": {
               "context": {
@@ -821,10 +769,6 @@
                                 "trailingInvalid": "",
                                 "trailingTrivia": "\n",
                                 "value": "This is a global note"
-                              },
-                              "parent": {
-                                "id": "<element-declaration>:@[L7:C0, L9:C1]",
-                                "snippet": "Note {\r\n  ...l note'\r\n}"
                               }
                             },
                             "context": {
@@ -846,10 +790,6 @@
                               "line": 8,
                               "column": 4
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:@[L7:C0, L9:C1]",
-                            "snippet": "Note {\r\n  ...l note'\r\n}"
                           }
                         },
                         "context": {
@@ -871,10 +811,6 @@
                           "line": 8,
                           "column": 4
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:@[L7:C0, L9:C1]",
-                        "snippet": "Note {\r\n  ...l note'\r\n}"
                       }
                     },
                     "context": {
@@ -897,11 +833,7 @@
                       "column": 4
                     }
                   }
-                ],
-                "parent": {
-                  "id": "<element-declaration>:@[L7:C0, L9:C1]",
-                  "snippet": "Note {\r\n  ...l note'\r\n}"
-                }
+                ]
               },
               "context": {
                 "id": "<block-expression>@[L7:C5, L9:C1]",
@@ -922,10 +854,6 @@
                 "line": 7,
                 "column": 5
               }
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L13:C3]",
-              "snippet": "Table A {\r... note\r\n'''"
             },
             "type": {
               "context": {
@@ -1018,10 +946,6 @@
                           "trailingInvalid": "",
                           "trailingTrivia": "",
                           "value": "\r\n    This is another global note\r\n"
-                        },
-                        "parent": {
-                          "id": "<element-declaration>:@[L11:C0, L13:C3]",
-                          "snippet": "Note: '''\r... note\r\n'''"
                         }
                       },
                       "context": {
@@ -1043,10 +967,6 @@
                         "line": 11,
                         "column": 6
                       }
-                    },
-                    "parent": {
-                      "id": "<element-declaration>:@[L11:C0, L13:C3]",
-                      "snippet": "Note: '''\r... note\r\n'''"
                     }
                   },
                   "context": {
@@ -1068,10 +988,6 @@
                     "line": 11,
                     "column": 6
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:@[L11:C0, L13:C3]",
-                  "snippet": "Note: '''\r... note\r\n'''"
                 }
               },
               "context": {
@@ -1118,10 +1034,6 @@
               "trailingInvalid": "",
               "trailingTrivia": " ",
               "value": ":"
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L13:C3]",
-              "snippet": "Table A {\r... note\r\n'''"
             },
             "type": {
               "context": {

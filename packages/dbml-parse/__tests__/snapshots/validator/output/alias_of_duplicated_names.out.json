@@ -9,10 +9,6 @@
               "children": {
                 "expression": {
                   "children": {
-                    "parent": {
-                      "id": "<element-declaration>:Users@[L0:C0, L2:C1]",
-                      "snippet": "Table User... U1 {\r\n\r\n}"
-                    },
                     "variable": {
                       "context": {
                         "id": "<identifier>:U1@[L0:C15, L0:C17]",
@@ -58,10 +54,6 @@
                     "line": 0,
                     "column": 15
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:Users@[L0:C0, L2:C1]",
-                  "snippet": "Table User... U1 {\r\n\r\n}"
                 }
               },
               "context": {
@@ -161,11 +153,7 @@
                   "trailingTrivia": "\n",
                   "value": "{"
                 },
-                "body": [],
-                "parent": {
-                  "id": "<element-declaration>:Users@[L0:C0, L2:C1]",
-                  "snippet": "Table User... U1 {\r\n\r\n}"
-                }
+                "body": []
               },
               "context": {
                 "id": "<block-expression>@[L0:C18, L2:C1]",
@@ -191,10 +179,6 @@
               "children": {
                 "expression": {
                   "children": {
-                    "parent": {
-                      "id": "<element-declaration>:Users@[L0:C0, L2:C1]",
-                      "snippet": "Table User... U1 {\r\n\r\n}"
-                    },
                     "variable": {
                       "context": {
                         "id": "<identifier>:Users@[L0:C6, L0:C11]",
@@ -240,10 +224,6 @@
                     "line": 0,
                     "column": 6
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:Users@[L0:C0, L2:C1]",
-                  "snippet": "Table User... U1 {\r\n\r\n}"
                 }
               },
               "context": {
@@ -265,10 +245,6 @@
                 "line": 0,
                 "column": 6
               }
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L10:C1]",
-              "snippet": "Table User...{\r\n    \r\n}"
             },
             "type": {
               "context": {
@@ -334,10 +310,6 @@
               "children": {
                 "expression": {
                   "children": {
-                    "parent": {
-                      "id": "<element-declaration>:Users@[L4:C0, L6:C1]",
-                      "snippet": "Table User... U2 {\r\n\r\n}"
-                    },
                     "variable": {
                       "context": {
                         "id": "<identifier>:U2@[L4:C15, L4:C17]",
@@ -383,10 +355,6 @@
                     "line": 4,
                     "column": 15
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:Users@[L4:C0, L6:C1]",
-                  "snippet": "Table User... U2 {\r\n\r\n}"
                 }
               },
               "context": {
@@ -486,11 +454,7 @@
                   "trailingTrivia": "\n",
                   "value": "{"
                 },
-                "body": [],
-                "parent": {
-                  "id": "<element-declaration>:Users@[L4:C0, L6:C1]",
-                  "snippet": "Table User... U2 {\r\n\r\n}"
-                }
+                "body": []
               },
               "context": {
                 "id": "<block-expression>@[L4:C18, L6:C1]",
@@ -516,10 +480,6 @@
               "children": {
                 "expression": {
                   "children": {
-                    "parent": {
-                      "id": "<element-declaration>:Users@[L4:C0, L6:C1]",
-                      "snippet": "Table User... U2 {\r\n\r\n}"
-                    },
                     "variable": {
                       "context": {
                         "id": "<identifier>:Users@[L4:C6, L4:C11]",
@@ -565,10 +525,6 @@
                     "line": 4,
                     "column": 6
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:Users@[L4:C0, L6:C1]",
-                  "snippet": "Table User... U2 {\r\n\r\n}"
                 }
               },
               "context": {
@@ -590,10 +546,6 @@
                 "line": 4,
                 "column": 6
               }
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L10:C1]",
-              "snippet": "Table User...{\r\n    \r\n}"
             },
             "type": {
               "context": {
@@ -659,10 +611,6 @@
               "children": {
                 "expression": {
                   "children": {
-                    "parent": {
-                      "id": "<element-declaration>:Products@[L8:C0, L10:C1]",
-                      "snippet": "Table Prod...{\r\n    \r\n}"
-                    },
                     "variable": {
                       "context": {
                         "id": "<identifier>:U1@[L8:C18, L8:C20]",
@@ -708,10 +656,6 @@
                     "line": 8,
                     "column": 18
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:Products@[L8:C0, L10:C1]",
-                  "snippet": "Table Prod...{\r\n    \r\n}"
                 }
               },
               "context": {
@@ -811,11 +755,7 @@
                   "trailingTrivia": "\n",
                   "value": "{"
                 },
-                "body": [],
-                "parent": {
-                  "id": "<element-declaration>:Products@[L8:C0, L10:C1]",
-                  "snippet": "Table Prod...{\r\n    \r\n}"
-                }
+                "body": []
               },
               "context": {
                 "id": "<block-expression>@[L8:C21, L10:C1]",
@@ -841,10 +781,6 @@
               "children": {
                 "expression": {
                   "children": {
-                    "parent": {
-                      "id": "<element-declaration>:Products@[L8:C0, L10:C1]",
-                      "snippet": "Table Prod...{\r\n    \r\n}"
-                    },
                     "variable": {
                       "context": {
                         "id": "<identifier>:Products@[L8:C6, L8:C14]",
@@ -890,10 +826,6 @@
                     "line": 8,
                     "column": 6
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:Products@[L8:C0, L10:C1]",
-                  "snippet": "Table Prod...{\r\n    \r\n}"
                 }
               },
               "context": {
@@ -915,10 +847,6 @@
                 "line": 8,
                 "column": 6
               }
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L10:C1]",
-              "snippet": "Table User...{\r\n    \r\n}"
             },
             "type": {
               "context": {

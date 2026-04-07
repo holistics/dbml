@@ -71,11 +71,7 @@
                   "trailingTrivia": "\n",
                   "value": "{"
                 },
-                "body": [],
-                "parent": {
-                  "id": "<element-declaration>:A@[L0:C0, L1:C1]",
-                  "snippet": "Table A {\n}"
-                }
+                "body": []
               },
               "context": {
                 "id": "<block-expression>@[L0:C8, L1:C1]",
@@ -101,10 +97,6 @@
               "children": {
                 "expression": {
                   "children": {
-                    "parent": {
-                      "id": "<element-declaration>:A@[L0:C0, L1:C1]",
-                      "snippet": "Table A {\n}"
-                    },
                     "variable": {
                       "context": {
                         "id": "<identifier>:A@[L0:C6, L0:C7]",
@@ -150,10 +142,6 @@
                     "line": 0,
                     "column": 6
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:A@[L0:C0, L1:C1]",
-                  "snippet": "Table A {\n}"
                 }
               },
               "context": {
@@ -175,10 +163,6 @@
                 "line": 0,
                 "column": 6
               }
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L6:C0]",
-              "snippet": "Table A {\n...t {\n  A\n}\n"
             },
             "type": {
               "context": {
@@ -305,10 +289,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:schema.alphabet@[L3:C0, L5:C1]",
-                                "snippet": "TableGroup...et {\n  A\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:A@[L4:C2, L4:C3]",
@@ -354,10 +334,6 @@
                               "line": 4,
                               "column": 2
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:schema.alphabet@[L3:C0, L5:C1]",
-                            "snippet": "TableGroup...et {\n  A\n}"
                           }
                         },
                         "context": {
@@ -385,10 +361,6 @@
                           "line": 4,
                           "column": 2
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:schema.alphabet@[L3:C0, L5:C1]",
-                        "snippet": "TableGroup...et {\n  A\n}"
                       }
                     },
                     "context": {
@@ -423,11 +395,7 @@
                       "references": []
                     }
                   }
-                ],
-                "parent": {
-                  "id": "<element-declaration>:schema.alphabet@[L3:C0, L5:C1]",
-                  "snippet": "TableGroup...et {\n  A\n}"
-                }
+                ]
               },
               "context": {
                 "id": "<block-expression>@[L3:C27, L5:C1]",
@@ -455,10 +423,6 @@
                   "children": {
                     "expression": {
                       "children": {
-                        "parent": {
-                          "id": "<element-declaration>:schema.alphabet@[L3:C0, L5:C1]",
-                          "snippet": "TableGroup...et {\n  A\n}"
-                        },
                         "variable": {
                           "context": {
                             "id": "<identifier>:schema@[L3:C11, L3:C17]",
@@ -504,10 +468,6 @@
                         "line": 3,
                         "column": 11
                       }
-                    },
-                    "parent": {
-                      "id": "<element-declaration>:schema.alphabet@[L3:C0, L5:C1]",
-                      "snippet": "TableGroup...et {\n  A\n}"
                     }
                   },
                   "context": {
@@ -555,18 +515,10 @@
                   "trailingTrivia": "",
                   "value": "."
                 },
-                "parent": {
-                  "id": "<element-declaration>:schema.alphabet@[L3:C0, L5:C1]",
-                  "snippet": "TableGroup...et {\n  A\n}"
-                },
                 "rightExpression": {
                   "children": {
                     "expression": {
                       "children": {
-                        "parent": {
-                          "id": "<element-declaration>:schema.alphabet@[L3:C0, L5:C1]",
-                          "snippet": "TableGroup...et {\n  A\n}"
-                        },
                         "variable": {
                           "context": {
                             "id": "<identifier>:alphabet@[L3:C18, L3:C26]",
@@ -612,10 +564,6 @@
                         "line": 3,
                         "column": 18
                       }
-                    },
-                    "parent": {
-                      "id": "<element-declaration>:schema.alphabet@[L3:C0, L5:C1]",
-                      "snippet": "TableGroup...et {\n  A\n}"
                     }
                   },
                   "context": {
@@ -658,10 +606,6 @@
                 "line": 3,
                 "column": 11
               }
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L6:C0]",
-              "snippet": "Table A {\n...t {\n  A\n}\n"
             },
             "type": {
               "context": {

@@ -71,11 +71,7 @@
                   "trailingTrivia": "\n",
                   "value": "{"
                 },
-                "body": [],
-                "parent": {
-                  "id": "<element-declaration>:AB@[L0:C0, L2:C1]",
-                  "snippet": "Table AB {\r\n\r\n}"
-                }
+                "body": []
               },
               "context": {
                 "id": "<block-expression>@[L0:C9, L2:C1]",
@@ -101,10 +97,6 @@
               "children": {
                 "expression": {
                   "children": {
-                    "parent": {
-                      "id": "<element-declaration>:AB@[L0:C0, L2:C1]",
-                      "snippet": "Table AB {\r\n\r\n}"
-                    },
                     "variable": {
                       "context": {
                         "id": "<identifier>:AB@[L0:C6, L0:C8]",
@@ -150,10 +142,6 @@
                     "line": 0,
                     "column": 6
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:AB@[L0:C0, L2:C1]",
-                  "snippet": "Table AB {\r\n\r\n}"
                 }
               },
               "context": {
@@ -175,10 +163,6 @@
                 "line": 0,
                 "column": 6
               }
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L6:C1]",
-              "snippet": "Table AB {...{\r\n    \r\n}"
             },
             "type": {
               "context": {
@@ -292,11 +276,7 @@
                   "trailingTrivia": "\n",
                   "value": "{"
                 },
-                "body": [],
-                "parent": {
-                  "id": "<element-declaration>:AB@[L4:C0, L6:C1]",
-                  "snippet": "Table AB {\r\n    \r\n}"
-                }
+                "body": []
               },
               "context": {
                 "id": "<block-expression>@[L4:C9, L6:C1]",
@@ -322,10 +302,6 @@
               "children": {
                 "expression": {
                   "children": {
-                    "parent": {
-                      "id": "<element-declaration>:AB@[L4:C0, L6:C1]",
-                      "snippet": "Table AB {\r\n    \r\n}"
-                    },
                     "variable": {
                       "context": {
                         "id": "<identifier>:AB@[L4:C6, L4:C8]",
@@ -371,10 +347,6 @@
                     "line": 4,
                     "column": 6
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:AB@[L4:C0, L6:C1]",
-                  "snippet": "Table AB {\r\n    \r\n}"
                 }
               },
               "context": {
@@ -396,10 +368,6 @@
                 "line": 4,
                 "column": 6
               }
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L6:C1]",
-              "snippet": "Table AB {...{\r\n    \r\n}"
             },
             "type": {
               "context": {

@@ -65,10 +65,6 @@
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:Users@[L0:C0, L3:C1]",
-                                  "snippet": "Table User...integer \n}"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:integer@[L1:C7, L1:C14]",
@@ -125,10 +121,6 @@
                                 },
                                 "references": []
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:Users@[L0:C0, L3:C1]",
-                              "snippet": "Table User...integer \n}"
                             }
                           },
                           "context": {
@@ -167,10 +159,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:Users@[L0:C0, L3:C1]",
-                                "snippet": "Table User...integer \n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:id@[L1:C4, L1:C6]",
@@ -227,10 +215,6 @@
                               },
                               "references": []
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:Users@[L0:C0, L3:C1]",
-                            "snippet": "Table User...integer \n}"
                           }
                         },
                         "context": {
@@ -263,10 +247,6 @@
                           },
                           "references": []
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:Users@[L0:C0, L3:C1]",
-                        "snippet": "Table User...integer \n}"
                       }
                     },
                     "context": {
@@ -312,10 +292,6 @@
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:Users@[L0:C0, L3:C1]",
-                                  "snippet": "Table User...integer \n}"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:integer@[L2:C16, L2:C23]",
@@ -372,10 +348,6 @@
                                 },
                                 "references": []
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:Users@[L0:C0, L3:C1]",
-                              "snippet": "Table User...integer \n}"
                             }
                           },
                           "context": {
@@ -414,10 +386,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:Users@[L0:C0, L3:C1]",
-                                "snippet": "Table User...integer \n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:referrer_id@[L2:C4, L2:C15]",
@@ -474,10 +442,6 @@
                               },
                               "references": []
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:Users@[L0:C0, L3:C1]",
-                            "snippet": "Table User...integer \n}"
                           }
                         },
                         "context": {
@@ -510,10 +474,6 @@
                           },
                           "references": []
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:Users@[L0:C0, L3:C1]",
-                        "snippet": "Table User...integer \n}"
                       }
                     },
                     "context": {
@@ -552,11 +512,7 @@
                       ]
                     }
                   }
-                ],
-                "parent": {
-                  "id": "<element-declaration>:Users@[L0:C0, L3:C1]",
-                  "snippet": "Table User...integer \n}"
-                }
+                ]
               },
               "context": {
                 "id": "<block-expression>@[L0:C12, L3:C1]",
@@ -582,10 +538,6 @@
               "children": {
                 "expression": {
                   "children": {
-                    "parent": {
-                      "id": "<element-declaration>:Users@[L0:C0, L3:C1]",
-                      "snippet": "Table User...integer \n}"
-                    },
                     "variable": {
                       "context": {
                         "id": "<identifier>:Users@[L0:C6, L0:C11]",
@@ -631,10 +583,6 @@
                     "line": 0,
                     "column": 6
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:Users@[L0:C0, L3:C1]",
-                  "snippet": "Table User...integer \n}"
                 }
               },
               "context": {
@@ -656,10 +604,6 @@
                 "line": 0,
                 "column": 6
               }
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L7:C1]",
-              "snippet": "Table User...errer_id\n}"
             },
             "type": {
               "context": {
@@ -807,10 +751,6 @@
                                 "children": {
                                   "expression": {
                                     "children": {
-                                      "parent": {
-                                        "id": "<element-declaration>:@[L5:C0, L7:C1]",
-                                        "snippet": "Ref {\n    ...errer_id\n}"
-                                      },
                                       "variable": {
                                         "context": {
                                           "id": "<identifier>:Users@[L6:C4, L6:C9]",
@@ -856,10 +796,6 @@
                                       "line": 6,
                                       "column": 4
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:@[L5:C0, L7:C1]",
-                                    "snippet": "Ref {\n    ...errer_id\n}"
                                   }
                                 },
                                 "context": {
@@ -913,18 +849,10 @@
                                 "trailingTrivia": "",
                                 "value": "."
                               },
-                              "parent": {
-                                "id": "<element-declaration>:@[L5:C0, L7:C1]",
-                                "snippet": "Ref {\n    ...errer_id\n}"
-                              },
                               "rightExpression": {
                                 "children": {
                                   "expression": {
                                     "children": {
-                                      "parent": {
-                                        "id": "<element-declaration>:@[L5:C0, L7:C1]",
-                                        "snippet": "Ref {\n    ...errer_id\n}"
-                                      },
                                       "variable": {
                                         "context": {
                                           "id": "<identifier>:id@[L6:C10, L6:C12]",
@@ -970,10 +898,6 @@
                                       "line": 6,
                                       "column": 10
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:@[L5:C0, L7:C1]",
-                                    "snippet": "Ref {\n    ...errer_id\n}"
                                   }
                                 },
                                 "context": {
@@ -1048,20 +972,12 @@
                             "trailingTrivia": " ",
                             "value": ">"
                           },
-                          "parent": {
-                            "id": "<element-declaration>:@[L5:C0, L7:C1]",
-                            "snippet": "Ref {\n    ...errer_id\n}"
-                          },
                           "rightExpression": {
                             "children": {
                               "leftExpression": {
                                 "children": {
                                   "expression": {
                                     "children": {
-                                      "parent": {
-                                        "id": "<element-declaration>:@[L5:C0, L7:C1]",
-                                        "snippet": "Ref {\n    ...errer_id\n}"
-                                      },
                                       "variable": {
                                         "context": {
                                           "id": "<identifier>:Users@[L6:C15, L6:C20]",
@@ -1107,10 +1023,6 @@
                                       "line": 6,
                                       "column": 15
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:@[L5:C0, L7:C1]",
-                                    "snippet": "Ref {\n    ...errer_id\n}"
                                   }
                                 },
                                 "context": {
@@ -1164,18 +1076,10 @@
                                 "trailingTrivia": "",
                                 "value": "."
                               },
-                              "parent": {
-                                "id": "<element-declaration>:@[L5:C0, L7:C1]",
-                                "snippet": "Ref {\n    ...errer_id\n}"
-                              },
                               "rightExpression": {
                                 "children": {
                                   "expression": {
                                     "children": {
-                                      "parent": {
-                                        "id": "<element-declaration>:@[L5:C0, L7:C1]",
-                                        "snippet": "Ref {\n    ...errer_id\n}"
-                                      },
                                       "variable": {
                                         "context": {
                                           "id": "<identifier>:referrer_id@[L6:C21, L6:C32]",
@@ -1221,10 +1125,6 @@
                                       "line": 6,
                                       "column": 21
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:@[L5:C0, L7:C1]",
-                                    "snippet": "Ref {\n    ...errer_id\n}"
                                   }
                                 },
                                 "context": {
@@ -1294,10 +1194,6 @@
                           "line": 6,
                           "column": 4
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:@[L5:C0, L7:C1]",
-                        "snippet": "Ref {\n    ...errer_id\n}"
                       }
                     },
                     "context": {
@@ -1320,11 +1216,7 @@
                       "column": 4
                     }
                   }
-                ],
-                "parent": {
-                  "id": "<element-declaration>:@[L5:C0, L7:C1]",
-                  "snippet": "Ref {\n    ...errer_id\n}"
-                }
+                ]
               },
               "context": {
                 "id": "<block-expression>@[L5:C4, L7:C1]",
@@ -1345,10 +1237,6 @@
                 "line": 5,
                 "column": 4
               }
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L7:C1]",
-              "snippet": "Table User...errer_id\n}"
             },
             "type": {
               "context": {

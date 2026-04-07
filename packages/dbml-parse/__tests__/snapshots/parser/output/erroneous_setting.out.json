@@ -66,10 +66,6 @@
               "children": {
                 "expression": {
                   "children": {
-                    "parent": {
-                      "id": "<element-declaration>:users@[L0:C0, L2:C1]",
-                      "snippet": "Table user...crement]\n}"
-                    },
                     "variable": {
                       "context": {
                         "id": "<identifier>:U@[L0:C15, L0:C16]",
@@ -115,10 +111,6 @@
                     "line": 0,
                     "column": 15
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:users@[L0:C0, L2:C1]",
-                  "snippet": "Table user...crement]\n}"
                 }
               },
               "context": {
@@ -226,10 +218,6 @@
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:users@[L0:C0, L2:C1]",
-                                  "snippet": "Table user...crement]\n}"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:int@[L1:C5, L1:C8]",
@@ -286,10 +274,6 @@
                                 },
                                 "references": []
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:users@[L0:C0, L2:C1]",
-                              "snippet": "Table user...crement]\n}"
                             }
                           },
                           "context": {
@@ -383,11 +367,7 @@
                                           "trailingTrivia": "",
                                           "value": "pk"
                                         }
-                                      ],
-                                      "parent": {
-                                        "id": "<element-declaration>:users@[L0:C0, L2:C1]",
-                                        "snippet": "Table user...crement]\n}"
-                                      }
+                                      ]
                                     },
                                     "context": {
                                       "id": "<identifer-stream>@[L1:C10, L1:C12]",
@@ -419,10 +399,6 @@
                                       },
                                       "references": []
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:users@[L0:C0, L2:C1]",
-                                    "snippet": "Table user...crement]\n}"
                                   }
                                 },
                                 "context": {
@@ -486,11 +462,7 @@
                                           "trailingTrivia": "",
                                           "value": "increment"
                                         }
-                                      ],
-                                      "parent": {
-                                        "id": "<element-declaration>:users@[L0:C0, L2:C1]",
-                                        "snippet": "Table user...crement]\n}"
-                                      }
+                                      ]
                                     },
                                     "context": {
                                       "id": "<identifer-stream>@[L1:C14, L1:C23]",
@@ -522,10 +494,6 @@
                                       },
                                       "references": []
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:users@[L0:C0, L2:C1]",
-                                    "snippet": "Table user...crement]\n}"
                                   }
                                 },
                                 "context": {
@@ -609,10 +577,6 @@
                               "trailingInvalid": "",
                               "trailingTrivia": "",
                               "value": "["
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:users@[L0:C0, L2:C1]",
-                              "snippet": "Table user...crement]\n}"
                             }
                           },
                           "context": {
@@ -651,10 +615,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:users@[L0:C0, L2:C1]",
-                                "snippet": "Table user...crement]\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:id@[L1:C2, L1:C4]",
@@ -711,10 +671,6 @@
                               },
                               "references": []
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:users@[L0:C0, L2:C1]",
-                            "snippet": "Table user...crement]\n}"
                           }
                         },
                         "context": {
@@ -747,10 +703,6 @@
                           },
                           "references": []
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:users@[L0:C0, L2:C1]",
-                        "snippet": "Table user...crement]\n}"
                       }
                     },
                     "context": {
@@ -789,11 +741,7 @@
                       ]
                     }
                   }
-                ],
-                "parent": {
-                  "id": "<element-declaration>:users@[L0:C0, L2:C1]",
-                  "snippet": "Table user...crement]\n}"
-                }
+                ]
               },
               "context": {
                 "id": "<block-expression>@[L0:C17, L2:C1]",
@@ -819,10 +767,6 @@
               "children": {
                 "expression": {
                   "children": {
-                    "parent": {
-                      "id": "<element-declaration>:users@[L0:C0, L2:C1]",
-                      "snippet": "Table user...crement]\n}"
-                    },
                     "variable": {
                       "context": {
                         "id": "<identifier>:users@[L0:C6, L0:C11]",
@@ -868,10 +812,6 @@
                     "line": 0,
                     "column": 6
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:users@[L0:C0, L2:C1]",
-                  "snippet": "Table user...crement]\n}"
                 }
               },
               "context": {
@@ -893,10 +833,6 @@
                 "line": 0,
                 "column": 6
               }
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L25:C0]",
-              "snippet": "Table user...agram_id\"\n"
             },
             "type": {
               "context": {
@@ -1030,10 +966,6 @@
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:user_role_in_diagram@[L4:C0, L10:C3]",
-                                  "snippet": "Table user...) [pk]\n  }"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:int@[L5:C10, L5:C13]",
@@ -1090,10 +1022,6 @@
                                 },
                                 "references": []
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:user_role_in_diagram@[L4:C0, L10:C3]",
-                              "snippet": "Table user...) [pk]\n  }"
                             }
                           },
                           "context": {
@@ -1132,10 +1060,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:user_role_in_diagram@[L4:C0, L10:C3]",
-                                "snippet": "Table user...) [pk]\n  }"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:user_id@[L5:C2, L5:C9]",
@@ -1192,10 +1116,6 @@
                               },
                               "references": []
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:user_role_in_diagram@[L4:C0, L10:C3]",
-                            "snippet": "Table user...) [pk]\n  }"
                           }
                         },
                         "context": {
@@ -1228,10 +1148,6 @@
                           },
                           "references": []
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:user_role_in_diagram@[L4:C0, L10:C3]",
-                        "snippet": "Table user...) [pk]\n  }"
                       }
                     },
                     "context": {
@@ -1277,10 +1193,6 @@
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:user_role_in_diagram@[L4:C0, L10:C3]",
-                                  "snippet": "Table user...) [pk]\n  }"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:int@[L6:C13, L6:C16]",
@@ -1337,10 +1249,6 @@
                                 },
                                 "references": []
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:user_role_in_diagram@[L4:C0, L10:C3]",
-                              "snippet": "Table user...) [pk]\n  }"
                             }
                           },
                           "context": {
@@ -1379,10 +1287,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:user_role_in_diagram@[L4:C0, L10:C3]",
-                                "snippet": "Table user...) [pk]\n  }"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:diagram_id@[L6:C2, L6:C12]",
@@ -1439,10 +1343,6 @@
                               },
                               "references": []
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:user_role_in_diagram@[L4:C0, L10:C3]",
-                            "snippet": "Table user...) [pk]\n  }"
                           }
                         },
                         "context": {
@@ -1475,10 +1375,6 @@
                           },
                           "references": []
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:user_role_in_diagram@[L4:C0, L10:C3]",
-                        "snippet": "Table user...) [pk]\n  }"
                       }
                     },
                     "context": {
@@ -1524,10 +1420,6 @@
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:user_role_in_diagram@[L4:C0, L10:C3]",
-                                  "snippet": "Table user...) [pk]\n  }"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:int@[L7:C7, L7:C10]",
@@ -1584,10 +1476,6 @@
                                 },
                                 "references": []
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:user_role_in_diagram@[L4:C0, L10:C3]",
-                              "snippet": "Table user...) [pk]\n  }"
                             }
                           },
                           "context": {
@@ -1706,11 +1594,7 @@
                                           "trailingTrivia": "",
                                           "value": "note"
                                         }
-                                      ],
-                                      "parent": {
-                                        "id": "<element-declaration>:user_role_in_diagram@[L4:C0, L10:C3]",
-                                        "snippet": "Table user...) [pk]\n  }"
-                                      }
+                                      ]
                                     },
                                     "context": {
                                       "id": "<identifer-stream>@[L7:C12, L7:C16]",
@@ -1743,10 +1627,6 @@
                                       "references": []
                                     }
                                   },
-                                  "parent": {
-                                    "id": "<element-declaration>:user_role_in_diagram@[L4:C0, L10:C3]",
-                                    "snippet": "Table user...) [pk]\n  }"
-                                  },
                                   "value": {
                                     "children": {
                                       "expression": {
@@ -1775,10 +1655,6 @@
                                             "trailingInvalid": "savailablepermissionsbitvalue)Indexes{(user_id",
                                             "trailingTrivia": "",
                                             "value": "Role = sum(user"
-                                          },
-                                          "parent": {
-                                            "id": "<element-declaration>:user_role_in_diagram@[L4:C0, L10:C3]",
-                                            "snippet": "Table user...) [pk]\n  }"
                                           }
                                         },
                                         "context": {
@@ -1811,10 +1687,6 @@
                                           },
                                           "references": []
                                         }
-                                      },
-                                      "parent": {
-                                        "id": "<element-declaration>:user_role_in_diagram@[L4:C0, L10:C3]",
-                                        "snippet": "Table user...) [pk]\n  }"
                                       }
                                     },
                                     "context": {
@@ -1910,11 +1782,7 @@
                                           "trailingTrivia": "",
                                           "value": "diagram_id"
                                         }
-                                      ],
-                                      "parent": {
-                                        "id": "<element-declaration>:user_role_in_diagram@[L4:C0, L10:C3]",
-                                        "snippet": "Table user...) [pk]\n  }"
-                                      }
+                                      ]
                                     },
                                     "context": {
                                       "id": "<identifer-stream>@[L9:C14, L9:C24]",
@@ -1946,10 +1814,6 @@
                                       },
                                       "references": []
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:user_role_in_diagram@[L4:C0, L10:C3]",
-                                    "snippet": "Table user...) [pk]\n  }"
                                   }
                                 },
                                 "context": {
@@ -2033,10 +1897,6 @@
                               "trailingInvalid": "",
                               "trailingTrivia": "",
                               "value": "["
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:user_role_in_diagram@[L4:C0, L10:C3]",
-                              "snippet": "Table user...) [pk]\n  }"
                             }
                           },
                           "context": {
@@ -2075,10 +1935,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:user_role_in_diagram@[L4:C0, L10:C3]",
-                                "snippet": "Table user...) [pk]\n  }"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:role@[L7:C2, L7:C6]",
@@ -2135,10 +1991,6 @@
                               },
                               "references": []
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:user_role_in_diagram@[L4:C0, L10:C3]",
-                            "snippet": "Table user...) [pk]\n  }"
                           }
                         },
                         "context": {
@@ -2171,10 +2023,6 @@
                           },
                           "references": []
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:user_role_in_diagram@[L4:C0, L10:C3]",
-                        "snippet": "Table user...) [pk]\n  }"
                       }
                     },
                     "context": {
@@ -2208,11 +2056,7 @@
                       "references": []
                     }
                   }
-                ],
-                "parent": {
-                  "id": "<element-declaration>:user_role_in_diagram@[L4:C0, L10:C3]",
-                  "snippet": "Table user...) [pk]\n  }"
-                }
+                ]
               },
               "context": {
                 "id": "<block-expression>@[L4:C27, L10:C3]",
@@ -2238,10 +2082,6 @@
               "children": {
                 "expression": {
                   "children": {
-                    "parent": {
-                      "id": "<element-declaration>:user_role_in_diagram@[L4:C0, L10:C3]",
-                      "snippet": "Table user...) [pk]\n  }"
-                    },
                     "variable": {
                       "context": {
                         "id": "<identifier>:user_role_in_diagram@[L4:C6, L4:C26]",
@@ -2287,10 +2127,6 @@
                     "line": 4,
                     "column": 6
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:user_role_in_diagram@[L4:C0, L10:C3]",
-                  "snippet": "Table user...) [pk]\n  }"
                 }
               },
               "context": {
@@ -2312,10 +2148,6 @@
                 "line": 4,
                 "column": 6
               }
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L25:C0]",
-              "snippet": "Table user...agram_id\"\n"
             },
             "type": {
               "context": {
@@ -2404,12 +2236,7 @@
           }
         },
         {
-          "children": {
-            "parent": {
-              "id": "<program>@[L0:C0, L25:C0]",
-              "snippet": "Table user...agram_id\"\n"
-            }
-          },
+          "children": {},
           "context": {
             "id": "<element-declaration>:@[LNaN:CNaN, LNaN:CNaN]",
             "snippet": ""
@@ -2492,10 +2319,6 @@
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:permissions@[L13:C0, L16:C1]",
-                                  "snippet": "Table perm... varchar\n}"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:int@[L14:C6, L14:C9]",
@@ -2552,10 +2375,6 @@
                                 },
                                 "references": []
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:permissions@[L13:C0, L16:C1]",
-                              "snippet": "Table perm... varchar\n}"
                             }
                           },
                           "context": {
@@ -2623,11 +2442,7 @@
                                           "trailingTrivia": "",
                                           "value": "pk"
                                         }
-                                      ],
-                                      "parent": {
-                                        "id": "<element-declaration>:permissions@[L13:C0, L16:C1]",
-                                        "snippet": "Table perm... varchar\n}"
-                                      }
+                                      ]
                                     },
                                     "context": {
                                       "id": "<identifer-stream>@[L14:C11, L14:C13]",
@@ -2659,10 +2474,6 @@
                                       },
                                       "references": []
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:permissions@[L13:C0, L16:C1]",
-                                    "snippet": "Table perm... varchar\n}"
                                   }
                                 },
                                 "context": {
@@ -2746,10 +2557,6 @@
                               "trailingInvalid": "",
                               "trailingTrivia": "",
                               "value": "["
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:permissions@[L13:C0, L16:C1]",
-                              "snippet": "Table perm... varchar\n}"
                             }
                           },
                           "context": {
@@ -2788,10 +2595,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:permissions@[L13:C0, L16:C1]",
-                                "snippet": "Table perm... varchar\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:bit@[L14:C2, L14:C5]",
@@ -2848,10 +2651,6 @@
                               },
                               "references": []
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:permissions@[L13:C0, L16:C1]",
-                            "snippet": "Table perm... varchar\n}"
                           }
                         },
                         "context": {
@@ -2884,10 +2683,6 @@
                           },
                           "references": []
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:permissions@[L13:C0, L16:C1]",
-                        "snippet": "Table perm... varchar\n}"
                       }
                     },
                     "context": {
@@ -2928,10 +2723,6 @@
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:permissions@[L13:C0, L16:C1]",
-                                  "snippet": "Table perm... varchar\n}"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:varchar@[L15:C7, L15:C14]",
@@ -2988,10 +2779,6 @@
                                 },
                                 "references": []
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:permissions@[L13:C0, L16:C1]",
-                              "snippet": "Table perm... varchar\n}"
                             }
                           },
                           "context": {
@@ -3030,10 +2817,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:permissions@[L13:C0, L16:C1]",
-                                "snippet": "Table perm... varchar\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:name@[L15:C2, L15:C6]",
@@ -3090,10 +2873,6 @@
                               },
                               "references": []
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:permissions@[L13:C0, L16:C1]",
-                            "snippet": "Table perm... varchar\n}"
                           }
                         },
                         "context": {
@@ -3126,10 +2905,6 @@
                           },
                           "references": []
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:permissions@[L13:C0, L16:C1]",
-                        "snippet": "Table perm... varchar\n}"
                       }
                     },
                     "context": {
@@ -3163,11 +2938,7 @@
                       "references": []
                     }
                   }
-                ],
-                "parent": {
-                  "id": "<element-declaration>:permissions@[L13:C0, L16:C1]",
-                  "snippet": "Table perm... varchar\n}"
-                }
+                ]
               },
               "context": {
                 "id": "<block-expression>@[L13:C18, L16:C1]",
@@ -3193,10 +2964,6 @@
               "children": {
                 "expression": {
                   "children": {
-                    "parent": {
-                      "id": "<element-declaration>:permissions@[L13:C0, L16:C1]",
-                      "snippet": "Table perm... varchar\n}"
-                    },
                     "variable": {
                       "context": {
                         "id": "<identifier>:permissions@[L13:C6, L13:C17]",
@@ -3242,10 +3009,6 @@
                     "line": 13,
                     "column": 6
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:permissions@[L13:C0, L16:C1]",
-                  "snippet": "Table perm... varchar\n}"
                 }
               },
               "context": {
@@ -3267,10 +3030,6 @@
                 "line": 13,
                 "column": 6
               }
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L25:C0]",
-              "snippet": "Table user...agram_id\"\n"
             },
             "type": {
               "context": {
@@ -3405,10 +3164,6 @@
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:diagrams@[L18:C0, L20:C1]",
-                                  "snippet": "Table diag...ncrement\n}"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:int@[L19:C5, L19:C8]",
@@ -3465,10 +3220,6 @@
                                 },
                                 "references": []
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:diagrams@[L18:C0, L20:C1]",
-                              "snippet": "Table diag...ncrement\n}"
                             }
                           },
                           "context": {
@@ -3562,11 +3313,7 @@
                                           "trailingTrivia": "",
                                           "value": "pk"
                                         }
-                                      ],
-                                      "parent": {
-                                        "id": "<element-declaration>:diagrams@[L18:C0, L20:C1]",
-                                        "snippet": "Table diag...ncrement\n}"
-                                      }
+                                      ]
                                     },
                                     "context": {
                                       "id": "<identifer-stream>@[L19:C10, L19:C12]",
@@ -3598,10 +3345,6 @@
                                       },
                                       "references": []
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:diagrams@[L18:C0, L20:C1]",
-                                    "snippet": "Table diag...ncrement\n}"
                                   }
                                 },
                                 "context": {
@@ -3665,11 +3408,7 @@
                                           "trailingTrivia": "",
                                           "value": "increment"
                                         }
-                                      ],
-                                      "parent": {
-                                        "id": "<element-declaration>:diagrams@[L18:C0, L20:C1]",
-                                        "snippet": "Table diag...ncrement\n}"
-                                      }
+                                      ]
                                     },
                                     "context": {
                                       "id": "<identifer-stream>@[L19:C14, L19:C23]",
@@ -3701,10 +3440,6 @@
                                       },
                                       "references": []
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:diagrams@[L18:C0, L20:C1]",
-                                    "snippet": "Table diag...ncrement\n}"
                                   }
                                 },
                                 "context": {
@@ -3788,10 +3523,6 @@
                               "trailingInvalid": "",
                               "trailingTrivia": "",
                               "value": "["
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:diagrams@[L18:C0, L20:C1]",
-                              "snippet": "Table diag...ncrement\n}"
                             }
                           },
                           "context": {
@@ -3830,10 +3561,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:diagrams@[L18:C0, L20:C1]",
-                                "snippet": "Table diag...ncrement\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:id@[L19:C2, L19:C4]",
@@ -3890,10 +3617,6 @@
                               },
                               "references": []
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:diagrams@[L18:C0, L20:C1]",
-                            "snippet": "Table diag...ncrement\n}"
                           }
                         },
                         "context": {
@@ -3926,10 +3649,6 @@
                           },
                           "references": []
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:diagrams@[L18:C0, L20:C1]",
-                        "snippet": "Table diag...ncrement\n}"
                       }
                     },
                     "context": {
@@ -3968,11 +3687,7 @@
                       ]
                     }
                   }
-                ],
-                "parent": {
-                  "id": "<element-declaration>:diagrams@[L18:C0, L20:C1]",
-                  "snippet": "Table diag...ncrement\n}"
-                }
+                ]
               },
               "context": {
                 "id": "<block-expression>@[L18:C15, L20:C1]",
@@ -3998,10 +3713,6 @@
               "children": {
                 "expression": {
                   "children": {
-                    "parent": {
-                      "id": "<element-declaration>:diagrams@[L18:C0, L20:C1]",
-                      "snippet": "Table diag...ncrement\n}"
-                    },
                     "variable": {
                       "context": {
                         "id": "<identifier>:diagrams@[L18:C6, L18:C14]",
@@ -4047,10 +3758,6 @@
                     "line": 18,
                     "column": 6
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:diagrams@[L18:C0, L20:C1]",
-                  "snippet": "Table diag...ncrement\n}"
                 }
               },
               "context": {
@@ -4072,10 +3779,6 @@
                 "line": 18,
                 "column": 6
               }
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L25:C0]",
-              "snippet": "Table user...agram_id\"\n"
             },
             "type": {
               "context": {
@@ -4160,10 +3863,6 @@
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:@[L22:C0, L22:C52]",
-                                  "snippet": "Ref: \"user....\"user_id\""
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<variable>:users@[L22:C5, L22:C12]",
@@ -4209,10 +3908,6 @@
                                 "line": 22,
                                 "column": 5
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:@[L22:C0, L22:C52]",
-                              "snippet": "Ref: \"user....\"user_id\""
                             }
                           },
                           "context": {
@@ -4266,18 +3961,10 @@
                           "trailingTrivia": "",
                           "value": "."
                         },
-                        "parent": {
-                          "id": "<element-declaration>:@[L22:C0, L22:C52]",
-                          "snippet": "Ref: \"user....\"user_id\""
-                        },
                         "rightExpression": {
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:@[L22:C0, L22:C52]",
-                                  "snippet": "Ref: \"user....\"user_id\""
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<variable>:id@[L22:C13, L22:C17]",
@@ -4323,10 +4010,6 @@
                                 "line": 22,
                                 "column": 13
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:@[L22:C0, L22:C52]",
-                              "snippet": "Ref: \"user....\"user_id\""
                             }
                           },
                           "context": {
@@ -4401,20 +4084,12 @@
                       "trailingTrivia": " ",
                       "value": "-"
                     },
-                    "parent": {
-                      "id": "<element-declaration>:@[L22:C0, L22:C52]",
-                      "snippet": "Ref: \"user....\"user_id\""
-                    },
                     "rightExpression": {
                       "children": {
                         "leftExpression": {
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:@[L22:C0, L22:C52]",
-                                  "snippet": "Ref: \"user....\"user_id\""
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<variable>:user_role_in_diagram@[L22:C20, L22:C42]",
@@ -4460,10 +4135,6 @@
                                 "line": 22,
                                 "column": 20
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:@[L22:C0, L22:C52]",
-                              "snippet": "Ref: \"user....\"user_id\""
                             }
                           },
                           "context": {
@@ -4517,18 +4188,10 @@
                           "trailingTrivia": "",
                           "value": "."
                         },
-                        "parent": {
-                          "id": "<element-declaration>:@[L22:C0, L22:C52]",
-                          "snippet": "Ref: \"user....\"user_id\""
-                        },
                         "rightExpression": {
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:@[L22:C0, L22:C52]",
-                                  "snippet": "Ref: \"user....\"user_id\""
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<variable>:user_id@[L22:C43, L22:C52]",
@@ -4574,10 +4237,6 @@
                                 "line": 22,
                                 "column": 43
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:@[L22:C0, L22:C52]",
-                              "snippet": "Ref: \"user....\"user_id\""
                             }
                           },
                           "context": {
@@ -4647,10 +4306,6 @@
                     "line": 22,
                     "column": 5
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:@[L22:C0, L22:C52]",
-                  "snippet": "Ref: \"user....\"user_id\""
                 }
               },
               "context": {
@@ -4697,10 +4352,6 @@
               "trailingInvalid": "",
               "trailingTrivia": " ",
               "value": ":"
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L25:C0]",
-              "snippet": "Table user...agram_id\"\n"
             },
             "type": {
               "context": {
@@ -4773,10 +4424,6 @@
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:@[L24:C0, L24:C58]",
-                                  "snippet": "Ref: \"diag...iagram_id\""
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<variable>:diagrams@[L24:C5, L24:C15]",
@@ -4822,10 +4469,6 @@
                                 "line": 24,
                                 "column": 5
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:@[L24:C0, L24:C58]",
-                              "snippet": "Ref: \"diag...iagram_id\""
                             }
                           },
                           "context": {
@@ -4879,18 +4522,10 @@
                           "trailingTrivia": "",
                           "value": "."
                         },
-                        "parent": {
-                          "id": "<element-declaration>:@[L24:C0, L24:C58]",
-                          "snippet": "Ref: \"diag...iagram_id\""
-                        },
                         "rightExpression": {
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:@[L24:C0, L24:C58]",
-                                  "snippet": "Ref: \"diag...iagram_id\""
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<variable>:id@[L24:C16, L24:C20]",
@@ -4936,10 +4571,6 @@
                                 "line": 24,
                                 "column": 16
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:@[L24:C0, L24:C58]",
-                              "snippet": "Ref: \"diag...iagram_id\""
                             }
                           },
                           "context": {
@@ -5014,20 +4645,12 @@
                       "trailingTrivia": " ",
                       "value": "-"
                     },
-                    "parent": {
-                      "id": "<element-declaration>:@[L24:C0, L24:C58]",
-                      "snippet": "Ref: \"diag...iagram_id\""
-                    },
                     "rightExpression": {
                       "children": {
                         "leftExpression": {
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:@[L24:C0, L24:C58]",
-                                  "snippet": "Ref: \"diag...iagram_id\""
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<variable>:user_role_in_diagram@[L24:C23, L24:C45]",
@@ -5073,10 +4696,6 @@
                                 "line": 24,
                                 "column": 23
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:@[L24:C0, L24:C58]",
-                              "snippet": "Ref: \"diag...iagram_id\""
                             }
                           },
                           "context": {
@@ -5130,18 +4749,10 @@
                           "trailingTrivia": "",
                           "value": "."
                         },
-                        "parent": {
-                          "id": "<element-declaration>:@[L24:C0, L24:C58]",
-                          "snippet": "Ref: \"diag...iagram_id\""
-                        },
                         "rightExpression": {
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:@[L24:C0, L24:C58]",
-                                  "snippet": "Ref: \"diag...iagram_id\""
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<variable>:diagram_id@[L24:C46, L24:C58]",
@@ -5187,10 +4798,6 @@
                                 "line": 24,
                                 "column": 46
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:@[L24:C0, L24:C58]",
-                              "snippet": "Ref: \"diag...iagram_id\""
                             }
                           },
                           "context": {
@@ -5260,10 +4867,6 @@
                     "line": 24,
                     "column": 5
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:@[L24:C0, L24:C58]",
-                  "snippet": "Ref: \"diag...iagram_id\""
                 }
               },
               "context": {
@@ -5310,10 +4913,6 @@
               "trailingInvalid": "",
               "trailingTrivia": " ",
               "value": ":"
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L25:C0]",
-              "snippet": "Table user...agram_id\"\n"
             },
             "type": {
               "context": {

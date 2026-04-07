@@ -118,10 +118,6 @@
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:common@[L0:C0, L2:C1]",
-                                  "snippet": "TableParti...me text\r\n}"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:text@[L1:C7, L1:C11]",
@@ -167,10 +163,6 @@
                                 "line": 1,
                                 "column": 7
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:common@[L0:C0, L2:C1]",
-                              "snippet": "TableParti...me text\r\n}"
                             }
                           },
                           "context": {
@@ -198,10 +190,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:common@[L0:C0, L2:C1]",
-                                "snippet": "TableParti...me text\r\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:name@[L1:C2, L1:C6]",
@@ -247,10 +235,6 @@
                               "line": 1,
                               "column": 2
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:common@[L0:C0, L2:C1]",
-                            "snippet": "TableParti...me text\r\n}"
                           }
                         },
                         "context": {
@@ -272,10 +256,6 @@
                           "line": 1,
                           "column": 2
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:common@[L0:C0, L2:C1]",
-                        "snippet": "TableParti...me text\r\n}"
                       }
                     },
                     "context": {
@@ -309,11 +289,7 @@
                       "references": []
                     }
                   }
-                ],
-                "parent": {
-                  "id": "<element-declaration>:common@[L0:C0, L2:C1]",
-                  "snippet": "TableParti...me text\r\n}"
-                }
+                ]
               },
               "context": {
                 "id": "<block-expression>@[L0:C20, L2:C1]",
@@ -339,10 +315,6 @@
               "children": {
                 "expression": {
                   "children": {
-                    "parent": {
-                      "id": "<element-declaration>:common@[L0:C0, L2:C1]",
-                      "snippet": "TableParti...me text\r\n}"
-                    },
                     "variable": {
                       "context": {
                         "id": "<identifier>:common@[L0:C13, L0:C19]",
@@ -388,10 +360,6 @@
                     "line": 0,
                     "column": 13
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:common@[L0:C0, L2:C1]",
-                  "snippet": "TableParti...me text\r\n}"
                 }
               },
               "context": {
@@ -413,10 +381,6 @@
                 "line": 0,
                 "column": 13
               }
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L10:C0]",
-              "snippet": "TableParti...ommon\r\n}\r\n"
             },
             "type": {
               "context": {
@@ -558,10 +522,6 @@
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:Users@[L4:C0, L9:C1]",
-                                  "snippet": "Table User...~common\r\n}"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:int@[L5:C5, L5:C8]",
@@ -618,10 +578,6 @@
                                 },
                                 "references": []
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:Users@[L4:C0, L9:C1]",
-                              "snippet": "Table User...~common\r\n}"
                             }
                           },
                           "context": {
@@ -660,10 +616,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:Users@[L4:C0, L9:C1]",
-                                "snippet": "Table User...~common\r\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:id@[L5:C2, L5:C4]",
@@ -720,10 +672,6 @@
                               },
                               "references": []
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:Users@[L4:C0, L9:C1]",
-                            "snippet": "Table User...~common\r\n}"
                           }
                         },
                         "context": {
@@ -756,10 +704,6 @@
                           },
                           "references": []
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:Users@[L4:C0, L9:C1]",
-                        "snippet": "Table User...~common\r\n}"
                       }
                     },
                     "context": {
@@ -802,10 +746,6 @@
                             "children": {
                               "expression": {
                                 "children": {
-                                  "parent": {
-                                    "id": "<element-declaration>:Users@[L4:C0, L9:C1]",
-                                    "snippet": "Table User...~common\r\n}"
-                                  },
                                   "variable": {
                                     "context": {
                                       "id": "<identifier>:common@[L6:C3, L6:C9]",
@@ -862,10 +802,6 @@
                                   },
                                   "references": []
                                 }
-                              },
-                              "parent": {
-                                "id": "<element-declaration>:Users@[L4:C0, L9:C1]",
-                                "snippet": "Table User...~common\r\n}"
                               }
                             },
                             "context": {
@@ -929,10 +865,6 @@
                             "trailingInvalid": "",
                             "trailingTrivia": "",
                             "value": "~"
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:Users@[L4:C0, L9:C1]",
-                            "snippet": "Table User...~common\r\n}"
                           }
                         },
                         "context": {
@@ -965,10 +897,6 @@
                           },
                           "references": []
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:Users@[L4:C0, L9:C1]",
-                        "snippet": "Table User...~common\r\n}"
                       }
                     },
                     "context": {
@@ -1011,10 +939,6 @@
                             "children": {
                               "expression": {
                                 "children": {
-                                  "parent": {
-                                    "id": "<element-declaration>:Users@[L4:C0, L9:C1]",
-                                    "snippet": "Table User...~common\r\n}"
-                                  },
                                   "variable": {
                                     "context": {
                                       "id": "<identifier>:common@[L7:C3, L7:C9]",
@@ -1071,10 +995,6 @@
                                   },
                                   "references": []
                                 }
-                              },
-                              "parent": {
-                                "id": "<element-declaration>:Users@[L4:C0, L9:C1]",
-                                "snippet": "Table User...~common\r\n}"
                               }
                             },
                             "context": {
@@ -1138,10 +1058,6 @@
                             "trailingInvalid": "",
                             "trailingTrivia": "",
                             "value": "~"
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:Users@[L4:C0, L9:C1]",
-                            "snippet": "Table User...~common\r\n}"
                           }
                         },
                         "context": {
@@ -1174,10 +1090,6 @@
                           },
                           "references": []
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:Users@[L4:C0, L9:C1]",
-                        "snippet": "Table User...~common\r\n}"
                       }
                     },
                     "context": {
@@ -1220,10 +1132,6 @@
                             "children": {
                               "expression": {
                                 "children": {
-                                  "parent": {
-                                    "id": "<element-declaration>:Users@[L4:C0, L9:C1]",
-                                    "snippet": "Table User...~common\r\n}"
-                                  },
                                   "variable": {
                                     "context": {
                                       "id": "<identifier>:common@[L8:C3, L8:C9]",
@@ -1280,10 +1188,6 @@
                                   },
                                   "references": []
                                 }
-                              },
-                              "parent": {
-                                "id": "<element-declaration>:Users@[L4:C0, L9:C1]",
-                                "snippet": "Table User...~common\r\n}"
                               }
                             },
                             "context": {
@@ -1347,10 +1251,6 @@
                             "trailingInvalid": "",
                             "trailingTrivia": "",
                             "value": "~"
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:Users@[L4:C0, L9:C1]",
-                            "snippet": "Table User...~common\r\n}"
                           }
                         },
                         "context": {
@@ -1383,10 +1283,6 @@
                           },
                           "references": []
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:Users@[L4:C0, L9:C1]",
-                        "snippet": "Table User...~common\r\n}"
                       }
                     },
                     "context": {
@@ -1420,11 +1316,7 @@
                       "references": []
                     }
                   }
-                ],
-                "parent": {
-                  "id": "<element-declaration>:Users@[L4:C0, L9:C1]",
-                  "snippet": "Table User...~common\r\n}"
-                }
+                ]
               },
               "context": {
                 "id": "<block-expression>@[L4:C12, L9:C1]",
@@ -1450,10 +1342,6 @@
               "children": {
                 "expression": {
                   "children": {
-                    "parent": {
-                      "id": "<element-declaration>:Users@[L4:C0, L9:C1]",
-                      "snippet": "Table User...~common\r\n}"
-                    },
                     "variable": {
                       "context": {
                         "id": "<identifier>:Users@[L4:C6, L4:C11]",
@@ -1499,10 +1387,6 @@
                     "line": 4,
                     "column": 6
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:Users@[L4:C0, L9:C1]",
-                  "snippet": "Table User...~common\r\n}"
                 }
               },
               "context": {
@@ -1524,10 +1408,6 @@
                 "line": 4,
                 "column": 6
               }
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L10:C0]",
-              "snippet": "TableParti...ommon\r\n}\r\n"
             },
             "type": {
               "context": {

@@ -112,11 +112,7 @@
                             "trailingTrivia": "\n",
                             "value": "{"
                           },
-                          "body": [],
-                          "parent": {
-                            "id": "<element-declaration>:A@[L1:C4, L3:C5]",
-                            "snippet": "Table A {\r\n\r\n    }"
-                          }
+                          "body": []
                         },
                         "context": {
                           "id": "<block-expression>@[L1:C12, L3:C5]",
@@ -142,10 +138,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:A@[L1:C4, L3:C5]",
-                                "snippet": "Table A {\r\n\r\n    }"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:A@[L1:C10, L1:C11]",
@@ -191,10 +183,6 @@
                               "line": 1,
                               "column": 10
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:A@[L1:C4, L3:C5]",
-                            "snippet": "Table A {\r\n\r\n    }"
                           }
                         },
                         "context": {
@@ -216,10 +204,6 @@
                           "line": 1,
                           "column": 10
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:@[L0:C0, L8:C1]",
-                        "snippet": "Project {\r...\r\n    }\r\n}"
                       },
                       "type": {
                         "context": {
@@ -285,10 +269,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:B@[L5:C4, L7:C5]",
-                                "snippet": "Table B as...   \r\n    }"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:C@[L5:C15, L5:C16]",
@@ -334,10 +314,6 @@
                               "line": 5,
                               "column": 15
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:B@[L5:C4, L7:C5]",
-                            "snippet": "Table B as...   \r\n    }"
                           }
                         },
                         "context": {
@@ -437,11 +413,7 @@
                             "trailingTrivia": "\n",
                             "value": "{"
                           },
-                          "body": [],
-                          "parent": {
-                            "id": "<element-declaration>:B@[L5:C4, L7:C5]",
-                            "snippet": "Table B as...   \r\n    }"
-                          }
+                          "body": []
                         },
                         "context": {
                           "id": "<block-expression>@[L5:C17, L7:C5]",
@@ -467,10 +439,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:B@[L5:C4, L7:C5]",
-                                "snippet": "Table B as...   \r\n    }"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:B@[L5:C10, L5:C11]",
@@ -516,10 +484,6 @@
                               "line": 5,
                               "column": 10
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:B@[L5:C4, L7:C5]",
-                            "snippet": "Table B as...   \r\n    }"
                           }
                         },
                         "context": {
@@ -541,10 +505,6 @@
                           "line": 5,
                           "column": 10
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:@[L0:C0, L8:C1]",
-                        "snippet": "Project {\r...\r\n    }\r\n}"
                       },
                       "type": {
                         "context": {
@@ -604,11 +564,7 @@
                       "references": []
                     }
                   }
-                ],
-                "parent": {
-                  "id": "<element-declaration>:@[L0:C0, L8:C1]",
-                  "snippet": "Project {\r...\r\n    }\r\n}"
-                }
+                ]
               },
               "context": {
                 "id": "<block-expression>@[L0:C8, L8:C1]",
@@ -629,10 +585,6 @@
                 "line": 0,
                 "column": 8
               }
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L13:C0]",
-              "snippet": "Project {\r...ation\r\n}\r\n"
             },
             "type": {
               "context": {
@@ -760,10 +712,6 @@
                   "trailingInvalid": "",
                   "trailingTrivia": "",
                   "value": "["
-                },
-                "parent": {
-                  "id": "<element-declaration>:wrong_nested_element@[L10:C0, L12:C1]",
-                  "snippet": "Table wron...ication\r\n}"
                 }
               },
               "context": {
@@ -846,10 +794,6 @@
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:wrong_nested_element@[L10:C0, L12:C1]",
-                                  "snippet": "Table wron...ication\r\n}"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:wrong@[L11:C12, L11:C17]",
@@ -906,10 +850,6 @@
                                 },
                                 "references": []
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:wrong_nested_element@[L10:C0, L12:C1]",
-                              "snippet": "Table wron...ication\r\n}"
                             }
                           },
                           "context": {
@@ -947,10 +887,6 @@
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:wrong_nested_element@[L10:C0, L12:C1]",
-                                  "snippet": "Table wron...ication\r\n}"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:nested@[L11:C18, L11:C24]",
@@ -1007,10 +943,6 @@
                                 },
                                 "references": []
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:wrong_nested_element@[L10:C0, L12:C1]",
-                              "snippet": "Table wron...ication\r\n}"
                             }
                           },
                           "context": {
@@ -1048,10 +980,6 @@
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:wrong_nested_element@[L10:C0, L12:C1]",
-                                  "snippet": "Table wron...ication\r\n}"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:element@[L11:C25, L11:C32]",
@@ -1108,10 +1036,6 @@
                                 },
                                 "references": []
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:wrong_nested_element@[L10:C0, L12:C1]",
-                              "snippet": "Table wron...ication\r\n}"
                             }
                           },
                           "context": {
@@ -1197,11 +1121,7 @@
                               "trailingTrivia": "",
                               "value": "{"
                             },
-                            "body": [],
-                            "parent": {
-                              "id": "<element-declaration>:wrong_nested_element@[L10:C0, L12:C1]",
-                              "snippet": "Table wron...ication\r\n}"
-                            }
+                            "body": []
                           },
                           "context": {
                             "id": "<block-expression>@[L11:C33, L11:C35]",
@@ -1239,10 +1159,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:wrong_nested_element@[L10:C0, L12:C1]",
-                                "snippet": "Table wron...ication\r\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:Indexes@[L11:C4, L11:C11]",
@@ -1299,10 +1215,6 @@
                               },
                               "references": []
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:wrong_nested_element@[L10:C0, L12:C1]",
-                            "snippet": "Table wron...ication\r\n}"
                           }
                         },
                         "context": {
@@ -1335,10 +1247,6 @@
                           },
                           "references": []
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:wrong_nested_element@[L10:C0, L12:C1]",
-                        "snippet": "Table wron...ication\r\n}"
                       }
                     },
                     "context": {
@@ -1372,11 +1280,7 @@
                       "references": []
                     }
                   }
-                ],
-                "parent": {
-                  "id": "<element-declaration>:wrong_nested_element@[L10:C0, L12:C1]",
-                  "snippet": "Table wron...ication\r\n}"
-                }
+                ]
               },
               "context": {
                 "id": "<block-expression>@[L10:C30, L12:C1]",
@@ -1402,10 +1306,6 @@
               "children": {
                 "expression": {
                   "children": {
-                    "parent": {
-                      "id": "<element-declaration>:wrong_nested_element@[L10:C0, L12:C1]",
-                      "snippet": "Table wron...ication\r\n}"
-                    },
                     "variable": {
                       "context": {
                         "id": "<identifier>:wrong_nested_element@[L10:C6, L10:C26]",
@@ -1451,10 +1351,6 @@
                     "line": 10,
                     "column": 6
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:wrong_nested_element@[L10:C0, L12:C1]",
-                  "snippet": "Table wron...ication\r\n}"
                 }
               },
               "context": {
@@ -1476,10 +1372,6 @@
                 "line": 10,
                 "column": 6
               }
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L13:C0]",
-              "snippet": "Project {\r...ation\r\n}\r\n"
             },
             "type": {
               "context": {

@@ -65,10 +65,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:status@[L0:C0, L4:C1]",
-                                "snippet": "Enum statu...  churn\r\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:churn@[L1:C4, L1:C9]",
@@ -114,10 +110,6 @@
                               "line": 1,
                               "column": 4
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:status@[L0:C0, L4:C1]",
-                            "snippet": "Enum statu...  churn\r\n}"
                           }
                         },
                         "context": {
@@ -139,10 +131,6 @@
                           "line": 1,
                           "column": 4
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:status@[L0:C0, L4:C1]",
-                        "snippet": "Enum statu...  churn\r\n}"
                       }
                     },
                     "context": {
@@ -183,10 +171,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:status@[L0:C0, L4:C1]",
-                                "snippet": "Enum statu...  churn\r\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:churn@[L2:C4, L2:C9]",
@@ -232,10 +216,6 @@
                               "line": 2,
                               "column": 4
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:status@[L0:C0, L4:C1]",
-                            "snippet": "Enum statu...  churn\r\n}"
                           }
                         },
                         "context": {
@@ -257,10 +237,6 @@
                           "line": 2,
                           "column": 4
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:status@[L0:C0, L4:C1]",
-                        "snippet": "Enum statu...  churn\r\n}"
                       }
                     },
                     "context": {
@@ -301,10 +277,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:status@[L0:C0, L4:C1]",
-                                "snippet": "Enum statu...  churn\r\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:churn@[L3:C4, L3:C9]",
@@ -350,10 +322,6 @@
                               "line": 3,
                               "column": 4
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:status@[L0:C0, L4:C1]",
-                            "snippet": "Enum statu...  churn\r\n}"
                           }
                         },
                         "context": {
@@ -375,10 +343,6 @@
                           "line": 3,
                           "column": 4
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:status@[L0:C0, L4:C1]",
-                        "snippet": "Enum statu...  churn\r\n}"
                       }
                     },
                     "context": {
@@ -412,11 +376,7 @@
                       "references": []
                     }
                   }
-                ],
-                "parent": {
-                  "id": "<element-declaration>:status@[L0:C0, L4:C1]",
-                  "snippet": "Enum statu...  churn\r\n}"
-                }
+                ]
               },
               "context": {
                 "id": "<block-expression>@[L0:C12, L4:C1]",
@@ -442,10 +402,6 @@
               "children": {
                 "expression": {
                   "children": {
-                    "parent": {
-                      "id": "<element-declaration>:status@[L0:C0, L4:C1]",
-                      "snippet": "Enum statu...  churn\r\n}"
-                    },
                     "variable": {
                       "context": {
                         "id": "<identifier>:status@[L0:C5, L0:C11]",
@@ -491,10 +447,6 @@
                     "line": 0,
                     "column": 5
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:status@[L0:C0, L4:C1]",
-                  "snippet": "Enum statu...  churn\r\n}"
                 }
               },
               "context": {
@@ -516,10 +468,6 @@
                 "line": 0,
                 "column": 5
               }
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L4:C1]",
-              "snippet": "Enum statu...  churn\r\n}"
             },
             "type": {
               "context": {

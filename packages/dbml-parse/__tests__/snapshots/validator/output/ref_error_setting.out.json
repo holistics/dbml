@@ -143,11 +143,7 @@
                               "trailingTrivia": "",
                               "value": "headercolor"
                             }
-                          ],
-                          "parent": {
-                            "id": "<element-declaration>:b@[L0:C0, L9:C1]",
-                            "snippet": "Table b [h... id7 int\n}"
-                          }
+                          ]
                         },
                         "context": {
                           "id": "<identifer-stream>@[L0:C9, L0:C20]",
@@ -168,10 +164,6 @@
                           "line": 0,
                           "column": 9
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:b@[L0:C0, L9:C1]",
-                        "snippet": "Table b [h... id7 int\n}"
                       },
                       "value": {
                         "children": {
@@ -201,10 +193,6 @@
                                 "trailingInvalid": "",
                                 "trailingTrivia": "",
                                 "value": "#aaaaaa"
-                              },
-                              "parent": {
-                                "id": "<element-declaration>:b@[L0:C0, L9:C1]",
-                                "snippet": "Table b [h... id7 int\n}"
                               }
                             },
                             "context": {
@@ -226,10 +214,6 @@
                               "line": 0,
                               "column": 22
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:b@[L0:C0, L9:C1]",
-                            "snippet": "Table b [h... id7 int\n}"
                           }
                         },
                         "context": {
@@ -323,10 +307,6 @@
                   "trailingInvalid": "",
                   "trailingTrivia": "",
                   "value": "["
-                },
-                "parent": {
-                  "id": "<element-declaration>:b@[L0:C0, L9:C1]",
-                  "snippet": "Table b [h... id7 int\n}"
                 }
               },
               "context": {
@@ -409,10 +389,6 @@
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:b@[L0:C0, L9:C1]",
-                                  "snippet": "Table b [h... id7 int\n}"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:int@[L1:C5, L1:C8]",
@@ -469,10 +445,6 @@
                                 },
                                 "references": []
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:b@[L0:C0, L9:C1]",
-                              "snippet": "Table b [h... id7 int\n}"
                             }
                           },
                           "context": {
@@ -511,10 +483,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:b@[L0:C0, L9:C1]",
-                                "snippet": "Table b [h... id7 int\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:id@[L1:C2, L1:C4]",
@@ -571,10 +539,6 @@
                               },
                               "references": []
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:b@[L0:C0, L9:C1]",
-                            "snippet": "Table b [h... id7 int\n}"
                           }
                         },
                         "context": {
@@ -607,10 +571,6 @@
                           },
                           "references": []
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:b@[L0:C0, L9:C1]",
-                        "snippet": "Table b [h... id7 int\n}"
                       }
                     },
                     "context": {
@@ -656,10 +616,6 @@
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:b@[L0:C0, L9:C1]",
-                                  "snippet": "Table b [h... id7 int\n}"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:int@[L2:C7, L2:C10]",
@@ -716,10 +672,6 @@
                                 },
                                 "references": []
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:b@[L0:C0, L9:C1]",
-                              "snippet": "Table b [h... id7 int\n}"
                             }
                           },
                           "context": {
@@ -758,10 +710,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:b@[L0:C0, L9:C1]",
-                                "snippet": "Table b [h... id7 int\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:c_id@[L2:C2, L2:C6]",
@@ -818,10 +766,6 @@
                               },
                               "references": []
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:b@[L0:C0, L9:C1]",
-                            "snippet": "Table b [h... id7 int\n}"
                           }
                         },
                         "context": {
@@ -854,10 +798,6 @@
                           },
                           "references": []
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:b@[L0:C0, L9:C1]",
-                        "snippet": "Table b [h... id7 int\n}"
                       }
                     },
                     "context": {
@@ -903,10 +843,6 @@
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:b@[L0:C0, L9:C1]",
-                                  "snippet": "Table b [h... id7 int\n}"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:int@[L3:C6, L3:C9]",
@@ -963,10 +899,6 @@
                                 },
                                 "references": []
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:b@[L0:C0, L9:C1]",
-                              "snippet": "Table b [h... id7 int\n}"
                             }
                           },
                           "context": {
@@ -1005,10 +937,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:b@[L0:C0, L9:C1]",
-                                "snippet": "Table b [h... id7 int\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:id2@[L3:C2, L3:C5]",
@@ -1065,10 +993,6 @@
                               },
                               "references": []
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:b@[L0:C0, L9:C1]",
-                            "snippet": "Table b [h... id7 int\n}"
                           }
                         },
                         "context": {
@@ -1101,10 +1025,6 @@
                           },
                           "references": []
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:b@[L0:C0, L9:C1]",
-                        "snippet": "Table b [h... id7 int\n}"
                       }
                     },
                     "context": {
@@ -1150,10 +1070,6 @@
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:b@[L0:C0, L9:C1]",
-                                  "snippet": "Table b [h... id7 int\n}"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:int@[L4:C6, L4:C9]",
@@ -1210,10 +1126,6 @@
                                 },
                                 "references": []
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:b@[L0:C0, L9:C1]",
-                              "snippet": "Table b [h... id7 int\n}"
                             }
                           },
                           "context": {
@@ -1252,10 +1164,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:b@[L0:C0, L9:C1]",
-                                "snippet": "Table b [h... id7 int\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:id3@[L4:C2, L4:C5]",
@@ -1312,10 +1220,6 @@
                               },
                               "references": []
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:b@[L0:C0, L9:C1]",
-                            "snippet": "Table b [h... id7 int\n}"
                           }
                         },
                         "context": {
@@ -1348,10 +1252,6 @@
                           },
                           "references": []
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:b@[L0:C0, L9:C1]",
-                        "snippet": "Table b [h... id7 int\n}"
                       }
                     },
                     "context": {
@@ -1397,10 +1297,6 @@
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:b@[L0:C0, L9:C1]",
-                                  "snippet": "Table b [h... id7 int\n}"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:int@[L5:C6, L5:C9]",
@@ -1457,10 +1353,6 @@
                                 },
                                 "references": []
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:b@[L0:C0, L9:C1]",
-                              "snippet": "Table b [h... id7 int\n}"
                             }
                           },
                           "context": {
@@ -1499,10 +1391,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:b@[L0:C0, L9:C1]",
-                                "snippet": "Table b [h... id7 int\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:id4@[L5:C2, L5:C5]",
@@ -1559,10 +1447,6 @@
                               },
                               "references": []
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:b@[L0:C0, L9:C1]",
-                            "snippet": "Table b [h... id7 int\n}"
                           }
                         },
                         "context": {
@@ -1595,10 +1479,6 @@
                           },
                           "references": []
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:b@[L0:C0, L9:C1]",
-                        "snippet": "Table b [h... id7 int\n}"
                       }
                     },
                     "context": {
@@ -1644,10 +1524,6 @@
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:b@[L0:C0, L9:C1]",
-                                  "snippet": "Table b [h... id7 int\n}"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:int@[L6:C6, L6:C9]",
@@ -1704,10 +1580,6 @@
                                 },
                                 "references": []
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:b@[L0:C0, L9:C1]",
-                              "snippet": "Table b [h... id7 int\n}"
                             }
                           },
                           "context": {
@@ -1746,10 +1618,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:b@[L0:C0, L9:C1]",
-                                "snippet": "Table b [h... id7 int\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:id5@[L6:C2, L6:C5]",
@@ -1806,10 +1674,6 @@
                               },
                               "references": []
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:b@[L0:C0, L9:C1]",
-                            "snippet": "Table b [h... id7 int\n}"
                           }
                         },
                         "context": {
@@ -1842,10 +1706,6 @@
                           },
                           "references": []
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:b@[L0:C0, L9:C1]",
-                        "snippet": "Table b [h... id7 int\n}"
                       }
                     },
                     "context": {
@@ -1891,10 +1751,6 @@
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:b@[L0:C0, L9:C1]",
-                                  "snippet": "Table b [h... id7 int\n}"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:int@[L7:C6, L7:C9]",
@@ -1951,10 +1807,6 @@
                                 },
                                 "references": []
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:b@[L0:C0, L9:C1]",
-                              "snippet": "Table b [h... id7 int\n}"
                             }
                           },
                           "context": {
@@ -1993,10 +1845,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:b@[L0:C0, L9:C1]",
-                                "snippet": "Table b [h... id7 int\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:id6@[L7:C2, L7:C5]",
@@ -2053,10 +1901,6 @@
                               },
                               "references": []
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:b@[L0:C0, L9:C1]",
-                            "snippet": "Table b [h... id7 int\n}"
                           }
                         },
                         "context": {
@@ -2089,10 +1933,6 @@
                           },
                           "references": []
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:b@[L0:C0, L9:C1]",
-                        "snippet": "Table b [h... id7 int\n}"
                       }
                     },
                     "context": {
@@ -2138,10 +1978,6 @@
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:b@[L0:C0, L9:C1]",
-                                  "snippet": "Table b [h... id7 int\n}"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:int@[L8:C6, L8:C9]",
@@ -2198,10 +2034,6 @@
                                 },
                                 "references": []
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:b@[L0:C0, L9:C1]",
-                              "snippet": "Table b [h... id7 int\n}"
                             }
                           },
                           "context": {
@@ -2240,10 +2072,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:b@[L0:C0, L9:C1]",
-                                "snippet": "Table b [h... id7 int\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:id7@[L8:C2, L8:C5]",
@@ -2300,10 +2128,6 @@
                               },
                               "references": []
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:b@[L0:C0, L9:C1]",
-                            "snippet": "Table b [h... id7 int\n}"
                           }
                         },
                         "context": {
@@ -2336,10 +2160,6 @@
                           },
                           "references": []
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:b@[L0:C0, L9:C1]",
-                        "snippet": "Table b [h... id7 int\n}"
                       }
                     },
                     "context": {
@@ -2378,11 +2198,7 @@
                       ]
                     }
                   }
-                ],
-                "parent": {
-                  "id": "<element-declaration>:b@[L0:C0, L9:C1]",
-                  "snippet": "Table b [h... id7 int\n}"
-                }
+                ]
               },
               "context": {
                 "id": "<block-expression>@[L0:C31, L9:C1]",
@@ -2408,10 +2224,6 @@
               "children": {
                 "expression": {
                   "children": {
-                    "parent": {
-                      "id": "<element-declaration>:b@[L0:C0, L9:C1]",
-                      "snippet": "Table b [h... id7 int\n}"
-                    },
                     "variable": {
                       "context": {
                         "id": "<identifier>:b@[L0:C6, L0:C7]",
@@ -2457,10 +2269,6 @@
                     "line": 0,
                     "column": 6
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:b@[L0:C0, L9:C1]",
-                  "snippet": "Table b [h... id7 int\n}"
                 }
               },
               "context": {
@@ -2482,10 +2290,6 @@
                 "line": 0,
                 "column": 6
               }
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L45:C0]",
-              "snippet": "Table b [h... goodbye]\n"
             },
             "type": {
               "context": {
@@ -2689,10 +2493,6 @@
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:c@[L11:C0, L20:C1]",
-                                  "snippet": "Table c {\n... id7 int\n}"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:int@[L12:C5, L12:C8]",
@@ -2749,10 +2549,6 @@
                                 },
                                 "references": []
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:c@[L11:C0, L20:C1]",
-                              "snippet": "Table c {\n... id7 int\n}"
                             }
                           },
                           "context": {
@@ -2791,10 +2587,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:c@[L11:C0, L20:C1]",
-                                "snippet": "Table c {\n... id7 int\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:id@[L12:C2, L12:C4]",
@@ -2851,10 +2643,6 @@
                               },
                               "references": []
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:c@[L11:C0, L20:C1]",
-                            "snippet": "Table c {\n... id7 int\n}"
                           }
                         },
                         "context": {
@@ -2887,10 +2675,6 @@
                           },
                           "references": []
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:c@[L11:C0, L20:C1]",
-                        "snippet": "Table c {\n... id7 int\n}"
                       }
                     },
                     "context": {
@@ -2940,10 +2724,6 @@
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:c@[L11:C0, L20:C1]",
-                                  "snippet": "Table c {\n... id7 int\n}"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:int@[L13:C7, L13:C10]",
@@ -3000,10 +2780,6 @@
                                 },
                                 "references": []
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:c@[L11:C0, L20:C1]",
-                              "snippet": "Table c {\n... id7 int\n}"
                             }
                           },
                           "context": {
@@ -3042,10 +2818,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:c@[L11:C0, L20:C1]",
-                                "snippet": "Table c {\n... id7 int\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:b_id@[L13:C2, L13:C6]",
@@ -3102,10 +2874,6 @@
                               },
                               "references": []
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:c@[L11:C0, L20:C1]",
-                            "snippet": "Table c {\n... id7 int\n}"
                           }
                         },
                         "context": {
@@ -3138,10 +2906,6 @@
                           },
                           "references": []
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:c@[L11:C0, L20:C1]",
-                        "snippet": "Table c {\n... id7 int\n}"
                       }
                     },
                     "context": {
@@ -3182,10 +2946,6 @@
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:c@[L11:C0, L20:C1]",
-                                  "snippet": "Table c {\n... id7 int\n}"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:int@[L14:C6, L14:C9]",
@@ -3242,10 +3002,6 @@
                                 },
                                 "references": []
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:c@[L11:C0, L20:C1]",
-                              "snippet": "Table c {\n... id7 int\n}"
                             }
                           },
                           "context": {
@@ -3284,10 +3040,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:c@[L11:C0, L20:C1]",
-                                "snippet": "Table c {\n... id7 int\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:id2@[L14:C2, L14:C5]",
@@ -3344,10 +3096,6 @@
                               },
                               "references": []
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:c@[L11:C0, L20:C1]",
-                            "snippet": "Table c {\n... id7 int\n}"
                           }
                         },
                         "context": {
@@ -3380,10 +3128,6 @@
                           },
                           "references": []
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:c@[L11:C0, L20:C1]",
-                        "snippet": "Table c {\n... id7 int\n}"
                       }
                     },
                     "context": {
@@ -3429,10 +3173,6 @@
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:c@[L11:C0, L20:C1]",
-                                  "snippet": "Table c {\n... id7 int\n}"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:int@[L15:C6, L15:C9]",
@@ -3489,10 +3229,6 @@
                                 },
                                 "references": []
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:c@[L11:C0, L20:C1]",
-                              "snippet": "Table c {\n... id7 int\n}"
                             }
                           },
                           "context": {
@@ -3531,10 +3267,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:c@[L11:C0, L20:C1]",
-                                "snippet": "Table c {\n... id7 int\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:id3@[L15:C2, L15:C5]",
@@ -3591,10 +3323,6 @@
                               },
                               "references": []
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:c@[L11:C0, L20:C1]",
-                            "snippet": "Table c {\n... id7 int\n}"
                           }
                         },
                         "context": {
@@ -3627,10 +3355,6 @@
                           },
                           "references": []
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:c@[L11:C0, L20:C1]",
-                        "snippet": "Table c {\n... id7 int\n}"
                       }
                     },
                     "context": {
@@ -3676,10 +3400,6 @@
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:c@[L11:C0, L20:C1]",
-                                  "snippet": "Table c {\n... id7 int\n}"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:int@[L16:C6, L16:C9]",
@@ -3736,10 +3456,6 @@
                                 },
                                 "references": []
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:c@[L11:C0, L20:C1]",
-                              "snippet": "Table c {\n... id7 int\n}"
                             }
                           },
                           "context": {
@@ -3778,10 +3494,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:c@[L11:C0, L20:C1]",
-                                "snippet": "Table c {\n... id7 int\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:id4@[L16:C2, L16:C5]",
@@ -3838,10 +3550,6 @@
                               },
                               "references": []
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:c@[L11:C0, L20:C1]",
-                            "snippet": "Table c {\n... id7 int\n}"
                           }
                         },
                         "context": {
@@ -3874,10 +3582,6 @@
                           },
                           "references": []
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:c@[L11:C0, L20:C1]",
-                        "snippet": "Table c {\n... id7 int\n}"
                       }
                     },
                     "context": {
@@ -3923,10 +3627,6 @@
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:c@[L11:C0, L20:C1]",
-                                  "snippet": "Table c {\n... id7 int\n}"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:int@[L17:C6, L17:C9]",
@@ -3983,10 +3683,6 @@
                                 },
                                 "references": []
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:c@[L11:C0, L20:C1]",
-                              "snippet": "Table c {\n... id7 int\n}"
                             }
                           },
                           "context": {
@@ -4025,10 +3721,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:c@[L11:C0, L20:C1]",
-                                "snippet": "Table c {\n... id7 int\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:id5@[L17:C2, L17:C5]",
@@ -4085,10 +3777,6 @@
                               },
                               "references": []
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:c@[L11:C0, L20:C1]",
-                            "snippet": "Table c {\n... id7 int\n}"
                           }
                         },
                         "context": {
@@ -4121,10 +3809,6 @@
                           },
                           "references": []
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:c@[L11:C0, L20:C1]",
-                        "snippet": "Table c {\n... id7 int\n}"
                       }
                     },
                     "context": {
@@ -4170,10 +3854,6 @@
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:c@[L11:C0, L20:C1]",
-                                  "snippet": "Table c {\n... id7 int\n}"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:int@[L18:C6, L18:C9]",
@@ -4230,10 +3910,6 @@
                                 },
                                 "references": []
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:c@[L11:C0, L20:C1]",
-                              "snippet": "Table c {\n... id7 int\n}"
                             }
                           },
                           "context": {
@@ -4272,10 +3948,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:c@[L11:C0, L20:C1]",
-                                "snippet": "Table c {\n... id7 int\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:id6@[L18:C2, L18:C5]",
@@ -4332,10 +4004,6 @@
                               },
                               "references": []
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:c@[L11:C0, L20:C1]",
-                            "snippet": "Table c {\n... id7 int\n}"
                           }
                         },
                         "context": {
@@ -4368,10 +4036,6 @@
                           },
                           "references": []
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:c@[L11:C0, L20:C1]",
-                        "snippet": "Table c {\n... id7 int\n}"
                       }
                     },
                     "context": {
@@ -4417,10 +4081,6 @@
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:c@[L11:C0, L20:C1]",
-                                  "snippet": "Table c {\n... id7 int\n}"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:int@[L19:C6, L19:C9]",
@@ -4477,10 +4137,6 @@
                                 },
                                 "references": []
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:c@[L11:C0, L20:C1]",
-                              "snippet": "Table c {\n... id7 int\n}"
                             }
                           },
                           "context": {
@@ -4519,10 +4175,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:c@[L11:C0, L20:C1]",
-                                "snippet": "Table c {\n... id7 int\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:id7@[L19:C2, L19:C5]",
@@ -4579,10 +4231,6 @@
                               },
                               "references": []
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:c@[L11:C0, L20:C1]",
-                            "snippet": "Table c {\n... id7 int\n}"
                           }
                         },
                         "context": {
@@ -4615,10 +4263,6 @@
                           },
                           "references": []
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:c@[L11:C0, L20:C1]",
-                        "snippet": "Table c {\n... id7 int\n}"
                       }
                     },
                     "context": {
@@ -4657,11 +4301,7 @@
                       ]
                     }
                   }
-                ],
-                "parent": {
-                  "id": "<element-declaration>:c@[L11:C0, L20:C1]",
-                  "snippet": "Table c {\n... id7 int\n}"
-                }
+                ]
               },
               "context": {
                 "id": "<block-expression>@[L11:C8, L20:C1]",
@@ -4687,10 +4327,6 @@
               "children": {
                 "expression": {
                   "children": {
-                    "parent": {
-                      "id": "<element-declaration>:c@[L11:C0, L20:C1]",
-                      "snippet": "Table c {\n... id7 int\n}"
-                    },
                     "variable": {
                       "context": {
                         "id": "<identifier>:c@[L11:C6, L11:C7]",
@@ -4736,10 +4372,6 @@
                     "line": 11,
                     "column": 6
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:c@[L11:C0, L20:C1]",
-                  "snippet": "Table c {\n... id7 int\n}"
                 }
               },
               "context": {
@@ -4761,10 +4393,6 @@
                 "line": 11,
                 "column": 6
               }
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L45:C0]",
-              "snippet": "Table b [h... goodbye]\n"
             },
             "type": {
               "context": {
@@ -4996,11 +4624,7 @@
                                     "trailingTrivia": "",
                                     "value": "color"
                                   }
-                                ],
-                                "parent": {
-                                  "id": "<element-declaration>:short_ref@[L23:C0, L23:C61]",
-                                  "snippet": "Ref short_... set null]"
-                                }
+                                ]
                               },
                               "context": {
                                 "id": "<identifer-stream>@[L23:C28, L23:C33]",
@@ -5021,10 +4645,6 @@
                                 "line": 23,
                                 "column": 28
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:short_ref@[L23:C0, L23:C61]",
-                              "snippet": "Ref short_... set null]"
                             },
                             "value": {
                               "children": {
@@ -5054,10 +4674,6 @@
                                       "trailingInvalid": "",
                                       "trailingTrivia": "",
                                       "value": "#aabbcc"
-                                    },
-                                    "parent": {
-                                      "id": "<element-declaration>:short_ref@[L23:C0, L23:C61]",
-                                      "snippet": "Ref short_... set null]"
                                     }
                                   },
                                   "context": {
@@ -5079,10 +4695,6 @@
                                     "line": 23,
                                     "column": 35
                                   }
-                                },
-                                "parent": {
-                                  "id": "<element-declaration>:short_ref@[L23:C0, L23:C61]",
-                                  "snippet": "Ref short_... set null]"
                                 }
                               },
                               "context": {
@@ -5181,11 +4793,7 @@
                                     "trailingTrivia": "",
                                     "value": "update"
                                   }
-                                ],
-                                "parent": {
-                                  "id": "<element-declaration>:short_ref@[L23:C0, L23:C61]",
-                                  "snippet": "Ref short_... set null]"
-                                }
+                                ]
                               },
                               "context": {
                                 "id": "<identifer-stream>@[L23:C44, L23:C50]",
@@ -5206,10 +4814,6 @@
                                 "line": 23,
                                 "column": 44
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:short_ref@[L23:C0, L23:C61]",
-                              "snippet": "Ref short_... set null]"
                             },
                             "value": {
                               "children": {
@@ -5264,11 +4868,7 @@
                                     "trailingTrivia": "",
                                     "value": "null"
                                   }
-                                ],
-                                "parent": {
-                                  "id": "<element-declaration>:short_ref@[L23:C0, L23:C61]",
-                                  "snippet": "Ref short_... set null]"
-                                }
+                                ]
                               },
                               "context": {
                                 "id": "<identifer-stream>@[L23:C52, L23:C60]",
@@ -5361,10 +4961,6 @@
                         "trailingInvalid": "",
                         "trailingTrivia": "",
                         "value": "["
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:short_ref@[L23:C0, L23:C61]",
-                        "snippet": "Ref short_... set null]"
                       }
                     },
                     "context": {
@@ -5396,10 +4992,6 @@
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:short_ref@[L23:C0, L23:C61]",
-                                  "snippet": "Ref short_... set null]"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:b@[L23:C15, L23:C16]",
@@ -5445,10 +5037,6 @@
                                 "line": 23,
                                 "column": 15
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:short_ref@[L23:C0, L23:C61]",
-                              "snippet": "Ref short_... set null]"
                             }
                           },
                           "context": {
@@ -5502,18 +5090,10 @@
                           "trailingTrivia": "",
                           "value": "."
                         },
-                        "parent": {
-                          "id": "<element-declaration>:short_ref@[L23:C0, L23:C61]",
-                          "snippet": "Ref short_... set null]"
-                        },
                         "rightExpression": {
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:short_ref@[L23:C0, L23:C61]",
-                                  "snippet": "Ref short_... set null]"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:id@[L23:C17, L23:C19]",
@@ -5559,10 +5139,6 @@
                                 "line": 23,
                                 "column": 17
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:short_ref@[L23:C0, L23:C61]",
-                              "snippet": "Ref short_... set null]"
                             }
                           },
                           "context": {
@@ -5637,20 +5213,12 @@
                       "trailingTrivia": " ",
                       "value": "<"
                     },
-                    "parent": {
-                      "id": "<element-declaration>:short_ref@[L23:C0, L23:C61]",
-                      "snippet": "Ref short_... set null]"
-                    },
                     "rightExpression": {
                       "children": {
                         "leftExpression": {
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:short_ref@[L23:C0, L23:C61]",
-                                  "snippet": "Ref short_... set null]"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:c@[L23:C22, L23:C23]",
@@ -5696,10 +5264,6 @@
                                 "line": 23,
                                 "column": 22
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:short_ref@[L23:C0, L23:C61]",
-                              "snippet": "Ref short_... set null]"
                             }
                           },
                           "context": {
@@ -5753,18 +5317,10 @@
                           "trailingTrivia": "",
                           "value": "."
                         },
-                        "parent": {
-                          "id": "<element-declaration>:short_ref@[L23:C0, L23:C61]",
-                          "snippet": "Ref short_... set null]"
-                        },
                         "rightExpression": {
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:short_ref@[L23:C0, L23:C61]",
-                                  "snippet": "Ref short_... set null]"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:id@[L23:C24, L23:C26]",
@@ -5810,10 +5366,6 @@
                                 "line": 23,
                                 "column": 24
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:short_ref@[L23:C0, L23:C61]",
-                              "snippet": "Ref short_... set null]"
                             }
                           },
                           "context": {
@@ -5883,10 +5435,6 @@
                     "line": 23,
                     "column": 15
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:short_ref@[L23:C0, L23:C61]",
-                  "snippet": "Ref short_... set null]"
                 }
               },
               "context": {
@@ -5938,10 +5486,6 @@
               "children": {
                 "expression": {
                   "children": {
-                    "parent": {
-                      "id": "<element-declaration>:short_ref@[L23:C0, L23:C61]",
-                      "snippet": "Ref short_... set null]"
-                    },
                     "variable": {
                       "context": {
                         "id": "<identifier>:short_ref@[L23:C4, L23:C13]",
@@ -5987,10 +5531,6 @@
                     "line": 23,
                     "column": 4
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:short_ref@[L23:C0, L23:C61]",
-                  "snippet": "Ref short_... set null]"
                 }
               },
               "context": {
@@ -6012,10 +5552,6 @@
                 "line": 23,
                 "column": 4
               }
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L45:C0]",
-              "snippet": "Table b [h... goodbye]\n"
             },
             "type": {
               "context": {
@@ -6218,11 +5754,7 @@
                                           "trailingTrivia": "",
                                           "value": "color"
                                         }
-                                      ],
-                                      "parent": {
-                                        "id": "<element-declaration>:long_ref@[L26:C0, L28:C1]",
-                                        "snippet": "Ref long_r...cascade]\n}"
-                                      }
+                                      ]
                                     },
                                     "context": {
                                       "id": "<identifer-stream>@[L27:C17, L27:C22]",
@@ -6243,10 +5775,6 @@
                                       "line": 27,
                                       "column": 17
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:long_ref@[L26:C0, L28:C1]",
-                                    "snippet": "Ref long_r...cascade]\n}"
                                   },
                                   "value": {
                                     "children": {
@@ -6276,10 +5804,6 @@
                                             "trailingInvalid": "",
                                             "trailingTrivia": "",
                                             "value": "#123456"
-                                          },
-                                          "parent": {
-                                            "id": "<element-declaration>:long_ref@[L26:C0, L28:C1]",
-                                            "snippet": "Ref long_r...cascade]\n}"
                                           }
                                         },
                                         "context": {
@@ -6301,10 +5825,6 @@
                                           "line": 27,
                                           "column": 24
                                         }
-                                      },
-                                      "parent": {
-                                        "id": "<element-declaration>:long_ref@[L26:C0, L28:C1]",
-                                        "snippet": "Ref long_r...cascade]\n}"
                                       }
                                     },
                                     "context": {
@@ -6403,11 +5923,7 @@
                                           "trailingTrivia": "",
                                           "value": "delete"
                                         }
-                                      ],
-                                      "parent": {
-                                        "id": "<element-declaration>:long_ref@[L26:C0, L28:C1]",
-                                        "snippet": "Ref long_r...cascade]\n}"
-                                      }
+                                      ]
                                     },
                                     "context": {
                                       "id": "<identifer-stream>@[L27:C33, L27:C39]",
@@ -6429,18 +5945,10 @@
                                       "column": 33
                                     }
                                   },
-                                  "parent": {
-                                    "id": "<element-declaration>:long_ref@[L26:C0, L28:C1]",
-                                    "snippet": "Ref long_r...cascade]\n}"
-                                  },
                                   "value": {
                                     "children": {
                                       "expression": {
                                         "children": {
-                                          "parent": {
-                                            "id": "<element-declaration>:long_ref@[L26:C0, L28:C1]",
-                                            "snippet": "Ref long_r...cascade]\n}"
-                                          },
                                           "variable": {
                                             "context": {
                                               "id": "<identifier>:cascade@[L27:C41, L27:C48]",
@@ -6486,10 +5994,6 @@
                                           "line": 27,
                                           "column": 41
                                         }
-                                      },
-                                      "parent": {
-                                        "id": "<element-declaration>:long_ref@[L26:C0, L28:C1]",
-                                        "snippet": "Ref long_r...cascade]\n}"
                                       }
                                     },
                                     "context": {
@@ -6583,10 +6087,6 @@
                               "trailingInvalid": "",
                               "trailingTrivia": "",
                               "value": "["
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:long_ref@[L26:C0, L28:C1]",
-                              "snippet": "Ref long_r...cascade]\n}"
                             }
                           },
                           "context": {
@@ -6618,10 +6118,6 @@
                                 "children": {
                                   "expression": {
                                     "children": {
-                                      "parent": {
-                                        "id": "<element-declaration>:long_ref@[L26:C0, L28:C1]",
-                                        "snippet": "Ref long_r...cascade]\n}"
-                                      },
                                       "variable": {
                                         "context": {
                                           "id": "<identifier>:c@[L27:C2, L27:C3]",
@@ -6667,10 +6163,6 @@
                                       "line": 27,
                                       "column": 2
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:long_ref@[L26:C0, L28:C1]",
-                                    "snippet": "Ref long_r...cascade]\n}"
                                   }
                                 },
                                 "context": {
@@ -6724,18 +6216,10 @@
                                 "trailingTrivia": "",
                                 "value": "."
                               },
-                              "parent": {
-                                "id": "<element-declaration>:long_ref@[L26:C0, L28:C1]",
-                                "snippet": "Ref long_r...cascade]\n}"
-                              },
                               "rightExpression": {
                                 "children": {
                                   "expression": {
                                     "children": {
-                                      "parent": {
-                                        "id": "<element-declaration>:long_ref@[L26:C0, L28:C1]",
-                                        "snippet": "Ref long_r...cascade]\n}"
-                                      },
                                       "variable": {
                                         "context": {
                                           "id": "<identifier>:id@[L27:C4, L27:C6]",
@@ -6781,10 +6265,6 @@
                                       "line": 27,
                                       "column": 4
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:long_ref@[L26:C0, L28:C1]",
-                                    "snippet": "Ref long_r...cascade]\n}"
                                   }
                                 },
                                 "context": {
@@ -6859,20 +6339,12 @@
                             "trailingTrivia": " ",
                             "value": "<"
                           },
-                          "parent": {
-                            "id": "<element-declaration>:long_ref@[L26:C0, L28:C1]",
-                            "snippet": "Ref long_r...cascade]\n}"
-                          },
                           "rightExpression": {
                             "children": {
                               "leftExpression": {
                                 "children": {
                                   "expression": {
                                     "children": {
-                                      "parent": {
-                                        "id": "<element-declaration>:long_ref@[L26:C0, L28:C1]",
-                                        "snippet": "Ref long_r...cascade]\n}"
-                                      },
                                       "variable": {
                                         "context": {
                                           "id": "<identifier>:b@[L27:C9, L27:C10]",
@@ -6918,10 +6390,6 @@
                                       "line": 27,
                                       "column": 9
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:long_ref@[L26:C0, L28:C1]",
-                                    "snippet": "Ref long_r...cascade]\n}"
                                   }
                                 },
                                 "context": {
@@ -6975,18 +6443,10 @@
                                 "trailingTrivia": "",
                                 "value": "."
                               },
-                              "parent": {
-                                "id": "<element-declaration>:long_ref@[L26:C0, L28:C1]",
-                                "snippet": "Ref long_r...cascade]\n}"
-                              },
                               "rightExpression": {
                                 "children": {
                                   "expression": {
                                     "children": {
-                                      "parent": {
-                                        "id": "<element-declaration>:long_ref@[L26:C0, L28:C1]",
-                                        "snippet": "Ref long_r...cascade]\n}"
-                                      },
                                       "variable": {
                                         "context": {
                                           "id": "<identifier>:c_id@[L27:C11, L27:C15]",
@@ -7032,10 +6492,6 @@
                                       "line": 27,
                                       "column": 11
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:long_ref@[L26:C0, L28:C1]",
-                                    "snippet": "Ref long_r...cascade]\n}"
                                   }
                                 },
                                 "context": {
@@ -7105,10 +6561,6 @@
                           "line": 27,
                           "column": 2
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:long_ref@[L26:C0, L28:C1]",
-                        "snippet": "Ref long_r...cascade]\n}"
                       }
                     },
                     "context": {
@@ -7131,11 +6583,7 @@
                       "column": 2
                     }
                   }
-                ],
-                "parent": {
-                  "id": "<element-declaration>:long_ref@[L26:C0, L28:C1]",
-                  "snippet": "Ref long_r...cascade]\n}"
-                }
+                ]
               },
               "context": {
                 "id": "<block-expression>@[L26:C13, L28:C1]",
@@ -7161,10 +6609,6 @@
               "children": {
                 "expression": {
                   "children": {
-                    "parent": {
-                      "id": "<element-declaration>:long_ref@[L26:C0, L28:C1]",
-                      "snippet": "Ref long_r...cascade]\n}"
-                    },
                     "variable": {
                       "context": {
                         "id": "<identifier>:long_ref@[L26:C4, L26:C12]",
@@ -7210,10 +6654,6 @@
                     "line": 26,
                     "column": 4
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:long_ref@[L26:C0, L28:C1]",
-                  "snippet": "Ref long_r...cascade]\n}"
                 }
               },
               "context": {
@@ -7235,10 +6675,6 @@
                 "line": 26,
                 "column": 4
               }
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L45:C0]",
-              "snippet": "Table b [h... goodbye]\n"
             },
             "type": {
               "context": {
@@ -7359,11 +6795,7 @@
                               "trailingTrivia": "",
                               "value": "color"
                             }
-                          ],
-                          "parent": {
-                            "id": "<element-declaration>:error_ref2@[L30:C0, L32:C1]",
-                            "snippet": "Ref error_... < b.id2\n}"
-                          }
+                          ]
                         },
                         "context": {
                           "id": "<identifer-stream>@[L30:C16, L30:C21]",
@@ -7384,10 +6816,6 @@
                           "line": 30,
                           "column": 16
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:error_ref2@[L30:C0, L32:C1]",
-                        "snippet": "Ref error_... < b.id2\n}"
                       },
                       "value": {
                         "children": {
@@ -7417,10 +6845,6 @@
                                 "trailingInvalid": "",
                                 "trailingTrivia": "",
                                 "value": "#123456"
-                              },
-                              "parent": {
-                                "id": "<element-declaration>:error_ref2@[L30:C0, L32:C1]",
-                                "snippet": "Ref error_... < b.id2\n}"
                               }
                             },
                             "context": {
@@ -7442,10 +6866,6 @@
                               "line": 30,
                               "column": 23
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:error_ref2@[L30:C0, L32:C1]",
-                            "snippet": "Ref error_... < b.id2\n}"
                           }
                         },
                         "context": {
@@ -7539,10 +6959,6 @@
                   "trailingInvalid": "",
                   "trailingTrivia": "",
                   "value": "["
-                },
-                "parent": {
-                  "id": "<element-declaration>:error_ref2@[L30:C0, L32:C1]",
-                  "snippet": "Ref error_... < b.id2\n}"
                 }
               },
               "context": {
@@ -7629,10 +7045,6 @@
                                 "children": {
                                   "expression": {
                                     "children": {
-                                      "parent": {
-                                        "id": "<element-declaration>:error_ref2@[L30:C0, L32:C1]",
-                                        "snippet": "Ref error_... < b.id2\n}"
-                                      },
                                       "variable": {
                                         "context": {
                                           "id": "<identifier>:c@[L31:C2, L31:C3]",
@@ -7678,10 +7090,6 @@
                                       "line": 31,
                                       "column": 2
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:error_ref2@[L30:C0, L32:C1]",
-                                    "snippet": "Ref error_... < b.id2\n}"
                                   }
                                 },
                                 "context": {
@@ -7735,18 +7143,10 @@
                                 "trailingTrivia": "",
                                 "value": "."
                               },
-                              "parent": {
-                                "id": "<element-declaration>:error_ref2@[L30:C0, L32:C1]",
-                                "snippet": "Ref error_... < b.id2\n}"
-                              },
                               "rightExpression": {
                                 "children": {
                                   "expression": {
                                     "children": {
-                                      "parent": {
-                                        "id": "<element-declaration>:error_ref2@[L30:C0, L32:C1]",
-                                        "snippet": "Ref error_... < b.id2\n}"
-                                      },
                                       "variable": {
                                         "context": {
                                           "id": "<identifier>:id2@[L31:C4, L31:C7]",
@@ -7792,10 +7192,6 @@
                                       "line": 31,
                                       "column": 4
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:error_ref2@[L30:C0, L32:C1]",
-                                    "snippet": "Ref error_... < b.id2\n}"
                                   }
                                 },
                                 "context": {
@@ -7870,20 +7266,12 @@
                             "trailingTrivia": " ",
                             "value": "<"
                           },
-                          "parent": {
-                            "id": "<element-declaration>:error_ref2@[L30:C0, L32:C1]",
-                            "snippet": "Ref error_... < b.id2\n}"
-                          },
                           "rightExpression": {
                             "children": {
                               "leftExpression": {
                                 "children": {
                                   "expression": {
                                     "children": {
-                                      "parent": {
-                                        "id": "<element-declaration>:error_ref2@[L30:C0, L32:C1]",
-                                        "snippet": "Ref error_... < b.id2\n}"
-                                      },
                                       "variable": {
                                         "context": {
                                           "id": "<identifier>:b@[L31:C10, L31:C11]",
@@ -7929,10 +7317,6 @@
                                       "line": 31,
                                       "column": 10
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:error_ref2@[L30:C0, L32:C1]",
-                                    "snippet": "Ref error_... < b.id2\n}"
                                   }
                                 },
                                 "context": {
@@ -7986,18 +7370,10 @@
                                 "trailingTrivia": "",
                                 "value": "."
                               },
-                              "parent": {
-                                "id": "<element-declaration>:error_ref2@[L30:C0, L32:C1]",
-                                "snippet": "Ref error_... < b.id2\n}"
-                              },
                               "rightExpression": {
                                 "children": {
                                   "expression": {
                                     "children": {
-                                      "parent": {
-                                        "id": "<element-declaration>:error_ref2@[L30:C0, L32:C1]",
-                                        "snippet": "Ref error_... < b.id2\n}"
-                                      },
                                       "variable": {
                                         "context": {
                                           "id": "<identifier>:id2@[L31:C12, L31:C15]",
@@ -8043,10 +7419,6 @@
                                       "line": 31,
                                       "column": 12
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:error_ref2@[L30:C0, L32:C1]",
-                                    "snippet": "Ref error_... < b.id2\n}"
                                   }
                                 },
                                 "context": {
@@ -8116,10 +7488,6 @@
                           "line": 31,
                           "column": 2
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:error_ref2@[L30:C0, L32:C1]",
-                        "snippet": "Ref error_... < b.id2\n}"
                       }
                     },
                     "context": {
@@ -8142,11 +7510,7 @@
                       "column": 2
                     }
                   }
-                ],
-                "parent": {
-                  "id": "<element-declaration>:error_ref2@[L30:C0, L32:C1]",
-                  "snippet": "Ref error_... < b.id2\n}"
-                }
+                ]
               },
               "context": {
                 "id": "<block-expression>@[L30:C32, L32:C1]",
@@ -8172,10 +7536,6 @@
               "children": {
                 "expression": {
                   "children": {
-                    "parent": {
-                      "id": "<element-declaration>:error_ref2@[L30:C0, L32:C1]",
-                      "snippet": "Ref error_... < b.id2\n}"
-                    },
                     "variable": {
                       "context": {
                         "id": "<identifier>:error_ref2@[L30:C4, L30:C14]",
@@ -8221,10 +7581,6 @@
                     "line": 30,
                     "column": 4
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:error_ref2@[L30:C0, L32:C1]",
-                  "snippet": "Ref error_... < b.id2\n}"
                 }
               },
               "context": {
@@ -8246,10 +7602,6 @@
                 "line": 30,
                 "column": 4
               }
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L45:C0]",
-              "snippet": "Table b [h... goodbye]\n"
             },
             "type": {
               "context": {
@@ -8426,11 +7778,7 @@
                                           "trailingTrivia": "",
                                           "value": "color"
                                         }
-                                      ],
-                                      "parent": {
-                                        "id": "<element-declaration>:error_ref3@[L34:C0, L36:C1]",
-                                        "snippet": "Ref error_...a_color]\n}"
-                                      }
+                                      ]
                                     },
                                     "context": {
                                       "id": "<identifer-stream>@[L35:C17, L35:C22]",
@@ -8451,10 +7799,6 @@
                                       "line": 35,
                                       "column": 17
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:error_ref3@[L34:C0, L36:C1]",
-                                    "snippet": "Ref error_...a_color]\n}"
                                   },
                                   "value": {
                                     "children": {
@@ -8484,10 +7828,6 @@
                                             "trailingInvalid": "",
                                             "trailingTrivia": "",
                                             "value": "#not_a_color"
-                                          },
-                                          "parent": {
-                                            "id": "<element-declaration>:error_ref3@[L34:C0, L36:C1]",
-                                            "snippet": "Ref error_...a_color]\n}"
                                           }
                                         },
                                         "context": {
@@ -8509,10 +7849,6 @@
                                           "line": 35,
                                           "column": 24
                                         }
-                                      },
-                                      "parent": {
-                                        "id": "<element-declaration>:error_ref3@[L34:C0, L36:C1]",
-                                        "snippet": "Ref error_...a_color]\n}"
                                       }
                                     },
                                     "context": {
@@ -8606,10 +7942,6 @@
                               "trailingInvalid": "",
                               "trailingTrivia": "",
                               "value": "["
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:error_ref3@[L34:C0, L36:C1]",
-                              "snippet": "Ref error_...a_color]\n}"
                             }
                           },
                           "context": {
@@ -8641,10 +7973,6 @@
                                 "children": {
                                   "expression": {
                                     "children": {
-                                      "parent": {
-                                        "id": "<element-declaration>:error_ref3@[L34:C0, L36:C1]",
-                                        "snippet": "Ref error_...a_color]\n}"
-                                      },
                                       "variable": {
                                         "context": {
                                           "id": "<identifier>:c@[L35:C2, L35:C3]",
@@ -8690,10 +8018,6 @@
                                       "line": 35,
                                       "column": 2
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:error_ref3@[L34:C0, L36:C1]",
-                                    "snippet": "Ref error_...a_color]\n}"
                                   }
                                 },
                                 "context": {
@@ -8747,18 +8071,10 @@
                                 "trailingTrivia": "",
                                 "value": "."
                               },
-                              "parent": {
-                                "id": "<element-declaration>:error_ref3@[L34:C0, L36:C1]",
-                                "snippet": "Ref error_...a_color]\n}"
-                              },
                               "rightExpression": {
                                 "children": {
                                   "expression": {
                                     "children": {
-                                      "parent": {
-                                        "id": "<element-declaration>:error_ref3@[L34:C0, L36:C1]",
-                                        "snippet": "Ref error_...a_color]\n}"
-                                      },
                                       "variable": {
                                         "context": {
                                           "id": "<identifier>:id3@[L35:C4, L35:C7]",
@@ -8804,10 +8120,6 @@
                                       "line": 35,
                                       "column": 4
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:error_ref3@[L34:C0, L36:C1]",
-                                    "snippet": "Ref error_...a_color]\n}"
                                   }
                                 },
                                 "context": {
@@ -8882,20 +8194,12 @@
                             "trailingTrivia": " ",
                             "value": "<"
                           },
-                          "parent": {
-                            "id": "<element-declaration>:error_ref3@[L34:C0, L36:C1]",
-                            "snippet": "Ref error_...a_color]\n}"
-                          },
                           "rightExpression": {
                             "children": {
                               "leftExpression": {
                                 "children": {
                                   "expression": {
                                     "children": {
-                                      "parent": {
-                                        "id": "<element-declaration>:error_ref3@[L34:C0, L36:C1]",
-                                        "snippet": "Ref error_...a_color]\n}"
-                                      },
                                       "variable": {
                                         "context": {
                                           "id": "<identifier>:b@[L35:C10, L35:C11]",
@@ -8941,10 +8245,6 @@
                                       "line": 35,
                                       "column": 10
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:error_ref3@[L34:C0, L36:C1]",
-                                    "snippet": "Ref error_...a_color]\n}"
                                   }
                                 },
                                 "context": {
@@ -8998,18 +8298,10 @@
                                 "trailingTrivia": "",
                                 "value": "."
                               },
-                              "parent": {
-                                "id": "<element-declaration>:error_ref3@[L34:C0, L36:C1]",
-                                "snippet": "Ref error_...a_color]\n}"
-                              },
                               "rightExpression": {
                                 "children": {
                                   "expression": {
                                     "children": {
-                                      "parent": {
-                                        "id": "<element-declaration>:error_ref3@[L34:C0, L36:C1]",
-                                        "snippet": "Ref error_...a_color]\n}"
-                                      },
                                       "variable": {
                                         "context": {
                                           "id": "<identifier>:id3@[L35:C12, L35:C15]",
@@ -9055,10 +8347,6 @@
                                       "line": 35,
                                       "column": 12
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:error_ref3@[L34:C0, L36:C1]",
-                                    "snippet": "Ref error_...a_color]\n}"
                                   }
                                 },
                                 "context": {
@@ -9128,10 +8416,6 @@
                           "line": 35,
                           "column": 2
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:error_ref3@[L34:C0, L36:C1]",
-                        "snippet": "Ref error_...a_color]\n}"
                       }
                     },
                     "context": {
@@ -9154,11 +8438,7 @@
                       "column": 2
                     }
                   }
-                ],
-                "parent": {
-                  "id": "<element-declaration>:error_ref3@[L34:C0, L36:C1]",
-                  "snippet": "Ref error_...a_color]\n}"
-                }
+                ]
               },
               "context": {
                 "id": "<block-expression>@[L34:C15, L36:C1]",
@@ -9184,10 +8464,6 @@
               "children": {
                 "expression": {
                   "children": {
-                    "parent": {
-                      "id": "<element-declaration>:error_ref3@[L34:C0, L36:C1]",
-                      "snippet": "Ref error_...a_color]\n}"
-                    },
                     "variable": {
                       "context": {
                         "id": "<identifier>:error_ref3@[L34:C4, L34:C14]",
@@ -9233,10 +8509,6 @@
                     "line": 34,
                     "column": 4
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:error_ref3@[L34:C0, L36:C1]",
-                  "snippet": "Ref error_...a_color]\n}"
                 }
               },
               "context": {
@@ -9258,10 +8530,6 @@
                 "line": 34,
                 "column": 4
               }
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L45:C0]",
-              "snippet": "Table b [h... goodbye]\n"
             },
             "type": {
               "context": {
@@ -9438,11 +8706,7 @@
                                           "trailingTrivia": "",
                                           "value": "hello"
                                         }
-                                      ],
-                                      "parent": {
-                                        "id": "<element-declaration>:error_ref4@[L38:C0, L40:C1]",
-                                        "snippet": "Ref error_...goodbye]\n}"
-                                      }
+                                      ]
                                     },
                                     "context": {
                                       "id": "<identifer-stream>@[L39:C17, L39:C22]",
@@ -9464,18 +8728,10 @@
                                       "column": 17
                                     }
                                   },
-                                  "parent": {
-                                    "id": "<element-declaration>:error_ref4@[L38:C0, L40:C1]",
-                                    "snippet": "Ref error_...goodbye]\n}"
-                                  },
                                   "value": {
                                     "children": {
                                       "expression": {
                                         "children": {
-                                          "parent": {
-                                            "id": "<element-declaration>:error_ref4@[L38:C0, L40:C1]",
-                                            "snippet": "Ref error_...goodbye]\n}"
-                                          },
                                           "variable": {
                                             "context": {
                                               "id": "<identifier>:goodbye@[L39:C24, L39:C31]",
@@ -9521,10 +8777,6 @@
                                           "line": 39,
                                           "column": 24
                                         }
-                                      },
-                                      "parent": {
-                                        "id": "<element-declaration>:error_ref4@[L38:C0, L40:C1]",
-                                        "snippet": "Ref error_...goodbye]\n}"
                                       }
                                     },
                                     "context": {
@@ -9618,10 +8870,6 @@
                               "trailingInvalid": "",
                               "trailingTrivia": "",
                               "value": "["
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:error_ref4@[L38:C0, L40:C1]",
-                              "snippet": "Ref error_...goodbye]\n}"
                             }
                           },
                           "context": {
@@ -9653,10 +8901,6 @@
                                 "children": {
                                   "expression": {
                                     "children": {
-                                      "parent": {
-                                        "id": "<element-declaration>:error_ref4@[L38:C0, L40:C1]",
-                                        "snippet": "Ref error_...goodbye]\n}"
-                                      },
                                       "variable": {
                                         "context": {
                                           "id": "<identifier>:c@[L39:C2, L39:C3]",
@@ -9702,10 +8946,6 @@
                                       "line": 39,
                                       "column": 2
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:error_ref4@[L38:C0, L40:C1]",
-                                    "snippet": "Ref error_...goodbye]\n}"
                                   }
                                 },
                                 "context": {
@@ -9759,18 +8999,10 @@
                                 "trailingTrivia": "",
                                 "value": "."
                               },
-                              "parent": {
-                                "id": "<element-declaration>:error_ref4@[L38:C0, L40:C1]",
-                                "snippet": "Ref error_...goodbye]\n}"
-                              },
                               "rightExpression": {
                                 "children": {
                                   "expression": {
                                     "children": {
-                                      "parent": {
-                                        "id": "<element-declaration>:error_ref4@[L38:C0, L40:C1]",
-                                        "snippet": "Ref error_...goodbye]\n}"
-                                      },
                                       "variable": {
                                         "context": {
                                           "id": "<identifier>:id4@[L39:C4, L39:C7]",
@@ -9816,10 +9048,6 @@
                                       "line": 39,
                                       "column": 4
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:error_ref4@[L38:C0, L40:C1]",
-                                    "snippet": "Ref error_...goodbye]\n}"
                                   }
                                 },
                                 "context": {
@@ -9894,20 +9122,12 @@
                             "trailingTrivia": " ",
                             "value": "<"
                           },
-                          "parent": {
-                            "id": "<element-declaration>:error_ref4@[L38:C0, L40:C1]",
-                            "snippet": "Ref error_...goodbye]\n}"
-                          },
                           "rightExpression": {
                             "children": {
                               "leftExpression": {
                                 "children": {
                                   "expression": {
                                     "children": {
-                                      "parent": {
-                                        "id": "<element-declaration>:error_ref4@[L38:C0, L40:C1]",
-                                        "snippet": "Ref error_...goodbye]\n}"
-                                      },
                                       "variable": {
                                         "context": {
                                           "id": "<identifier>:b@[L39:C10, L39:C11]",
@@ -9953,10 +9173,6 @@
                                       "line": 39,
                                       "column": 10
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:error_ref4@[L38:C0, L40:C1]",
-                                    "snippet": "Ref error_...goodbye]\n}"
                                   }
                                 },
                                 "context": {
@@ -10010,18 +9226,10 @@
                                 "trailingTrivia": "",
                                 "value": "."
                               },
-                              "parent": {
-                                "id": "<element-declaration>:error_ref4@[L38:C0, L40:C1]",
-                                "snippet": "Ref error_...goodbye]\n}"
-                              },
                               "rightExpression": {
                                 "children": {
                                   "expression": {
                                     "children": {
-                                      "parent": {
-                                        "id": "<element-declaration>:error_ref4@[L38:C0, L40:C1]",
-                                        "snippet": "Ref error_...goodbye]\n}"
-                                      },
                                       "variable": {
                                         "context": {
                                           "id": "<identifier>:id4@[L39:C12, L39:C15]",
@@ -10067,10 +9275,6 @@
                                       "line": 39,
                                       "column": 12
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:error_ref4@[L38:C0, L40:C1]",
-                                    "snippet": "Ref error_...goodbye]\n}"
                                   }
                                 },
                                 "context": {
@@ -10140,10 +9344,6 @@
                           "line": 39,
                           "column": 2
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:error_ref4@[L38:C0, L40:C1]",
-                        "snippet": "Ref error_...goodbye]\n}"
                       }
                     },
                     "context": {
@@ -10166,11 +9366,7 @@
                       "column": 2
                     }
                   }
-                ],
-                "parent": {
-                  "id": "<element-declaration>:error_ref4@[L38:C0, L40:C1]",
-                  "snippet": "Ref error_...goodbye]\n}"
-                }
+                ]
               },
               "context": {
                 "id": "<block-expression>@[L38:C15, L40:C1]",
@@ -10196,10 +9392,6 @@
               "children": {
                 "expression": {
                   "children": {
-                    "parent": {
-                      "id": "<element-declaration>:error_ref4@[L38:C0, L40:C1]",
-                      "snippet": "Ref error_...goodbye]\n}"
-                    },
                     "variable": {
                       "context": {
                         "id": "<identifier>:error_ref4@[L38:C4, L38:C14]",
@@ -10245,10 +9437,6 @@
                     "line": 38,
                     "column": 4
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:error_ref4@[L38:C0, L40:C1]",
-                  "snippet": "Ref error_...goodbye]\n}"
                 }
               },
               "context": {
@@ -10270,10 +9458,6 @@
                 "line": 38,
                 "column": 4
               }
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L45:C0]",
-              "snippet": "Table b [h... goodbye]\n"
             },
             "type": {
               "context": {
@@ -10394,11 +9578,7 @@
                               "trailingTrivia": "",
                               "value": "color"
                             }
-                          ],
-                          "parent": {
-                            "id": "<element-declaration>:error_shortref2@[L42:C0, L42:C51]",
-                            "snippet": "Ref error_...d5 < b.id5"
-                          }
+                          ]
                         },
                         "context": {
                           "id": "<identifer-stream>@[L42:C21, L42:C26]",
@@ -10419,10 +9599,6 @@
                           "line": 42,
                           "column": 21
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:error_shortref2@[L42:C0, L42:C51]",
-                        "snippet": "Ref error_...d5 < b.id5"
                       },
                       "value": {
                         "children": {
@@ -10452,10 +9628,6 @@
                                 "trailingInvalid": "",
                                 "trailingTrivia": "",
                                 "value": "#123456"
-                              },
-                              "parent": {
-                                "id": "<element-declaration>:error_shortref2@[L42:C0, L42:C51]",
-                                "snippet": "Ref error_...d5 < b.id5"
                               }
                             },
                             "context": {
@@ -10477,10 +9649,6 @@
                               "line": 42,
                               "column": 28
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:error_shortref2@[L42:C0, L42:C51]",
-                            "snippet": "Ref error_...d5 < b.id5"
                           }
                         },
                         "context": {
@@ -10574,10 +9742,6 @@
                   "trailingInvalid": "",
                   "trailingTrivia": "",
                   "value": "["
-                },
-                "parent": {
-                  "id": "<element-declaration>:error_shortref2@[L42:C0, L42:C51]",
-                  "snippet": "Ref error_...d5 < b.id5"
                 }
               },
               "context": {
@@ -10611,10 +9775,6 @@
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:error_shortref2@[L42:C0, L42:C51]",
-                                  "snippet": "Ref error_...d5 < b.id5"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:c@[L42:C38, L42:C39]",
@@ -10660,10 +9820,6 @@
                                 "line": 42,
                                 "column": 38
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:error_shortref2@[L42:C0, L42:C51]",
-                              "snippet": "Ref error_...d5 < b.id5"
                             }
                           },
                           "context": {
@@ -10717,18 +9873,10 @@
                           "trailingTrivia": "",
                           "value": "."
                         },
-                        "parent": {
-                          "id": "<element-declaration>:error_shortref2@[L42:C0, L42:C51]",
-                          "snippet": "Ref error_...d5 < b.id5"
-                        },
                         "rightExpression": {
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:error_shortref2@[L42:C0, L42:C51]",
-                                  "snippet": "Ref error_...d5 < b.id5"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:id5@[L42:C40, L42:C43]",
@@ -10774,10 +9922,6 @@
                                 "line": 42,
                                 "column": 40
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:error_shortref2@[L42:C0, L42:C51]",
-                              "snippet": "Ref error_...d5 < b.id5"
                             }
                           },
                           "context": {
@@ -10852,20 +9996,12 @@
                       "trailingTrivia": " ",
                       "value": "<"
                     },
-                    "parent": {
-                      "id": "<element-declaration>:error_shortref2@[L42:C0, L42:C51]",
-                      "snippet": "Ref error_...d5 < b.id5"
-                    },
                     "rightExpression": {
                       "children": {
                         "leftExpression": {
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:error_shortref2@[L42:C0, L42:C51]",
-                                  "snippet": "Ref error_...d5 < b.id5"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:b@[L42:C46, L42:C47]",
@@ -10911,10 +10047,6 @@
                                 "line": 42,
                                 "column": 46
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:error_shortref2@[L42:C0, L42:C51]",
-                              "snippet": "Ref error_...d5 < b.id5"
                             }
                           },
                           "context": {
@@ -10968,18 +10100,10 @@
                           "trailingTrivia": "",
                           "value": "."
                         },
-                        "parent": {
-                          "id": "<element-declaration>:error_shortref2@[L42:C0, L42:C51]",
-                          "snippet": "Ref error_...d5 < b.id5"
-                        },
                         "rightExpression": {
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:error_shortref2@[L42:C0, L42:C51]",
-                                  "snippet": "Ref error_...d5 < b.id5"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:id5@[L42:C48, L42:C51]",
@@ -11025,10 +10149,6 @@
                                 "line": 42,
                                 "column": 48
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:error_shortref2@[L42:C0, L42:C51]",
-                              "snippet": "Ref error_...d5 < b.id5"
                             }
                           },
                           "context": {
@@ -11098,10 +10218,6 @@
                     "line": 42,
                     "column": 38
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:error_shortref2@[L42:C0, L42:C51]",
-                  "snippet": "Ref error_...d5 < b.id5"
                 }
               },
               "context": {
@@ -11153,10 +10269,6 @@
               "children": {
                 "expression": {
                   "children": {
-                    "parent": {
-                      "id": "<element-declaration>:error_shortref2@[L42:C0, L42:C51]",
-                      "snippet": "Ref error_...d5 < b.id5"
-                    },
                     "variable": {
                       "context": {
                         "id": "<identifier>:error_shortref2@[L42:C4, L42:C19]",
@@ -11202,10 +10314,6 @@
                     "line": 42,
                     "column": 4
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:error_shortref2@[L42:C0, L42:C51]",
-                  "snippet": "Ref error_...d5 < b.id5"
                 }
               },
               "context": {
@@ -11227,10 +10335,6 @@
                 "line": 42,
                 "column": 4
               }
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L45:C0]",
-              "snippet": "Table b [h... goodbye]\n"
             },
             "type": {
               "context": {
@@ -11354,11 +10458,7 @@
                                     "trailingTrivia": "",
                                     "value": "color"
                                   }
-                                ],
-                                "parent": {
-                                  "id": "<element-declaration>:error_shortref3@[L43:C0, L43:C56]",
-                                  "snippet": "Ref error_...t_a_color]"
-                                }
+                                ]
                               },
                               "context": {
                                 "id": "<identifer-stream>@[L43:C36, L43:C41]",
@@ -11379,10 +10479,6 @@
                                 "line": 43,
                                 "column": 36
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:error_shortref3@[L43:C0, L43:C56]",
-                              "snippet": "Ref error_...t_a_color]"
                             },
                             "value": {
                               "children": {
@@ -11412,10 +10508,6 @@
                                       "trailingInvalid": "",
                                       "trailingTrivia": "",
                                       "value": "#not_a_color"
-                                    },
-                                    "parent": {
-                                      "id": "<element-declaration>:error_shortref3@[L43:C0, L43:C56]",
-                                      "snippet": "Ref error_...t_a_color]"
                                     }
                                   },
                                   "context": {
@@ -11437,10 +10529,6 @@
                                     "line": 43,
                                     "column": 43
                                   }
-                                },
-                                "parent": {
-                                  "id": "<element-declaration>:error_shortref3@[L43:C0, L43:C56]",
-                                  "snippet": "Ref error_...t_a_color]"
                                 }
                               },
                               "context": {
@@ -11534,10 +10622,6 @@
                         "trailingInvalid": "",
                         "trailingTrivia": "",
                         "value": "["
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:error_shortref3@[L43:C0, L43:C56]",
-                        "snippet": "Ref error_...t_a_color]"
                       }
                     },
                     "context": {
@@ -11569,10 +10653,6 @@
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:error_shortref3@[L43:C0, L43:C56]",
-                                  "snippet": "Ref error_...t_a_color]"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:c@[L43:C21, L43:C22]",
@@ -11618,10 +10698,6 @@
                                 "line": 43,
                                 "column": 21
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:error_shortref3@[L43:C0, L43:C56]",
-                              "snippet": "Ref error_...t_a_color]"
                             }
                           },
                           "context": {
@@ -11675,18 +10751,10 @@
                           "trailingTrivia": "",
                           "value": "."
                         },
-                        "parent": {
-                          "id": "<element-declaration>:error_shortref3@[L43:C0, L43:C56]",
-                          "snippet": "Ref error_...t_a_color]"
-                        },
                         "rightExpression": {
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:error_shortref3@[L43:C0, L43:C56]",
-                                  "snippet": "Ref error_...t_a_color]"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:id6@[L43:C23, L43:C26]",
@@ -11732,10 +10800,6 @@
                                 "line": 43,
                                 "column": 23
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:error_shortref3@[L43:C0, L43:C56]",
-                              "snippet": "Ref error_...t_a_color]"
                             }
                           },
                           "context": {
@@ -11810,20 +10874,12 @@
                       "trailingTrivia": " ",
                       "value": "<"
                     },
-                    "parent": {
-                      "id": "<element-declaration>:error_shortref3@[L43:C0, L43:C56]",
-                      "snippet": "Ref error_...t_a_color]"
-                    },
                     "rightExpression": {
                       "children": {
                         "leftExpression": {
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:error_shortref3@[L43:C0, L43:C56]",
-                                  "snippet": "Ref error_...t_a_color]"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:b@[L43:C29, L43:C30]",
@@ -11869,10 +10925,6 @@
                                 "line": 43,
                                 "column": 29
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:error_shortref3@[L43:C0, L43:C56]",
-                              "snippet": "Ref error_...t_a_color]"
                             }
                           },
                           "context": {
@@ -11926,18 +10978,10 @@
                           "trailingTrivia": "",
                           "value": "."
                         },
-                        "parent": {
-                          "id": "<element-declaration>:error_shortref3@[L43:C0, L43:C56]",
-                          "snippet": "Ref error_...t_a_color]"
-                        },
                         "rightExpression": {
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:error_shortref3@[L43:C0, L43:C56]",
-                                  "snippet": "Ref error_...t_a_color]"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:id6@[L43:C31, L43:C34]",
@@ -11983,10 +11027,6 @@
                                 "line": 43,
                                 "column": 31
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:error_shortref3@[L43:C0, L43:C56]",
-                              "snippet": "Ref error_...t_a_color]"
                             }
                           },
                           "context": {
@@ -12056,10 +11096,6 @@
                     "line": 43,
                     "column": 21
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:error_shortref3@[L43:C0, L43:C56]",
-                  "snippet": "Ref error_...t_a_color]"
                 }
               },
               "context": {
@@ -12111,10 +11147,6 @@
               "children": {
                 "expression": {
                   "children": {
-                    "parent": {
-                      "id": "<element-declaration>:error_shortref3@[L43:C0, L43:C56]",
-                      "snippet": "Ref error_...t_a_color]"
-                    },
                     "variable": {
                       "context": {
                         "id": "<identifier>:error_shortref3@[L43:C4, L43:C19]",
@@ -12160,10 +11192,6 @@
                     "line": 43,
                     "column": 4
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:error_shortref3@[L43:C0, L43:C56]",
-                  "snippet": "Ref error_...t_a_color]"
                 }
               },
               "context": {
@@ -12185,10 +11213,6 @@
                 "line": 43,
                 "column": 4
               }
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L45:C0]",
-              "snippet": "Table b [h... goodbye]\n"
             },
             "type": {
               "context": {
@@ -12312,11 +11336,7 @@
                                     "trailingTrivia": "",
                                     "value": "hello"
                                   }
-                                ],
-                                "parent": {
-                                  "id": "<element-declaration>:error_shortref4@[L44:C0, L44:C51]",
-                                  "snippet": "Ref error_...: goodbye]"
-                                }
+                                ]
                               },
                               "context": {
                                 "id": "<identifer-stream>@[L44:C36, L44:C41]",
@@ -12338,18 +11358,10 @@
                                 "column": 36
                               }
                             },
-                            "parent": {
-                              "id": "<element-declaration>:error_shortref4@[L44:C0, L44:C51]",
-                              "snippet": "Ref error_...: goodbye]"
-                            },
                             "value": {
                               "children": {
                                 "expression": {
                                   "children": {
-                                    "parent": {
-                                      "id": "<element-declaration>:error_shortref4@[L44:C0, L44:C51]",
-                                      "snippet": "Ref error_...: goodbye]"
-                                    },
                                     "variable": {
                                       "context": {
                                         "id": "<identifier>:goodbye@[L44:C43, L44:C50]",
@@ -12395,10 +11407,6 @@
                                     "line": 44,
                                     "column": 43
                                   }
-                                },
-                                "parent": {
-                                  "id": "<element-declaration>:error_shortref4@[L44:C0, L44:C51]",
-                                  "snippet": "Ref error_...: goodbye]"
                                 }
                               },
                               "context": {
@@ -12492,10 +11500,6 @@
                         "trailingInvalid": "",
                         "trailingTrivia": "",
                         "value": "["
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:error_shortref4@[L44:C0, L44:C51]",
-                        "snippet": "Ref error_...: goodbye]"
                       }
                     },
                     "context": {
@@ -12527,10 +11531,6 @@
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:error_shortref4@[L44:C0, L44:C51]",
-                                  "snippet": "Ref error_...: goodbye]"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:c@[L44:C21, L44:C22]",
@@ -12576,10 +11576,6 @@
                                 "line": 44,
                                 "column": 21
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:error_shortref4@[L44:C0, L44:C51]",
-                              "snippet": "Ref error_...: goodbye]"
                             }
                           },
                           "context": {
@@ -12633,18 +11629,10 @@
                           "trailingTrivia": "",
                           "value": "."
                         },
-                        "parent": {
-                          "id": "<element-declaration>:error_shortref4@[L44:C0, L44:C51]",
-                          "snippet": "Ref error_...: goodbye]"
-                        },
                         "rightExpression": {
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:error_shortref4@[L44:C0, L44:C51]",
-                                  "snippet": "Ref error_...: goodbye]"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:id7@[L44:C23, L44:C26]",
@@ -12690,10 +11678,6 @@
                                 "line": 44,
                                 "column": 23
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:error_shortref4@[L44:C0, L44:C51]",
-                              "snippet": "Ref error_...: goodbye]"
                             }
                           },
                           "context": {
@@ -12768,20 +11752,12 @@
                       "trailingTrivia": " ",
                       "value": "<"
                     },
-                    "parent": {
-                      "id": "<element-declaration>:error_shortref4@[L44:C0, L44:C51]",
-                      "snippet": "Ref error_...: goodbye]"
-                    },
                     "rightExpression": {
                       "children": {
                         "leftExpression": {
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:error_shortref4@[L44:C0, L44:C51]",
-                                  "snippet": "Ref error_...: goodbye]"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:b@[L44:C29, L44:C30]",
@@ -12827,10 +11803,6 @@
                                 "line": 44,
                                 "column": 29
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:error_shortref4@[L44:C0, L44:C51]",
-                              "snippet": "Ref error_...: goodbye]"
                             }
                           },
                           "context": {
@@ -12884,18 +11856,10 @@
                           "trailingTrivia": "",
                           "value": "."
                         },
-                        "parent": {
-                          "id": "<element-declaration>:error_shortref4@[L44:C0, L44:C51]",
-                          "snippet": "Ref error_...: goodbye]"
-                        },
                         "rightExpression": {
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:error_shortref4@[L44:C0, L44:C51]",
-                                  "snippet": "Ref error_...: goodbye]"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:id7@[L44:C31, L44:C34]",
@@ -12941,10 +11905,6 @@
                                 "line": 44,
                                 "column": 31
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:error_shortref4@[L44:C0, L44:C51]",
-                              "snippet": "Ref error_...: goodbye]"
                             }
                           },
                           "context": {
@@ -13014,10 +11974,6 @@
                     "line": 44,
                     "column": 21
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:error_shortref4@[L44:C0, L44:C51]",
-                  "snippet": "Ref error_...: goodbye]"
                 }
               },
               "context": {
@@ -13069,10 +12025,6 @@
               "children": {
                 "expression": {
                   "children": {
-                    "parent": {
-                      "id": "<element-declaration>:error_shortref4@[L44:C0, L44:C51]",
-                      "snippet": "Ref error_...: goodbye]"
-                    },
                     "variable": {
                       "context": {
                         "id": "<identifier>:error_shortref4@[L44:C4, L44:C19]",
@@ -13118,10 +12070,6 @@
                     "line": 44,
                     "column": 4
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:error_shortref4@[L44:C0, L44:C51]",
-                  "snippet": "Ref error_...: goodbye]"
                 }
               },
               "context": {
@@ -13143,10 +12091,6 @@
                 "line": 44,
                 "column": 4
               }
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L45:C0]",
-              "snippet": "Table b [h... goodbye]\n"
             },
             "type": {
               "context": {

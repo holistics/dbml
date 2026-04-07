@@ -65,10 +65,6 @@
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:with_timestamp@[L0:C0, L2:C1]",
-                                  "snippet": "TableParti...amp uuid\n}"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:uuid@[L1:C12, L1:C16]",
@@ -114,10 +110,6 @@
                                 "line": 1,
                                 "column": 12
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:with_timestamp@[L0:C0, L2:C1]",
-                              "snippet": "TableParti...amp uuid\n}"
                             }
                           },
                           "context": {
@@ -145,10 +137,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:with_timestamp@[L0:C0, L2:C1]",
-                                "snippet": "TableParti...amp uuid\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:timestamp@[L1:C2, L1:C11]",
@@ -194,10 +182,6 @@
                               "line": 1,
                               "column": 2
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:with_timestamp@[L0:C0, L2:C1]",
-                            "snippet": "TableParti...amp uuid\n}"
                           }
                         },
                         "context": {
@@ -219,10 +203,6 @@
                           "line": 1,
                           "column": 2
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:with_timestamp@[L0:C0, L2:C1]",
-                        "snippet": "TableParti...amp uuid\n}"
                       }
                     },
                     "context": {
@@ -256,11 +236,7 @@
                       "references": []
                     }
                   }
-                ],
-                "parent": {
-                  "id": "<element-declaration>:with_timestamp@[L0:C0, L2:C1]",
-                  "snippet": "TableParti...amp uuid\n}"
-                }
+                ]
               },
               "context": {
                 "id": "<block-expression>@[L0:C28, L2:C1]",
@@ -286,10 +262,6 @@
               "children": {
                 "expression": {
                   "children": {
-                    "parent": {
-                      "id": "<element-declaration>:with_timestamp@[L0:C0, L2:C1]",
-                      "snippet": "TableParti...amp uuid\n}"
-                    },
                     "variable": {
                       "context": {
                         "id": "<identifier>:with_timestamp@[L0:C13, L0:C27]",
@@ -335,10 +307,6 @@
                     "line": 0,
                     "column": 13
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:with_timestamp@[L0:C0, L2:C1]",
-                  "snippet": "TableParti...amp uuid\n}"
                 }
               },
               "context": {
@@ -360,10 +328,6 @@
                 "line": 0,
                 "column": 13
               }
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L7:C0]",
-              "snippet": "TableParti...mestamp\n}\n"
             },
             "type": {
               "context": {
@@ -499,10 +463,6 @@
                             "children": {
                               "expression": {
                                 "children": {
-                                  "parent": {
-                                    "id": "<element-declaration>:users@[L4:C0, L6:C1]",
-                                    "snippet": "Table user...imestamp\n}"
-                                  },
                                   "variable": {
                                     "context": {
                                       "id": "<identifier>:with_timestamp@[L5:C3, L5:C17]",
@@ -559,10 +519,6 @@
                                   },
                                   "references": []
                                 }
-                              },
-                              "parent": {
-                                "id": "<element-declaration>:users@[L4:C0, L6:C1]",
-                                "snippet": "Table user...imestamp\n}"
                               }
                             },
                             "context": {
@@ -626,10 +582,6 @@
                             "trailingInvalid": "",
                             "trailingTrivia": "",
                             "value": "~"
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:users@[L4:C0, L6:C1]",
-                            "snippet": "Table user...imestamp\n}"
                           }
                         },
                         "context": {
@@ -662,10 +614,6 @@
                           },
                           "references": []
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:users@[L4:C0, L6:C1]",
-                        "snippet": "Table user...imestamp\n}"
                       }
                     },
                     "context": {
@@ -699,11 +647,7 @@
                       "references": []
                     }
                   }
-                ],
-                "parent": {
-                  "id": "<element-declaration>:users@[L4:C0, L6:C1]",
-                  "snippet": "Table user...imestamp\n}"
-                }
+                ]
               },
               "context": {
                 "id": "<block-expression>@[L4:C12, L6:C1]",
@@ -729,10 +673,6 @@
               "children": {
                 "expression": {
                   "children": {
-                    "parent": {
-                      "id": "<element-declaration>:users@[L4:C0, L6:C1]",
-                      "snippet": "Table user...imestamp\n}"
-                    },
                     "variable": {
                       "context": {
                         "id": "<identifier>:users@[L4:C6, L4:C11]",
@@ -778,10 +718,6 @@
                     "line": 4,
                     "column": 6
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:users@[L4:C0, L6:C1]",
-                  "snippet": "Table user...imestamp\n}"
                 }
               },
               "context": {
@@ -803,10 +739,6 @@
                 "line": 4,
                 "column": 6
               }
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L7:C0]",
-              "snippet": "TableParti...mestamp\n}\n"
             },
             "type": {
               "context": {

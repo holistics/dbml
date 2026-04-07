@@ -106,10 +106,6 @@
                                     "trailingInvalid": "",
                                     "trailingTrivia": " ",
                                     "value": "1"
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:CallExpression@[L0:C0, L4:C1]",
-                                    "snippet": "Test CallE...  a.b()\r\n}"
                                   }
                                 },
                                 "context": {
@@ -131,10 +127,6 @@
                                   "line": 1,
                                   "column": 4
                                 }
-                              },
-                              "parent": {
-                                "id": "<element-declaration>:CallExpression@[L0:C0, L4:C1]",
-                                "snippet": "Test CallE...  a.b()\r\n}"
                               }
                             },
                             "context": {
@@ -182,17 +174,8 @@
                             "trailingTrivia": "",
                             "value": "*"
                           },
-                          "parent": {
-                            "id": "<element-declaration>:CallExpression@[L0:C0, L4:C1]",
-                            "snippet": "Test CallE...  a.b()\r\n}"
-                          },
                           "rightExpression": {
-                            "children": {
-                              "parent": {
-                                "id": "<element-declaration>:CallExpression@[L0:C0, L4:C1]",
-                                "snippet": "Test CallE...  a.b()\r\n}"
-                              }
-                            },
+                            "children": {},
                             "context": {
                               "id": "<dummy>@[L1:C8, L1:C8]",
                               "snippet": ""
@@ -233,10 +216,6 @@
                           "line": 1,
                           "column": 4
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:CallExpression@[L0:C0, L4:C1]",
-                        "snippet": "Test CallE...  a.b()\r\n}"
                       }
                     },
                     "context": {
@@ -268,10 +247,6 @@
                             "children": {
                               "commaList": [],
                               "elementList": [],
-                              "parent": {
-                                "id": "<element-declaration>:CallExpression@[L0:C0, L4:C1]",
-                                "snippet": "Test CallE...  a.b()\r\n}"
-                              },
                               "tupleCloseParen": {
                                 "context": {
                                   "id": "<rparen>:)@[L2:C7, L2:C8]",
@@ -373,10 +348,6 @@
                                         "trailingInvalid": "",
                                         "trailingTrivia": "",
                                         "value": "2"
-                                      },
-                                      "parent": {
-                                        "id": "<element-declaration>:CallExpression@[L0:C0, L4:C1]",
-                                        "snippet": "Test CallE...  a.b()\r\n}"
                                       }
                                     },
                                     "context": {
@@ -398,10 +369,6 @@
                                       "line": 2,
                                       "column": 5
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:CallExpression@[L0:C0, L4:C1]",
-                                    "snippet": "Test CallE...  a.b()\r\n}"
                                   }
                                 },
                                 "context": {
@@ -448,10 +415,6 @@
                                 "trailingInvalid": "",
                                 "trailingTrivia": "",
                                 "value": "-"
-                              },
-                              "parent": {
-                                "id": "<element-declaration>:CallExpression@[L0:C0, L4:C1]",
-                                "snippet": "Test CallE...  a.b()\r\n}"
                               }
                             },
                             "context": {
@@ -473,10 +436,6 @@
                               "line": 2,
                               "column": 4
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:CallExpression@[L0:C0, L4:C1]",
-                            "snippet": "Test CallE...  a.b()\r\n}"
                           }
                         },
                         "context": {
@@ -498,10 +457,6 @@
                           "line": 2,
                           "column": 4
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:CallExpression@[L0:C0, L4:C1]",
-                        "snippet": "Test CallE...  a.b()\r\n}"
                       }
                     },
                     "context": {
@@ -533,10 +488,6 @@
                             "children": {
                               "commaList": [],
                               "elementList": [],
-                              "parent": {
-                                "id": "<element-declaration>:CallExpression@[L0:C0, L4:C1]",
-                                "snippet": "Test CallE...  a.b()\r\n}"
-                              },
                               "tupleCloseParen": {
                                 "context": {
                                   "id": "<rparen>:)@[L3:C8, L3:C9]",
@@ -614,10 +565,6 @@
                                 "children": {
                                   "expression": {
                                     "children": {
-                                      "parent": {
-                                        "id": "<element-declaration>:CallExpression@[L0:C0, L4:C1]",
-                                        "snippet": "Test CallE...  a.b()\r\n}"
-                                      },
                                       "variable": {
                                         "context": {
                                           "id": "<identifier>:a@[L3:C4, L3:C5]",
@@ -663,10 +610,6 @@
                                       "line": 3,
                                       "column": 4
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:CallExpression@[L0:C0, L4:C1]",
-                                    "snippet": "Test CallE...  a.b()\r\n}"
                                   }
                                 },
                                 "context": {
@@ -714,18 +657,10 @@
                                 "trailingTrivia": "",
                                 "value": "."
                               },
-                              "parent": {
-                                "id": "<element-declaration>:CallExpression@[L0:C0, L4:C1]",
-                                "snippet": "Test CallE...  a.b()\r\n}"
-                              },
                               "rightExpression": {
                                 "children": {
                                   "expression": {
                                     "children": {
-                                      "parent": {
-                                        "id": "<element-declaration>:CallExpression@[L0:C0, L4:C1]",
-                                        "snippet": "Test CallE...  a.b()\r\n}"
-                                      },
                                       "variable": {
                                         "context": {
                                           "id": "<identifier>:b@[L3:C6, L3:C7]",
@@ -771,10 +706,6 @@
                                       "line": 3,
                                       "column": 6
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:CallExpression@[L0:C0, L4:C1]",
-                                    "snippet": "Test CallE...  a.b()\r\n}"
                                   }
                                 },
                                 "context": {
@@ -817,10 +748,6 @@
                               "line": 3,
                               "column": 4
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:CallExpression@[L0:C0, L4:C1]",
-                            "snippet": "Test CallE...  a.b()\r\n}"
                           }
                         },
                         "context": {
@@ -842,10 +769,6 @@
                           "line": 3,
                           "column": 4
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:CallExpression@[L0:C0, L4:C1]",
-                        "snippet": "Test CallE...  a.b()\r\n}"
                       }
                     },
                     "context": {
@@ -868,11 +791,7 @@
                       "column": 4
                     }
                   }
-                ],
-                "parent": {
-                  "id": "<element-declaration>:CallExpression@[L0:C0, L4:C1]",
-                  "snippet": "Test CallE...  a.b()\r\n}"
-                }
+                ]
               },
               "context": {
                 "id": "<block-expression>@[L0:C20, L4:C1]",
@@ -898,10 +817,6 @@
               "children": {
                 "expression": {
                   "children": {
-                    "parent": {
-                      "id": "<element-declaration>:CallExpression@[L0:C0, L4:C1]",
-                      "snippet": "Test CallE...  a.b()\r\n}"
-                    },
                     "variable": {
                       "context": {
                         "id": "<identifier>:CallExpression@[L0:C5, L0:C19]",
@@ -947,10 +862,6 @@
                     "line": 0,
                     "column": 5
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:CallExpression@[L0:C0, L4:C1]",
-                  "snippet": "Test CallE...  a.b()\r\n}"
                 }
               },
               "context": {
@@ -972,10 +883,6 @@
                 "line": 0,
                 "column": 5
               }
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L5:C0]",
-              "snippet": "Test CallE...a.b()\r\n}\r\n"
             },
             "type": {
               "context": {

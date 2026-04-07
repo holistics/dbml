@@ -65,10 +65,6 @@
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:User@[L0:C0, L6:C1]",
-                                  "snippet": "Table User... int(10)\n}"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:int@[L1:C7, L1:C10]",
@@ -125,10 +121,6 @@
                                 },
                                 "references": []
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:User@[L0:C0, L6:C1]",
-                              "snippet": "Table User... int(10)\n}"
                             }
                           },
                           "context": {
@@ -167,10 +159,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:User@[L0:C0, L6:C1]",
-                                "snippet": "Table User... int(10)\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:id@[L1:C4, L1:C6]",
@@ -227,10 +215,6 @@
                               },
                               "references": []
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:User@[L0:C0, L6:C1]",
-                            "snippet": "Table User... int(10)\n}"
                           }
                         },
                         "context": {
@@ -263,10 +247,6 @@
                           },
                           "references": []
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:User@[L0:C0, L6:C1]",
-                        "snippet": "Table User... int(10)\n}"
                       }
                     },
                     "context": {
@@ -313,10 +293,6 @@
                                     "children": {
                                       "expression": {
                                         "children": {
-                                          "parent": {
-                                            "id": "<element-declaration>:User@[L0:C0, L6:C1]",
-                                            "snippet": "Table User... int(10)\n}"
-                                          },
                                           "variable": {
                                             "context": {
                                               "id": "<identifier>:MAX@[L2:C22, L2:C25]",
@@ -373,10 +349,6 @@
                                           },
                                           "references": []
                                         }
-                                      },
-                                      "parent": {
-                                        "id": "<element-declaration>:User@[L0:C0, L6:C1]",
-                                        "snippet": "Table User... int(10)\n}"
                                       }
                                     },
                                     "context": {
@@ -411,10 +383,6 @@
                                     }
                                   }
                                 ],
-                                "parent": {
-                                  "id": "<element-declaration>:User@[L0:C0, L6:C1]",
-                                  "snippet": "Table User... int(10)\n}"
-                                },
                                 "tupleCloseParen": {
                                   "context": {
                                     "id": "<rparen>:)@[L2:C25, L2:C26]",
@@ -501,10 +469,6 @@
                               "children": {
                                 "expression": {
                                   "children": {
-                                    "parent": {
-                                      "id": "<element-declaration>:User@[L0:C0, L6:C1]",
-                                      "snippet": "Table User... int(10)\n}"
-                                    },
                                     "variable": {
                                       "context": {
                                         "id": "<identifier>:nvarbinary@[L2:C11, L2:C21]",
@@ -561,10 +525,6 @@
                                     },
                                     "references": []
                                   }
-                                },
-                                "parent": {
-                                  "id": "<element-declaration>:User@[L0:C0, L6:C1]",
-                                  "snippet": "Table User... int(10)\n}"
                                 }
                               },
                               "context": {
@@ -597,10 +557,6 @@
                                 },
                                 "references": []
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:User@[L0:C0, L6:C1]",
-                              "snippet": "Table User... int(10)\n}"
                             }
                           },
                           "context": {
@@ -639,10 +595,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:User@[L0:C0, L6:C1]",
-                                "snippet": "Table User... int(10)\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:secret@[L2:C4, L2:C10]",
@@ -699,10 +651,6 @@
                               },
                               "references": []
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:User@[L0:C0, L6:C1]",
-                            "snippet": "Table User... int(10)\n}"
                           }
                         },
                         "context": {
@@ -735,10 +683,6 @@
                           },
                           "references": []
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:User@[L0:C0, L6:C1]",
-                        "snippet": "Table User... int(10)\n}"
                       }
                     },
                     "context": {
@@ -785,10 +729,6 @@
                                     "children": {
                                       "expression": {
                                         "children": {
-                                          "parent": {
-                                            "id": "<element-declaration>:User@[L0:C0, L6:C1]",
-                                            "snippet": "Table User... int(10)\n}"
-                                          },
                                           "variable": {
                                             "context": {
                                               "id": "<variable>:MAX@[L3:C17, L3:C22]",
@@ -845,10 +785,6 @@
                                           },
                                           "references": []
                                         }
-                                      },
-                                      "parent": {
-                                        "id": "<element-declaration>:User@[L0:C0, L6:C1]",
-                                        "snippet": "Table User... int(10)\n}"
                                       }
                                     },
                                     "context": {
@@ -883,10 +819,6 @@
                                     }
                                   }
                                 ],
-                                "parent": {
-                                  "id": "<element-declaration>:User@[L0:C0, L6:C1]",
-                                  "snippet": "Table User... int(10)\n}"
-                                },
                                 "tupleCloseParen": {
                                   "context": {
                                     "id": "<rparen>:)@[L3:C22, L3:C23]",
@@ -973,10 +905,6 @@
                               "children": {
                                 "expression": {
                                   "children": {
-                                    "parent": {
-                                      "id": "<element-declaration>:User@[L0:C0, L6:C1]",
-                                      "snippet": "Table User... int(10)\n}"
-                                    },
                                     "variable": {
                                       "context": {
                                         "id": "<identifier>:varchar@[L3:C9, L3:C16]",
@@ -1033,10 +961,6 @@
                                     },
                                     "references": []
                                   }
-                                },
-                                "parent": {
-                                  "id": "<element-declaration>:User@[L0:C0, L6:C1]",
-                                  "snippet": "Table User... int(10)\n}"
                                 }
                               },
                               "context": {
@@ -1069,10 +993,6 @@
                                 },
                                 "references": []
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:User@[L0:C0, L6:C1]",
-                              "snippet": "Table User... int(10)\n}"
                             }
                           },
                           "context": {
@@ -1111,10 +1031,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:User@[L0:C0, L6:C1]",
-                                "snippet": "Table User... int(10)\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:name@[L3:C4, L3:C8]",
@@ -1171,10 +1087,6 @@
                               },
                               "references": []
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:User@[L0:C0, L6:C1]",
-                            "snippet": "Table User... int(10)\n}"
                           }
                         },
                         "context": {
@@ -1207,10 +1119,6 @@
                           },
                           "references": []
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:User@[L0:C0, L6:C1]",
-                        "snippet": "Table User... int(10)\n}"
                       }
                     },
                     "context": {
@@ -1281,10 +1189,6 @@
                                             "trailingInvalid": "",
                                             "trailingTrivia": "",
                                             "value": "MAX"
-                                          },
-                                          "parent": {
-                                            "id": "<element-declaration>:User@[L0:C0, L6:C1]",
-                                            "snippet": "Table User... int(10)\n}"
                                           }
                                         },
                                         "context": {
@@ -1317,10 +1221,6 @@
                                           },
                                           "references": []
                                         }
-                                      },
-                                      "parent": {
-                                        "id": "<element-declaration>:User@[L0:C0, L6:C1]",
-                                        "snippet": "Table User... int(10)\n}"
                                       }
                                     },
                                     "context": {
@@ -1355,10 +1255,6 @@
                                     }
                                   }
                                 ],
-                                "parent": {
-                                  "id": "<element-declaration>:User@[L0:C0, L6:C1]",
-                                  "snippet": "Table User... int(10)\n}"
-                                },
                                 "tupleCloseParen": {
                                   "context": {
                                     "id": "<rparen>:)@[L4:C24, L4:C25]",
@@ -1445,10 +1341,6 @@
                               "children": {
                                 "expression": {
                                   "children": {
-                                    "parent": {
-                                      "id": "<element-declaration>:User@[L0:C0, L6:C1]",
-                                      "snippet": "Table User... int(10)\n}"
-                                    },
                                     "variable": {
                                       "context": {
                                         "id": "<identifier>:varbinary@[L4:C9, L4:C18]",
@@ -1505,10 +1397,6 @@
                                     },
                                     "references": []
                                   }
-                                },
-                                "parent": {
-                                  "id": "<element-declaration>:User@[L0:C0, L6:C1]",
-                                  "snippet": "Table User... int(10)\n}"
                                 }
                               },
                               "context": {
@@ -1541,10 +1429,6 @@
                                 },
                                 "references": []
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:User@[L0:C0, L6:C1]",
-                              "snippet": "Table User... int(10)\n}"
                             }
                           },
                           "context": {
@@ -1583,10 +1467,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:User@[L0:C0, L6:C1]",
-                                "snippet": "Table User... int(10)\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:code@[L4:C4, L4:C8]",
@@ -1643,10 +1523,6 @@
                               },
                               "references": []
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:User@[L0:C0, L6:C1]",
-                            "snippet": "Table User... int(10)\n}"
                           }
                         },
                         "context": {
@@ -1679,10 +1555,6 @@
                           },
                           "references": []
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:User@[L0:C0, L6:C1]",
-                        "snippet": "Table User... int(10)\n}"
                       }
                     },
                     "context": {
@@ -1753,10 +1625,6 @@
                                             "trailingInvalid": "",
                                             "trailingTrivia": "",
                                             "value": "10"
-                                          },
-                                          "parent": {
-                                            "id": "<element-declaration>:User@[L0:C0, L6:C1]",
-                                            "snippet": "Table User... int(10)\n}"
                                           }
                                         },
                                         "context": {
@@ -1789,10 +1657,6 @@
                                           },
                                           "references": []
                                         }
-                                      },
-                                      "parent": {
-                                        "id": "<element-declaration>:User@[L0:C0, L6:C1]",
-                                        "snippet": "Table User... int(10)\n}"
                                       }
                                     },
                                     "context": {
@@ -1827,10 +1691,6 @@
                                     }
                                   }
                                 ],
-                                "parent": {
-                                  "id": "<element-declaration>:User@[L0:C0, L6:C1]",
-                                  "snippet": "Table User... int(10)\n}"
-                                },
                                 "tupleCloseParen": {
                                   "context": {
                                     "id": "<rparen>:)@[L5:C15, L5:C16]",
@@ -1917,10 +1777,6 @@
                               "children": {
                                 "expression": {
                                   "children": {
-                                    "parent": {
-                                      "id": "<element-declaration>:User@[L0:C0, L6:C1]",
-                                      "snippet": "Table User... int(10)\n}"
-                                    },
                                     "variable": {
                                       "context": {
                                         "id": "<identifier>:int@[L5:C9, L5:C12]",
@@ -1977,10 +1833,6 @@
                                     },
                                     "references": []
                                   }
-                                },
-                                "parent": {
-                                  "id": "<element-declaration>:User@[L0:C0, L6:C1]",
-                                  "snippet": "Table User... int(10)\n}"
                                 }
                               },
                               "context": {
@@ -2013,10 +1865,6 @@
                                 },
                                 "references": []
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:User@[L0:C0, L6:C1]",
-                              "snippet": "Table User... int(10)\n}"
                             }
                           },
                           "context": {
@@ -2055,10 +1903,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:User@[L0:C0, L6:C1]",
-                                "snippet": "Table User... int(10)\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:ssid@[L5:C4, L5:C8]",
@@ -2115,10 +1959,6 @@
                               },
                               "references": []
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:User@[L0:C0, L6:C1]",
-                            "snippet": "Table User... int(10)\n}"
                           }
                         },
                         "context": {
@@ -2151,10 +1991,6 @@
                           },
                           "references": []
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:User@[L0:C0, L6:C1]",
-                        "snippet": "Table User... int(10)\n}"
                       }
                     },
                     "context": {
@@ -2188,11 +2024,7 @@
                       "references": []
                     }
                   }
-                ],
-                "parent": {
-                  "id": "<element-declaration>:User@[L0:C0, L6:C1]",
-                  "snippet": "Table User... int(10)\n}"
-                }
+                ]
               },
               "context": {
                 "id": "<block-expression>@[L0:C11, L6:C1]",
@@ -2218,10 +2050,6 @@
               "children": {
                 "expression": {
                   "children": {
-                    "parent": {
-                      "id": "<element-declaration>:User@[L0:C0, L6:C1]",
-                      "snippet": "Table User... int(10)\n}"
-                    },
                     "variable": {
                       "context": {
                         "id": "<identifier>:User@[L0:C6, L0:C10]",
@@ -2267,10 +2095,6 @@
                     "line": 0,
                     "column": 6
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:User@[L0:C0, L6:C1]",
-                  "snippet": "Table User... int(10)\n}"
                 }
               },
               "context": {
@@ -2292,10 +2116,6 @@
                 "line": 0,
                 "column": 6
               }
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L6:C1]",
-              "snippet": "Table User... int(10)\n}"
             },
             "type": {
               "context": {

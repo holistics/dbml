@@ -67,11 +67,7 @@
                                     "trailingTrivia": "",
                                     "value": "update"
                                   }
-                                ],
-                                "parent": {
-                                  "id": "<element-declaration>:a@[L0:C0, L0:C50]",
-                                  "snippet": "Ref a: Use...no action]"
-                                }
+                                ]
                               },
                               "context": {
                                 "id": "<identifer-stream>@[L0:C32, L0:C38]",
@@ -92,10 +88,6 @@
                                 "line": 0,
                                 "column": 32
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:a@[L0:C0, L0:C50]",
-                              "snippet": "Ref a: Use...no action]"
                             },
                             "value": {
                               "children": {
@@ -150,11 +142,7 @@
                                     "trailingTrivia": "",
                                     "value": "action"
                                   }
-                                ],
-                                "parent": {
-                                  "id": "<element-declaration>:a@[L0:C0, L0:C50]",
-                                  "snippet": "Ref a: Use...no action]"
-                                }
+                                ]
                               },
                               "context": {
                                 "id": "<identifer-stream>@[L0:C40, L0:C49]",
@@ -247,10 +235,6 @@
                         "trailingInvalid": "",
                         "trailingTrivia": "",
                         "value": "["
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:a@[L0:C0, L0:C50]",
-                        "snippet": "Ref a: Use...no action]"
                       }
                     },
                     "context": {
@@ -282,10 +266,6 @@
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:a@[L0:C0, L0:C50]",
-                                  "snippet": "Ref a: Use...no action]"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:Users@[L0:C7, L0:C12]",
@@ -331,10 +311,6 @@
                                 "line": 0,
                                 "column": 7
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:a@[L0:C0, L0:C50]",
-                              "snippet": "Ref a: Use...no action]"
                             }
                           },
                           "context": {
@@ -382,18 +358,10 @@
                           "trailingTrivia": "",
                           "value": "."
                         },
-                        "parent": {
-                          "id": "<element-declaration>:a@[L0:C0, L0:C50]",
-                          "snippet": "Ref a: Use...no action]"
-                        },
                         "rightExpression": {
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:a@[L0:C0, L0:C50]",
-                                  "snippet": "Ref a: Use...no action]"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:id@[L0:C13, L0:C15]",
@@ -439,10 +407,6 @@
                                 "line": 0,
                                 "column": 13
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:a@[L0:C0, L0:C50]",
-                              "snippet": "Ref a: Use...no action]"
                             }
                           },
                           "context": {
@@ -511,20 +475,12 @@
                       "trailingTrivia": " ",
                       "value": "<"
                     },
-                    "parent": {
-                      "id": "<element-declaration>:a@[L0:C0, L0:C50]",
-                      "snippet": "Ref a: Use...no action]"
-                    },
                     "rightExpression": {
                       "children": {
                         "leftExpression": {
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:a@[L0:C0, L0:C50]",
-                                  "snippet": "Ref a: Use...no action]"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:Products@[L0:C18, L0:C26]",
@@ -570,10 +526,6 @@
                                 "line": 0,
                                 "column": 18
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:a@[L0:C0, L0:C50]",
-                              "snippet": "Ref a: Use...no action]"
                             }
                           },
                           "context": {
@@ -621,18 +573,10 @@
                           "trailingTrivia": "",
                           "value": "."
                         },
-                        "parent": {
-                          "id": "<element-declaration>:a@[L0:C0, L0:C50]",
-                          "snippet": "Ref a: Use...no action]"
-                        },
                         "rightExpression": {
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:a@[L0:C0, L0:C50]",
-                                  "snippet": "Ref a: Use...no action]"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:uid@[L0:C27, L0:C30]",
@@ -678,10 +622,6 @@
                                 "line": 0,
                                 "column": 27
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:a@[L0:C0, L0:C50]",
-                              "snippet": "Ref a: Use...no action]"
                             }
                           },
                           "context": {
@@ -745,10 +685,6 @@
                     "line": 0,
                     "column": 7
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:a@[L0:C0, L0:C50]",
-                  "snippet": "Ref a: Use...no action]"
                 }
               },
               "context": {
@@ -800,10 +736,6 @@
               "children": {
                 "expression": {
                   "children": {
-                    "parent": {
-                      "id": "<element-declaration>:a@[L0:C0, L0:C50]",
-                      "snippet": "Ref a: Use...no action]"
-                    },
                     "variable": {
                       "context": {
                         "id": "<identifier>:a@[L0:C4, L0:C5]",
@@ -849,10 +781,6 @@
                     "line": 0,
                     "column": 4
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:a@[L0:C0, L0:C50]",
-                  "snippet": "Ref a: Use...no action]"
                 }
               },
               "context": {
@@ -874,10 +802,6 @@
                 "line": 0,
                 "column": 4
               }
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L0:C50]",
-              "snippet": "Ref a: Use...no action]"
             },
             "type": {
               "context": {

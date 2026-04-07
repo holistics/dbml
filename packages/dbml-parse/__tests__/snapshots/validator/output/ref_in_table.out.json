@@ -118,10 +118,6 @@
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:A@[L0:C0, L3:C1]",
-                                  "snippet": "Table A {\n...e number\n}"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:integer@[L1:C7, L1:C14]",
@@ -178,10 +174,6 @@
                                 },
                                 "references": []
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:A@[L0:C0, L3:C1]",
-                              "snippet": "Table A {\n...e number\n}"
                             }
                           },
                           "context": {
@@ -220,10 +212,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:A@[L0:C0, L3:C1]",
-                                "snippet": "Table A {\n...e number\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:id@[L1:C4, L1:C6]",
@@ -280,10 +268,6 @@
                               },
                               "references": []
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:A@[L0:C0, L3:C1]",
-                            "snippet": "Table A {\n...e number\n}"
                           }
                         },
                         "context": {
@@ -316,10 +300,6 @@
                           },
                           "references": []
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:A@[L0:C0, L3:C1]",
-                        "snippet": "Table A {\n...e number\n}"
                       }
                     },
                     "context": {
@@ -365,10 +345,6 @@
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:A@[L0:C0, L3:C1]",
-                                  "snippet": "Table A {\n...e number\n}"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:number@[L2:C9, L2:C15]",
@@ -425,10 +401,6 @@
                                 },
                                 "references": []
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:A@[L0:C0, L3:C1]",
-                              "snippet": "Table A {\n...e number\n}"
                             }
                           },
                           "context": {
@@ -467,10 +439,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:A@[L0:C0, L3:C1]",
-                                "snippet": "Table A {\n...e number\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:code@[L2:C4, L2:C8]",
@@ -527,10 +495,6 @@
                               },
                               "references": []
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:A@[L0:C0, L3:C1]",
-                            "snippet": "Table A {\n...e number\n}"
                           }
                         },
                         "context": {
@@ -563,10 +527,6 @@
                           },
                           "references": []
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:A@[L0:C0, L3:C1]",
-                        "snippet": "Table A {\n...e number\n}"
                       }
                     },
                     "context": {
@@ -600,11 +560,7 @@
                       "references": []
                     }
                   }
-                ],
-                "parent": {
-                  "id": "<element-declaration>:A@[L0:C0, L3:C1]",
-                  "snippet": "Table A {\n...e number\n}"
-                }
+                ]
               },
               "context": {
                 "id": "<block-expression>@[L0:C8, L3:C1]",
@@ -630,10 +586,6 @@
               "children": {
                 "expression": {
                   "children": {
-                    "parent": {
-                      "id": "<element-declaration>:A@[L0:C0, L3:C1]",
-                      "snippet": "Table A {\n...e number\n}"
-                    },
                     "variable": {
                       "context": {
                         "id": "<identifier>:A@[L0:C6, L0:C7]",
@@ -679,10 +631,6 @@
                     "line": 0,
                     "column": 6
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:A@[L0:C0, L3:C1]",
-                  "snippet": "Table A {\n...e number\n}"
                 }
               },
               "context": {
@@ -704,10 +652,6 @@
                 "line": 0,
                 "column": 6
               }
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L15:C1]",
-              "snippet": "Table A {\n...> B.code\n}"
             },
             "type": {
               "context": {
@@ -847,10 +791,6 @@
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:B@[L5:C0, L8:C1]",
-                                  "snippet": "Table B {\n...e number\n}"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:integer@[L6:C7, L6:C14]",
@@ -907,10 +847,6 @@
                                 },
                                 "references": []
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:B@[L5:C0, L8:C1]",
-                              "snippet": "Table B {\n...e number\n}"
                             }
                           },
                           "context": {
@@ -949,10 +885,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:B@[L5:C0, L8:C1]",
-                                "snippet": "Table B {\n...e number\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:id@[L6:C4, L6:C6]",
@@ -1009,10 +941,6 @@
                               },
                               "references": []
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:B@[L5:C0, L8:C1]",
-                            "snippet": "Table B {\n...e number\n}"
                           }
                         },
                         "context": {
@@ -1045,10 +973,6 @@
                           },
                           "references": []
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:B@[L5:C0, L8:C1]",
-                        "snippet": "Table B {\n...e number\n}"
                       }
                     },
                     "context": {
@@ -1089,10 +1013,6 @@
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:B@[L5:C0, L8:C1]",
-                                  "snippet": "Table B {\n...e number\n}"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:number@[L7:C9, L7:C15]",
@@ -1149,10 +1069,6 @@
                                 },
                                 "references": []
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:B@[L5:C0, L8:C1]",
-                              "snippet": "Table B {\n...e number\n}"
                             }
                           },
                           "context": {
@@ -1191,10 +1107,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:B@[L5:C0, L8:C1]",
-                                "snippet": "Table B {\n...e number\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:code@[L7:C4, L7:C8]",
@@ -1251,10 +1163,6 @@
                               },
                               "references": []
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:B@[L5:C0, L8:C1]",
-                            "snippet": "Table B {\n...e number\n}"
                           }
                         },
                         "context": {
@@ -1287,10 +1195,6 @@
                           },
                           "references": []
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:B@[L5:C0, L8:C1]",
-                        "snippet": "Table B {\n...e number\n}"
                       }
                     },
                     "context": {
@@ -1329,11 +1233,7 @@
                       ]
                     }
                   }
-                ],
-                "parent": {
-                  "id": "<element-declaration>:B@[L5:C0, L8:C1]",
-                  "snippet": "Table B {\n...e number\n}"
-                }
+                ]
               },
               "context": {
                 "id": "<block-expression>@[L5:C8, L8:C1]",
@@ -1359,10 +1259,6 @@
               "children": {
                 "expression": {
                   "children": {
-                    "parent": {
-                      "id": "<element-declaration>:B@[L5:C0, L8:C1]",
-                      "snippet": "Table B {\n...e number\n}"
-                    },
                     "variable": {
                       "context": {
                         "id": "<identifier>:B@[L5:C6, L5:C7]",
@@ -1408,10 +1304,6 @@
                     "line": 5,
                     "column": 6
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:B@[L5:C0, L8:C1]",
-                  "snippet": "Table B {\n...e number\n}"
                 }
               },
               "context": {
@@ -1433,10 +1325,6 @@
                 "line": 5,
                 "column": 6
               }
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L15:C1]",
-              "snippet": "Table A {\n...> B.code\n}"
             },
             "type": {
               "context": {
@@ -1576,10 +1464,6 @@
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:C@[L10:C0, L15:C1]",
-                                  "snippet": "Table C {\n...> B.code\n}"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:integer@[L11:C7, L11:C14]",
@@ -1636,10 +1520,6 @@
                                 },
                                 "references": []
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:C@[L10:C0, L15:C1]",
-                              "snippet": "Table C {\n...> B.code\n}"
                             }
                           },
                           "context": {
@@ -1678,10 +1558,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:C@[L10:C0, L15:C1]",
-                                "snippet": "Table C {\n...> B.code\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:id@[L11:C4, L11:C6]",
@@ -1738,10 +1614,6 @@
                               },
                               "references": []
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:C@[L10:C0, L15:C1]",
-                            "snippet": "Table C {\n...> B.code\n}"
                           }
                         },
                         "context": {
@@ -1774,10 +1646,6 @@
                           },
                           "references": []
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:C@[L10:C0, L15:C1]",
-                        "snippet": "Table C {\n...> B.code\n}"
                       }
                     },
                     "context": {
@@ -1818,10 +1686,6 @@
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:C@[L10:C0, L15:C1]",
-                                  "snippet": "Table C {\n...> B.code\n}"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:number@[L12:C9, L12:C15]",
@@ -1878,10 +1742,6 @@
                                 },
                                 "references": []
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:C@[L10:C0, L15:C1]",
-                              "snippet": "Table C {\n...> B.code\n}"
                             }
                           },
                           "context": {
@@ -1920,10 +1780,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:C@[L10:C0, L15:C1]",
-                                "snippet": "Table C {\n...> B.code\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:code@[L12:C4, L12:C8]",
@@ -1980,10 +1836,6 @@
                               },
                               "references": []
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:C@[L10:C0, L15:C1]",
-                            "snippet": "Table C {\n...> B.code\n}"
                           }
                         },
                         "context": {
@@ -2016,10 +1868,6 @@
                           },
                           "references": []
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:C@[L10:C0, L15:C1]",
-                        "snippet": "Table C {\n...> B.code\n}"
                       }
                     },
                     "context": {
@@ -2064,10 +1912,6 @@
                                 "children": {
                                   "expression": {
                                     "children": {
-                                      "parent": {
-                                        "id": "<element-declaration>:@[L13:C4, L13:C18]",
-                                        "snippet": "Ref: id > A.id"
-                                      },
                                       "variable": {
                                         "context": {
                                           "id": "<identifier>:id@[L13:C9, L13:C11]",
@@ -2113,10 +1957,6 @@
                                       "line": 13,
                                       "column": 9
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:@[L13:C4, L13:C18]",
-                                    "snippet": "Ref: id > A.id"
                                   }
                                 },
                                 "context": {
@@ -2164,20 +2004,12 @@
                                 "trailingTrivia": " ",
                                 "value": ">"
                               },
-                              "parent": {
-                                "id": "<element-declaration>:@[L13:C4, L13:C18]",
-                                "snippet": "Ref: id > A.id"
-                              },
                               "rightExpression": {
                                 "children": {
                                   "leftExpression": {
                                     "children": {
                                       "expression": {
                                         "children": {
-                                          "parent": {
-                                            "id": "<element-declaration>:@[L13:C4, L13:C18]",
-                                            "snippet": "Ref: id > A.id"
-                                          },
                                           "variable": {
                                             "context": {
                                               "id": "<identifier>:A@[L13:C14, L13:C15]",
@@ -2223,10 +2055,6 @@
                                           "line": 13,
                                           "column": 14
                                         }
-                                      },
-                                      "parent": {
-                                        "id": "<element-declaration>:@[L13:C4, L13:C18]",
-                                        "snippet": "Ref: id > A.id"
                                       }
                                     },
                                     "context": {
@@ -2280,18 +2108,10 @@
                                     "trailingTrivia": "",
                                     "value": "."
                                   },
-                                  "parent": {
-                                    "id": "<element-declaration>:@[L13:C4, L13:C18]",
-                                    "snippet": "Ref: id > A.id"
-                                  },
                                   "rightExpression": {
                                     "children": {
                                       "expression": {
                                         "children": {
-                                          "parent": {
-                                            "id": "<element-declaration>:@[L13:C4, L13:C18]",
-                                            "snippet": "Ref: id > A.id"
-                                          },
                                           "variable": {
                                             "context": {
                                               "id": "<identifier>:id@[L13:C16, L13:C18]",
@@ -2337,10 +2157,6 @@
                                           "line": 13,
                                           "column": 16
                                         }
-                                      },
-                                      "parent": {
-                                        "id": "<element-declaration>:@[L13:C4, L13:C18]",
-                                        "snippet": "Ref: id > A.id"
                                       }
                                     },
                                     "context": {
@@ -2410,10 +2226,6 @@
                               "line": 13,
                               "column": 9
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:@[L13:C4, L13:C18]",
-                            "snippet": "Ref: id > A.id"
                           }
                         },
                         "context": {
@@ -2460,10 +2272,6 @@
                         "trailingInvalid": "",
                         "trailingTrivia": " ",
                         "value": ":"
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:C@[L10:C0, L15:C1]",
-                        "snippet": "Table C {\n...> B.code\n}"
                       },
                       "type": {
                         "context": {
@@ -2533,10 +2341,6 @@
                                 "children": {
                                   "expression": {
                                     "children": {
-                                      "parent": {
-                                        "id": "<element-declaration>:@[L14:C4, L14:C22]",
-                                        "snippet": "Ref: code > B.code"
-                                      },
                                       "variable": {
                                         "context": {
                                           "id": "<identifier>:code@[L14:C9, L14:C13]",
@@ -2582,10 +2386,6 @@
                                       "line": 14,
                                       "column": 9
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:@[L14:C4, L14:C22]",
-                                    "snippet": "Ref: code > B.code"
                                   }
                                 },
                                 "context": {
@@ -2633,20 +2433,12 @@
                                 "trailingTrivia": " ",
                                 "value": ">"
                               },
-                              "parent": {
-                                "id": "<element-declaration>:@[L14:C4, L14:C22]",
-                                "snippet": "Ref: code > B.code"
-                              },
                               "rightExpression": {
                                 "children": {
                                   "leftExpression": {
                                     "children": {
                                       "expression": {
                                         "children": {
-                                          "parent": {
-                                            "id": "<element-declaration>:@[L14:C4, L14:C22]",
-                                            "snippet": "Ref: code > B.code"
-                                          },
                                           "variable": {
                                             "context": {
                                               "id": "<identifier>:B@[L14:C16, L14:C17]",
@@ -2692,10 +2484,6 @@
                                           "line": 14,
                                           "column": 16
                                         }
-                                      },
-                                      "parent": {
-                                        "id": "<element-declaration>:@[L14:C4, L14:C22]",
-                                        "snippet": "Ref: code > B.code"
                                       }
                                     },
                                     "context": {
@@ -2749,18 +2537,10 @@
                                     "trailingTrivia": "",
                                     "value": "."
                                   },
-                                  "parent": {
-                                    "id": "<element-declaration>:@[L14:C4, L14:C22]",
-                                    "snippet": "Ref: code > B.code"
-                                  },
                                   "rightExpression": {
                                     "children": {
                                       "expression": {
                                         "children": {
-                                          "parent": {
-                                            "id": "<element-declaration>:@[L14:C4, L14:C22]",
-                                            "snippet": "Ref: code > B.code"
-                                          },
                                           "variable": {
                                             "context": {
                                               "id": "<identifier>:code@[L14:C18, L14:C22]",
@@ -2806,10 +2586,6 @@
                                           "line": 14,
                                           "column": 18
                                         }
-                                      },
-                                      "parent": {
-                                        "id": "<element-declaration>:@[L14:C4, L14:C22]",
-                                        "snippet": "Ref: code > B.code"
                                       }
                                     },
                                     "context": {
@@ -2879,10 +2655,6 @@
                               "line": 14,
                               "column": 9
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:@[L14:C4, L14:C22]",
-                            "snippet": "Ref: code > B.code"
                           }
                         },
                         "context": {
@@ -2929,10 +2701,6 @@
                         "trailingInvalid": "",
                         "trailingTrivia": " ",
                         "value": ":"
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:C@[L10:C0, L15:C1]",
-                        "snippet": "Table C {\n...> B.code\n}"
                       },
                       "type": {
                         "context": {
@@ -2991,11 +2759,7 @@
                       "references": []
                     }
                   }
-                ],
-                "parent": {
-                  "id": "<element-declaration>:C@[L10:C0, L15:C1]",
-                  "snippet": "Table C {\n...> B.code\n}"
-                }
+                ]
               },
               "context": {
                 "id": "<block-expression>@[L10:C8, L15:C1]",
@@ -3021,10 +2785,6 @@
               "children": {
                 "expression": {
                   "children": {
-                    "parent": {
-                      "id": "<element-declaration>:C@[L10:C0, L15:C1]",
-                      "snippet": "Table C {\n...> B.code\n}"
-                    },
                     "variable": {
                       "context": {
                         "id": "<identifier>:C@[L10:C6, L10:C7]",
@@ -3070,10 +2830,6 @@
                     "line": 10,
                     "column": 6
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:C@[L10:C0, L15:C1]",
-                  "snippet": "Table C {\n...> B.code\n}"
                 }
               },
               "context": {
@@ -3095,10 +2851,6 @@
                 "line": 10,
                 "column": 6
               }
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L15:C1]",
-              "snippet": "Table A {\n...> B.code\n}"
             },
             "type": {
               "context": {

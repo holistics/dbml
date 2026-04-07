@@ -149,11 +149,7 @@
                   "trailingTrivia": "",
                   "value": "{"
                 },
-                "body": [],
-                "parent": {
-                  "id": "<element-declaration>:@[L0:C0, L0:C9]",
-                  "snippet": "checks {}"
-                }
+                "body": []
               },
               "context": {
                 "id": "<block-expression>@[L0:C7, L0:C9]",
@@ -174,10 +170,6 @@
                 "line": 0,
                 "column": 7
               }
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L24:C0]",
-              "snippet": "checks {}\n...id]\n  }\n}\n"
             },
             "type": {
               "context": {
@@ -299,10 +291,6 @@
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:Users@[L2:C0, L12:C1]",
-                                  "snippet": "Table User...lid]\n  }\n}"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:int@[L3:C10, L3:C13]",
@@ -359,10 +347,6 @@
                                 },
                                 "references": []
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:Users@[L2:C0, L12:C1]",
-                              "snippet": "Table User...lid]\n  }\n}"
                             }
                           },
                           "context": {
@@ -401,10 +385,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:Users@[L2:C0, L12:C1]",
-                                "snippet": "Table User...lid]\n  }\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:balance@[L3:C2, L3:C9]",
@@ -461,10 +441,6 @@
                               },
                               "references": []
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:Users@[L2:C0, L12:C1]",
-                            "snippet": "Table User...lid]\n  }\n}"
                           }
                         },
                         "context": {
@@ -497,10 +473,6 @@
                           },
                           "references": []
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:Users@[L2:C0, L12:C1]",
-                        "snippet": "Table User...lid]\n  }\n}"
                       }
                     },
                     "context": {
@@ -651,11 +623,7 @@
                                                     "trailingTrivia": "",
                                                     "value": "name"
                                                   }
-                                                ],
-                                                "parent": {
-                                                  "id": "<element-declaration>:@[L6:C2, L11:C3]",
-                                                  "snippet": "checks {\n ...valid]\n  }"
-                                                }
+                                                ]
                                               },
                                               "context": {
                                                 "id": "<identifer-stream>@[L7:C19, L7:C23]",
@@ -676,10 +644,6 @@
                                                 "line": 7,
                                                 "column": 19
                                               }
-                                            },
-                                            "parent": {
-                                              "id": "<element-declaration>:@[L6:C2, L11:C3]",
-                                              "snippet": "checks {\n ...valid]\n  }"
                                             },
                                             "value": {
                                               "children": {
@@ -709,10 +673,6 @@
                                                       "trailingInvalid": "",
                                                       "trailingTrivia": "",
                                                       "value": "positive_balance"
-                                                    },
-                                                    "parent": {
-                                                      "id": "<element-declaration>:@[L6:C2, L11:C3]",
-                                                      "snippet": "checks {\n ...valid]\n  }"
                                                     }
                                                   },
                                                   "context": {
@@ -734,10 +694,6 @@
                                                     "line": 7,
                                                     "column": 25
                                                   }
-                                                },
-                                                "parent": {
-                                                  "id": "<element-declaration>:@[L6:C2, L11:C3]",
-                                                  "snippet": "checks {\n ...valid]\n  }"
                                                 }
                                               },
                                               "context": {
@@ -831,10 +787,6 @@
                                         "trailingInvalid": "",
                                         "trailingTrivia": "",
                                         "value": "["
-                                      },
-                                      "parent": {
-                                        "id": "<element-declaration>:@[L6:C2, L11:C3]",
-                                        "snippet": "checks {\n ...valid]\n  }"
                                       }
                                     },
                                     "context": {
@@ -860,10 +812,6 @@
                                 ],
                                 "callee": {
                                   "children": {
-                                    "parent": {
-                                      "id": "<element-declaration>:@[L6:C2, L11:C3]",
-                                      "snippet": "checks {\n ...valid]\n  }"
-                                    },
                                     "value": {
                                       "context": {
                                         "id": "<function-expression>:balance > 0@[L7:C4, L7:C17]",
@@ -909,10 +857,6 @@
                                     "line": 7,
                                     "column": 4
                                   }
-                                },
-                                "parent": {
-                                  "id": "<element-declaration>:@[L6:C2, L11:C3]",
-                                  "snippet": "checks {\n ...valid]\n  }"
                                 }
                               },
                               "context": {
@@ -1023,11 +967,7 @@
                                                     "trailingTrivia": "",
                                                     "value": "name"
                                                   }
-                                                ],
-                                                "parent": {
-                                                  "id": "<element-declaration>:@[L6:C2, L11:C3]",
-                                                  "snippet": "checks {\n ...valid]\n  }"
-                                                }
+                                                ]
                                               },
                                               "context": {
                                                 "id": "<identifer-stream>@[L9:C22, L9:C26]",
@@ -1048,10 +988,6 @@
                                                 "line": 9,
                                                 "column": 22
                                               }
-                                            },
-                                            "parent": {
-                                              "id": "<element-declaration>:@[L6:C2, L11:C3]",
-                                              "snippet": "checks {\n ...valid]\n  }"
                                             },
                                             "value": {
                                               "children": {
@@ -1081,10 +1017,6 @@
                                                       "trailingInvalid": "",
                                                       "trailingTrivia": "",
                                                       "value": "dup"
-                                                    },
-                                                    "parent": {
-                                                      "id": "<element-declaration>:@[L6:C2, L11:C3]",
-                                                      "snippet": "checks {\n ...valid]\n  }"
                                                     }
                                                   },
                                                   "context": {
@@ -1106,10 +1038,6 @@
                                                     "line": 9,
                                                     "column": 28
                                                   }
-                                                },
-                                                "parent": {
-                                                  "id": "<element-declaration>:@[L6:C2, L11:C3]",
-                                                  "snippet": "checks {\n ...valid]\n  }"
                                                 }
                                               },
                                               "context": {
@@ -1208,11 +1136,7 @@
                                                     "trailingTrivia": "",
                                                     "value": "name"
                                                   }
-                                                ],
-                                                "parent": {
-                                                  "id": "<element-declaration>:@[L6:C2, L11:C3]",
-                                                  "snippet": "checks {\n ...valid]\n  }"
-                                                }
+                                                ]
                                               },
                                               "context": {
                                                 "id": "<identifer-stream>@[L9:C35, L9:C39]",
@@ -1233,10 +1157,6 @@
                                                 "line": 9,
                                                 "column": 35
                                               }
-                                            },
-                                            "parent": {
-                                              "id": "<element-declaration>:@[L6:C2, L11:C3]",
-                                              "snippet": "checks {\n ...valid]\n  }"
                                             },
                                             "value": {
                                               "children": {
@@ -1266,10 +1186,6 @@
                                                       "trailingInvalid": "",
                                                       "trailingTrivia": "",
                                                       "value": "dup"
-                                                    },
-                                                    "parent": {
-                                                      "id": "<element-declaration>:@[L6:C2, L11:C3]",
-                                                      "snippet": "checks {\n ...valid]\n  }"
                                                     }
                                                   },
                                                   "context": {
@@ -1291,10 +1207,6 @@
                                                     "line": 9,
                                                     "column": 41
                                                   }
-                                                },
-                                                "parent": {
-                                                  "id": "<element-declaration>:@[L6:C2, L11:C3]",
-                                                  "snippet": "checks {\n ...valid]\n  }"
                                                 }
                                               },
                                               "context": {
@@ -1388,10 +1300,6 @@
                                         "trailingInvalid": "",
                                         "trailingTrivia": "",
                                         "value": "["
-                                      },
-                                      "parent": {
-                                        "id": "<element-declaration>:@[L6:C2, L11:C3]",
-                                        "snippet": "checks {\n ...valid]\n  }"
                                       }
                                     },
                                     "context": {
@@ -1417,10 +1325,6 @@
                                 ],
                                 "callee": {
                                   "children": {
-                                    "parent": {
-                                      "id": "<element-declaration>:@[L6:C2, L11:C3]",
-                                      "snippet": "checks {\n ...valid]\n  }"
-                                    },
                                     "value": {
                                       "context": {
                                         "id": "<function-expression>:duplicate name@[L9:C4, L9:C20]",
@@ -1466,10 +1370,6 @@
                                     "line": 9,
                                     "column": 4
                                   }
-                                },
-                                "parent": {
-                                  "id": "<element-declaration>:@[L6:C2, L11:C3]",
-                                  "snippet": "checks {\n ...valid]\n  }"
                                 }
                               },
                               "context": {
@@ -1529,11 +1429,7 @@
                                                     "trailingTrivia": "",
                                                     "value": "invalid"
                                                   }
-                                                ],
-                                                "parent": {
-                                                  "id": "<element-declaration>:@[L6:C2, L11:C3]",
-                                                  "snippet": "checks {\n ...valid]\n  }"
-                                                }
+                                                ]
                                               },
                                               "context": {
                                                 "id": "<identifer-stream>@[L10:C23, L10:C30]",
@@ -1554,10 +1450,6 @@
                                                 "line": 10,
                                                 "column": 23
                                               }
-                                            },
-                                            "parent": {
-                                              "id": "<element-declaration>:@[L6:C2, L11:C3]",
-                                              "snippet": "checks {\n ...valid]\n  }"
                                             }
                                           },
                                           "context": {
@@ -1630,10 +1522,6 @@
                                         "trailingInvalid": "",
                                         "trailingTrivia": "",
                                         "value": "["
-                                      },
-                                      "parent": {
-                                        "id": "<element-declaration>:@[L6:C2, L11:C3]",
-                                        "snippet": "checks {\n ...valid]\n  }"
                                       }
                                     },
                                     "context": {
@@ -1659,10 +1547,6 @@
                                 ],
                                 "callee": {
                                   "children": {
-                                    "parent": {
-                                      "id": "<element-declaration>:@[L6:C2, L11:C3]",
-                                      "snippet": "checks {\n ...valid]\n  }"
-                                    },
                                     "value": {
                                       "context": {
                                         "id": "<function-expression>:invalid setting@[L10:C4, L10:C21]",
@@ -1708,10 +1592,6 @@
                                     "line": 10,
                                     "column": 4
                                   }
-                                },
-                                "parent": {
-                                  "id": "<element-declaration>:@[L6:C2, L11:C3]",
-                                  "snippet": "checks {\n ...valid]\n  }"
                                 }
                               },
                               "context": {
@@ -1734,11 +1614,7 @@
                                 "column": 4
                               }
                             }
-                          ],
-                          "parent": {
-                            "id": "<element-declaration>:@[L6:C2, L11:C3]",
-                            "snippet": "checks {\n ...valid]\n  }"
-                          }
+                          ]
                         },
                         "context": {
                           "id": "<block-expression>@[L6:C9, L11:C3]",
@@ -1759,10 +1635,6 @@
                           "line": 6,
                           "column": 9
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:Users@[L2:C0, L12:C1]",
-                        "snippet": "Table User...lid]\n  }\n}"
                       },
                       "type": {
                         "context": {
@@ -1821,11 +1693,7 @@
                       "references": []
                     }
                   }
-                ],
-                "parent": {
-                  "id": "<element-declaration>:Users@[L2:C0, L12:C1]",
-                  "snippet": "Table User...lid]\n  }\n}"
-                }
+                ]
               },
               "context": {
                 "id": "<block-expression>@[L2:C12, L12:C1]",
@@ -1851,10 +1719,6 @@
               "children": {
                 "expression": {
                   "children": {
-                    "parent": {
-                      "id": "<element-declaration>:Users@[L2:C0, L12:C1]",
-                      "snippet": "Table User...lid]\n  }\n}"
-                    },
                     "variable": {
                       "context": {
                         "id": "<identifier>:Users@[L2:C6, L2:C11]",
@@ -1900,10 +1764,6 @@
                     "line": 2,
                     "column": 6
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:Users@[L2:C0, L12:C1]",
-                  "snippet": "Table User...lid]\n  }\n}"
                 }
               },
               "context": {
@@ -1925,10 +1785,6 @@
                 "line": 2,
                 "column": 6
               }
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L24:C0]",
-              "snippet": "checks {}\n...id]\n  }\n}\n"
             },
             "type": {
               "context": {
@@ -2063,10 +1919,6 @@
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:Users@[L14:C0, L23:C1]",
-                                  "snippet": "TableParti...lid]\n  }\n}"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:int@[L15:C10, L15:C13]",
@@ -2112,10 +1964,6 @@
                                 "line": 15,
                                 "column": 10
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:Users@[L14:C0, L23:C1]",
-                              "snippet": "TableParti...lid]\n  }\n}"
                             }
                           },
                           "context": {
@@ -2143,10 +1991,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:Users@[L14:C0, L23:C1]",
-                                "snippet": "TableParti...lid]\n  }\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:balance@[L15:C2, L15:C9]",
@@ -2192,10 +2036,6 @@
                               "line": 15,
                               "column": 2
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:Users@[L14:C0, L23:C1]",
-                            "snippet": "TableParti...lid]\n  }\n}"
                           }
                         },
                         "context": {
@@ -2217,10 +2057,6 @@
                           "line": 15,
                           "column": 2
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:Users@[L14:C0, L23:C1]",
-                        "snippet": "TableParti...lid]\n  }\n}"
                       }
                     },
                     "context": {
@@ -2371,11 +2207,7 @@
                                                     "trailingTrivia": "",
                                                     "value": "name"
                                                   }
-                                                ],
-                                                "parent": {
-                                                  "id": "<element-declaration>:@[L17:C2, L22:C3]",
-                                                  "snippet": "checks {\n ...valid]\n  }"
-                                                }
+                                                ]
                                               },
                                               "context": {
                                                 "id": "<identifer-stream>@[L18:C19, L18:C23]",
@@ -2396,10 +2228,6 @@
                                                 "line": 18,
                                                 "column": 19
                                               }
-                                            },
-                                            "parent": {
-                                              "id": "<element-declaration>:@[L17:C2, L22:C3]",
-                                              "snippet": "checks {\n ...valid]\n  }"
                                             },
                                             "value": {
                                               "children": {
@@ -2429,10 +2257,6 @@
                                                       "trailingInvalid": "",
                                                       "trailingTrivia": "",
                                                       "value": "positive_balance"
-                                                    },
-                                                    "parent": {
-                                                      "id": "<element-declaration>:@[L17:C2, L22:C3]",
-                                                      "snippet": "checks {\n ...valid]\n  }"
                                                     }
                                                   },
                                                   "context": {
@@ -2454,10 +2278,6 @@
                                                     "line": 18,
                                                     "column": 25
                                                   }
-                                                },
-                                                "parent": {
-                                                  "id": "<element-declaration>:@[L17:C2, L22:C3]",
-                                                  "snippet": "checks {\n ...valid]\n  }"
                                                 }
                                               },
                                               "context": {
@@ -2551,10 +2371,6 @@
                                         "trailingInvalid": "",
                                         "trailingTrivia": "",
                                         "value": "["
-                                      },
-                                      "parent": {
-                                        "id": "<element-declaration>:@[L17:C2, L22:C3]",
-                                        "snippet": "checks {\n ...valid]\n  }"
                                       }
                                     },
                                     "context": {
@@ -2580,10 +2396,6 @@
                                 ],
                                 "callee": {
                                   "children": {
-                                    "parent": {
-                                      "id": "<element-declaration>:@[L17:C2, L22:C3]",
-                                      "snippet": "checks {\n ...valid]\n  }"
-                                    },
                                     "value": {
                                       "context": {
                                         "id": "<function-expression>:balance > 0@[L18:C4, L18:C17]",
@@ -2629,10 +2441,6 @@
                                     "line": 18,
                                     "column": 4
                                   }
-                                },
-                                "parent": {
-                                  "id": "<element-declaration>:@[L17:C2, L22:C3]",
-                                  "snippet": "checks {\n ...valid]\n  }"
                                 }
                               },
                               "context": {
@@ -2743,11 +2551,7 @@
                                                     "trailingTrivia": "",
                                                     "value": "name"
                                                   }
-                                                ],
-                                                "parent": {
-                                                  "id": "<element-declaration>:@[L17:C2, L22:C3]",
-                                                  "snippet": "checks {\n ...valid]\n  }"
-                                                }
+                                                ]
                                               },
                                               "context": {
                                                 "id": "<identifer-stream>@[L20:C22, L20:C26]",
@@ -2768,10 +2572,6 @@
                                                 "line": 20,
                                                 "column": 22
                                               }
-                                            },
-                                            "parent": {
-                                              "id": "<element-declaration>:@[L17:C2, L22:C3]",
-                                              "snippet": "checks {\n ...valid]\n  }"
                                             },
                                             "value": {
                                               "children": {
@@ -2801,10 +2601,6 @@
                                                       "trailingInvalid": "",
                                                       "trailingTrivia": "",
                                                       "value": "dup"
-                                                    },
-                                                    "parent": {
-                                                      "id": "<element-declaration>:@[L17:C2, L22:C3]",
-                                                      "snippet": "checks {\n ...valid]\n  }"
                                                     }
                                                   },
                                                   "context": {
@@ -2826,10 +2622,6 @@
                                                     "line": 20,
                                                     "column": 28
                                                   }
-                                                },
-                                                "parent": {
-                                                  "id": "<element-declaration>:@[L17:C2, L22:C3]",
-                                                  "snippet": "checks {\n ...valid]\n  }"
                                                 }
                                               },
                                               "context": {
@@ -2928,11 +2720,7 @@
                                                     "trailingTrivia": "",
                                                     "value": "name"
                                                   }
-                                                ],
-                                                "parent": {
-                                                  "id": "<element-declaration>:@[L17:C2, L22:C3]",
-                                                  "snippet": "checks {\n ...valid]\n  }"
-                                                }
+                                                ]
                                               },
                                               "context": {
                                                 "id": "<identifer-stream>@[L20:C35, L20:C39]",
@@ -2953,10 +2741,6 @@
                                                 "line": 20,
                                                 "column": 35
                                               }
-                                            },
-                                            "parent": {
-                                              "id": "<element-declaration>:@[L17:C2, L22:C3]",
-                                              "snippet": "checks {\n ...valid]\n  }"
                                             },
                                             "value": {
                                               "children": {
@@ -2986,10 +2770,6 @@
                                                       "trailingInvalid": "",
                                                       "trailingTrivia": "",
                                                       "value": "dup"
-                                                    },
-                                                    "parent": {
-                                                      "id": "<element-declaration>:@[L17:C2, L22:C3]",
-                                                      "snippet": "checks {\n ...valid]\n  }"
                                                     }
                                                   },
                                                   "context": {
@@ -3011,10 +2791,6 @@
                                                     "line": 20,
                                                     "column": 41
                                                   }
-                                                },
-                                                "parent": {
-                                                  "id": "<element-declaration>:@[L17:C2, L22:C3]",
-                                                  "snippet": "checks {\n ...valid]\n  }"
                                                 }
                                               },
                                               "context": {
@@ -3108,10 +2884,6 @@
                                         "trailingInvalid": "",
                                         "trailingTrivia": "",
                                         "value": "["
-                                      },
-                                      "parent": {
-                                        "id": "<element-declaration>:@[L17:C2, L22:C3]",
-                                        "snippet": "checks {\n ...valid]\n  }"
                                       }
                                     },
                                     "context": {
@@ -3137,10 +2909,6 @@
                                 ],
                                 "callee": {
                                   "children": {
-                                    "parent": {
-                                      "id": "<element-declaration>:@[L17:C2, L22:C3]",
-                                      "snippet": "checks {\n ...valid]\n  }"
-                                    },
                                     "value": {
                                       "context": {
                                         "id": "<function-expression>:duplicate name@[L20:C4, L20:C20]",
@@ -3186,10 +2954,6 @@
                                     "line": 20,
                                     "column": 4
                                   }
-                                },
-                                "parent": {
-                                  "id": "<element-declaration>:@[L17:C2, L22:C3]",
-                                  "snippet": "checks {\n ...valid]\n  }"
                                 }
                               },
                               "context": {
@@ -3249,11 +3013,7 @@
                                                     "trailingTrivia": "",
                                                     "value": "invalid"
                                                   }
-                                                ],
-                                                "parent": {
-                                                  "id": "<element-declaration>:@[L17:C2, L22:C3]",
-                                                  "snippet": "checks {\n ...valid]\n  }"
-                                                }
+                                                ]
                                               },
                                               "context": {
                                                 "id": "<identifer-stream>@[L21:C23, L21:C30]",
@@ -3274,10 +3034,6 @@
                                                 "line": 21,
                                                 "column": 23
                                               }
-                                            },
-                                            "parent": {
-                                              "id": "<element-declaration>:@[L17:C2, L22:C3]",
-                                              "snippet": "checks {\n ...valid]\n  }"
                                             }
                                           },
                                           "context": {
@@ -3350,10 +3106,6 @@
                                         "trailingInvalid": "",
                                         "trailingTrivia": "",
                                         "value": "["
-                                      },
-                                      "parent": {
-                                        "id": "<element-declaration>:@[L17:C2, L22:C3]",
-                                        "snippet": "checks {\n ...valid]\n  }"
                                       }
                                     },
                                     "context": {
@@ -3379,10 +3131,6 @@
                                 ],
                                 "callee": {
                                   "children": {
-                                    "parent": {
-                                      "id": "<element-declaration>:@[L17:C2, L22:C3]",
-                                      "snippet": "checks {\n ...valid]\n  }"
-                                    },
                                     "value": {
                                       "context": {
                                         "id": "<function-expression>:invalid setting@[L21:C4, L21:C21]",
@@ -3428,10 +3176,6 @@
                                     "line": 21,
                                     "column": 4
                                   }
-                                },
-                                "parent": {
-                                  "id": "<element-declaration>:@[L17:C2, L22:C3]",
-                                  "snippet": "checks {\n ...valid]\n  }"
                                 }
                               },
                               "context": {
@@ -3454,11 +3198,7 @@
                                 "column": 4
                               }
                             }
-                          ],
-                          "parent": {
-                            "id": "<element-declaration>:@[L17:C2, L22:C3]",
-                            "snippet": "checks {\n ...valid]\n  }"
-                          }
+                          ]
                         },
                         "context": {
                           "id": "<block-expression>@[L17:C9, L22:C3]",
@@ -3479,10 +3219,6 @@
                           "line": 17,
                           "column": 9
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:Users@[L14:C0, L23:C1]",
-                        "snippet": "TableParti...lid]\n  }\n}"
                       },
                       "type": {
                         "context": {
@@ -3542,11 +3278,7 @@
                       "references": []
                     }
                   }
-                ],
-                "parent": {
-                  "id": "<element-declaration>:Users@[L14:C0, L23:C1]",
-                  "snippet": "TableParti...lid]\n  }\n}"
-                }
+                ]
               },
               "context": {
                 "id": "<block-expression>@[L14:C19, L23:C1]",
@@ -3572,10 +3304,6 @@
               "children": {
                 "expression": {
                   "children": {
-                    "parent": {
-                      "id": "<element-declaration>:Users@[L14:C0, L23:C1]",
-                      "snippet": "TableParti...lid]\n  }\n}"
-                    },
                     "variable": {
                       "context": {
                         "id": "<identifier>:Users@[L14:C13, L14:C18]",
@@ -3621,10 +3349,6 @@
                     "line": 14,
                     "column": 13
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:Users@[L14:C0, L23:C1]",
-                  "snippet": "TableParti...lid]\n  }\n}"
                 }
               },
               "context": {
@@ -3646,10 +3370,6 @@
                 "line": 14,
                 "column": 13
               }
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L24:C0]",
-              "snippet": "checks {}\n...id]\n  }\n}\n"
             },
             "type": {
               "context": {

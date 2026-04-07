@@ -152,11 +152,7 @@
                             "trailingTrivia": "\n",
                             "value": "{"
                           },
-                          "body": [],
-                          "parent": {
-                            "id": "<element-declaration>:A@[L1:C4, L3:C5]",
-                            "snippet": "Table A {\r\n\r\n    }"
-                          }
+                          "body": []
                         },
                         "context": {
                           "id": "<block-expression>@[L1:C12, L3:C5]",
@@ -182,10 +178,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:A@[L1:C4, L3:C5]",
-                                "snippet": "Table A {\r\n\r\n    }"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:A@[L1:C10, L1:C11]",
@@ -231,10 +223,6 @@
                               "line": 1,
                               "column": 10
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:A@[L1:C4, L3:C5]",
-                            "snippet": "Table A {\r\n\r\n    }"
                           }
                         },
                         "context": {
@@ -256,10 +244,6 @@
                           "line": 1,
                           "column": 10
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:B@[L0:C0, L12:C1]",
-                        "snippet": "Project B ...\r\n    }\r\n}"
                       },
                       "type": {
                         "context": {
@@ -373,11 +357,7 @@
                             "trailingTrivia": "\n",
                             "value": "{"
                           },
-                          "body": [],
-                          "parent": {
-                            "id": "<element-declaration>:A@[L5:C4, L7:C5]",
-                            "snippet": "Table A {\r\n\r\n    }"
-                          }
+                          "body": []
                         },
                         "context": {
                           "id": "<block-expression>@[L5:C12, L7:C5]",
@@ -403,10 +383,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:A@[L5:C4, L7:C5]",
-                                "snippet": "Table A {\r\n\r\n    }"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:A@[L5:C10, L5:C11]",
@@ -452,10 +428,6 @@
                               "line": 5,
                               "column": 10
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:A@[L5:C4, L7:C5]",
-                            "snippet": "Table A {\r\n\r\n    }"
                           }
                         },
                         "context": {
@@ -477,10 +449,6 @@
                           "line": 5,
                           "column": 10
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:B@[L0:C0, L12:C1]",
-                        "snippet": "Project B ...\r\n    }\r\n}"
                       },
                       "type": {
                         "context": {
@@ -594,11 +562,7 @@
                             "trailingTrivia": "\n",
                             "value": "{"
                           },
-                          "body": [],
-                          "parent": {
-                            "id": "<element-declaration>:B@[L9:C4, L11:C5]",
-                            "snippet": "Table B {\r...   \r\n    }"
-                          }
+                          "body": []
                         },
                         "context": {
                           "id": "<block-expression>@[L9:C12, L11:C5]",
@@ -624,10 +588,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:B@[L9:C4, L11:C5]",
-                                "snippet": "Table B {\r...   \r\n    }"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:B@[L9:C10, L9:C11]",
@@ -673,10 +633,6 @@
                               "line": 9,
                               "column": 10
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:B@[L9:C4, L11:C5]",
-                            "snippet": "Table B {\r...   \r\n    }"
                           }
                         },
                         "context": {
@@ -698,10 +654,6 @@
                           "line": 9,
                           "column": 10
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:B@[L0:C0, L12:C1]",
-                        "snippet": "Project B ...\r\n    }\r\n}"
                       },
                       "type": {
                         "context": {
@@ -761,11 +713,7 @@
                       "references": []
                     }
                   }
-                ],
-                "parent": {
-                  "id": "<element-declaration>:B@[L0:C0, L12:C1]",
-                  "snippet": "Project B ...\r\n    }\r\n}"
-                }
+                ]
               },
               "context": {
                 "id": "<block-expression>@[L0:C10, L12:C1]",
@@ -791,10 +739,6 @@
               "children": {
                 "expression": {
                   "children": {
-                    "parent": {
-                      "id": "<element-declaration>:B@[L0:C0, L12:C1]",
-                      "snippet": "Project B ...\r\n    }\r\n}"
-                    },
                     "variable": {
                       "context": {
                         "id": "<identifier>:B@[L0:C8, L0:C9]",
@@ -840,10 +784,6 @@
                     "line": 0,
                     "column": 8
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:B@[L0:C0, L12:C1]",
-                  "snippet": "Project B ...\r\n    }\r\n}"
                 }
               },
               "context": {
@@ -865,10 +805,6 @@
                 "line": 0,
                 "column": 8
               }
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L12:C1]",
-              "snippet": "Project B ...\r\n    }\r\n}"
             },
             "type": {
               "context": {

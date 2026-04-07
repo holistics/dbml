@@ -131,10 +131,6 @@
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:Users@[L0:C0, L9:C1]",
-                                  "snippet": "TableParti...k: null]\n}"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:int@[L1:C10, L1:C13]",
@@ -180,10 +176,6 @@
                                 "line": 1,
                                 "column": 10
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:Users@[L0:C0, L9:C1]",
-                              "snippet": "TableParti...k: null]\n}"
                             }
                           },
                           "context": {
@@ -265,11 +257,7 @@
                                           "trailingTrivia": "",
                                           "value": "check"
                                         }
-                                      ],
-                                      "parent": {
-                                        "id": "<element-declaration>:Users@[L0:C0, L9:C1]",
-                                        "snippet": "TableParti...k: null]\n}"
-                                      }
+                                      ]
                                     },
                                     "context": {
                                       "id": "<identifer-stream>@[L1:C15, L1:C20]",
@@ -291,16 +279,8 @@
                                       "column": 15
                                     }
                                   },
-                                  "parent": {
-                                    "id": "<element-declaration>:Users@[L0:C0, L9:C1]",
-                                    "snippet": "TableParti...k: null]\n}"
-                                  },
                                   "value": {
                                     "children": {
-                                      "parent": {
-                                        "id": "<element-declaration>:Users@[L0:C0, L9:C1]",
-                                        "snippet": "TableParti...k: null]\n}"
-                                      },
                                       "value": {
                                         "context": {
                                           "id": "<function-expression>:balance > 0@[L1:C22, L1:C35]",
@@ -418,10 +398,6 @@
                               "trailingInvalid": "",
                               "trailingTrivia": "",
                               "value": "["
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:Users@[L0:C0, L9:C1]",
-                              "snippet": "TableParti...k: null]\n}"
                             }
                           },
                           "context": {
@@ -449,10 +425,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:Users@[L0:C0, L9:C1]",
-                                "snippet": "TableParti...k: null]\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:balance@[L1:C2, L1:C9]",
@@ -498,10 +470,6 @@
                               "line": 1,
                               "column": 2
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:Users@[L0:C0, L9:C1]",
-                            "snippet": "TableParti...k: null]\n}"
                           }
                         },
                         "context": {
@@ -523,10 +491,6 @@
                           "line": 1,
                           "column": 2
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:Users@[L0:C0, L9:C1]",
-                        "snippet": "TableParti...k: null]\n}"
                       }
                     },
                     "context": {
@@ -567,10 +531,6 @@
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:Users@[L0:C0, L9:C1]",
-                                  "snippet": "TableParti...k: null]\n}"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:int@[L2:C13, L2:C16]",
@@ -616,10 +576,6 @@
                                 "line": 2,
                                 "column": 13
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:Users@[L0:C0, L9:C1]",
-                              "snippet": "TableParti...k: null]\n}"
                             }
                           },
                           "context": {
@@ -727,11 +683,7 @@
                                           "trailingTrivia": "",
                                           "value": "check"
                                         }
-                                      ],
-                                      "parent": {
-                                        "id": "<element-declaration>:Users@[L0:C0, L9:C1]",
-                                        "snippet": "TableParti...k: null]\n}"
-                                      }
+                                      ]
                                     },
                                     "context": {
                                       "id": "<identifer-stream>@[L2:C18, L2:C23]",
@@ -753,16 +705,8 @@
                                       "column": 18
                                     }
                                   },
-                                  "parent": {
-                                    "id": "<element-declaration>:Users@[L0:C0, L9:C1]",
-                                    "snippet": "TableParti...k: null]\n}"
-                                  },
                                   "value": {
                                     "children": {
-                                      "parent": {
-                                        "id": "<element-declaration>:Users@[L0:C0, L9:C1]",
-                                        "snippet": "TableParti...k: null]\n}"
-                                      },
                                       "value": {
                                         "context": {
                                           "id": "<function-expression>:dependents >= 0@[L2:C25, L2:C42]",
@@ -885,11 +829,7 @@
                                           "trailingTrivia": "",
                                           "value": "check"
                                         }
-                                      ],
-                                      "parent": {
-                                        "id": "<element-declaration>:Users@[L0:C0, L9:C1]",
-                                        "snippet": "TableParti...k: null]\n}"
-                                      }
+                                      ]
                                     },
                                     "context": {
                                       "id": "<identifer-stream>@[L2:C44, L2:C49]",
@@ -911,16 +851,8 @@
                                       "column": 44
                                     }
                                   },
-                                  "parent": {
-                                    "id": "<element-declaration>:Users@[L0:C0, L9:C1]",
-                                    "snippet": "TableParti...k: null]\n}"
-                                  },
                                   "value": {
                                     "children": {
-                                      "parent": {
-                                        "id": "<element-declaration>:Users@[L0:C0, L9:C1]",
-                                        "snippet": "TableParti...k: null]\n}"
-                                      },
                                       "value": {
                                         "context": {
                                           "id": "<function-expression>:dependents < 10@[L2:C51, L2:C68]",
@@ -1038,10 +970,6 @@
                               "trailingInvalid": "",
                               "trailingTrivia": "",
                               "value": "["
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:Users@[L0:C0, L9:C1]",
-                              "snippet": "TableParti...k: null]\n}"
                             }
                           },
                           "context": {
@@ -1069,10 +997,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:Users@[L0:C0, L9:C1]",
-                                "snippet": "TableParti...k: null]\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:dependents@[L2:C2, L2:C12]",
@@ -1118,10 +1042,6 @@
                               "line": 2,
                               "column": 2
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:Users@[L0:C0, L9:C1]",
-                            "snippet": "TableParti...k: null]\n}"
                           }
                         },
                         "context": {
@@ -1143,10 +1063,6 @@
                           "line": 2,
                           "column": 2
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:Users@[L0:C0, L9:C1]",
-                        "snippet": "TableParti...k: null]\n}"
                       }
                     },
                     "context": {
@@ -1187,10 +1103,6 @@
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:Users@[L0:C0, L9:C1]",
-                                  "snippet": "TableParti...k: null]\n}"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:invalid_type@[L4:C14, L4:C26]",
@@ -1236,10 +1148,6 @@
                                 "line": 4,
                                 "column": 14
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:Users@[L0:C0, L9:C1]",
-                              "snippet": "TableParti...k: null]\n}"
                             }
                           },
                           "context": {
@@ -1422,11 +1330,7 @@
                                           "trailingTrivia": "",
                                           "value": "check"
                                         }
-                                      ],
-                                      "parent": {
-                                        "id": "<element-declaration>:Users@[L0:C0, L9:C1]",
-                                        "snippet": "TableParti...k: null]\n}"
-                                      }
+                                      ]
                                     },
                                     "context": {
                                       "id": "<identifer-stream>@[L4:C28, L4:C33]",
@@ -1448,18 +1352,10 @@
                                       "column": 28
                                     }
                                   },
-                                  "parent": {
-                                    "id": "<element-declaration>:Users@[L0:C0, L9:C1]",
-                                    "snippet": "TableParti...k: null]\n}"
-                                  },
                                   "value": {
                                     "children": {
                                       "expression": {
                                         "children": {
-                                          "parent": {
-                                            "id": "<element-declaration>:Users@[L0:C0, L9:C1]",
-                                            "snippet": "TableParti...k: null]\n}"
-                                          },
                                           "variable": {
                                             "context": {
                                               "id": "<variable>:invalid check 1@[L4:C35, L4:C52]",
@@ -1505,10 +1401,6 @@
                                           "line": 4,
                                           "column": 35
                                         }
-                                      },
-                                      "parent": {
-                                        "id": "<element-declaration>:Users@[L0:C0, L9:C1]",
-                                        "snippet": "TableParti...k: null]\n}"
                                       }
                                     },
                                     "context": {
@@ -1607,11 +1499,7 @@
                                           "trailingTrivia": "",
                                           "value": "check"
                                         }
-                                      ],
-                                      "parent": {
-                                        "id": "<element-declaration>:Users@[L0:C0, L9:C1]",
-                                        "snippet": "TableParti...k: null]\n}"
-                                      }
+                                      ]
                                     },
                                     "context": {
                                       "id": "<identifer-stream>@[L5:C28, L5:C33]",
@@ -1632,10 +1520,6 @@
                                       "line": 5,
                                       "column": 28
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:Users@[L0:C0, L9:C1]",
-                                    "snippet": "TableParti...k: null]\n}"
                                   },
                                   "value": {
                                     "children": {
@@ -1665,10 +1549,6 @@
                                             "trailingInvalid": "",
                                             "trailingTrivia": "",
                                             "value": "invalid check 2"
-                                          },
-                                          "parent": {
-                                            "id": "<element-declaration>:Users@[L0:C0, L9:C1]",
-                                            "snippet": "TableParti...k: null]\n}"
                                           }
                                         },
                                         "context": {
@@ -1690,10 +1570,6 @@
                                           "line": 5,
                                           "column": 35
                                         }
-                                      },
-                                      "parent": {
-                                        "id": "<element-declaration>:Users@[L0:C0, L9:C1]",
-                                        "snippet": "TableParti...k: null]\n}"
                                       }
                                     },
                                     "context": {
@@ -1792,11 +1668,7 @@
                                           "trailingTrivia": "",
                                           "value": "check"
                                         }
-                                      ],
-                                      "parent": {
-                                        "id": "<element-declaration>:Users@[L0:C0, L9:C1]",
-                                        "snippet": "TableParti...k: null]\n}"
-                                      }
+                                      ]
                                     },
                                     "context": {
                                       "id": "<identifer-stream>@[L6:C28, L6:C33]",
@@ -1817,10 +1689,6 @@
                                       "line": 6,
                                       "column": 28
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:Users@[L0:C0, L9:C1]",
-                                    "snippet": "TableParti...k: null]\n}"
                                   },
                                   "value": {
                                     "children": {
@@ -1850,10 +1718,6 @@
                                             "trailingInvalid": "",
                                             "trailingTrivia": "",
                                             "value": "3"
-                                          },
-                                          "parent": {
-                                            "id": "<element-declaration>:Users@[L0:C0, L9:C1]",
-                                            "snippet": "TableParti...k: null]\n}"
                                           }
                                         },
                                         "context": {
@@ -1875,10 +1739,6 @@
                                           "line": 6,
                                           "column": 35
                                         }
-                                      },
-                                      "parent": {
-                                        "id": "<element-declaration>:Users@[L0:C0, L9:C1]",
-                                        "snippet": "TableParti...k: null]\n}"
                                       }
                                     },
                                     "context": {
@@ -1977,11 +1837,7 @@
                                           "trailingTrivia": "",
                                           "value": "check"
                                         }
-                                      ],
-                                      "parent": {
-                                        "id": "<element-declaration>:Users@[L0:C0, L9:C1]",
-                                        "snippet": "TableParti...k: null]\n}"
-                                      }
+                                      ]
                                     },
                                     "context": {
                                       "id": "<identifer-stream>@[L7:C28, L7:C33]",
@@ -2003,18 +1859,10 @@
                                       "column": 28
                                     }
                                   },
-                                  "parent": {
-                                    "id": "<element-declaration>:Users@[L0:C0, L9:C1]",
-                                    "snippet": "TableParti...k: null]\n}"
-                                  },
                                   "value": {
                                     "children": {
                                       "expression": {
                                         "children": {
-                                          "parent": {
-                                            "id": "<element-declaration>:Users@[L0:C0, L9:C1]",
-                                            "snippet": "TableParti...k: null]\n}"
-                                          },
                                           "variable": {
                                             "context": {
                                               "id": "<identifier>:false@[L7:C35, L7:C40]",
@@ -2060,10 +1908,6 @@
                                           "line": 7,
                                           "column": 35
                                         }
-                                      },
-                                      "parent": {
-                                        "id": "<element-declaration>:Users@[L0:C0, L9:C1]",
-                                        "snippet": "TableParti...k: null]\n}"
                                       }
                                     },
                                     "context": {
@@ -2162,11 +2006,7 @@
                                           "trailingTrivia": "",
                                           "value": "check"
                                         }
-                                      ],
-                                      "parent": {
-                                        "id": "<element-declaration>:Users@[L0:C0, L9:C1]",
-                                        "snippet": "TableParti...k: null]\n}"
-                                      }
+                                      ]
                                     },
                                     "context": {
                                       "id": "<identifer-stream>@[L8:C28, L8:C33]",
@@ -2188,18 +2028,10 @@
                                       "column": 28
                                     }
                                   },
-                                  "parent": {
-                                    "id": "<element-declaration>:Users@[L0:C0, L9:C1]",
-                                    "snippet": "TableParti...k: null]\n}"
-                                  },
                                   "value": {
                                     "children": {
                                       "expression": {
                                         "children": {
-                                          "parent": {
-                                            "id": "<element-declaration>:Users@[L0:C0, L9:C1]",
-                                            "snippet": "TableParti...k: null]\n}"
-                                          },
                                           "variable": {
                                             "context": {
                                               "id": "<identifier>:null@[L8:C35, L8:C39]",
@@ -2245,10 +2077,6 @@
                                           "line": 8,
                                           "column": 35
                                         }
-                                      },
-                                      "parent": {
-                                        "id": "<element-declaration>:Users@[L0:C0, L9:C1]",
-                                        "snippet": "TableParti...k: null]\n}"
                                       }
                                     },
                                     "context": {
@@ -2342,10 +2170,6 @@
                               "trailingInvalid": "",
                               "trailingTrivia": "",
                               "value": "["
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:Users@[L0:C0, L9:C1]",
-                              "snippet": "TableParti...k: null]\n}"
                             }
                           },
                           "context": {
@@ -2373,10 +2197,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:Users@[L0:C0, L9:C1]",
-                                "snippet": "TableParti...k: null]\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:invalid_col@[L4:C2, L4:C13]",
@@ -2422,10 +2242,6 @@
                               "line": 4,
                               "column": 2
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:Users@[L0:C0, L9:C1]",
-                            "snippet": "TableParti...k: null]\n}"
                           }
                         },
                         "context": {
@@ -2447,10 +2263,6 @@
                           "line": 4,
                           "column": 2
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:Users@[L0:C0, L9:C1]",
-                        "snippet": "TableParti...k: null]\n}"
                       }
                     },
                     "context": {
@@ -2484,11 +2296,7 @@
                       "references": []
                     }
                   }
-                ],
-                "parent": {
-                  "id": "<element-declaration>:Users@[L0:C0, L9:C1]",
-                  "snippet": "TableParti...k: null]\n}"
-                }
+                ]
               },
               "context": {
                 "id": "<block-expression>@[L0:C19, L9:C1]",
@@ -2514,10 +2322,6 @@
               "children": {
                 "expression": {
                   "children": {
-                    "parent": {
-                      "id": "<element-declaration>:Users@[L0:C0, L9:C1]",
-                      "snippet": "TableParti...k: null]\n}"
-                    },
                     "variable": {
                       "context": {
                         "id": "<identifier>:Users@[L0:C13, L0:C18]",
@@ -2563,10 +2367,6 @@
                     "line": 0,
                     "column": 13
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:Users@[L0:C0, L9:C1]",
-                  "snippet": "TableParti...k: null]\n}"
                 }
               },
               "context": {
@@ -2588,10 +2388,6 @@
                 "line": 0,
                 "column": 13
               }
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L10:C0]",
-              "snippet": "TableParti...: null]\n}\n"
             },
             "type": {
               "context": {

@@ -118,10 +118,6 @@
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:t1@[L0:C0, L2:C1]",
-                                  "snippet": "Table t1 {... integer\n}"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:integer@[L1:C7, L1:C14]",
@@ -178,10 +174,6 @@
                                 },
                                 "references": []
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:t1@[L0:C0, L2:C1]",
-                              "snippet": "Table t1 {... integer\n}"
                             }
                           },
                           "context": {
@@ -220,10 +212,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:t1@[L0:C0, L2:C1]",
-                                "snippet": "Table t1 {... integer\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:id@[L1:C4, L1:C6]",
@@ -280,10 +268,6 @@
                               },
                               "references": []
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:t1@[L0:C0, L2:C1]",
-                            "snippet": "Table t1 {... integer\n}"
                           }
                         },
                         "context": {
@@ -316,10 +300,6 @@
                           },
                           "references": []
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:t1@[L0:C0, L2:C1]",
-                        "snippet": "Table t1 {... integer\n}"
                       }
                     },
                     "context": {
@@ -353,11 +333,7 @@
                       "references": []
                     }
                   }
-                ],
-                "parent": {
-                  "id": "<element-declaration>:t1@[L0:C0, L2:C1]",
-                  "snippet": "Table t1 {... integer\n}"
-                }
+                ]
               },
               "context": {
                 "id": "<block-expression>@[L0:C9, L2:C1]",
@@ -383,10 +359,6 @@
               "children": {
                 "expression": {
                   "children": {
-                    "parent": {
-                      "id": "<element-declaration>:t1@[L0:C0, L2:C1]",
-                      "snippet": "Table t1 {... integer\n}"
-                    },
                     "variable": {
                       "context": {
                         "id": "<identifier>:t1@[L0:C6, L0:C8]",
@@ -432,10 +404,6 @@
                     "line": 0,
                     "column": 6
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:t1@[L0:C0, L2:C1]",
-                  "snippet": "Table t1 {... integer\n}"
                 }
               },
               "context": {
@@ -457,10 +425,6 @@
                 "line": 0,
                 "column": 6
               }
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L22:C0]",
-              "snippet": "Table t1 {... table2\n}\n"
             },
             "type": {
               "context": {
@@ -669,11 +633,7 @@
                               "trailingTrivia": "",
                               "value": "note"
                             }
-                          ],
-                          "parent": {
-                            "id": "<element-declaration>:g1@[L4:C0, L11:C1]",
-                            "snippet": "TableGroup...{\n    t1\n}"
-                          }
+                          ]
                         },
                         "context": {
                           "id": "<identifer-stream>@[L5:C4, L5:C8]",
@@ -694,10 +654,6 @@
                           "line": 5,
                           "column": 4
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:g1@[L4:C0, L11:C1]",
-                        "snippet": "TableGroup...{\n    t1\n}"
                       },
                       "value": {
                         "children": {
@@ -727,10 +683,6 @@
                                 "trailingInvalid": "",
                                 "trailingTrivia": "",
                                 "value": "This is a note"
-                              },
-                              "parent": {
-                                "id": "<element-declaration>:g1@[L4:C0, L11:C1]",
-                                "snippet": "TableGroup...{\n    t1\n}"
                               }
                             },
                             "context": {
@@ -752,10 +704,6 @@
                               "line": 5,
                               "column": 10
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:g1@[L4:C0, L11:C1]",
-                            "snippet": "TableGroup...{\n    t1\n}"
                           }
                         },
                         "context": {
@@ -854,11 +802,7 @@
                               "trailingTrivia": "",
                               "value": "note"
                             }
-                          ],
-                          "parent": {
-                            "id": "<element-declaration>:g1@[L4:C0, L11:C1]",
-                            "snippet": "TableGroup...{\n    t1\n}"
-                          }
+                          ]
                         },
                         "context": {
                           "id": "<identifer-stream>@[L6:C4, L6:C8]",
@@ -879,10 +823,6 @@
                           "line": 6,
                           "column": 4
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:g1@[L4:C0, L11:C1]",
-                        "snippet": "TableGroup...{\n    t1\n}"
                       },
                       "value": {
                         "children": {
@@ -912,10 +852,6 @@
                                 "trailingInvalid": "",
                                 "trailingTrivia": "",
                                 "value": "This is another note"
-                              },
-                              "parent": {
-                                "id": "<element-declaration>:g1@[L4:C0, L11:C1]",
-                                "snippet": "TableGroup...{\n    t1\n}"
                               }
                             },
                             "context": {
@@ -937,10 +873,6 @@
                               "line": 6,
                               "column": 10
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:g1@[L4:C0, L11:C1]",
-                            "snippet": "TableGroup...{\n    t1\n}"
                           }
                         },
                         "context": {
@@ -1039,11 +971,7 @@
                               "trailingTrivia": "",
                               "value": "color"
                             }
-                          ],
-                          "parent": {
-                            "id": "<element-declaration>:g1@[L4:C0, L11:C1]",
-                            "snippet": "TableGroup...{\n    t1\n}"
-                          }
+                          ]
                         },
                         "context": {
                           "id": "<identifer-stream>@[L7:C4, L7:C9]",
@@ -1064,10 +992,6 @@
                           "line": 7,
                           "column": 4
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:g1@[L4:C0, L11:C1]",
-                        "snippet": "TableGroup...{\n    t1\n}"
                       },
                       "value": {
                         "children": {
@@ -1097,10 +1021,6 @@
                                 "trailingInvalid": "",
                                 "trailingTrivia": "",
                                 "value": "#ccc"
-                              },
-                              "parent": {
-                                "id": "<element-declaration>:g1@[L4:C0, L11:C1]",
-                                "snippet": "TableGroup...{\n    t1\n}"
                               }
                             },
                             "context": {
@@ -1122,10 +1042,6 @@
                               "line": 7,
                               "column": 11
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:g1@[L4:C0, L11:C1]",
-                            "snippet": "TableGroup...{\n    t1\n}"
                           }
                         },
                         "context": {
@@ -1224,11 +1140,7 @@
                               "trailingTrivia": "",
                               "value": "what"
                             }
-                          ],
-                          "parent": {
-                            "id": "<element-declaration>:g1@[L4:C0, L11:C1]",
-                            "snippet": "TableGroup...{\n    t1\n}"
-                          }
+                          ]
                         },
                         "context": {
                           "id": "<identifer-stream>@[L8:C4, L8:C8]",
@@ -1249,10 +1161,6 @@
                           "line": 8,
                           "column": 4
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:g1@[L4:C0, L11:C1]",
-                        "snippet": "TableGroup...{\n    t1\n}"
                       },
                       "value": {
                         "children": {
@@ -1282,10 +1190,6 @@
                                 "trailingInvalid": "",
                                 "trailingTrivia": "\n",
                                 "value": "ye ye"
-                              },
-                              "parent": {
-                                "id": "<element-declaration>:g1@[L4:C0, L11:C1]",
-                                "snippet": "TableGroup...{\n    t1\n}"
                               }
                             },
                             "context": {
@@ -1307,10 +1211,6 @@
                               "line": 8,
                               "column": 10
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:g1@[L4:C0, L11:C1]",
-                            "snippet": "TableGroup...{\n    t1\n}"
                           }
                         },
                         "context": {
@@ -1404,10 +1304,6 @@
                   "trailingInvalid": "",
                   "trailingTrivia": "\n",
                   "value": "["
-                },
-                "parent": {
-                  "id": "<element-declaration>:g1@[L4:C0, L11:C1]",
-                  "snippet": "TableGroup...{\n    t1\n}"
                 }
               },
               "context": {
@@ -1490,10 +1386,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:g1@[L4:C0, L11:C1]",
-                                "snippet": "TableGroup...{\n    t1\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:t1@[L10:C4, L10:C6]",
@@ -1539,10 +1431,6 @@
                               "line": 10,
                               "column": 4
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:g1@[L4:C0, L11:C1]",
-                            "snippet": "TableGroup...{\n    t1\n}"
                           }
                         },
                         "context": {
@@ -1570,10 +1458,6 @@
                           "line": 10,
                           "column": 4
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:g1@[L4:C0, L11:C1]",
-                        "snippet": "TableGroup...{\n    t1\n}"
                       }
                     },
                     "context": {
@@ -1608,11 +1492,7 @@
                       "references": []
                     }
                   }
-                ],
-                "parent": {
-                  "id": "<element-declaration>:g1@[L4:C0, L11:C1]",
-                  "snippet": "TableGroup...{\n    t1\n}"
-                }
+                ]
               },
               "context": {
                 "id": "<block-expression>@[L9:C2, L11:C1]",
@@ -1638,10 +1518,6 @@
               "children": {
                 "expression": {
                   "children": {
-                    "parent": {
-                      "id": "<element-declaration>:g1@[L4:C0, L11:C1]",
-                      "snippet": "TableGroup...{\n    t1\n}"
-                    },
                     "variable": {
                       "context": {
                         "id": "<identifier>:g1@[L4:C11, L4:C13]",
@@ -1687,10 +1563,6 @@
                     "line": 4,
                     "column": 11
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:g1@[L4:C0, L11:C1]",
-                  "snippet": "TableGroup...{\n    t1\n}"
                 }
               },
               "context": {
@@ -1712,10 +1584,6 @@
                 "line": 4,
                 "column": 11
               }
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L22:C0]",
-              "snippet": "Table t1 {... table2\n}\n"
             },
             "type": {
               "context": {
@@ -1844,10 +1712,6 @@
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:table2@[L13:C0, L15:C1]",
-                                  "snippet": "Table tabl...int [pk]\n}"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:int@[L14:C5, L14:C8]",
@@ -1904,10 +1768,6 @@
                                 },
                                 "references": []
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:table2@[L13:C0, L15:C1]",
-                              "snippet": "Table tabl...int [pk]\n}"
                             }
                           },
                           "context": {
@@ -1975,11 +1835,7 @@
                                           "trailingTrivia": "",
                                           "value": "pk"
                                         }
-                                      ],
-                                      "parent": {
-                                        "id": "<element-declaration>:table2@[L13:C0, L15:C1]",
-                                        "snippet": "Table tabl...int [pk]\n}"
-                                      }
+                                      ]
                                     },
                                     "context": {
                                       "id": "<identifer-stream>@[L14:C10, L14:C12]",
@@ -2011,10 +1867,6 @@
                                       },
                                       "references": []
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:table2@[L13:C0, L15:C1]",
-                                    "snippet": "Table tabl...int [pk]\n}"
                                   }
                                 },
                                 "context": {
@@ -2098,10 +1950,6 @@
                               "trailingInvalid": "",
                               "trailingTrivia": "",
                               "value": "["
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:table2@[L13:C0, L15:C1]",
-                              "snippet": "Table tabl...int [pk]\n}"
                             }
                           },
                           "context": {
@@ -2140,10 +1988,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:table2@[L13:C0, L15:C1]",
-                                "snippet": "Table tabl...int [pk]\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:id@[L14:C2, L14:C4]",
@@ -2200,10 +2044,6 @@
                               },
                               "references": []
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:table2@[L13:C0, L15:C1]",
-                            "snippet": "Table tabl...int [pk]\n}"
                           }
                         },
                         "context": {
@@ -2236,10 +2076,6 @@
                           },
                           "references": []
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:table2@[L13:C0, L15:C1]",
-                        "snippet": "Table tabl...int [pk]\n}"
                       }
                     },
                     "context": {
@@ -2273,11 +2109,7 @@
                       "references": []
                     }
                   }
-                ],
-                "parent": {
-                  "id": "<element-declaration>:table2@[L13:C0, L15:C1]",
-                  "snippet": "Table tabl...int [pk]\n}"
-                }
+                ]
               },
               "context": {
                 "id": "<block-expression>@[L13:C13, L15:C1]",
@@ -2303,10 +2135,6 @@
               "children": {
                 "expression": {
                   "children": {
-                    "parent": {
-                      "id": "<element-declaration>:table2@[L13:C0, L15:C1]",
-                      "snippet": "Table tabl...int [pk]\n}"
-                    },
                     "variable": {
                       "context": {
                         "id": "<identifier>:table2@[L13:C6, L13:C12]",
@@ -2352,10 +2180,6 @@
                     "line": 13,
                     "column": 6
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:table2@[L13:C0, L15:C1]",
-                  "snippet": "Table tabl...int [pk]\n}"
                 }
               },
               "context": {
@@ -2377,10 +2201,6 @@
                 "line": 13,
                 "column": 6
               }
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L22:C0]",
-              "snippet": "Table t1 {... table2\n}\n"
             },
             "type": {
               "context": {
@@ -2513,11 +2333,7 @@
                               "trailingTrivia": "",
                               "value": "color"
                             }
-                          ],
-                          "parent": {
-                            "id": "<element-declaration>:group2@[L17:C0, L21:C1]",
-                            "snippet": "TableGroup...  table2\n}"
-                          }
+                          ]
                         },
                         "context": {
                           "id": "<identifer-stream>@[L18:C2, L18:C7]",
@@ -2538,10 +2354,6 @@
                           "line": 18,
                           "column": 2
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:group2@[L17:C0, L21:C1]",
-                        "snippet": "TableGroup...  table2\n}"
                       },
                       "value": {
                         "children": {
@@ -2571,10 +2383,6 @@
                                 "trailingInvalid": "",
                                 "trailingTrivia": "\n",
                                 "value": "#aa"
-                              },
-                              "parent": {
-                                "id": "<element-declaration>:group2@[L17:C0, L21:C1]",
-                                "snippet": "TableGroup...  table2\n}"
                               }
                             },
                             "context": {
@@ -2596,10 +2404,6 @@
                               "line": 18,
                               "column": 9
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:group2@[L17:C0, L21:C1]",
-                            "snippet": "TableGroup...  table2\n}"
                           }
                         },
                         "context": {
@@ -2693,10 +2497,6 @@
                   "trailingInvalid": "",
                   "trailingTrivia": "\n",
                   "value": "["
-                },
-                "parent": {
-                  "id": "<element-declaration>:group2@[L17:C0, L21:C1]",
-                  "snippet": "TableGroup...  table2\n}"
                 }
               },
               "context": {
@@ -2779,10 +2579,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:group2@[L17:C0, L21:C1]",
-                                "snippet": "TableGroup...  table2\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:table2@[L20:C2, L20:C8]",
@@ -2828,10 +2624,6 @@
                               "line": 20,
                               "column": 2
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:group2@[L17:C0, L21:C1]",
-                            "snippet": "TableGroup...  table2\n}"
                           }
                         },
                         "context": {
@@ -2859,10 +2651,6 @@
                           "line": 20,
                           "column": 2
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:group2@[L17:C0, L21:C1]",
-                        "snippet": "TableGroup...  table2\n}"
                       }
                     },
                     "context": {
@@ -2897,11 +2685,7 @@
                       "references": []
                     }
                   }
-                ],
-                "parent": {
-                  "id": "<element-declaration>:group2@[L17:C0, L21:C1]",
-                  "snippet": "TableGroup...  table2\n}"
-                }
+                ]
               },
               "context": {
                 "id": "<block-expression>@[L19:C2, L21:C1]",
@@ -2927,10 +2711,6 @@
               "children": {
                 "expression": {
                   "children": {
-                    "parent": {
-                      "id": "<element-declaration>:group2@[L17:C0, L21:C1]",
-                      "snippet": "TableGroup...  table2\n}"
-                    },
                     "variable": {
                       "context": {
                         "id": "<identifier>:group2@[L17:C11, L17:C17]",
@@ -2976,10 +2756,6 @@
                     "line": 17,
                     "column": 11
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:group2@[L17:C0, L21:C1]",
-                  "snippet": "TableGroup...  table2\n}"
                 }
               },
               "context": {
@@ -3001,10 +2777,6 @@
                 "line": 17,
                 "column": 11
               }
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L22:C0]",
-              "snippet": "Table t1 {... table2\n}\n"
             },
             "type": {
               "context": {

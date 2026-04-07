@@ -65,10 +65,6 @@
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:FunctionApplication@[L0:C0, L3:C1]",
-                                  "snippet": "Test Funct...unique]\r\n}"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:integer@[L1:C7, L1:C14]",
@@ -114,10 +110,6 @@
                                 "line": 1,
                                 "column": 7
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:FunctionApplication@[L0:C0, L3:C1]",
-                              "snippet": "Test Funct...unique]\r\n}"
                             }
                           },
                           "context": {
@@ -199,11 +191,7 @@
                                           "trailingTrivia": "",
                                           "value": "key"
                                         }
-                                      ],
-                                      "parent": {
-                                        "id": "<element-declaration>:FunctionApplication@[L0:C0, L3:C1]",
-                                        "snippet": "Test Funct...unique]\r\n}"
-                                      }
+                                      ]
                                     },
                                     "context": {
                                       "id": "<identifer-stream>@[L1:C16, L1:C27]",
@@ -224,10 +212,6 @@
                                       "line": 1,
                                       "column": 16
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:FunctionApplication@[L0:C0, L3:C1]",
-                                    "snippet": "Test Funct...unique]\r\n}"
                                   }
                                 },
                                 "context": {
@@ -300,10 +284,6 @@
                               "trailingInvalid": "",
                               "trailingTrivia": "",
                               "value": "["
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:FunctionApplication@[L0:C0, L3:C1]",
-                              "snippet": "Test Funct...unique]\r\n}"
                             }
                           },
                           "context": {
@@ -331,10 +311,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:FunctionApplication@[L0:C0, L3:C1]",
-                                "snippet": "Test Funct...unique]\r\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:id@[L1:C4, L1:C6]",
@@ -380,10 +356,6 @@
                               "line": 1,
                               "column": 4
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:FunctionApplication@[L0:C0, L3:C1]",
-                            "snippet": "Test Funct...unique]\r\n}"
                           }
                         },
                         "context": {
@@ -405,10 +377,6 @@
                           "line": 1,
                           "column": 4
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:FunctionApplication@[L0:C0, L3:C1]",
-                        "snippet": "Test Funct...unique]\r\n}"
                       }
                     },
                     "context": {
@@ -468,10 +436,6 @@
                                             "trailingInvalid": "",
                                             "trailingTrivia": "",
                                             "value": "255"
-                                          },
-                                          "parent": {
-                                            "id": "<element-declaration>:FunctionApplication@[L0:C0, L3:C1]",
-                                            "snippet": "Test Funct...unique]\r\n}"
                                           }
                                         },
                                         "context": {
@@ -493,10 +457,6 @@
                                           "line": 2,
                                           "column": 15
                                         }
-                                      },
-                                      "parent": {
-                                        "id": "<element-declaration>:FunctionApplication@[L0:C0, L3:C1]",
-                                        "snippet": "Test Funct...unique]\r\n}"
                                       }
                                     },
                                     "context": {
@@ -520,10 +480,6 @@
                                     }
                                   }
                                 ],
-                                "parent": {
-                                  "id": "<element-declaration>:FunctionApplication@[L0:C0, L3:C1]",
-                                  "snippet": "Test Funct...unique]\r\n}"
-                                },
                                 "tupleCloseParen": {
                                   "context": {
                                     "id": "<rparen>:)@[L2:C18, L2:C19]",
@@ -599,10 +555,6 @@
                               "children": {
                                 "expression": {
                                   "children": {
-                                    "parent": {
-                                      "id": "<element-declaration>:FunctionApplication@[L0:C0, L3:C1]",
-                                      "snippet": "Test Funct...unique]\r\n}"
-                                    },
                                     "variable": {
                                       "context": {
                                         "id": "<identifier>:char@[L2:C9, L2:C13]",
@@ -648,10 +600,6 @@
                                     "line": 2,
                                     "column": 9
                                   }
-                                },
-                                "parent": {
-                                  "id": "<element-declaration>:FunctionApplication@[L0:C0, L3:C1]",
-                                  "snippet": "Test Funct...unique]\r\n}"
                                 }
                               },
                               "context": {
@@ -673,10 +621,6 @@
                                 "line": 2,
                                 "column": 9
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:FunctionApplication@[L0:C0, L3:C1]",
-                              "snippet": "Test Funct...unique]\r\n}"
                             }
                           },
                           "context": {
@@ -733,11 +677,7 @@
                                           "trailingTrivia": "",
                                           "value": "unique"
                                         }
-                                      ],
-                                      "parent": {
-                                        "id": "<element-declaration>:FunctionApplication@[L0:C0, L3:C1]",
-                                        "snippet": "Test Funct...unique]\r\n}"
-                                      }
+                                      ]
                                     },
                                     "context": {
                                       "id": "<identifer-stream>@[L2:C21, L2:C27]",
@@ -758,10 +698,6 @@
                                       "line": 2,
                                       "column": 21
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:FunctionApplication@[L0:C0, L3:C1]",
-                                    "snippet": "Test Funct...unique]\r\n}"
                                   }
                                 },
                                 "context": {
@@ -834,10 +770,6 @@
                               "trailingInvalid": "",
                               "trailingTrivia": "",
                               "value": "["
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:FunctionApplication@[L0:C0, L3:C1]",
-                              "snippet": "Test Funct...unique]\r\n}"
                             }
                           },
                           "context": {
@@ -865,10 +797,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:FunctionApplication@[L0:C0, L3:C1]",
-                                "snippet": "Test Funct...unique]\r\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:name@[L2:C4, L2:C8]",
@@ -914,10 +842,6 @@
                               "line": 2,
                               "column": 4
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:FunctionApplication@[L0:C0, L3:C1]",
-                            "snippet": "Test Funct...unique]\r\n}"
                           }
                         },
                         "context": {
@@ -939,10 +863,6 @@
                           "line": 2,
                           "column": 4
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:FunctionApplication@[L0:C0, L3:C1]",
-                        "snippet": "Test Funct...unique]\r\n}"
                       }
                     },
                     "context": {
@@ -965,11 +885,7 @@
                       "column": 4
                     }
                   }
-                ],
-                "parent": {
-                  "id": "<element-declaration>:FunctionApplication@[L0:C0, L3:C1]",
-                  "snippet": "Test Funct...unique]\r\n}"
-                }
+                ]
               },
               "context": {
                 "id": "<block-expression>@[L0:C25, L3:C1]",
@@ -995,10 +911,6 @@
               "children": {
                 "expression": {
                   "children": {
-                    "parent": {
-                      "id": "<element-declaration>:FunctionApplication@[L0:C0, L3:C1]",
-                      "snippet": "Test Funct...unique]\r\n}"
-                    },
                     "variable": {
                       "context": {
                         "id": "<identifier>:FunctionApplication@[L0:C5, L0:C24]",
@@ -1044,10 +956,6 @@
                     "line": 0,
                     "column": 5
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:FunctionApplication@[L0:C0, L3:C1]",
-                  "snippet": "Test Funct...unique]\r\n}"
                 }
               },
               "context": {
@@ -1069,10 +977,6 @@
                 "line": 0,
                 "column": 5
               }
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L4:C0]",
-              "snippet": "Test Funct...ique]\r\n}\r\n"
             },
             "type": {
               "context": {

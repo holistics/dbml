@@ -84,11 +84,7 @@
                   "trailingTrivia": "\n",
                   "value": "{"
                 },
-                "body": [],
-                "parent": {
-                  "id": "<element-declaration>:status@[L0:C0, L2:C1]",
-                  "snippet": "Enum status {\r\n\r\n}"
-                }
+                "body": []
               },
               "context": {
                 "id": "<block-expression>@[L0:C12, L2:C1]",
@@ -114,10 +110,6 @@
               "children": {
                 "expression": {
                   "children": {
-                    "parent": {
-                      "id": "<element-declaration>:status@[L0:C0, L2:C1]",
-                      "snippet": "Enum status {\r\n\r\n}"
-                    },
                     "variable": {
                       "context": {
                         "id": "<identifier>:status@[L0:C5, L0:C11]",
@@ -163,10 +155,6 @@
                     "line": 0,
                     "column": 5
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:status@[L0:C0, L2:C1]",
-                  "snippet": "Enum status {\r\n\r\n}"
                 }
               },
               "context": {
@@ -188,10 +176,6 @@
                 "line": 0,
                 "column": 5
               }
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L6:C1]",
-              "snippet": "Enum statu...{\r\n    \r\n}"
             },
             "type": {
               "context": {
@@ -305,11 +289,7 @@
                   "trailingTrivia": "\n",
                   "value": "{"
                 },
-                "body": [],
-                "parent": {
-                  "id": "<element-declaration>:public.status@[L4:C0, L6:C1]",
-                  "snippet": "Enum publi...{\r\n    \r\n}"
-                }
+                "body": []
               },
               "context": {
                 "id": "<block-expression>@[L4:C19, L6:C1]",
@@ -337,10 +317,6 @@
                   "children": {
                     "expression": {
                       "children": {
-                        "parent": {
-                          "id": "<element-declaration>:public.status@[L4:C0, L6:C1]",
-                          "snippet": "Enum publi...{\r\n    \r\n}"
-                        },
                         "variable": {
                           "context": {
                             "id": "<identifier>:public@[L4:C5, L4:C11]",
@@ -386,10 +362,6 @@
                         "line": 4,
                         "column": 5
                       }
-                    },
-                    "parent": {
-                      "id": "<element-declaration>:public.status@[L4:C0, L6:C1]",
-                      "snippet": "Enum publi...{\r\n    \r\n}"
                     }
                   },
                   "context": {
@@ -437,18 +409,10 @@
                   "trailingTrivia": "",
                   "value": "."
                 },
-                "parent": {
-                  "id": "<element-declaration>:public.status@[L4:C0, L6:C1]",
-                  "snippet": "Enum publi...{\r\n    \r\n}"
-                },
                 "rightExpression": {
                   "children": {
                     "expression": {
                       "children": {
-                        "parent": {
-                          "id": "<element-declaration>:public.status@[L4:C0, L6:C1]",
-                          "snippet": "Enum publi...{\r\n    \r\n}"
-                        },
                         "variable": {
                           "context": {
                             "id": "<identifier>:status@[L4:C12, L4:C18]",
@@ -494,10 +458,6 @@
                         "line": 4,
                         "column": 12
                       }
-                    },
-                    "parent": {
-                      "id": "<element-declaration>:public.status@[L4:C0, L6:C1]",
-                      "snippet": "Enum publi...{\r\n    \r\n}"
                     }
                   },
                   "context": {
@@ -540,10 +500,6 @@
                 "line": 4,
                 "column": 5
               }
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L6:C1]",
-              "snippet": "Enum statu...{\r\n    \r\n}"
             },
             "type": {
               "context": {

@@ -298,12 +298,6 @@ export function syntaxNodeToSnapshot (
     parentNode,
     ...props
   } = node;
-  if (parent) {
-    (props as any).parent = {
-      id: getReadableId(parent),
-      snippet: getCodeSnippet(parent, compiler.parse.source()),
-    };
-  }
   const symbol = compiler.nodeSymbol(node).getFiltered(UNHANDLED);
   const referee = compiler.nodeReferee(node).getFiltered(UNHANDLED);
   if (node instanceof ProgramNode) {

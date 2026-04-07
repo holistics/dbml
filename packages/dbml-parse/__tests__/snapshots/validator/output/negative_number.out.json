@@ -97,10 +97,6 @@
                                                 "trailingInvalid": "",
                                                 "trailingTrivia": "",
                                                 "value": "1"
-                                              },
-                                              "parent": {
-                                                "id": "<element-declaration>:a@[L0:C0, L4:C1]",
-                                                "snippet": "Table a {\n...positive\n}"
                                               }
                                             },
                                             "context": {
@@ -133,10 +129,6 @@
                                               },
                                               "references": []
                                             }
-                                          },
-                                          "parent": {
-                                            "id": "<element-declaration>:a@[L0:C0, L4:C1]",
-                                            "snippet": "Table a {\n...positive\n}"
                                           }
                                         },
                                         "context": {
@@ -194,10 +186,6 @@
                                         "trailingInvalid": "",
                                         "trailingTrivia": "",
                                         "value": "-"
-                                      },
-                                      "parent": {
-                                        "id": "<element-declaration>:a@[L0:C0, L4:C1]",
-                                        "snippet": "Table a {\n...positive\n}"
                                       }
                                     },
                                     "context": {
@@ -232,10 +220,6 @@
                                     }
                                   }
                                 ],
-                                "parent": {
-                                  "id": "<element-declaration>:a@[L0:C0, L4:C1]",
-                                  "snippet": "Table a {\n...positive\n}"
-                                },
                                 "tupleCloseParen": {
                                   "context": {
                                     "id": "<rparen>:)@[L1:C11, L1:C12]",
@@ -322,10 +306,6 @@
                               "children": {
                                 "expression": {
                                   "children": {
-                                    "parent": {
-                                      "id": "<element-declaration>:a@[L0:C0, L4:C1]",
-                                      "snippet": "Table a {\n...positive\n}"
-                                    },
                                     "variable": {
                                       "context": {
                                         "id": "<identifier>:int@[L1:C5, L1:C8]",
@@ -382,10 +362,6 @@
                                     },
                                     "references": []
                                   }
-                                },
-                                "parent": {
-                                  "id": "<element-declaration>:a@[L0:C0, L4:C1]",
-                                  "snippet": "Table a {\n...positive\n}"
                                 }
                               },
                               "context": {
@@ -418,10 +394,6 @@
                                 },
                                 "references": []
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:a@[L0:C0, L4:C1]",
-                              "snippet": "Table a {\n...positive\n}"
                             }
                           },
                           "context": {
@@ -514,11 +486,7 @@
                                           "trailingTrivia": "",
                                           "value": "default"
                                         }
-                                      ],
-                                      "parent": {
-                                        "id": "<element-declaration>:a@[L0:C0, L4:C1]",
-                                        "snippet": "Table a {\n...positive\n}"
-                                      }
+                                      ]
                                     },
                                     "context": {
                                       "id": "<identifer-stream>@[L1:C14, L1:C21]",
@@ -551,10 +519,6 @@
                                       "references": []
                                     }
                                   },
-                                  "parent": {
-                                    "id": "<element-declaration>:a@[L0:C0, L4:C1]",
-                                    "snippet": "Table a {\n...positive\n}"
-                                  },
                                   "value": {
                                     "children": {
                                       "expression": {
@@ -585,10 +549,6 @@
                                                 "trailingInvalid": "",
                                                 "trailingTrivia": "",
                                                 "value": "2"
-                                              },
-                                              "parent": {
-                                                "id": "<element-declaration>:a@[L0:C0, L4:C1]",
-                                                "snippet": "Table a {\n...positive\n}"
                                               }
                                             },
                                             "context": {
@@ -621,10 +581,6 @@
                                               },
                                               "references": []
                                             }
-                                          },
-                                          "parent": {
-                                            "id": "<element-declaration>:a@[L0:C0, L4:C1]",
-                                            "snippet": "Table a {\n...positive\n}"
                                           }
                                         },
                                         "context": {
@@ -682,10 +638,6 @@
                                         "trailingInvalid": "",
                                         "trailingTrivia": "",
                                         "value": "-"
-                                      },
-                                      "parent": {
-                                        "id": "<element-declaration>:a@[L0:C0, L4:C1]",
-                                        "snippet": "Table a {\n...positive\n}"
                                       }
                                     },
                                     "context": {
@@ -801,10 +753,6 @@
                               "trailingInvalid": "",
                               "trailingTrivia": "",
                               "value": "["
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:a@[L0:C0, L4:C1]",
-                              "snippet": "Table a {\n...positive\n}"
                             }
                           },
                           "context": {
@@ -843,10 +791,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:a@[L0:C0, L4:C1]",
-                                "snippet": "Table a {\n...positive\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:id@[L1:C2, L1:C4]",
@@ -903,10 +847,6 @@
                               },
                               "references": []
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:a@[L0:C0, L4:C1]",
-                            "snippet": "Table a {\n...positive\n}"
                           }
                         },
                         "context": {
@@ -939,10 +879,6 @@
                           },
                           "references": []
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:a@[L0:C0, L4:C1]",
-                        "snippet": "Table a {\n...positive\n}"
                       }
                     },
                     "context": {
@@ -1017,10 +953,6 @@
                                                     "trailingInvalid": "",
                                                     "trailingTrivia": "",
                                                     "value": "1"
-                                                  },
-                                                  "parent": {
-                                                    "id": "<element-declaration>:a@[L0:C0, L4:C1]",
-                                                    "snippet": "Table a {\n...positive\n}"
                                                   }
                                                 },
                                                 "context": {
@@ -1053,10 +985,6 @@
                                                   },
                                                   "references": []
                                                 }
-                                              },
-                                              "parent": {
-                                                "id": "<element-declaration>:a@[L0:C0, L4:C1]",
-                                                "snippet": "Table a {\n...positive\n}"
                                               }
                                             },
                                             "context": {
@@ -1114,10 +1042,6 @@
                                             "trailingInvalid": "",
                                             "trailingTrivia": "",
                                             "value": "-"
-                                          },
-                                          "parent": {
-                                            "id": "<element-declaration>:a@[L0:C0, L4:C1]",
-                                            "snippet": "Table a {\n...positive\n}"
                                           }
                                         },
                                         "context": {
@@ -1175,10 +1099,6 @@
                                         "trailingInvalid": "",
                                         "trailingTrivia": "",
                                         "value": "-"
-                                      },
-                                      "parent": {
-                                        "id": "<element-declaration>:a@[L0:C0, L4:C1]",
-                                        "snippet": "Table a {\n...positive\n}"
                                       }
                                     },
                                     "context": {
@@ -1213,10 +1133,6 @@
                                     }
                                   }
                                 ],
-                                "parent": {
-                                  "id": "<element-declaration>:a@[L0:C0, L4:C1]",
-                                  "snippet": "Table a {\n...positive\n}"
-                                },
                                 "tupleCloseParen": {
                                   "context": {
                                     "id": "<rparen>:)@[L2:C13, L2:C14]",
@@ -1303,10 +1219,6 @@
                               "children": {
                                 "expression": {
                                   "children": {
-                                    "parent": {
-                                      "id": "<element-declaration>:a@[L0:C0, L4:C1]",
-                                      "snippet": "Table a {\n...positive\n}"
-                                    },
                                     "variable": {
                                       "context": {
                                         "id": "<identifier>:int@[L2:C6, L2:C9]",
@@ -1363,10 +1275,6 @@
                                     },
                                     "references": []
                                   }
-                                },
-                                "parent": {
-                                  "id": "<element-declaration>:a@[L0:C0, L4:C1]",
-                                  "snippet": "Table a {\n...positive\n}"
                                 }
                               },
                               "context": {
@@ -1399,10 +1307,6 @@
                                 },
                                 "references": []
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:a@[L0:C0, L4:C1]",
-                              "snippet": "Table a {\n...positive\n}"
                             }
                           },
                           "context": {
@@ -1495,11 +1399,7 @@
                                           "trailingTrivia": "",
                                           "value": "default"
                                         }
-                                      ],
-                                      "parent": {
-                                        "id": "<element-declaration>:a@[L0:C0, L4:C1]",
-                                        "snippet": "Table a {\n...positive\n}"
-                                      }
+                                      ]
                                     },
                                     "context": {
                                       "id": "<identifer-stream>@[L2:C16, L2:C23]",
@@ -1531,10 +1431,6 @@
                                       },
                                       "references": []
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:a@[L0:C0, L4:C1]",
-                                    "snippet": "Table a {\n...positive\n}"
                                   },
                                   "value": {
                                     "children": {
@@ -1568,10 +1464,6 @@
                                                     "trailingInvalid": "",
                                                     "trailingTrivia": "",
                                                     "value": "2"
-                                                  },
-                                                  "parent": {
-                                                    "id": "<element-declaration>:a@[L0:C0, L4:C1]",
-                                                    "snippet": "Table a {\n...positive\n}"
                                                   }
                                                 },
                                                 "context": {
@@ -1604,10 +1496,6 @@
                                                   },
                                                   "references": []
                                                 }
-                                              },
-                                              "parent": {
-                                                "id": "<element-declaration>:a@[L0:C0, L4:C1]",
-                                                "snippet": "Table a {\n...positive\n}"
                                               }
                                             },
                                             "context": {
@@ -1665,10 +1553,6 @@
                                             "trailingInvalid": "",
                                             "trailingTrivia": "",
                                             "value": "-"
-                                          },
-                                          "parent": {
-                                            "id": "<element-declaration>:a@[L0:C0, L4:C1]",
-                                            "snippet": "Table a {\n...positive\n}"
                                           }
                                         },
                                         "context": {
@@ -1726,10 +1610,6 @@
                                         "trailingInvalid": "",
                                         "trailingTrivia": "",
                                         "value": "+"
-                                      },
-                                      "parent": {
-                                        "id": "<element-declaration>:a@[L0:C0, L4:C1]",
-                                        "snippet": "Table a {\n...positive\n}"
                                       }
                                     },
                                     "context": {
@@ -1845,10 +1725,6 @@
                               "trailingInvalid": "",
                               "trailingTrivia": "",
                               "value": "["
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:a@[L0:C0, L4:C1]",
-                              "snippet": "Table a {\n...positive\n}"
                             }
                           },
                           "context": {
@@ -1887,10 +1763,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:a@[L0:C0, L4:C1]",
-                                "snippet": "Table a {\n...positive\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:id2@[L2:C2, L2:C5]",
@@ -1947,10 +1819,6 @@
                               },
                               "references": []
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:a@[L0:C0, L4:C1]",
-                            "snippet": "Table a {\n...positive\n}"
                           }
                         },
                         "context": {
@@ -1983,10 +1851,6 @@
                           },
                           "references": []
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:a@[L0:C0, L4:C1]",
-                        "snippet": "Table a {\n...positive\n}"
                       }
                     },
                     "context": {
@@ -2071,10 +1935,6 @@
                                                                         "trailingInvalid": "",
                                                                         "trailingTrivia": "",
                                                                         "value": "0.1"
-                                                                      },
-                                                                      "parent": {
-                                                                        "id": "<element-declaration>:a@[L0:C0, L4:C1]",
-                                                                        "snippet": "Table a {\n...positive\n}"
                                                                       }
                                                                     },
                                                                     "context": {
@@ -2107,10 +1967,6 @@
                                                                       },
                                                                       "references": []
                                                                     }
-                                                                  },
-                                                                  "parent": {
-                                                                    "id": "<element-declaration>:a@[L0:C0, L4:C1]",
-                                                                    "snippet": "Table a {\n...positive\n}"
                                                                   }
                                                                 },
                                                                 "context": {
@@ -2168,10 +2024,6 @@
                                                                 "trailingInvalid": "",
                                                                 "trailingTrivia": "",
                                                                 "value": "+"
-                                                              },
-                                                              "parent": {
-                                                                "id": "<element-declaration>:a@[L0:C0, L4:C1]",
-                                                                "snippet": "Table a {\n...positive\n}"
                                                               }
                                                             },
                                                             "context": {
@@ -2229,10 +2081,6 @@
                                                             "trailingInvalid": "",
                                                             "trailingTrivia": "",
                                                             "value": "-"
-                                                          },
-                                                          "parent": {
-                                                            "id": "<element-declaration>:a@[L0:C0, L4:C1]",
-                                                            "snippet": "Table a {\n...positive\n}"
                                                           }
                                                         },
                                                         "context": {
@@ -2290,10 +2138,6 @@
                                                         "trailingInvalid": "",
                                                         "trailingTrivia": "",
                                                         "value": "-"
-                                                      },
-                                                      "parent": {
-                                                        "id": "<element-declaration>:a@[L0:C0, L4:C1]",
-                                                        "snippet": "Table a {\n...positive\n}"
                                                       }
                                                     },
                                                     "context": {
@@ -2351,10 +2195,6 @@
                                                     "trailingInvalid": "",
                                                     "trailingTrivia": "",
                                                     "value": "-"
-                                                  },
-                                                  "parent": {
-                                                    "id": "<element-declaration>:a@[L0:C0, L4:C1]",
-                                                    "snippet": "Table a {\n...positive\n}"
                                                   }
                                                 },
                                                 "context": {
@@ -2412,10 +2252,6 @@
                                                 "trailingInvalid": "",
                                                 "trailingTrivia": "",
                                                 "value": "+"
-                                              },
-                                              "parent": {
-                                                "id": "<element-declaration>:a@[L0:C0, L4:C1]",
-                                                "snippet": "Table a {\n...positive\n}"
                                               }
                                             },
                                             "context": {
@@ -2473,10 +2309,6 @@
                                             "trailingInvalid": "",
                                             "trailingTrivia": "",
                                             "value": "-"
-                                          },
-                                          "parent": {
-                                            "id": "<element-declaration>:a@[L0:C0, L4:C1]",
-                                            "snippet": "Table a {\n...positive\n}"
                                           }
                                         },
                                         "context": {
@@ -2534,10 +2366,6 @@
                                         "trailingInvalid": "",
                                         "trailingTrivia": "",
                                         "value": "+"
-                                      },
-                                      "parent": {
-                                        "id": "<element-declaration>:a@[L0:C0, L4:C1]",
-                                        "snippet": "Table a {\n...positive\n}"
                                       }
                                     },
                                     "context": {
@@ -2572,10 +2400,6 @@
                                     }
                                   }
                                 ],
-                                "parent": {
-                                  "id": "<element-declaration>:a@[L0:C0, L4:C1]",
-                                  "snippet": "Table a {\n...positive\n}"
-                                },
                                 "tupleCloseParen": {
                                   "context": {
                                     "id": "<rparen>:)@[L3:C21, L3:C22]",
@@ -2662,10 +2486,6 @@
                               "children": {
                                 "expression": {
                                   "children": {
-                                    "parent": {
-                                      "id": "<element-declaration>:a@[L0:C0, L4:C1]",
-                                      "snippet": "Table a {\n...positive\n}"
-                                    },
                                     "variable": {
                                       "context": {
                                         "id": "<identifier>:int@[L3:C6, L3:C9]",
@@ -2722,10 +2542,6 @@
                                     },
                                     "references": []
                                   }
-                                },
-                                "parent": {
-                                  "id": "<element-declaration>:a@[L0:C0, L4:C1]",
-                                  "snippet": "Table a {\n...positive\n}"
                                 }
                               },
                               "context": {
@@ -2758,10 +2574,6 @@
                                 },
                                 "references": []
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:a@[L0:C0, L4:C1]",
-                              "snippet": "Table a {\n...positive\n}"
                             }
                           },
                           "context": {
@@ -2854,11 +2666,7 @@
                                           "trailingTrivia": "",
                                           "value": "default"
                                         }
-                                      ],
-                                      "parent": {
-                                        "id": "<element-declaration>:a@[L0:C0, L4:C1]",
-                                        "snippet": "Table a {\n...positive\n}"
-                                      }
+                                      ]
                                     },
                                     "context": {
                                       "id": "<identifer-stream>@[L3:C24, L3:C31]",
@@ -2890,10 +2698,6 @@
                                       },
                                       "references": []
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:a@[L0:C0, L4:C1]",
-                                    "snippet": "Table a {\n...positive\n}"
                                   },
                                   "value": {
                                     "children": {
@@ -2931,10 +2735,6 @@
                                                             "trailingInvalid": "",
                                                             "trailingTrivia": "",
                                                             "value": "7.2225"
-                                                          },
-                                                          "parent": {
-                                                            "id": "<element-declaration>:a@[L0:C0, L4:C1]",
-                                                            "snippet": "Table a {\n...positive\n}"
                                                           }
                                                         },
                                                         "context": {
@@ -2967,10 +2767,6 @@
                                                           },
                                                           "references": []
                                                         }
-                                                      },
-                                                      "parent": {
-                                                        "id": "<element-declaration>:a@[L0:C0, L4:C1]",
-                                                        "snippet": "Table a {\n...positive\n}"
                                                       }
                                                     },
                                                     "context": {
@@ -3028,10 +2824,6 @@
                                                     "trailingInvalid": "",
                                                     "trailingTrivia": "",
                                                     "value": "+"
-                                                  },
-                                                  "parent": {
-                                                    "id": "<element-declaration>:a@[L0:C0, L4:C1]",
-                                                    "snippet": "Table a {\n...positive\n}"
                                                   }
                                                 },
                                                 "context": {
@@ -3089,10 +2881,6 @@
                                                 "trailingInvalid": "",
                                                 "trailingTrivia": "",
                                                 "value": "+"
-                                              },
-                                              "parent": {
-                                                "id": "<element-declaration>:a@[L0:C0, L4:C1]",
-                                                "snippet": "Table a {\n...positive\n}"
                                               }
                                             },
                                             "context": {
@@ -3150,10 +2938,6 @@
                                             "trailingInvalid": "",
                                             "trailingTrivia": "",
                                             "value": "-"
-                                          },
-                                          "parent": {
-                                            "id": "<element-declaration>:a@[L0:C0, L4:C1]",
-                                            "snippet": "Table a {\n...positive\n}"
                                           }
                                         },
                                         "context": {
@@ -3211,10 +2995,6 @@
                                         "trailingInvalid": "",
                                         "trailingTrivia": "",
                                         "value": "-"
-                                      },
-                                      "parent": {
-                                        "id": "<element-declaration>:a@[L0:C0, L4:C1]",
-                                        "snippet": "Table a {\n...positive\n}"
                                       }
                                     },
                                     "context": {
@@ -3330,10 +3110,6 @@
                               "trailingInvalid": "",
                               "trailingTrivia": "",
                               "value": "["
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:a@[L0:C0, L4:C1]",
-                              "snippet": "Table a {\n...positive\n}"
                             }
                           },
                           "context": {
@@ -3372,10 +3148,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:a@[L0:C0, L4:C1]",
-                                "snippet": "Table a {\n...positive\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:id3@[L3:C2, L3:C5]",
@@ -3432,10 +3204,6 @@
                               },
                               "references": []
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:a@[L0:C0, L4:C1]",
-                            "snippet": "Table a {\n...positive\n}"
                           }
                         },
                         "context": {
@@ -3468,10 +3236,6 @@
                           },
                           "references": []
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:a@[L0:C0, L4:C1]",
-                        "snippet": "Table a {\n...positive\n}"
                       }
                     },
                     "context": {
@@ -3505,11 +3269,7 @@
                       "references": []
                     }
                   }
-                ],
-                "parent": {
-                  "id": "<element-declaration>:a@[L0:C0, L4:C1]",
-                  "snippet": "Table a {\n...positive\n}"
-                }
+                ]
               },
               "context": {
                 "id": "<block-expression>@[L0:C8, L4:C1]",
@@ -3535,10 +3295,6 @@
               "children": {
                 "expression": {
                   "children": {
-                    "parent": {
-                      "id": "<element-declaration>:a@[L0:C0, L4:C1]",
-                      "snippet": "Table a {\n...positive\n}"
-                    },
                     "variable": {
                       "context": {
                         "id": "<identifier>:a@[L0:C6, L0:C7]",
@@ -3584,10 +3340,6 @@
                     "line": 0,
                     "column": 6
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:a@[L0:C0, L4:C1]",
-                  "snippet": "Table a {\n...positive\n}"
                 }
               },
               "context": {
@@ -3609,10 +3361,6 @@
                 "line": 0,
                 "column": 6
               }
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L15:C1]",
-              "snippet": "Table a {\n...nt\n  ~P1\n}"
             },
             "type": {
               "context": {
@@ -3785,10 +3533,6 @@
                                                 "trailingInvalid": "",
                                                 "trailingTrivia": "",
                                                 "value": "1"
-                                              },
-                                              "parent": {
-                                                "id": "<element-declaration>:P1@[L6:C0, L10:C1]",
-                                                "snippet": "TableParti...negative\n}"
                                               }
                                             },
                                             "context": {
@@ -3810,10 +3554,6 @@
                                               "line": 7,
                                               "column": 10
                                             }
-                                          },
-                                          "parent": {
-                                            "id": "<element-declaration>:P1@[L6:C0, L10:C1]",
-                                            "snippet": "TableParti...negative\n}"
                                           }
                                         },
                                         "context": {
@@ -3860,10 +3600,6 @@
                                         "trailingInvalid": "",
                                         "trailingTrivia": "",
                                         "value": "-"
-                                      },
-                                      "parent": {
-                                        "id": "<element-declaration>:P1@[L6:C0, L10:C1]",
-                                        "snippet": "TableParti...negative\n}"
                                       }
                                     },
                                     "context": {
@@ -3887,10 +3623,6 @@
                                     }
                                   }
                                 ],
-                                "parent": {
-                                  "id": "<element-declaration>:P1@[L6:C0, L10:C1]",
-                                  "snippet": "TableParti...negative\n}"
-                                },
                                 "tupleCloseParen": {
                                   "context": {
                                     "id": "<rparen>:)@[L7:C11, L7:C12]",
@@ -3966,10 +3698,6 @@
                               "children": {
                                 "expression": {
                                   "children": {
-                                    "parent": {
-                                      "id": "<element-declaration>:P1@[L6:C0, L10:C1]",
-                                      "snippet": "TableParti...negative\n}"
-                                    },
                                     "variable": {
                                       "context": {
                                         "id": "<identifier>:int@[L7:C5, L7:C8]",
@@ -4015,10 +3743,6 @@
                                     "line": 7,
                                     "column": 5
                                   }
-                                },
-                                "parent": {
-                                  "id": "<element-declaration>:P1@[L6:C0, L10:C1]",
-                                  "snippet": "TableParti...negative\n}"
                                 }
                               },
                               "context": {
@@ -4040,10 +3764,6 @@
                                 "line": 7,
                                 "column": 5
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:P1@[L6:C0, L10:C1]",
-                              "snippet": "TableParti...negative\n}"
                             }
                           },
                           "context": {
@@ -4125,11 +3845,7 @@
                                           "trailingTrivia": "",
                                           "value": "default"
                                         }
-                                      ],
-                                      "parent": {
-                                        "id": "<element-declaration>:P1@[L6:C0, L10:C1]",
-                                        "snippet": "TableParti...negative\n}"
-                                      }
+                                      ]
                                     },
                                     "context": {
                                       "id": "<identifer-stream>@[L7:C14, L7:C21]",
@@ -4150,10 +3866,6 @@
                                       "line": 7,
                                       "column": 14
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:P1@[L6:C0, L10:C1]",
-                                    "snippet": "TableParti...negative\n}"
                                   },
                                   "value": {
                                     "children": {
@@ -4185,10 +3897,6 @@
                                                 "trailingInvalid": "",
                                                 "trailingTrivia": "",
                                                 "value": "2"
-                                              },
-                                              "parent": {
-                                                "id": "<element-declaration>:P1@[L6:C0, L10:C1]",
-                                                "snippet": "TableParti...negative\n}"
                                               }
                                             },
                                             "context": {
@@ -4210,10 +3918,6 @@
                                               "line": 7,
                                               "column": 24
                                             }
-                                          },
-                                          "parent": {
-                                            "id": "<element-declaration>:P1@[L6:C0, L10:C1]",
-                                            "snippet": "TableParti...negative\n}"
                                           }
                                         },
                                         "context": {
@@ -4260,10 +3964,6 @@
                                         "trailingInvalid": "",
                                         "trailingTrivia": "",
                                         "value": "-"
-                                      },
-                                      "parent": {
-                                        "id": "<element-declaration>:P1@[L6:C0, L10:C1]",
-                                        "snippet": "TableParti...negative\n}"
                                       }
                                     },
                                     "context": {
@@ -4357,10 +4057,6 @@
                               "trailingInvalid": "",
                               "trailingTrivia": "",
                               "value": "["
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:P1@[L6:C0, L10:C1]",
-                              "snippet": "TableParti...negative\n}"
                             }
                           },
                           "context": {
@@ -4388,10 +4084,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:P1@[L6:C0, L10:C1]",
-                                "snippet": "TableParti...negative\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:id@[L7:C2, L7:C4]",
@@ -4437,10 +4129,6 @@
                               "line": 7,
                               "column": 2
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:P1@[L6:C0, L10:C1]",
-                            "snippet": "TableParti...negative\n}"
                           }
                         },
                         "context": {
@@ -4462,10 +4150,6 @@
                           "line": 7,
                           "column": 2
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:P1@[L6:C0, L10:C1]",
-                        "snippet": "TableParti...negative\n}"
                       }
                     },
                     "context": {
@@ -4540,10 +4224,6 @@
                                                     "trailingInvalid": "",
                                                     "trailingTrivia": "",
                                                     "value": "1"
-                                                  },
-                                                  "parent": {
-                                                    "id": "<element-declaration>:P1@[L6:C0, L10:C1]",
-                                                    "snippet": "TableParti...negative\n}"
                                                   }
                                                 },
                                                 "context": {
@@ -4565,10 +4245,6 @@
                                                   "line": 8,
                                                   "column": 12
                                                 }
-                                              },
-                                              "parent": {
-                                                "id": "<element-declaration>:P1@[L6:C0, L10:C1]",
-                                                "snippet": "TableParti...negative\n}"
                                               }
                                             },
                                             "context": {
@@ -4615,10 +4291,6 @@
                                             "trailingInvalid": "",
                                             "trailingTrivia": "",
                                             "value": "-"
-                                          },
-                                          "parent": {
-                                            "id": "<element-declaration>:P1@[L6:C0, L10:C1]",
-                                            "snippet": "TableParti...negative\n}"
                                           }
                                         },
                                         "context": {
@@ -4665,10 +4337,6 @@
                                         "trailingInvalid": "",
                                         "trailingTrivia": "",
                                         "value": "-"
-                                      },
-                                      "parent": {
-                                        "id": "<element-declaration>:P1@[L6:C0, L10:C1]",
-                                        "snippet": "TableParti...negative\n}"
                                       }
                                     },
                                     "context": {
@@ -4692,10 +4360,6 @@
                                     }
                                   }
                                 ],
-                                "parent": {
-                                  "id": "<element-declaration>:P1@[L6:C0, L10:C1]",
-                                  "snippet": "TableParti...negative\n}"
-                                },
                                 "tupleCloseParen": {
                                   "context": {
                                     "id": "<rparen>:)@[L8:C13, L8:C14]",
@@ -4771,10 +4435,6 @@
                               "children": {
                                 "expression": {
                                   "children": {
-                                    "parent": {
-                                      "id": "<element-declaration>:P1@[L6:C0, L10:C1]",
-                                      "snippet": "TableParti...negative\n}"
-                                    },
                                     "variable": {
                                       "context": {
                                         "id": "<identifier>:int@[L8:C6, L8:C9]",
@@ -4820,10 +4480,6 @@
                                     "line": 8,
                                     "column": 6
                                   }
-                                },
-                                "parent": {
-                                  "id": "<element-declaration>:P1@[L6:C0, L10:C1]",
-                                  "snippet": "TableParti...negative\n}"
                                 }
                               },
                               "context": {
@@ -4845,10 +4501,6 @@
                                 "line": 8,
                                 "column": 6
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:P1@[L6:C0, L10:C1]",
-                              "snippet": "TableParti...negative\n}"
                             }
                           },
                           "context": {
@@ -4930,11 +4582,7 @@
                                           "trailingTrivia": "",
                                           "value": "default"
                                         }
-                                      ],
-                                      "parent": {
-                                        "id": "<element-declaration>:P1@[L6:C0, L10:C1]",
-                                        "snippet": "TableParti...negative\n}"
-                                      }
+                                      ]
                                     },
                                     "context": {
                                       "id": "<identifer-stream>@[L8:C16, L8:C23]",
@@ -4955,10 +4603,6 @@
                                       "line": 8,
                                       "column": 16
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:P1@[L6:C0, L10:C1]",
-                                    "snippet": "TableParti...negative\n}"
                                   },
                                   "value": {
                                     "children": {
@@ -4992,10 +4636,6 @@
                                                     "trailingInvalid": "",
                                                     "trailingTrivia": "",
                                                     "value": "2"
-                                                  },
-                                                  "parent": {
-                                                    "id": "<element-declaration>:P1@[L6:C0, L10:C1]",
-                                                    "snippet": "TableParti...negative\n}"
                                                   }
                                                 },
                                                 "context": {
@@ -5017,10 +4657,6 @@
                                                   "line": 8,
                                                   "column": 27
                                                 }
-                                              },
-                                              "parent": {
-                                                "id": "<element-declaration>:P1@[L6:C0, L10:C1]",
-                                                "snippet": "TableParti...negative\n}"
                                               }
                                             },
                                             "context": {
@@ -5067,10 +4703,6 @@
                                             "trailingInvalid": "",
                                             "trailingTrivia": "",
                                             "value": "-"
-                                          },
-                                          "parent": {
-                                            "id": "<element-declaration>:P1@[L6:C0, L10:C1]",
-                                            "snippet": "TableParti...negative\n}"
                                           }
                                         },
                                         "context": {
@@ -5117,10 +4749,6 @@
                                         "trailingInvalid": "",
                                         "trailingTrivia": "",
                                         "value": "+"
-                                      },
-                                      "parent": {
-                                        "id": "<element-declaration>:P1@[L6:C0, L10:C1]",
-                                        "snippet": "TableParti...negative\n}"
                                       }
                                     },
                                     "context": {
@@ -5214,10 +4842,6 @@
                               "trailingInvalid": "",
                               "trailingTrivia": "",
                               "value": "["
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:P1@[L6:C0, L10:C1]",
-                              "snippet": "TableParti...negative\n}"
                             }
                           },
                           "context": {
@@ -5245,10 +4869,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:P1@[L6:C0, L10:C1]",
-                                "snippet": "TableParti...negative\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:id2@[L8:C2, L8:C5]",
@@ -5294,10 +4914,6 @@
                               "line": 8,
                               "column": 2
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:P1@[L6:C0, L10:C1]",
-                            "snippet": "TableParti...negative\n}"
                           }
                         },
                         "context": {
@@ -5319,10 +4935,6 @@
                           "line": 8,
                           "column": 2
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:P1@[L6:C0, L10:C1]",
-                        "snippet": "TableParti...negative\n}"
                       }
                     },
                     "context": {
@@ -5407,10 +5019,6 @@
                                                                         "trailingInvalid": "",
                                                                         "trailingTrivia": "",
                                                                         "value": "0.1"
-                                                                      },
-                                                                      "parent": {
-                                                                        "id": "<element-declaration>:P1@[L6:C0, L10:C1]",
-                                                                        "snippet": "TableParti...negative\n}"
                                                                       }
                                                                     },
                                                                     "context": {
@@ -5432,10 +5040,6 @@
                                                                       "line": 9,
                                                                       "column": 18
                                                                     }
-                                                                  },
-                                                                  "parent": {
-                                                                    "id": "<element-declaration>:P1@[L6:C0, L10:C1]",
-                                                                    "snippet": "TableParti...negative\n}"
                                                                   }
                                                                 },
                                                                 "context": {
@@ -5482,10 +5086,6 @@
                                                                 "trailingInvalid": "",
                                                                 "trailingTrivia": "",
                                                                 "value": "+"
-                                                              },
-                                                              "parent": {
-                                                                "id": "<element-declaration>:P1@[L6:C0, L10:C1]",
-                                                                "snippet": "TableParti...negative\n}"
                                                               }
                                                             },
                                                             "context": {
@@ -5532,10 +5132,6 @@
                                                             "trailingInvalid": "",
                                                             "trailingTrivia": "",
                                                             "value": "-"
-                                                          },
-                                                          "parent": {
-                                                            "id": "<element-declaration>:P1@[L6:C0, L10:C1]",
-                                                            "snippet": "TableParti...negative\n}"
                                                           }
                                                         },
                                                         "context": {
@@ -5582,10 +5178,6 @@
                                                         "trailingInvalid": "",
                                                         "trailingTrivia": "",
                                                         "value": "-"
-                                                      },
-                                                      "parent": {
-                                                        "id": "<element-declaration>:P1@[L6:C0, L10:C1]",
-                                                        "snippet": "TableParti...negative\n}"
                                                       }
                                                     },
                                                     "context": {
@@ -5632,10 +5224,6 @@
                                                     "trailingInvalid": "",
                                                     "trailingTrivia": "",
                                                     "value": "-"
-                                                  },
-                                                  "parent": {
-                                                    "id": "<element-declaration>:P1@[L6:C0, L10:C1]",
-                                                    "snippet": "TableParti...negative\n}"
                                                   }
                                                 },
                                                 "context": {
@@ -5682,10 +5270,6 @@
                                                 "trailingInvalid": "",
                                                 "trailingTrivia": "",
                                                 "value": "+"
-                                              },
-                                              "parent": {
-                                                "id": "<element-declaration>:P1@[L6:C0, L10:C1]",
-                                                "snippet": "TableParti...negative\n}"
                                               }
                                             },
                                             "context": {
@@ -5732,10 +5316,6 @@
                                             "trailingInvalid": "",
                                             "trailingTrivia": "",
                                             "value": "-"
-                                          },
-                                          "parent": {
-                                            "id": "<element-declaration>:P1@[L6:C0, L10:C1]",
-                                            "snippet": "TableParti...negative\n}"
                                           }
                                         },
                                         "context": {
@@ -5782,10 +5362,6 @@
                                         "trailingInvalid": "",
                                         "trailingTrivia": "",
                                         "value": "+"
-                                      },
-                                      "parent": {
-                                        "id": "<element-declaration>:P1@[L6:C0, L10:C1]",
-                                        "snippet": "TableParti...negative\n}"
                                       }
                                     },
                                     "context": {
@@ -5809,10 +5385,6 @@
                                     }
                                   }
                                 ],
-                                "parent": {
-                                  "id": "<element-declaration>:P1@[L6:C0, L10:C1]",
-                                  "snippet": "TableParti...negative\n}"
-                                },
                                 "tupleCloseParen": {
                                   "context": {
                                     "id": "<rparen>:)@[L9:C21, L9:C22]",
@@ -5888,10 +5460,6 @@
                               "children": {
                                 "expression": {
                                   "children": {
-                                    "parent": {
-                                      "id": "<element-declaration>:P1@[L6:C0, L10:C1]",
-                                      "snippet": "TableParti...negative\n}"
-                                    },
                                     "variable": {
                                       "context": {
                                         "id": "<identifier>:int@[L9:C6, L9:C9]",
@@ -5937,10 +5505,6 @@
                                     "line": 9,
                                     "column": 6
                                   }
-                                },
-                                "parent": {
-                                  "id": "<element-declaration>:P1@[L6:C0, L10:C1]",
-                                  "snippet": "TableParti...negative\n}"
                                 }
                               },
                               "context": {
@@ -5962,10 +5526,6 @@
                                 "line": 9,
                                 "column": 6
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:P1@[L6:C0, L10:C1]",
-                              "snippet": "TableParti...negative\n}"
                             }
                           },
                           "context": {
@@ -6047,11 +5607,7 @@
                                           "trailingTrivia": "",
                                           "value": "default"
                                         }
-                                      ],
-                                      "parent": {
-                                        "id": "<element-declaration>:P1@[L6:C0, L10:C1]",
-                                        "snippet": "TableParti...negative\n}"
-                                      }
+                                      ]
                                     },
                                     "context": {
                                       "id": "<identifer-stream>@[L9:C24, L9:C31]",
@@ -6072,10 +5628,6 @@
                                       "line": 9,
                                       "column": 24
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:P1@[L6:C0, L10:C1]",
-                                    "snippet": "TableParti...negative\n}"
                                   },
                                   "value": {
                                     "children": {
@@ -6121,10 +5673,6 @@
                                                                             "trailingInvalid": "",
                                                                             "trailingTrivia": "",
                                                                             "value": "7.2225"
-                                                                          },
-                                                                          "parent": {
-                                                                            "id": "<element-declaration>:P1@[L6:C0, L10:C1]",
-                                                                            "snippet": "TableParti...negative\n}"
                                                                           }
                                                                         },
                                                                         "context": {
@@ -6146,10 +5694,6 @@
                                                                           "line": 9,
                                                                           "column": 41
                                                                         }
-                                                                      },
-                                                                      "parent": {
-                                                                        "id": "<element-declaration>:P1@[L6:C0, L10:C1]",
-                                                                        "snippet": "TableParti...negative\n}"
                                                                       }
                                                                     },
                                                                     "context": {
@@ -6196,10 +5740,6 @@
                                                                     "trailingInvalid": "",
                                                                     "trailingTrivia": "",
                                                                     "value": "-"
-                                                                  },
-                                                                  "parent": {
-                                                                    "id": "<element-declaration>:P1@[L6:C0, L10:C1]",
-                                                                    "snippet": "TableParti...negative\n}"
                                                                   }
                                                                 },
                                                                 "context": {
@@ -6246,10 +5786,6 @@
                                                                 "trailingInvalid": "",
                                                                 "trailingTrivia": "",
                                                                 "value": "-"
-                                                              },
-                                                              "parent": {
-                                                                "id": "<element-declaration>:P1@[L6:C0, L10:C1]",
-                                                                "snippet": "TableParti...negative\n}"
                                                               }
                                                             },
                                                             "context": {
@@ -6296,10 +5832,6 @@
                                                             "trailingInvalid": "",
                                                             "trailingTrivia": "",
                                                             "value": "+"
-                                                          },
-                                                          "parent": {
-                                                            "id": "<element-declaration>:P1@[L6:C0, L10:C1]",
-                                                            "snippet": "TableParti...negative\n}"
                                                           }
                                                         },
                                                         "context": {
@@ -6346,10 +5878,6 @@
                                                         "trailingInvalid": "",
                                                         "trailingTrivia": "",
                                                         "value": "-"
-                                                      },
-                                                      "parent": {
-                                                        "id": "<element-declaration>:P1@[L6:C0, L10:C1]",
-                                                        "snippet": "TableParti...negative\n}"
                                                       }
                                                     },
                                                     "context": {
@@ -6396,10 +5924,6 @@
                                                     "trailingInvalid": "",
                                                     "trailingTrivia": "",
                                                     "value": "+"
-                                                  },
-                                                  "parent": {
-                                                    "id": "<element-declaration>:P1@[L6:C0, L10:C1]",
-                                                    "snippet": "TableParti...negative\n}"
                                                   }
                                                 },
                                                 "context": {
@@ -6446,10 +5970,6 @@
                                                 "trailingInvalid": "",
                                                 "trailingTrivia": "",
                                                 "value": "+"
-                                              },
-                                              "parent": {
-                                                "id": "<element-declaration>:P1@[L6:C0, L10:C1]",
-                                                "snippet": "TableParti...negative\n}"
                                               }
                                             },
                                             "context": {
@@ -6496,10 +6016,6 @@
                                             "trailingInvalid": "",
                                             "trailingTrivia": "",
                                             "value": "-"
-                                          },
-                                          "parent": {
-                                            "id": "<element-declaration>:P1@[L6:C0, L10:C1]",
-                                            "snippet": "TableParti...negative\n}"
                                           }
                                         },
                                         "context": {
@@ -6546,10 +6062,6 @@
                                         "trailingInvalid": "",
                                         "trailingTrivia": "",
                                         "value": "-"
-                                      },
-                                      "parent": {
-                                        "id": "<element-declaration>:P1@[L6:C0, L10:C1]",
-                                        "snippet": "TableParti...negative\n}"
                                       }
                                     },
                                     "context": {
@@ -6643,10 +6155,6 @@
                               "trailingInvalid": "",
                               "trailingTrivia": "",
                               "value": "["
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:P1@[L6:C0, L10:C1]",
-                              "snippet": "TableParti...negative\n}"
                             }
                           },
                           "context": {
@@ -6674,10 +6182,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:P1@[L6:C0, L10:C1]",
-                                "snippet": "TableParti...negative\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:id3@[L9:C2, L9:C5]",
@@ -6723,10 +6227,6 @@
                               "line": 9,
                               "column": 2
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:P1@[L6:C0, L10:C1]",
-                            "snippet": "TableParti...negative\n}"
                           }
                         },
                         "context": {
@@ -6748,10 +6248,6 @@
                           "line": 9,
                           "column": 2
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:P1@[L6:C0, L10:C1]",
-                        "snippet": "TableParti...negative\n}"
                       }
                     },
                     "context": {
@@ -6785,11 +6281,7 @@
                       "references": []
                     }
                   }
-                ],
-                "parent": {
-                  "id": "<element-declaration>:P1@[L6:C0, L10:C1]",
-                  "snippet": "TableParti...negative\n}"
-                }
+                ]
               },
               "context": {
                 "id": "<block-expression>@[L6:C16, L10:C1]",
@@ -6815,10 +6307,6 @@
               "children": {
                 "expression": {
                   "children": {
-                    "parent": {
-                      "id": "<element-declaration>:P1@[L6:C0, L10:C1]",
-                      "snippet": "TableParti...negative\n}"
-                    },
                     "variable": {
                       "context": {
                         "id": "<identifier>:P1@[L6:C13, L6:C15]",
@@ -6864,10 +6352,6 @@
                     "line": 6,
                     "column": 13
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:P1@[L6:C0, L10:C1]",
-                  "snippet": "TableParti...negative\n}"
                 }
               },
               "context": {
@@ -6889,10 +6373,6 @@
                 "line": 6,
                 "column": 13
               }
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L15:C1]",
-              "snippet": "Table a {\n...nt\n  ~P1\n}"
             },
             "type": {
               "context": {
@@ -7038,10 +6518,6 @@
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:b@[L12:C0, L15:C1]",
-                                  "snippet": "Table b {\n...nt\n  ~P1\n}"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:int@[L13:C5, L13:C8]",
@@ -7098,10 +6574,6 @@
                                 },
                                 "references": []
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:b@[L12:C0, L15:C1]",
-                              "snippet": "Table b {\n...nt\n  ~P1\n}"
                             }
                           },
                           "context": {
@@ -7140,10 +6612,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:b@[L12:C0, L15:C1]",
-                                "snippet": "Table b {\n...nt\n  ~P1\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:id@[L13:C2, L13:C4]",
@@ -7200,10 +6668,6 @@
                               },
                               "references": []
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:b@[L12:C0, L15:C1]",
-                            "snippet": "Table b {\n...nt\n  ~P1\n}"
                           }
                         },
                         "context": {
@@ -7236,10 +6700,6 @@
                           },
                           "references": []
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:b@[L12:C0, L15:C1]",
-                        "snippet": "Table b {\n...nt\n  ~P1\n}"
                       }
                     },
                     "context": {
@@ -7282,10 +6742,6 @@
                             "children": {
                               "expression": {
                                 "children": {
-                                  "parent": {
-                                    "id": "<element-declaration>:b@[L12:C0, L15:C1]",
-                                    "snippet": "Table b {\n...nt\n  ~P1\n}"
-                                  },
                                   "variable": {
                                     "context": {
                                       "id": "<identifier>:P1@[L14:C3, L14:C5]",
@@ -7342,10 +6798,6 @@
                                   },
                                   "references": []
                                 }
-                              },
-                              "parent": {
-                                "id": "<element-declaration>:b@[L12:C0, L15:C1]",
-                                "snippet": "Table b {\n...nt\n  ~P1\n}"
                               }
                             },
                             "context": {
@@ -7409,10 +6861,6 @@
                             "trailingInvalid": "",
                             "trailingTrivia": "",
                             "value": "~"
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:b@[L12:C0, L15:C1]",
-                            "snippet": "Table b {\n...nt\n  ~P1\n}"
                           }
                         },
                         "context": {
@@ -7445,10 +6893,6 @@
                           },
                           "references": []
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:b@[L12:C0, L15:C1]",
-                        "snippet": "Table b {\n...nt\n  ~P1\n}"
                       }
                     },
                     "context": {
@@ -7482,11 +6926,7 @@
                       "references": []
                     }
                   }
-                ],
-                "parent": {
-                  "id": "<element-declaration>:b@[L12:C0, L15:C1]",
-                  "snippet": "Table b {\n...nt\n  ~P1\n}"
-                }
+                ]
               },
               "context": {
                 "id": "<block-expression>@[L12:C8, L15:C1]",
@@ -7512,10 +6952,6 @@
               "children": {
                 "expression": {
                   "children": {
-                    "parent": {
-                      "id": "<element-declaration>:b@[L12:C0, L15:C1]",
-                      "snippet": "Table b {\n...nt\n  ~P1\n}"
-                    },
                     "variable": {
                       "context": {
                         "id": "<identifier>:b@[L12:C6, L12:C7]",
@@ -7561,10 +6997,6 @@
                     "line": 12,
                     "column": 6
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:b@[L12:C0, L15:C1]",
-                  "snippet": "Table b {\n...nt\n  ~P1\n}"
                 }
               },
               "context": {
@@ -7586,10 +7018,6 @@
                 "line": 12,
                 "column": 6
               }
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L15:C1]",
-              "snippet": "Table a {\n...nt\n  ~P1\n}"
             },
             "type": {
               "context": {

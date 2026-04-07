@@ -57,11 +57,7 @@
                   "trailingTrivia": "\n",
                   "value": "{"
                 },
-                "body": [],
-                "parent": {
-                  "id": "<element-declaration>:@[L0:C0, L2:C1]",
-                  "snippet": "Table {\r\n\r\n}"
-                }
+                "body": []
               },
               "context": {
                 "id": "<block-expression>@[L0:C6, L2:C1]",
@@ -82,10 +78,6 @@
                 "line": 0,
                 "column": 6
               }
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L19:C1]",
-              "snippet": "Table {\r\n\r...{\r\n    \r\n}"
             },
             "type": {
               "context": {
@@ -199,11 +191,7 @@
                   "trailingTrivia": "\n",
                   "value": "{"
                 },
-                "body": [],
-                "parent": {
-                  "id": "<element-declaration>:group@[L4:C0, L6:C1]",
-                  "snippet": "TableGroup...oup {\r\n\r\n}"
-                }
+                "body": []
               },
               "context": {
                 "id": "<block-expression>@[L4:C17, L6:C1]",
@@ -229,10 +217,6 @@
               "children": {
                 "expression": {
                   "children": {
-                    "parent": {
-                      "id": "<element-declaration>:group@[L4:C0, L6:C1]",
-                      "snippet": "TableGroup...oup {\r\n\r\n}"
-                    },
                     "variable": {
                       "context": {
                         "id": "<identifier>:group@[L4:C11, L4:C16]",
@@ -278,10 +262,6 @@
                     "line": 4,
                     "column": 11
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:group@[L4:C0, L6:C1]",
-                  "snippet": "TableGroup...oup {\r\n\r\n}"
                 }
               },
               "context": {
@@ -303,10 +283,6 @@
                 "line": 4,
                 "column": 11
               }
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L19:C1]",
-              "snippet": "Table {\r\n\r...{\r\n    \r\n}"
             },
             "type": {
               "context": {
@@ -420,11 +396,7 @@
                   "trailingTrivia": "\n",
                   "value": "{"
                 },
-                "body": [],
-                "parent": {
-                  "id": "<element-declaration>:@[L8:C0, L10:C1]",
-                  "snippet": "Ref {\r\n\r\n}"
-                }
+                "body": []
               },
               "context": {
                 "id": "<block-expression>@[L8:C4, L10:C1]",
@@ -445,10 +417,6 @@
                 "line": 8,
                 "column": 4
               }
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L19:C1]",
-              "snippet": "Table {\r\n\r...{\r\n    \r\n}"
             },
             "type": {
               "context": {
@@ -541,10 +509,6 @@
                           "trailingInvalid": "",
                           "trailingTrivia": "\n",
                           "value": "This is a note"
-                        },
-                        "parent": {
-                          "id": "<element-declaration>:@[L12:C0, L12:C22]",
-                          "snippet": "Note: 'Thi...is a note'"
                         }
                       },
                       "context": {
@@ -566,10 +530,6 @@
                         "line": 12,
                         "column": 6
                       }
-                    },
-                    "parent": {
-                      "id": "<element-declaration>:@[L12:C0, L12:C22]",
-                      "snippet": "Note: 'Thi...is a note'"
                     }
                   },
                   "context": {
@@ -591,10 +551,6 @@
                     "line": 12,
                     "column": 6
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:@[L12:C0, L12:C22]",
-                  "snippet": "Note: 'Thi...is a note'"
                 }
               },
               "context": {
@@ -641,10 +597,6 @@
               "trailingInvalid": "",
               "trailingTrivia": " ",
               "value": ":"
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L19:C1]",
-              "snippet": "Table {\r\n\r...{\r\n    \r\n}"
             },
             "type": {
               "context": {
@@ -737,10 +689,6 @@
                           "trailingInvalid": "",
                           "trailingTrivia": "\n",
                           "value": "This is \r\nanother note"
-                        },
-                        "parent": {
-                          "id": "<element-declaration>:@[L14:C0, L15:C15]",
-                          "snippet": "Note: '''T...er note'''"
                         }
                       },
                       "context": {
@@ -762,10 +710,6 @@
                         "line": 14,
                         "column": 6
                       }
-                    },
-                    "parent": {
-                      "id": "<element-declaration>:@[L14:C0, L15:C15]",
-                      "snippet": "Note: '''T...er note'''"
                     }
                   },
                   "context": {
@@ -787,10 +731,6 @@
                     "line": 14,
                     "column": 6
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:@[L14:C0, L15:C15]",
-                  "snippet": "Note: '''T...er note'''"
                 }
               },
               "context": {
@@ -837,10 +777,6 @@
               "trailingInvalid": "",
               "trailingTrivia": " ",
               "value": ":"
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L19:C1]",
-              "snippet": "Table {\r\n\r...{\r\n    \r\n}"
             },
             "type": {
               "context": {
@@ -906,10 +842,6 @@
               "children": {
                 "expression": {
                   "children": {
-                    "parent": {
-                      "id": "<element-declaration>:Users@[L17:C0, L19:C1]",
-                      "snippet": "Table User...{\r\n    \r\n}"
-                    },
                     "variable": {
                       "context": {
                         "id": "<identifier>:U@[L17:C15, L17:C16]",
@@ -955,10 +887,6 @@
                     "line": 17,
                     "column": 15
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:Users@[L17:C0, L19:C1]",
-                  "snippet": "Table User...{\r\n    \r\n}"
                 }
               },
               "context": {
@@ -1058,11 +986,7 @@
                   "trailingTrivia": "\n",
                   "value": "{"
                 },
-                "body": [],
-                "parent": {
-                  "id": "<element-declaration>:Users@[L17:C0, L19:C1]",
-                  "snippet": "Table User...{\r\n    \r\n}"
-                }
+                "body": []
               },
               "context": {
                 "id": "<block-expression>@[L17:C17, L19:C1]",
@@ -1088,10 +1012,6 @@
               "children": {
                 "expression": {
                   "children": {
-                    "parent": {
-                      "id": "<element-declaration>:Users@[L17:C0, L19:C1]",
-                      "snippet": "Table User...{\r\n    \r\n}"
-                    },
                     "variable": {
                       "context": {
                         "id": "<identifier>:Users@[L17:C6, L17:C11]",
@@ -1137,10 +1057,6 @@
                     "line": 17,
                     "column": 6
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:Users@[L17:C0, L19:C1]",
-                  "snippet": "Table User...{\r\n    \r\n}"
                 }
               },
               "context": {
@@ -1162,10 +1078,6 @@
                 "line": 17,
                 "column": 6
               }
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L19:C1]",
-              "snippet": "Table {\r\n\r...{\r\n    \r\n}"
             },
             "type": {
               "context": {

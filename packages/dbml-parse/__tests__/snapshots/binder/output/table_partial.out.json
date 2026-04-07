@@ -71,11 +71,7 @@
                   "trailingTrivia": "",
                   "value": "{"
                 },
-                "body": [],
-                "parent": {
-                  "id": "<element-declaration>:p1@[L0:C0, L0:C18]",
-                  "snippet": "TablePartial p1 {}"
-                }
+                "body": []
               },
               "context": {
                 "id": "<block-expression>@[L0:C16, L0:C18]",
@@ -101,10 +97,6 @@
               "children": {
                 "expression": {
                   "children": {
-                    "parent": {
-                      "id": "<element-declaration>:p1@[L0:C0, L0:C18]",
-                      "snippet": "TablePartial p1 {}"
-                    },
                     "variable": {
                       "context": {
                         "id": "<identifier>:p1@[L0:C13, L0:C15]",
@@ -150,10 +142,6 @@
                     "line": 0,
                     "column": 13
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:p1@[L0:C0, L0:C18]",
-                  "snippet": "TablePartial p1 {}"
                 }
               },
               "context": {
@@ -175,10 +163,6 @@
                 "line": 0,
                 "column": 13
               }
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L7:C0]",
-              "snippet": "TableParti...1\n  ~p2\n}\n"
             },
             "type": {
               "context": {
@@ -305,10 +289,6 @@
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:t1@[L2:C0, L6:C1]",
-                                  "snippet": "Table t1 {...p1\n  ~p2\n}"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:int@[L3:C5, L3:C8]",
@@ -365,10 +345,6 @@
                                 },
                                 "references": []
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:t1@[L2:C0, L6:C1]",
-                              "snippet": "Table t1 {...p1\n  ~p2\n}"
                             }
                           },
                           "context": {
@@ -407,10 +383,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:t1@[L2:C0, L6:C1]",
-                                "snippet": "Table t1 {...p1\n  ~p2\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:id@[L3:C2, L3:C4]",
@@ -467,10 +439,6 @@
                               },
                               "references": []
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:t1@[L2:C0, L6:C1]",
-                            "snippet": "Table t1 {...p1\n  ~p2\n}"
                           }
                         },
                         "context": {
@@ -503,10 +471,6 @@
                           },
                           "references": []
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:t1@[L2:C0, L6:C1]",
-                        "snippet": "Table t1 {...p1\n  ~p2\n}"
                       }
                     },
                     "context": {
@@ -549,10 +513,6 @@
                             "children": {
                               "expression": {
                                 "children": {
-                                  "parent": {
-                                    "id": "<element-declaration>:t1@[L2:C0, L6:C1]",
-                                    "snippet": "Table t1 {...p1\n  ~p2\n}"
-                                  },
                                   "variable": {
                                     "context": {
                                       "id": "<identifier>:p1@[L4:C3, L4:C5]",
@@ -609,10 +569,6 @@
                                   },
                                   "references": []
                                 }
-                              },
-                              "parent": {
-                                "id": "<element-declaration>:t1@[L2:C0, L6:C1]",
-                                "snippet": "Table t1 {...p1\n  ~p2\n}"
                               }
                             },
                             "context": {
@@ -676,10 +632,6 @@
                             "trailingInvalid": "",
                             "trailingTrivia": "",
                             "value": "~"
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:t1@[L2:C0, L6:C1]",
-                            "snippet": "Table t1 {...p1\n  ~p2\n}"
                           }
                         },
                         "context": {
@@ -712,10 +664,6 @@
                           },
                           "references": []
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:t1@[L2:C0, L6:C1]",
-                        "snippet": "Table t1 {...p1\n  ~p2\n}"
                       }
                     },
                     "context": {
@@ -758,10 +706,6 @@
                             "children": {
                               "expression": {
                                 "children": {
-                                  "parent": {
-                                    "id": "<element-declaration>:t1@[L2:C0, L6:C1]",
-                                    "snippet": "Table t1 {...p1\n  ~p2\n}"
-                                  },
                                   "variable": {
                                     "context": {
                                       "id": "<identifier>:p2@[L5:C3, L5:C5]",
@@ -818,10 +762,6 @@
                                   },
                                   "references": []
                                 }
-                              },
-                              "parent": {
-                                "id": "<element-declaration>:t1@[L2:C0, L6:C1]",
-                                "snippet": "Table t1 {...p1\n  ~p2\n}"
                               }
                             },
                             "context": {
@@ -879,10 +819,6 @@
                             "trailingInvalid": "",
                             "trailingTrivia": "",
                             "value": "~"
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:t1@[L2:C0, L6:C1]",
-                            "snippet": "Table t1 {...p1\n  ~p2\n}"
                           }
                         },
                         "context": {
@@ -915,10 +851,6 @@
                           },
                           "references": []
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:t1@[L2:C0, L6:C1]",
-                        "snippet": "Table t1 {...p1\n  ~p2\n}"
                       }
                     },
                     "context": {
@@ -952,11 +884,7 @@
                       "references": []
                     }
                   }
-                ],
-                "parent": {
-                  "id": "<element-declaration>:t1@[L2:C0, L6:C1]",
-                  "snippet": "Table t1 {...p1\n  ~p2\n}"
-                }
+                ]
               },
               "context": {
                 "id": "<block-expression>@[L2:C9, L6:C1]",
@@ -982,10 +910,6 @@
               "children": {
                 "expression": {
                   "children": {
-                    "parent": {
-                      "id": "<element-declaration>:t1@[L2:C0, L6:C1]",
-                      "snippet": "Table t1 {...p1\n  ~p2\n}"
-                    },
                     "variable": {
                       "context": {
                         "id": "<identifier>:t1@[L2:C6, L2:C8]",
@@ -1031,10 +955,6 @@
                     "line": 2,
                     "column": 6
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:t1@[L2:C0, L6:C1]",
-                  "snippet": "Table t1 {...p1\n  ~p2\n}"
                 }
               },
               "context": {
@@ -1056,10 +976,6 @@
                 "line": 2,
                 "column": 6
               }
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L7:C0]",
-              "snippet": "TableParti...1\n  ~p2\n}\n"
             },
             "type": {
               "context": {

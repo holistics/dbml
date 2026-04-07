@@ -65,10 +65,6 @@
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                                  "snippet": "Table \"cus...ESTAMP`]\n}"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:SMALLINT@[L1:C16, L1:C24]",
@@ -125,10 +121,6 @@
                                 },
                                 "references": []
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                              "snippet": "Table \"cus...ESTAMP`]\n}"
                             }
                           },
                           "context": {
@@ -247,11 +239,7 @@
                                           "trailingTrivia": "",
                                           "value": "pk"
                                         }
-                                      ],
-                                      "parent": {
-                                        "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                                        "snippet": "Table \"cus...ESTAMP`]\n}"
-                                      }
+                                      ]
                                     },
                                     "context": {
                                       "id": "<identifer-stream>@[L1:C26, L1:C28]",
@@ -283,10 +271,6 @@
                                       },
                                       "references": []
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                                    "snippet": "Table \"cus...ESTAMP`]\n}"
                                   }
                                 },
                                 "context": {
@@ -375,11 +359,7 @@
                                           "trailingTrivia": "",
                                           "value": "null"
                                         }
-                                      ],
-                                      "parent": {
-                                        "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                                        "snippet": "Table \"cus...ESTAMP`]\n}"
-                                      }
+                                      ]
                                     },
                                     "context": {
                                       "id": "<identifer-stream>@[L1:C30, L1:C38]",
@@ -411,10 +391,6 @@
                                       },
                                       "references": []
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                                    "snippet": "Table \"cus...ESTAMP`]\n}"
                                   }
                                 },
                                 "context": {
@@ -478,11 +454,7 @@
                                           "trailingTrivia": "",
                                           "value": "increment"
                                         }
-                                      ],
-                                      "parent": {
-                                        "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                                        "snippet": "Table \"cus...ESTAMP`]\n}"
-                                      }
+                                      ]
                                     },
                                     "context": {
                                       "id": "<identifer-stream>@[L1:C40, L1:C49]",
@@ -514,10 +486,6 @@
                                       },
                                       "references": []
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                                    "snippet": "Table \"cus...ESTAMP`]\n}"
                                   }
                                 },
                                 "context": {
@@ -601,10 +569,6 @@
                               "trailingInvalid": "",
                               "trailingTrivia": "",
                               "value": "["
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                              "snippet": "Table \"cus...ESTAMP`]\n}"
                             }
                           },
                           "context": {
@@ -643,10 +607,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                                "snippet": "Table \"cus...ESTAMP`]\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<variable>:customer_id@[L1:C2, L1:C15]",
@@ -703,10 +663,6 @@
                               },
                               "references": []
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                            "snippet": "Table \"cus...ESTAMP`]\n}"
                           }
                         },
                         "context": {
@@ -739,10 +695,6 @@
                           },
                           "references": []
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                        "snippet": "Table \"cus...ESTAMP`]\n}"
                       }
                     },
                     "context": {
@@ -783,10 +735,6 @@
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                                  "snippet": "Table \"cus...ESTAMP`]\n}"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:TINYINT@[L2:C13, L2:C20]",
@@ -843,10 +791,6 @@
                                 },
                                 "references": []
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                              "snippet": "Table \"cus...ESTAMP`]\n}"
                             }
                           },
                           "context": {
@@ -939,11 +883,7 @@
                                           "trailingTrivia": "",
                                           "value": "null"
                                         }
-                                      ],
-                                      "parent": {
-                                        "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                                        "snippet": "Table \"cus...ESTAMP`]\n}"
-                                      }
+                                      ]
                                     },
                                     "context": {
                                       "id": "<identifer-stream>@[L2:C22, L2:C30]",
@@ -975,10 +915,6 @@
                                       },
                                       "references": []
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                                    "snippet": "Table \"cus...ESTAMP`]\n}"
                                   }
                                 },
                                 "context": {
@@ -1062,10 +998,6 @@
                               "trailingInvalid": "",
                               "trailingTrivia": "",
                               "value": "["
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                              "snippet": "Table \"cus...ESTAMP`]\n}"
                             }
                           },
                           "context": {
@@ -1104,10 +1036,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                                "snippet": "Table \"cus...ESTAMP`]\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<variable>:store_id@[L2:C2, L2:C12]",
@@ -1164,10 +1092,6 @@
                               },
                               "references": []
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                            "snippet": "Table \"cus...ESTAMP`]\n}"
                           }
                         },
                         "context": {
@@ -1200,10 +1124,6 @@
                           },
                           "references": []
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                        "snippet": "Table \"cus...ESTAMP`]\n}"
                       }
                     },
                     "context": {
@@ -1274,10 +1194,6 @@
                                             "trailingInvalid": "",
                                             "trailingTrivia": "",
                                             "value": "45"
-                                          },
-                                          "parent": {
-                                            "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                                            "snippet": "Table \"cus...ESTAMP`]\n}"
                                           }
                                         },
                                         "context": {
@@ -1310,10 +1226,6 @@
                                           },
                                           "references": []
                                         }
-                                      },
-                                      "parent": {
-                                        "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                                        "snippet": "Table \"cus...ESTAMP`]\n}"
                                       }
                                     },
                                     "context": {
@@ -1348,10 +1260,6 @@
                                     }
                                   }
                                 ],
-                                "parent": {
-                                  "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                                  "snippet": "Table \"cus...ESTAMP`]\n}"
-                                },
                                 "tupleCloseParen": {
                                   "context": {
                                     "id": "<rparen>:)@[L3:C25, L3:C26]",
@@ -1438,10 +1346,6 @@
                               "children": {
                                 "expression": {
                                   "children": {
-                                    "parent": {
-                                      "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                                      "snippet": "Table \"cus...ESTAMP`]\n}"
-                                    },
                                     "variable": {
                                       "context": {
                                         "id": "<identifier>:VARCHAR@[L3:C15, L3:C22]",
@@ -1498,10 +1402,6 @@
                                     },
                                     "references": []
                                   }
-                                },
-                                "parent": {
-                                  "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                                  "snippet": "Table \"cus...ESTAMP`]\n}"
                                 }
                               },
                               "context": {
@@ -1534,10 +1434,6 @@
                                 },
                                 "references": []
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                              "snippet": "Table \"cus...ESTAMP`]\n}"
                             }
                           },
                           "context": {
@@ -1630,11 +1526,7 @@
                                           "trailingTrivia": "",
                                           "value": "null"
                                         }
-                                      ],
-                                      "parent": {
-                                        "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                                        "snippet": "Table \"cus...ESTAMP`]\n}"
-                                      }
+                                      ]
                                     },
                                     "context": {
                                       "id": "<identifer-stream>@[L3:C28, L3:C36]",
@@ -1666,10 +1558,6 @@
                                       },
                                       "references": []
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                                    "snippet": "Table \"cus...ESTAMP`]\n}"
                                   }
                                 },
                                 "context": {
@@ -1753,10 +1641,6 @@
                               "trailingInvalid": "",
                               "trailingTrivia": "",
                               "value": "["
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                              "snippet": "Table \"cus...ESTAMP`]\n}"
                             }
                           },
                           "context": {
@@ -1795,10 +1679,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                                "snippet": "Table \"cus...ESTAMP`]\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<variable>:first_name@[L3:C2, L3:C14]",
@@ -1855,10 +1735,6 @@
                               },
                               "references": []
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                            "snippet": "Table \"cus...ESTAMP`]\n}"
                           }
                         },
                         "context": {
@@ -1891,10 +1767,6 @@
                           },
                           "references": []
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                        "snippet": "Table \"cus...ESTAMP`]\n}"
                       }
                     },
                     "context": {
@@ -1965,10 +1837,6 @@
                                             "trailingInvalid": "",
                                             "trailingTrivia": "",
                                             "value": "45"
-                                          },
-                                          "parent": {
-                                            "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                                            "snippet": "Table \"cus...ESTAMP`]\n}"
                                           }
                                         },
                                         "context": {
@@ -2001,10 +1869,6 @@
                                           },
                                           "references": []
                                         }
-                                      },
-                                      "parent": {
-                                        "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                                        "snippet": "Table \"cus...ESTAMP`]\n}"
                                       }
                                     },
                                     "context": {
@@ -2039,10 +1903,6 @@
                                     }
                                   }
                                 ],
-                                "parent": {
-                                  "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                                  "snippet": "Table \"cus...ESTAMP`]\n}"
-                                },
                                 "tupleCloseParen": {
                                   "context": {
                                     "id": "<rparen>:)@[L4:C24, L4:C25]",
@@ -2129,10 +1989,6 @@
                               "children": {
                                 "expression": {
                                   "children": {
-                                    "parent": {
-                                      "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                                      "snippet": "Table \"cus...ESTAMP`]\n}"
-                                    },
                                     "variable": {
                                       "context": {
                                         "id": "<identifier>:VARCHAR@[L4:C14, L4:C21]",
@@ -2189,10 +2045,6 @@
                                     },
                                     "references": []
                                   }
-                                },
-                                "parent": {
-                                  "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                                  "snippet": "Table \"cus...ESTAMP`]\n}"
                                 }
                               },
                               "context": {
@@ -2225,10 +2077,6 @@
                                 },
                                 "references": []
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                              "snippet": "Table \"cus...ESTAMP`]\n}"
                             }
                           },
                           "context": {
@@ -2347,11 +2195,7 @@
                                           "trailingTrivia": "",
                                           "value": "null"
                                         }
-                                      ],
-                                      "parent": {
-                                        "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                                        "snippet": "Table \"cus...ESTAMP`]\n}"
-                                      }
+                                      ]
                                     },
                                     "context": {
                                       "id": "<identifer-stream>@[L4:C27, L4:C35]",
@@ -2383,10 +2227,6 @@
                                       },
                                       "references": []
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                                    "snippet": "Table \"cus...ESTAMP`]\n}"
                                   }
                                 },
                                 "context": {
@@ -2475,11 +2315,7 @@
                                           "trailingTrivia": "",
                                           "value": "default"
                                         }
-                                      ],
-                                      "parent": {
-                                        "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                                        "snippet": "Table \"cus...ESTAMP`]\n}"
-                                      }
+                                      ]
                                     },
                                     "context": {
                                       "id": "<identifer-stream>@[L4:C37, L4:C44]",
@@ -2512,18 +2348,10 @@
                                       "references": []
                                     }
                                   },
-                                  "parent": {
-                                    "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                                    "snippet": "Table \"cus...ESTAMP`]\n}"
-                                  },
                                   "value": {
                                     "children": {
                                       "expression": {
                                         "children": {
-                                          "parent": {
-                                            "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                                            "snippet": "Table \"cus...ESTAMP`]\n}"
-                                          },
                                           "variable": {
                                             "context": {
                                               "id": "<identifier>:faLse@[L4:C46, L4:C51]",
@@ -2580,10 +2408,6 @@
                                           },
                                           "references": []
                                         }
-                                      },
-                                      "parent": {
-                                        "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                                        "snippet": "Table \"cus...ESTAMP`]\n}"
                                       }
                                     },
                                     "context": {
@@ -2699,10 +2523,6 @@
                               "trailingInvalid": "",
                               "trailingTrivia": "",
                               "value": "["
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                              "snippet": "Table \"cus...ESTAMP`]\n}"
                             }
                           },
                           "context": {
@@ -2741,10 +2561,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                                "snippet": "Table \"cus...ESTAMP`]\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<variable>:last_name@[L4:C2, L4:C13]",
@@ -2801,10 +2617,6 @@
                               },
                               "references": []
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                            "snippet": "Table \"cus...ESTAMP`]\n}"
                           }
                         },
                         "context": {
@@ -2837,10 +2649,6 @@
                           },
                           "references": []
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                        "snippet": "Table \"cus...ESTAMP`]\n}"
                       }
                     },
                     "context": {
@@ -2911,10 +2719,6 @@
                                             "trailingInvalid": "",
                                             "trailingTrivia": "",
                                             "value": "50"
-                                          },
-                                          "parent": {
-                                            "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                                            "snippet": "Table \"cus...ESTAMP`]\n}"
                                           }
                                         },
                                         "context": {
@@ -2947,10 +2751,6 @@
                                           },
                                           "references": []
                                         }
-                                      },
-                                      "parent": {
-                                        "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                                        "snippet": "Table \"cus...ESTAMP`]\n}"
                                       }
                                     },
                                     "context": {
@@ -2985,10 +2785,6 @@
                                     }
                                   }
                                 ],
-                                "parent": {
-                                  "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                                  "snippet": "Table \"cus...ESTAMP`]\n}"
-                                },
                                 "tupleCloseParen": {
                                   "context": {
                                     "id": "<rparen>:)@[L5:C20, L5:C21]",
@@ -3075,10 +2871,6 @@
                               "children": {
                                 "expression": {
                                   "children": {
-                                    "parent": {
-                                      "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                                      "snippet": "Table \"cus...ESTAMP`]\n}"
-                                    },
                                     "variable": {
                                       "context": {
                                         "id": "<identifier>:VARCHAR@[L5:C10, L5:C17]",
@@ -3135,10 +2927,6 @@
                                     },
                                     "references": []
                                   }
-                                },
-                                "parent": {
-                                  "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                                  "snippet": "Table \"cus...ESTAMP`]\n}"
                                 }
                               },
                               "context": {
@@ -3171,10 +2959,6 @@
                                 },
                                 "references": []
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                              "snippet": "Table \"cus...ESTAMP`]\n}"
                             }
                           },
                           "context": {
@@ -3267,11 +3051,7 @@
                                           "trailingTrivia": "",
                                           "value": "default"
                                         }
-                                      ],
-                                      "parent": {
-                                        "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                                        "snippet": "Table \"cus...ESTAMP`]\n}"
-                                      }
+                                      ]
                                     },
                                     "context": {
                                       "id": "<identifer-stream>@[L5:C23, L5:C30]",
@@ -3304,18 +3084,10 @@
                                       "references": []
                                     }
                                   },
-                                  "parent": {
-                                    "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                                    "snippet": "Table \"cus...ESTAMP`]\n}"
-                                  },
                                   "value": {
                                     "children": {
                                       "expression": {
                                         "children": {
-                                          "parent": {
-                                            "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                                            "snippet": "Table \"cus...ESTAMP`]\n}"
-                                          },
                                           "variable": {
                                             "context": {
                                               "id": "<identifier>:NULL@[L5:C32, L5:C36]",
@@ -3372,10 +3144,6 @@
                                           },
                                           "references": []
                                         }
-                                      },
-                                      "parent": {
-                                        "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                                        "snippet": "Table \"cus...ESTAMP`]\n}"
                                       }
                                     },
                                     "context": {
@@ -3491,10 +3259,6 @@
                               "trailingInvalid": "",
                               "trailingTrivia": "",
                               "value": "["
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                              "snippet": "Table \"cus...ESTAMP`]\n}"
                             }
                           },
                           "context": {
@@ -3533,10 +3297,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                                "snippet": "Table \"cus...ESTAMP`]\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<variable>:email@[L5:C2, L5:C9]",
@@ -3593,10 +3353,6 @@
                               },
                               "references": []
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                            "snippet": "Table \"cus...ESTAMP`]\n}"
                           }
                         },
                         "context": {
@@ -3629,10 +3385,6 @@
                           },
                           "references": []
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                        "snippet": "Table \"cus...ESTAMP`]\n}"
                       }
                     },
                     "context": {
@@ -3673,10 +3425,6 @@
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                                  "snippet": "Table \"cus...ESTAMP`]\n}"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:SMALLINT@[L6:C15, L6:C23]",
@@ -3733,10 +3481,6 @@
                                 },
                                 "references": []
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                              "snippet": "Table \"cus...ESTAMP`]\n}"
                             }
                           },
                           "context": {
@@ -3829,11 +3573,7 @@
                                           "trailingTrivia": "",
                                           "value": "NULL"
                                         }
-                                      ],
-                                      "parent": {
-                                        "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                                        "snippet": "Table \"cus...ESTAMP`]\n}"
-                                      }
+                                      ]
                                     },
                                     "context": {
                                       "id": "<identifer-stream>@[L6:C25, L6:C33]",
@@ -3865,10 +3605,6 @@
                                       },
                                       "references": []
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                                    "snippet": "Table \"cus...ESTAMP`]\n}"
                                   }
                                 },
                                 "context": {
@@ -3952,10 +3688,6 @@
                               "trailingInvalid": "",
                               "trailingTrivia": "",
                               "value": "["
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                              "snippet": "Table \"cus...ESTAMP`]\n}"
                             }
                           },
                           "context": {
@@ -3994,10 +3726,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                                "snippet": "Table \"cus...ESTAMP`]\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<variable>:address_id@[L6:C2, L6:C14]",
@@ -4054,10 +3782,6 @@
                               },
                               "references": []
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                            "snippet": "Table \"cus...ESTAMP`]\n}"
                           }
                         },
                         "context": {
@@ -4090,10 +3814,6 @@
                           },
                           "references": []
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                        "snippet": "Table \"cus...ESTAMP`]\n}"
                       }
                     },
                     "context": {
@@ -4134,10 +3854,6 @@
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                                  "snippet": "Table \"cus...ESTAMP`]\n}"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:BOOLEAN@[L7:C11, L7:C18]",
@@ -4194,10 +3910,6 @@
                                 },
                                 "references": []
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                              "snippet": "Table \"cus...ESTAMP`]\n}"
                             }
                           },
                           "context": {
@@ -4316,11 +4028,7 @@
                                           "trailingTrivia": "",
                                           "value": "null"
                                         }
-                                      ],
-                                      "parent": {
-                                        "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                                        "snippet": "Table \"cus...ESTAMP`]\n}"
-                                      }
+                                      ]
                                     },
                                     "context": {
                                       "id": "<identifer-stream>@[L7:C20, L7:C28]",
@@ -4352,10 +4060,6 @@
                                       },
                                       "references": []
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                                    "snippet": "Table \"cus...ESTAMP`]\n}"
                                   }
                                 },
                                 "context": {
@@ -4444,11 +4148,7 @@
                                           "trailingTrivia": "",
                                           "value": "default"
                                         }
-                                      ],
-                                      "parent": {
-                                        "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                                        "snippet": "Table \"cus...ESTAMP`]\n}"
-                                      }
+                                      ]
                                     },
                                     "context": {
                                       "id": "<identifer-stream>@[L7:C30, L7:C37]",
@@ -4481,18 +4181,10 @@
                                       "references": []
                                     }
                                   },
-                                  "parent": {
-                                    "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                                    "snippet": "Table \"cus...ESTAMP`]\n}"
-                                  },
                                   "value": {
                                     "children": {
                                       "expression": {
                                         "children": {
-                                          "parent": {
-                                            "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                                            "snippet": "Table \"cus...ESTAMP`]\n}"
-                                          },
                                           "variable": {
                                             "context": {
                                               "id": "<identifier>:TRUE@[L7:C39, L7:C43]",
@@ -4549,10 +4241,6 @@
                                           },
                                           "references": []
                                         }
-                                      },
-                                      "parent": {
-                                        "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                                        "snippet": "Table \"cus...ESTAMP`]\n}"
                                       }
                                     },
                                     "context": {
@@ -4668,10 +4356,6 @@
                               "trailingInvalid": "",
                               "trailingTrivia": "",
                               "value": "["
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                              "snippet": "Table \"cus...ESTAMP`]\n}"
                             }
                           },
                           "context": {
@@ -4710,10 +4394,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                                "snippet": "Table \"cus...ESTAMP`]\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<variable>:active@[L7:C2, L7:C10]",
@@ -4770,10 +4450,6 @@
                               },
                               "references": []
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                            "snippet": "Table \"cus...ESTAMP`]\n}"
                           }
                         },
                         "context": {
@@ -4806,10 +4482,6 @@
                           },
                           "references": []
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                        "snippet": "Table \"cus...ESTAMP`]\n}"
                       }
                     },
                     "context": {
@@ -4850,10 +4522,6 @@
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                                  "snippet": "Table \"cus...ESTAMP`]\n}"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:DATETIME@[L8:C16, L8:C24]",
@@ -4910,10 +4578,6 @@
                                 },
                                 "references": []
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                              "snippet": "Table \"cus...ESTAMP`]\n}"
                             }
                           },
                           "context": {
@@ -5006,11 +4670,7 @@
                                           "trailingTrivia": "",
                                           "value": "null"
                                         }
-                                      ],
-                                      "parent": {
-                                        "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                                        "snippet": "Table \"cus...ESTAMP`]\n}"
-                                      }
+                                      ]
                                     },
                                     "context": {
                                       "id": "<identifer-stream>@[L8:C26, L8:C34]",
@@ -5042,10 +4702,6 @@
                                       },
                                       "references": []
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                                    "snippet": "Table \"cus...ESTAMP`]\n}"
                                   }
                                 },
                                 "context": {
@@ -5129,10 +4785,6 @@
                               "trailingInvalid": "",
                               "trailingTrivia": "",
                               "value": "["
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                              "snippet": "Table \"cus...ESTAMP`]\n}"
                             }
                           },
                           "context": {
@@ -5171,10 +4823,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                                "snippet": "Table \"cus...ESTAMP`]\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<variable>:create_date@[L8:C2, L8:C15]",
@@ -5231,10 +4879,6 @@
                               },
                               "references": []
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                            "snippet": "Table \"cus...ESTAMP`]\n}"
                           }
                         },
                         "context": {
@@ -5267,10 +4911,6 @@
                           },
                           "references": []
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                        "snippet": "Table \"cus...ESTAMP`]\n}"
                       }
                     },
                     "context": {
@@ -5311,10 +4951,6 @@
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                                  "snippet": "Table \"cus...ESTAMP`]\n}"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:TIMESTAMP@[L9:C16, L9:C25]",
@@ -5371,10 +5007,6 @@
                                 },
                                 "references": []
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                              "snippet": "Table \"cus...ESTAMP`]\n}"
                             }
                           },
                           "context": {
@@ -5467,11 +5099,7 @@
                                           "trailingTrivia": "",
                                           "value": "default"
                                         }
-                                      ],
-                                      "parent": {
-                                        "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                                        "snippet": "Table \"cus...ESTAMP`]\n}"
-                                      }
+                                      ]
                                     },
                                     "context": {
                                       "id": "<identifer-stream>@[L9:C27, L9:C34]",
@@ -5504,16 +5132,8 @@
                                       "references": []
                                     }
                                   },
-                                  "parent": {
-                                    "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                                    "snippet": "Table \"cus...ESTAMP`]\n}"
-                                  },
                                   "value": {
                                     "children": {
-                                      "parent": {
-                                        "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                                        "snippet": "Table \"cus...ESTAMP`]\n}"
-                                      },
                                       "value": {
                                         "context": {
                                           "id": "<function-expression>:CURRENT_TIMESTAMP@[L9:C36, L9:C55]",
@@ -5653,10 +5273,6 @@
                               "trailingInvalid": "",
                               "trailingTrivia": "",
                               "value": "["
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                              "snippet": "Table \"cus...ESTAMP`]\n}"
                             }
                           },
                           "context": {
@@ -5695,10 +5311,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                                "snippet": "Table \"cus...ESTAMP`]\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<variable>:last_update@[L9:C2, L9:C15]",
@@ -5755,10 +5367,6 @@
                               },
                               "references": []
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                            "snippet": "Table \"cus...ESTAMP`]\n}"
                           }
                         },
                         "context": {
@@ -5791,10 +5399,6 @@
                           },
                           "references": []
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                        "snippet": "Table \"cus...ESTAMP`]\n}"
                       }
                     },
                     "context": {
@@ -5828,11 +5432,7 @@
                       "references": []
                     }
                   }
-                ],
-                "parent": {
-                  "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                  "snippet": "Table \"cus...ESTAMP`]\n}"
-                }
+                ]
               },
               "context": {
                 "id": "<block-expression>@[L0:C17, L10:C1]",
@@ -5858,10 +5458,6 @@
               "children": {
                 "expression": {
                   "children": {
-                    "parent": {
-                      "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                      "snippet": "Table \"cus...ESTAMP`]\n}"
-                    },
                     "variable": {
                       "context": {
                         "id": "<variable>:customer@[L0:C6, L0:C16]",
@@ -5907,10 +5503,6 @@
                     "line": 0,
                     "column": 6
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:customer@[L0:C0, L10:C1]",
-                  "snippet": "Table \"cus...ESTAMP`]\n}"
                 }
               },
               "context": {
@@ -5932,10 +5524,6 @@
                 "line": 0,
                 "column": 6
               }
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L30:C1]",
-              "snippet": "Table \"cus... name\n\t}\n}"
             },
             "type": {
               "context": {
@@ -6112,10 +5700,6 @@
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:cities@[L12:C0, L17:C1]",
-                                  "snippet": "Table citi...\"sasasa\"\n}"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:integer@[L13:C5, L13:C12]",
@@ -6172,10 +5756,6 @@
                                 },
                                 "references": []
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:cities@[L12:C0, L17:C1]",
-                              "snippet": "Table citi...\"sasasa\"\n}"
                             }
                           },
                           "context": {
@@ -6268,11 +5848,7 @@
                                           "trailingTrivia": "",
                                           "value": "key"
                                         }
-                                      ],
-                                      "parent": {
-                                        "id": "<element-declaration>:cities@[L12:C0, L17:C1]",
-                                        "snippet": "Table citi...\"sasasa\"\n}"
-                                      }
+                                      ]
                                     },
                                     "context": {
                                       "id": "<identifer-stream>@[L13:C14, L13:C25]",
@@ -6304,10 +5880,6 @@
                                       },
                                       "references": []
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:cities@[L12:C0, L17:C1]",
-                                    "snippet": "Table citi...\"sasasa\"\n}"
                                   }
                                 },
                                 "context": {
@@ -6391,10 +5963,6 @@
                               "trailingInvalid": "",
                               "trailingTrivia": "",
                               "value": "["
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:cities@[L12:C0, L17:C1]",
-                              "snippet": "Table citi...\"sasasa\"\n}"
                             }
                           },
                           "context": {
@@ -6433,10 +6001,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:cities@[L12:C0, L17:C1]",
-                                "snippet": "Table citi...\"sasasa\"\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:id@[L13:C2, L13:C4]",
@@ -6493,10 +6057,6 @@
                               },
                               "references": []
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:cities@[L12:C0, L17:C1]",
-                            "snippet": "Table citi...\"sasasa\"\n}"
                           }
                         },
                         "context": {
@@ -6529,10 +6089,6 @@
                           },
                           "references": []
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:cities@[L12:C0, L17:C1]",
-                        "snippet": "Table citi...\"sasasa\"\n}"
                       }
                     },
                     "context": {
@@ -6573,10 +6129,6 @@
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:cities@[L12:C0, L17:C1]",
-                                  "snippet": "Table citi...\"sasasa\"\n}"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:e@[L14:C7, L14:C8]",
@@ -6633,10 +6185,6 @@
                                 },
                                 "references": []
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:cities@[L12:C0, L17:C1]",
-                              "snippet": "Table citi...\"sasasa\"\n}"
                             }
                           },
                           "context": {
@@ -6729,11 +6277,7 @@
                                           "trailingTrivia": "",
                                           "value": "default"
                                         }
-                                      ],
-                                      "parent": {
-                                        "id": "<element-declaration>:cities@[L12:C0, L17:C1]",
-                                        "snippet": "Table citi...\"sasasa\"\n}"
-                                      }
+                                      ]
                                     },
                                     "context": {
                                       "id": "<identifer-stream>@[L14:C10, L14:C17]",
@@ -6766,18 +6310,10 @@
                                       "references": []
                                     }
                                   },
-                                  "parent": {
-                                    "id": "<element-declaration>:cities@[L12:C0, L17:C1]",
-                                    "snippet": "Table citi...\"sasasa\"\n}"
-                                  },
                                   "value": {
                                     "children": {
                                       "expression": {
                                         "children": {
-                                          "parent": {
-                                            "id": "<element-declaration>:cities@[L12:C0, L17:C1]",
-                                            "snippet": "Table citi...\"sasasa\"\n}"
-                                          },
                                           "variable": {
                                             "context": {
                                               "id": "<variable>:hello@[L14:C19, L14:C26]",
@@ -6834,10 +6370,6 @@
                                           },
                                           "references": []
                                         }
-                                      },
-                                      "parent": {
-                                        "id": "<element-declaration>:cities@[L12:C0, L17:C1]",
-                                        "snippet": "Table citi...\"sasasa\"\n}"
                                       }
                                     },
                                     "context": {
@@ -6953,10 +6485,6 @@
                               "trailingInvalid": "",
                               "trailingTrivia": "",
                               "value": "["
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:cities@[L12:C0, L17:C1]",
-                              "snippet": "Table citi...\"sasasa\"\n}"
                             }
                           },
                           "context": {
@@ -6995,10 +6523,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:cities@[L12:C0, L17:C1]",
-                                "snippet": "Table citi...\"sasasa\"\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:name@[L14:C2, L14:C6]",
@@ -7055,10 +6579,6 @@
                               },
                               "references": []
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:cities@[L12:C0, L17:C1]",
-                            "snippet": "Table citi...\"sasasa\"\n}"
                           }
                         },
                         "context": {
@@ -7091,10 +6611,6 @@
                           },
                           "references": []
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:cities@[L12:C0, L17:C1]",
-                        "snippet": "Table citi...\"sasasa\"\n}"
                       }
                     },
                     "context": {
@@ -7135,10 +6651,6 @@
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:cities@[L12:C0, L17:C1]",
-                                  "snippet": "Table citi...\"sasasa\"\n}"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:integer@[L15:C13, L15:C20]",
@@ -7195,10 +6707,6 @@
                                 },
                                 "references": []
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:cities@[L12:C0, L17:C1]",
-                              "snippet": "Table citi...\"sasasa\"\n}"
                             }
                           },
                           "context": {
@@ -7237,10 +6745,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:cities@[L12:C0, L17:C1]",
-                                "snippet": "Table citi...\"sasasa\"\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:country_id@[L15:C2, L15:C12]",
@@ -7297,10 +6801,6 @@
                               },
                               "references": []
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:cities@[L12:C0, L17:C1]",
-                            "snippet": "Table citi...\"sasasa\"\n}"
                           }
                         },
                         "context": {
@@ -7333,10 +6833,6 @@
                           },
                           "references": []
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:cities@[L12:C0, L17:C1]",
-                        "snippet": "Table citi...\"sasasa\"\n}"
                       }
                     },
                     "context": {
@@ -7379,10 +6875,6 @@
                             "children": {
                               "expression": {
                                 "children": {
-                                  "parent": {
-                                    "id": "<element-declaration>:@[L16:C2, L16:C16]",
-                                    "snippet": "note: \"sasasa\""
-                                  },
                                   "variable": {
                                     "context": {
                                       "id": "<variable>:sasasa@[L16:C8, L16:C16]",
@@ -7428,10 +6920,6 @@
                                   "line": 16,
                                   "column": 8
                                 }
-                              },
-                              "parent": {
-                                "id": "<element-declaration>:@[L16:C2, L16:C16]",
-                                "snippet": "note: \"sasasa\""
                               }
                             },
                             "context": {
@@ -7453,10 +6941,6 @@
                               "line": 16,
                               "column": 8
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:@[L16:C2, L16:C16]",
-                            "snippet": "note: \"sasasa\""
                           }
                         },
                         "context": {
@@ -7503,10 +6987,6 @@
                         "trailingInvalid": "",
                         "trailingTrivia": " ",
                         "value": ":"
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:cities@[L12:C0, L17:C1]",
-                        "snippet": "Table citi...\"sasasa\"\n}"
                       },
                       "type": {
                         "context": {
@@ -7565,11 +7045,7 @@
                       "references": []
                     }
                   }
-                ],
-                "parent": {
-                  "id": "<element-declaration>:cities@[L12:C0, L17:C1]",
-                  "snippet": "Table citi...\"sasasa\"\n}"
-                }
+                ]
               },
               "context": {
                 "id": "<block-expression>@[L12:C13, L17:C1]",
@@ -7595,10 +7071,6 @@
               "children": {
                 "expression": {
                   "children": {
-                    "parent": {
-                      "id": "<element-declaration>:cities@[L12:C0, L17:C1]",
-                      "snippet": "Table citi...\"sasasa\"\n}"
-                    },
                     "variable": {
                       "context": {
                         "id": "<identifier>:cities@[L12:C6, L12:C12]",
@@ -7644,10 +7116,6 @@
                     "line": 12,
                     "column": 6
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:cities@[L12:C0, L17:C1]",
-                  "snippet": "Table citi...\"sasasa\"\n}"
                 }
               },
               "context": {
@@ -7669,10 +7137,6 @@
                 "line": 12,
                 "column": 6
               }
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L30:C1]",
-              "snippet": "Table \"cus... name\n\t}\n}"
             },
             "type": {
               "context": {
@@ -7819,10 +7283,6 @@
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:country@[L19:C0, L22:C1]",
-                                  "snippet": "Table coun...string[]\n}"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:integer@[L20:C4, L20:C11]",
@@ -7879,10 +7339,6 @@
                                 },
                                 "references": []
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:country@[L19:C0, L22:C1]",
-                              "snippet": "Table coun...string[]\n}"
                             }
                           },
                           "context": {
@@ -7921,10 +7377,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:country@[L19:C0, L22:C1]",
-                                "snippet": "Table coun...string[]\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:id@[L20:C1, L20:C3]",
@@ -7981,10 +7433,6 @@
                               },
                               "references": []
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:country@[L19:C0, L22:C1]",
-                            "snippet": "Table coun...string[]\n}"
                           }
                         },
                         "context": {
@@ -8017,10 +7465,6 @@
                           },
                           "references": []
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:country@[L19:C0, L22:C1]",
-                        "snippet": "Table coun...string[]\n}"
                       }
                     },
                     "context": {
@@ -8063,10 +7507,6 @@
                               "children": {
                                 "expression": {
                                   "children": {
-                                    "parent": {
-                                      "id": "<element-declaration>:country@[L19:C0, L22:C1]",
-                                      "snippet": "Table coun...string[]\n}"
-                                    },
                                     "variable": {
                                       "context": {
                                         "id": "<identifier>:string@[L21:C8, L21:C14]",
@@ -8123,10 +7563,6 @@
                                     },
                                     "references": []
                                   }
-                                },
-                                "parent": {
-                                  "id": "<element-declaration>:country@[L19:C0, L22:C1]",
-                                  "snippet": "Table coun...string[]\n}"
                                 }
                               },
                               "context": {
@@ -8213,10 +7649,6 @@
                                   "trailingInvalid": "",
                                   "trailingTrivia": "",
                                   "value": "["
-                                },
-                                "parent": {
-                                  "id": "<element-declaration>:country@[L19:C0, L22:C1]",
-                                  "snippet": "Table coun...string[]\n}"
                                 }
                               },
                               "context": {
@@ -8249,10 +7681,6 @@
                                 },
                                 "references": []
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:country@[L19:C0, L22:C1]",
-                              "snippet": "Table coun...string[]\n}"
                             }
                           },
                           "context": {
@@ -8291,10 +7719,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:country@[L19:C0, L22:C1]",
-                                "snippet": "Table coun...string[]\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:cities@[L21:C1, L21:C7]",
@@ -8351,10 +7775,6 @@
                               },
                               "references": []
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:country@[L19:C0, L22:C1]",
-                            "snippet": "Table coun...string[]\n}"
                           }
                         },
                         "context": {
@@ -8387,10 +7807,6 @@
                           },
                           "references": []
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:country@[L19:C0, L22:C1]",
-                        "snippet": "Table coun...string[]\n}"
                       }
                     },
                     "context": {
@@ -8424,11 +7840,7 @@
                       "references": []
                     }
                   }
-                ],
-                "parent": {
-                  "id": "<element-declaration>:country@[L19:C0, L22:C1]",
-                  "snippet": "Table coun...string[]\n}"
-                }
+                ]
               },
               "context": {
                 "id": "<block-expression>@[L19:C14, L22:C1]",
@@ -8454,10 +7866,6 @@
               "children": {
                 "expression": {
                   "children": {
-                    "parent": {
-                      "id": "<element-declaration>:country@[L19:C0, L22:C1]",
-                      "snippet": "Table coun...string[]\n}"
-                    },
                     "variable": {
                       "context": {
                         "id": "<identifier>:country@[L19:C6, L19:C13]",
@@ -8503,10 +7911,6 @@
                     "line": 19,
                     "column": 6
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:country@[L19:C0, L22:C1]",
-                  "snippet": "Table coun...string[]\n}"
                 }
               },
               "context": {
@@ -8528,10 +7932,6 @@
                 "line": 19,
                 "column": 6
               }
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L30:C1]",
-              "snippet": "Table \"cus... name\n\t}\n}"
             },
             "type": {
               "context": {
@@ -8666,10 +8066,6 @@
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:citites@[L24:C0, L30:C1]",
-                                  "snippet": "Table citi... name\n\t}\n}"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:integer@[L25:C4, L25:C11]",
@@ -8726,10 +8122,6 @@
                                 },
                                 "references": []
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:citites@[L24:C0, L30:C1]",
-                              "snippet": "Table citi... name\n\t}\n}"
                             }
                           },
                           "context": {
@@ -8768,10 +8160,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:citites@[L24:C0, L30:C1]",
-                                "snippet": "Table citi... name\n\t}\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:id@[L25:C1, L25:C3]",
@@ -8828,10 +8216,6 @@
                               },
                               "references": []
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:citites@[L24:C0, L30:C1]",
-                            "snippet": "Table citi... name\n\t}\n}"
                           }
                         },
                         "context": {
@@ -8864,10 +8248,6 @@
                           },
                           "references": []
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:citites@[L24:C0, L30:C1]",
-                        "snippet": "Table citi... name\n\t}\n}"
                       }
                     },
                     "context": {
@@ -8913,10 +8293,6 @@
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:citites@[L24:C0, L30:C1]",
-                                  "snippet": "Table citi... name\n\t}\n}"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:string@[L26:C6, L26:C12]",
@@ -8973,10 +8349,6 @@
                                 },
                                 "references": []
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:citites@[L24:C0, L30:C1]",
-                              "snippet": "Table citi... name\n\t}\n}"
                             }
                           },
                           "context": {
@@ -9015,10 +8387,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:citites@[L24:C0, L30:C1]",
-                                "snippet": "Table citi... name\n\t}\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:name@[L26:C1, L26:C5]",
@@ -9075,10 +8443,6 @@
                               },
                               "references": []
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:citites@[L24:C0, L30:C1]",
-                            "snippet": "Table citi... name\n\t}\n}"
                           }
                         },
                         "context": {
@@ -9111,10 +8475,6 @@
                           },
                           "references": []
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:citites@[L24:C0, L30:C1]",
-                        "snippet": "Table citi... name\n\t}\n}"
                       }
                     },
                     "context": {
@@ -9215,10 +8575,6 @@
                                     "children": {
                                       "expression": {
                                         "children": {
-                                          "parent": {
-                                            "id": "<element-declaration>:@[L27:C1, L29:C2]",
-                                            "snippet": "indexes {\n...id name\n\t}"
-                                          },
                                           "variable": {
                                             "context": {
                                               "id": "<identifier>:name@[L28:C5, L28:C9]",
@@ -9264,10 +8620,6 @@
                                           "line": 28,
                                           "column": 5
                                         }
-                                      },
-                                      "parent": {
-                                        "id": "<element-declaration>:@[L27:C1, L29:C2]",
-                                        "snippet": "indexes {\n...id name\n\t}"
                                       }
                                     },
                                     "context": {
@@ -9301,10 +8653,6 @@
                                   "children": {
                                     "expression": {
                                       "children": {
-                                        "parent": {
-                                          "id": "<element-declaration>:@[L27:C1, L29:C2]",
-                                          "snippet": "indexes {\n...id name\n\t}"
-                                        },
                                         "variable": {
                                           "context": {
                                             "id": "<identifier>:id@[L28:C2, L28:C4]",
@@ -9350,10 +8698,6 @@
                                         "line": 28,
                                         "column": 2
                                       }
-                                    },
-                                    "parent": {
-                                      "id": "<element-declaration>:@[L27:C1, L29:C2]",
-                                      "snippet": "indexes {\n...id name\n\t}"
                                     }
                                   },
                                   "context": {
@@ -9381,10 +8725,6 @@
                                     "line": 28,
                                     "column": 2
                                   }
-                                },
-                                "parent": {
-                                  "id": "<element-declaration>:@[L27:C1, L29:C2]",
-                                  "snippet": "indexes {\n...id name\n\t}"
                                 }
                               },
                               "context": {
@@ -9407,11 +8747,7 @@
                                 "column": 2
                               }
                             }
-                          ],
-                          "parent": {
-                            "id": "<element-declaration>:@[L27:C1, L29:C2]",
-                            "snippet": "indexes {\n...id name\n\t}"
-                          }
+                          ]
                         },
                         "context": {
                           "id": "<block-expression>@[L27:C9, L29:C2]",
@@ -9432,10 +8768,6 @@
                           "line": 27,
                           "column": 9
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:citites@[L24:C0, L30:C1]",
-                        "snippet": "Table citi... name\n\t}\n}"
                       },
                       "type": {
                         "context": {
@@ -9494,11 +8826,7 @@
                       "references": []
                     }
                   }
-                ],
-                "parent": {
-                  "id": "<element-declaration>:citites@[L24:C0, L30:C1]",
-                  "snippet": "Table citi... name\n\t}\n}"
-                }
+                ]
               },
               "context": {
                 "id": "<block-expression>@[L24:C14, L30:C1]",
@@ -9524,10 +8852,6 @@
               "children": {
                 "expression": {
                   "children": {
-                    "parent": {
-                      "id": "<element-declaration>:citites@[L24:C0, L30:C1]",
-                      "snippet": "Table citi... name\n\t}\n}"
-                    },
                     "variable": {
                       "context": {
                         "id": "<identifier>:citites@[L24:C6, L24:C13]",
@@ -9573,10 +8897,6 @@
                     "line": 24,
                     "column": 6
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:citites@[L24:C0, L30:C1]",
-                  "snippet": "Table citi... name\n\t}\n}"
                 }
               },
               "context": {
@@ -9598,10 +8918,6 @@
                 "line": 24,
                 "column": 6
               }
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L30:C1]",
-              "snippet": "Table \"cus... name\n\t}\n}"
             },
             "type": {
               "context": {

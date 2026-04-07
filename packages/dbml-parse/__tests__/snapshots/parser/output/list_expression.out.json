@@ -94,10 +94,6 @@
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:ListExpression@[L0:C0, L5:C1]",
-                                  "snippet": "Test ListE...mpty. ]\r\n}"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<identifier>:integer@[L1:C7, L1:C14]",
@@ -143,10 +139,6 @@
                                 "line": 1,
                                 "column": 7
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:ListExpression@[L0:C0, L5:C1]",
-                              "snippet": "Test ListE...mpty. ]\r\n}"
                             }
                           },
                           "context": {
@@ -304,11 +296,7 @@
                                           "trailingTrivia": "",
                                           "value": "one"
                                         }
-                                      ],
-                                      "parent": {
-                                        "id": "<element-declaration>:ListExpression@[L0:C0, L5:C1]",
-                                        "snippet": "Test ListE...mpty. ]\r\n}"
-                                      }
+                                      ]
                                     },
                                     "context": {
                                       "id": "<identifer-stream>@[L1:C16, L1:C19]",
@@ -329,10 +317,6 @@
                                       "line": 1,
                                       "column": 16
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:ListExpression@[L0:C0, L5:C1]",
-                                    "snippet": "Test ListE...mpty. ]\r\n}"
                                   }
                                 },
                                 "context": {
@@ -410,11 +394,7 @@
                                           "trailingTrivia": "",
                                           "value": "two"
                                         }
-                                      ],
-                                      "parent": {
-                                        "id": "<element-declaration>:ListExpression@[L0:C0, L5:C1]",
-                                        "snippet": "Test ListE...mpty. ]\r\n}"
-                                      }
+                                      ]
                                     },
                                     "context": {
                                       "id": "<identifer-stream>@[L1:C21, L1:C24]",
@@ -435,10 +415,6 @@
                                       "line": 1,
                                       "column": 21
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:ListExpression@[L0:C0, L5:C1]",
-                                    "snippet": "Test ListE...mpty. ]\r\n}"
                                   },
                                   "value": {
                                     "children": {
@@ -468,10 +444,6 @@
                                             "trailingInvalid": "",
                                             "trailingTrivia": "",
                                             "value": "two"
-                                          },
-                                          "parent": {
-                                            "id": "<element-declaration>:ListExpression@[L0:C0, L5:C1]",
-                                            "snippet": "Test ListE...mpty. ]\r\n}"
                                           }
                                         },
                                         "context": {
@@ -493,10 +465,6 @@
                                           "line": 1,
                                           "column": 26
                                         }
-                                      },
-                                      "parent": {
-                                        "id": "<element-declaration>:ListExpression@[L0:C0, L5:C1]",
-                                        "snippet": "Test ListE...mpty. ]\r\n}"
                                       }
                                     },
                                     "context": {
@@ -595,11 +563,7 @@
                                           "trailingTrivia": "",
                                           "value": "three"
                                         }
-                                      ],
-                                      "parent": {
-                                        "id": "<element-declaration>:ListExpression@[L0:C0, L5:C1]",
-                                        "snippet": "Test ListE...mpty. ]\r\n}"
-                                      }
+                                      ]
                                     },
                                     "context": {
                                       "id": "<identifer-stream>@[L2:C16, L2:C21]",
@@ -620,10 +584,6 @@
                                       "line": 2,
                                       "column": 16
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:ListExpression@[L0:C0, L5:C1]",
-                                    "snippet": "Test ListE...mpty. ]\r\n}"
                                   },
                                   "value": {
                                     "children": {
@@ -653,10 +613,6 @@
                                             "trailingInvalid": "",
                                             "trailingTrivia": "",
                                             "value": "three"
-                                          },
-                                          "parent": {
-                                            "id": "<element-declaration>:ListExpression@[L0:C0, L5:C1]",
-                                            "snippet": "Test ListE...mpty. ]\r\n}"
                                           }
                                         },
                                         "context": {
@@ -678,10 +634,6 @@
                                           "line": 2,
                                           "column": 23
                                         }
-                                      },
-                                      "parent": {
-                                        "id": "<element-declaration>:ListExpression@[L0:C0, L5:C1]",
-                                        "snippet": "Test ListE...mpty. ]\r\n}"
                                       }
                                     },
                                     "context": {
@@ -780,11 +732,7 @@
                                           "trailingTrivia": "",
                                           "value": "key"
                                         }
-                                      ],
-                                      "parent": {
-                                        "id": "<element-declaration>:ListExpression@[L0:C0, L5:C1]",
-                                        "snippet": "Test ListE...mpty. ]\r\n}"
-                                      }
+                                      ]
                                     },
                                     "context": {
                                       "id": "<identifer-stream>@[L2:C32, L3:C19]",
@@ -805,10 +753,6 @@
                                       "line": 2,
                                       "column": 32
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:ListExpression@[L0:C0, L5:C1]",
-                                    "snippet": "Test ListE...mpty. ]\r\n}"
                                   }
                                 },
                                 "context": {
@@ -860,11 +804,7 @@
                                   },
                                   "name": {
                                     "children": {
-                                      "identifiers": [],
-                                      "parent": {
-                                        "id": "<element-declaration>:ListExpression@[L0:C0, L5:C1]",
-                                        "snippet": "Test ListE...mpty. ]\r\n}"
-                                      }
+                                      "identifiers": []
                                     },
                                     "context": {
                                       "id": "<identifer-stream>@[LNaN:CNaN, LNaN:CNaN]",
@@ -885,10 +825,6 @@
                                       "column": null,
                                       "line": null
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:ListExpression@[L0:C0, L5:C1]",
-                                    "snippet": "Test ListE...mpty. ]\r\n}"
                                   },
                                   "value": {
                                     "children": {
@@ -918,10 +854,6 @@
                                             "trailingInvalid": "",
                                             "trailingTrivia": " ",
                                             "value": "invalid-attribute"
-                                          },
-                                          "parent": {
-                                            "id": "<element-declaration>:ListExpression@[L0:C0, L5:C1]",
-                                            "snippet": "Test ListE...mpty. ]\r\n}"
                                           }
                                         },
                                         "context": {
@@ -943,10 +875,6 @@
                                           "line": 3,
                                           "column": 23
                                         }
-                                      },
-                                      "parent": {
-                                        "id": "<element-declaration>:ListExpression@[L0:C0, L5:C1]",
-                                        "snippet": "Test ListE...mpty. ]\r\n}"
                                       }
                                     },
                                     "context": {
@@ -1040,10 +968,6 @@
                               "trailingInvalid": "",
                               "trailingTrivia": "",
                               "value": "["
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:ListExpression@[L0:C0, L5:C1]",
-                              "snippet": "Test ListE...mpty. ]\r\n}"
                             }
                           },
                           "context": {
@@ -1071,10 +995,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:ListExpression@[L0:C0, L5:C1]",
-                                "snippet": "Test ListE...mpty. ]\r\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:id@[L1:C4, L1:C6]",
@@ -1120,10 +1040,6 @@
                               "line": 1,
                               "column": 4
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:ListExpression@[L0:C0, L5:C1]",
-                            "snippet": "Test ListE...mpty. ]\r\n}"
                           }
                         },
                         "context": {
@@ -1145,10 +1061,6 @@
                           "line": 1,
                           "column": 4
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:ListExpression@[L0:C0, L5:C1]",
-                        "snippet": "Test ListE...mpty. ]\r\n}"
                       }
                     },
                     "context": {
@@ -1178,10 +1090,6 @@
                           "children": {
                             "expression": {
                               "children": {
-                                "parent": {
-                                  "id": "<element-declaration>:ListExpression@[L0:C0, L5:C1]",
-                                  "snippet": "Test ListE...mpty. ]\r\n}"
-                                },
                                 "variable": {
                                   "context": {
                                     "id": "<variable>: gibberish type @[L4:C8, L4:C26]",
@@ -1227,10 +1135,6 @@
                                 "line": 4,
                                 "column": 8
                               }
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:ListExpression@[L0:C0, L5:C1]",
-                              "snippet": "Test ListE...mpty. ]\r\n}"
                             }
                           },
                           "context": {
@@ -1312,11 +1216,7 @@
                                           "trailingTrivia": "",
                                           "value": "ref"
                                         }
-                                      ],
-                                      "parent": {
-                                        "id": "<element-declaration>:ListExpression@[L0:C0, L5:C1]",
-                                        "snippet": "Test ListE...mpty. ]\r\n}"
-                                      }
+                                      ]
                                     },
                                     "context": {
                                       "id": "<identifer-stream>@[L4:C28, L4:C31]",
@@ -1338,20 +1238,12 @@
                                       "column": 28
                                     }
                                   },
-                                  "parent": {
-                                    "id": "<element-declaration>:ListExpression@[L0:C0, L5:C1]",
-                                    "snippet": "Test ListE...mpty. ]\r\n}"
-                                  },
                                   "value": {
                                     "children": {
                                       "leftExpression": {
                                         "children": {
                                           "expression": {
                                             "children": {
-                                              "parent": {
-                                                "id": "<element-declaration>:ListExpression@[L0:C0, L5:C1]",
-                                                "snippet": "Test ListE...mpty. ]\r\n}"
-                                              },
                                               "variable": {
                                                 "context": {
                                                   "id": "<identifier>:empty@[L4:C33, L4:C38]",
@@ -1397,10 +1289,6 @@
                                               "line": 4,
                                               "column": 33
                                             }
-                                          },
-                                          "parent": {
-                                            "id": "<element-declaration>:ListExpression@[L0:C0, L5:C1]",
-                                            "snippet": "Test ListE...mpty. ]\r\n}"
                                           }
                                         },
                                         "context": {
@@ -1448,17 +1336,8 @@
                                         "trailingTrivia": " ",
                                         "value": "."
                                       },
-                                      "parent": {
-                                        "id": "<element-declaration>:ListExpression@[L0:C0, L5:C1]",
-                                        "snippet": "Test ListE...mpty. ]\r\n}"
-                                      },
                                       "rightExpression": {
-                                        "children": {
-                                          "parent": {
-                                            "id": "<element-declaration>:ListExpression@[L0:C0, L5:C1]",
-                                            "snippet": "Test ListE...mpty. ]\r\n}"
-                                          }
-                                        },
+                                        "children": {},
                                         "context": {
                                           "id": "<dummy>@[L4:C39, L4:C39]",
                                           "snippet": ""
@@ -1571,10 +1450,6 @@
                               "trailingInvalid": "",
                               "trailingTrivia": "",
                               "value": "["
-                            },
-                            "parent": {
-                              "id": "<element-declaration>:ListExpression@[L0:C0, L5:C1]",
-                              "snippet": "Test ListE...mpty. ]\r\n}"
                             }
                           },
                           "context": {
@@ -1602,10 +1477,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:ListExpression@[L0:C0, L5:C1]",
-                                "snippet": "Test ListE...mpty. ]\r\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:abc@[L4:C4, L4:C7]",
@@ -1651,10 +1522,6 @@
                               "line": 4,
                               "column": 4
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:ListExpression@[L0:C0, L5:C1]",
-                            "snippet": "Test ListE...mpty. ]\r\n}"
                           }
                         },
                         "context": {
@@ -1676,10 +1543,6 @@
                           "line": 4,
                           "column": 4
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:ListExpression@[L0:C0, L5:C1]",
-                        "snippet": "Test ListE...mpty. ]\r\n}"
                       }
                     },
                     "context": {
@@ -1702,11 +1565,7 @@
                       "column": 4
                     }
                   }
-                ],
-                "parent": {
-                  "id": "<element-declaration>:ListExpression@[L0:C0, L5:C1]",
-                  "snippet": "Test ListE...mpty. ]\r\n}"
-                }
+                ]
               },
               "context": {
                 "id": "<block-expression>@[L0:C20, L5:C1]",
@@ -1732,10 +1591,6 @@
               "children": {
                 "expression": {
                   "children": {
-                    "parent": {
-                      "id": "<element-declaration>:ListExpression@[L0:C0, L5:C1]",
-                      "snippet": "Test ListE...mpty. ]\r\n}"
-                    },
                     "variable": {
                       "context": {
                         "id": "<identifier>:ListExpression@[L0:C5, L0:C19]",
@@ -1781,10 +1636,6 @@
                     "line": 0,
                     "column": 5
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:ListExpression@[L0:C0, L5:C1]",
-                  "snippet": "Test ListE...mpty. ]\r\n}"
                 }
               },
               "context": {
@@ -1806,10 +1657,6 @@
                 "line": 0,
                 "column": 5
               }
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L5:C1]",
-              "snippet": "Test ListE...mpty. ]\r\n}"
             },
             "type": {
               "context": {

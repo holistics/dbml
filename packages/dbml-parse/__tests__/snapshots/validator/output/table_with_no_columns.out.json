@@ -57,11 +57,7 @@
                   "trailingTrivia": "\n",
                   "value": "{"
                 },
-                "body": [],
-                "parent": {
-                  "id": "<element-declaration>:empty_table@[L0:C0, L1:C1]",
-                  "snippet": "Table empt..._table {\n}"
-                }
+                "body": []
               },
               "context": {
                 "id": "<block-expression>@[L0:C18, L1:C1]",
@@ -87,10 +83,6 @@
               "children": {
                 "expression": {
                   "children": {
-                    "parent": {
-                      "id": "<element-declaration>:empty_table@[L0:C0, L1:C1]",
-                      "snippet": "Table empt..._table {\n}"
-                    },
                     "variable": {
                       "context": {
                         "id": "<identifier>:empty_table@[L0:C6, L0:C17]",
@@ -136,10 +128,6 @@
                     "line": 0,
                     "column": 6
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:empty_table@[L0:C0, L1:C1]",
-                  "snippet": "Table empt..._table {\n}"
                 }
               },
               "context": {
@@ -161,10 +149,6 @@
                 "line": 0,
                 "column": 6
               }
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L2:C0]",
-              "snippet": "Table empt...table {\n}\n"
             },
             "type": {
               "context": {

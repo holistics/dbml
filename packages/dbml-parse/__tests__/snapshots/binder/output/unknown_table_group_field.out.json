@@ -71,11 +71,7 @@
                   "trailingTrivia": "\n",
                   "value": "{"
                 },
-                "body": [],
-                "parent": {
-                  "id": "<element-declaration>:Users@[L0:C0, L2:C1]",
-                  "snippet": "Table Users {\r\n\r\n}"
-                }
+                "body": []
               },
               "context": {
                 "id": "<block-expression>@[L0:C12, L2:C1]",
@@ -101,10 +97,6 @@
               "children": {
                 "expression": {
                   "children": {
-                    "parent": {
-                      "id": "<element-declaration>:Users@[L0:C0, L2:C1]",
-                      "snippet": "Table Users {\r\n\r\n}"
-                    },
                     "variable": {
                       "context": {
                         "id": "<identifier>:Users@[L0:C6, L0:C11]",
@@ -150,10 +142,6 @@
                     "line": 0,
                     "column": 6
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:Users@[L0:C0, L2:C1]",
-                  "snippet": "Table Users {\r\n\r\n}"
                 }
               },
               "context": {
@@ -175,10 +163,6 @@
                 "line": 0,
                 "column": 6
               }
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L7:C1]",
-              "snippet": "Table User...roducts\r\n}"
             },
             "type": {
               "context": {
@@ -305,10 +289,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:Group@[L4:C0, L7:C1]",
-                                "snippet": "Tablegroup...roducts\r\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:Users@[L5:C4, L5:C9]",
@@ -354,10 +334,6 @@
                               "line": 5,
                               "column": 4
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:Group@[L4:C0, L7:C1]",
-                            "snippet": "Tablegroup...roducts\r\n}"
                           }
                         },
                         "context": {
@@ -385,10 +361,6 @@
                           "line": 5,
                           "column": 4
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:Group@[L4:C0, L7:C1]",
-                        "snippet": "Tablegroup...roducts\r\n}"
                       }
                     },
                     "context": {
@@ -430,10 +402,6 @@
                         "children": {
                           "expression": {
                             "children": {
-                              "parent": {
-                                "id": "<element-declaration>:Group@[L4:C0, L7:C1]",
-                                "snippet": "Tablegroup...roducts\r\n}"
-                              },
                               "variable": {
                                 "context": {
                                   "id": "<identifier>:Products@[L6:C4, L6:C12]",
@@ -479,10 +447,6 @@
                               "line": 6,
                               "column": 4
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:Group@[L4:C0, L7:C1]",
-                            "snippet": "Tablegroup...roducts\r\n}"
                           }
                         },
                         "context": {
@@ -504,10 +468,6 @@
                           "line": 6,
                           "column": 4
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:Group@[L4:C0, L7:C1]",
-                        "snippet": "Tablegroup...roducts\r\n}"
                       }
                     },
                     "context": {
@@ -542,11 +502,7 @@
                       "references": []
                     }
                   }
-                ],
-                "parent": {
-                  "id": "<element-declaration>:Group@[L4:C0, L7:C1]",
-                  "snippet": "Tablegroup...roducts\r\n}"
-                }
+                ]
               },
               "context": {
                 "id": "<block-expression>@[L4:C17, L7:C1]",
@@ -572,10 +528,6 @@
               "children": {
                 "expression": {
                   "children": {
-                    "parent": {
-                      "id": "<element-declaration>:Group@[L4:C0, L7:C1]",
-                      "snippet": "Tablegroup...roducts\r\n}"
-                    },
                     "variable": {
                       "context": {
                         "id": "<identifier>:Group@[L4:C11, L4:C16]",
@@ -621,10 +573,6 @@
                     "line": 4,
                     "column": 11
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:Group@[L4:C0, L7:C1]",
-                  "snippet": "Tablegroup...roducts\r\n}"
                 }
               },
               "context": {
@@ -646,10 +594,6 @@
                 "line": 4,
                 "column": 11
               }
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L7:C1]",
-              "snippet": "Table User...roducts\r\n}"
             },
             "type": {
               "context": {

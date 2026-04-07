@@ -77,12 +77,7 @@
                     "children": {
                       "args": [],
                       "callee": {
-                        "children": {
-                          "parent": {
-                            "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                            "snippet": "Test Expre...++---+1\r\n}"
-                          }
-                        },
+                        "children": {},
                         "context": {
                           "id": "<dummy>@[L1:C5, L1:C5]",
                           "snippet": ""
@@ -102,10 +97,6 @@
                           "line": 1,
                           "column": 5
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                        "snippet": "Test Expre...++---+1\r\n}"
                       }
                     },
                     "context": {
@@ -161,10 +152,6 @@
                                     "trailingInvalid": "",
                                     "trailingTrivia": " ",
                                     "value": "1"
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                    "snippet": "Test Expre...++---+1\r\n}"
                                   }
                                 },
                                 "context": {
@@ -186,10 +173,6 @@
                                   "line": 3,
                                   "column": 4
                                 }
-                              },
-                              "parent": {
-                                "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                "snippet": "Test Expre...++---+1\r\n}"
                               }
                             },
                             "context": {
@@ -237,10 +220,6 @@
                             "trailingTrivia": " ",
                             "value": "+"
                           },
-                          "parent": {
-                            "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                            "snippet": "Test Expre...++---+1\r\n}"
-                          },
                           "rightExpression": {
                             "children": {
                               "leftExpression": {
@@ -271,10 +250,6 @@
                                         "trailingInvalid": "",
                                         "trailingTrivia": " ",
                                         "value": "2"
-                                      },
-                                      "parent": {
-                                        "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                        "snippet": "Test Expre...++---+1\r\n}"
                                       }
                                     },
                                     "context": {
@@ -296,10 +271,6 @@
                                       "line": 3,
                                       "column": 8
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                    "snippet": "Test Expre...++---+1\r\n}"
                                   }
                                 },
                                 "context": {
@@ -347,10 +318,6 @@
                                 "trailingTrivia": " ",
                                 "value": "*"
                               },
-                              "parent": {
-                                "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                "snippet": "Test Expre...++---+1\r\n}"
-                              },
                               "rightExpression": {
                                 "children": {
                                   "expression": {
@@ -379,10 +346,6 @@
                                         "trailingInvalid": "",
                                         "trailingTrivia": "\n",
                                         "value": "3"
-                                      },
-                                      "parent": {
-                                        "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                        "snippet": "Test Expre...++---+1\r\n}"
                                       }
                                     },
                                     "context": {
@@ -404,10 +367,6 @@
                                       "line": 3,
                                       "column": 12
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                    "snippet": "Test Expre...++---+1\r\n}"
                                   }
                                 },
                                 "context": {
@@ -471,10 +430,6 @@
                           "line": 3,
                           "column": 4
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                        "snippet": "Test Expre...++---+1\r\n}"
                       }
                     },
                     "context": {
@@ -532,10 +487,6 @@
                                         "trailingInvalid": "",
                                         "trailingTrivia": " ",
                                         "value": "1"
-                                      },
-                                      "parent": {
-                                        "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                        "snippet": "Test Expre...++---+1\r\n}"
                                       }
                                     },
                                     "context": {
@@ -557,10 +508,6 @@
                                       "line": 4,
                                       "column": 4
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                    "snippet": "Test Expre...++---+1\r\n}"
                                   }
                                 },
                                 "context": {
@@ -608,10 +555,6 @@
                                 "trailingTrivia": " ",
                                 "value": "+"
                               },
-                              "parent": {
-                                "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                "snippet": "Test Expre...++---+1\r\n}"
-                              },
                               "rightExpression": {
                                 "children": {
                                   "expression": {
@@ -640,10 +583,6 @@
                                         "trailingInvalid": "",
                                         "trailingTrivia": " ",
                                         "value": "2"
-                                      },
-                                      "parent": {
-                                        "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                        "snippet": "Test Expre...++---+1\r\n}"
                                       }
                                     },
                                     "context": {
@@ -665,10 +604,6 @@
                                       "line": 4,
                                       "column": 8
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                    "snippet": "Test Expre...++---+1\r\n}"
                                   }
                                 },
                                 "context": {
@@ -737,10 +672,6 @@
                             "trailingTrivia": " ",
                             "value": "+"
                           },
-                          "parent": {
-                            "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                            "snippet": "Test Expre...++---+1\r\n}"
-                          },
                           "rightExpression": {
                             "children": {
                               "expression": {
@@ -769,10 +700,6 @@
                                     "trailingInvalid": "",
                                     "trailingTrivia": "\n",
                                     "value": "3"
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                    "snippet": "Test Expre...++---+1\r\n}"
                                   }
                                 },
                                 "context": {
@@ -794,10 +721,6 @@
                                   "line": 4,
                                   "column": 12
                                 }
-                              },
-                              "parent": {
-                                "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                "snippet": "Test Expre...++---+1\r\n}"
                               }
                             },
                             "context": {
@@ -840,10 +763,6 @@
                           "line": 4,
                           "column": 4
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                        "snippet": "Test Expre...++---+1\r\n}"
                       }
                     },
                     "context": {
@@ -901,10 +820,6 @@
                                         "trailingInvalid": "",
                                         "trailingTrivia": " ",
                                         "value": "1"
-                                      },
-                                      "parent": {
-                                        "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                        "snippet": "Test Expre...++---+1\r\n}"
                                       }
                                     },
                                     "context": {
@@ -926,10 +841,6 @@
                                       "line": 5,
                                       "column": 4
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                    "snippet": "Test Expre...++---+1\r\n}"
                                   }
                                 },
                                 "context": {
@@ -977,10 +888,6 @@
                                 "trailingTrivia": " ",
                                 "value": "+"
                               },
-                              "parent": {
-                                "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                "snippet": "Test Expre...++---+1\r\n}"
-                              },
                               "rightExpression": {
                                 "children": {
                                   "expression": {
@@ -1011,10 +918,6 @@
                                             "trailingInvalid": "",
                                             "trailingTrivia": " ",
                                             "value": "2"
-                                          },
-                                          "parent": {
-                                            "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                            "snippet": "Test Expre...++---+1\r\n}"
                                           }
                                         },
                                         "context": {
@@ -1036,10 +939,6 @@
                                           "line": 5,
                                           "column": 9
                                         }
-                                      },
-                                      "parent": {
-                                        "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                        "snippet": "Test Expre...++---+1\r\n}"
                                       }
                                     },
                                     "context": {
@@ -1086,10 +985,6 @@
                                     "trailingInvalid": "",
                                     "trailingTrivia": "",
                                     "value": "-"
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                    "snippet": "Test Expre...++---+1\r\n}"
                                   }
                                 },
                                 "context": {
@@ -1158,10 +1053,6 @@
                             "trailingTrivia": " ",
                             "value": "+"
                           },
-                          "parent": {
-                            "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                            "snippet": "Test Expre...++---+1\r\n}"
-                          },
                           "rightExpression": {
                             "children": {
                               "expression": {
@@ -1190,10 +1081,6 @@
                                     "trailingInvalid": "",
                                     "trailingTrivia": "\n",
                                     "value": "3"
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                    "snippet": "Test Expre...++---+1\r\n}"
                                   }
                                 },
                                 "context": {
@@ -1215,10 +1102,6 @@
                                   "line": 5,
                                   "column": 13
                                 }
-                              },
-                              "parent": {
-                                "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                "snippet": "Test Expre...++---+1\r\n}"
                               }
                             },
                             "context": {
@@ -1261,10 +1144,6 @@
                           "line": 5,
                           "column": 4
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                        "snippet": "Test Expre...++---+1\r\n}"
                       }
                     },
                     "context": {
@@ -1326,10 +1205,6 @@
                                               "trailingInvalid": "",
                                               "trailingTrivia": " ",
                                               "value": "1"
-                                            },
-                                            "parent": {
-                                              "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                              "snippet": "Test Expre...++---+1\r\n}"
                                             }
                                           },
                                           "context": {
@@ -1351,10 +1226,6 @@
                                             "line": 6,
                                             "column": 5
                                           }
-                                        },
-                                        "parent": {
-                                          "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                          "snippet": "Test Expre...++---+1\r\n}"
                                         }
                                       },
                                       "context": {
@@ -1402,10 +1273,6 @@
                                       "trailingTrivia": " ",
                                       "value": "-"
                                     },
-                                    "parent": {
-                                      "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                      "snippet": "Test Expre...++---+1\r\n}"
-                                    },
                                     "rightExpression": {
                                       "children": {
                                         "expression": {
@@ -1434,10 +1301,6 @@
                                               "trailingInvalid": "",
                                               "trailingTrivia": "",
                                               "value": "2"
-                                            },
-                                            "parent": {
-                                              "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                              "snippet": "Test Expre...++---+1\r\n}"
                                             }
                                           },
                                           "context": {
@@ -1459,10 +1322,6 @@
                                             "line": 6,
                                             "column": 9
                                           }
-                                        },
-                                        "parent": {
-                                          "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                          "snippet": "Test Expre...++---+1\r\n}"
                                         }
                                       },
                                       "context": {
@@ -1507,10 +1366,6 @@
                                   }
                                 }
                               ],
-                              "parent": {
-                                "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                "snippet": "Test Expre...++---+1\r\n}"
-                              },
                               "tupleCloseParen": {
                                 "context": {
                                   "id": "<rparen>:)@[L6:C10, L6:C11]",
@@ -1607,10 +1462,6 @@
                             "trailingTrivia": " ",
                             "value": "+"
                           },
-                          "parent": {
-                            "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                            "snippet": "Test Expre...++---+1\r\n}"
-                          },
                           "rightExpression": {
                             "children": {
                               "expression": {
@@ -1639,10 +1490,6 @@
                                     "trailingInvalid": "",
                                     "trailingTrivia": "\n",
                                     "value": "3"
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                    "snippet": "Test Expre...++---+1\r\n}"
                                   }
                                 },
                                 "context": {
@@ -1664,10 +1511,6 @@
                                   "line": 6,
                                   "column": 14
                                 }
-                              },
-                              "parent": {
-                                "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                "snippet": "Test Expre...++---+1\r\n}"
                               }
                             },
                             "context": {
@@ -1710,10 +1553,6 @@
                           "line": 6,
                           "column": 4
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                        "snippet": "Test Expre...++---+1\r\n}"
                       }
                     },
                     "context": {
@@ -1771,10 +1610,6 @@
                                         "trailingInvalid": "",
                                         "trailingTrivia": " ",
                                         "value": "1"
-                                      },
-                                      "parent": {
-                                        "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                        "snippet": "Test Expre...++---+1\r\n}"
                                       }
                                     },
                                     "context": {
@@ -1796,10 +1631,6 @@
                                       "line": 7,
                                       "column": 4
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                    "snippet": "Test Expre...++---+1\r\n}"
                                   }
                                 },
                                 "context": {
@@ -1847,10 +1678,6 @@
                                 "trailingTrivia": " ",
                                 "value": "+"
                               },
-                              "parent": {
-                                "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                "snippet": "Test Expre...++---+1\r\n}"
-                              },
                               "rightExpression": {
                                 "children": {
                                   "expression": {
@@ -1879,10 +1706,6 @@
                                         "trailingInvalid": "",
                                         "trailingTrivia": " ",
                                         "value": "2.0"
-                                      },
-                                      "parent": {
-                                        "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                        "snippet": "Test Expre...++---+1\r\n}"
                                       }
                                     },
                                     "context": {
@@ -1904,10 +1727,6 @@
                                       "line": 7,
                                       "column": 8
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                    "snippet": "Test Expre...++---+1\r\n}"
                                   }
                                 },
                                 "context": {
@@ -1976,10 +1795,6 @@
                             "trailingTrivia": " ",
                             "value": "-"
                           },
-                          "parent": {
-                            "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                            "snippet": "Test Expre...++---+1\r\n}"
-                          },
                           "rightExpression": {
                             "children": {
                               "expression": {
@@ -2008,10 +1823,6 @@
                                     "trailingInvalid": "",
                                     "trailingTrivia": "\n",
                                     "value": "3.2"
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                    "snippet": "Test Expre...++---+1\r\n}"
                                   }
                                 },
                                 "context": {
@@ -2033,10 +1844,6 @@
                                   "line": 7,
                                   "column": 14
                                 }
-                              },
-                              "parent": {
-                                "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                "snippet": "Test Expre...++---+1\r\n}"
                               }
                             },
                             "context": {
@@ -2079,10 +1886,6 @@
                           "line": 7,
                           "column": 4
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                        "snippet": "Test Expre...++---+1\r\n}"
                       }
                     },
                     "context": {
@@ -2140,10 +1943,6 @@
                                         "trailingInvalid": "",
                                         "trailingTrivia": " ",
                                         "value": "1"
-                                      },
-                                      "parent": {
-                                        "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                        "snippet": "Test Expre...++---+1\r\n}"
                                       }
                                     },
                                     "context": {
@@ -2165,10 +1964,6 @@
                                       "line": 9,
                                       "column": 4
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                    "snippet": "Test Expre...++---+1\r\n}"
                                   }
                                 },
                                 "context": {
@@ -2216,10 +2011,6 @@
                                 "trailingTrivia": "\n",
                                 "value": "+"
                               },
-                              "parent": {
-                                "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                "snippet": "Test Expre...++---+1\r\n}"
-                              },
                               "rightExpression": {
                                 "children": {
                                   "expression": {
@@ -2248,10 +2039,6 @@
                                         "trailingInvalid": "",
                                         "trailingTrivia": " ",
                                         "value": "2"
-                                      },
-                                      "parent": {
-                                        "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                        "snippet": "Test Expre...++---+1\r\n}"
                                       }
                                     },
                                     "context": {
@@ -2273,10 +2060,6 @@
                                       "line": 10,
                                       "column": 4
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                    "snippet": "Test Expre...++---+1\r\n}"
                                   }
                                 },
                                 "context": {
@@ -2345,10 +2128,6 @@
                             "trailingTrivia": "\n",
                             "value": "+"
                           },
-                          "parent": {
-                            "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                            "snippet": "Test Expre...++---+1\r\n}"
-                          },
                           "rightExpression": {
                             "children": {
                               "expression": {
@@ -2377,10 +2156,6 @@
                                     "trailingInvalid": "",
                                     "trailingTrivia": "\n",
                                     "value": "3"
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                    "snippet": "Test Expre...++---+1\r\n}"
                                   }
                                 },
                                 "context": {
@@ -2402,10 +2177,6 @@
                                   "line": 11,
                                   "column": 4
                                 }
-                              },
-                              "parent": {
-                                "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                "snippet": "Test Expre...++---+1\r\n}"
                               }
                             },
                             "context": {
@@ -2448,10 +2219,6 @@
                           "line": 9,
                           "column": 4
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                        "snippet": "Test Expre...++---+1\r\n}"
                       }
                     },
                     "context": {
@@ -2509,10 +2276,6 @@
                                         "trailingInvalid": "",
                                         "trailingTrivia": "\n",
                                         "value": "1"
-                                      },
-                                      "parent": {
-                                        "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                        "snippet": "Test Expre...++---+1\r\n}"
                                       }
                                     },
                                     "context": {
@@ -2534,10 +2297,6 @@
                                       "line": 13,
                                       "column": 4
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                    "snippet": "Test Expre...++---+1\r\n}"
                                   }
                                 },
                                 "context": {
@@ -2585,10 +2344,6 @@
                                 "trailingTrivia": " ",
                                 "value": "+"
                               },
-                              "parent": {
-                                "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                "snippet": "Test Expre...++---+1\r\n}"
-                              },
                               "rightExpression": {
                                 "children": {
                                   "expression": {
@@ -2617,10 +2372,6 @@
                                         "trailingInvalid": "",
                                         "trailingTrivia": "\n",
                                         "value": "2"
-                                      },
-                                      "parent": {
-                                        "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                        "snippet": "Test Expre...++---+1\r\n}"
                                       }
                                     },
                                     "context": {
@@ -2642,10 +2393,6 @@
                                       "line": 14,
                                       "column": 6
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                    "snippet": "Test Expre...++---+1\r\n}"
                                   }
                                 },
                                 "context": {
@@ -2714,10 +2461,6 @@
                             "trailingTrivia": " ",
                             "value": "+"
                           },
-                          "parent": {
-                            "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                            "snippet": "Test Expre...++---+1\r\n}"
-                          },
                           "rightExpression": {
                             "children": {
                               "expression": {
@@ -2746,10 +2489,6 @@
                                     "trailingInvalid": "",
                                     "trailingTrivia": "\n",
                                     "value": "3"
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                    "snippet": "Test Expre...++---+1\r\n}"
                                   }
                                 },
                                 "context": {
@@ -2771,10 +2510,6 @@
                                   "line": 15,
                                   "column": 6
                                 }
-                              },
-                              "parent": {
-                                "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                "snippet": "Test Expre...++---+1\r\n}"
                               }
                             },
                             "context": {
@@ -2817,10 +2552,6 @@
                           "line": 13,
                           "column": 4
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                        "snippet": "Test Expre...++---+1\r\n}"
                       }
                     },
                     "context": {
@@ -2854,10 +2585,6 @@
                                 "children": {
                                   "expression": {
                                     "children": {
-                                      "parent": {
-                                        "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                        "snippet": "Test Expre...++---+1\r\n}"
-                                      },
                                       "variable": {
                                         "context": {
                                           "id": "<identifier>:a@[L17:C4, L17:C5]",
@@ -2903,10 +2630,6 @@
                                       "line": 17,
                                       "column": 4
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                    "snippet": "Test Expre...++---+1\r\n}"
                                   }
                                 },
                                 "context": {
@@ -2954,18 +2677,10 @@
                                 "trailingTrivia": "",
                                 "value": "."
                               },
-                              "parent": {
-                                "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                "snippet": "Test Expre...++---+1\r\n}"
-                              },
                               "rightExpression": {
                                 "children": {
                                   "expression": {
                                     "children": {
-                                      "parent": {
-                                        "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                        "snippet": "Test Expre...++---+1\r\n}"
-                                      },
                                       "variable": {
                                         "context": {
                                           "id": "<identifier>:b@[L17:C6, L17:C7]",
@@ -3011,10 +2726,6 @@
                                       "line": 17,
                                       "column": 6
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                    "snippet": "Test Expre...++---+1\r\n}"
                                   }
                                 },
                                 "context": {
@@ -3083,18 +2794,10 @@
                             "trailingTrivia": "",
                             "value": "."
                           },
-                          "parent": {
-                            "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                            "snippet": "Test Expre...++---+1\r\n}"
-                          },
                           "rightExpression": {
                             "children": {
                               "expression": {
                                 "children": {
-                                  "parent": {
-                                    "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                    "snippet": "Test Expre...++---+1\r\n}"
-                                  },
                                   "variable": {
                                     "context": {
                                       "id": "<identifier>:c@[L17:C8, L17:C9]",
@@ -3140,10 +2843,6 @@
                                   "line": 17,
                                   "column": 8
                                 }
-                              },
-                              "parent": {
-                                "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                "snippet": "Test Expre...++---+1\r\n}"
                               }
                             },
                             "context": {
@@ -3186,10 +2885,6 @@
                           "line": 17,
                           "column": 4
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                        "snippet": "Test Expre...++---+1\r\n}"
                       }
                     },
                     "context": {
@@ -3223,10 +2918,6 @@
                                 "children": {
                                   "expression": {
                                     "children": {
-                                      "parent": {
-                                        "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                        "snippet": "Test Expre...++---+1\r\n}"
-                                      },
                                       "variable": {
                                         "context": {
                                           "id": "<identifier>:a@[L19:C4, L19:C5]",
@@ -3272,10 +2963,6 @@
                                       "line": 19,
                                       "column": 4
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                    "snippet": "Test Expre...++---+1\r\n}"
                                   }
                                 },
                                 "context": {
@@ -3323,18 +3010,10 @@
                                 "trailingTrivia": "\n",
                                 "value": "."
                               },
-                              "parent": {
-                                "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                "snippet": "Test Expre...++---+1\r\n}"
-                              },
                               "rightExpression": {
                                 "children": {
                                   "expression": {
                                     "children": {
-                                      "parent": {
-                                        "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                        "snippet": "Test Expre...++---+1\r\n}"
-                                      },
                                       "variable": {
                                         "context": {
                                           "id": "<identifier>:b@[L20:C4, L20:C5]",
@@ -3380,10 +3059,6 @@
                                       "line": 20,
                                       "column": 4
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                    "snippet": "Test Expre...++---+1\r\n}"
                                   }
                                 },
                                 "context": {
@@ -3452,18 +3127,10 @@
                             "trailingTrivia": "\n",
                             "value": "."
                           },
-                          "parent": {
-                            "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                            "snippet": "Test Expre...++---+1\r\n}"
-                          },
                           "rightExpression": {
                             "children": {
                               "expression": {
                                 "children": {
-                                  "parent": {
-                                    "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                    "snippet": "Test Expre...++---+1\r\n}"
-                                  },
                                   "variable": {
                                     "context": {
                                       "id": "<identifier>:c@[L21:C4, L21:C5]",
@@ -3509,10 +3176,6 @@
                                   "line": 21,
                                   "column": 4
                                 }
-                              },
-                              "parent": {
-                                "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                "snippet": "Test Expre...++---+1\r\n}"
                               }
                             },
                             "context": {
@@ -3555,10 +3218,6 @@
                           "line": 19,
                           "column": 4
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                        "snippet": "Test Expre...++---+1\r\n}"
                       }
                     },
                     "context": {
@@ -3592,10 +3251,6 @@
                                 "children": {
                                   "expression": {
                                     "children": {
-                                      "parent": {
-                                        "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                        "snippet": "Test Expre...++---+1\r\n}"
-                                      },
                                       "variable": {
                                         "context": {
                                           "id": "<identifier>:a@[L23:C4, L23:C5]",
@@ -3641,10 +3296,6 @@
                                       "line": 23,
                                       "column": 4
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                    "snippet": "Test Expre...++---+1\r\n}"
                                   }
                                 },
                                 "context": {
@@ -3692,18 +3343,10 @@
                                 "trailingTrivia": "",
                                 "value": "."
                               },
-                              "parent": {
-                                "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                "snippet": "Test Expre...++---+1\r\n}"
-                              },
                               "rightExpression": {
                                 "children": {
                                   "expression": {
                                     "children": {
-                                      "parent": {
-                                        "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                        "snippet": "Test Expre...++---+1\r\n}"
-                                      },
                                       "variable": {
                                         "context": {
                                           "id": "<identifier>:b@[L23:C6, L23:C7]",
@@ -3749,10 +3392,6 @@
                                       "line": 23,
                                       "column": 6
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                    "snippet": "Test Expre...++---+1\r\n}"
                                   }
                                 },
                                 "context": {
@@ -3821,18 +3460,10 @@
                             "trailingTrivia": "",
                             "value": "."
                           },
-                          "parent": {
-                            "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                            "snippet": "Test Expre...++---+1\r\n}"
-                          },
                           "rightExpression": {
                             "children": {
                               "expression": {
                                 "children": {
-                                  "parent": {
-                                    "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                    "snippet": "Test Expre...++---+1\r\n}"
-                                  },
                                   "variable": {
                                     "context": {
                                       "id": "<identifier>:c@[L24:C6, L24:C7]",
@@ -3878,10 +3509,6 @@
                                   "line": 24,
                                   "column": 6
                                 }
-                              },
-                              "parent": {
-                                "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                "snippet": "Test Expre...++---+1\r\n}"
                               }
                             },
                             "context": {
@@ -3924,10 +3551,6 @@
                           "line": 23,
                           "column": 4
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                        "snippet": "Test Expre...++---+1\r\n}"
                       }
                     },
                     "context": {
@@ -3959,10 +3582,6 @@
                             "children": {
                               "commaList": [],
                               "elementList": [],
-                              "parent": {
-                                "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                "snippet": "Test Expre...++---+1\r\n}"
-                              },
                               "tupleCloseParen": {
                                 "context": {
                                   "id": "<rparen>:)@[L26:C6, L26:C7]",
@@ -4038,10 +3657,6 @@
                             "children": {
                               "expression": {
                                 "children": {
-                                  "parent": {
-                                    "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                    "snippet": "Test Expre...++---+1\r\n}"
-                                  },
                                   "variable": {
                                     "context": {
                                       "id": "<identifier>:f@[L26:C4, L26:C5]",
@@ -4087,10 +3702,6 @@
                                   "line": 26,
                                   "column": 4
                                 }
-                              },
-                              "parent": {
-                                "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                "snippet": "Test Expre...++---+1\r\n}"
                               }
                             },
                             "context": {
@@ -4112,10 +3723,6 @@
                               "line": 26,
                               "column": 4
                             }
-                          },
-                          "parent": {
-                            "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                            "snippet": "Test Expre...++---+1\r\n}"
                           }
                         },
                         "context": {
@@ -4137,10 +3744,6 @@
                           "line": 26,
                           "column": 4
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                        "snippet": "Test Expre...++---+1\r\n}"
                       }
                     },
                     "context": {
@@ -4249,10 +3852,6 @@
                                       "trailingInvalid": "",
                                       "trailingTrivia": "",
                                       "value": "1"
-                                    },
-                                    "parent": {
-                                      "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                      "snippet": "Test Expre...++---+1\r\n}"
                                     }
                                   },
                                   "context": {
@@ -4274,10 +3873,6 @@
                                     "line": 28,
                                     "column": 5
                                   }
-                                },
-                                "parent": {
-                                  "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                  "snippet": "Test Expre...++---+1\r\n}"
                                 }
                               },
                               "context": {
@@ -4328,10 +3923,6 @@
                                       "trailingInvalid": "",
                                       "trailingTrivia": "",
                                       "value": "2"
-                                    },
-                                    "parent": {
-                                      "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                      "snippet": "Test Expre...++---+1\r\n}"
                                     }
                                   },
                                   "context": {
@@ -4353,10 +3944,6 @@
                                     "line": 28,
                                     "column": 8
                                   }
-                                },
-                                "parent": {
-                                  "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                  "snippet": "Test Expre...++---+1\r\n}"
                                 }
                               },
                               "context": {
@@ -4407,10 +3994,6 @@
                                       "trailingInvalid": "",
                                       "trailingTrivia": "",
                                       "value": "3"
-                                    },
-                                    "parent": {
-                                      "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                      "snippet": "Test Expre...++---+1\r\n}"
                                     }
                                   },
                                   "context": {
@@ -4432,10 +4015,6 @@
                                     "line": 28,
                                     "column": 11
                                   }
-                                },
-                                "parent": {
-                                  "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                  "snippet": "Test Expre...++---+1\r\n}"
                                 }
                               },
                               "context": {
@@ -4459,10 +4038,6 @@
                               }
                             }
                           ],
-                          "parent": {
-                            "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                            "snippet": "Test Expre...++---+1\r\n}"
-                          },
                           "tupleCloseParen": {
                             "context": {
                               "id": "<rparen>:)@[L28:C12, L28:C13]",
@@ -4533,10 +4108,6 @@
                           "line": 28,
                           "column": 4
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                        "snippet": "Test Expre...++---+1\r\n}"
                       }
                     },
                     "context": {
@@ -4645,10 +4216,6 @@
                                       "trailingInvalid": "",
                                       "trailingTrivia": "",
                                       "value": "2"
-                                    },
-                                    "parent": {
-                                      "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                      "snippet": "Test Expre...++---+1\r\n}"
                                     }
                                   },
                                   "context": {
@@ -4670,10 +4237,6 @@
                                     "line": 29,
                                     "column": 5
                                   }
-                                },
-                                "parent": {
-                                  "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                  "snippet": "Test Expre...++---+1\r\n}"
                                 }
                               },
                               "context": {
@@ -4724,10 +4287,6 @@
                                       "trailingInvalid": "",
                                       "trailingTrivia": "",
                                       "value": "3"
-                                    },
-                                    "parent": {
-                                      "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                      "snippet": "Test Expre...++---+1\r\n}"
                                     }
                                   },
                                   "context": {
@@ -4749,10 +4308,6 @@
                                     "line": 29,
                                     "column": 8
                                   }
-                                },
-                                "parent": {
-                                  "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                  "snippet": "Test Expre...++---+1\r\n}"
                                 }
                               },
                               "context": {
@@ -4803,10 +4358,6 @@
                                       "trailingInvalid": "",
                                       "trailingTrivia": "",
                                       "value": "4"
-                                    },
-                                    "parent": {
-                                      "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                      "snippet": "Test Expre...++---+1\r\n}"
                                     }
                                   },
                                   "context": {
@@ -4828,10 +4379,6 @@
                                     "line": 29,
                                     "column": 11
                                   }
-                                },
-                                "parent": {
-                                  "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                  "snippet": "Test Expre...++---+1\r\n}"
                                 }
                               },
                               "context": {
@@ -4855,10 +4402,6 @@
                               }
                             }
                           ],
-                          "parent": {
-                            "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                            "snippet": "Test Expre...++---+1\r\n}"
-                          },
                           "tupleCloseParen": {
                             "context": {
                               "id": "<rparen>:)@[L29:C12, L29:C13]",
@@ -4929,10 +4472,6 @@
                           "line": 29,
                           "column": 4
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                        "snippet": "Test Expre...++---+1\r\n}"
                       }
                     },
                     "context": {
@@ -5047,10 +4586,6 @@
                                                 "trailingInvalid": "",
                                                 "trailingTrivia": "",
                                                 "value": "1"
-                                              },
-                                              "parent": {
-                                                "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                                "snippet": "Test Expre...++---+1\r\n}"
                                               }
                                             },
                                             "context": {
@@ -5072,10 +4607,6 @@
                                               "line": 32,
                                               "column": 6
                                             }
-                                          },
-                                          "parent": {
-                                            "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                            "snippet": "Test Expre...++---+1\r\n}"
                                           }
                                         },
                                         "context": {
@@ -5126,10 +4657,6 @@
                                                 "trailingInvalid": "",
                                                 "trailingTrivia": "",
                                                 "value": "2"
-                                              },
-                                              "parent": {
-                                                "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                                "snippet": "Test Expre...++---+1\r\n}"
                                               }
                                             },
                                             "context": {
@@ -5151,10 +4678,6 @@
                                               "line": 32,
                                               "column": 9
                                             }
-                                          },
-                                          "parent": {
-                                            "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                            "snippet": "Test Expre...++---+1\r\n}"
                                           }
                                         },
                                         "context": {
@@ -5205,10 +4728,6 @@
                                                 "trailingInvalid": "",
                                                 "trailingTrivia": "",
                                                 "value": "3"
-                                              },
-                                              "parent": {
-                                                "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                                "snippet": "Test Expre...++---+1\r\n}"
                                               }
                                             },
                                             "context": {
@@ -5230,10 +4749,6 @@
                                               "line": 32,
                                               "column": 12
                                             }
-                                          },
-                                          "parent": {
-                                            "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                            "snippet": "Test Expre...++---+1\r\n}"
                                           }
                                         },
                                         "context": {
@@ -5257,10 +4772,6 @@
                                         }
                                       }
                                     ],
-                                    "parent": {
-                                      "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                      "snippet": "Test Expre...++---+1\r\n}"
-                                    },
                                     "tupleCloseParen": {
                                       "context": {
                                         "id": "<rparen>:)@[L32:C13, L32:C14]",
@@ -5336,10 +4847,6 @@
                                   "children": {
                                     "expression": {
                                       "children": {
-                                        "parent": {
-                                          "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                          "snippet": "Test Expre...++---+1\r\n}"
-                                        },
                                         "variable": {
                                           "context": {
                                             "id": "<identifier>:f@[L31:C5, L31:C6]",
@@ -5385,10 +4892,6 @@
                                         "line": 31,
                                         "column": 5
                                       }
-                                    },
-                                    "parent": {
-                                      "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                      "snippet": "Test Expre...++---+1\r\n}"
                                     }
                                   },
                                   "context": {
@@ -5410,10 +4913,6 @@
                                     "line": 31,
                                     "column": 5
                                   }
-                                },
-                                "parent": {
-                                  "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                  "snippet": "Test Expre...++---+1\r\n}"
                                 }
                               },
                               "context": {
@@ -5437,10 +4936,6 @@
                               }
                             }
                           ],
-                          "parent": {
-                            "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                            "snippet": "Test Expre...++---+1\r\n}"
-                          },
                           "tupleCloseParen": {
                             "context": {
                               "id": "<rparen>:)@[L32:C14, L32:C15]",
@@ -5511,10 +5006,6 @@
                           "line": 31,
                           "column": 4
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                        "snippet": "Test Expre...++---+1\r\n}"
                       }
                     },
                     "context": {
@@ -5598,10 +5089,6 @@
                                       "trailingInvalid": "",
                                       "trailingTrivia": "",
                                       "value": "1"
-                                    },
-                                    "parent": {
-                                      "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                      "snippet": "Test Expre...++---+1\r\n}"
                                     }
                                   },
                                   "context": {
@@ -5623,10 +5110,6 @@
                                     "line": 34,
                                     "column": 5
                                   }
-                                },
-                                "parent": {
-                                  "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                  "snippet": "Test Expre...++---+1\r\n}"
                                 }
                               },
                               "context": {
@@ -5677,10 +5160,6 @@
                                       "trailingInvalid": "",
                                       "trailingTrivia": "",
                                       "value": "2"
-                                    },
-                                    "parent": {
-                                      "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                      "snippet": "Test Expre...++---+1\r\n}"
                                     }
                                   },
                                   "context": {
@@ -5702,10 +5181,6 @@
                                     "line": 35,
                                     "column": 5
                                   }
-                                },
-                                "parent": {
-                                  "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                  "snippet": "Test Expre...++---+1\r\n}"
                                 }
                               },
                               "context": {
@@ -5729,10 +5204,6 @@
                               }
                             }
                           ],
-                          "parent": {
-                            "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                            "snippet": "Test Expre...++---+1\r\n}"
-                          },
                           "tupleCloseParen": {
                             "context": {
                               "id": "<rparen>:)@[L35:C6, L35:C7]",
@@ -5803,10 +5274,6 @@
                           "line": 34,
                           "column": 4
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                        "snippet": "Test Expre...++---+1\r\n}"
                       }
                     },
                     "context": {
@@ -5866,10 +5333,6 @@
                                             "trailingInvalid": "",
                                             "trailingTrivia": " ",
                                             "value": "1"
-                                          },
-                                          "parent": {
-                                            "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                            "snippet": "Test Expre...++---+1\r\n}"
                                           }
                                         },
                                         "context": {
@@ -5891,10 +5354,6 @@
                                           "line": 37,
                                           "column": 4
                                         }
-                                      },
-                                      "parent": {
-                                        "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                        "snippet": "Test Expre...++---+1\r\n}"
                                       }
                                     },
                                     "context": {
@@ -5942,10 +5401,6 @@
                                     "trailingTrivia": " ",
                                     "value": "*"
                                   },
-                                  "parent": {
-                                    "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                    "snippet": "Test Expre...++---+1\r\n}"
-                                  },
                                   "rightExpression": {
                                     "children": {
                                       "expression": {
@@ -5974,10 +5429,6 @@
                                             "trailingInvalid": "",
                                             "trailingTrivia": " ",
                                             "value": "2"
-                                          },
-                                          "parent": {
-                                            "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                            "snippet": "Test Expre...++---+1\r\n}"
                                           }
                                         },
                                         "context": {
@@ -5999,10 +5450,6 @@
                                           "line": 37,
                                           "column": 8
                                         }
-                                      },
-                                      "parent": {
-                                        "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                        "snippet": "Test Expre...++---+1\r\n}"
                                       }
                                     },
                                     "context": {
@@ -6071,10 +5518,6 @@
                                 "trailingTrivia": " ",
                                 "value": "/"
                               },
-                              "parent": {
-                                "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                "snippet": "Test Expre...++---+1\r\n}"
-                              },
                               "rightExpression": {
                                 "children": {
                                   "expression": {
@@ -6103,10 +5546,6 @@
                                         "trailingInvalid": "",
                                         "trailingTrivia": " ",
                                         "value": "3"
-                                      },
-                                      "parent": {
-                                        "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                        "snippet": "Test Expre...++---+1\r\n}"
                                       }
                                     },
                                     "context": {
@@ -6128,10 +5567,6 @@
                                       "line": 37,
                                       "column": 12
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                    "snippet": "Test Expre...++---+1\r\n}"
                                   }
                                 },
                                 "context": {
@@ -6200,10 +5635,6 @@
                             "trailingTrivia": " ",
                             "value": "!="
                           },
-                          "parent": {
-                            "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                            "snippet": "Test Expre...++---+1\r\n}"
-                          },
                           "rightExpression": {
                             "children": {
                               "leftExpression": {
@@ -6234,10 +5665,6 @@
                                         "trailingInvalid": "",
                                         "trailingTrivia": " ",
                                         "value": "1"
-                                      },
-                                      "parent": {
-                                        "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                        "snippet": "Test Expre...++---+1\r\n}"
                                       }
                                     },
                                     "context": {
@@ -6259,10 +5686,6 @@
                                       "line": 37,
                                       "column": 17
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                    "snippet": "Test Expre...++---+1\r\n}"
                                   }
                                 },
                                 "context": {
@@ -6310,10 +5733,6 @@
                                 "trailingTrivia": " ",
                                 "value": "*"
                               },
-                              "parent": {
-                                "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                "snippet": "Test Expre...++---+1\r\n}"
-                              },
                               "rightExpression": {
                                 "children": {
                                   "commaList": [],
@@ -6348,10 +5767,6 @@
                                                   "trailingInvalid": "",
                                                   "trailingTrivia": " ",
                                                   "value": "2"
-                                                },
-                                                "parent": {
-                                                  "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                                  "snippet": "Test Expre...++---+1\r\n}"
                                                 }
                                               },
                                               "context": {
@@ -6373,10 +5788,6 @@
                                                 "line": 37,
                                                 "column": 22
                                               }
-                                            },
-                                            "parent": {
-                                              "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                              "snippet": "Test Expre...++---+1\r\n}"
                                             }
                                           },
                                           "context": {
@@ -6424,10 +5835,6 @@
                                           "trailingTrivia": " ",
                                           "value": "/"
                                         },
-                                        "parent": {
-                                          "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                          "snippet": "Test Expre...++---+1\r\n}"
-                                        },
                                         "rightExpression": {
                                           "children": {
                                             "expression": {
@@ -6456,10 +5863,6 @@
                                                   "trailingInvalid": "",
                                                   "trailingTrivia": "",
                                                   "value": "3"
-                                                },
-                                                "parent": {
-                                                  "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                                  "snippet": "Test Expre...++---+1\r\n}"
                                                 }
                                               },
                                               "context": {
@@ -6481,10 +5884,6 @@
                                                 "line": 37,
                                                 "column": 26
                                               }
-                                            },
-                                            "parent": {
-                                              "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                              "snippet": "Test Expre...++---+1\r\n}"
                                             }
                                           },
                                           "context": {
@@ -6529,10 +5928,6 @@
                                       }
                                     }
                                   ],
-                                  "parent": {
-                                    "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                    "snippet": "Test Expre...++---+1\r\n}"
-                                  },
                                   "tupleCloseParen": {
                                     "context": {
                                       "id": "<rparen>:)@[L37:C27, L37:C28]",
@@ -6645,10 +6040,6 @@
                           "line": 37,
                           "column": 4
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                        "snippet": "Test Expre...++---+1\r\n}"
                       }
                     },
                     "context": {
@@ -6704,10 +6095,6 @@
                                     "trailingInvalid": "",
                                     "trailingTrivia": " ",
                                     "value": "1"
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                    "snippet": "Test Expre...++---+1\r\n}"
                                   }
                                 },
                                 "context": {
@@ -6729,10 +6116,6 @@
                                   "line": 39,
                                   "column": 4
                                 }
-                              },
-                              "parent": {
-                                "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                "snippet": "Test Expre...++---+1\r\n}"
                               }
                             },
                             "context": {
@@ -6780,10 +6163,6 @@
                             "trailingTrivia": " ",
                             "value": "=="
                           },
-                          "parent": {
-                            "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                            "snippet": "Test Expre...++---+1\r\n}"
-                          },
                           "rightExpression": {
                             "children": {
                               "expression": {
@@ -6812,10 +6191,6 @@
                                     "trailingInvalid": "",
                                     "trailingTrivia": "\n",
                                     "value": "1"
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                    "snippet": "Test Expre...++---+1\r\n}"
                                   }
                                 },
                                 "context": {
@@ -6837,10 +6212,6 @@
                                   "line": 39,
                                   "column": 9
                                 }
-                              },
-                              "parent": {
-                                "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                "snippet": "Test Expre...++---+1\r\n}"
                               }
                             },
                             "context": {
@@ -6883,10 +6254,6 @@
                           "line": 39,
                           "column": 4
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                        "snippet": "Test Expre...++---+1\r\n}"
                       }
                     },
                     "context": {
@@ -6918,10 +6285,6 @@
                             "children": {
                               "expression": {
                                 "children": {
-                                  "parent": {
-                                    "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                    "snippet": "Test Expre...++---+1\r\n}"
-                                  },
                                   "variable": {
                                     "context": {
                                       "id": "<identifier>:a@[L41:C4, L41:C5]",
@@ -6967,10 +6330,6 @@
                                   "line": 41,
                                   "column": 4
                                 }
-                              },
-                              "parent": {
-                                "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                "snippet": "Test Expre...++---+1\r\n}"
                               }
                             },
                             "context": {
@@ -7018,10 +6377,6 @@
                             "trailingTrivia": " ",
                             "value": "="
                           },
-                          "parent": {
-                            "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                            "snippet": "Test Expre...++---+1\r\n}"
-                          },
                           "rightExpression": {
                             "children": {
                               "leftExpression": {
@@ -7052,10 +6407,6 @@
                                         "trailingInvalid": "",
                                         "trailingTrivia": " ",
                                         "value": "1"
-                                      },
-                                      "parent": {
-                                        "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                        "snippet": "Test Expre...++---+1\r\n}"
                                       }
                                     },
                                     "context": {
@@ -7077,10 +6428,6 @@
                                       "line": 41,
                                       "column": 8
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                    "snippet": "Test Expre...++---+1\r\n}"
                                   }
                                 },
                                 "context": {
@@ -7128,10 +6475,6 @@
                                 "trailingTrivia": " ",
                                 "value": "<="
                               },
-                              "parent": {
-                                "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                "snippet": "Test Expre...++---+1\r\n}"
-                              },
                               "rightExpression": {
                                 "children": {
                                   "leftExpression": {
@@ -7162,10 +6505,6 @@
                                             "trailingInvalid": "",
                                             "trailingTrivia": " ",
                                             "value": "2"
-                                          },
-                                          "parent": {
-                                            "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                            "snippet": "Test Expre...++---+1\r\n}"
                                           }
                                         },
                                         "context": {
@@ -7187,10 +6526,6 @@
                                           "line": 41,
                                           "column": 13
                                         }
-                                      },
-                                      "parent": {
-                                        "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                        "snippet": "Test Expre...++---+1\r\n}"
                                       }
                                     },
                                     "context": {
@@ -7238,10 +6573,6 @@
                                     "trailingTrivia": " ",
                                     "value": "+"
                                   },
-                                  "parent": {
-                                    "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                    "snippet": "Test Expre...++---+1\r\n}"
-                                  },
                                   "rightExpression": {
                                     "children": {
                                       "expression": {
@@ -7270,10 +6601,6 @@
                                             "trailingInvalid": "",
                                             "trailingTrivia": "\n",
                                             "value": "3"
-                                          },
-                                          "parent": {
-                                            "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                            "snippet": "Test Expre...++---+1\r\n}"
                                           }
                                         },
                                         "context": {
@@ -7295,10 +6622,6 @@
                                           "line": 41,
                                           "column": 17
                                         }
-                                      },
-                                      "parent": {
-                                        "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                        "snippet": "Test Expre...++---+1\r\n}"
                                       }
                                     },
                                     "context": {
@@ -7383,10 +6706,6 @@
                           "line": 41,
                           "column": 4
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                        "snippet": "Test Expre...++---+1\r\n}"
                       }
                     },
                     "context": {
@@ -7418,10 +6737,6 @@
                             "children": {
                               "expression": {
                                 "children": {
-                                  "parent": {
-                                    "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                    "snippet": "Test Expre...++---+1\r\n}"
-                                  },
                                   "variable": {
                                     "context": {
                                       "id": "<identifier>:b@[L43:C4, L43:C5]",
@@ -7467,10 +6782,6 @@
                                   "line": 43,
                                   "column": 4
                                 }
-                              },
-                              "parent": {
-                                "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                "snippet": "Test Expre...++---+1\r\n}"
                               }
                             },
                             "context": {
@@ -7518,10 +6829,6 @@
                             "trailingTrivia": " ",
                             "value": "="
                           },
-                          "parent": {
-                            "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                            "snippet": "Test Expre...++---+1\r\n}"
-                          },
                           "rightExpression": {
                             "children": {
                               "leftExpression": {
@@ -7552,10 +6859,6 @@
                                         "trailingInvalid": "",
                                         "trailingTrivia": " ",
                                         "value": "1"
-                                      },
-                                      "parent": {
-                                        "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                        "snippet": "Test Expre...++---+1\r\n}"
                                       }
                                     },
                                     "context": {
@@ -7577,10 +6880,6 @@
                                       "line": 43,
                                       "column": 8
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                    "snippet": "Test Expre...++---+1\r\n}"
                                   }
                                 },
                                 "context": {
@@ -7628,10 +6927,6 @@
                                 "trailingTrivia": " ",
                                 "value": "=="
                               },
-                              "parent": {
-                                "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                "snippet": "Test Expre...++---+1\r\n}"
-                              },
                               "rightExpression": {
                                 "children": {
                                   "expression": {
@@ -7660,10 +6955,6 @@
                                         "trailingInvalid": "",
                                         "trailingTrivia": "\n",
                                         "value": "1"
-                                      },
-                                      "parent": {
-                                        "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                        "snippet": "Test Expre...++---+1\r\n}"
                                       }
                                     },
                                     "context": {
@@ -7685,10 +6976,6 @@
                                       "line": 43,
                                       "column": 13
                                     }
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                    "snippet": "Test Expre...++---+1\r\n}"
                                   }
                                 },
                                 "context": {
@@ -7752,10 +7039,6 @@
                           "line": 43,
                           "column": 4
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                        "snippet": "Test Expre...++---+1\r\n}"
                       }
                     },
                     "context": {
@@ -7787,10 +7070,6 @@
                             "children": {
                               "expression": {
                                 "children": {
-                                  "parent": {
-                                    "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                    "snippet": "Test Expre...++---+1\r\n}"
-                                  },
                                   "variable": {
                                     "context": {
                                       "id": "<identifier>:a@[L45:C4, L45:C5]",
@@ -7836,10 +7115,6 @@
                                   "line": 45,
                                   "column": 4
                                 }
-                              },
-                              "parent": {
-                                "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                "snippet": "Test Expre...++---+1\r\n}"
                               }
                             },
                             "context": {
@@ -7887,10 +7162,6 @@
                             "trailingTrivia": " ",
                             "value": "!="
                           },
-                          "parent": {
-                            "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                            "snippet": "Test Expre...++---+1\r\n}"
-                          },
                           "rightExpression": {
                             "children": {
                               "leftExpression": {
@@ -7901,10 +7172,6 @@
                                         "children": {
                                           "expression": {
                                             "children": {
-                                              "parent": {
-                                                "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                                "snippet": "Test Expre...++---+1\r\n}"
-                                              },
                                               "variable": {
                                                 "context": {
                                                   "id": "<identifier>:b@[L45:C9, L45:C10]",
@@ -7950,10 +7217,6 @@
                                               "line": 45,
                                               "column": 9
                                             }
-                                          },
-                                          "parent": {
-                                            "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                            "snippet": "Test Expre...++---+1\r\n}"
                                           }
                                         },
                                         "context": {
@@ -8001,20 +7264,12 @@
                                         "trailingTrivia": " ",
                                         "value": "+"
                                       },
-                                      "parent": {
-                                        "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                        "snippet": "Test Expre...++---+1\r\n}"
-                                      },
                                       "rightExpression": {
                                         "children": {
                                           "argumentList": {
                                             "children": {
                                               "commaList": [],
                                               "elementList": [],
-                                              "parent": {
-                                                "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                                "snippet": "Test Expre...++---+1\r\n}"
-                                              },
                                               "tupleCloseParen": {
                                                 "context": {
                                                   "id": "<rparen>:)@[L45:C16, L45:C17]",
@@ -8090,10 +7345,6 @@
                                             "children": {
                                               "expression": {
                                                 "children": {
-                                                  "parent": {
-                                                    "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                                    "snippet": "Test Expre...++---+1\r\n}"
-                                                  },
                                                   "variable": {
                                                     "context": {
                                                       "id": "<identifier>:c@[L45:C13, L45:C14]",
@@ -8139,10 +7390,6 @@
                                                   "line": 45,
                                                   "column": 13
                                                 }
-                                              },
-                                              "parent": {
-                                                "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                                "snippet": "Test Expre...++---+1\r\n}"
                                               }
                                             },
                                             "context": {
@@ -8164,10 +7411,6 @@
                                               "line": 45,
                                               "column": 13
                                             }
-                                          },
-                                          "parent": {
-                                            "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                            "snippet": "Test Expre...++---+1\r\n}"
                                           }
                                         },
                                         "context": {
@@ -8236,10 +7479,6 @@
                                     "trailingTrivia": "",
                                     "value": "+"
                                   },
-                                  "parent": {
-                                    "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                    "snippet": "Test Expre...++---+1\r\n}"
-                                  },
                                   "rightExpression": {
                                     "children": {
                                       "expression": {
@@ -8286,10 +7525,6 @@
                                                                                 "trailingInvalid": "",
                                                                                 "trailingTrivia": "\n",
                                                                                 "value": "1"
-                                                                              },
-                                                                              "parent": {
-                                                                                "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                                                                "snippet": "Test Expre...++---+1\r\n}"
                                                                               }
                                                                             },
                                                                             "context": {
@@ -8311,10 +7546,6 @@
                                                                               "line": 47,
                                                                               "column": 14
                                                                             }
-                                                                          },
-                                                                          "parent": {
-                                                                            "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                                                            "snippet": "Test Expre...++---+1\r\n}"
                                                                           }
                                                                         },
                                                                         "context": {
@@ -8361,10 +7592,6 @@
                                                                         "trailingInvalid": "",
                                                                         "trailingTrivia": "",
                                                                         "value": "-"
-                                                                      },
-                                                                      "parent": {
-                                                                        "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                                                        "snippet": "Test Expre...++---+1\r\n}"
                                                                       }
                                                                     },
                                                                     "context": {
@@ -8411,10 +7638,6 @@
                                                                     "trailingInvalid": "",
                                                                     "trailingTrivia": "",
                                                                     "value": "+"
-                                                                  },
-                                                                  "parent": {
-                                                                    "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                                                    "snippet": "Test Expre...++---+1\r\n}"
                                                                   }
                                                                 },
                                                                 "context": {
@@ -8461,10 +7684,6 @@
                                                                 "trailingInvalid": "",
                                                                 "trailingTrivia": "",
                                                                 "value": "+"
-                                                              },
-                                                              "parent": {
-                                                                "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                                                "snippet": "Test Expre...++---+1\r\n}"
                                                               }
                                                             },
                                                             "context": {
@@ -8511,10 +7730,6 @@
                                                             "trailingInvalid": "",
                                                             "trailingTrivia": "",
                                                             "value": "-"
-                                                          },
-                                                          "parent": {
-                                                            "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                                            "snippet": "Test Expre...++---+1\r\n}"
                                                           }
                                                         },
                                                         "context": {
@@ -8561,10 +7776,6 @@
                                                         "trailingInvalid": "",
                                                         "trailingTrivia": "",
                                                         "value": "-"
-                                                      },
-                                                      "parent": {
-                                                        "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                                        "snippet": "Test Expre...++---+1\r\n}"
                                                       }
                                                     },
                                                     "context": {
@@ -8611,10 +7822,6 @@
                                                     "trailingInvalid": "",
                                                     "trailingTrivia": "",
                                                     "value": "-"
-                                                  },
-                                                  "parent": {
-                                                    "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                                    "snippet": "Test Expre...++---+1\r\n}"
                                                   }
                                                 },
                                                 "context": {
@@ -8661,10 +7868,6 @@
                                                 "trailingInvalid": "",
                                                 "trailingTrivia": "",
                                                 "value": "-"
-                                              },
-                                              "parent": {
-                                                "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                                "snippet": "Test Expre...++---+1\r\n}"
                                               }
                                             },
                                             "context": {
@@ -8711,10 +7914,6 @@
                                             "trailingInvalid": "",
                                             "trailingTrivia": "",
                                             "value": "+"
-                                          },
-                                          "parent": {
-                                            "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                            "snippet": "Test Expre...++---+1\r\n}"
                                           }
                                         },
                                         "context": {
@@ -8761,10 +7960,6 @@
                                         "trailingInvalid": "",
                                         "trailingTrivia": "",
                                         "value": "+"
-                                      },
-                                      "parent": {
-                                        "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                        "snippet": "Test Expre...++---+1\r\n}"
                                       }
                                     },
                                     "context": {
@@ -8833,10 +8028,6 @@
                                 "trailingTrivia": "",
                                 "value": "-"
                               },
-                              "parent": {
-                                "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                "snippet": "Test Expre...++---+1\r\n}"
-                              },
                               "rightExpression": {
                                 "children": {
                                   "expression": {
@@ -8881,10 +8072,6 @@
                                                                         "trailingInvalid": "",
                                                                         "trailingTrivia": "\n",
                                                                         "value": "1"
-                                                                      },
-                                                                      "parent": {
-                                                                        "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                                                        "snippet": "Test Expre...++---+1\r\n}"
                                                                       }
                                                                     },
                                                                     "context": {
@@ -8906,10 +8093,6 @@
                                                                       "line": 48,
                                                                       "column": 13
                                                                     }
-                                                                  },
-                                                                  "parent": {
-                                                                    "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                                                    "snippet": "Test Expre...++---+1\r\n}"
                                                                   }
                                                                 },
                                                                 "context": {
@@ -8956,10 +8139,6 @@
                                                                 "trailingInvalid": "",
                                                                 "trailingTrivia": "",
                                                                 "value": "+"
-                                                              },
-                                                              "parent": {
-                                                                "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                                                "snippet": "Test Expre...++---+1\r\n}"
                                                               }
                                                             },
                                                             "context": {
@@ -9006,10 +8185,6 @@
                                                             "trailingInvalid": "",
                                                             "trailingTrivia": "",
                                                             "value": "-"
-                                                          },
-                                                          "parent": {
-                                                            "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                                            "snippet": "Test Expre...++---+1\r\n}"
                                                           }
                                                         },
                                                         "context": {
@@ -9056,10 +8231,6 @@
                                                         "trailingInvalid": "",
                                                         "trailingTrivia": "",
                                                         "value": "-"
-                                                      },
-                                                      "parent": {
-                                                        "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                                        "snippet": "Test Expre...++---+1\r\n}"
                                                       }
                                                     },
                                                     "context": {
@@ -9106,10 +8277,6 @@
                                                     "trailingInvalid": "",
                                                     "trailingTrivia": "",
                                                     "value": "-"
-                                                  },
-                                                  "parent": {
-                                                    "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                                    "snippet": "Test Expre...++---+1\r\n}"
                                                   }
                                                 },
                                                 "context": {
@@ -9156,10 +8323,6 @@
                                                 "trailingInvalid": "",
                                                 "trailingTrivia": "",
                                                 "value": "+"
-                                              },
-                                              "parent": {
-                                                "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                                "snippet": "Test Expre...++---+1\r\n}"
                                               }
                                             },
                                             "context": {
@@ -9206,10 +8369,6 @@
                                             "trailingInvalid": "",
                                             "trailingTrivia": "",
                                             "value": "+"
-                                          },
-                                          "parent": {
-                                            "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                            "snippet": "Test Expre...++---+1\r\n}"
                                           }
                                         },
                                         "context": {
@@ -9256,10 +8415,6 @@
                                         "trailingInvalid": "",
                                         "trailingTrivia": "",
                                         "value": "-"
-                                      },
-                                      "parent": {
-                                        "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                        "snippet": "Test Expre...++---+1\r\n}"
                                       }
                                     },
                                     "context": {
@@ -9306,10 +8461,6 @@
                                     "trailingInvalid": "",
                                     "trailingTrivia": "",
                                     "value": "-"
-                                  },
-                                  "parent": {
-                                    "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                                    "snippet": "Test Expre...++---+1\r\n}"
                                   }
                                 },
                                 "context": {
@@ -9373,10 +8524,6 @@
                           "line": 45,
                           "column": 4
                         }
-                      },
-                      "parent": {
-                        "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                        "snippet": "Test Expre...++---+1\r\n}"
                       }
                     },
                     "context": {
@@ -9399,11 +8546,7 @@
                       "column": 4
                     }
                   }
-                ],
-                "parent": {
-                  "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                  "snippet": "Test Expre...++---+1\r\n}"
-                }
+                ]
               },
               "context": {
                 "id": "<block-expression>@[L0:C16, L49:C1]",
@@ -9429,10 +8572,6 @@
               "children": {
                 "expression": {
                   "children": {
-                    "parent": {
-                      "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                      "snippet": "Test Expre...++---+1\r\n}"
-                    },
                     "variable": {
                       "context": {
                         "id": "<identifier>:Expression@[L0:C5, L0:C15]",
@@ -9478,10 +8617,6 @@
                     "line": 0,
                     "column": 5
                   }
-                },
-                "parent": {
-                  "id": "<element-declaration>:Expression@[L0:C0, L49:C1]",
-                  "snippet": "Test Expre...++---+1\r\n}"
                 }
               },
               "context": {
@@ -9503,10 +8638,6 @@
                 "line": 0,
                 "column": 5
               }
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L50:C0]",
-              "snippet": "Test Expre...---+1\r\n}\r\n"
             },
             "type": {
               "context": {
