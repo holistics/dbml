@@ -743,9 +743,6 @@
                 "column": 6
               }
             },
-            "parent": {
-              "context": {}
-            },
             "type": {
               "context": {
                 "id": "<identifier>:Table@[L0:C0, L0:C5]",
@@ -1837,9 +1834,6 @@
                 "column": 6
               }
             },
-            "parent": {
-              "context": {}
-            },
             "type": {
               "context": {
                 "id": "<identifier>:Table@[L4:C0, L4:C5]",
@@ -1918,11 +1912,7 @@
           }
         },
         {
-          "children": {
-            "parent": {
-              "context": {}
-            }
-          },
+          "children": {},
           "context": {
             "id": "<element-declaration>:@[LNaN:CNaN, LNaN:CNaN]",
             "snippet": ""
@@ -2596,9 +2586,6 @@
                 "column": 6
               }
             },
-            "parent": {
-              "context": {}
-            },
             "type": {
               "context": {
                 "id": "<identifier>:Table@[L13:C0, L13:C5]",
@@ -3244,9 +3231,6 @@
                 "column": 6
               }
             },
-            "parent": {
-              "context": {}
-            },
             "type": {
               "context": {
                 "id": "<identifier>:Table@[L18:C0, L18:C5]",
@@ -3791,9 +3775,6 @@
               "trailingTrivia": " ",
               "value": ":"
             },
-            "parent": {
-              "context": {}
-            },
             "type": {
               "context": {
                 "id": "<identifier>:Ref@[L22:C0, L22:C3]",
@@ -4318,9 +4299,6 @@
               "trailingInvalid": "",
               "trailingTrivia": " ",
               "value": ":"
-            },
-            "parent": {
-              "context": {}
             },
             "type": {
               "context": {

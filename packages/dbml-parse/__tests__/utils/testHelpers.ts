@@ -297,13 +297,7 @@ export function syntaxNodeToSnapshot (
     ...props
   } = node;
   if (node instanceof ElementDeclarationNode) {
-    const parent = node.parent;
-    if (parent && 'parent' in props) {
-      props['parent'] = {
-        id: getReadableId(parent),
-        snippet: getCodeSnippet(parent, compiler.parse.source()),
-      };
-    }
+    delete (props as any).parent;
   }
   if (node instanceof ProgramNode) {
     delete (props as any).source;

@@ -518,9 +518,6 @@
                 "column": 6
               }
             },
-            "parent": {
-              "context": {}
-            },
             "type": {
               "context": {
                 "id": "<identifier>:Table@[L0:C0, L0:C5]",
@@ -762,9 +759,6 @@
                         "trailingInvalid": "",
                         "trailingTrivia": " ",
                         "value": ":"
-                      },
-                      "parent": {
-                        "context": {}
                       },
                       "type": {
                         "context": {
@@ -1040,9 +1034,6 @@
                         "trailingTrivia": " ",
                         "value": ":"
                       },
-                      "parent": {
-                        "context": {}
-                      },
                       "type": {
                         "context": {
                           "id": "<identifier>:note@[L7:C2, L7:C6]",
@@ -1261,9 +1252,6 @@
                           "column": 7
                         }
                       },
-                      "parent": {
-                        "context": {}
-                      },
                       "type": {
                         "context": {
                           "id": "<identifier>:note@[L15:C2, L15:C6]",
@@ -1402,9 +1390,6 @@
                 "line": 4,
                 "column": 11
               }
-            },
-            "parent": {
-              "context": {}
             },
             "type": {
               "context": {

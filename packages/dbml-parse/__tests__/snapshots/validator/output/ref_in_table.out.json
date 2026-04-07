@@ -560,9 +560,6 @@
                 "column": 6
               }
             },
-            "parent": {
-              "context": {}
-            },
             "type": {
               "context": {
                 "id": "<identifier>:Table@[L0:C0, L0:C5]",
@@ -1137,9 +1134,6 @@
                 "line": 5,
                 "column": 6
               }
-            },
-            "parent": {
-              "context": {}
             },
             "type": {
               "context": {
@@ -1983,9 +1977,6 @@
                         "trailingTrivia": " ",
                         "value": ":"
                       },
-                      "parent": {
-                        "context": {}
-                      },
                       "type": {
                         "context": {
                           "id": "<identifier>:Ref@[L13:C4, L13:C7]",
@@ -2392,9 +2383,6 @@
                         "trailingTrivia": " ",
                         "value": ":"
                       },
-                      "parent": {
-                        "context": {}
-                      },
                       "type": {
                         "context": {
                           "id": "<identifier>:Ref@[L14:C4, L14:C7]",
@@ -2533,9 +2521,6 @@
                 "line": 10,
                 "column": 6
               }
-            },
-            "parent": {
-              "context": {}
             },
             "type": {
               "context": {

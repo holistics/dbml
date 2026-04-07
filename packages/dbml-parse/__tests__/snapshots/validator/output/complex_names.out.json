@@ -1310,9 +1310,6 @@
                           "column": 10
                         }
                       },
-                      "parent": {
-                        "context": {}
-                      },
                       "type": {
                         "context": {
                           "id": "<identifier>:Table@[L1:C4, L1:C9]",
@@ -2075,9 +2072,6 @@
                           "column": 9
                         }
                       },
-                      "parent": {
-                        "context": {}
-                      },
                       "type": {
                         "context": {
                           "id": "<identifier>:Enum@[L6:C4, L6:C8]",
@@ -2182,9 +2176,6 @@
                 "line": 0,
                 "column": 8
               }
-            },
-            "parent": {
-              "context": {}
             },
             "type": {
               "context": {

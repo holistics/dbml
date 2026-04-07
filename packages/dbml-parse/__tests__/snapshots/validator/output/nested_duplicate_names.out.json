@@ -258,9 +258,6 @@
                           "column": 10
                         }
                       },
-                      "parent": {
-                        "context": {}
-                      },
                       "type": {
                         "context": {
                           "id": "<identifier>:Table@[L1:C4, L1:C9]",
@@ -465,9 +462,6 @@
                           "line": 5,
                           "column": 10
                         }
-                      },
-                      "parent": {
-                        "context": {}
                       },
                       "type": {
                         "context": {
@@ -674,9 +668,6 @@
                           "column": 10
                         }
                       },
-                      "parent": {
-                        "context": {}
-                      },
                       "type": {
                         "context": {
                           "id": "<identifier>:Table@[L9:C4, L9:C9]",
@@ -827,9 +818,6 @@
                 "line": 0,
                 "column": 8
               }
-            },
-            "parent": {
-              "context": {}
             },
             "type": {
               "context": {
