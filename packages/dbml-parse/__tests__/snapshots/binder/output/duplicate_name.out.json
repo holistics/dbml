@@ -15,11 +15,23 @@
     }
   ],
   "program": {
+    "context": {
+      "id": "<program>@[L0:C0, L6:C1]",
+      "snippet": "Table AB {...{\r\n    \r\n}"
+    },
     "children": {
       "body": [
         {
+          "context": {
+            "id": "<element-declaration>:AB@[L0:C0, L2:C1]",
+            "snippet": "Table AB {\r\n\r\n}"
+          },
           "children": {
             "body": {
+              "context": {
+                "id": "<block-expression>@[L0:C9, L2:C1]",
+                "snippet": "{\r\n\r\n}"
+              },
               "children": {
                 "blockCloseBrace": {
                   "context": {
@@ -73,10 +85,6 @@
                 },
                 "body": []
               },
-              "context": {
-                "id": "<block-expression>@[L0:C9, L2:C1]",
-                "snippet": "{\r\n\r\n}"
-              },
               "end": 15,
               "endPos": {
                 "offset": 15,
@@ -94,8 +102,16 @@
               }
             },
             "name": {
+              "context": {
+                "id": "<primary-expression>@[L0:C6, L0:C8]",
+                "snippet": "AB"
+              },
               "children": {
                 "expression": {
+                  "context": {
+                    "id": "<variable>:AB@[L0:C6, L0:C8]",
+                    "snippet": "AB"
+                  },
                   "children": {
                     "variable": {
                       "context": {
@@ -123,10 +139,6 @@
                       "value": "AB"
                     }
                   },
-                  "context": {
-                    "id": "<variable>:AB@[L0:C6, L0:C8]",
-                    "snippet": "AB"
-                  },
                   "end": 8,
                   "endPos": {
                     "offset": 8,
@@ -143,10 +155,6 @@
                     "column": 6
                   }
                 }
-              },
-              "context": {
-                "id": "<primary-expression>@[L0:C6, L0:C8]",
-                "snippet": "AB"
               },
               "end": 8,
               "endPos": {
@@ -190,10 +198,6 @@
               "value": "Table"
             }
           },
-          "context": {
-            "id": "<element-declaration>:AB@[L0:C0, L2:C1]",
-            "snippet": "Table AB {\r\n\r\n}"
-          },
           "end": 15,
           "endPos": {
             "offset": 15,
@@ -223,8 +227,16 @@
           }
         },
         {
+          "context": {
+            "id": "<element-declaration>:AB@[L4:C0, L6:C1]",
+            "snippet": "Table AB {\r\n    \r\n}"
+          },
           "children": {
             "body": {
+              "context": {
+                "id": "<block-expression>@[L4:C9, L6:C1]",
+                "snippet": "{\r\n    \r\n}"
+              },
               "children": {
                 "blockCloseBrace": {
                   "context": {
@@ -278,10 +290,6 @@
                 },
                 "body": []
               },
-              "context": {
-                "id": "<block-expression>@[L4:C9, L6:C1]",
-                "snippet": "{\r\n    \r\n}"
-              },
               "end": 38,
               "endPos": {
                 "offset": 38,
@@ -299,8 +307,16 @@
               }
             },
             "name": {
+              "context": {
+                "id": "<primary-expression>@[L4:C6, L4:C8]",
+                "snippet": "AB"
+              },
               "children": {
                 "expression": {
+                  "context": {
+                    "id": "<variable>:AB@[L4:C6, L4:C8]",
+                    "snippet": "AB"
+                  },
                   "children": {
                     "variable": {
                       "context": {
@@ -328,10 +344,6 @@
                       "value": "AB"
                     }
                   },
-                  "context": {
-                    "id": "<variable>:AB@[L4:C6, L4:C8]",
-                    "snippet": "AB"
-                  },
                   "end": 27,
                   "endPos": {
                     "offset": 27,
@@ -348,10 +360,6 @@
                     "column": 6
                   }
                 }
-              },
-              "context": {
-                "id": "<primary-expression>@[L4:C6, L4:C8]",
-                "snippet": "AB"
               },
               "end": 27,
               "endPos": {
@@ -394,10 +402,6 @@
               "trailingTrivia": " ",
               "value": "Table"
             }
-          },
-          "context": {
-            "id": "<element-declaration>:AB@[L4:C0, L6:C1]",
-            "snippet": "Table AB {\r\n    \r\n}"
           },
           "end": 38,
           "endPos": {
@@ -453,10 +457,6 @@
         "trailingTrivia": "",
         "value": ""
       }
-    },
-    "context": {
-      "id": "<program>@[L0:C0, L6:C1]",
-      "snippet": "Table AB {...{\r\n    \r\n}"
     },
     "end": 38,
     "endPos": {

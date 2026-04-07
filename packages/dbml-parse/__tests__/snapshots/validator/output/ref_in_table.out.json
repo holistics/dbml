@@ -54,11 +54,23 @@
     }
   ],
   "program": {
+    "context": {
+      "id": "<program>@[L0:C0, L15:C1]",
+      "snippet": "Table A {\n...> B.code\n}"
+    },
     "children": {
       "body": [
         {
+          "context": {
+            "id": "<element-declaration>:A@[L0:C0, L3:C1]",
+            "snippet": "Table A {\n...e number\n}"
+          },
           "children": {
             "body": {
+              "context": {
+                "id": "<block-expression>@[L0:C8, L3:C1]",
+                "snippet": "{\n    id i...e number\n}"
+              },
               "children": {
                 "blockCloseBrace": {
                   "context": {
@@ -112,11 +124,23 @@
                 },
                 "body": [
                   {
+                    "context": {
+                      "id": "<function-application>@[L1:C4, L1:C14]",
+                      "snippet": "id integer"
+                    },
                     "children": {
                       "args": [
                         {
+                          "context": {
+                            "id": "<primary-expression>@[L1:C7, L1:C14]",
+                            "snippet": "integer"
+                          },
                           "children": {
                             "expression": {
+                              "context": {
+                                "id": "<variable>:integer@[L1:C7, L1:C14]",
+                                "snippet": "integer"
+                              },
                               "children": {
                                 "variable": {
                                   "context": {
@@ -144,10 +168,6 @@
                                   "value": "integer"
                                 }
                               },
-                              "context": {
-                                "id": "<variable>:integer@[L1:C7, L1:C14]",
-                                "snippet": "integer"
-                              },
                               "end": 24,
                               "endPos": {
                                 "offset": 24,
@@ -164,10 +184,6 @@
                                 "column": 7
                               }
                             }
-                          },
-                          "context": {
-                            "id": "<primary-expression>@[L1:C7, L1:C14]",
-                            "snippet": "integer"
                           },
                           "end": 24,
                           "endPos": {
@@ -187,8 +203,16 @@
                         }
                       ],
                       "callee": {
+                        "context": {
+                          "id": "<primary-expression>@[L1:C4, L1:C6]",
+                          "snippet": "id"
+                        },
                         "children": {
                           "expression": {
+                            "context": {
+                              "id": "<variable>:id@[L1:C4, L1:C6]",
+                              "snippet": "id"
+                            },
                             "children": {
                               "variable": {
                                 "context": {
@@ -216,10 +240,6 @@
                                 "value": "id"
                               }
                             },
-                            "context": {
-                              "id": "<variable>:id@[L1:C4, L1:C6]",
-                              "snippet": "id"
-                            },
                             "end": 16,
                             "endPos": {
                               "offset": 16,
@@ -237,10 +257,6 @@
                             }
                           }
                         },
-                        "context": {
-                          "id": "<primary-expression>@[L1:C4, L1:C6]",
-                          "snippet": "id"
-                        },
                         "end": 16,
                         "endPos": {
                           "offset": 16,
@@ -257,10 +273,6 @@
                           "column": 4
                         }
                       }
-                    },
-                    "context": {
-                      "id": "<function-application>@[L1:C4, L1:C14]",
-                      "snippet": "id integer"
                     },
                     "end": 24,
                     "endPos": {
@@ -290,11 +302,23 @@
                     }
                   },
                   {
+                    "context": {
+                      "id": "<function-application>@[L2:C4, L2:C15]",
+                      "snippet": "code number"
+                    },
                     "children": {
                       "args": [
                         {
+                          "context": {
+                            "id": "<primary-expression>@[L2:C9, L2:C15]",
+                            "snippet": "number"
+                          },
                           "children": {
                             "expression": {
+                              "context": {
+                                "id": "<variable>:number@[L2:C9, L2:C15]",
+                                "snippet": "number"
+                              },
                               "children": {
                                 "variable": {
                                   "context": {
@@ -322,10 +346,6 @@
                                   "value": "number"
                                 }
                               },
-                              "context": {
-                                "id": "<variable>:number@[L2:C9, L2:C15]",
-                                "snippet": "number"
-                              },
                               "end": 40,
                               "endPos": {
                                 "offset": 40,
@@ -342,10 +362,6 @@
                                 "column": 9
                               }
                             }
-                          },
-                          "context": {
-                            "id": "<primary-expression>@[L2:C9, L2:C15]",
-                            "snippet": "number"
                           },
                           "end": 40,
                           "endPos": {
@@ -365,8 +381,16 @@
                         }
                       ],
                       "callee": {
+                        "context": {
+                          "id": "<primary-expression>@[L2:C4, L2:C8]",
+                          "snippet": "code"
+                        },
                         "children": {
                           "expression": {
+                            "context": {
+                              "id": "<variable>:code@[L2:C4, L2:C8]",
+                              "snippet": "code"
+                            },
                             "children": {
                               "variable": {
                                 "context": {
@@ -394,10 +418,6 @@
                                 "value": "code"
                               }
                             },
-                            "context": {
-                              "id": "<variable>:code@[L2:C4, L2:C8]",
-                              "snippet": "code"
-                            },
                             "end": 33,
                             "endPos": {
                               "offset": 33,
@@ -415,10 +435,6 @@
                             }
                           }
                         },
-                        "context": {
-                          "id": "<primary-expression>@[L2:C4, L2:C8]",
-                          "snippet": "code"
-                        },
                         "end": 33,
                         "endPos": {
                           "offset": 33,
@@ -435,10 +451,6 @@
                           "column": 4
                         }
                       }
-                    },
-                    "context": {
-                      "id": "<function-application>@[L2:C4, L2:C15]",
-                      "snippet": "code number"
                     },
                     "end": 40,
                     "endPos": {
@@ -469,10 +481,6 @@
                   }
                 ]
               },
-              "context": {
-                "id": "<block-expression>@[L0:C8, L3:C1]",
-                "snippet": "{\n    id i...e number\n}"
-              },
               "end": 42,
               "endPos": {
                 "offset": 42,
@@ -490,8 +498,16 @@
               }
             },
             "name": {
+              "context": {
+                "id": "<primary-expression>@[L0:C6, L0:C7]",
+                "snippet": "A"
+              },
               "children": {
                 "expression": {
+                  "context": {
+                    "id": "<variable>:A@[L0:C6, L0:C7]",
+                    "snippet": "A"
+                  },
                   "children": {
                     "variable": {
                       "context": {
@@ -519,10 +535,6 @@
                       "value": "A"
                     }
                   },
-                  "context": {
-                    "id": "<variable>:A@[L0:C6, L0:C7]",
-                    "snippet": "A"
-                  },
                   "end": 7,
                   "endPos": {
                     "offset": 7,
@@ -539,10 +551,6 @@
                     "column": 6
                   }
                 }
-              },
-              "context": {
-                "id": "<primary-expression>@[L0:C6, L0:C7]",
-                "snippet": "A"
               },
               "end": 7,
               "endPos": {
@@ -586,10 +594,6 @@
               "value": "Table"
             }
           },
-          "context": {
-            "id": "<element-declaration>:A@[L0:C0, L3:C1]",
-            "snippet": "Table A {\n...e number\n}"
-          },
           "end": 42,
           "endPos": {
             "offset": 42,
@@ -632,8 +636,16 @@
           }
         },
         {
+          "context": {
+            "id": "<element-declaration>:B@[L5:C0, L8:C1]",
+            "snippet": "Table B {\n...e number\n}"
+          },
           "children": {
             "body": {
+              "context": {
+                "id": "<block-expression>@[L5:C8, L8:C1]",
+                "snippet": "{\n    id i...e number\n}"
+              },
               "children": {
                 "blockCloseBrace": {
                   "context": {
@@ -687,11 +699,23 @@
                 },
                 "body": [
                   {
+                    "context": {
+                      "id": "<function-application>@[L6:C4, L6:C14]",
+                      "snippet": "id integer"
+                    },
                     "children": {
                       "args": [
                         {
+                          "context": {
+                            "id": "<primary-expression>@[L6:C7, L6:C14]",
+                            "snippet": "integer"
+                          },
                           "children": {
                             "expression": {
+                              "context": {
+                                "id": "<variable>:integer@[L6:C7, L6:C14]",
+                                "snippet": "integer"
+                              },
                               "children": {
                                 "variable": {
                                   "context": {
@@ -719,10 +743,6 @@
                                   "value": "integer"
                                 }
                               },
-                              "context": {
-                                "id": "<variable>:integer@[L6:C7, L6:C14]",
-                                "snippet": "integer"
-                              },
                               "end": 68,
                               "endPos": {
                                 "offset": 68,
@@ -739,10 +759,6 @@
                                 "column": 7
                               }
                             }
-                          },
-                          "context": {
-                            "id": "<primary-expression>@[L6:C7, L6:C14]",
-                            "snippet": "integer"
                           },
                           "end": 68,
                           "endPos": {
@@ -762,8 +778,16 @@
                         }
                       ],
                       "callee": {
+                        "context": {
+                          "id": "<primary-expression>@[L6:C4, L6:C6]",
+                          "snippet": "id"
+                        },
                         "children": {
                           "expression": {
+                            "context": {
+                              "id": "<variable>:id@[L6:C4, L6:C6]",
+                              "snippet": "id"
+                            },
                             "children": {
                               "variable": {
                                 "context": {
@@ -791,10 +815,6 @@
                                 "value": "id"
                               }
                             },
-                            "context": {
-                              "id": "<variable>:id@[L6:C4, L6:C6]",
-                              "snippet": "id"
-                            },
                             "end": 60,
                             "endPos": {
                               "offset": 60,
@@ -812,10 +832,6 @@
                             }
                           }
                         },
-                        "context": {
-                          "id": "<primary-expression>@[L6:C4, L6:C6]",
-                          "snippet": "id"
-                        },
                         "end": 60,
                         "endPos": {
                           "offset": 60,
@@ -832,10 +848,6 @@
                           "column": 4
                         }
                       }
-                    },
-                    "context": {
-                      "id": "<function-application>@[L6:C4, L6:C14]",
-                      "snippet": "id integer"
                     },
                     "end": 68,
                     "endPos": {
@@ -865,11 +877,23 @@
                     }
                   },
                   {
+                    "context": {
+                      "id": "<function-application>@[L7:C4, L7:C15]",
+                      "snippet": "code number"
+                    },
                     "children": {
                       "args": [
                         {
+                          "context": {
+                            "id": "<primary-expression>@[L7:C9, L7:C15]",
+                            "snippet": "number"
+                          },
                           "children": {
                             "expression": {
+                              "context": {
+                                "id": "<variable>:number@[L7:C9, L7:C15]",
+                                "snippet": "number"
+                              },
                               "children": {
                                 "variable": {
                                   "context": {
@@ -897,10 +921,6 @@
                                   "value": "number"
                                 }
                               },
-                              "context": {
-                                "id": "<variable>:number@[L7:C9, L7:C15]",
-                                "snippet": "number"
-                              },
                               "end": 84,
                               "endPos": {
                                 "offset": 84,
@@ -917,10 +937,6 @@
                                 "column": 9
                               }
                             }
-                          },
-                          "context": {
-                            "id": "<primary-expression>@[L7:C9, L7:C15]",
-                            "snippet": "number"
                           },
                           "end": 84,
                           "endPos": {
@@ -940,8 +956,16 @@
                         }
                       ],
                       "callee": {
+                        "context": {
+                          "id": "<primary-expression>@[L7:C4, L7:C8]",
+                          "snippet": "code"
+                        },
                         "children": {
                           "expression": {
+                            "context": {
+                              "id": "<variable>:code@[L7:C4, L7:C8]",
+                              "snippet": "code"
+                            },
                             "children": {
                               "variable": {
                                 "context": {
@@ -969,10 +993,6 @@
                                 "value": "code"
                               }
                             },
-                            "context": {
-                              "id": "<variable>:code@[L7:C4, L7:C8]",
-                              "snippet": "code"
-                            },
                             "end": 77,
                             "endPos": {
                               "offset": 77,
@@ -990,10 +1010,6 @@
                             }
                           }
                         },
-                        "context": {
-                          "id": "<primary-expression>@[L7:C4, L7:C8]",
-                          "snippet": "code"
-                        },
                         "end": 77,
                         "endPos": {
                           "offset": 77,
@@ -1010,10 +1026,6 @@
                           "column": 4
                         }
                       }
-                    },
-                    "context": {
-                      "id": "<function-application>@[L7:C4, L7:C15]",
-                      "snippet": "code number"
                     },
                     "end": 84,
                     "endPos": {
@@ -1044,10 +1056,6 @@
                   }
                 ]
               },
-              "context": {
-                "id": "<block-expression>@[L5:C8, L8:C1]",
-                "snippet": "{\n    id i...e number\n}"
-              },
               "end": 86,
               "endPos": {
                 "offset": 86,
@@ -1065,8 +1073,16 @@
               }
             },
             "name": {
+              "context": {
+                "id": "<primary-expression>@[L5:C6, L5:C7]",
+                "snippet": "B"
+              },
               "children": {
                 "expression": {
+                  "context": {
+                    "id": "<variable>:B@[L5:C6, L5:C7]",
+                    "snippet": "B"
+                  },
                   "children": {
                     "variable": {
                       "context": {
@@ -1094,10 +1110,6 @@
                       "value": "B"
                     }
                   },
-                  "context": {
-                    "id": "<variable>:B@[L5:C6, L5:C7]",
-                    "snippet": "B"
-                  },
                   "end": 51,
                   "endPos": {
                     "offset": 51,
@@ -1114,10 +1126,6 @@
                     "column": 6
                   }
                 }
-              },
-              "context": {
-                "id": "<primary-expression>@[L5:C6, L5:C7]",
-                "snippet": "B"
               },
               "end": 51,
               "endPos": {
@@ -1161,10 +1169,6 @@
               "value": "Table"
             }
           },
-          "context": {
-            "id": "<element-declaration>:B@[L5:C0, L8:C1]",
-            "snippet": "Table B {\n...e number\n}"
-          },
           "end": 86,
           "endPos": {
             "offset": 86,
@@ -1207,8 +1211,16 @@
           }
         },
         {
+          "context": {
+            "id": "<element-declaration>:C@[L10:C0, L15:C1]",
+            "snippet": "Table C {\n...> B.code\n}"
+          },
           "children": {
             "body": {
+              "context": {
+                "id": "<block-expression>@[L10:C8, L15:C1]",
+                "snippet": "{\n    id i...> B.code\n}"
+              },
               "children": {
                 "blockCloseBrace": {
                   "context": {
@@ -1262,11 +1274,23 @@
                 },
                 "body": [
                   {
+                    "context": {
+                      "id": "<function-application>@[L11:C4, L11:C14]",
+                      "snippet": "id integer"
+                    },
                     "children": {
                       "args": [
                         {
+                          "context": {
+                            "id": "<primary-expression>@[L11:C7, L11:C14]",
+                            "snippet": "integer"
+                          },
                           "children": {
                             "expression": {
+                              "context": {
+                                "id": "<variable>:integer@[L11:C7, L11:C14]",
+                                "snippet": "integer"
+                              },
                               "children": {
                                 "variable": {
                                   "context": {
@@ -1294,10 +1318,6 @@
                                   "value": "integer"
                                 }
                               },
-                              "context": {
-                                "id": "<variable>:integer@[L11:C7, L11:C14]",
-                                "snippet": "integer"
-                              },
                               "end": 112,
                               "endPos": {
                                 "offset": 112,
@@ -1314,10 +1334,6 @@
                                 "column": 7
                               }
                             }
-                          },
-                          "context": {
-                            "id": "<primary-expression>@[L11:C7, L11:C14]",
-                            "snippet": "integer"
                           },
                           "end": 112,
                           "endPos": {
@@ -1337,8 +1353,16 @@
                         }
                       ],
                       "callee": {
+                        "context": {
+                          "id": "<primary-expression>@[L11:C4, L11:C6]",
+                          "snippet": "id"
+                        },
                         "children": {
                           "expression": {
+                            "context": {
+                              "id": "<variable>:id@[L11:C4, L11:C6]",
+                              "snippet": "id"
+                            },
                             "children": {
                               "variable": {
                                 "context": {
@@ -1366,10 +1390,6 @@
                                 "value": "id"
                               }
                             },
-                            "context": {
-                              "id": "<variable>:id@[L11:C4, L11:C6]",
-                              "snippet": "id"
-                            },
                             "end": 104,
                             "endPos": {
                               "offset": 104,
@@ -1387,10 +1407,6 @@
                             }
                           }
                         },
-                        "context": {
-                          "id": "<primary-expression>@[L11:C4, L11:C6]",
-                          "snippet": "id"
-                        },
                         "end": 104,
                         "endPos": {
                           "offset": 104,
@@ -1407,10 +1423,6 @@
                           "column": 4
                         }
                       }
-                    },
-                    "context": {
-                      "id": "<function-application>@[L11:C4, L11:C14]",
-                      "snippet": "id integer"
                     },
                     "end": 112,
                     "endPos": {
@@ -1440,11 +1452,23 @@
                     }
                   },
                   {
+                    "context": {
+                      "id": "<function-application>@[L12:C4, L12:C15]",
+                      "snippet": "code number"
+                    },
                     "children": {
                       "args": [
                         {
+                          "context": {
+                            "id": "<primary-expression>@[L12:C9, L12:C15]",
+                            "snippet": "number"
+                          },
                           "children": {
                             "expression": {
+                              "context": {
+                                "id": "<variable>:number@[L12:C9, L12:C15]",
+                                "snippet": "number"
+                              },
                               "children": {
                                 "variable": {
                                   "context": {
@@ -1472,10 +1496,6 @@
                                   "value": "number"
                                 }
                               },
-                              "context": {
-                                "id": "<variable>:number@[L12:C9, L12:C15]",
-                                "snippet": "number"
-                              },
                               "end": 128,
                               "endPos": {
                                 "offset": 128,
@@ -1492,10 +1512,6 @@
                                 "column": 9
                               }
                             }
-                          },
-                          "context": {
-                            "id": "<primary-expression>@[L12:C9, L12:C15]",
-                            "snippet": "number"
                           },
                           "end": 128,
                           "endPos": {
@@ -1515,8 +1531,16 @@
                         }
                       ],
                       "callee": {
+                        "context": {
+                          "id": "<primary-expression>@[L12:C4, L12:C8]",
+                          "snippet": "code"
+                        },
                         "children": {
                           "expression": {
+                            "context": {
+                              "id": "<variable>:code@[L12:C4, L12:C8]",
+                              "snippet": "code"
+                            },
                             "children": {
                               "variable": {
                                 "context": {
@@ -1544,10 +1568,6 @@
                                 "value": "code"
                               }
                             },
-                            "context": {
-                              "id": "<variable>:code@[L12:C4, L12:C8]",
-                              "snippet": "code"
-                            },
                             "end": 121,
                             "endPos": {
                               "offset": 121,
@@ -1565,10 +1585,6 @@
                             }
                           }
                         },
-                        "context": {
-                          "id": "<primary-expression>@[L12:C4, L12:C8]",
-                          "snippet": "code"
-                        },
                         "end": 121,
                         "endPos": {
                           "offset": 121,
@@ -1585,10 +1601,6 @@
                           "column": 4
                         }
                       }
-                    },
-                    "context": {
-                      "id": "<function-application>@[L12:C4, L12:C15]",
-                      "snippet": "code number"
                     },
                     "end": 128,
                     "endPos": {
@@ -1618,15 +1630,35 @@
                     }
                   },
                   {
+                    "context": {
+                      "id": "<element-declaration>:@[L13:C4, L13:C18]",
+                      "snippet": "Ref: id > A.id"
+                    },
                     "children": {
                       "body": {
+                        "context": {
+                          "id": "<function-application>@[L13:C9, L13:C18]",
+                          "snippet": "id > A.id"
+                        },
                         "children": {
                           "args": [],
                           "callee": {
+                            "context": {
+                              "id": "<infix-expression>@[L13:C9, L13:C18]",
+                              "snippet": "id > A.id"
+                            },
                             "children": {
                               "leftExpression": {
+                                "context": {
+                                  "id": "<primary-expression>@[L13:C9, L13:C11]",
+                                  "snippet": "id"
+                                },
                                 "children": {
                                   "expression": {
+                                    "context": {
+                                      "id": "<variable>:id@[L13:C9, L13:C11]",
+                                      "snippet": "id"
+                                    },
                                     "children": {
                                       "variable": {
                                         "context": {
@@ -1654,10 +1686,6 @@
                                         "value": "id"
                                       }
                                     },
-                                    "context": {
-                                      "id": "<variable>:id@[L13:C9, L13:C11]",
-                                      "snippet": "id"
-                                    },
                                     "end": 140,
                                     "endPos": {
                                       "offset": 140,
@@ -1674,10 +1702,6 @@
                                       "column": 9
                                     }
                                   }
-                                },
-                                "context": {
-                                  "id": "<primary-expression>@[L13:C9, L13:C11]",
-                                  "snippet": "id"
                                 },
                                 "end": 140,
                                 "endPos": {
@@ -1721,10 +1745,22 @@
                                 "value": ">"
                               },
                               "rightExpression": {
+                                "context": {
+                                  "id": "<infix-expression>@[L13:C14, L13:C18]",
+                                  "snippet": "A.id"
+                                },
                                 "children": {
                                   "leftExpression": {
+                                    "context": {
+                                      "id": "<primary-expression>@[L13:C14, L13:C15]",
+                                      "snippet": "A"
+                                    },
                                     "children": {
                                       "expression": {
+                                        "context": {
+                                          "id": "<variable>:A@[L13:C14, L13:C15]",
+                                          "snippet": "A"
+                                        },
                                         "children": {
                                           "variable": {
                                             "context": {
@@ -1752,10 +1788,6 @@
                                             "value": "A"
                                           }
                                         },
-                                        "context": {
-                                          "id": "<variable>:A@[L13:C14, L13:C15]",
-                                          "snippet": "A"
-                                        },
                                         "end": 144,
                                         "endPos": {
                                           "offset": 144,
@@ -1772,10 +1804,6 @@
                                           "column": 14
                                         }
                                       }
-                                    },
-                                    "context": {
-                                      "id": "<primary-expression>@[L13:C14, L13:C15]",
-                                      "snippet": "A"
                                     },
                                     "end": 144,
                                     "endPos": {
@@ -1819,8 +1847,16 @@
                                     "value": "."
                                   },
                                   "rightExpression": {
+                                    "context": {
+                                      "id": "<primary-expression>@[L13:C16, L13:C18]",
+                                      "snippet": "id"
+                                    },
                                     "children": {
                                       "expression": {
+                                        "context": {
+                                          "id": "<variable>:id@[L13:C16, L13:C18]",
+                                          "snippet": "id"
+                                        },
                                         "children": {
                                           "variable": {
                                             "context": {
@@ -1848,10 +1884,6 @@
                                             "value": "id"
                                           }
                                         },
-                                        "context": {
-                                          "id": "<variable>:id@[L13:C16, L13:C18]",
-                                          "snippet": "id"
-                                        },
                                         "end": 147,
                                         "endPos": {
                                           "offset": 147,
@@ -1868,10 +1900,6 @@
                                           "column": 16
                                         }
                                       }
-                                    },
-                                    "context": {
-                                      "id": "<primary-expression>@[L13:C16, L13:C18]",
-                                      "snippet": "id"
                                     },
                                     "end": 147,
                                     "endPos": {
@@ -1890,10 +1918,6 @@
                                     }
                                   }
                                 },
-                                "context": {
-                                  "id": "<infix-expression>@[L13:C14, L13:C18]",
-                                  "snippet": "A.id"
-                                },
                                 "end": 147,
                                 "endPos": {
                                   "offset": 147,
@@ -1911,10 +1935,6 @@
                                 }
                               }
                             },
-                            "context": {
-                              "id": "<infix-expression>@[L13:C9, L13:C18]",
-                              "snippet": "id > A.id"
-                            },
                             "end": 147,
                             "endPos": {
                               "offset": 147,
@@ -1931,10 +1951,6 @@
                               "column": 9
                             }
                           }
-                        },
-                        "context": {
-                          "id": "<function-application>@[L13:C9, L13:C18]",
-                          "snippet": "id > A.id"
                         },
                         "end": 147,
                         "endPos": {
@@ -2003,10 +2019,6 @@
                         "value": "Ref"
                       }
                     },
-                    "context": {
-                      "id": "<element-declaration>:@[L13:C4, L13:C18]",
-                      "snippet": "Ref: id > A.id"
-                    },
                     "end": 147,
                     "endPos": {
                       "offset": 147,
@@ -2024,15 +2036,35 @@
                     }
                   },
                   {
+                    "context": {
+                      "id": "<element-declaration>:@[L14:C4, L14:C22]",
+                      "snippet": "Ref: code > B.code"
+                    },
                     "children": {
                       "body": {
+                        "context": {
+                          "id": "<function-application>@[L14:C9, L14:C22]",
+                          "snippet": "code > B.code"
+                        },
                         "children": {
                           "args": [],
                           "callee": {
+                            "context": {
+                              "id": "<infix-expression>@[L14:C9, L14:C22]",
+                              "snippet": "code > B.code"
+                            },
                             "children": {
                               "leftExpression": {
+                                "context": {
+                                  "id": "<primary-expression>@[L14:C9, L14:C13]",
+                                  "snippet": "code"
+                                },
                                 "children": {
                                   "expression": {
+                                    "context": {
+                                      "id": "<variable>:code@[L14:C9, L14:C13]",
+                                      "snippet": "code"
+                                    },
                                     "children": {
                                       "variable": {
                                         "context": {
@@ -2060,10 +2092,6 @@
                                         "value": "code"
                                       }
                                     },
-                                    "context": {
-                                      "id": "<variable>:code@[L14:C9, L14:C13]",
-                                      "snippet": "code"
-                                    },
                                     "end": 161,
                                     "endPos": {
                                       "offset": 161,
@@ -2080,10 +2108,6 @@
                                       "column": 9
                                     }
                                   }
-                                },
-                                "context": {
-                                  "id": "<primary-expression>@[L14:C9, L14:C13]",
-                                  "snippet": "code"
                                 },
                                 "end": 161,
                                 "endPos": {
@@ -2127,10 +2151,22 @@
                                 "value": ">"
                               },
                               "rightExpression": {
+                                "context": {
+                                  "id": "<infix-expression>@[L14:C16, L14:C22]",
+                                  "snippet": "B.code"
+                                },
                                 "children": {
                                   "leftExpression": {
+                                    "context": {
+                                      "id": "<primary-expression>@[L14:C16, L14:C17]",
+                                      "snippet": "B"
+                                    },
                                     "children": {
                                       "expression": {
+                                        "context": {
+                                          "id": "<variable>:B@[L14:C16, L14:C17]",
+                                          "snippet": "B"
+                                        },
                                         "children": {
                                           "variable": {
                                             "context": {
@@ -2158,10 +2194,6 @@
                                             "value": "B"
                                           }
                                         },
-                                        "context": {
-                                          "id": "<variable>:B@[L14:C16, L14:C17]",
-                                          "snippet": "B"
-                                        },
                                         "end": 165,
                                         "endPos": {
                                           "offset": 165,
@@ -2178,10 +2210,6 @@
                                           "column": 16
                                         }
                                       }
-                                    },
-                                    "context": {
-                                      "id": "<primary-expression>@[L14:C16, L14:C17]",
-                                      "snippet": "B"
                                     },
                                     "end": 165,
                                     "endPos": {
@@ -2225,8 +2253,16 @@
                                     "value": "."
                                   },
                                   "rightExpression": {
+                                    "context": {
+                                      "id": "<primary-expression>@[L14:C18, L14:C22]",
+                                      "snippet": "code"
+                                    },
                                     "children": {
                                       "expression": {
+                                        "context": {
+                                          "id": "<variable>:code@[L14:C18, L14:C22]",
+                                          "snippet": "code"
+                                        },
                                         "children": {
                                           "variable": {
                                             "context": {
@@ -2254,10 +2290,6 @@
                                             "value": "code"
                                           }
                                         },
-                                        "context": {
-                                          "id": "<variable>:code@[L14:C18, L14:C22]",
-                                          "snippet": "code"
-                                        },
                                         "end": 170,
                                         "endPos": {
                                           "offset": 170,
@@ -2274,10 +2306,6 @@
                                           "column": 18
                                         }
                                       }
-                                    },
-                                    "context": {
-                                      "id": "<primary-expression>@[L14:C18, L14:C22]",
-                                      "snippet": "code"
                                     },
                                     "end": 170,
                                     "endPos": {
@@ -2296,10 +2324,6 @@
                                     }
                                   }
                                 },
-                                "context": {
-                                  "id": "<infix-expression>@[L14:C16, L14:C22]",
-                                  "snippet": "B.code"
-                                },
                                 "end": 170,
                                 "endPos": {
                                   "offset": 170,
@@ -2317,10 +2341,6 @@
                                 }
                               }
                             },
-                            "context": {
-                              "id": "<infix-expression>@[L14:C9, L14:C22]",
-                              "snippet": "code > B.code"
-                            },
                             "end": 170,
                             "endPos": {
                               "offset": 170,
@@ -2337,10 +2357,6 @@
                               "column": 9
                             }
                           }
-                        },
-                        "context": {
-                          "id": "<function-application>@[L14:C9, L14:C22]",
-                          "snippet": "code > B.code"
                         },
                         "end": 170,
                         "endPos": {
@@ -2409,10 +2425,6 @@
                         "value": "Ref"
                       }
                     },
-                    "context": {
-                      "id": "<element-declaration>:@[L14:C4, L14:C22]",
-                      "snippet": "Ref: code > B.code"
-                    },
                     "end": 170,
                     "endPos": {
                       "offset": 170,
@@ -2431,10 +2443,6 @@
                   }
                 ]
               },
-              "context": {
-                "id": "<block-expression>@[L10:C8, L15:C1]",
-                "snippet": "{\n    id i...> B.code\n}"
-              },
               "end": 172,
               "endPos": {
                 "offset": 172,
@@ -2452,8 +2460,16 @@
               }
             },
             "name": {
+              "context": {
+                "id": "<primary-expression>@[L10:C6, L10:C7]",
+                "snippet": "C"
+              },
               "children": {
                 "expression": {
+                  "context": {
+                    "id": "<variable>:C@[L10:C6, L10:C7]",
+                    "snippet": "C"
+                  },
                   "children": {
                     "variable": {
                       "context": {
@@ -2481,10 +2497,6 @@
                       "value": "C"
                     }
                   },
-                  "context": {
-                    "id": "<variable>:C@[L10:C6, L10:C7]",
-                    "snippet": "C"
-                  },
                   "end": 95,
                   "endPos": {
                     "offset": 95,
@@ -2501,10 +2513,6 @@
                     "column": 6
                   }
                 }
-              },
-              "context": {
-                "id": "<primary-expression>@[L10:C6, L10:C7]",
-                "snippet": "C"
               },
               "end": 95,
               "endPos": {
@@ -2547,10 +2555,6 @@
               "trailingTrivia": " ",
               "value": "Table"
             }
-          },
-          "context": {
-            "id": "<element-declaration>:C@[L10:C0, L15:C1]",
-            "snippet": "Table C {\n...> B.code\n}"
           },
           "end": 172,
           "endPos": {
@@ -2619,10 +2623,6 @@
         "trailingTrivia": "",
         "value": ""
       }
-    },
-    "context": {
-      "id": "<program>@[L0:C0, L15:C1]",
-      "snippet": "Table A {\n...> B.code\n}"
     },
     "end": 172,
     "endPos": {

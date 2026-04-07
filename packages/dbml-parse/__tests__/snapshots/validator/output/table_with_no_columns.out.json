@@ -1,11 +1,23 @@
 {
   "errors": [],
   "program": {
+    "context": {
+      "id": "<program>@[L0:C0, L2:C0]",
+      "snippet": "Table empt...table {\n}\n"
+    },
     "children": {
       "body": [
         {
+          "context": {
+            "id": "<element-declaration>:empty_table@[L0:C0, L1:C1]",
+            "snippet": "Table empt..._table {\n}"
+          },
           "children": {
             "body": {
+              "context": {
+                "id": "<block-expression>@[L0:C18, L1:C1]",
+                "snippet": "{\n}"
+              },
               "children": {
                 "blockCloseBrace": {
                   "context": {
@@ -59,10 +71,6 @@
                 },
                 "body": []
               },
-              "context": {
-                "id": "<block-expression>@[L0:C18, L1:C1]",
-                "snippet": "{\n}"
-              },
               "end": 21,
               "endPos": {
                 "offset": 21,
@@ -80,8 +88,16 @@
               }
             },
             "name": {
+              "context": {
+                "id": "<primary-expression>@[L0:C6, L0:C17]",
+                "snippet": "empty_table"
+              },
               "children": {
                 "expression": {
+                  "context": {
+                    "id": "<variable>:empty_table@[L0:C6, L0:C17]",
+                    "snippet": "empty_table"
+                  },
                   "children": {
                     "variable": {
                       "context": {
@@ -109,10 +125,6 @@
                       "value": "empty_table"
                     }
                   },
-                  "context": {
-                    "id": "<variable>:empty_table@[L0:C6, L0:C17]",
-                    "snippet": "empty_table"
-                  },
                   "end": 17,
                   "endPos": {
                     "offset": 17,
@@ -129,10 +141,6 @@
                     "column": 6
                   }
                 }
-              },
-              "context": {
-                "id": "<primary-expression>@[L0:C6, L0:C17]",
-                "snippet": "empty_table"
               },
               "end": 17,
               "endPos": {
@@ -175,10 +183,6 @@
               "trailingTrivia": " ",
               "value": "Table"
             }
-          },
-          "context": {
-            "id": "<element-declaration>:empty_table@[L0:C0, L1:C1]",
-            "snippet": "Table empt..._table {\n}"
           },
           "end": 21,
           "endPos": {
@@ -234,10 +238,6 @@
         "trailingTrivia": "",
         "value": ""
       }
-    },
-    "context": {
-      "id": "<program>@[L0:C0, L2:C0]",
-      "snippet": "Table empt...table {\n}\n"
     },
     "end": 22,
     "endPos": {

@@ -42,11 +42,23 @@
     }
   ],
   "program": {
+    "context": {
+      "id": "<program>@[L0:C0, L22:C1]",
+      "snippet": "Table User... tenant\r\n}"
+    },
     "children": {
       "body": [
         {
+          "context": {
+            "id": "<element-declaration>:Users@[L0:C0, L8:C1]",
+            "snippet": "Table User...us6 v2.\r\n}"
+          },
           "children": {
             "body": {
+              "context": {
+                "id": "<block-expression>@[L0:C12, L8:C1]",
+                "snippet": "{\r\n    id ...us6 v2.\r\n}"
+              },
               "children": {
                 "blockCloseBrace": {
                   "context": {
@@ -100,11 +112,23 @@
                 },
                 "body": [
                   {
+                    "context": {
+                      "id": "<function-application>@[L1:C4, L1:C14]",
+                      "snippet": "id integer"
+                    },
                     "children": {
                       "args": [
                         {
+                          "context": {
+                            "id": "<primary-expression>@[L1:C7, L1:C14]",
+                            "snippet": "integer"
+                          },
                           "children": {
                             "expression": {
+                              "context": {
+                                "id": "<variable>:integer@[L1:C7, L1:C14]",
+                                "snippet": "integer"
+                              },
                               "children": {
                                 "variable": {
                                   "context": {
@@ -132,10 +156,6 @@
                                   "value": "integer"
                                 }
                               },
-                              "context": {
-                                "id": "<variable>:integer@[L1:C7, L1:C14]",
-                                "snippet": "integer"
-                              },
                               "end": 29,
                               "endPos": {
                                 "offset": 29,
@@ -152,10 +172,6 @@
                                 "column": 7
                               }
                             }
-                          },
-                          "context": {
-                            "id": "<primary-expression>@[L1:C7, L1:C14]",
-                            "snippet": "integer"
                           },
                           "end": 29,
                           "endPos": {
@@ -175,8 +191,16 @@
                         }
                       ],
                       "callee": {
+                        "context": {
+                          "id": "<primary-expression>@[L1:C4, L1:C6]",
+                          "snippet": "id"
+                        },
                         "children": {
                           "expression": {
+                            "context": {
+                              "id": "<variable>:id@[L1:C4, L1:C6]",
+                              "snippet": "id"
+                            },
                             "children": {
                               "variable": {
                                 "context": {
@@ -204,10 +228,6 @@
                                 "value": "id"
                               }
                             },
-                            "context": {
-                              "id": "<variable>:id@[L1:C4, L1:C6]",
-                              "snippet": "id"
-                            },
                             "end": 21,
                             "endPos": {
                               "offset": 21,
@@ -225,10 +245,6 @@
                             }
                           }
                         },
-                        "context": {
-                          "id": "<primary-expression>@[L1:C4, L1:C6]",
-                          "snippet": "id"
-                        },
                         "end": 21,
                         "endPos": {
                           "offset": 21,
@@ -245,10 +261,6 @@
                           "column": 4
                         }
                       }
-                    },
-                    "context": {
-                      "id": "<function-application>@[L1:C4, L1:C14]",
-                      "snippet": "id integer"
                     },
                     "end": 29,
                     "endPos": {
@@ -278,13 +290,29 @@
                     }
                   },
                   {
+                    "context": {
+                      "id": "<function-application>@[L2:C4, L2:C21]",
+                      "snippet": "status1 v2.status"
+                    },
                     "children": {
                       "args": [
                         {
+                          "context": {
+                            "id": "<infix-expression>@[L2:C12, L2:C21]",
+                            "snippet": "v2.status"
+                          },
                           "children": {
                             "leftExpression": {
+                              "context": {
+                                "id": "<primary-expression>@[L2:C12, L2:C14]",
+                                "snippet": "v2"
+                              },
                               "children": {
                                 "expression": {
+                                  "context": {
+                                    "id": "<variable>:v2@[L2:C12, L2:C14]",
+                                    "snippet": "v2"
+                                  },
                                   "children": {
                                     "variable": {
                                       "context": {
@@ -312,10 +340,6 @@
                                       "value": "v2"
                                     }
                                   },
-                                  "context": {
-                                    "id": "<variable>:v2@[L2:C12, L2:C14]",
-                                    "snippet": "v2"
-                                  },
                                   "end": 45,
                                   "endPos": {
                                     "offset": 45,
@@ -332,10 +356,6 @@
                                     "column": 12
                                   }
                                 }
-                              },
-                              "context": {
-                                "id": "<primary-expression>@[L2:C12, L2:C14]",
-                                "snippet": "v2"
                               },
                               "end": 45,
                               "endPos": {
@@ -382,8 +402,16 @@
                               "value": "."
                             },
                             "rightExpression": {
+                              "context": {
+                                "id": "<primary-expression>@[L2:C15, L2:C21]",
+                                "snippet": "status"
+                              },
                               "children": {
                                 "expression": {
+                                  "context": {
+                                    "id": "<variable>:status@[L2:C15, L2:C21]",
+                                    "snippet": "status"
+                                  },
                                   "children": {
                                     "variable": {
                                       "context": {
@@ -411,10 +439,6 @@
                                       "value": "status"
                                     }
                                   },
-                                  "context": {
-                                    "id": "<variable>:status@[L2:C15, L2:C21]",
-                                    "snippet": "status"
-                                  },
                                   "end": 52,
                                   "endPos": {
                                     "offset": 52,
@@ -431,10 +455,6 @@
                                     "column": 15
                                   }
                                 }
-                              },
-                              "context": {
-                                "id": "<primary-expression>@[L2:C15, L2:C21]",
-                                "snippet": "status"
                               },
                               "end": 52,
                               "endPos": {
@@ -459,10 +479,6 @@
                               }
                             }
                           },
-                          "context": {
-                            "id": "<infix-expression>@[L2:C12, L2:C21]",
-                            "snippet": "v2.status"
-                          },
                           "end": 52,
                           "endPos": {
                             "offset": 52,
@@ -481,8 +497,16 @@
                         }
                       ],
                       "callee": {
+                        "context": {
+                          "id": "<primary-expression>@[L2:C4, L2:C11]",
+                          "snippet": "status1"
+                        },
                         "children": {
                           "expression": {
+                            "context": {
+                              "id": "<variable>:status1@[L2:C4, L2:C11]",
+                              "snippet": "status1"
+                            },
                             "children": {
                               "variable": {
                                 "context": {
@@ -510,10 +534,6 @@
                                 "value": "status1"
                               }
                             },
-                            "context": {
-                              "id": "<variable>:status1@[L2:C4, L2:C11]",
-                              "snippet": "status1"
-                            },
                             "end": 42,
                             "endPos": {
                               "offset": 42,
@@ -531,10 +551,6 @@
                             }
                           }
                         },
-                        "context": {
-                          "id": "<primary-expression>@[L2:C4, L2:C11]",
-                          "snippet": "status1"
-                        },
                         "end": 42,
                         "endPos": {
                           "offset": 42,
@@ -551,10 +567,6 @@
                           "column": 4
                         }
                       }
-                    },
-                    "context": {
-                      "id": "<function-application>@[L2:C4, L2:C21]",
-                      "snippet": "status1 v2.status"
                     },
                     "end": 52,
                     "endPos": {
@@ -584,13 +596,29 @@
                     }
                   },
                   {
+                    "context": {
+                      "id": "<function-application>@[L3:C4, L3:C25]",
+                      "snippet": "status2 pu...lic.status"
+                    },
                     "children": {
                       "args": [
                         {
+                          "context": {
+                            "id": "<infix-expression>@[L3:C12, L3:C25]",
+                            "snippet": "public.status"
+                          },
                           "children": {
                             "leftExpression": {
+                              "context": {
+                                "id": "<primary-expression>@[L3:C12, L3:C18]",
+                                "snippet": "public"
+                              },
                               "children": {
                                 "expression": {
+                                  "context": {
+                                    "id": "<variable>:public@[L3:C12, L3:C18]",
+                                    "snippet": "public"
+                                  },
                                   "children": {
                                     "variable": {
                                       "context": {
@@ -618,10 +646,6 @@
                                       "value": "public"
                                     }
                                   },
-                                  "context": {
-                                    "id": "<variable>:public@[L3:C12, L3:C18]",
-                                    "snippet": "public"
-                                  },
                                   "end": 72,
                                   "endPos": {
                                     "offset": 72,
@@ -638,10 +662,6 @@
                                     "column": 12
                                   }
                                 }
-                              },
-                              "context": {
-                                "id": "<primary-expression>@[L3:C12, L3:C18]",
-                                "snippet": "public"
                               },
                               "end": 72,
                               "endPos": {
@@ -685,8 +705,16 @@
                               "value": "."
                             },
                             "rightExpression": {
+                              "context": {
+                                "id": "<primary-expression>@[L3:C19, L3:C25]",
+                                "snippet": "status"
+                              },
                               "children": {
                                 "expression": {
+                                  "context": {
+                                    "id": "<variable>:status@[L3:C19, L3:C25]",
+                                    "snippet": "status"
+                                  },
                                   "children": {
                                     "variable": {
                                       "context": {
@@ -714,10 +742,6 @@
                                       "value": "status"
                                     }
                                   },
-                                  "context": {
-                                    "id": "<variable>:status@[L3:C19, L3:C25]",
-                                    "snippet": "status"
-                                  },
                                   "end": 79,
                                   "endPos": {
                                     "offset": 79,
@@ -734,10 +758,6 @@
                                     "column": 19
                                   }
                                 }
-                              },
-                              "context": {
-                                "id": "<primary-expression>@[L3:C19, L3:C25]",
-                                "snippet": "status"
                               },
                               "end": 79,
                               "endPos": {
@@ -762,10 +782,6 @@
                               }
                             }
                           },
-                          "context": {
-                            "id": "<infix-expression>@[L3:C12, L3:C25]",
-                            "snippet": "public.status"
-                          },
                           "end": 79,
                           "endPos": {
                             "offset": 79,
@@ -784,8 +800,16 @@
                         }
                       ],
                       "callee": {
+                        "context": {
+                          "id": "<primary-expression>@[L3:C4, L3:C11]",
+                          "snippet": "status2"
+                        },
                         "children": {
                           "expression": {
+                            "context": {
+                              "id": "<variable>:status2@[L3:C4, L3:C11]",
+                              "snippet": "status2"
+                            },
                             "children": {
                               "variable": {
                                 "context": {
@@ -813,10 +837,6 @@
                                 "value": "status2"
                               }
                             },
-                            "context": {
-                              "id": "<variable>:status2@[L3:C4, L3:C11]",
-                              "snippet": "status2"
-                            },
                             "end": 65,
                             "endPos": {
                               "offset": 65,
@@ -834,10 +854,6 @@
                             }
                           }
                         },
-                        "context": {
-                          "id": "<primary-expression>@[L3:C4, L3:C11]",
-                          "snippet": "status2"
-                        },
                         "end": 65,
                         "endPos": {
                           "offset": 65,
@@ -854,10 +870,6 @@
                           "column": 4
                         }
                       }
-                    },
-                    "context": {
-                      "id": "<function-application>@[L3:C4, L3:C25]",
-                      "snippet": "status2 pu...lic.status"
                     },
                     "end": 79,
                     "endPos": {
@@ -887,13 +899,29 @@
                     }
                   },
                   {
+                    "context": {
+                      "id": "<function-application>@[L4:C4, L4:C26]",
+                      "snippet": "status3 pu...ic.statuss"
+                    },
                     "children": {
                       "args": [
                         {
+                          "context": {
+                            "id": "<infix-expression>@[L4:C12, L4:C26]",
+                            "snippet": "public.statuss"
+                          },
                           "children": {
                             "leftExpression": {
+                              "context": {
+                                "id": "<primary-expression>@[L4:C12, L4:C18]",
+                                "snippet": "public"
+                              },
                               "children": {
                                 "expression": {
+                                  "context": {
+                                    "id": "<variable>:public@[L4:C12, L4:C18]",
+                                    "snippet": "public"
+                                  },
                                   "children": {
                                     "variable": {
                                       "context": {
@@ -921,10 +949,6 @@
                                       "value": "public"
                                     }
                                   },
-                                  "context": {
-                                    "id": "<variable>:public@[L4:C12, L4:C18]",
-                                    "snippet": "public"
-                                  },
                                   "end": 99,
                                   "endPos": {
                                     "offset": 99,
@@ -941,10 +965,6 @@
                                     "column": 12
                                   }
                                 }
-                              },
-                              "context": {
-                                "id": "<primary-expression>@[L4:C12, L4:C18]",
-                                "snippet": "public"
                               },
                               "end": 99,
                               "endPos": {
@@ -988,8 +1008,16 @@
                               "value": "."
                             },
                             "rightExpression": {
+                              "context": {
+                                "id": "<primary-expression>@[L4:C19, L4:C26]",
+                                "snippet": "statuss"
+                              },
                               "children": {
                                 "expression": {
+                                  "context": {
+                                    "id": "<variable>:statuss@[L4:C19, L4:C26]",
+                                    "snippet": "statuss"
+                                  },
                                   "children": {
                                     "variable": {
                                       "context": {
@@ -1017,10 +1045,6 @@
                                       "value": "statuss"
                                     }
                                   },
-                                  "context": {
-                                    "id": "<variable>:statuss@[L4:C19, L4:C26]",
-                                    "snippet": "statuss"
-                                  },
                                   "end": 107,
                                   "endPos": {
                                     "offset": 107,
@@ -1038,10 +1062,6 @@
                                   }
                                 }
                               },
-                              "context": {
-                                "id": "<primary-expression>@[L4:C19, L4:C26]",
-                                "snippet": "statuss"
-                              },
                               "end": 107,
                               "endPos": {
                                 "offset": 107,
@@ -1058,10 +1078,6 @@
                                 "column": 19
                               }
                             }
-                          },
-                          "context": {
-                            "id": "<infix-expression>@[L4:C12, L4:C26]",
-                            "snippet": "public.statuss"
                           },
                           "end": 107,
                           "endPos": {
@@ -1081,8 +1097,16 @@
                         }
                       ],
                       "callee": {
+                        "context": {
+                          "id": "<primary-expression>@[L4:C4, L4:C11]",
+                          "snippet": "status3"
+                        },
                         "children": {
                           "expression": {
+                            "context": {
+                              "id": "<variable>:status3@[L4:C4, L4:C11]",
+                              "snippet": "status3"
+                            },
                             "children": {
                               "variable": {
                                 "context": {
@@ -1110,10 +1134,6 @@
                                 "value": "status3"
                               }
                             },
-                            "context": {
-                              "id": "<variable>:status3@[L4:C4, L4:C11]",
-                              "snippet": "status3"
-                            },
                             "end": 92,
                             "endPos": {
                               "offset": 92,
@@ -1131,10 +1151,6 @@
                             }
                           }
                         },
-                        "context": {
-                          "id": "<primary-expression>@[L4:C4, L4:C11]",
-                          "snippet": "status3"
-                        },
                         "end": 92,
                         "endPos": {
                           "offset": 92,
@@ -1151,10 +1167,6 @@
                           "column": 4
                         }
                       }
-                    },
-                    "context": {
-                      "id": "<function-application>@[L4:C4, L4:C26]",
-                      "snippet": "status3 pu...ic.statuss"
                     },
                     "end": 107,
                     "endPos": {
@@ -1184,13 +1196,29 @@
                     }
                   },
                   {
+                    "context": {
+                      "id": "<function-application>@[L5:C4, L5:C22]",
+                      "snippet": "status4 v2.statuss"
+                    },
                     "children": {
                       "args": [
                         {
+                          "context": {
+                            "id": "<infix-expression>@[L5:C12, L5:C22]",
+                            "snippet": "v2.statuss"
+                          },
                           "children": {
                             "leftExpression": {
+                              "context": {
+                                "id": "<primary-expression>@[L5:C12, L5:C14]",
+                                "snippet": "v2"
+                              },
                               "children": {
                                 "expression": {
+                                  "context": {
+                                    "id": "<variable>:v2@[L5:C12, L5:C14]",
+                                    "snippet": "v2"
+                                  },
                                   "children": {
                                     "variable": {
                                       "context": {
@@ -1218,10 +1246,6 @@
                                       "value": "v2"
                                     }
                                   },
-                                  "context": {
-                                    "id": "<variable>:v2@[L5:C12, L5:C14]",
-                                    "snippet": "v2"
-                                  },
                                   "end": 123,
                                   "endPos": {
                                     "offset": 123,
@@ -1238,10 +1262,6 @@
                                     "column": 12
                                   }
                                 }
-                              },
-                              "context": {
-                                "id": "<primary-expression>@[L5:C12, L5:C14]",
-                                "snippet": "v2"
                               },
                               "end": 123,
                               "endPos": {
@@ -1288,8 +1308,16 @@
                               "value": "."
                             },
                             "rightExpression": {
+                              "context": {
+                                "id": "<primary-expression>@[L5:C15, L5:C22]",
+                                "snippet": "statuss"
+                              },
                               "children": {
                                 "expression": {
+                                  "context": {
+                                    "id": "<variable>:statuss@[L5:C15, L5:C22]",
+                                    "snippet": "statuss"
+                                  },
                                   "children": {
                                     "variable": {
                                       "context": {
@@ -1317,10 +1345,6 @@
                                       "value": "statuss"
                                     }
                                   },
-                                  "context": {
-                                    "id": "<variable>:statuss@[L5:C15, L5:C22]",
-                                    "snippet": "statuss"
-                                  },
                                   "end": 131,
                                   "endPos": {
                                     "offset": 131,
@@ -1338,10 +1362,6 @@
                                   }
                                 }
                               },
-                              "context": {
-                                "id": "<primary-expression>@[L5:C15, L5:C22]",
-                                "snippet": "statuss"
-                              },
                               "end": 131,
                               "endPos": {
                                 "offset": 131,
@@ -1358,10 +1378,6 @@
                                 "column": 15
                               }
                             }
-                          },
-                          "context": {
-                            "id": "<infix-expression>@[L5:C12, L5:C22]",
-                            "snippet": "v2.statuss"
                           },
                           "end": 131,
                           "endPos": {
@@ -1381,8 +1397,16 @@
                         }
                       ],
                       "callee": {
+                        "context": {
+                          "id": "<primary-expression>@[L5:C4, L5:C11]",
+                          "snippet": "status4"
+                        },
                         "children": {
                           "expression": {
+                            "context": {
+                              "id": "<variable>:status4@[L5:C4, L5:C11]",
+                              "snippet": "status4"
+                            },
                             "children": {
                               "variable": {
                                 "context": {
@@ -1410,10 +1434,6 @@
                                 "value": "status4"
                               }
                             },
-                            "context": {
-                              "id": "<variable>:status4@[L5:C4, L5:C11]",
-                              "snippet": "status4"
-                            },
                             "end": 120,
                             "endPos": {
                               "offset": 120,
@@ -1431,10 +1451,6 @@
                             }
                           }
                         },
-                        "context": {
-                          "id": "<primary-expression>@[L5:C4, L5:C11]",
-                          "snippet": "status4"
-                        },
                         "end": 120,
                         "endPos": {
                           "offset": 120,
@@ -1451,10 +1467,6 @@
                           "column": 4
                         }
                       }
-                    },
-                    "context": {
-                      "id": "<function-application>@[L5:C4, L5:C22]",
-                      "snippet": "status4 v2.statuss"
                     },
                     "end": 131,
                     "endPos": {
@@ -1484,13 +1496,29 @@
                     }
                   },
                   {
+                    "context": {
+                      "id": "<function-application>@[L6:C4, L6:C18]",
+                      "snippet": "status5 v2. []"
+                    },
                     "children": {
                       "args": [
                         {
+                          "context": {
+                            "id": "<infix-expression>@[L6:C12, L6:C18]",
+                            "snippet": "v2. []"
+                          },
                           "children": {
                             "leftExpression": {
+                              "context": {
+                                "id": "<primary-expression>@[L6:C12, L6:C14]",
+                                "snippet": "v2"
+                              },
                               "children": {
                                 "expression": {
+                                  "context": {
+                                    "id": "<variable>:v2@[L6:C12, L6:C14]",
+                                    "snippet": "v2"
+                                  },
                                   "children": {
                                     "variable": {
                                       "context": {
@@ -1518,10 +1546,6 @@
                                       "value": "v2"
                                     }
                                   },
-                                  "context": {
-                                    "id": "<variable>:v2@[L6:C12, L6:C14]",
-                                    "snippet": "v2"
-                                  },
                                   "end": 147,
                                   "endPos": {
                                     "offset": 147,
@@ -1538,10 +1562,6 @@
                                     "column": 12
                                   }
                                 }
-                              },
-                              "context": {
-                                "id": "<primary-expression>@[L6:C12, L6:C14]",
-                                "snippet": "v2"
                               },
                               "end": 147,
                               "endPos": {
@@ -1585,6 +1605,10 @@
                               "value": "."
                             },
                             "rightExpression": {
+                              "context": {
+                                "id": "<list-expression>@[L6:C16, L6:C18]",
+                                "snippet": "[]"
+                              },
                               "children": {
                                 "commaList": [],
                                 "elementList": [],
@@ -1639,10 +1663,6 @@
                                   "value": "["
                                 }
                               },
-                              "context": {
-                                "id": "<list-expression>@[L6:C16, L6:C18]",
-                                "snippet": "[]"
-                              },
                               "end": 151,
                               "endPos": {
                                 "offset": 151,
@@ -1659,10 +1679,6 @@
                                 "column": 16
                               }
                             }
-                          },
-                          "context": {
-                            "id": "<infix-expression>@[L6:C12, L6:C18]",
-                            "snippet": "v2. []"
                           },
                           "end": 151,
                           "endPos": {
@@ -1682,8 +1698,16 @@
                         }
                       ],
                       "callee": {
+                        "context": {
+                          "id": "<primary-expression>@[L6:C4, L6:C11]",
+                          "snippet": "status5"
+                        },
                         "children": {
                           "expression": {
+                            "context": {
+                              "id": "<variable>:status5@[L6:C4, L6:C11]",
+                              "snippet": "status5"
+                            },
                             "children": {
                               "variable": {
                                 "context": {
@@ -1711,10 +1735,6 @@
                                 "value": "status5"
                               }
                             },
-                            "context": {
-                              "id": "<variable>:status5@[L6:C4, L6:C11]",
-                              "snippet": "status5"
-                            },
                             "end": 144,
                             "endPos": {
                               "offset": 144,
@@ -1732,10 +1752,6 @@
                             }
                           }
                         },
-                        "context": {
-                          "id": "<primary-expression>@[L6:C4, L6:C11]",
-                          "snippet": "status5"
-                        },
                         "end": 144,
                         "endPos": {
                           "offset": 144,
@@ -1752,10 +1768,6 @@
                           "column": 4
                         }
                       }
-                    },
-                    "context": {
-                      "id": "<function-application>@[L6:C4, L6:C18]",
-                      "snippet": "status5 v2. []"
                     },
                     "end": 151,
                     "endPos": {
@@ -1785,13 +1797,29 @@
                     }
                   },
                   {
+                    "context": {
+                      "id": "<function-application>@[L7:C4, L7:C15]",
+                      "snippet": "status6 v2."
+                    },
                     "children": {
                       "args": [
                         {
+                          "context": {
+                            "id": "<infix-expression>@[L7:C12, L7:C15]",
+                            "snippet": "v2."
+                          },
                           "children": {
                             "leftExpression": {
+                              "context": {
+                                "id": "<primary-expression>@[L7:C12, L7:C14]",
+                                "snippet": "v2"
+                              },
                               "children": {
                                 "expression": {
+                                  "context": {
+                                    "id": "<variable>:v2@[L7:C12, L7:C14]",
+                                    "snippet": "v2"
+                                  },
                                   "children": {
                                     "variable": {
                                       "context": {
@@ -1819,10 +1847,6 @@
                                       "value": "v2"
                                     }
                                   },
-                                  "context": {
-                                    "id": "<variable>:v2@[L7:C12, L7:C14]",
-                                    "snippet": "v2"
-                                  },
                                   "end": 167,
                                   "endPos": {
                                     "offset": 167,
@@ -1839,10 +1863,6 @@
                                     "column": 12
                                   }
                                 }
-                              },
-                              "context": {
-                                "id": "<primary-expression>@[L7:C12, L7:C14]",
-                                "snippet": "v2"
                               },
                               "end": 167,
                               "endPos": {
@@ -1886,11 +1906,11 @@
                               "value": "."
                             },
                             "rightExpression": {
-                              "children": {},
                               "context": {
                                 "id": "<dummy>@[L7:C15, L7:C15]",
                                 "snippet": ""
                               },
+                              "children": {},
                               "end": 168,
                               "endPos": {
                                 "offset": 168,
@@ -1907,10 +1927,6 @@
                                 "column": 15
                               }
                             }
-                          },
-                          "context": {
-                            "id": "<infix-expression>@[L7:C12, L7:C15]",
-                            "snippet": "v2."
                           },
                           "end": 168,
                           "endPos": {
@@ -1930,8 +1946,16 @@
                         }
                       ],
                       "callee": {
+                        "context": {
+                          "id": "<primary-expression>@[L7:C4, L7:C11]",
+                          "snippet": "status6"
+                        },
                         "children": {
                           "expression": {
+                            "context": {
+                              "id": "<variable>:status6@[L7:C4, L7:C11]",
+                              "snippet": "status6"
+                            },
                             "children": {
                               "variable": {
                                 "context": {
@@ -1959,10 +1983,6 @@
                                 "value": "status6"
                               }
                             },
-                            "context": {
-                              "id": "<variable>:status6@[L7:C4, L7:C11]",
-                              "snippet": "status6"
-                            },
                             "end": 164,
                             "endPos": {
                               "offset": 164,
@@ -1980,10 +2000,6 @@
                             }
                           }
                         },
-                        "context": {
-                          "id": "<primary-expression>@[L7:C4, L7:C11]",
-                          "snippet": "status6"
-                        },
                         "end": 164,
                         "endPos": {
                           "offset": 164,
@@ -2000,10 +2016,6 @@
                           "column": 4
                         }
                       }
-                    },
-                    "context": {
-                      "id": "<function-application>@[L7:C4, L7:C15]",
-                      "snippet": "status6 v2."
                     },
                     "end": 168,
                     "endPos": {
@@ -2034,10 +2046,6 @@
                   }
                 ]
               },
-              "context": {
-                "id": "<block-expression>@[L0:C12, L8:C1]",
-                "snippet": "{\r\n    id ...us6 v2.\r\n}"
-              },
               "end": 171,
               "endPos": {
                 "offset": 171,
@@ -2055,8 +2063,16 @@
               }
             },
             "name": {
+              "context": {
+                "id": "<primary-expression>@[L0:C6, L0:C11]",
+                "snippet": "Users"
+              },
               "children": {
                 "expression": {
+                  "context": {
+                    "id": "<variable>:Users@[L0:C6, L0:C11]",
+                    "snippet": "Users"
+                  },
                   "children": {
                     "variable": {
                       "context": {
@@ -2084,10 +2100,6 @@
                       "value": "Users"
                     }
                   },
-                  "context": {
-                    "id": "<variable>:Users@[L0:C6, L0:C11]",
-                    "snippet": "Users"
-                  },
                   "end": 11,
                   "endPos": {
                     "offset": 11,
@@ -2104,10 +2116,6 @@
                     "column": 6
                   }
                 }
-              },
-              "context": {
-                "id": "<primary-expression>@[L0:C6, L0:C11]",
-                "snippet": "Users"
               },
               "end": 11,
               "endPos": {
@@ -2150,10 +2158,6 @@
               "trailingTrivia": " ",
               "value": "Table"
             }
-          },
-          "context": {
-            "id": "<element-declaration>:Users@[L0:C0, L8:C1]",
-            "snippet": "Table User...us6 v2.\r\n}"
           },
           "end": 171,
           "endPos": {
@@ -2227,8 +2231,16 @@
           }
         },
         {
+          "context": {
+            "id": "<element-declaration>:v2.status@[L10:C0, L15:C1]",
+            "snippet": "Enum v2.st... tenant\r\n}"
+          },
           "children": {
             "body": {
+              "context": {
+                "id": "<block-expression>@[L10:C15, L15:C1]",
+                "snippet": "{\r\n    chu... tenant\r\n}"
+              },
               "children": {
                 "blockCloseBrace": {
                   "context": {
@@ -2282,11 +2294,23 @@
                 },
                 "body": [
                   {
+                    "context": {
+                      "id": "<function-application>@[L11:C4, L11:C9]",
+                      "snippet": "churn"
+                    },
                     "children": {
                       "args": [],
                       "callee": {
+                        "context": {
+                          "id": "<primary-expression>@[L11:C4, L11:C9]",
+                          "snippet": "churn"
+                        },
                         "children": {
                           "expression": {
+                            "context": {
+                              "id": "<variable>:churn@[L11:C4, L11:C9]",
+                              "snippet": "churn"
+                            },
                             "children": {
                               "variable": {
                                 "context": {
@@ -2314,10 +2338,6 @@
                                 "value": "churn"
                               }
                             },
-                            "context": {
-                              "id": "<variable>:churn@[L11:C4, L11:C9]",
-                              "snippet": "churn"
-                            },
                             "end": 202,
                             "endPos": {
                               "offset": 202,
@@ -2335,10 +2355,6 @@
                             }
                           }
                         },
-                        "context": {
-                          "id": "<primary-expression>@[L11:C4, L11:C9]",
-                          "snippet": "churn"
-                        },
                         "end": 202,
                         "endPos": {
                           "offset": 202,
@@ -2355,10 +2371,6 @@
                           "column": 4
                         }
                       }
-                    },
-                    "context": {
-                      "id": "<function-application>@[L11:C4, L11:C9]",
-                      "snippet": "churn"
                     },
                     "end": 202,
                     "endPos": {
@@ -2388,11 +2400,23 @@
                     }
                   },
                   {
+                    "context": {
+                      "id": "<function-application>@[L12:C4, L12:C7]",
+                      "snippet": "new"
+                    },
                     "children": {
                       "args": [],
                       "callee": {
+                        "context": {
+                          "id": "<primary-expression>@[L12:C4, L12:C7]",
+                          "snippet": "new"
+                        },
                         "children": {
                           "expression": {
+                            "context": {
+                              "id": "<variable>:new@[L12:C4, L12:C7]",
+                              "snippet": "new"
+                            },
                             "children": {
                               "variable": {
                                 "context": {
@@ -2420,10 +2444,6 @@
                                 "value": "new"
                               }
                             },
-                            "context": {
-                              "id": "<variable>:new@[L12:C4, L12:C7]",
-                              "snippet": "new"
-                            },
                             "end": 211,
                             "endPos": {
                               "offset": 211,
@@ -2441,10 +2461,6 @@
                             }
                           }
                         },
-                        "context": {
-                          "id": "<primary-expression>@[L12:C4, L12:C7]",
-                          "snippet": "new"
-                        },
                         "end": 211,
                         "endPos": {
                           "offset": 211,
@@ -2461,10 +2477,6 @@
                           "column": 4
                         }
                       }
-                    },
-                    "context": {
-                      "id": "<function-application>@[L12:C4, L12:C7]",
-                      "snippet": "new"
                     },
                     "end": 211,
                     "endPos": {
@@ -2494,11 +2506,23 @@
                     }
                   },
                   {
+                    "context": {
+                      "id": "<function-application>@[L13:C4, L13:C10]",
+                      "snippet": "active"
+                    },
                     "children": {
                       "args": [],
                       "callee": {
+                        "context": {
+                          "id": "<primary-expression>@[L13:C4, L13:C10]",
+                          "snippet": "active"
+                        },
                         "children": {
                           "expression": {
+                            "context": {
+                              "id": "<variable>:active@[L13:C4, L13:C10]",
+                              "snippet": "active"
+                            },
                             "children": {
                               "variable": {
                                 "context": {
@@ -2526,10 +2550,6 @@
                                 "value": "active"
                               }
                             },
-                            "context": {
-                              "id": "<variable>:active@[L13:C4, L13:C10]",
-                              "snippet": "active"
-                            },
                             "end": 223,
                             "endPos": {
                               "offset": 223,
@@ -2547,10 +2567,6 @@
                             }
                           }
                         },
-                        "context": {
-                          "id": "<primary-expression>@[L13:C4, L13:C10]",
-                          "snippet": "active"
-                        },
                         "end": 223,
                         "endPos": {
                           "offset": 223,
@@ -2567,10 +2583,6 @@
                           "column": 4
                         }
                       }
-                    },
-                    "context": {
-                      "id": "<function-application>@[L13:C4, L13:C10]",
-                      "snippet": "active"
                     },
                     "end": 223,
                     "endPos": {
@@ -2600,11 +2612,23 @@
                     }
                   },
                   {
+                    "context": {
+                      "id": "<function-application>@[L14:C4, L14:C10]",
+                      "snippet": "tenant"
+                    },
                     "children": {
                       "args": [],
                       "callee": {
+                        "context": {
+                          "id": "<primary-expression>@[L14:C4, L14:C10]",
+                          "snippet": "tenant"
+                        },
                         "children": {
                           "expression": {
+                            "context": {
+                              "id": "<variable>:tenant@[L14:C4, L14:C10]",
+                              "snippet": "tenant"
+                            },
                             "children": {
                               "variable": {
                                 "context": {
@@ -2632,10 +2656,6 @@
                                 "value": "tenant"
                               }
                             },
-                            "context": {
-                              "id": "<variable>:tenant@[L14:C4, L14:C10]",
-                              "snippet": "tenant"
-                            },
                             "end": 235,
                             "endPos": {
                               "offset": 235,
@@ -2653,10 +2673,6 @@
                             }
                           }
                         },
-                        "context": {
-                          "id": "<primary-expression>@[L14:C4, L14:C10]",
-                          "snippet": "tenant"
-                        },
                         "end": 235,
                         "endPos": {
                           "offset": 235,
@@ -2673,10 +2689,6 @@
                           "column": 4
                         }
                       }
-                    },
-                    "context": {
-                      "id": "<function-application>@[L14:C4, L14:C10]",
-                      "snippet": "tenant"
                     },
                     "end": 235,
                     "endPos": {
@@ -2707,10 +2719,6 @@
                   }
                 ]
               },
-              "context": {
-                "id": "<block-expression>@[L10:C15, L15:C1]",
-                "snippet": "{\r\n    chu... tenant\r\n}"
-              },
               "end": 238,
               "endPos": {
                 "offset": 238,
@@ -2728,10 +2736,22 @@
               }
             },
             "name": {
+              "context": {
+                "id": "<infix-expression>@[L10:C5, L10:C14]",
+                "snippet": "v2.status"
+              },
               "children": {
                 "leftExpression": {
+                  "context": {
+                    "id": "<primary-expression>@[L10:C5, L10:C7]",
+                    "snippet": "v2"
+                  },
                   "children": {
                     "expression": {
+                      "context": {
+                        "id": "<variable>:v2@[L10:C5, L10:C7]",
+                        "snippet": "v2"
+                      },
                       "children": {
                         "variable": {
                           "context": {
@@ -2759,10 +2779,6 @@
                           "value": "v2"
                         }
                       },
-                      "context": {
-                        "id": "<variable>:v2@[L10:C5, L10:C7]",
-                        "snippet": "v2"
-                      },
                       "end": 182,
                       "endPos": {
                         "offset": 182,
@@ -2779,10 +2795,6 @@
                         "column": 5
                       }
                     }
-                  },
-                  "context": {
-                    "id": "<primary-expression>@[L10:C5, L10:C7]",
-                    "snippet": "v2"
                   },
                   "end": 182,
                   "endPos": {
@@ -2826,8 +2838,16 @@
                   "value": "."
                 },
                 "rightExpression": {
+                  "context": {
+                    "id": "<primary-expression>@[L10:C8, L10:C14]",
+                    "snippet": "status"
+                  },
                   "children": {
                     "expression": {
+                      "context": {
+                        "id": "<variable>:status@[L10:C8, L10:C14]",
+                        "snippet": "status"
+                      },
                       "children": {
                         "variable": {
                           "context": {
@@ -2855,10 +2875,6 @@
                           "value": "status"
                         }
                       },
-                      "context": {
-                        "id": "<variable>:status@[L10:C8, L10:C14]",
-                        "snippet": "status"
-                      },
                       "end": 189,
                       "endPos": {
                         "offset": 189,
@@ -2876,10 +2892,6 @@
                       }
                     }
                   },
-                  "context": {
-                    "id": "<primary-expression>@[L10:C8, L10:C14]",
-                    "snippet": "status"
-                  },
                   "end": 189,
                   "endPos": {
                     "offset": 189,
@@ -2896,10 +2908,6 @@
                     "column": 8
                   }
                 }
-              },
-              "context": {
-                "id": "<infix-expression>@[L10:C5, L10:C14]",
-                "snippet": "v2.status"
               },
               "end": 189,
               "endPos": {
@@ -2942,10 +2950,6 @@
               "trailingTrivia": " ",
               "value": "Enum"
             }
-          },
-          "context": {
-            "id": "<element-declaration>:v2.status@[L10:C0, L15:C1]",
-            "snippet": "Enum v2.st... tenant\r\n}"
           },
           "end": 238,
           "endPos": {
@@ -3006,8 +3010,16 @@
           }
         },
         {
+          "context": {
+            "id": "<element-declaration>:status@[L17:C0, L22:C1]",
+            "snippet": "Enum statu... tenant\r\n}"
+          },
           "children": {
             "body": {
+              "context": {
+                "id": "<block-expression>@[L17:C12, L22:C1]",
+                "snippet": "{\r\n    chu... tenant\r\n}"
+              },
               "children": {
                 "blockCloseBrace": {
                   "context": {
@@ -3061,11 +3073,23 @@
                 },
                 "body": [
                   {
+                    "context": {
+                      "id": "<function-application>@[L18:C4, L18:C9]",
+                      "snippet": "churn"
+                    },
                     "children": {
                       "args": [],
                       "callee": {
+                        "context": {
+                          "id": "<primary-expression>@[L18:C4, L18:C9]",
+                          "snippet": "churn"
+                        },
                         "children": {
                           "expression": {
+                            "context": {
+                              "id": "<variable>:churn@[L18:C4, L18:C9]",
+                              "snippet": "churn"
+                            },
                             "children": {
                               "variable": {
                                 "context": {
@@ -3093,10 +3117,6 @@
                                 "value": "churn"
                               }
                             },
-                            "context": {
-                              "id": "<variable>:churn@[L18:C4, L18:C9]",
-                              "snippet": "churn"
-                            },
                             "end": 266,
                             "endPos": {
                               "offset": 266,
@@ -3114,10 +3134,6 @@
                             }
                           }
                         },
-                        "context": {
-                          "id": "<primary-expression>@[L18:C4, L18:C9]",
-                          "snippet": "churn"
-                        },
                         "end": 266,
                         "endPos": {
                           "offset": 266,
@@ -3134,10 +3150,6 @@
                           "column": 4
                         }
                       }
-                    },
-                    "context": {
-                      "id": "<function-application>@[L18:C4, L18:C9]",
-                      "snippet": "churn"
                     },
                     "end": 266,
                     "endPos": {
@@ -3167,11 +3179,23 @@
                     }
                   },
                   {
+                    "context": {
+                      "id": "<function-application>@[L19:C4, L19:C7]",
+                      "snippet": "new"
+                    },
                     "children": {
                       "args": [],
                       "callee": {
+                        "context": {
+                          "id": "<primary-expression>@[L19:C4, L19:C7]",
+                          "snippet": "new"
+                        },
                         "children": {
                           "expression": {
+                            "context": {
+                              "id": "<variable>:new@[L19:C4, L19:C7]",
+                              "snippet": "new"
+                            },
                             "children": {
                               "variable": {
                                 "context": {
@@ -3199,10 +3223,6 @@
                                 "value": "new"
                               }
                             },
-                            "context": {
-                              "id": "<variable>:new@[L19:C4, L19:C7]",
-                              "snippet": "new"
-                            },
                             "end": 275,
                             "endPos": {
                               "offset": 275,
@@ -3220,10 +3240,6 @@
                             }
                           }
                         },
-                        "context": {
-                          "id": "<primary-expression>@[L19:C4, L19:C7]",
-                          "snippet": "new"
-                        },
                         "end": 275,
                         "endPos": {
                           "offset": 275,
@@ -3240,10 +3256,6 @@
                           "column": 4
                         }
                       }
-                    },
-                    "context": {
-                      "id": "<function-application>@[L19:C4, L19:C7]",
-                      "snippet": "new"
                     },
                     "end": 275,
                     "endPos": {
@@ -3273,11 +3285,23 @@
                     }
                   },
                   {
+                    "context": {
+                      "id": "<function-application>@[L20:C4, L20:C10]",
+                      "snippet": "active"
+                    },
                     "children": {
                       "args": [],
                       "callee": {
+                        "context": {
+                          "id": "<primary-expression>@[L20:C4, L20:C10]",
+                          "snippet": "active"
+                        },
                         "children": {
                           "expression": {
+                            "context": {
+                              "id": "<variable>:active@[L20:C4, L20:C10]",
+                              "snippet": "active"
+                            },
                             "children": {
                               "variable": {
                                 "context": {
@@ -3305,10 +3329,6 @@
                                 "value": "active"
                               }
                             },
-                            "context": {
-                              "id": "<variable>:active@[L20:C4, L20:C10]",
-                              "snippet": "active"
-                            },
                             "end": 287,
                             "endPos": {
                               "offset": 287,
@@ -3326,10 +3346,6 @@
                             }
                           }
                         },
-                        "context": {
-                          "id": "<primary-expression>@[L20:C4, L20:C10]",
-                          "snippet": "active"
-                        },
                         "end": 287,
                         "endPos": {
                           "offset": 287,
@@ -3346,10 +3362,6 @@
                           "column": 4
                         }
                       }
-                    },
-                    "context": {
-                      "id": "<function-application>@[L20:C4, L20:C10]",
-                      "snippet": "active"
                     },
                     "end": 287,
                     "endPos": {
@@ -3379,11 +3391,23 @@
                     }
                   },
                   {
+                    "context": {
+                      "id": "<function-application>@[L21:C4, L21:C10]",
+                      "snippet": "tenant"
+                    },
                     "children": {
                       "args": [],
                       "callee": {
+                        "context": {
+                          "id": "<primary-expression>@[L21:C4, L21:C10]",
+                          "snippet": "tenant"
+                        },
                         "children": {
                           "expression": {
+                            "context": {
+                              "id": "<variable>:tenant@[L21:C4, L21:C10]",
+                              "snippet": "tenant"
+                            },
                             "children": {
                               "variable": {
                                 "context": {
@@ -3411,10 +3435,6 @@
                                 "value": "tenant"
                               }
                             },
-                            "context": {
-                              "id": "<variable>:tenant@[L21:C4, L21:C10]",
-                              "snippet": "tenant"
-                            },
                             "end": 299,
                             "endPos": {
                               "offset": 299,
@@ -3432,10 +3452,6 @@
                             }
                           }
                         },
-                        "context": {
-                          "id": "<primary-expression>@[L21:C4, L21:C10]",
-                          "snippet": "tenant"
-                        },
                         "end": 299,
                         "endPos": {
                           "offset": 299,
@@ -3452,10 +3468,6 @@
                           "column": 4
                         }
                       }
-                    },
-                    "context": {
-                      "id": "<function-application>@[L21:C4, L21:C10]",
-                      "snippet": "tenant"
                     },
                     "end": 299,
                     "endPos": {
@@ -3486,10 +3498,6 @@
                   }
                 ]
               },
-              "context": {
-                "id": "<block-expression>@[L17:C12, L22:C1]",
-                "snippet": "{\r\n    chu... tenant\r\n}"
-              },
               "end": 302,
               "endPos": {
                 "offset": 302,
@@ -3507,8 +3515,16 @@
               }
             },
             "name": {
+              "context": {
+                "id": "<primary-expression>@[L17:C5, L17:C11]",
+                "snippet": "status"
+              },
               "children": {
                 "expression": {
+                  "context": {
+                    "id": "<variable>:status@[L17:C5, L17:C11]",
+                    "snippet": "status"
+                  },
                   "children": {
                     "variable": {
                       "context": {
@@ -3536,10 +3552,6 @@
                       "value": "status"
                     }
                   },
-                  "context": {
-                    "id": "<variable>:status@[L17:C5, L17:C11]",
-                    "snippet": "status"
-                  },
                   "end": 253,
                   "endPos": {
                     "offset": 253,
@@ -3556,10 +3568,6 @@
                     "column": 5
                   }
                 }
-              },
-              "context": {
-                "id": "<primary-expression>@[L17:C5, L17:C11]",
-                "snippet": "status"
               },
               "end": 253,
               "endPos": {
@@ -3602,10 +3610,6 @@
               "trailingTrivia": " ",
               "value": "Enum"
             }
-          },
-          "context": {
-            "id": "<element-declaration>:status@[L17:C0, L22:C1]",
-            "snippet": "Enum statu... tenant\r\n}"
           },
           "end": 302,
           "endPos": {
@@ -3691,10 +3695,6 @@
         "trailingTrivia": "",
         "value": ""
       }
-    },
-    "context": {
-      "id": "<program>@[L0:C0, L22:C1]",
-      "snippet": "Table User... tenant\r\n}"
     },
     "end": 302,
     "endPos": {
