@@ -17,19 +17,19 @@ import { isOffsetWithinSpan } from '@/core/utils/span';
 import { getMemberChain } from '@/core/parser/utils';
 
 export function containerStack (this: Compiler, offset: number): readonly Readonly<SyntaxNode>[] {
-  const tokens = this.token.flatStream();
-  const { index: startIndex, token } = this.container.token(offset);
+  const tokens = this._token.flatStream();
+  const { index: startIndex, token } = this._container.token(offset);
   const validIndex = startIndex === undefined
     ? -1
     : findLastIndex(tokens, (t) => !t.isInvalid, startIndex);
 
   if (validIndex === -1) {
-    return [this.parse.ast()];
+    return [this._parse.ast()];
   }
 
   const searchOffset = tokens[validIndex].start;
 
-  let curNode: Readonly<SyntaxNode> = this.parse.ast();
+  let curNode: Readonly<SyntaxNode> = this._parse.ast();
   const res: SyntaxNode[] = [curNode];
 
   while (true) {
@@ -51,7 +51,7 @@ export function containerStack (this: Compiler, offset: number): readonly Readon
     const lastContainer = last(res)!;
 
     if (lastContainer instanceof FunctionApplicationNode) {
-      const source = this.parse.source();
+      const source = this._parse.source();
       for (let i = lastContainer.end; i < offset; i += 1) {
         if (source[i] === '\n') {
           res.pop();
@@ -62,7 +62,7 @@ export function containerStack (this: Compiler, offset: number): readonly Readon
       lastContainer instanceof PrefixExpressionNode
       || lastContainer instanceof InfixExpressionNode
     ) {
-      if (this.container.token(offset).token !== lastContainer.op) {
+      if (this._container.token(offset).token !== lastContainer.op) {
         res.pop();
         popOnce = true;
       }

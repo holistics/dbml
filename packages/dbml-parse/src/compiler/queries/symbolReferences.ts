@@ -20,7 +20,7 @@ function getRightmostVariable (node: SyntaxNode): SyntaxNode | undefined {
 // Collect all AST nodes whose nodeReferee resolves to the given symbol.
 // Walks every variable node checking the memoized nodeReferee result.
 export function symbolReferences (this: Compiler, symbol: NodeSymbol): Report<SyntaxNode[]> {
-  const ast = this.parseFile().getValue().ast;
+  const ast = this.parse().getValue().ast;
   this.bind(ast);
 
   const refs: SyntaxNode[] = [];

@@ -1,7 +1,6 @@
 import { DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLReferencesProvider, DBMLDiagnosticsProvider } from '@/services/index';
-import { invalidStream, flatStream } from './queries/token';
+import { invalidStream, flatStream } from './queries/legacy/token';
 import { splitQualifiedIdentifier, unescapeString, escapeString, formatRecordValue, isValidIdentifier, addDoubleQuoteIfNeeded } from './queries/utils';
-import { parseFile } from './queries/pipeline';
 import { containerStack, containerToken, containerElement, containerScope, containerScopeKind } from './queries/container';
 import { renameTable, type TableNameInput } from './queries/transform';
 export { ScopeKind } from './types';
@@ -26,10 +25,13 @@ import { SyntaxNodeIdGenerator } from '@/core/parser/nodes';
 import { type DbmlProjectLayout, MemoryProjectLayout } from './projectLayout';
 import { fileDependencies } from './queries/fileDependencies';
 import { Filepath } from '@/core/types/filepath';
+import { parse } from './queries/pipeline/parse';
 
 // Re-export utilities
 export { splitQualifiedIdentifier, unescapeString, escapeString, formatRecordValue, isValidIdentifier, addDoubleQuoteIfNeeded };
 
+// To detect cyclic queries
+// Indicating that a query is being computed, but we're trying to compute it again
 const COMPUTING = Symbol('COMPUTING');
 
 export default class Compiler {
@@ -43,8 +45,8 @@ export default class Compiler {
 
   symbolFactory = new SymbolFactory(this.symbolIdGenerator);
 
-  setSource (layout: DbmlProjectLayout) {
-    this.layout = layout;
+  setSource (filepath: Filepath, source: string) {
+    this.layout.setSource(filepath, source);
     this.cache.clear();
   }
 
@@ -77,43 +79,50 @@ export default class Compiler {
     }) as (...args: Args) => Return;
   }
 
-  parseFile = this.query(parseFile);
+  // global queries
+  bind = this.query(bind);
+
   nodeSymbol = this.query(nodeSymbol);
   symbolMembers = this.query(symbolMembers);
   lookupMembers = this.query(lookupMembers);
-  fileDependencies = this.query(fileDependencies);
+
   symbolReferences = this.query(symbolReferences);
   nodeReferee = this.query(nodeReferee);
+
   nestedSymbols = this.query(nestedSymbols);
-  bind = this.query(bind);
+
   interpret = this.query(interpret);
 
-  renameTable (oldName: TableNameInput, newName: TableNameInput): string {
-    return renameTable.call(this, oldName, newName);
-  }
-
+  // local queries
+  parse = this.query(parse);
+  fileDependencies = this.query(fileDependencies);
   validate = this.query(validate);
   fullname = this.query(fullname);
   symbolName = this.query(symbolName);
   alias = this.query(alias);
   settings = this.query(settings);
 
-  readonly token = {
+  renameTable (oldName: TableNameInput, newName: TableNameInput): string {
+    return renameTable.call(this, oldName, newName);
+  }
+
+  // @deprecated - legacy APIs for services compatibility
+  readonly _token = {
     invalidStream: this.query(invalidStream),
     flatStream: this.query(flatStream),
   };
 
   // @deprecated - legacy APIs for services compatibility
-  readonly parse = {
+  readonly _parse = {
     source: () => this.layout.getSource(DEFAULT_ENTRY),
-    ast: () => this.parseFile(DEFAULT_ENTRY).getValue().ast,
+    ast: () => this.parse(DEFAULT_ENTRY).getValue().ast,
     _: () => {
-      const ast = this.parseFile(DEFAULT_ENTRY).getValue().ast;
+      const ast = this.parse(DEFAULT_ENTRY).getValue().ast;
       this.bind(ast);
       return this.interpret(ast);
     },
     publicSymbolTable: () => {
-      const ast = this.parseFile(DEFAULT_ENTRY).getValue().ast;
+      const ast = this.parse(DEFAULT_ENTRY).getValue().ast;
       const sym = this.nodeSymbol(ast);
       if (sym.hasValue(UNHANDLED)) return undefined;
       const programMembers = this.symbolMembers(sym.getValue());
@@ -134,8 +143,8 @@ export default class Compiler {
     },
   };
 
-  // @deprecated
-  readonly container = {
+  // @deprecated - legacy APIs for services compatibility
+  readonly _container = {
     stack: this.query(containerStack),
     token: this.query(containerToken),
     element: this.query(containerElement),

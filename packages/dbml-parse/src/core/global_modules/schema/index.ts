@@ -35,7 +35,7 @@ export const schemaModule: GlobalModule = {
 
     const members: NodeSymbol[] = [];
     const errors: CompileError[] = [];
-    const { ast } = compiler.parseFile(symbol.filepath).getValue();
+    const { ast } = compiler.parse(symbol.filepath).getValue();
 
     const childSchemas = new Map<string, SchemaSymbol>();
 

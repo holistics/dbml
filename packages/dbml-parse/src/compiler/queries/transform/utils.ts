@@ -57,7 +57,7 @@ export function lookupTableSymbol (
   schema: string,
   table: string,
 ): NodeSymbol | null {
-  const publicSymbols = compiler.parse.publicSymbolTable();
+  const publicSymbols = compiler._parse.publicSymbolTable();
   if (!publicSymbols) return null;
 
   // Build the expected fullname

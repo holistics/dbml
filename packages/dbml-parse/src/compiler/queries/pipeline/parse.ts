@@ -6,12 +6,12 @@ import Lexer from '@/core/lexer/lexer';
 import Parser from '@/core/parser/parser';
 import type { Filepath } from '@/core/types/filepath';
 
-export function parseFile (this: Compiler, filepath: Filepath): Report<{
+export function parse (this: Compiler, filepath: Filepath): Report<{
   readonly ast: Readonly<ProgramNode>;
   readonly tokens: readonly Readonly<SyntaxToken>[];
 }> {
-  const source = this.parse.source();
-  return new Lexer(source)
+  const source = this._parse.source(filepath);
+  return new Lexer(source, filepath)
     .lex()
     .chain((lexedTokens) => new Parser(filepath, source, lexedTokens, this.nodeIdGenerator).parse());
 }

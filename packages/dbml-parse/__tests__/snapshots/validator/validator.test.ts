@@ -24,7 +24,7 @@ describe('[snapshot] validator', () => {
 
     const compiler = new Compiler();
     compiler.setSource(program);
-    const astReport = compiler.parseFile().map(({ ast }) => ast);
+    const astReport = compiler.parse().map(({ ast }) => ast);
     const validateReport = compiler.validate(astReport.getValue());
     const output = serializeValidatorResult(
       compiler,

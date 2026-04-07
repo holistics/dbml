@@ -1,4 +1,4 @@
-import type Compiler from '../index';
+import type Compiler from '../../index';
 import { ElementDeclarationNode, ProgramNode } from '@/core/parser/nodes';
 import { NodeSymbol, SymbolKind } from '@/core/types/symbols';
 import { UNHANDLED } from '@/constants';

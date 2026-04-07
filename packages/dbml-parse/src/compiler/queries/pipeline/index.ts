@@ -1,1 +1,1 @@
-export { parseFile } from './parse';
+export { parse as parseFile } from './parse';

@@ -32,18 +32,18 @@ import type { Database } from '@/core/types/schemaJson';
 import { DEFAULT_ENTRY } from '@/constants';
 
 export function lex (source: string): Report<SyntaxToken[]> {
-  return new Lexer(source).lex();
+  return new Lexer(source, DEFAULT_ENTRY).lex();
 }
 
 export function parse (source: string): Report<{ ast: ProgramNode; tokens: SyntaxToken[] }> {
-  return new Lexer(source).lex().chain((tokens) => new Parser(DEFAULT_ENTRY, source, tokens, new SyntaxNodeIdGenerator()).parse());
+  return new Lexer(source, DEFAULT_ENTRY).lex().chain((tokens) => new Parser(DEFAULT_ENTRY, source, tokens, new SyntaxNodeIdGenerator()).parse());
 }
 
 export function analyze (source: string) {
   const compiler = new Compiler();
-  compiler.setSource(source);
+  compiler.setSource(DEFAULT_ENTRY, source);
 
-  const parseResult = compiler.parseFile(DEFAULT_ENTRY);
+  const parseResult = compiler.parse(DEFAULT_ENTRY);
   const ast = parseResult.getValue().ast;
 
   const bindResult = compiler.bind(ast);
@@ -63,9 +63,9 @@ export function analyze (source: string) {
 
 export function interpret (source: string): Report<Database | undefined> {
   const compiler = new Compiler();
-  compiler.setSource(source);
+  compiler.setSource(DEFAULT_ENTRY, source);
 
-  const parseResult = compiler.parseFile(DEFAULT_ENTRY);
+  const parseResult = compiler.parse(DEFAULT_ENTRY);
   const ast = parseResult.getValue().ast;
 
   const bindResult = compiler.bind(ast);

@@ -54,7 +54,7 @@ export const refModule: GlobalModule = {
     // Skip variables that are inside setting attribute values (e.g. delete: cascade)
     if (node.parentOfKind(AttributeNode)) return Report.create(PASS_THROUGH);
 
-    const programNode = compiler.parseFile(node.filepath).getValue().ast;
+    const programNode = compiler.parse(node.filepath).getValue().ast;
     const globalSymbol = compiler.nodeSymbol(programNode).getValue();
     if (globalSymbol === UNHANDLED) return Report.create(undefined);
 

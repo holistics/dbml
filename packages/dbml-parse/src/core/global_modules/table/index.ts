@@ -103,7 +103,7 @@ export const tableModule: GlobalModule = {
       if (!partialName) continue;
 
       // Look up the TablePartial symbol among direct program elements
-      const ast = compiler.parseFile(symbol.filepath).getValue().ast;
+      const ast = compiler.parse(symbol.filepath).getValue().ast;
       if (!(ast instanceof ProgramNode)) continue;
       let partialSymbol: NodeSymbol | undefined;
       for (const programChild of ast.body) {
@@ -159,7 +159,7 @@ export const tableModule: GlobalModule = {
       return Report.create(PASS_THROUGH);
     }
 
-    const programNode = compiler.parseFile(node.filepath).getValue().ast;
+    const programNode = compiler.parse(node.filepath).getValue().ast;
     const globalSymbol = compiler.nodeSymbol(programNode).getValue();
 
     if (globalSymbol === UNHANDLED) {
