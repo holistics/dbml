@@ -1,433 +1,185 @@
 {
+  "errors": [
+    {
+      "code": "INVALID_ESCAPE_SEQUENCE",
+      "diagnostic": "Invalid unicode escape sequence '\\u', only unicode escape sequences of the form '\\uHHHH' where H is a hexadecimal number are allowed",
+      "end": 3,
+      "level": "error",
+      "start": 1,
+      "token": {
+        "context": {
+          "id": "<string>:\\u@[L0:C1, L0:C3]",
+          "snippet": "\\u"
+        },
+        "isInvalid": true
+      }
+    },
+    {
+      "code": "INVALID_ESCAPE_SEQUENCE",
+      "diagnostic": "Invalid unicode escape sequence '\\u1', only unicode escape sequences of the form '\\uHHHH' where H is a hexadecimal number are allowed",
+      "end": 14,
+      "level": "error",
+      "start": 11,
+      "token": {
+        "context": {
+          "id": "<string>:\\u1@[L2:C1, L2:C4]",
+          "snippet": "\\u1"
+        },
+        "isInvalid": true
+      }
+    },
+    {
+      "code": "INVALID_ESCAPE_SEQUENCE",
+      "diagnostic": "Invalid unicode escape sequence '\\u12', only unicode escape sequences of the form '\\uHHHH' where H is a hexadecimal number are allowed",
+      "end": 21,
+      "level": "error",
+      "start": 17,
+      "token": {
+        "context": {
+          "id": "<string>:\\u12@[L3:C1, L3:C5]",
+          "snippet": "\\u12"
+        },
+        "isInvalid": true
+      }
+    },
+    {
+      "code": "INVALID_ESCAPE_SEQUENCE",
+      "diagnostic": "Invalid unicode escape sequence '\\uab', only unicode escape sequences of the form '\\uHHHH' where H is a hexadecimal number are allowed",
+      "end": 28,
+      "level": "error",
+      "start": 24,
+      "token": {
+        "context": {
+          "id": "<string>:\\uab@[L4:C1, L4:C5]",
+          "snippet": "\\uab"
+        },
+        "isInvalid": true
+      }
+    },
+    {
+      "code": "INVALID_ESCAPE_SEQUENCE",
+      "diagnostic": "Invalid unicode escape sequence '\\ua1', only unicode escape sequences of the form '\\uHHHH' where H is a hexadecimal number are allowed",
+      "end": 35,
+      "level": "error",
+      "start": 31,
+      "token": {
+        "context": {
+          "id": "<string>:\\ua1@[L5:C1, L5:C5]",
+          "snippet": "\\ua1"
+        },
+        "isInvalid": true
+      }
+    },
+    {
+      "code": "UNEXPECTED_TOKEN",
+      "diagnostic": "Expect an identifier",
+      "end": 4,
+      "level": "error",
+      "start": 0,
+      "token": {
+        "context": {
+          "id": "<variable>:\\u@[L0:C0, L0:C4]",
+          "snippet": "\"\\u\""
+        },
+        "isInvalid": true
+      }
+    },
+    {
+      "code": "UNEXPECTED_TOKEN",
+      "diagnostic": "Expect an identifier",
+      "end": 9,
+      "level": "error",
+      "start": 5,
+      "token": {
+        "context": {
+          "id": "<variable>:a@[L1:C0, L1:C4]",
+          "snippet": "\"\\a\""
+        },
+        "isInvalid": true
+      }
+    },
+    {
+      "code": "UNEXPECTED_TOKEN",
+      "diagnostic": "Expect an identifier",
+      "end": 15,
+      "level": "error",
+      "start": 10,
+      "token": {
+        "context": {
+          "id": "<variable>:\\u1@[L2:C0, L2:C5]",
+          "snippet": "\"\\u1\""
+        },
+        "isInvalid": true
+      }
+    },
+    {
+      "code": "UNEXPECTED_TOKEN",
+      "diagnostic": "Expect an identifier",
+      "end": 22,
+      "level": "error",
+      "start": 16,
+      "token": {
+        "context": {
+          "id": "<variable>:\\u12@[L3:C0, L3:C6]",
+          "snippet": "\"\\u12\""
+        },
+        "isInvalid": true
+      }
+    },
+    {
+      "code": "UNEXPECTED_TOKEN",
+      "diagnostic": "Expect an identifier",
+      "end": 29,
+      "level": "error",
+      "start": 23,
+      "token": {
+        "context": {
+          "id": "<variable>:\\uab@[L4:C0, L4:C6]",
+          "snippet": "\"\\uab\""
+        },
+        "isInvalid": true
+      }
+    },
+    {
+      "code": "UNEXPECTED_TOKEN",
+      "diagnostic": "Expect an identifier",
+      "end": 36,
+      "level": "error",
+      "start": 30,
+      "token": {
+        "context": {
+          "id": "<variable>:\\ua1@[L5:C0, L5:C6]",
+          "snippet": "\"\\ua1\""
+        },
+        "isInvalid": true
+      }
+    }
+  ],
   "tokens": [
     {
       "context": {
         "id": "<eof>:@[L5:C6, L5:C6]",
         "snippet": ""
       },
-      "isInvalid": false,
-      "kind": "<eof>",
-      "value": "",
-      "startPos": {
-        "offset": 36,
-        "line": 5,
-        "column": 6
-      },
+      "end": 36,
       "endPos": {
         "offset": 36,
         "line": 5,
         "column": 6
       },
+      "isInvalid": false,
+      "kind": "<eof>",
+      "leadingInvalid": "\\ua\\u1\\u12\\uab\\ua1",
+      "leadingTrivia": "",
       "start": 36,
-      "end": 36,
-      "leadingTrivia": [],
-      "trailingTrivia": [],
-      "leadingInvalid": [
-        "\\u",
-        "a",
-        "\\u1",
-        "\\u12",
-        "\\uab",
-        "\\ua1"
-      ],
-      "trailingInvalid": []
-    }
-  ],
-  "errors": [
-    {
-      "level": "error",
-      "code": {
-        "value": 1011,
-        "name": "INVALID_ESCAPE_SEQUENCE"
+      "startPos": {
+        "offset": 36,
+        "line": 5,
+        "column": 6
       },
-      "diagnostic": "Invalid unicode escape sequence '\\u', only unicode escape sequences of the form '\\uHHHH' where H is a hexadecimal number are allowed",
-      "token": {
-        "context": {
-          "id": "<string>:\\u@[L0:C1, L0:C3]",
-          "snippet": "\\u"
-        },
-        "isInvalid": true,
-        "kind": "<string>",
-        "value": "\\u",
-        "startPos": {
-          "column": 1,
-          "offset": 1,
-          "line": 0
-        },
-        "endPos": {
-          "offset": 3,
-          "line": 0,
-          "column": 3
-        },
-        "start": 1,
-        "end": 3,
-        "leadingTrivia": [],
-        "trailingTrivia": [],
-        "leadingInvalid": [],
-        "trailingInvalid": []
-      },
-      "start": 1,
-      "end": 3
-    },
-    {
-      "level": "error",
-      "code": {
-        "value": 1011,
-        "name": "INVALID_ESCAPE_SEQUENCE"
-      },
-      "diagnostic": "Invalid unicode escape sequence '\\u1', only unicode escape sequences of the form '\\uHHHH' where H is a hexadecimal number are allowed",
-      "token": {
-        "context": {
-          "id": "<string>:\\u1@[L2:C1, L2:C4]",
-          "snippet": "\\u1"
-        },
-        "isInvalid": true,
-        "kind": "<string>",
-        "value": "\\u1",
-        "startPos": {
-          "column": 1,
-          "offset": 11,
-          "line": 2
-        },
-        "endPos": {
-          "offset": 14,
-          "line": 2,
-          "column": 4
-        },
-        "start": 11,
-        "end": 14,
-        "leadingTrivia": [],
-        "trailingTrivia": [],
-        "leadingInvalid": [],
-        "trailingInvalid": []
-      },
-      "start": 11,
-      "end": 14
-    },
-    {
-      "level": "error",
-      "code": {
-        "value": 1011,
-        "name": "INVALID_ESCAPE_SEQUENCE"
-      },
-      "diagnostic": "Invalid unicode escape sequence '\\u12', only unicode escape sequences of the form '\\uHHHH' where H is a hexadecimal number are allowed",
-      "token": {
-        "context": {
-          "id": "<string>:\\u12@[L3:C1, L3:C5]",
-          "snippet": "\\u12"
-        },
-        "isInvalid": true,
-        "kind": "<string>",
-        "value": "\\u12",
-        "startPos": {
-          "column": 1,
-          "offset": 17,
-          "line": 3
-        },
-        "endPos": {
-          "offset": 21,
-          "line": 3,
-          "column": 5
-        },
-        "start": 17,
-        "end": 21,
-        "leadingTrivia": [],
-        "trailingTrivia": [],
-        "leadingInvalid": [],
-        "trailingInvalid": []
-      },
-      "start": 17,
-      "end": 21
-    },
-    {
-      "level": "error",
-      "code": {
-        "value": 1011,
-        "name": "INVALID_ESCAPE_SEQUENCE"
-      },
-      "diagnostic": "Invalid unicode escape sequence '\\uab', only unicode escape sequences of the form '\\uHHHH' where H is a hexadecimal number are allowed",
-      "token": {
-        "context": {
-          "id": "<string>:\\uab@[L4:C1, L4:C5]",
-          "snippet": "\\uab"
-        },
-        "isInvalid": true,
-        "kind": "<string>",
-        "value": "\\uab",
-        "startPos": {
-          "column": 1,
-          "offset": 24,
-          "line": 4
-        },
-        "endPos": {
-          "offset": 28,
-          "line": 4,
-          "column": 5
-        },
-        "start": 24,
-        "end": 28,
-        "leadingTrivia": [],
-        "trailingTrivia": [],
-        "leadingInvalid": [],
-        "trailingInvalid": []
-      },
-      "start": 24,
-      "end": 28
-    },
-    {
-      "level": "error",
-      "code": {
-        "value": 1011,
-        "name": "INVALID_ESCAPE_SEQUENCE"
-      },
-      "diagnostic": "Invalid unicode escape sequence '\\ua1', only unicode escape sequences of the form '\\uHHHH' where H is a hexadecimal number are allowed",
-      "token": {
-        "context": {
-          "id": "<string>:\\ua1@[L5:C1, L5:C5]",
-          "snippet": "\\ua1"
-        },
-        "isInvalid": true,
-        "kind": "<string>",
-        "value": "\\ua1",
-        "startPos": {
-          "column": 1,
-          "offset": 31,
-          "line": 5
-        },
-        "endPos": {
-          "offset": 35,
-          "line": 5,
-          "column": 5
-        },
-        "start": 31,
-        "end": 35,
-        "leadingTrivia": [],
-        "trailingTrivia": [],
-        "leadingInvalid": [],
-        "trailingInvalid": []
-      },
-      "start": 31,
-      "end": 35
-    },
-    {
-      "level": "error",
-      "code": {
-        "value": 1005,
-        "name": "UNEXPECTED_TOKEN"
-      },
-      "diagnostic": "Expect an identifier",
-      "token": {
-        "context": {
-          "id": "<variable>:\\u@[L0:C0, L0:C4]",
-          "snippet": "\"\\u\""
-        },
-        "isInvalid": true,
-        "kind": "<variable>",
-        "value": "\\u",
-        "startPos": {
-          "offset": 0,
-          "line": 0,
-          "column": 0
-        },
-        "endPos": {
-          "offset": 4,
-          "line": 0,
-          "column": 4
-        },
-        "start": 0,
-        "end": 4,
-        "leadingTrivia": [],
-        "trailingTrivia": [
-          "\n"
-        ],
-        "leadingInvalid": [],
-        "trailingInvalid": []
-      },
-      "start": 0,
-      "end": 4
-    },
-    {
-      "level": "error",
-      "code": {
-        "value": 1005,
-        "name": "UNEXPECTED_TOKEN"
-      },
-      "diagnostic": "Expect an identifier",
-      "token": {
-        "context": {
-          "id": "<variable>:a@[L1:C0, L1:C4]",
-          "snippet": "\"\\a\""
-        },
-        "isInvalid": true,
-        "kind": "<variable>",
-        "value": "a",
-        "startPos": {
-          "offset": 5,
-          "line": 1,
-          "column": 0
-        },
-        "endPos": {
-          "offset": 9,
-          "line": 1,
-          "column": 4
-        },
-        "start": 5,
-        "end": 9,
-        "leadingTrivia": [],
-        "trailingTrivia": [
-          "\n"
-        ],
-        "leadingInvalid": [],
-        "trailingInvalid": []
-      },
-      "start": 5,
-      "end": 9
-    },
-    {
-      "level": "error",
-      "code": {
-        "value": 1005,
-        "name": "UNEXPECTED_TOKEN"
-      },
-      "diagnostic": "Expect an identifier",
-      "token": {
-        "context": {
-          "id": "<variable>:\\u1@[L2:C0, L2:C5]",
-          "snippet": "\"\\u1\""
-        },
-        "isInvalid": true,
-        "kind": "<variable>",
-        "value": "\\u1",
-        "startPos": {
-          "offset": 10,
-          "line": 2,
-          "column": 0
-        },
-        "endPos": {
-          "offset": 15,
-          "line": 2,
-          "column": 5
-        },
-        "start": 10,
-        "end": 15,
-        "leadingTrivia": [],
-        "trailingTrivia": [
-          "\n"
-        ],
-        "leadingInvalid": [],
-        "trailingInvalid": []
-      },
-      "start": 10,
-      "end": 15
-    },
-    {
-      "level": "error",
-      "code": {
-        "value": 1005,
-        "name": "UNEXPECTED_TOKEN"
-      },
-      "diagnostic": "Expect an identifier",
-      "token": {
-        "context": {
-          "id": "<variable>:\\u12@[L3:C0, L3:C6]",
-          "snippet": "\"\\u12\""
-        },
-        "isInvalid": true,
-        "kind": "<variable>",
-        "value": "\\u12",
-        "startPos": {
-          "offset": 16,
-          "line": 3,
-          "column": 0
-        },
-        "endPos": {
-          "offset": 22,
-          "line": 3,
-          "column": 6
-        },
-        "start": 16,
-        "end": 22,
-        "leadingTrivia": [],
-        "trailingTrivia": [
-          "\n"
-        ],
-        "leadingInvalid": [],
-        "trailingInvalid": []
-      },
-      "start": 16,
-      "end": 22
-    },
-    {
-      "level": "error",
-      "code": {
-        "value": 1005,
-        "name": "UNEXPECTED_TOKEN"
-      },
-      "diagnostic": "Expect an identifier",
-      "token": {
-        "context": {
-          "id": "<variable>:\\uab@[L4:C0, L4:C6]",
-          "snippet": "\"\\uab\""
-        },
-        "isInvalid": true,
-        "kind": "<variable>",
-        "value": "\\uab",
-        "startPos": {
-          "offset": 23,
-          "line": 4,
-          "column": 0
-        },
-        "endPos": {
-          "offset": 29,
-          "line": 4,
-          "column": 6
-        },
-        "start": 23,
-        "end": 29,
-        "leadingTrivia": [],
-        "trailingTrivia": [
-          "\n"
-        ],
-        "leadingInvalid": [],
-        "trailingInvalid": []
-      },
-      "start": 23,
-      "end": 29
-    },
-    {
-      "level": "error",
-      "code": {
-        "value": 1005,
-        "name": "UNEXPECTED_TOKEN"
-      },
-      "diagnostic": "Expect an identifier",
-      "token": {
-        "context": {
-          "id": "<variable>:\\ua1@[L5:C0, L5:C6]",
-          "snippet": "\"\\ua1\""
-        },
-        "isInvalid": true,
-        "kind": "<variable>",
-        "value": "\\ua1",
-        "startPos": {
-          "offset": 30,
-          "line": 5,
-          "column": 0
-        },
-        "endPos": {
-          "offset": 36,
-          "line": 5,
-          "column": 6
-        },
-        "start": 30,
-        "end": 36,
-        "leadingTrivia": [],
-        "trailingTrivia": [],
-        "leadingInvalid": [],
-        "trailingInvalid": []
-      },
-      "start": 30,
-      "end": 36
+      "trailingInvalid": "",
+      "trailingTrivia": "",
+      "value": ""
     }
   ],
   "warnings": []

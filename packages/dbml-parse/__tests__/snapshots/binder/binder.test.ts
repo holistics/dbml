@@ -3,8 +3,8 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import type { ProgramNode } from '@/core/parser/nodes';
 import { scanTestNames, toSnapshot } from '@tests/utils';
-import Compiler from '@/compiler';
 import Report from '@/core/report';
+import Compiler from '@/compiler';
 
 function serializeBinderResult (compiler: Compiler, report: Report<ProgramNode>): string {
   const value = report.getValue();
@@ -16,9 +16,8 @@ function serializeBinderResult (compiler: Compiler, report: Report<ProgramNode>)
     warnings,
   }), null, 2);
 }
-// The legacy snapshot tests are very prone to breakage
-// Do not add more tests here
-describe('[legacy - snapshot] validator', () => {
+
+describe('[snapshot] binder', () => {
   const testNames = scanTestNames(path.resolve(__dirname, './input/'));
 
   testNames.forEach((testName) => {

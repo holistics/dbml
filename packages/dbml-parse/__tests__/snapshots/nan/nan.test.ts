@@ -17,9 +17,8 @@ function serializeInterpreterResult (compiler: Compiler, report: Report<SchemaEl
     warnings,
   }), null, 2);
 }
-// The legacy snapshot tests are very prone to breakage
-// Do not add more tests here
-describe('[legacy - snapshot] interpreter', () => {
+
+describe('[snapshot] nan', () => {
   const testNames = scanTestNames(path.resolve(__dirname, './input/'));
 
   testNames.forEach((testName) => {

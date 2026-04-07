@@ -1,135 +1,109 @@
 {
+  "errors": [
+    {
+      "code": "UNEXPECTED_ELEMENT_DECLARATION",
+      "diagnostic": "An element's simple body must not be an element declaration",
+      "end": 15,
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "<element-declaration>:E@[L0:C6, L0:C15]",
+          "snippet": "Enum E {}"
+        }
+      },
+      "start": 6
+    }
+  ],
   "program": {
-    "context": {
-      "id": "<program>@[L0:C0, L0:C15]",
-      "snippet": "Note: Enum E {}"
-    },
-    "kind": "<program>",
-    "startPos": {
-      "offset": 0,
-      "line": 0,
-      "column": 0
-    },
-    "endPos": {
-      "offset": 15,
-      "line": 0,
-      "column": 15
-    },
-    "start": 0,
-    "end": 15,
-    "fullStart": 0,
-    "fullEnd": 15,
-    "symbol": {
-      "context": {
-        "id": "<program>@[L0:C0, L0:C15]",
-        "snippet": "Note: Enum E {}"
-      },
-      "members": [],
-      "declaration": {
-        "id": "<program>@[L0:C0, L0:C15]",
-        "snippet": "Note: Enum E {}"
-      },
-      "references": []
-    },
     "children": {
-      "id": 7,
-      "source": "Note: Enum E {}",
       "body": [
         {
-          "context": {
-            "id": "<element-declaration>:@[L0:C0, L0:C5]",
-            "snippet": "Note:"
-          },
-          "kind": "<element-declaration>",
-          "startPos": {
-            "offset": 0,
-            "line": 0,
-            "column": 0
-          },
-          "endPos": {
-            "offset": 5,
-            "line": 0,
-            "column": 5
-          },
-          "start": 0,
-          "end": 5,
-          "fullStart": 0,
-          "fullEnd": 6,
-          "symbol": {
-            "context": {
-              "id": "<element-declaration>:@[L0:C0, L0:C5]",
-              "snippet": "Note:"
-            },
-            "members": [],
-            "declaration": {
-              "id": "<element-declaration>:@[L0:C0, L0:C5]",
-              "snippet": "Note:"
-            },
-            "references": []
-          },
           "children": {
-            "id": 6,
-            "type": {
-              "context": {
-                "id": "<identifier>:Note@[L0:C0, L0:C4]",
-                "snippet": "Note"
-              },
-              "isInvalid": false,
-              "kind": "<identifier>",
-              "value": "Note",
-              "startPos": {
-                "offset": 0,
-                "line": 0,
-                "column": 0
-              },
-              "endPos": {
-                "offset": 4,
-                "line": 0,
-                "column": 4
-              },
-              "start": 0,
-              "end": 4,
-              "leadingTrivia": [],
-              "trailingTrivia": [],
-              "leadingInvalid": [],
-              "trailingInvalid": []
-            },
             "bodyColon": {
               "context": {
                 "id": "<colon>::@[L0:C4, L0:C5]",
                 "snippet": ":"
               },
-              "isInvalid": false,
-              "kind": "<colon>",
-              "value": ":",
-              "startPos": {
-                "offset": 4,
-                "line": 0,
-                "column": 4
-              },
+              "end": 5,
               "endPos": {
                 "offset": 5,
                 "line": 0,
                 "column": 5
               },
+              "isInvalid": false,
+              "kind": "<colon>",
+              "leadingInvalid": "",
+              "leadingTrivia": "",
               "start": 4,
-              "end": 5,
-              "leadingTrivia": [],
-              "trailingTrivia": [
-                " "
-              ],
-              "leadingInvalid": [],
-              "trailingInvalid": [
-                "Enum",
-                "E",
-                "{",
-                "}"
-              ]
+              "startPos": {
+                "offset": 4,
+                "line": 0,
+                "column": 4
+              },
+              "trailingInvalid": "EnumE{}",
+              "trailingTrivia": " ",
+              "value": ":"
             },
             "parent": {
               "id": "<program>@[L0:C0, L0:C15]",
               "snippet": "Note: Enum E {}"
+            },
+            "type": {
+              "context": {
+                "id": "<identifier>:Note@[L0:C0, L0:C4]",
+                "snippet": "Note"
+              },
+              "end": 4,
+              "endPos": {
+                "offset": 4,
+                "line": 0,
+                "column": 4
+              },
+              "isInvalid": false,
+              "kind": "<identifier>",
+              "leadingInvalid": "",
+              "leadingTrivia": "",
+              "start": 0,
+              "startPos": {
+                "offset": 0,
+                "line": 0,
+                "column": 0
+              },
+              "trailingInvalid": "",
+              "trailingTrivia": "",
+              "value": "Note"
             }
+          },
+          "context": {
+            "id": "<element-declaration>:@[L0:C0, L0:C5]",
+            "snippet": "Note:"
+          },
+          "end": 5,
+          "endPos": {
+            "offset": 5,
+            "line": 0,
+            "column": 5
+          },
+          "fullEnd": 6,
+          "fullStart": 0,
+          "kind": "<element-declaration>",
+          "start": 0,
+          "startPos": {
+            "offset": 0,
+            "line": 0,
+            "column": 0
+          },
+          "symbol": {
+            "context": {
+              "id": "<element-declaration>:@[L0:C0, L0:C5]",
+              "snippet": "Note:"
+            },
+            "declaration": {
+              "id": "<element-declaration>:@[L0:C0, L0:C5]",
+              "snippet": "Note:"
+            },
+            "members": [],
+            "references": []
           }
         }
       ],
@@ -138,252 +112,58 @@
           "id": "<eof>:@[L0:C15, L0:C15]",
           "snippet": ""
         },
+        "end": 15,
+        "endPos": {
+          "offset": 15,
+          "line": 0,
+          "column": 15
+        },
         "isInvalid": false,
         "kind": "<eof>",
-        "value": "",
+        "leadingInvalid": "",
+        "leadingTrivia": "",
+        "start": 15,
         "startPos": {
           "offset": 15,
           "line": 0,
           "column": 15
         },
-        "endPos": {
-          "offset": 15,
-          "line": 0,
-          "column": 15
-        },
-        "start": 15,
-        "end": 15,
-        "leadingTrivia": [],
-        "trailingTrivia": [],
-        "leadingInvalid": [],
-        "trailingInvalid": []
+        "trailingInvalid": "",
+        "trailingTrivia": "",
+        "value": ""
       }
+    },
+    "context": {
+      "id": "<program>@[L0:C0, L0:C15]",
+      "snippet": "Note: Enum E {}"
+    },
+    "end": 15,
+    "endPos": {
+      "offset": 15,
+      "line": 0,
+      "column": 15
+    },
+    "fullEnd": 15,
+    "fullStart": 0,
+    "kind": "<program>",
+    "start": 0,
+    "startPos": {
+      "offset": 0,
+      "line": 0,
+      "column": 0
+    },
+    "symbol": {
+      "context": {
+        "id": "<program>@[L0:C0, L0:C15]",
+        "snippet": "Note: Enum E {}"
+      },
+      "declaration": {
+        "id": "<program>@[L0:C0, L0:C15]",
+        "snippet": "Note: Enum E {}"
+      },
+      "members": [],
+      "references": []
     }
   },
-  "errors": [
-    {
-      "level": "error",
-      "code": {
-        "value": 1006,
-        "name": "UNEXPECTED_ELEMENT_DECLARATION"
-      },
-      "diagnostic": "An element's simple body must not be an element declaration",
-      "node": {
-        "context": {
-          "id": "<element-declaration>:E@[L0:C6, L0:C15]",
-          "snippet": "Enum E {}"
-        },
-        "kind": "<element-declaration>",
-        "startPos": {
-          "offset": 6,
-          "line": 0,
-          "column": 6
-        },
-        "endPos": {
-          "offset": 15,
-          "line": 0,
-          "column": 15
-        },
-        "start": 6,
-        "end": 15,
-        "fullStart": 6,
-        "fullEnd": 15,
-        "symbol": {
-          "context": {
-            "id": "<element-declaration>:E@[L0:C6, L0:C15]",
-            "snippet": "Enum E {}"
-          },
-          "members": [],
-          "declaration": {
-            "id": "<element-declaration>:E@[L0:C6, L0:C15]",
-            "snippet": "Enum E {}"
-          },
-          "references": []
-        },
-        "children": {
-          "id": 5,
-          "type": {
-            "context": {
-              "id": "<identifier>:Enum@[L0:C6, L0:C10]",
-              "snippet": "Enum"
-            },
-            "isInvalid": true,
-            "kind": "<identifier>",
-            "value": "Enum",
-            "startPos": {
-              "offset": 6,
-              "line": 0,
-              "column": 6
-            },
-            "endPos": {
-              "offset": 10,
-              "line": 0,
-              "column": 10
-            },
-            "start": 6,
-            "end": 10,
-            "leadingTrivia": [],
-            "trailingTrivia": [
-              " "
-            ],
-            "leadingInvalid": [],
-            "trailingInvalid": []
-          },
-          "name": {
-            "context": {
-              "id": "<primary-expression>@[L0:C11, L0:C12]",
-              "snippet": "E"
-            },
-            "kind": "<primary-expression>",
-            "startPos": {
-              "offset": 11,
-              "line": 0,
-              "column": 11
-            },
-            "endPos": {
-              "offset": 12,
-              "line": 0,
-              "column": 12
-            },
-            "start": 11,
-            "end": 12,
-            "fullStart": 11,
-            "fullEnd": 13,
-            "children": {
-              "id": 3,
-              "expression": {
-                "context": {
-                  "id": "<variable>:E@[L0:C11, L0:C12]",
-                  "snippet": "E"
-                },
-                "kind": "<variable>",
-                "startPos": {
-                  "offset": 11,
-                  "line": 0,
-                  "column": 11
-                },
-                "endPos": {
-                  "offset": 12,
-                  "line": 0,
-                  "column": 12
-                },
-                "start": 11,
-                "end": 12,
-                "fullStart": 11,
-                "fullEnd": 13,
-                "children": {
-                  "id": 2,
-                  "variable": {
-                    "context": {
-                      "id": "<identifier>:E@[L0:C11, L0:C12]",
-                      "snippet": "E"
-                    },
-                    "isInvalid": true,
-                    "kind": "<identifier>",
-                    "value": "E",
-                    "startPos": {
-                      "offset": 11,
-                      "line": 0,
-                      "column": 11
-                    },
-                    "endPos": {
-                      "offset": 12,
-                      "line": 0,
-                      "column": 12
-                    },
-                    "start": 11,
-                    "end": 12,
-                    "leadingTrivia": [],
-                    "trailingTrivia": [
-                      " "
-                    ],
-                    "leadingInvalid": [],
-                    "trailingInvalid": []
-                  }
-                }
-              }
-            }
-          },
-          "body": {
-            "context": {
-              "id": "<block-expression>@[L0:C13, L0:C15]",
-              "snippet": "{}"
-            },
-            "kind": "<block-expression>",
-            "startPos": {
-              "offset": 13,
-              "line": 0,
-              "column": 13
-            },
-            "endPos": {
-              "offset": 15,
-              "line": 0,
-              "column": 15
-            },
-            "start": 13,
-            "end": 15,
-            "fullStart": 13,
-            "fullEnd": 15,
-            "children": {
-              "id": 4,
-              "blockOpenBrace": {
-                "context": {
-                  "id": "<lbrace>:{@[L0:C13, L0:C14]",
-                  "snippet": "{"
-                },
-                "isInvalid": true,
-                "kind": "<lbrace>",
-                "value": "{",
-                "startPos": {
-                  "offset": 13,
-                  "line": 0,
-                  "column": 13
-                },
-                "endPos": {
-                  "offset": 14,
-                  "line": 0,
-                  "column": 14
-                },
-                "start": 13,
-                "end": 14,
-                "leadingTrivia": [],
-                "trailingTrivia": [],
-                "leadingInvalid": [],
-                "trailingInvalid": []
-              },
-              "body": [],
-              "blockCloseBrace": {
-                "context": {
-                  "id": "<rbrace>:}@[L0:C14, L0:C15]",
-                  "snippet": "}"
-                },
-                "isInvalid": true,
-                "kind": "<rbrace>",
-                "value": "}",
-                "startPos": {
-                  "offset": 14,
-                  "line": 0,
-                  "column": 14
-                },
-                "endPos": {
-                  "offset": 15,
-                  "line": 0,
-                  "column": 15
-                },
-                "start": 14,
-                "end": 15,
-                "leadingTrivia": [],
-                "trailingTrivia": [],
-                "leadingInvalid": [],
-                "trailingInvalid": []
-              }
-            }
-          }
-        }
-      },
-      "start": 6,
-      "end": 15
-    }
-  ],
   "warnings": []
 }

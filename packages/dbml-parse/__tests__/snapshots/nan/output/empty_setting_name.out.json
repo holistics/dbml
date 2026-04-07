@@ -1,72 +1,72 @@
 {
   "database": {
+    "aliases": [],
+    "enums": [],
+    "notes": [],
+    "records": [],
+    "refs": [],
     "schemas": [],
+    "tableGroups": [],
+    "tablePartials": [],
     "tables": [
       {
-        "name": "M",
-        "schemaName": "null",
-        "alias": "null",
+        "alias": null,
+        "checks": [],
         "fields": [
           {
+            "checks": [],
+            "increment": false,
+            "inline_refs": [],
             "name": "id",
-            "type": {
-              "schemaName": "null",
-              "type_name": "int",
-              "args": "null"
-            },
+            "pk": false,
             "token": {
-              "start": {
-                "offset": 14,
-                "line": 2,
-                "column": 5
-              },
               "end": {
-                "offset": 22,
+                "column": 13,
                 "line": 2,
-                "column": 13
+                "offset": 22
+              },
+              "start": {
+                "column": 5,
+                "line": 2,
+                "offset": 14
               }
             },
-            "inline_refs": [],
-            "pk": false,
-            "increment": false,
-            "unique": false,
-            "checks": []
+            "type": {
+              "args": null,
+              "schemaName": null,
+              "type_name": "int"
+            },
+            "unique": false
           }
         ],
-        "token": {
-          "start": {
-            "offset": 0,
-            "line": 1,
-            "column": 1
-          },
-          "end": {
-            "offset": 44,
-            "line": 3,
-            "column": 2
-          }
-        },
         "indexes": [],
+        "name": "M",
         "partials": [],
-        "checks": []
+        "schemaName": null,
+        "token": {
+          "end": {
+            "column": 2,
+            "line": 3,
+            "offset": 44
+          },
+          "start": {
+            "column": 1,
+            "line": 1,
+            "offset": 0
+          }
+        }
       }
     ],
-    "notes": [],
-    "refs": [],
-    "enums": [],
-    "tableGroups": [],
-    "aliases": [],
-    "tablePartials": [],
-    "records": [],
     "token": {
-      "start": {
-        "offset": 0,
-        "line": 1,
-        "column": 1
-      },
       "end": {
-        "offset": 44,
+        "column": 2,
         "line": 3,
-        "column": 2
+        "offset": 44
+      },
+      "start": {
+        "column": 1,
+        "line": 1,
+        "offset": 0
       }
     }
   },

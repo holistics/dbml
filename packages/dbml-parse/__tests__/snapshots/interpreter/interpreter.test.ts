@@ -1,11 +1,11 @@
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { UNHANDLED } from '@/constants';
 import { scanTestNames, toSnapshot } from '@tests/utils';
 import Compiler from '@/compiler';
 import type Report from '@/core/report';
 import type { SchemaElement } from '@/core/types';
+import { UNHANDLED } from '@/constants';
 
 function serializeInterpreterResult (compiler: Compiler, report: Report<SchemaElement | SchemaElement[] | undefined>): string {
   const value = report.getValue();
@@ -17,9 +17,7 @@ function serializeInterpreterResult (compiler: Compiler, report: Report<SchemaEl
     warnings,
   }), null, 2);
 }
-// The legacy snapshot tests are very prone to breakage
-// Do not add more tests here
-describe('[legacy - snapshot] interpreter', () => {
+describe('[snapshot] interpreter', () => {
   const testNames = scanTestNames(path.resolve(__dirname, './input/'));
 
   testNames.forEach((testName) => {

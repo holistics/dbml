@@ -1,107 +1,59 @@
 {
+  "errors": [
+    {
+      "code": "UNEXPECTED_TOKEN",
+      "diagnostic": "Expect an identifier",
+      "end": 5,
+      "level": "error",
+      "start": 0,
+      "token": {
+        "context": {
+          "id": "<color>:#1234@[L0:C0, L0:C5]",
+          "snippet": "#1234"
+        },
+        "isInvalid": true
+      }
+    },
+    {
+      "code": "UNEXPECTED_TOKEN",
+      "diagnostic": "Expect an identifier",
+      "end": 15,
+      "level": "error",
+      "start": 8,
+      "token": {
+        "context": {
+          "id": "<color>:#12acbd@[L1:C0, L1:C7]",
+          "snippet": "#12acbd"
+        },
+        "isInvalid": true
+      }
+    }
+  ],
   "tokens": [
     {
       "context": {
         "id": "<eof>:@[L1:C7, L1:C7]",
         "snippet": ""
       },
-      "isInvalid": false,
-      "kind": "<eof>",
-      "value": "",
-      "startPos": {
-        "offset": 15,
-        "line": 1,
-        "column": 7
-      },
+      "end": 15,
       "endPos": {
         "offset": 15,
         "line": 1,
         "column": 7
       },
+      "isInvalid": false,
+      "kind": "<eof>",
+      "leadingInvalid": "#1234#12acbd",
+      "leadingTrivia": "",
       "start": 15,
-      "end": 15,
-      "leadingTrivia": [],
-      "trailingTrivia": [],
-      "leadingInvalid": [
-        "#1234",
-        "#12acbd"
-      ],
-      "trailingInvalid": []
-    }
-  ],
-  "errors": [
-    {
-      "level": "error",
-      "code": {
-        "value": 1005,
-        "name": "UNEXPECTED_TOKEN"
+      "startPos": {
+        "offset": 15,
+        "line": 1,
+        "column": 7
       },
-      "diagnostic": "Expect an identifier",
-      "token": {
-        "context": {
-          "id": "<color>:#1234@[L0:C0, L0:C5]",
-          "snippet": "#1234"
-        },
-        "isInvalid": true,
-        "kind": "<color>",
-        "value": "#1234",
-        "startPos": {
-          "offset": 0,
-          "line": 0,
-          "column": 0
-        },
-        "endPos": {
-          "offset": 5,
-          "line": 0,
-          "column": 5
-        },
-        "start": 0,
-        "end": 5,
-        "leadingTrivia": [],
-        "trailingTrivia": [
-          " ",
-          "\n"
-        ],
-        "leadingInvalid": [],
-        "trailingInvalid": []
-      },
-      "start": 0,
-      "end": 5
-    },
-    {
-      "level": "error",
-      "code": {
-        "value": 1005,
-        "name": "UNEXPECTED_TOKEN"
-      },
-      "diagnostic": "Expect an identifier",
-      "token": {
-        "context": {
-          "id": "<color>:#12acbd@[L1:C0, L1:C7]",
-          "snippet": "#12acbd"
-        },
-        "isInvalid": true,
-        "kind": "<color>",
-        "value": "#12acbd",
-        "startPos": {
-          "offset": 8,
-          "line": 1,
-          "column": 0
-        },
-        "endPos": {
-          "offset": 15,
-          "line": 1,
-          "column": 7
-        },
-        "start": 8,
-        "end": 15,
-        "leadingTrivia": [],
-        "trailingTrivia": [],
-        "leadingInvalid": [],
-        "trailingInvalid": []
-      },
-      "start": 8,
-      "end": 15
+      "trailingInvalid": "",
+      "trailingTrivia": "",
+      "value": ""
     }
   ],
   "warnings": []

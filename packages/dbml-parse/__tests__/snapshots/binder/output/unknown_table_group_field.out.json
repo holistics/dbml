@@ -1,405 +1,707 @@
 {
-  "program": {
-    "context": {
-      "id": "<program>@[L0:C0, L7:C1]",
-      "snippet": "Table User...roducts\r\n}"
-    },
-    "kind": "<program>",
-    "startPos": {
-      "offset": 0,
-      "line": 0,
-      "column": 0
-    },
-    "endPos": {
-      "offset": 68,
-      "line": 7,
-      "column": 1
-    },
-    "start": 0,
-    "end": 68,
-    "fullStart": 0,
-    "fullEnd": 68,
-    "symbol": {
-      "context": {
-        "id": "<program>@[L0:C0, L7:C1]",
-        "snippet": "Table User...roducts\r\n}"
-      },
-      "members": [
-        {
-          "context": {},
-          "members": [
-            {
-              "context": {
-                "id": "<element-declaration>:Users@[L0:C0, L2:C1]",
-                "snippet": "Table Users {\r\n\r\n}"
-              },
-              "members": [],
-              "declaration": {
-                "id": "<element-declaration>:Users@[L0:C0, L2:C1]",
-                "snippet": "Table Users {\r\n\r\n}"
-              },
-              "references": [
-                {
-                  "id": "<primary-expression>@[L5:C4, L5:C9]",
-                  "snippet": "Users"
-                }
-              ]
-            },
-            {
-              "context": {
-                "id": "<element-declaration>:Group@[L4:C0, L7:C1]",
-                "snippet": "Tablegroup...roducts\r\n}"
-              },
-              "members": [
-                {
-                  "context": {
-                    "id": "<function-application>@[L5:C4, L5:C9]",
-                    "snippet": "Users"
-                  },
-                  "members": [],
-                  "declaration": {
-                    "id": "<function-application>@[L5:C4, L5:C9]",
-                    "snippet": "Users"
-                  },
-                  "references": []
-                },
-                {
-                  "context": {
-                    "id": "<function-application>@[L6:C4, L6:C12]",
-                    "snippet": "Products"
-                  },
-                  "members": [],
-                  "declaration": {
-                    "id": "<function-application>@[L6:C4, L6:C12]",
-                    "snippet": "Products"
-                  },
-                  "references": []
-                }
-              ],
-              "declaration": {
-                "id": "<element-declaration>:Group@[L4:C0, L7:C1]",
-                "snippet": "Tablegroup...roducts\r\n}"
-              },
-              "references": []
-            }
-          ],
-          "references": []
-        },
-        {
-          "context": {
-            "id": "<element-declaration>:Users@[L0:C0, L2:C1]",
-            "snippet": "Table Users {\r\n\r\n}"
-          },
-          "members": [],
-          "declaration": {
-            "id": "<element-declaration>:Users@[L0:C0, L2:C1]",
-            "snippet": "Table Users {\r\n\r\n}"
-          },
-          "references": [
-            {
-              "id": "<primary-expression>@[L5:C4, L5:C9]",
-              "snippet": "Users"
-            }
-          ]
-        },
-        {
-          "context": {
-            "id": "<element-declaration>:Group@[L4:C0, L7:C1]",
-            "snippet": "Tablegroup...roducts\r\n}"
-          },
-          "members": [
-            {
-              "context": {
-                "id": "<function-application>@[L5:C4, L5:C9]",
-                "snippet": "Users"
-              },
-              "members": [],
-              "declaration": {
-                "id": "<function-application>@[L5:C4, L5:C9]",
-                "snippet": "Users"
-              },
-              "references": []
-            },
-            {
-              "context": {
-                "id": "<function-application>@[L6:C4, L6:C12]",
-                "snippet": "Products"
-              },
-              "members": [],
-              "declaration": {
-                "id": "<function-application>@[L6:C4, L6:C12]",
-                "snippet": "Products"
-              },
-              "references": []
-            }
-          ],
-          "declaration": {
-            "id": "<element-declaration>:Group@[L4:C0, L7:C1]",
-            "snippet": "Tablegroup...roducts\r\n}"
-          },
-          "references": []
+  "errors": [
+    {
+      "code": "BINDING_ERROR",
+      "diagnostic": "Table 'Products' does not exist in Schema 'public'",
+      "end": 65,
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "<primary-expression>@[L6:C4, L6:C12]",
+          "snippet": "Products"
         }
-      ],
-      "declaration": {
-        "id": "<program>@[L0:C0, L7:C1]",
-        "snippet": "Table User...roducts\r\n}"
       },
-      "references": []
-    },
+      "start": 57
+    }
+  ],
+  "program": {
     "children": {
-      "id": 14,
-      "source": "Table Users {\r\n\r\n}\r\n\r\nTablegroup Group {\r\n    Users\r\n    Products\r\n}",
       "body": [
         {
+          "children": {
+            "body": {
+              "children": {
+                "blockCloseBrace": {
+                  "context": {
+                    "id": "<rbrace>:}@[L2:C0, L2:C1]",
+                    "snippet": "}"
+                  },
+                  "end": 18,
+                  "endPos": {
+                    "offset": 18,
+                    "line": 2,
+                    "column": 1
+                  },
+                  "isInvalid": false,
+                  "kind": "<rbrace>",
+                  "leadingInvalid": "",
+                  "leadingTrivia": "\n",
+                  "start": 17,
+                  "startPos": {
+                    "offset": 17,
+                    "line": 2,
+                    "column": 0
+                  },
+                  "trailingInvalid": "",
+                  "trailingTrivia": "\n",
+                  "value": "}"
+                },
+                "blockOpenBrace": {
+                  "context": {
+                    "id": "<lbrace>:{@[L0:C12, L0:C13]",
+                    "snippet": "{"
+                  },
+                  "end": 13,
+                  "endPos": {
+                    "offset": 13,
+                    "line": 0,
+                    "column": 13
+                  },
+                  "isInvalid": false,
+                  "kind": "<lbrace>",
+                  "leadingInvalid": "",
+                  "leadingTrivia": "",
+                  "start": 12,
+                  "startPos": {
+                    "offset": 12,
+                    "line": 0,
+                    "column": 12
+                  },
+                  "trailingInvalid": "",
+                  "trailingTrivia": "\n",
+                  "value": "{"
+                },
+                "body": [],
+                "parent": {
+                  "id": "<element-declaration>:Users@[L0:C0, L2:C1]",
+                  "snippet": "Table Users {\r\n\r\n}"
+                }
+              },
+              "context": {
+                "id": "<block-expression>@[L0:C12, L2:C1]",
+                "snippet": "{\r\n\r\n}"
+              },
+              "end": 18,
+              "endPos": {
+                "offset": 18,
+                "line": 2,
+                "column": 1
+              },
+              "fullEnd": 20,
+              "fullStart": 12,
+              "kind": "<block-expression>",
+              "start": 12,
+              "startPos": {
+                "offset": 12,
+                "line": 0,
+                "column": 12
+              }
+            },
+            "name": {
+              "children": {
+                "expression": {
+                  "children": {
+                    "parent": {
+                      "id": "<element-declaration>:Users@[L0:C0, L2:C1]",
+                      "snippet": "Table Users {\r\n\r\n}"
+                    },
+                    "variable": {
+                      "context": {
+                        "id": "<identifier>:Users@[L0:C6, L0:C11]",
+                        "snippet": "Users"
+                      },
+                      "end": 11,
+                      "endPos": {
+                        "offset": 11,
+                        "line": 0,
+                        "column": 11
+                      },
+                      "isInvalid": false,
+                      "kind": "<identifier>",
+                      "leadingInvalid": "",
+                      "leadingTrivia": "",
+                      "start": 6,
+                      "startPos": {
+                        "offset": 6,
+                        "line": 0,
+                        "column": 6
+                      },
+                      "trailingInvalid": "",
+                      "trailingTrivia": " ",
+                      "value": "Users"
+                    }
+                  },
+                  "context": {
+                    "id": "<variable>:Users@[L0:C6, L0:C11]",
+                    "snippet": "Users"
+                  },
+                  "end": 11,
+                  "endPos": {
+                    "offset": 11,
+                    "line": 0,
+                    "column": 11
+                  },
+                  "fullEnd": 12,
+                  "fullStart": 6,
+                  "kind": "<variable>",
+                  "start": 6,
+                  "startPos": {
+                    "offset": 6,
+                    "line": 0,
+                    "column": 6
+                  }
+                },
+                "parent": {
+                  "id": "<element-declaration>:Users@[L0:C0, L2:C1]",
+                  "snippet": "Table Users {\r\n\r\n}"
+                }
+              },
+              "context": {
+                "id": "<primary-expression>@[L0:C6, L0:C11]",
+                "snippet": "Users"
+              },
+              "end": 11,
+              "endPos": {
+                "offset": 11,
+                "line": 0,
+                "column": 11
+              },
+              "fullEnd": 12,
+              "fullStart": 6,
+              "kind": "<primary-expression>",
+              "start": 6,
+              "startPos": {
+                "offset": 6,
+                "line": 0,
+                "column": 6
+              }
+            },
+            "parent": {
+              "id": "<program>@[L0:C0, L7:C1]",
+              "snippet": "Table User...roducts\r\n}"
+            },
+            "type": {
+              "context": {
+                "id": "<identifier>:Table@[L0:C0, L0:C5]",
+                "snippet": "Table"
+              },
+              "end": 5,
+              "endPos": {
+                "offset": 5,
+                "line": 0,
+                "column": 5
+              },
+              "isInvalid": false,
+              "kind": "<identifier>",
+              "leadingInvalid": "",
+              "leadingTrivia": "",
+              "start": 0,
+              "startPos": {
+                "offset": 0,
+                "line": 0,
+                "column": 0
+              },
+              "trailingInvalid": "",
+              "trailingTrivia": " ",
+              "value": "Table"
+            }
+          },
           "context": {
             "id": "<element-declaration>:Users@[L0:C0, L2:C1]",
             "snippet": "Table Users {\r\n\r\n}"
           },
-          "kind": "<element-declaration>",
-          "startPos": {
-            "offset": 0,
-            "line": 0,
-            "column": 0
-          },
+          "end": 18,
           "endPos": {
             "offset": 18,
             "line": 2,
             "column": 1
           },
-          "start": 0,
-          "end": 18,
-          "fullStart": 0,
           "fullEnd": 20,
+          "fullStart": 0,
+          "kind": "<element-declaration>",
+          "start": 0,
+          "startPos": {
+            "offset": 0,
+            "line": 0,
+            "column": 0
+          },
           "symbol": {
             "context": {
               "id": "<element-declaration>:Users@[L0:C0, L2:C1]",
               "snippet": "Table Users {\r\n\r\n}"
             },
-            "members": [],
             "declaration": {
               "id": "<element-declaration>:Users@[L0:C0, L2:C1]",
               "snippet": "Table Users {\r\n\r\n}"
             },
+            "members": [],
             "references": [
               {
                 "id": "<primary-expression>@[L5:C4, L5:C9]",
                 "snippet": "Users"
               }
             ]
-          },
+          }
+        },
+        {
           "children": {
-            "id": 3,
-            "type": {
-              "context": {
-                "id": "<identifier>:Table@[L0:C0, L0:C5]",
-                "snippet": "Table"
-              },
-              "isInvalid": false,
-              "kind": "<identifier>",
-              "value": "Table",
-              "startPos": {
-                "offset": 0,
-                "line": 0,
-                "column": 0
-              },
-              "endPos": {
-                "offset": 5,
-                "line": 0,
-                "column": 5
-              },
-              "start": 0,
-              "end": 5,
-              "leadingTrivia": [],
-              "trailingTrivia": [
-                " "
-              ],
-              "leadingInvalid": [],
-              "trailingInvalid": []
-            },
-            "name": {
-              "context": {
-                "id": "<primary-expression>@[L0:C6, L0:C11]",
-                "snippet": "Users"
-              },
-              "kind": "<primary-expression>",
-              "startPos": {
-                "offset": 6,
-                "line": 0,
-                "column": 6
-              },
-              "endPos": {
-                "offset": 11,
-                "line": 0,
-                "column": 11
-              },
-              "start": 6,
-              "end": 11,
-              "fullStart": 6,
-              "fullEnd": 12,
-              "children": {
-                "id": 1,
-                "expression": {
-                  "context": {
-                    "id": "<variable>:Users@[L0:C6, L0:C11]",
-                    "snippet": "Users"
-                  },
-                  "kind": "<variable>",
-                  "startPos": {
-                    "offset": 6,
-                    "line": 0,
-                    "column": 6
-                  },
-                  "endPos": {
-                    "offset": 11,
-                    "line": 0,
-                    "column": 11
-                  },
-                  "start": 6,
-                  "end": 11,
-                  "fullStart": 6,
-                  "fullEnd": 12,
-                  "children": {
-                    "id": 0,
-                    "variable": {
-                      "context": {
-                        "id": "<identifier>:Users@[L0:C6, L0:C11]",
-                        "snippet": "Users"
-                      },
-                      "isInvalid": false,
-                      "kind": "<identifier>",
-                      "value": "Users",
-                      "startPos": {
-                        "offset": 6,
-                        "line": 0,
-                        "column": 6
-                      },
-                      "endPos": {
-                        "offset": 11,
-                        "line": 0,
-                        "column": 11
-                      },
-                      "start": 6,
-                      "end": 11,
-                      "leadingTrivia": [],
-                      "trailingTrivia": [
-                        " "
-                      ],
-                      "leadingInvalid": [],
-                      "trailingInvalid": []
-                    }
-                  }
-                }
-              }
-            },
             "body": {
-              "context": {
-                "id": "<block-expression>@[L0:C12, L2:C1]",
-                "snippet": "{\r\n\r\n}"
-              },
-              "kind": "<block-expression>",
-              "startPos": {
-                "offset": 12,
-                "line": 0,
-                "column": 12
-              },
-              "endPos": {
-                "offset": 18,
-                "line": 2,
-                "column": 1
-              },
-              "start": 12,
-              "end": 18,
-              "fullStart": 12,
-              "fullEnd": 20,
               "children": {
-                "id": 2,
-                "blockOpenBrace": {
-                  "context": {
-                    "id": "<lbrace>:{@[L0:C12, L0:C13]",
-                    "snippet": "{"
-                  },
-                  "isInvalid": false,
-                  "kind": "<lbrace>",
-                  "value": "{",
-                  "startPos": {
-                    "offset": 12,
-                    "line": 0,
-                    "column": 12
-                  },
-                  "endPos": {
-                    "offset": 13,
-                    "line": 0,
-                    "column": 13
-                  },
-                  "start": 12,
-                  "end": 13,
-                  "leadingTrivia": [],
-                  "trailingTrivia": [
-                    "\n"
-                  ],
-                  "leadingInvalid": [],
-                  "trailingInvalid": []
-                },
-                "body": [],
                 "blockCloseBrace": {
                   "context": {
-                    "id": "<rbrace>:}@[L2:C0, L2:C1]",
+                    "id": "<rbrace>:}@[L7:C0, L7:C1]",
                     "snippet": "}"
+                  },
+                  "end": 68,
+                  "endPos": {
+                    "offset": 68,
+                    "line": 7,
+                    "column": 1
                   },
                   "isInvalid": false,
                   "kind": "<rbrace>",
-                  "value": "}",
+                  "leadingInvalid": "",
+                  "leadingTrivia": "",
+                  "start": 67,
                   "startPos": {
-                    "offset": 17,
-                    "line": 2,
+                    "offset": 67,
+                    "line": 7,
                     "column": 0
                   },
-                  "endPos": {
-                    "offset": 18,
-                    "line": 2,
-                    "column": 1
+                  "trailingInvalid": "",
+                  "trailingTrivia": "",
+                  "value": "}"
+                },
+                "blockOpenBrace": {
+                  "context": {
+                    "id": "<lbrace>:{@[L4:C17, L4:C18]",
+                    "snippet": "{"
                   },
-                  "start": 17,
-                  "end": 18,
-                  "leadingTrivia": [
-                    "\n"
-                  ],
-                  "trailingTrivia": [
-                    "\n"
-                  ],
-                  "leadingInvalid": [],
-                  "trailingInvalid": []
+                  "end": 40,
+                  "endPos": {
+                    "offset": 40,
+                    "line": 4,
+                    "column": 18
+                  },
+                  "isInvalid": false,
+                  "kind": "<lbrace>",
+                  "leadingInvalid": "",
+                  "leadingTrivia": "",
+                  "start": 39,
+                  "startPos": {
+                    "offset": 39,
+                    "line": 4,
+                    "column": 17
+                  },
+                  "trailingInvalid": "",
+                  "trailingTrivia": "\n",
+                  "value": "{"
+                },
+                "body": [
+                  {
+                    "children": {
+                      "args": [],
+                      "callee": {
+                        "children": {
+                          "expression": {
+                            "children": {
+                              "parent": {
+                                "id": "<element-declaration>:Group@[L4:C0, L7:C1]",
+                                "snippet": "Tablegroup...roducts\r\n}"
+                              },
+                              "variable": {
+                                "context": {
+                                  "id": "<identifier>:Users@[L5:C4, L5:C9]",
+                                  "snippet": "Users"
+                                },
+                                "end": 51,
+                                "endPos": {
+                                  "offset": 51,
+                                  "line": 5,
+                                  "column": 9
+                                },
+                                "isInvalid": false,
+                                "kind": "<identifier>",
+                                "leadingInvalid": "",
+                                "leadingTrivia": "    ",
+                                "start": 46,
+                                "startPos": {
+                                  "offset": 46,
+                                  "line": 5,
+                                  "column": 4
+                                },
+                                "trailingInvalid": "",
+                                "trailingTrivia": "\n",
+                                "value": "Users"
+                              }
+                            },
+                            "context": {
+                              "id": "<variable>:Users@[L5:C4, L5:C9]",
+                              "snippet": "Users"
+                            },
+                            "end": 51,
+                            "endPos": {
+                              "offset": 51,
+                              "line": 5,
+                              "column": 9
+                            },
+                            "fullEnd": 53,
+                            "fullStart": 42,
+                            "kind": "<variable>",
+                            "start": 46,
+                            "startPos": {
+                              "offset": 46,
+                              "line": 5,
+                              "column": 4
+                            }
+                          },
+                          "parent": {
+                            "id": "<element-declaration>:Group@[L4:C0, L7:C1]",
+                            "snippet": "Tablegroup...roducts\r\n}"
+                          }
+                        },
+                        "context": {
+                          "id": "<primary-expression>@[L5:C4, L5:C9]",
+                          "snippet": "Users"
+                        },
+                        "end": 51,
+                        "endPos": {
+                          "offset": 51,
+                          "line": 5,
+                          "column": 9
+                        },
+                        "fullEnd": 53,
+                        "fullStart": 42,
+                        "kind": "<primary-expression>",
+                        "referee": {
+                          "context": {
+                            "id": "<element-declaration>:Users@[L0:C0, L2:C1]",
+                            "snippet": "Table Users {\r\n\r\n}"
+                          }
+                        },
+                        "start": 46,
+                        "startPos": {
+                          "offset": 46,
+                          "line": 5,
+                          "column": 4
+                        }
+                      },
+                      "parent": {
+                        "id": "<element-declaration>:Group@[L4:C0, L7:C1]",
+                        "snippet": "Tablegroup...roducts\r\n}"
+                      }
+                    },
+                    "context": {
+                      "id": "<function-application>@[L5:C4, L5:C9]",
+                      "snippet": "Users"
+                    },
+                    "end": 51,
+                    "endPos": {
+                      "offset": 51,
+                      "line": 5,
+                      "column": 9
+                    },
+                    "fullEnd": 53,
+                    "fullStart": 42,
+                    "kind": "<function-application>",
+                    "start": 46,
+                    "startPos": {
+                      "offset": 46,
+                      "line": 5,
+                      "column": 4
+                    },
+                    "symbol": {
+                      "context": {
+                        "id": "<function-application>@[L5:C4, L5:C9]",
+                        "snippet": "Users"
+                      },
+                      "declaration": {
+                        "id": "<function-application>@[L5:C4, L5:C9]",
+                        "snippet": "Users"
+                      },
+                      "members": [],
+                      "references": []
+                    }
+                  },
+                  {
+                    "children": {
+                      "args": [],
+                      "callee": {
+                        "children": {
+                          "expression": {
+                            "children": {
+                              "parent": {
+                                "id": "<element-declaration>:Group@[L4:C0, L7:C1]",
+                                "snippet": "Tablegroup...roducts\r\n}"
+                              },
+                              "variable": {
+                                "context": {
+                                  "id": "<identifier>:Products@[L6:C4, L6:C12]",
+                                  "snippet": "Products"
+                                },
+                                "end": 65,
+                                "endPos": {
+                                  "offset": 65,
+                                  "line": 6,
+                                  "column": 12
+                                },
+                                "isInvalid": false,
+                                "kind": "<identifier>",
+                                "leadingInvalid": "",
+                                "leadingTrivia": "    ",
+                                "start": 57,
+                                "startPos": {
+                                  "offset": 57,
+                                  "line": 6,
+                                  "column": 4
+                                },
+                                "trailingInvalid": "",
+                                "trailingTrivia": "\n",
+                                "value": "Products"
+                              }
+                            },
+                            "context": {
+                              "id": "<variable>:Products@[L6:C4, L6:C12]",
+                              "snippet": "Products"
+                            },
+                            "end": 65,
+                            "endPos": {
+                              "offset": 65,
+                              "line": 6,
+                              "column": 12
+                            },
+                            "fullEnd": 67,
+                            "fullStart": 53,
+                            "kind": "<variable>",
+                            "start": 57,
+                            "startPos": {
+                              "offset": 57,
+                              "line": 6,
+                              "column": 4
+                            }
+                          },
+                          "parent": {
+                            "id": "<element-declaration>:Group@[L4:C0, L7:C1]",
+                            "snippet": "Tablegroup...roducts\r\n}"
+                          }
+                        },
+                        "context": {
+                          "id": "<primary-expression>@[L6:C4, L6:C12]",
+                          "snippet": "Products"
+                        },
+                        "end": 65,
+                        "endPos": {
+                          "offset": 65,
+                          "line": 6,
+                          "column": 12
+                        },
+                        "fullEnd": 67,
+                        "fullStart": 53,
+                        "kind": "<primary-expression>",
+                        "start": 57,
+                        "startPos": {
+                          "offset": 57,
+                          "line": 6,
+                          "column": 4
+                        }
+                      },
+                      "parent": {
+                        "id": "<element-declaration>:Group@[L4:C0, L7:C1]",
+                        "snippet": "Tablegroup...roducts\r\n}"
+                      }
+                    },
+                    "context": {
+                      "id": "<function-application>@[L6:C4, L6:C12]",
+                      "snippet": "Products"
+                    },
+                    "end": 65,
+                    "endPos": {
+                      "offset": 65,
+                      "line": 6,
+                      "column": 12
+                    },
+                    "fullEnd": 67,
+                    "fullStart": 53,
+                    "kind": "<function-application>",
+                    "start": 57,
+                    "startPos": {
+                      "offset": 57,
+                      "line": 6,
+                      "column": 4
+                    },
+                    "symbol": {
+                      "context": {
+                        "id": "<function-application>@[L6:C4, L6:C12]",
+                        "snippet": "Products"
+                      },
+                      "declaration": {
+                        "id": "<function-application>@[L6:C4, L6:C12]",
+                        "snippet": "Products"
+                      },
+                      "members": [],
+                      "references": []
+                    }
+                  }
+                ],
+                "parent": {
+                  "id": "<element-declaration>:Group@[L4:C0, L7:C1]",
+                  "snippet": "Tablegroup...roducts\r\n}"
                 }
+              },
+              "context": {
+                "id": "<block-expression>@[L4:C17, L7:C1]",
+                "snippet": "{\r\n    Use...roducts\r\n}"
+              },
+              "end": 68,
+              "endPos": {
+                "offset": 68,
+                "line": 7,
+                "column": 1
+              },
+              "fullEnd": 68,
+              "fullStart": 39,
+              "kind": "<block-expression>",
+              "start": 39,
+              "startPos": {
+                "offset": 39,
+                "line": 4,
+                "column": 17
+              }
+            },
+            "name": {
+              "children": {
+                "expression": {
+                  "children": {
+                    "parent": {
+                      "id": "<element-declaration>:Group@[L4:C0, L7:C1]",
+                      "snippet": "Tablegroup...roducts\r\n}"
+                    },
+                    "variable": {
+                      "context": {
+                        "id": "<identifier>:Group@[L4:C11, L4:C16]",
+                        "snippet": "Group"
+                      },
+                      "end": 38,
+                      "endPos": {
+                        "offset": 38,
+                        "line": 4,
+                        "column": 16
+                      },
+                      "isInvalid": false,
+                      "kind": "<identifier>",
+                      "leadingInvalid": "",
+                      "leadingTrivia": "",
+                      "start": 33,
+                      "startPos": {
+                        "offset": 33,
+                        "line": 4,
+                        "column": 11
+                      },
+                      "trailingInvalid": "",
+                      "trailingTrivia": " ",
+                      "value": "Group"
+                    }
+                  },
+                  "context": {
+                    "id": "<variable>:Group@[L4:C11, L4:C16]",
+                    "snippet": "Group"
+                  },
+                  "end": 38,
+                  "endPos": {
+                    "offset": 38,
+                    "line": 4,
+                    "column": 16
+                  },
+                  "fullEnd": 39,
+                  "fullStart": 33,
+                  "kind": "<variable>",
+                  "start": 33,
+                  "startPos": {
+                    "offset": 33,
+                    "line": 4,
+                    "column": 11
+                  }
+                },
+                "parent": {
+                  "id": "<element-declaration>:Group@[L4:C0, L7:C1]",
+                  "snippet": "Tablegroup...roducts\r\n}"
+                }
+              },
+              "context": {
+                "id": "<primary-expression>@[L4:C11, L4:C16]",
+                "snippet": "Group"
+              },
+              "end": 38,
+              "endPos": {
+                "offset": 38,
+                "line": 4,
+                "column": 16
+              },
+              "fullEnd": 39,
+              "fullStart": 33,
+              "kind": "<primary-expression>",
+              "start": 33,
+              "startPos": {
+                "offset": 33,
+                "line": 4,
+                "column": 11
               }
             },
             "parent": {
               "id": "<program>@[L0:C0, L7:C1]",
               "snippet": "Table User...roducts\r\n}"
+            },
+            "type": {
+              "context": {
+                "id": "<identifier>:Tablegroup@[L4:C0, L4:C10]",
+                "snippet": "Tablegroup"
+              },
+              "end": 32,
+              "endPos": {
+                "offset": 32,
+                "line": 4,
+                "column": 10
+              },
+              "isInvalid": false,
+              "kind": "<identifier>",
+              "leadingInvalid": "",
+              "leadingTrivia": "\n",
+              "start": 22,
+              "startPos": {
+                "offset": 22,
+                "line": 4,
+                "column": 0
+              },
+              "trailingInvalid": "",
+              "trailingTrivia": " ",
+              "value": "Tablegroup"
             }
-          }
-        },
-        {
+          },
           "context": {
             "id": "<element-declaration>:Group@[L4:C0, L7:C1]",
             "snippet": "Tablegroup...roducts\r\n}"
           },
-          "kind": "<element-declaration>",
-          "startPos": {
-            "offset": 22,
-            "line": 4,
-            "column": 0
-          },
+          "end": 68,
           "endPos": {
             "offset": 68,
             "line": 7,
             "column": 1
           },
-          "start": 22,
-          "end": 68,
-          "fullStart": 21,
           "fullEnd": 68,
+          "fullStart": 21,
+          "kind": "<element-declaration>",
+          "start": 22,
+          "startPos": {
+            "offset": 22,
+            "line": 4,
+            "column": 0
+          },
           "symbol": {
             "context": {
+              "id": "<element-declaration>:Group@[L4:C0, L7:C1]",
+              "snippet": "Tablegroup...roducts\r\n}"
+            },
+            "declaration": {
               "id": "<element-declaration>:Group@[L4:C0, L7:C1]",
               "snippet": "Tablegroup...roducts\r\n}"
             },
@@ -408,472 +710,16 @@
                 "context": {
                   "id": "<function-application>@[L5:C4, L5:C9]",
                   "snippet": "Users"
-                },
-                "members": [],
-                "declaration": {
-                  "id": "<function-application>@[L5:C4, L5:C9]",
-                  "snippet": "Users"
-                },
-                "references": []
+                }
               },
               {
                 "context": {
                   "id": "<function-application>@[L6:C4, L6:C12]",
                   "snippet": "Products"
-                },
-                "members": [],
-                "declaration": {
-                  "id": "<function-application>@[L6:C4, L6:C12]",
-                  "snippet": "Products"
-                },
-                "references": []
+                }
               }
             ],
-            "declaration": {
-              "id": "<element-declaration>:Group@[L4:C0, L7:C1]",
-              "snippet": "Tablegroup...roducts\r\n}"
-            },
             "references": []
-          },
-          "children": {
-            "id": 13,
-            "type": {
-              "context": {
-                "id": "<identifier>:Tablegroup@[L4:C0, L4:C10]",
-                "snippet": "Tablegroup"
-              },
-              "isInvalid": false,
-              "kind": "<identifier>",
-              "value": "Tablegroup",
-              "startPos": {
-                "offset": 22,
-                "line": 4,
-                "column": 0
-              },
-              "endPos": {
-                "offset": 32,
-                "line": 4,
-                "column": 10
-              },
-              "start": 22,
-              "end": 32,
-              "leadingTrivia": [
-                "\n"
-              ],
-              "trailingTrivia": [
-                " "
-              ],
-              "leadingInvalid": [],
-              "trailingInvalid": []
-            },
-            "name": {
-              "context": {
-                "id": "<primary-expression>@[L4:C11, L4:C16]",
-                "snippet": "Group"
-              },
-              "kind": "<primary-expression>",
-              "startPos": {
-                "offset": 33,
-                "line": 4,
-                "column": 11
-              },
-              "endPos": {
-                "offset": 38,
-                "line": 4,
-                "column": 16
-              },
-              "start": 33,
-              "end": 38,
-              "fullStart": 33,
-              "fullEnd": 39,
-              "children": {
-                "id": 5,
-                "expression": {
-                  "context": {
-                    "id": "<variable>:Group@[L4:C11, L4:C16]",
-                    "snippet": "Group"
-                  },
-                  "kind": "<variable>",
-                  "startPos": {
-                    "offset": 33,
-                    "line": 4,
-                    "column": 11
-                  },
-                  "endPos": {
-                    "offset": 38,
-                    "line": 4,
-                    "column": 16
-                  },
-                  "start": 33,
-                  "end": 38,
-                  "fullStart": 33,
-                  "fullEnd": 39,
-                  "children": {
-                    "id": 4,
-                    "variable": {
-                      "context": {
-                        "id": "<identifier>:Group@[L4:C11, L4:C16]",
-                        "snippet": "Group"
-                      },
-                      "isInvalid": false,
-                      "kind": "<identifier>",
-                      "value": "Group",
-                      "startPos": {
-                        "offset": 33,
-                        "line": 4,
-                        "column": 11
-                      },
-                      "endPos": {
-                        "offset": 38,
-                        "line": 4,
-                        "column": 16
-                      },
-                      "start": 33,
-                      "end": 38,
-                      "leadingTrivia": [],
-                      "trailingTrivia": [
-                        " "
-                      ],
-                      "leadingInvalid": [],
-                      "trailingInvalid": []
-                    }
-                  }
-                }
-              }
-            },
-            "body": {
-              "context": {
-                "id": "<block-expression>@[L4:C17, L7:C1]",
-                "snippet": "{\r\n    Use...roducts\r\n}"
-              },
-              "kind": "<block-expression>",
-              "startPos": {
-                "offset": 39,
-                "line": 4,
-                "column": 17
-              },
-              "endPos": {
-                "offset": 68,
-                "line": 7,
-                "column": 1
-              },
-              "start": 39,
-              "end": 68,
-              "fullStart": 39,
-              "fullEnd": 68,
-              "children": {
-                "id": 12,
-                "blockOpenBrace": {
-                  "context": {
-                    "id": "<lbrace>:{@[L4:C17, L4:C18]",
-                    "snippet": "{"
-                  },
-                  "isInvalid": false,
-                  "kind": "<lbrace>",
-                  "value": "{",
-                  "startPos": {
-                    "offset": 39,
-                    "line": 4,
-                    "column": 17
-                  },
-                  "endPos": {
-                    "offset": 40,
-                    "line": 4,
-                    "column": 18
-                  },
-                  "start": 39,
-                  "end": 40,
-                  "leadingTrivia": [],
-                  "trailingTrivia": [
-                    "\n"
-                  ],
-                  "leadingInvalid": [],
-                  "trailingInvalid": []
-                },
-                "body": [
-                  {
-                    "context": {
-                      "id": "<function-application>@[L5:C4, L5:C9]",
-                      "snippet": "Users"
-                    },
-                    "kind": "<function-application>",
-                    "startPos": {
-                      "offset": 46,
-                      "line": 5,
-                      "column": 4
-                    },
-                    "endPos": {
-                      "offset": 51,
-                      "line": 5,
-                      "column": 9
-                    },
-                    "start": 46,
-                    "end": 51,
-                    "fullStart": 42,
-                    "fullEnd": 53,
-                    "symbol": {
-                      "context": {
-                        "id": "<function-application>@[L5:C4, L5:C9]",
-                        "snippet": "Users"
-                      },
-                      "members": [],
-                      "declaration": {
-                        "id": "<function-application>@[L5:C4, L5:C9]",
-                        "snippet": "Users"
-                      },
-                      "references": []
-                    },
-                    "children": {
-                      "id": 8,
-                      "callee": {
-                        "context": {
-                          "id": "<primary-expression>@[L5:C4, L5:C9]",
-                          "snippet": "Users"
-                        },
-                        "kind": "<primary-expression>",
-                        "startPos": {
-                          "offset": 46,
-                          "line": 5,
-                          "column": 4
-                        },
-                        "endPos": {
-                          "offset": 51,
-                          "line": 5,
-                          "column": 9
-                        },
-                        "start": 46,
-                        "end": 51,
-                        "fullStart": 42,
-                        "fullEnd": 53,
-                        "referee": {
-                          "context": {
-                            "id": "<element-declaration>:Users@[L0:C0, L2:C1]",
-                            "snippet": "Table Users {\r\n\r\n}"
-                          },
-                          "members": [],
-                          "declaration": {
-                            "id": "<element-declaration>:Users@[L0:C0, L2:C1]",
-                            "snippet": "Table Users {\r\n\r\n}"
-                          },
-                          "references": [
-                            {
-                              "id": "<primary-expression>@[L5:C4, L5:C9]",
-                              "snippet": "Users"
-                            }
-                          ]
-                        },
-                        "children": {
-                          "id": 7,
-                          "expression": {
-                            "context": {
-                              "id": "<variable>:Users@[L5:C4, L5:C9]",
-                              "snippet": "Users"
-                            },
-                            "kind": "<variable>",
-                            "startPos": {
-                              "offset": 46,
-                              "line": 5,
-                              "column": 4
-                            },
-                            "endPos": {
-                              "offset": 51,
-                              "line": 5,
-                              "column": 9
-                            },
-                            "start": 46,
-                            "end": 51,
-                            "fullStart": 42,
-                            "fullEnd": 53,
-                            "children": {
-                              "id": 6,
-                              "variable": {
-                                "context": {
-                                  "id": "<identifier>:Users@[L5:C4, L5:C9]",
-                                  "snippet": "Users"
-                                },
-                                "isInvalid": false,
-                                "kind": "<identifier>",
-                                "value": "Users",
-                                "startPos": {
-                                  "offset": 46,
-                                  "line": 5,
-                                  "column": 4
-                                },
-                                "endPos": {
-                                  "offset": 51,
-                                  "line": 5,
-                                  "column": 9
-                                },
-                                "start": 46,
-                                "end": 51,
-                                "leadingTrivia": [
-                                  " ",
-                                  " ",
-                                  " ",
-                                  " "
-                                ],
-                                "trailingTrivia": [
-                                  "\n"
-                                ],
-                                "leadingInvalid": [],
-                                "trailingInvalid": []
-                              }
-                            }
-                          }
-                        }
-                      },
-                      "args": []
-                    }
-                  },
-                  {
-                    "context": {
-                      "id": "<function-application>@[L6:C4, L6:C12]",
-                      "snippet": "Products"
-                    },
-                    "kind": "<function-application>",
-                    "startPos": {
-                      "offset": 57,
-                      "line": 6,
-                      "column": 4
-                    },
-                    "endPos": {
-                      "offset": 65,
-                      "line": 6,
-                      "column": 12
-                    },
-                    "start": 57,
-                    "end": 65,
-                    "fullStart": 53,
-                    "fullEnd": 67,
-                    "symbol": {
-                      "context": {
-                        "id": "<function-application>@[L6:C4, L6:C12]",
-                        "snippet": "Products"
-                      },
-                      "members": [],
-                      "declaration": {
-                        "id": "<function-application>@[L6:C4, L6:C12]",
-                        "snippet": "Products"
-                      },
-                      "references": []
-                    },
-                    "children": {
-                      "id": 11,
-                      "callee": {
-                        "context": {
-                          "id": "<primary-expression>@[L6:C4, L6:C12]",
-                          "snippet": "Products"
-                        },
-                        "kind": "<primary-expression>",
-                        "startPos": {
-                          "offset": 57,
-                          "line": 6,
-                          "column": 4
-                        },
-                        "endPos": {
-                          "offset": 65,
-                          "line": 6,
-                          "column": 12
-                        },
-                        "start": 57,
-                        "end": 65,
-                        "fullStart": 53,
-                        "fullEnd": 67,
-                        "children": {
-                          "id": 10,
-                          "expression": {
-                            "context": {
-                              "id": "<variable>:Products@[L6:C4, L6:C12]",
-                              "snippet": "Products"
-                            },
-                            "kind": "<variable>",
-                            "startPos": {
-                              "offset": 57,
-                              "line": 6,
-                              "column": 4
-                            },
-                            "endPos": {
-                              "offset": 65,
-                              "line": 6,
-                              "column": 12
-                            },
-                            "start": 57,
-                            "end": 65,
-                            "fullStart": 53,
-                            "fullEnd": 67,
-                            "children": {
-                              "id": 9,
-                              "variable": {
-                                "context": {
-                                  "id": "<identifier>:Products@[L6:C4, L6:C12]",
-                                  "snippet": "Products"
-                                },
-                                "isInvalid": false,
-                                "kind": "<identifier>",
-                                "value": "Products",
-                                "startPos": {
-                                  "offset": 57,
-                                  "line": 6,
-                                  "column": 4
-                                },
-                                "endPos": {
-                                  "offset": 65,
-                                  "line": 6,
-                                  "column": 12
-                                },
-                                "start": 57,
-                                "end": 65,
-                                "leadingTrivia": [
-                                  " ",
-                                  " ",
-                                  " ",
-                                  " "
-                                ],
-                                "trailingTrivia": [
-                                  "\n"
-                                ],
-                                "leadingInvalid": [],
-                                "trailingInvalid": []
-                              }
-                            }
-                          }
-                        }
-                      },
-                      "args": []
-                    }
-                  }
-                ],
-                "blockCloseBrace": {
-                  "context": {
-                    "id": "<rbrace>:}@[L7:C0, L7:C1]",
-                    "snippet": "}"
-                  },
-                  "isInvalid": false,
-                  "kind": "<rbrace>",
-                  "value": "}",
-                  "startPos": {
-                    "offset": 67,
-                    "line": 7,
-                    "column": 0
-                  },
-                  "endPos": {
-                    "offset": 68,
-                    "line": 7,
-                    "column": 1
-                  },
-                  "start": 67,
-                  "end": 68,
-                  "leadingTrivia": [],
-                  "trailingTrivia": [],
-                  "leadingInvalid": [],
-                  "trailingInvalid": []
-                }
-              }
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L7:C1]",
-              "snippet": "Table User...roducts\r\n}"
-            }
           }
         }
       ],
@@ -882,119 +728,74 @@
           "id": "<eof>:@[L7:C1, L7:C1]",
           "snippet": ""
         },
+        "end": 68,
+        "endPos": {
+          "offset": 68,
+          "line": 7,
+          "column": 1
+        },
         "isInvalid": false,
         "kind": "<eof>",
-        "value": "",
-        "startPos": {
-          "offset": 68,
-          "line": 7,
-          "column": 1
-        },
-        "endPos": {
-          "offset": 68,
-          "line": 7,
-          "column": 1
-        },
+        "leadingInvalid": "",
+        "leadingTrivia": "",
         "start": 68,
-        "end": 68,
-        "leadingTrivia": [],
-        "trailingTrivia": [],
-        "leadingInvalid": [],
-        "trailingInvalid": []
-      }
-    }
-  },
-  "errors": [
-    {
-      "level": "error",
-      "code": {
-        "value": 4000,
-        "name": "BINDING_ERROR"
-      },
-      "diagnostic": "Table 'Products' does not exist in Schema 'public'",
-      "node": {
-        "context": {
-          "id": "<primary-expression>@[L6:C4, L6:C12]",
-          "snippet": "Products"
-        },
-        "kind": "<primary-expression>",
         "startPos": {
-          "offset": 57,
-          "line": 6,
-          "column": 4
+          "offset": 68,
+          "line": 7,
+          "column": 1
         },
-        "endPos": {
-          "offset": 65,
-          "line": 6,
-          "column": 12
+        "trailingInvalid": "",
+        "trailingTrivia": "",
+        "value": ""
+      }
+    },
+    "context": {
+      "id": "<program>@[L0:C0, L7:C1]",
+      "snippet": "Table User...roducts\r\n}"
+    },
+    "end": 68,
+    "endPos": {
+      "offset": 68,
+      "line": 7,
+      "column": 1
+    },
+    "fullEnd": 68,
+    "fullStart": 0,
+    "kind": "<program>",
+    "start": 0,
+    "startPos": {
+      "offset": 0,
+      "line": 0,
+      "column": 0
+    },
+    "symbol": {
+      "context": {
+        "id": "<program>@[L0:C0, L7:C1]",
+        "snippet": "Table User...roducts\r\n}"
+      },
+      "declaration": {
+        "id": "<program>@[L0:C0, L7:C1]",
+        "snippet": "Table User...roducts\r\n}"
+      },
+      "members": [
+        {
+          "context": {}
         },
-        "start": 57,
-        "end": 65,
-        "fullStart": 53,
-        "fullEnd": 67,
-        "children": {
-          "id": 10,
-          "expression": {
-            "context": {
-              "id": "<variable>:Products@[L6:C4, L6:C12]",
-              "snippet": "Products"
-            },
-            "kind": "<variable>",
-            "startPos": {
-              "offset": 57,
-              "line": 6,
-              "column": 4
-            },
-            "endPos": {
-              "offset": 65,
-              "line": 6,
-              "column": 12
-            },
-            "start": 57,
-            "end": 65,
-            "fullStart": 53,
-            "fullEnd": 67,
-            "children": {
-              "id": 9,
-              "variable": {
-                "context": {
-                  "id": "<identifier>:Products@[L6:C4, L6:C12]",
-                  "snippet": "Products"
-                },
-                "isInvalid": false,
-                "kind": "<identifier>",
-                "value": "Products",
-                "startPos": {
-                  "offset": 57,
-                  "line": 6,
-                  "column": 4
-                },
-                "endPos": {
-                  "offset": 65,
-                  "line": 6,
-                  "column": 12
-                },
-                "start": 57,
-                "end": 65,
-                "leadingTrivia": [
-                  " ",
-                  " ",
-                  " ",
-                  " "
-                ],
-                "trailingTrivia": [
-                  "\n"
-                ],
-                "leadingInvalid": [],
-                "trailingInvalid": []
-              }
-            }
+        {
+          "context": {
+            "id": "<element-declaration>:Users@[L0:C0, L2:C1]",
+            "snippet": "Table Users {\r\n\r\n}"
+          }
+        },
+        {
+          "context": {
+            "id": "<element-declaration>:Group@[L4:C0, L7:C1]",
+            "snippet": "Tablegroup...roducts\r\n}"
           }
         }
-      },
-      "start": 57,
-      "end": 65
+      ],
+      "references": []
     }
-  ],
+  },
   "warnings": []
 }

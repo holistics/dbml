@@ -1,385 +1,385 @@
 {
   "database": {
-    "schemas": [],
-    "tables": [
+    "aliases": [],
+    "enums": [
       {
-        "name": "user",
-        "schemaName": "null",
-        "alias": "null",
-        "fields": [
-          {
-            "name": "name",
-            "type": {
-              "schemaName": "null",
-              "type_name": "text",
-              "args": "null"
-            },
-            "token": {
-              "start": {
-                "offset": 197,
-                "line": 21,
-                "column": 3
-              },
-              "end": {
-                "offset": 206,
-                "line": 21,
-                "column": 12
-              }
-            },
-            "inline_refs": [],
-            "pk": false,
-            "unique": false
-          },
-          {
-            "name": "id",
-            "type": {
-              "schemaName": "null",
-              "type_name": "int",
-              "args": "null"
-            },
-            "token": {
-              "start": {
-                "offset": 209,
-                "line": 22,
-                "column": 3
-              },
-              "end": {
-                "offset": 215,
-                "line": 22,
-                "column": 9
-              }
-            },
-            "inline_refs": [],
-            "pk": false,
-            "unique": false
-          },
-          {
-            "name": "status",
-            "type": {
-              "schemaName": "null",
-              "type_name": "status",
-              "args": "null"
-            },
-            "token": {
-              "start": {
-                "offset": 218,
-                "line": 23,
-                "column": 3
-              },
-              "end": {
-                "offset": 256,
-                "line": 23,
-                "column": 41
-              }
-            },
-            "inline_refs": [],
-            "pk": false,
-            "increment": false,
-            "unique": false,
-            "dbdefault": {
-              "value": "active",
-              "type": "string"
-            },
-            "checks": []
-          },
-          {
-            "name": "gender",
-            "type": {
-              "schemaName": "demographic",
-              "type_name": "gender",
-              "args": "null"
-            },
-            "token": {
-              "start": {
-                "offset": 259,
-                "line": 24,
-                "column": 3
-              },
-              "end": {
-                "offset": 319,
-                "line": 24,
-                "column": 63
-              }
-            },
-            "inline_refs": [],
-            "pk": false,
-            "increment": false,
-            "unique": false,
-            "dbdefault": {
-              "value": "male",
-              "type": "string"
-            },
-            "checks": []
-          },
-          {
-            "name": "age_type",
-            "type": {
-              "schemaName": "demographic",
-              "type_name": "age segment",
-              "args": "null"
-            },
-            "token": {
-              "start": {
-                "offset": 322,
-                "line": 25,
-                "column": 3
-              },
-              "end": {
-                "offset": 405,
-                "line": 25,
-                "column": 86
-              }
-            },
-            "inline_refs": [],
-            "pk": false,
-            "increment": false,
-            "unique": false,
-            "dbdefault": {
-              "value": "young_adult",
-              "type": "string"
-            },
-            "checks": []
-          }
-        ],
+        "name": "status",
+        "schemaName": null,
         "token": {
-          "start": {
-            "offset": 182,
-            "line": 20,
-            "column": 1
-          },
           "end": {
-            "offset": 407,
-            "line": 26,
-            "column": 2
+            "column": 2,
+            "line": 5,
+            "offset": 45
+          },
+          "start": {
+            "column": 1,
+            "line": 1,
+            "offset": 0
           }
         },
-        "indexes": [],
-        "partials": [],
-        "checks": []
+        "values": [
+          {
+            "name": "active",
+            "token": {
+              "end": {
+                "column": 9,
+                "line": 2,
+                "offset": 22
+              },
+              "start": {
+                "column": 3,
+                "line": 2,
+                "offset": 16
+              }
+            }
+          },
+          {
+            "name": "churned",
+            "token": {
+              "end": {
+                "column": 10,
+                "line": 3,
+                "offset": 32
+              },
+              "start": {
+                "column": 3,
+                "line": 3,
+                "offset": 25
+              }
+            }
+          },
+          {
+            "name": "inactive",
+            "token": {
+              "end": {
+                "column": 11,
+                "line": 4,
+                "offset": 43
+              },
+              "start": {
+                "column": 3,
+                "line": 4,
+                "offset": 35
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "gender",
+        "schemaName": "demographic",
+        "token": {
+          "end": {
+            "column": 2,
+            "line": 10,
+            "offset": 90
+          },
+          "start": {
+            "column": 1,
+            "line": 7,
+            "offset": 47
+          }
+        },
+        "values": [
+          {
+            "name": "male",
+            "token": {
+              "end": {
+                "column": 7,
+                "line": 8,
+                "offset": 79
+              },
+              "start": {
+                "column": 3,
+                "line": 8,
+                "offset": 75
+              }
+            }
+          },
+          {
+            "name": "female",
+            "token": {
+              "end": {
+                "column": 9,
+                "line": 9,
+                "offset": 88
+              },
+              "start": {
+                "column": 3,
+                "line": 9,
+                "offset": 82
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "age segment",
+        "schemaName": "demographic",
+        "token": {
+          "end": {
+            "column": 2,
+            "line": 18,
+            "offset": 180
+          },
+          "start": {
+            "column": 1,
+            "line": 12,
+            "offset": 92
+          }
+        },
+        "values": [
+          {
+            "name": "toddler",
+            "token": {
+              "end": {
+                "column": 10,
+                "line": 13,
+                "offset": 134
+              },
+              "start": {
+                "column": 3,
+                "line": 13,
+                "offset": 127
+              }
+            }
+          },
+          {
+            "name": "children",
+            "token": {
+              "end": {
+                "column": 11,
+                "line": 14,
+                "offset": 145
+              },
+              "start": {
+                "column": 3,
+                "line": 14,
+                "offset": 137
+              }
+            }
+          },
+          {
+            "name": "teenager",
+            "token": {
+              "end": {
+                "column": 11,
+                "line": 15,
+                "offset": 156
+              },
+              "start": {
+                "column": 3,
+                "line": 15,
+                "offset": 148
+              }
+            }
+          },
+          {
+            "name": "young_adult",
+            "token": {
+              "end": {
+                "column": 14,
+                "line": 16,
+                "offset": 170
+              },
+              "start": {
+                "column": 3,
+                "line": 16,
+                "offset": 159
+              }
+            }
+          },
+          {
+            "name": "elder",
+            "token": {
+              "end": {
+                "column": 8,
+                "line": 17,
+                "offset": 178
+              },
+              "start": {
+                "column": 3,
+                "line": 17,
+                "offset": 173
+              }
+            }
+          }
+        ]
       }
     ],
     "notes": [],
+    "records": [],
     "refs": [],
-    "enums": [
+    "schemas": [],
+    "tableGroups": [],
+    "tablePartials": [],
+    "tables": [
       {
-        "values": [
+        "alias": null,
+        "checks": [],
+        "fields": [
           {
+            "inline_refs": [],
+            "name": "name",
+            "pk": false,
             "token": {
-              "start": {
-                "offset": 16,
-                "line": 2,
-                "column": 3
-              },
               "end": {
-                "offset": 22,
-                "line": 2,
-                "column": 9
+                "column": 12,
+                "line": 21,
+                "offset": 206
+              },
+              "start": {
+                "column": 3,
+                "line": 21,
+                "offset": 197
               }
             },
-            "name": "active"
+            "type": {
+              "args": null,
+              "schemaName": null,
+              "type_name": "text"
+            },
+            "unique": false
           },
           {
+            "inline_refs": [],
+            "name": "id",
+            "pk": false,
             "token": {
-              "start": {
-                "offset": 25,
-                "line": 3,
-                "column": 3
-              },
               "end": {
-                "offset": 32,
-                "line": 3,
-                "column": 10
+                "column": 9,
+                "line": 22,
+                "offset": 215
+              },
+              "start": {
+                "column": 3,
+                "line": 22,
+                "offset": 209
               }
             },
-            "name": "churned"
+            "type": {
+              "args": null,
+              "schemaName": null,
+              "type_name": "int"
+            },
+            "unique": false
           },
           {
+            "checks": [],
+            "dbdefault": {
+              "type": "string",
+              "value": "active"
+            },
+            "increment": false,
+            "inline_refs": [],
+            "name": "status",
+            "pk": false,
             "token": {
-              "start": {
-                "offset": 35,
-                "line": 4,
-                "column": 3
-              },
               "end": {
-                "offset": 43,
-                "line": 4,
-                "column": 11
+                "column": 41,
+                "line": 23,
+                "offset": 256
+              },
+              "start": {
+                "column": 3,
+                "line": 23,
+                "offset": 218
               }
             },
-            "name": "inactive"
+            "type": {
+              "args": null,
+              "schemaName": null,
+              "type_name": "status"
+            },
+            "unique": false
+          },
+          {
+            "checks": [],
+            "dbdefault": {
+              "type": "string",
+              "value": "male"
+            },
+            "increment": false,
+            "inline_refs": [],
+            "name": "gender",
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 63,
+                "line": 24,
+                "offset": 319
+              },
+              "start": {
+                "column": 3,
+                "line": 24,
+                "offset": 259
+              }
+            },
+            "type": {
+              "args": null,
+              "schemaName": "demographic",
+              "type_name": "gender"
+            },
+            "unique": false
+          },
+          {
+            "checks": [],
+            "dbdefault": {
+              "type": "string",
+              "value": "young_adult"
+            },
+            "increment": false,
+            "inline_refs": [],
+            "name": "age_type",
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 86,
+                "line": 25,
+                "offset": 405
+              },
+              "start": {
+                "column": 3,
+                "line": 25,
+                "offset": 322
+              }
+            },
+            "type": {
+              "args": null,
+              "schemaName": "demographic",
+              "type_name": "age segment"
+            },
+            "unique": false
           }
         ],
+        "indexes": [],
+        "name": "user",
+        "partials": [],
+        "schemaName": null,
         "token": {
-          "start": {
-            "offset": 0,
-            "line": 1,
-            "column": 1
-          },
           "end": {
-            "offset": 45,
-            "line": 5,
-            "column": 2
-          }
-        },
-        "name": "status",
-        "schemaName": "null"
-      },
-      {
-        "values": [
-          {
-            "token": {
-              "start": {
-                "offset": 75,
-                "line": 8,
-                "column": 3
-              },
-              "end": {
-                "offset": 79,
-                "line": 8,
-                "column": 7
-              }
-            },
-            "name": "male"
+            "column": 2,
+            "line": 26,
+            "offset": 407
           },
-          {
-            "token": {
-              "start": {
-                "offset": 82,
-                "line": 9,
-                "column": 3
-              },
-              "end": {
-                "offset": 88,
-                "line": 9,
-                "column": 9
-              }
-            },
-            "name": "female"
-          }
-        ],
-        "token": {
           "start": {
-            "offset": 47,
-            "line": 7,
-            "column": 1
-          },
-          "end": {
-            "offset": 90,
-            "line": 10,
-            "column": 2
+            "column": 1,
+            "line": 20,
+            "offset": 182
           }
-        },
-        "name": "gender",
-        "schemaName": "demographic"
-      },
-      {
-        "values": [
-          {
-            "token": {
-              "start": {
-                "offset": 127,
-                "line": 13,
-                "column": 3
-              },
-              "end": {
-                "offset": 134,
-                "line": 13,
-                "column": 10
-              }
-            },
-            "name": "toddler"
-          },
-          {
-            "token": {
-              "start": {
-                "offset": 137,
-                "line": 14,
-                "column": 3
-              },
-              "end": {
-                "offset": 145,
-                "line": 14,
-                "column": 11
-              }
-            },
-            "name": "children"
-          },
-          {
-            "token": {
-              "start": {
-                "offset": 148,
-                "line": 15,
-                "column": 3
-              },
-              "end": {
-                "offset": 156,
-                "line": 15,
-                "column": 11
-              }
-            },
-            "name": "teenager"
-          },
-          {
-            "token": {
-              "start": {
-                "offset": 159,
-                "line": 16,
-                "column": 3
-              },
-              "end": {
-                "offset": 170,
-                "line": 16,
-                "column": 14
-              }
-            },
-            "name": "young_adult"
-          },
-          {
-            "token": {
-              "start": {
-                "offset": 173,
-                "line": 17,
-                "column": 3
-              },
-              "end": {
-                "offset": 178,
-                "line": 17,
-                "column": 8
-              }
-            },
-            "name": "elder"
-          }
-        ],
-        "token": {
-          "start": {
-            "offset": 92,
-            "line": 12,
-            "column": 1
-          },
-          "end": {
-            "offset": 180,
-            "line": 18,
-            "column": 2
-          }
-        },
-        "name": "age segment",
-        "schemaName": "demographic"
+        }
       }
     ],
-    "tableGroups": [],
-    "aliases": [],
-    "tablePartials": [],
-    "records": [],
     "token": {
-      "start": {
-        "offset": 0,
-        "line": 1,
-        "column": 1
-      },
       "end": {
-        "offset": 408,
+        "column": 1,
         "line": 27,
-        "column": 1
+        "offset": 408
+      },
+      "start": {
+        "column": 1,
+        "line": 1,
+        "offset": 0
       }
     }
   },

@@ -1,303 +1,303 @@
 {
   "database": {
-    "schemas": [],
-    "tables": [
-      {
-        "name": "a",
-        "schemaName": "null",
-        "alias": "null",
-        "fields": [
-          {
-            "name": "id",
-            "type": {
-              "schemaName": "null",
-              "type_name": "int(-1)",
-              "args": "-1"
-            },
-            "token": {
-              "start": {
-                "offset": 12,
-                "line": 2,
-                "column": 3
-              },
-              "end": {
-                "offset": 36,
-                "line": 2,
-                "column": 27
-              }
-            },
-            "inline_refs": [],
-            "pk": false,
-            "increment": false,
-            "unique": false,
-            "dbdefault": {
-              "type": "number",
-              "value": -2
-            },
-            "checks": []
-          },
-          {
-            "name": "id2",
-            "type": {
-              "schemaName": "null",
-              "type_name": "int(--1)",
-              "args": "--1"
-            },
-            "token": {
-              "start": {
-                "offset": 39,
-                "line": 3,
-                "column": 3
-              },
-              "end": {
-                "offset": 66,
-                "line": 3,
-                "column": 30
-              }
-            },
-            "inline_refs": [],
-            "pk": false,
-            "increment": false,
-            "unique": false,
-            "dbdefault": {
-              "type": "number",
-              "value": -2
-            },
-            "checks": []
-          },
-          {
-            "name": "id3",
-            "type": {
-              "schemaName": "null",
-              "type_name": "int(+-+---+0.1)",
-              "args": "+-+---+0.1"
-            },
-            "token": {
-              "start": {
-                "offset": 69,
-                "line": 4,
-                "column": 3
-              },
-              "end": {
-                "offset": 111,
-                "line": 4,
-                "column": 45
-              }
-            },
-            "inline_refs": [],
-            "pk": false,
-            "increment": false,
-            "unique": false,
-            "dbdefault": {
-              "type": "number",
-              "value": 7.2225
-            },
-            "checks": []
-          }
-        ],
-        "token": {
-          "start": {
-            "offset": 0,
-            "line": 1,
-            "column": 1
-          },
-          "end": {
-            "offset": 125,
-            "line": 5,
-            "column": 2
-          }
-        },
-        "indexes": [],
-        "partials": [],
-        "checks": []
-      },
-      {
-        "name": "b",
-        "schemaName": "null",
-        "alias": "null",
-        "fields": [
-          {
-            "name": "id",
-            "type": {
-              "schemaName": "null",
-              "type_name": "int",
-              "args": "null"
-            },
-            "token": {
-              "start": {
-                "offset": 278,
-                "line": 14,
-                "column": 3
-              },
-              "end": {
-                "offset": 284,
-                "line": 14,
-                "column": 9
-              }
-            },
-            "inline_refs": [],
-            "pk": false,
-            "unique": false
-          }
-        ],
-        "token": {
-          "start": {
-            "offset": 266,
-            "line": 13,
-            "column": 1
-          },
-          "end": {
-            "offset": 292,
-            "line": 16,
-            "column": 2
-          }
-        },
-        "indexes": [],
-        "partials": [
-          {
-            "order": 1,
-            "token": {
-              "start": {
-                "offset": 287,
-                "line": 15,
-                "column": 3
-              },
-              "end": {
-                "offset": 290,
-                "line": 15,
-                "column": 6
-              }
-            },
-            "name": "P1"
-          }
-        ],
-        "checks": []
-      }
-    ],
-    "notes": [],
-    "refs": [],
-    "enums": [],
-    "tableGroups": [],
     "aliases": [],
+    "enums": [],
+    "notes": [],
+    "records": [],
+    "refs": [],
+    "schemas": [],
+    "tableGroups": [],
     "tablePartials": [
       {
-        "name": "P1",
+        "checks": [],
         "fields": [
           {
+            "checks": [],
+            "dbdefault": {
+              "type": "number",
+              "value": -2
+            },
+            "increment": false,
+            "inline_refs": [],
             "name": "id",
-            "type": {
-              "schemaName": "null",
-              "type_name": "int(-1)",
-              "args": "-1"
-            },
+            "pk": false,
             "token": {
-              "start": {
-                "offset": 147,
-                "line": 8,
-                "column": 3
-              },
               "end": {
-                "offset": 171,
+                "column": 27,
                 "line": 8,
-                "column": 27
+                "offset": 171
+              },
+              "start": {
+                "column": 3,
+                "line": 8,
+                "offset": 147
               }
             },
-            "inline_refs": [],
-            "pk": false,
-            "increment": false,
-            "unique": false,
+            "type": {
+              "args": "-1",
+              "schemaName": null,
+              "type_name": "int(-1)"
+            },
+            "unique": false
+          },
+          {
+            "checks": [],
             "dbdefault": {
               "type": "number",
               "value": -2
             },
-            "checks": []
-          },
-          {
+            "increment": false,
+            "inline_refs": [],
             "name": "id2",
-            "type": {
-              "schemaName": "null",
-              "type_name": "int(--1)",
-              "args": "--1"
-            },
+            "pk": false,
             "token": {
-              "start": {
-                "offset": 174,
-                "line": 9,
-                "column": 3
-              },
               "end": {
-                "offset": 201,
+                "column": 30,
                 "line": 9,
-                "column": 30
+                "offset": 201
+              },
+              "start": {
+                "column": 3,
+                "line": 9,
+                "offset": 174
               }
             },
-            "inline_refs": [],
-            "pk": false,
-            "increment": false,
-            "unique": false,
-            "dbdefault": {
-              "type": "number",
-              "value": -2
+            "type": {
+              "args": "--1",
+              "schemaName": null,
+              "type_name": "int(--1)"
             },
-            "checks": []
+            "unique": false
           },
           {
-            "name": "id3",
-            "type": {
-              "schemaName": "null",
-              "type_name": "int(+-+---+0.1)",
-              "args": "+-+---+0.1"
-            },
-            "token": {
-              "start": {
-                "offset": 204,
-                "line": 10,
-                "column": 3
-              },
-              "end": {
-                "offset": 250,
-                "line": 10,
-                "column": 49
-              }
-            },
-            "inline_refs": [],
-            "pk": false,
-            "increment": false,
-            "unique": false,
+            "checks": [],
             "dbdefault": {
               "type": "number",
               "value": -7.2225
             },
-            "checks": []
+            "increment": false,
+            "inline_refs": [],
+            "name": "id3",
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 49,
+                "line": 10,
+                "offset": 250
+              },
+              "start": {
+                "column": 3,
+                "line": 10,
+                "offset": 204
+              }
+            },
+            "type": {
+              "args": "+-+---+0.1",
+              "schemaName": null,
+              "type_name": "int(+-+---+0.1)"
+            },
+            "unique": false
           }
         ],
-        "token": {
-          "start": {
-            "offset": 127,
-            "line": 7,
-            "column": 1
-          },
-          "end": {
-            "offset": 264,
-            "line": 11,
-            "column": 2
-          }
-        },
         "indexes": [],
-        "checks": []
+        "name": "P1",
+        "token": {
+          "end": {
+            "column": 2,
+            "line": 11,
+            "offset": 264
+          },
+          "start": {
+            "column": 1,
+            "line": 7,
+            "offset": 127
+          }
+        }
       }
     ],
-    "records": [],
-    "token": {
-      "start": {
-        "offset": 0,
-        "line": 1,
-        "column": 1
+    "tables": [
+      {
+        "alias": null,
+        "checks": [],
+        "fields": [
+          {
+            "checks": [],
+            "dbdefault": {
+              "type": "number",
+              "value": -2
+            },
+            "increment": false,
+            "inline_refs": [],
+            "name": "id",
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 27,
+                "line": 2,
+                "offset": 36
+              },
+              "start": {
+                "column": 3,
+                "line": 2,
+                "offset": 12
+              }
+            },
+            "type": {
+              "args": "-1",
+              "schemaName": null,
+              "type_name": "int(-1)"
+            },
+            "unique": false
+          },
+          {
+            "checks": [],
+            "dbdefault": {
+              "type": "number",
+              "value": -2
+            },
+            "increment": false,
+            "inline_refs": [],
+            "name": "id2",
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 30,
+                "line": 3,
+                "offset": 66
+              },
+              "start": {
+                "column": 3,
+                "line": 3,
+                "offset": 39
+              }
+            },
+            "type": {
+              "args": "--1",
+              "schemaName": null,
+              "type_name": "int(--1)"
+            },
+            "unique": false
+          },
+          {
+            "checks": [],
+            "dbdefault": {
+              "type": "number",
+              "value": 7.2225
+            },
+            "increment": false,
+            "inline_refs": [],
+            "name": "id3",
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 45,
+                "line": 4,
+                "offset": 111
+              },
+              "start": {
+                "column": 3,
+                "line": 4,
+                "offset": 69
+              }
+            },
+            "type": {
+              "args": "+-+---+0.1",
+              "schemaName": null,
+              "type_name": "int(+-+---+0.1)"
+            },
+            "unique": false
+          }
+        ],
+        "indexes": [],
+        "name": "a",
+        "partials": [],
+        "schemaName": null,
+        "token": {
+          "end": {
+            "column": 2,
+            "line": 5,
+            "offset": 125
+          },
+          "start": {
+            "column": 1,
+            "line": 1,
+            "offset": 0
+          }
+        }
       },
+      {
+        "alias": null,
+        "checks": [],
+        "fields": [
+          {
+            "inline_refs": [],
+            "name": "id",
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 9,
+                "line": 14,
+                "offset": 284
+              },
+              "start": {
+                "column": 3,
+                "line": 14,
+                "offset": 278
+              }
+            },
+            "type": {
+              "args": null,
+              "schemaName": null,
+              "type_name": "int"
+            },
+            "unique": false
+          }
+        ],
+        "indexes": [],
+        "name": "b",
+        "partials": [
+          {
+            "name": "P1",
+            "order": 1,
+            "token": {
+              "end": {
+                "column": 6,
+                "line": 15,
+                "offset": 290
+              },
+              "start": {
+                "column": 3,
+                "line": 15,
+                "offset": 287
+              }
+            }
+          }
+        ],
+        "schemaName": null,
+        "token": {
+          "end": {
+            "column": 2,
+            "line": 16,
+            "offset": 292
+          },
+          "start": {
+            "column": 1,
+            "line": 13,
+            "offset": 266
+          }
+        }
+      }
+    ],
+    "token": {
       "end": {
-        "offset": 293,
+        "column": 1,
         "line": 17,
-        "column": 1
+        "offset": 293
+      },
+      "start": {
+        "column": 1,
+        "line": 1,
+        "offset": 0
       }
     }
   },

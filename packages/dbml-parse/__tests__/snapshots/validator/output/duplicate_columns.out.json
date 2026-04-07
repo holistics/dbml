@@ -1,1217 +1,1784 @@
 {
+  "errors": [],
   "program": {
-    "context": {
-      "id": "<program>@[L0:C0, L11:C0]",
-      "snippet": "Table User...d int\r\n}\r\n"
-    },
-    "kind": "<program>",
-    "startPos": {
-      "offset": 0,
-      "line": 0,
-      "column": 0
-    },
-    "endPos": {
-      "offset": 135,
-      "line": 11,
-      "column": 0
-    },
-    "start": 0,
-    "end": 135,
-    "fullStart": 0,
-    "fullEnd": 135,
-    "symbol": {
-      "context": {
-        "id": "<program>@[L0:C0, L11:C0]",
-        "snippet": "Table User...d int\r\n}\r\n"
-      },
-      "members": [
-        {
-          "context": {},
-          "members": [
-            {
-              "context": {
-                "id": "<element-declaration>:Users@[L0:C0, L4:C1]",
-                "snippet": "Table User...integer\r\n}"
-              },
-              "members": [
-                {
-                  "context": {
-                    "id": "<function-application>@[L1:C4, L1:C14]",
-                    "snippet": "id integer"
-                  },
-                  "declaration": {
-                    "id": "<function-application>@[L1:C4, L1:C14]",
-                    "snippet": "id integer"
-                  },
-                  "references": []
-                },
-                {
-                  "context": {
-                    "id": "<function-application>@[L2:C4, L2:C14]",
-                    "snippet": "id integer"
-                  },
-                  "declaration": {
-                    "id": "<function-application>@[L2:C4, L2:C14]",
-                    "snippet": "id integer"
-                  },
-                  "references": []
-                },
-                {
-                  "context": {
-                    "id": "<function-application>@[L3:C4, L3:C14]",
-                    "snippet": "id integer"
-                  },
-                  "declaration": {
-                    "id": "<function-application>@[L3:C4, L3:C14]",
-                    "snippet": "id integer"
-                  },
-                  "references": []
-                }
-              ],
-              "declaration": {
-                "id": "<element-declaration>:Users@[L0:C0, L4:C1]",
-                "snippet": "Table User...integer\r\n}"
-              },
-              "references": []
-            },
-            {
-              "context": {
-                "id": "<element-declaration>:userPartial@[L6:C0, L10:C1]",
-                "snippet": "TableParti... id int\r\n}"
-              },
-              "members": [
-                {
-                  "context": {
-                    "id": "<function-application>@[L7:C4, L7:C10]",
-                    "snippet": "id int"
-                  },
-                  "declaration": {
-                    "id": "<function-application>@[L7:C4, L7:C10]",
-                    "snippet": "id int"
-                  },
-                  "references": []
-                },
-                {
-                  "context": {
-                    "id": "<function-application>@[L8:C4, L8:C10]",
-                    "snippet": "id int"
-                  },
-                  "declaration": {
-                    "id": "<function-application>@[L8:C4, L8:C10]",
-                    "snippet": "id int"
-                  },
-                  "references": []
-                },
-                {
-                  "context": {
-                    "id": "<function-application>@[L9:C4, L9:C10]",
-                    "snippet": "id int"
-                  },
-                  "declaration": {
-                    "id": "<function-application>@[L9:C4, L9:C10]",
-                    "snippet": "id int"
-                  },
-                  "references": []
-                }
-              ],
-              "declaration": {
-                "id": "<element-declaration>:userPartial@[L6:C0, L10:C1]",
-                "snippet": "TableParti... id int\r\n}"
-              },
-              "references": []
-            }
-          ],
-          "references": []
-        },
-        {
-          "context": {
-            "id": "<element-declaration>:Users@[L0:C0, L4:C1]",
-            "snippet": "Table User...integer\r\n}"
-          },
-          "members": [
-            {
-              "context": {
-                "id": "<function-application>@[L1:C4, L1:C14]",
-                "snippet": "id integer"
-              },
-              "declaration": {
-                "id": "<function-application>@[L1:C4, L1:C14]",
-                "snippet": "id integer"
-              },
-              "references": []
-            },
-            {
-              "context": {
-                "id": "<function-application>@[L2:C4, L2:C14]",
-                "snippet": "id integer"
-              },
-              "declaration": {
-                "id": "<function-application>@[L2:C4, L2:C14]",
-                "snippet": "id integer"
-              },
-              "references": []
-            },
-            {
-              "context": {
-                "id": "<function-application>@[L3:C4, L3:C14]",
-                "snippet": "id integer"
-              },
-              "declaration": {
-                "id": "<function-application>@[L3:C4, L3:C14]",
-                "snippet": "id integer"
-              },
-              "references": []
-            }
-          ],
-          "declaration": {
-            "id": "<element-declaration>:Users@[L0:C0, L4:C1]",
-            "snippet": "Table User...integer\r\n}"
-          },
-          "references": []
-        },
-        {
-          "context": {
-            "id": "<element-declaration>:userPartial@[L6:C0, L10:C1]",
-            "snippet": "TableParti... id int\r\n}"
-          },
-          "members": [
-            {
-              "context": {
-                "id": "<function-application>@[L7:C4, L7:C10]",
-                "snippet": "id int"
-              },
-              "declaration": {
-                "id": "<function-application>@[L7:C4, L7:C10]",
-                "snippet": "id int"
-              },
-              "references": []
-            },
-            {
-              "context": {
-                "id": "<function-application>@[L8:C4, L8:C10]",
-                "snippet": "id int"
-              },
-              "declaration": {
-                "id": "<function-application>@[L8:C4, L8:C10]",
-                "snippet": "id int"
-              },
-              "references": []
-            },
-            {
-              "context": {
-                "id": "<function-application>@[L9:C4, L9:C10]",
-                "snippet": "id int"
-              },
-              "declaration": {
-                "id": "<function-application>@[L9:C4, L9:C10]",
-                "snippet": "id int"
-              },
-              "references": []
-            }
-          ],
-          "declaration": {
-            "id": "<element-declaration>:userPartial@[L6:C0, L10:C1]",
-            "snippet": "TableParti... id int\r\n}"
-          },
-          "references": []
-        }
-      ],
-      "declaration": {
-        "id": "<program>@[L0:C0, L11:C0]",
-        "snippet": "Table User...d int\r\n}\r\n"
-      },
-      "references": []
-    },
     "children": {
-      "id": 38,
-      "source": "Table Users {\r\n    id integer\r\n    id integer\r\n    id integer\r\n}\r\n\r\nTablePartial userPartial {\r\n    id int\r\n    id int\r\n    id int\r\n}\r\n",
       "body": [
         {
-          "context": {
-            "id": "<element-declaration>:Users@[L0:C0, L4:C1]",
-            "snippet": "Table User...integer\r\n}"
-          },
-          "kind": "<element-declaration>",
-          "startPos": {
-            "offset": 0,
-            "line": 0,
-            "column": 0
-          },
-          "endPos": {
-            "offset": 64,
-            "line": 4,
-            "column": 1
-          },
-          "start": 0,
-          "end": 64,
-          "fullStart": 0,
-          "fullEnd": 66,
-          "symbol": {
-            "context": {
-              "id": "<element-declaration>:Users@[L0:C0, L4:C1]",
-              "snippet": "Table User...integer\r\n}"
-            },
-            "members": [
-              {
-                "context": {
-                  "id": "<function-application>@[L1:C4, L1:C14]",
-                  "snippet": "id integer"
-                },
-                "declaration": {
-                  "id": "<function-application>@[L1:C4, L1:C14]",
-                  "snippet": "id integer"
-                },
-                "references": []
-              },
-              {
-                "context": {
-                  "id": "<function-application>@[L2:C4, L2:C14]",
-                  "snippet": "id integer"
-                },
-                "declaration": {
-                  "id": "<function-application>@[L2:C4, L2:C14]",
-                  "snippet": "id integer"
-                },
-                "references": []
-              },
-              {
-                "context": {
-                  "id": "<function-application>@[L3:C4, L3:C14]",
-                  "snippet": "id integer"
-                },
-                "declaration": {
-                  "id": "<function-application>@[L3:C4, L3:C14]",
-                  "snippet": "id integer"
-                },
-                "references": []
-              }
-            ],
-            "declaration": {
-              "id": "<element-declaration>:Users@[L0:C0, L4:C1]",
-              "snippet": "Table User...integer\r\n}"
-            },
-            "references": []
-          },
           "children": {
-            "id": 18,
-            "type": {
-              "context": {
-                "id": "<identifier>:Table@[L0:C0, L0:C5]",
-                "snippet": "Table"
-              },
-              "isInvalid": false,
-              "kind": "<identifier>",
-              "value": "Table",
-              "startPos": {
-                "offset": 0,
-                "line": 0,
-                "column": 0
-              },
-              "endPos": {
-                "offset": 5,
-                "line": 0,
-                "column": 5
-              },
-              "start": 0,
-              "end": 5,
-              "leadingTrivia": [],
-              "trailingTrivia": [
-                " "
-              ],
-              "leadingInvalid": [],
-              "trailingInvalid": []
-            },
-            "name": {
-              "context": {
-                "id": "<primary-expression>@[L0:C6, L0:C11]",
-                "snippet": "Users"
-              },
-              "kind": "<primary-expression>",
-              "startPos": {
-                "offset": 6,
-                "line": 0,
-                "column": 6
-              },
-              "endPos": {
-                "offset": 11,
-                "line": 0,
-                "column": 11
-              },
-              "start": 6,
-              "end": 11,
-              "fullStart": 6,
-              "fullEnd": 12,
-              "children": {
-                "id": 1,
-                "expression": {
-                  "context": {
-                    "id": "<variable>:Users@[L0:C6, L0:C11]",
-                    "snippet": "Users"
-                  },
-                  "kind": "<variable>",
-                  "startPos": {
-                    "offset": 6,
-                    "line": 0,
-                    "column": 6
-                  },
-                  "endPos": {
-                    "offset": 11,
-                    "line": 0,
-                    "column": 11
-                  },
-                  "start": 6,
-                  "end": 11,
-                  "fullStart": 6,
-                  "fullEnd": 12,
-                  "children": {
-                    "id": 0,
-                    "variable": {
-                      "context": {
-                        "id": "<identifier>:Users@[L0:C6, L0:C11]",
-                        "snippet": "Users"
-                      },
-                      "isInvalid": false,
-                      "kind": "<identifier>",
-                      "value": "Users",
-                      "startPos": {
-                        "offset": 6,
-                        "line": 0,
-                        "column": 6
-                      },
-                      "endPos": {
-                        "offset": 11,
-                        "line": 0,
-                        "column": 11
-                      },
-                      "start": 6,
-                      "end": 11,
-                      "leadingTrivia": [],
-                      "trailingTrivia": [
-                        " "
-                      ],
-                      "leadingInvalid": [],
-                      "trailingInvalid": []
-                    }
-                  }
-                }
-              }
-            },
             "body": {
-              "context": {
-                "id": "<block-expression>@[L0:C12, L4:C1]",
-                "snippet": "{\r\n    id ...integer\r\n}"
-              },
-              "kind": "<block-expression>",
-              "startPos": {
-                "offset": 12,
-                "line": 0,
-                "column": 12
-              },
-              "endPos": {
-                "offset": 64,
-                "line": 4,
-                "column": 1
-              },
-              "start": 12,
-              "end": 64,
-              "fullStart": 12,
-              "fullEnd": 66,
               "children": {
-                "id": 17,
-                "blockOpenBrace": {
-                  "context": {
-                    "id": "<lbrace>:{@[L0:C12, L0:C13]",
-                    "snippet": "{"
-                  },
-                  "isInvalid": false,
-                  "kind": "<lbrace>",
-                  "value": "{",
-                  "startPos": {
-                    "offset": 12,
-                    "line": 0,
-                    "column": 12
-                  },
-                  "endPos": {
-                    "offset": 13,
-                    "line": 0,
-                    "column": 13
-                  },
-                  "start": 12,
-                  "end": 13,
-                  "leadingTrivia": [],
-                  "trailingTrivia": [
-                    "\n"
-                  ],
-                  "leadingInvalid": [],
-                  "trailingInvalid": []
-                },
-                "body": [
-                  {
-                    "context": {
-                      "id": "<function-application>@[L1:C4, L1:C14]",
-                      "snippet": "id integer"
-                    },
-                    "kind": "<function-application>",
-                    "startPos": {
-                      "offset": 19,
-                      "line": 1,
-                      "column": 4
-                    },
-                    "endPos": {
-                      "offset": 29,
-                      "line": 1,
-                      "column": 14
-                    },
-                    "start": 19,
-                    "end": 29,
-                    "fullStart": 15,
-                    "fullEnd": 31,
-                    "symbol": {
-                      "context": {
-                        "id": "<function-application>@[L1:C4, L1:C14]",
-                        "snippet": "id integer"
-                      },
-                      "declaration": {
-                        "id": "<function-application>@[L1:C4, L1:C14]",
-                        "snippet": "id integer"
-                      },
-                      "references": []
-                    },
-                    "children": {
-                      "id": 6,
-                      "callee": {
-                        "context": {
-                          "id": "<primary-expression>@[L1:C4, L1:C6]",
-                          "snippet": "id"
-                        },
-                        "kind": "<primary-expression>",
-                        "startPos": {
-                          "offset": 19,
-                          "line": 1,
-                          "column": 4
-                        },
-                        "endPos": {
-                          "offset": 21,
-                          "line": 1,
-                          "column": 6
-                        },
-                        "start": 19,
-                        "end": 21,
-                        "fullStart": 15,
-                        "fullEnd": 22,
-                        "symbol": {
-                          "context": {
-                            "id": "<primary-expression>@[L1:C4, L1:C6]",
-                            "snippet": "id"
-                          },
-                          "declaration": {
-                            "id": "<primary-expression>@[L1:C4, L1:C6]",
-                            "snippet": "id"
-                          },
-                          "references": []
-                        },
-                        "children": {
-                          "id": 3,
-                          "expression": {
-                            "context": {
-                              "id": "<variable>:id@[L1:C4, L1:C6]",
-                              "snippet": "id"
-                            },
-                            "kind": "<variable>",
-                            "startPos": {
-                              "offset": 19,
-                              "line": 1,
-                              "column": 4
-                            },
-                            "endPos": {
-                              "offset": 21,
-                              "line": 1,
-                              "column": 6
-                            },
-                            "start": 19,
-                            "end": 21,
-                            "fullStart": 15,
-                            "fullEnd": 22,
-                            "symbol": {
-                              "context": {
-                                "id": "<variable>:id@[L1:C4, L1:C6]",
-                                "snippet": "id"
-                              },
-                              "declaration": {
-                                "id": "<variable>:id@[L1:C4, L1:C6]",
-                                "snippet": "id"
-                              },
-                              "references": []
-                            },
-                            "children": {
-                              "id": 2,
-                              "variable": {
-                                "context": {
-                                  "id": "<identifier>:id@[L1:C4, L1:C6]",
-                                  "snippet": "id"
-                                },
-                                "isInvalid": false,
-                                "kind": "<identifier>",
-                                "value": "id",
-                                "startPos": {
-                                  "offset": 19,
-                                  "line": 1,
-                                  "column": 4
-                                },
-                                "endPos": {
-                                  "offset": 21,
-                                  "line": 1,
-                                  "column": 6
-                                },
-                                "start": 19,
-                                "end": 21,
-                                "leadingTrivia": [
-                                  " ",
-                                  " ",
-                                  " ",
-                                  " "
-                                ],
-                                "trailingTrivia": [
-                                  " "
-                                ],
-                                "leadingInvalid": [],
-                                "trailingInvalid": []
-                              }
-                            }
-                          }
-                        }
-                      },
-                      "args": [
-                        {
-                          "context": {
-                            "id": "<primary-expression>@[L1:C7, L1:C14]",
-                            "snippet": "integer"
-                          },
-                          "kind": "<primary-expression>",
-                          "startPos": {
-                            "offset": 22,
-                            "line": 1,
-                            "column": 7
-                          },
-                          "endPos": {
-                            "offset": 29,
-                            "line": 1,
-                            "column": 14
-                          },
-                          "start": 22,
-                          "end": 29,
-                          "fullStart": 22,
-                          "fullEnd": 31,
-                          "symbol": {
-                            "context": {
-                              "id": "<primary-expression>@[L1:C7, L1:C14]",
-                              "snippet": "integer"
-                            },
-                            "declaration": {
-                              "id": "<primary-expression>@[L1:C7, L1:C14]",
-                              "snippet": "integer"
-                            },
-                            "references": []
-                          },
-                          "children": {
-                            "id": 5,
-                            "expression": {
-                              "context": {
-                                "id": "<variable>:integer@[L1:C7, L1:C14]",
-                                "snippet": "integer"
-                              },
-                              "kind": "<variable>",
-                              "startPos": {
-                                "offset": 22,
-                                "line": 1,
-                                "column": 7
-                              },
-                              "endPos": {
-                                "offset": 29,
-                                "line": 1,
-                                "column": 14
-                              },
-                              "start": 22,
-                              "end": 29,
-                              "fullStart": 22,
-                              "fullEnd": 31,
-                              "symbol": {
-                                "context": {
-                                  "id": "<variable>:integer@[L1:C7, L1:C14]",
-                                  "snippet": "integer"
-                                },
-                                "declaration": {
-                                  "id": "<variable>:integer@[L1:C7, L1:C14]",
-                                  "snippet": "integer"
-                                },
-                                "references": []
-                              },
-                              "children": {
-                                "id": 4,
-                                "variable": {
-                                  "context": {
-                                    "id": "<identifier>:integer@[L1:C7, L1:C14]",
-                                    "snippet": "integer"
-                                  },
-                                  "isInvalid": false,
-                                  "kind": "<identifier>",
-                                  "value": "integer",
-                                  "startPos": {
-                                    "offset": 22,
-                                    "line": 1,
-                                    "column": 7
-                                  },
-                                  "endPos": {
-                                    "offset": 29,
-                                    "line": 1,
-                                    "column": 14
-                                  },
-                                  "start": 22,
-                                  "end": 29,
-                                  "leadingTrivia": [],
-                                  "trailingTrivia": [
-                                    "\n"
-                                  ],
-                                  "leadingInvalid": [],
-                                  "trailingInvalid": []
-                                }
-                              }
-                            }
-                          }
-                        }
-                      ]
-                    }
-                  },
-                  {
-                    "context": {
-                      "id": "<function-application>@[L2:C4, L2:C14]",
-                      "snippet": "id integer"
-                    },
-                    "kind": "<function-application>",
-                    "startPos": {
-                      "offset": 35,
-                      "line": 2,
-                      "column": 4
-                    },
-                    "endPos": {
-                      "offset": 45,
-                      "line": 2,
-                      "column": 14
-                    },
-                    "start": 35,
-                    "end": 45,
-                    "fullStart": 31,
-                    "fullEnd": 47,
-                    "symbol": {
-                      "context": {
-                        "id": "<function-application>@[L2:C4, L2:C14]",
-                        "snippet": "id integer"
-                      },
-                      "declaration": {
-                        "id": "<function-application>@[L2:C4, L2:C14]",
-                        "snippet": "id integer"
-                      },
-                      "references": []
-                    },
-                    "children": {
-                      "id": 11,
-                      "callee": {
-                        "context": {
-                          "id": "<primary-expression>@[L2:C4, L2:C6]",
-                          "snippet": "id"
-                        },
-                        "kind": "<primary-expression>",
-                        "startPos": {
-                          "offset": 35,
-                          "line": 2,
-                          "column": 4
-                        },
-                        "endPos": {
-                          "offset": 37,
-                          "line": 2,
-                          "column": 6
-                        },
-                        "start": 35,
-                        "end": 37,
-                        "fullStart": 31,
-                        "fullEnd": 38,
-                        "symbol": {
-                          "context": {
-                            "id": "<primary-expression>@[L2:C4, L2:C6]",
-                            "snippet": "id"
-                          },
-                          "declaration": {
-                            "id": "<primary-expression>@[L2:C4, L2:C6]",
-                            "snippet": "id"
-                          },
-                          "references": []
-                        },
-                        "children": {
-                          "id": 8,
-                          "expression": {
-                            "context": {
-                              "id": "<variable>:id@[L2:C4, L2:C6]",
-                              "snippet": "id"
-                            },
-                            "kind": "<variable>",
-                            "startPos": {
-                              "offset": 35,
-                              "line": 2,
-                              "column": 4
-                            },
-                            "endPos": {
-                              "offset": 37,
-                              "line": 2,
-                              "column": 6
-                            },
-                            "start": 35,
-                            "end": 37,
-                            "fullStart": 31,
-                            "fullEnd": 38,
-                            "symbol": {
-                              "context": {
-                                "id": "<variable>:id@[L2:C4, L2:C6]",
-                                "snippet": "id"
-                              },
-                              "declaration": {
-                                "id": "<variable>:id@[L2:C4, L2:C6]",
-                                "snippet": "id"
-                              },
-                              "references": []
-                            },
-                            "children": {
-                              "id": 7,
-                              "variable": {
-                                "context": {
-                                  "id": "<identifier>:id@[L2:C4, L2:C6]",
-                                  "snippet": "id"
-                                },
-                                "isInvalid": false,
-                                "kind": "<identifier>",
-                                "value": "id",
-                                "startPos": {
-                                  "offset": 35,
-                                  "line": 2,
-                                  "column": 4
-                                },
-                                "endPos": {
-                                  "offset": 37,
-                                  "line": 2,
-                                  "column": 6
-                                },
-                                "start": 35,
-                                "end": 37,
-                                "leadingTrivia": [
-                                  " ",
-                                  " ",
-                                  " ",
-                                  " "
-                                ],
-                                "trailingTrivia": [
-                                  " "
-                                ],
-                                "leadingInvalid": [],
-                                "trailingInvalid": []
-                              }
-                            }
-                          }
-                        }
-                      },
-                      "args": [
-                        {
-                          "context": {
-                            "id": "<primary-expression>@[L2:C7, L2:C14]",
-                            "snippet": "integer"
-                          },
-                          "kind": "<primary-expression>",
-                          "startPos": {
-                            "offset": 38,
-                            "line": 2,
-                            "column": 7
-                          },
-                          "endPos": {
-                            "offset": 45,
-                            "line": 2,
-                            "column": 14
-                          },
-                          "start": 38,
-                          "end": 45,
-                          "fullStart": 38,
-                          "fullEnd": 47,
-                          "symbol": {
-                            "context": {
-                              "id": "<primary-expression>@[L2:C7, L2:C14]",
-                              "snippet": "integer"
-                            },
-                            "declaration": {
-                              "id": "<primary-expression>@[L2:C7, L2:C14]",
-                              "snippet": "integer"
-                            },
-                            "references": []
-                          },
-                          "children": {
-                            "id": 10,
-                            "expression": {
-                              "context": {
-                                "id": "<variable>:integer@[L2:C7, L2:C14]",
-                                "snippet": "integer"
-                              },
-                              "kind": "<variable>",
-                              "startPos": {
-                                "offset": 38,
-                                "line": 2,
-                                "column": 7
-                              },
-                              "endPos": {
-                                "offset": 45,
-                                "line": 2,
-                                "column": 14
-                              },
-                              "start": 38,
-                              "end": 45,
-                              "fullStart": 38,
-                              "fullEnd": 47,
-                              "symbol": {
-                                "context": {
-                                  "id": "<variable>:integer@[L2:C7, L2:C14]",
-                                  "snippet": "integer"
-                                },
-                                "declaration": {
-                                  "id": "<variable>:integer@[L2:C7, L2:C14]",
-                                  "snippet": "integer"
-                                },
-                                "references": []
-                              },
-                              "children": {
-                                "id": 9,
-                                "variable": {
-                                  "context": {
-                                    "id": "<identifier>:integer@[L2:C7, L2:C14]",
-                                    "snippet": "integer"
-                                  },
-                                  "isInvalid": false,
-                                  "kind": "<identifier>",
-                                  "value": "integer",
-                                  "startPos": {
-                                    "offset": 38,
-                                    "line": 2,
-                                    "column": 7
-                                  },
-                                  "endPos": {
-                                    "offset": 45,
-                                    "line": 2,
-                                    "column": 14
-                                  },
-                                  "start": 38,
-                                  "end": 45,
-                                  "leadingTrivia": [],
-                                  "trailingTrivia": [
-                                    "\n"
-                                  ],
-                                  "leadingInvalid": [],
-                                  "trailingInvalid": []
-                                }
-                              }
-                            }
-                          }
-                        }
-                      ]
-                    }
-                  },
-                  {
-                    "context": {
-                      "id": "<function-application>@[L3:C4, L3:C14]",
-                      "snippet": "id integer"
-                    },
-                    "kind": "<function-application>",
-                    "startPos": {
-                      "offset": 51,
-                      "line": 3,
-                      "column": 4
-                    },
-                    "endPos": {
-                      "offset": 61,
-                      "line": 3,
-                      "column": 14
-                    },
-                    "start": 51,
-                    "end": 61,
-                    "fullStart": 47,
-                    "fullEnd": 63,
-                    "symbol": {
-                      "context": {
-                        "id": "<function-application>@[L3:C4, L3:C14]",
-                        "snippet": "id integer"
-                      },
-                      "declaration": {
-                        "id": "<function-application>@[L3:C4, L3:C14]",
-                        "snippet": "id integer"
-                      },
-                      "references": []
-                    },
-                    "children": {
-                      "id": 16,
-                      "callee": {
-                        "context": {
-                          "id": "<primary-expression>@[L3:C4, L3:C6]",
-                          "snippet": "id"
-                        },
-                        "kind": "<primary-expression>",
-                        "startPos": {
-                          "offset": 51,
-                          "line": 3,
-                          "column": 4
-                        },
-                        "endPos": {
-                          "offset": 53,
-                          "line": 3,
-                          "column": 6
-                        },
-                        "start": 51,
-                        "end": 53,
-                        "fullStart": 47,
-                        "fullEnd": 54,
-                        "symbol": {
-                          "context": {
-                            "id": "<primary-expression>@[L3:C4, L3:C6]",
-                            "snippet": "id"
-                          },
-                          "declaration": {
-                            "id": "<primary-expression>@[L3:C4, L3:C6]",
-                            "snippet": "id"
-                          },
-                          "references": []
-                        },
-                        "children": {
-                          "id": 13,
-                          "expression": {
-                            "context": {
-                              "id": "<variable>:id@[L3:C4, L3:C6]",
-                              "snippet": "id"
-                            },
-                            "kind": "<variable>",
-                            "startPos": {
-                              "offset": 51,
-                              "line": 3,
-                              "column": 4
-                            },
-                            "endPos": {
-                              "offset": 53,
-                              "line": 3,
-                              "column": 6
-                            },
-                            "start": 51,
-                            "end": 53,
-                            "fullStart": 47,
-                            "fullEnd": 54,
-                            "symbol": {
-                              "context": {
-                                "id": "<variable>:id@[L3:C4, L3:C6]",
-                                "snippet": "id"
-                              },
-                              "declaration": {
-                                "id": "<variable>:id@[L3:C4, L3:C6]",
-                                "snippet": "id"
-                              },
-                              "references": []
-                            },
-                            "children": {
-                              "id": 12,
-                              "variable": {
-                                "context": {
-                                  "id": "<identifier>:id@[L3:C4, L3:C6]",
-                                  "snippet": "id"
-                                },
-                                "isInvalid": false,
-                                "kind": "<identifier>",
-                                "value": "id",
-                                "startPos": {
-                                  "offset": 51,
-                                  "line": 3,
-                                  "column": 4
-                                },
-                                "endPos": {
-                                  "offset": 53,
-                                  "line": 3,
-                                  "column": 6
-                                },
-                                "start": 51,
-                                "end": 53,
-                                "leadingTrivia": [
-                                  " ",
-                                  " ",
-                                  " ",
-                                  " "
-                                ],
-                                "trailingTrivia": [
-                                  " "
-                                ],
-                                "leadingInvalid": [],
-                                "trailingInvalid": []
-                              }
-                            }
-                          }
-                        }
-                      },
-                      "args": [
-                        {
-                          "context": {
-                            "id": "<primary-expression>@[L3:C7, L3:C14]",
-                            "snippet": "integer"
-                          },
-                          "kind": "<primary-expression>",
-                          "startPos": {
-                            "offset": 54,
-                            "line": 3,
-                            "column": 7
-                          },
-                          "endPos": {
-                            "offset": 61,
-                            "line": 3,
-                            "column": 14
-                          },
-                          "start": 54,
-                          "end": 61,
-                          "fullStart": 54,
-                          "fullEnd": 63,
-                          "symbol": {
-                            "context": {
-                              "id": "<primary-expression>@[L3:C7, L3:C14]",
-                              "snippet": "integer"
-                            },
-                            "declaration": {
-                              "id": "<primary-expression>@[L3:C7, L3:C14]",
-                              "snippet": "integer"
-                            },
-                            "references": []
-                          },
-                          "children": {
-                            "id": 15,
-                            "expression": {
-                              "context": {
-                                "id": "<variable>:integer@[L3:C7, L3:C14]",
-                                "snippet": "integer"
-                              },
-                              "kind": "<variable>",
-                              "startPos": {
-                                "offset": 54,
-                                "line": 3,
-                                "column": 7
-                              },
-                              "endPos": {
-                                "offset": 61,
-                                "line": 3,
-                                "column": 14
-                              },
-                              "start": 54,
-                              "end": 61,
-                              "fullStart": 54,
-                              "fullEnd": 63,
-                              "symbol": {
-                                "context": {
-                                  "id": "<variable>:integer@[L3:C7, L3:C14]",
-                                  "snippet": "integer"
-                                },
-                                "declaration": {
-                                  "id": "<variable>:integer@[L3:C7, L3:C14]",
-                                  "snippet": "integer"
-                                },
-                                "references": []
-                              },
-                              "children": {
-                                "id": 14,
-                                "variable": {
-                                  "context": {
-                                    "id": "<identifier>:integer@[L3:C7, L3:C14]",
-                                    "snippet": "integer"
-                                  },
-                                  "isInvalid": false,
-                                  "kind": "<identifier>",
-                                  "value": "integer",
-                                  "startPos": {
-                                    "offset": 54,
-                                    "line": 3,
-                                    "column": 7
-                                  },
-                                  "endPos": {
-                                    "offset": 61,
-                                    "line": 3,
-                                    "column": 14
-                                  },
-                                  "start": 54,
-                                  "end": 61,
-                                  "leadingTrivia": [],
-                                  "trailingTrivia": [
-                                    "\n"
-                                  ],
-                                  "leadingInvalid": [],
-                                  "trailingInvalid": []
-                                }
-                              }
-                            }
-                          }
-                        }
-                      ]
-                    }
-                  }
-                ],
                 "blockCloseBrace": {
                   "context": {
                     "id": "<rbrace>:}@[L4:C0, L4:C1]",
                     "snippet": "}"
                   },
-                  "isInvalid": false,
-                  "kind": "<rbrace>",
-                  "value": "}",
-                  "startPos": {
-                    "offset": 63,
-                    "line": 4,
-                    "column": 0
-                  },
+                  "end": 64,
                   "endPos": {
                     "offset": 64,
                     "line": 4,
                     "column": 1
                   },
+                  "isInvalid": false,
+                  "kind": "<rbrace>",
+                  "leadingInvalid": "",
+                  "leadingTrivia": "",
                   "start": 63,
-                  "end": 64,
-                  "leadingTrivia": [],
-                  "trailingTrivia": [
-                    "\n"
-                  ],
-                  "leadingInvalid": [],
-                  "trailingInvalid": []
+                  "startPos": {
+                    "offset": 63,
+                    "line": 4,
+                    "column": 0
+                  },
+                  "trailingInvalid": "",
+                  "trailingTrivia": "\n",
+                  "value": "}"
+                },
+                "blockOpenBrace": {
+                  "context": {
+                    "id": "<lbrace>:{@[L0:C12, L0:C13]",
+                    "snippet": "{"
+                  },
+                  "end": 13,
+                  "endPos": {
+                    "offset": 13,
+                    "line": 0,
+                    "column": 13
+                  },
+                  "isInvalid": false,
+                  "kind": "<lbrace>",
+                  "leadingInvalid": "",
+                  "leadingTrivia": "",
+                  "start": 12,
+                  "startPos": {
+                    "offset": 12,
+                    "line": 0,
+                    "column": 12
+                  },
+                  "trailingInvalid": "",
+                  "trailingTrivia": "\n",
+                  "value": "{"
+                },
+                "body": [
+                  {
+                    "children": {
+                      "args": [
+                        {
+                          "children": {
+                            "expression": {
+                              "children": {
+                                "parent": {
+                                  "id": "<element-declaration>:Users@[L0:C0, L4:C1]",
+                                  "snippet": "Table User...integer\r\n}"
+                                },
+                                "variable": {
+                                  "context": {
+                                    "id": "<identifier>:integer@[L1:C7, L1:C14]",
+                                    "snippet": "integer"
+                                  },
+                                  "end": 29,
+                                  "endPos": {
+                                    "offset": 29,
+                                    "line": 1,
+                                    "column": 14
+                                  },
+                                  "isInvalid": false,
+                                  "kind": "<identifier>",
+                                  "leadingInvalid": "",
+                                  "leadingTrivia": "",
+                                  "start": 22,
+                                  "startPos": {
+                                    "offset": 22,
+                                    "line": 1,
+                                    "column": 7
+                                  },
+                                  "trailingInvalid": "",
+                                  "trailingTrivia": "\n",
+                                  "value": "integer"
+                                }
+                              },
+                              "context": {
+                                "id": "<variable>:integer@[L1:C7, L1:C14]",
+                                "snippet": "integer"
+                              },
+                              "end": 29,
+                              "endPos": {
+                                "offset": 29,
+                                "line": 1,
+                                "column": 14
+                              },
+                              "fullEnd": 31,
+                              "fullStart": 22,
+                              "kind": "<variable>",
+                              "start": 22,
+                              "startPos": {
+                                "offset": 22,
+                                "line": 1,
+                                "column": 7
+                              },
+                              "symbol": {
+                                "context": {
+                                  "id": "<variable>:integer@[L1:C7, L1:C14]",
+                                  "snippet": "integer"
+                                },
+                                "declaration": {
+                                  "id": "<variable>:integer@[L1:C7, L1:C14]",
+                                  "snippet": "integer"
+                                },
+                                "references": []
+                              }
+                            },
+                            "parent": {
+                              "id": "<element-declaration>:Users@[L0:C0, L4:C1]",
+                              "snippet": "Table User...integer\r\n}"
+                            }
+                          },
+                          "context": {
+                            "id": "<primary-expression>@[L1:C7, L1:C14]",
+                            "snippet": "integer"
+                          },
+                          "end": 29,
+                          "endPos": {
+                            "offset": 29,
+                            "line": 1,
+                            "column": 14
+                          },
+                          "fullEnd": 31,
+                          "fullStart": 22,
+                          "kind": "<primary-expression>",
+                          "start": 22,
+                          "startPos": {
+                            "offset": 22,
+                            "line": 1,
+                            "column": 7
+                          },
+                          "symbol": {
+                            "context": {
+                              "id": "<primary-expression>@[L1:C7, L1:C14]",
+                              "snippet": "integer"
+                            },
+                            "declaration": {
+                              "id": "<primary-expression>@[L1:C7, L1:C14]",
+                              "snippet": "integer"
+                            },
+                            "references": []
+                          }
+                        }
+                      ],
+                      "callee": {
+                        "children": {
+                          "expression": {
+                            "children": {
+                              "parent": {
+                                "id": "<element-declaration>:Users@[L0:C0, L4:C1]",
+                                "snippet": "Table User...integer\r\n}"
+                              },
+                              "variable": {
+                                "context": {
+                                  "id": "<identifier>:id@[L1:C4, L1:C6]",
+                                  "snippet": "id"
+                                },
+                                "end": 21,
+                                "endPos": {
+                                  "offset": 21,
+                                  "line": 1,
+                                  "column": 6
+                                },
+                                "isInvalid": false,
+                                "kind": "<identifier>",
+                                "leadingInvalid": "",
+                                "leadingTrivia": "    ",
+                                "start": 19,
+                                "startPos": {
+                                  "offset": 19,
+                                  "line": 1,
+                                  "column": 4
+                                },
+                                "trailingInvalid": "",
+                                "trailingTrivia": " ",
+                                "value": "id"
+                              }
+                            },
+                            "context": {
+                              "id": "<variable>:id@[L1:C4, L1:C6]",
+                              "snippet": "id"
+                            },
+                            "end": 21,
+                            "endPos": {
+                              "offset": 21,
+                              "line": 1,
+                              "column": 6
+                            },
+                            "fullEnd": 22,
+                            "fullStart": 15,
+                            "kind": "<variable>",
+                            "start": 19,
+                            "startPos": {
+                              "offset": 19,
+                              "line": 1,
+                              "column": 4
+                            },
+                            "symbol": {
+                              "context": {
+                                "id": "<variable>:id@[L1:C4, L1:C6]",
+                                "snippet": "id"
+                              },
+                              "declaration": {
+                                "id": "<variable>:id@[L1:C4, L1:C6]",
+                                "snippet": "id"
+                              },
+                              "references": []
+                            }
+                          },
+                          "parent": {
+                            "id": "<element-declaration>:Users@[L0:C0, L4:C1]",
+                            "snippet": "Table User...integer\r\n}"
+                          }
+                        },
+                        "context": {
+                          "id": "<primary-expression>@[L1:C4, L1:C6]",
+                          "snippet": "id"
+                        },
+                        "end": 21,
+                        "endPos": {
+                          "offset": 21,
+                          "line": 1,
+                          "column": 6
+                        },
+                        "fullEnd": 22,
+                        "fullStart": 15,
+                        "kind": "<primary-expression>",
+                        "start": 19,
+                        "startPos": {
+                          "offset": 19,
+                          "line": 1,
+                          "column": 4
+                        },
+                        "symbol": {
+                          "context": {
+                            "id": "<primary-expression>@[L1:C4, L1:C6]",
+                            "snippet": "id"
+                          },
+                          "declaration": {
+                            "id": "<primary-expression>@[L1:C4, L1:C6]",
+                            "snippet": "id"
+                          },
+                          "references": []
+                        }
+                      },
+                      "parent": {
+                        "id": "<element-declaration>:Users@[L0:C0, L4:C1]",
+                        "snippet": "Table User...integer\r\n}"
+                      }
+                    },
+                    "context": {
+                      "id": "<function-application>@[L1:C4, L1:C14]",
+                      "snippet": "id integer"
+                    },
+                    "end": 29,
+                    "endPos": {
+                      "offset": 29,
+                      "line": 1,
+                      "column": 14
+                    },
+                    "fullEnd": 31,
+                    "fullStart": 15,
+                    "kind": "<function-application>",
+                    "start": 19,
+                    "startPos": {
+                      "offset": 19,
+                      "line": 1,
+                      "column": 4
+                    },
+                    "symbol": {
+                      "context": {
+                        "id": "<function-application>@[L1:C4, L1:C14]",
+                        "snippet": "id integer"
+                      },
+                      "declaration": {
+                        "id": "<function-application>@[L1:C4, L1:C14]",
+                        "snippet": "id integer"
+                      },
+                      "references": []
+                    }
+                  },
+                  {
+                    "children": {
+                      "args": [
+                        {
+                          "children": {
+                            "expression": {
+                              "children": {
+                                "parent": {
+                                  "id": "<element-declaration>:Users@[L0:C0, L4:C1]",
+                                  "snippet": "Table User...integer\r\n}"
+                                },
+                                "variable": {
+                                  "context": {
+                                    "id": "<identifier>:integer@[L2:C7, L2:C14]",
+                                    "snippet": "integer"
+                                  },
+                                  "end": 45,
+                                  "endPos": {
+                                    "offset": 45,
+                                    "line": 2,
+                                    "column": 14
+                                  },
+                                  "isInvalid": false,
+                                  "kind": "<identifier>",
+                                  "leadingInvalid": "",
+                                  "leadingTrivia": "",
+                                  "start": 38,
+                                  "startPos": {
+                                    "offset": 38,
+                                    "line": 2,
+                                    "column": 7
+                                  },
+                                  "trailingInvalid": "",
+                                  "trailingTrivia": "\n",
+                                  "value": "integer"
+                                }
+                              },
+                              "context": {
+                                "id": "<variable>:integer@[L2:C7, L2:C14]",
+                                "snippet": "integer"
+                              },
+                              "end": 45,
+                              "endPos": {
+                                "offset": 45,
+                                "line": 2,
+                                "column": 14
+                              },
+                              "fullEnd": 47,
+                              "fullStart": 38,
+                              "kind": "<variable>",
+                              "start": 38,
+                              "startPos": {
+                                "offset": 38,
+                                "line": 2,
+                                "column": 7
+                              },
+                              "symbol": {
+                                "context": {
+                                  "id": "<variable>:integer@[L2:C7, L2:C14]",
+                                  "snippet": "integer"
+                                },
+                                "declaration": {
+                                  "id": "<variable>:integer@[L2:C7, L2:C14]",
+                                  "snippet": "integer"
+                                },
+                                "references": []
+                              }
+                            },
+                            "parent": {
+                              "id": "<element-declaration>:Users@[L0:C0, L4:C1]",
+                              "snippet": "Table User...integer\r\n}"
+                            }
+                          },
+                          "context": {
+                            "id": "<primary-expression>@[L2:C7, L2:C14]",
+                            "snippet": "integer"
+                          },
+                          "end": 45,
+                          "endPos": {
+                            "offset": 45,
+                            "line": 2,
+                            "column": 14
+                          },
+                          "fullEnd": 47,
+                          "fullStart": 38,
+                          "kind": "<primary-expression>",
+                          "start": 38,
+                          "startPos": {
+                            "offset": 38,
+                            "line": 2,
+                            "column": 7
+                          },
+                          "symbol": {
+                            "context": {
+                              "id": "<primary-expression>@[L2:C7, L2:C14]",
+                              "snippet": "integer"
+                            },
+                            "declaration": {
+                              "id": "<primary-expression>@[L2:C7, L2:C14]",
+                              "snippet": "integer"
+                            },
+                            "references": []
+                          }
+                        }
+                      ],
+                      "callee": {
+                        "children": {
+                          "expression": {
+                            "children": {
+                              "parent": {
+                                "id": "<element-declaration>:Users@[L0:C0, L4:C1]",
+                                "snippet": "Table User...integer\r\n}"
+                              },
+                              "variable": {
+                                "context": {
+                                  "id": "<identifier>:id@[L2:C4, L2:C6]",
+                                  "snippet": "id"
+                                },
+                                "end": 37,
+                                "endPos": {
+                                  "offset": 37,
+                                  "line": 2,
+                                  "column": 6
+                                },
+                                "isInvalid": false,
+                                "kind": "<identifier>",
+                                "leadingInvalid": "",
+                                "leadingTrivia": "    ",
+                                "start": 35,
+                                "startPos": {
+                                  "offset": 35,
+                                  "line": 2,
+                                  "column": 4
+                                },
+                                "trailingInvalid": "",
+                                "trailingTrivia": " ",
+                                "value": "id"
+                              }
+                            },
+                            "context": {
+                              "id": "<variable>:id@[L2:C4, L2:C6]",
+                              "snippet": "id"
+                            },
+                            "end": 37,
+                            "endPos": {
+                              "offset": 37,
+                              "line": 2,
+                              "column": 6
+                            },
+                            "fullEnd": 38,
+                            "fullStart": 31,
+                            "kind": "<variable>",
+                            "start": 35,
+                            "startPos": {
+                              "offset": 35,
+                              "line": 2,
+                              "column": 4
+                            },
+                            "symbol": {
+                              "context": {
+                                "id": "<variable>:id@[L2:C4, L2:C6]",
+                                "snippet": "id"
+                              },
+                              "declaration": {
+                                "id": "<variable>:id@[L2:C4, L2:C6]",
+                                "snippet": "id"
+                              },
+                              "references": []
+                            }
+                          },
+                          "parent": {
+                            "id": "<element-declaration>:Users@[L0:C0, L4:C1]",
+                            "snippet": "Table User...integer\r\n}"
+                          }
+                        },
+                        "context": {
+                          "id": "<primary-expression>@[L2:C4, L2:C6]",
+                          "snippet": "id"
+                        },
+                        "end": 37,
+                        "endPos": {
+                          "offset": 37,
+                          "line": 2,
+                          "column": 6
+                        },
+                        "fullEnd": 38,
+                        "fullStart": 31,
+                        "kind": "<primary-expression>",
+                        "start": 35,
+                        "startPos": {
+                          "offset": 35,
+                          "line": 2,
+                          "column": 4
+                        },
+                        "symbol": {
+                          "context": {
+                            "id": "<primary-expression>@[L2:C4, L2:C6]",
+                            "snippet": "id"
+                          },
+                          "declaration": {
+                            "id": "<primary-expression>@[L2:C4, L2:C6]",
+                            "snippet": "id"
+                          },
+                          "references": []
+                        }
+                      },
+                      "parent": {
+                        "id": "<element-declaration>:Users@[L0:C0, L4:C1]",
+                        "snippet": "Table User...integer\r\n}"
+                      }
+                    },
+                    "context": {
+                      "id": "<function-application>@[L2:C4, L2:C14]",
+                      "snippet": "id integer"
+                    },
+                    "end": 45,
+                    "endPos": {
+                      "offset": 45,
+                      "line": 2,
+                      "column": 14
+                    },
+                    "fullEnd": 47,
+                    "fullStart": 31,
+                    "kind": "<function-application>",
+                    "start": 35,
+                    "startPos": {
+                      "offset": 35,
+                      "line": 2,
+                      "column": 4
+                    },
+                    "symbol": {
+                      "context": {
+                        "id": "<function-application>@[L2:C4, L2:C14]",
+                        "snippet": "id integer"
+                      },
+                      "declaration": {
+                        "id": "<function-application>@[L2:C4, L2:C14]",
+                        "snippet": "id integer"
+                      },
+                      "references": []
+                    }
+                  },
+                  {
+                    "children": {
+                      "args": [
+                        {
+                          "children": {
+                            "expression": {
+                              "children": {
+                                "parent": {
+                                  "id": "<element-declaration>:Users@[L0:C0, L4:C1]",
+                                  "snippet": "Table User...integer\r\n}"
+                                },
+                                "variable": {
+                                  "context": {
+                                    "id": "<identifier>:integer@[L3:C7, L3:C14]",
+                                    "snippet": "integer"
+                                  },
+                                  "end": 61,
+                                  "endPos": {
+                                    "offset": 61,
+                                    "line": 3,
+                                    "column": 14
+                                  },
+                                  "isInvalid": false,
+                                  "kind": "<identifier>",
+                                  "leadingInvalid": "",
+                                  "leadingTrivia": "",
+                                  "start": 54,
+                                  "startPos": {
+                                    "offset": 54,
+                                    "line": 3,
+                                    "column": 7
+                                  },
+                                  "trailingInvalid": "",
+                                  "trailingTrivia": "\n",
+                                  "value": "integer"
+                                }
+                              },
+                              "context": {
+                                "id": "<variable>:integer@[L3:C7, L3:C14]",
+                                "snippet": "integer"
+                              },
+                              "end": 61,
+                              "endPos": {
+                                "offset": 61,
+                                "line": 3,
+                                "column": 14
+                              },
+                              "fullEnd": 63,
+                              "fullStart": 54,
+                              "kind": "<variable>",
+                              "start": 54,
+                              "startPos": {
+                                "offset": 54,
+                                "line": 3,
+                                "column": 7
+                              },
+                              "symbol": {
+                                "context": {
+                                  "id": "<variable>:integer@[L3:C7, L3:C14]",
+                                  "snippet": "integer"
+                                },
+                                "declaration": {
+                                  "id": "<variable>:integer@[L3:C7, L3:C14]",
+                                  "snippet": "integer"
+                                },
+                                "references": []
+                              }
+                            },
+                            "parent": {
+                              "id": "<element-declaration>:Users@[L0:C0, L4:C1]",
+                              "snippet": "Table User...integer\r\n}"
+                            }
+                          },
+                          "context": {
+                            "id": "<primary-expression>@[L3:C7, L3:C14]",
+                            "snippet": "integer"
+                          },
+                          "end": 61,
+                          "endPos": {
+                            "offset": 61,
+                            "line": 3,
+                            "column": 14
+                          },
+                          "fullEnd": 63,
+                          "fullStart": 54,
+                          "kind": "<primary-expression>",
+                          "start": 54,
+                          "startPos": {
+                            "offset": 54,
+                            "line": 3,
+                            "column": 7
+                          },
+                          "symbol": {
+                            "context": {
+                              "id": "<primary-expression>@[L3:C7, L3:C14]",
+                              "snippet": "integer"
+                            },
+                            "declaration": {
+                              "id": "<primary-expression>@[L3:C7, L3:C14]",
+                              "snippet": "integer"
+                            },
+                            "references": []
+                          }
+                        }
+                      ],
+                      "callee": {
+                        "children": {
+                          "expression": {
+                            "children": {
+                              "parent": {
+                                "id": "<element-declaration>:Users@[L0:C0, L4:C1]",
+                                "snippet": "Table User...integer\r\n}"
+                              },
+                              "variable": {
+                                "context": {
+                                  "id": "<identifier>:id@[L3:C4, L3:C6]",
+                                  "snippet": "id"
+                                },
+                                "end": 53,
+                                "endPos": {
+                                  "offset": 53,
+                                  "line": 3,
+                                  "column": 6
+                                },
+                                "isInvalid": false,
+                                "kind": "<identifier>",
+                                "leadingInvalid": "",
+                                "leadingTrivia": "    ",
+                                "start": 51,
+                                "startPos": {
+                                  "offset": 51,
+                                  "line": 3,
+                                  "column": 4
+                                },
+                                "trailingInvalid": "",
+                                "trailingTrivia": " ",
+                                "value": "id"
+                              }
+                            },
+                            "context": {
+                              "id": "<variable>:id@[L3:C4, L3:C6]",
+                              "snippet": "id"
+                            },
+                            "end": 53,
+                            "endPos": {
+                              "offset": 53,
+                              "line": 3,
+                              "column": 6
+                            },
+                            "fullEnd": 54,
+                            "fullStart": 47,
+                            "kind": "<variable>",
+                            "start": 51,
+                            "startPos": {
+                              "offset": 51,
+                              "line": 3,
+                              "column": 4
+                            },
+                            "symbol": {
+                              "context": {
+                                "id": "<variable>:id@[L3:C4, L3:C6]",
+                                "snippet": "id"
+                              },
+                              "declaration": {
+                                "id": "<variable>:id@[L3:C4, L3:C6]",
+                                "snippet": "id"
+                              },
+                              "references": []
+                            }
+                          },
+                          "parent": {
+                            "id": "<element-declaration>:Users@[L0:C0, L4:C1]",
+                            "snippet": "Table User...integer\r\n}"
+                          }
+                        },
+                        "context": {
+                          "id": "<primary-expression>@[L3:C4, L3:C6]",
+                          "snippet": "id"
+                        },
+                        "end": 53,
+                        "endPos": {
+                          "offset": 53,
+                          "line": 3,
+                          "column": 6
+                        },
+                        "fullEnd": 54,
+                        "fullStart": 47,
+                        "kind": "<primary-expression>",
+                        "start": 51,
+                        "startPos": {
+                          "offset": 51,
+                          "line": 3,
+                          "column": 4
+                        },
+                        "symbol": {
+                          "context": {
+                            "id": "<primary-expression>@[L3:C4, L3:C6]",
+                            "snippet": "id"
+                          },
+                          "declaration": {
+                            "id": "<primary-expression>@[L3:C4, L3:C6]",
+                            "snippet": "id"
+                          },
+                          "references": []
+                        }
+                      },
+                      "parent": {
+                        "id": "<element-declaration>:Users@[L0:C0, L4:C1]",
+                        "snippet": "Table User...integer\r\n}"
+                      }
+                    },
+                    "context": {
+                      "id": "<function-application>@[L3:C4, L3:C14]",
+                      "snippet": "id integer"
+                    },
+                    "end": 61,
+                    "endPos": {
+                      "offset": 61,
+                      "line": 3,
+                      "column": 14
+                    },
+                    "fullEnd": 63,
+                    "fullStart": 47,
+                    "kind": "<function-application>",
+                    "start": 51,
+                    "startPos": {
+                      "offset": 51,
+                      "line": 3,
+                      "column": 4
+                    },
+                    "symbol": {
+                      "context": {
+                        "id": "<function-application>@[L3:C4, L3:C14]",
+                        "snippet": "id integer"
+                      },
+                      "declaration": {
+                        "id": "<function-application>@[L3:C4, L3:C14]",
+                        "snippet": "id integer"
+                      },
+                      "references": []
+                    }
+                  }
+                ],
+                "parent": {
+                  "id": "<element-declaration>:Users@[L0:C0, L4:C1]",
+                  "snippet": "Table User...integer\r\n}"
                 }
+              },
+              "context": {
+                "id": "<block-expression>@[L0:C12, L4:C1]",
+                "snippet": "{\r\n    id ...integer\r\n}"
+              },
+              "end": 64,
+              "endPos": {
+                "offset": 64,
+                "line": 4,
+                "column": 1
+              },
+              "fullEnd": 66,
+              "fullStart": 12,
+              "kind": "<block-expression>",
+              "start": 12,
+              "startPos": {
+                "offset": 12,
+                "line": 0,
+                "column": 12
+              }
+            },
+            "name": {
+              "children": {
+                "expression": {
+                  "children": {
+                    "parent": {
+                      "id": "<element-declaration>:Users@[L0:C0, L4:C1]",
+                      "snippet": "Table User...integer\r\n}"
+                    },
+                    "variable": {
+                      "context": {
+                        "id": "<identifier>:Users@[L0:C6, L0:C11]",
+                        "snippet": "Users"
+                      },
+                      "end": 11,
+                      "endPos": {
+                        "offset": 11,
+                        "line": 0,
+                        "column": 11
+                      },
+                      "isInvalid": false,
+                      "kind": "<identifier>",
+                      "leadingInvalid": "",
+                      "leadingTrivia": "",
+                      "start": 6,
+                      "startPos": {
+                        "offset": 6,
+                        "line": 0,
+                        "column": 6
+                      },
+                      "trailingInvalid": "",
+                      "trailingTrivia": " ",
+                      "value": "Users"
+                    }
+                  },
+                  "context": {
+                    "id": "<variable>:Users@[L0:C6, L0:C11]",
+                    "snippet": "Users"
+                  },
+                  "end": 11,
+                  "endPos": {
+                    "offset": 11,
+                    "line": 0,
+                    "column": 11
+                  },
+                  "fullEnd": 12,
+                  "fullStart": 6,
+                  "kind": "<variable>",
+                  "start": 6,
+                  "startPos": {
+                    "offset": 6,
+                    "line": 0,
+                    "column": 6
+                  }
+                },
+                "parent": {
+                  "id": "<element-declaration>:Users@[L0:C0, L4:C1]",
+                  "snippet": "Table User...integer\r\n}"
+                }
+              },
+              "context": {
+                "id": "<primary-expression>@[L0:C6, L0:C11]",
+                "snippet": "Users"
+              },
+              "end": 11,
+              "endPos": {
+                "offset": 11,
+                "line": 0,
+                "column": 11
+              },
+              "fullEnd": 12,
+              "fullStart": 6,
+              "kind": "<primary-expression>",
+              "start": 6,
+              "startPos": {
+                "offset": 6,
+                "line": 0,
+                "column": 6
               }
             },
             "parent": {
               "id": "<program>@[L0:C0, L11:C0]",
               "snippet": "Table User...d int\r\n}\r\n"
+            },
+            "type": {
+              "context": {
+                "id": "<identifier>:Table@[L0:C0, L0:C5]",
+                "snippet": "Table"
+              },
+              "end": 5,
+              "endPos": {
+                "offset": 5,
+                "line": 0,
+                "column": 5
+              },
+              "isInvalid": false,
+              "kind": "<identifier>",
+              "leadingInvalid": "",
+              "leadingTrivia": "",
+              "start": 0,
+              "startPos": {
+                "offset": 0,
+                "line": 0,
+                "column": 0
+              },
+              "trailingInvalid": "",
+              "trailingTrivia": " ",
+              "value": "Table"
             }
+          },
+          "context": {
+            "id": "<element-declaration>:Users@[L0:C0, L4:C1]",
+            "snippet": "Table User...integer\r\n}"
+          },
+          "end": 64,
+          "endPos": {
+            "offset": 64,
+            "line": 4,
+            "column": 1
+          },
+          "fullEnd": 66,
+          "fullStart": 0,
+          "kind": "<element-declaration>",
+          "start": 0,
+          "startPos": {
+            "offset": 0,
+            "line": 0,
+            "column": 0
+          },
+          "symbol": {
+            "context": {
+              "id": "<element-declaration>:Users@[L0:C0, L4:C1]",
+              "snippet": "Table User...integer\r\n}"
+            },
+            "declaration": {
+              "id": "<element-declaration>:Users@[L0:C0, L4:C1]",
+              "snippet": "Table User...integer\r\n}"
+            },
+            "members": [
+              {
+                "context": {
+                  "id": "<function-application>@[L1:C4, L1:C14]",
+                  "snippet": "id integer"
+                }
+              },
+              {
+                "context": {
+                  "id": "<function-application>@[L2:C4, L2:C14]",
+                  "snippet": "id integer"
+                }
+              },
+              {
+                "context": {
+                  "id": "<function-application>@[L3:C4, L3:C14]",
+                  "snippet": "id integer"
+                }
+              }
+            ],
+            "references": []
           }
         },
         {
+          "children": {
+            "body": {
+              "children": {
+                "blockCloseBrace": {
+                  "context": {
+                    "id": "<rbrace>:}@[L10:C0, L10:C1]",
+                    "snippet": "}"
+                  },
+                  "end": 133,
+                  "endPos": {
+                    "offset": 133,
+                    "line": 10,
+                    "column": 1
+                  },
+                  "isInvalid": false,
+                  "kind": "<rbrace>",
+                  "leadingInvalid": "",
+                  "leadingTrivia": "",
+                  "start": 132,
+                  "startPos": {
+                    "offset": 132,
+                    "line": 10,
+                    "column": 0
+                  },
+                  "trailingInvalid": "",
+                  "trailingTrivia": "\n",
+                  "value": "}"
+                },
+                "blockOpenBrace": {
+                  "context": {
+                    "id": "<lbrace>:{@[L6:C25, L6:C26]",
+                    "snippet": "{"
+                  },
+                  "end": 94,
+                  "endPos": {
+                    "offset": 94,
+                    "line": 6,
+                    "column": 26
+                  },
+                  "isInvalid": false,
+                  "kind": "<lbrace>",
+                  "leadingInvalid": "",
+                  "leadingTrivia": "",
+                  "start": 93,
+                  "startPos": {
+                    "offset": 93,
+                    "line": 6,
+                    "column": 25
+                  },
+                  "trailingInvalid": "",
+                  "trailingTrivia": "\n",
+                  "value": "{"
+                },
+                "body": [
+                  {
+                    "children": {
+                      "args": [
+                        {
+                          "children": {
+                            "expression": {
+                              "children": {
+                                "parent": {
+                                  "id": "<element-declaration>:userPartial@[L6:C0, L10:C1]",
+                                  "snippet": "TableParti... id int\r\n}"
+                                },
+                                "variable": {
+                                  "context": {
+                                    "id": "<identifier>:int@[L7:C7, L7:C10]",
+                                    "snippet": "int"
+                                  },
+                                  "end": 106,
+                                  "endPos": {
+                                    "offset": 106,
+                                    "line": 7,
+                                    "column": 10
+                                  },
+                                  "isInvalid": false,
+                                  "kind": "<identifier>",
+                                  "leadingInvalid": "",
+                                  "leadingTrivia": "",
+                                  "start": 103,
+                                  "startPos": {
+                                    "offset": 103,
+                                    "line": 7,
+                                    "column": 7
+                                  },
+                                  "trailingInvalid": "",
+                                  "trailingTrivia": "\n",
+                                  "value": "int"
+                                }
+                              },
+                              "context": {
+                                "id": "<variable>:int@[L7:C7, L7:C10]",
+                                "snippet": "int"
+                              },
+                              "end": 106,
+                              "endPos": {
+                                "offset": 106,
+                                "line": 7,
+                                "column": 10
+                              },
+                              "fullEnd": 108,
+                              "fullStart": 103,
+                              "kind": "<variable>",
+                              "start": 103,
+                              "startPos": {
+                                "offset": 103,
+                                "line": 7,
+                                "column": 7
+                              }
+                            },
+                            "parent": {
+                              "id": "<element-declaration>:userPartial@[L6:C0, L10:C1]",
+                              "snippet": "TableParti... id int\r\n}"
+                            }
+                          },
+                          "context": {
+                            "id": "<primary-expression>@[L7:C7, L7:C10]",
+                            "snippet": "int"
+                          },
+                          "end": 106,
+                          "endPos": {
+                            "offset": 106,
+                            "line": 7,
+                            "column": 10
+                          },
+                          "fullEnd": 108,
+                          "fullStart": 103,
+                          "kind": "<primary-expression>",
+                          "start": 103,
+                          "startPos": {
+                            "offset": 103,
+                            "line": 7,
+                            "column": 7
+                          }
+                        }
+                      ],
+                      "callee": {
+                        "children": {
+                          "expression": {
+                            "children": {
+                              "parent": {
+                                "id": "<element-declaration>:userPartial@[L6:C0, L10:C1]",
+                                "snippet": "TableParti... id int\r\n}"
+                              },
+                              "variable": {
+                                "context": {
+                                  "id": "<identifier>:id@[L7:C4, L7:C6]",
+                                  "snippet": "id"
+                                },
+                                "end": 102,
+                                "endPos": {
+                                  "offset": 102,
+                                  "line": 7,
+                                  "column": 6
+                                },
+                                "isInvalid": false,
+                                "kind": "<identifier>",
+                                "leadingInvalid": "",
+                                "leadingTrivia": "    ",
+                                "start": 100,
+                                "startPos": {
+                                  "offset": 100,
+                                  "line": 7,
+                                  "column": 4
+                                },
+                                "trailingInvalid": "",
+                                "trailingTrivia": " ",
+                                "value": "id"
+                              }
+                            },
+                            "context": {
+                              "id": "<variable>:id@[L7:C4, L7:C6]",
+                              "snippet": "id"
+                            },
+                            "end": 102,
+                            "endPos": {
+                              "offset": 102,
+                              "line": 7,
+                              "column": 6
+                            },
+                            "fullEnd": 103,
+                            "fullStart": 96,
+                            "kind": "<variable>",
+                            "start": 100,
+                            "startPos": {
+                              "offset": 100,
+                              "line": 7,
+                              "column": 4
+                            }
+                          },
+                          "parent": {
+                            "id": "<element-declaration>:userPartial@[L6:C0, L10:C1]",
+                            "snippet": "TableParti... id int\r\n}"
+                          }
+                        },
+                        "context": {
+                          "id": "<primary-expression>@[L7:C4, L7:C6]",
+                          "snippet": "id"
+                        },
+                        "end": 102,
+                        "endPos": {
+                          "offset": 102,
+                          "line": 7,
+                          "column": 6
+                        },
+                        "fullEnd": 103,
+                        "fullStart": 96,
+                        "kind": "<primary-expression>",
+                        "start": 100,
+                        "startPos": {
+                          "offset": 100,
+                          "line": 7,
+                          "column": 4
+                        }
+                      },
+                      "parent": {
+                        "id": "<element-declaration>:userPartial@[L6:C0, L10:C1]",
+                        "snippet": "TableParti... id int\r\n}"
+                      }
+                    },
+                    "context": {
+                      "id": "<function-application>@[L7:C4, L7:C10]",
+                      "snippet": "id int"
+                    },
+                    "end": 106,
+                    "endPos": {
+                      "offset": 106,
+                      "line": 7,
+                      "column": 10
+                    },
+                    "fullEnd": 108,
+                    "fullStart": 96,
+                    "kind": "<function-application>",
+                    "start": 100,
+                    "startPos": {
+                      "offset": 100,
+                      "line": 7,
+                      "column": 4
+                    },
+                    "symbol": {
+                      "context": {
+                        "id": "<function-application>@[L7:C4, L7:C10]",
+                        "snippet": "id int"
+                      },
+                      "declaration": {
+                        "id": "<function-application>@[L7:C4, L7:C10]",
+                        "snippet": "id int"
+                      },
+                      "references": []
+                    }
+                  },
+                  {
+                    "children": {
+                      "args": [
+                        {
+                          "children": {
+                            "expression": {
+                              "children": {
+                                "parent": {
+                                  "id": "<element-declaration>:userPartial@[L6:C0, L10:C1]",
+                                  "snippet": "TableParti... id int\r\n}"
+                                },
+                                "variable": {
+                                  "context": {
+                                    "id": "<identifier>:int@[L8:C7, L8:C10]",
+                                    "snippet": "int"
+                                  },
+                                  "end": 118,
+                                  "endPos": {
+                                    "offset": 118,
+                                    "line": 8,
+                                    "column": 10
+                                  },
+                                  "isInvalid": false,
+                                  "kind": "<identifier>",
+                                  "leadingInvalid": "",
+                                  "leadingTrivia": "",
+                                  "start": 115,
+                                  "startPos": {
+                                    "offset": 115,
+                                    "line": 8,
+                                    "column": 7
+                                  },
+                                  "trailingInvalid": "",
+                                  "trailingTrivia": "\n",
+                                  "value": "int"
+                                }
+                              },
+                              "context": {
+                                "id": "<variable>:int@[L8:C7, L8:C10]",
+                                "snippet": "int"
+                              },
+                              "end": 118,
+                              "endPos": {
+                                "offset": 118,
+                                "line": 8,
+                                "column": 10
+                              },
+                              "fullEnd": 120,
+                              "fullStart": 115,
+                              "kind": "<variable>",
+                              "start": 115,
+                              "startPos": {
+                                "offset": 115,
+                                "line": 8,
+                                "column": 7
+                              }
+                            },
+                            "parent": {
+                              "id": "<element-declaration>:userPartial@[L6:C0, L10:C1]",
+                              "snippet": "TableParti... id int\r\n}"
+                            }
+                          },
+                          "context": {
+                            "id": "<primary-expression>@[L8:C7, L8:C10]",
+                            "snippet": "int"
+                          },
+                          "end": 118,
+                          "endPos": {
+                            "offset": 118,
+                            "line": 8,
+                            "column": 10
+                          },
+                          "fullEnd": 120,
+                          "fullStart": 115,
+                          "kind": "<primary-expression>",
+                          "start": 115,
+                          "startPos": {
+                            "offset": 115,
+                            "line": 8,
+                            "column": 7
+                          }
+                        }
+                      ],
+                      "callee": {
+                        "children": {
+                          "expression": {
+                            "children": {
+                              "parent": {
+                                "id": "<element-declaration>:userPartial@[L6:C0, L10:C1]",
+                                "snippet": "TableParti... id int\r\n}"
+                              },
+                              "variable": {
+                                "context": {
+                                  "id": "<identifier>:id@[L8:C4, L8:C6]",
+                                  "snippet": "id"
+                                },
+                                "end": 114,
+                                "endPos": {
+                                  "offset": 114,
+                                  "line": 8,
+                                  "column": 6
+                                },
+                                "isInvalid": false,
+                                "kind": "<identifier>",
+                                "leadingInvalid": "",
+                                "leadingTrivia": "    ",
+                                "start": 112,
+                                "startPos": {
+                                  "offset": 112,
+                                  "line": 8,
+                                  "column": 4
+                                },
+                                "trailingInvalid": "",
+                                "trailingTrivia": " ",
+                                "value": "id"
+                              }
+                            },
+                            "context": {
+                              "id": "<variable>:id@[L8:C4, L8:C6]",
+                              "snippet": "id"
+                            },
+                            "end": 114,
+                            "endPos": {
+                              "offset": 114,
+                              "line": 8,
+                              "column": 6
+                            },
+                            "fullEnd": 115,
+                            "fullStart": 108,
+                            "kind": "<variable>",
+                            "start": 112,
+                            "startPos": {
+                              "offset": 112,
+                              "line": 8,
+                              "column": 4
+                            }
+                          },
+                          "parent": {
+                            "id": "<element-declaration>:userPartial@[L6:C0, L10:C1]",
+                            "snippet": "TableParti... id int\r\n}"
+                          }
+                        },
+                        "context": {
+                          "id": "<primary-expression>@[L8:C4, L8:C6]",
+                          "snippet": "id"
+                        },
+                        "end": 114,
+                        "endPos": {
+                          "offset": 114,
+                          "line": 8,
+                          "column": 6
+                        },
+                        "fullEnd": 115,
+                        "fullStart": 108,
+                        "kind": "<primary-expression>",
+                        "start": 112,
+                        "startPos": {
+                          "offset": 112,
+                          "line": 8,
+                          "column": 4
+                        }
+                      },
+                      "parent": {
+                        "id": "<element-declaration>:userPartial@[L6:C0, L10:C1]",
+                        "snippet": "TableParti... id int\r\n}"
+                      }
+                    },
+                    "context": {
+                      "id": "<function-application>@[L8:C4, L8:C10]",
+                      "snippet": "id int"
+                    },
+                    "end": 118,
+                    "endPos": {
+                      "offset": 118,
+                      "line": 8,
+                      "column": 10
+                    },
+                    "fullEnd": 120,
+                    "fullStart": 108,
+                    "kind": "<function-application>",
+                    "start": 112,
+                    "startPos": {
+                      "offset": 112,
+                      "line": 8,
+                      "column": 4
+                    },
+                    "symbol": {
+                      "context": {
+                        "id": "<function-application>@[L8:C4, L8:C10]",
+                        "snippet": "id int"
+                      },
+                      "declaration": {
+                        "id": "<function-application>@[L8:C4, L8:C10]",
+                        "snippet": "id int"
+                      },
+                      "references": []
+                    }
+                  },
+                  {
+                    "children": {
+                      "args": [
+                        {
+                          "children": {
+                            "expression": {
+                              "children": {
+                                "parent": {
+                                  "id": "<element-declaration>:userPartial@[L6:C0, L10:C1]",
+                                  "snippet": "TableParti... id int\r\n}"
+                                },
+                                "variable": {
+                                  "context": {
+                                    "id": "<identifier>:int@[L9:C7, L9:C10]",
+                                    "snippet": "int"
+                                  },
+                                  "end": 130,
+                                  "endPos": {
+                                    "offset": 130,
+                                    "line": 9,
+                                    "column": 10
+                                  },
+                                  "isInvalid": false,
+                                  "kind": "<identifier>",
+                                  "leadingInvalid": "",
+                                  "leadingTrivia": "",
+                                  "start": 127,
+                                  "startPos": {
+                                    "offset": 127,
+                                    "line": 9,
+                                    "column": 7
+                                  },
+                                  "trailingInvalid": "",
+                                  "trailingTrivia": "\n",
+                                  "value": "int"
+                                }
+                              },
+                              "context": {
+                                "id": "<variable>:int@[L9:C7, L9:C10]",
+                                "snippet": "int"
+                              },
+                              "end": 130,
+                              "endPos": {
+                                "offset": 130,
+                                "line": 9,
+                                "column": 10
+                              },
+                              "fullEnd": 132,
+                              "fullStart": 127,
+                              "kind": "<variable>",
+                              "start": 127,
+                              "startPos": {
+                                "offset": 127,
+                                "line": 9,
+                                "column": 7
+                              }
+                            },
+                            "parent": {
+                              "id": "<element-declaration>:userPartial@[L6:C0, L10:C1]",
+                              "snippet": "TableParti... id int\r\n}"
+                            }
+                          },
+                          "context": {
+                            "id": "<primary-expression>@[L9:C7, L9:C10]",
+                            "snippet": "int"
+                          },
+                          "end": 130,
+                          "endPos": {
+                            "offset": 130,
+                            "line": 9,
+                            "column": 10
+                          },
+                          "fullEnd": 132,
+                          "fullStart": 127,
+                          "kind": "<primary-expression>",
+                          "start": 127,
+                          "startPos": {
+                            "offset": 127,
+                            "line": 9,
+                            "column": 7
+                          }
+                        }
+                      ],
+                      "callee": {
+                        "children": {
+                          "expression": {
+                            "children": {
+                              "parent": {
+                                "id": "<element-declaration>:userPartial@[L6:C0, L10:C1]",
+                                "snippet": "TableParti... id int\r\n}"
+                              },
+                              "variable": {
+                                "context": {
+                                  "id": "<identifier>:id@[L9:C4, L9:C6]",
+                                  "snippet": "id"
+                                },
+                                "end": 126,
+                                "endPos": {
+                                  "offset": 126,
+                                  "line": 9,
+                                  "column": 6
+                                },
+                                "isInvalid": false,
+                                "kind": "<identifier>",
+                                "leadingInvalid": "",
+                                "leadingTrivia": "    ",
+                                "start": 124,
+                                "startPos": {
+                                  "offset": 124,
+                                  "line": 9,
+                                  "column": 4
+                                },
+                                "trailingInvalid": "",
+                                "trailingTrivia": " ",
+                                "value": "id"
+                              }
+                            },
+                            "context": {
+                              "id": "<variable>:id@[L9:C4, L9:C6]",
+                              "snippet": "id"
+                            },
+                            "end": 126,
+                            "endPos": {
+                              "offset": 126,
+                              "line": 9,
+                              "column": 6
+                            },
+                            "fullEnd": 127,
+                            "fullStart": 120,
+                            "kind": "<variable>",
+                            "start": 124,
+                            "startPos": {
+                              "offset": 124,
+                              "line": 9,
+                              "column": 4
+                            }
+                          },
+                          "parent": {
+                            "id": "<element-declaration>:userPartial@[L6:C0, L10:C1]",
+                            "snippet": "TableParti... id int\r\n}"
+                          }
+                        },
+                        "context": {
+                          "id": "<primary-expression>@[L9:C4, L9:C6]",
+                          "snippet": "id"
+                        },
+                        "end": 126,
+                        "endPos": {
+                          "offset": 126,
+                          "line": 9,
+                          "column": 6
+                        },
+                        "fullEnd": 127,
+                        "fullStart": 120,
+                        "kind": "<primary-expression>",
+                        "start": 124,
+                        "startPos": {
+                          "offset": 124,
+                          "line": 9,
+                          "column": 4
+                        }
+                      },
+                      "parent": {
+                        "id": "<element-declaration>:userPartial@[L6:C0, L10:C1]",
+                        "snippet": "TableParti... id int\r\n}"
+                      }
+                    },
+                    "context": {
+                      "id": "<function-application>@[L9:C4, L9:C10]",
+                      "snippet": "id int"
+                    },
+                    "end": 130,
+                    "endPos": {
+                      "offset": 130,
+                      "line": 9,
+                      "column": 10
+                    },
+                    "fullEnd": 132,
+                    "fullStart": 120,
+                    "kind": "<function-application>",
+                    "start": 124,
+                    "startPos": {
+                      "offset": 124,
+                      "line": 9,
+                      "column": 4
+                    },
+                    "symbol": {
+                      "context": {
+                        "id": "<function-application>@[L9:C4, L9:C10]",
+                        "snippet": "id int"
+                      },
+                      "declaration": {
+                        "id": "<function-application>@[L9:C4, L9:C10]",
+                        "snippet": "id int"
+                      },
+                      "references": []
+                    }
+                  }
+                ],
+                "parent": {
+                  "id": "<element-declaration>:userPartial@[L6:C0, L10:C1]",
+                  "snippet": "TableParti... id int\r\n}"
+                }
+              },
+              "context": {
+                "id": "<block-expression>@[L6:C25, L10:C1]",
+                "snippet": "{\r\n    id ... id int\r\n}"
+              },
+              "end": 133,
+              "endPos": {
+                "offset": 133,
+                "line": 10,
+                "column": 1
+              },
+              "fullEnd": 135,
+              "fullStart": 93,
+              "kind": "<block-expression>",
+              "start": 93,
+              "startPos": {
+                "offset": 93,
+                "line": 6,
+                "column": 25
+              }
+            },
+            "name": {
+              "children": {
+                "expression": {
+                  "children": {
+                    "parent": {
+                      "id": "<element-declaration>:userPartial@[L6:C0, L10:C1]",
+                      "snippet": "TableParti... id int\r\n}"
+                    },
+                    "variable": {
+                      "context": {
+                        "id": "<identifier>:userPartial@[L6:C13, L6:C24]",
+                        "snippet": "userPartial"
+                      },
+                      "end": 92,
+                      "endPos": {
+                        "offset": 92,
+                        "line": 6,
+                        "column": 24
+                      },
+                      "isInvalid": false,
+                      "kind": "<identifier>",
+                      "leadingInvalid": "",
+                      "leadingTrivia": "",
+                      "start": 81,
+                      "startPos": {
+                        "offset": 81,
+                        "line": 6,
+                        "column": 13
+                      },
+                      "trailingInvalid": "",
+                      "trailingTrivia": " ",
+                      "value": "userPartial"
+                    }
+                  },
+                  "context": {
+                    "id": "<variable>:userPartial@[L6:C13, L6:C24]",
+                    "snippet": "userPartial"
+                  },
+                  "end": 92,
+                  "endPos": {
+                    "offset": 92,
+                    "line": 6,
+                    "column": 24
+                  },
+                  "fullEnd": 93,
+                  "fullStart": 81,
+                  "kind": "<variable>",
+                  "start": 81,
+                  "startPos": {
+                    "offset": 81,
+                    "line": 6,
+                    "column": 13
+                  }
+                },
+                "parent": {
+                  "id": "<element-declaration>:userPartial@[L6:C0, L10:C1]",
+                  "snippet": "TableParti... id int\r\n}"
+                }
+              },
+              "context": {
+                "id": "<primary-expression>@[L6:C13, L6:C24]",
+                "snippet": "userPartial"
+              },
+              "end": 92,
+              "endPos": {
+                "offset": 92,
+                "line": 6,
+                "column": 24
+              },
+              "fullEnd": 93,
+              "fullStart": 81,
+              "kind": "<primary-expression>",
+              "start": 81,
+              "startPos": {
+                "offset": 81,
+                "line": 6,
+                "column": 13
+              }
+            },
+            "parent": {
+              "id": "<program>@[L0:C0, L11:C0]",
+              "snippet": "Table User...d int\r\n}\r\n"
+            },
+            "type": {
+              "context": {
+                "id": "<identifier>:TablePartial@[L6:C0, L6:C12]",
+                "snippet": "TablePartial"
+              },
+              "end": 80,
+              "endPos": {
+                "offset": 80,
+                "line": 6,
+                "column": 12
+              },
+              "isInvalid": false,
+              "kind": "<identifier>",
+              "leadingInvalid": "",
+              "leadingTrivia": "\n",
+              "start": 68,
+              "startPos": {
+                "offset": 68,
+                "line": 6,
+                "column": 0
+              },
+              "trailingInvalid": "",
+              "trailingTrivia": " ",
+              "value": "TablePartial"
+            }
+          },
           "context": {
             "id": "<element-declaration>:userPartial@[L6:C0, L10:C1]",
             "snippet": "TableParti... id int\r\n}"
           },
-          "kind": "<element-declaration>",
-          "startPos": {
-            "offset": 68,
-            "line": 6,
-            "column": 0
-          },
+          "end": 133,
           "endPos": {
             "offset": 133,
             "line": 10,
             "column": 1
           },
-          "start": 68,
-          "end": 133,
-          "fullStart": 67,
           "fullEnd": 135,
+          "fullStart": 67,
+          "kind": "<element-declaration>",
+          "start": 68,
+          "startPos": {
+            "offset": 68,
+            "line": 6,
+            "column": 0
+          },
           "symbol": {
             "context": {
+              "id": "<element-declaration>:userPartial@[L6:C0, L10:C1]",
+              "snippet": "TableParti... id int\r\n}"
+            },
+            "declaration": {
               "id": "<element-declaration>:userPartial@[L6:C0, L10:C1]",
               "snippet": "TableParti... id int\r\n}"
             },
@@ -1220,808 +1787,22 @@
                 "context": {
                   "id": "<function-application>@[L7:C4, L7:C10]",
                   "snippet": "id int"
-                },
-                "declaration": {
-                  "id": "<function-application>@[L7:C4, L7:C10]",
-                  "snippet": "id int"
-                },
-                "references": []
+                }
               },
               {
                 "context": {
                   "id": "<function-application>@[L8:C4, L8:C10]",
                   "snippet": "id int"
-                },
-                "declaration": {
-                  "id": "<function-application>@[L8:C4, L8:C10]",
-                  "snippet": "id int"
-                },
-                "references": []
+                }
               },
               {
                 "context": {
                   "id": "<function-application>@[L9:C4, L9:C10]",
                   "snippet": "id int"
-                },
-                "declaration": {
-                  "id": "<function-application>@[L9:C4, L9:C10]",
-                  "snippet": "id int"
-                },
-                "references": []
+                }
               }
             ],
-            "declaration": {
-              "id": "<element-declaration>:userPartial@[L6:C0, L10:C1]",
-              "snippet": "TableParti... id int\r\n}"
-            },
             "references": []
-          },
-          "children": {
-            "id": 37,
-            "type": {
-              "context": {
-                "id": "<identifier>:TablePartial@[L6:C0, L6:C12]",
-                "snippet": "TablePartial"
-              },
-              "isInvalid": false,
-              "kind": "<identifier>",
-              "value": "TablePartial",
-              "startPos": {
-                "offset": 68,
-                "line": 6,
-                "column": 0
-              },
-              "endPos": {
-                "offset": 80,
-                "line": 6,
-                "column": 12
-              },
-              "start": 68,
-              "end": 80,
-              "leadingTrivia": [
-                "\n"
-              ],
-              "trailingTrivia": [
-                " "
-              ],
-              "leadingInvalid": [],
-              "trailingInvalid": []
-            },
-            "name": {
-              "context": {
-                "id": "<primary-expression>@[L6:C13, L6:C24]",
-                "snippet": "userPartial"
-              },
-              "kind": "<primary-expression>",
-              "startPos": {
-                "offset": 81,
-                "line": 6,
-                "column": 13
-              },
-              "endPos": {
-                "offset": 92,
-                "line": 6,
-                "column": 24
-              },
-              "start": 81,
-              "end": 92,
-              "fullStart": 81,
-              "fullEnd": 93,
-              "children": {
-                "id": 20,
-                "expression": {
-                  "context": {
-                    "id": "<variable>:userPartial@[L6:C13, L6:C24]",
-                    "snippet": "userPartial"
-                  },
-                  "kind": "<variable>",
-                  "startPos": {
-                    "offset": 81,
-                    "line": 6,
-                    "column": 13
-                  },
-                  "endPos": {
-                    "offset": 92,
-                    "line": 6,
-                    "column": 24
-                  },
-                  "start": 81,
-                  "end": 92,
-                  "fullStart": 81,
-                  "fullEnd": 93,
-                  "children": {
-                    "id": 19,
-                    "variable": {
-                      "context": {
-                        "id": "<identifier>:userPartial@[L6:C13, L6:C24]",
-                        "snippet": "userPartial"
-                      },
-                      "isInvalid": false,
-                      "kind": "<identifier>",
-                      "value": "userPartial",
-                      "startPos": {
-                        "offset": 81,
-                        "line": 6,
-                        "column": 13
-                      },
-                      "endPos": {
-                        "offset": 92,
-                        "line": 6,
-                        "column": 24
-                      },
-                      "start": 81,
-                      "end": 92,
-                      "leadingTrivia": [],
-                      "trailingTrivia": [
-                        " "
-                      ],
-                      "leadingInvalid": [],
-                      "trailingInvalid": []
-                    }
-                  }
-                }
-              }
-            },
-            "body": {
-              "context": {
-                "id": "<block-expression>@[L6:C25, L10:C1]",
-                "snippet": "{\r\n    id ... id int\r\n}"
-              },
-              "kind": "<block-expression>",
-              "startPos": {
-                "offset": 93,
-                "line": 6,
-                "column": 25
-              },
-              "endPos": {
-                "offset": 133,
-                "line": 10,
-                "column": 1
-              },
-              "start": 93,
-              "end": 133,
-              "fullStart": 93,
-              "fullEnd": 135,
-              "children": {
-                "id": 36,
-                "blockOpenBrace": {
-                  "context": {
-                    "id": "<lbrace>:{@[L6:C25, L6:C26]",
-                    "snippet": "{"
-                  },
-                  "isInvalid": false,
-                  "kind": "<lbrace>",
-                  "value": "{",
-                  "startPos": {
-                    "offset": 93,
-                    "line": 6,
-                    "column": 25
-                  },
-                  "endPos": {
-                    "offset": 94,
-                    "line": 6,
-                    "column": 26
-                  },
-                  "start": 93,
-                  "end": 94,
-                  "leadingTrivia": [],
-                  "trailingTrivia": [
-                    "\n"
-                  ],
-                  "leadingInvalid": [],
-                  "trailingInvalid": []
-                },
-                "body": [
-                  {
-                    "context": {
-                      "id": "<function-application>@[L7:C4, L7:C10]",
-                      "snippet": "id int"
-                    },
-                    "kind": "<function-application>",
-                    "startPos": {
-                      "offset": 100,
-                      "line": 7,
-                      "column": 4
-                    },
-                    "endPos": {
-                      "offset": 106,
-                      "line": 7,
-                      "column": 10
-                    },
-                    "start": 100,
-                    "end": 106,
-                    "fullStart": 96,
-                    "fullEnd": 108,
-                    "symbol": {
-                      "context": {
-                        "id": "<function-application>@[L7:C4, L7:C10]",
-                        "snippet": "id int"
-                      },
-                      "declaration": {
-                        "id": "<function-application>@[L7:C4, L7:C10]",
-                        "snippet": "id int"
-                      },
-                      "references": []
-                    },
-                    "children": {
-                      "id": 25,
-                      "callee": {
-                        "context": {
-                          "id": "<primary-expression>@[L7:C4, L7:C6]",
-                          "snippet": "id"
-                        },
-                        "kind": "<primary-expression>",
-                        "startPos": {
-                          "offset": 100,
-                          "line": 7,
-                          "column": 4
-                        },
-                        "endPos": {
-                          "offset": 102,
-                          "line": 7,
-                          "column": 6
-                        },
-                        "start": 100,
-                        "end": 102,
-                        "fullStart": 96,
-                        "fullEnd": 103,
-                        "children": {
-                          "id": 22,
-                          "expression": {
-                            "context": {
-                              "id": "<variable>:id@[L7:C4, L7:C6]",
-                              "snippet": "id"
-                            },
-                            "kind": "<variable>",
-                            "startPos": {
-                              "offset": 100,
-                              "line": 7,
-                              "column": 4
-                            },
-                            "endPos": {
-                              "offset": 102,
-                              "line": 7,
-                              "column": 6
-                            },
-                            "start": 100,
-                            "end": 102,
-                            "fullStart": 96,
-                            "fullEnd": 103,
-                            "children": {
-                              "id": 21,
-                              "variable": {
-                                "context": {
-                                  "id": "<identifier>:id@[L7:C4, L7:C6]",
-                                  "snippet": "id"
-                                },
-                                "isInvalid": false,
-                                "kind": "<identifier>",
-                                "value": "id",
-                                "startPos": {
-                                  "offset": 100,
-                                  "line": 7,
-                                  "column": 4
-                                },
-                                "endPos": {
-                                  "offset": 102,
-                                  "line": 7,
-                                  "column": 6
-                                },
-                                "start": 100,
-                                "end": 102,
-                                "leadingTrivia": [
-                                  " ",
-                                  " ",
-                                  " ",
-                                  " "
-                                ],
-                                "trailingTrivia": [
-                                  " "
-                                ],
-                                "leadingInvalid": [],
-                                "trailingInvalid": []
-                              }
-                            }
-                          }
-                        }
-                      },
-                      "args": [
-                        {
-                          "context": {
-                            "id": "<primary-expression>@[L7:C7, L7:C10]",
-                            "snippet": "int"
-                          },
-                          "kind": "<primary-expression>",
-                          "startPos": {
-                            "offset": 103,
-                            "line": 7,
-                            "column": 7
-                          },
-                          "endPos": {
-                            "offset": 106,
-                            "line": 7,
-                            "column": 10
-                          },
-                          "start": 103,
-                          "end": 106,
-                          "fullStart": 103,
-                          "fullEnd": 108,
-                          "children": {
-                            "id": 24,
-                            "expression": {
-                              "context": {
-                                "id": "<variable>:int@[L7:C7, L7:C10]",
-                                "snippet": "int"
-                              },
-                              "kind": "<variable>",
-                              "startPos": {
-                                "offset": 103,
-                                "line": 7,
-                                "column": 7
-                              },
-                              "endPos": {
-                                "offset": 106,
-                                "line": 7,
-                                "column": 10
-                              },
-                              "start": 103,
-                              "end": 106,
-                              "fullStart": 103,
-                              "fullEnd": 108,
-                              "children": {
-                                "id": 23,
-                                "variable": {
-                                  "context": {
-                                    "id": "<identifier>:int@[L7:C7, L7:C10]",
-                                    "snippet": "int"
-                                  },
-                                  "isInvalid": false,
-                                  "kind": "<identifier>",
-                                  "value": "int",
-                                  "startPos": {
-                                    "offset": 103,
-                                    "line": 7,
-                                    "column": 7
-                                  },
-                                  "endPos": {
-                                    "offset": 106,
-                                    "line": 7,
-                                    "column": 10
-                                  },
-                                  "start": 103,
-                                  "end": 106,
-                                  "leadingTrivia": [],
-                                  "trailingTrivia": [
-                                    "\n"
-                                  ],
-                                  "leadingInvalid": [],
-                                  "trailingInvalid": []
-                                }
-                              }
-                            }
-                          }
-                        }
-                      ]
-                    }
-                  },
-                  {
-                    "context": {
-                      "id": "<function-application>@[L8:C4, L8:C10]",
-                      "snippet": "id int"
-                    },
-                    "kind": "<function-application>",
-                    "startPos": {
-                      "offset": 112,
-                      "line": 8,
-                      "column": 4
-                    },
-                    "endPos": {
-                      "offset": 118,
-                      "line": 8,
-                      "column": 10
-                    },
-                    "start": 112,
-                    "end": 118,
-                    "fullStart": 108,
-                    "fullEnd": 120,
-                    "symbol": {
-                      "context": {
-                        "id": "<function-application>@[L8:C4, L8:C10]",
-                        "snippet": "id int"
-                      },
-                      "declaration": {
-                        "id": "<function-application>@[L8:C4, L8:C10]",
-                        "snippet": "id int"
-                      },
-                      "references": []
-                    },
-                    "children": {
-                      "id": 30,
-                      "callee": {
-                        "context": {
-                          "id": "<primary-expression>@[L8:C4, L8:C6]",
-                          "snippet": "id"
-                        },
-                        "kind": "<primary-expression>",
-                        "startPos": {
-                          "offset": 112,
-                          "line": 8,
-                          "column": 4
-                        },
-                        "endPos": {
-                          "offset": 114,
-                          "line": 8,
-                          "column": 6
-                        },
-                        "start": 112,
-                        "end": 114,
-                        "fullStart": 108,
-                        "fullEnd": 115,
-                        "children": {
-                          "id": 27,
-                          "expression": {
-                            "context": {
-                              "id": "<variable>:id@[L8:C4, L8:C6]",
-                              "snippet": "id"
-                            },
-                            "kind": "<variable>",
-                            "startPos": {
-                              "offset": 112,
-                              "line": 8,
-                              "column": 4
-                            },
-                            "endPos": {
-                              "offset": 114,
-                              "line": 8,
-                              "column": 6
-                            },
-                            "start": 112,
-                            "end": 114,
-                            "fullStart": 108,
-                            "fullEnd": 115,
-                            "children": {
-                              "id": 26,
-                              "variable": {
-                                "context": {
-                                  "id": "<identifier>:id@[L8:C4, L8:C6]",
-                                  "snippet": "id"
-                                },
-                                "isInvalid": false,
-                                "kind": "<identifier>",
-                                "value": "id",
-                                "startPos": {
-                                  "offset": 112,
-                                  "line": 8,
-                                  "column": 4
-                                },
-                                "endPos": {
-                                  "offset": 114,
-                                  "line": 8,
-                                  "column": 6
-                                },
-                                "start": 112,
-                                "end": 114,
-                                "leadingTrivia": [
-                                  " ",
-                                  " ",
-                                  " ",
-                                  " "
-                                ],
-                                "trailingTrivia": [
-                                  " "
-                                ],
-                                "leadingInvalid": [],
-                                "trailingInvalid": []
-                              }
-                            }
-                          }
-                        }
-                      },
-                      "args": [
-                        {
-                          "context": {
-                            "id": "<primary-expression>@[L8:C7, L8:C10]",
-                            "snippet": "int"
-                          },
-                          "kind": "<primary-expression>",
-                          "startPos": {
-                            "offset": 115,
-                            "line": 8,
-                            "column": 7
-                          },
-                          "endPos": {
-                            "offset": 118,
-                            "line": 8,
-                            "column": 10
-                          },
-                          "start": 115,
-                          "end": 118,
-                          "fullStart": 115,
-                          "fullEnd": 120,
-                          "children": {
-                            "id": 29,
-                            "expression": {
-                              "context": {
-                                "id": "<variable>:int@[L8:C7, L8:C10]",
-                                "snippet": "int"
-                              },
-                              "kind": "<variable>",
-                              "startPos": {
-                                "offset": 115,
-                                "line": 8,
-                                "column": 7
-                              },
-                              "endPos": {
-                                "offset": 118,
-                                "line": 8,
-                                "column": 10
-                              },
-                              "start": 115,
-                              "end": 118,
-                              "fullStart": 115,
-                              "fullEnd": 120,
-                              "children": {
-                                "id": 28,
-                                "variable": {
-                                  "context": {
-                                    "id": "<identifier>:int@[L8:C7, L8:C10]",
-                                    "snippet": "int"
-                                  },
-                                  "isInvalid": false,
-                                  "kind": "<identifier>",
-                                  "value": "int",
-                                  "startPos": {
-                                    "offset": 115,
-                                    "line": 8,
-                                    "column": 7
-                                  },
-                                  "endPos": {
-                                    "offset": 118,
-                                    "line": 8,
-                                    "column": 10
-                                  },
-                                  "start": 115,
-                                  "end": 118,
-                                  "leadingTrivia": [],
-                                  "trailingTrivia": [
-                                    "\n"
-                                  ],
-                                  "leadingInvalid": [],
-                                  "trailingInvalid": []
-                                }
-                              }
-                            }
-                          }
-                        }
-                      ]
-                    }
-                  },
-                  {
-                    "context": {
-                      "id": "<function-application>@[L9:C4, L9:C10]",
-                      "snippet": "id int"
-                    },
-                    "kind": "<function-application>",
-                    "startPos": {
-                      "offset": 124,
-                      "line": 9,
-                      "column": 4
-                    },
-                    "endPos": {
-                      "offset": 130,
-                      "line": 9,
-                      "column": 10
-                    },
-                    "start": 124,
-                    "end": 130,
-                    "fullStart": 120,
-                    "fullEnd": 132,
-                    "symbol": {
-                      "context": {
-                        "id": "<function-application>@[L9:C4, L9:C10]",
-                        "snippet": "id int"
-                      },
-                      "declaration": {
-                        "id": "<function-application>@[L9:C4, L9:C10]",
-                        "snippet": "id int"
-                      },
-                      "references": []
-                    },
-                    "children": {
-                      "id": 35,
-                      "callee": {
-                        "context": {
-                          "id": "<primary-expression>@[L9:C4, L9:C6]",
-                          "snippet": "id"
-                        },
-                        "kind": "<primary-expression>",
-                        "startPos": {
-                          "offset": 124,
-                          "line": 9,
-                          "column": 4
-                        },
-                        "endPos": {
-                          "offset": 126,
-                          "line": 9,
-                          "column": 6
-                        },
-                        "start": 124,
-                        "end": 126,
-                        "fullStart": 120,
-                        "fullEnd": 127,
-                        "children": {
-                          "id": 32,
-                          "expression": {
-                            "context": {
-                              "id": "<variable>:id@[L9:C4, L9:C6]",
-                              "snippet": "id"
-                            },
-                            "kind": "<variable>",
-                            "startPos": {
-                              "offset": 124,
-                              "line": 9,
-                              "column": 4
-                            },
-                            "endPos": {
-                              "offset": 126,
-                              "line": 9,
-                              "column": 6
-                            },
-                            "start": 124,
-                            "end": 126,
-                            "fullStart": 120,
-                            "fullEnd": 127,
-                            "children": {
-                              "id": 31,
-                              "variable": {
-                                "context": {
-                                  "id": "<identifier>:id@[L9:C4, L9:C6]",
-                                  "snippet": "id"
-                                },
-                                "isInvalid": false,
-                                "kind": "<identifier>",
-                                "value": "id",
-                                "startPos": {
-                                  "offset": 124,
-                                  "line": 9,
-                                  "column": 4
-                                },
-                                "endPos": {
-                                  "offset": 126,
-                                  "line": 9,
-                                  "column": 6
-                                },
-                                "start": 124,
-                                "end": 126,
-                                "leadingTrivia": [
-                                  " ",
-                                  " ",
-                                  " ",
-                                  " "
-                                ],
-                                "trailingTrivia": [
-                                  " "
-                                ],
-                                "leadingInvalid": [],
-                                "trailingInvalid": []
-                              }
-                            }
-                          }
-                        }
-                      },
-                      "args": [
-                        {
-                          "context": {
-                            "id": "<primary-expression>@[L9:C7, L9:C10]",
-                            "snippet": "int"
-                          },
-                          "kind": "<primary-expression>",
-                          "startPos": {
-                            "offset": 127,
-                            "line": 9,
-                            "column": 7
-                          },
-                          "endPos": {
-                            "offset": 130,
-                            "line": 9,
-                            "column": 10
-                          },
-                          "start": 127,
-                          "end": 130,
-                          "fullStart": 127,
-                          "fullEnd": 132,
-                          "children": {
-                            "id": 34,
-                            "expression": {
-                              "context": {
-                                "id": "<variable>:int@[L9:C7, L9:C10]",
-                                "snippet": "int"
-                              },
-                              "kind": "<variable>",
-                              "startPos": {
-                                "offset": 127,
-                                "line": 9,
-                                "column": 7
-                              },
-                              "endPos": {
-                                "offset": 130,
-                                "line": 9,
-                                "column": 10
-                              },
-                              "start": 127,
-                              "end": 130,
-                              "fullStart": 127,
-                              "fullEnd": 132,
-                              "children": {
-                                "id": 33,
-                                "variable": {
-                                  "context": {
-                                    "id": "<identifier>:int@[L9:C7, L9:C10]",
-                                    "snippet": "int"
-                                  },
-                                  "isInvalid": false,
-                                  "kind": "<identifier>",
-                                  "value": "int",
-                                  "startPos": {
-                                    "offset": 127,
-                                    "line": 9,
-                                    "column": 7
-                                  },
-                                  "endPos": {
-                                    "offset": 130,
-                                    "line": 9,
-                                    "column": 10
-                                  },
-                                  "start": 127,
-                                  "end": 130,
-                                  "leadingTrivia": [],
-                                  "trailingTrivia": [
-                                    "\n"
-                                  ],
-                                  "leadingInvalid": [],
-                                  "trailingInvalid": []
-                                }
-                              }
-                            }
-                          }
-                        }
-                      ]
-                    }
-                  }
-                ],
-                "blockCloseBrace": {
-                  "context": {
-                    "id": "<rbrace>:}@[L10:C0, L10:C1]",
-                    "snippet": "}"
-                  },
-                  "isInvalid": false,
-                  "kind": "<rbrace>",
-                  "value": "}",
-                  "startPos": {
-                    "offset": 132,
-                    "line": 10,
-                    "column": 0
-                  },
-                  "endPos": {
-                    "offset": 133,
-                    "line": 10,
-                    "column": 1
-                  },
-                  "start": 132,
-                  "end": 133,
-                  "leadingTrivia": [],
-                  "trailingTrivia": [
-                    "\n"
-                  ],
-                  "leadingInvalid": [],
-                  "trailingInvalid": []
-                }
-              }
-            },
-            "parent": {
-              "id": "<program>@[L0:C0, L11:C0]",
-              "snippet": "Table User...d int\r\n}\r\n"
-            }
           }
         }
       ],
@@ -2030,28 +1811,74 @@
           "id": "<eof>:@[L11:C0, L11:C0]",
           "snippet": ""
         },
-        "isInvalid": false,
-        "kind": "<eof>",
-        "value": "",
-        "startPos": {
-          "offset": 135,
-          "line": 11,
-          "column": 0
-        },
+        "end": 135,
         "endPos": {
           "offset": 135,
           "line": 11,
           "column": 0
         },
+        "isInvalid": false,
+        "kind": "<eof>",
+        "leadingInvalid": "",
+        "leadingTrivia": "",
         "start": 135,
-        "end": 135,
-        "leadingTrivia": [],
-        "trailingTrivia": [],
-        "leadingInvalid": [],
-        "trailingInvalid": []
+        "startPos": {
+          "offset": 135,
+          "line": 11,
+          "column": 0
+        },
+        "trailingInvalid": "",
+        "trailingTrivia": "",
+        "value": ""
       }
+    },
+    "context": {
+      "id": "<program>@[L0:C0, L11:C0]",
+      "snippet": "Table User...d int\r\n}\r\n"
+    },
+    "end": 135,
+    "endPos": {
+      "offset": 135,
+      "line": 11,
+      "column": 0
+    },
+    "fullEnd": 135,
+    "fullStart": 0,
+    "kind": "<program>",
+    "start": 0,
+    "startPos": {
+      "offset": 0,
+      "line": 0,
+      "column": 0
+    },
+    "symbol": {
+      "context": {
+        "id": "<program>@[L0:C0, L11:C0]",
+        "snippet": "Table User...d int\r\n}\r\n"
+      },
+      "declaration": {
+        "id": "<program>@[L0:C0, L11:C0]",
+        "snippet": "Table User...d int\r\n}\r\n"
+      },
+      "members": [
+        {
+          "context": {}
+        },
+        {
+          "context": {
+            "id": "<element-declaration>:Users@[L0:C0, L4:C1]",
+            "snippet": "Table User...integer\r\n}"
+          }
+        },
+        {
+          "context": {
+            "id": "<element-declaration>:userPartial@[L6:C0, L10:C1]",
+            "snippet": "TableParti... id int\r\n}"
+          }
+        }
+      ],
+      "references": []
     }
   },
-  "errors": [],
   "warnings": []
 }

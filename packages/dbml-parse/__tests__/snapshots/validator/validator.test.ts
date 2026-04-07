@@ -16,9 +16,7 @@ function serializeValidatorResult (compiler: Compiler, report: Report<ProgramNod
     warnings,
   }), null, 2);
 }
-// The legacy snapshot tests are very prone to breakage
-// Do not add more tests here
-describe('[legacy - snapshot] validator', () => {
+describe('[snapshot] validator', () => {
   const testNames = scanTestNames(path.resolve(__dirname, './input/'));
 
   testNames.forEach((testName) => {
@@ -26,7 +24,6 @@ describe('[legacy - snapshot] validator', () => {
 
     const compiler = new Compiler();
     compiler.setSource(program);
-
     const astReport = compiler.parseFile().map(({ ast }) => ast);
     const validateReport = compiler.validate(astReport.getValue());
     const output = serializeValidatorResult(

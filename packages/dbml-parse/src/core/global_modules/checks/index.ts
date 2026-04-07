@@ -45,6 +45,7 @@ export const checksModule: GlobalModule = {
 
   interpret (compiler: Compiler, node: SyntaxNode): Report<SchemaElement | SchemaElement[] | undefined> | Report<PassThrough> {
     if (!isElementNode(node, ElementKind.Checks)) return Report.create(PASS_THROUGH);
+    if (compiler.bind(node).getErrors().length + compiler.validate(node).getErrors().length > 0) return Report.create(undefined);
     return new ChecksInterpreter(compiler, node as ElementDeclarationNode & { type: SyntaxToken }).interpret();
   },
 };

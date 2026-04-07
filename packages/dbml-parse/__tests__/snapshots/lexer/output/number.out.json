@@ -1,306 +1,129 @@
 {
+  "errors": [
+    {
+      "code": "UNKNOWN_TOKEN",
+      "diagnostic": "Invalid number",
+      "end": 62,
+      "level": "error",
+      "start": 58,
+      "token": {
+        "context": {
+          "id": "<number>:8.6a@[L3:C0, L3:C4]",
+          "snippet": "8.6a"
+        },
+        "isInvalid": true
+      }
+    },
+    {
+      "code": "UNKNOWN_TOKEN",
+      "diagnostic": "Invalid number",
+      "end": 69,
+      "level": "error",
+      "start": 63,
+      "token": {
+        "context": {
+          "id": "<number>:24.10b@[L3:C5, L3:C11]",
+          "snippet": "24.10b"
+        },
+        "isInvalid": true
+      }
+    },
+    {
+      "code": "UNKNOWN_TOKEN",
+      "diagnostic": "Invalid number",
+      "end": 79,
+      "level": "error",
+      "start": 70,
+      "token": {
+        "context": {
+          "id": "<number>:1.2.3.4.5@[L3:C12, L3:C21]",
+          "snippet": "1.2.3.4.5"
+        },
+        "isInvalid": true
+      }
+    },
+    {
+      "code": "UNEXPECTED_TOKEN",
+      "diagnostic": "Expect an identifier",
+      "end": 1,
+      "level": "error",
+      "start": 0,
+      "token": {
+        "context": {
+          "id": "<number>:1@[L0:C0, L0:C1]",
+          "snippet": "1"
+        },
+        "isInvalid": true
+      }
+    },
+    {
+      "code": "UNEXPECTED_TOKEN",
+      "diagnostic": "Expect an identifier",
+      "end": 3,
+      "level": "error",
+      "start": 2,
+      "token": {
+        "context": {
+          "id": "<number>:2@[L0:C2, L0:C3]",
+          "snippet": "2"
+        },
+        "isInvalid": true
+      }
+    },
+    {
+      "code": "UNEXPECTED_TOKEN",
+      "diagnostic": "Expect an identifier",
+      "end": 25,
+      "level": "error",
+      "start": 21,
+      "token": {
+        "context": {
+          "id": "<number>:2.33@[L1:C0, L1:C4]",
+          "snippet": "2.33"
+        },
+        "isInvalid": true
+      }
+    },
+    {
+      "code": "UNEXPECTED_TOKEN",
+      "diagnostic": "Expect an identifier",
+      "end": 29,
+      "level": "error",
+      "start": 26,
+      "token": {
+        "context": {
+          "id": "<number>:2.8@[L1:C5, L1:C8]",
+          "snippet": "2.8"
+        },
+        "isInvalid": true
+      }
+    }
+  ],
   "tokens": [
     {
       "context": {
         "id": "<eof>:@[L3:C39, L3:C39]",
         "snippet": ""
       },
-      "isInvalid": false,
-      "kind": "<eof>",
-      "value": "",
-      "startPos": {
-        "offset": 97,
-        "line": 3,
-        "column": 39
-      },
+      "end": 97,
       "endPos": {
         "offset": 97,
         "line": 3,
         "column": 39
       },
+      "isInvalid": false,
+      "kind": "<eof>",
+      "leadingInvalid": "122.332.8",
+      "leadingTrivia": "",
       "start": 97,
-      "end": 97,
-      "leadingTrivia": [],
-      "trailingTrivia": [],
-      "leadingInvalid": [
-        "1",
-        "2",
-        "2.33",
-        "2.8"
-      ],
-      "trailingInvalid": []
-    }
-  ],
-  "errors": [
-    {
-      "level": "error",
-      "code": {
-        "value": 1004,
-        "name": "UNKNOWN_TOKEN"
+      "startPos": {
+        "offset": 97,
+        "line": 3,
+        "column": 39
       },
-      "diagnostic": "Invalid number",
-      "token": {
-        "context": {
-          "id": "<number>:8.6a@[L3:C0, L3:C4]",
-          "snippet": "8.6a"
-        },
-        "isInvalid": true,
-        "kind": "<number>",
-        "value": "8.6a",
-        "startPos": {
-          "offset": 58,
-          "line": 3,
-          "column": 0
-        },
-        "endPos": {
-          "offset": 62,
-          "line": 3,
-          "column": 4
-        },
-        "start": 58,
-        "end": 62,
-        "leadingTrivia": [
-          "\n"
-        ],
-        "trailingTrivia": [
-          " "
-        ],
-        "leadingInvalid": [],
-        "trailingInvalid": []
-      },
-      "start": 58,
-      "end": 62
-    },
-    {
-      "level": "error",
-      "code": {
-        "value": 1004,
-        "name": "UNKNOWN_TOKEN"
-      },
-      "diagnostic": "Invalid number",
-      "token": {
-        "context": {
-          "id": "<number>:24.10b@[L3:C5, L3:C11]",
-          "snippet": "24.10b"
-        },
-        "isInvalid": true,
-        "kind": "<number>",
-        "value": "24.10b",
-        "startPos": {
-          "offset": 63,
-          "line": 3,
-          "column": 5
-        },
-        "endPos": {
-          "offset": 69,
-          "line": 3,
-          "column": 11
-        },
-        "start": 63,
-        "end": 69,
-        "leadingTrivia": [],
-        "trailingTrivia": [
-          " "
-        ],
-        "leadingInvalid": [],
-        "trailingInvalid": []
-      },
-      "start": 63,
-      "end": 69
-    },
-    {
-      "level": "error",
-      "code": {
-        "value": 1004,
-        "name": "UNKNOWN_TOKEN"
-      },
-      "diagnostic": "Invalid number",
-      "token": {
-        "context": {
-          "id": "<number>:1.2.3.4.5@[L3:C12, L3:C21]",
-          "snippet": "1.2.3.4.5"
-        },
-        "isInvalid": true,
-        "kind": "<number>",
-        "value": "1.2.3.4.5",
-        "startPos": {
-          "offset": 70,
-          "line": 3,
-          "column": 12
-        },
-        "endPos": {
-          "offset": 79,
-          "line": 3,
-          "column": 21
-        },
-        "start": 70,
-        "end": 79,
-        "leadingTrivia": [],
-        "trailingTrivia": [
-          " ",
-          " invalid number"
-        ],
-        "leadingInvalid": [],
-        "trailingInvalid": []
-      },
-      "start": 70,
-      "end": 79
-    },
-    {
-      "level": "error",
-      "code": {
-        "value": 1005,
-        "name": "UNEXPECTED_TOKEN"
-      },
-      "diagnostic": "Expect an identifier",
-      "token": {
-        "context": {
-          "id": "<number>:1@[L0:C0, L0:C1]",
-          "snippet": "1"
-        },
-        "isInvalid": true,
-        "kind": "<number>",
-        "value": "1",
-        "startPos": {
-          "offset": 0,
-          "line": 0,
-          "column": 0
-        },
-        "endPos": {
-          "offset": 1,
-          "line": 0,
-          "column": 1
-        },
-        "start": 0,
-        "end": 1,
-        "leadingTrivia": [],
-        "trailingTrivia": [
-          " "
-        ],
-        "leadingInvalid": [],
-        "trailingInvalid": []
-      },
-      "start": 0,
-      "end": 1
-    },
-    {
-      "level": "error",
-      "code": {
-        "value": 1005,
-        "name": "UNEXPECTED_TOKEN"
-      },
-      "diagnostic": "Expect an identifier",
-      "token": {
-        "context": {
-          "id": "<number>:2@[L0:C2, L0:C3]",
-          "snippet": "2"
-        },
-        "isInvalid": true,
-        "kind": "<number>",
-        "value": "2",
-        "startPos": {
-          "offset": 2,
-          "line": 0,
-          "column": 2
-        },
-        "endPos": {
-          "offset": 3,
-          "line": 0,
-          "column": 3
-        },
-        "start": 2,
-        "end": 3,
-        "leadingTrivia": [],
-        "trailingTrivia": [
-          " ",
-          " whole number\r",
-          "\n"
-        ],
-        "leadingInvalid": [],
-        "trailingInvalid": []
-      },
-      "start": 2,
-      "end": 3
-    },
-    {
-      "level": "error",
-      "code": {
-        "value": 1005,
-        "name": "UNEXPECTED_TOKEN"
-      },
-      "diagnostic": "Expect an identifier",
-      "token": {
-        "context": {
-          "id": "<number>:2.33@[L1:C0, L1:C4]",
-          "snippet": "2.33"
-        },
-        "isInvalid": true,
-        "kind": "<number>",
-        "value": "2.33",
-        "startPos": {
-          "offset": 21,
-          "line": 1,
-          "column": 0
-        },
-        "endPos": {
-          "offset": 25,
-          "line": 1,
-          "column": 4
-        },
-        "start": 21,
-        "end": 25,
-        "leadingTrivia": [],
-        "trailingTrivia": [
-          " "
-        ],
-        "leadingInvalid": [],
-        "trailingInvalid": []
-      },
-      "start": 21,
-      "end": 25
-    },
-    {
-      "level": "error",
-      "code": {
-        "value": 1005,
-        "name": "UNEXPECTED_TOKEN"
-      },
-      "diagnostic": "Expect an identifier",
-      "token": {
-        "context": {
-          "id": "<number>:2.8@[L1:C5, L1:C8]",
-          "snippet": "2.8"
-        },
-        "isInvalid": true,
-        "kind": "<number>",
-        "value": "2.8",
-        "startPos": {
-          "offset": 26,
-          "line": 1,
-          "column": 5
-        },
-        "endPos": {
-          "offset": 29,
-          "line": 1,
-          "column": 8
-        },
-        "start": 26,
-        "end": 29,
-        "leadingTrivia": [],
-        "trailingTrivia": [
-          " ",
-          " floating-point number\r",
-          "\n"
-        ],
-        "leadingInvalid": [],
-        "trailingInvalid": [
-          "8.6a",
-          "24.10b",
-          "1.2.3.4.5"
-        ]
-      },
-      "start": 26,
-      "end": 29
+      "trailingInvalid": "",
+      "trailingTrivia": "",
+      "value": ""
     }
   ],
   "warnings": []

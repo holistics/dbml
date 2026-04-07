@@ -1,107 +1,30 @@
 {
   "database": {
-    "schemas": [],
-    "tables": [
-      {
-        "name": "table1",
-        "schemaName": "null",
-        "alias": "null",
-        "fields": [
-          {
-            "name": "id",
-            "type": {
-              "schemaName": "null",
-              "type_name": "int",
-              "args": "null"
-            },
-            "token": {
-              "start": {
-                "offset": 17,
-                "line": 2,
-                "column": 3
-              },
-              "end": {
-                "offset": 28,
-                "line": 2,
-                "column": 14
-              }
-            },
-            "inline_refs": [],
-            "pk": true,
-            "increment": false,
-            "unique": false,
-            "checks": []
-          }
-        ],
-        "token": {
-          "start": {
-            "offset": 0,
-            "line": 1,
-            "column": 1
-          },
-          "end": {
-            "offset": 30,
-            "line": 3,
-            "column": 2
-          }
-        },
-        "indexes": [],
-        "partials": [],
-        "checks": []
-      },
-      {
-        "name": "table2",
-        "schemaName": "null",
-        "alias": "null",
-        "fields": [
-          {
-            "name": "id",
-            "type": {
-              "schemaName": "null",
-              "type_name": "int",
-              "args": "null"
-            },
-            "token": {
-              "start": {
-                "offset": 49,
-                "line": 6,
-                "column": 3
-              },
-              "end": {
-                "offset": 60,
-                "line": 6,
-                "column": 14
-              }
-            },
-            "inline_refs": [],
-            "pk": true,
-            "increment": false,
-            "unique": false,
-            "checks": []
-          }
-        ],
-        "token": {
-          "start": {
-            "offset": 32,
-            "line": 5,
-            "column": 1
-          },
-          "end": {
-            "offset": 62,
-            "line": 7,
-            "column": 2
-          }
-        },
-        "indexes": [],
-        "partials": [],
-        "checks": []
-      }
-    ],
-    "notes": [],
-    "refs": [],
+    "aliases": [],
     "enums": [],
+    "notes": [],
+    "records": [],
+    "refs": [],
+    "schemas": [],
     "tableGroups": [
       {
+        "name": "group1",
+        "note": {
+          "token": {
+            "end": {
+              "column": 4,
+              "line": 23,
+              "offset": 323
+            },
+            "start": {
+              "column": 3,
+              "line": 14,
+              "offset": 145
+            }
+          },
+          "value": "# Note\n\n## Objective\n  * Support define element's note inside element body\n  * Make writing long note easier with the new syntax\n  \n"
+        },
+        "schemaName": null,
         "tables": [
           {
             "name": "table1",
@@ -113,113 +36,190 @@
           }
         ],
         "token": {
-          "start": {
-            "offset": 64,
-            "line": 9,
-            "column": 1
-          },
           "end": {
-            "offset": 325,
+            "column": 2,
             "line": 24,
-            "column": 2
-          }
-        },
-        "name": "group1",
-        "schemaName": "null",
-        "note": {
-          "value": "# Note\n\n## Objective\n  * Support define element's note inside element body\n  * Make writing long note easier with the new syntax\n  \n",
-          "token": {
-            "start": {
-              "offset": 145,
-              "line": 14,
-              "column": 3
-            },
-            "end": {
-              "offset": 323,
-              "line": 23,
-              "column": 4
-            }
+            "offset": 325
+          },
+          "start": {
+            "column": 1,
+            "line": 9,
+            "offset": 64
           }
         }
       },
       {
-        "tables": [],
-        "token": {
-          "start": {
-            "offset": 327,
-            "line": 26,
-            "column": 1
-          },
-          "end": {
-            "offset": 425,
-            "line": 31,
-            "column": 2
-          }
-        },
         "name": "group2",
-        "schemaName": "null",
         "note": {
-          "value": "# Note\n* Support define element's note inside element body\n  ",
           "token": {
-            "start": {
-              "offset": 349,
-              "line": 27,
-              "column": 3
-            },
             "end": {
-              "offset": 423,
+              "column": 6,
               "line": 30,
-              "column": 6
+              "offset": 423
+            },
+            "start": {
+              "column": 3,
+              "line": 27,
+              "offset": 349
             }
+          },
+          "value": "# Note\n* Support define element's note inside element body\n  "
+        },
+        "schemaName": null,
+        "tables": [],
+        "token": {
+          "end": {
+            "column": 2,
+            "line": 31,
+            "offset": 425
+          },
+          "start": {
+            "column": 1,
+            "line": 26,
+            "offset": 327
           }
         }
       },
       {
+        "name": "group3",
+        "note": {
+          "token": {
+            "end": {
+              "column": 22,
+              "line": 34,
+              "offset": 468
+            },
+            "start": {
+              "column": 3,
+              "line": 34,
+              "offset": 449
+            }
+          },
+          "value": "simple note"
+        },
+        "schemaName": null,
         "tables": [],
         "token": {
-          "start": {
-            "offset": 427,
-            "line": 33,
-            "column": 1
-          },
           "end": {
-            "offset": 470,
+            "column": 2,
             "line": 35,
-            "column": 2
-          }
-        },
-        "name": "group3",
-        "schemaName": "null",
-        "note": {
-          "value": "simple note",
-          "token": {
-            "start": {
-              "offset": 449,
-              "line": 34,
-              "column": 3
-            },
-            "end": {
-              "offset": 468,
-              "line": 34,
-              "column": 22
-            }
+            "offset": 470
+          },
+          "start": {
+            "column": 1,
+            "line": 33,
+            "offset": 427
           }
         }
       }
     ],
-    "aliases": [],
     "tablePartials": [],
-    "records": [],
-    "token": {
-      "start": {
-        "offset": 0,
-        "line": 1,
-        "column": 1
+    "tables": [
+      {
+        "alias": null,
+        "checks": [],
+        "fields": [
+          {
+            "checks": [],
+            "increment": false,
+            "inline_refs": [],
+            "name": "id",
+            "pk": true,
+            "token": {
+              "end": {
+                "column": 14,
+                "line": 2,
+                "offset": 28
+              },
+              "start": {
+                "column": 3,
+                "line": 2,
+                "offset": 17
+              }
+            },
+            "type": {
+              "args": null,
+              "schemaName": null,
+              "type_name": "int"
+            },
+            "unique": false
+          }
+        ],
+        "indexes": [],
+        "name": "table1",
+        "partials": [],
+        "schemaName": null,
+        "token": {
+          "end": {
+            "column": 2,
+            "line": 3,
+            "offset": 30
+          },
+          "start": {
+            "column": 1,
+            "line": 1,
+            "offset": 0
+          }
+        }
       },
+      {
+        "alias": null,
+        "checks": [],
+        "fields": [
+          {
+            "checks": [],
+            "increment": false,
+            "inline_refs": [],
+            "name": "id",
+            "pk": true,
+            "token": {
+              "end": {
+                "column": 14,
+                "line": 6,
+                "offset": 60
+              },
+              "start": {
+                "column": 3,
+                "line": 6,
+                "offset": 49
+              }
+            },
+            "type": {
+              "args": null,
+              "schemaName": null,
+              "type_name": "int"
+            },
+            "unique": false
+          }
+        ],
+        "indexes": [],
+        "name": "table2",
+        "partials": [],
+        "schemaName": null,
+        "token": {
+          "end": {
+            "column": 2,
+            "line": 7,
+            "offset": 62
+          },
+          "start": {
+            "column": 1,
+            "line": 5,
+            "offset": 32
+          }
+        }
+      }
+    ],
+    "token": {
       "end": {
-        "offset": 471,
+        "column": 1,
         "line": 36,
-        "column": 1
+        "offset": 471
+      },
+      "start": {
+        "column": 1,
+        "line": 1,
+        "offset": 0
       }
     }
   },

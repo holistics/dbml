@@ -1,974 +1,381 @@
 {
+  "errors": [
+    {
+      "code": "UNEXPECTED_TOKEN",
+      "diagnostic": "Expect an identifier",
+      "end": 1,
+      "level": "error",
+      "start": 0,
+      "token": {
+        "context": {
+          "id": "<op>:+@[L0:C0, L0:C1]",
+          "snippet": "+"
+        },
+        "isInvalid": true
+      }
+    },
+    {
+      "code": "UNEXPECTED_TOKEN",
+      "diagnostic": "Expect an identifier",
+      "end": 3,
+      "level": "error",
+      "start": 2,
+      "token": {
+        "context": {
+          "id": "<op>:-@[L0:C2, L0:C3]",
+          "snippet": "-"
+        },
+        "isInvalid": true
+      }
+    },
+    {
+      "code": "UNEXPECTED_TOKEN",
+      "diagnostic": "Expect an identifier",
+      "end": 5,
+      "level": "error",
+      "start": 4,
+      "token": {
+        "context": {
+          "id": "<op>:*@[L0:C4, L0:C5]",
+          "snippet": "*"
+        },
+        "isInvalid": true
+      }
+    },
+    {
+      "code": "UNEXPECTED_TOKEN",
+      "diagnostic": "Expect an identifier",
+      "end": 7,
+      "level": "error",
+      "start": 6,
+      "token": {
+        "context": {
+          "id": "<op>:/@[L0:C6, L0:C7]",
+          "snippet": "/"
+        },
+        "isInvalid": true
+      }
+    },
+    {
+      "code": "UNEXPECTED_TOKEN",
+      "diagnostic": "Expect an identifier",
+      "end": 10,
+      "level": "error",
+      "start": 9,
+      "token": {
+        "context": {
+          "id": "<op>:!@[L1:C0, L1:C1]",
+          "snippet": "!"
+        },
+        "isInvalid": true
+      }
+    },
+    {
+      "code": "UNEXPECTED_TOKEN",
+      "diagnostic": "Expect an identifier",
+      "end": 13,
+      "level": "error",
+      "start": 12,
+      "token": {
+        "context": {
+          "id": "<op>:=@[L2:C0, L2:C1]",
+          "snippet": "="
+        },
+        "isInvalid": true
+      }
+    },
+    {
+      "code": "UNEXPECTED_TOKEN",
+      "diagnostic": "Expect an identifier",
+      "end": 17,
+      "level": "error",
+      "start": 15,
+      "token": {
+        "context": {
+          "id": "<op>:==@[L3:C0, L3:C2]",
+          "snippet": "=="
+        },
+        "isInvalid": true
+      }
+    },
+    {
+      "code": "UNEXPECTED_TOKEN",
+      "diagnostic": "Expect an identifier",
+      "end": 20,
+      "level": "error",
+      "start": 18,
+      "token": {
+        "context": {
+          "id": "<op>:!=@[L3:C3, L3:C5]",
+          "snippet": "!="
+        },
+        "isInvalid": true
+      }
+    },
+    {
+      "code": "UNEXPECTED_TOKEN",
+      "diagnostic": "Expect an identifier",
+      "end": 22,
+      "level": "error",
+      "start": 21,
+      "token": {
+        "context": {
+          "id": "<op>:>@[L3:C6, L3:C7]",
+          "snippet": ">"
+        },
+        "isInvalid": true
+      }
+    },
+    {
+      "code": "UNEXPECTED_TOKEN",
+      "diagnostic": "Expect an identifier",
+      "end": 24,
+      "level": "error",
+      "start": 23,
+      "token": {
+        "context": {
+          "id": "<op>:<@[L3:C8, L3:C9]",
+          "snippet": "<"
+        },
+        "isInvalid": true
+      }
+    },
+    {
+      "code": "UNEXPECTED_TOKEN",
+      "diagnostic": "Expect an identifier",
+      "end": 27,
+      "level": "error",
+      "start": 25,
+      "token": {
+        "context": {
+          "id": "<op>:<=@[L3:C10, L3:C12]",
+          "snippet": "<="
+        },
+        "isInvalid": true
+      }
+    },
+    {
+      "code": "UNEXPECTED_TOKEN",
+      "diagnostic": "Expect an identifier",
+      "end": 30,
+      "level": "error",
+      "start": 28,
+      "token": {
+        "context": {
+          "id": "<op>:>=@[L3:C13, L3:C15]",
+          "snippet": ">="
+        },
+        "isInvalid": true
+      }
+    },
+    {
+      "code": "UNEXPECTED_TOKEN",
+      "diagnostic": "Expect an identifier",
+      "end": 33,
+      "level": "error",
+      "start": 32,
+      "token": {
+        "context": {
+          "id": "<colon>::@[L4:C0, L4:C1]",
+          "snippet": ":"
+        },
+        "isInvalid": true
+      }
+    },
+    {
+      "code": "UNEXPECTED_TOKEN",
+      "diagnostic": "Expect an identifier",
+      "end": 35,
+      "level": "error",
+      "start": 34,
+      "token": {
+        "context": {
+          "id": "<comma>:,@[L4:C2, L4:C3]",
+          "snippet": ","
+        },
+        "isInvalid": true
+      }
+    },
+    {
+      "code": "UNEXPECTED_TOKEN",
+      "diagnostic": "Expect an identifier",
+      "end": 38,
+      "level": "error",
+      "start": 37,
+      "token": {
+        "context": {
+          "id": "<lbracket>:[@[L5:C0, L5:C1]",
+          "snippet": "["
+        },
+        "isInvalid": true
+      }
+    },
+    {
+      "code": "UNEXPECTED_TOKEN",
+      "diagnostic": "Expect an identifier",
+      "end": 39,
+      "level": "error",
+      "start": 38,
+      "token": {
+        "context": {
+          "id": "<rbracket>:]@[L5:C1, L5:C2]",
+          "snippet": "]"
+        },
+        "isInvalid": true
+      }
+    },
+    {
+      "code": "UNEXPECTED_TOKEN",
+      "diagnostic": "Expect an identifier",
+      "end": 41,
+      "level": "error",
+      "start": 40,
+      "token": {
+        "context": {
+          "id": "<lparen>:(@[L5:C3, L5:C4]",
+          "snippet": "("
+        },
+        "isInvalid": true
+      }
+    },
+    {
+      "code": "UNEXPECTED_TOKEN",
+      "diagnostic": "Expect an identifier",
+      "end": 42,
+      "level": "error",
+      "start": 41,
+      "token": {
+        "context": {
+          "id": "<rparen>:)@[L5:C4, L5:C5]",
+          "snippet": ")"
+        },
+        "isInvalid": true
+      }
+    },
+    {
+      "code": "UNEXPECTED_TOKEN",
+      "diagnostic": "Expect an identifier",
+      "end": 44,
+      "level": "error",
+      "start": 43,
+      "token": {
+        "context": {
+          "id": "<lbrace>:{@[L5:C6, L5:C7]",
+          "snippet": "{"
+        },
+        "isInvalid": true
+      }
+    },
+    {
+      "code": "UNEXPECTED_TOKEN",
+      "diagnostic": "Expect an identifier",
+      "end": 45,
+      "level": "error",
+      "start": 44,
+      "token": {
+        "context": {
+          "id": "<rbrace>:}@[L5:C7, L5:C8]",
+          "snippet": "}"
+        },
+        "isInvalid": true
+      }
+    },
+    {
+      "code": "UNEXPECTED_TOKEN",
+      "diagnostic": "Expect an identifier",
+      "end": 48,
+      "level": "error",
+      "start": 47,
+      "token": {
+        "context": {
+          "id": "<op>:.@[L6:C0, L6:C1]",
+          "snippet": "."
+        },
+        "isInvalid": true
+      }
+    },
+    {
+      "code": "UNEXPECTED_TOKEN",
+      "diagnostic": "Expect an identifier",
+      "end": 51,
+      "level": "error",
+      "start": 50,
+      "token": {
+        "context": {
+          "id": "<op>:>@[L7:C0, L7:C1]",
+          "snippet": ">"
+        },
+        "isInvalid": true
+      }
+    },
+    {
+      "code": "UNEXPECTED_TOKEN",
+      "diagnostic": "Expect an identifier",
+      "end": 53,
+      "level": "error",
+      "start": 52,
+      "token": {
+        "context": {
+          "id": "<op>:<@[L7:C2, L7:C3]",
+          "snippet": "<"
+        },
+        "isInvalid": true
+      }
+    },
+    {
+      "code": "UNEXPECTED_TOKEN",
+      "diagnostic": "Expect an identifier",
+      "end": 56,
+      "level": "error",
+      "start": 54,
+      "token": {
+        "context": {
+          "id": "<op>:<>@[L7:C4, L7:C6]",
+          "snippet": "<>"
+        },
+        "isInvalid": true
+      }
+    },
+    {
+      "code": "UNEXPECTED_TOKEN",
+      "diagnostic": "Expect an identifier",
+      "end": 59,
+      "level": "error",
+      "start": 58,
+      "token": {
+        "context": {
+          "id": "<op>:~@[L8:C0, L8:C1]",
+          "snippet": "~"
+        },
+        "isInvalid": true
+      }
+    }
+  ],
   "tokens": [
     {
       "context": {
         "id": "<eof>:@[L8:C1, L8:C1]",
         "snippet": ""
       },
-      "isInvalid": false,
-      "kind": "<eof>",
-      "value": "",
-      "startPos": {
-        "offset": 59,
-        "line": 8,
-        "column": 1
-      },
+      "end": 59,
       "endPos": {
         "offset": 59,
         "line": 8,
         "column": 1
       },
+      "isInvalid": false,
+      "kind": "<eof>",
+      "leadingInvalid": "+-*/!===!=><<=>=:,[](){}.><<>~",
+      "leadingTrivia": "",
       "start": 59,
-      "end": 59,
-      "leadingTrivia": [],
-      "trailingTrivia": [],
-      "leadingInvalid": [
-        "+",
-        "-",
-        "*",
-        "/",
-        "!",
-        "=",
-        "==",
-        "!=",
-        ">",
-        "<",
-        "<=",
-        ">=",
-        ":",
-        ",",
-        "[",
-        "]",
-        "(",
-        ")",
-        "{",
-        "}",
-        ".",
-        ">",
-        "<",
-        "<>",
-        "~"
-      ],
-      "trailingInvalid": []
-    }
-  ],
-  "errors": [
-    {
-      "level": "error",
-      "code": {
-        "value": 1005,
-        "name": "UNEXPECTED_TOKEN"
+      "startPos": {
+        "offset": 59,
+        "line": 8,
+        "column": 1
       },
-      "diagnostic": "Expect an identifier",
-      "token": {
-        "context": {
-          "id": "<op>:+@[L0:C0, L0:C1]",
-          "snippet": "+"
-        },
-        "isInvalid": true,
-        "kind": "<op>",
-        "value": "+",
-        "startPos": {
-          "offset": 0,
-          "line": 0,
-          "column": 0
-        },
-        "endPos": {
-          "offset": 1,
-          "line": 0,
-          "column": 1
-        },
-        "start": 0,
-        "end": 1,
-        "leadingTrivia": [],
-        "trailingTrivia": [
-          " "
-        ],
-        "leadingInvalid": [],
-        "trailingInvalid": []
-      },
-      "start": 0,
-      "end": 1
-    },
-    {
-      "level": "error",
-      "code": {
-        "value": 1005,
-        "name": "UNEXPECTED_TOKEN"
-      },
-      "diagnostic": "Expect an identifier",
-      "token": {
-        "context": {
-          "id": "<op>:-@[L0:C2, L0:C3]",
-          "snippet": "-"
-        },
-        "isInvalid": true,
-        "kind": "<op>",
-        "value": "-",
-        "startPos": {
-          "offset": 2,
-          "line": 0,
-          "column": 2
-        },
-        "endPos": {
-          "offset": 3,
-          "line": 0,
-          "column": 3
-        },
-        "start": 2,
-        "end": 3,
-        "leadingTrivia": [],
-        "trailingTrivia": [
-          " "
-        ],
-        "leadingInvalid": [],
-        "trailingInvalid": []
-      },
-      "start": 2,
-      "end": 3
-    },
-    {
-      "level": "error",
-      "code": {
-        "value": 1005,
-        "name": "UNEXPECTED_TOKEN"
-      },
-      "diagnostic": "Expect an identifier",
-      "token": {
-        "context": {
-          "id": "<op>:*@[L0:C4, L0:C5]",
-          "snippet": "*"
-        },
-        "isInvalid": true,
-        "kind": "<op>",
-        "value": "*",
-        "startPos": {
-          "offset": 4,
-          "line": 0,
-          "column": 4
-        },
-        "endPos": {
-          "offset": 5,
-          "line": 0,
-          "column": 5
-        },
-        "start": 4,
-        "end": 5,
-        "leadingTrivia": [],
-        "trailingTrivia": [
-          " "
-        ],
-        "leadingInvalid": [],
-        "trailingInvalid": []
-      },
-      "start": 4,
-      "end": 5
-    },
-    {
-      "level": "error",
-      "code": {
-        "value": 1005,
-        "name": "UNEXPECTED_TOKEN"
-      },
-      "diagnostic": "Expect an identifier",
-      "token": {
-        "context": {
-          "id": "<op>:/@[L0:C6, L0:C7]",
-          "snippet": "/"
-        },
-        "isInvalid": true,
-        "kind": "<op>",
-        "value": "/",
-        "startPos": {
-          "offset": 6,
-          "line": 0,
-          "column": 6
-        },
-        "endPos": {
-          "offset": 7,
-          "line": 0,
-          "column": 7
-        },
-        "start": 6,
-        "end": 7,
-        "leadingTrivia": [],
-        "trailingTrivia": [
-          "\n"
-        ],
-        "leadingInvalid": [],
-        "trailingInvalid": []
-      },
-      "start": 6,
-      "end": 7
-    },
-    {
-      "level": "error",
-      "code": {
-        "value": 1005,
-        "name": "UNEXPECTED_TOKEN"
-      },
-      "diagnostic": "Expect an identifier",
-      "token": {
-        "context": {
-          "id": "<op>:!@[L1:C0, L1:C1]",
-          "snippet": "!"
-        },
-        "isInvalid": true,
-        "kind": "<op>",
-        "value": "!",
-        "startPos": {
-          "offset": 9,
-          "line": 1,
-          "column": 0
-        },
-        "endPos": {
-          "offset": 10,
-          "line": 1,
-          "column": 1
-        },
-        "start": 9,
-        "end": 10,
-        "leadingTrivia": [],
-        "trailingTrivia": [
-          "\n"
-        ],
-        "leadingInvalid": [],
-        "trailingInvalid": []
-      },
-      "start": 9,
-      "end": 10
-    },
-    {
-      "level": "error",
-      "code": {
-        "value": 1005,
-        "name": "UNEXPECTED_TOKEN"
-      },
-      "diagnostic": "Expect an identifier",
-      "token": {
-        "context": {
-          "id": "<op>:=@[L2:C0, L2:C1]",
-          "snippet": "="
-        },
-        "isInvalid": true,
-        "kind": "<op>",
-        "value": "=",
-        "startPos": {
-          "offset": 12,
-          "line": 2,
-          "column": 0
-        },
-        "endPos": {
-          "offset": 13,
-          "line": 2,
-          "column": 1
-        },
-        "start": 12,
-        "end": 13,
-        "leadingTrivia": [],
-        "trailingTrivia": [
-          "\n"
-        ],
-        "leadingInvalid": [],
-        "trailingInvalid": []
-      },
-      "start": 12,
-      "end": 13
-    },
-    {
-      "level": "error",
-      "code": {
-        "value": 1005,
-        "name": "UNEXPECTED_TOKEN"
-      },
-      "diagnostic": "Expect an identifier",
-      "token": {
-        "context": {
-          "id": "<op>:==@[L3:C0, L3:C2]",
-          "snippet": "=="
-        },
-        "isInvalid": true,
-        "kind": "<op>",
-        "value": "==",
-        "startPos": {
-          "offset": 15,
-          "line": 3,
-          "column": 0
-        },
-        "endPos": {
-          "offset": 17,
-          "line": 3,
-          "column": 2
-        },
-        "start": 15,
-        "end": 17,
-        "leadingTrivia": [],
-        "trailingTrivia": [
-          " "
-        ],
-        "leadingInvalid": [],
-        "trailingInvalid": []
-      },
-      "start": 15,
-      "end": 17
-    },
-    {
-      "level": "error",
-      "code": {
-        "value": 1005,
-        "name": "UNEXPECTED_TOKEN"
-      },
-      "diagnostic": "Expect an identifier",
-      "token": {
-        "context": {
-          "id": "<op>:!=@[L3:C3, L3:C5]",
-          "snippet": "!="
-        },
-        "isInvalid": true,
-        "kind": "<op>",
-        "value": "!=",
-        "startPos": {
-          "offset": 18,
-          "line": 3,
-          "column": 3
-        },
-        "endPos": {
-          "offset": 20,
-          "line": 3,
-          "column": 5
-        },
-        "start": 18,
-        "end": 20,
-        "leadingTrivia": [],
-        "trailingTrivia": [
-          " "
-        ],
-        "leadingInvalid": [],
-        "trailingInvalid": []
-      },
-      "start": 18,
-      "end": 20
-    },
-    {
-      "level": "error",
-      "code": {
-        "value": 1005,
-        "name": "UNEXPECTED_TOKEN"
-      },
-      "diagnostic": "Expect an identifier",
-      "token": {
-        "context": {
-          "id": "<op>:>@[L3:C6, L3:C7]",
-          "snippet": ">"
-        },
-        "isInvalid": true,
-        "kind": "<op>",
-        "value": ">",
-        "startPos": {
-          "offset": 21,
-          "line": 3,
-          "column": 6
-        },
-        "endPos": {
-          "offset": 22,
-          "line": 3,
-          "column": 7
-        },
-        "start": 21,
-        "end": 22,
-        "leadingTrivia": [],
-        "trailingTrivia": [
-          " "
-        ],
-        "leadingInvalid": [],
-        "trailingInvalid": []
-      },
-      "start": 21,
-      "end": 22
-    },
-    {
-      "level": "error",
-      "code": {
-        "value": 1005,
-        "name": "UNEXPECTED_TOKEN"
-      },
-      "diagnostic": "Expect an identifier",
-      "token": {
-        "context": {
-          "id": "<op>:<@[L3:C8, L3:C9]",
-          "snippet": "<"
-        },
-        "isInvalid": true,
-        "kind": "<op>",
-        "value": "<",
-        "startPos": {
-          "offset": 23,
-          "line": 3,
-          "column": 8
-        },
-        "endPos": {
-          "offset": 24,
-          "line": 3,
-          "column": 9
-        },
-        "start": 23,
-        "end": 24,
-        "leadingTrivia": [],
-        "trailingTrivia": [
-          " "
-        ],
-        "leadingInvalid": [],
-        "trailingInvalid": []
-      },
-      "start": 23,
-      "end": 24
-    },
-    {
-      "level": "error",
-      "code": {
-        "value": 1005,
-        "name": "UNEXPECTED_TOKEN"
-      },
-      "diagnostic": "Expect an identifier",
-      "token": {
-        "context": {
-          "id": "<op>:<=@[L3:C10, L3:C12]",
-          "snippet": "<="
-        },
-        "isInvalid": true,
-        "kind": "<op>",
-        "value": "<=",
-        "startPos": {
-          "offset": 25,
-          "line": 3,
-          "column": 10
-        },
-        "endPos": {
-          "offset": 27,
-          "line": 3,
-          "column": 12
-        },
-        "start": 25,
-        "end": 27,
-        "leadingTrivia": [],
-        "trailingTrivia": [
-          " "
-        ],
-        "leadingInvalid": [],
-        "trailingInvalid": []
-      },
-      "start": 25,
-      "end": 27
-    },
-    {
-      "level": "error",
-      "code": {
-        "value": 1005,
-        "name": "UNEXPECTED_TOKEN"
-      },
-      "diagnostic": "Expect an identifier",
-      "token": {
-        "context": {
-          "id": "<op>:>=@[L3:C13, L3:C15]",
-          "snippet": ">="
-        },
-        "isInvalid": true,
-        "kind": "<op>",
-        "value": ">=",
-        "startPos": {
-          "offset": 28,
-          "line": 3,
-          "column": 13
-        },
-        "endPos": {
-          "offset": 30,
-          "line": 3,
-          "column": 15
-        },
-        "start": 28,
-        "end": 30,
-        "leadingTrivia": [],
-        "trailingTrivia": [
-          "\n"
-        ],
-        "leadingInvalid": [],
-        "trailingInvalid": []
-      },
-      "start": 28,
-      "end": 30
-    },
-    {
-      "level": "error",
-      "code": {
-        "value": 1005,
-        "name": "UNEXPECTED_TOKEN"
-      },
-      "diagnostic": "Expect an identifier",
-      "token": {
-        "context": {
-          "id": "<colon>::@[L4:C0, L4:C1]",
-          "snippet": ":"
-        },
-        "isInvalid": true,
-        "kind": "<colon>",
-        "value": ":",
-        "startPos": {
-          "offset": 32,
-          "line": 4,
-          "column": 0
-        },
-        "endPos": {
-          "offset": 33,
-          "line": 4,
-          "column": 1
-        },
-        "start": 32,
-        "end": 33,
-        "leadingTrivia": [],
-        "trailingTrivia": [
-          " "
-        ],
-        "leadingInvalid": [],
-        "trailingInvalid": []
-      },
-      "start": 32,
-      "end": 33
-    },
-    {
-      "level": "error",
-      "code": {
-        "value": 1005,
-        "name": "UNEXPECTED_TOKEN"
-      },
-      "diagnostic": "Expect an identifier",
-      "token": {
-        "context": {
-          "id": "<comma>:,@[L4:C2, L4:C3]",
-          "snippet": ","
-        },
-        "isInvalid": true,
-        "kind": "<comma>",
-        "value": ",",
-        "startPos": {
-          "offset": 34,
-          "line": 4,
-          "column": 2
-        },
-        "endPos": {
-          "offset": 35,
-          "line": 4,
-          "column": 3
-        },
-        "start": 34,
-        "end": 35,
-        "leadingTrivia": [],
-        "trailingTrivia": [
-          "\n"
-        ],
-        "leadingInvalid": [],
-        "trailingInvalid": []
-      },
-      "start": 34,
-      "end": 35
-    },
-    {
-      "level": "error",
-      "code": {
-        "value": 1005,
-        "name": "UNEXPECTED_TOKEN"
-      },
-      "diagnostic": "Expect an identifier",
-      "token": {
-        "context": {
-          "id": "<lbracket>:[@[L5:C0, L5:C1]",
-          "snippet": "["
-        },
-        "isInvalid": true,
-        "kind": "<lbracket>",
-        "value": "[",
-        "startPos": {
-          "offset": 37,
-          "line": 5,
-          "column": 0
-        },
-        "endPos": {
-          "offset": 38,
-          "line": 5,
-          "column": 1
-        },
-        "start": 37,
-        "end": 38,
-        "leadingTrivia": [],
-        "trailingTrivia": [],
-        "leadingInvalid": [],
-        "trailingInvalid": []
-      },
-      "start": 37,
-      "end": 38
-    },
-    {
-      "level": "error",
-      "code": {
-        "value": 1005,
-        "name": "UNEXPECTED_TOKEN"
-      },
-      "diagnostic": "Expect an identifier",
-      "token": {
-        "context": {
-          "id": "<rbracket>:]@[L5:C1, L5:C2]",
-          "snippet": "]"
-        },
-        "isInvalid": true,
-        "kind": "<rbracket>",
-        "value": "]",
-        "startPos": {
-          "offset": 38,
-          "line": 5,
-          "column": 1
-        },
-        "endPos": {
-          "offset": 39,
-          "line": 5,
-          "column": 2
-        },
-        "start": 38,
-        "end": 39,
-        "leadingTrivia": [],
-        "trailingTrivia": [
-          " "
-        ],
-        "leadingInvalid": [],
-        "trailingInvalid": []
-      },
-      "start": 38,
-      "end": 39
-    },
-    {
-      "level": "error",
-      "code": {
-        "value": 1005,
-        "name": "UNEXPECTED_TOKEN"
-      },
-      "diagnostic": "Expect an identifier",
-      "token": {
-        "context": {
-          "id": "<lparen>:(@[L5:C3, L5:C4]",
-          "snippet": "("
-        },
-        "isInvalid": true,
-        "kind": "<lparen>",
-        "value": "(",
-        "startPos": {
-          "offset": 40,
-          "line": 5,
-          "column": 3
-        },
-        "endPos": {
-          "offset": 41,
-          "line": 5,
-          "column": 4
-        },
-        "start": 40,
-        "end": 41,
-        "leadingTrivia": [],
-        "trailingTrivia": [],
-        "leadingInvalid": [],
-        "trailingInvalid": []
-      },
-      "start": 40,
-      "end": 41
-    },
-    {
-      "level": "error",
-      "code": {
-        "value": 1005,
-        "name": "UNEXPECTED_TOKEN"
-      },
-      "diagnostic": "Expect an identifier",
-      "token": {
-        "context": {
-          "id": "<rparen>:)@[L5:C4, L5:C5]",
-          "snippet": ")"
-        },
-        "isInvalid": true,
-        "kind": "<rparen>",
-        "value": ")",
-        "startPos": {
-          "offset": 41,
-          "line": 5,
-          "column": 4
-        },
-        "endPos": {
-          "offset": 42,
-          "line": 5,
-          "column": 5
-        },
-        "start": 41,
-        "end": 42,
-        "leadingTrivia": [],
-        "trailingTrivia": [
-          " "
-        ],
-        "leadingInvalid": [],
-        "trailingInvalid": []
-      },
-      "start": 41,
-      "end": 42
-    },
-    {
-      "level": "error",
-      "code": {
-        "value": 1005,
-        "name": "UNEXPECTED_TOKEN"
-      },
-      "diagnostic": "Expect an identifier",
-      "token": {
-        "context": {
-          "id": "<lbrace>:{@[L5:C6, L5:C7]",
-          "snippet": "{"
-        },
-        "isInvalid": true,
-        "kind": "<lbrace>",
-        "value": "{",
-        "startPos": {
-          "offset": 43,
-          "line": 5,
-          "column": 6
-        },
-        "endPos": {
-          "offset": 44,
-          "line": 5,
-          "column": 7
-        },
-        "start": 43,
-        "end": 44,
-        "leadingTrivia": [],
-        "trailingTrivia": [],
-        "leadingInvalid": [],
-        "trailingInvalid": []
-      },
-      "start": 43,
-      "end": 44
-    },
-    {
-      "level": "error",
-      "code": {
-        "value": 1005,
-        "name": "UNEXPECTED_TOKEN"
-      },
-      "diagnostic": "Expect an identifier",
-      "token": {
-        "context": {
-          "id": "<rbrace>:}@[L5:C7, L5:C8]",
-          "snippet": "}"
-        },
-        "isInvalid": true,
-        "kind": "<rbrace>",
-        "value": "}",
-        "startPos": {
-          "offset": 44,
-          "line": 5,
-          "column": 7
-        },
-        "endPos": {
-          "offset": 45,
-          "line": 5,
-          "column": 8
-        },
-        "start": 44,
-        "end": 45,
-        "leadingTrivia": [],
-        "trailingTrivia": [
-          "\n"
-        ],
-        "leadingInvalid": [],
-        "trailingInvalid": []
-      },
-      "start": 44,
-      "end": 45
-    },
-    {
-      "level": "error",
-      "code": {
-        "value": 1005,
-        "name": "UNEXPECTED_TOKEN"
-      },
-      "diagnostic": "Expect an identifier",
-      "token": {
-        "context": {
-          "id": "<op>:.@[L6:C0, L6:C1]",
-          "snippet": "."
-        },
-        "isInvalid": true,
-        "kind": "<op>",
-        "value": ".",
-        "startPos": {
-          "offset": 47,
-          "line": 6,
-          "column": 0
-        },
-        "endPos": {
-          "offset": 48,
-          "line": 6,
-          "column": 1
-        },
-        "start": 47,
-        "end": 48,
-        "leadingTrivia": [],
-        "trailingTrivia": [
-          "\n"
-        ],
-        "leadingInvalid": [],
-        "trailingInvalid": []
-      },
-      "start": 47,
-      "end": 48
-    },
-    {
-      "level": "error",
-      "code": {
-        "value": 1005,
-        "name": "UNEXPECTED_TOKEN"
-      },
-      "diagnostic": "Expect an identifier",
-      "token": {
-        "context": {
-          "id": "<op>:>@[L7:C0, L7:C1]",
-          "snippet": ">"
-        },
-        "isInvalid": true,
-        "kind": "<op>",
-        "value": ">",
-        "startPos": {
-          "offset": 50,
-          "line": 7,
-          "column": 0
-        },
-        "endPos": {
-          "offset": 51,
-          "line": 7,
-          "column": 1
-        },
-        "start": 50,
-        "end": 51,
-        "leadingTrivia": [],
-        "trailingTrivia": [
-          " "
-        ],
-        "leadingInvalid": [],
-        "trailingInvalid": []
-      },
-      "start": 50,
-      "end": 51
-    },
-    {
-      "level": "error",
-      "code": {
-        "value": 1005,
-        "name": "UNEXPECTED_TOKEN"
-      },
-      "diagnostic": "Expect an identifier",
-      "token": {
-        "context": {
-          "id": "<op>:<@[L7:C2, L7:C3]",
-          "snippet": "<"
-        },
-        "isInvalid": true,
-        "kind": "<op>",
-        "value": "<",
-        "startPos": {
-          "offset": 52,
-          "line": 7,
-          "column": 2
-        },
-        "endPos": {
-          "offset": 53,
-          "line": 7,
-          "column": 3
-        },
-        "start": 52,
-        "end": 53,
-        "leadingTrivia": [],
-        "trailingTrivia": [
-          " "
-        ],
-        "leadingInvalid": [],
-        "trailingInvalid": []
-      },
-      "start": 52,
-      "end": 53
-    },
-    {
-      "level": "error",
-      "code": {
-        "value": 1005,
-        "name": "UNEXPECTED_TOKEN"
-      },
-      "diagnostic": "Expect an identifier",
-      "token": {
-        "context": {
-          "id": "<op>:<>@[L7:C4, L7:C6]",
-          "snippet": "<>"
-        },
-        "isInvalid": true,
-        "kind": "<op>",
-        "value": "<>",
-        "startPos": {
-          "offset": 54,
-          "line": 7,
-          "column": 4
-        },
-        "endPos": {
-          "offset": 56,
-          "line": 7,
-          "column": 6
-        },
-        "start": 54,
-        "end": 56,
-        "leadingTrivia": [],
-        "trailingTrivia": [
-          "\n"
-        ],
-        "leadingInvalid": [],
-        "trailingInvalid": []
-      },
-      "start": 54,
-      "end": 56
-    },
-    {
-      "level": "error",
-      "code": {
-        "value": 1005,
-        "name": "UNEXPECTED_TOKEN"
-      },
-      "diagnostic": "Expect an identifier",
-      "token": {
-        "context": {
-          "id": "<op>:~@[L8:C0, L8:C1]",
-          "snippet": "~"
-        },
-        "isInvalid": true,
-        "kind": "<op>",
-        "value": "~",
-        "startPos": {
-          "offset": 58,
-          "line": 8,
-          "column": 0
-        },
-        "endPos": {
-          "offset": 59,
-          "line": 8,
-          "column": 1
-        },
-        "start": 58,
-        "end": 59,
-        "leadingTrivia": [],
-        "trailingTrivia": [],
-        "leadingInvalid": [],
-        "trailingInvalid": []
-      },
-      "start": 58,
-      "end": 59
+      "trailingInvalid": "",
+      "trailingTrivia": "",
+      "value": ""
     }
   ],
   "warnings": []

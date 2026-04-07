@@ -85,6 +85,7 @@ export const indexesModule: GlobalModule = {
 
   interpret (compiler: Compiler, node: SyntaxNode): Report<SchemaElement | SchemaElement[] | undefined> | Report<PassThrough> {
     if (!isElementNode(node, ElementKind.Indexes)) return Report.create(PASS_THROUGH);
+    if (compiler.bind(node).getErrors().length + compiler.validate(node).getErrors().length > 0) return Report.create(undefined);
     return new IndexesInterpreter(compiler, node).interpret();
   },
 };

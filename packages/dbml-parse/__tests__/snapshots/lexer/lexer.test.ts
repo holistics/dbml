@@ -6,7 +6,7 @@ import Compiler from '@/compiler';
 import type { SyntaxToken } from '@/index';
 import type Report from '@/core/report';
 
-function serializeLexerResult (compiler: Compiler, report: Report<Readonly<SyntaxToken[]>>): string {
+function serializeLexerResult (compiler: Compiler, report: Report<readonly Readonly<SyntaxToken>[]>): string {
   const value = report.getValue();
   const errors = report.getErrors();
   const warnings = report.getWarnings();
@@ -17,9 +17,7 @@ function serializeLexerResult (compiler: Compiler, report: Report<Readonly<Synta
   }), null, 2);
 }
 
-// The legacy snapshot tests are very prone to breakage
-// Do not add more tests here
-describe('[legacy - snapshot] lexer', () => {
+describe('[snapshot] lexer', () => {
   const testNames = scanTestNames(path.resolve(__dirname, './input/'));
 
   testNames.forEach((testName) => {

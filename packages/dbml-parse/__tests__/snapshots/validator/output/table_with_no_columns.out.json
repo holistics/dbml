@@ -1,290 +1,227 @@
 {
+  "errors": [],
   "program": {
-    "context": {
-      "id": "<program>@[L0:C0, L2:C0]",
-      "snippet": "Table empt...table {\n}\n"
-    },
-    "kind": "<program>",
-    "startPos": {
-      "offset": 0,
-      "line": 0,
-      "column": 0
-    },
-    "endPos": {
-      "offset": 22,
-      "line": 2,
-      "column": 0
-    },
-    "start": 0,
-    "end": 22,
-    "fullStart": 0,
-    "fullEnd": 22,
-    "symbol": {
-      "context": {
-        "id": "<program>@[L0:C0, L2:C0]",
-        "snippet": "Table empt...table {\n}\n"
-      },
-      "members": [
-        {
-          "context": {},
-          "members": [
-            {
-              "context": {
-                "id": "<element-declaration>:empty_table@[L0:C0, L1:C1]",
-                "snippet": "Table empt..._table {\n}"
-              },
-              "members": [],
-              "declaration": {
-                "id": "<element-declaration>:empty_table@[L0:C0, L1:C1]",
-                "snippet": "Table empt..._table {\n}"
-              },
-              "references": []
-            }
-          ],
-          "references": []
-        },
-        {
-          "context": {
-            "id": "<element-declaration>:empty_table@[L0:C0, L1:C1]",
-            "snippet": "Table empt..._table {\n}"
-          },
-          "members": [],
-          "declaration": {
-            "id": "<element-declaration>:empty_table@[L0:C0, L1:C1]",
-            "snippet": "Table empt..._table {\n}"
-          },
-          "references": []
-        }
-      ],
-      "declaration": {
-        "id": "<program>@[L0:C0, L2:C0]",
-        "snippet": "Table empt...table {\n}\n"
-      },
-      "references": []
-    },
     "children": {
-      "id": 4,
-      "source": "Table empty_table {\n}\n",
       "body": [
         {
-          "context": {
-            "id": "<element-declaration>:empty_table@[L0:C0, L1:C1]",
-            "snippet": "Table empt..._table {\n}"
-          },
-          "kind": "<element-declaration>",
-          "startPos": {
-            "offset": 0,
-            "line": 0,
-            "column": 0
-          },
-          "endPos": {
-            "offset": 21,
-            "line": 1,
-            "column": 1
-          },
-          "start": 0,
-          "end": 21,
-          "fullStart": 0,
-          "fullEnd": 22,
-          "symbol": {
-            "context": {
-              "id": "<element-declaration>:empty_table@[L0:C0, L1:C1]",
-              "snippet": "Table empt..._table {\n}"
-            },
-            "members": [],
-            "declaration": {
-              "id": "<element-declaration>:empty_table@[L0:C0, L1:C1]",
-              "snippet": "Table empt..._table {\n}"
-            },
-            "references": []
-          },
           "children": {
-            "id": 3,
-            "type": {
-              "context": {
-                "id": "<identifier>:Table@[L0:C0, L0:C5]",
-                "snippet": "Table"
-              },
-              "isInvalid": false,
-              "kind": "<identifier>",
-              "value": "Table",
-              "startPos": {
-                "offset": 0,
-                "line": 0,
-                "column": 0
-              },
-              "endPos": {
-                "offset": 5,
-                "line": 0,
-                "column": 5
-              },
-              "start": 0,
-              "end": 5,
-              "leadingTrivia": [],
-              "trailingTrivia": [
-                " "
-              ],
-              "leadingInvalid": [],
-              "trailingInvalid": []
-            },
-            "name": {
-              "context": {
-                "id": "<primary-expression>@[L0:C6, L0:C17]",
-                "snippet": "empty_table"
-              },
-              "kind": "<primary-expression>",
-              "startPos": {
-                "offset": 6,
-                "line": 0,
-                "column": 6
-              },
-              "endPos": {
-                "offset": 17,
-                "line": 0,
-                "column": 17
-              },
-              "start": 6,
-              "end": 17,
-              "fullStart": 6,
-              "fullEnd": 18,
-              "children": {
-                "id": 1,
-                "expression": {
-                  "context": {
-                    "id": "<variable>:empty_table@[L0:C6, L0:C17]",
-                    "snippet": "empty_table"
-                  },
-                  "kind": "<variable>",
-                  "startPos": {
-                    "offset": 6,
-                    "line": 0,
-                    "column": 6
-                  },
-                  "endPos": {
-                    "offset": 17,
-                    "line": 0,
-                    "column": 17
-                  },
-                  "start": 6,
-                  "end": 17,
-                  "fullStart": 6,
-                  "fullEnd": 18,
-                  "children": {
-                    "id": 0,
-                    "variable": {
-                      "context": {
-                        "id": "<identifier>:empty_table@[L0:C6, L0:C17]",
-                        "snippet": "empty_table"
-                      },
-                      "isInvalid": false,
-                      "kind": "<identifier>",
-                      "value": "empty_table",
-                      "startPos": {
-                        "offset": 6,
-                        "line": 0,
-                        "column": 6
-                      },
-                      "endPos": {
-                        "offset": 17,
-                        "line": 0,
-                        "column": 17
-                      },
-                      "start": 6,
-                      "end": 17,
-                      "leadingTrivia": [],
-                      "trailingTrivia": [
-                        " "
-                      ],
-                      "leadingInvalid": [],
-                      "trailingInvalid": []
-                    }
-                  }
-                }
-              }
-            },
             "body": {
-              "context": {
-                "id": "<block-expression>@[L0:C18, L1:C1]",
-                "snippet": "{\n}"
-              },
-              "kind": "<block-expression>",
-              "startPos": {
-                "offset": 18,
-                "line": 0,
-                "column": 18
-              },
-              "endPos": {
-                "offset": 21,
-                "line": 1,
-                "column": 1
-              },
-              "start": 18,
-              "end": 21,
-              "fullStart": 18,
-              "fullEnd": 22,
               "children": {
-                "id": 2,
-                "blockOpenBrace": {
-                  "context": {
-                    "id": "<lbrace>:{@[L0:C18, L0:C19]",
-                    "snippet": "{"
-                  },
-                  "isInvalid": false,
-                  "kind": "<lbrace>",
-                  "value": "{",
-                  "startPos": {
-                    "offset": 18,
-                    "line": 0,
-                    "column": 18
-                  },
-                  "endPos": {
-                    "offset": 19,
-                    "line": 0,
-                    "column": 19
-                  },
-                  "start": 18,
-                  "end": 19,
-                  "leadingTrivia": [],
-                  "trailingTrivia": [
-                    "\n"
-                  ],
-                  "leadingInvalid": [],
-                  "trailingInvalid": []
-                },
-                "body": [],
                 "blockCloseBrace": {
                   "context": {
                     "id": "<rbrace>:}@[L1:C0, L1:C1]",
                     "snippet": "}"
                   },
-                  "isInvalid": false,
-                  "kind": "<rbrace>",
-                  "value": "}",
-                  "startPos": {
-                    "offset": 20,
-                    "line": 1,
-                    "column": 0
-                  },
+                  "end": 21,
                   "endPos": {
                     "offset": 21,
                     "line": 1,
                     "column": 1
                   },
+                  "isInvalid": false,
+                  "kind": "<rbrace>",
+                  "leadingInvalid": "",
+                  "leadingTrivia": "",
                   "start": 20,
-                  "end": 21,
-                  "leadingTrivia": [],
-                  "trailingTrivia": [
-                    "\n"
-                  ],
-                  "leadingInvalid": [],
-                  "trailingInvalid": []
+                  "startPos": {
+                    "offset": 20,
+                    "line": 1,
+                    "column": 0
+                  },
+                  "trailingInvalid": "",
+                  "trailingTrivia": "\n",
+                  "value": "}"
+                },
+                "blockOpenBrace": {
+                  "context": {
+                    "id": "<lbrace>:{@[L0:C18, L0:C19]",
+                    "snippet": "{"
+                  },
+                  "end": 19,
+                  "endPos": {
+                    "offset": 19,
+                    "line": 0,
+                    "column": 19
+                  },
+                  "isInvalid": false,
+                  "kind": "<lbrace>",
+                  "leadingInvalid": "",
+                  "leadingTrivia": "",
+                  "start": 18,
+                  "startPos": {
+                    "offset": 18,
+                    "line": 0,
+                    "column": 18
+                  },
+                  "trailingInvalid": "",
+                  "trailingTrivia": "\n",
+                  "value": "{"
+                },
+                "body": [],
+                "parent": {
+                  "id": "<element-declaration>:empty_table@[L0:C0, L1:C1]",
+                  "snippet": "Table empt..._table {\n}"
                 }
+              },
+              "context": {
+                "id": "<block-expression>@[L0:C18, L1:C1]",
+                "snippet": "{\n}"
+              },
+              "end": 21,
+              "endPos": {
+                "offset": 21,
+                "line": 1,
+                "column": 1
+              },
+              "fullEnd": 22,
+              "fullStart": 18,
+              "kind": "<block-expression>",
+              "start": 18,
+              "startPos": {
+                "offset": 18,
+                "line": 0,
+                "column": 18
+              }
+            },
+            "name": {
+              "children": {
+                "expression": {
+                  "children": {
+                    "parent": {
+                      "id": "<element-declaration>:empty_table@[L0:C0, L1:C1]",
+                      "snippet": "Table empt..._table {\n}"
+                    },
+                    "variable": {
+                      "context": {
+                        "id": "<identifier>:empty_table@[L0:C6, L0:C17]",
+                        "snippet": "empty_table"
+                      },
+                      "end": 17,
+                      "endPos": {
+                        "offset": 17,
+                        "line": 0,
+                        "column": 17
+                      },
+                      "isInvalid": false,
+                      "kind": "<identifier>",
+                      "leadingInvalid": "",
+                      "leadingTrivia": "",
+                      "start": 6,
+                      "startPos": {
+                        "offset": 6,
+                        "line": 0,
+                        "column": 6
+                      },
+                      "trailingInvalid": "",
+                      "trailingTrivia": " ",
+                      "value": "empty_table"
+                    }
+                  },
+                  "context": {
+                    "id": "<variable>:empty_table@[L0:C6, L0:C17]",
+                    "snippet": "empty_table"
+                  },
+                  "end": 17,
+                  "endPos": {
+                    "offset": 17,
+                    "line": 0,
+                    "column": 17
+                  },
+                  "fullEnd": 18,
+                  "fullStart": 6,
+                  "kind": "<variable>",
+                  "start": 6,
+                  "startPos": {
+                    "offset": 6,
+                    "line": 0,
+                    "column": 6
+                  }
+                },
+                "parent": {
+                  "id": "<element-declaration>:empty_table@[L0:C0, L1:C1]",
+                  "snippet": "Table empt..._table {\n}"
+                }
+              },
+              "context": {
+                "id": "<primary-expression>@[L0:C6, L0:C17]",
+                "snippet": "empty_table"
+              },
+              "end": 17,
+              "endPos": {
+                "offset": 17,
+                "line": 0,
+                "column": 17
+              },
+              "fullEnd": 18,
+              "fullStart": 6,
+              "kind": "<primary-expression>",
+              "start": 6,
+              "startPos": {
+                "offset": 6,
+                "line": 0,
+                "column": 6
               }
             },
             "parent": {
               "id": "<program>@[L0:C0, L2:C0]",
               "snippet": "Table empt...table {\n}\n"
+            },
+            "type": {
+              "context": {
+                "id": "<identifier>:Table@[L0:C0, L0:C5]",
+                "snippet": "Table"
+              },
+              "end": 5,
+              "endPos": {
+                "offset": 5,
+                "line": 0,
+                "column": 5
+              },
+              "isInvalid": false,
+              "kind": "<identifier>",
+              "leadingInvalid": "",
+              "leadingTrivia": "",
+              "start": 0,
+              "startPos": {
+                "offset": 0,
+                "line": 0,
+                "column": 0
+              },
+              "trailingInvalid": "",
+              "trailingTrivia": " ",
+              "value": "Table"
             }
+          },
+          "context": {
+            "id": "<element-declaration>:empty_table@[L0:C0, L1:C1]",
+            "snippet": "Table empt..._table {\n}"
+          },
+          "end": 21,
+          "endPos": {
+            "offset": 21,
+            "line": 1,
+            "column": 1
+          },
+          "fullEnd": 22,
+          "fullStart": 0,
+          "kind": "<element-declaration>",
+          "start": 0,
+          "startPos": {
+            "offset": 0,
+            "line": 0,
+            "column": 0
+          },
+          "symbol": {
+            "context": {
+              "id": "<element-declaration>:empty_table@[L0:C0, L1:C1]",
+              "snippet": "Table empt..._table {\n}"
+            },
+            "declaration": {
+              "id": "<element-declaration>:empty_table@[L0:C0, L1:C1]",
+              "snippet": "Table empt..._table {\n}"
+            },
+            "members": [],
+            "references": []
           }
         }
       ],
@@ -293,28 +230,68 @@
           "id": "<eof>:@[L2:C0, L2:C0]",
           "snippet": ""
         },
-        "isInvalid": false,
-        "kind": "<eof>",
-        "value": "",
-        "startPos": {
-          "offset": 22,
-          "line": 2,
-          "column": 0
-        },
+        "end": 22,
         "endPos": {
           "offset": 22,
           "line": 2,
           "column": 0
         },
+        "isInvalid": false,
+        "kind": "<eof>",
+        "leadingInvalid": "",
+        "leadingTrivia": "",
         "start": 22,
-        "end": 22,
-        "leadingTrivia": [],
-        "trailingTrivia": [],
-        "leadingInvalid": [],
-        "trailingInvalid": []
+        "startPos": {
+          "offset": 22,
+          "line": 2,
+          "column": 0
+        },
+        "trailingInvalid": "",
+        "trailingTrivia": "",
+        "value": ""
       }
+    },
+    "context": {
+      "id": "<program>@[L0:C0, L2:C0]",
+      "snippet": "Table empt...table {\n}\n"
+    },
+    "end": 22,
+    "endPos": {
+      "offset": 22,
+      "line": 2,
+      "column": 0
+    },
+    "fullEnd": 22,
+    "fullStart": 0,
+    "kind": "<program>",
+    "start": 0,
+    "startPos": {
+      "offset": 0,
+      "line": 0,
+      "column": 0
+    },
+    "symbol": {
+      "context": {
+        "id": "<program>@[L0:C0, L2:C0]",
+        "snippet": "Table empt...table {\n}\n"
+      },
+      "declaration": {
+        "id": "<program>@[L0:C0, L2:C0]",
+        "snippet": "Table empt...table {\n}\n"
+      },
+      "members": [
+        {
+          "context": {}
+        },
+        {
+          "context": {
+            "id": "<element-declaration>:empty_table@[L0:C0, L1:C1]",
+            "snippet": "Table empt..._table {\n}"
+          }
+        }
+      ],
+      "references": []
     }
   },
-  "errors": [],
   "warnings": []
 }

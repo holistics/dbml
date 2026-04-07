@@ -18,6 +18,7 @@ import {
   isWithinNthArgOfField,
   isAccessExpression,
   isExpressionAVariableNode,
+  isElementFieldNode,
 } from '@/core/utils/expression';
 import { getNodeMemberSymbols, lookupMember, nodeRefereeOfLeftExpression } from '../utils';
 import { isValidPartialInjection } from '@/core/utils/validate';
@@ -199,13 +200,17 @@ export const tableModule: GlobalModule = {
   },
 
   interpret (compiler: Compiler, node: SyntaxNode): Report<SchemaElement | SchemaElement[] | undefined> | Report<PassThrough> {
-    if (!isElementNode(node, ElementKind.Table) && !isInsideElementBody(node, ElementKind.Table)) return Report.create(PASS_THROUGH);
+    if (!isElementNode(node, ElementKind.Table) && !isElementFieldNode(node, ElementKind.Table)) return Report.create(PASS_THROUGH);
+    if (compiler.bind(node).getErrors().length + compiler.validate(node).getErrors().length > 0) return Report.create(undefined);
+
     if (isElementNode(node, ElementKind.Table)) {
       return new TableInterpreter(compiler, node).interpret();
     }
-    if (node instanceof FunctionApplicationNode && isInsideElementBody(node, ElementKind.Table)) {
+
+    if (isElementFieldNode(node, ElementKind.Table)) {
       return new TableInterpreter(compiler, node.parent as ElementDeclarationNode).interpretColumnStandalone(node);
     }
+
     return Report.create(PASS_THROUGH);
   },
 };

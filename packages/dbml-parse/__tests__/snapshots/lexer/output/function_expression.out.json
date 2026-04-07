@@ -1,224 +1,101 @@
 {
+  "errors": [
+    {
+      "code": "UNEXPECTED_EOF",
+      "diagnostic": "EOF reached while parsing",
+      "end": 84,
+      "level": "error",
+      "start": 81,
+      "token": {
+        "context": {
+          "id": "<function-expression>:`\r\n@[L6:C43, L7:C0]",
+          "snippet": "`\r\n"
+        },
+        "isInvalid": true
+      }
+    },
+    {
+      "code": "UNEXPECTED_TOKEN",
+      "diagnostic": "Expect an identifier",
+      "end": 8,
+      "level": "error",
+      "start": 0,
+      "token": {
+        "context": {
+          "id": "<function-expression>:id * 2@[L0:C0, L0:C8]",
+          "snippet": "`id * 2`"
+        },
+        "isInvalid": true
+      }
+    },
+    {
+      "code": "UNEXPECTED_TOKEN",
+      "diagnostic": "Expect an identifier",
+      "end": 13,
+      "level": "error",
+      "start": 9,
+      "token": {
+        "context": {
+          "id": "<function-expression>:id@[L0:C9, L0:C13]",
+          "snippet": "`id`"
+        },
+        "isInvalid": true
+      }
+    },
+    {
+      "code": "UNEXPECTED_TOKEN",
+      "diagnostic": "Expect an identifier",
+      "end": 34,
+      "level": "error",
+      "start": 18,
+      "token": {
+        "context": {
+          "id": "<function-expression>:\r\n    id * 3\r\n@[L2:C0, L4:C1]",
+          "snippet": "`\r\n    id * 3\r\n`"
+        },
+        "isInvalid": true
+      }
+    },
+    {
+      "code": "UNEXPECTED_TOKEN",
+      "diagnostic": "Expect an identifier",
+      "end": 81,
+      "level": "error",
+      "start": 38,
+      "token": {
+        "context": {
+          "id": "<function-expression>:no escaped supported! this is an error! \\@[L6:C0, L6:C43]",
+          "snippet": "`no escape... error! \\`"
+        },
+        "isInvalid": true
+      }
+    }
+  ],
   "tokens": [
     {
       "context": {
         "id": "<eof>:@[L7:C0, L7:C0]",
         "snippet": ""
       },
-      "isInvalid": false,
-      "kind": "<eof>",
-      "value": "",
-      "startPos": {
-        "offset": 84,
-        "line": 7,
-        "column": 0
-      },
+      "end": 84,
       "endPos": {
         "offset": 84,
         "line": 7,
         "column": 0
       },
+      "isInvalid": false,
+      "kind": "<eof>",
+      "leadingInvalid": "id * 2id\r\n    id * 3\r\nno escaped supported! this is an error! \\",
+      "leadingTrivia": "",
       "start": 84,
-      "end": 84,
-      "leadingTrivia": [],
-      "trailingTrivia": [],
-      "leadingInvalid": [
-        "id * 2",
-        "id",
-        "\r\n    id * 3\r\n",
-        "no escaped supported! this is an error! \\"
-      ],
-      "trailingInvalid": []
-    }
-  ],
-  "errors": [
-    {
-      "level": "error",
-      "code": {
-        "value": 1002,
-        "name": "UNEXPECTED_EOF"
+      "startPos": {
+        "offset": 84,
+        "line": 7,
+        "column": 0
       },
-      "diagnostic": "EOF reached while parsing",
-      "token": {
-        "context": {
-          "id": "<function-expression>:`\r\n@[L6:C43, L7:C0]",
-          "snippet": "`\r\n"
-        },
-        "isInvalid": true,
-        "kind": "<function-expression>",
-        "value": "`\r\n",
-        "startPos": {
-          "offset": 81,
-          "line": 6,
-          "column": 43
-        },
-        "endPos": {
-          "offset": 84,
-          "line": 7,
-          "column": 0
-        },
-        "start": 81,
-        "end": 84,
-        "leadingTrivia": [],
-        "trailingTrivia": [],
-        "leadingInvalid": [],
-        "trailingInvalid": []
-      },
-      "start": 81,
-      "end": 84
-    },
-    {
-      "level": "error",
-      "code": {
-        "value": 1005,
-        "name": "UNEXPECTED_TOKEN"
-      },
-      "diagnostic": "Expect an identifier",
-      "token": {
-        "context": {
-          "id": "<function-expression>:id * 2@[L0:C0, L0:C8]",
-          "snippet": "`id * 2`"
-        },
-        "isInvalid": true,
-        "kind": "<function-expression>",
-        "value": "id * 2",
-        "startPos": {
-          "offset": 0,
-          "line": 0,
-          "column": 0
-        },
-        "endPos": {
-          "offset": 8,
-          "line": 0,
-          "column": 8
-        },
-        "start": 0,
-        "end": 8,
-        "leadingTrivia": [],
-        "trailingTrivia": [
-          " "
-        ],
-        "leadingInvalid": [],
-        "trailingInvalid": []
-      },
-      "start": 0,
-      "end": 8
-    },
-    {
-      "level": "error",
-      "code": {
-        "value": 1005,
-        "name": "UNEXPECTED_TOKEN"
-      },
-      "diagnostic": "Expect an identifier",
-      "token": {
-        "context": {
-          "id": "<function-expression>:id@[L0:C9, L0:C13]",
-          "snippet": "`id`"
-        },
-        "isInvalid": true,
-        "kind": "<function-expression>",
-        "value": "id",
-        "startPos": {
-          "offset": 9,
-          "line": 0,
-          "column": 9
-        },
-        "endPos": {
-          "offset": 13,
-          "line": 0,
-          "column": 13
-        },
-        "start": 9,
-        "end": 13,
-        "leadingTrivia": [],
-        "trailingTrivia": [
-          " ",
-          "\n"
-        ],
-        "leadingInvalid": [],
-        "trailingInvalid": []
-      },
-      "start": 9,
-      "end": 13
-    },
-    {
-      "level": "error",
-      "code": {
-        "value": 1005,
-        "name": "UNEXPECTED_TOKEN"
-      },
-      "diagnostic": "Expect an identifier",
-      "token": {
-        "context": {
-          "id": "<function-expression>:\r\n    id * 3\r\n@[L2:C0, L4:C1]",
-          "snippet": "`\r\n    id * 3\r\n`"
-        },
-        "isInvalid": true,
-        "kind": "<function-expression>",
-        "value": "\r\n    id * 3\r\n",
-        "startPos": {
-          "offset": 18,
-          "line": 2,
-          "column": 0
-        },
-        "endPos": {
-          "offset": 34,
-          "line": 4,
-          "column": 1
-        },
-        "start": 18,
-        "end": 34,
-        "leadingTrivia": [
-          "\n"
-        ],
-        "trailingTrivia": [
-          "\n"
-        ],
-        "leadingInvalid": [],
-        "trailingInvalid": []
-      },
-      "start": 18,
-      "end": 34
-    },
-    {
-      "level": "error",
-      "code": {
-        "value": 1005,
-        "name": "UNEXPECTED_TOKEN"
-      },
-      "diagnostic": "Expect an identifier",
-      "token": {
-        "context": {
-          "id": "<function-expression>:no escaped supported! this is an error! \\@[L6:C0, L6:C43]",
-          "snippet": "`no escape... error! \\`"
-        },
-        "isInvalid": true,
-        "kind": "<function-expression>",
-        "value": "no escaped supported! this is an error! \\",
-        "startPos": {
-          "offset": 38,
-          "line": 6,
-          "column": 0
-        },
-        "endPos": {
-          "offset": 81,
-          "line": 6,
-          "column": 43
-        },
-        "start": 38,
-        "end": 81,
-        "leadingTrivia": [
-          "\n"
-        ],
-        "trailingTrivia": [],
-        "leadingInvalid": [],
-        "trailingInvalid": [
-          "`\r\n"
-        ]
-      },
-      "start": 38,
-      "end": 81
+      "trailingInvalid": "",
+      "trailingTrivia": "",
+      "value": ""
     }
   ],
   "warnings": []

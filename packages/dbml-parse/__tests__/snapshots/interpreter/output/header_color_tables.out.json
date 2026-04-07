@@ -1,140 +1,140 @@
 {
   "database": {
+    "aliases": [],
+    "enums": [],
+    "notes": [],
+    "records": [],
+    "refs": [],
     "schemas": [],
+    "tableGroups": [],
+    "tablePartials": [],
     "tables": [
       {
-        "name": "orders",
-        "schemaName": "null",
-        "alias": "null",
+        "alias": null,
+        "checks": [],
         "fields": [
           {
+            "inline_refs": [],
             "name": "id",
-            "type": {
-              "schemaName": "null",
-              "type_name": "int",
-              "args": "null"
-            },
+            "pk": false,
             "token": {
-              "start": {
-                "offset": 75,
-                "line": 2,
-                "column": 2
-              },
               "end": {
-                "offset": 81,
+                "column": 8,
                 "line": 2,
-                "column": 8
+                "offset": 81
+              },
+              "start": {
+                "column": 2,
+                "line": 2,
+                "offset": 75
               }
             },
-            "inline_refs": [],
-            "pk": false,
+            "type": {
+              "args": null,
+              "schemaName": null,
+              "type_name": "int"
+            },
             "unique": false
           },
           {
+            "inline_refs": [],
             "name": "user_id",
-            "type": {
-              "schemaName": "null",
-              "type_name": "int",
-              "args": "null"
-            },
+            "pk": false,
             "token": {
-              "start": {
-                "offset": 93,
-                "line": 3,
-                "column": 2
-              },
               "end": {
-                "offset": 104,
+                "column": 13,
                 "line": 3,
-                "column": 13
+                "offset": 104
+              },
+              "start": {
+                "column": 2,
+                "line": 3,
+                "offset": 93
               }
             },
-            "inline_refs": [],
-            "pk": false,
+            "type": {
+              "args": null,
+              "schemaName": null,
+              "type_name": "int"
+            },
             "unique": false
           },
           {
+            "inline_refs": [],
             "name": "status",
-            "type": {
-              "schemaName": "null",
-              "type_name": "varchar",
-              "args": "null"
-            },
+            "pk": false,
             "token": {
-              "start": {
-                "offset": 106,
-                "line": 4,
-                "column": 2
-              },
               "end": {
-                "offset": 120,
+                "column": 16,
                 "line": 4,
-                "column": 16
+                "offset": 120
+              },
+              "start": {
+                "column": 2,
+                "line": 4,
+                "offset": 106
               }
             },
-            "inline_refs": [],
-            "pk": false,
+            "type": {
+              "args": null,
+              "schemaName": null,
+              "type_name": "varchar"
+            },
             "unique": false
           },
           {
+            "inline_refs": [],
             "name": "create_at",
-            "type": {
-              "schemaName": "null",
-              "type_name": "date_time",
-              "args": "null"
-            },
+            "pk": false,
             "token": {
-              "start": {
-                "offset": 122,
-                "line": 5,
-                "column": 2
-              },
               "end": {
-                "offset": 141,
+                "column": 21,
                 "line": 5,
-                "column": 21
+                "offset": 141
+              },
+              "start": {
+                "column": 2,
+                "line": 5,
+                "offset": 122
               }
             },
-            "inline_refs": [],
-            "pk": false,
+            "type": {
+              "args": null,
+              "schemaName": null,
+              "type_name": "date_time"
+            },
             "unique": false
           }
         ],
-        "token": {
-          "start": {
-            "offset": 0,
-            "line": 1,
-            "column": 1
-          },
-          "end": {
-            "offset": 143,
-            "line": 6,
-            "column": 2
-          }
-        },
+        "headerColor": "#0065ab",
         "indexes": [],
+        "name": "orders",
         "partials": [],
-        "checks": [],
-        "headerColor": "#0065ab"
+        "schemaName": null,
+        "token": {
+          "end": {
+            "column": 2,
+            "line": 6,
+            "offset": 143
+          },
+          "start": {
+            "column": 1,
+            "line": 1,
+            "offset": 0
+          }
+        }
       }
     ],
-    "notes": [],
-    "refs": [],
-    "enums": [],
-    "tableGroups": [],
-    "aliases": [],
-    "tablePartials": [],
-    "records": [],
     "token": {
-      "start": {
-        "offset": 0,
-        "line": 1,
-        "column": 1
-      },
       "end": {
-        "offset": 143,
+        "column": 2,
         "line": 6,
-        "column": 2
+        "offset": 143
+      },
+      "start": {
+        "column": 1,
+        "line": 1,
+        "offset": 0
       }
     }
   },

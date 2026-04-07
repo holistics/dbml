@@ -1,179 +1,145 @@
 {
+  "errors": [
+    {
+      "code": "UNEXPECTED_TOKEN",
+      "diagnostic": "Expect an opening brace '{' or a colon ':'",
+      "end": 34,
+      "level": "error",
+      "start": 30,
+      "token": {
+        "context": {
+          "id": "<identifier>:Note@[L2:C8, L2:C12]",
+          "snippet": "Note"
+        },
+        "isInvalid": true
+      }
+    }
+  ],
   "tokens": [
     {
       "context": {
         "id": "<identifier>:Table@[L0:C0, L0:C5]",
         "snippet": "Table"
       },
-      "isInvalid": false,
-      "kind": "<identifier>",
-      "value": "Table",
-      "startPos": {
-        "offset": 0,
-        "line": 0,
-        "column": 0
-      },
+      "end": 5,
       "endPos": {
         "offset": 5,
         "line": 0,
         "column": 5
       },
+      "isInvalid": false,
+      "kind": "<identifier>",
+      "leadingInvalid": "",
+      "leadingTrivia": "",
       "start": 0,
-      "end": 5,
-      "leadingTrivia": [],
-      "trailingTrivia": [
-        " "
-      ],
-      "leadingInvalid": [],
-      "trailingInvalid": []
+      "startPos": {
+        "offset": 0,
+        "line": 0,
+        "column": 0
+      },
+      "trailingInvalid": "",
+      "trailingTrivia": " ",
+      "value": "Table"
     },
     {
       "context": {
         "id": "<identifier>:TableGroup@[L0:C6, L0:C16]",
         "snippet": "TableGroup"
       },
-      "isInvalid": false,
-      "kind": "<identifier>",
-      "value": "TableGroup",
-      "startPos": {
-        "offset": 6,
-        "line": 0,
-        "column": 6
-      },
+      "end": 16,
       "endPos": {
         "offset": 16,
         "line": 0,
         "column": 16
       },
+      "isInvalid": false,
+      "kind": "<identifier>",
+      "leadingInvalid": "",
+      "leadingTrivia": "",
       "start": 6,
-      "end": 16,
-      "leadingTrivia": [],
-      "trailingTrivia": [
-        "\n"
-      ],
-      "leadingInvalid": [],
-      "trailingInvalid": []
+      "startPos": {
+        "offset": 6,
+        "line": 0,
+        "column": 6
+      },
+      "trailingInvalid": "",
+      "trailingTrivia": "\n",
+      "value": "TableGroup"
     },
     {
       "context": {
         "id": "<identifier>:as@[L1:C0, L1:C2]",
         "snippet": "as"
       },
-      "isInvalid": false,
-      "kind": "<identifier>",
-      "value": "as",
-      "startPos": {
-        "offset": 18,
-        "line": 1,
-        "column": 0
-      },
+      "end": 20,
       "endPos": {
         "offset": 20,
         "line": 1,
         "column": 2
       },
+      "isInvalid": false,
+      "kind": "<identifier>",
+      "leadingInvalid": "",
+      "leadingTrivia": "",
       "start": 18,
-      "end": 20,
-      "leadingTrivia": [],
-      "trailingTrivia": [
-        "\n"
-      ],
-      "leadingInvalid": [],
-      "trailingInvalid": []
+      "startPos": {
+        "offset": 18,
+        "line": 1,
+        "column": 0
+      },
+      "trailingInvalid": "",
+      "trailingTrivia": "\n",
+      "value": "as"
     },
     {
       "context": {
         "id": "<identifier>:indexes@[L2:C0, L2:C7]",
         "snippet": "indexes"
       },
-      "isInvalid": false,
-      "kind": "<identifier>",
-      "value": "indexes",
-      "startPos": {
-        "offset": 22,
-        "line": 2,
-        "column": 0
-      },
+      "end": 29,
       "endPos": {
         "offset": 29,
         "line": 2,
         "column": 7
       },
+      "isInvalid": false,
+      "kind": "<identifier>",
+      "leadingInvalid": "",
+      "leadingTrivia": "",
       "start": 22,
-      "end": 29,
-      "leadingTrivia": [],
-      "trailingTrivia": [
-        " "
-      ],
-      "leadingInvalid": [],
-      "trailingInvalid": [
-        "Note",
-        "_ab"
-      ]
+      "startPos": {
+        "offset": 22,
+        "line": 2,
+        "column": 0
+      },
+      "trailingInvalid": "Note_ab",
+      "trailingTrivia": " ",
+      "value": "indexes"
     },
     {
       "context": {
         "id": "<eof>:@[L3:C3, L3:C3]",
         "snippet": ""
       },
-      "isInvalid": false,
-      "kind": "<eof>",
-      "value": "",
-      "startPos": {
-        "offset": 39,
-        "line": 3,
-        "column": 3
-      },
+      "end": 39,
       "endPos": {
         "offset": 39,
         "line": 3,
         "column": 3
       },
+      "isInvalid": false,
+      "kind": "<eof>",
+      "leadingInvalid": "",
+      "leadingTrivia": "",
       "start": 39,
-      "end": 39,
-      "leadingTrivia": [],
-      "trailingTrivia": [],
-      "leadingInvalid": [],
-      "trailingInvalid": []
-    }
-  ],
-  "errors": [
-    {
-      "level": "error",
-      "code": {
-        "value": 1005,
-        "name": "UNEXPECTED_TOKEN"
+      "startPos": {
+        "offset": 39,
+        "line": 3,
+        "column": 3
       },
-      "diagnostic": "Expect an opening brace '{' or a colon ':'",
-      "token": {
-        "context": {
-          "id": "<identifier>:Note@[L2:C8, L2:C12]",
-          "snippet": "Note"
-        },
-        "isInvalid": true,
-        "kind": "<identifier>",
-        "value": "Note",
-        "startPos": {
-          "offset": 30,
-          "line": 2,
-          "column": 8
-        },
-        "endPos": {
-          "offset": 34,
-          "line": 2,
-          "column": 12
-        },
-        "start": 30,
-        "end": 34,
-        "leadingTrivia": [],
-        "trailingTrivia": [
-          "\n"
-        ],
-        "leadingInvalid": [],
-        "trailingInvalid": []
-      },
-      "start": 30,
-      "end": 34
+      "trailingInvalid": "",
+      "trailingTrivia": "",
+      "value": ""
     }
   ],
   "warnings": []

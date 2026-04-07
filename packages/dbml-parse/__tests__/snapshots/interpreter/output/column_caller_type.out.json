@@ -1,162 +1,162 @@
 {
   "database": {
+    "aliases": [],
+    "enums": [],
+    "notes": [],
+    "records": [],
+    "refs": [],
     "schemas": [],
+    "tableGroups": [],
+    "tablePartials": [],
     "tables": [
       {
-        "name": "User",
-        "schemaName": "null",
-        "alias": "null",
+        "alias": null,
+        "checks": [],
         "fields": [
           {
+            "inline_refs": [],
             "name": "id",
-            "type": {
-              "schemaName": "null",
-              "type_name": "int",
-              "args": "null"
-            },
+            "pk": false,
             "token": {
-              "start": {
-                "offset": 17,
-                "line": 2,
-                "column": 5
-              },
               "end": {
-                "offset": 23,
+                "column": 11,
                 "line": 2,
-                "column": 11
+                "offset": 23
+              },
+              "start": {
+                "column": 5,
+                "line": 2,
+                "offset": 17
               }
             },
-            "inline_refs": [],
-            "pk": false,
+            "type": {
+              "args": null,
+              "schemaName": null,
+              "type_name": "int"
+            },
             "unique": false
           },
           {
+            "inline_refs": [],
             "name": "secret",
-            "type": {
-              "schemaName": "null",
-              "type_name": "nvarbinary(MAX)",
-              "args": "MAX"
-            },
+            "pk": false,
             "token": {
-              "start": {
-                "offset": 28,
-                "line": 3,
-                "column": 5
-              },
               "end": {
-                "offset": 50,
+                "column": 27,
                 "line": 3,
-                "column": 27
+                "offset": 50
+              },
+              "start": {
+                "column": 5,
+                "line": 3,
+                "offset": 28
               }
             },
-            "inline_refs": [],
-            "pk": false,
+            "type": {
+              "args": "MAX",
+              "schemaName": null,
+              "type_name": "nvarbinary(MAX)"
+            },
             "unique": false
           },
           {
+            "inline_refs": [],
             "name": "name",
-            "type": {
-              "schemaName": "null",
-              "type_name": "varchar(MAX)",
-              "args": "MAX"
-            },
+            "pk": false,
             "token": {
-              "start": {
-                "offset": 55,
-                "line": 4,
-                "column": 5
-              },
               "end": {
-                "offset": 74,
+                "column": 24,
                 "line": 4,
-                "column": 24
+                "offset": 74
+              },
+              "start": {
+                "column": 5,
+                "line": 4,
+                "offset": 55
               }
             },
-            "inline_refs": [],
-            "pk": false,
+            "type": {
+              "args": "MAX",
+              "schemaName": null,
+              "type_name": "varchar(MAX)"
+            },
             "unique": false
           },
           {
+            "inline_refs": [],
             "name": "code",
-            "type": {
-              "schemaName": "null",
-              "type_name": "varbinary(MAX)",
-              "args": "MAX"
-            },
+            "pk": false,
             "token": {
-              "start": {
-                "offset": 79,
-                "line": 5,
-                "column": 5
-              },
               "end": {
-                "offset": 100,
+                "column": 26,
                 "line": 5,
-                "column": 26
+                "offset": 100
+              },
+              "start": {
+                "column": 5,
+                "line": 5,
+                "offset": 79
               }
             },
-            "inline_refs": [],
-            "pk": false,
+            "type": {
+              "args": "MAX",
+              "schemaName": null,
+              "type_name": "varbinary(MAX)"
+            },
             "unique": false
           },
           {
+            "inline_refs": [],
             "name": "ssid",
-            "type": {
-              "schemaName": "null",
-              "type_name": "int(10)",
-              "args": "10"
-            },
+            "pk": false,
             "token": {
-              "start": {
-                "offset": 105,
-                "line": 6,
-                "column": 5
-              },
               "end": {
-                "offset": 117,
+                "column": 17,
                 "line": 6,
-                "column": 17
+                "offset": 117
+              },
+              "start": {
+                "column": 5,
+                "line": 6,
+                "offset": 105
               }
             },
-            "inline_refs": [],
-            "pk": false,
+            "type": {
+              "args": "10",
+              "schemaName": null,
+              "type_name": "int(10)"
+            },
             "unique": false
           }
         ],
-        "token": {
-          "start": {
-            "offset": 0,
-            "line": 1,
-            "column": 1
-          },
-          "end": {
-            "offset": 119,
-            "line": 7,
-            "column": 2
-          }
-        },
         "indexes": [],
+        "name": "User",
         "partials": [],
-        "checks": []
+        "schemaName": null,
+        "token": {
+          "end": {
+            "column": 2,
+            "line": 7,
+            "offset": 119
+          },
+          "start": {
+            "column": 1,
+            "line": 1,
+            "offset": 0
+          }
+        }
       }
     ],
-    "notes": [],
-    "refs": [],
-    "enums": [],
-    "tableGroups": [],
-    "aliases": [],
-    "tablePartials": [],
-    "records": [],
     "token": {
-      "start": {
-        "offset": 0,
-        "line": 1,
-        "column": 1
-      },
       "end": {
-        "offset": 119,
+        "column": 2,
         "line": 7,
-        "column": 2
+        "offset": 119
+      },
+      "start": {
+        "column": 1,
+        "line": 1,
+        "offset": 0
       }
     }
   },

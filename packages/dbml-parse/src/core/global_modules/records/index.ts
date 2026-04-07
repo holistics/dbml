@@ -91,6 +91,7 @@ export const recordsModule: GlobalModule = {
 
   interpret (compiler: Compiler, node: SyntaxNode): Report<TableRecord | undefined> | Report<PassThrough> {
     if (!isElementNode(node, ElementKind.Records)) return Report.create(PASS_THROUGH);
+    if (compiler.bind(node).getErrors().length + compiler.validate(node).getErrors().length > 0) return Report.create(undefined);
     return new RecordsInterpreter(compiler, node).interpret();
   },
 };

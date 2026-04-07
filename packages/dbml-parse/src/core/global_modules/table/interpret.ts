@@ -305,9 +305,8 @@ export class TableInterpreter {
 
   interpretColumnStandalone (field: FunctionApplicationNode): Report<Column | undefined> {
     // Save current fields state, interpret column, then extract it
-    const prevLength = this.table.fields!.length;
     const errors = this.interpretColumn(field);
-    const column = this.table.fields!.pop();
+    const column = this.table.fields?.pop();
     // Also remove from pkColumns if it was added
     if (column?.pk && this.pkColumns.length > 0 && this.pkColumns[this.pkColumns.length - 1] === column) {
       this.pkColumns.pop();
@@ -316,7 +315,7 @@ export class TableInterpreter {
   }
 
   private interpretIndexes (indexes: ElementDeclarationNode): CompileError[] {
-    this.table.indexes!.push(...(indexes.body as BlockExpressionNode).body.map((_indexField) => {
+    this.table.indexes?.push(...(indexes.body as BlockExpressionNode).body.map((_indexField) => {
       const index: Partial<Index> = { columns: [] };
 
       const indexField = _indexField as FunctionApplicationNode;

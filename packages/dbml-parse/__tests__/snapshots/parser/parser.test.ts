@@ -17,9 +17,7 @@ function serializeParserResult (compiler: Compiler, report: Report<ProgramNode>)
   }), null, 2);
 }
 
-// The legacy snapshot tests are very prone to breakage
-// Do not add more tests here
-describe('[legacy - snapshot] parser', () => {
+describe('[snapshot] parser', () => {
   const testNames = scanTestNames(path.resolve(__dirname, './input/'));
 
   testNames.forEach((testName) => {

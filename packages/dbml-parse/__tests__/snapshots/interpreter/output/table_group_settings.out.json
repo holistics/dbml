@@ -1,60 +1,31 @@
 {
   "database": {
-    "schemas": [],
-    "tables": [
-      {
-        "name": "table1",
-        "schemaName": "null",
-        "alias": "null",
-        "fields": [
-          {
-            "name": "id",
-            "type": {
-              "schemaName": "null",
-              "type_name": "int",
-              "args": "null"
-            },
-            "token": {
-              "start": {
-                "offset": 17,
-                "line": 2,
-                "column": 3
-              },
-              "end": {
-                "offset": 28,
-                "line": 2,
-                "column": 14
-              }
-            },
-            "inline_refs": [],
-            "pk": true,
-            "increment": false,
-            "unique": false,
-            "checks": []
-          }
-        ],
-        "token": {
-          "start": {
-            "offset": 0,
-            "line": 1,
-            "column": 1
-          },
-          "end": {
-            "offset": 30,
-            "line": 3,
-            "column": 2
-          }
-        },
-        "indexes": [],
-        "partials": [],
-        "checks": []
-      }
-    ],
-    "notes": [],
-    "refs": [],
+    "aliases": [],
     "enums": [],
+    "notes": [],
+    "records": [],
+    "refs": [],
+    "schemas": [],
     "tableGroups": [
       {
+        "color": "#06c",
+        "name": "group1",
+        "note": {
+          "token": {
+            "end": {
+              "column": 6,
+              "line": 8,
+              "offset": 113
+            },
+            "start": {
+              "column": 3,
+              "line": 6,
+              "offset": 54
+            }
+          },
+          "value": "note inside setting list of a table group\n"
+        },
+        "schemaName": null,
         "tables": [
           {
             "name": "table1",
@@ -62,50 +33,79 @@
           }
         ],
         "token": {
-          "start": {
-            "offset": 32,
-            "line": 5,
-            "column": 1
-          },
           "end": {
-            "offset": 143,
+            "column": 2,
             "line": 12,
-            "column": 2
-          }
-        },
-        "name": "group1",
-        "schemaName": "null",
-        "color": "#06c",
-        "note": {
-          "value": "note inside setting list of a table group\n",
-          "token": {
-            "start": {
-              "offset": 54,
-              "line": 6,
-              "column": 3
-            },
-            "end": {
-              "offset": 113,
-              "line": 8,
-              "column": 6
-            }
+            "offset": 143
+          },
+          "start": {
+            "column": 1,
+            "line": 5,
+            "offset": 32
           }
         }
       }
     ],
-    "aliases": [],
     "tablePartials": [],
-    "records": [],
+    "tables": [
+      {
+        "alias": null,
+        "checks": [],
+        "fields": [
+          {
+            "checks": [],
+            "increment": false,
+            "inline_refs": [],
+            "name": "id",
+            "pk": true,
+            "token": {
+              "end": {
+                "column": 14,
+                "line": 2,
+                "offset": 28
+              },
+              "start": {
+                "column": 3,
+                "line": 2,
+                "offset": 17
+              }
+            },
+            "type": {
+              "args": null,
+              "schemaName": null,
+              "type_name": "int"
+            },
+            "unique": false
+          }
+        ],
+        "indexes": [],
+        "name": "table1",
+        "partials": [],
+        "schemaName": null,
+        "token": {
+          "end": {
+            "column": 2,
+            "line": 3,
+            "offset": 30
+          },
+          "start": {
+            "column": 1,
+            "line": 1,
+            "offset": 0
+          }
+        }
+      }
+    ],
     "token": {
-      "start": {
-        "offset": 0,
-        "line": 1,
-        "column": 1
-      },
       "end": {
-        "offset": 144,
+        "column": 1,
         "line": 13,
-        "column": 1
+        "offset": 144
+      },
+      "start": {
+        "column": 1,
+        "line": 1,
+        "offset": 0
       }
     }
   },

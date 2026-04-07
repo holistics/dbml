@@ -1,474 +1,29 @@
 {
   "database": {
-    "schemas": [],
-    "tables": [
-      {
-        "name": "follows",
-        "schemaName": "null",
-        "alias": "null",
-        "fields": [
-          {
-            "name": "following_user_id",
-            "type": {
-              "schemaName": "null",
-              "type_name": "integer",
-              "args": "null"
-            },
-            "token": {
-              "start": {
-                "offset": 105,
-                "line": 5,
-                "column": 3
-              },
-              "end": {
-                "offset": 130,
-                "line": 5,
-                "column": 28
-              }
-            },
-            "inline_refs": [],
-            "pk": false,
-            "unique": false
-          },
-          {
-            "name": "followed_user_id",
-            "type": {
-              "schemaName": "null",
-              "type_name": "integer",
-              "args": "null"
-            },
-            "token": {
-              "start": {
-                "offset": 133,
-                "line": 6,
-                "column": 3
-              },
-              "end": {
-                "offset": 157,
-                "line": 6,
-                "column": 27
-              }
-            },
-            "inline_refs": [],
-            "pk": false,
-            "unique": false
-          },
-          {
-            "name": "created_at",
-            "type": {
-              "schemaName": "null",
-              "type_name": "timestamp",
-              "args": "null"
-            },
-            "token": {
-              "start": {
-                "offset": 160,
-                "line": 7,
-                "column": 3
-              },
-              "end": {
-                "offset": 180,
-                "line": 7,
-                "column": 23
-              }
-            },
-            "inline_refs": [],
-            "pk": false,
-            "unique": false
-          }
-        ],
-        "token": {
-          "start": {
-            "offset": 87,
-            "line": 4,
-            "column": 1
-          },
-          "end": {
-            "offset": 283,
-            "line": 16,
-            "column": 2
-          }
-        },
-        "indexes": [],
-        "partials": [],
-        "checks": [],
-        "note": {
-          "value": "# Heading 1\n    code block\n# Heading 2\n  * 1\n  * 1\n",
-          "token": {
-            "start": {
-              "offset": 185,
-              "line": 9,
-              "column": 3
-            },
-            "end": {
-              "offset": 281,
-              "line": 15,
-              "column": 6
-            }
-          }
-        }
-      },
-      {
-        "name": "users",
-        "schemaName": "null",
-        "alias": "null",
-        "fields": [
-          {
-            "name": "id",
-            "type": {
-              "schemaName": "null",
-              "type_name": "integer",
-              "args": "null"
-            },
-            "token": {
-              "start": {
-                "offset": 301,
-                "line": 19,
-                "column": 3
-              },
-              "end": {
-                "offset": 325,
-                "line": 19,
-                "column": 27
-              }
-            },
-            "inline_refs": [],
-            "pk": true,
-            "increment": false,
-            "unique": false,
-            "checks": []
-          },
-          {
-            "name": "username",
-            "type": {
-              "schemaName": "null",
-              "type_name": "varchar",
-              "args": "null"
-            },
-            "token": {
-              "start": {
-                "offset": 328,
-                "line": 20,
-                "column": 3
-              },
-              "end": {
-                "offset": 344,
-                "line": 20,
-                "column": 19
-              }
-            },
-            "inline_refs": [],
-            "pk": false,
-            "unique": false
-          },
-          {
-            "name": "role",
-            "type": {
-              "schemaName": "null",
-              "type_name": "varchar",
-              "args": "null"
-            },
-            "token": {
-              "start": {
-                "offset": 347,
-                "line": 21,
-                "column": 3
-              },
-              "end": {
-                "offset": 359,
-                "line": 21,
-                "column": 15
-              }
-            },
-            "inline_refs": [],
-            "pk": false,
-            "unique": false
-          },
-          {
-            "name": "created_at",
-            "type": {
-              "schemaName": "null",
-              "type_name": "timestamp",
-              "args": "null"
-            },
-            "token": {
-              "start": {
-                "offset": 362,
-                "line": 22,
-                "column": 3
-              },
-              "end": {
-                "offset": 382,
-                "line": 22,
-                "column": 23
-              }
-            },
-            "inline_refs": [],
-            "pk": false,
-            "unique": false
-          }
-        ],
-        "token": {
-          "start": {
-            "offset": 285,
-            "line": 18,
-            "column": 1
-          },
-          "end": {
-            "offset": 491,
-            "line": 33,
-            "column": 2
-          }
-        },
-        "indexes": [],
-        "partials": [],
-        "checks": [],
-        "note": {
-          "value": "# Heading 1\n    code block\n# Heading 2\n  * 1\n  * 2\n",
-          "token": {
-            "start": {
-              "offset": 386,
-              "line": 24,
-              "column": 3
-            },
-            "end": {
-              "offset": 489,
-              "line": 32,
-              "column": 4
-            }
-          }
-        }
-      },
-      {
-        "name": "posts",
-        "schemaName": "null",
-        "alias": "null",
-        "fields": [
-          {
-            "name": "id",
-            "type": {
-              "schemaName": "null",
-              "type_name": "integer",
-              "args": "null"
-            },
-            "token": {
-              "start": {
-                "offset": 509,
-                "line": 36,
-                "column": 3
-              },
-              "end": {
-                "offset": 533,
-                "line": 36,
-                "column": 27
-              }
-            },
-            "inline_refs": [],
-            "pk": true,
-            "increment": false,
-            "unique": false,
-            "checks": []
-          },
-          {
-            "name": "title",
-            "type": {
-              "schemaName": "null",
-              "type_name": "varchar",
-              "args": "null"
-            },
-            "token": {
-              "start": {
-                "offset": 536,
-                "line": 37,
-                "column": 3
-              },
-              "end": {
-                "offset": 549,
-                "line": 37,
-                "column": 16
-              }
-            },
-            "inline_refs": [],
-            "pk": false,
-            "unique": false
-          },
-          {
-            "name": "body",
-            "type": {
-              "schemaName": "null",
-              "type_name": "text",
-              "args": "null"
-            },
-            "token": {
-              "start": {
-                "offset": 552,
-                "line": 38,
-                "column": 3
-              },
-              "end": {
-                "offset": 633,
-                "line": 45,
-                "column": 7
-              }
-            },
-            "inline_refs": [],
-            "pk": false,
-            "increment": false,
-            "unique": false,
-            "note": {
-              "value": "# Heading 1\n    code block\n# Heading 2\n  * 1\n  * 2\n  ",
-              "token": {
-                "start": {
-                  "offset": 563,
-                  "line": 38,
-                  "column": 14
-                },
-                "end": {
-                  "offset": 632,
-                  "line": 45,
-                  "column": 6
-                }
-              }
-            },
-            "checks": []
-          },
-          {
-            "name": "user_id",
-            "type": {
-              "schemaName": "null",
-              "type_name": "integer",
-              "args": "null"
-            },
-            "token": {
-              "start": {
-                "offset": 636,
-                "line": 46,
-                "column": 3
-              },
-              "end": {
-                "offset": 651,
-                "line": 46,
-                "column": 18
-              }
-            },
-            "inline_refs": [],
-            "pk": false,
-            "unique": false
-          },
-          {
-            "name": "status",
-            "type": {
-              "schemaName": "null",
-              "type_name": "varchar",
-              "args": "null"
-            },
-            "token": {
-              "start": {
-                "offset": 654,
-                "line": 47,
-                "column": 3
-              },
-              "end": {
-                "offset": 668,
-                "line": 47,
-                "column": 17
-              }
-            },
-            "inline_refs": [],
-            "pk": false,
-            "unique": false
-          },
-          {
-            "name": "created_at",
-            "type": {
-              "schemaName": "null",
-              "type_name": "timestamp",
-              "args": "null"
-            },
-            "token": {
-              "start": {
-                "offset": 671,
-                "line": 48,
-                "column": 3
-              },
-              "end": {
-                "offset": 691,
-                "line": 48,
-                "column": 23
-              }
-            },
-            "inline_refs": [],
-            "pk": false,
-            "unique": false
-          }
-        ],
-        "token": {
-          "start": {
-            "offset": 493,
-            "line": 35,
-            "column": 1
-          },
-          "end": {
-            "offset": 853,
-            "line": 59,
-            "column": 2
-          }
-        },
-        "indexes": [],
-        "partials": [],
-        "checks": [],
-        "note": {
-          "value": "# Heading 1\n    code block\n# Heading 2\n  * 1\n    * 1.1\n    * 1.2\n  * 2\n",
-          "token": {
-            "start": {
-              "offset": 695,
-              "line": 50,
-              "column": 3
-            },
-            "end": {
-              "offset": 851,
-              "line": 58,
-              "column": 6
-            }
-          }
-        }
-      }
-    ],
+    "aliases": [],
+    "enums": [],
     "notes": [],
+    "records": [],
     "refs": [
       {
-        "token": {
-          "start": {
-            "offset": 855,
-            "line": 61,
-            "column": 1
-          },
-          "end": {
-            "offset": 884,
-            "line": 61,
-            "column": 30
-          }
-        },
-        "name": "null",
-        "schemaName": "null",
         "endpoints": [
           {
             "fieldNames": [
               "user_id"
             ],
-            "tableName": "posts",
-            "schemaName": "null",
             "relation": "*",
+            "schemaName": null,
+            "tableName": "posts",
             "token": {
-              "start": {
-                "offset": 860,
-                "line": 61,
-                "column": 6
-              },
               "end": {
-                "offset": 873,
+                "column": 19,
                 "line": 61,
-                "column": 19
+                "offset": 873
+              },
+              "start": {
+                "column": 6,
+                "line": 61,
+                "offset": 860
               }
             }
           },
@@ -476,57 +31,57 @@
             "fieldNames": [
               "id"
             ],
-            "tableName": "users",
-            "schemaName": "null",
             "relation": "1",
+            "schemaName": null,
+            "tableName": "users",
             "token": {
-              "start": {
-                "offset": 876,
-                "line": 61,
-                "column": 22
-              },
               "end": {
-                "offset": 884,
+                "column": 30,
                 "line": 61,
-                "column": 30
+                "offset": 884
+              },
+              "start": {
+                "column": 22,
+                "line": 61,
+                "offset": 876
               }
             }
           }
-        ]
+        ],
+        "name": null,
+        "schemaName": null,
+        "token": {
+          "end": {
+            "column": 30,
+            "line": 61,
+            "offset": 884
+          },
+          "start": {
+            "column": 1,
+            "line": 61,
+            "offset": 855
+          }
+        }
       },
       {
-        "token": {
-          "start": {
-            "offset": 901,
-            "line": 63,
-            "column": 1
-          },
-          "end": {
-            "offset": 942,
-            "line": 63,
-            "column": 42
-          }
-        },
-        "name": "null",
-        "schemaName": "null",
         "endpoints": [
           {
             "fieldNames": [
               "id"
             ],
-            "tableName": "users",
-            "schemaName": "null",
             "relation": "1",
+            "schemaName": null,
+            "tableName": "users",
             "token": {
-              "start": {
-                "offset": 906,
-                "line": 63,
-                "column": 6
-              },
               "end": {
-                "offset": 914,
+                "column": 14,
                 "line": 63,
-                "column": 14
+                "offset": 914
+              },
+              "start": {
+                "column": 6,
+                "line": 63,
+                "offset": 906
               }
             }
           },
@@ -534,57 +89,57 @@
             "fieldNames": [
               "following_user_id"
             ],
-            "tableName": "follows",
-            "schemaName": "null",
             "relation": "*",
+            "schemaName": null,
+            "tableName": "follows",
             "token": {
-              "start": {
-                "offset": 917,
-                "line": 63,
-                "column": 17
-              },
               "end": {
-                "offset": 942,
+                "column": 42,
                 "line": 63,
-                "column": 42
+                "offset": 942
+              },
+              "start": {
+                "column": 17,
+                "line": 63,
+                "offset": 917
               }
             }
           }
-        ]
+        ],
+        "name": null,
+        "schemaName": null,
+        "token": {
+          "end": {
+            "column": 42,
+            "line": 63,
+            "offset": 942
+          },
+          "start": {
+            "column": 1,
+            "line": 63,
+            "offset": 901
+          }
+        }
       },
       {
-        "token": {
-          "start": {
-            "offset": 944,
-            "line": 65,
-            "column": 1
-          },
-          "end": {
-            "offset": 984,
-            "line": 65,
-            "column": 41
-          }
-        },
-        "name": "null",
-        "schemaName": "null",
         "endpoints": [
           {
             "fieldNames": [
               "id"
             ],
-            "tableName": "users",
-            "schemaName": "null",
             "relation": "1",
+            "schemaName": null,
+            "tableName": "users",
             "token": {
-              "start": {
-                "offset": 949,
-                "line": 65,
-                "column": 6
-              },
               "end": {
-                "offset": 957,
+                "column": 14,
                 "line": 65,
-                "column": 14
+                "offset": 957
+              },
+              "start": {
+                "column": 6,
+                "line": 65,
+                "offset": 949
               }
             }
           },
@@ -592,40 +147,485 @@
             "fieldNames": [
               "followed_user_id"
             ],
-            "tableName": "follows",
-            "schemaName": "null",
             "relation": "*",
+            "schemaName": null,
+            "tableName": "follows",
             "token": {
-              "start": {
-                "offset": 960,
-                "line": 65,
-                "column": 17
-              },
               "end": {
-                "offset": 984,
+                "column": 41,
                 "line": 65,
-                "column": 41
+                "offset": 984
+              },
+              "start": {
+                "column": 17,
+                "line": 65,
+                "offset": 960
               }
             }
           }
-        ]
+        ],
+        "name": null,
+        "schemaName": null,
+        "token": {
+          "end": {
+            "column": 41,
+            "line": 65,
+            "offset": 984
+          },
+          "start": {
+            "column": 1,
+            "line": 65,
+            "offset": 944
+          }
+        }
       }
     ],
-    "enums": [],
+    "schemas": [],
     "tableGroups": [],
-    "aliases": [],
     "tablePartials": [],
-    "records": [],
-    "token": {
-      "start": {
-        "offset": 87,
-        "line": 4,
-        "column": 1
+    "tables": [
+      {
+        "alias": null,
+        "checks": [],
+        "fields": [
+          {
+            "inline_refs": [],
+            "name": "following_user_id",
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 28,
+                "line": 5,
+                "offset": 130
+              },
+              "start": {
+                "column": 3,
+                "line": 5,
+                "offset": 105
+              }
+            },
+            "type": {
+              "args": null,
+              "schemaName": null,
+              "type_name": "integer"
+            },
+            "unique": false
+          },
+          {
+            "inline_refs": [],
+            "name": "followed_user_id",
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 27,
+                "line": 6,
+                "offset": 157
+              },
+              "start": {
+                "column": 3,
+                "line": 6,
+                "offset": 133
+              }
+            },
+            "type": {
+              "args": null,
+              "schemaName": null,
+              "type_name": "integer"
+            },
+            "unique": false
+          },
+          {
+            "inline_refs": [],
+            "name": "created_at",
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 23,
+                "line": 7,
+                "offset": 180
+              },
+              "start": {
+                "column": 3,
+                "line": 7,
+                "offset": 160
+              }
+            },
+            "type": {
+              "args": null,
+              "schemaName": null,
+              "type_name": "timestamp"
+            },
+            "unique": false
+          }
+        ],
+        "indexes": [],
+        "name": "follows",
+        "note": {
+          "token": {
+            "end": {
+              "column": 6,
+              "line": 15,
+              "offset": 281
+            },
+            "start": {
+              "column": 3,
+              "line": 9,
+              "offset": 185
+            }
+          },
+          "value": "# Heading 1\n    code block\n# Heading 2\n  * 1\n  * 1\n"
+        },
+        "partials": [],
+        "schemaName": null,
+        "token": {
+          "end": {
+            "column": 2,
+            "line": 16,
+            "offset": 283
+          },
+          "start": {
+            "column": 1,
+            "line": 4,
+            "offset": 87
+          }
+        }
       },
+      {
+        "alias": null,
+        "checks": [],
+        "fields": [
+          {
+            "checks": [],
+            "increment": false,
+            "inline_refs": [],
+            "name": "id",
+            "pk": true,
+            "token": {
+              "end": {
+                "column": 27,
+                "line": 19,
+                "offset": 325
+              },
+              "start": {
+                "column": 3,
+                "line": 19,
+                "offset": 301
+              }
+            },
+            "type": {
+              "args": null,
+              "schemaName": null,
+              "type_name": "integer"
+            },
+            "unique": false
+          },
+          {
+            "inline_refs": [],
+            "name": "username",
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 19,
+                "line": 20,
+                "offset": 344
+              },
+              "start": {
+                "column": 3,
+                "line": 20,
+                "offset": 328
+              }
+            },
+            "type": {
+              "args": null,
+              "schemaName": null,
+              "type_name": "varchar"
+            },
+            "unique": false
+          },
+          {
+            "inline_refs": [],
+            "name": "role",
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 15,
+                "line": 21,
+                "offset": 359
+              },
+              "start": {
+                "column": 3,
+                "line": 21,
+                "offset": 347
+              }
+            },
+            "type": {
+              "args": null,
+              "schemaName": null,
+              "type_name": "varchar"
+            },
+            "unique": false
+          },
+          {
+            "inline_refs": [],
+            "name": "created_at",
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 23,
+                "line": 22,
+                "offset": 382
+              },
+              "start": {
+                "column": 3,
+                "line": 22,
+                "offset": 362
+              }
+            },
+            "type": {
+              "args": null,
+              "schemaName": null,
+              "type_name": "timestamp"
+            },
+            "unique": false
+          }
+        ],
+        "indexes": [],
+        "name": "users",
+        "note": {
+          "token": {
+            "end": {
+              "column": 4,
+              "line": 32,
+              "offset": 489
+            },
+            "start": {
+              "column": 3,
+              "line": 24,
+              "offset": 386
+            }
+          },
+          "value": "# Heading 1\n    code block\n# Heading 2\n  * 1\n  * 2\n"
+        },
+        "partials": [],
+        "schemaName": null,
+        "token": {
+          "end": {
+            "column": 2,
+            "line": 33,
+            "offset": 491
+          },
+          "start": {
+            "column": 1,
+            "line": 18,
+            "offset": 285
+          }
+        }
+      },
+      {
+        "alias": null,
+        "checks": [],
+        "fields": [
+          {
+            "checks": [],
+            "increment": false,
+            "inline_refs": [],
+            "name": "id",
+            "pk": true,
+            "token": {
+              "end": {
+                "column": 27,
+                "line": 36,
+                "offset": 533
+              },
+              "start": {
+                "column": 3,
+                "line": 36,
+                "offset": 509
+              }
+            },
+            "type": {
+              "args": null,
+              "schemaName": null,
+              "type_name": "integer"
+            },
+            "unique": false
+          },
+          {
+            "inline_refs": [],
+            "name": "title",
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 16,
+                "line": 37,
+                "offset": 549
+              },
+              "start": {
+                "column": 3,
+                "line": 37,
+                "offset": 536
+              }
+            },
+            "type": {
+              "args": null,
+              "schemaName": null,
+              "type_name": "varchar"
+            },
+            "unique": false
+          },
+          {
+            "checks": [],
+            "increment": false,
+            "inline_refs": [],
+            "name": "body",
+            "note": {
+              "token": {
+                "end": {
+                  "column": 6,
+                  "line": 45,
+                  "offset": 632
+                },
+                "start": {
+                  "column": 14,
+                  "line": 38,
+                  "offset": 563
+                }
+              },
+              "value": "# Heading 1\n    code block\n# Heading 2\n  * 1\n  * 2\n  "
+            },
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 7,
+                "line": 45,
+                "offset": 633
+              },
+              "start": {
+                "column": 3,
+                "line": 38,
+                "offset": 552
+              }
+            },
+            "type": {
+              "args": null,
+              "schemaName": null,
+              "type_name": "text"
+            },
+            "unique": false
+          },
+          {
+            "inline_refs": [],
+            "name": "user_id",
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 18,
+                "line": 46,
+                "offset": 651
+              },
+              "start": {
+                "column": 3,
+                "line": 46,
+                "offset": 636
+              }
+            },
+            "type": {
+              "args": null,
+              "schemaName": null,
+              "type_name": "integer"
+            },
+            "unique": false
+          },
+          {
+            "inline_refs": [],
+            "name": "status",
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 17,
+                "line": 47,
+                "offset": 668
+              },
+              "start": {
+                "column": 3,
+                "line": 47,
+                "offset": 654
+              }
+            },
+            "type": {
+              "args": null,
+              "schemaName": null,
+              "type_name": "varchar"
+            },
+            "unique": false
+          },
+          {
+            "inline_refs": [],
+            "name": "created_at",
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 23,
+                "line": 48,
+                "offset": 691
+              },
+              "start": {
+                "column": 3,
+                "line": 48,
+                "offset": 671
+              }
+            },
+            "type": {
+              "args": null,
+              "schemaName": null,
+              "type_name": "timestamp"
+            },
+            "unique": false
+          }
+        ],
+        "indexes": [],
+        "name": "posts",
+        "note": {
+          "token": {
+            "end": {
+              "column": 6,
+              "line": 58,
+              "offset": 851
+            },
+            "start": {
+              "column": 3,
+              "line": 50,
+              "offset": 695
+            }
+          },
+          "value": "# Heading 1\n    code block\n# Heading 2\n  * 1\n    * 1.1\n    * 1.2\n  * 2\n"
+        },
+        "partials": [],
+        "schemaName": null,
+        "token": {
+          "end": {
+            "column": 2,
+            "line": 59,
+            "offset": 853
+          },
+          "start": {
+            "column": 1,
+            "line": 35,
+            "offset": 493
+          }
+        }
+      }
+    ],
+    "token": {
       "end": {
-        "offset": 985,
+        "column": 1,
         "line": 66,
-        "column": 1
+        "offset": 985
+      },
+      "start": {
+        "column": 1,
+        "line": 4,
+        "offset": 87
       }
     }
   },

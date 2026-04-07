@@ -1,253 +1,87 @@
 {
+  "errors": [],
   "program": {
-    "context": {
-      "id": "<program>@[L0:C0, L10:C1]",
-      "snippet": "Table User...{\r\n    \r\n}"
-    },
-    "kind": "<program>",
-    "startPos": {
-      "offset": 0,
-      "line": 0,
-      "column": 0
-    },
-    "endPos": {
-      "offset": 87,
-      "line": 10,
-      "column": 1
-    },
-    "start": 0,
-    "end": 87,
-    "fullStart": 0,
-    "fullEnd": 87,
-    "symbol": {
-      "context": {
-        "id": "<program>@[L0:C0, L10:C1]",
-        "snippet": "Table User...{\r\n    \r\n}"
-      },
-      "members": [
-        {
-          "context": {},
-          "members": [
-            {
-              "context": {
-                "id": "<element-declaration>:Users@[L0:C0, L2:C1]",
-                "snippet": "Table User... U1 {\r\n\r\n}"
-              },
-              "members": [],
-              "declaration": {
-                "id": "<element-declaration>:Users@[L0:C0, L2:C1]",
-                "snippet": "Table User... U1 {\r\n\r\n}"
-              },
-              "references": []
-            },
-            {
-              "context": {
-                "id": "<element-declaration>:Users@[L4:C0, L6:C1]",
-                "snippet": "Table User... U2 {\r\n\r\n}"
-              },
-              "members": [],
-              "declaration": {
-                "id": "<element-declaration>:Users@[L4:C0, L6:C1]",
-                "snippet": "Table User... U2 {\r\n\r\n}"
-              },
-              "references": []
-            },
-            {
-              "context": {
-                "id": "<element-declaration>:Products@[L8:C0, L10:C1]",
-                "snippet": "Table Prod...{\r\n    \r\n}"
-              },
-              "members": [],
-              "declaration": {
-                "id": "<element-declaration>:Products@[L8:C0, L10:C1]",
-                "snippet": "Table Prod...{\r\n    \r\n}"
-              },
-              "references": []
-            }
-          ],
-          "references": []
-        },
-        {
-          "context": {
-            "id": "<element-declaration>:Users@[L0:C0, L2:C1]",
-            "snippet": "Table User... U1 {\r\n\r\n}"
-          },
-          "members": [],
-          "declaration": {
-            "id": "<element-declaration>:Users@[L0:C0, L2:C1]",
-            "snippet": "Table User... U1 {\r\n\r\n}"
-          },
-          "references": []
-        },
-        {
-          "context": {
-            "id": "<element-declaration>:Users@[L4:C0, L6:C1]",
-            "snippet": "Table User... U2 {\r\n\r\n}"
-          },
-          "members": [],
-          "declaration": {
-            "id": "<element-declaration>:Users@[L4:C0, L6:C1]",
-            "snippet": "Table User... U2 {\r\n\r\n}"
-          },
-          "references": []
-        },
-        {
-          "context": {
-            "id": "<element-declaration>:Products@[L8:C0, L10:C1]",
-            "snippet": "Table Prod...{\r\n    \r\n}"
-          },
-          "members": [],
-          "declaration": {
-            "id": "<element-declaration>:Products@[L8:C0, L10:C1]",
-            "snippet": "Table Prod...{\r\n    \r\n}"
-          },
-          "references": []
-        }
-      ],
-      "declaration": {
-        "id": "<program>@[L0:C0, L10:C1]",
-        "snippet": "Table User...{\r\n    \r\n}"
-      },
-      "references": []
-    },
     "children": {
-      "id": 18,
-      "source": "Table Users as U1 {\r\n\r\n}\r\n\r\nTable Users as U2 {\r\n\r\n}\r\n\r\nTable Products as U1 {\r\n    \r\n}",
       "body": [
         {
-          "context": {
-            "id": "<element-declaration>:Users@[L0:C0, L2:C1]",
-            "snippet": "Table User... U1 {\r\n\r\n}"
-          },
-          "kind": "<element-declaration>",
-          "startPos": {
-            "offset": 0,
-            "line": 0,
-            "column": 0
-          },
-          "endPos": {
-            "offset": 24,
-            "line": 2,
-            "column": 1
-          },
-          "start": 0,
-          "end": 24,
-          "fullStart": 0,
-          "fullEnd": 26,
-          "symbol": {
-            "context": {
-              "id": "<element-declaration>:Users@[L0:C0, L2:C1]",
-              "snippet": "Table User... U1 {\r\n\r\n}"
-            },
-            "members": [],
-            "declaration": {
-              "id": "<element-declaration>:Users@[L0:C0, L2:C1]",
-              "snippet": "Table User... U1 {\r\n\r\n}"
-            },
-            "references": []
-          },
           "children": {
-            "id": 5,
-            "type": {
-              "context": {
-                "id": "<identifier>:Table@[L0:C0, L0:C5]",
-                "snippet": "Table"
-              },
-              "isInvalid": false,
-              "kind": "<identifier>",
-              "value": "Table",
-              "startPos": {
-                "offset": 0,
-                "line": 0,
-                "column": 0
-              },
-              "endPos": {
-                "offset": 5,
-                "line": 0,
-                "column": 5
-              },
-              "start": 0,
-              "end": 5,
-              "leadingTrivia": [],
-              "trailingTrivia": [
-                " "
-              ],
-              "leadingInvalid": [],
-              "trailingInvalid": []
-            },
-            "name": {
-              "context": {
-                "id": "<primary-expression>@[L0:C6, L0:C11]",
-                "snippet": "Users"
-              },
-              "kind": "<primary-expression>",
-              "startPos": {
-                "offset": 6,
-                "line": 0,
-                "column": 6
-              },
-              "endPos": {
-                "offset": 11,
-                "line": 0,
-                "column": 11
-              },
-              "start": 6,
-              "end": 11,
-              "fullStart": 6,
-              "fullEnd": 12,
+            "alias": {
               "children": {
-                "id": 1,
                 "expression": {
-                  "context": {
-                    "id": "<variable>:Users@[L0:C6, L0:C11]",
-                    "snippet": "Users"
-                  },
-                  "kind": "<variable>",
-                  "startPos": {
-                    "offset": 6,
-                    "line": 0,
-                    "column": 6
-                  },
-                  "endPos": {
-                    "offset": 11,
-                    "line": 0,
-                    "column": 11
-                  },
-                  "start": 6,
-                  "end": 11,
-                  "fullStart": 6,
-                  "fullEnd": 12,
                   "children": {
-                    "id": 0,
+                    "parent": {
+                      "id": "<element-declaration>:Users@[L0:C0, L2:C1]",
+                      "snippet": "Table User... U1 {\r\n\r\n}"
+                    },
                     "variable": {
                       "context": {
-                        "id": "<identifier>:Users@[L0:C6, L0:C11]",
-                        "snippet": "Users"
+                        "id": "<identifier>:U1@[L0:C15, L0:C17]",
+                        "snippet": "U1"
+                      },
+                      "end": 17,
+                      "endPos": {
+                        "offset": 17,
+                        "line": 0,
+                        "column": 17
                       },
                       "isInvalid": false,
                       "kind": "<identifier>",
-                      "value": "Users",
+                      "leadingInvalid": "",
+                      "leadingTrivia": "",
+                      "start": 15,
                       "startPos": {
-                        "offset": 6,
+                        "offset": 15,
                         "line": 0,
-                        "column": 6
+                        "column": 15
                       },
-                      "endPos": {
-                        "offset": 11,
-                        "line": 0,
-                        "column": 11
-                      },
-                      "start": 6,
-                      "end": 11,
-                      "leadingTrivia": [],
-                      "trailingTrivia": [
-                        " "
-                      ],
-                      "leadingInvalid": [],
-                      "trailingInvalid": []
+                      "trailingInvalid": "",
+                      "trailingTrivia": " ",
+                      "value": "U1"
                     }
+                  },
+                  "context": {
+                    "id": "<variable>:U1@[L0:C15, L0:C17]",
+                    "snippet": "U1"
+                  },
+                  "end": 17,
+                  "endPos": {
+                    "offset": 17,
+                    "line": 0,
+                    "column": 17
+                  },
+                  "fullEnd": 18,
+                  "fullStart": 15,
+                  "kind": "<variable>",
+                  "start": 15,
+                  "startPos": {
+                    "offset": 15,
+                    "line": 0,
+                    "column": 15
                   }
+                },
+                "parent": {
+                  "id": "<element-declaration>:Users@[L0:C0, L2:C1]",
+                  "snippet": "Table User... U1 {\r\n\r\n}"
                 }
+              },
+              "context": {
+                "id": "<primary-expression>@[L0:C15, L0:C17]",
+                "snippet": "U1"
+              },
+              "end": 17,
+              "endPos": {
+                "offset": 17,
+                "line": 0,
+                "column": 17
+              },
+              "fullEnd": 18,
+              "fullStart": 15,
+              "kind": "<primary-expression>",
+              "start": 15,
+              "startPos": {
+                "offset": 15,
+                "line": 0,
+                "column": 15
               }
             },
             "as": {
@@ -255,326 +89,324 @@
                 "id": "<identifier>:as@[L0:C12, L0:C14]",
                 "snippet": "as"
               },
-              "isInvalid": false,
-              "kind": "<identifier>",
-              "value": "as",
-              "startPos": {
-                "offset": 12,
-                "line": 0,
-                "column": 12
-              },
+              "end": 14,
               "endPos": {
                 "offset": 14,
                 "line": 0,
                 "column": 14
               },
+              "isInvalid": false,
+              "kind": "<identifier>",
+              "leadingInvalid": "",
+              "leadingTrivia": "",
               "start": 12,
-              "end": 14,
-              "leadingTrivia": [],
-              "trailingTrivia": [
-                " "
-              ],
-              "leadingInvalid": [],
-              "trailingInvalid": []
-            },
-            "alias": {
-              "context": {
-                "id": "<primary-expression>@[L0:C15, L0:C17]",
-                "snippet": "U1"
-              },
-              "kind": "<primary-expression>",
               "startPos": {
-                "offset": 15,
+                "offset": 12,
                 "line": 0,
-                "column": 15
+                "column": 12
               },
-              "endPos": {
-                "offset": 17,
-                "line": 0,
-                "column": 17
-              },
-              "start": 15,
-              "end": 17,
-              "fullStart": 15,
-              "fullEnd": 18,
-              "children": {
-                "id": 3,
-                "expression": {
-                  "context": {
-                    "id": "<variable>:U1@[L0:C15, L0:C17]",
-                    "snippet": "U1"
-                  },
-                  "kind": "<variable>",
-                  "startPos": {
-                    "offset": 15,
-                    "line": 0,
-                    "column": 15
-                  },
-                  "endPos": {
-                    "offset": 17,
-                    "line": 0,
-                    "column": 17
-                  },
-                  "start": 15,
-                  "end": 17,
-                  "fullStart": 15,
-                  "fullEnd": 18,
-                  "children": {
-                    "id": 2,
-                    "variable": {
-                      "context": {
-                        "id": "<identifier>:U1@[L0:C15, L0:C17]",
-                        "snippet": "U1"
-                      },
-                      "isInvalid": false,
-                      "kind": "<identifier>",
-                      "value": "U1",
-                      "startPos": {
-                        "offset": 15,
-                        "line": 0,
-                        "column": 15
-                      },
-                      "endPos": {
-                        "offset": 17,
-                        "line": 0,
-                        "column": 17
-                      },
-                      "start": 15,
-                      "end": 17,
-                      "leadingTrivia": [],
-                      "trailingTrivia": [
-                        " "
-                      ],
-                      "leadingInvalid": [],
-                      "trailingInvalid": []
-                    }
-                  }
-                }
-              }
+              "trailingInvalid": "",
+              "trailingTrivia": " ",
+              "value": "as"
             },
             "body": {
-              "context": {
-                "id": "<block-expression>@[L0:C18, L2:C1]",
-                "snippet": "{\r\n\r\n}"
-              },
-              "kind": "<block-expression>",
-              "startPos": {
-                "offset": 18,
-                "line": 0,
-                "column": 18
-              },
-              "endPos": {
-                "offset": 24,
-                "line": 2,
-                "column": 1
-              },
-              "start": 18,
-              "end": 24,
-              "fullStart": 18,
-              "fullEnd": 26,
               "children": {
-                "id": 4,
-                "blockOpenBrace": {
-                  "context": {
-                    "id": "<lbrace>:{@[L0:C18, L0:C19]",
-                    "snippet": "{"
-                  },
-                  "isInvalid": false,
-                  "kind": "<lbrace>",
-                  "value": "{",
-                  "startPos": {
-                    "offset": 18,
-                    "line": 0,
-                    "column": 18
-                  },
-                  "endPos": {
-                    "offset": 19,
-                    "line": 0,
-                    "column": 19
-                  },
-                  "start": 18,
-                  "end": 19,
-                  "leadingTrivia": [],
-                  "trailingTrivia": [
-                    "\n"
-                  ],
-                  "leadingInvalid": [],
-                  "trailingInvalid": []
-                },
-                "body": [],
                 "blockCloseBrace": {
                   "context": {
                     "id": "<rbrace>:}@[L2:C0, L2:C1]",
                     "snippet": "}"
                   },
-                  "isInvalid": false,
-                  "kind": "<rbrace>",
-                  "value": "}",
-                  "startPos": {
-                    "offset": 23,
-                    "line": 2,
-                    "column": 0
-                  },
+                  "end": 24,
                   "endPos": {
                     "offset": 24,
                     "line": 2,
                     "column": 1
                   },
+                  "isInvalid": false,
+                  "kind": "<rbrace>",
+                  "leadingInvalid": "",
+                  "leadingTrivia": "\n",
                   "start": 23,
-                  "end": 24,
-                  "leadingTrivia": [
-                    "\n"
-                  ],
-                  "trailingTrivia": [
-                    "\n"
-                  ],
-                  "leadingInvalid": [],
-                  "trailingInvalid": []
+                  "startPos": {
+                    "offset": 23,
+                    "line": 2,
+                    "column": 0
+                  },
+                  "trailingInvalid": "",
+                  "trailingTrivia": "\n",
+                  "value": "}"
+                },
+                "blockOpenBrace": {
+                  "context": {
+                    "id": "<lbrace>:{@[L0:C18, L0:C19]",
+                    "snippet": "{"
+                  },
+                  "end": 19,
+                  "endPos": {
+                    "offset": 19,
+                    "line": 0,
+                    "column": 19
+                  },
+                  "isInvalid": false,
+                  "kind": "<lbrace>",
+                  "leadingInvalid": "",
+                  "leadingTrivia": "",
+                  "start": 18,
+                  "startPos": {
+                    "offset": 18,
+                    "line": 0,
+                    "column": 18
+                  },
+                  "trailingInvalid": "",
+                  "trailingTrivia": "\n",
+                  "value": "{"
+                },
+                "body": [],
+                "parent": {
+                  "id": "<element-declaration>:Users@[L0:C0, L2:C1]",
+                  "snippet": "Table User... U1 {\r\n\r\n}"
                 }
+              },
+              "context": {
+                "id": "<block-expression>@[L0:C18, L2:C1]",
+                "snippet": "{\r\n\r\n}"
+              },
+              "end": 24,
+              "endPos": {
+                "offset": 24,
+                "line": 2,
+                "column": 1
+              },
+              "fullEnd": 26,
+              "fullStart": 18,
+              "kind": "<block-expression>",
+              "start": 18,
+              "startPos": {
+                "offset": 18,
+                "line": 0,
+                "column": 18
+              }
+            },
+            "name": {
+              "children": {
+                "expression": {
+                  "children": {
+                    "parent": {
+                      "id": "<element-declaration>:Users@[L0:C0, L2:C1]",
+                      "snippet": "Table User... U1 {\r\n\r\n}"
+                    },
+                    "variable": {
+                      "context": {
+                        "id": "<identifier>:Users@[L0:C6, L0:C11]",
+                        "snippet": "Users"
+                      },
+                      "end": 11,
+                      "endPos": {
+                        "offset": 11,
+                        "line": 0,
+                        "column": 11
+                      },
+                      "isInvalid": false,
+                      "kind": "<identifier>",
+                      "leadingInvalid": "",
+                      "leadingTrivia": "",
+                      "start": 6,
+                      "startPos": {
+                        "offset": 6,
+                        "line": 0,
+                        "column": 6
+                      },
+                      "trailingInvalid": "",
+                      "trailingTrivia": " ",
+                      "value": "Users"
+                    }
+                  },
+                  "context": {
+                    "id": "<variable>:Users@[L0:C6, L0:C11]",
+                    "snippet": "Users"
+                  },
+                  "end": 11,
+                  "endPos": {
+                    "offset": 11,
+                    "line": 0,
+                    "column": 11
+                  },
+                  "fullEnd": 12,
+                  "fullStart": 6,
+                  "kind": "<variable>",
+                  "start": 6,
+                  "startPos": {
+                    "offset": 6,
+                    "line": 0,
+                    "column": 6
+                  }
+                },
+                "parent": {
+                  "id": "<element-declaration>:Users@[L0:C0, L2:C1]",
+                  "snippet": "Table User... U1 {\r\n\r\n}"
+                }
+              },
+              "context": {
+                "id": "<primary-expression>@[L0:C6, L0:C11]",
+                "snippet": "Users"
+              },
+              "end": 11,
+              "endPos": {
+                "offset": 11,
+                "line": 0,
+                "column": 11
+              },
+              "fullEnd": 12,
+              "fullStart": 6,
+              "kind": "<primary-expression>",
+              "start": 6,
+              "startPos": {
+                "offset": 6,
+                "line": 0,
+                "column": 6
               }
             },
             "parent": {
               "id": "<program>@[L0:C0, L10:C1]",
               "snippet": "Table User...{\r\n    \r\n}"
-            }
-          }
-        },
-        {
-          "context": {
-            "id": "<element-declaration>:Users@[L4:C0, L6:C1]",
-            "snippet": "Table User... U2 {\r\n\r\n}"
-          },
-          "kind": "<element-declaration>",
-          "startPos": {
-            "offset": 28,
-            "line": 4,
-            "column": 0
-          },
-          "endPos": {
-            "offset": 52,
-            "line": 6,
-            "column": 1
-          },
-          "start": 28,
-          "end": 52,
-          "fullStart": 27,
-          "fullEnd": 54,
-          "symbol": {
-            "context": {
-              "id": "<element-declaration>:Users@[L4:C0, L6:C1]",
-              "snippet": "Table User... U2 {\r\n\r\n}"
             },
-            "members": [],
-            "declaration": {
-              "id": "<element-declaration>:Users@[L4:C0, L6:C1]",
-              "snippet": "Table User... U2 {\r\n\r\n}"
-            },
-            "references": []
-          },
-          "children": {
-            "id": 11,
             "type": {
               "context": {
-                "id": "<identifier>:Table@[L4:C0, L4:C5]",
+                "id": "<identifier>:Table@[L0:C0, L0:C5]",
                 "snippet": "Table"
+              },
+              "end": 5,
+              "endPos": {
+                "offset": 5,
+                "line": 0,
+                "column": 5
               },
               "isInvalid": false,
               "kind": "<identifier>",
-              "value": "Table",
+              "leadingInvalid": "",
+              "leadingTrivia": "",
+              "start": 0,
               "startPos": {
-                "offset": 28,
-                "line": 4,
+                "offset": 0,
+                "line": 0,
                 "column": 0
               },
-              "endPos": {
-                "offset": 33,
-                "line": 4,
-                "column": 5
-              },
-              "start": 28,
-              "end": 33,
-              "leadingTrivia": [
-                "\n"
-              ],
-              "trailingTrivia": [
-                " "
-              ],
-              "leadingInvalid": [],
-              "trailingInvalid": []
+              "trailingInvalid": "",
+              "trailingTrivia": " ",
+              "value": "Table"
+            }
+          },
+          "context": {
+            "id": "<element-declaration>:Users@[L0:C0, L2:C1]",
+            "snippet": "Table User... U1 {\r\n\r\n}"
+          },
+          "end": 24,
+          "endPos": {
+            "offset": 24,
+            "line": 2,
+            "column": 1
+          },
+          "fullEnd": 26,
+          "fullStart": 0,
+          "kind": "<element-declaration>",
+          "start": 0,
+          "startPos": {
+            "offset": 0,
+            "line": 0,
+            "column": 0
+          },
+          "symbol": {
+            "context": {
+              "id": "<element-declaration>:Users@[L0:C0, L2:C1]",
+              "snippet": "Table User... U1 {\r\n\r\n}"
             },
-            "name": {
-              "context": {
-                "id": "<primary-expression>@[L4:C6, L4:C11]",
-                "snippet": "Users"
-              },
-              "kind": "<primary-expression>",
-              "startPos": {
-                "offset": 34,
-                "line": 4,
-                "column": 6
-              },
-              "endPos": {
-                "offset": 39,
-                "line": 4,
-                "column": 11
-              },
-              "start": 34,
-              "end": 39,
-              "fullStart": 34,
-              "fullEnd": 40,
+            "declaration": {
+              "id": "<element-declaration>:Users@[L0:C0, L2:C1]",
+              "snippet": "Table User... U1 {\r\n\r\n}"
+            },
+            "members": [],
+            "references": []
+          }
+        },
+        {
+          "children": {
+            "alias": {
               "children": {
-                "id": 7,
                 "expression": {
-                  "context": {
-                    "id": "<variable>:Users@[L4:C6, L4:C11]",
-                    "snippet": "Users"
-                  },
-                  "kind": "<variable>",
-                  "startPos": {
-                    "offset": 34,
-                    "line": 4,
-                    "column": 6
-                  },
-                  "endPos": {
-                    "offset": 39,
-                    "line": 4,
-                    "column": 11
-                  },
-                  "start": 34,
-                  "end": 39,
-                  "fullStart": 34,
-                  "fullEnd": 40,
                   "children": {
-                    "id": 6,
+                    "parent": {
+                      "id": "<element-declaration>:Users@[L4:C0, L6:C1]",
+                      "snippet": "Table User... U2 {\r\n\r\n}"
+                    },
                     "variable": {
                       "context": {
-                        "id": "<identifier>:Users@[L4:C6, L4:C11]",
-                        "snippet": "Users"
+                        "id": "<identifier>:U2@[L4:C15, L4:C17]",
+                        "snippet": "U2"
+                      },
+                      "end": 45,
+                      "endPos": {
+                        "offset": 45,
+                        "line": 4,
+                        "column": 17
                       },
                       "isInvalid": false,
                       "kind": "<identifier>",
-                      "value": "Users",
+                      "leadingInvalid": "",
+                      "leadingTrivia": "",
+                      "start": 43,
                       "startPos": {
-                        "offset": 34,
+                        "offset": 43,
                         "line": 4,
-                        "column": 6
+                        "column": 15
                       },
-                      "endPos": {
-                        "offset": 39,
-                        "line": 4,
-                        "column": 11
-                      },
-                      "start": 34,
-                      "end": 39,
-                      "leadingTrivia": [],
-                      "trailingTrivia": [
-                        " "
-                      ],
-                      "leadingInvalid": [],
-                      "trailingInvalid": []
+                      "trailingInvalid": "",
+                      "trailingTrivia": " ",
+                      "value": "U2"
                     }
+                  },
+                  "context": {
+                    "id": "<variable>:U2@[L4:C15, L4:C17]",
+                    "snippet": "U2"
+                  },
+                  "end": 45,
+                  "endPos": {
+                    "offset": 45,
+                    "line": 4,
+                    "column": 17
+                  },
+                  "fullEnd": 46,
+                  "fullStart": 43,
+                  "kind": "<variable>",
+                  "start": 43,
+                  "startPos": {
+                    "offset": 43,
+                    "line": 4,
+                    "column": 15
                   }
+                },
+                "parent": {
+                  "id": "<element-declaration>:Users@[L4:C0, L6:C1]",
+                  "snippet": "Table User... U2 {\r\n\r\n}"
                 }
+              },
+              "context": {
+                "id": "<primary-expression>@[L4:C15, L4:C17]",
+                "snippet": "U2"
+              },
+              "end": 45,
+              "endPos": {
+                "offset": 45,
+                "line": 4,
+                "column": 17
+              },
+              "fullEnd": 46,
+              "fullStart": 43,
+              "kind": "<primary-expression>",
+              "start": 43,
+              "startPos": {
+                "offset": 43,
+                "line": 4,
+                "column": 15
               }
             },
             "as": {
@@ -582,326 +414,324 @@
                 "id": "<identifier>:as@[L4:C12, L4:C14]",
                 "snippet": "as"
               },
-              "isInvalid": false,
-              "kind": "<identifier>",
-              "value": "as",
-              "startPos": {
-                "offset": 40,
-                "line": 4,
-                "column": 12
-              },
+              "end": 42,
               "endPos": {
                 "offset": 42,
                 "line": 4,
                 "column": 14
               },
+              "isInvalid": false,
+              "kind": "<identifier>",
+              "leadingInvalid": "",
+              "leadingTrivia": "",
               "start": 40,
-              "end": 42,
-              "leadingTrivia": [],
-              "trailingTrivia": [
-                " "
-              ],
-              "leadingInvalid": [],
-              "trailingInvalid": []
-            },
-            "alias": {
-              "context": {
-                "id": "<primary-expression>@[L4:C15, L4:C17]",
-                "snippet": "U2"
-              },
-              "kind": "<primary-expression>",
               "startPos": {
-                "offset": 43,
+                "offset": 40,
                 "line": 4,
-                "column": 15
+                "column": 12
               },
-              "endPos": {
-                "offset": 45,
-                "line": 4,
-                "column": 17
-              },
-              "start": 43,
-              "end": 45,
-              "fullStart": 43,
-              "fullEnd": 46,
-              "children": {
-                "id": 9,
-                "expression": {
-                  "context": {
-                    "id": "<variable>:U2@[L4:C15, L4:C17]",
-                    "snippet": "U2"
-                  },
-                  "kind": "<variable>",
-                  "startPos": {
-                    "offset": 43,
-                    "line": 4,
-                    "column": 15
-                  },
-                  "endPos": {
-                    "offset": 45,
-                    "line": 4,
-                    "column": 17
-                  },
-                  "start": 43,
-                  "end": 45,
-                  "fullStart": 43,
-                  "fullEnd": 46,
-                  "children": {
-                    "id": 8,
-                    "variable": {
-                      "context": {
-                        "id": "<identifier>:U2@[L4:C15, L4:C17]",
-                        "snippet": "U2"
-                      },
-                      "isInvalid": false,
-                      "kind": "<identifier>",
-                      "value": "U2",
-                      "startPos": {
-                        "offset": 43,
-                        "line": 4,
-                        "column": 15
-                      },
-                      "endPos": {
-                        "offset": 45,
-                        "line": 4,
-                        "column": 17
-                      },
-                      "start": 43,
-                      "end": 45,
-                      "leadingTrivia": [],
-                      "trailingTrivia": [
-                        " "
-                      ],
-                      "leadingInvalid": [],
-                      "trailingInvalid": []
-                    }
-                  }
-                }
-              }
+              "trailingInvalid": "",
+              "trailingTrivia": " ",
+              "value": "as"
             },
             "body": {
-              "context": {
-                "id": "<block-expression>@[L4:C18, L6:C1]",
-                "snippet": "{\r\n\r\n}"
-              },
-              "kind": "<block-expression>",
-              "startPos": {
-                "offset": 46,
-                "line": 4,
-                "column": 18
-              },
-              "endPos": {
-                "offset": 52,
-                "line": 6,
-                "column": 1
-              },
-              "start": 46,
-              "end": 52,
-              "fullStart": 46,
-              "fullEnd": 54,
               "children": {
-                "id": 10,
-                "blockOpenBrace": {
-                  "context": {
-                    "id": "<lbrace>:{@[L4:C18, L4:C19]",
-                    "snippet": "{"
-                  },
-                  "isInvalid": false,
-                  "kind": "<lbrace>",
-                  "value": "{",
-                  "startPos": {
-                    "offset": 46,
-                    "line": 4,
-                    "column": 18
-                  },
-                  "endPos": {
-                    "offset": 47,
-                    "line": 4,
-                    "column": 19
-                  },
-                  "start": 46,
-                  "end": 47,
-                  "leadingTrivia": [],
-                  "trailingTrivia": [
-                    "\n"
-                  ],
-                  "leadingInvalid": [],
-                  "trailingInvalid": []
-                },
-                "body": [],
                 "blockCloseBrace": {
                   "context": {
                     "id": "<rbrace>:}@[L6:C0, L6:C1]",
                     "snippet": "}"
                   },
-                  "isInvalid": false,
-                  "kind": "<rbrace>",
-                  "value": "}",
-                  "startPos": {
-                    "offset": 51,
-                    "line": 6,
-                    "column": 0
-                  },
+                  "end": 52,
                   "endPos": {
                     "offset": 52,
                     "line": 6,
                     "column": 1
                   },
+                  "isInvalid": false,
+                  "kind": "<rbrace>",
+                  "leadingInvalid": "",
+                  "leadingTrivia": "\n",
                   "start": 51,
-                  "end": 52,
-                  "leadingTrivia": [
-                    "\n"
-                  ],
-                  "trailingTrivia": [
-                    "\n"
-                  ],
-                  "leadingInvalid": [],
-                  "trailingInvalid": []
+                  "startPos": {
+                    "offset": 51,
+                    "line": 6,
+                    "column": 0
+                  },
+                  "trailingInvalid": "",
+                  "trailingTrivia": "\n",
+                  "value": "}"
+                },
+                "blockOpenBrace": {
+                  "context": {
+                    "id": "<lbrace>:{@[L4:C18, L4:C19]",
+                    "snippet": "{"
+                  },
+                  "end": 47,
+                  "endPos": {
+                    "offset": 47,
+                    "line": 4,
+                    "column": 19
+                  },
+                  "isInvalid": false,
+                  "kind": "<lbrace>",
+                  "leadingInvalid": "",
+                  "leadingTrivia": "",
+                  "start": 46,
+                  "startPos": {
+                    "offset": 46,
+                    "line": 4,
+                    "column": 18
+                  },
+                  "trailingInvalid": "",
+                  "trailingTrivia": "\n",
+                  "value": "{"
+                },
+                "body": [],
+                "parent": {
+                  "id": "<element-declaration>:Users@[L4:C0, L6:C1]",
+                  "snippet": "Table User... U2 {\r\n\r\n}"
                 }
+              },
+              "context": {
+                "id": "<block-expression>@[L4:C18, L6:C1]",
+                "snippet": "{\r\n\r\n}"
+              },
+              "end": 52,
+              "endPos": {
+                "offset": 52,
+                "line": 6,
+                "column": 1
+              },
+              "fullEnd": 54,
+              "fullStart": 46,
+              "kind": "<block-expression>",
+              "start": 46,
+              "startPos": {
+                "offset": 46,
+                "line": 4,
+                "column": 18
+              }
+            },
+            "name": {
+              "children": {
+                "expression": {
+                  "children": {
+                    "parent": {
+                      "id": "<element-declaration>:Users@[L4:C0, L6:C1]",
+                      "snippet": "Table User... U2 {\r\n\r\n}"
+                    },
+                    "variable": {
+                      "context": {
+                        "id": "<identifier>:Users@[L4:C6, L4:C11]",
+                        "snippet": "Users"
+                      },
+                      "end": 39,
+                      "endPos": {
+                        "offset": 39,
+                        "line": 4,
+                        "column": 11
+                      },
+                      "isInvalid": false,
+                      "kind": "<identifier>",
+                      "leadingInvalid": "",
+                      "leadingTrivia": "",
+                      "start": 34,
+                      "startPos": {
+                        "offset": 34,
+                        "line": 4,
+                        "column": 6
+                      },
+                      "trailingInvalid": "",
+                      "trailingTrivia": " ",
+                      "value": "Users"
+                    }
+                  },
+                  "context": {
+                    "id": "<variable>:Users@[L4:C6, L4:C11]",
+                    "snippet": "Users"
+                  },
+                  "end": 39,
+                  "endPos": {
+                    "offset": 39,
+                    "line": 4,
+                    "column": 11
+                  },
+                  "fullEnd": 40,
+                  "fullStart": 34,
+                  "kind": "<variable>",
+                  "start": 34,
+                  "startPos": {
+                    "offset": 34,
+                    "line": 4,
+                    "column": 6
+                  }
+                },
+                "parent": {
+                  "id": "<element-declaration>:Users@[L4:C0, L6:C1]",
+                  "snippet": "Table User... U2 {\r\n\r\n}"
+                }
+              },
+              "context": {
+                "id": "<primary-expression>@[L4:C6, L4:C11]",
+                "snippet": "Users"
+              },
+              "end": 39,
+              "endPos": {
+                "offset": 39,
+                "line": 4,
+                "column": 11
+              },
+              "fullEnd": 40,
+              "fullStart": 34,
+              "kind": "<primary-expression>",
+              "start": 34,
+              "startPos": {
+                "offset": 34,
+                "line": 4,
+                "column": 6
               }
             },
             "parent": {
               "id": "<program>@[L0:C0, L10:C1]",
               "snippet": "Table User...{\r\n    \r\n}"
-            }
-          }
-        },
-        {
-          "context": {
-            "id": "<element-declaration>:Products@[L8:C0, L10:C1]",
-            "snippet": "Table Prod...{\r\n    \r\n}"
-          },
-          "kind": "<element-declaration>",
-          "startPos": {
-            "offset": 56,
-            "line": 8,
-            "column": 0
-          },
-          "endPos": {
-            "offset": 87,
-            "line": 10,
-            "column": 1
-          },
-          "start": 56,
-          "end": 87,
-          "fullStart": 55,
-          "fullEnd": 87,
-          "symbol": {
-            "context": {
-              "id": "<element-declaration>:Products@[L8:C0, L10:C1]",
-              "snippet": "Table Prod...{\r\n    \r\n}"
             },
-            "members": [],
-            "declaration": {
-              "id": "<element-declaration>:Products@[L8:C0, L10:C1]",
-              "snippet": "Table Prod...{\r\n    \r\n}"
-            },
-            "references": []
-          },
-          "children": {
-            "id": 17,
             "type": {
               "context": {
-                "id": "<identifier>:Table@[L8:C0, L8:C5]",
+                "id": "<identifier>:Table@[L4:C0, L4:C5]",
                 "snippet": "Table"
+              },
+              "end": 33,
+              "endPos": {
+                "offset": 33,
+                "line": 4,
+                "column": 5
               },
               "isInvalid": false,
               "kind": "<identifier>",
-              "value": "Table",
+              "leadingInvalid": "",
+              "leadingTrivia": "\n",
+              "start": 28,
               "startPos": {
-                "offset": 56,
-                "line": 8,
+                "offset": 28,
+                "line": 4,
                 "column": 0
               },
-              "endPos": {
-                "offset": 61,
-                "line": 8,
-                "column": 5
-              },
-              "start": 56,
-              "end": 61,
-              "leadingTrivia": [
-                "\n"
-              ],
-              "trailingTrivia": [
-                " "
-              ],
-              "leadingInvalid": [],
-              "trailingInvalid": []
+              "trailingInvalid": "",
+              "trailingTrivia": " ",
+              "value": "Table"
+            }
+          },
+          "context": {
+            "id": "<element-declaration>:Users@[L4:C0, L6:C1]",
+            "snippet": "Table User... U2 {\r\n\r\n}"
+          },
+          "end": 52,
+          "endPos": {
+            "offset": 52,
+            "line": 6,
+            "column": 1
+          },
+          "fullEnd": 54,
+          "fullStart": 27,
+          "kind": "<element-declaration>",
+          "start": 28,
+          "startPos": {
+            "offset": 28,
+            "line": 4,
+            "column": 0
+          },
+          "symbol": {
+            "context": {
+              "id": "<element-declaration>:Users@[L4:C0, L6:C1]",
+              "snippet": "Table User... U2 {\r\n\r\n}"
             },
-            "name": {
-              "context": {
-                "id": "<primary-expression>@[L8:C6, L8:C14]",
-                "snippet": "Products"
-              },
-              "kind": "<primary-expression>",
-              "startPos": {
-                "offset": 62,
-                "line": 8,
-                "column": 6
-              },
-              "endPos": {
-                "offset": 70,
-                "line": 8,
-                "column": 14
-              },
-              "start": 62,
-              "end": 70,
-              "fullStart": 62,
-              "fullEnd": 71,
+            "declaration": {
+              "id": "<element-declaration>:Users@[L4:C0, L6:C1]",
+              "snippet": "Table User... U2 {\r\n\r\n}"
+            },
+            "members": [],
+            "references": []
+          }
+        },
+        {
+          "children": {
+            "alias": {
               "children": {
-                "id": 13,
                 "expression": {
-                  "context": {
-                    "id": "<variable>:Products@[L8:C6, L8:C14]",
-                    "snippet": "Products"
-                  },
-                  "kind": "<variable>",
-                  "startPos": {
-                    "offset": 62,
-                    "line": 8,
-                    "column": 6
-                  },
-                  "endPos": {
-                    "offset": 70,
-                    "line": 8,
-                    "column": 14
-                  },
-                  "start": 62,
-                  "end": 70,
-                  "fullStart": 62,
-                  "fullEnd": 71,
                   "children": {
-                    "id": 12,
+                    "parent": {
+                      "id": "<element-declaration>:Products@[L8:C0, L10:C1]",
+                      "snippet": "Table Prod...{\r\n    \r\n}"
+                    },
                     "variable": {
                       "context": {
-                        "id": "<identifier>:Products@[L8:C6, L8:C14]",
-                        "snippet": "Products"
+                        "id": "<identifier>:U1@[L8:C18, L8:C20]",
+                        "snippet": "U1"
+                      },
+                      "end": 76,
+                      "endPos": {
+                        "offset": 76,
+                        "line": 8,
+                        "column": 20
                       },
                       "isInvalid": false,
                       "kind": "<identifier>",
-                      "value": "Products",
+                      "leadingInvalid": "",
+                      "leadingTrivia": "",
+                      "start": 74,
                       "startPos": {
-                        "offset": 62,
+                        "offset": 74,
                         "line": 8,
-                        "column": 6
+                        "column": 18
                       },
-                      "endPos": {
-                        "offset": 70,
-                        "line": 8,
-                        "column": 14
-                      },
-                      "start": 62,
-                      "end": 70,
-                      "leadingTrivia": [],
-                      "trailingTrivia": [
-                        " "
-                      ],
-                      "leadingInvalid": [],
-                      "trailingInvalid": []
+                      "trailingInvalid": "",
+                      "trailingTrivia": " ",
+                      "value": "U1"
                     }
+                  },
+                  "context": {
+                    "id": "<variable>:U1@[L8:C18, L8:C20]",
+                    "snippet": "U1"
+                  },
+                  "end": 76,
+                  "endPos": {
+                    "offset": 76,
+                    "line": 8,
+                    "column": 20
+                  },
+                  "fullEnd": 77,
+                  "fullStart": 74,
+                  "kind": "<variable>",
+                  "start": 74,
+                  "startPos": {
+                    "offset": 74,
+                    "line": 8,
+                    "column": 18
                   }
+                },
+                "parent": {
+                  "id": "<element-declaration>:Products@[L8:C0, L10:C1]",
+                  "snippet": "Table Prod...{\r\n    \r\n}"
                 }
+              },
+              "context": {
+                "id": "<primary-expression>@[L8:C18, L8:C20]",
+                "snippet": "U1"
+              },
+              "end": 76,
+              "endPos": {
+                "offset": 76,
+                "line": 8,
+                "column": 20
+              },
+              "fullEnd": 77,
+              "fullStart": 74,
+              "kind": "<primary-expression>",
+              "start": 74,
+              "startPos": {
+                "offset": 74,
+                "line": 8,
+                "column": 18
               }
             },
             "as": {
@@ -909,190 +739,243 @@
                 "id": "<identifier>:as@[L8:C15, L8:C17]",
                 "snippet": "as"
               },
-              "isInvalid": false,
-              "kind": "<identifier>",
-              "value": "as",
-              "startPos": {
-                "offset": 71,
-                "line": 8,
-                "column": 15
-              },
+              "end": 73,
               "endPos": {
                 "offset": 73,
                 "line": 8,
                 "column": 17
               },
+              "isInvalid": false,
+              "kind": "<identifier>",
+              "leadingInvalid": "",
+              "leadingTrivia": "",
               "start": 71,
-              "end": 73,
-              "leadingTrivia": [],
-              "trailingTrivia": [
-                " "
-              ],
-              "leadingInvalid": [],
-              "trailingInvalid": []
-            },
-            "alias": {
-              "context": {
-                "id": "<primary-expression>@[L8:C18, L8:C20]",
-                "snippet": "U1"
-              },
-              "kind": "<primary-expression>",
               "startPos": {
-                "offset": 74,
+                "offset": 71,
                 "line": 8,
-                "column": 18
+                "column": 15
               },
-              "endPos": {
-                "offset": 76,
-                "line": 8,
-                "column": 20
-              },
-              "start": 74,
-              "end": 76,
-              "fullStart": 74,
-              "fullEnd": 77,
-              "children": {
-                "id": 15,
-                "expression": {
-                  "context": {
-                    "id": "<variable>:U1@[L8:C18, L8:C20]",
-                    "snippet": "U1"
-                  },
-                  "kind": "<variable>",
-                  "startPos": {
-                    "offset": 74,
-                    "line": 8,
-                    "column": 18
-                  },
-                  "endPos": {
-                    "offset": 76,
-                    "line": 8,
-                    "column": 20
-                  },
-                  "start": 74,
-                  "end": 76,
-                  "fullStart": 74,
-                  "fullEnd": 77,
-                  "children": {
-                    "id": 14,
-                    "variable": {
-                      "context": {
-                        "id": "<identifier>:U1@[L8:C18, L8:C20]",
-                        "snippet": "U1"
-                      },
-                      "isInvalid": false,
-                      "kind": "<identifier>",
-                      "value": "U1",
-                      "startPos": {
-                        "offset": 74,
-                        "line": 8,
-                        "column": 18
-                      },
-                      "endPos": {
-                        "offset": 76,
-                        "line": 8,
-                        "column": 20
-                      },
-                      "start": 74,
-                      "end": 76,
-                      "leadingTrivia": [],
-                      "trailingTrivia": [
-                        " "
-                      ],
-                      "leadingInvalid": [],
-                      "trailingInvalid": []
-                    }
-                  }
-                }
-              }
+              "trailingInvalid": "",
+              "trailingTrivia": " ",
+              "value": "as"
             },
             "body": {
-              "context": {
-                "id": "<block-expression>@[L8:C21, L10:C1]",
-                "snippet": "{\r\n    \r\n}"
-              },
-              "kind": "<block-expression>",
-              "startPos": {
-                "offset": 77,
-                "line": 8,
-                "column": 21
-              },
-              "endPos": {
-                "offset": 87,
-                "line": 10,
-                "column": 1
-              },
-              "start": 77,
-              "end": 87,
-              "fullStart": 77,
-              "fullEnd": 87,
               "children": {
-                "id": 16,
-                "blockOpenBrace": {
-                  "context": {
-                    "id": "<lbrace>:{@[L8:C21, L8:C22]",
-                    "snippet": "{"
-                  },
-                  "isInvalid": false,
-                  "kind": "<lbrace>",
-                  "value": "{",
-                  "startPos": {
-                    "offset": 77,
-                    "line": 8,
-                    "column": 21
-                  },
-                  "endPos": {
-                    "offset": 78,
-                    "line": 8,
-                    "column": 22
-                  },
-                  "start": 77,
-                  "end": 78,
-                  "leadingTrivia": [],
-                  "trailingTrivia": [
-                    "\n"
-                  ],
-                  "leadingInvalid": [],
-                  "trailingInvalid": []
-                },
-                "body": [],
                 "blockCloseBrace": {
                   "context": {
                     "id": "<rbrace>:}@[L10:C0, L10:C1]",
                     "snippet": "}"
                   },
-                  "isInvalid": false,
-                  "kind": "<rbrace>",
-                  "value": "}",
-                  "startPos": {
-                    "offset": 86,
-                    "line": 10,
-                    "column": 0
-                  },
+                  "end": 87,
                   "endPos": {
                     "offset": 87,
                     "line": 10,
                     "column": 1
                   },
+                  "isInvalid": false,
+                  "kind": "<rbrace>",
+                  "leadingInvalid": "",
+                  "leadingTrivia": "    \n",
                   "start": 86,
-                  "end": 87,
-                  "leadingTrivia": [
-                    " ",
-                    " ",
-                    " ",
-                    " ",
-                    "\n"
-                  ],
-                  "trailingTrivia": [],
-                  "leadingInvalid": [],
-                  "trailingInvalid": []
+                  "startPos": {
+                    "offset": 86,
+                    "line": 10,
+                    "column": 0
+                  },
+                  "trailingInvalid": "",
+                  "trailingTrivia": "",
+                  "value": "}"
+                },
+                "blockOpenBrace": {
+                  "context": {
+                    "id": "<lbrace>:{@[L8:C21, L8:C22]",
+                    "snippet": "{"
+                  },
+                  "end": 78,
+                  "endPos": {
+                    "offset": 78,
+                    "line": 8,
+                    "column": 22
+                  },
+                  "isInvalid": false,
+                  "kind": "<lbrace>",
+                  "leadingInvalid": "",
+                  "leadingTrivia": "",
+                  "start": 77,
+                  "startPos": {
+                    "offset": 77,
+                    "line": 8,
+                    "column": 21
+                  },
+                  "trailingInvalid": "",
+                  "trailingTrivia": "\n",
+                  "value": "{"
+                },
+                "body": [],
+                "parent": {
+                  "id": "<element-declaration>:Products@[L8:C0, L10:C1]",
+                  "snippet": "Table Prod...{\r\n    \r\n}"
                 }
+              },
+              "context": {
+                "id": "<block-expression>@[L8:C21, L10:C1]",
+                "snippet": "{\r\n    \r\n}"
+              },
+              "end": 87,
+              "endPos": {
+                "offset": 87,
+                "line": 10,
+                "column": 1
+              },
+              "fullEnd": 87,
+              "fullStart": 77,
+              "kind": "<block-expression>",
+              "start": 77,
+              "startPos": {
+                "offset": 77,
+                "line": 8,
+                "column": 21
+              }
+            },
+            "name": {
+              "children": {
+                "expression": {
+                  "children": {
+                    "parent": {
+                      "id": "<element-declaration>:Products@[L8:C0, L10:C1]",
+                      "snippet": "Table Prod...{\r\n    \r\n}"
+                    },
+                    "variable": {
+                      "context": {
+                        "id": "<identifier>:Products@[L8:C6, L8:C14]",
+                        "snippet": "Products"
+                      },
+                      "end": 70,
+                      "endPos": {
+                        "offset": 70,
+                        "line": 8,
+                        "column": 14
+                      },
+                      "isInvalid": false,
+                      "kind": "<identifier>",
+                      "leadingInvalid": "",
+                      "leadingTrivia": "",
+                      "start": 62,
+                      "startPos": {
+                        "offset": 62,
+                        "line": 8,
+                        "column": 6
+                      },
+                      "trailingInvalid": "",
+                      "trailingTrivia": " ",
+                      "value": "Products"
+                    }
+                  },
+                  "context": {
+                    "id": "<variable>:Products@[L8:C6, L8:C14]",
+                    "snippet": "Products"
+                  },
+                  "end": 70,
+                  "endPos": {
+                    "offset": 70,
+                    "line": 8,
+                    "column": 14
+                  },
+                  "fullEnd": 71,
+                  "fullStart": 62,
+                  "kind": "<variable>",
+                  "start": 62,
+                  "startPos": {
+                    "offset": 62,
+                    "line": 8,
+                    "column": 6
+                  }
+                },
+                "parent": {
+                  "id": "<element-declaration>:Products@[L8:C0, L10:C1]",
+                  "snippet": "Table Prod...{\r\n    \r\n}"
+                }
+              },
+              "context": {
+                "id": "<primary-expression>@[L8:C6, L8:C14]",
+                "snippet": "Products"
+              },
+              "end": 70,
+              "endPos": {
+                "offset": 70,
+                "line": 8,
+                "column": 14
+              },
+              "fullEnd": 71,
+              "fullStart": 62,
+              "kind": "<primary-expression>",
+              "start": 62,
+              "startPos": {
+                "offset": 62,
+                "line": 8,
+                "column": 6
               }
             },
             "parent": {
               "id": "<program>@[L0:C0, L10:C1]",
               "snippet": "Table User...{\r\n    \r\n}"
+            },
+            "type": {
+              "context": {
+                "id": "<identifier>:Table@[L8:C0, L8:C5]",
+                "snippet": "Table"
+              },
+              "end": 61,
+              "endPos": {
+                "offset": 61,
+                "line": 8,
+                "column": 5
+              },
+              "isInvalid": false,
+              "kind": "<identifier>",
+              "leadingInvalid": "",
+              "leadingTrivia": "\n",
+              "start": 56,
+              "startPos": {
+                "offset": 56,
+                "line": 8,
+                "column": 0
+              },
+              "trailingInvalid": "",
+              "trailingTrivia": " ",
+              "value": "Table"
             }
+          },
+          "context": {
+            "id": "<element-declaration>:Products@[L8:C0, L10:C1]",
+            "snippet": "Table Prod...{\r\n    \r\n}"
+          },
+          "end": 87,
+          "endPos": {
+            "offset": 87,
+            "line": 10,
+            "column": 1
+          },
+          "fullEnd": 87,
+          "fullStart": 55,
+          "kind": "<element-declaration>",
+          "start": 56,
+          "startPos": {
+            "offset": 56,
+            "line": 8,
+            "column": 0
+          },
+          "symbol": {
+            "context": {
+              "id": "<element-declaration>:Products@[L8:C0, L10:C1]",
+              "snippet": "Table Prod...{\r\n    \r\n}"
+            },
+            "declaration": {
+              "id": "<element-declaration>:Products@[L8:C0, L10:C1]",
+              "snippet": "Table Prod...{\r\n    \r\n}"
+            },
+            "members": [],
+            "references": []
           }
         }
       ],
@@ -1101,28 +984,80 @@
           "id": "<eof>:@[L10:C1, L10:C1]",
           "snippet": ""
         },
-        "isInvalid": false,
-        "kind": "<eof>",
-        "value": "",
-        "startPos": {
-          "offset": 87,
-          "line": 10,
-          "column": 1
-        },
+        "end": 87,
         "endPos": {
           "offset": 87,
           "line": 10,
           "column": 1
         },
+        "isInvalid": false,
+        "kind": "<eof>",
+        "leadingInvalid": "",
+        "leadingTrivia": "",
         "start": 87,
-        "end": 87,
-        "leadingTrivia": [],
-        "trailingTrivia": [],
-        "leadingInvalid": [],
-        "trailingInvalid": []
+        "startPos": {
+          "offset": 87,
+          "line": 10,
+          "column": 1
+        },
+        "trailingInvalid": "",
+        "trailingTrivia": "",
+        "value": ""
       }
+    },
+    "context": {
+      "id": "<program>@[L0:C0, L10:C1]",
+      "snippet": "Table User...{\r\n    \r\n}"
+    },
+    "end": 87,
+    "endPos": {
+      "offset": 87,
+      "line": 10,
+      "column": 1
+    },
+    "fullEnd": 87,
+    "fullStart": 0,
+    "kind": "<program>",
+    "start": 0,
+    "startPos": {
+      "offset": 0,
+      "line": 0,
+      "column": 0
+    },
+    "symbol": {
+      "context": {
+        "id": "<program>@[L0:C0, L10:C1]",
+        "snippet": "Table User...{\r\n    \r\n}"
+      },
+      "declaration": {
+        "id": "<program>@[L0:C0, L10:C1]",
+        "snippet": "Table User...{\r\n    \r\n}"
+      },
+      "members": [
+        {
+          "context": {}
+        },
+        {
+          "context": {
+            "id": "<element-declaration>:Users@[L0:C0, L2:C1]",
+            "snippet": "Table User... U1 {\r\n\r\n}"
+          }
+        },
+        {
+          "context": {
+            "id": "<element-declaration>:Users@[L4:C0, L6:C1]",
+            "snippet": "Table User... U2 {\r\n\r\n}"
+          }
+        },
+        {
+          "context": {
+            "id": "<element-declaration>:Products@[L8:C0, L10:C1]",
+            "snippet": "Table Prod...{\r\n    \r\n}"
+          }
+        }
+      ],
+      "references": []
     }
   },
-  "errors": [],
   "warnings": []
 }

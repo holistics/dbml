@@ -1,350 +1,143 @@
 {
+  "errors": [
+    {
+      "code": "UNEXPECTED_NEWLINE",
+      "diagnostic": "Invalid newline encountered while parsing",
+      "end": 191,
+      "level": "error",
+      "start": 156,
+      "token": {
+        "context": {
+          "id": "<variable>:\"This is an unclosed quoted string\r@[L8:C0, L8:C35]",
+          "snippet": "\"This is a...ed string\r"
+        },
+        "isInvalid": true
+      }
+    },
+    {
+      "code": "UNEXPECTED_NEWLINE",
+      "diagnostic": "Invalid newline encountered while parsing",
+      "end": 230,
+      "level": "error",
+      "start": 194,
+      "token": {
+        "context": {
+          "id": "<string>:'This is an unclosed string literal\r@[L10:C0, L10:C36]",
+          "snippet": "'This is a...g literal\r"
+        },
+        "isInvalid": true
+      }
+    },
+    {
+      "code": "UNEXPECTED_EOF",
+      "diagnostic": "EOF reached while parsing",
+      "end": 312,
+      "level": "error",
+      "start": 271,
+      "token": {
+        "context": {
+          "id": "<string>:'''This is an unclosed multiline string\r\n@[L15:C0, L16:C0]",
+          "snippet": "'''This is...e string\r\n"
+        },
+        "isInvalid": true
+      }
+    },
+    {
+      "code": "UNEXPECTED_TOKEN",
+      "diagnostic": "Expect an identifier",
+      "end": 25,
+      "level": "error",
+      "start": 0,
+      "token": {
+        "context": {
+          "id": "<variable>:This is a quoted string@[L0:C0, L0:C25]",
+          "snippet": "\"This is a...ed string\""
+        },
+        "isInvalid": true
+      }
+    },
+    {
+      "code": "UNEXPECTED_TOKEN",
+      "diagnostic": "Expect an identifier",
+      "end": 73,
+      "level": "error",
+      "start": 29,
+      "token": {
+        "context": {
+          "id": "<variable>:This is a quoted string \nwith a newline\n@[L2:C0, L2:C44]",
+          "snippet": "\"This is a...newline\\n\""
+        },
+        "isInvalid": true
+      }
+    },
+    {
+      "code": "UNEXPECTED_TOKEN",
+      "diagnostic": "Expect an identifier",
+      "end": 103,
+      "level": "error",
+      "start": 77,
+      "token": {
+        "context": {
+          "id": "<string>:This is a string literal@[L4:C0, L4:C26]",
+          "snippet": "'This is a...g literal'"
+        },
+        "isInvalid": true
+      }
+    },
+    {
+      "code": "UNEXPECTED_TOKEN",
+      "diagnostic": "Expect an identifier",
+      "end": 152,
+      "level": "error",
+      "start": 107,
+      "token": {
+        "context": {
+          "id": "<string>:This is a string literal \nwith a newline\n@[L6:C0, L6:C45]",
+          "snippet": "'This is a...newline\\n'"
+        },
+        "isInvalid": true
+      }
+    },
+    {
+      "code": "UNEXPECTED_TOKEN",
+      "diagnostic": "Expect an identifier",
+      "end": 267,
+      "level": "error",
+      "start": 233,
+      "token": {
+        "context": {
+          "id": "<string>:This is a multiline string\r\n@[L12:C0, L13:C3]",
+          "snippet": "'''This is...tring\r\n'''"
+        },
+        "isInvalid": true
+      }
+    }
+  ],
   "tokens": [
     {
       "context": {
         "id": "<eof>:@[L16:C0, L16:C0]",
         "snippet": ""
       },
-      "isInvalid": false,
-      "kind": "<eof>",
-      "value": "",
-      "startPos": {
-        "offset": 312,
-        "line": 16,
-        "column": 0
-      },
+      "end": 312,
       "endPos": {
         "offset": 312,
         "line": 16,
         "column": 0
       },
+      "isInvalid": false,
+      "kind": "<eof>",
+      "leadingInvalid": "This is a quoted stringThis is a quoted string \nwith a newline\nThis is a string literalThis is a string literal \nwith a newline\nThis is a multiline string\r\n",
+      "leadingTrivia": "",
       "start": 312,
-      "end": 312,
-      "leadingTrivia": [],
-      "trailingTrivia": [],
-      "leadingInvalid": [
-        "This is a quoted string",
-        "This is a quoted string \nwith a newline\n",
-        "This is a string literal",
-        "This is a string literal \nwith a newline\n",
-        "This is a multiline string\r\n"
-      ],
-      "trailingInvalid": []
-    }
-  ],
-  "errors": [
-    {
-      "level": "error",
-      "code": {
-        "value": 1003,
-        "name": "UNEXPECTED_NEWLINE"
+      "startPos": {
+        "offset": 312,
+        "line": 16,
+        "column": 0
       },
-      "diagnostic": "Invalid newline encountered while parsing",
-      "token": {
-        "context": {
-          "id": "<variable>:\"This is an unclosed quoted string\r@[L8:C0, L8:C35]",
-          "snippet": "\"This is a...ed string\r"
-        },
-        "isInvalid": true,
-        "kind": "<variable>",
-        "value": "\"This is an unclosed quoted string\r",
-        "startPos": {
-          "offset": 156,
-          "line": 8,
-          "column": 0
-        },
-        "endPos": {
-          "offset": 191,
-          "line": 8,
-          "column": 35
-        },
-        "start": 156,
-        "end": 191,
-        "leadingTrivia": [
-          "\n"
-        ],
-        "trailingTrivia": [
-          "\n"
-        ],
-        "leadingInvalid": [],
-        "trailingInvalid": []
-      },
-      "start": 156,
-      "end": 191
-    },
-    {
-      "level": "error",
-      "code": {
-        "value": 1003,
-        "name": "UNEXPECTED_NEWLINE"
-      },
-      "diagnostic": "Invalid newline encountered while parsing",
-      "token": {
-        "context": {
-          "id": "<string>:'This is an unclosed string literal\r@[L10:C0, L10:C36]",
-          "snippet": "'This is a...g literal\r"
-        },
-        "isInvalid": true,
-        "kind": "<string>",
-        "value": "'This is an unclosed string literal\r",
-        "startPos": {
-          "offset": 194,
-          "line": 10,
-          "column": 0
-        },
-        "endPos": {
-          "offset": 230,
-          "line": 10,
-          "column": 36
-        },
-        "start": 194,
-        "end": 230,
-        "leadingTrivia": [
-          "\n"
-        ],
-        "trailingTrivia": [
-          "\n"
-        ],
-        "leadingInvalid": [],
-        "trailingInvalid": []
-      },
-      "start": 194,
-      "end": 230
-    },
-    {
-      "level": "error",
-      "code": {
-        "value": 1002,
-        "name": "UNEXPECTED_EOF"
-      },
-      "diagnostic": "EOF reached while parsing",
-      "token": {
-        "context": {
-          "id": "<string>:'''This is an unclosed multiline string\r\n@[L15:C0, L16:C0]",
-          "snippet": "'''This is...e string\r\n"
-        },
-        "isInvalid": true,
-        "kind": "<string>",
-        "value": "'''This is an unclosed multiline string\r\n",
-        "startPos": {
-          "offset": 271,
-          "line": 15,
-          "column": 0
-        },
-        "endPos": {
-          "offset": 312,
-          "line": 16,
-          "column": 0
-        },
-        "start": 271,
-        "end": 312,
-        "leadingTrivia": [
-          "\n"
-        ],
-        "trailingTrivia": [],
-        "leadingInvalid": [],
-        "trailingInvalid": []
-      },
-      "start": 271,
-      "end": 312
-    },
-    {
-      "level": "error",
-      "code": {
-        "value": 1005,
-        "name": "UNEXPECTED_TOKEN"
-      },
-      "diagnostic": "Expect an identifier",
-      "token": {
-        "context": {
-          "id": "<variable>:This is a quoted string@[L0:C0, L0:C25]",
-          "snippet": "\"This is a...ed string\""
-        },
-        "isInvalid": true,
-        "kind": "<variable>",
-        "value": "This is a quoted string",
-        "startPos": {
-          "offset": 0,
-          "line": 0,
-          "column": 0
-        },
-        "endPos": {
-          "offset": 25,
-          "line": 0,
-          "column": 25
-        },
-        "start": 0,
-        "end": 25,
-        "leadingTrivia": [],
-        "trailingTrivia": [
-          "\n"
-        ],
-        "leadingInvalid": [],
-        "trailingInvalid": []
-      },
-      "start": 0,
-      "end": 25
-    },
-    {
-      "level": "error",
-      "code": {
-        "value": 1005,
-        "name": "UNEXPECTED_TOKEN"
-      },
-      "diagnostic": "Expect an identifier",
-      "token": {
-        "context": {
-          "id": "<variable>:This is a quoted string \nwith a newline\n@[L2:C0, L2:C44]",
-          "snippet": "\"This is a...newline\\n\""
-        },
-        "isInvalid": true,
-        "kind": "<variable>",
-        "value": "This is a quoted string \nwith a newline\n",
-        "startPos": {
-          "offset": 29,
-          "line": 2,
-          "column": 0
-        },
-        "endPos": {
-          "offset": 73,
-          "line": 2,
-          "column": 44
-        },
-        "start": 29,
-        "end": 73,
-        "leadingTrivia": [
-          "\n"
-        ],
-        "trailingTrivia": [
-          "\n"
-        ],
-        "leadingInvalid": [],
-        "trailingInvalid": []
-      },
-      "start": 29,
-      "end": 73
-    },
-    {
-      "level": "error",
-      "code": {
-        "value": 1005,
-        "name": "UNEXPECTED_TOKEN"
-      },
-      "diagnostic": "Expect an identifier",
-      "token": {
-        "context": {
-          "id": "<string>:This is a string literal@[L4:C0, L4:C26]",
-          "snippet": "'This is a...g literal'"
-        },
-        "isInvalid": true,
-        "kind": "<string>",
-        "value": "This is a string literal",
-        "startPos": {
-          "offset": 77,
-          "line": 4,
-          "column": 0
-        },
-        "endPos": {
-          "offset": 103,
-          "line": 4,
-          "column": 26
-        },
-        "start": 77,
-        "end": 103,
-        "leadingTrivia": [
-          "\n"
-        ],
-        "trailingTrivia": [
-          "\n"
-        ],
-        "leadingInvalid": [],
-        "trailingInvalid": []
-      },
-      "start": 77,
-      "end": 103
-    },
-    {
-      "level": "error",
-      "code": {
-        "value": 1005,
-        "name": "UNEXPECTED_TOKEN"
-      },
-      "diagnostic": "Expect an identifier",
-      "token": {
-        "context": {
-          "id": "<string>:This is a string literal \nwith a newline\n@[L6:C0, L6:C45]",
-          "snippet": "'This is a...newline\\n'"
-        },
-        "isInvalid": true,
-        "kind": "<string>",
-        "value": "This is a string literal \nwith a newline\n",
-        "startPos": {
-          "offset": 107,
-          "line": 6,
-          "column": 0
-        },
-        "endPos": {
-          "offset": 152,
-          "line": 6,
-          "column": 45
-        },
-        "start": 107,
-        "end": 152,
-        "leadingTrivia": [
-          "\n"
-        ],
-        "trailingTrivia": [
-          "\n"
-        ],
-        "leadingInvalid": [],
-        "trailingInvalid": [
-          "\"This is an unclosed quoted string\r",
-          "'This is an unclosed string literal\r"
-        ]
-      },
-      "start": 107,
-      "end": 152
-    },
-    {
-      "level": "error",
-      "code": {
-        "value": 1005,
-        "name": "UNEXPECTED_TOKEN"
-      },
-      "diagnostic": "Expect an identifier",
-      "token": {
-        "context": {
-          "id": "<string>:This is a multiline string\r\n@[L12:C0, L13:C3]",
-          "snippet": "'''This is...tring\r\n'''"
-        },
-        "isInvalid": true,
-        "kind": "<string>",
-        "value": "This is a multiline string\r\n",
-        "startPos": {
-          "offset": 233,
-          "line": 12,
-          "column": 0
-        },
-        "endPos": {
-          "offset": 267,
-          "line": 13,
-          "column": 3
-        },
-        "start": 233,
-        "end": 267,
-        "leadingTrivia": [
-          "\n"
-        ],
-        "trailingTrivia": [
-          "\n"
-        ],
-        "leadingInvalid": [],
-        "trailingInvalid": [
-          "'''This is an unclosed multiline string\r\n"
-        ]
-      },
-      "start": 233,
-      "end": 267
+      "trailingInvalid": "",
+      "trailingTrivia": "",
+      "value": ""
     }
   ],
   "warnings": []
