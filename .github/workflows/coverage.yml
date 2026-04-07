@@ -1,14 +1,14 @@
-name: Run unit test
+name: Run coverage test
 on:
   push:
     branches: [master]
     paths-ignore:
-      - 'dbml-homepage/**'
+      - "dbml-homepage/**"
   pull_request:
     branches: [master]
     types: [opened, synchronize]
     paths-ignore:
-      - 'dbml-homepage/**'
+      - "dbml-homepage/**"
 jobs:
   build:
     runs-on: ubuntu-22.04
@@ -71,31 +71,40 @@ jobs:
           --health-retries 10
 
     steps:
-    - name: Setup Oracle Instant Client
-      uses: iamazeem/setup-oracle-instant-client-action@v2
-    - uses: actions/checkout@v3
-    - name: Import DDL to Postgres
-      run: |
-        psql -h localhost -U dbml -d dbml_test -f packages/dbml-cli/__tests__/db2dbml/postgres/schema.sql
-      env:
-        PGPASSWORD: testtest
-    - name: Import DDL to MySQL
-      run: |
-        mysql -h 127.0.0.1 -u root -proot dbml_test < packages/dbml-cli/__tests__/db2dbml/mysql/schema.sql
-    - name: Import DDL to MSSQL
-      run: |
-        sqlcmd -S localhost -U sa -P dbml.123.123 -d master -i packages/dbml-cli/__tests__/db2dbml/mssql/schema.sql
-    - name: Import DDL to Oracle
-      run: |
-        sqlplus -s dbml/root@localhost:1521/dbml_test @packages/dbml-cli/__tests__/db2dbml/oracle/schema.sql
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'yarn'
-    - name: Install dependencies
-      run: yarn install --frozen-lockfile
-    - name: Build packages
-      run: yarn build
-    - name: Run unit test
-      run: yarn test
+      - name: Setup Oracle Instant Client
+        uses: iamazeem/setup-oracle-instant-client-action@v2
+      - uses: actions/checkout@v3
+      - name: Import DDL to Postgres
+        run: |
+          psql -h localhost -U dbml -d dbml_test -f packages/dbml-cli/__tests__/db2dbml/postgres/schema.sql
+        env:
+          PGPASSWORD: testtest
+      - name: Import DDL to MySQL
+        run: |
+          mysql -h 127.0.0.1 -u root -proot dbml_test < packages/dbml-cli/__tests__/db2dbml/mysql/schema.sql
+      - name: Import DDL to MSSQL
+        run: |
+          sqlcmd -S localhost -U sa -P dbml.123.123 -d master -i packages/dbml-cli/__tests__/db2dbml/mssql/schema.sql
+      - name: Import DDL to Oracle
+        run: |
+          sqlplus -s dbml/root@localhost:1521/dbml_test @packages/dbml-cli/__tests__/db2dbml/oracle/schema.sql
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "yarn"
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      - name: Build packages
+        run: yarn build
+      - name: Run unit test and coverage
+        run: yarn coverage
+      - name: Generate coverage report
+        id: coverage
+        run: node .github/workflows/scripts/collect-coverage.js
+      - name: Comment PR with coverage report
+        uses: marocchino/sticky-pull-request-comment@v2
+        if: github.event_name == 'pull_request'
+        with:
+          recreate: true
+          path: coverage-report.md
