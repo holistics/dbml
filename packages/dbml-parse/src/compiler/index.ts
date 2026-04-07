@@ -41,7 +41,6 @@ export default class Compiler {
   setSource (source: string) {
     this.source = source;
     this.cache.clear();
-    this.symbolIdGenerator.reset();
   }
 
   private query<Args extends (Primitive | Primitive[] | Internable<Primitive>)[], Return> (
