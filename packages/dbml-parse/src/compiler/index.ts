@@ -6,7 +6,7 @@ import { parseFile } from './queries/pipeline';
 import { containerStack, containerToken, containerElement, containerScope, containerScopeKind } from './queries/container';
 import { renameTable, type TableNameInput } from './queries/transform';
 export { ScopeKind } from './types';
-export { type TextEdit, type TableNameInput } from './queries/transform';
+export type { TextEdit, TableNameInput } from './queries/transform';
 import {
   nodeSymbol,
   symbolMembers,
@@ -16,13 +16,14 @@ import {
   interpret,
 } from '@/core/global_modules';
 import { symbolReferences } from './queries/symbolReferences';
-import { intern, Internable, Primitive } from '@/core/types/internable';
+import { intern, type Internable, type Primitive } from '@/core/types/internable';
 import { DEFAULT_SCHEMA_NAME, UNHANDLED } from '@/constants';
 import { alias, nodeFullname as fullname, settings, validate } from '@/core/local_modules';
-import { NodeSymbolIdGenerator, SchemaSymbol, NodeSymbol } from '@/core/types/symbols';
+import { NodeSymbolIdGenerator, SchemaSymbol, type NodeSymbol } from '@/core/types/symbols';
 import SymbolFactory from '@/core/types/symbolFactory';
 import { lookupMembers } from './queries/lookupMembers';
 import { symbolName } from './queries/symbolName';
+import { SyntaxNodeIdGenerator } from '@/core/parser/nodes';
 
 // Re-export utilities
 export { splitQualifiedIdentifier, unescapeString, escapeString, formatRecordValue, isValidIdentifier, addDoubleQuoteIfNeeded };
@@ -32,7 +33,10 @@ const COMPUTING = Symbol('COMPUTING');
 export default class Compiler {
   private source = '';
   private cache = new Map<symbol, any>();
-  private symbolIdGenerator = new NodeSymbolIdGenerator();
+
+  nodeIdGenerator = new SyntaxNodeIdGenerator();
+
+  symbolIdGenerator = new NodeSymbolIdGenerator();
   symbolFactory = new SymbolFactory(this.symbolIdGenerator);
 
   setSource (source: string) {
