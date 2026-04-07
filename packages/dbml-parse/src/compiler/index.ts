@@ -23,6 +23,7 @@ import SymbolFactory from '@/core/types/symbolFactory';
 import { lookupMembers } from './queries/lookupMembers';
 import { symbolName } from './queries/symbolName';
 import { SyntaxNodeIdGenerator } from '@/core/parser/nodes';
+import { type DbmlProjectLayout, MemoryProjectLayout } from './projectLayout';
 
 // Re-export utilities
 export { splitQualifiedIdentifier, unescapeString, escapeString, formatRecordValue, isValidIdentifier, addDoubleQuoteIfNeeded };
@@ -30,18 +31,18 @@ export { splitQualifiedIdentifier, unescapeString, escapeString, formatRecordVal
 const COMPUTING = Symbol('COMPUTING');
 
 export default class Compiler {
-  private source = '';
   private cache = new Map<symbol, any>();
+
+  layout: DbmlProjectLayout = new MemoryProjectLayout();
 
   nodeIdGenerator = new SyntaxNodeIdGenerator();
 
   symbolIdGenerator = new NodeSymbolIdGenerator();
   symbolFactory = new SymbolFactory(this.symbolIdGenerator);
 
-  setSource (source: string) {
-    this.source = source;
+  setSource (layout: DbmlProjectLayout) {
+    this.layout = layout;
     this.cache.clear();
-    this.symbolIdGenerator.reset();
   }
 
   private query<Args extends (Primitive | Primitive[] | Internable<Primitive>)[], Return> (
@@ -100,7 +101,7 @@ export default class Compiler {
 
   // @deprecated - legacy APIs for services compatibility
   readonly parse = {
-    source: () => this.source as Readonly<string>,
+    source: () => this.layout.getSource(DEFAULT_ENTRY),
     ast: () => this.parseFile(DEFAULT_ENTRY).getValue().ast,
     _: () => {
       const ast = this.parseFile(DEFAULT_ENTRY).getValue().ast;
