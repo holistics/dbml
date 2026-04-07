@@ -11,7 +11,7 @@ function serializeInterpreterResult (compiler: Compiler, report: Report<Database
   const errors = report.getErrors();
   const warnings = report.getWarnings();
   return JSON.stringify(toSnapshot(compiler, {
-    database: value,
+    database: value as any,
     errors,
     warnings,
   }), null, 2);
