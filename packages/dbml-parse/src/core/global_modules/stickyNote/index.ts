@@ -20,7 +20,7 @@ export const noteModule: GlobalModule = {
     return new Report(compiler.symbolFactory.create(NodeSymbol, {
       kind: SymbolKind.Note,
       declaration: node,
-    }));
+    }, node.filepath));
   },
 
   symbolMembers (compiler: Compiler, symbol: NodeSymbol): Report<NodeSymbol[]> | Report<PassThrough> {

@@ -36,7 +36,7 @@ export const refModule: GlobalModule = {
     return new Report(compiler.symbolFactory.create(NodeSymbol, {
       kind: SymbolKind.Ref,
       declaration: node,
-    }));
+    }, node.filepath));
   },
 
   symbolMembers (compiler: Compiler, symbol: NodeSymbol): Report<NodeSymbol[]> | Report<PassThrough> {
@@ -54,7 +54,7 @@ export const refModule: GlobalModule = {
     // Skip variables that are inside setting attribute values (e.g. delete: cascade)
     if (node.parentOfKind(AttributeNode)) return Report.create(PASS_THROUGH);
 
-    const programNode = compiler.parseFile().getValue().ast;
+    const programNode = compiler.parseFile(node.filepath).getValue().ast;
     const globalSymbol = compiler.nodeSymbol(programNode).getValue();
     if (globalSymbol === UNHANDLED) return Report.create(undefined);
 
@@ -90,19 +90,6 @@ function getDefaultSchemaSymbol (compiler: Compiler, globalSymbol: NodeSymbol): 
   return members.getValue().find((m: NodeSymbol) =>
     m instanceof SchemaSymbol && m.name === DEFAULT_SCHEMA_NAME,
   );
-}
-
-function findTableByAlias (compiler: Compiler, parentSymbol: NodeSymbol, alias: string): NodeSymbol | undefined {
-  const members = compiler.symbolMembers(parentSymbol);
-  if (members.hasValue(UNHANDLED)) return undefined;
-  for (const m of members.getValue()) {
-    if (!m.isKind(SymbolKind.Table) || !m.declaration) continue;
-    const aliasResult = compiler.alias(m.declaration);
-    if (!aliasResult.hasValue(UNHANDLED) && aliasResult.getValue() === alias) {
-      return m;
-    }
-  }
-  return undefined;
 }
 
 // Ref endpoint: table.column or schema.table.column

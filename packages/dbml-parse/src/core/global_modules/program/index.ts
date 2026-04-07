@@ -19,7 +19,7 @@ export const programModule: GlobalModule = {
     return new Report(compiler.symbolFactory.create(NodeSymbol, {
       kind: SymbolKind.Program,
       declaration: node,
-    }));
+    }, node.filepath));
   },
 
   nestedSymbols (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol[]> | Report<PassThrough> {
@@ -45,7 +45,7 @@ export const programModule: GlobalModule = {
 
       const schemaName = fullname.length <= 1 ? DEFAULT_SCHEMA_NAME : fullname[0]; // When fullname doesn't have a schema name, `public` is assumed
       if (!schemaMembers.has(schemaName)) {
-        schemaMembers.set(schemaName, compiler.symbolFactory.create(SchemaSymbol, { name: schemaName }));
+        schemaMembers.set(schemaName, compiler.symbolFactory.create(SchemaSymbol, { name: schemaName }, symbol.filepath));
       }
     }
 

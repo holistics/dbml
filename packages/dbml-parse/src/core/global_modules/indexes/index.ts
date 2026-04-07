@@ -19,11 +19,11 @@ export const indexesModule: GlobalModule = {
       return new Report(compiler.symbolFactory.create(NodeSymbol, {
         kind: SymbolKind.Indexes,
         declaration: node,
-      }));
+      }, node.filepath));
     }
     if (isElementFieldNode(node, ElementKind.Indexes)) {
       if (node instanceof PrimaryExpressionNode) {
-        return new Report(compiler.symbolFactory.create(NodeSymbol, { kind: SymbolKind.IndexesField, declaration: node }));
+        return new Report(compiler.symbolFactory.create(NodeSymbol, { kind: SymbolKind.IndexesField, declaration: node }, node.filepath));
       }
       return Report.create(PASS_THROUGH);
     }

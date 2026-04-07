@@ -42,10 +42,10 @@ export const tableModule: GlobalModule = {
       return new Report(compiler.symbolFactory.create(NodeSymbol, {
         kind: SymbolKind.Table,
         declaration: node,
-      }));
+      }, node.filepath));
     }
     if (isInsideElementBody(node, ElementKind.Table) && !isElementNode(node, ElementKind.Records)) {
-      return new Report(compiler.symbolFactory.create(NodeSymbol, { kind: SymbolKind.Column, declaration: node }));
+      return new Report(compiler.symbolFactory.create(NodeSymbol, { kind: SymbolKind.Column, declaration: node }, node.filepath));
     }
     return Report.create(PASS_THROUGH);
   },
@@ -103,7 +103,7 @@ export const tableModule: GlobalModule = {
       if (!partialName) continue;
 
       // Look up the TablePartial symbol among direct program elements
-      const ast = compiler.parseFile().getValue().ast;
+      const ast = compiler.parseFile(symbol.filepath).getValue().ast;
       if (!(ast instanceof ProgramNode)) continue;
       let partialSymbol: NodeSymbol | undefined;
       for (const programChild of ast.body) {
@@ -117,7 +117,7 @@ export const tableModule: GlobalModule = {
       }
 
       if (!partialSymbol) {
-        errors.push(new CompileError(CompileErrorCode.BINDING_ERROR, `TablePartial '${partialName}' does not exist in Schema 'public'`, partialNameNode));
+        errors.push(new CompileError(CompileErrorCode.BINDING_ERROR, `TablePartial '${partialName}' does not exist in Schema 'public'`, partialNameNode || node));
         continue;
       }
 
@@ -128,7 +128,7 @@ export const tableModule: GlobalModule = {
           if (!m.isKind(SymbolKind.Column) || !m.declaration) return m;
           const name = compiler.symbolName(m);
           if (!name) return m;
-          return compiler.symbolFactory.create(InjectedSymbol, { kind: SymbolKind.Column, declaration: m.declaration, name });
+          return compiler.symbolFactory.create(InjectedSymbol, { kind: SymbolKind.Column, declaration: m.declaration, name }, node.filepath);
         });
         injections.push({ index: i, partialMembers: injectedMembers, partialErrors: partialMembersResult.getErrors() });
       }
@@ -159,7 +159,7 @@ export const tableModule: GlobalModule = {
       return Report.create(PASS_THROUGH);
     }
 
-    const programNode = compiler.parseFile().getValue().ast;
+    const programNode = compiler.parseFile(node.filepath).getValue().ast;
     const globalSymbol = compiler.nodeSymbol(programNode).getValue();
 
     if (globalSymbol === UNHANDLED) {

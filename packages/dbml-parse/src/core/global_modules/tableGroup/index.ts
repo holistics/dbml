@@ -5,7 +5,7 @@ import type { SyntaxNode } from '@/core/parser/nodes';
 import type { SyntaxToken } from '@/core/lexer/tokens';
 import { NodeSymbol, SchemaSymbol, SymbolKind } from '@/core/types/symbols';
 import type { GlobalModule } from '../types';
-import { DEFAULT_SCHEMA_NAME, PASS_THROUGH, type PassThrough, UNHANDLED } from '@/constants';
+import { DEFAULT_SCHEMA_NAME, PASS_THROUGH, type PassThrough, UNHANDLED, DEFAULT_ENTRY } from '@/constants';
 import Report from '@/core/report';
 import type Compiler from '@/compiler/index';
 import type { SchemaElement } from '@/core/types/schemaJson';
@@ -32,10 +32,10 @@ export const tableGroupModule: GlobalModule = {
       return new Report(compiler.symbolFactory.create(NodeSymbol, {
         kind: SymbolKind.TableGroup,
         declaration: node,
-      }));
+      }, node.filepath));
     }
     if (isElementFieldNode(node, ElementKind.TableGroup)) {
-      return new Report(compiler.symbolFactory.create(NodeSymbol, { kind: SymbolKind.TableGroupField, declaration: node }));
+      return new Report(compiler.symbolFactory.create(NodeSymbol, { kind: SymbolKind.TableGroupField, declaration: node }, node.filepath));
     }
     return Report.create(PASS_THROUGH);
   },
@@ -99,7 +99,7 @@ export const tableGroupModule: GlobalModule = {
     // Skip variables inside setting lists
     if (node.parent && isInsideSettingList(node)) return Report.create(PASS_THROUGH);
 
-    const programNode = compiler.parseFile().getValue().ast;
+    const programNode = compiler.parseFile(DEFAULT_ENTRY).getValue().ast;
     const globalSymbol = compiler.nodeSymbol(programNode).getValue();
     if (globalSymbol === UNHANDLED) return Report.create(undefined);
 

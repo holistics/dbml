@@ -30,13 +30,13 @@ export const enumModule: GlobalModule = {
       return new Report(compiler.symbolFactory.create(NodeSymbol, {
         kind: SymbolKind.Enum,
         declaration: node,
-      }));
+      }, node.filepath));
     }
     if (isElementFieldNode(node, ElementKind.Enum)) {
       return new Report(compiler.symbolFactory.create(NodeSymbol, {
         kind: SymbolKind.EnumField,
         declaration: node,
-      }));
+      }, node.filepath));
     }
     return Report.create(PASS_THROUGH);
   },

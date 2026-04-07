@@ -4,7 +4,6 @@ import {
   isAccessExpression,
   destructureMemberAccessExpression,
   extractVarNameFromPrimaryVariable,
-  getBody,
 } from '@/core/utils/expression';
 import { ElementKind } from '@/core/types/keywords';
 import {
@@ -35,7 +34,7 @@ export const recordsModule: GlobalModule = {
     return new Report(compiler.symbolFactory.create(NodeSymbol, {
       kind: SymbolKind.Records,
       declaration: node,
-    }));
+    }, node.filepath));
   },
 
   symbolMembers (compiler: Compiler, symbol: NodeSymbol): Report<NodeSymbol[]> | Report<PassThrough> {
@@ -59,7 +58,7 @@ export const recordsModule: GlobalModule = {
     const recordsNode = node.parentOfKind(ElementDeclarationNode);
     if (!recordsNode?.isKind(ElementKind.Records)) return Report.create(PASS_THROUGH);
 
-    const programNode = compiler.parseFile().getValue().ast;
+    const programNode = compiler.parseFile(node.filepath).getValue().ast;
     const globalSymbol = compiler.nodeSymbol(programNode).getValue();
     if (globalSymbol === UNHANDLED) return Report.create(undefined);
 

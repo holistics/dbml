@@ -41,9 +41,7 @@ export default class Compiler {
 
   symbolIdGenerator = new NodeSymbolIdGenerator();
 
-  symbolFactory (filepath: Filepath = DEFAULT_ENTRY): SymbolFactory {
-    return new SymbolFactory(this.symbolIdGenerator, filepath);
-  }
+  symbolFactory = new SymbolFactory(this.symbolIdGenerator);
 
   setSource (layout: DbmlProjectLayout) {
     this.layout = layout;

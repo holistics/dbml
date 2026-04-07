@@ -35,7 +35,7 @@ export const schemaModule: GlobalModule = {
 
     const members: NodeSymbol[] = [];
     const errors: CompileError[] = [];
-    const { ast } = compiler.parseFile().getValue();
+    const { ast } = compiler.parseFile(symbol.filepath).getValue();
 
     const childSchemas = new Map<string, SchemaSymbol>();
 
@@ -61,7 +61,7 @@ export const schemaModule: GlobalModule = {
         // Element belongs to a child schema - create it if not yet seen
         const childName = elementSchemaChain[qualifiedName.length];
         if (!childSchemas.has(childName)) {
-          childSchemas.set(childName, compiler.symbolFactory.create(SchemaSymbol, { name: childName, parent: symbol as SchemaSymbol }));
+          childSchemas.set(childName, compiler.symbolFactory.create(SchemaSymbol, { name: childName, parent: symbol as SchemaSymbol }, symbol.filepath));
         }
       }
     }

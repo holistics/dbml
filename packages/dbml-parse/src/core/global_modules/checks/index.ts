@@ -19,7 +19,7 @@ export const checksModule: GlobalModule = {
     return new Report(compiler.symbolFactory.create(NodeSymbol, {
       kind: SymbolKind.Checks,
       declaration: node,
-    }));
+    }, node.filepath));
   },
 
   symbolMembers (compiler: Compiler, symbol: NodeSymbol): Report<NodeSymbol[]> | Report<PassThrough> {

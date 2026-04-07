@@ -20,10 +20,10 @@ export const projectModule: GlobalModule = {
       return new Report(compiler.symbolFactory.create(NodeSymbol, {
         kind: SymbolKind.Project,
         declaration: node,
-      }));
+      }, node.filepath));
     }
     if (isElementFieldNode(node, ElementKind.Project)) {
-      return new Report(compiler.symbolFactory.create(NodeSymbol, { kind: SymbolKind.ProjectField, declaration: node }));
+      return new Report(compiler.symbolFactory.create(NodeSymbol, { kind: SymbolKind.ProjectField, declaration: node }, node.filepath));
     }
     return Report.create(PASS_THROUGH);
   },
