@@ -176,8 +176,6 @@ export function errorToSnapshot (
     code,
     diagnostic,
     nodeOrToken,
-    start,
-    end,
   } = error;
   if (simple) {
     return sortObject({
@@ -193,8 +191,6 @@ export function errorToSnapshot (
     ...(nodeOrToken instanceof SyntaxNode
       ? { node: syntaxNodeToSnapshot(compiler, nodeOrToken, { simple: true }) }
       : { token: syntaxTokenToSnapshot(compiler, nodeOrToken as SyntaxToken, { simple: true }) }),
-    start,
-    end,
   });
 }
 
@@ -207,8 +203,6 @@ export function warningToSnapshot (
     code,
     diagnostic,
     nodeOrToken,
-    start,
-    end,
   } = warning;
   if (simple) {
     return sortObject({
@@ -224,8 +218,6 @@ export function warningToSnapshot (
     ...(nodeOrToken instanceof SyntaxNode
       ? { node: syntaxNodeToSnapshot(compiler, nodeOrToken, { simple: true }) }
       : { token: syntaxTokenToSnapshot(compiler, nodeOrToken as SyntaxToken, { simple: true }) }),
-    start,
-    end,
   });
 }
 
@@ -243,38 +235,32 @@ export function syntaxTokenToSnapshot (
     trailingTrivia,
     leadingInvalid,
     trailingInvalid,
-    startPos,
-    start,
-    endPos,
-    end,
     isInvalid,
   } = token;
   if (simple) {
-    return sortObject({
-      context: {
+    return {
+      context: { // context should always be at the top
         id: tokenReadableId,
         snippet,
       },
       isInvalid,
-    });
+    };
   }
-  const result = sortObject({
-    context: {
+  const result = {
+    context: { // context should ways be at the top
       id: tokenReadableId,
       snippet,
     },
-    isInvalid,
-    kind,
-    value,
-    startPos,
-    endPos,
-    start,
-    end,
-    leadingTrivia: leadingTrivia.map((t) => t.value).join(''),
-    trailingTrivia: trailingTrivia.map((t) => t.value).join(''),
-    leadingInvalid: leadingInvalid.map((t) => t.value).join(''),
-    trailingInvalid: trailingInvalid.map((t) => t.value).join(''),
-  });
+    ...sortObject({
+      isInvalid,
+      kind,
+      value,
+      leadingTrivia: leadingTrivia.map((t) => t.value).join(''),
+      trailingTrivia: trailingTrivia.map((t) => t.value).join(''),
+      leadingInvalid: leadingInvalid.map((t) => t.value).join(''),
+      trailingInvalid: trailingInvalid.map((t) => t.value).join(''),
+    }),
+  };
   return result;
 }
 
@@ -287,13 +273,6 @@ export function syntaxNodeToSnapshot (
   const snippet = getCodeSnippet(node, compiler.parse.source());
   const {
     id, // Filter this out
-    kind,
-    startPos,
-    endPos,
-    start,
-    end,
-    fullStart,
-    fullEnd,
     parent,
     parentNode,
     ...props
@@ -304,35 +283,30 @@ export function syntaxNodeToSnapshot (
     delete (props as any).source;
   }
   if (simple) {
-    return sortObject({
-      context: {
+    return {
+      context: { // context should always be at the top
         id: nodeReadableId,
         snippet,
       },
-    });
+    };
   }
-  const result = sortObject({
-    context: {
+  const result = {
+    context: { // context should ways be at the top
       id: nodeReadableId,
       snippet,
     },
-    kind,
-    startPos,
-    endPos,
-    start,
-    end,
-    fullStart,
-    fullEnd,
-    symbol: symbol && symbolToSnapshot(compiler, symbol),
-    referee: referee && symbolToSnapshot(compiler, referee, { simple: true }),
-    children: sortObject(Object.fromEntries(
-      Object.entries(props)
-        .map(
-          ([key, value]) =>
-            [key, toSnapshot(compiler, value as Snappable | Snappable[] | Record<string, Snappable>)],
-        ),
-    )),
-  });
+    ...sortObject({
+      symbol: symbol && symbolToSnapshot(compiler, symbol),
+      referee: referee && symbolToSnapshot(compiler, referee, { simple: true }),
+      children: sortObject(Object.fromEntries(
+        Object.entries(props)
+          .map(
+            ([key, value]) =>
+              [key, toSnapshot(compiler, value as Snappable | Snappable[] | Record<string, Snappable>)],
+          ),
+      )),
+    }),
+  };
   return result;
 }
 
@@ -352,26 +326,28 @@ export function symbolToSnapshot (
   const symbolTable = compiler.symbolMembers(symbol).getFiltered(UNHANDLED);
 
   if (simple) {
-    return sortObject({
+    return {
       context: {
-        id: symbolReadableId,
+        id: symbolReadableId, // context should always be at the top
         snippet,
       },
-    });
+    };
   }
-  return sortObject({
-    context: {
+  return {
+    context: { // context should ways be at the top
       id: symbolReadableId,
       snippet,
     },
-    members: symbolTable && sortArray([...symbolTable.entries()].map(([, value]) => symbolToSnapshot(compiler, value, { simple: true }))),
-    declaration: declaration && {
-      id: getReadableId(declaration),
-      snippet: getCodeSnippet(declaration, compiler.parse.source()),
-    },
-    references: references && sortArray(references.map((r) => ({
-      id: getReadableId(r),
-      snippet: getCodeSnippet(r, compiler.parse.source()),
-    }))),
-  });
+    ...sortObject({
+      members: symbolTable && sortArray([...symbolTable.entries()].map(([, value]) => symbolToSnapshot(compiler, value, { simple: true }))),
+      declaration: declaration && {
+        id: getReadableId(declaration),
+        snippet: getCodeSnippet(declaration, compiler.parse.source()),
+      },
+      references: references && sortArray(references.map((r) => ({
+        id: getReadableId(r),
+        snippet: getCodeSnippet(r, compiler.parse.source()),
+      }))),
+    }),
+  };
 }

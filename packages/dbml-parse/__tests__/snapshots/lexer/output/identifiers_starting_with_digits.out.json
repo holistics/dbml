@@ -3,9 +3,7 @@
     {
       "code": "UNKNOWN_TOKEN",
       "diagnostic": "Invalid number",
-      "end": 117,
       "level": "error",
-      "start": 114,
       "token": {
         "context": {
           "id": "<number>:1.a@[L5:C0, L5:C3]",
@@ -17,9 +15,7 @@
     {
       "code": "UNKNOWN_TOKEN",
       "diagnostic": "Invalid number",
-      "end": 141,
       "level": "error",
-      "start": 136,
       "token": {
         "context": {
           "id": "<number>:1.3.a@[L6:C0, L6:C5]",
@@ -31,9 +27,7 @@
     {
       "code": "UNKNOWN_TOKEN",
       "diagnostic": "Invalid number",
-      "end": 167,
       "level": "error",
-      "start": 160,
       "token": {
         "context": {
           "id": "<number>:1.4.a.b@[L7:C0, L7:C7]",
@@ -45,9 +39,7 @@
     {
       "code": "UNEXPECTED_TOKEN",
       "diagnostic": "Expect an opening brace '{' or a colon ':'",
-      "end": 45,
       "level": "error",
-      "start": 43,
       "token": {
         "context": {
           "id": "<identifier>:3a@[L2:C0, L2:C2]",
@@ -63,22 +55,10 @@
         "id": "<identifier>:12_abc@[L0:C0, L0:C6]",
         "snippet": "12_abc"
       },
-      "end": 6,
-      "endPos": {
-        "offset": 6,
-        "line": 0,
-        "column": 6
-      },
       "isInvalid": false,
       "kind": "<identifier>",
       "leadingInvalid": "",
       "leadingTrivia": "",
-      "start": 0,
-      "startPos": {
-        "offset": 0,
-        "line": 0,
-        "column": 0
-      },
       "trailingInvalid": "",
       "trailingTrivia": "  Identifier\n",
       "value": "12_abc"
@@ -88,22 +68,10 @@
         "id": "<identifier>:226_abc@[L1:C0, L1:C7]",
         "snippet": "226_abc"
       },
-      "end": 28,
-      "endPos": {
-        "offset": 28,
-        "line": 1,
-        "column": 7
-      },
       "isInvalid": false,
       "kind": "<identifier>",
       "leadingInvalid": "",
       "leadingTrivia": "",
-      "start": 21,
-      "startPos": {
-        "offset": 21,
-        "line": 1,
-        "column": 0
-      },
       "trailingInvalid": "3a3a.4a3a3",
       "trailingTrivia": "  Identifier\n",
       "value": "226_abc"
@@ -113,22 +81,10 @@
         "id": "<eof>:@[L7:C25, L7:C25]",
         "snippet": ""
       },
-      "end": 185,
-      "endPos": {
-        "offset": 185,
-        "line": 7,
-        "column": 25
-      },
       "isInvalid": false,
       "kind": "<eof>",
       "leadingInvalid": "",
       "leadingTrivia": "",
-      "start": 185,
-      "startPos": {
-        "offset": 185,
-        "line": 7,
-        "column": 25
-      },
       "trailingInvalid": "",
       "trailingTrivia": "",
       "value": ""

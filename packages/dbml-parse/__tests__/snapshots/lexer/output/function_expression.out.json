@@ -3,9 +3,7 @@
     {
       "code": "UNEXPECTED_EOF",
       "diagnostic": "EOF reached while parsing",
-      "end": 84,
       "level": "error",
-      "start": 81,
       "token": {
         "context": {
           "id": "<function-expression>:`\r\n@[L6:C43, L7:C0]",
@@ -17,9 +15,7 @@
     {
       "code": "UNEXPECTED_TOKEN",
       "diagnostic": "Expect an identifier",
-      "end": 8,
       "level": "error",
-      "start": 0,
       "token": {
         "context": {
           "id": "<function-expression>:id * 2@[L0:C0, L0:C8]",
@@ -31,9 +27,7 @@
     {
       "code": "UNEXPECTED_TOKEN",
       "diagnostic": "Expect an identifier",
-      "end": 13,
       "level": "error",
-      "start": 9,
       "token": {
         "context": {
           "id": "<function-expression>:id@[L0:C9, L0:C13]",
@@ -45,9 +39,7 @@
     {
       "code": "UNEXPECTED_TOKEN",
       "diagnostic": "Expect an identifier",
-      "end": 34,
       "level": "error",
-      "start": 18,
       "token": {
         "context": {
           "id": "<function-expression>:\r\n    id * 3\r\n@[L2:C0, L4:C1]",
@@ -59,9 +51,7 @@
     {
       "code": "UNEXPECTED_TOKEN",
       "diagnostic": "Expect an identifier",
-      "end": 81,
       "level": "error",
-      "start": 38,
       "token": {
         "context": {
           "id": "<function-expression>:no escaped supported! this is an error! \\@[L6:C0, L6:C43]",
@@ -77,22 +67,10 @@
         "id": "<eof>:@[L7:C0, L7:C0]",
         "snippet": ""
       },
-      "end": 84,
-      "endPos": {
-        "offset": 84,
-        "line": 7,
-        "column": 0
-      },
       "isInvalid": false,
       "kind": "<eof>",
       "leadingInvalid": "id * 2id\r\n    id * 3\r\nno escaped supported! this is an error! \\",
       "leadingTrivia": "",
-      "start": 84,
-      "startPos": {
-        "offset": 84,
-        "line": 7,
-        "column": 0
-      },
       "trailingInvalid": "",
       "trailingTrivia": "",
       "value": ""

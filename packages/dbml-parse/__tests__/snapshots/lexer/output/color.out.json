@@ -3,9 +3,7 @@
     {
       "code": "UNEXPECTED_TOKEN",
       "diagnostic": "Expect an identifier",
-      "end": 5,
       "level": "error",
-      "start": 0,
       "token": {
         "context": {
           "id": "<color>:#1234@[L0:C0, L0:C5]",
@@ -17,9 +15,7 @@
     {
       "code": "UNEXPECTED_TOKEN",
       "diagnostic": "Expect an identifier",
-      "end": 15,
       "level": "error",
-      "start": 8,
       "token": {
         "context": {
           "id": "<color>:#12acbd@[L1:C0, L1:C7]",
@@ -35,22 +31,10 @@
         "id": "<eof>:@[L1:C7, L1:C7]",
         "snippet": ""
       },
-      "end": 15,
-      "endPos": {
-        "offset": 15,
-        "line": 1,
-        "column": 7
-      },
       "isInvalid": false,
       "kind": "<eof>",
       "leadingInvalid": "#1234#12acbd",
       "leadingTrivia": "",
-      "start": 15,
-      "startPos": {
-        "offset": 15,
-        "line": 1,
-        "column": 7
-      },
       "trailingInvalid": "",
       "trailingTrivia": "",
       "value": ""

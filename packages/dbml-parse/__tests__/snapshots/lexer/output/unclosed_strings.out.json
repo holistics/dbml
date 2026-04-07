@@ -3,9 +3,7 @@
     {
       "code": "UNEXPECTED_NEWLINE",
       "diagnostic": "Invalid newline encountered while parsing",
-      "end": 27,
       "level": "error",
-      "start": 0,
       "token": {
         "context": {
           "id": "<variable>:\"This is an unclosed string@[L0:C0, L0:C27]",
@@ -17,9 +15,7 @@
     {
       "code": "UNEXPECTED_NEWLINE",
       "diagnostic": "Invalid newline encountered while parsing",
-      "end": 61,
       "level": "error",
-      "start": 29,
       "token": {
         "context": {
           "id": "<string>:'This is also an unclosed string@[L2:C0, L2:C32]",
@@ -31,9 +27,7 @@
     {
       "code": "UNEXPECTED_EOF",
       "diagnostic": "EOF reached while parsing",
-      "end": 104,
       "level": "error",
-      "start": 63,
       "token": {
         "context": {
           "id": "<string>:'''This is also an unclosed string\n\n\\'''\n@[L4:C0, L7:C0]",
@@ -49,22 +43,10 @@
         "id": "<eof>:@[L7:C0, L7:C0]",
         "snippet": ""
       },
-      "end": 104,
-      "endPos": {
-        "offset": 104,
-        "line": 7,
-        "column": 0
-      },
       "isInvalid": false,
       "kind": "<eof>",
       "leadingInvalid": "\"This is an unclosed string'This is also an unclosed string'''This is also an unclosed string\n\n\\'''\n",
       "leadingTrivia": "",
-      "start": 104,
-      "startPos": {
-        "offset": 104,
-        "line": 7,
-        "column": 0
-      },
       "trailingInvalid": "",
       "trailingTrivia": "",
       "value": ""

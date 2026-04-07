@@ -3,9 +3,7 @@
     {
       "code": "UNEXPECTED_NEWLINE",
       "diagnostic": "Invalid newline encountered while parsing",
-      "end": 191,
       "level": "error",
-      "start": 156,
       "token": {
         "context": {
           "id": "<variable>:\"This is an unclosed quoted string\r@[L8:C0, L8:C35]",
@@ -17,9 +15,7 @@
     {
       "code": "UNEXPECTED_NEWLINE",
       "diagnostic": "Invalid newline encountered while parsing",
-      "end": 230,
       "level": "error",
-      "start": 194,
       "token": {
         "context": {
           "id": "<string>:'This is an unclosed string literal\r@[L10:C0, L10:C36]",
@@ -31,9 +27,7 @@
     {
       "code": "UNEXPECTED_EOF",
       "diagnostic": "EOF reached while parsing",
-      "end": 312,
       "level": "error",
-      "start": 271,
       "token": {
         "context": {
           "id": "<string>:'''This is an unclosed multiline string\r\n@[L15:C0, L16:C0]",
@@ -45,9 +39,7 @@
     {
       "code": "UNEXPECTED_TOKEN",
       "diagnostic": "Expect an identifier",
-      "end": 25,
       "level": "error",
-      "start": 0,
       "token": {
         "context": {
           "id": "<variable>:This is a quoted string@[L0:C0, L0:C25]",
@@ -59,9 +51,7 @@
     {
       "code": "UNEXPECTED_TOKEN",
       "diagnostic": "Expect an identifier",
-      "end": 73,
       "level": "error",
-      "start": 29,
       "token": {
         "context": {
           "id": "<variable>:This is a quoted string \nwith a newline\n@[L2:C0, L2:C44]",
@@ -73,9 +63,7 @@
     {
       "code": "UNEXPECTED_TOKEN",
       "diagnostic": "Expect an identifier",
-      "end": 103,
       "level": "error",
-      "start": 77,
       "token": {
         "context": {
           "id": "<string>:This is a string literal@[L4:C0, L4:C26]",
@@ -87,9 +75,7 @@
     {
       "code": "UNEXPECTED_TOKEN",
       "diagnostic": "Expect an identifier",
-      "end": 152,
       "level": "error",
-      "start": 107,
       "token": {
         "context": {
           "id": "<string>:This is a string literal \nwith a newline\n@[L6:C0, L6:C45]",
@@ -101,9 +87,7 @@
     {
       "code": "UNEXPECTED_TOKEN",
       "diagnostic": "Expect an identifier",
-      "end": 267,
       "level": "error",
-      "start": 233,
       "token": {
         "context": {
           "id": "<string>:This is a multiline string\r\n@[L12:C0, L13:C3]",
@@ -119,22 +103,10 @@
         "id": "<eof>:@[L16:C0, L16:C0]",
         "snippet": ""
       },
-      "end": 312,
-      "endPos": {
-        "offset": 312,
-        "line": 16,
-        "column": 0
-      },
       "isInvalid": false,
       "kind": "<eof>",
       "leadingInvalid": "This is a quoted stringThis is a quoted string \nwith a newline\nThis is a string literalThis is a string literal \nwith a newline\nThis is a multiline string\r\n",
       "leadingTrivia": "",
-      "start": 312,
-      "startPos": {
-        "offset": 312,
-        "line": 16,
-        "column": 0
-      },
       "trailingInvalid": "",
       "trailingTrivia": "",
       "value": ""

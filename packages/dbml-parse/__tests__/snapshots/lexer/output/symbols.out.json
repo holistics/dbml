@@ -3,9 +3,7 @@
     {
       "code": "UNEXPECTED_TOKEN",
       "diagnostic": "Expect an identifier",
-      "end": 1,
       "level": "error",
-      "start": 0,
       "token": {
         "context": {
           "id": "<op>:+@[L0:C0, L0:C1]",
@@ -17,9 +15,7 @@
     {
       "code": "UNEXPECTED_TOKEN",
       "diagnostic": "Expect an identifier",
-      "end": 3,
       "level": "error",
-      "start": 2,
       "token": {
         "context": {
           "id": "<op>:-@[L0:C2, L0:C3]",
@@ -31,9 +27,7 @@
     {
       "code": "UNEXPECTED_TOKEN",
       "diagnostic": "Expect an identifier",
-      "end": 5,
       "level": "error",
-      "start": 4,
       "token": {
         "context": {
           "id": "<op>:*@[L0:C4, L0:C5]",
@@ -45,9 +39,7 @@
     {
       "code": "UNEXPECTED_TOKEN",
       "diagnostic": "Expect an identifier",
-      "end": 7,
       "level": "error",
-      "start": 6,
       "token": {
         "context": {
           "id": "<op>:/@[L0:C6, L0:C7]",
@@ -59,9 +51,7 @@
     {
       "code": "UNEXPECTED_TOKEN",
       "diagnostic": "Expect an identifier",
-      "end": 10,
       "level": "error",
-      "start": 9,
       "token": {
         "context": {
           "id": "<op>:!@[L1:C0, L1:C1]",
@@ -73,9 +63,7 @@
     {
       "code": "UNEXPECTED_TOKEN",
       "diagnostic": "Expect an identifier",
-      "end": 13,
       "level": "error",
-      "start": 12,
       "token": {
         "context": {
           "id": "<op>:=@[L2:C0, L2:C1]",
@@ -87,9 +75,7 @@
     {
       "code": "UNEXPECTED_TOKEN",
       "diagnostic": "Expect an identifier",
-      "end": 17,
       "level": "error",
-      "start": 15,
       "token": {
         "context": {
           "id": "<op>:==@[L3:C0, L3:C2]",
@@ -101,9 +87,7 @@
     {
       "code": "UNEXPECTED_TOKEN",
       "diagnostic": "Expect an identifier",
-      "end": 20,
       "level": "error",
-      "start": 18,
       "token": {
         "context": {
           "id": "<op>:!=@[L3:C3, L3:C5]",
@@ -115,9 +99,7 @@
     {
       "code": "UNEXPECTED_TOKEN",
       "diagnostic": "Expect an identifier",
-      "end": 22,
       "level": "error",
-      "start": 21,
       "token": {
         "context": {
           "id": "<op>:>@[L3:C6, L3:C7]",
@@ -129,9 +111,7 @@
     {
       "code": "UNEXPECTED_TOKEN",
       "diagnostic": "Expect an identifier",
-      "end": 24,
       "level": "error",
-      "start": 23,
       "token": {
         "context": {
           "id": "<op>:<@[L3:C8, L3:C9]",
@@ -143,9 +123,7 @@
     {
       "code": "UNEXPECTED_TOKEN",
       "diagnostic": "Expect an identifier",
-      "end": 27,
       "level": "error",
-      "start": 25,
       "token": {
         "context": {
           "id": "<op>:<=@[L3:C10, L3:C12]",
@@ -157,9 +135,7 @@
     {
       "code": "UNEXPECTED_TOKEN",
       "diagnostic": "Expect an identifier",
-      "end": 30,
       "level": "error",
-      "start": 28,
       "token": {
         "context": {
           "id": "<op>:>=@[L3:C13, L3:C15]",
@@ -171,9 +147,7 @@
     {
       "code": "UNEXPECTED_TOKEN",
       "diagnostic": "Expect an identifier",
-      "end": 33,
       "level": "error",
-      "start": 32,
       "token": {
         "context": {
           "id": "<colon>::@[L4:C0, L4:C1]",
@@ -185,9 +159,7 @@
     {
       "code": "UNEXPECTED_TOKEN",
       "diagnostic": "Expect an identifier",
-      "end": 35,
       "level": "error",
-      "start": 34,
       "token": {
         "context": {
           "id": "<comma>:,@[L4:C2, L4:C3]",
@@ -199,9 +171,7 @@
     {
       "code": "UNEXPECTED_TOKEN",
       "diagnostic": "Expect an identifier",
-      "end": 38,
       "level": "error",
-      "start": 37,
       "token": {
         "context": {
           "id": "<lbracket>:[@[L5:C0, L5:C1]",
@@ -213,9 +183,7 @@
     {
       "code": "UNEXPECTED_TOKEN",
       "diagnostic": "Expect an identifier",
-      "end": 39,
       "level": "error",
-      "start": 38,
       "token": {
         "context": {
           "id": "<rbracket>:]@[L5:C1, L5:C2]",
@@ -227,9 +195,7 @@
     {
       "code": "UNEXPECTED_TOKEN",
       "diagnostic": "Expect an identifier",
-      "end": 41,
       "level": "error",
-      "start": 40,
       "token": {
         "context": {
           "id": "<lparen>:(@[L5:C3, L5:C4]",
@@ -241,9 +207,7 @@
     {
       "code": "UNEXPECTED_TOKEN",
       "diagnostic": "Expect an identifier",
-      "end": 42,
       "level": "error",
-      "start": 41,
       "token": {
         "context": {
           "id": "<rparen>:)@[L5:C4, L5:C5]",
@@ -255,9 +219,7 @@
     {
       "code": "UNEXPECTED_TOKEN",
       "diagnostic": "Expect an identifier",
-      "end": 44,
       "level": "error",
-      "start": 43,
       "token": {
         "context": {
           "id": "<lbrace>:{@[L5:C6, L5:C7]",
@@ -269,9 +231,7 @@
     {
       "code": "UNEXPECTED_TOKEN",
       "diagnostic": "Expect an identifier",
-      "end": 45,
       "level": "error",
-      "start": 44,
       "token": {
         "context": {
           "id": "<rbrace>:}@[L5:C7, L5:C8]",
@@ -283,9 +243,7 @@
     {
       "code": "UNEXPECTED_TOKEN",
       "diagnostic": "Expect an identifier",
-      "end": 48,
       "level": "error",
-      "start": 47,
       "token": {
         "context": {
           "id": "<op>:.@[L6:C0, L6:C1]",
@@ -297,9 +255,7 @@
     {
       "code": "UNEXPECTED_TOKEN",
       "diagnostic": "Expect an identifier",
-      "end": 51,
       "level": "error",
-      "start": 50,
       "token": {
         "context": {
           "id": "<op>:>@[L7:C0, L7:C1]",
@@ -311,9 +267,7 @@
     {
       "code": "UNEXPECTED_TOKEN",
       "diagnostic": "Expect an identifier",
-      "end": 53,
       "level": "error",
-      "start": 52,
       "token": {
         "context": {
           "id": "<op>:<@[L7:C2, L7:C3]",
@@ -325,9 +279,7 @@
     {
       "code": "UNEXPECTED_TOKEN",
       "diagnostic": "Expect an identifier",
-      "end": 56,
       "level": "error",
-      "start": 54,
       "token": {
         "context": {
           "id": "<op>:<>@[L7:C4, L7:C6]",
@@ -339,9 +291,7 @@
     {
       "code": "UNEXPECTED_TOKEN",
       "diagnostic": "Expect an identifier",
-      "end": 59,
       "level": "error",
-      "start": 58,
       "token": {
         "context": {
           "id": "<op>:~@[L8:C0, L8:C1]",
@@ -357,22 +307,10 @@
         "id": "<eof>:@[L8:C1, L8:C1]",
         "snippet": ""
       },
-      "end": 59,
-      "endPos": {
-        "offset": 59,
-        "line": 8,
-        "column": 1
-      },
       "isInvalid": false,
       "kind": "<eof>",
       "leadingInvalid": "+-*/!===!=><<=>=:,[](){}.><<>~",
       "leadingTrivia": "",
-      "start": 59,
-      "startPos": {
-        "offset": 59,
-        "line": 8,
-        "column": 1
-      },
       "trailingInvalid": "",
       "trailingTrivia": "",
       "value": ""

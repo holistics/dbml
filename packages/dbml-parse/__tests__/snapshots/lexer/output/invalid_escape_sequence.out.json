@@ -3,9 +3,7 @@
     {
       "code": "INVALID_ESCAPE_SEQUENCE",
       "diagnostic": "Invalid unicode escape sequence '\\u', only unicode escape sequences of the form '\\uHHHH' where H is a hexadecimal number are allowed",
-      "end": 3,
       "level": "error",
-      "start": 1,
       "token": {
         "context": {
           "id": "<string>:\\u@[L0:C1, L0:C3]",
@@ -17,9 +15,7 @@
     {
       "code": "INVALID_ESCAPE_SEQUENCE",
       "diagnostic": "Invalid unicode escape sequence '\\u1', only unicode escape sequences of the form '\\uHHHH' where H is a hexadecimal number are allowed",
-      "end": 14,
       "level": "error",
-      "start": 11,
       "token": {
         "context": {
           "id": "<string>:\\u1@[L2:C1, L2:C4]",
@@ -31,9 +27,7 @@
     {
       "code": "INVALID_ESCAPE_SEQUENCE",
       "diagnostic": "Invalid unicode escape sequence '\\u12', only unicode escape sequences of the form '\\uHHHH' where H is a hexadecimal number are allowed",
-      "end": 21,
       "level": "error",
-      "start": 17,
       "token": {
         "context": {
           "id": "<string>:\\u12@[L3:C1, L3:C5]",
@@ -45,9 +39,7 @@
     {
       "code": "INVALID_ESCAPE_SEQUENCE",
       "diagnostic": "Invalid unicode escape sequence '\\uab', only unicode escape sequences of the form '\\uHHHH' where H is a hexadecimal number are allowed",
-      "end": 28,
       "level": "error",
-      "start": 24,
       "token": {
         "context": {
           "id": "<string>:\\uab@[L4:C1, L4:C5]",
@@ -59,9 +51,7 @@
     {
       "code": "INVALID_ESCAPE_SEQUENCE",
       "diagnostic": "Invalid unicode escape sequence '\\ua1', only unicode escape sequences of the form '\\uHHHH' where H is a hexadecimal number are allowed",
-      "end": 35,
       "level": "error",
-      "start": 31,
       "token": {
         "context": {
           "id": "<string>:\\ua1@[L5:C1, L5:C5]",
@@ -73,9 +63,7 @@
     {
       "code": "UNEXPECTED_TOKEN",
       "diagnostic": "Expect an identifier",
-      "end": 4,
       "level": "error",
-      "start": 0,
       "token": {
         "context": {
           "id": "<variable>:\\u@[L0:C0, L0:C4]",
@@ -87,9 +75,7 @@
     {
       "code": "UNEXPECTED_TOKEN",
       "diagnostic": "Expect an identifier",
-      "end": 9,
       "level": "error",
-      "start": 5,
       "token": {
         "context": {
           "id": "<variable>:a@[L1:C0, L1:C4]",
@@ -101,9 +87,7 @@
     {
       "code": "UNEXPECTED_TOKEN",
       "diagnostic": "Expect an identifier",
-      "end": 15,
       "level": "error",
-      "start": 10,
       "token": {
         "context": {
           "id": "<variable>:\\u1@[L2:C0, L2:C5]",
@@ -115,9 +99,7 @@
     {
       "code": "UNEXPECTED_TOKEN",
       "diagnostic": "Expect an identifier",
-      "end": 22,
       "level": "error",
-      "start": 16,
       "token": {
         "context": {
           "id": "<variable>:\\u12@[L3:C0, L3:C6]",
@@ -129,9 +111,7 @@
     {
       "code": "UNEXPECTED_TOKEN",
       "diagnostic": "Expect an identifier",
-      "end": 29,
       "level": "error",
-      "start": 23,
       "token": {
         "context": {
           "id": "<variable>:\\uab@[L4:C0, L4:C6]",
@@ -143,9 +123,7 @@
     {
       "code": "UNEXPECTED_TOKEN",
       "diagnostic": "Expect an identifier",
-      "end": 36,
       "level": "error",
-      "start": 30,
       "token": {
         "context": {
           "id": "<variable>:\\ua1@[L5:C0, L5:C6]",
@@ -161,22 +139,10 @@
         "id": "<eof>:@[L5:C6, L5:C6]",
         "snippet": ""
       },
-      "end": 36,
-      "endPos": {
-        "offset": 36,
-        "line": 5,
-        "column": 6
-      },
       "isInvalid": false,
       "kind": "<eof>",
       "leadingInvalid": "\\ua\\u1\\u12\\uab\\ua1",
       "leadingTrivia": "",
-      "start": 36,
-      "startPos": {
-        "offset": 36,
-        "line": 5,
-        "column": 6
-      },
       "trailingInvalid": "",
       "trailingTrivia": "",
       "value": ""

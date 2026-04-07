@@ -3,9 +3,7 @@
     {
       "code": "UNEXPECTED_TOKEN",
       "diagnostic": "Expect an opening brace '{' or a colon ':'",
-      "end": 34,
       "level": "error",
-      "start": 30,
       "token": {
         "context": {
           "id": "<identifier>:Note@[L2:C8, L2:C12]",
@@ -21,22 +19,10 @@
         "id": "<identifier>:Table@[L0:C0, L0:C5]",
         "snippet": "Table"
       },
-      "end": 5,
-      "endPos": {
-        "offset": 5,
-        "line": 0,
-        "column": 5
-      },
       "isInvalid": false,
       "kind": "<identifier>",
       "leadingInvalid": "",
       "leadingTrivia": "",
-      "start": 0,
-      "startPos": {
-        "offset": 0,
-        "line": 0,
-        "column": 0
-      },
       "trailingInvalid": "",
       "trailingTrivia": " ",
       "value": "Table"
@@ -46,22 +32,10 @@
         "id": "<identifier>:TableGroup@[L0:C6, L0:C16]",
         "snippet": "TableGroup"
       },
-      "end": 16,
-      "endPos": {
-        "offset": 16,
-        "line": 0,
-        "column": 16
-      },
       "isInvalid": false,
       "kind": "<identifier>",
       "leadingInvalid": "",
       "leadingTrivia": "",
-      "start": 6,
-      "startPos": {
-        "offset": 6,
-        "line": 0,
-        "column": 6
-      },
       "trailingInvalid": "",
       "trailingTrivia": "\n",
       "value": "TableGroup"
@@ -71,22 +45,10 @@
         "id": "<identifier>:as@[L1:C0, L1:C2]",
         "snippet": "as"
       },
-      "end": 20,
-      "endPos": {
-        "offset": 20,
-        "line": 1,
-        "column": 2
-      },
       "isInvalid": false,
       "kind": "<identifier>",
       "leadingInvalid": "",
       "leadingTrivia": "",
-      "start": 18,
-      "startPos": {
-        "offset": 18,
-        "line": 1,
-        "column": 0
-      },
       "trailingInvalid": "",
       "trailingTrivia": "\n",
       "value": "as"
@@ -96,22 +58,10 @@
         "id": "<identifier>:indexes@[L2:C0, L2:C7]",
         "snippet": "indexes"
       },
-      "end": 29,
-      "endPos": {
-        "offset": 29,
-        "line": 2,
-        "column": 7
-      },
       "isInvalid": false,
       "kind": "<identifier>",
       "leadingInvalid": "",
       "leadingTrivia": "",
-      "start": 22,
-      "startPos": {
-        "offset": 22,
-        "line": 2,
-        "column": 0
-      },
       "trailingInvalid": "Note_ab",
       "trailingTrivia": " ",
       "value": "indexes"
@@ -121,22 +71,10 @@
         "id": "<eof>:@[L3:C3, L3:C3]",
         "snippet": ""
       },
-      "end": 39,
-      "endPos": {
-        "offset": 39,
-        "line": 3,
-        "column": 3
-      },
       "isInvalid": false,
       "kind": "<eof>",
       "leadingInvalid": "",
       "leadingTrivia": "",
-      "start": 39,
-      "startPos": {
-        "offset": 39,
-        "line": 3,
-        "column": 3
-      },
       "trailingInvalid": "",
       "trailingTrivia": "",
       "value": ""
