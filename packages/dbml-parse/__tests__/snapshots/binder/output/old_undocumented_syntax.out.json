@@ -4535,9 +4535,6 @@
                 "column": 6
               }
             },
-            "parent": {
-              "context": {}
-            },
             "type": {
               "context": {
                 "id": "<identifier>:Table@[L0:C0, L0:C5]",
@@ -5781,9 +5778,6 @@
                         "trailingTrivia": " ",
                         "value": ":"
                       },
-                      "parent": {
-                        "context": {}
-                      },
                       "type": {
                         "context": {
                           "id": "<identifier>:note@[L16:C2, L16:C6]",
@@ -5922,9 +5916,6 @@
                 "line": 12,
                 "column": 6
               }
-            },
-            "parent": {
-              "context": {}
             },
             "type": {
               "context": {
@@ -6604,9 +6595,6 @@
                 "line": 19,
                 "column": 6
               }
-            },
-            "parent": {
-              "context": {}
             },
             "type": {
               "context": {
@@ -7356,9 +7344,6 @@
                           "column": 9
                         }
                       },
-                      "parent": {
-                        "context": {}
-                      },
                       "type": {
                         "context": {
                           "id": "<identifier>:indexes@[L27:C1, L27:C8]",
@@ -7497,9 +7482,6 @@
                 "line": 24,
                 "column": 6
               }
-            },
-            "parent": {
-              "context": {}
             },
             "type": {
               "context": {

@@ -233,9 +233,6 @@
                         "trailingTrivia": " ",
                         "value": ":"
                       },
-                      "parent": {
-                        "context": {}
-                      },
                       "type": {
                         "context": {
                           "id": "<identifier>:Note@[L1:C4, L1:C8]",
@@ -454,9 +451,6 @@
                           "column": 9
                         }
                       },
-                      "parent": {
-                        "context": {}
-                      },
                       "type": {
                         "context": {
                           "id": "<identifier>:Note@[L2:C4, L2:C8]",
@@ -595,9 +589,6 @@
                 "line": 0,
                 "column": 6
               }
-            },
-            "parent": {
-              "context": {}
             },
             "type": {
               "context": {
@@ -829,9 +820,6 @@
                 "column": 5
               }
             },
-            "parent": {
-              "context": {}
-            },
             "type": {
               "context": {
                 "id": "<identifier>:Note@[L7:C0, L7:C4]",
@@ -999,9 +987,6 @@
               "trailingInvalid": "",
               "trailingTrivia": " ",
               "value": ":"
-            },
-            "parent": {
-              "context": {}
             },
             "type": {
               "context": {
