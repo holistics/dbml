@@ -24,6 +24,7 @@ import { lookupMembers } from './queries/lookupMembers';
 import { symbolName } from './queries/symbolName';
 import { SyntaxNodeIdGenerator } from '@/core/parser/nodes';
 import { type DbmlProjectLayout, MemoryProjectLayout } from './projectLayout';
+import { fileDependencies } from './queries/fileDependencies';
 
 // Re-export utilities
 export { splitQualifiedIdentifier, unescapeString, escapeString, formatRecordValue, isValidIdentifier, addDoubleQuoteIfNeeded };
@@ -78,6 +79,7 @@ export default class Compiler {
   nodeSymbol = this.query(nodeSymbol);
   symbolMembers = this.query(symbolMembers);
   lookupMembers = this.query(lookupMembers);
+  fileDependencies = this.query(fileDependencies);
   symbolReferences = this.query(symbolReferences);
   nodeReferee = this.query(nodeReferee);
   nestedSymbols = this.query(nestedSymbols);
