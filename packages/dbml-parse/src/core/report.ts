@@ -20,11 +20,16 @@ export default class Report<T> {
     }
   }
 
+  filter<S extends symbol> (filteredValue: S): Report<undefined | Exclude<T, S>> {
+    if (this.value as any === filteredValue) return new Report(undefined, this.errors, this.warnings);
+    return this as Report<Exclude<T, S>>;
+  }
+
   hasValue<S> (value: S): this is Report<S> {
     return this.value as any === value;
   }
 
-  getFiltered<S> (filteredValue: S): Exclude<T, typeof filteredValue> | undefined {
+  getFiltered<S extends symbol> (filteredValue: S): Exclude<T, typeof filteredValue> | undefined {
     return this.value as any === filteredValue ? undefined : this.value as Exclude<T, typeof filteredValue>;
   }
 
@@ -40,12 +45,26 @@ export default class Report<T> {
     return this.warnings || [];
   }
 
+  chainFiltered<S extends symbol, U>(filteredValue: S, fn: (_: Exclude<T, S>) => Report<U>): Report<U | undefined> {
+    if (this.value as any === filteredValue) return new Report(undefined, this.errors, this.warnings);
+    const res = fn(this.value as Exclude<T, S>);
+    const errors = [...this.errors, ...res.errors];
+    const warnings = [...this.getWarnings(), ...res.getWarnings()];
+
+    return new Report<U>(res.value, errors, warnings);
+  }
+
   chain<U>(fn: (_: T) => Report<U>): Report<U> {
     const res = fn(this.value);
     const errors = [...this.errors, ...res.errors];
     const warnings = [...this.getWarnings(), ...res.getWarnings()];
 
     return new Report<U>(res.value, errors, warnings);
+  }
+
+  mapFiltered<S extends symbol, U>(filteredValue: S, fn: (_: T) => U): Report<U | undefined> {
+    if (this.value as any === filteredValue) return new Report(undefined, this.errors, this.warnings);
+    return new Report<U>(fn(this.value), this.errors, this.warnings);
   }
 
   map<U>(fn: (_: T) => U): Report<U> {

@@ -1,564 +1,491 @@
 {
-  "value": [
+  "tokens": [
     {
-      "kind": "<variable>",
+      "context": {
+        "id": "<eof>:@[L18:C0, L18:C0]",
+        "snippet": ""
+      },
+      "isInvalid": false,
+      "kind": "<eof>",
+      "value": "",
       "startPos": {
-        "offset": 0,
-        "line": 0,
+        "offset": 251,
+        "line": 18,
         "column": 0
       },
       "endPos": {
-        "offset": 4,
-        "line": 0,
-        "column": 4
+        "offset": 251,
+        "line": 18,
+        "column": 0
       },
-      "value": "\n",
+      "start": 251,
+      "end": 251,
       "leadingTrivia": [],
-      "trailingTrivia": [
-        {
-          "kind": "<newline>",
-          "startPos": {
-            "offset": 4,
-            "line": 0,
-            "column": 4
-          },
-          "endPos": {
-            "offset": 5,
-            "line": 1,
-            "column": 0
-          },
-          "value": "\n",
-          "leadingTrivia": [],
-          "trailingTrivia": [],
-          "leadingInvalid": [],
-          "trailingInvalid": [],
-          "isInvalid": false,
-          "start": 4,
-          "end": 5
-        }
+      "trailingTrivia": [],
+      "leadingInvalid": [
+        "\n",
+        "\r",
+        "ꯎ",
+        "ሿ",
+        "ꯍ",
+        "\t",
+        "\u000b",
+        "This is a single line ''' ",
+        "This is a single line here!",
+        "This is not a single line \\ !",
+        "This is also not a single line \\    \nas there are spaces after \\",
+        "This is single line\n\n\n"
       ],
-      "leadingInvalid": [],
-      "trailingInvalid": [],
-      "isInvalid": false,
+      "trailingInvalid": []
+    }
+  ],
+  "errors": [
+    {
+      "level": "error",
+      "code": {
+        "value": 1005,
+        "name": "UNEXPECTED_TOKEN"
+      },
+      "diagnostic": "Expect an identifier",
+      "token": {
+        "context": {
+          "id": "<variable>:\n@[L0:C0, L0:C4]",
+          "snippet": "\"\\n\""
+        },
+        "isInvalid": true,
+        "kind": "<variable>",
+        "value": "\n",
+        "startPos": {
+          "offset": 0,
+          "line": 0,
+          "column": 0
+        },
+        "endPos": {
+          "offset": 4,
+          "line": 0,
+          "column": 4
+        },
+        "start": 0,
+        "end": 4,
+        "leadingTrivia": [],
+        "trailingTrivia": [
+          "\n"
+        ],
+        "leadingInvalid": [],
+        "trailingInvalid": []
+      },
       "start": 0,
       "end": 4
     },
     {
-      "kind": "<variable>",
-      "startPos": {
-        "offset": 5,
-        "line": 1,
-        "column": 0
+      "level": "error",
+      "code": {
+        "value": 1005,
+        "name": "UNEXPECTED_TOKEN"
       },
-      "endPos": {
-        "offset": 9,
-        "line": 1,
-        "column": 4
+      "diagnostic": "Expect an identifier",
+      "token": {
+        "context": {
+          "id": "<variable>:\r@[L1:C0, L1:C4]",
+          "snippet": "\"\\r\""
+        },
+        "isInvalid": true,
+        "kind": "<variable>",
+        "value": "\r",
+        "startPos": {
+          "offset": 5,
+          "line": 1,
+          "column": 0
+        },
+        "endPos": {
+          "offset": 9,
+          "line": 1,
+          "column": 4
+        },
+        "start": 5,
+        "end": 9,
+        "leadingTrivia": [],
+        "trailingTrivia": [
+          "\n"
+        ],
+        "leadingInvalid": [],
+        "trailingInvalid": []
       },
-      "value": "\r",
-      "leadingTrivia": [],
-      "trailingTrivia": [
-        {
-          "kind": "<newline>",
-          "startPos": {
-            "offset": 9,
-            "line": 1,
-            "column": 4
-          },
-          "endPos": {
-            "offset": 10,
-            "line": 2,
-            "column": 0
-          },
-          "value": "\n",
-          "leadingTrivia": [],
-          "trailingTrivia": [],
-          "leadingInvalid": [],
-          "trailingInvalid": [],
-          "isInvalid": false,
-          "start": 9,
-          "end": 10
-        }
-      ],
-      "leadingInvalid": [],
-      "trailingInvalid": [],
-      "isInvalid": false,
       "start": 5,
       "end": 9
     },
     {
-      "kind": "<variable>",
-      "startPos": {
-        "offset": 10,
-        "line": 2,
-        "column": 0
+      "level": "error",
+      "code": {
+        "value": 1005,
+        "name": "UNEXPECTED_TOKEN"
       },
-      "endPos": {
-        "offset": 18,
-        "line": 2,
-        "column": 8
+      "diagnostic": "Expect an identifier",
+      "token": {
+        "context": {
+          "id": "<variable>:ꯎ@[L2:C0, L2:C8]",
+          "snippet": "\"\\uabce\""
+        },
+        "isInvalid": true,
+        "kind": "<variable>",
+        "value": "ꯎ",
+        "startPos": {
+          "offset": 10,
+          "line": 2,
+          "column": 0
+        },
+        "endPos": {
+          "offset": 18,
+          "line": 2,
+          "column": 8
+        },
+        "start": 10,
+        "end": 18,
+        "leadingTrivia": [],
+        "trailingTrivia": [
+          "\n"
+        ],
+        "leadingInvalid": [],
+        "trailingInvalid": []
       },
-      "value": "ꯎ",
-      "leadingTrivia": [],
-      "trailingTrivia": [
-        {
-          "kind": "<newline>",
-          "startPos": {
-            "offset": 18,
-            "line": 2,
-            "column": 8
-          },
-          "endPos": {
-            "offset": 19,
-            "line": 3,
-            "column": 0
-          },
-          "value": "\n",
-          "leadingTrivia": [],
-          "trailingTrivia": [],
-          "leadingInvalid": [],
-          "trailingInvalid": [],
-          "isInvalid": false,
-          "start": 18,
-          "end": 19
-        }
-      ],
-      "leadingInvalid": [],
-      "trailingInvalid": [],
-      "isInvalid": false,
       "start": 10,
       "end": 18
     },
     {
-      "kind": "<variable>",
-      "startPos": {
-        "offset": 19,
-        "line": 3,
-        "column": 0
+      "level": "error",
+      "code": {
+        "value": 1005,
+        "name": "UNEXPECTED_TOKEN"
       },
-      "endPos": {
-        "offset": 27,
-        "line": 3,
-        "column": 8
+      "diagnostic": "Expect an identifier",
+      "token": {
+        "context": {
+          "id": "<variable>:ሿ@[L3:C0, L3:C8]",
+          "snippet": "\"\\u123F\""
+        },
+        "isInvalid": true,
+        "kind": "<variable>",
+        "value": "ሿ",
+        "startPos": {
+          "offset": 19,
+          "line": 3,
+          "column": 0
+        },
+        "endPos": {
+          "offset": 27,
+          "line": 3,
+          "column": 8
+        },
+        "start": 19,
+        "end": 27,
+        "leadingTrivia": [],
+        "trailingTrivia": [
+          "\n"
+        ],
+        "leadingInvalid": [],
+        "trailingInvalid": []
       },
-      "value": "ሿ",
-      "leadingTrivia": [],
-      "trailingTrivia": [
-        {
-          "kind": "<newline>",
-          "startPos": {
-            "offset": 27,
-            "line": 3,
-            "column": 8
-          },
-          "endPos": {
-            "offset": 28,
-            "line": 4,
-            "column": 0
-          },
-          "value": "\n",
-          "leadingTrivia": [],
-          "trailingTrivia": [],
-          "leadingInvalid": [],
-          "trailingInvalid": [],
-          "isInvalid": false,
-          "start": 27,
-          "end": 28
-        }
-      ],
-      "leadingInvalid": [],
-      "trailingInvalid": [],
-      "isInvalid": false,
       "start": 19,
       "end": 27
     },
     {
-      "kind": "<variable>",
-      "startPos": {
-        "offset": 28,
-        "line": 4,
-        "column": 0
+      "level": "error",
+      "code": {
+        "value": 1005,
+        "name": "UNEXPECTED_TOKEN"
       },
-      "endPos": {
-        "offset": 36,
-        "line": 4,
-        "column": 8
+      "diagnostic": "Expect an identifier",
+      "token": {
+        "context": {
+          "id": "<variable>:ꯍ@[L4:C0, L4:C8]",
+          "snippet": "\"\\uABCD\""
+        },
+        "isInvalid": true,
+        "kind": "<variable>",
+        "value": "ꯍ",
+        "startPos": {
+          "offset": 28,
+          "line": 4,
+          "column": 0
+        },
+        "endPos": {
+          "offset": 36,
+          "line": 4,
+          "column": 8
+        },
+        "start": 28,
+        "end": 36,
+        "leadingTrivia": [],
+        "trailingTrivia": [
+          "\n"
+        ],
+        "leadingInvalid": [],
+        "trailingInvalid": []
       },
-      "value": "ꯍ",
-      "leadingTrivia": [],
-      "trailingTrivia": [
-        {
-          "kind": "<newline>",
-          "startPos": {
-            "offset": 36,
-            "line": 4,
-            "column": 8
-          },
-          "endPos": {
-            "offset": 37,
-            "line": 5,
-            "column": 0
-          },
-          "value": "\n",
-          "leadingTrivia": [],
-          "trailingTrivia": [],
-          "leadingInvalid": [],
-          "trailingInvalid": [],
-          "isInvalid": false,
-          "start": 36,
-          "end": 37
-        }
-      ],
-      "leadingInvalid": [],
-      "trailingInvalid": [],
-      "isInvalid": false,
       "start": 28,
       "end": 36
     },
     {
-      "kind": "<variable>",
-      "startPos": {
-        "offset": 37,
-        "line": 5,
-        "column": 0
+      "level": "error",
+      "code": {
+        "value": 1005,
+        "name": "UNEXPECTED_TOKEN"
       },
-      "endPos": {
-        "offset": 41,
-        "line": 5,
-        "column": 4
+      "diagnostic": "Expect an identifier",
+      "token": {
+        "context": {
+          "id": "<variable>:\t@[L5:C0, L5:C4]",
+          "snippet": "\"\\t\""
+        },
+        "isInvalid": true,
+        "kind": "<variable>",
+        "value": "\t",
+        "startPos": {
+          "offset": 37,
+          "line": 5,
+          "column": 0
+        },
+        "endPos": {
+          "offset": 41,
+          "line": 5,
+          "column": 4
+        },
+        "start": 37,
+        "end": 41,
+        "leadingTrivia": [],
+        "trailingTrivia": [
+          "\n"
+        ],
+        "leadingInvalid": [],
+        "trailingInvalid": []
       },
-      "value": "\t",
-      "leadingTrivia": [],
-      "trailingTrivia": [
-        {
-          "kind": "<newline>",
-          "startPos": {
-            "offset": 41,
-            "line": 5,
-            "column": 4
-          },
-          "endPos": {
-            "offset": 42,
-            "line": 6,
-            "column": 0
-          },
-          "value": "\n",
-          "leadingTrivia": [],
-          "trailingTrivia": [],
-          "leadingInvalid": [],
-          "trailingInvalid": [],
-          "isInvalid": false,
-          "start": 41,
-          "end": 42
-        }
-      ],
-      "leadingInvalid": [],
-      "trailingInvalid": [],
-      "isInvalid": false,
       "start": 37,
       "end": 41
     },
     {
-      "kind": "<variable>",
-      "startPos": {
-        "offset": 42,
-        "line": 6,
-        "column": 0
+      "level": "error",
+      "code": {
+        "value": 1005,
+        "name": "UNEXPECTED_TOKEN"
       },
-      "endPos": {
-        "offset": 46,
-        "line": 6,
-        "column": 4
+      "diagnostic": "Expect an identifier",
+      "token": {
+        "context": {
+          "id": "<variable>:\u000b@[L6:C0, L6:C4]",
+          "snippet": "\"\\v\""
+        },
+        "isInvalid": true,
+        "kind": "<variable>",
+        "value": "\u000b",
+        "startPos": {
+          "offset": 42,
+          "line": 6,
+          "column": 0
+        },
+        "endPos": {
+          "offset": 46,
+          "line": 6,
+          "column": 4
+        },
+        "start": 42,
+        "end": 46,
+        "leadingTrivia": [],
+        "trailingTrivia": [
+          "\n"
+        ],
+        "leadingInvalid": [],
+        "trailingInvalid": []
       },
-      "value": "\u000b",
-      "leadingTrivia": [],
-      "trailingTrivia": [
-        {
-          "kind": "<newline>",
-          "startPos": {
-            "offset": 46,
-            "line": 6,
-            "column": 4
-          },
-          "endPos": {
-            "offset": 47,
-            "line": 7,
-            "column": 0
-          },
-          "value": "\n",
-          "leadingTrivia": [],
-          "trailingTrivia": [],
-          "leadingInvalid": [],
-          "trailingInvalid": [],
-          "isInvalid": false,
-          "start": 46,
-          "end": 47
-        }
-      ],
-      "leadingInvalid": [],
-      "trailingInvalid": [],
-      "isInvalid": false,
       "start": 42,
       "end": 46
     },
     {
-      "kind": "<string>",
-      "startPos": {
-        "offset": 47,
-        "line": 7,
-        "column": 0
+      "level": "error",
+      "code": {
+        "value": 1005,
+        "name": "UNEXPECTED_TOKEN"
       },
-      "endPos": {
-        "offset": 80,
-        "line": 7,
-        "column": 33
+      "diagnostic": "Expect an identifier",
+      "token": {
+        "context": {
+          "id": "<string>:This is a single line ''' @[L7:C0, L7:C33]",
+          "snippet": "'''This is...e \\''' '''"
+        },
+        "isInvalid": true,
+        "kind": "<string>",
+        "value": "This is a single line ''' ",
+        "startPos": {
+          "offset": 47,
+          "line": 7,
+          "column": 0
+        },
+        "endPos": {
+          "offset": 80,
+          "line": 7,
+          "column": 33
+        },
+        "start": 47,
+        "end": 80,
+        "leadingTrivia": [],
+        "trailingTrivia": [
+          "\n"
+        ],
+        "leadingInvalid": [],
+        "trailingInvalid": []
       },
-      "value": "This is a single line ''' ",
-      "leadingTrivia": [],
-      "trailingTrivia": [
-        {
-          "kind": "<newline>",
-          "startPos": {
-            "offset": 80,
-            "line": 7,
-            "column": 33
-          },
-          "endPos": {
-            "offset": 81,
-            "line": 8,
-            "column": 0
-          },
-          "value": "\n",
-          "leadingTrivia": [],
-          "trailingTrivia": [],
-          "leadingInvalid": [],
-          "trailingInvalid": [],
-          "isInvalid": false,
-          "start": 80,
-          "end": 81
-        }
-      ],
-      "leadingInvalid": [],
-      "trailingInvalid": [],
-      "isInvalid": false,
       "start": 47,
       "end": 80
     },
     {
-      "kind": "<string>",
-      "startPos": {
-        "offset": 81,
-        "line": 8,
-        "column": 0
+      "level": "error",
+      "code": {
+        "value": 1005,
+        "name": "UNEXPECTED_TOKEN"
       },
-      "endPos": {
-        "offset": 116,
-        "line": 9,
-        "column": 8
+      "diagnostic": "Expect an identifier",
+      "token": {
+        "context": {
+          "id": "<string>:This is a single line here!@[L8:C0, L9:C8]",
+          "snippet": "'''This is...\\\nhere!'''"
+        },
+        "isInvalid": true,
+        "kind": "<string>",
+        "value": "This is a single line here!",
+        "startPos": {
+          "offset": 81,
+          "line": 8,
+          "column": 0
+        },
+        "endPos": {
+          "offset": 116,
+          "line": 9,
+          "column": 8
+        },
+        "start": 81,
+        "end": 116,
+        "leadingTrivia": [],
+        "trailingTrivia": [
+          "\n"
+        ],
+        "leadingInvalid": [],
+        "trailingInvalid": []
       },
-      "value": "This is a single line here!",
-      "leadingTrivia": [],
-      "trailingTrivia": [
-        {
-          "kind": "<newline>",
-          "startPos": {
-            "offset": 116,
-            "line": 9,
-            "column": 8
-          },
-          "endPos": {
-            "offset": 117,
-            "line": 10,
-            "column": 0
-          },
-          "value": "\n",
-          "leadingTrivia": [],
-          "trailingTrivia": [],
-          "leadingInvalid": [],
-          "trailingInvalid": [],
-          "isInvalid": false,
-          "start": 116,
-          "end": 117
-        }
-      ],
-      "leadingInvalid": [],
-      "trailingInvalid": [],
-      "isInvalid": false,
       "start": 81,
       "end": 116
     },
     {
-      "kind": "<string>",
-      "startPos": {
-        "offset": 118,
-        "line": 11,
-        "column": 0
+      "level": "error",
+      "code": {
+        "value": 1005,
+        "name": "UNEXPECTED_TOKEN"
       },
-      "endPos": {
-        "offset": 153,
-        "line": 11,
-        "column": 35
+      "diagnostic": "Expect an identifier",
+      "token": {
+        "context": {
+          "id": "<string>:This is not a single line \\ !@[L11:C0, L11:C35]",
+          "snippet": "'''This is...ine \\ !'''"
+        },
+        "isInvalid": true,
+        "kind": "<string>",
+        "value": "This is not a single line \\ !",
+        "startPos": {
+          "offset": 118,
+          "line": 11,
+          "column": 0
+        },
+        "endPos": {
+          "offset": 153,
+          "line": 11,
+          "column": 35
+        },
+        "start": 118,
+        "end": 153,
+        "leadingTrivia": [
+          "\n"
+        ],
+        "trailingTrivia": [
+          "\n"
+        ],
+        "leadingInvalid": [],
+        "trailingInvalid": []
       },
-      "value": "This is not a single line \\ !",
-      "leadingTrivia": [
-        {
-          "kind": "<newline>",
-          "startPos": {
-            "offset": 117,
-            "line": 10,
-            "column": 0
-          },
-          "endPos": {
-            "offset": 118,
-            "line": 11,
-            "column": 0
-          },
-          "value": "\n",
-          "leadingTrivia": [],
-          "trailingTrivia": [],
-          "leadingInvalid": [],
-          "trailingInvalid": [],
-          "isInvalid": false,
-          "start": 117,
-          "end": 118
-        }
-      ],
-      "trailingTrivia": [
-        {
-          "kind": "<newline>",
-          "startPos": {
-            "offset": 153,
-            "line": 11,
-            "column": 35
-          },
-          "endPos": {
-            "offset": 154,
-            "line": 12,
-            "column": 0
-          },
-          "value": "\n",
-          "leadingTrivia": [],
-          "trailingTrivia": [],
-          "leadingInvalid": [],
-          "trailingInvalid": [],
-          "isInvalid": false,
-          "start": 153,
-          "end": 154
-        }
-      ],
-      "leadingInvalid": [],
-      "trailingInvalid": [],
-      "isInvalid": false,
       "start": 118,
       "end": 153
     },
     {
-      "kind": "<string>",
-      "startPos": {
-        "offset": 154,
-        "line": 12,
-        "column": 0
+      "level": "error",
+      "code": {
+        "value": 1005,
+        "name": "UNEXPECTED_TOKEN"
       },
-      "endPos": {
-        "offset": 225,
-        "line": 13,
-        "column": 31
+      "diagnostic": "Expect an identifier",
+      "token": {
+        "context": {
+          "id": "<string>:This is also not a single line \\    \nas there are spaces after \\@[L12:C0, L13:C31]",
+          "snippet": "'''This is...fter \\\\'''"
+        },
+        "isInvalid": true,
+        "kind": "<string>",
+        "value": "This is also not a single line \\    \nas there are spaces after \\",
+        "startPos": {
+          "offset": 154,
+          "line": 12,
+          "column": 0
+        },
+        "endPos": {
+          "offset": 225,
+          "line": 13,
+          "column": 31
+        },
+        "start": 154,
+        "end": 225,
+        "leadingTrivia": [],
+        "trailingTrivia": [
+          "\n"
+        ],
+        "leadingInvalid": [],
+        "trailingInvalid": []
       },
-      "value": "This is also not a single line \\    \nas there are spaces after \\",
-      "leadingTrivia": [],
-      "trailingTrivia": [
-        {
-          "kind": "<newline>",
-          "startPos": {
-            "offset": 225,
-            "line": 13,
-            "column": 31
-          },
-          "endPos": {
-            "offset": 226,
-            "line": 14,
-            "column": 0
-          },
-          "value": "\n",
-          "leadingTrivia": [],
-          "trailingTrivia": [],
-          "leadingInvalid": [],
-          "trailingInvalid": [],
-          "isInvalid": false,
-          "start": 225,
-          "end": 226
-        }
-      ],
-      "leadingInvalid": [],
-      "trailingInvalid": [],
-      "isInvalid": false,
       "start": 154,
       "end": 225
     },
     {
-      "kind": "<function-expression>",
-      "startPos": {
-        "offset": 226,
-        "line": 14,
-        "column": 0
+      "level": "error",
+      "code": {
+        "value": 1005,
+        "name": "UNEXPECTED_TOKEN"
       },
-      "endPos": {
-        "offset": 250,
-        "line": 17,
-        "column": 1
+      "diagnostic": "Expect an identifier",
+      "token": {
+        "context": {
+          "id": "<function-expression>:This is single line\n\n\n@[L14:C0, L17:C1]",
+          "snippet": "`This is s...e line\n\n\n`"
+        },
+        "isInvalid": true,
+        "kind": "<function-expression>",
+        "value": "This is single line\n\n\n",
+        "startPos": {
+          "offset": 226,
+          "line": 14,
+          "column": 0
+        },
+        "endPos": {
+          "offset": 250,
+          "line": 17,
+          "column": 1
+        },
+        "start": 226,
+        "end": 250,
+        "leadingTrivia": [],
+        "trailingTrivia": [
+          "\n"
+        ],
+        "leadingInvalid": [],
+        "trailingInvalid": []
       },
-      "value": "This is single line\n\n\n",
-      "leadingTrivia": [],
-      "trailingTrivia": [
-        {
-          "kind": "<newline>",
-          "startPos": {
-            "offset": 250,
-            "line": 17,
-            "column": 1
-          },
-          "endPos": {
-            "offset": 251,
-            "line": 18,
-            "column": 0
-          },
-          "value": "\n",
-          "leadingTrivia": [],
-          "trailingTrivia": [],
-          "leadingInvalid": [],
-          "trailingInvalid": [],
-          "isInvalid": false,
-          "start": 250,
-          "end": 251
-        }
-      ],
-      "leadingInvalid": [],
-      "trailingInvalid": [],
-      "isInvalid": false,
       "start": 226,
       "end": 250
-    },
-    {
-      "kind": "<eof>",
-      "startPos": {
-        "offset": 251,
-        "line": 18,
-        "column": 0
-      },
-      "endPos": {
-        "offset": 251,
-        "line": 18,
-        "column": 0
-      },
-      "value": "",
-      "leadingTrivia": [],
-      "trailingTrivia": [],
-      "leadingInvalid": [],
-      "trailingInvalid": [],
-      "isInvalid": false,
-      "start": 251,
-      "end": 251
     }
   ],
-  "errors": []
+  "warnings": []
 }

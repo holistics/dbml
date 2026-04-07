@@ -1,10 +1,22 @@
-import { readFileSync } from 'fs';
-import path from 'path';
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { Compiler } from '@/index';
 import { UNHANDLED } from '@/constants';
-import { scanTestNames } from '@tests/utils';
+import { scanTestNames, toSnapshot } from '@tests/utils';
+import Compiler from '@/compiler';
+import type Report from '@/core/report';
+import type { SchemaElement } from '@/core/types';
 
+function serializeInterpreterResult (compiler: Compiler, report: Report<SchemaElement | SchemaElement[] | undefined>): string {
+  const value = report.getValue();
+  const errors = report.getErrors();
+  const warnings = report.getWarnings();
+  return JSON.stringify(toSnapshot(compiler, {
+    database: value,
+    errors,
+    warnings,
+  }), null, 2);
+}
 // The legacy snapshot tests are very prone to breakage
 // Do not add more tests here
 describe('[legacy - snapshot] interpreter', () => {
@@ -14,57 +26,8 @@ describe('[legacy - snapshot] interpreter', () => {
     const program = readFileSync(path.resolve(__dirname, `./input/${testName}.in.dbml`), 'utf-8');
     const compiler = new Compiler();
     compiler.setSource(program);
-    let output: any;
+    const report = compiler.parse._().map((v) => v === UNHANDLED ? undefined : v);
 
-    const ast = compiler.parseFile().getValue().ast;
-    const bindResult = compiler.bind(ast);
-    const bindErrors = [...compiler.parseFile().getErrors(), ...bindResult.getErrors()];
-
-    if (bindErrors.length !== 0) {
-      output = JSON.stringify(
-        bindErrors,
-        (key, value) => (['symbol', 'references', 'referee', 'parent', 'parentNode'].includes(key) ? undefined : value),
-        2,
-      );
-    } else {
-      const res = compiler.interpret(ast);
-      if (res.hasValue(UNHANDLED)) {
-        output = JSON.stringify(undefined, null, 2);
-      } else if (res.getErrors().length > 0) {
-        output = JSON.stringify(
-          res.getErrors(),
-          (key, value) => (['symbol', 'references', 'referee', 'parent', 'parentNode'].includes(key) ? undefined : value),
-          2,
-        );
-      } else {
-        const db = res.getValue() as any;
-        // Serialize Database in expected field order
-        const dbFormatted = db
-          ? {
-              schemas: db.schemas ?? [],
-              tables: db.tables ?? [],
-              notes: db.notes ?? [],
-              refs: db.refs ?? [],
-              enums: db.enums ?? [],
-              tableGroups: db.tableGroups ?? [],
-              aliases: db.aliases ?? [],
-              project: db.project ?? {},
-              tablePartials: db.tablePartials ?? [],
-              records: db.records ?? [],
-            }
-          : db;
-        output = JSON.stringify(
-          dbFormatted,
-          (key, value) => {
-            if (['symbol', 'references', 'referee', 'parentNode'].includes(key)) return undefined;
-            if (key.startsWith('_')) return undefined;
-            return value;
-          },
-          2,
-        );
-      }
-    }
-
-    it(testName, () => expect(output).toMatchFileSnapshot(path.resolve(__dirname, `./output/${testName}.out.json`)));
+    it(testName, () => expect(serializeInterpreterResult(compiler, report)).toMatchFileSnapshot(path.resolve(__dirname, `./output/${testName}.out.json`)));
   });
 });

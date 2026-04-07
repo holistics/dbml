@@ -1,130 +1,376 @@
-[
-  {
-    "code": 4000,
-    "diagnostic": "Table 'staff' does not exist in Schema 'public'",
-    "nodeOrToken": {
-      "id": 21,
-      "kind": "<primary-expression>",
-      "startPos": {
-        "offset": 71,
-        "line": 3,
-        "column": 23
-      },
-      "fullStart": 71,
-      "endPos": {
-        "offset": 76,
-        "line": 3,
-        "column": 28
-      },
-      "fullEnd": 76,
-      "start": 71,
-      "end": 76,
-      "expression": {
-        "id": 20,
-        "kind": "<variable>",
-        "startPos": {
-          "offset": 71,
-          "line": 3,
-          "column": 23
-        },
-        "fullStart": 71,
-        "endPos": {
-          "offset": 76,
-          "line": 3,
-          "column": 28
-        },
-        "fullEnd": 76,
-        "start": 71,
-        "end": 76,
-        "variable": {
-          "kind": "<identifier>",
-          "startPos": {
-            "offset": 71,
-            "line": 3,
-            "column": 23
+{
+  "database": {
+    "schemas": [],
+    "tables": [
+      {
+        "name": "payment",
+        "schemaName": "null",
+        "alias": "null",
+        "fields": [
+          {
+            "name": "id",
+            "type": {
+              "schemaName": "null",
+              "type_name": "int",
+              "args": "null"
+            },
+            "token": {
+              "start": {
+                "offset": 18,
+                "line": 2,
+                "column": 3
+              },
+              "end": {
+                "offset": 29,
+                "line": 2,
+                "column": 14
+              }
+            },
+            "inline_refs": [],
+            "pk": true,
+            "increment": false,
+            "unique": false,
+            "checks": []
           },
-          "endPos": {
-            "offset": 76,
-            "line": 3,
-            "column": 28
+          {
+            "name": "customer_id",
+            "type": {
+              "schemaName": "null",
+              "type_name": "int",
+              "args": "null"
+            },
+            "token": {
+              "start": {
+                "offset": 32,
+                "line": 3,
+                "column": 3
+              },
+              "end": {
+                "offset": 47,
+                "line": 3,
+                "column": 18
+              }
+            },
+            "inline_refs": [],
+            "pk": false,
+            "unique": false
           },
-          "value": "staff",
-          "leadingTrivia": [],
-          "trailingTrivia": [],
-          "leadingInvalid": [],
-          "trailingInvalid": [],
-          "isInvalid": false,
-          "start": 71,
-          "end": 76
-        }
+          {
+            "name": "staff_id",
+            "type": {
+              "schemaName": "null",
+              "type_name": "int",
+              "args": "null"
+            },
+            "token": {
+              "start": {
+                "offset": 50,
+                "line": 4,
+                "column": 3
+              },
+              "end": {
+                "offset": 80,
+                "line": 4,
+                "column": 33
+              }
+            },
+            "inline_refs": [
+              {
+                "schemaName": "null",
+                "tableName": "staff",
+                "fieldNames": [
+                  "id"
+                ],
+                "relation": ">",
+                "token": {
+                  "start": {
+                    "offset": 64,
+                    "line": 4,
+                    "column": 17
+                  },
+                  "end": {
+                    "offset": 79,
+                    "line": 4,
+                    "column": 32
+                  }
+                }
+              }
+            ],
+            "pk": false,
+            "increment": false,
+            "unique": false,
+            "checks": []
+          },
+          {
+            "name": "rental_id",
+            "type": {
+              "schemaName": "null",
+              "type_name": "int",
+              "args": "null"
+            },
+            "token": {
+              "start": {
+                "offset": 83,
+                "line": 5,
+                "column": 3
+              },
+              "end": {
+                "offset": 115,
+                "line": 5,
+                "column": 35
+              }
+            },
+            "inline_refs": [
+              {
+                "schemaName": "null",
+                "tableName": "rental",
+                "fieldNames": [
+                  "id"
+                ],
+                "relation": ">",
+                "token": {
+                  "start": {
+                    "offset": 98,
+                    "line": 5,
+                    "column": 18
+                  },
+                  "end": {
+                    "offset": 114,
+                    "line": 5,
+                    "column": 34
+                  }
+                }
+              }
+            ],
+            "pk": false,
+            "increment": false,
+            "unique": false,
+            "checks": []
+          },
+          {
+            "name": "amount",
+            "type": {
+              "schemaName": "null",
+              "type_name": "decimal",
+              "args": "null"
+            },
+            "token": {
+              "start": {
+                "offset": 118,
+                "line": 6,
+                "column": 3
+              },
+              "end": {
+                "offset": 132,
+                "line": 6,
+                "column": 17
+              }
+            },
+            "inline_refs": [],
+            "pk": false,
+            "unique": false
+          },
+          {
+            "name": "payment_date",
+            "type": {
+              "schemaName": "null",
+              "type_name": "datetime",
+              "args": "null"
+            },
+            "token": {
+              "start": {
+                "offset": 135,
+                "line": 7,
+                "column": 3
+              },
+              "end": {
+                "offset": 156,
+                "line": 7,
+                "column": 24
+              }
+            },
+            "inline_refs": [],
+            "pk": false,
+            "unique": false
+          },
+          {
+            "name": "last_update",
+            "type": {
+              "schemaName": "null",
+              "type_name": "timestamp",
+              "args": "null"
+            },
+            "token": {
+              "start": {
+                "offset": 159,
+                "line": 8,
+                "column": 3
+              },
+              "end": {
+                "offset": 180,
+                "line": 8,
+                "column": 24
+              }
+            },
+            "inline_refs": [],
+            "pk": false,
+            "unique": false
+          }
+        ],
+        "token": {
+          "start": {
+            "offset": 0,
+            "line": 1,
+            "column": 1
+          },
+          "end": {
+            "offset": 182,
+            "line": 9,
+            "column": 2
+          }
+        },
+        "indexes": [],
+        "partials": [],
+        "checks": []
       }
-    },
-    "start": 71,
-    "end": 76,
-    "name": "CompileError"
+    ],
+    "notes": [],
+    "refs": [
+      {
+        "name": "null",
+        "schemaName": "null",
+        "token": {
+          "start": {
+            "offset": 64,
+            "line": 4,
+            "column": 17
+          },
+          "end": {
+            "offset": 79,
+            "line": 4,
+            "column": 32
+          }
+        },
+        "endpoints": [
+          {
+            "schemaName": "null",
+            "tableName": "staff",
+            "fieldNames": [
+              "id"
+            ],
+            "relation": "1",
+            "token": {
+              "start": {
+                "offset": 64,
+                "line": 4,
+                "column": 17
+              },
+              "end": {
+                "offset": 79,
+                "line": 4,
+                "column": 32
+              }
+            }
+          },
+          {
+            "schemaName": "null",
+            "tableName": "payment",
+            "fieldNames": [
+              "staff_id"
+            ],
+            "token": {
+              "start": {
+                "offset": 50,
+                "line": 4,
+                "column": 3
+              },
+              "end": {
+                "offset": 80,
+                "line": 4,
+                "column": 33
+              }
+            },
+            "relation": "*"
+          }
+        ]
+      },
+      {
+        "name": "null",
+        "schemaName": "null",
+        "token": {
+          "start": {
+            "offset": 98,
+            "line": 5,
+            "column": 18
+          },
+          "end": {
+            "offset": 114,
+            "line": 5,
+            "column": 34
+          }
+        },
+        "endpoints": [
+          {
+            "schemaName": "null",
+            "tableName": "rental",
+            "fieldNames": [
+              "id"
+            ],
+            "relation": "1",
+            "token": {
+              "start": {
+                "offset": 98,
+                "line": 5,
+                "column": 18
+              },
+              "end": {
+                "offset": 114,
+                "line": 5,
+                "column": 34
+              }
+            }
+          },
+          {
+            "schemaName": "null",
+            "tableName": "payment",
+            "fieldNames": [
+              "rental_id"
+            ],
+            "token": {
+              "start": {
+                "offset": 83,
+                "line": 5,
+                "column": 3
+              },
+              "end": {
+                "offset": 115,
+                "line": 5,
+                "column": 35
+              }
+            },
+            "relation": "*"
+          }
+        ]
+      }
+    ],
+    "enums": [],
+    "tableGroups": [],
+    "aliases": [],
+    "tablePartials": [],
+    "records": [],
+    "token": {
+      "start": {
+        "offset": 0,
+        "line": 1,
+        "column": 1
+      },
+      "end": {
+        "offset": 182,
+        "line": 9,
+        "column": 2
+      }
+    }
   },
-  {
-    "code": 4000,
-    "diagnostic": "Table 'rental' does not exist in Schema 'public'",
-    "nodeOrToken": {
-      "id": 35,
-      "kind": "<primary-expression>",
-      "startPos": {
-        "offset": 105,
-        "line": 4,
-        "column": 24
-      },
-      "fullStart": 105,
-      "endPos": {
-        "offset": 111,
-        "line": 4,
-        "column": 30
-      },
-      "fullEnd": 111,
-      "start": 105,
-      "end": 111,
-      "expression": {
-        "id": 34,
-        "kind": "<variable>",
-        "startPos": {
-          "offset": 105,
-          "line": 4,
-          "column": 24
-        },
-        "fullStart": 105,
-        "endPos": {
-          "offset": 111,
-          "line": 4,
-          "column": 30
-        },
-        "fullEnd": 111,
-        "start": 105,
-        "end": 111,
-        "variable": {
-          "kind": "<identifier>",
-          "startPos": {
-            "offset": 105,
-            "line": 4,
-            "column": 24
-          },
-          "endPos": {
-            "offset": 111,
-            "line": 4,
-            "column": 30
-          },
-          "value": "rental",
-          "leadingTrivia": [],
-          "trailingTrivia": [],
-          "leadingInvalid": [],
-          "trailingInvalid": [],
-          "isInvalid": false,
-          "start": 105,
-          "end": 111
-        }
-      }
-    },
-    "start": 105,
-    "end": 111,
-    "name": "CompileError"
-  }
-]
+  "errors": [],
+  "warnings": []
+}

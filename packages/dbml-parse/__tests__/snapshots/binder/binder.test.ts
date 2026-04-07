@@ -1,25 +1,43 @@
-import { readFileSync } from 'fs';
-import path from 'path';
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { Compiler } from '@/index';
+import type { ProgramNode } from '@/core/parser/nodes';
+import { scanTestNames, toSnapshot } from '@tests/utils';
+import Compiler from '@/compiler';
 import Report from '@/core/report';
-import { serialize, scanTestNames } from '@tests/utils';
 
+function serializeBinderResult (compiler: Compiler, report: Report<ProgramNode>): string {
+  const value = report.getValue();
+  const errors = report.getErrors();
+  const warnings = report.getWarnings();
+  return JSON.stringify(toSnapshot(compiler, {
+    program: value,
+    errors,
+    warnings,
+  }), null, 2);
+}
 // The legacy snapshot tests are very prone to breakage
 // Do not add more tests here
-describe('[legacy - snapshot] binder', () => {
+describe('[legacy - snapshot] validator', () => {
   const testNames = scanTestNames(path.resolve(__dirname, './input/'));
 
   testNames.forEach((testName) => {
     const program = readFileSync(path.resolve(__dirname, `./input/${testName}.in.dbml`), 'utf-8');
+
     const compiler = new Compiler();
     compiler.setSource(program);
-    const ast = compiler.parseFile().getValue().ast;
-    const validateResult = compiler.validate(ast);
-    const bindResult = compiler.bind(ast);
-    const errors = [...compiler.parseFile().getErrors(), ...validateResult.getErrors(), ...bindResult.getErrors()];
-    const report = new Report(ast, errors);
-    const output = serialize(report, compiler, true);
+
+    const astReport = compiler.parseFile().map(({ ast }) => ast);
+    const validateReport = compiler.validate(astReport.getValue());
+    const bindReport = compiler.bind(astReport.getValue());
+    const output = serializeBinderResult(
+      compiler,
+      Report.create(
+        astReport.getValue(),
+        [...astReport.getErrors(), ...validateReport.getErrors(), ...bindReport.getErrors()],
+        [...astReport.getWarnings(), ...validateReport.getWarnings(), ...bindReport.getWarnings()],
+      ),
+    );
 
     it(testName, () => expect(output).toMatchFileSnapshot(path.resolve(__dirname, `./output/${testName}.out.json`)));
   });

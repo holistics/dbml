@@ -1,232 +1,276 @@
-import { NodeSymbol, SchemaSymbol } from '@/core/types/symbols';
-import Report from '@/core/report';
-import { ProgramNode, SyntaxNode, ElementDeclarationNode } from '@/core/parser/nodes';
+import fs from 'node:fs';
 import { SyntaxToken } from '@/core/lexer/tokens';
-import type Compiler from '@/compiler/index';
-import { DEFAULT_SCHEMA_NAME, UNHANDLED } from '@/constants';
-import fs from 'fs';
+import { ElementDeclarationNode, LiteralNode, SyntaxNode, VariableNode } from '@/core/parser/nodes';
+import { CompileError, CompileErrorCode, CompileWarning } from '@/core/errors';
+import type Compiler from '@/compiler';
+import { UNHANDLED } from '@/constants';
+import { getElementNameString } from '@/core/utils/expression';
+import { NodeSymbol } from '@/core/types';
 
-export function scanTestNames (_path: any) {
-  const files = fs.readdirSync(_path);
+export function scanTestNames (path: string) {
+  const files = fs.readdirSync(path);
 
   return files.filter((fn) => fn.match(/\.in\./)).map((fn) => fn.split('.in.')[0]);
 }
 
-/**
- * Build a reverse mapping: symbol ID -> list of referencing node IDs.
- */
-function buildReferencesMap (ast: ProgramNode, compiler: Compiler): Map<number, number[]> {
-  const refs = new Map<number, number[]>();
-
-  function walk (node: SyntaxNode | SyntaxToken | undefined) {
-    if (!node) return;
-    if (node instanceof SyntaxToken) return;
-
-    const result = compiler.nodeReferee(node);
-    if (!result.hasValue(UNHANDLED)) {
-      const sym = result.getValue();
-      if (sym instanceof NodeSymbol) {
-        if (!refs.has(sym.id)) refs.set(sym.id, []);
-        refs.get(sym.id)!.push(node.id);
-      }
-    }
-
-    for (const key of Object.keys(node)) {
-      if (key === 'parentNode') continue;
-      const val = (node as any)[key];
-      if (val instanceof SyntaxNode) {
-        walk(val);
-      } else if (Array.isArray(val)) {
-        for (const item of val) {
-          if (item instanceof SyntaxNode) walk(item);
-        }
-      }
-    }
+function getNameHint (node: SyntaxNode | SyntaxToken): string {
+  if (node instanceof SyntaxToken) {
+    return `:${node.value}`;
   }
-
-  walk(ast);
-  return refs;
-}
-
-/**
- * Serializes a compiler report to JSON, matching the old format:
- * - 'symbol': For non-root nodes, outputs only the symbol ID. For root nodes,
- *   outputs the full symbol table with references as IDs.
- * - 'referee': Outputs only the referenced symbol's ID
- * - 'parent': Outputs only the parent node's ID
- * - 'declaration': Outputs only the declaration node's ID
- */
-export function serialize (
-  report: Readonly<Report<ProgramNode>>,
-  compiler: Compiler,
-  pretty: boolean = false,
-): string {
-  const ast = report.getValue();
-  const referencesMap = buildReferencesMap(ast, compiler);
-
-  // Transform the report into a plain object tree with symbol/referee/parent injected
-  const transformed = transformReport(report, compiler, referencesMap);
-  return JSON.stringify(transformed, null, pretty ? 2 : 0);
-}
-
-function transformReport (report: Readonly<Report<any>>, compiler: Compiler, referencesMap: Map<number, number[]>): any {
-  return {
-    value: transformNode(report.getValue(), compiler, referencesMap, true),
-    errors: report.getErrors().map((e) => transformValue(e, compiler, referencesMap)),
-  };
-}
-
-function transformNode (node: any, compiler: Compiler, referencesMap: Map<number, number[]>, isRoot: boolean): any {
-  if (node === null || node === undefined) return node;
-  if (node instanceof SyntaxToken) return transformToken(node);
-  if (!(node instanceof SyntaxNode)) return node;
-
-  const result: any = {};
-
-  // Emit all enumerable properties, transforming child nodes
-  for (const key of Object.keys(node)) {
-    if (key === 'parentNode') continue;
-    if (key === 'source' && node instanceof ProgramNode) continue;
-
-    const val = (node as any)[key];
-    if (val instanceof SyntaxNode) {
-      result[key] = transformNode(val, compiler, referencesMap, false);
-    } else if (val instanceof SyntaxToken) {
-      result[key] = transformToken(val);
-    } else if (Array.isArray(val)) {
-      result[key] = val.map((item) => {
-        if (item instanceof SyntaxNode) return transformNode(item, compiler, referencesMap, false);
-        if (item instanceof SyntaxToken) return transformToken(item);
-        return item;
-      });
-    } else {
-      result[key] = val;
-    }
+  if (node instanceof VariableNode) {
+    return `:${node.variable?.value || ''}`;
   }
-
-  // Inject 'parent' only on ElementDeclarationNode (matching pre-query-system format)
+  if (node instanceof LiteralNode) {
+    return `:${node.literal?.value || ''}`;
+  }
   if (node instanceof ElementDeclarationNode) {
-    const parent = node.parent;
-    if (parent instanceof SyntaxNode) {
-      result.parent = parent.id;
-    }
+    return `:${getElementNameString(node) || ''}`;
   }
-
-  // Inject 'symbol'
-  const symResult = compiler.nodeSymbol(node);
-  if (!symResult.hasValue(UNHANDLED)) {
-    const sym = symResult.getValue();
-    if (sym instanceof NodeSymbol) {
-      if (isRoot) {
-        result.symbol = transformRootSymbol(sym, compiler, referencesMap);
-      } else {
-        result.symbol = sym.id;
-      }
-    }
-  }
-
-  // Inject 'referee' (as symbol ID)
-  const refResult = compiler.nodeReferee(node);
-  if (!refResult.hasValue(UNHANDLED)) {
-    const refSym = refResult.getValue();
-    if (refSym instanceof NodeSymbol) {
-      result.referee = refSym.id;
-    }
-  }
-
-  return result;
+  return '';
 }
 
-function transformRootSymbol (sym: NodeSymbol, compiler: Compiler, referencesMap: Map<number, number[]>): any {
-  // Build a flat symbolTable matching pre-query-system format:
-  // Walk schemas and collect all element members + schema entries
-  const symbolTable: Record<string, any> = {};
-  const membersResult = compiler.symbolMembers(sym);
+// Output a human-readable id for node/token/symbol to:
+// - Avoid snapshot brittleness
+// - Easy for verification
+function getReadableId (nodeOrSymbol: SyntaxNode | SyntaxToken | NodeSymbol): string | undefined {
+  const node = (nodeOrSymbol instanceof SyntaxNode) || (nodeOrSymbol instanceof SyntaxToken) ? nodeOrSymbol : nodeOrSymbol?.declaration;
+  if (!node) return undefined;
 
-  if (!membersResult.hasValue(UNHANDLED)) {
-    for (const schema of membersResult.getValue()) {
-      if (!(schema instanceof SchemaSymbol)) continue;
+  const start = `L${node.startPos.line}:C${node.startPos.column}`;
+  const end = `L${node.endPos.line}:C${node.endPos.column}`;
+  const nameHint = getNameHint(node);
 
-      // Add non-default schemas as entries
-      if (schema.name !== DEFAULT_SCHEMA_NAME) {
-        symbolTable[`Schema:${schema.name}`] = transformSymbol(schema, compiler, referencesMap);
-      }
-
-      // Flatten all elements into the root symbolTable (matching flat format)
-      const schemaMembers = compiler.symbolMembers(schema);
-      if (!schemaMembers.hasValue(UNHANDLED)) {
-        for (const member of schemaMembers.getValue()) {
-          const memberKey = `${member.kind}:${getMemberName(compiler, member)}`;
-          symbolTable[memberKey] = transformSymbol(member, compiler, referencesMap);
-        }
-      }
-    }
-  }
-
-  return {
-    symbolTable,
-    id: sym.id,
-    references: referencesMap.get(sym.id) ?? [],
-  };
+  return `${node.kind}${nameHint}@[${start}, ${end}]`;
 }
 
-function transformSymbol (sym: NodeSymbol, compiler: Compiler, referencesMap: Map<number, number[]>): any {
-  const membersResult = compiler.symbolMembers(sym);
-  let symbolTable: Record<string, any> | undefined;
+// Output the code snippet for a node or a symbol for easy verfication
+function getCodeSnippet (nodeOrSymbol: SyntaxNode | SyntaxToken | NodeSymbol, source: string): string | undefined {
+  const node = (nodeOrSymbol instanceof SyntaxNode) || (nodeOrSymbol instanceof SyntaxToken) ? nodeOrSymbol : nodeOrSymbol?.declaration;
 
-  if (!membersResult.hasValue(UNHANDLED)) {
-    const members = membersResult.getValue();
-    if (members.length > 0) {
-      symbolTable = {};
-      for (const member of members) {
-        const memberKey = `${member.kind}:${getMemberName(compiler, member)}`;
-        symbolTable[memberKey] = transformSymbol(member, compiler, referencesMap);
-      }
-    } else {
-      symbolTable = {};
-    }
+  if (!node) return undefined;
+
+  const text = source.slice(node.start, node.end);
+  if (text.length <= 20) {
+    return text;
   }
 
-  return {
-    references: referencesMap.get(sym.id) ?? [],
-    id: sym.id,
-    symbolTable,
-    declaration: sym.declaration?.id,
-  };
+  return `${text.slice(0, 10)}...${text.slice(-10)}`;
 }
 
-function transformToken (token: SyntaxToken): any {
-  // Tokens are plain data — just strip parentNode-like fields if any
-  const result: any = {};
-  for (const key of Object.keys(token)) {
-    if (key === 'parentNode') continue;
-    const val = (token as any)[key];
-    if (val instanceof SyntaxToken) {
-      result[key] = transformToken(val);
-    } else if (Array.isArray(val)) {
-      result[key] = val.map((item) => item instanceof SyntaxToken ? transformToken(item) : item);
-    } else {
-      result[key] = val;
-    }
+export type Snappable =
+  | string | number | null | undefined | boolean | bigint | symbol
+  | CompileWarning
+  | CompileError
+  | SyntaxNode
+  | SyntaxToken
+  | NodeSymbol
+  | Snappable[]
+  | Record<string, unknown>;
+
+export function toSnapshot (
+  compiler: Compiler,
+  value: Snappable,
+): unknown {
+  if (Array.isArray(value)) {
+    return value.map((v) => toSnapshot(compiler, v));
   }
-  return result;
-}
-
-function transformValue (value: any, compiler: Compiler, referencesMap: Map<number, number[]>): any {
-  if (value === null || value === undefined) return value;
-  if (value instanceof SyntaxNode) return transformNode(value, compiler, referencesMap, false);
-  if (value instanceof SyntaxToken) return transformToken(value);
-  if (Array.isArray(value)) return value.map((v) => transformValue(v, compiler, referencesMap));
+  if (value instanceof CompileWarning) {
+    return warningToSnapshot(compiler, value);
+  }
+  if (value instanceof CompileError) {
+    return errorToSnapshot(compiler, value);
+  }
+  if (value instanceof SyntaxToken) {
+    return syntaxTokenToSnapshot(compiler, value);
+  }
+  if (value instanceof SyntaxNode) {
+    return syntaxNodeToSnapshot(compiler, value);
+  }
+  if (value === null) {
+    return 'null';
+  }
+  // An adhoc check for NodeSymbol
+  // because it's just an interface
+  if (value instanceof NodeSymbol) {
+    return symbolToSnapshot(compiler, value as NodeSymbol);
+  }
   if (typeof value === 'object') {
-    const result: any = {};
-    for (const key of Object.keys(value)) {
-      result[key] = transformValue(value[key], compiler, referencesMap);
-    }
-    return result;
+    return Object.fromEntries(Object.entries(value).map(([key, value]) => [key, toSnapshot(compiler, value as Snappable)]));
   }
   return value;
 }
 
-function getMemberName (compiler: Compiler, member: NodeSymbol): string {
-  return compiler.symbolName(member) ?? String(member.id);
+export function errorToSnapshot (
+  compiler: Compiler,
+  error: CompileError,
+): unknown {
+  const {
+    code,
+    diagnostic,
+    nodeOrToken,
+    start,
+    end,
+  } = error;
+  return {
+    level: 'error',
+    code: {
+      value: code,
+      name: CompileErrorCode[code],
+    },
+    diagnostic,
+    ...(nodeOrToken instanceof SyntaxNode
+      ? { node: syntaxNodeToSnapshot(compiler, nodeOrToken) }
+      : { token: syntaxTokenToSnapshot(compiler, nodeOrToken as SyntaxToken) }),
+    start,
+    end,
+  };
+}
+
+export function warningToSnapshot (
+  compiler: Compiler,
+  warning: CompileWarning,
+): unknown {
+  const {
+    code,
+    diagnostic,
+    nodeOrToken,
+    start,
+    end,
+  } = warning;
+  return {
+    level: 'warning',
+    code: {
+      value: code,
+      name: CompileErrorCode[code],
+    },
+    diagnostic,
+    ...(nodeOrToken instanceof SyntaxNode
+      ? { node: syntaxNodeToSnapshot(compiler, nodeOrToken) }
+      : { token: syntaxTokenToSnapshot(compiler, nodeOrToken as SyntaxToken) }),
+    start,
+    end,
+  };
+}
+
+export function syntaxTokenToSnapshot (
+  compiler: Compiler,
+  token: SyntaxToken,
+): unknown {
+  const tokenReadableId = getReadableId(token);
+  const snippet = getCodeSnippet(token, compiler.parse.source());
+  const {
+    kind,
+    value,
+    leadingTrivia,
+    trailingTrivia,
+    leadingInvalid,
+    trailingInvalid,
+    startPos,
+    start,
+    endPos,
+    end,
+    isInvalid,
+  } = token;
+  const result = {
+    context: {
+      id: tokenReadableId,
+      snippet,
+    },
+    isInvalid,
+    kind,
+    value,
+    startPos,
+    endPos,
+    start,
+    end,
+    leadingTrivia: leadingTrivia.map((t) => t.value),
+    trailingTrivia: trailingTrivia.map((t) => t.value),
+    leadingInvalid: leadingInvalid.map((t) => t.value),
+    trailingInvalid: trailingInvalid.map((t) => t.value),
+  };
+  return result;
+}
+
+export function syntaxNodeToSnapshot (
+  compiler: Compiler,
+  node: SyntaxNode,
+): unknown {
+  const nodeReadableId = getReadableId(node);
+  const snippet = getCodeSnippet(node, compiler.parse.source());
+  const {
+    kind,
+    startPos,
+    endPos,
+    start,
+    end,
+    fullStart,
+    fullEnd,
+    parent,
+    parentNode,
+    ...props
+  } = node;
+  if (node instanceof ElementDeclarationNode) {
+    const parent = node.parent;
+    if (parent) {
+      (props as any).parent = {
+        id: getReadableId(parent),
+        snippet: getCodeSnippet(parent, compiler.parse.source()),
+      };
+    }
+  }
+  const symbol = compiler.nodeSymbol(node).getFiltered(UNHANDLED);
+  const referee = compiler.nodeReferee(node).getFiltered(UNHANDLED);
+  const result = {
+    context: {
+      id: nodeReadableId,
+      snippet,
+    },
+    kind,
+    startPos,
+    endPos,
+    start,
+    end,
+    fullStart,
+    fullEnd,
+    symbol: symbol && symbolToSnapshot(compiler, symbol),
+    referee: referee && symbolToSnapshot(compiler, referee),
+    children: Object.fromEntries(
+      Object.entries(props)
+        .map(
+          ([key, value]) =>
+            [key, toSnapshot(compiler, value)],
+        ),
+    ),
+  };
+  return result;
+}
+
+export function symbolToSnapshot (
+  compiler: Compiler,
+  symbol: NodeSymbol,
+): unknown {
+  if (!symbol) return undefined;
+  const symbolReadableId = getReadableId(symbol);
+  const snippet = getCodeSnippet(symbol, compiler.parse.source());
+  const {
+    declaration,
+  } = symbol;
+  const references = compiler.symbolReferences(symbol).getFiltered(UNHANDLED);
+  const symbolTable = compiler.symbolMembers(symbol).getFiltered(UNHANDLED);
+
+  return {
+    context: {
+      id: symbolReadableId,
+      snippet,
+    },
+    members: symbolTable?.map((value) => symbolToSnapshot(compiler, value)),
+    declaration: declaration && {
+      id: getReadableId(declaration),
+      snippet: getCodeSnippet(declaration, compiler.parse.source()),
+    },
+    references: references?.map((r) => ({
+      id: getReadableId(r),
+      snippet: getCodeSnippet(r, compiler.parse.source()),
+    })),
+  };
 }

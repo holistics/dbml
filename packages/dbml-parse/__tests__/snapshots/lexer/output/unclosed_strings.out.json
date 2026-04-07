@@ -1,7 +1,13 @@
 {
-  "value": [
+  "tokens": [
     {
+      "context": {
+        "id": "<eof>:@[L7:C0, L7:C0]",
+        "snippet": ""
+      },
+      "isInvalid": false,
       "kind": "<eof>",
+      "value": "",
       "startPos": {
         "offset": 104,
         "line": 7,
@@ -12,174 +18,34 @@
         "line": 7,
         "column": 0
       },
-      "value": "",
+      "start": 104,
+      "end": 104,
       "leadingTrivia": [],
       "trailingTrivia": [],
       "leadingInvalid": [
-        {
-          "kind": "<variable>",
-          "startPos": {
-            "offset": 0,
-            "line": 0,
-            "column": 0
-          },
-          "endPos": {
-            "offset": 27,
-            "line": 0,
-            "column": 27
-          },
-          "value": "\"This is an unclosed string",
-          "leadingTrivia": [],
-          "trailingTrivia": [
-            {
-              "kind": "<newline>",
-              "startPos": {
-                "offset": 27,
-                "line": 0,
-                "column": 27
-              },
-              "endPos": {
-                "offset": 28,
-                "line": 1,
-                "column": 0
-              },
-              "value": "\n",
-              "leadingTrivia": [],
-              "trailingTrivia": [],
-              "leadingInvalid": [],
-              "trailingInvalid": [],
-              "isInvalid": false,
-              "start": 27,
-              "end": 28
-            }
-          ],
-          "leadingInvalid": [],
-          "trailingInvalid": [],
-          "isInvalid": true,
-          "start": 0,
-          "end": 27
-        },
-        {
-          "kind": "<string>",
-          "startPos": {
-            "offset": 29,
-            "line": 2,
-            "column": 0
-          },
-          "endPos": {
-            "offset": 61,
-            "line": 2,
-            "column": 32
-          },
-          "value": "'This is also an unclosed string",
-          "leadingTrivia": [
-            {
-              "kind": "<newline>",
-              "startPos": {
-                "offset": 28,
-                "line": 1,
-                "column": 0
-              },
-              "endPos": {
-                "offset": 29,
-                "line": 2,
-                "column": 0
-              },
-              "value": "\n",
-              "leadingTrivia": [],
-              "trailingTrivia": [],
-              "leadingInvalid": [],
-              "trailingInvalid": [],
-              "isInvalid": false,
-              "start": 28,
-              "end": 29
-            }
-          ],
-          "trailingTrivia": [
-            {
-              "kind": "<newline>",
-              "startPos": {
-                "offset": 61,
-                "line": 2,
-                "column": 32
-              },
-              "endPos": {
-                "offset": 62,
-                "line": 3,
-                "column": 0
-              },
-              "value": "\n",
-              "leadingTrivia": [],
-              "trailingTrivia": [],
-              "leadingInvalid": [],
-              "trailingInvalid": [],
-              "isInvalid": false,
-              "start": 61,
-              "end": 62
-            }
-          ],
-          "leadingInvalid": [],
-          "trailingInvalid": [],
-          "isInvalid": true,
-          "start": 29,
-          "end": 61
-        },
-        {
-          "kind": "<string>",
-          "startPos": {
-            "offset": 63,
-            "line": 4,
-            "column": 0
-          },
-          "endPos": {
-            "offset": 104,
-            "line": 7,
-            "column": 0
-          },
-          "value": "'''This is also an unclosed string\n\n\\'''\n",
-          "leadingTrivia": [
-            {
-              "kind": "<newline>",
-              "startPos": {
-                "offset": 62,
-                "line": 3,
-                "column": 0
-              },
-              "endPos": {
-                "offset": 63,
-                "line": 4,
-                "column": 0
-              },
-              "value": "\n",
-              "leadingTrivia": [],
-              "trailingTrivia": [],
-              "leadingInvalid": [],
-              "trailingInvalid": [],
-              "isInvalid": false,
-              "start": 62,
-              "end": 63
-            }
-          ],
-          "trailingTrivia": [],
-          "leadingInvalid": [],
-          "trailingInvalid": [],
-          "isInvalid": true,
-          "start": 63,
-          "end": 104
-        }
+        "\"This is an unclosed string",
+        "'This is also an unclosed string",
+        "'''This is also an unclosed string\n\n\\'''\n"
       ],
-      "trailingInvalid": [],
-      "isInvalid": false,
-      "start": 104,
-      "end": 104
+      "trailingInvalid": []
     }
   ],
   "errors": [
     {
-      "code": 1003,
+      "level": "error",
+      "code": {
+        "value": 1003,
+        "name": "UNEXPECTED_NEWLINE"
+      },
       "diagnostic": "Invalid newline encountered while parsing",
-      "nodeOrToken": {
+      "token": {
+        "context": {
+          "id": "<variable>:\"This is an unclosed string@[L0:C0, L0:C27]",
+          "snippet": "\"This is a...sed string"
+        },
+        "isInvalid": true,
         "kind": "<variable>",
+        "value": "\"This is an unclosed string",
         "startPos": {
           "offset": 0,
           "line": 0,
@@ -190,46 +56,33 @@
           "line": 0,
           "column": 27
         },
-        "value": "\"This is an unclosed string",
+        "start": 0,
+        "end": 27,
         "leadingTrivia": [],
         "trailingTrivia": [
-          {
-            "kind": "<newline>",
-            "startPos": {
-              "offset": 27,
-              "line": 0,
-              "column": 27
-            },
-            "endPos": {
-              "offset": 28,
-              "line": 1,
-              "column": 0
-            },
-            "value": "\n",
-            "leadingTrivia": [],
-            "trailingTrivia": [],
-            "leadingInvalid": [],
-            "trailingInvalid": [],
-            "isInvalid": false,
-            "start": 27,
-            "end": 28
-          }
+          "\n"
         ],
         "leadingInvalid": [],
-        "trailingInvalid": [],
-        "isInvalid": true,
-        "start": 0,
-        "end": 27
+        "trailingInvalid": []
       },
       "start": 0,
-      "end": 27,
-      "name": "CompileError"
+      "end": 27
     },
     {
-      "code": 1003,
+      "level": "error",
+      "code": {
+        "value": 1003,
+        "name": "UNEXPECTED_NEWLINE"
+      },
       "diagnostic": "Invalid newline encountered while parsing",
-      "nodeOrToken": {
+      "token": {
+        "context": {
+          "id": "<string>:'This is also an unclosed string@[L2:C0, L2:C32]",
+          "snippet": "'This is a...sed string"
+        },
+        "isInvalid": true,
         "kind": "<string>",
+        "value": "'This is also an unclosed string",
         "startPos": {
           "offset": 29,
           "line": 2,
@@ -240,68 +93,35 @@
           "line": 2,
           "column": 32
         },
-        "value": "'This is also an unclosed string",
+        "start": 29,
+        "end": 61,
         "leadingTrivia": [
-          {
-            "kind": "<newline>",
-            "startPos": {
-              "offset": 28,
-              "line": 1,
-              "column": 0
-            },
-            "endPos": {
-              "offset": 29,
-              "line": 2,
-              "column": 0
-            },
-            "value": "\n",
-            "leadingTrivia": [],
-            "trailingTrivia": [],
-            "leadingInvalid": [],
-            "trailingInvalid": [],
-            "isInvalid": false,
-            "start": 28,
-            "end": 29
-          }
+          "\n"
         ],
         "trailingTrivia": [
-          {
-            "kind": "<newline>",
-            "startPos": {
-              "offset": 61,
-              "line": 2,
-              "column": 32
-            },
-            "endPos": {
-              "offset": 62,
-              "line": 3,
-              "column": 0
-            },
-            "value": "\n",
-            "leadingTrivia": [],
-            "trailingTrivia": [],
-            "leadingInvalid": [],
-            "trailingInvalid": [],
-            "isInvalid": false,
-            "start": 61,
-            "end": 62
-          }
+          "\n"
         ],
         "leadingInvalid": [],
-        "trailingInvalid": [],
-        "isInvalid": true,
-        "start": 29,
-        "end": 61
+        "trailingInvalid": []
       },
       "start": 29,
-      "end": 61,
-      "name": "CompileError"
+      "end": 61
     },
     {
-      "code": 1002,
+      "level": "error",
+      "code": {
+        "value": 1002,
+        "name": "UNEXPECTED_EOF"
+      },
       "diagnostic": "EOF reached while parsing",
-      "nodeOrToken": {
+      "token": {
+        "context": {
+          "id": "<string>:'''This is also an unclosed string\n\n\\'''\n@[L4:C0, L7:C0]",
+          "snippet": "'''This is...ing\n\n\\'''\n"
+        },
+        "isInvalid": true,
         "kind": "<string>",
+        "value": "'''This is also an unclosed string\n\n\\'''\n",
         "startPos": {
           "offset": 63,
           "line": 4,
@@ -312,40 +132,18 @@
           "line": 7,
           "column": 0
         },
-        "value": "'''This is also an unclosed string\n\n\\'''\n",
+        "start": 63,
+        "end": 104,
         "leadingTrivia": [
-          {
-            "kind": "<newline>",
-            "startPos": {
-              "offset": 62,
-              "line": 3,
-              "column": 0
-            },
-            "endPos": {
-              "offset": 63,
-              "line": 4,
-              "column": 0
-            },
-            "value": "\n",
-            "leadingTrivia": [],
-            "trailingTrivia": [],
-            "leadingInvalid": [],
-            "trailingInvalid": [],
-            "isInvalid": false,
-            "start": 62,
-            "end": 63
-          }
+          "\n"
         ],
         "trailingTrivia": [],
         "leadingInvalid": [],
-        "trailingInvalid": [],
-        "isInvalid": true,
-        "start": 63,
-        "end": 104
+        "trailingInvalid": []
       },
       "start": 63,
-      "end": 104,
-      "name": "CompileError"
+      "end": 104
     }
-  ]
+  ],
+  "warnings": []
 }
