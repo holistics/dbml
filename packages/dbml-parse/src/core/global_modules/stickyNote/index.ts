@@ -1,6 +1,6 @@
 import { isElementNode } from '@/core/utils/expression';
 import { ElementKind } from '@/core/types/keywords';
-import type { SyntaxNode, ElementDeclarationNode } from '@/core/parser/nodes';
+import { type SyntaxNode, type ElementDeclarationNode, ProgramNode } from '@/core/parser/nodes';
 import type { SyntaxToken } from '@/core/lexer/tokens';
 import { NodeSymbol, SymbolKind } from '@/core/types/symbols';
 import type { GlobalModule } from '../types';
@@ -13,7 +13,7 @@ import { StickyNoteInterpreter } from './interpret';
 
 export const noteModule: GlobalModule = {
   nodeSymbol (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol> | Report<PassThrough> {
-    if (!isElementNode(node, ElementKind.Note)) {
+    if (!isElementNode(node, ElementKind.Note) || !(node.parentNode instanceof ProgramNode)) {
       return Report.create(PASS_THROUGH);
     }
 

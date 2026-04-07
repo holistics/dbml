@@ -29,22 +29,11 @@ function isInsideRefBody (node: SyntaxNode): boolean {
 
 export const refModule: GlobalModule = {
   nodeSymbol (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol> | Report<PassThrough> {
-    if (!isElementNode(node, ElementKind.Ref)) {
-      return Report.create(PASS_THROUGH);
-    }
-
-    return new Report(compiler.symbolFactory.create(NodeSymbol, {
-      kind: SymbolKind.Ref,
-      declaration: node,
-    }));
+    return Report.create(PASS_THROUGH);
   },
 
   symbolMembers (compiler: Compiler, symbol: NodeSymbol): Report<NodeSymbol[]> | Report<PassThrough> {
-    if (!symbol.isKind(SymbolKind.Ref)) {
-      return Report.create(PASS_THROUGH);
-    }
-
-    return new Report([]);
+    return Report.create(PASS_THROUGH);
   },
 
   nodeReferee (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol | undefined> | Report<PassThrough> {

@@ -19,17 +19,8 @@ export const enum SymbolKind {
   TablePartialField = 'TablePartial field',
   PartialInjection = 'PartialInjection',
 
-  Project = 'Project',
-  ProjectField = 'Project field',
-
-  Records = 'Records',
-
   Indexes = 'Indexes',
   IndexesField = 'Indexes field',
-
-  Checks = 'Checks',
-
-  Ref = 'Ref',
 
   Program = 'Program',
 }

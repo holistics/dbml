@@ -40,9 +40,8 @@ export const schemaModule: GlobalModule = {
     const childSchemas = new Map<string, SchemaSymbol>();
 
     for (const element of ast.body) {
-      const fullnameResult = compiler.fullname(element);
-      if (fullnameResult.hasValue(UNHANDLED)) continue;
-      const fullname = fullnameResult.getValue();
+      const fullname = compiler.fullname(element).getValue();
+      if (fullname === UNHANDLED) continue;
 
       // Elements with no name or no schema prefix belong to the default (public) schema
       // e.g. anonymous Refs, Notes, etc.
@@ -61,7 +60,16 @@ export const schemaModule: GlobalModule = {
         // Element belongs to a child schema - create it if not yet seen
         const childName = elementSchemaChain[qualifiedName.length];
         if (!childSchemas.has(childName)) {
-          childSchemas.set(childName, compiler.symbolFactory.create(SchemaSymbol, { name: childName, parent: symbol as SchemaSymbol }));
+          childSchemas.set(
+            childName,
+            compiler.symbolFactory.create(
+              SchemaSymbol,
+              {
+                name: childName,
+                parent: symbol as SchemaSymbol,
+              },
+            ),
+          );
         }
       }
     }
@@ -69,39 +77,49 @@ export const schemaModule: GlobalModule = {
     members.push(...childSchemas.values());
 
     // Duplicate checking and alias conflict detection
-    // Skip Records - multiple records blocks for the same table are allowed
     const seen = new Map<string, NodeSymbol>();
     for (const member of members) {
-      if (!member.declaration || member.isKind(SymbolKind.Records)) continue;
+      if (!member.declaration) continue;
 
-      const nameResult = compiler.fullname(member.declaration);
-      if (nameResult.hasValue(UNHANDLED)) continue;
-      const name = nameResult.getValue()?.at(-1);
+      const name = compiler.fullname(member.declaration).getFiltered(UNHANDLED)?.at(-1);
       if (!name) continue;
 
       const key = `${member.kind}:${name}`;
       const existing = seen.get(key);
       if (existing) {
         // Report only on the duplicate (second) declaration
-        const errorNode = (member.declaration instanceof ElementDeclarationNode && member.declaration.name) ? member.declaration.name : member.declaration;
+        const errorNode = (
+          member.declaration instanceof ElementDeclarationNode
+          && member.declaration.name
+        )
+          ? member.declaration.name
+          : member.declaration;
         errors.push(getDuplicateSchemaMemberError(member.kind, name, qualifiedName.join('.'), errorNode));
       } else {
         seen.set(key, member);
       }
 
       // Check alias conflicts (e.g. Table users as U)
-      const aliasResult = compiler.alias(member.declaration);
-      if (!aliasResult.hasValue(UNHANDLED)) {
-        const alias = aliasResult.getValue();
-        if (alias) {
-          const aliasKey = `${member.kind}:${alias}`;
-          const existingAlias = seen.get(aliasKey);
-          if (existingAlias) {
-            const errorNode = (member.declaration instanceof ElementDeclarationNode && member.declaration.alias) ? member.declaration.alias : member.declaration;
-            errors.push(new CompileError(CompileErrorCode.DUPLICATE_NAME, `${member.kind} alias '${alias}' conflicts with an existing ${member.kind} name or alias`, errorNode));
-          } else {
-            seen.set(aliasKey, member);
-          }
+      const alias = compiler.alias(member.declaration).getFiltered(UNHANDLED);
+      if (alias) {
+        const aliasKey = `${member.kind}:${alias}`;
+        const existingAlias = seen.get(aliasKey);
+        if (existingAlias) {
+          const errorNode = (
+            member.declaration instanceof ElementDeclarationNode
+            && member.declaration.alias
+          )
+            ? member.declaration.alias
+            : member.declaration;
+          errors.push(
+            new CompileError(
+              CompileErrorCode.DUPLICATE_NAME,
+              `${member.kind} alias '${alias}' conflicts with an existing ${member.kind} name or alias`,
+              errorNode,
+            ),
+          );
+        } else {
+          seen.set(aliasKey, member);
         }
       }
     }

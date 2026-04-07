@@ -16,38 +16,10 @@ import { ProjectInterpreter } from './interpret';
 
 export const projectModule: GlobalModule = {
   nodeSymbol (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol> | Report<PassThrough> {
-    if (isElementNode(node, ElementKind.Project)) {
-      return new Report(compiler.symbolFactory.create(NodeSymbol, {
-        kind: SymbolKind.Project,
-        declaration: node,
-      }));
-    }
-    if (isElementFieldNode(node, ElementKind.Project)) {
-      return new Report(compiler.symbolFactory.create(NodeSymbol, { kind: SymbolKind.ProjectField, declaration: node }));
-    }
     return Report.create(PASS_THROUGH);
   },
 
   symbolMembers (compiler: Compiler, symbol: NodeSymbol): Report<NodeSymbol[]> | Report<PassThrough> {
-    if (symbol.isKind(SymbolKind.Project)) {
-      const node = symbol.declaration;
-      if (!(node instanceof ElementDeclarationNode)) return new Report([]);
-      const children = getBody(node);
-
-      const members: NodeSymbol[] = [];
-      const errors: CompileError[] = [];
-      for (const child of children) {
-        const res = compiler.nodeSymbol(child);
-        if (res.hasValue(UNHANDLED)) continue;
-        members.push(res.getValue());
-        errors.push(...res.getErrors());
-      }
-
-      return new Report(members, errors);
-    }
-    if (symbol.isKind(SymbolKind.ProjectField)) {
-      return new Report([]);
-    }
     return Report.create(PASS_THROUGH);
   },
 
