@@ -1,5 +1,4 @@
-// Lazy import: services depend on modules not yet migrated
-// import { DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLReferencesProvider, DBMLDiagnosticsProvider } from '@/services/index';
+import { DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLReferencesProvider, DBMLDiagnosticsProvider } from '@/services/index';
 import { invalidStream, flatStream } from './queries/token';
 import { splitQualifiedIdentifier, unescapeString, escapeString, formatRecordValue, isValidIdentifier, addDoubleQuoteIfNeeded } from './queries/utils';
 import { parseFile } from './queries/pipeline';
@@ -140,7 +139,6 @@ export default class Compiler {
   };
 
   async initMonacoServices () {
-    const { DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLReferencesProvider, DBMLDiagnosticsProvider } = await import('@/services/index');
     return {
       definitionProvider: new DBMLDefinitionProvider(this),
       referenceProvider: new DBMLReferencesProvider(this),
