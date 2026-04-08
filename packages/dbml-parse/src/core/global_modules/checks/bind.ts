@@ -1,16 +1,14 @@
-import { ElementDeclarationNode, ProgramNode } from '../../parser/nodes';
-import { SyntaxToken } from '../../lexer/tokens';
-import { CompileError } from '../../errors';
-import Compiler from '@/compiler';
+import type { ElementDeclarationNode } from '@/core/parser/nodes';
+import type { SyntaxToken } from '@/core/lexer/tokens';
+import type { CompileError } from '@/core/errors';
+import type Compiler from '@/compiler';
 
 export default class ChecksBinder {
   private compiler: Compiler;
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
-  private ast: ProgramNode | undefined;
 
-  constructor (declarationNode: ElementDeclarationNode & { type: SyntaxToken }, compiler: Compiler) {
+  constructor (compiler: Compiler, declarationNode: ElementDeclarationNode & { type: SyntaxToken }) {
     this.declarationNode = declarationNode;
-    this.ast = undefined;
     this.compiler = compiler;
   }
 

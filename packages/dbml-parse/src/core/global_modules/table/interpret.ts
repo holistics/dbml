@@ -303,17 +303,6 @@ export class TableInterpreter {
     return sym.isKind(SymbolKind.Enum);
   }
 
-  interpretColumnStandalone (field: FunctionApplicationNode): Report<Column | undefined> {
-    // Save current fields state, interpret column, then extract it
-    const errors = this.interpretColumn(field);
-    const column = this.table.fields?.pop();
-    // Also remove from pkColumns if it was added
-    if (column?.pk && this.pkColumns.length > 0 && this.pkColumns[this.pkColumns.length - 1] === column) {
-      this.pkColumns.pop();
-    }
-    return new Report<Column | undefined>(column, errors);
-  }
-
   private interpretIndexes (indexes: ElementDeclarationNode): CompileError[] {
     this.table.indexes?.push(...(indexes.body as BlockExpressionNode).body.map((_indexField) => {
       const index: Partial<Index> = { columns: [] };

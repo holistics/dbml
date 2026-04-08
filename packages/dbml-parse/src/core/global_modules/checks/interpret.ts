@@ -1,12 +1,11 @@
 import Compiler from '@/compiler/index';
-import { ElementKind, SettingName } from '@/core/types/keywords';
+import { SettingName } from '@/core/types/keywords';
 import { BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, FunctionExpressionNode, ListExpressionNode } from '@/core/parser/nodes';
-import type { SyntaxNode } from '@/core/parser/nodes';
 import { PASS_THROUGH } from '@/constants';
 import Report from '@/core/report';
 import type { Check, SchemaElement } from '@/core/types/schemaJson';
 import { getTokenPosition } from '../utils';
-import { isElementNode, extractQuotedStringToken } from '@/core/utils/expression';
+import { extractQuotedStringToken } from '@/core/utils/expression';
 import { aggregateSettingList } from '@/core/utils/validate';
 import { SyntaxToken } from '@/core/lexer/tokens';
 
@@ -41,7 +40,7 @@ export default class ChecksInterpreter {
         const settingMap = settingsReport.getValue();
         name = extractQuotedStringToken(settingMap[SettingName.Name]?.at(0)?.value);
       }
-      return { expression, name, token } as Check;
+      return { expression, name, token };
     });
 
     return new Report(checks);

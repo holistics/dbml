@@ -9,7 +9,7 @@ import { PASS_THROUGH, type PassThrough, UNHANDLED } from '@/constants';
 import Report from '@/core/report';
 import type Compiler from '@/compiler/index';
 import type { SchemaElement } from '@/core/types/schemaJson';
-import { getNodeMemberSymbols, lookupMember } from '../utils';
+import { getNodeMemberSymbols, lookupMember, shouldInterpretNode } from '../utils';
 import IndexesBinder from './bind';
 import IndexesInterpreter from './interpret';
 
@@ -77,6 +77,7 @@ export const indexesModule: GlobalModule = {
 
   bind (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
     if (!isElementNode(node, ElementKind.Indexes)) return Report.create(PASS_THROUGH);
+
     return Report.create(
       undefined,
       new IndexesBinder(compiler, node as ElementDeclarationNode & { type: SyntaxToken }).bind(),
@@ -85,7 +86,9 @@ export const indexesModule: GlobalModule = {
 
   interpret (compiler: Compiler, node: SyntaxNode): Report<SchemaElement | SchemaElement[] | undefined> | Report<PassThrough> {
     if (!isElementNode(node, ElementKind.Indexes)) return Report.create(PASS_THROUGH);
-    if (compiler.bind(node).getErrors().length + compiler.validate(node).getErrors().length > 0) return Report.create(undefined);
+
+    if (!shouldInterpretNode(compiler, node)) return Report.create(undefined);
+
     return new IndexesInterpreter(compiler, node).interpret();
   },
 };

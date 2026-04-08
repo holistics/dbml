@@ -19,7 +19,7 @@ import { PASS_THROUGH, type PassThrough, UNHANDLED } from '@/constants';
 import Report from '@/core/report';
 import type Compiler from '@/compiler/index';
 import type { SchemaElement } from '@/core/types/schemaJson';
-import { getNodeMemberSymbols, lookupMember, nodeRefereeOfLeftExpression, lookupInDefaultSchema } from '../utils';
+import { getNodeMemberSymbols, lookupMember, nodeRefereeOfLeftExpression, lookupInDefaultSchema, shouldInterpretNode } from '../utils';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import { tableUtils } from '../table';
 import TablePartialBinder from './bind';
@@ -127,8 +127,10 @@ export const tablePartialModule: GlobalModule = {
   },
 
   interpret (compiler: Compiler, node: SyntaxNode): Report<SchemaElement | SchemaElement[] | undefined> | Report<PassThrough> {
-    if (!isElementNode(node, ElementKind.TablePartial) && !isElementFieldNode(node, ElementKind.TablePartial)) return Report.create(PASS_THROUGH);
-    if (compiler.bind(node).getErrors().length + compiler.validate(node).getErrors().length > 0) return Report.create(undefined);
+    if (!isElementNode(node, ElementKind.TablePartial)) return Report.create(PASS_THROUGH);
+
+    if (!shouldInterpretNode(compiler, node)) return Report.create(undefined);
+
     return new TablePartialInterpreter(compiler, node).interpret();
   },
 };

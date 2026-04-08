@@ -5,7 +5,7 @@ import type { GlobalModule } from '../types';
 import { DEFAULT_SCHEMA_NAME, PASS_THROUGH, type PassThrough, UNHANDLED } from '@/constants';
 import Report from '@/core/report';
 import type Compiler from '@/compiler/index';
-import { getNodeMemberSymbols } from '../utils';
+import { getNodeMemberSymbols, shouldInterpretNode } from '../utils';
 import type { Database } from '@/core/types/schemaJson';
 import Binder from './bind';
 import ProgramInterpreter from './interpret';
@@ -67,7 +67,9 @@ export const programModule: GlobalModule = {
 
   interpret (compiler: Compiler, node: SyntaxNode): Report<Database | undefined> | Report<PassThrough> {
     if (!isProgramNode(node)) return Report.create(PASS_THROUGH);
-    if (compiler.bind(node).getErrors().length + compiler.validate(node).getErrors().length > 0) return Report.create(undefined);
+
+    if (!shouldInterpretNode(compiler, node)) return Report.create(undefined);
+
     return new ProgramInterpreter(compiler, node).interpret() as Report<Database | undefined>;
   },
 };

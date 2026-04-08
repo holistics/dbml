@@ -19,28 +19,13 @@ import type { GlobalModule } from '../types';
 import { PASS_THROUGH, UNHANDLED, type PassThrough } from '@/constants';
 import Report from '@/core/report';
 import type Compiler from '@/compiler/index';
-import { lookupMember, lookupInDefaultSchema, nodeRefereeOfLeftExpression } from '../utils';
+import { lookupMember, lookupInDefaultSchema, nodeRefereeOfLeftExpression, shouldInterpretNode } from '../utils';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import type { TableRecord } from '@/core/types/schemaJson';
 import RecordsBinder from './bind';
 import RecordsInterpreter from './interpret';
 
 export const recordsModule: GlobalModule = {
-  nodeSymbol (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol> | Report<PassThrough> {
-    return Report.create(PASS_THROUGH);
-  },
-
-  symbolMembers (compiler: Compiler, symbol: NodeSymbol): Report<NodeSymbol[]> | Report<PassThrough> {
-    return new Report(PASS_THROUGH);
-  },
-
-  nestedSymbols (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol[]> | Report<PassThrough> {
-    if (!isElementNode(node, ElementKind.Records)) {
-      return Report.create(PASS_THROUGH);
-    }
-    return new Report([]);
-  },
-
   nodeReferee (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol | undefined> | Report<PassThrough> {
     if (!isExpressionAVariableNode(node)) return Report.create(PASS_THROUGH);
 
@@ -74,12 +59,18 @@ export const recordsModule: GlobalModule = {
 
   bind (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
     if (!isElementNode(node, ElementKind.Records)) return Report.create(PASS_THROUGH);
-    return Report.create(undefined, new RecordsBinder(compiler, node as ElementDeclarationNode & { type: SyntaxToken }).bind());
+
+    return Report.create(
+      undefined,
+      new RecordsBinder(compiler, node as ElementDeclarationNode & { type: SyntaxToken }).bind(),
+    );
   },
 
   interpret (compiler: Compiler, node: SyntaxNode): Report<TableRecord | undefined> | Report<PassThrough> {
     if (!isElementNode(node, ElementKind.Records)) return Report.create(PASS_THROUGH);
-    if (compiler.bind(node).getErrors().length + compiler.validate(node).getErrors().length > 0) return Report.create(undefined);
+
+    if (!shouldInterpretNode(compiler, node)) return Report.create(undefined);
+
     return new RecordsInterpreter(compiler, node).interpret();
   },
 };
@@ -88,9 +79,9 @@ export const recordsModule: GlobalModule = {
 function nodeRefereeOfTupleColumn (compiler: Compiler, recordsNode: ElementDeclarationNode, node: SyntaxNode): Report<NodeSymbol | undefined> {
   const tableNode = recordsNode.parent;
   if (tableNode instanceof ElementDeclarationNode && tableNode.isKind(ElementKind.Table)) {
-    const tableSymbol = compiler.nodeSymbol(tableNode);
-    if (!tableSymbol.hasValue(UNHANDLED)) {
-      return nodeRefereeOfRecordsColumn(compiler, tableSymbol.getValue(), node);
+    const tableSymbol = compiler.nodeSymbol(tableNode).getFiltered(UNHANDLED);
+    if (tableSymbol) {
+      return nodeRefereeOfRecordsColumn(compiler, tableSymbol, node);
     }
   }
   return new Report(undefined);
@@ -100,14 +91,12 @@ function nodeRefereeOfCallColumn (compiler: Compiler, callParent: CallExpression
   if (callParent.callee) {
     let tableSymbol: NodeSymbol | undefined;
     if (isExpressionAVariableNode(callParent.callee)) {
-      const tableReferee = compiler.nodeReferee(callParent.callee);
-      if (!tableReferee.hasValue(UNHANDLED)) tableSymbol = tableReferee.getValue() ?? undefined;
+      tableSymbol = compiler.nodeReferee(callParent.callee).getFiltered(UNHANDLED);
     } else {
       const fragments = destructureMemberAccessExpression(callParent.callee);
       if (fragments && fragments.length > 0) {
         const lastFragment = fragments[fragments.length - 1];
-        const tableReferee = compiler.nodeReferee(lastFragment);
-        if (!tableReferee.hasValue(UNHANDLED)) tableSymbol = tableReferee.getValue() ?? undefined;
+        tableSymbol = compiler.nodeReferee(lastFragment).getFiltered(UNHANDLED);
       }
     }
     if (tableSymbol) {
@@ -122,19 +111,35 @@ function nodeRefereeOfCallColumn (compiler: Compiler, callParent: CallExpression
 // In access: left is schema -> table/schema
 function nodeRefereeOfRecordsName (compiler: Compiler, globalSymbol: NodeSymbol, node: SyntaxNode): Report<NodeSymbol | undefined> {
   if (!isExpressionAVariableNode(node)) return new Report(undefined);
+
   const name = extractVarNameFromPrimaryVariable(node) ?? '';
 
   if (!isAccessExpression(node.parentNode)) {
-    return lookupInDefaultSchema(compiler, globalSymbol, name, { kinds: [SymbolKind.Table, SymbolKind.Schema] });
+    return lookupInDefaultSchema(
+      compiler,
+      globalSymbol,
+      name,
+      { kinds: [SymbolKind.Table, SymbolKind.Schema] },
+    );
   }
 
   const left = nodeRefereeOfLeftExpression(compiler, node);
   if (!left) {
-    return lookupMember(compiler, globalSymbol, name, { kinds: [SymbolKind.Table, SymbolKind.Schema] });
+    return lookupMember(
+      compiler,
+      globalSymbol,
+      name,
+      { kinds: [SymbolKind.Table, SymbolKind.Schema] },
+    );
   }
 
   if (left.isKind(SymbolKind.Schema)) {
-    return lookupMember(compiler, left, name, { kinds: [SymbolKind.Table, SymbolKind.Schema] });
+    return lookupMember(
+      compiler,
+      left,
+      name,
+      { kinds: [SymbolKind.Table, SymbolKind.Schema] },
+    );
   }
 
   return new Report(undefined);
@@ -144,13 +149,21 @@ function nodeRefereeOfRecordsName (compiler: Compiler, globalSymbol: NodeSymbol,
 // Resolves against the parent table's columns
 function nodeRefereeOfRecordsColumn (compiler: Compiler, tableSymbol: NodeSymbol, node: SyntaxNode): Report<NodeSymbol | undefined> {
   if (!isExpressionAVariableNode(node)) return new Report(undefined);
+
   const name = extractVarNameFromPrimaryVariable(node) ?? '';
-  return lookupMember(compiler, tableSymbol, name, { kinds: [SymbolKind.Column] });
+
+  return lookupMember(
+    compiler,
+    tableSymbol,
+    name,
+    { kinds: [SymbolKind.Column] },
+  );
 }
 
 // Records body enum value: enum.field or schema.enum.field
 function nodeRefereeOfEnumValue (compiler: Compiler, globalSymbol: NodeSymbol, node: SyntaxNode): Report<NodeSymbol | undefined> {
   if (!isExpressionAVariableNode(node)) return new Report(undefined);
+
   const name = extractVarNameFromPrimaryVariable(node) ?? '';
 
   // Standalone: ignore (could be a literal like null/true/false)
@@ -178,12 +191,18 @@ function nodeRefereeOfEnumValue (compiler: Compiler, globalSymbol: NodeSymbol, n
       return lookupMember(compiler, globalSymbol, name, { kinds: [SymbolKind.Schema] });
     }
     // Look up as Enum in default (public) schema first, then fall back to program scope
-    const result = lookupInDefaultSchema(compiler, globalSymbol, name, { kinds: [SymbolKind.Enum], ignoreNotFound: true });
-    const sym = result.getValue();
-    if (sym && sym.declaration) {
+    const symbolResult = lookupInDefaultSchema(
+      compiler,
+      globalSymbol,
+      name,
+      { kinds: [SymbolKind.Enum], ignoreNotFound: true },
+    );
+    const symbol = symbolResult.getValue();
+
+    if (symbol?.declaration) {
       // Verify the enum is not schema-qualified when accessed without schema
-      const fn = compiler.fullname(sym.declaration);
-      if (!fn.hasValue(UNHANDLED) && fn.getValue() && fn.getValue()!.length > 1) {
+      const fullname = compiler.fullname(symbol.declaration).getFiltered(UNHANDLED);
+      if (fullname && fullname.length > 1) {
         // Schema-qualified enum accessed without schema prefix - report error
         return new Report(undefined, [
           new CompileError(
@@ -193,10 +212,15 @@ function nodeRefereeOfEnumValue (compiler: Compiler, globalSymbol: NodeSymbol, n
           ),
         ]);
       }
-      return result;
+      return symbolResult;
     }
     // Not found at all - report error
-    return lookupInDefaultSchema(compiler, globalSymbol, name, { kinds: [SymbolKind.Enum] });
+    return lookupInDefaultSchema(
+      compiler,
+      globalSymbol,
+      name,
+      { kinds: [SymbolKind.Enum] },
+    );
   }
 
   return new Report(undefined);

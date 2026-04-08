@@ -18,9 +18,8 @@ import {
   isWithinNthArgOfField,
   isAccessExpression,
   isExpressionAVariableNode,
-  isElementFieldNode,
 } from '@/core/utils/expression';
-import { getNodeMemberSymbols, lookupMember, nodeRefereeOfLeftExpression } from '../utils';
+import { getNodeMemberSymbols, lookupMember, nodeRefereeOfLeftExpression, shouldInterpretNode } from '../utils';
 import { isValidPartialInjection } from '@/core/utils/validate';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import TableBinder from './bind';
@@ -193,6 +192,7 @@ export const tableModule: GlobalModule = {
 
   bind (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
     if (!isElementNode(node, ElementKind.Table)) return Report.create(PASS_THROUGH);
+
     return Report.create(
       undefined,
       new TableBinder(compiler, node as ElementDeclarationNode & { type: SyntaxToken }).bind(),
@@ -200,18 +200,11 @@ export const tableModule: GlobalModule = {
   },
 
   interpret (compiler: Compiler, node: SyntaxNode): Report<SchemaElement | SchemaElement[] | undefined> | Report<PassThrough> {
-    if (!isElementNode(node, ElementKind.Table) && !isElementFieldNode(node, ElementKind.Table)) return Report.create(PASS_THROUGH);
-    if (compiler.bind(node).getErrors().length + compiler.validate(node).getErrors().length > 0) return Report.create(undefined);
+    if (!isElementNode(node, ElementKind.Table)) return Report.create(PASS_THROUGH);
 
-    if (isElementNode(node, ElementKind.Table)) {
-      return new TableInterpreter(compiler, node).interpret();
-    }
+    if (!shouldInterpretNode(compiler, node)) return Report.create(undefined);
 
-    if (isElementFieldNode(node, ElementKind.Table)) {
-      return new TableInterpreter(compiler, node.parent as ElementDeclarationNode).interpretColumnStandalone(node);
-    }
-
-    return Report.create(PASS_THROUGH);
+    return new TableInterpreter(compiler, node).interpret();
   },
 };
 
