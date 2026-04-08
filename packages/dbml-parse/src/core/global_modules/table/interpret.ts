@@ -32,7 +32,6 @@ export class TableInterpreter {
   private compiler: Compiler;
   private table: Partial<Table>;
   private pkColumns: Column[];
-  private nestedRecords: any[];
 
   constructor (compiler: Compiler, declarationNode: ElementDeclarationNode) {
     this.declarationNode = declarationNode;
@@ -48,10 +47,9 @@ export class TableInterpreter {
       checks: [],
     };
     this.pkColumns = [];
-    this.nestedRecords = [];
   }
 
-  interpret (): Report<Table | SchemaElement[]> {
+  interpret (): Report<Table> {
     this.table.token = getTokenPosition(this.declarationNode);
 
     const settingErrors = this.interpretSettingList(this.declarationNode.attributeList);
@@ -79,9 +77,6 @@ export class TableInterpreter {
       }
     }
 
-    if (this.nestedRecords.length > 0) {
-      return new Report([this.table as Table, ...this.nestedRecords] as SchemaElement[], errors);
-    }
     return new Report(this.table as Table, errors);
   }
 
@@ -159,11 +154,7 @@ export class TableInterpreter {
           return this.interpretChecks(sub);
 
         case ElementKind.Records: {
-          // Nested records are collected and returned alongside the table
-          const result = this.compiler.interpret(sub);
-          if (!result.hasValue(UNHANDLED)) {
-            this.nestedRecords.push(result.getValue());
-          }
+          // Nested records are collected by the program module
           return [];
         }
 

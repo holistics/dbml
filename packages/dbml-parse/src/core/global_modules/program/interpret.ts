@@ -1,19 +1,19 @@
 import Compiler from '@/compiler/index';
-import { isProgramNode } from '@/core/utils/expression';
-import { ElementDeclarationNode, SyntaxNode } from '@/core/parser/nodes';
+import { ElementDeclarationNode, ProgramNode } from '@/core/parser/nodes';
 import { ElementKind } from '@/core/types/keywords';
 import { SymbolKind } from '@/core/types/symbols';
-import { DEFAULT_SCHEMA_NAME, PASS_THROUGH, UNHANDLED } from '@/constants';
+import { DEFAULT_SCHEMA_NAME, UNHANDLED } from '@/constants';
 import Report from '@/core/report';
-import type { Alias, Database, Ref, RefEndpoint, Table, TableRecord, SchemaElement } from '@/core/types/schemaJson';
+import type { Database, Ref, RefEndpoint, Table, TableRecord, SchemaElement, Enum, TableGroup, TablePartial, Note, Project } from '@/core/types/schemaJson';
 import { getTokenPosition, getMultiplicities } from '../utils';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import type { CompileWarning } from '@/core/errors';
 import { validateForeignKeys } from '../records/utils/constraints';
 import { buildTableFromElement } from '../records/utils/interpret';
+import { getBody } from '@/core/utils/expression';
 
 // Strip internal-only properties from columns before exposing in the final Database output
-function processColumnInDb (table: Table): Table {
+function processColumnInDb<T extends Table | TablePartial> (table: T): T {
   return {
     ...table,
     fields: table.fields.map((c) => ({
@@ -28,17 +28,15 @@ function processColumnInDb (table: Table): Table {
 
 export default class ProgramInterpreter {
   private compiler: Compiler;
-  private node: SyntaxNode;
+  private programNode: ProgramNode;
 
-  constructor (compiler: Compiler, node: SyntaxNode) {
+  constructor (compiler: Compiler, node: ProgramNode) {
     this.compiler = compiler;
-    this.node = node;
+    this.programNode = node;
   }
 
-  interpret (): Report<SchemaElement | SchemaElement[] | undefined> | Report<typeof PASS_THROUGH> {
-    if (!isProgramNode(this.node)) return Report.create(PASS_THROUGH);
-
-    const token = getTokenPosition(this.node);
+  interpret (): Report<SchemaElement | SchemaElement[] | undefined> {
+    const token = getTokenPosition(this.programNode);
     const errors: CompileError[] = [];
     const warnings: CompileWarning[] = [];
     const db: Database = {
@@ -54,49 +52,50 @@ export default class ProgramInterpreter {
       token,
     };
 
-    // Walk Program → Schemas → Elements
-    const symbolResult = this.compiler.nodeSymbol(this.node);
-    if (symbolResult.hasValue(UNHANDLED)) return new Report(db);
+    for (const node of this.programNode.body) {
+      if (!(node instanceof ElementDeclarationNode)) continue;
 
-    const schemasResult = this.compiler.symbolMembers(symbolResult.getValue());
-    if (schemasResult.hasValue(UNHANDLED)) return new Report(db);
-    errors.push(...schemasResult.getErrors());
+      const result = this.compiler.interpret(node);
+      if (result.hasValue(UNHANDLED)) continue;
+      errors.push(...result.getErrors());
+      warnings.push(...result.getWarnings());
 
-    for (const schema of schemasResult.getValue()) {
-      // Only iterate schema symbols - skip non-schema members (e.g. flattened public members)
-      if (!schema.isKind(SymbolKind.Schema)) continue;
-      const elementsResult = this.compiler.symbolMembers(schema);
-      if (elementsResult.hasValue(UNHANDLED)) continue;
-
-      for (const member of elementsResult.getValue()) {
-        if (!member.declaration) continue;
-        const result = this.compiler.interpret(member.declaration);
-        if (result.hasValue(UNHANDLED)) continue;
-        errors.push(...result.getErrors());
-        warnings.push(...result.getWarnings());
-
-        const value = result.getValue();
-        if (!value) continue;
-        const kind = (member.declaration as ElementDeclarationNode).type?.value.toLowerCase();
-        switch (kind) {
-          case ElementKind.Table:
-            if (Array.isArray(value)) {
-            // interpretTable may return [Table, ...TableRecord] when there are nested records
-              db.tables.push(processColumnInDb(value[0] as any));
-              for (let i = 1; i < value.length; i++) db.records.push(value[i] as any);
-            } else {
-              db.tables.push(processColumnInDb(value as any));
-            }
-            break;
-          case ElementKind.Ref: db.refs.push(value as any); break;
-          case ElementKind.Enum: db.enums.push(value as any); break;
-          case ElementKind.TableGroup: db.tableGroups.push(value as any); break;
-          case ElementKind.TablePartial: db.tablePartials.push(processColumnInDb(value as any)); break;
-          case ElementKind.Note: db.notes.push(value as any); break;
-          case ElementKind.Project: db.project = value as any; break;
-          case ElementKind.Records: db.records.push(value as any); break;
-          default: break;
+      const value = result.getValue();
+      if (!value) continue;
+      const kind = Object.values(ElementKind).find((k) => node.isKind(k));
+      switch (kind) {
+        case ElementKind.Table: {
+          db.tables.push(processColumnInDb(value as Table));
+          // interpret nested tables also
+          for (const subElement of getBody(node)) {
+            if (!(subElement instanceof ElementDeclarationNode) || !subElement.isKind(ElementKind.Records)) continue;
+            const record = this.compiler.interpret(subElement).getFiltered(UNHANDLED);
+            if (record) db.records.push(record as TableRecord);
+          }
+          break;
         }
+        case ElementKind.Ref:
+          db.refs.push(value as Ref);
+          break;
+        case ElementKind.Enum:
+          db.enums.push(value as Enum);
+          break;
+        case ElementKind.TableGroup:
+          db.tableGroups.push(value as TableGroup);
+          break;
+        case ElementKind.TablePartial:
+          db.tablePartials.push(processColumnInDb(value as TablePartial));
+          break;
+        case ElementKind.Note:
+          db.notes.push(value as Note);
+          break;
+        case ElementKind.Project:
+          db.project = value as Project;
+          break;
+        case ElementKind.Records:
+          db.records.push(value as TableRecord);
+          break;
+        default: break;
       }
     }
 
@@ -168,26 +167,25 @@ export default class ProgramInterpreter {
         if (!recordsByTable.has(key)) {
           recordsByTable.set(key, []);
         }
-        recordsByTable.get(key)!.push(record);
+        recordsByTable.get(key)?.push(record);
       }
       for (const [, records] of recordsByTable) {
         if (records.length > 1) {
           const tableName = records[0].tableName;
           const msg = `Duplicate Records blocks for the same Table '${tableName}' - A Table can only have one Records block`;
-          // First block gets (N-1) errors, each subsequent block gets 1 error
-          // Total: 2*(N-1) errors
+
           for (let i = 1; i < records.length; i++) {
             errors.push(new CompileError(
               CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE,
               msg,
-              records[0] as any,
+              records[0],
             ));
           }
           for (let i = 1; i < records.length; i++) {
             errors.push(new CompileError(
               CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE,
               msg,
-              records[i] as any,
+              records[i],
             ));
           }
         }
@@ -213,7 +211,7 @@ export default class ProgramInterpreter {
   }
 
   private findTableNode (table: Table): ElementDeclarationNode | undefined {
-    for (const element of this.node.body) {
+    for (const element of this.programNode.body) {
       if (!(element instanceof ElementDeclarationNode)) continue;
       if (!element.isKind(ElementKind.Table)) continue;
       const fn = this.compiler.fullname(element);
