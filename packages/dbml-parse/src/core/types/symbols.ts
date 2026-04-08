@@ -125,43 +125,33 @@ export class SchemaSymbol extends NodeSymbol {
   }
 }
 
-export enum UseSpecifierPatternKind {
-  Exact, // Selective use
-  All, // *
-}
-
-// The item pattern
-// e.g. use { <kind> <name> } from <filepath>
-//            ^^^^^^^^^^^^^
-//             pattern "Exact"
-// e.g. use * from <filepath>
-//          ^
-//        pattern "All"
-export type UseSpecifierPattern = {
-  type: UseSpecifierPatternKind.Exact;
-  importKind?: ImportKind;
-  fullname?: string[]; // schema qualified name
-} | {
-  type: UseSpecifierPatternKind.All;
-};
-
 export class UseSymbol extends NodeSymbol {
   absolutePath?: Filepath;
-  specifier: UseSpecifierPattern;
+  importKind?: ImportKind; // undefined === `*`
+  isReExport: boolean;
 
   constructor (
     {
       absolutePath,
-      specifier,
+      isReExport,
+      importKind,
+      declaration,
     }: {
       absolutePath?: Filepath;
-      specifier: UseSpecifierPattern;
+      importKind?: ImportKind;
+      isReExport: boolean;
+      declaration: SyntaxNode;
     },
     id: NodeSymbolId,
     filepath: Filepath,
   ) {
-    super({ kind: SymbolKind.Use }, id, filepath);
+    super({ kind: SymbolKind.Use, declaration }, id, filepath);
     this.absolutePath = absolutePath;
-    this.specifier = specifier;
+    this.importKind = importKind;
+    this.isReExport = isReExport;
+  }
+
+  isWildcardUse (): boolean {
+    return this.importKind === undefined;
   }
 }

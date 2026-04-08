@@ -1,17 +1,19 @@
-import { CompileError, CompileErrorCode } from '@/core/errors';
 import { SyntaxNode, UseDeclarationNode } from '@/core/parser/nodes';
 import { GlobalModule } from '../types';
 import Report from '@/core/report';
 import Compiler from '@/compiler';
-import { PASS_THROUGH, PassThrough, UNHANDLED } from '@/constants';
-import { ImportKind, NodeSymbol, SchemaElement, UseSpecifierPatternKind, UseSymbol } from '@/core/types';
+import { PASS_THROUGH, PassThrough } from '@/constants';
+import { ImportKind, NodeSymbol, SchemaElement, UseSymbol } from '@/core/types';
 import { isUseSpecifier, isWildcardSpecifier } from '@/core/utils/expression';
 import { resolveImportFilepath } from '@/core/types/filepath';
 
 export const useModule: GlobalModule = {
   nodeSymbol (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol> | Report<PassThrough> {
-    const filepath = node.parentOfKind(UseDeclarationNode)?.importPath?.value;
-    const absolutePath = filepath !== undefined ? resolveImportFilepath(node.filepath, filepath) : undefined;
+    const useDeclaration = node.parentOfKind(UseDeclarationNode);
+    const isReExport = useDeclaration?.isReExport;
+
+    const rawFilepath = useDeclaration?.importPath?.value;
+    const absolutePath = rawFilepath !== undefined ? resolveImportFilepath(node.filepath, rawFilepath) : undefined;
 
     if (isUseSpecifier(node)) {
       const kind = Object.values(ImportKind).find((k) => node.isKind(k));
@@ -21,11 +23,9 @@ export const useModule: GlobalModule = {
           UseSymbol,
           {
             absolutePath,
-            specifier: {
-              type: UseSpecifierPatternKind.Exact,
-              importKind: kind,
-              fullname: compiler.fullname(node).getFiltered(UNHANDLED),
-            },
+            importKind: kind,
+            isReExport: isReExport!,
+            declaration: node,
           },
           node.filepath,
         ),
@@ -37,9 +37,8 @@ export const useModule: GlobalModule = {
           UseSymbol,
           {
             absolutePath,
-            specifier: {
-              type: UseSpecifierPatternKind.All,
-            },
+            isReExport: isReExport!,
+            declaration: node,
           },
           node.filepath,
         ),
