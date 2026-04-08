@@ -9,7 +9,6 @@ import {
   nodeSymbol,
   symbolMembers,
   nodeReferee,
-  nestedSymbols,
   bind,
   interpret,
 } from '@/core/global_modules';
@@ -83,8 +82,6 @@ export default class Compiler {
 
   symbolReferences = this.query(symbolReferences);
   nodeReferee = this.query(nodeReferee);
-
-  nestedSymbols = this.query(nestedSymbols);
 
   interpret = this.query(interpret);
 

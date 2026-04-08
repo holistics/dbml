@@ -111,16 +111,6 @@ export const tablePartialModule: GlobalModule = {
     return nodeRefereeOfEnumDefault(compiler, globalSymbol, node);
   },
 
-  nestedSymbols (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol[]> | Report<PassThrough> {
-    if (isElementNode(node, ElementKind.TablePartial)) {
-      return getNodeMemberSymbols(compiler, node);
-    }
-    if (isElementFieldNode(node, ElementKind.TablePartial)) {
-      return new Report([]);
-    }
-    return Report.create(PASS_THROUGH);
-  },
-
   bind (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
     if (!isElementNode(node, ElementKind.TablePartial)) return Report.create(PASS_THROUGH);
     return Report.create(undefined, new TablePartialBinder(compiler, node as ElementDeclarationNode & { type: SyntaxToken }).bind());

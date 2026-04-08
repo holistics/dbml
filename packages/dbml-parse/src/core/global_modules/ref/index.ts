@@ -50,13 +50,6 @@ export const refModule: GlobalModule = {
     return nodeRefereeOfRefEndpoint(compiler, globalSymbol, node);
   },
 
-  nestedSymbols (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol[]> | Report<PassThrough> {
-    if (!isElementNode(node, ElementKind.Ref)) {
-      return Report.create(PASS_THROUGH);
-    }
-    return new Report([]);
-  },
-
   bind (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
     if (!isElementNode(node, ElementKind.Ref)) return Report.create(PASS_THROUGH);
 

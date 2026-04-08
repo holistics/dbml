@@ -131,16 +131,6 @@ export const tableModule: GlobalModule = {
     return new Report(members, errors);
   },
 
-  nestedSymbols (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol[]> | Report<PassThrough> {
-    if (isElementNode(node, ElementKind.Table)) {
-      return getNodeMemberSymbols(compiler, node);
-    }
-    if (isInsideElementBody(node, ElementKind.Table)) {
-      return new Report([]);
-    }
-    return Report.create(PASS_THROUGH);
-  },
-
   nodeReferee (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol | undefined> | Report<PassThrough> {
     if (!isInsideElementBody(node, ElementKind.Table)) {
       return Report.create(PASS_THROUGH);

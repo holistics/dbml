@@ -14,8 +14,6 @@ export interface GlobalModule extends Module {
   nodeSymbol? (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol> | Report<PassThrough>;
   // List the direct child symbols owned by this symbol (e.g. columns of a table)
   symbolMembers? (compiler: Compiler, symbol: NodeSymbol): Report<NodeSymbol[]> | Report<PassThrough>;
-  // List all symbols syntactically nested under this node (recursive)
-  nestedSymbols? (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol[]> | Report<PassThrough>;
   // Resolve the symbol that this reference node points to
   nodeReferee? (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol | undefined> | Report<PassThrough>;
   // Resolve cross-references for this node (e.g. link ref endpoints to their target columns)

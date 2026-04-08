@@ -64,11 +64,6 @@ export function symbolMembers (this: Compiler, symbol: NodeSymbol): Report<NodeS
   return res.hasValue(PASS_THROUGH) ? Report.create(UNHANDLED) : res;
 }
 
-export function nestedSymbols (this: Compiler, node: SyntaxNode): Report<NodeSymbol[]> | Report<Unhandled> {
-  const res = dispatch('nestedSymbols', this, node);
-  return res.hasValue(PASS_THROUGH) ? Report.create(UNHANDLED) : res;
-}
-
 export function nodeReferee (this: Compiler, node: SyntaxNode): Report<NodeSymbol | undefined> | Report<Unhandled> {
   const res = dispatch('nodeReferee', this, node);
   return res.hasValue(PASS_THROUGH) ? Report.create(UNHANDLED) : res;
