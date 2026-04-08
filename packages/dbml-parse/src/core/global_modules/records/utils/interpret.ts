@@ -8,16 +8,15 @@ import { isValidPartialInjection } from '@/core/utils/validate';
 
 // Build a Table object from an element node using interpret (includes indexes, checks, etc.)
 // and symbolMembers (includes partial-injected columns).
-export function buildTableFromElement (tableNode: ElementDeclarationNode, compiler: Compiler): Table | undefined {
-  const interpreted = compiler.interpret(tableNode).getFiltered(UNHANDLED);
-  // interpret may return [Table, ...TableRecord] when there are nested records
-  const baseTable = Array.isArray(interpreted) ? interpreted[0] as Table : interpreted as Table | undefined;
+export function buildMergedTableFromElement (tableNode: ElementDeclarationNode, compiler: Compiler): Table | undefined {
+  const baseTable = compiler.interpret(tableNode).getFiltered(UNHANDLED) as Table | undefined;
   if (!baseTable) return undefined;
 
   // The interpreted table only has direct fields. Merge partial-injected columns from symbolMembers.
   // symbolMembers respects injection position order.
   const tableSymbol = compiler.nodeSymbol(tableNode).getFiltered(UNHANDLED);
   if (!tableSymbol) return baseTable;
+
   const members = compiler.symbolMembers(tableSymbol).getFiltered(UNHANDLED);
   if (!members) return baseTable;
 
@@ -73,9 +72,10 @@ export function buildTableFromElement (tableNode: ElementDeclarationNode, compil
 
 // Build a Table object from a table node's symbol members (including partial-injected columns),
 // without calling compiler.interpret(tableNode) (avoids cycle when called from nested records).
-export function buildTableFromSymbolMembers (tableNode: ElementDeclarationNode, compiler: Compiler): Table | undefined {
+export function buildMergedTableFromSymbolMembers (tableNode: ElementDeclarationNode, compiler: Compiler): Table | undefined {
   const tableSymbol = compiler.nodeSymbol(tableNode).getFiltered(UNHANDLED);
   if (!tableSymbol) return undefined;
+
   const members = compiler.symbolMembers(tableSymbol).getFiltered(UNHANDLED);
   if (!members) return undefined;
 

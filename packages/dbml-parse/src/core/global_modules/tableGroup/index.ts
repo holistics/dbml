@@ -9,7 +9,7 @@ import { DEFAULT_SCHEMA_NAME, PASS_THROUGH, type PassThrough, UNHANDLED, DEFAULT
 import Report from '@/core/report';
 import type Compiler from '@/compiler/index';
 import type { SchemaElement } from '@/core/types/schemaJson';
-import { getNodeMemberSymbols, lookupMember, nodeRefereeOfLeftExpression } from '../utils';
+import { getNodeMemberSymbols, lookupMember, nodeRefereeOfLeftExpression, shouldInterpretNode } from '../utils';
 import { extractVarNameFromPrimaryVariable } from '@/core/utils/expression';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import TableGroupBinder from './bind';
@@ -116,7 +116,9 @@ export const tableGroupModule: GlobalModule = {
 
   interpret (compiler: Compiler, node: SyntaxNode): Report<SchemaElement | SchemaElement[] | undefined> | Report<PassThrough> {
     if (!isElementNode(node, ElementKind.TableGroup)) return Report.create(PASS_THROUGH);
-    if (compiler.bind(node).getErrors().length + compiler.validate(node).getErrors().length > 0) return Report.create(undefined);
+
+    if (!shouldInterpretNode(compiler, node)) return Report.create(undefined);
+
     return new TableGroupInterpreter(compiler, node).interpret();
   },
 };

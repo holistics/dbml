@@ -12,23 +12,6 @@ import { tablePartialUtils } from '../tablePartial';
 import { tableGroupUtils } from '../tableGroup';
 
 export const schemaModule: GlobalModule = {
-  // Schemas don't have their own AST nodes - they are synthesized
-  // from dotted names (e.g. `auth.users` creates schema `auth`).
-  // nodeSymbol is not used for schemas; they are created via symbolMembers on Program.
-  nodeSymbol (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol> | Report<PassThrough> { return Report.create(PASS_THROUGH); },
-
-  nestedSymbols (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol[]> | Report<PassThrough> { return Report.create(PASS_THROUGH); },
-
-  nodeReferee (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol | undefined> | Report<PassThrough> { return Report.create(PASS_THROUGH); },
-
-  bind (compiler: Compiler, node: SyntaxNode): Report<PassThrough> {
-    return Report.create(PASS_THROUGH);
-  },
-
-  interpret (compiler: Compiler, node: SyntaxNode): Report<PassThrough> {
-    return Report.create(PASS_THROUGH);
-  },
-
   symbolMembers (compiler: Compiler, symbol: NodeSymbol): Report<NodeSymbol[]> | Report<PassThrough> {
     if (!symbol.isKind(SymbolKind.Schema) || !(symbol instanceof SchemaSymbol)) return Report.create(PASS_THROUGH);
     const qualifiedName = symbol.qualifiedName;

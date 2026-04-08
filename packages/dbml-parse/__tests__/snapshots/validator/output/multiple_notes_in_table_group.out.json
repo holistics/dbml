@@ -724,18 +724,6 @@
                         "trailingTrivia": "",
                         "value": "note"
                       }
-                    },
-                    "symbol": {
-                      "context": {
-                        "id": "<element-declaration>:@[L5:C2, L5:C21]",
-                        "snippet": "note: 'inline note'"
-                      },
-                      "declaration": {
-                        "id": "<element-declaration>:@[L5:C2, L5:C21]",
-                        "snippet": "note: 'inline note'"
-                      },
-                      "members": [],
-                      "references": []
                     }
                   },
                   {
@@ -969,18 +957,6 @@
                         "trailingTrivia": "",
                         "value": "note"
                       }
-                    },
-                    "symbol": {
-                      "context": {
-                        "id": "<element-declaration>:@[L7:C2, L13:C3]",
-                        "snippet": "note: '''\n...syntax\n'''"
-                      },
-                      "declaration": {
-                        "id": "<element-declaration>:@[L7:C2, L13:C3]",
-                        "snippet": "note: '''\n...syntax\n'''"
-                      },
-                      "members": [],
-                      "references": []
                     }
                   },
                   {
@@ -1151,18 +1127,6 @@
                         "trailingTrivia": " ",
                         "value": "note"
                       }
-                    },
-                    "symbol": {
-                      "context": {
-                        "id": "<element-declaration>:@[L15:C2, L17:C3]",
-                        "snippet": "note {\n   ... note'\n  }"
-                      },
-                      "declaration": {
-                        "id": "<element-declaration>:@[L15:C2, L17:C3]",
-                        "snippet": "note {\n   ... note'\n  }"
-                      },
-                      "members": [],
-                      "references": []
                     }
                   }
                 ],
@@ -1283,26 +1247,8 @@
             "members": [
               {
                 "context": {
-                  "id": "<element-declaration>:@[L5:C2, L5:C21]",
-                  "snippet": "note: 'inline note'"
-                }
-              },
-              {
-                "context": {
                   "id": "<function-application>@[L6:C2, L6:C8]",
                   "snippet": "table1"
-                }
-              },
-              {
-                "context": {
-                  "id": "<element-declaration>:@[L7:C2, L13:C3]",
-                  "snippet": "note: '''\n...syntax\n'''"
-                }
-              },
-              {
-                "context": {
-                  "id": "<element-declaration>:@[L15:C2, L17:C3]",
-                  "snippet": "note {\n   ... note'\n  }"
                 }
               }
             ],

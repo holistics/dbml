@@ -9,7 +9,7 @@ import { PASS_THROUGH, UNHANDLED, type PassThrough } from '@/constants';
 import Report from '@/core/report';
 import type Compiler from '@/compiler/index';
 import type { SchemaElement } from '@/core/types/schemaJson';
-import { getNodeMemberSymbols } from '../utils';
+import { getNodeMemberSymbols, shouldInterpretNode } from '../utils';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import EnumBinder from './bind';
 import EnumInterpreter from './interpret';
@@ -96,6 +96,7 @@ export const enumModule: GlobalModule = {
 
   bind (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
     if (!isElementNode(node, ElementKind.Enum)) return Report.create(PASS_THROUGH);
+
     return Report.create(
       undefined,
       new EnumBinder(compiler, node as ElementDeclarationNode & { type: SyntaxToken }).bind(),
@@ -104,7 +105,9 @@ export const enumModule: GlobalModule = {
 
   interpret (compiler: Compiler, node: SyntaxNode): Report<SchemaElement | SchemaElement[] | undefined> | Report<PassThrough> {
     if (!isElementNode(node, ElementKind.Enum)) return Report.create(PASS_THROUGH);
-    if (compiler.bind(node).getErrors().length + compiler.validate(node).getErrors().length > 0) return Report.create(undefined);
+
+    if (!shouldInterpretNode(compiler, node)) return Report.create(undefined);
+
     return new EnumInterpreter(compiler, node).interpret();
   },
 };

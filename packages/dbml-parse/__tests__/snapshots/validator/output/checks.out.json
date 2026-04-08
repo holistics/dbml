@@ -169,18 +169,6 @@
               "trailingTrivia": " ",
               "value": "checks"
             }
-          },
-          "symbol": {
-            "context": {
-              "id": "<element-declaration>:@[L0:C0, L0:C9]",
-              "snippet": "checks {}"
-            },
-            "declaration": {
-              "id": "<element-declaration>:@[L0:C0, L0:C9]",
-              "snippet": "checks {}"
-            },
-            "members": [],
-            "references": []
           }
         },
         {
@@ -2554,18 +2542,6 @@
                         "trailingTrivia": " ",
                         "value": "checks"
                       }
-                    },
-                    "symbol": {
-                      "context": {
-                        "id": "<element-declaration>:@[L17:C2, L22:C3]",
-                        "snippet": "checks {\n ...valid]\n  }"
-                      },
-                      "declaration": {
-                        "id": "<element-declaration>:@[L17:C2, L22:C3]",
-                        "snippet": "checks {\n ...valid]\n  }"
-                      },
-                      "members": [],
-                      "references": []
                     }
                   }
                 ],
@@ -2689,12 +2665,6 @@
                   "id": "<function-application>@[L15:C2, L15:C13]",
                   "snippet": "balance int"
                 }
-              },
-              {
-                "context": {
-                  "id": "<element-declaration>:@[L17:C2, L22:C3]",
-                  "snippet": "checks {\n ...valid]\n  }"
-                }
               }
             ],
             "references": []
@@ -2742,12 +2712,6 @@
       "members": [
         {
           "context": {}
-        },
-        {
-          "context": {
-            "id": "<element-declaration>:@[L0:C0, L0:C9]",
-            "snippet": "checks {}"
-          }
         },
         {
           "context": {

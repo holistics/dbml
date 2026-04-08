@@ -2,7 +2,7 @@ import { ElementKind, SettingName } from '@/core/types/keywords';
 import { ElementDeclarationNode, FunctionApplicationNode, PrefixExpressionNode, InfixExpressionNode, ProgramNode } from '@/core/parser/nodes';
 import type { SyntaxNode } from '@/core/parser/nodes';
 import type { SyntaxToken } from '@/core/lexer/tokens';
-import { NodeSymbol, SchemaSymbol, InjectedSymbol, SymbolKind } from '@/core/types/symbols';
+import { NodeSymbol, SchemaSymbol, InjectedColumnSymbol, SymbolKind } from '@/core/types/symbols';
 import type { GlobalModule } from '../types';
 import { DEFAULT_SCHEMA_NAME, KEYWORDS_OF_DEFAULT_SETTING, PASS_THROUGH, type PassThrough, UNHANDLED } from '@/constants';
 import Report from '@/core/report';
@@ -18,9 +18,8 @@ import {
   isWithinNthArgOfField,
   isAccessExpression,
   isExpressionAVariableNode,
-  isElementFieldNode,
 } from '@/core/utils/expression';
-import { getNodeMemberSymbols, lookupMember, nodeRefereeOfLeftExpression } from '../utils';
+import { getNodeMemberSymbols, lookupMember, nodeRefereeOfLeftExpression, shouldInterpretNode } from '../utils';
 import { isValidPartialInjection } from '@/core/utils/validate';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import TableBinder from './bind';
@@ -94,55 +93,46 @@ export const tableModule: GlobalModule = {
 
     // Detect partial injections (~partial_name) and insert their columns at the injection position
     // Process in reverse so that insertion indices remain valid
-    const injections: { index: number; partialMembers: NodeSymbol[]; partialErrors: CompileError[] }[] = [];
+    const injections: { index: number; partialMembers: NodeSymbol[] }[] = [];
     for (let i = 0; i < members.length; i++) {
       const member = members[i];
-      if (
-        !(member.declaration instanceof FunctionApplicationNode)
-        || !isValidPartialInjection(member.declaration.callee)
-      ) continue;
+      if (!(member.declaration instanceof FunctionApplicationNode)) continue;
+      if (!isValidPartialInjection(member.declaration.callee)) continue;
 
-      const partialNameNode = member.declaration.callee.expression;
-      const partialName = extractVariableFromExpression(partialNameNode);
-      if (partialName === undefined) continue;
+      const tablePartialNameNode = (member.declaration.callee as PrefixExpressionNode).expression;
+      const tablePartialName = extractVariableFromExpression(tablePartialNameNode);
+      if (tablePartialNameNode === undefined || tablePartialName === undefined) continue;
 
       // Look up the TablePartial symbol among direct program elements
-      const ast = compiler.parse(symbol.filepath).getValue().ast;
-      if (!(ast instanceof ProgramNode)) continue;
-      let partialSymbol: NodeSymbol | undefined;
-      for (const programChild of ast.body) {
-        const res = compiler.nodeSymbol(programChild);
-        if (res.hasValue(UNHANDLED)) continue;
-        const sym = res.getValue();
-        if (!sym.isKind(SymbolKind.TablePartial) || !sym.declaration) continue;
-        const fn = compiler.fullname(sym.declaration);
-        if (fn.hasValue(UNHANDLED)) continue;
-        if (fn.getValue()?.at(-1) === partialName) { partialSymbol = sym; break; }
-      }
+      const tablePartialSymbol = compiler.nodeReferee(tablePartialNameNode).getFiltered(UNHANDLED);
 
-      if (!partialSymbol) {
-        errors.push(new CompileError(CompileErrorCode.BINDING_ERROR, `TablePartial '${partialName}' does not exist in Schema 'public'`, partialNameNode || node));
+      if (!tablePartialSymbol) {
+        errors.push(new CompileError(CompileErrorCode.BINDING_ERROR, `TablePartial '${tablePartialName}' does not exist in Schema 'public'`, tablePartialNameNode || node));
         continue;
       }
 
-      const partialMembersResult = compiler.symbolMembers(partialSymbol);
-      if (!partialMembersResult.hasValue(UNHANDLED)) {
-        // Wrap partial columns as InjectedSymbol so symbolName works without fullname(declaration)
-        const injectedMembers = partialMembersResult.getValue().map((m) => {
-          if (!m.isKind(SymbolKind.Column) || !m.declaration) return m;
+      const tablePartialMembers = compiler.symbolMembers(tablePartialSymbol).getFiltered(UNHANDLED);
+      if (tablePartialMembers) {
+        const injectedMembers = tablePartialMembers.flatMap((m) => {
+          if (!m.declaration) return [];
+
           const name = compiler.symbolName(m);
           if (!name) return m;
-          return compiler.symbolFactory.create(InjectedSymbol, { kind: SymbolKind.Column, declaration: m.declaration, name }, node.filepath);
+
+          return compiler.symbolFactory.create(
+            InjectedColumnSymbol,
+            { kind: SymbolKind.Column, injectionDeclaration: member.declaration!, declaration: m.declaration, name },
+            node.filepath,
+          );
         });
-        injections.push({ index: i, partialMembers: injectedMembers, partialErrors: partialMembersResult.getErrors() });
+        injections.push({ index: i, partialMembers: injectedMembers });
       }
     }
 
     // Insert partial members at injection positions (process in reverse to keep indices valid)
     for (let j = injections.length - 1; j >= 0; j--) {
-      const { index, partialMembers: pMembers, partialErrors: pErrors } = injections[j];
+      const { index, partialMembers: pMembers } = injections[j];
       members.splice(index, 0, ...pMembers);
-      errors.push(...pErrors);
     }
 
     return new Report(members, errors);
@@ -197,6 +187,7 @@ export const tableModule: GlobalModule = {
 
   bind (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
     if (!isElementNode(node, ElementKind.Table)) return Report.create(PASS_THROUGH);
+
     return Report.create(
       undefined,
       new TableBinder(compiler, node as ElementDeclarationNode & { type: SyntaxToken }).bind(),
@@ -204,18 +195,11 @@ export const tableModule: GlobalModule = {
   },
 
   interpret (compiler: Compiler, node: SyntaxNode): Report<SchemaElement | SchemaElement[] | undefined> | Report<PassThrough> {
-    if (!isElementNode(node, ElementKind.Table) && !isElementFieldNode(node, ElementKind.Table)) return Report.create(PASS_THROUGH);
-    if (compiler.bind(node).getErrors().length + compiler.validate(node).getErrors().length > 0) return Report.create(undefined);
+    if (!isElementNode(node, ElementKind.Table)) return Report.create(PASS_THROUGH);
 
-    if (isElementNode(node, ElementKind.Table)) {
-      return new TableInterpreter(compiler, node).interpret();
-    }
+    if (!shouldInterpretNode(compiler, node)) return Report.create(undefined);
 
-    if (isElementFieldNode(node, ElementKind.Table)) {
-      return new TableInterpreter(compiler, node.parent as ElementDeclarationNode).interpretColumnStandalone(node);
-    }
-
-    return Report.create(PASS_THROUGH);
+    return new TableInterpreter(compiler, node).interpret();
   },
 };
 

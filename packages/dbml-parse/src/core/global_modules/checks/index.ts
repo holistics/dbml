@@ -10,6 +10,7 @@ import type Compiler from '@/compiler/index';
 import type { SchemaElement } from '@/core/types/schemaJson';
 import ChecksBinder from './bind';
 import ChecksInterpreter from './interpret';
+import { shouldInterpretNode } from '../utils';
 
 export const checksModule: GlobalModule = {
   nodeSymbol (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol> | Report<PassThrough> {
@@ -31,12 +32,18 @@ export const checksModule: GlobalModule = {
 
   bind (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
     if (!isElementNode(node, ElementKind.Checks)) return Report.create(PASS_THROUGH);
-    return Report.create(undefined, new ChecksBinder(node as ElementDeclarationNode & { type: SyntaxToken }, compiler).bind());
+
+    return Report.create(
+      undefined,
+      new ChecksBinder(compiler, node as ElementDeclarationNode & { type: SyntaxToken }).bind(),
+    );
   },
 
   interpret (compiler: Compiler, node: SyntaxNode): Report<SchemaElement | SchemaElement[] | undefined> | Report<PassThrough> {
     if (!isElementNode(node, ElementKind.Checks)) return Report.create(PASS_THROUGH);
-    if (compiler.bind(node).getErrors().length + compiler.validate(node).getErrors().length > 0) return Report.create(undefined);
+
+    if (!shouldInterpretNode(compiler, node)) return Report.create(undefined);
+
     return new ChecksInterpreter(compiler, node as ElementDeclarationNode & { type: SyntaxToken }).interpret();
   },
 };

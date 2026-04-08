@@ -33,6 +33,13 @@ export function normalizeNoteContent (content: string): string {
   return trimmedTopEmptyLines.map((line) => line.slice(minIndent)).join('\n');
 }
 
+export function shouldInterpretNode (compiler: Compiler, node: SyntaxNode): boolean {
+  const hasParseError = compiler.parse().getErrors().length > 0;
+  const hasValidateError = compiler.validate(node).getErrors().length > 0;
+  const hasBindError = compiler.bind(node).getErrors().length > 0;
+  return !hasParseError && !hasValidateError && !hasBindError;
+}
+
 export function getTokenPosition (node: SyntaxNode): TokenPosition {
   return {
     start: {
@@ -206,19 +213,6 @@ export function getMultiplicities (
     default:
       return undefined;
   }
-}
-
-export function findTableByAlias (compiler: Compiler, parentSymbol: NodeSymbol, alias: string): NodeSymbol | undefined {
-  const members = compiler.symbolMembers(parentSymbol);
-  if (members.hasValue(UNHANDLED)) return undefined;
-  for (const m of members.getValue()) {
-    if (!m.isKind(SymbolKind.Table) || !m.declaration) continue;
-    const aliasResult = compiler.alias(m.declaration);
-    if (!aliasResult.hasValue(UNHANDLED) && aliasResult.getValue() === alias) {
-      return m;
-    }
-  }
-  return undefined;
 }
 
 export function extractNamesFromRefOperand (node: SyntaxNode, container?: { schemaName: string | null; tableName: string }): { schemaName: string | null; tableName: string; fieldNames: string[] } {

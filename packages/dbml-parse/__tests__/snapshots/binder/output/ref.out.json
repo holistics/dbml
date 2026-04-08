@@ -1070,18 +1070,6 @@
               "trailingTrivia": " ",
               "value": "Ref"
             }
-          },
-          "symbol": {
-            "context": {
-              "id": "<element-declaration>:@[L5:C0, L7:C1]",
-              "snippet": "Ref {\n    ...errer_id\n}"
-            },
-            "declaration": {
-              "id": "<element-declaration>:@[L5:C0, L7:C1]",
-              "snippet": "Ref {\n    ...errer_id\n}"
-            },
-            "members": [],
-            "references": []
           }
         }
       ],
@@ -1131,12 +1119,6 @@
           "context": {
             "id": "<element-declaration>:Users@[L0:C0, L3:C1]",
             "snippet": "Table User...integer \n}"
-          }
-        },
-        {
-          "context": {
-            "id": "<element-declaration>:@[L5:C0, L7:C1]",
-            "snippet": "Ref {\n    ...errer_id\n}"
           }
         }
       ],

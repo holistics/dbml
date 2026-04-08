@@ -9,7 +9,7 @@ import { DEFAULT_SCHEMA_NAME, PASS_THROUGH, UNHANDLED, type PassThrough } from '
 import Report from '@/core/report';
 import type Compiler from '@/compiler/index';
 import type { Ref } from '@/core/types/schemaJson';
-import { lookupMember, nodeRefereeOfLeftExpression } from '../utils';
+import { lookupMember, nodeRefereeOfLeftExpression, shouldInterpretNode } from '../utils';
 import { extractVarNameFromPrimaryVariable } from '@/core/utils/expression';
 import RefBinder from './bind';
 import { RefInterpreter } from './interpret';
@@ -59,6 +59,7 @@ export const refModule: GlobalModule = {
 
   bind (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
     if (!isElementNode(node, ElementKind.Ref)) return Report.create(PASS_THROUGH);
+
     return Report.create(
       undefined,
       new RefBinder(compiler, node as ElementDeclarationNode & { type: SyntaxToken }).bind(),
@@ -67,7 +68,9 @@ export const refModule: GlobalModule = {
 
   interpret (compiler: Compiler, node: SyntaxNode): Report<Ref | undefined> | Report<PassThrough> {
     if (!isElementNode(node, ElementKind.Ref)) return Report.create(PASS_THROUGH);
-    if (compiler.bind(node).getErrors().length + compiler.validate(node).getErrors().length > 0) return Report.create(undefined);
+
+    if (!shouldInterpretNode(compiler, node)) return Report.create(undefined);
+
     return new RefInterpreter(compiler, node).interpret();
   },
 };

@@ -10,6 +10,7 @@ import type Compiler from '@/compiler/index';
 import type { Note } from '@/core/types/schemaJson';
 import NoteBinder from './bind';
 import { StickyNoteInterpreter } from './interpret';
+import { shouldInterpretNode } from '../utils';
 
 export const noteModule: GlobalModule = {
   nodeSymbol (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol> | Report<PassThrough> {
@@ -42,6 +43,7 @@ export const noteModule: GlobalModule = {
 
   bind (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
     if (!isElementNode(node, ElementKind.Note)) return Report.create(PASS_THROUGH);
+
     return Report.create(
       undefined,
       new NoteBinder(compiler, node as ElementDeclarationNode & { type: SyntaxToken }).bind(),
@@ -50,7 +52,9 @@ export const noteModule: GlobalModule = {
 
   interpret (compiler: Compiler, node: SyntaxNode): Report<Note | undefined> | Report<PassThrough> {
     if (!isElementNode(node, ElementKind.Note)) return Report.create(PASS_THROUGH);
-    if (compiler.bind(node).getErrors().length + compiler.validate(node).getErrors().length > 0) return Report.create(undefined);
+
+    if (!shouldInterpretNode(compiler, node)) return Report.create(undefined);
+
     return new StickyNoteInterpreter(compiler, node).interpret();
   },
 };

@@ -346,18 +346,6 @@
               "trailingTrivia": " ",
               "value": "Ref"
             }
-          },
-          "symbol": {
-            "context": {
-              "id": "<element-declaration>:@[L8:C0, L10:C1]",
-              "snippet": "Ref {\r\n\r\n}"
-            },
-            "declaration": {
-              "id": "<element-declaration>:@[L8:C0, L10:C1]",
-              "snippet": "Ref {\r\n\r\n}"
-            },
-            "members": [],
-            "references": []
           }
         },
         {
@@ -930,12 +918,6 @@
           "context": {
             "id": "<element-declaration>:group@[L4:C0, L6:C1]",
             "snippet": "TableGroup...oup {\r\n\r\n}"
-          }
-        },
-        {
-          "context": {
-            "id": "<element-declaration>:@[L8:C0, L10:C1]",
-            "snippet": "Ref {\r\n\r\n}"
           }
         },
         {

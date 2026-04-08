@@ -3673,18 +3673,6 @@
               "trailingTrivia": "",
               "value": "Ref"
             }
-          },
-          "symbol": {
-            "context": {
-              "id": "<element-declaration>:@[L22:C0, L22:C52]",
-              "snippet": "Ref: \"user....\"user_id\""
-            },
-            "declaration": {
-              "id": "<element-declaration>:@[L22:C0, L22:C52]",
-              "snippet": "Ref: \"user....\"user_id\""
-            },
-            "members": [],
-            "references": []
           }
         },
         {
@@ -4126,18 +4114,6 @@
               "trailingTrivia": "",
               "value": "Ref"
             }
-          },
-          "symbol": {
-            "context": {
-              "id": "<element-declaration>:@[L24:C0, L24:C58]",
-              "snippet": "Ref: \"diag...iagram_id\""
-            },
-            "declaration": {
-              "id": "<element-declaration>:@[L24:C0, L24:C58]",
-              "snippet": "Ref: \"diag...iagram_id\""
-            },
-            "members": [],
-            "references": []
           }
         }
       ],
@@ -4205,18 +4181,6 @@
           "context": {
             "id": "<element-declaration>:diagrams@[L18:C0, L20:C1]",
             "snippet": "Table diag...ncrement\n}"
-          }
-        },
-        {
-          "context": {
-            "id": "<element-declaration>:@[L22:C0, L22:C52]",
-            "snippet": "Ref: \"user....\"user_id\""
-          }
-        },
-        {
-          "context": {
-            "id": "<element-declaration>:@[L24:C0, L24:C58]",
-            "snippet": "Ref: \"diag...iagram_id\""
           }
         }
       ],
