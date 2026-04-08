@@ -65,7 +65,9 @@ export const schemaModule: GlobalModule = {
           )
             ? member.declaration.name
             : member.declaration;
-          errors.push(getDuplicateSchemaMemberError(member.kind, name, qualifiedName.join('.'), errorNode));
+          if (errorNode) {
+            errors.push(getDuplicateSchemaMemberError(member.kind, name, qualifiedName.join('.'), errorNode));
+          }
         } else {
           seen.set(key, member);
         }
@@ -223,7 +225,7 @@ function expandTableGroup (compiler: Compiler, tableGroupSymbol: NodeSymbol): No
   for (const field of members) {
     if (field.isKind(SymbolKind.TableGroupField) && field.declaration) {
       const originalTable = compiler.nodeReferee(field.declaration).getFiltered(UNHANDLED);
-      if (originalTable?.isKind(SymbolKind.Table)) {
+      if (originalTable && originalTable.isKind(SymbolKind.Table)) {
         let useSpecifierDeclaration: UseSpecifierNode | WildcardNode | undefined;
         if (tableGroupSymbol instanceof UseSymbol) {
           useSpecifierDeclaration = tableGroupSymbol.useSpecifierDeclaration;
