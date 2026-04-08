@@ -33,7 +33,7 @@ export function normalizeNoteContent (content: string): string {
 }
 
 export function shouldInterpretNode (compiler: Compiler, node: SyntaxNode): boolean {
-  const hasParseError = compiler.parseProject().getErrors().length > 0;
+  const hasParseError = compiler.parse(node.filepath).getErrors().length > 0;
   const hasValidateError = compiler.validate(node).getErrors().length > 0;
   const hasBindError = compiler.bind(node).getErrors().length > 0;
   return !hasParseError && !hasValidateError && !hasBindError;
@@ -144,10 +144,7 @@ export function lookupMember (
 
   const match = members.find((m: NodeSymbol) => {
     if (kinds && !m.isKind(...kinds)) return false;
-    if (compiler.symbolName(m) === name) return true;
-    if (!m.declaration) return false;
-    const alias = compiler.alias(m.declaration).getFiltered(UNHANDLED);
-    return alias === name;
+    return compiler.symbolNames(m).includes(name);
   });
 
   // Report symbol not found
@@ -162,13 +159,15 @@ export function lookupMember (
             ? `Schema '${DEFAULT_SCHEMA_NAME}'`
             : 'global scope');
 
-    return new Report(undefined, [
-      new CompileError(
-        CompileErrorCode.BINDING_ERROR,
-        `${kindLabel} '${name}' does not exist in ${scopeLabel}`,
-        errorNode ?? parentSymbol.declaration ?? compiler.parse().getValue().ast,
-      ),
-    ]);
+    return new Report(undefined, errorNode || parentSymbol.declaration
+      ? [
+          new CompileError(
+            CompileErrorCode.BINDING_ERROR,
+            `${kindLabel} '${name}' does not exist in ${scopeLabel}`,
+            (errorNode ?? parentSymbol.declaration)!,
+          ),
+        ]
+      : []);
   }
 
   return new Report(match);

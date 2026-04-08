@@ -19,12 +19,14 @@ import { alias, nodeFullname as fullname, settings, validate } from '@/core/loca
 import { NodeSymbolIdGenerator, SchemaSymbol, type NodeSymbol } from '@/core/types/symbols';
 import SymbolFactory from '@/core/types/symbolFactory';
 import { lookupMembers } from './queries/lookupMembers';
-import { symbolName } from './queries/symbolName';
+import { symbolNames } from './queries/symbolName';
 import { SyntaxNodeIdGenerator } from '@/core/parser/nodes';
 import { type DbmlProjectLayout, MemoryProjectLayout } from './projectLayout';
 import { fileDependencies } from './queries/fileDependencies';
 import { Filepath } from '@/core/types/filepath';
 import { parse } from './queries/pipeline/parse';
+import { usableMembers } from './queries/usableMembers';
+import { topLevelSchemaMembers } from './queries/topLevelSchemaMembers';
 
 // Re-export utilities
 export { splitQualifiedIdentifier, unescapeString, escapeString, formatRecordValue, isValidIdentifier, addDoubleQuoteIfNeeded };
@@ -92,10 +94,12 @@ export default class Compiler {
 
   // local queries
   parse = this.query(parse);
+  topLevelSchemaMembers = this.query(topLevelSchemaMembers);
+  usableMembers = this.query(usableMembers);
   fileDependencies = this.query(fileDependencies);
   validate = this.query(validate);
   fullname = this.query(fullname);
-  symbolName = this.query(symbolName);
+  symbolNames = this.query(symbolNames);
   alias = this.query(alias);
   settings = this.query(settings);
 

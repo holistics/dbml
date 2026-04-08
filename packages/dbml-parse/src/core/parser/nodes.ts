@@ -1,6 +1,6 @@
 import { flatten, zip } from 'lodash-es';
 import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
-import { ElementKind, ImportKind, Internable, Position } from '@/core/types';
+import { ElementKind, IMPORT_KINDS_TO_SYMBOL_KINDS, ImportKind, Internable, Position, SymbolKind } from '@/core/types';
 import { getTokenFullEnd, getTokenFullStart } from '@/core/lexer/utils';
 import { Filepath } from '../types/filepath';
 import { isReuseKeyword } from '../utils/expression';
@@ -241,7 +241,7 @@ export class UseDeclarationNode extends SyntaxNode {
     this.importPath = path;
   }
 
-  get isReExport (): boolean {
+  get isReuse (): boolean {
     return isReuseKeyword(this.useKeyword);
   }
 }
@@ -284,6 +284,17 @@ export class UseSpecifierNode extends SyntaxNode {
 
   isKind (...importKinds: ImportKind[]): boolean {
     return this.importKind?.value !== undefined && importKinds.map((k) => k.toLowerCase()).includes(this.importKind.value.toLowerCase());
+  }
+
+  getImportKind (): ImportKind | undefined {
+    const importKind = Object.values(ImportKind).find((k) => this.isKind(k));
+    return importKind;
+  }
+
+  getSymbolKind (): SymbolKind | undefined {
+    const importKind = this.getImportKind();
+    if (importKind === undefined) return undefined;
+    return IMPORT_KINDS_TO_SYMBOL_KINDS[importKind];
   }
 }
 

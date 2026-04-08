@@ -116,7 +116,8 @@ type AccessExpression = InfixExpressionNode & {
 };
 
 type DotDelimitedIdentifier = PrimaryExpressionNode | (AccessExpression & {
-  rightExpression: AccessExpression | PrimaryExpressionNode;
+  leftExpression: AccessExpression | PrimaryExpressionNode;
+  rightExpression: PrimaryExpressionNode;
 });
 
 export function isAccessExpression (node?: SyntaxNode): node is AccessExpression {

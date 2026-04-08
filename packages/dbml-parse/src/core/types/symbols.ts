@@ -1,6 +1,6 @@
-import { SyntaxNode, UseDeclarationNode, UseSpecifierNode, WildcardNode } from '@/core/parser/nodes';
+import { type SyntaxNode, UseDeclarationNode, type UseSpecifierNode, type WildcardNode } from '@/core/parser/nodes';
 import type { Internable } from '@/core/types/internable';
-import { Filepath } from './filepath';
+import type { Filepath } from './filepath';
 
 export const enum SymbolKind {
   Schema = 'Schema',
@@ -24,8 +24,6 @@ export const enum SymbolKind {
   IndexesField = 'Indexes field',
 
   Program = 'Program',
-
-  Use = 'Use',
 }
 
 declare const __nodeSymbolBrand: unique symbol;
@@ -51,35 +49,32 @@ export class NodeSymbol implements Internable<InternedNodeSymbol> {
   kind: SymbolKind;
   declaration?: SyntaxNode;
   filepath: Filepath;
-  useSpecifierDeclaration?: UseSpecifierNode | WildcardNode;
 
   constructor ({
     kind,
     declaration,
-    useSpecifierDeclaration,
   }: {
     kind: SymbolKind;
     declaration?: SyntaxNode;
-    useSpecifierDeclaration?: UseSpecifierNode | WildcardNode;
   }, id: NodeSymbolId, filepath: Filepath) {
     this.id = id;
     this.kind = kind;
     this.declaration = declaration;
     this.filepath = filepath;
-    this.useSpecifierDeclaration = useSpecifierDeclaration;
   }
 
   // Whether this symbol can be imported from other files
   get canBeImported (): boolean {
-    const useDeclaration = this.useSpecifierDeclaration?.parentOfKind(UseDeclarationNode);
-    return !useDeclaration || useDeclaration.isReExport;
+    return true;
+  }
+
+  get originalSymbol (): NodeSymbol {
+    return this;
   }
 
   // Return the filepath that defines the real symbol
   get originalFilepath (): Filepath {
-    const useDeclaration = this.useSpecifierDeclaration?.parentOfKind(UseDeclarationNode);
-    if (!useDeclaration) return this.filepath;
-    return useDeclaration.filepath;
+    return this.originalSymbol.filepath;
   }
 
   intern (): InternedNodeSymbol {
@@ -88,6 +83,37 @@ export class NodeSymbol implements Internable<InternedNodeSymbol> {
 
   isKind (...kinds: SymbolKind[]): boolean {
     return kinds.includes(this.kind);
+  }
+}
+
+export class UseSymbol extends NodeSymbol {
+  useSpecifierDeclaration?: UseSpecifierNode | WildcardNode;
+  usedSymbol?: NodeSymbol;
+
+  constructor ({
+    kind,
+    declaration,
+    useSpecifierDeclaration,
+    usedSymbol,
+  }: {
+    kind: SymbolKind;
+    declaration?: SyntaxNode;
+    useSpecifierDeclaration?: UseSpecifierNode | WildcardNode;
+    usedSymbol?: NodeSymbol;
+  }, id: NodeSymbolId, filepath: Filepath) {
+    super({ kind, declaration }, id, filepath);
+    this.useSpecifierDeclaration = useSpecifierDeclaration;
+    this.usedSymbol = usedSymbol;
+  }
+
+  get canBeImported (): boolean {
+    const useDeclaration = this.useSpecifierDeclaration?.parentOfKind(UseDeclarationNode);
+    return !useDeclaration || useDeclaration.isReuse;
+  }
+
+  get originalSymbol (): NodeSymbol {
+    if (!this.usedSymbol) return this;
+    return this.usedSymbol.originalSymbol;
   }
 }
 
@@ -143,4 +169,5 @@ export class SchemaSymbol extends NodeSymbol {
     if (!this.parent) return [this.name];
     return [...this.parent.qualifiedName, this.name];
   }
+
 }

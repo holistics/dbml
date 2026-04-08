@@ -12,6 +12,7 @@ import { indexesModule } from './indexes';
 import { checksModule } from './checks';
 import { programModule } from './program';
 import { schemaModule } from './schema';
+import { useSpecifierModule } from './useSpecifier';
 import type Compiler from '@/compiler/index';
 import type { SyntaxNode } from '@/core/parser/nodes';
 import Report from '@/core/report';
@@ -32,6 +33,7 @@ export const modules: GlobalModule[] = [
   tableGroupModule,
   tablePartialModule,
   noteModule,
+  useSpecifierModule,
   schemaModule,
   programModule,
 ];
@@ -45,7 +47,7 @@ function dispatch<K extends keyof GlobalModule> (
     const fn = module[method] as any;
     if (fn) {
       const result = fn(...args);
-      if (!result.hasValue(PASS_THROUGH)) {
+      if (result instanceof Report && !result.hasValue(PASS_THROUGH)) {
         return result;
       }
     }

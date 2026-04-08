@@ -70,27 +70,27 @@ export const tableModule: GlobalModule = {
 
     // Duplicate checking
     const seen = new Map<string, SyntaxNode>();
+    // Duplicate checking
     for (const member of members) {
       if (!member.isKind(SymbolKind.Column) || !member.declaration) continue; // Ignore non-column members
 
-      const name = compiler.fullname(member.declaration).getFiltered(UNHANDLED)?.at(-1);
-      if (name === undefined) continue; // Column must always have a name!
+      const names = compiler.symbolNames(member);
+      for (const name of names) {
+        const errorNode = (
+          member.declaration instanceof ElementDeclarationNode && member.declaration.name
+        )
+          ? member.declaration.name
+          : member.declaration;
 
-      const errorNode = (
-        member.declaration instanceof ElementDeclarationNode && member.declaration.name
-      )
-        ? member.declaration.name
-        : member.declaration;
-
-      const firstNode = seen.get(name);
-      if (firstNode) {
-        errors.push(tableUtils.getColumnDuplicateError(name, firstNode));
-        errors.push(tableUtils.getColumnDuplicateError(name, errorNode));
-      } else {
-        seen.set(name, errorNode);
+        const firstNode = seen.get(name);
+        if (firstNode) {
+          errors.push(tableUtils.getColumnDuplicateError(name, firstNode));
+          errors.push(tableUtils.getColumnDuplicateError(name, errorNode));
+        } else {
+          seen.set(name, errorNode);
+        }
       }
     }
-
     // Detect partial injections (~partial_name) and insert their columns at the injection position
     // Process in reverse so that insertion indices remain valid
     const injections: { index: number; partialMembers: NodeSymbol[] }[] = [];
@@ -116,7 +116,8 @@ export const tableModule: GlobalModule = {
         const injectedMembers = tablePartialMembers.flatMap((m) => {
           if (!m.declaration) return [];
 
-          const name = compiler.symbolName(m);
+          const names = compiler.symbolNames(m);
+          const name = names[0];
           if (!name) return m;
 
           return compiler.symbolFactory.create(

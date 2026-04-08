@@ -207,7 +207,8 @@ function suggestOnRelOp (
 }
 
 function getMemberName (compiler: Compiler, member: NodeSymbol): { name: string; fullname: string[] | undefined } {
-  const name = compiler.symbolName(member) ?? '';
+  const names = compiler.symbolNames(member);
+  const name = names[0] ?? '';
   if (member instanceof SchemaSymbol) {
     return { name, fullname: [name] };
   }

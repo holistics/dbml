@@ -23,7 +23,7 @@ import {
 } from '@/core/utils/expression';
 import { ElementKind, SettingName } from '@/core/types/keywords';
 import { UNHANDLED } from '@/constants';
-import { NodeSymbol, SchemaSymbol } from '@/core/types/symbols';
+import { SchemaSymbol } from '@/core/types/symbols';
 
 export default class Binder {
   private ast: ProgramNode;
@@ -39,16 +39,19 @@ export default class Binder {
     const errors: CompileError[] = [];
 
     // Program-level checks (duplicate projects)
-    const projects = this.ast.body.filter((e) => e.isKind(ElementKind.Project));
+    const projects = this.ast.body.filter((e): e is ElementDeclarationNode => e instanceof ElementDeclarationNode && e.isKind(ElementKind.Project));
     if (projects.length > 1) {
       projects.forEach((project) => errors.push(new CompileError(CompileErrorCode.PROJECT_REDEFINED, 'Only one project can exist', project)));
     }
 
     for (const element of this.ast.body) {
-      if (element.type) {
+      if (element instanceof ElementDeclarationNode && element.type) {
         const binder = element as ElementDeclarationNode & { type: SyntaxToken };
         errors.push(...this.compiler.validate(binder).getErrors());
         errors.push(...this.compiler.bind(binder).getErrors());
+      } else {
+        errors.push(...this.compiler.validate(element).getErrors());
+        errors.push(...this.compiler.bind(element).getErrors());
       }
     }
 
@@ -130,7 +133,7 @@ export default class Binder {
     const seenRefIds = new Map<string, SyntaxNode>();
 
     for (const element of this.ast.body) {
-      if (!element.type) continue;
+      if (!(element instanceof ElementDeclarationNode) || !element.type) continue;
       const decl = element as ElementDeclarationNode & { type: SyntaxToken };
 
       // Standalone Ref elements
@@ -257,7 +260,7 @@ export default class Binder {
     const tableOwner = new Map<number, { groupName: string; node: SyntaxNode }>();
 
     for (const element of this.ast.body) {
-      if (!element.type) continue;
+      if (!(element instanceof ElementDeclarationNode) || !element.type) continue;
       const decl = element as ElementDeclarationNode & { type: SyntaxToken };
       if (!isElementNode(decl, ElementKind.TableGroup)) continue;
 

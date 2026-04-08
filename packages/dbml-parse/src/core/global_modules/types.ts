@@ -1,7 +1,7 @@
 import type { PassThrough } from '@/constants';
 import type Compiler from '@/compiler/index';
 import type { SyntaxNode } from '@/core/parser/nodes';
-import type { NodeSymbol, SymbolKind } from '../types/symbols';
+import type { NodeSymbol } from '../types/symbols';
 import type Report from '../report';
 import type { SchemaElement } from '../types/schemaJson';
 import type { Module } from '../types/module';
@@ -13,6 +13,7 @@ export interface GlobalModule extends Module {
   // Produce the unique symbol identity for this AST node
   nodeSymbol? (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol> | Report<PassThrough>;
   // List the direct child symbols owned by this symbol (e.g. columns of a table)
+  // for schemas: including the used symbols
   symbolMembers? (compiler: Compiler, symbol: NodeSymbol): Report<NodeSymbol[]> | Report<PassThrough>;
   // Resolve the symbol that this reference node points to
   nodeReferee? (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol | undefined> | Report<PassThrough>;
