@@ -74,12 +74,15 @@ export const tableModule: GlobalModule = {
     for (const member of members) {
       if (!member.isKind(SymbolKind.Column) || !member.declaration) continue; // Ignore non-column members
 
-      const nameResult = compiler.fullname(member.declaration);
-      if (nameResult.hasValue(UNHANDLED)) continue;
-      const name = nameResult.getValue()?.at(-1);
-      if (!name) continue; // Column must always have a name!
+      const name = compiler.fullname(member.declaration).getFiltered(UNHANDLED)?.at(-1);
+      if (name === undefined) continue; // Column must always have a name!
 
-      const errorNode = (member.declaration instanceof ElementDeclarationNode && member.declaration.name) ? member.declaration.name : member.declaration;
+      const errorNode = (
+        member.declaration instanceof ElementDeclarationNode && member.declaration.name
+      )
+        ? member.declaration.name
+        : member.declaration;
+
       const firstNode = seen.get(name);
       if (firstNode) {
         errors.push(tableUtils.getColumnDuplicateError(name, firstNode));
@@ -94,13 +97,14 @@ export const tableModule: GlobalModule = {
     const injections: { index: number; partialMembers: NodeSymbol[]; partialErrors: CompileError[] }[] = [];
     for (let i = 0; i < members.length; i++) {
       const member = members[i];
-      if (!member.declaration) continue;
-      if (!(member.declaration instanceof FunctionApplicationNode)) continue;
-      if (!isValidPartialInjection(member.declaration.callee)) continue;
+      if (
+        !(member.declaration instanceof FunctionApplicationNode)
+        || !isValidPartialInjection(member.declaration.callee)
+      ) continue;
 
-      const partialNameNode = (member.declaration.callee as PrefixExpressionNode).expression;
+      const partialNameNode = member.declaration.callee.expression;
       const partialName = extractVariableFromExpression(partialNameNode);
-      if (!partialName) continue;
+      if (partialName === undefined) continue;
 
       // Look up the TablePartial symbol among direct program elements
       const ast = compiler.parse(symbol.filepath).getValue().ast;

@@ -4,7 +4,7 @@ import Report from '@/core/report';
 import Compiler from '@/compiler';
 import { PASS_THROUGH, PassThrough } from '@/constants';
 import { ImportKind, NodeSymbol, SchemaElement, UseSymbol } from '@/core/types';
-import { isUseSpecifier, isWildcardSpecifier } from '@/core/utils/expression';
+import { isUseDeclaration, isUseSpecifier, isWildcardSpecifier } from '@/core/utils/expression';
 import { resolveImportFilepath } from '@/core/types/filepath';
 
 export const useModule: GlobalModule = {
