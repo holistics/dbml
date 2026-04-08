@@ -1,5 +1,5 @@
 import { ElementDeclarationNode } from '@/core/parser/nodes';
-import type { SyntaxNode } from '@/core/parser/nodes';
+import type { SyntaxNode, UseSpecifierNode, WildcardNode } from '@/core/parser/nodes';
 import { NodeSymbol, SchemaSymbol, SymbolKind } from '@/core/types/symbols';
 import type { GlobalModule } from '../types';
 import { DEFAULT_SCHEMA_NAME, PASS_THROUGH, type PassThrough, UNHANDLED } from '@/constants';
@@ -23,32 +23,24 @@ export const schemaModule: GlobalModule = {
     const childSchemas = new Map<string, SchemaSymbol>();
 
     for (const element of ast.body) {
-      const fullname = compiler.fullname(element).getValue();
-      if (fullname === UNHANDLED) continue;
+      if (!(element instanceof ElementDeclarationNode)) continue;
+      const nestedSchemaName = shouldElementBelongToThisSchema(compiler, symbol, element);
+      if (nestedSchemaName === false) continue;
 
-      // Elements with no name or no schema prefix belong to the default (public) schema
-      // e.g. anonymous Refs, Notes, etc.
-      const elementSchemaChain = !fullname || fullname.length <= 1 ? [DEFAULT_SCHEMA_NAME] : fullname.slice(0, -1);
-
-      // Must start with this schema's qualified name
-      if (elementSchemaChain.length < qualifiedName.length) continue;
-      if (!qualifiedName.every((seg, i) => seg === elementSchemaChain[i])) continue;
-
-      if (elementSchemaChain.length === qualifiedName.length) {
+      if (nestedSchemaName === true) {
         // Direct member of this schema
-        const symbolResult = compiler.nodeSymbol(element);
-        if (symbolResult.hasValue(UNHANDLED)) continue;
-        members.push(symbolResult.getValue());
+        const symbol = compiler.nodeSymbol(element).getFiltered(UNHANDLED);
+        if (!symbol) continue;
+        members.push(symbol);
       } else {
         // Element belongs to a child schema - create it if not yet seen
-        const childName = elementSchemaChain[qualifiedName.length];
-        if (!childSchemas.has(childName)) {
+        if (!childSchemas.has(nestedSchemaName)) {
           childSchemas.set(
-            childName,
+            nestedSchemaName,
             compiler.symbolFactory.create(
               SchemaSymbol,
               {
-                name: childName,
+                name: nestedSchemaName,
                 parent: symbol as SchemaSymbol,
               },
               symbol.filepath,
@@ -124,5 +116,31 @@ function getDuplicateSchemaMemberError (kind: SymbolKind, name: string, schemaLa
       return tableGroupUtils.getDuplicateError(name, schemaLabel, errorNode);
     default:
       return new CompileError(CompileErrorCode.DUPLICATE_NAME, `Duplicate ${kind} '${name}' in schema '${schemaLabel}'`, errorNode);
+  }
+}
+
+// Return if this node introduces a declaration belong to schemaSymbol
+// - Return true if the declaration belongs directly to the schemaSymbol
+// - Return false if the declaration doesn't belong to the schemaSymbol
+// - Return a string for the directly nested schema name that the declaration belongs to
+function shouldElementBelongToThisSchema (compiler: Compiler, schemaSymbol: SchemaSymbol, element: ElementDeclarationNode): boolean | string {
+  const qualifiedName = schemaSymbol.qualifiedName;
+  const fullname = compiler.fullname(element).getFiltered(UNHANDLED);
+  if (!fullname) return false;
+
+  // Elements with no name or no schema prefix belong to the default (public) schema
+  // e.g. anonymous Refs, Notes, etc.
+  const elementSchemaChain = !fullname || fullname.length <= 1 ? [DEFAULT_SCHEMA_NAME] : fullname.slice(0, -1);
+
+  // Must start with this schema's qualified name
+  if (elementSchemaChain.length < qualifiedName.length) return false;
+  if (!qualifiedName.every((seg, i) => seg === elementSchemaChain[i])) return false;
+
+  if (elementSchemaChain.length === qualifiedName.length) {
+    // Direct member of this schema
+    return true;
+  } else {
+    // Element belongs to a child schema - create it if not yet seen
+    return elementSchemaChain[qualifiedName.length];
   }
 }
