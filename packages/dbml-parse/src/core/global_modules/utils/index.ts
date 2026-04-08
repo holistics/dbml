@@ -139,24 +139,35 @@ export function lookupMember (
     errorNode?: SyntaxNode;
   } = {},
 ): Report<NodeSymbol | undefined> {
-  const members = compiler.symbolMembers(parentSymbol);
-  if (members.hasValue(UNHANDLED)) return new Report(undefined);
+  const members = compiler.symbolMembers(parentSymbol).getFiltered(UNHANDLED);
+  if (!members) return new Report(undefined);
 
-  const match = members.getValue().find((m: NodeSymbol) => {
+  const match = members.find((m: NodeSymbol) => {
     if (kinds && !m.isKind(...kinds)) return false;
     if (compiler.symbolName(m) === name) return true;
     if (!m.declaration) return false;
-    const al = compiler.alias(m.declaration);
-    return !al.hasValue(UNHANDLED) && al.getValue() === name;
+    const alias = compiler.alias(m.declaration).getFiltered(UNHANDLED);
+    return alias === name;
   });
 
+  // Report symbol not found
   if (!match && !ignoreNotFound) {
     const kindLabel = kinds?.length ? kinds[0] : 'member';
-    const fnResult = parentSymbol.declaration ? compiler.fullname(parentSymbol.declaration) : undefined;
-    const parentName = fnResult && !fnResult.hasValue(UNHANDLED) ? fnResult.getValue()?.join('.') : undefined;
-    const scopeLabel = parentSymbol instanceof SchemaSymbol ? `Schema '${parentSymbol.name}'` : parentName ? `${parentSymbol.kind} '${parentName}'` : (parentSymbol.isKind(SymbolKind.Program) ? `Schema '${DEFAULT_SCHEMA_NAME}'` : 'global scope');
+    const parentName = parentSymbol.declaration ? compiler.fullname(parentSymbol.declaration).getFiltered(UNHANDLED)?.join('.') : undefined;
+    const scopeLabel = parentSymbol instanceof SchemaSymbol
+      ? `Schema '${parentSymbol.name}'`
+      : parentName
+        ? `${parentSymbol.kind} '${parentName}'`
+        : (parentSymbol.isKind(SymbolKind.Program)
+            ? `Schema '${DEFAULT_SCHEMA_NAME}'`
+            : 'global scope');
+
     return new Report(undefined, [
-      new CompileError(CompileErrorCode.BINDING_ERROR, `${kindLabel} '${name}' does not exist in ${scopeLabel}`, errorNode ?? parentSymbol.declaration ?? compiler.parse().getValue().ast),
+      new CompileError(
+        CompileErrorCode.BINDING_ERROR,
+        `${kindLabel} '${name}' does not exist in ${scopeLabel}`,
+        errorNode ?? parentSymbol.declaration ?? compiler.parse().getValue().ast,
+      ),
     ]);
   }
 
@@ -164,16 +175,25 @@ export function lookupMember (
 }
 
 // Look up a member in the default (public) schema, falling back to direct program search
-export function lookupInDefaultSchema (compiler: Compiler, globalSymbol: NodeSymbol, name: string, opts: { kinds?: SymbolKind[]; ignoreNotFound?: boolean; errorNode?: SyntaxNode }): Report<NodeSymbol | undefined> {
-  const members = compiler.symbolMembers(globalSymbol);
-  if (!members.hasValue(UNHANDLED)) {
-    const publicSchema = members.getValue().find((m: NodeSymbol) => m instanceof SchemaSymbol && m.name === DEFAULT_SCHEMA_NAME);
+export function lookupInDefaultSchema (
+  compiler: Compiler,
+  globalSymbol: NodeSymbol,
+  name: string,
+  options: {
+    kinds?: SymbolKind[];
+    ignoreNotFound?: boolean;
+    errorNode?: SyntaxNode;
+  }): Report<NodeSymbol | undefined> {
+  const members = compiler.symbolMembers(globalSymbol).getFiltered(UNHANDLED);
+
+  if (members) {
+    const publicSchema = members.find((m: NodeSymbol) => m instanceof SchemaSymbol && m.name === DEFAULT_SCHEMA_NAME);
     if (publicSchema) {
-      const result = lookupMember(compiler, publicSchema, name, { ...opts, ignoreNotFound: true });
+      const result = lookupMember(compiler, publicSchema, name, { ...options, ignoreNotFound: true });
       if (result.getValue()) return result;
     }
   }
-  return lookupMember(compiler, globalSymbol, name, opts);
+  return lookupMember(compiler, globalSymbol, name, options);
 }
 
 // For a node that is the right side of an access expression (a.b),
