@@ -38,20 +38,26 @@ export default class Binder {
   resolve (): Report<void> {
     const errors: CompileError[] = [];
 
-    // Program-level checks (duplicate projects)
-    const projects = this.ast.body.filter((e): e is ElementDeclarationNode => e instanceof ElementDeclarationNode && e.isKind(ElementKind.Project));
-    if (projects.length > 1) {
-      projects.forEach((project) => errors.push(new CompileError(CompileErrorCode.PROJECT_REDEFINED, 'Only one project can exist', project)));
-    }
+    const reachableFiles = this.compiler.reachableFiles(this.ast.filepath);
 
-    for (const element of this.ast.body) {
-      if (element instanceof ElementDeclarationNode && element.type) {
-        const binder = element as ElementDeclarationNode & { type: SyntaxToken };
-        errors.push(...this.compiler.validate(binder).getErrors());
-        errors.push(...this.compiler.bind(binder).getErrors());
-      } else {
-        errors.push(...this.compiler.validate(element).getErrors());
-        errors.push(...this.compiler.bind(element).getErrors());
+    for (const filepath of reachableFiles) {
+      const { ast } = this.compiler.parse(filepath).getValue();
+      // Program-level checks (duplicate projects) - only if it's the entry file or we want to check all?
+      // Usually project is only one per whole project.
+      const projects = ast.body.filter((e): e is ElementDeclarationNode => e instanceof ElementDeclarationNode && e.isKind(ElementKind.Project));
+      if (projects.length > 1) {
+        projects.forEach((project) => errors.push(new CompileError(CompileErrorCode.PROJECT_REDEFINED, 'Only one project can exist', project)));
+      }
+
+      for (const element of ast.body) {
+        if (element instanceof ElementDeclarationNode && element.type) {
+          const binder = element as ElementDeclarationNode & { type: SyntaxToken };
+          errors.push(...this.compiler.validate(binder).getErrors());
+          errors.push(...this.compiler.bind(binder).getErrors());
+        } else {
+          errors.push(...this.compiler.validate(element).getErrors());
+          errors.push(...this.compiler.bind(element).getErrors());
+        }
       }
     }
 
@@ -132,73 +138,29 @@ export default class Binder {
     const errors: CompileError[] = [];
     const seenRefIds = new Map<string, SyntaxNode>();
 
-    for (const element of this.ast.body) {
-      if (!(element instanceof ElementDeclarationNode) || !element.type) continue;
-      const decl = element as ElementDeclarationNode & { type: SyntaxToken };
+    const reachableFiles = this.compiler.reachableFiles(this.ast.filepath);
 
-      // Standalone Ref elements
-      if (isElementNode(decl, ElementKind.Ref)) {
-        const fields = getBody(decl);
-        for (const field of fields) {
-          if (!(field instanceof FunctionApplicationNode)) continue;
-          if (!field.callee || !isBinaryRelationship(field.callee)) continue;
-          const infix = field.callee as InfixExpressionNode;
-          if (!infix.leftExpression || !infix.rightExpression) continue;
+    for (const filepath of reachableFiles) {
+      const { ast } = this.compiler.parse(filepath).getValue();
+      for (const element of ast.body) {
+        if (!(element instanceof ElementDeclarationNode) || !element.type) continue;
+        const decl = element as ElementDeclarationNode & { type: SyntaxToken };
 
-          const leftIds = this.getColumnSymbolIds(infix.leftExpression);
-          const rightIds = this.getColumnSymbolIds(infix.rightExpression);
-          if (!leftIds || !rightIds) continue;
+        // Standalone Ref elements
+        if (isElementNode(decl, ElementKind.Ref)) {
+          const fields = getBody(decl);
+          for (const field of fields) {
+            if (!(field instanceof FunctionApplicationNode)) continue;
+            if (!field.callee || !isBinaryRelationship(field.callee)) continue;
+            const infix = field.callee as InfixExpressionNode;
+            if (!infix.leftExpression || !infix.rightExpression) continue;
 
-          if (this.isSameEndpoint(leftIds, rightIds)) {
-            errors.push(new CompileError(CompileErrorCode.SAME_ENDPOINT, 'Two endpoints are the same', decl));
-            continue;
-          }
-
-          const refId = this.getRefId(leftIds, rightIds);
-          const existing = seenRefIds.get(refId);
-          if (existing) {
-            errors.push(
-              new CompileError(CompileErrorCode.CIRCULAR_REF, 'References with same endpoints exist', decl),
-              new CompileError(CompileErrorCode.CIRCULAR_REF, 'References with same endpoints exist', existing),
-            );
-          } else {
-            seenRefIds.set(refId, decl);
-          }
-        }
-      }
-
-      // Inline refs from table column settings
-      if (isElementNode(decl, ElementKind.Table)) {
-        const fields = getBody(decl);
-        for (const field of fields) {
-          if (!(field instanceof FunctionApplicationNode)) continue;
-          if (!field.callee) continue;
-
-          // Get the column's symbol
-          const colResult = this.compiler.nodeSymbol(field);
-          if (colResult.hasValue(UNHANDLED)) continue;
-          const colSym = colResult.getValue();
-          if (!colSym) continue;
-
-          // Get settings for this field
-          const settingsResult = this.compiler.settings(field);
-          if (settingsResult.hasValue(UNHANDLED)) continue;
-          const settingsMap = settingsResult.getValue();
-          const refAttrs = settingsMap[SettingName.Ref];
-          if (!refAttrs || refAttrs.length === 0) continue;
-
-          for (const attr of refAttrs) {
-            const refValue = attr.value;
-            if (!(refValue instanceof PrefixExpressionNode)) continue;
-            if (!refValue.op || !isRelationshipOp(refValue.op.value)) continue;
-            if (!refValue.expression) continue;
-
-            const rightIds = this.getColumnSymbolIds(refValue.expression);
-            if (!rightIds) continue;
-            const leftIds = [colSym.id];
+            const leftIds = this.getColumnSymbolIds(infix.leftExpression);
+            const rightIds = this.getColumnSymbolIds(infix.rightExpression);
+            if (!leftIds || !rightIds) continue;
 
             if (this.isSameEndpoint(leftIds, rightIds)) {
-              errors.push(new CompileError(CompileErrorCode.SAME_ENDPOINT, 'Two endpoints are the same', attr));
+              errors.push(new CompileError(CompileErrorCode.SAME_ENDPOINT, 'Two endpoints are the same', decl));
               continue;
             }
 
@@ -206,43 +168,92 @@ export default class Binder {
             const existing = seenRefIds.get(refId);
             if (existing) {
               errors.push(
-                new CompileError(CompileErrorCode.CIRCULAR_REF, 'References with same endpoints exist', attr),
+                new CompileError(CompileErrorCode.CIRCULAR_REF, 'References with same endpoints exist', decl),
                 new CompileError(CompileErrorCode.CIRCULAR_REF, 'References with same endpoints exist', existing),
               );
             } else {
-              seenRefIds.set(refId, attr);
+              seenRefIds.set(refId, decl);
             }
           }
         }
-      }
 
-      // TablePartial: only check same-endpoint for bare column self-refs
-      if (isElementNode(decl, ElementKind.TablePartial)) {
-        const fields = getBody(decl);
-        for (const field of fields) {
-          if (!(field instanceof FunctionApplicationNode)) continue;
-          if (!field.callee) continue;
+        // Inline refs from table column settings
+        if (isElementNode(decl, ElementKind.Table)) {
+          const fields = getBody(decl);
+          for (const field of fields) {
+            if (!(field instanceof FunctionApplicationNode)) continue;
+            if (!field.callee) continue;
 
-          const colName = extractVariableFromExpression(field.callee);
-          if (!colName) continue;
+            // Get the column's symbol
+            const colResult = this.compiler.nodeSymbol(field);
+            if (colResult.hasValue(UNHANDLED)) continue;
+            const colSym = colResult.getValue();
+            if (!colSym) continue;
 
-          const settingsResult = this.compiler.settings(field);
-          if (settingsResult.hasValue(UNHANDLED)) continue;
-          const settingsMap = settingsResult.getValue();
-          const refAttrs = settingsMap[SettingName.Ref];
-          if (!refAttrs || refAttrs.length === 0) continue;
+            // Get settings for this field
+            const settingsResult = this.compiler.settings(field);
+            if (settingsResult.hasValue(UNHANDLED)) continue;
+            const settingsMap = settingsResult.getValue();
+            const refAttrs = settingsMap[SettingName.Ref];
+            if (!refAttrs || refAttrs.length === 0) continue;
 
-          for (const attr of refAttrs) {
-            const refValue = attr.value;
-            if (!(refValue instanceof PrefixExpressionNode)) continue;
-            if (!refValue.op || !isRelationshipOp(refValue.op.value)) continue;
-            if (!refValue.expression) continue;
+            for (const attr of refAttrs) {
+              const refValue = attr.value;
+              if (!(refValue instanceof PrefixExpressionNode)) continue;
+              if (!refValue.op || !isRelationshipOp(refValue.op.value)) continue;
+              if (!refValue.expression) continue;
 
-            // Only check bare column refs (single variable matching the field name)
-            if (!isExpressionAVariableNode(refValue.expression)) continue;
-            const targetName = refValue.expression.expression.variable?.value;
-            if (targetName === colName) {
-              errors.push(new CompileError(CompileErrorCode.SAME_ENDPOINT, 'Two endpoints are the same', attr));
+              const rightIds = this.getColumnSymbolIds(refValue.expression);
+              if (!rightIds) continue;
+              const leftIds = [colSym.id];
+
+              if (this.isSameEndpoint(leftIds, rightIds)) {
+                errors.push(new CompileError(CompileErrorCode.SAME_ENDPOINT, 'Two endpoints are the same', attr));
+                continue;
+              }
+
+              const refId = this.getRefId(leftIds, rightIds);
+              const existing = seenRefIds.get(refId);
+              if (existing) {
+                errors.push(
+                  new CompileError(CompileErrorCode.CIRCULAR_REF, 'References with same endpoints exist', attr),
+                  new CompileError(CompileErrorCode.CIRCULAR_REF, 'References with same endpoints exist', existing),
+                );
+              } else {
+                seenRefIds.set(refId, attr);
+              }
+            }
+          }
+        }
+
+        // TablePartial: only check same-endpoint for bare column self-refs
+        if (isElementNode(decl, ElementKind.TablePartial)) {
+          const fields = getBody(decl);
+          for (const field of fields) {
+            if (!(field instanceof FunctionApplicationNode)) continue;
+            if (!field.callee) continue;
+
+            const colName = extractVariableFromExpression(field.callee);
+            if (!colName) continue;
+
+            const settingsResult = this.compiler.settings(field);
+            if (settingsResult.hasValue(UNHANDLED)) continue;
+            const settingsMap = settingsResult.getValue();
+            const refAttrs = settingsMap[SettingName.Ref];
+            if (!refAttrs || refAttrs.length === 0) continue;
+
+            for (const attr of refAttrs) {
+              const refValue = attr.value;
+              if (!(refValue instanceof PrefixExpressionNode)) continue;
+              if (!refValue.op || !isRelationshipOp(refValue.op.value)) continue;
+              if (!refValue.expression) continue;
+
+              // Only check bare column refs (single variable matching the field name)
+              if (!isExpressionAVariableNode(refValue.expression)) continue;
+              const targetName = refValue.expression.expression.variable?.value;
+              if (targetName === colName) {
+                errors.push(new CompileError(CompileErrorCode.SAME_ENDPOINT, 'Two endpoints are the same', attr));
+              }
             }
           }
         }
@@ -259,41 +270,46 @@ export default class Binder {
     const errors: CompileError[] = [];
     const tableOwner = new Map<number, { groupName: string; node: SyntaxNode }>();
 
-    for (const element of this.ast.body) {
-      if (!(element instanceof ElementDeclarationNode) || !element.type) continue;
-      const decl = element as ElementDeclarationNode & { type: SyntaxToken };
-      if (!isElementNode(decl, ElementKind.TableGroup)) continue;
+    const reachableFiles = this.compiler.reachableFiles(this.ast.filepath);
 
-      const groupNameFragments = decl.name ? destructureComplexVariable(decl.name) : undefined;
-      const groupName = groupNameFragments ? groupNameFragments.join('.') : '<unknown>';
+    for (const filepath of reachableFiles) {
+      const { ast } = this.compiler.parse(filepath).getValue();
+      for (const element of ast.body) {
+        if (!(element instanceof ElementDeclarationNode) || !element.type) continue;
+        const decl = element as ElementDeclarationNode & { type: SyntaxToken };
+        if (!isElementNode(decl, ElementKind.TableGroup)) continue;
 
-      const fields = getBody(decl);
-      for (const field of fields) {
-        if (!(field instanceof FunctionApplicationNode)) continue;
-        if (!field.callee) continue;
+        const groupNameFragments = decl.name ? destructureComplexVariable(decl.name) : undefined;
+        const groupName = groupNameFragments ? groupNameFragments.join('.') : '<unknown>';
 
-        // Resolve the table reference to its symbol
-        const fragments = destructureMemberAccessExpression(field.callee);
-        if (!fragments || fragments.length === 0) continue;
+        const fields = getBody(decl);
+        for (const field of fields) {
+          if (!(field instanceof FunctionApplicationNode)) continue;
+          if (!field.callee) continue;
 
-        // Get the last resolved symbol (the table)
-        const lastFragment = fragments[fragments.length - 1];
-        const result = this.compiler.nodeReferee(lastFragment);
-        if (result.hasValue(UNHANDLED)) continue;
-        const tableSym = result.getValue();
-        if (!tableSym) continue;
+          // Resolve the table reference to its symbol
+          const fragments = destructureMemberAccessExpression(field.callee);
+          if (!fragments || fragments.length === 0) continue;
 
-        const existing = tableOwner.get(tableSym.id);
-        if (existing) {
-          const fieldFragments = destructureComplexVariable(field.callee);
-          const displayName = fieldFragments ? fieldFragments.join('.') : '<unknown>';
-          errors.push(new CompileError(
-            CompileErrorCode.TABLE_REAPPEAR_IN_TABLEGROUP,
-            `Table "${displayName}" already appears in group "${existing.groupName}"`,
-            field,
-          ));
-        } else {
-          tableOwner.set(tableSym.id, { groupName, node: field });
+          // Get the last resolved symbol (the table)
+          const lastFragment = fragments[fragments.length - 1];
+          const result = this.compiler.nodeReferee(lastFragment);
+          if (result.hasValue(UNHANDLED)) continue;
+          const tableSym = result.getValue();
+          if (!tableSym) continue;
+
+          const existing = tableOwner.get(tableSym.id);
+          if (existing) {
+            const fieldFragments = destructureComplexVariable(field.callee);
+            const displayName = fieldFragments ? fieldFragments.join('.') : '<unknown>';
+            errors.push(new CompileError(
+              CompileErrorCode.TABLE_REAPPEAR_IN_TABLEGROUP,
+              `Table "${displayName}" already appears in group "${existing.groupName}"`,
+              field,
+            ));
+          } else {
+            tableOwner.set(tableSym.id, { groupName, node: field });
+          }
         }
       }
     }
