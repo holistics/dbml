@@ -27,22 +27,11 @@ import RecordsInterpreter from './interpret';
 
 export const recordsModule: GlobalModule = {
   nodeSymbol (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol> | Report<PassThrough> {
-    if (!isElementNode(node, ElementKind.Records)) {
-      return Report.create(PASS_THROUGH);
-    }
-
-    return new Report(compiler.symbolFactory.create(NodeSymbol, {
-      kind: SymbolKind.Records,
-      declaration: node,
-    }, node.filepath));
+    return Report.create(PASS_THROUGH);
   },
 
   symbolMembers (compiler: Compiler, symbol: NodeSymbol): Report<NodeSymbol[]> | Report<PassThrough> {
-    if (!symbol.isKind(SymbolKind.Records)) {
-      return Report.create(PASS_THROUGH);
-    }
-
-    return new Report([]); // Records do not have any members
+    return new Report(PASS_THROUGH);
   },
 
   nestedSymbols (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol[]> | Report<PassThrough> {

@@ -13,20 +13,11 @@ import ChecksInterpreter from './interpret';
 
 export const checksModule: GlobalModule = {
   nodeSymbol (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol> | Report<PassThrough> {
-    if (!isElementNode(node, ElementKind.Checks)) {
-      return Report.create(PASS_THROUGH);
-    }
-    return new Report(compiler.symbolFactory.create(NodeSymbol, {
-      kind: SymbolKind.Checks,
-      declaration: node,
-    }, node.filepath));
+    return Report.create(PASS_THROUGH);
   },
 
   symbolMembers (compiler: Compiler, symbol: NodeSymbol): Report<NodeSymbol[]> | Report<PassThrough> {
-    if (!symbol.isKind(SymbolKind.Checks)) {
-      return Report.create(PASS_THROUGH);
-    }
-    return new Report([]);
+    return Report.create(PASS_THROUGH);
   },
 
   nestedSymbols (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol[]> | Report<PassThrough> {
