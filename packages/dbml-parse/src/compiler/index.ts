@@ -27,6 +27,7 @@ import { Filepath } from '@/core/types/filepath';
 import { parse } from './queries/pipeline/parse';
 import { usableMembers } from './queries/usableMembers';
 import { topLevelSchemaMembers } from './queries/topLevelSchemaMembers';
+import { reachableFiles } from './queries/reachableFiles';
 
 // Re-export utilities
 export { splitQualifiedIdentifier, unescapeString, escapeString, formatRecordValue, isValidIdentifier, addDoubleQuoteIfNeeded };
@@ -48,6 +49,16 @@ export default class Compiler {
 
   setSource (filepath: Filepath, source: string) {
     this.layout.setSource(filepath, source);
+    this.cache.clear();
+  }
+
+  clearSource () {
+    this.layout = new MemoryProjectLayout();
+    this.cache.clear();
+  }
+
+  deleteSource (filepath: Filepath) {
+    this.layout.deleteSource(filepath);
     this.cache.clear();
   }
 
@@ -95,6 +106,7 @@ export default class Compiler {
   // local queries
   parse = this.query(parse);
   topLevelSchemaMembers = this.query(topLevelSchemaMembers);
+  reachableFiles = this.query(reachableFiles);
   usableMembers = this.query(usableMembers);
   fileDependencies = this.query(fileDependencies);
   validate = this.query(validate);

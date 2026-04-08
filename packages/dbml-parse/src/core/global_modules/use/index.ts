@@ -16,7 +16,7 @@ import { Filepath, resolveImportFilepath } from '@/core/types/filepath';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import { lookupMember } from '../utils';
 
-export const useSpecifierModule: GlobalModule = {
+export const useModule: GlobalModule = {
   nodeSymbol (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol> | Report<PassThrough> {
     if (!isUseSpecifier(node) || !node.name) return Report.create(PASS_THROUGH);
 
@@ -119,11 +119,24 @@ export const useSpecifierModule: GlobalModule = {
 
   bind (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
     if (isUseDeclaration(node)) {
-      if (node.specifiers) {
-        return compiler.bind(node.specifiers).map(() => undefined);
+      const errors: CompileError[] = [];
+      if (node.importPath?.value) {
+        const importPath = resolveImportFilepath(node.filepath, node.importPath.value);
+        if (importPath && !compiler.layout.exists(importPath)) {
+          errors.push(new CompileError(
+            CompileErrorCode.NONEXISTENT_MODULE,
+            `Failed to resolve the non-existent file '${node.importPath.value}'`,
+            node.importPath,
+          ));
+        }
       }
 
-      return Report.create(undefined);
+      if (node.specifiers) {
+        const res = compiler.bind(node.specifiers);
+        errors.push(...res.getErrors());
+      }
+
+      return new Report(undefined, errors);
     }
 
     if (node instanceof UseSpecifierListNode) {

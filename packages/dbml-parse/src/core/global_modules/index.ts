@@ -12,7 +12,7 @@ import { indexesModule } from './indexes';
 import { checksModule } from './checks';
 import { programModule } from './program';
 import { schemaModule } from './schema';
-import { useSpecifierModule } from './useSpecifier';
+import { useModule } from './use';
 import type Compiler from '@/compiler/index';
 import type { SyntaxNode } from '@/core/parser/nodes';
 import Report from '@/core/report';
@@ -33,7 +33,7 @@ export const modules: GlobalModule[] = [
   tableGroupModule,
   tablePartialModule,
   noteModule,
-  useSpecifierModule,
+  useModule,
   schemaModule,
   programModule,
 ];

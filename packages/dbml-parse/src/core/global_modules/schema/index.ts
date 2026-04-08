@@ -60,7 +60,7 @@ export const schemaModule: GlobalModule = {
         if (existing) {
           // Report only on the duplicate (second) declaration
           const errorNode = (
-            member.declaration instanceof ElementDeclarationNode
+            member.declaration && member.declaration instanceof ElementDeclarationNode
             && member.declaration.name
           )
             ? member.declaration.name
@@ -74,26 +74,30 @@ export const schemaModule: GlobalModule = {
       }
 
       // Check alias conflicts (e.g. Table users as U)
-      const alias = compiler.alias(member.declaration).getFiltered(UNHANDLED);
-      if (alias) {
-        const aliasKey = `${member.kind}:${alias}`;
-        const existingAlias = seen.get(aliasKey);
-        if (existingAlias && existingAlias !== member) {
-          const errorNode = (
-            member.declaration instanceof ElementDeclarationNode
-            && member.declaration.alias
-          )
-            ? member.declaration.alias
-            : member.declaration;
-          errors.push(
-            new CompileError(
-              CompileErrorCode.DUPLICATE_NAME,
-              `${member.kind} alias '${alias}' conflicts with an existing ${member.kind} name or alias`,
-              errorNode,
-            ),
-          );
-        } else if (!existingAlias) {
-          seen.set(aliasKey, member);
+      if (member.declaration) {
+        const alias = compiler.alias(member.declaration).getFiltered(UNHANDLED);
+        if (alias) {
+          const aliasKey = `${member.kind}:${alias}`;
+          const existingAlias = seen.get(aliasKey);
+          if (existingAlias && existingAlias !== member) {
+            const errorNode = (
+              member.declaration instanceof ElementDeclarationNode
+              && member.declaration.alias
+            )
+              ? member.declaration.alias
+              : member.declaration;
+            if (errorNode) {
+              errors.push(
+                new CompileError(
+                  CompileErrorCode.DUPLICATE_NAME,
+                  `${member.kind} alias '${alias}' conflicts with an existing ${member.kind} name or alias`,
+                  errorNode,
+                ),
+              );
+            }
+          } else if (!existingAlias) {
+            seen.set(aliasKey, member);
+          }
         }
       }
     }
