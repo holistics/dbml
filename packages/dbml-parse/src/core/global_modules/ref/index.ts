@@ -28,14 +28,6 @@ function isInsideRefBody (node: SyntaxNode): boolean {
 }
 
 export const refModule: GlobalModule = {
-  nodeSymbol (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol> | Report<PassThrough> {
-    return Report.create(PASS_THROUGH);
-  },
-
-  symbolMembers (compiler: Compiler, symbol: NodeSymbol): Report<NodeSymbol[]> | Report<PassThrough> {
-    return Report.create(PASS_THROUGH);
-  },
-
   nodeReferee (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol | undefined> | Report<PassThrough> {
     if (!isExpressionAVariableNode(node) && !isAccessExpression(node)) return Report.create(PASS_THROUGH);
     if (!isInsideRefBody(node)) return Report.create(PASS_THROUGH);
