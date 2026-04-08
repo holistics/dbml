@@ -34,7 +34,8 @@ export function buildMergedTableFromElement (tableNode: ElementDeclarationNode, 
     if (!member.declaration || !member.isKind(SymbolKind.Column)) continue;
     if (member.declaration instanceof FunctionApplicationNode && isValidPartialInjection(member.declaration.callee)) continue;
 
-    const memberName = compiler.symbolName(member);
+    const memberNames = compiler.symbolNames(member);
+    const memberName = memberNames[0];
     if (!memberName) continue;
 
     const isDirect = member.declaration.parent === tableNode;

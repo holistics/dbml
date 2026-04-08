@@ -111,7 +111,8 @@ export const tableModule: GlobalModule = {
         const injectedMembers = tablePartialMembers.flatMap((m) => {
           if (!m.declaration) return [];
 
-          const name = compiler.symbolName(m);
+          const names = compiler.symbolNames(m);
+          const name = names[0];
           if (!name) return m;
 
           return compiler.symbolFactory.create(

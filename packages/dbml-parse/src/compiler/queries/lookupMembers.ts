@@ -23,12 +23,7 @@ export function lookupMembers (this: Compiler, symbolOrNode: NodeSymbol | Syntax
     members.find((m) => {
       if (!m.isKind(targetKind)) return false;
 
-      const name = this.symbolName(m);
-      if (name === targetName) return true;
-
-      if (!m.declaration) return false;
-      const alias = this.alias(m.declaration).getValue();
-      return alias === targetName;
+      return this.symbolNames(m).includes(targetName);
     }),
   );
 }

@@ -146,10 +146,7 @@ export function lookupMember (
 
   const match = members.find((m: NodeSymbol) => {
     if (kinds && !m.isKind(...kinds)) return false;
-    if (compiler.symbolName(m) === name) return true;
-    if (!m.declaration) return false;
-    const alias = compiler.alias(m.declaration).getFiltered(UNHANDLED);
-    return alias === name;
+    return compiler.symbolNames(m).includes(name);
   });
 
   // Report symbol not found

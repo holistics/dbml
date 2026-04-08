@@ -19,7 +19,7 @@ import { alias, nodeFullname as fullname, settings, validate } from '@/core/loca
 import { NodeSymbolIdGenerator, SchemaSymbol, type NodeSymbol } from '@/core/types/symbols';
 import SymbolFactory from '@/core/types/symbolFactory';
 import { lookupMembers } from './queries/lookupMembers';
-import { symbolName } from './queries/symbolName';
+import { symbolNames } from './queries/symbolName';
 import { SyntaxNodeIdGenerator } from '@/core/parser/nodes';
 import { parse } from './queries/pipeline/parse';
 
@@ -89,7 +89,7 @@ export default class Compiler {
   parse = this.query(parse);
   validate = this.query(validate);
   fullname = this.query(fullname);
-  symbolName = this.query(symbolName);
+  symbolNames = this.query(symbolNames);
   alias = this.query(alias);
   settings = this.query(settings);
 

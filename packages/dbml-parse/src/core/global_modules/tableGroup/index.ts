@@ -60,18 +60,16 @@ export const tableGroupModule: GlobalModule = {
       for (const member of members) {
         if (!member.isKind(SymbolKind.TableGroupField) || !member.declaration) continue; // Ignore non-field members
 
-        const nameResult = compiler.fullname(member.declaration);
-        if (nameResult.hasValue(UNHANDLED)) continue;
-        const name = nameResult.getValue()?.map(addDoubleQuoteIfNeeded)?.join('.');
-        if (!name) continue; // Field must always have a name!
-
-        const errorNode = (member.declaration instanceof ElementDeclarationNode && member.declaration.name) ? member.declaration.name : member.declaration;
-        const firstNode = seen.get(name);
-        if (firstNode) {
-          errors.push(tableGroupUtils.getFieldDuplicateError(name, firstNode));
-          errors.push(tableGroupUtils.getFieldDuplicateError(name, errorNode));
-        } else {
-          seen.set(name, errorNode);
+        const names = compiler.symbolNames(member);
+        for (const name of names) {
+          const errorNode = (member.declaration instanceof ElementDeclarationNode && member.declaration.name) ? member.declaration.name : member.declaration;
+          const firstNode = seen.get(name);
+          if (firstNode) {
+            errors.push(tableGroupUtils.getFieldDuplicateError(name, firstNode));
+            errors.push(tableGroupUtils.getFieldDuplicateError(name, errorNode));
+          } else {
+            seen.set(name, errorNode);
+          }
         }
       }
 

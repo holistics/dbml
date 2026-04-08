@@ -1,5 +1,5 @@
 import { ElementDeclarationNode } from '@/core/parser/nodes';
-import type { SyntaxNode, UseSpecifierNode, WildcardNode } from '@/core/parser/nodes';
+import type { SyntaxNode } from '@/core/parser/nodes';
 import { NodeSymbol, SchemaSymbol, SymbolKind } from '@/core/types/symbols';
 import type { GlobalModule } from '../types';
 import { DEFAULT_SCHEMA_NAME, PASS_THROUGH, type PassThrough, UNHANDLED } from '@/constants';
@@ -54,47 +54,23 @@ export const schemaModule: GlobalModule = {
     // Duplicate checking and alias conflict detection
     const seen = new Map<string, NodeSymbol>();
     for (const member of members) {
-      if (!member.declaration) continue;
-
-      const name = compiler.fullname(member.declaration).getFiltered(UNHANDLED)?.at(-1);
-      if (!name) continue;
-
-      const key = `${member.kind}:${name}`;
-      const existing = seen.get(key);
-      if (existing) {
-        // Report only on the duplicate (second) declaration
-        const errorNode = (
-          member.declaration instanceof ElementDeclarationNode
-          && member.declaration.name
-        )
-          ? member.declaration.name
-          : member.declaration;
-        errors.push(getDuplicateSchemaMemberError(member.kind, name, qualifiedName.join('.'), errorNode));
-      } else {
-        seen.set(key, member);
-      }
-
-      // Check alias conflicts (e.g. Table users as U)
-      const alias = compiler.alias(member.declaration).getFiltered(UNHANDLED);
-      if (alias) {
-        const aliasKey = `${member.kind}:${alias}`;
-        const existingAlias = seen.get(aliasKey);
-        if (existingAlias) {
+      const names = compiler.symbolNames(member);
+      for (const name of names) {
+        const key = `${member.kind}:${name}`;
+        const existing = seen.get(key);
+        if (existing) {
+          // Report only on the duplicate (second) declaration
           const errorNode = (
-            member.declaration instanceof ElementDeclarationNode
-            && member.declaration.alias
+            member.declaration && member.declaration instanceof ElementDeclarationNode
+            && member.declaration.name
           )
-            ? member.declaration.alias
+            ? member.declaration.name
             : member.declaration;
-          errors.push(
-            new CompileError(
-              CompileErrorCode.DUPLICATE_NAME,
-              `${member.kind} alias '${alias}' conflicts with an existing ${member.kind} name or alias`,
-              errorNode,
-            ),
-          );
+          if (errorNode) {
+            errors.push(getDuplicateSchemaMemberError(member.kind, name, qualifiedName.join('.'), errorNode));
+          }
         } else {
-          seen.set(aliasKey, member);
+          seen.set(key, member);
         }
       }
     }

@@ -66,18 +66,16 @@ export const tablePartialModule: GlobalModule = {
       for (const member of members) {
         if (!member.isKind(SymbolKind.Column) || !member.declaration) continue; // Ignore non-column members
 
-        const nameResult = compiler.fullname(member.declaration);
-        if (nameResult.hasValue(UNHANDLED)) continue;
-        const name = nameResult.getValue()?.at(-1);
-        if (!name) continue; // Column must always have a name!
-
-        const errorNode = (member.declaration instanceof ElementDeclarationNode && member.declaration.name) ? member.declaration.name : member.declaration;
-        const firstNode = seen.get(name);
-        if (firstNode) {
-          errors.push(tableUtils.getColumnDuplicateError(name, firstNode));
-          errors.push(tableUtils.getColumnDuplicateError(name, errorNode));
-        } else {
-          seen.set(name, errorNode);
+        const names = compiler.symbolNames(member);
+        for (const name of names) {
+          const errorNode = (member.declaration instanceof ElementDeclarationNode && member.declaration.name) ? member.declaration.name : member.declaration;
+          const firstNode = seen.get(name);
+          if (firstNode) {
+            errors.push(tableUtils.getColumnDuplicateError(name, firstNode));
+            errors.push(tableUtils.getColumnDuplicateError(name, errorNode));
+          } else {
+            seen.set(name, errorNode);
+          }
         }
       }
 

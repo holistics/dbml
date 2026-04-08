@@ -33,7 +33,7 @@ export function symbolOfName (this: Compiler, nameStack: string[], owner: Elemen
 
     for (const name of nameStack) {
       matchedSymbols = currentPossibleSymbols
-        .filter((s) => this.symbolName(s) === name)
+        .filter((s) => this.symbolNames(s).includes(name))
         .map((symbol) => ({
           symbol,
           kind: symbol.kind,
