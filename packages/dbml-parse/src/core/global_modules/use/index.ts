@@ -15,6 +15,7 @@ import { NodeSymbol, SymbolKind, UseSymbol } from '@/core/types';
 import { Filepath, resolveImportFilepath } from '@/core/types/filepath';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import { lookupMember } from '../utils';
+import type { SchemaElement } from '@/core/types/schemaJson';
 
 export const useModule: GlobalModule = {
   nodeSymbol (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol> | Report<PassThrough> {
@@ -152,6 +153,35 @@ export const useModule: GlobalModule = {
     }
 
     return Report.create(PASS_THROUGH);
+  },
+
+  interpret (compiler: Compiler, node: SyntaxNode): Report<SchemaElement | SchemaElement[] | undefined> | Report<PassThrough> {
+    if (!isUseSpecifier(node)) return Report.create(PASS_THROUGH);
+
+    const symbolResult = compiler.nodeSymbol(node);
+    if (symbolResult.hasValue(UNHANDLED)) return Report.create(undefined);
+    const symbol = symbolResult.getValue();
+    if (!(symbol instanceof UseSymbol) || !symbol.usedSymbol || !symbol.usedSymbol.declaration) return Report.create(undefined);
+
+    const result = compiler.interpret(symbol.usedSymbol.declaration);
+    if (result.hasValue(UNHANDLED)) return Report.create(undefined);
+
+    const value = result.getValue();
+    if (!value || Array.isArray(value)) return result;
+
+    const names = compiler.symbolNames(symbol);
+    const name = names[0];
+
+    // Apply alias if it exists
+    if (name) {
+      const clonedValue = JSON.parse(JSON.stringify(value));
+      if ('name' in clonedValue) {
+        clonedValue.name = name;
+      }
+      return Report.create(clonedValue);
+    }
+
+    return Report.create(value);
   },
 };
 

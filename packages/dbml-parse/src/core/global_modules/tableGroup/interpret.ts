@@ -4,13 +4,15 @@ import { CompileError, CompileErrorCode } from '@/core/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, SyntaxNode, ListExpressionNode,
 } from '@/core/parser/nodes';
-import type { TableGroup, TableGroupField } from '@/core/types/schemaJson';
+import type { TableGroup } from '@/core/types/schemaJson';
 import {
-  extractElementName, getTokenPosition, normalizeNoteContent, extractColor,
+  extractElementName, getTokenPosition, normalizeNoteContent, extractColor, getSymbolSchemaAndName,
 } from '../utils';
 import { aggregateSettingList } from '@/core/utils/validate';
 import Compiler from '@/compiler';
 import Report from '@/core/report';
+import { UNHANDLED } from '@/constants';
+import { SymbolKind } from '@/core/types/symbols';
 
 export class TableGroupInterpreter {
   private declarationNode: ElementDeclarationNode;
@@ -83,11 +85,15 @@ export class TableGroupInterpreter {
 
   private interpretFields (fields: FunctionApplicationNode[]): CompileError[] {
     const errors: CompileError[] = [];
-    this.tableGroup.tables = fields.map((field) => {
-      const fragments = destructureComplexVariable(field.callee!) ?? [];
-      const name = fragments.pop() ?? '';
-      const schemaName = fragments.join('.') || '';
-      return { name, schemaName } as TableGroupField;
+    this.tableGroup.tables = fields.flatMap((field) => {
+      const result = this.compiler.nodeReferee(field.callee!);
+      if (result.hasValue(UNHANDLED)) return [];
+      const tableSymbol = result.getValue();
+      if (!tableSymbol || !tableSymbol.isKind(SymbolKind.Table)) return [];
+
+      const { schemaName, name } = getSymbolSchemaAndName(this.compiler, tableSymbol);
+
+      return [{ name, schemaName }];
     });
 
     return errors;

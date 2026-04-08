@@ -279,3 +279,13 @@ export function extractElementName (nameNode: SyntaxNode): { schemaName: string[
     schemaName: fragments,
   };
 }
+
+export function getSymbolSchemaAndName (compiler: Compiler, symbol: NodeSymbol): { schemaName: string | null; name: string } {
+  const names = compiler.symbolNames(symbol);
+  const name = names[0];
+
+  const fullname = symbol.declaration ? compiler.fullname(symbol.declaration).getFiltered(UNHANDLED) : undefined;
+  const schemaName = (fullname && fullname.length > 1) ? fullname[0] : null;
+
+  return { schemaName, name: name || '' };
+}

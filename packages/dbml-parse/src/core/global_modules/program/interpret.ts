@@ -10,6 +10,7 @@ import type { CompileWarning } from '@/core/errors';
 import { validateForeignKeys } from '../records/utils/constraints';
 import { buildMergedTableFromElement } from '../records/utils/interpret';
 import { getBody } from '@/core/utils/expression';
+import { SchemaSymbol, UseSymbol } from '@/core/types';
 
 // Strip internal-only properties from columns before exposing in the final Database output
 function processColumnInDb<T extends Table | TablePartial> (table: T): T {
@@ -53,9 +54,20 @@ export default class ProgramInterpreter {
       token,
     };
 
-    for (const node of this.programNode.body) {
-      if (!(node instanceof ElementDeclarationNode)) continue;
+    const reachableFiles = this.compiler.reachableFiles(this.programNode.filepath);
+    const discoveredElements = new Set<ElementDeclarationNode>();
 
+    for (const filepath of reachableFiles) {
+      const { ast } = this.compiler.parse(filepath).getValue();
+      for (const element of ast.body) {
+        if (element instanceof ElementDeclarationNode) {
+          discoveredElements.add(element);
+        }
+      }
+    }
+
+    // Process all discovered elements
+    for (const node of discoveredElements) {
       const result = this.compiler.interpret(node);
       if (result.hasValue(UNHANDLED)) continue;
       errors.push(...result.getErrors());
@@ -64,44 +76,24 @@ export default class ProgramInterpreter {
       const value = result.getValue();
       if (!value) continue;
       const kind = Object.values(ElementKind).find((k) => node.isKind(k));
-      switch (kind) {
-        case ElementKind.Table: {
-          this.tableElements.push(node);
-          db.tables.push(processColumnInDb(value as Table));
-          // interpret nested tables also
-          for (const subElement of getBody(node)) {
-            if (!(subElement instanceof ElementDeclarationNode) || !subElement.isKind(ElementKind.Records)) continue;
-            const record = this.compiler.interpret(subElement).getFiltered(UNHANDLED);
-            this.pushRecordsToTable(node, subElement);
-            if (record) db.records.push(record as TableRecord);
+      this.collectElementToDb(db, kind, node, value);
+    }
+
+    // Process used symbols (imports)
+    const programSymbol = this.compiler.nodeSymbol(this.programNode).getFiltered(UNHANDLED);
+    if (programSymbol) {
+      const members = this.compiler.symbolMembers(programSymbol).getFiltered(UNHANDLED);
+      if (members) {
+        for (const member of members) {
+          if (member instanceof UseSymbol && member.declaration) {
+            const result = this.compiler.interpret(member.declaration);
+            if (result.hasValue(UNHANDLED)) continue;
+            const value = result.getValue();
+            if (!value) continue;
+            const kind = Object.values(ElementKind).find((k) => member.isKind(k as any));
+            this.collectElementToDb(db, kind, member.declaration as ElementDeclarationNode, value);
           }
-          break;
         }
-        case ElementKind.Ref:
-          db.refs.push(value as Ref);
-          break;
-        case ElementKind.Enum:
-          db.enums.push(value as Enum);
-          break;
-        case ElementKind.TableGroup:
-          db.tableGroups.push(value as TableGroup);
-          break;
-        case ElementKind.TablePartial:
-          db.tablePartials.push(processColumnInDb(value as TablePartial));
-          break;
-        case ElementKind.Note:
-          db.notes.push(value as Note);
-          break;
-        case ElementKind.Project:
-          db.project = value as Project;
-          break;
-        case ElementKind.Records: {
-          db.records.push(value as TableRecord);
-          const referencedTable = this.compiler.nodeReferee((node.name as CallExpressionNode).callee!).getFiltered(UNHANDLED)?.declaration;
-          if (referencedTable instanceof ElementDeclarationNode) this.pushRecordsToTable(referencedTable, node);
-          break;
-        }
-        default: break;
       }
     }
 
@@ -116,21 +108,26 @@ export default class ProgramInterpreter {
       }
     }
 
+    // Filter metadata (refs, records, tableGroups) based on available tables/schemas
+    this.filterMetadata(db);
+
     // Build merged tables (with partial-injected fields) for FK validation and inline ref collection
     const mergedTables = new Map<Table, Table>();
     for (const tableNode of this.tableElements) {
-      const table = this.compiler.interpret(tableNode).getFiltered(UNHANDLED) as Table;
+      const table = db.tables.find((t) => t.name === (this.compiler.interpret(tableNode).getValue() as Table).name); // Simplified lookup
+      if (!table) continue;
       const merged = buildMergedTableFromElement(tableNode, this.compiler);
       if (merged) mergedTables.set(table, merged);
     }
 
-    // Convert inline refs from table fields (including partial-injected) into top-level Ref objects
-    // Inline refs are placed before standalone refs in the output
+    // Convert inline refs from table fields
     const inlineRefs: Ref[] = [];
     for (const table of db.tables) {
       const merged = mergedTables.get(table) ?? table;
       for (const field of merged.fields) {
         for (const inlineRef of field.inline_refs) {
+          if (!this.isTableInDb(db, inlineRef.schemaName, inlineRef.tableName)) continue;
+
           const cardinalities = getMultiplicities(inlineRef.relation);
           if (!cardinalities) continue;
 
@@ -177,9 +174,7 @@ export default class ProgramInterpreter {
       }
     }
 
-    // Run FK validation once for all records now that all tables/refs/records are collected
-    // Build a map of table info including merged tables (with partial columns) and record values.
-    // Include ALL tables, even those without records (with empty values for FK target checking).
+    // Run FK validation
     const recordTableMap = new Map<string, { rows: TableRecord; mergedTable: Table }>();
     for (const table of db.tables) {
       const key = `${table.schemaName ?? DEFAULT_SCHEMA_NAME}.${table.name}`;
@@ -193,6 +188,67 @@ export default class ProgramInterpreter {
     warnings.push(...validateForeignKeys(db.refs, recordTableMap));
 
     return new Report(db, errors, warnings);
+  }
+
+  private collectElementToDb (db: Database, kind: ElementKind | undefined, node: ElementDeclarationNode, value: SchemaElement | SchemaElement[]) {
+    switch (kind) {
+      case ElementKind.Table: {
+        this.tableElements.push(node);
+        db.tables.push(processColumnInDb(value as Table));
+        // interpret nested tables also
+        for (const subElement of getBody(node)) {
+          if (!(subElement instanceof ElementDeclarationNode) || !subElement.isKind(ElementKind.Records)) continue;
+          const record = this.compiler.interpret(subElement).getFiltered(UNHANDLED);
+          this.pushRecordsToTable(node, subElement);
+          if (record) db.records.push(record as TableRecord);
+        }
+        break;
+      }
+      case ElementKind.Ref:
+        db.refs.push(value as Ref);
+        break;
+      case ElementKind.Enum:
+        db.enums.push(value as Enum);
+        break;
+      case ElementKind.TableGroup:
+        db.tableGroups.push(value as TableGroup);
+        break;
+      case ElementKind.TablePartial:
+        db.tablePartials.push(processColumnInDb(value as TablePartial));
+        break;
+      case ElementKind.Note:
+        db.notes.push(value as Note);
+        break;
+      case ElementKind.Project:
+        db.project = value as Project;
+        break;
+      case ElementKind.Records: {
+        db.records.push(value as TableRecord);
+        const referencedTable = this.compiler.nodeReferee((node.name as CallExpressionNode).callee!).getFiltered(UNHANDLED)?.declaration;
+        if (referencedTable instanceof ElementDeclarationNode) this.pushRecordsToTable(referencedTable, node);
+        break;
+      }
+      default: break;
+    }
+  }
+
+  private filterMetadata (db: Database) {
+    // Filter refs: both endpoints must exist in db.tables
+    db.refs = db.refs.filter((ref) => ref.endpoints.every((ep) => this.isTableInDb(db, ep.schemaName, ep.tableName)));
+
+    // Filter records: table must exist in db.tables
+    db.records = db.records.filter((rec) => this.isTableInDb(db, rec.schemaName ?? null, rec.tableName));
+
+    // Filter tableGroups: keep only tables that exist in db.tables
+    db.tableGroups.forEach((tg) => {
+      tg.tables = tg.tables.filter((t) => this.isTableInDb(db, t.schemaName, t.name));
+    });
+    db.tableGroups = db.tableGroups.filter((tg) => tg.tables.length > 0);
+  }
+
+  private isTableInDb (db: Database, schemaName: string | null, tableName: string): boolean {
+    const sName = schemaName ?? DEFAULT_SCHEMA_NAME;
+    return db.tables.some((t) => t.name === tableName && (t.schemaName ?? DEFAULT_SCHEMA_NAME) === sName);
   }
 
   private pushRecordsToTable (table: ElementDeclarationNode, records: ElementDeclarationNode) {

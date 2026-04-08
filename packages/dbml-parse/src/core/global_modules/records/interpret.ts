@@ -125,33 +125,26 @@ function getTableAndColumnsOfRecords (records: ElementDeclarationNode, compiler:
       mergedColumns,
     };
   }
+
   const fragments = destructureCallExpression(nameNode!);
   if (!fragments) return { table: undefined, mergedColumns: [] };
-  const tableNameFragments = fragments.variables.map((v) => v.expression.variable?.value ?? '');
-  const tableName = tableNameFragments.at(-1) ?? '';
-  const schemaName = tableNameFragments.length > 1 ? tableNameFragments.slice(0, -1).join('.') : undefined;
 
-  const ast = compiler.parse().getValue().ast;
-  const programSymbol = compiler.nodeSymbol(ast);
-  if (programSymbol.hasValue(UNHANDLED)) return { table: undefined, mergedColumns: [] };
+  const tableResult = compiler.nodeReferee(fragments.callee!);
+  if (tableResult.hasValue(UNHANDLED)) return { table: undefined, mergedColumns: [] };
+  const tableSymbol = tableResult.getValue();
 
-  let tableSymbol: NodeSymbol | undefined;
-  if (schemaName) {
-    // Schema-qualified: look up the schema first, then the table within it
-    const schemaResult = lookupMember(compiler, programSymbol.getValue(), schemaName, { kinds: [SymbolKind.Schema], ignoreNotFound: true });
-    if (schemaResult.getValue()) {
-      tableSymbol = lookupMember(compiler, schemaResult.getValue()!, tableName, { kinds: [SymbolKind.Table], ignoreNotFound: true }).getValue() ?? undefined;
-    }
-  }
-  if (!tableSymbol) {
-    tableSymbol = lookupInDefaultSchema(compiler, programSymbol.getValue(), tableName, { kinds: [SymbolKind.Table], ignoreNotFound: true }).getValue() ?? undefined;
-  }
-
-  if (!tableSymbol?.declaration) return { table: undefined, mergedColumns: [] };
+  if (!tableSymbol?.declaration || !tableSymbol.isKind(SymbolKind.Table)) return { table: undefined, mergedColumns: [] };
 
   const tableNode = tableSymbol.declaration as ElementDeclarationNode;
   const table = buildMergedTableFromElement(tableNode, compiler);
   if (!table) return { table: undefined, mergedColumns: [] };
+
+  // Use the alias/effective name for the table in the records object
+  const names = compiler.symbolNames(tableSymbol);
+  table.name = names[0] || table.name;
+  const fullname = tableSymbol.declaration ? compiler.fullname(tableSymbol.declaration).getFiltered(UNHANDLED) : undefined;
+  table.schemaName = (fullname && fullname.length > 1) ? fullname[0] : null;
+
   const mergedColumns = fragments.args.map((e) => table.fields.find((f) => f.name === extractVariableFromExpression(e))!);
   return {
     table,

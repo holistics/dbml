@@ -108,40 +108,36 @@ export function buildMergedTableFromSymbolMembers (tableNode: ElementDeclaration
 
 // Look up enum field names for a column's enum type via the compiler's symbol graph.
 export function getEnumMembers (column: Column, compiler: Compiler): string[] {
+  // column is an interpreted object, we need to find its declaration to use nodeReferee
+  // but column doesn't have declaration. We should ideally pass the column symbol or declaration here.
+  // For now, use the compiler to find the enum symbol by its interpreted names.
   const ast = compiler.parse().getValue().ast;
   const programSymbol = compiler.nodeSymbol(ast).getFiltered(UNHANDLED);
   if (!programSymbol) return [];
-  const schemas = compiler.symbolMembers(programSymbol).getFiltered(UNHANDLED);
-  if (!schemas) return [];
 
-  // Flatten through schemas to find enums
-  const allMembers = schemas.flatMap((s) => {
-    if (!(s instanceof SchemaSymbol)) return [s];
-    const schemaMembers = compiler.symbolMembers(s).getFiltered(UNHANDLED);
-    return schemaMembers ? [s, ...schemaMembers] : [s];
-  });
-
-  for (const member of allMembers) {
-    if (!member.isKind(SymbolKind.Enum) || !member.declaration) continue;
-
-    const fullname = compiler.fullname(member.declaration).getFiltered(UNHANDLED);
-    if (!fullname || fullname.at(-1) !== column.type.type_name) continue;
-
-    const enumSchemaName = fullname.length > 1 ? fullname.slice(0, -1).join('.') : null;
-    if (enumSchemaName !== column.type.schemaName) continue;
-
-    const enumSymbol = compiler.nodeSymbol(member.declaration).getFiltered(UNHANDLED);
-    if (!enumSymbol) continue;
-    const enumFields = compiler.symbolMembers(enumSymbol).getFiltered(UNHANDLED);
-    if (!enumFields) continue;
-
-    return enumFields
-      .filter((field) => field.declaration)
-      .map((field) => compiler.fullname(field.declaration!).getFiltered(UNHANDLED)?.at(-1))
-      .filter(Boolean) as string[];
+  let enumSymbol: NodeSymbol | undefined;
+  if (column.type.schemaName) {
+    const schemaResult = lookupMember(compiler, programSymbol, column.type.schemaName, { kinds: [SymbolKind.Schema], ignoreNotFound: true });
+    if (schemaResult.getValue()) {
+      enumSymbol = lookupMember(compiler, schemaResult.getValue()!, column.type.type_name, { kinds: [SymbolKind.Enum], ignoreNotFound: true }).getValue();
+    }
   }
 
-  return [];
+  if (!enumSymbol) {
+    enumSymbol = lookupInDefaultSchema(compiler, programSymbol, column.type.type_name, { kinds: [SymbolKind.Enum], ignoreNotFound: true }).getValue();
+  }
+
+  if (!enumSymbol) return [];
+
+  const enumFields = compiler.symbolMembers(enumSymbol).getFiltered(UNHANDLED);
+  if (!enumFields) return [];
+
+  return enumFields
+    .map((field) => {
+      const names = compiler.symbolNames(field);
+      return names[0];
+    })
+    .filter(Boolean) as string[];
 }
 
 export function parseNumericParams (column: Column): { precision: number; scale: number } | undefined {

@@ -2,12 +2,18 @@ import { destructureComplexVariable, extractVariableFromExpression } from '@/cor
 import { aggregateSettingList } from '@/core/utils/validate';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import {
-  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, IdentiferStreamNode, InfixExpressionNode, ListExpressionNode, SyntaxNode,
+  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, IdentiferStreamNode, InfixExpressionNode, ListExpressionNode, SyntaxNode, TupleExpressionNode,
 } from '@/core/parser/nodes';
 import type { Ref, RefEndpoint, RelationCardinality, TokenPosition } from '@/core/types/schemaJson';
 import {
-  extractColor, extractNamesFromRefOperand, getMultiplicities, getTokenPosition,
+  extractColor, extractNamesFromRefOperand, getMultiplicities, getTokenPosition, getSymbolSchemaAndName,
 } from '../utils';
+import { extractStringFromIdentifierStream, isAccessExpression } from '@/core/utils/expression';
+import Compiler from '@/compiler';
+import Report from '@/core/report';
+import { ElementKind } from '@/core/types/keywords';
+import { UNHANDLED } from '@/constants';
+import { SymbolKind } from '@/core/types/symbols';
 
 function buildRefEndpoint (
   names: { schemaName: string | null; tableName: string; fieldNames: string[] },
@@ -33,11 +39,6 @@ function buildRefEndpoint (
     token,
   };
 }
-import { extractStringFromIdentifierStream } from '@/core/utils/expression';
-import Compiler from '@/compiler';
-import Report from '@/core/report';
-import { ElementKind } from '@/core/types/keywords';
-import { UNHANDLED } from '@/constants';
 
 export class RefInterpreter {
   private declarationNode: ElementDeclarationNode;
@@ -116,13 +117,41 @@ export class RefInterpreter {
     const multiplicities = getMultiplicities(op);
     if (!multiplicities) return [];
 
-    const leftNames = extractNamesFromRefOperand(leftExpression!, this.container);
-    const rightNames = extractNamesFromRefOperand(rightExpression!, this.container);
-    this.ref.endpoints = [
-      buildRefEndpoint(leftNames, multiplicities[0], getTokenPosition(leftExpression!)),
-      buildRefEndpoint(rightNames, multiplicities[1], getTokenPosition(rightExpression!)),
-    ];
+    const leftEndpoint = this.resolveEndpoint(leftExpression!, multiplicities[0]);
+    const rightEndpoint = this.resolveEndpoint(rightExpression!, multiplicities[1]);
+
+    if (!leftEndpoint || !rightEndpoint) return [];
+
+    this.ref.endpoints = [leftEndpoint, rightEndpoint];
 
     return [];
+  }
+
+  private resolveEndpoint (node: SyntaxNode, relation: RelationCardinality): RefEndpoint | undefined {
+    let tableNode = node;
+    let fieldNames: string[] = [];
+
+    if (isAccessExpression(node)) {
+      tableNode = node.leftExpression!;
+      const right = node.rightExpression;
+      if (right instanceof TupleExpressionNode) {
+        fieldNames = right.elementList.map((e) => extractVariableFromExpression(e) ?? '');
+      } else {
+        fieldNames = [extractVariableFromExpression(right) ?? ''];
+      }
+    } else {
+      // In standalone Ref, it MUST be an access. If it's not, it's a bare column in a table-level Ref.
+      const names = extractNamesFromRefOperand(node, this.container);
+      return buildRefEndpoint(names, relation, getTokenPosition(node));
+    }
+
+    const result = this.compiler.nodeReferee(tableNode);
+    if (result.hasValue(UNHANDLED)) return undefined;
+    const tableSymbol = result.getValue();
+    if (!tableSymbol || !tableSymbol.isKind(SymbolKind.Table)) return undefined;
+
+    const { schemaName, name: tableName } = getSymbolSchemaAndName(this.compiler, tableSymbol);
+
+    return buildRefEndpoint({ schemaName, tableName, fieldNames }, relation, getTokenPosition(node));
   }
 }
