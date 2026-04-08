@@ -39,7 +39,7 @@ import { NodeSymbol, SymbolKind } from '@/core/types/symbols';
 import { PASS_THROUGH, UNHANDLED } from '@/constants';
 import { getTokenPosition, lookupMember, lookupInDefaultSchema } from '../utils';
 import { validatePrimaryKey, validateUnique } from './utils/constraints';
-import { buildTableFromElement, buildTableFromSymbolMembers, getEnumMembers, parseNumericParams, parseLengthParam } from './utils/interpret';
+import { buildMergedTableFromElement, buildMergedTableFromSymbolMembers, getEnumMembers, parseNumericParams, parseLengthParam } from './utils/interpret';
 
 export default class RecordsInterpreter {
   private compiler: Compiler;
@@ -113,7 +113,7 @@ function getTableAndColumnsOfRecords (records: ElementDeclarationNode, compiler:
     // For nested records (inside a table), we can't call buildTableFromElement(parent)
     // because the parent table is currently being interpreted (would cause a cycle).
     // Instead, build the column list from symbolMembers which includes partial-injected columns.
-    const table = buildTableFromSymbolMembers(parent, compiler);
+    const table = buildMergedTableFromSymbolMembers(parent, compiler);
     if (!table) return { table: undefined, mergedColumns: [] };
     if (!nameNode) return {
       table,
@@ -150,7 +150,7 @@ function getTableAndColumnsOfRecords (records: ElementDeclarationNode, compiler:
   if (!tableSymbol?.declaration) return { table: undefined, mergedColumns: [] };
 
   const tableNode = tableSymbol.declaration as ElementDeclarationNode;
-  const table = buildTableFromElement(tableNode, compiler);
+  const table = buildMergedTableFromElement(tableNode, compiler);
   if (!table) return { table: undefined, mergedColumns: [] };
   const mergedColumns = fragments.args.map((e) => table.fields.find((f) => f.name === extractVariableFromExpression(e))!);
   return {

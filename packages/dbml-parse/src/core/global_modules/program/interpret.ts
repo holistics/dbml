@@ -1,7 +1,6 @@
 import Compiler from '@/compiler/index';
-import { ElementDeclarationNode, ProgramNode } from '@/core/parser/nodes';
+import { CallExpressionNode, ElementDeclarationNode, ProgramNode } from '@/core/parser/nodes';
 import { ElementKind } from '@/core/types/keywords';
-import { SymbolKind } from '@/core/types/symbols';
 import { DEFAULT_SCHEMA_NAME, UNHANDLED } from '@/constants';
 import Report from '@/core/report';
 import type { Database, Ref, RefEndpoint, Table, TableRecord, SchemaElement, Enum, TableGroup, TablePartial, Note, Project } from '@/core/types/schemaJson';
@@ -9,7 +8,7 @@ import { getTokenPosition, getMultiplicities } from '../utils';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import type { CompileWarning } from '@/core/errors';
 import { validateForeignKeys } from '../records/utils/constraints';
-import { buildTableFromElement } from '../records/utils/interpret';
+import { buildMergedTableFromElement } from '../records/utils/interpret';
 import { getBody } from '@/core/utils/expression';
 
 // Strip internal-only properties from columns before exposing in the final Database output
@@ -29,6 +28,8 @@ function processColumnInDb<T extends Table | TablePartial> (table: T): T {
 export default class ProgramInterpreter {
   private compiler: Compiler;
   private programNode: ProgramNode;
+  private recordsByTable = new Map<ElementDeclarationNode, ElementDeclarationNode[]>(); // to track duplicated records for a table
+  private tableElements: ElementDeclarationNode[] = [];
 
   constructor (compiler: Compiler, node: ProgramNode) {
     this.compiler = compiler;
@@ -65,11 +66,13 @@ export default class ProgramInterpreter {
       const kind = Object.values(ElementKind).find((k) => node.isKind(k));
       switch (kind) {
         case ElementKind.Table: {
+          this.tableElements.push(node);
           db.tables.push(processColumnInDb(value as Table));
           // interpret nested tables also
           for (const subElement of getBody(node)) {
             if (!(subElement instanceof ElementDeclarationNode) || !subElement.isKind(ElementKind.Records)) continue;
             const record = this.compiler.interpret(subElement).getFiltered(UNHANDLED);
+            this.pushRecordsToTable(node, subElement);
             if (record) db.records.push(record as TableRecord);
           }
           break;
@@ -92,9 +95,12 @@ export default class ProgramInterpreter {
         case ElementKind.Project:
           db.project = value as Project;
           break;
-        case ElementKind.Records:
+        case ElementKind.Records: {
           db.records.push(value as TableRecord);
+          const referencedTable = this.compiler.nodeReferee((node.name as CallExpressionNode).callee!).getFiltered(UNHANDLED)?.declaration;
+          if (referencedTable instanceof ElementDeclarationNode) this.pushRecordsToTable(referencedTable, node);
           break;
+        }
         default: break;
       }
     }
@@ -112,13 +118,10 @@ export default class ProgramInterpreter {
 
     // Build merged tables (with partial-injected fields) for FK validation and inline ref collection
     const mergedTables = new Map<Table, Table>();
-    for (const table of db.tables) {
-      // Find the table's AST node to build the merged version
-      const tableNode = this.findTableNode(table);
-      if (tableNode) {
-        const merged = buildTableFromElement(tableNode, this.compiler);
-        if (merged) mergedTables.set(table, merged);
-      }
+    for (const tableNode of this.tableElements) {
+      const table = this.compiler.interpret(tableNode).getFiltered(UNHANDLED) as Table;
+      const merged = buildMergedTableFromElement(tableNode, this.compiler);
+      if (merged) mergedTables.set(table, merged);
     }
 
     // Convert inline refs from table fields (including partial-injected) into top-level Ref objects
@@ -160,35 +163,17 @@ export default class ProgramInterpreter {
     db.refs = [...inlineRefs, ...db.refs];
 
     // Validate duplicate records blocks for the same table
-    {
-      const recordsByTable = new Map<string, TableRecord[]>();
-      for (const record of db.records) {
-        const key = `${record.schemaName ?? DEFAULT_SCHEMA_NAME}.${record.tableName}`;
-        if (!recordsByTable.has(key)) {
-          recordsByTable.set(key, []);
-        }
-        recordsByTable.get(key)?.push(record);
-      }
-      for (const [, records] of recordsByTable) {
-        if (records.length > 1) {
-          const tableName = records[0].tableName;
-          const msg = `Duplicate Records blocks for the same Table '${tableName}' - A Table can only have one Records block`;
+    for (const [table, records] of this.recordsByTable) {
+      if (records.length <= 1) continue;
+      const tableName = this.compiler.fullname(table).getFiltered(UNHANDLED)?.join('.') || '';
+      const msg = `Duplicate Records blocks for the same Table '${tableName}' - A Table can only have one Records block`;
 
-          for (let i = 1; i < records.length; i++) {
-            errors.push(new CompileError(
-              CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE,
-              msg,
-              records[0],
-            ));
-          }
-          for (let i = 1; i < records.length; i++) {
-            errors.push(new CompileError(
-              CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE,
-              msg,
-              records[i],
-            ));
-          }
-        }
+      for (let i = 0; i < records.length; i++) {
+        errors.push(new CompileError(
+          CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE,
+          msg,
+          records[i],
+        ));
       }
     }
 
@@ -210,18 +195,10 @@ export default class ProgramInterpreter {
     return new Report(db, errors, warnings);
   }
 
-  private findTableNode (table: Table): ElementDeclarationNode | undefined {
-    for (const element of this.programNode.body) {
-      if (!(element instanceof ElementDeclarationNode)) continue;
-      if (!element.isKind(ElementKind.Table)) continue;
-      const fn = this.compiler.fullname(element);
-      if (fn.hasValue(UNHANDLED)) continue;
-      const fullname = fn.getValue();
-      if (!fullname) continue;
-      const name = fullname.at(-1);
-      const schema = fullname.length > 1 ? fullname.slice(0, -1).join('.') : null;
-      if (name === table.name && schema === table.schemaName) return element;
+  private pushRecordsToTable (table: ElementDeclarationNode, records: ElementDeclarationNode) {
+    if (!this.recordsByTable.has(table)) {
+      this.recordsByTable.set(table, []);
     }
-    return undefined;
+    this.recordsByTable.get(table)?.push(records);
   }
 }
