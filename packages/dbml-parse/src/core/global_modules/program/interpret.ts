@@ -13,7 +13,7 @@ import { validateForeignKeys } from '../records/utils/constraints';
 import { buildTableFromElement } from '../records/utils/interpret';
 
 // Strip internal-only properties from columns before exposing in the final Database output
-function stripInternalColumnProps (table: Table): Table {
+function processColumnInDb (table: Table): Table {
   return {
     ...table,
     fields: table.fields.map((c) => ({
@@ -82,16 +82,16 @@ export default class ProgramInterpreter {
           case ElementKind.Table:
             if (Array.isArray(value)) {
             // interpretTable may return [Table, ...TableRecord] when there are nested records
-              db.tables.push(stripInternalColumnProps(value[0] as any));
+              db.tables.push(processColumnInDb(value[0] as any));
               for (let i = 1; i < value.length; i++) db.records.push(value[i] as any);
             } else {
-              db.tables.push(stripInternalColumnProps(value as any));
+              db.tables.push(processColumnInDb(value as any));
             }
             break;
           case ElementKind.Ref: db.refs.push(value as any); break;
           case ElementKind.Enum: db.enums.push(value as any); break;
           case ElementKind.TableGroup: db.tableGroups.push(value as any); break;
-          case ElementKind.TablePartial: db.tablePartials.push(stripInternalColumnProps(value as any)); break;
+          case ElementKind.TablePartial: db.tablePartials.push(processColumnInDb(value as any)); break;
           case ElementKind.Note: db.notes.push(value as any); break;
           case ElementKind.Project: db.project = value as any; break;
           case ElementKind.Records: db.records.push(value as any); break;
