@@ -1,4 +1,4 @@
-import { SyntaxNode } from '@/core/parser/nodes';
+import { ElementDeclarationNode, SyntaxNode } from '@/core/parser/nodes';
 import type { Internable } from '@/core/types/internable';
 
 export const enum SymbolKind {
@@ -72,11 +72,26 @@ export class NodeSymbol implements Internable<InternedNodeSymbol> {
 // A symbol injected from another scope (e.g. partial-injected columns).
 // Carries its own name to avoid fullname(declaration) lookups which would resolve
 // against the original scope, not the injection target.
-export class InjectedSymbol extends NodeSymbol {
+export class InjectedColumnSymbol extends NodeSymbol {
   name: string;
+  injectionDeclaration: SyntaxNode;
 
-  constructor ({ kind, declaration, name }: { kind: SymbolKind; declaration?: SyntaxNode; name: string }, id: NodeSymbolId) {
+  constructor (
+    {
+      kind,
+      declaration,
+      name,
+      injectionDeclaration,
+    }: {
+      kind: SymbolKind;
+      declaration: SyntaxNode;
+      injectionDeclaration: SyntaxNode;
+      name: string;
+    },
+    id: NodeSymbolId,
+  ) {
     super({ kind, declaration }, id);
+    this.injectionDeclaration = injectionDeclaration;
     this.name = name;
   }
 }

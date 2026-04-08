@@ -84,19 +84,6 @@ function getDefaultSchemaSymbol (compiler: Compiler, globalSymbol: NodeSymbol): 
   );
 }
 
-function findTableByAlias (compiler: Compiler, parentSymbol: NodeSymbol, alias: string): NodeSymbol | undefined {
-  const members = compiler.symbolMembers(parentSymbol);
-  if (members.hasValue(UNHANDLED)) return undefined;
-  for (const m of members.getValue()) {
-    if (!m.isKind(SymbolKind.Table) || !m.declaration) continue;
-    const aliasResult = compiler.alias(m.declaration);
-    if (!aliasResult.hasValue(UNHANDLED) && aliasResult.getValue() === alias) {
-      return m;
-    }
-  }
-  return undefined;
-}
-
 // Ref endpoint: table.column or schema.table.column
 // Always report errors, never ignore not found
 export function nodeRefereeOfRefEndpoint (compiler: Compiler, globalSymbol: NodeSymbol, node: SyntaxNode): Report<NodeSymbol | undefined> {

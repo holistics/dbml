@@ -656,37 +656,6 @@
               "trailingTrivia": " ",
               "value": "Project"
             }
-          },
-          "symbol": {
-            "context": {
-              "id": "<element-declaration>:B@[L0:C0, L12:C1]",
-              "snippet": "Project B ...\r\n    }\r\n}"
-            },
-            "declaration": {
-              "id": "<element-declaration>:B@[L0:C0, L12:C1]",
-              "snippet": "Project B ...\r\n    }\r\n}"
-            },
-            "members": [
-              {
-                "context": {
-                  "id": "<element-declaration>:A@[L1:C4, L3:C5]",
-                  "snippet": "Table A {\r\n\r\n    }"
-                }
-              },
-              {
-                "context": {
-                  "id": "<element-declaration>:A@[L5:C4, L7:C5]",
-                  "snippet": "Table A {\r\n\r\n    }"
-                }
-              },
-              {
-                "context": {
-                  "id": "<element-declaration>:B@[L9:C4, L11:C5]",
-                  "snippet": "Table B {\r...   \r\n    }"
-                }
-              }
-            ],
-            "references": []
           }
         }
       ],
@@ -731,12 +700,6 @@
       "members": [
         {
           "context": {}
-        },
-        {
-          "context": {
-            "id": "<element-declaration>:B@[L0:C0, L12:C1]",
-            "snippet": "Project B ...\r\n    }\r\n}"
-          }
         }
       ],
       "references": []

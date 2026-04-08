@@ -3223,18 +3223,6 @@
               "trailingTrivia": " ",
               "value": "Ref"
             }
-          },
-          "symbol": {
-            "context": {
-              "id": "<element-declaration>:@[L17:C0, L19:C1]",
-              "snippet": "Ref {\n    ...scade] a\n}"
-            },
-            "declaration": {
-              "id": "<element-declaration>:@[L17:C0, L19:C1]",
-              "snippet": "Ref {\n    ...scade] a\n}"
-            },
-            "members": [],
-            "references": []
           }
         },
         {
@@ -3959,18 +3947,6 @@
               "trailingTrivia": " ",
               "value": "Ref"
             }
-          },
-          "symbol": {
-            "context": {
-              "id": "<element-declaration>:@[L21:C0, L23:C1]",
-              "snippet": "Ref {\n    ...cascade]\n}"
-            },
-            "declaration": {
-              "id": "<element-declaration>:@[L21:C0, L23:C1]",
-              "snippet": "Ref {\n    ...cascade]\n}"
-            },
-            "members": [],
-            "references": []
           }
         },
         {
@@ -4510,18 +4486,6 @@
               "trailingTrivia": " ",
               "value": "Ref"
             }
-          },
-          "symbol": {
-            "context": {
-              "id": "<element-declaration>:@[L25:C0, L27:C1]",
-              "snippet": "Ref {\n    ...> A.id a\n}"
-            },
-            "declaration": {
-              "id": "<element-declaration>:@[L25:C0, L27:C1]",
-              "snippet": "Ref {\n    ...> A.id a\n}"
-            },
-            "members": [],
-            "references": []
           }
         },
         {
@@ -5120,18 +5084,6 @@
               "trailingTrivia": " ",
               "value": "Ref"
             }
-          },
-          "symbol": {
-            "context": {
-              "id": "<element-declaration>:@[L29:C0, L31:C1]",
-              "snippet": "Ref {\n    ...A.id a a\n}"
-            },
-            "declaration": {
-              "id": "<element-declaration>:@[L29:C0, L31:C1]",
-              "snippet": "Ref {\n    ...A.id a a\n}"
-            },
-            "members": [],
-            "references": []
           }
         }
       ],
@@ -5193,30 +5145,6 @@
           "context": {
             "id": "<element-declaration>:G@[L12:C0, L15:C1]",
             "snippet": "TableGroup...   A a a\n}"
-          }
-        },
-        {
-          "context": {
-            "id": "<element-declaration>:@[L17:C0, L19:C1]",
-            "snippet": "Ref {\n    ...scade] a\n}"
-          }
-        },
-        {
-          "context": {
-            "id": "<element-declaration>:@[L21:C0, L23:C1]",
-            "snippet": "Ref {\n    ...cascade]\n}"
-          }
-        },
-        {
-          "context": {
-            "id": "<element-declaration>:@[L25:C0, L27:C1]",
-            "snippet": "Ref {\n    ...> A.id a\n}"
-          }
-        },
-        {
-          "context": {
-            "id": "<element-declaration>:@[L29:C0, L31:C1]",
-            "snippet": "Ref {\n    ...A.id a a\n}"
           }
         }
       ],

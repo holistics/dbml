@@ -2047,18 +2047,6 @@
               "trailingTrivia": " ",
               "value": "Ref"
             }
-          },
-          "symbol": {
-            "context": {
-              "id": "<element-declaration>:short_ref@[L11:C0, L11:C43]",
-              "snippet": "Ref short_...: #aabbcc]"
-            },
-            "declaration": {
-              "id": "<element-declaration>:short_ref@[L11:C0, L11:C43]",
-              "snippet": "Ref short_...: #aabbcc]"
-            },
-            "members": [],
-            "references": []
           }
         },
         {
@@ -2783,18 +2771,6 @@
               "trailingTrivia": " ",
               "value": "Ref"
             }
-          },
-          "symbol": {
-            "context": {
-              "id": "<element-declaration>:long_ref@[L14:C0, L16:C1]",
-              "snippet": "Ref long_r...#123456]\n}"
-            },
-            "declaration": {
-              "id": "<element-declaration>:long_ref@[L14:C0, L16:C1]",
-              "snippet": "Ref long_r...#123456]\n}"
-            },
-            "members": [],
-            "references": []
           }
         }
       ],
@@ -2850,18 +2826,6 @@
           "context": {
             "id": "<element-declaration>:c@[L5:C0, L8:C1]",
             "snippet": "Table c {\n...b_id int\n}"
-          }
-        },
-        {
-          "context": {
-            "id": "<element-declaration>:short_ref@[L11:C0, L11:C43]",
-            "snippet": "Ref short_...: #aabbcc]"
-          }
-        },
-        {
-          "context": {
-            "id": "<element-declaration>:long_ref@[L14:C0, L16:C1]",
-            "snippet": "Ref long_r...#123456]\n}"
           }
         }
       ],

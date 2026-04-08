@@ -4809,18 +4809,6 @@
               "trailingTrivia": " ",
               "value": "Ref"
             }
-          },
-          "symbol": {
-            "context": {
-              "id": "<element-declaration>:short_ref@[L23:C0, L23:C61]",
-              "snippet": "Ref short_... set null]"
-            },
-            "declaration": {
-              "id": "<element-declaration>:short_ref@[L23:C0, L23:C61]",
-              "snippet": "Ref short_... set null]"
-            },
-            "members": [],
-            "references": []
           }
         },
         {
@@ -5692,18 +5680,6 @@
               "trailingTrivia": " ",
               "value": "Ref"
             }
-          },
-          "symbol": {
-            "context": {
-              "id": "<element-declaration>:long_ref@[L26:C0, L28:C1]",
-              "snippet": "Ref long_r...cascade]\n}"
-            },
-            "declaration": {
-              "id": "<element-declaration>:long_ref@[L26:C0, L28:C1]",
-              "snippet": "Ref long_r...cascade]\n}"
-            },
-            "members": [],
-            "references": []
           }
         },
         {
@@ -6427,18 +6403,6 @@
               "trailingTrivia": " ",
               "value": "Ref"
             }
-          },
-          "symbol": {
-            "context": {
-              "id": "<element-declaration>:error_ref2@[L30:C0, L32:C1]",
-              "snippet": "Ref error_... < b.id2\n}"
-            },
-            "declaration": {
-              "id": "<element-declaration>:error_ref2@[L30:C0, L32:C1]",
-              "snippet": "Ref error_... < b.id2\n}"
-            },
-            "members": [],
-            "references": []
           }
         },
         {
@@ -7163,18 +7127,6 @@
               "trailingTrivia": " ",
               "value": "Ref"
             }
-          },
-          "symbol": {
-            "context": {
-              "id": "<element-declaration>:error_ref3@[L34:C0, L36:C1]",
-              "snippet": "Ref error_...a_color]\n}"
-            },
-            "declaration": {
-              "id": "<element-declaration>:error_ref3@[L34:C0, L36:C1]",
-              "snippet": "Ref error_...a_color]\n}"
-            },
-            "members": [],
-            "references": []
           }
         },
         {
@@ -7899,18 +7851,6 @@
               "trailingTrivia": " ",
               "value": "Ref"
             }
-          },
-          "symbol": {
-            "context": {
-              "id": "<element-declaration>:error_ref4@[L38:C0, L40:C1]",
-              "snippet": "Ref error_...goodbye]\n}"
-            },
-            "declaration": {
-              "id": "<element-declaration>:error_ref4@[L38:C0, L40:C1]",
-              "snippet": "Ref error_...goodbye]\n}"
-            },
-            "members": [],
-            "references": []
           }
         },
         {
@@ -8596,18 +8536,6 @@
               "trailingTrivia": " ",
               "value": "Ref"
             }
-          },
-          "symbol": {
-            "context": {
-              "id": "<element-declaration>:error_shortref2@[L42:C0, L42:C51]",
-              "snippet": "Ref error_...d5 < b.id5"
-            },
-            "declaration": {
-              "id": "<element-declaration>:error_shortref2@[L42:C0, L42:C51]",
-              "snippet": "Ref error_...d5 < b.id5"
-            },
-            "members": [],
-            "references": []
           }
         },
         {
@@ -9294,18 +9222,6 @@
               "trailingTrivia": " ",
               "value": "Ref"
             }
-          },
-          "symbol": {
-            "context": {
-              "id": "<element-declaration>:error_shortref3@[L43:C0, L43:C56]",
-              "snippet": "Ref error_...t_a_color]"
-            },
-            "declaration": {
-              "id": "<element-declaration>:error_shortref3@[L43:C0, L43:C56]",
-              "snippet": "Ref error_...t_a_color]"
-            },
-            "members": [],
-            "references": []
           }
         },
         {
@@ -9992,18 +9908,6 @@
               "trailingTrivia": " ",
               "value": "Ref"
             }
-          },
-          "symbol": {
-            "context": {
-              "id": "<element-declaration>:error_shortref4@[L44:C0, L44:C51]",
-              "snippet": "Ref error_...: goodbye]"
-            },
-            "declaration": {
-              "id": "<element-declaration>:error_shortref4@[L44:C0, L44:C51]",
-              "snippet": "Ref error_...: goodbye]"
-            },
-            "members": [],
-            "references": []
           }
         }
       ],
@@ -10059,54 +9963,6 @@
           "context": {
             "id": "<element-declaration>:c@[L11:C0, L20:C1]",
             "snippet": "Table c {\n... id7 int\n}"
-          }
-        },
-        {
-          "context": {
-            "id": "<element-declaration>:short_ref@[L23:C0, L23:C61]",
-            "snippet": "Ref short_... set null]"
-          }
-        },
-        {
-          "context": {
-            "id": "<element-declaration>:long_ref@[L26:C0, L28:C1]",
-            "snippet": "Ref long_r...cascade]\n}"
-          }
-        },
-        {
-          "context": {
-            "id": "<element-declaration>:error_ref2@[L30:C0, L32:C1]",
-            "snippet": "Ref error_... < b.id2\n}"
-          }
-        },
-        {
-          "context": {
-            "id": "<element-declaration>:error_ref3@[L34:C0, L36:C1]",
-            "snippet": "Ref error_...a_color]\n}"
-          }
-        },
-        {
-          "context": {
-            "id": "<element-declaration>:error_ref4@[L38:C0, L40:C1]",
-            "snippet": "Ref error_...goodbye]\n}"
-          }
-        },
-        {
-          "context": {
-            "id": "<element-declaration>:error_shortref2@[L42:C0, L42:C51]",
-            "snippet": "Ref error_...d5 < b.id5"
-          }
-        },
-        {
-          "context": {
-            "id": "<element-declaration>:error_shortref3@[L43:C0, L43:C56]",
-            "snippet": "Ref error_...t_a_color]"
-          }
-        },
-        {
-          "context": {
-            "id": "<element-declaration>:error_shortref4@[L44:C0, L44:C51]",
-            "snippet": "Ref error_...: goodbye]"
           }
         }
       ],
