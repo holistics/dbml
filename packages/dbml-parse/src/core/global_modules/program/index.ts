@@ -31,6 +31,7 @@ export const programModule: GlobalModule = {
     const ast = symbol.declaration;
     if (!(ast instanceof ProgramNode)) return Report.create([]);
 
+    // Collect and create schemas
     const schemaMembers = new Map<string, SchemaSymbol>();
     for (const element of ast.body) {
       const fullname = compiler.fullname(element).getValue();
