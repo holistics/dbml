@@ -1,7 +1,6 @@
-import { ElementDeclarationNode, SyntaxNode } from '@/core/parser/nodes';
+import { SyntaxNode, UseDeclarationNode, UseSpecifierNode, WildcardNode } from '@/core/parser/nodes';
 import type { Internable } from '@/core/types/internable';
 import { Filepath } from './filepath';
-import { ImportKind } from './keywords';
 
 export const enum SymbolKind {
   Schema = 'Schema',
@@ -52,18 +51,35 @@ export class NodeSymbol implements Internable<InternedNodeSymbol> {
   kind: SymbolKind;
   declaration?: SyntaxNode;
   filepath: Filepath;
+  useSpecifierDeclaration?: UseSpecifierNode | WildcardNode;
 
   constructor ({
     kind,
     declaration,
+    useSpecifierDeclaration,
   }: {
     kind: SymbolKind;
     declaration?: SyntaxNode;
+    useSpecifierDeclaration?: UseSpecifierNode | WildcardNode;
   }, id: NodeSymbolId, filepath: Filepath) {
     this.id = id;
     this.kind = kind;
     this.declaration = declaration;
     this.filepath = filepath;
+    this.useSpecifierDeclaration = useSpecifierDeclaration;
+  }
+
+  // Whether this symbol can be imported from other files
+  get canBeImported (): boolean {
+    const useDeclaration = this.useSpecifierDeclaration?.parentOfKind(UseDeclarationNode);
+    return !useDeclaration || useDeclaration.isReExport;
+  }
+
+  // Return the filepath that defines the real symbol
+  get originalFilepath (): Filepath {
+    const useDeclaration = this.useSpecifierDeclaration?.parentOfKind(UseDeclarationNode);
+    if (!useDeclaration) return this.filepath;
+    return useDeclaration.filepath;
   }
 
   intern (): InternedNodeSymbol {
@@ -126,36 +142,5 @@ export class SchemaSymbol extends NodeSymbol {
   get qualifiedName (): string[] {
     if (!this.parent) return [this.name];
     return [...this.parent.qualifiedName, this.name];
-  }
-}
-
-export class UseSymbol extends NodeSymbol {
-  absolutePath?: Filepath;
-  importKind?: ImportKind; // undefined === `*`
-  isReExport: boolean;
-
-  constructor (
-    {
-      absolutePath,
-      isReExport,
-      importKind,
-      declaration,
-    }: {
-      absolutePath?: Filepath;
-      importKind?: ImportKind;
-      isReExport: boolean;
-      declaration: SyntaxNode;
-    },
-    id: NodeSymbolId,
-    filepath: Filepath,
-  ) {
-    super({ kind: SymbolKind.Use, declaration }, id, filepath);
-    this.absolutePath = absolutePath;
-    this.importKind = importKind;
-    this.isReExport = isReExport;
-  }
-
-  isWildcardUse (): boolean {
-    return this.importKind === undefined;
   }
 }

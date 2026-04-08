@@ -12,7 +12,6 @@ import { indexesModule } from './indexes';
 import { checksModule } from './checks';
 import { programModule } from './program';
 import { schemaModule } from './schema';
-import { useModule } from './use';
 import type Compiler from '@/compiler/index';
 import type { SyntaxNode } from '@/core/parser/nodes';
 import Report from '@/core/report';
@@ -35,7 +34,6 @@ export const modules: GlobalModule[] = [
   noteModule,
   schemaModule,
   programModule,
-  useModule,
 ];
 
 // Chain-of-responsibility: iterate modules until one handles the node (returns non-PASS_THROUGH)

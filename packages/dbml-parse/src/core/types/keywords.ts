@@ -1,12 +1,23 @@
+import { SymbolKind } from './symbols';
+
 // Allowable import kinds for use declaration
 export enum ImportKind {
   Table = 'table',
   Enum = 'enum',
-  TableGroup = 'tableGroup',
-  TablePartial = 'tablePartial',
+  TableGroup = 'tablegroup',
+  TablePartial = 'tablepartial',
   Note = 'note',
   Schema = 'schema',
 }
+
+export const IMPORT_KINDS_TO_SYMBOL_KINDS = {
+  [ImportKind.Table]: SymbolKind.Table,
+  [ImportKind.Enum]: SymbolKind.Enum,
+  [ImportKind.TableGroup]: SymbolKind.TableGroup,
+  [ImportKind.TablePartial]: SymbolKind.TablePartial,
+  [ImportKind.Note]: SymbolKind.Note,
+  [ImportKind.Schema]: SymbolKind.Schema,
+};
 
 export enum ElementKind {
   Table = 'table',
