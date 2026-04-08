@@ -2,7 +2,6 @@ import { isElementNode } from '@/core/utils/expression';
 import { ElementKind } from '@/core/types/keywords';
 import { type SyntaxNode, type ElementDeclarationNode } from '@/core/parser/nodes';
 import type { SyntaxToken } from '@/core/lexer/tokens';
-import { NodeSymbol } from '@/core/types/symbols';
 import type { GlobalModule } from '../types';
 import { PASS_THROUGH, type PassThrough } from '@/constants';
 import Report from '@/core/report';
@@ -13,13 +12,6 @@ import ChecksInterpreter from './interpret';
 import { shouldInterpretNode } from '../utils';
 
 export const checksModule: GlobalModule = {
-  nestedSymbols (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol[]> | Report<PassThrough> {
-    if (!isElementNode(node, ElementKind.Checks)) {
-      return Report.create(PASS_THROUGH);
-    }
-    return new Report([]);
-  },
-
   bind (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
     if (!isElementNode(node, ElementKind.Checks)) return Report.create(PASS_THROUGH);
 

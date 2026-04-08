@@ -82,18 +82,6 @@ export const enumModule: GlobalModule = {
     return new Report(members, errors);
   },
 
-  nodeReferee (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol | undefined> | Report<PassThrough> { return Report.create(PASS_THROUGH); },
-
-  nestedSymbols (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol[]> | Report<PassThrough> {
-    if (isElementNode(node, ElementKind.Enum)) {
-      return getNodeMemberSymbols(compiler, node);
-    }
-    if (isElementFieldNode(node, ElementKind.Enum)) {
-      return new Report([]);
-    }
-    return Report.create(PASS_THROUGH);
-  },
-
   bind (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
     if (!isElementNode(node, ElementKind.Enum)) return Report.create(PASS_THROUGH);
 

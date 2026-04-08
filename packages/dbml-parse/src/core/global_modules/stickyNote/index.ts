@@ -32,15 +32,6 @@ export const noteModule: GlobalModule = {
     return new Report([]);
   },
 
-  nestedSymbols (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol[]> | Report<PassThrough> {
-    if (!isElementNode(node, ElementKind.Note)) {
-      return Report.create(PASS_THROUGH);
-    }
-    return new Report([]);
-  },
-
-  nodeReferee (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol | undefined> | Report<PassThrough> { return Report.create(PASS_THROUGH); },
-
   bind (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
     if (!isElementNode(node, ElementKind.Note)) return Report.create(PASS_THROUGH);
 

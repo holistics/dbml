@@ -18,7 +18,8 @@ import { destructureComplexVariable, getBody, isAccessExpression, isExpressionAV
 import { destructureComplexVariableTuple } from '@/core/utils/expression';
 import type { TokenPosition, RelationCardinality } from '@/core/types/schemaJson';
 import { CompileError, CompileErrorCode } from '@/core/errors';
-import { SyntaxTokenKind } from '@/core/lexer/tokens';
+import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
+import { getMemberChain } from '@/core/parser/utils';
 
 export function normalizeNoteContent (content: string): string {
   const lines = content.split('\n');
@@ -55,8 +56,9 @@ export function getTokenPosition (node: SyntaxNode): TokenPosition {
   };
 }
 
-export function getNodeMemberSymbols (compiler: Compiler, node: ElementDeclarationNode | ProgramNode): Report<NodeSymbol[]> {
-  const children = node instanceof ElementDeclarationNode ? getBody(node) : (node instanceof ProgramNode ? node.body : undefined);
+// Get all symbols syntactically defined inside `node`
+export function getNodeMemberSymbols (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol[]> {
+  const children = getMemberChain(node).filter((node) => node instanceof SyntaxNode);
   if (!children) {
     return new Report([]);
   }
@@ -64,7 +66,7 @@ export function getNodeMemberSymbols (compiler: Compiler, node: ElementDeclarati
   return children.reduce(
     (report, child) => {
       const symbol = compiler.nodeSymbol(child);
-      const nestedSymbols = compiler.nestedSymbols(child);
+      const nestedSymbols = getNodeMemberSymbols(compiler, child);
       return new Report(
         [
           ...report.getValue(),

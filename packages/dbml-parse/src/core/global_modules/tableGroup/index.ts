@@ -83,16 +83,6 @@ export const tableGroupModule: GlobalModule = {
     return Report.create(PASS_THROUGH);
   },
 
-  nestedSymbols (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol[]> | Report<PassThrough> {
-    if (isElementNode(node, ElementKind.TableGroup)) {
-      return getNodeMemberSymbols(compiler, node);
-    }
-    if (isElementFieldNode(node, ElementKind.TableGroup)) {
-      return new Report([]);
-    }
-    return Report.create(PASS_THROUGH);
-  },
-
   nodeReferee (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol | undefined> | Report<PassThrough> {
     if (!isExpressionAVariableNode(node)) return Report.create(PASS_THROUGH);
     if (!isInsideElementBody(node, ElementKind.TableGroup)) return Report.create(PASS_THROUGH);

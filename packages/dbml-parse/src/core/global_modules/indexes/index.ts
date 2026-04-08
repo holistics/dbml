@@ -35,7 +35,7 @@ export const indexesModule: GlobalModule = {
       if (!symbol.declaration) {
         return new Report([]);
       }
-      const symbols = compiler.nestedSymbols(symbol.declaration);
+      const symbols = getNodeMemberSymbols(compiler, symbol.declaration);
       if (symbols.hasValue(UNHANDLED)) {
         return new Report([]);
       }
@@ -43,13 +43,6 @@ export const indexesModule: GlobalModule = {
     }
     if (symbol.isKind(SymbolKind.IndexesField)) {
       return new Report([]);
-    }
-    return Report.create(PASS_THROUGH);
-  },
-
-  nestedSymbols (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol[]> | Report<PassThrough> {
-    if (isElementNode(node, ElementKind.Indexes)) {
-      return getNodeMemberSymbols(compiler, node);
     }
     return Report.create(PASS_THROUGH);
   },
