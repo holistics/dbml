@@ -1,12 +1,10 @@
 import type Compiler from '@/compiler/index';
 import {
-  ElementDeclarationNode,
   InfixExpressionNode,
   PostfixExpressionNode,
   PrefixExpressionNode,
   LiteralNode,
   PrimaryExpressionNode,
-  ProgramNode,
   TupleExpressionNode,
   VariableNode,
   SyntaxNode,
@@ -14,11 +12,11 @@ import {
 import { type NodeSymbol, SchemaSymbol, SymbolKind } from '@/core/types/symbols';
 import Report from '@/core/report';
 import { DEFAULT_SCHEMA_NAME, UNHANDLED } from '@/constants';
-import { destructureComplexVariable, getBody, isAccessExpression, isExpressionAVariableNode } from '@/core/utils/expression';
+import { destructureComplexVariable, isAccessExpression, isExpressionAVariableNode } from '@/core/utils/expression';
 import { destructureComplexVariableTuple } from '@/core/utils/expression';
 import type { TokenPosition, RelationCardinality } from '@/core/types/schemaJson';
 import { CompileError, CompileErrorCode } from '@/core/errors';
-import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
+import { SyntaxTokenKind } from '@/core/lexer/tokens';
 import { getMemberChain } from '@/core/parser/utils';
 
 export function normalizeNoteContent (content: string): string {
@@ -35,7 +33,7 @@ export function normalizeNoteContent (content: string): string {
 }
 
 export function shouldInterpretNode (compiler: Compiler, node: SyntaxNode): boolean {
-  const hasParseError = compiler.parse().getErrors().length > 0;
+  const hasParseError = compiler.parseProject().getErrors().length > 0;
   const hasValidateError = compiler.validate(node).getErrors().length > 0;
   const hasBindError = compiler.bind(node).getErrors().length > 0;
   return !hasParseError && !hasValidateError && !hasBindError;
