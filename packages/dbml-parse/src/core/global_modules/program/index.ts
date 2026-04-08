@@ -51,8 +51,6 @@ export const programModule: GlobalModule = {
     return Report.create([...schemaMembers.values(), ...publicMembers.getValue()]);
   },
 
-  nodeReferee (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol | undefined> | Report<PassThrough> { return Report.create(PASS_THROUGH); },
-
   bind (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
     if (!isProgramNode(node)) return Report.create(PASS_THROUGH);
     return new Binder(node, compiler).resolve();
