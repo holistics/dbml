@@ -2,6 +2,7 @@ import {
   CallExpressionNode,
   FunctionExpressionNode, ListExpressionNode, PrefixExpressionNode,
   ArrayNode,
+  PrimaryExpressionNode,
 } from '@/core/parser/nodes';
 import type { AttributeNode, SyntaxNode } from '@/core/parser/nodes';
 import { getTokenPosition } from '../utils';
@@ -48,7 +49,7 @@ export function interpretColumnType (typeNode?: SyntaxNode): ColumnType {
         typeSuffix = `(${args})${typeSuffix}`;
         rawTypeNode = rawTypeNode.callee;
       } else {
-        const indexer = `[${rawTypeNode.indexer?.elementList.map((e) => e?.name?.expression?.literal?.value ?? '').join(',') ?? ''}]`;
+        const indexer = `[${rawTypeNode.indexer?.elementList.map((e) => (e?.name as any)?.expression?.literal?.value ?? '').join(',') ?? ''}]`;
         typeSuffix = `${indexer}${typeSuffix}`;
         rawTypeNode = rawTypeNode.array;
       }

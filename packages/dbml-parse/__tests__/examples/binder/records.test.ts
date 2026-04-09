@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 import { NodeSymbol, SymbolKind } from '@/core/types/symbols';
-import { DEFAULT_SCHEMA_NAME } from '@/constants';
+import { DEFAULT_SCHEMA_NAME, UNHANDLED } from '@/constants';
 import { analyze } from '@tests/utils';
 
 describe('[example] records binder', () => {
@@ -54,7 +54,7 @@ describe('[example] records binder', () => {
     expect(result.getErrors().length).toBe(0);
 
     const { ast, compiler } = result.getValue();
-    const programSymbol = compiler.nodeSymbol(ast).getValue()!;
+    const programSymbol = compiler.nodeSymbol(ast).getFiltered(UNHANDLED)!;
     const authSchema = compiler.lookupMembers(programSymbol, SymbolKind.Schema, 'auth').getValue()!;
     const tableSymbol = compiler.lookupMembers(authSchema, SymbolKind.Table, 'users').getValue()!;
 
@@ -203,7 +203,7 @@ describe('[example] records binder', () => {
     expect(result.getErrors().length).toBe(0);
 
     const { ast, compiler } = result.getValue();
-    const programSymbol = compiler.nodeSymbol(ast).getValue()!;
+    const programSymbol = compiler.nodeSymbol(ast).getFiltered(UNHANDLED)!;
     const authSchema = compiler.lookupMembers(programSymbol, SymbolKind.Schema, 'auth').getValue()!;
     const enumSymbol = compiler.lookupMembers(authSchema, SymbolKind.Enum, 'role').getValue()!;
 
