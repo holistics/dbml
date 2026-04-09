@@ -3,7 +3,7 @@ import {
   FunctionExpressionNode, ListExpressionNode, PrefixExpressionNode,
   ArrayNode,
 } from '@/core/parser/nodes';
-import type { SyntaxNode } from '@/core/parser/nodes';
+import type { AttributeNode, SyntaxNode } from '@/core/parser/nodes';
 import { getTokenPosition } from '../utils';
 import {
   destructureComplexVariable, extractQuotedStringToken,
@@ -77,7 +77,7 @@ export function interpretColumnType (typeNode?: SyntaxNode): ColumnType {
   return columnType;
 }
 
-export function interpretInlineRefs (refs: any[]): InlineRef[] {
+export function interpretInlineRefs (refs: AttributeNode[]): InlineRef[] {
   const inlineRefs: InlineRef[] = [];
 
   for (const ref of refs) {

@@ -38,7 +38,7 @@ import { ElementKind } from '@/core/types/keywords';
 import { NodeSymbol, SymbolKind } from '@/core/types/symbols';
 import { PASS_THROUGH, UNHANDLED } from '@/constants';
 import { getTokenPosition, lookupMember, lookupInDefaultSchema } from '../utils';
-import { validatePrimaryKey, validateUnique } from './utils/constraints';
+import { validateForeignKeys, validatePrimaryKey, validateUnique } from './utils/constraints';
 import { buildMergedTableFromElement, getEnumMembers, parseNumericParams, parseLengthParam } from './utils/interpret';
 
 export default class RecordsInterpreter {
@@ -97,6 +97,8 @@ export default class RecordsInterpreter {
 
     // Validate unique constraints
     warnings.push(...validateUnique(tableRecord, table));
+
+    // FIXME: Validation of FK constraints are performed in the program module
 
     return warnings;
   }

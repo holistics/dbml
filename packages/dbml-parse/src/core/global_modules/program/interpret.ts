@@ -8,7 +8,7 @@ import { getTokenPosition, getMultiplicities } from '../utils';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import type { CompileWarning } from '@/core/errors';
 import { validateForeignKeys } from '../records/utils/constraints';
-import { buildMergedTableFromElement } from '../records/utils/interpret';
+import { buildMergedTableFromElement, extractInlineRefsFromTablePartials } from '../records/utils/interpret';
 import { getBody } from '@/core/utils/expression';
 
 // Strip internal-only properties from columns before exposing in the final Database output
@@ -181,6 +181,7 @@ export default class ProgramInterpreter {
     // Build a map of table info including merged tables (with partial columns) and record values.
     // Include ALL tables, even those without records (with empty values for FK target checking).
     const recordTableMap = new Map<string, { rows: TableRecord; mergedTable: Table }>();
+    const allRefs: Ref[] = [...db.refs]; // Collect both table partial refs and table refs
     for (const table of db.tables) {
       const key = `${table.schemaName ?? DEFAULT_SCHEMA_NAME}.${table.name}`;
       const merged = mergedTables.get(table) ?? table;
@@ -189,8 +190,9 @@ export default class ProgramInterpreter {
         rows: record ?? { schemaName: table.schemaName ?? undefined, tableName: table.name, columns: [], values: [], token: table.token },
         mergedTable: merged,
       });
+      allRefs.push(...extractInlineRefsFromTablePartials(table, db.tablePartials));
     }
-    warnings.push(...validateForeignKeys(db.refs, recordTableMap));
+    warnings.push(...validateForeignKeys(allRefs, recordTableMap));
 
     return new Report(db, errors, warnings);
   }

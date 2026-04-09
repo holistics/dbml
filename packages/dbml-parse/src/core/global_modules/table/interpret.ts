@@ -173,13 +173,13 @@ export class TableInterpreter {
 
   private interpretFields (fields: FunctionApplicationNode[]): CompileError[] {
     // Check for empty table via compiler symbol resolution
-    const symbolResult = this.compiler.nodeSymbol(this.declarationNode);
+    const symbol = this.compiler.nodeSymbol(this.declarationNode).getFiltered(UNHANDLED);
     let hasColumns = true;
-    if (!symbolResult.hasValue(UNHANDLED)) {
-      const membersResult = this.compiler.symbolMembers(symbolResult.getValue());
+    if (symbol) {
+      const membersResult = this.compiler.symbolMembers(symbol);
       const members = !membersResult.hasValue(UNHANDLED) ? membersResult.getValue() : [];
       // Filter to actual column members (excluding partial injections)
-      const columnMembers = members.filter((m: any) => {
+      const columnMembers = members.filter((m) => {
         if (!m.declaration) return false;
         const parent = m.declaration.parent;
         if (parent instanceof ElementDeclarationNode && parent !== this.declarationNode) return false;

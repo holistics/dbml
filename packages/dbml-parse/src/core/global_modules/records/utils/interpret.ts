@@ -2,11 +2,12 @@ import { ElementDeclarationNode, FunctionApplicationNode } from '@/core/parser/n
 import type Compiler from '@/compiler/index';
 import { SchemaSymbol, SymbolKind } from '@/core/types/symbols';
 import { UNHANDLED } from '@/constants';
-import type { Table, Column, TablePartial } from '@/core/types/schemaJson';
+import type { Table, Column, TablePartial, Ref } from '@/core/types/schemaJson';
 import { isValidPartialInjection } from '@/core/utils/validate';
 import { extractVariableFromExpression, getBody, isElementNode } from '@/core/utils/expression';
 import { ElementKind } from '@/core/types';
 import { uniqBy } from 'lodash-es';
+import { getMultiplicities } from '../../utils';
 
 // Build a Table object from an element node using interpret (includes indexes, checks, etc.)
 // and symbolMembers (includes partial-injected columns).
@@ -142,11 +143,11 @@ export function parseNumericParams (column: Column): { precision: number; scale:
   if (parts.length === 2) {
     const precision = parseInt(parts[0], 10);
     const scale = parseInt(parts[1], 10);
-    if (!isNaN(precision) && !isNaN(scale)) return { precision, scale };
+    if (!Number.isNaN(precision) && !Number.isNaN(scale)) return { precision, scale };
   }
   if (parts.length === 1) {
     const precision = parseInt(parts[0], 10);
-    if (!isNaN(precision)) return { precision, scale: 0 };
+    if (!Number.isNaN(precision)) return { precision, scale: 0 };
   }
   return undefined;
 }
@@ -155,6 +156,52 @@ export function parseLengthParam (column: Column): { length: number } | undefine
   const args = column.type.args;
   if (!args) return undefined;
   const length = parseInt(args.trim(), 10);
-  if (!isNaN(length)) return { length };
+  if (!Number.isNaN(length)) return { length };
   return undefined;
+}
+
+export function extractInlineRefsFromTablePartials (table: Table, tablePartials: TablePartial[]): Ref[] {
+  const refs: Ref[] = [];
+  const originalFieldNames = new Set(table.fields.map((f) => f.name));
+
+  // Process partials in the same order as mergeTableAndPartials
+  for (const tablePartial of [...table.partials].reverse()) {
+    const { name } = tablePartial;
+    const partial = tablePartials.find((p) => p.name === name);
+    if (!partial) continue;
+
+    // Extract inline refs from partial fields
+    for (const field of partial.fields) {
+      // Skip if this field is overridden by the original table
+      if (originalFieldNames.has(field.name)) continue;
+
+      for (const inlineRef of field.inline_refs) {
+        const multiplicities = getMultiplicities(inlineRef.relation);
+        if (!multiplicities) continue;
+        refs.push({
+          name: null,
+          schemaName: null,
+          token: inlineRef.token,
+          endpoints: [
+            {
+              schemaName: inlineRef.schemaName,
+              tableName: inlineRef.tableName,
+              fieldNames: inlineRef.fieldNames,
+              token: inlineRef.token,
+              relation: multiplicities[1],
+            },
+            {
+              schemaName: table.schemaName,
+              tableName: table.name,
+              fieldNames: [field.name],
+              token: field.token,
+              relation: multiplicities[0],
+            },
+          ],
+        });
+      }
+    }
+  }
+
+  return refs;
 }

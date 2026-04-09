@@ -11,8 +11,6 @@ import {
 import { DEFAULT_SCHEMA_NAME } from '@/constants';
 import { isEmpty, flatMap } from 'lodash-es';
 
-type CompileError = CompileWarning;
-
 type TableInfo = {
   rows: TableRecord;
   mergedTable: Table;
@@ -21,7 +19,7 @@ type TableInfo = {
 export function validateForeignKeys (
   allRefs: Ref[],
   allRecords: Map<string, TableInfo>,
-): CompileError[] {
+): CompileWarning[] {
   return flatMap(allRefs, (ref) => validateRef(ref, allRecords));
 }
 
@@ -35,7 +33,7 @@ function validateFkSourceToTarget (
   targetTable: TableInfo,
   sourceEndpoint: RefEndpoint,
   targetEndpoint: RefEndpoint,
-): CompileError[] {
+): CompileWarning[] {
   if (isEmpty(sourceTable.rows.values)) return [];
 
   const sourceColumnIndex = buildColumnIndex(sourceTable.rows);
@@ -79,7 +77,7 @@ function validateFkSourceToTarget (
   });
 }
 
-function validateRef (ref: Ref, tableInfoMap: Map<string, TableInfo>): CompileError[] {
+function validateRef (ref: Ref, tableInfoMap: Map<string, TableInfo>): CompileWarning[] {
   if (!ref.endpoints) return [];
 
   const [endpoint1, endpoint2] = ref.endpoints;
@@ -98,7 +96,7 @@ function validateRelationship (
   table2: TableInfo,
   endpoint1: RefEndpoint,
   endpoint2: RefEndpoint,
-): CompileError[] {
+): CompileWarning[] {
   const rel1 = endpoint1.relation;
   const rel2 = endpoint2.relation;
 
