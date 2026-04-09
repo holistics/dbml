@@ -234,17 +234,21 @@ export function syntaxTokenToSnapshot (
     value,
     leadingTrivia,
     trailingTrivia,
-    leadingInvalid,
-    trailingInvalid,
+    leadingInvalid, // Filter this out
+    trailingInvalid, // Filter this out
     isInvalid,
+    startPos, // Filter this out
+    endPos, // Filter this out
+    start, // Filter this out
+    end, // Filter this out
   } = token;
   if (simple) {
     return {
       context: { // context should always be at the top
         id: tokenReadableId,
         snippet,
+        isInvalid,
       },
-      isInvalid,
     };
   }
   const result = {
@@ -253,13 +257,10 @@ export function syntaxTokenToSnapshot (
       snippet,
     },
     ...sortObject({
-      isInvalid,
       kind,
       value,
       leadingTrivia: leadingTrivia.map((t) => t.value).join(''),
       trailingTrivia: trailingTrivia.map((t) => t.value).join(''),
-      leadingInvalid: leadingInvalid.map((t) => t.value).join(''),
-      trailingInvalid: trailingInvalid.map((t) => t.value).join(''),
     }),
   };
   return result;
@@ -276,6 +277,10 @@ export function syntaxNodeToSnapshot (
     id, // Filter this out
     symbol,
     referee,
+    startPos, // Filter this out
+    endPos, // Filter this out
+    start, // Filter this out
+    end, // Filter this out
     ...props
   } = node;
   if (node instanceof ElementDeclarationNode) {
