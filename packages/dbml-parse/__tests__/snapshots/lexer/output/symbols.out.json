@@ -6,11 +6,7 @@
         "id": "token-<op>:+@[L0:C0, L0:C1]",
         "snippet": "+"
       },
-      "isInvalid": false,
-      "kind": "<op>",
-      "leadingInvalid": "",
       "leadingTrivia": "",
-      "trailingInvalid": "",
       "trailingTrivia": " ",
       "value": "+"
     },
@@ -19,11 +15,7 @@
         "id": "token-<op>:-@[L0:C2, L0:C3]",
         "snippet": "-"
       },
-      "isInvalid": false,
-      "kind": "<op>",
-      "leadingInvalid": "",
       "leadingTrivia": "",
-      "trailingInvalid": "",
       "trailingTrivia": " ",
       "value": "-"
     },
@@ -32,11 +24,7 @@
         "id": "token-<op>:*@[L0:C4, L0:C5]",
         "snippet": "*"
       },
-      "isInvalid": false,
-      "kind": "<op>",
-      "leadingInvalid": "",
       "leadingTrivia": "",
-      "trailingInvalid": "",
       "trailingTrivia": " ",
       "value": "*"
     },
@@ -45,11 +33,7 @@
         "id": "token-<op>:/@[L0:C6, L0:C7]",
         "snippet": "/"
       },
-      "isInvalid": false,
-      "kind": "<op>",
-      "leadingInvalid": "",
       "leadingTrivia": "",
-      "trailingInvalid": "",
       "trailingTrivia": "\n",
       "value": "/"
     },
@@ -58,11 +42,7 @@
         "id": "token-<op>:!@[L1:C0, L1:C1]",
         "snippet": "!"
       },
-      "isInvalid": false,
-      "kind": "<op>",
-      "leadingInvalid": "",
       "leadingTrivia": "",
-      "trailingInvalid": "",
       "trailingTrivia": "\n",
       "value": "!"
     },
@@ -71,11 +51,7 @@
         "id": "token-<op>:=@[L2:C0, L2:C1]",
         "snippet": "="
       },
-      "isInvalid": false,
-      "kind": "<op>",
-      "leadingInvalid": "",
       "leadingTrivia": "",
-      "trailingInvalid": "",
       "trailingTrivia": "\n",
       "value": "="
     },
@@ -84,11 +60,7 @@
         "id": "token-<op>:==@[L3:C0, L3:C2]",
         "snippet": "=="
       },
-      "isInvalid": false,
-      "kind": "<op>",
-      "leadingInvalid": "",
       "leadingTrivia": "",
-      "trailingInvalid": "",
       "trailingTrivia": " ",
       "value": "=="
     },
@@ -97,11 +69,7 @@
         "id": "token-<op>:!=@[L3:C3, L3:C5]",
         "snippet": "!="
       },
-      "isInvalid": false,
-      "kind": "<op>",
-      "leadingInvalid": "",
       "leadingTrivia": "",
-      "trailingInvalid": "",
       "trailingTrivia": " ",
       "value": "!="
     },
@@ -110,11 +78,7 @@
         "id": "token-<op>:>@[L3:C6, L3:C7]",
         "snippet": ">"
       },
-      "isInvalid": false,
-      "kind": "<op>",
-      "leadingInvalid": "",
       "leadingTrivia": "",
-      "trailingInvalid": "",
       "trailingTrivia": " ",
       "value": ">"
     },
@@ -123,11 +87,7 @@
         "id": "token-<op>:<@[L3:C8, L3:C9]",
         "snippet": "<"
       },
-      "isInvalid": false,
-      "kind": "<op>",
-      "leadingInvalid": "",
       "leadingTrivia": "",
-      "trailingInvalid": "",
       "trailingTrivia": " ",
       "value": "<"
     },
@@ -136,11 +96,7 @@
         "id": "token-<op>:<=@[L3:C10, L3:C12]",
         "snippet": "<="
       },
-      "isInvalid": false,
-      "kind": "<op>",
-      "leadingInvalid": "",
       "leadingTrivia": "",
-      "trailingInvalid": "",
       "trailingTrivia": " ",
       "value": "<="
     },
@@ -149,11 +105,7 @@
         "id": "token-<op>:>=@[L3:C13, L3:C15]",
         "snippet": ">="
       },
-      "isInvalid": false,
-      "kind": "<op>",
-      "leadingInvalid": "",
       "leadingTrivia": "",
-      "trailingInvalid": "",
       "trailingTrivia": "\n",
       "value": ">="
     },
@@ -162,11 +114,7 @@
         "id": "token-<colon>::@[L4:C0, L4:C1]",
         "snippet": ":"
       },
-      "isInvalid": false,
-      "kind": "<colon>",
-      "leadingInvalid": "",
       "leadingTrivia": "",
-      "trailingInvalid": "",
       "trailingTrivia": " ",
       "value": ":"
     },
@@ -175,11 +123,7 @@
         "id": "token-<comma>:,@[L4:C2, L4:C3]",
         "snippet": ","
       },
-      "isInvalid": false,
-      "kind": "<comma>",
-      "leadingInvalid": "",
       "leadingTrivia": "",
-      "trailingInvalid": "",
       "trailingTrivia": "\n",
       "value": ","
     },
@@ -188,11 +132,7 @@
         "id": "token-<lbracket>:[@[L5:C0, L5:C1]",
         "snippet": "["
       },
-      "isInvalid": false,
-      "kind": "<lbracket>",
-      "leadingInvalid": "",
       "leadingTrivia": "",
-      "trailingInvalid": "",
       "trailingTrivia": "",
       "value": "["
     },
@@ -201,11 +141,7 @@
         "id": "token-<rbracket>:]@[L5:C1, L5:C2]",
         "snippet": "]"
       },
-      "isInvalid": false,
-      "kind": "<rbracket>",
-      "leadingInvalid": "",
       "leadingTrivia": "",
-      "trailingInvalid": "",
       "trailingTrivia": " ",
       "value": "]"
     },
@@ -214,11 +150,7 @@
         "id": "token-<lparen>:(@[L5:C3, L5:C4]",
         "snippet": "("
       },
-      "isInvalid": false,
-      "kind": "<lparen>",
-      "leadingInvalid": "",
       "leadingTrivia": "",
-      "trailingInvalid": "",
       "trailingTrivia": "",
       "value": "("
     },
@@ -227,11 +159,7 @@
         "id": "token-<rparen>:)@[L5:C4, L5:C5]",
         "snippet": ")"
       },
-      "isInvalid": false,
-      "kind": "<rparen>",
-      "leadingInvalid": "",
       "leadingTrivia": "",
-      "trailingInvalid": "",
       "trailingTrivia": " ",
       "value": ")"
     },
@@ -240,11 +168,7 @@
         "id": "token-<lbrace>:{@[L5:C6, L5:C7]",
         "snippet": "{"
       },
-      "isInvalid": false,
-      "kind": "<lbrace>",
-      "leadingInvalid": "",
       "leadingTrivia": "",
-      "trailingInvalid": "",
       "trailingTrivia": "",
       "value": "{"
     },
@@ -253,11 +177,7 @@
         "id": "token-<rbrace>:}@[L5:C7, L5:C8]",
         "snippet": "}"
       },
-      "isInvalid": false,
-      "kind": "<rbrace>",
-      "leadingInvalid": "",
       "leadingTrivia": "",
-      "trailingInvalid": "",
       "trailingTrivia": "\n",
       "value": "}"
     },
@@ -266,11 +186,7 @@
         "id": "token-<op>:.@[L6:C0, L6:C1]",
         "snippet": "."
       },
-      "isInvalid": false,
-      "kind": "<op>",
-      "leadingInvalid": "",
       "leadingTrivia": "",
-      "trailingInvalid": "",
       "trailingTrivia": "\n",
       "value": "."
     },
@@ -279,11 +195,7 @@
         "id": "token-<op>:>@[L7:C0, L7:C1]",
         "snippet": ">"
       },
-      "isInvalid": false,
-      "kind": "<op>",
-      "leadingInvalid": "",
       "leadingTrivia": "",
-      "trailingInvalid": "",
       "trailingTrivia": " ",
       "value": ">"
     },
@@ -292,11 +204,7 @@
         "id": "token-<op>:<@[L7:C2, L7:C3]",
         "snippet": "<"
       },
-      "isInvalid": false,
-      "kind": "<op>",
-      "leadingInvalid": "",
       "leadingTrivia": "",
-      "trailingInvalid": "",
       "trailingTrivia": " ",
       "value": "<"
     },
@@ -305,11 +213,7 @@
         "id": "token-<op>:<>@[L7:C4, L7:C6]",
         "snippet": "<>"
       },
-      "isInvalid": false,
-      "kind": "<op>",
-      "leadingInvalid": "",
       "leadingTrivia": "",
-      "trailingInvalid": "",
       "trailingTrivia": "\n",
       "value": "<>"
     },
@@ -318,11 +222,7 @@
         "id": "token-<op>:~@[L8:C0, L8:C1]",
         "snippet": "~"
       },
-      "isInvalid": false,
-      "kind": "<op>",
-      "leadingInvalid": "",
       "leadingTrivia": "",
-      "trailingInvalid": "",
       "trailingTrivia": "",
       "value": "~"
     },
@@ -331,11 +231,7 @@
         "id": "token-<eof>:@[L8:C1, L8:C1]",
         "snippet": ""
       },
-      "isInvalid": false,
-      "kind": "<eof>",
-      "leadingInvalid": "",
       "leadingTrivia": "",
-      "trailingInvalid": "",
       "trailingTrivia": "",
       "value": ""
     }

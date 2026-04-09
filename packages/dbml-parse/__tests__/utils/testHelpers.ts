@@ -230,7 +230,7 @@ export function syntaxTokenToSnapshot (
   const tokenReadableId = getReadableId(token);
   const snippet = getCodeSnippet(token, compiler.parse.source());
   const {
-    kind,
+    kind, // Filter this out as it's in the readable id
     value,
     leadingTrivia,
     trailingTrivia,
@@ -257,7 +257,6 @@ export function syntaxTokenToSnapshot (
       snippet,
     },
     ...sortObject({
-      kind,
       value,
       leadingTrivia: leadingTrivia.map((t) => t.value).join(''),
       trailingTrivia: trailingTrivia.map((t) => t.value).join(''),
@@ -275,6 +274,7 @@ export function syntaxNodeToSnapshot (
   const snippet = getCodeSnippet(node, compiler.parse.source());
   const {
     id, // Filter this out
+    kind, // Filter this out as it's in the readable id
     symbol,
     referee,
     startPos, // Filter this out

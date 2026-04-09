@@ -6,11 +6,7 @@
         "id": "token-<color>:#1234@[L0:C0, L0:C5]",
         "snippet": "#1234"
       },
-      "isInvalid": false,
-      "kind": "<color>",
-      "leadingInvalid": "",
       "leadingTrivia": "",
-      "trailingInvalid": "",
       "trailingTrivia": " \n",
       "value": "#1234"
     },
@@ -19,11 +15,7 @@
         "id": "token-<color>:#12acbd@[L1:C0, L1:C7]",
         "snippet": "#12acbd"
       },
-      "isInvalid": false,
-      "kind": "<color>",
-      "leadingInvalid": "",
       "leadingTrivia": "",
-      "trailingInvalid": "",
       "trailingTrivia": "",
       "value": "#12acbd"
     },
@@ -32,11 +24,7 @@
         "id": "token-<eof>:@[L1:C7, L1:C7]",
         "snippet": ""
       },
-      "isInvalid": false,
-      "kind": "<eof>",
-      "leadingInvalid": "",
       "leadingTrivia": "",
-      "trailingInvalid": "",
       "trailingTrivia": "",
       "value": ""
     }
