@@ -21,7 +21,7 @@ import SymbolFactory from '@/core/types/symbolFactory';
 import { lookupMembers } from './queries/lookupMembers';
 import { symbolNames } from './queries/symbolName';
 import { SyntaxNodeIdGenerator } from '@/core/parser/nodes';
-import { parse } from './queries/pipeline/parse';
+import { parseFile } from './queries/pipeline/parse';
 
 // Re-export utilities
 export { splitQualifiedIdentifier, unescapeString, escapeString, formatRecordValue, isValidIdentifier, addDoubleQuoteIfNeeded };
@@ -86,7 +86,7 @@ export default class Compiler {
   interpret = this.query(interpret);
 
   // local queries
-  parse = this.query(parse);
+  parseFile = this.query(parseFile);
   validate = this.query(validate);
   fullname = this.query(fullname);
   symbolNames = this.query(symbolNames);
@@ -98,22 +98,22 @@ export default class Compiler {
   }
 
   // @deprecated - legacy APIs for services compatibility
-  readonly _token = {
+  readonly token = {
     invalidStream: this.query(invalidStream),
     flatStream: this.query(flatStream),
   };
 
   // @deprecated - legacy APIs for services compatibility
-  readonly _parse = {
+  readonly parse = {
     source: () => this.source as Readonly<string>,
-    ast: () => this.parse().getValue().ast,
+    ast: () => this.parseFile().getValue().ast,
     _: () => {
-      const ast = this.parse().getValue().ast;
+      const ast = this.parseFile().getValue().ast;
       this.bind(ast);
       return this.interpret(ast);
     },
     publicSymbolTable: () => {
-      const ast = this.parse().getValue().ast;
+      const ast = this.parseFile().getValue().ast;
       const sym = this.nodeSymbol(ast);
       if (sym.hasValue(UNHANDLED)) return undefined;
       const programMembers = this.symbolMembers(sym.getValue());
@@ -135,7 +135,7 @@ export default class Compiler {
   };
 
   // @deprecated - legacy APIs for services compatibility
-  readonly _container = {
+  readonly container = {
     stack: this.query(containerStack),
     token: this.query(containerToken),
     element: this.query(containerElement),

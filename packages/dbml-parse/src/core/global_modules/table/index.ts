@@ -140,7 +140,7 @@ export const tableModule: GlobalModule = {
       return Report.create(PASS_THROUGH);
     }
 
-    const programNode = compiler.parse().getValue().ast;
+    const programNode = compiler.parseFile().getValue().ast;
     const globalSymbol = compiler.nodeSymbol(programNode).getValue();
 
     if (globalSymbol === UNHANDLED) {

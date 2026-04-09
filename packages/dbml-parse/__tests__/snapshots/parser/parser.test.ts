@@ -28,7 +28,7 @@ describe('[snapshot] parser', () => {
 
     const output = serializeParserResult(
       compiler,
-      compiler.parse().map(({ ast }) => ast),
+      compiler.parseFile().map(({ ast }) => ast),
     );
     it(testName, () => expect(output).toMatchFileSnapshot(path.resolve(__dirname, `./output/${testName}.out.json`)));
   });

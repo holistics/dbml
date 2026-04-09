@@ -6,11 +6,11 @@ import { type NodeSymbol, SchemaSymbol } from '@/core/types/symbols';
 import { DEFAULT_SCHEMA_NAME, UNHANDLED } from '@/constants';
 
 export function ast (this: Compiler): Readonly<ProgramNode> {
-  return this.parse().getValue().ast;
+  return this.parseFile().getValue().ast;
 }
 
 function compile (compiler: Compiler) {
-  const parseResult = compiler.parse();
+  const parseResult = compiler.parseFile();
   const astNode = parseResult.getValue().ast;
   compiler.bind(astNode);
   const interpretResult = compiler.interpret(astNode);
@@ -28,11 +28,11 @@ export function warnings (this: Compiler): readonly Readonly<CompileWarning>[] {
 }
 
 export function tokens (this: Compiler): readonly Readonly<SyntaxToken>[] {
-  return this.parse().getValue().tokens;
+  return this.parseFile().getValue().tokens;
 }
 
 export function publicSymbolTable (this: Compiler): readonly Readonly<NodeSymbol>[] | undefined {
-  const astNode = this.parse().getValue().ast;
+  const astNode = this.parseFile().getValue().ast;
   const sym = this.nodeSymbol(astNode);
   if (sym.hasValue(UNHANDLED)) return undefined;
   const programMembers = this.symbolMembers(sym.getValue());

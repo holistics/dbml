@@ -32,7 +32,7 @@ export const recordsModule: GlobalModule = {
     const recordsNode = node.parentOfKind(ElementDeclarationNode);
     if (!recordsNode?.isKind(ElementKind.Records)) return Report.create(PASS_THROUGH);
 
-    const programNode = compiler.parse().getValue().ast;
+    const programNode = compiler.parseFile().getValue().ast;
     const globalSymbol = compiler.nodeSymbol(programNode).getValue();
     if (globalSymbol === UNHANDLED) return Report.create(undefined);
 

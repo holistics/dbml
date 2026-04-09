@@ -130,7 +130,7 @@ function getTableAndColumnsOfRecords (records: ElementDeclarationNode, compiler:
   const tableName = tableNameFragments.at(-1) ?? '';
   const schemaName = tableNameFragments.length > 1 ? tableNameFragments.slice(0, -1).join('.') : undefined;
 
-  const ast = compiler.parse().getValue().ast;
+  const ast = compiler.parseFile().getValue().ast;
   const programSymbol = compiler.nodeSymbol(ast);
   if (programSymbol.hasValue(UNHANDLED)) return { table: undefined, mergedColumns: [] };
 

@@ -35,7 +35,7 @@ export function normalizeNoteContent (content: string): string {
 }
 
 export function shouldInterpretNode (compiler: Compiler, node: SyntaxNode): boolean {
-  const hasParseError = compiler.parse().getErrors().length > 0;
+  const hasParseError = compiler.parseFile().getErrors().length > 0;
   const hasValidateError = compiler.validate(node).getErrors().length > 0;
   const hasBindError = compiler.bind(node).getErrors().length > 0;
   return !hasParseError && !hasValidateError && !hasBindError;
@@ -165,7 +165,7 @@ export function lookupMember (
       new CompileError(
         CompileErrorCode.BINDING_ERROR,
         `${kindLabel} '${name}' does not exist in ${scopeLabel}`,
-        errorNode ?? parentSymbol.declaration ?? compiler.parse().getValue().ast,
+        errorNode ?? parentSymbol.declaration ?? compiler.parseFile().getValue().ast,
       ),
     ]);
   }
