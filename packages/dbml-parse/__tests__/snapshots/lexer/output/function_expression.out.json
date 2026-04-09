@@ -7,9 +7,9 @@
       "token": {
         "context": {
           "id": "token-<function-expression>:`\r\n@[L6:C43, L7:C0]",
-          "snippet": "`\r\n"
-        },
-        "isInvalid": true
+          "snippet": "`\r\n",
+          "isInvalid": true
+        }
       }
     }
   ],
@@ -19,11 +19,7 @@
         "id": "token-<function-expression>:id * 2@[L0:C0, L0:C8]",
         "snippet": "`id * 2`"
       },
-      "isInvalid": false,
-      "kind": "<function-expression>",
-      "leadingInvalid": "",
       "leadingTrivia": "",
-      "trailingInvalid": "",
       "trailingTrivia": " ",
       "value": "id * 2"
     },
@@ -32,11 +28,7 @@
         "id": "token-<function-expression>:id@[L0:C9, L0:C13]",
         "snippet": "`id`"
       },
-      "isInvalid": false,
-      "kind": "<function-expression>",
-      "leadingInvalid": "",
       "leadingTrivia": "",
-      "trailingInvalid": "",
       "trailingTrivia": " \n",
       "value": "id"
     },
@@ -45,11 +37,7 @@
         "id": "token-<function-expression>:\r\n    id * 3\r\n@[L2:C0, L4:C1]",
         "snippet": "`\r\n    id * 3\r\n`"
       },
-      "isInvalid": false,
-      "kind": "<function-expression>",
-      "leadingInvalid": "",
       "leadingTrivia": "\n",
-      "trailingInvalid": "",
       "trailingTrivia": "\n",
       "value": "\r\n    id * 3\r\n"
     },
@@ -58,11 +46,7 @@
         "id": "token-<function-expression>:no escaped supported! this is an error! \\@[L6:C0, L6:C43]",
         "snippet": "`no escape... error! \\`"
       },
-      "isInvalid": false,
-      "kind": "<function-expression>",
-      "leadingInvalid": "",
       "leadingTrivia": "\n",
-      "trailingInvalid": "`\r\n",
       "trailingTrivia": "",
       "value": "no escaped supported! this is an error! \\"
     },
@@ -71,11 +55,7 @@
         "id": "token-<eof>:@[L7:C0, L7:C0]",
         "snippet": ""
       },
-      "isInvalid": false,
-      "kind": "<eof>",
-      "leadingInvalid": "",
       "leadingTrivia": "",
-      "trailingInvalid": "",
       "trailingTrivia": "",
       "value": ""
     }

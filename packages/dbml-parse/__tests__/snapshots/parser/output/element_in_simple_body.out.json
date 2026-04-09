@@ -30,73 +30,35 @@
                 "id": "token-<colon>::@[L0:C4, L0:C5]",
                 "snippet": ":"
               },
-              "isInvalid": false,
-              "kind": "<colon>",
-              "leadingInvalid": "",
               "leadingTrivia": "",
-              "trailingInvalid": "EnumE{}",
               "trailingTrivia": " ",
               "value": ":"
             },
-            "end": 5,
-            "endPos": {
-              "column": 5,
-              "line": 0,
-              "offset": 5
-            },
             "fullEnd": 6,
             "fullStart": 0,
-            "kind": "<element-declaration>",
-            "start": 0,
-            "startPos": {
-              "column": 0,
-              "line": 0,
-              "offset": 0
-            },
             "type": {
               "context": {
                 "id": "token-<identifier>:Note@[L0:C0, L0:C4]",
                 "snippet": "Note"
               },
-              "isInvalid": false,
-              "kind": "<identifier>",
-              "leadingInvalid": "",
               "leadingTrivia": "",
-              "trailingInvalid": "",
               "trailingTrivia": "",
               "value": "Note"
             }
           }
         }
       ],
-      "end": 15,
-      "endPos": {
-        "column": 15,
-        "line": 0,
-        "offset": 15
-      },
       "eof": {
         "context": {
           "id": "token-<eof>:@[L0:C15, L0:C15]",
           "snippet": ""
         },
-        "isInvalid": false,
-        "kind": "<eof>",
-        "leadingInvalid": "",
         "leadingTrivia": "",
-        "trailingInvalid": "",
         "trailingTrivia": "",
         "value": ""
       },
       "fullEnd": 15,
-      "fullStart": 0,
-      "kind": "<program>",
-      "start": 0,
-      "startPos": {
-        "column": 0,
-        "line": 0,
-        "offset": 0
-      }
+      "fullStart": 0
     }
   },
   "warnings": []
