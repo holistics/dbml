@@ -792,7 +792,11 @@
         "id": "<program>@[L0:C0, L5:C0]",
         "snippet": "Test CallE...a.b()\r\n}\r\n"
       },
-      "members": [],
+      "members": [
+        {
+          "context": {}
+        }
+      ],
       "references": []
     }
   },

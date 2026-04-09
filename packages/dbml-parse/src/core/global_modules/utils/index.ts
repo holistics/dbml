@@ -1,44 +1,66 @@
-import type Compiler from '@/compiler/index';
-import {
-  ElementDeclarationNode,
-  InfixExpressionNode,
-  PostfixExpressionNode,
-  PrefixExpressionNode,
-  LiteralNode,
-  PrimaryExpressionNode,
-  ProgramNode,
-  TupleExpressionNode,
-  VariableNode,
-  SyntaxNode,
-} from '@/core/parser/nodes';
-import { type NodeSymbol, SchemaSymbol, SymbolKind } from '@/core/types/symbols';
-import Report from '@/core/report';
+import Compiler from '@/compiler';
 import { DEFAULT_SCHEMA_NAME, UNHANDLED } from '@/constants';
-import { destructureComplexVariable, getBody, isAccessExpression, isExpressionAVariableNode } from '@/core/utils/expression';
-import { destructureComplexVariableTuple } from '@/core/utils/expression';
-import type { TokenPosition, RelationCardinality } from '@/core/types/schemaJson';
 import { CompileError, CompileErrorCode } from '@/core/errors';
-import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
+import { SyntaxTokenKind } from '@/core/lexer/tokens';
+import { ArrayNode, CallExpressionNode, FunctionExpressionNode, InfixExpressionNode, LiteralNode, PostfixExpressionNode, PrefixExpressionNode, PrimaryExpressionNode, SyntaxNode, TupleExpressionNode, VariableNode } from '@/core/parser/nodes';
 import { getMemberChain } from '@/core/parser/utils';
+import Report from '@/core/report';
+import { ColumnType, NodeSymbol, RelationCardinality, SchemaSymbol, SymbolKind, Table, TokenPosition } from '@/core/types';
+import { destructureComplexVariable, destructureComplexVariableTuple, destructureMemberAccessExpression, extractQuotedStringToken, extractVariableFromExpression, extractVarNameFromPrimaryVariable, getNumberTextFromExpression, isAccessExpression, isDotDelimitedIdentifier, isExpressionAnIdentifierNode, isExpressionAQuotedString, isExpressionASignedNumberExpression, isExpressionAVariableNode, parseNumber } from '@/core/utils/expression';
+import { zip } from 'lodash-es';
 
-export function normalizeNoteContent (content: string): string {
-  const lines = content.split('\n');
+export function extractNamesFromRefOperand (operand: SyntaxNode, ownerSchema?: string | null, ownerName?: string): { schemaName: string | null; tableName: string; fieldNames: string[] } {
+  const { variables, tupleElements } = destructureComplexVariableTuple(operand)!;
 
-  // Top empty lines are trimmed
-  const trimmedTopEmptyLines = lines.slice(lines.findIndex((line) => line.trimStart() !== ''));
+  const tupleNames = tupleElements?.map((e) => extractVarNameFromPrimaryVariable(e)!);
+  const variableNames = variables?.map((e) => extractVarNameFromPrimaryVariable(e)!);
 
-  // Calculate min-indentation, empty lines are ignored
-  const nonEmptyLines = trimmedTopEmptyLines.filter((line) => line.trimStart());
-  const minIndent = Math.min(...nonEmptyLines.map((line) => line.length - line.trimStart().length));
+  if (tupleElements?.length) {
+    if (variables?.length === 0) {
+      return {
+        schemaName: ownerSchema ?? null,
+        tableName: ownerName ?? '',
+        fieldNames: tupleNames,
+      };
+    }
 
-  return trimmedTopEmptyLines.map((line) => line.slice(minIndent)).join('\n');
+    return {
+      tableName: variableNames.pop()!,
+      schemaName: variableNames.pop() ?? null,
+      fieldNames: tupleNames,
+    };
+  }
+
+  if (variables.length === 1) {
+    return {
+      schemaName: ownerSchema ?? null,
+      tableName: ownerName ?? '',
+      fieldNames: [variableNames[0]],
+    };
+  }
+
+  return {
+    fieldNames: [variableNames.pop()!],
+    tableName: variableNames.pop()!,
+    schemaName: variableNames.pop() || null,
+  };
 }
 
-export function shouldInterpretNode (compiler: Compiler, node: SyntaxNode): boolean {
-  const hasParseError = compiler.parseFile().getErrors().length > 0;
-  const hasValidateError = compiler.validate(node).getErrors().length > 0;
-  const hasBindError = compiler.bind(node).getErrors().length > 0;
-  return !hasParseError && !hasValidateError && !hasBindError;
+export function getMultiplicities (
+  op: string,
+): [RelationCardinality, RelationCardinality] {
+  switch (op) {
+    case '<':
+      return ['1', '*'];
+    case '<>':
+      return ['*', '*'];
+    case '>':
+      return ['*', '1'];
+    case '-':
+      return ['1', '1'];
+    default:
+      throw new Error('Invalid relation op');
+  }
 }
 
 export function getTokenPosition (node: SyntaxNode): TokenPosition {
@@ -54,6 +76,208 @@ export function getTokenPosition (node: SyntaxNode): TokenPosition {
       column: node.endPos.column + 1,
     },
   };
+}
+
+export function getColumnSymbolsOfRefOperand (compiler: Compiler, ref: SyntaxNode): NodeSymbol[] {
+  const colNode = destructureMemberAccessExpression(ref)!.pop()!;
+  if (colNode instanceof TupleExpressionNode) {
+    return colNode.elementList.map((e) => compiler.nodeReferee(e).getFiltered(UNHANDLED)!);
+  }
+  return [compiler.nodeReferee(colNode).getFiltered(UNHANDLED)!];
+}
+
+export function extractElementName (nameNode: SyntaxNode): { schemaName: string[]; name: string } {
+  const fragments = destructureComplexVariable(nameNode)!;
+  const name = fragments.pop()!;
+
+  return {
+    name,
+    schemaName: fragments,
+  };
+}
+
+export function extractColor (node: unknown): string | undefined {
+  if (node instanceof PrimaryExpressionNode && node.expression instanceof LiteralNode && node.expression.literal?.kind === SyntaxTokenKind.COLOR_LITERAL) {
+    return node.expression.literal.value;
+  }
+  return undefined;
+}
+
+export function isSameEndpoint (sym1?: NodeSymbol, sym2?: NodeSymbol): boolean;
+export function isSameEndpoint (sym1?: NodeSymbol[], sym2?: NodeSymbol[]): boolean;
+export function isSameEndpoint (sym1?: NodeSymbol | NodeSymbol[], sym2?: NodeSymbol | NodeSymbol[]): boolean {
+  if (sym1 === undefined || sym2 === undefined) return false;
+  if (Array.isArray(sym1)) {
+    const firstIds = sym1.map(({ id }) => id).sort();
+    const secondIds = (sym2 as NodeSymbol[]).map(({ id }) => id).sort();
+    return zip(firstIds, secondIds).every(([first, second]) => first === second);
+  }
+
+  const firstId = sym1.id;
+  const secondId = (sym2 as NodeSymbol).id;
+  return firstId === secondId;
+}
+
+export function normalizeNoteContent (content: string): string {
+  const lines = content.split('\n');
+
+  // Top empty lines are trimmed
+  const trimmedTopEmptyLines = lines.slice(lines.findIndex((line) => line.trimStart() !== ''));
+
+  // Calculate min-indentation, empty lines are ignored
+  const nonEmptyLines = trimmedTopEmptyLines.filter((line) => line.trimStart());
+  const minIndent = Math.min(...nonEmptyLines.map((line) => line.length - line.trimStart().length));
+
+  return trimmedTopEmptyLines.map((line) => line.slice(minIndent)).join('\n');
+}
+
+export function processDefaultValue (valueNode?: SyntaxNode):
+  {
+    type: 'string' | 'number' | 'boolean' | 'expression';
+    value: string | number;
+  } | undefined {
+  if (!valueNode) {
+    return undefined;
+  }
+
+  if (isExpressionAQuotedString(valueNode)) {
+    return {
+      value: extractQuotedStringToken(valueNode)!,
+      type: 'string',
+    };
+  }
+
+  if (isExpressionASignedNumberExpression(valueNode)) {
+    return {
+      type: 'number',
+      value: parseNumber(valueNode),
+    };
+  }
+
+  if (isExpressionAnIdentifierNode(valueNode)) {
+    const value = valueNode.expression.variable.value.toLowerCase();
+    return {
+      value,
+      type: 'boolean',
+    };
+  }
+
+  if (valueNode instanceof FunctionExpressionNode && valueNode.value) {
+    return {
+      value: valueNode.value.value,
+      type: 'expression',
+    };
+  }
+
+  if (isDotDelimitedIdentifier(valueNode)) {
+    return {
+      value: extractVariableFromExpression(destructureMemberAccessExpression(valueNode)!.at(-1))!,
+      type: 'string',
+    };
+  }
+
+  throw new Error('Unreachable');
+}
+
+export function processColumnType (compiler: Compiler, typeNode: SyntaxNode): Report<ColumnType> {
+  let typeSuffix: string = '';
+  let typeArgs: string | null = null;
+  let numericParams: { precision: number; scale: number } | undefined;
+  let lengthParam: { length: number } | undefined;
+
+  if (typeNode instanceof CallExpressionNode) {
+    const argElements = typeNode.argumentList!.elementList;
+    typeArgs = argElements.map((e) => {
+      if (isExpressionASignedNumberExpression(e)) {
+        return getNumberTextFromExpression(e);
+      }
+      if (isExpressionAQuotedString(e)) {
+        return extractQuotedStringToken(e);
+      }
+      // e can only be an identifier here
+      return extractVariableFromExpression(e);
+    }).join(',');
+    typeSuffix = `(${typeArgs})`;
+
+    // Parse numeric type parameters (precision, scale)
+    if (argElements.length === 2
+      && isExpressionASignedNumberExpression(argElements[0])
+      && isExpressionASignedNumberExpression(argElements[1])) {
+      const precision = parseNumber(argElements[0]);
+      const scale = parseNumber(argElements[1]);
+      if (!Number.isNaN(precision) && !Number.isNaN(scale)) {
+        numericParams = { precision: Math.trunc(precision), scale: Math.trunc(scale) };
+      }
+    } else if (argElements.length === 1 && isExpressionASignedNumberExpression(argElements[0])) {
+      const length = parseNumber(argElements[0]);
+      if (!Number.isNaN(length)) {
+        lengthParam = { length: Math.trunc(length) };
+      }
+    }
+
+    typeNode = typeNode.callee!;
+  }
+  while (typeNode instanceof CallExpressionNode || typeNode instanceof ArrayNode) {
+    if (typeNode instanceof CallExpressionNode) {
+      const args = typeNode
+        .argumentList!.elementList.map((e) => {
+        if (isExpressionASignedNumberExpression(e)) {
+          return getNumberTextFromExpression(e);
+        }
+        if (isExpressionAQuotedString(e)) {
+          return extractQuotedStringToken(e);
+        }
+        // e can only be an identifier here
+        return extractVariableFromExpression(e);
+      })
+        .join(',');
+      typeSuffix = `(${args})${typeSuffix}`;
+      typeNode = typeNode.callee!;
+    } else if (typeNode instanceof ArrayNode) {
+      const indexer = `[${
+        typeNode
+          .indexer!.elementList.map((e) => (e.name as any).expression.literal.value)
+          .join(',')
+      }]`;
+      typeSuffix = `${indexer}${typeSuffix}`;
+      typeNode = typeNode.array!;
+    }
+  }
+
+  const { name: typeName, schemaName: typeSchemaName } = extractElementName(typeNode);
+
+  // Check if this type references an enum
+  const isEnum = !!compiler.nodeReferee(typeNode).getFiltered(UNHANDLED);
+
+  if (typeSchemaName.length > 1) {
+    return new Report(
+      {
+        schemaName: typeSchemaName.length === 0 ? null : typeSchemaName[0],
+        type_name: `${typeName}${typeSuffix}`,
+        args: typeArgs,
+        numericParams,
+        lengthParam,
+        isEnum,
+      },
+      [new CompileError(CompileErrorCode.UNSUPPORTED, 'Nested schema is not supported', typeNode)],
+    );
+  }
+
+  return new Report({
+    schemaName: typeSchemaName.length === 0 ? null : typeSchemaName[0],
+    type_name: `${typeName}${typeSuffix}`,
+    args: typeArgs,
+    numericParams,
+    lengthParam,
+    isEnum,
+  });
+}
+
+export function shouldInterpretNode (compiler: Compiler, node: SyntaxNode): boolean {
+  const hasParseError = compiler.parseFile().getErrors().length > 0;
+  const hasValidateError = compiler.validate(node).getErrors().length > 0;
+  const hasBindError = compiler.bind(node).getErrors().length > 0;
+  return !hasParseError && !hasValidateError && !hasBindError;
 }
 
 // Get all symbols syntactically defined inside `node`
@@ -146,7 +370,11 @@ export function lookupMember (
 
   const match = members.find((m: NodeSymbol) => {
     if (kinds && !m.isKind(...kinds)) return false;
-    return compiler.symbolNames(m).includes(name);
+    if (parentSymbol.isKind(SymbolKind.Program) || (parentSymbol instanceof SchemaSymbol && parentSymbol.qualifiedName.join('.') === DEFAULT_SCHEMA_NAME)) {
+      if (m.declaration && compiler.alias(m.declaration).getFiltered(UNHANDLED) === name) return true; // Aliases can be found in public
+      if (m.declaration && (compiler.fullname(m.declaration).getFiltered(UNHANDLED) || []).length > 1) return false; // This is a qualfied element
+    }
+    return compiler.symbolName(m) === name;
   });
 
   // Report symbol not found
@@ -186,7 +414,7 @@ export function lookupInDefaultSchema (
   const members = compiler.symbolMembers(globalSymbol).getFiltered(UNHANDLED);
 
   if (members) {
-    const publicSchema = members.find((m: NodeSymbol) => m instanceof SchemaSymbol && m.name === DEFAULT_SCHEMA_NAME);
+    const publicSchema = members.find((m: NodeSymbol) => m instanceof SchemaSymbol && m.qualifiedName.join('.') === DEFAULT_SCHEMA_NAME);
     if (publicSchema) {
       const result = lookupMember(compiler, publicSchema, name, { ...options, ignoreNotFound: true });
       if (result.getValue()) return result;
@@ -208,74 +436,4 @@ export function nodeRefereeOfLeftExpression (compiler: Compiler, node: SyntaxNod
   const result = compiler.nodeReferee(leftExpr);
   if (result.hasValue(UNHANDLED)) return undefined;
   return result.getValue() ?? undefined;
-}
-
-export function extractColor (node: unknown): string | undefined {
-  if (node instanceof PrimaryExpressionNode && node.expression instanceof LiteralNode && node.expression.literal?.kind === SyntaxTokenKind.COLOR_LITERAL) {
-    return node.expression.literal.value;
-  }
-  return undefined;
-}
-
-export function getMultiplicities (
-  op: string,
-): [RelationCardinality, RelationCardinality] | undefined {
-  switch (op) {
-    case '<':
-      return ['1', '*'];
-    case '<>':
-      return ['*', '*'];
-    case '>':
-      return ['*', '1'];
-    case '-':
-      return ['1', '1'];
-    default:
-      return undefined;
-  }
-}
-
-export function extractNamesFromRefOperand (node: SyntaxNode, container?: { schemaName: string | null; tableName: string }): { schemaName: string | null; tableName: string; fieldNames: string[] } {
-  const tuple = destructureComplexVariableTuple(node);
-  if (!tuple) return { schemaName: null, tableName: '', fieldNames: [] };
-
-  const vars = tuple.variables.map((v: any) => v.expression.variable?.value ?? '');
-  const fieldNames = tuple.tupleElements.length > 0
-    ? tuple.tupleElements.map((e: any) => e.expression.variable?.value ?? '')
-    : [];
-
-  if (fieldNames.length > 0) {
-    // Composite ref: table.(col1, col2) or (col1, col2)
-    if (vars.length === 0 && container) {
-      return { schemaName: container.schemaName, tableName: container.tableName, fieldNames };
-    }
-    const tableName = vars.at(-1) ?? '';
-    const schemaName = vars.length > 1 ? vars.slice(0, -1).join('.') : (container?.schemaName ?? null);
-    return { schemaName, tableName, fieldNames };
-  }
-
-  // Single-column ref: just `column` or `table.column` or `schema.table.column`
-  if (vars.length === 1 && container) {
-    return { schemaName: container.schemaName, tableName: container.tableName, fieldNames: [vars[0]] };
-  }
-
-  if (vars.length >= 2) {
-    const colName = vars.at(-1) ?? '';
-    const tableName = vars.at(-2) ?? '';
-    const schemaName = vars.length > 2 ? vars.slice(0, -2).join('.') : (container?.schemaName ?? null);
-    return { schemaName, tableName, fieldNames: [colName] };
-  }
-
-  const tableName = vars.at(-1) ?? '';
-  const schemaName = vars.length > 1 ? vars.slice(0, -1).join('.') : null;
-  return { schemaName, tableName, fieldNames };
-}
-
-export function extractElementName (nameNode: SyntaxNode): { schemaName: string[]; name: string } {
-  const fragments = destructureComplexVariable(nameNode)!;
-  const name = fragments.pop()!;
-
-  return {
-    name,
-    schemaName: fragments,
-  };
 }

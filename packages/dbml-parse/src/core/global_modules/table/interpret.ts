@@ -1,31 +1,29 @@
 import { partition, last } from 'lodash-es';
-import type {
+import {
   Column, Check, Index, InlineRef,
-  Table, TablePartialInjection, TokenPosition, SchemaElement,
+  Table, TablePartialInjection,
 } from '@/core/types/schemaJson';
 import {
   BlockExpressionNode, CallExpressionNode, ElementDeclarationNode,
   FunctionApplicationNode, FunctionExpressionNode, ListExpressionNode, PrefixExpressionNode,
+  SyntaxNode,
 } from '@/core/parser/nodes';
-import type { SyntaxNode } from '@/core/parser/nodes';
 import {
-  extractColor, extractElementName,
-  getTokenPosition, normalizeNoteContent,
+  extractColor, extractElementName, getColumnSymbolsOfRefOperand,
+  getTokenPosition, isSameEndpoint, normalizeNoteContent,
+  processColumnType, processDefaultValue,
 } from '../utils';
 import {
   destructureComplexVariable, destructureIndexNode, extractQuotedStringToken, extractVarNameFromPrimaryVariable,
   extractVariableFromExpression,
-  isExpressionAQuotedString, isExpressionAVariableNode,
-  isExpressionASignedNumberExpression, parseNumber,
 } from '@/core/utils/expression';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import { aggregateSettingList, isValidPartialInjection } from '@/core/utils/validate';
-import { ElementKind, SettingName } from '@/core/types/keywords';
-import Compiler from '@/compiler/index';
-import { UNHANDLED } from '@/constants';
 import { SymbolKind } from '@/core/types/symbols';
+import { ElementKind, SettingName } from '@/core/types/keywords';
+import Compiler from '@/compiler';
+import { UNHANDLED } from '@/constants';
 import Report from '@/core/report';
-import { interpretColumnType, interpretInlineRefs } from './utils';
 
 export class TableInterpreter {
   private declarationNode: ElementDeclarationNode;
@@ -34,8 +32,8 @@ export class TableInterpreter {
   private pkColumns: Column[];
 
   constructor (compiler: Compiler, declarationNode: ElementDeclarationNode) {
-    this.declarationNode = declarationNode;
     this.compiler = compiler;
+    this.declarationNode = declarationNode;
     this.table = {
       name: undefined,
       schemaName: undefined,
@@ -52,32 +50,31 @@ export class TableInterpreter {
   interpret (): Report<Table> {
     this.table.token = getTokenPosition(this.declarationNode);
 
-    const settingErrors = this.interpretSettingList(this.declarationNode.attributeList);
-    const settingsNote = this.table.note;
-
     const errors = [
       ...this.interpretName(this.declarationNode.name!),
       ...this.interpretAlias(this.declarationNode.alias),
-      ...settingErrors,
+      ...this.interpretSettingList(this.declarationNode.attributeList),
       ...this.interpretBody(this.declarationNode.body as BlockExpressionNode),
     ];
 
-    // Settings note takes priority over body Note elements
-    if (settingsNote) {
-      this.table.note = settingsNote;
+    // Handle cases where there are multiple primary columns
+    // all the pk field of the columns are reset to false
+    // and a new pk composite index is added
+    if (this.pkColumns.length >= 2) {
+      this.table.indexes!.push({
+        columns: this.pkColumns.map(({ name, token }) => ({ value: name, type: 'column', token })),
+        token: {
+          start: { offset: -1, line: -1, column: -1 }, // do not make sense to have a meaningful start (?)
+          end: { offset: -1, line: -1, column: -1 }, // do not make sense to have a meaningful end (?)
+        },
+        pk: true,
+      });
+      this.pkColumns.forEach((column) => {
+        column.pk = false;
+      });
     }
 
-    // Fill in empty tableNames in inline refs with the current table name
-    for (const field of this.table.fields!) {
-      for (const ref of field.inline_refs) {
-        if (!ref.tableName && ref.fieldNames.length > 0) {
-          ref.tableName = this.table.name!;
-          ref.schemaName = this.table.schemaName!;
-        }
-      }
-    }
-
-    return new Report(this.table as Table, errors);
+    return Report.create(this.table as Table, errors);
   }
 
   private interpretName (nameNode: SyntaxNode): CompileError[] {
@@ -138,11 +135,11 @@ export class TableInterpreter {
       switch (sub.type?.value.toLowerCase()) {
         case ElementKind.Note:
           this.table.note = {
-            value: normalizeNoteContent(
+            value: normalizeNoteContent(extractQuotedStringToken(
               sub.body instanceof BlockExpressionNode
-                ? extractQuotedStringToken((sub.body.body[0] as FunctionApplicationNode).callee)!
-                : extractQuotedStringToken(sub.body!.callee)!,
-            ),
+                ? (sub.body.body[0] as FunctionApplicationNode).callee
+                : sub.body!.callee,
+            )!),
             token: getTokenPosition(sub),
           };
           return [];
@@ -153,10 +150,9 @@ export class TableInterpreter {
         case ElementKind.Checks:
           return this.interpretChecks(sub);
 
-        case ElementKind.Records: {
-          // Nested records are collected by the program module
+        case ElementKind.Records:
+          // Nested records are interpreted in program module
           return [];
-        }
 
         default:
           return [];
@@ -166,36 +162,26 @@ export class TableInterpreter {
 
   private interpretInjection (injection: PrefixExpressionNode, order: number) {
     const partial: Partial<TablePartialInjection> = { order, token: getTokenPosition(injection) };
-    partial.name = extractVariableFromExpression(injection.expression) ?? '';
+    partial.name = extractVariableFromExpression(injection.expression) || '';
     this.table.partials!.push(partial as TablePartialInjection);
     return [];
   }
 
   private interpretFields (fields: FunctionApplicationNode[]): CompileError[] {
-    // Check for empty table via compiler symbol resolution
-    const symbol = this.compiler.nodeSymbol(this.declarationNode).getFiltered(UNHANDLED);
-    let hasColumns = true;
-    if (symbol) {
-      const membersResult = this.compiler.symbolMembers(symbol);
-      const members = !membersResult.hasValue(UNHANDLED) ? membersResult.getValue() : [];
-      // Filter to actual column members (excluding partial injections)
-      const columnMembers = members.filter((m) => {
-        if (!m.declaration) return false;
-        const parent = m.declaration.parent;
-        if (parent instanceof ElementDeclarationNode && parent !== this.declarationNode) return false;
-        if (m.declaration instanceof FunctionApplicationNode && isValidPartialInjection(m.declaration.callee)) return false;
-        return true;
-      });
-      hasColumns = columnMembers.length > 0;
-    }
+    const symbolTableEntries = this.compiler.symbolMembers(
+      this.compiler.nodeSymbol(this.declarationNode).getFiltered(UNHANDLED)!,
+    ).getFiltered(UNHANDLED) || [];
+    const columnEntries = symbolTableEntries.filter((symbol) => {
+      return symbol.isKind(SymbolKind.Column);
+    });
 
-    const columnCountErrors = hasColumns
+    const columnCountErrors = columnEntries.length
       ? []
       : [new CompileError(CompileErrorCode.EMPTY_TABLE, 'A Table must have at least one column', this.declarationNode)];
 
     const interpretFieldErrors = fields.flatMap((field, order) => {
       return isValidPartialInjection(field.callee)
-        ? this.interpretInjection(field.callee as PrefixExpressionNode, order)
+        ? this.interpretInjection(field.callee, order)
         : this.interpretColumn(field);
     });
 
@@ -210,14 +196,11 @@ export class TableInterpreter {
 
     const column: Partial<Column> = {};
 
-    column.name = extractVarNameFromPrimaryVariable(field.callee as any) ?? '';
+    column.name = extractVarNameFromPrimaryVariable(field.callee as any)!;
 
-    column.type = interpretColumnType(field.args[0]);
-
-    // Check if type resolves to an enum
-    if (field.args[0]) {
-      column.type.isEnum = this.isEnumType(field.args[0]);
-    }
+    const typeReport = processColumnType(this.compiler, field.args[0]);
+    column.type = typeReport.getValue();
+    errors.push(...typeReport.getErrors());
 
     column.token = getTokenPosition(field);
     column.inline_refs = [];
@@ -235,26 +218,7 @@ export class TableInterpreter {
         : settingMap[SettingName.Null]?.length
           ? false
           : undefined;
-
-      const defaultNode = settingMap[SettingName.Default]?.at(0)?.value;
-      if (defaultNode) {
-        if (isExpressionAQuotedString(defaultNode)) {
-          column.dbdefault = { value: extractQuotedStringToken(defaultNode) ?? '', type: 'string' };
-        } else if (isExpressionASignedNumberExpression(defaultNode)) {
-          column.dbdefault = { type: 'number', value: parseNumber(defaultNode) };
-        } else if (defaultNode instanceof FunctionExpressionNode) {
-          column.dbdefault = { value: defaultNode.value?.value ?? '', type: 'expression' };
-        } else if (isExpressionAVariableNode(defaultNode)) {
-          const val = defaultNode.expression.variable.value.toLowerCase();
-          column.dbdefault = { value: val, type: 'boolean' };
-        } else {
-          // Enum default value: schema.enum.field or enum.field
-          const fragments = destructureComplexVariable(defaultNode);
-          if (fragments && fragments.length > 0) {
-            column.dbdefault = { value: fragments.at(-1) ?? '', type: 'string' };
-          }
-        }
-      }
+      column.dbdefault = processDefaultValue(settingMap[SettingName.Default]?.at(0)?.value);
 
       const noteNode = settingMap[SettingName.Note]?.at(0);
       column.note = noteNode && {
@@ -263,18 +227,77 @@ export class TableInterpreter {
       };
 
       const refs = settingMap[SettingName.Ref] || [];
-      column.inline_refs = interpretInlineRefs(refs);
+      column.inline_refs = refs.flatMap((ref) => {
+        const [referredSymbol] = getColumnSymbolsOfRefOperand(this.compiler, (ref.value as PrefixExpressionNode).expression!);
+
+        if (isSameEndpoint(referredSymbol, this.compiler.nodeSymbol(field).getFiltered(UNHANDLED))) {
+          errors.push(new CompileError(CompileErrorCode.SAME_ENDPOINT, 'Two endpoints are the same', ref));
+
+          return [];
+        }
+
+        const op = (ref.value as PrefixExpressionNode).op!;
+        const fragments = destructureComplexVariable((ref.value as PrefixExpressionNode).expression)!;
+
+        let inlineRef: InlineRef | undefined;
+        if (fragments.length === 1) {
+          const [columnName] = fragments;
+
+          inlineRef = {
+            schemaName: this.table.schemaName!,
+            tableName: this.table.name!,
+            fieldNames: [columnName],
+            relation: op.value as any,
+            token: getTokenPosition(ref),
+          };
+        } else if (fragments.length === 2) {
+          const [table, columnName] = fragments;
+          inlineRef = {
+            schemaName: null,
+            tableName: table,
+            fieldNames: [columnName],
+            relation: op.value as any,
+            token: getTokenPosition(ref),
+          };
+        } else if (fragments.length === 3) {
+          const [schema, table, columnName] = fragments;
+          inlineRef = {
+            schemaName: schema,
+            tableName: table,
+            fieldNames: [columnName],
+            relation: op.value as any,
+            token: getTokenPosition(ref),
+          };
+        } else {
+          errors.push(new CompileError(CompileErrorCode.UNSUPPORTED, 'Nested schema is not supported', ref));
+          const columnName = fragments.pop()!;
+          const table = fragments.pop()!;
+          const schema = fragments.join('.');
+          inlineRef = {
+            schemaName: schema,
+            tableName: table,
+            fieldNames: [columnName],
+            relation: op.value as any,
+            token: getTokenPosition(ref),
+          };
+        }
+
+        return inlineRef;
+      });
 
       const checkNodes = settingMap[SettingName.Check] || [];
       column.checks = checkNodes.map((checkNode) => {
         const token = getTokenPosition(checkNode);
         const expression = (checkNode.value as FunctionExpressionNode).value!.value!;
-        return { token, expression } as Check;
+        return {
+          token,
+          expression,
+        };
       });
     }
 
-    column.pk ||= settings.some((setting) => (extractVariableFromExpression(setting) ?? '').toLowerCase() === 'pk');
-    column.unique ||= settings.some((setting) => (extractVariableFromExpression(setting) ?? '').toLowerCase() === 'unique');
+    column.pk ||= settings.some((setting) => extractVariableFromExpression(setting)?.toLowerCase() === SettingName.PK);
+    column.unique ||= settings.some((setting) => extractVariableFromExpression(setting)?.toLowerCase() === SettingName.Unique);
 
     this.table.fields!.push(column as Column);
     if (column.pk) {
@@ -284,18 +307,8 @@ export class TableInterpreter {
     return errors;
   }
 
-  private isEnumType (typeNode: SyntaxNode): boolean {
-    // Check if the type resolves to an Enum symbol via nodeReferee.
-    // nodeReferee on the type node inside a table field will use nodeRefereeOfEnumType.
-    const result = this.compiler.nodeReferee(typeNode);
-    if (result.hasValue(UNHANDLED)) return false;
-    const sym = result.getValue();
-    if (!sym) return false;
-    return sym.isKind(SymbolKind.Enum);
-  }
-
   private interpretIndexes (indexes: ElementDeclarationNode): CompileError[] {
-    this.table.indexes?.push(...(indexes.body as BlockExpressionNode).body.map((_indexField) => {
+    this.table.indexes!.push(...(indexes.body as BlockExpressionNode).body.map((_indexField) => {
       const index: Partial<Index> = { columns: [] };
 
       const indexField = _indexField as FunctionApplicationNode;
@@ -339,7 +352,7 @@ export class TableInterpreter {
             token: getTokenPosition(s),
           })),
           ...nonFunctional.map((s) => ({
-            value: extractVarNameFromPrimaryVariable(s as any) ?? '',
+            value: extractVarNameFromPrimaryVariable(s)!,
             type: 'column',
             token: getTokenPosition(s),
           })),

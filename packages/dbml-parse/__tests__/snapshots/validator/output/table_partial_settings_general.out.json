@@ -1843,6 +1843,9 @@
                                   "line": 10,
                                   "offset": 339
                                 }
+                              },
+                              "referee": {
+                                "context": {}
                               }
                             },
                             "op": {
@@ -1914,6 +1917,12 @@
                                   "column": 14,
                                   "line": 10,
                                   "offset": 342
+                                }
+                              },
+                              "referee": {
+                                "context": {
+                                  "id": "<element-declaration>:v2.status@[L14:C0, L19:C1]",
+                                  "snippet": "Enum v2.st... tenant\r\n}"
                                 }
                               }
                             },
@@ -2092,6 +2101,9 @@
                                                 "line": 10,
                                                 "offset": 359
                                               }
+                                            },
+                                            "referee": {
+                                              "context": {}
                                             }
                                           },
                                           "op": {
@@ -2163,6 +2175,12 @@
                                                 "column": 34,
                                                 "line": 10,
                                                 "offset": 362
+                                              }
+                                            },
+                                            "referee": {
+                                              "context": {
+                                                "id": "<element-declaration>:v2.status@[L14:C0, L19:C1]",
+                                                "snippet": "Enum v2.st... tenant\r\n}"
                                               }
                                             }
                                           },
@@ -2243,6 +2261,12 @@
                                             "column": 41,
                                             "line": 10,
                                             "offset": 369
+                                          }
+                                        },
+                                        "referee": {
+                                          "context": {
+                                            "id": "<function-application>@[L16:C4, L16:C7]",
+                                            "snippet": "new"
                                           }
                                         }
                                       },
@@ -3165,7 +3189,12 @@
                         "id": "<function-application>@[L16:C4, L16:C7]",
                         "snippet": "new"
                       },
-                      "references": []
+                      "references": [
+                        {
+                          "id": "<primary-expression>@[L10:C41, L10:C44]",
+                          "snippet": "new"
+                        }
+                      ]
                     }
                   },
                   {
@@ -3592,7 +3621,16 @@
                 }
               }
             ],
-            "references": []
+            "references": [
+              {
+                "id": "<primary-expression>@[L10:C14, L10:C20]",
+                "snippet": "status"
+              },
+              {
+                "id": "<primary-expression>@[L10:C34, L10:C40]",
+                "snippet": "status"
+              }
+            ]
           }
         },
         {

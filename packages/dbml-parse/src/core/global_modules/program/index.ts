@@ -32,7 +32,10 @@ export const programModule: GlobalModule = {
     if (!(ast instanceof ProgramNode)) return Report.create([]);
 
     // Collect and create schemas
-    const schemaMembers = new Map<string, SchemaSymbol>();
+    const schemaMembers = new Map<string, SchemaSymbol>([
+      [DEFAULT_SCHEMA_NAME, compiler.symbolFactory.create(SchemaSymbol, { name: DEFAULT_SCHEMA_NAME })],
+    ]);
+
     for (const element of ast.body) {
       const fullname = compiler.fullname(element).getValue();
       if (!Array.isArray(fullname)) continue; // No schema here
@@ -60,7 +63,7 @@ export const programModule: GlobalModule = {
   interpret (compiler: Compiler, node: SyntaxNode): Report<Database | undefined> | Report<PassThrough> {
     if (!isProgramNode(node)) return Report.create(PASS_THROUGH);
 
-    if (!shouldInterpretNode(compiler, node)) return Report.create(undefined);
+    if (!shouldInterpretNode(compiler, node)) return Report.create(undefined, [...compiler.parseFile().getErrors(), ...compiler.bind(node).getErrors()]);
 
     return new ProgramInterpreter(compiler, node).interpret() as Report<Database | undefined>;
   },

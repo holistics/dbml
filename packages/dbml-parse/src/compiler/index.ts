@@ -14,14 +14,15 @@ import {
 } from '@/core/global_modules';
 import { symbolReferences } from './queries/symbolReferences';
 import { intern, type Internable, type Primitive } from '@/core/types/internable';
-import { DEFAULT_SCHEMA_NAME, UNHANDLED } from '@/constants';
 import { alias, nodeFullname as fullname, settings, validate } from '@/core/local_modules';
-import { NodeSymbolIdGenerator, SchemaSymbol, type NodeSymbol } from '@/core/types/symbols';
+import { NodeSymbolIdGenerator } from '@/core/types/symbols';
 import SymbolFactory from '@/core/types/symbolFactory';
 import { lookupMembers } from './queries/lookupMembers';
-import { symbolNames } from './queries/symbolName';
+import { symbolName } from './queries/symbolName';
 import { SyntaxNodeIdGenerator } from '@/core/parser/nodes';
 import { parseFile } from './queries/pipeline/parse';
+import { ast, errors, publicSymbolTable, rawDb, tokens, warnings } from './queries/legacy/parse';
+import { interpretFile } from './queries/pipeline/interpret';
 
 // Re-export utilities
 export { splitQualifiedIdentifier, unescapeString, escapeString, formatRecordValue, isValidIdentifier, addDoubleQuoteIfNeeded };
@@ -84,12 +85,13 @@ export default class Compiler {
   nodeReferee = this.query(nodeReferee);
 
   interpret = this.query(interpret);
+  interpretFile = this.query(interpretFile);
 
   // local queries
   parseFile = this.query(parseFile);
   validate = this.query(validate);
   fullname = this.query(fullname);
-  symbolNames = this.query(symbolNames);
+  symbolName = this.query(symbolName);
   alias = this.query(alias);
   settings = this.query(settings);
 
@@ -106,32 +108,13 @@ export default class Compiler {
   // @deprecated - legacy APIs for services compatibility
   readonly parse = {
     source: () => this.source as Readonly<string>,
-    ast: () => this.parseFile().getValue().ast,
-    _: () => {
-      const ast = this.parseFile().getValue().ast;
-      this.bind(ast);
-      return this.interpret(ast);
-    },
-    publicSymbolTable: () => {
-      const ast = this.parseFile().getValue().ast;
-      const sym = this.nodeSymbol(ast);
-      if (sym.hasValue(UNHANDLED)) return undefined;
-      const programMembers = this.symbolMembers(sym.getValue());
-      if (programMembers.hasValue(UNHANDLED)) return undefined;
-
-      // Program symbolMembers flattens public schema, but we also need non-public schema contents
-      const result: NodeSymbol[] = [];
-      for (const member of programMembers.getValue()) {
-        result.push(member);
-        if (member instanceof SchemaSymbol && member.name !== DEFAULT_SCHEMA_NAME) {
-          const schemaMembers = this.symbolMembers(member);
-          if (!schemaMembers.hasValue(UNHANDLED)) {
-            result.push(...schemaMembers.getValue());
-          }
-        }
-      }
-      return result;
-    },
+    _: this.query(interpretFile),
+    ast: this.query(ast),
+    errors: this.query(errors),
+    warnings: this.query(warnings),
+    tokens: this.query(tokens),
+    rawDb: this.query(rawDb),
+    publicSymbolTable: this.query(publicSymbolTable),
   };
 
   // @deprecated - legacy APIs for services compatibility

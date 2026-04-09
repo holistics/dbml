@@ -6987,7 +6987,11 @@
         "id": "<program>@[L0:C0, L50:C0]",
         "snippet": "Test Expre...---+1\r\n}\r\n"
       },
-      "members": [],
+      "members": [
+        {
+          "context": {}
+        }
+      ],
       "references": []
     }
   },

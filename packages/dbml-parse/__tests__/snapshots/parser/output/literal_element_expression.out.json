@@ -1155,7 +1155,11 @@
         "id": "<program>@[L0:C0, L11:C1]",
         "snippet": "Test Liter...\r\n    }\r\n}"
       },
-      "members": [],
+      "members": [
+        {
+          "context": {}
+        }
+      ],
       "references": []
     }
   },

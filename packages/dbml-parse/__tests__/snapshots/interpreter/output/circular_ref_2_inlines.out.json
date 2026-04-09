@@ -1,4 +1,27 @@
 {
-  "errors": [],
+  "errors": [
+    {
+      "code": "CIRCULAR_REF",
+      "diagnostic": "References with same endpoints exist",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "<attribute>@[L5:C12, L5:C23]",
+          "snippet": "ref: > A.id"
+        }
+      }
+    },
+    {
+      "code": "CIRCULAR_REF",
+      "diagnostic": "References with same endpoints exist",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "<attribute>@[L1:C12, L1:C23]",
+          "snippet": "ref: > B.id"
+        }
+      }
+    }
+  ],
   "warnings": []
 }

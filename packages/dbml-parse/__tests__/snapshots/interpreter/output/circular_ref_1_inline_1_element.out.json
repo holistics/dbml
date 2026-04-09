@@ -1,4 +1,49 @@
 {
-  "errors": [],
+  "errors": [
+    {
+      "code": "CIRCULAR_REF",
+      "diagnostic": "References with same endpoints exist",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "<element-declaration>:@[L10:C0, L10:C16]",
+          "snippet": "Ref: B.id > A.id"
+        }
+      }
+    },
+    {
+      "code": "CIRCULAR_REF",
+      "diagnostic": "References with same endpoints exist",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "<attribute>@[L1:C12, L1:C23]",
+          "snippet": "ref: > B.id"
+        }
+      }
+    },
+    {
+      "code": "CIRCULAR_REF",
+      "diagnostic": "References with same endpoints exist",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "<element-declaration>:@[L34:C0, L34:C29]",
+          "snippet": "Ref: posts...> users.id"
+        }
+      }
+    },
+    {
+      "code": "CIRCULAR_REF",
+      "diagnostic": "References with same endpoints exist",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "<attribute>@[L29:C19, L29:C34]",
+          "snippet": "ref: > users.id"
+        }
+      }
+    }
+  ],
   "warnings": []
 }

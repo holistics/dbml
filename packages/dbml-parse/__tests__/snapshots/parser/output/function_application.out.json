@@ -851,7 +851,11 @@
         "id": "<program>@[L0:C0, L4:C0]",
         "snippet": "Test Funct...ique]\r\n}\r\n"
       },
-      "members": [],
+      "members": [
+        {
+          "context": {}
+        }
+      ],
       "references": []
     }
   },

@@ -114,9 +114,8 @@ export const tableModule: GlobalModule = {
         const injectedMembers = tablePartialMembers.flatMap((m) => {
           if (!m.declaration) return [];
 
-          const names = compiler.symbolNames(m);
-          const name = names[0];
-          if (!name) return m;
+          const name = compiler.symbolName(m);
+          if (name === undefined) return m;
 
           return compiler.symbolFactory.create(
             InjectedColumnSymbol,
@@ -194,7 +193,7 @@ export const tableModule: GlobalModule = {
 function lookupInDefaultSchema (compiler: Compiler, globalSymbol: NodeSymbol, name: string, opts: { kinds?: SymbolKind[]; ignoreNotFound?: boolean; errorNode?: SyntaxNode }): Report<NodeSymbol | undefined> {
   const members = compiler.symbolMembers(globalSymbol);
   if (!members.hasValue(UNHANDLED)) {
-    const publicSchema = members.getValue().find((m: NodeSymbol) => m instanceof SchemaSymbol && m.name === DEFAULT_SCHEMA_NAME);
+    const publicSchema = members.getValue().find((m: NodeSymbol) => m instanceof SchemaSymbol && m.qualifiedName.join('.') === DEFAULT_SCHEMA_NAME);
     if (publicSchema) {
       return lookupMember(compiler, publicSchema, name, opts);
     }
@@ -207,7 +206,7 @@ function nodeRefereeOfPartialInjection (compiler: Compiler, globalSymbol: NodeSy
   const name = extractVariableFromExpression(node) ?? '';
   const members = compiler.symbolMembers(globalSymbol);
   if (!members.hasValue(UNHANDLED)) {
-    const publicSchema = members.getValue().find((m: NodeSymbol) => m instanceof SchemaSymbol && m.name === DEFAULT_SCHEMA_NAME && m.isKind(SymbolKind.Schema));
+    const publicSchema = members.getValue().find((m: NodeSymbol) => m instanceof SchemaSymbol && m.qualifiedName.join('.') === DEFAULT_SCHEMA_NAME && m.isKind(SymbolKind.Schema));
     if (publicSchema) {
       return lookupMember(compiler, publicSchema, name, { kinds: [SymbolKind.TablePartial], errorNode: node });
     }

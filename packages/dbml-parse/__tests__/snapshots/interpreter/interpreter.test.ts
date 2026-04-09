@@ -1,11 +1,10 @@
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { scanTestNames, Snappable, toSnapshot } from '@tests/utils';
+import { scanTestNames, toSnapshot } from '@tests/utils';
 import Compiler from '@/compiler';
 import type Report from '@/core/report';
 import type { SchemaElement } from '@/core/types';
-import { UNHANDLED } from '@/constants';
 
 function serializeInterpreterResult (compiler: Compiler, report: Report<SchemaElement | SchemaElement[] | undefined>): string {
   const value = report.getValue();
@@ -24,7 +23,7 @@ describe('[snapshot] interpreter', () => {
     const program = readFileSync(path.resolve(__dirname, `./input/${testName}.in.dbml`), 'utf-8');
     const compiler = new Compiler();
     compiler.setSource(program);
-    const report = compiler.parse._().map((v) => v === UNHANDLED ? undefined : v);
+    const report = compiler.parse._();
 
     it(testName, () => expect(serializeInterpreterResult(compiler, report)).toMatchFileSnapshot(path.resolve(__dirname, `./output/${testName}.out.json`)));
   });

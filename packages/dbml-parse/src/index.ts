@@ -39,4 +39,6 @@ export {
   addDoubleQuoteIfNeeded,
 } from '@/compiler/index';
 
+export * from '@/core/global_modules/records/utils/data';
+
 export { Compiler };

@@ -64,8 +64,8 @@ export const enumModule: GlobalModule = {
     for (const member of members) {
       if (!member.isKind(SymbolKind.EnumField) || !member.declaration) continue; // Ignore non-enum fields
 
-      const names = compiler.symbolNames(member);
-      for (const name of names) {
+      const name = compiler.symbolName(member);
+      if (name !== undefined) {
         const errorNode = (member.declaration instanceof ElementDeclarationNode && member.declaration.name) ? member.declaration.name : member.declaration;
         const firstNode = seen.get(name);
         if (firstNode) {

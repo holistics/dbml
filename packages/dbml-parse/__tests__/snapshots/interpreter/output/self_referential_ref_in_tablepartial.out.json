@@ -1,4 +1,16 @@
 {
-  "errors": [],
+  "errors": [
+    {
+      "code": "SAME_ENDPOINT",
+      "diagnostic": "Two endpoints are the same",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "<attribute>@[L1:C12, L1:C22]",
+          "snippet": "ref: > col"
+        }
+      }
+    }
+  ],
   "warnings": []
 }

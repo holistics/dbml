@@ -51,10 +51,27 @@ export const schemaModule: GlobalModule = {
 
     members.push(...childSchemas.values());
 
-    // Duplicate checking and alias conflict detection
+    // Duplicate checking and alias conflict detection (alias is only checked for `public`)
     const seen = new Map<string, NodeSymbol>();
     for (const member of members) {
-      const names = compiler.symbolNames(member);
+      const isPublicSchema = symbol.qualifiedName.join('.') === DEFAULT_SCHEMA_NAME;
+
+      const fullname = (member.declaration && compiler.fullname(member.declaration).getFiltered(UNHANDLED)) || [];
+      if (fullname.length > 1 && fullname[0] === DEFAULT_SCHEMA_NAME) {
+        fullname.shift();
+      }
+
+      const canonicalName = isPublicSchema
+        ? (fullname.length <= 1 ? compiler.symbolName(member) : undefined) // only include canonical name for public schema if the name is not qualified, or is qualified with DEFAULT_SCHEMA_NAME
+        : compiler.symbolName(member);
+
+      const alias = (
+        isPublicSchema && member.declaration
+      )
+        ? compiler.alias(member.declaration).getFiltered(UNHANDLED)
+        : undefined;
+
+      const names = [canonicalName, alias].filter(Boolean);
       for (const name of names) {
         const key = `${member.kind}:${name}`;
         const existing = seen.get(key);
@@ -67,7 +84,7 @@ export const schemaModule: GlobalModule = {
             ? member.declaration.name
             : member.declaration;
           if (errorNode) {
-            errors.push(getDuplicateSchemaMemberError(member.kind, name, qualifiedName.join('.'), errorNode));
+            errors.push(getDuplicateSchemaMemberError(member.kind, name!, qualifiedName.join('.'), errorNode));
           }
         } else {
           seen.set(key, member);
@@ -99,6 +116,8 @@ function getDuplicateSchemaMemberError (kind: SymbolKind, name: string, schemaLa
 // - Return false if the declaration doesn't belong to the schemaSymbol
 // - Return a string for the directly nested schema name that the declaration belongs to
 function shouldElementBelongToThisSchema (compiler: Compiler, schemaSymbol: SchemaSymbol, element: ElementDeclarationNode): boolean | string {
+  if (schemaSymbol.qualifiedName.join('.') === DEFAULT_SCHEMA_NAME && element.alias) return true;
+
   const qualifiedName = schemaSymbol.qualifiedName;
   const fullname = compiler.fullname(element).getFiltered(UNHANDLED);
   if (!fullname) return false;

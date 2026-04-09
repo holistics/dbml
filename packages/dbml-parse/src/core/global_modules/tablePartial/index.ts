@@ -15,11 +15,11 @@ import type { SyntaxNode } from '@/core/parser/nodes';
 import type { SyntaxToken } from '@/core/lexer/tokens';
 import { NodeSymbol, SymbolKind } from '@/core/types/symbols';
 import type { GlobalModule } from '../types';
-import { PASS_THROUGH, type PassThrough, UNHANDLED } from '@/constants';
+import { PASS_THROUGH, type PassThrough, UNHANDLED, KEYWORDS_OF_DEFAULT_SETTING } from '@/constants';
 import Report from '@/core/report';
 import type Compiler from '@/compiler/index';
 import type { SchemaElement } from '@/core/types/schemaJson';
-import { getNodeMemberSymbols, lookupMember, nodeRefereeOfLeftExpression, lookupInDefaultSchema, shouldInterpretNode } from '../utils';
+import { lookupMember, nodeRefereeOfLeftExpression, lookupInDefaultSchema, shouldInterpretNode } from '../utils';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import { tableUtils } from '../table';
 import TablePartialBinder from './bind';
@@ -66,8 +66,8 @@ export const tablePartialModule: GlobalModule = {
       for (const member of members) {
         if (!member.isKind(SymbolKind.Column) || !member.declaration) continue; // Ignore non-column members
 
-        const names = compiler.symbolNames(member);
-        for (const name of names) {
+        const name = compiler.symbolName(member);
+        if (name !== undefined) {
           const errorNode = (member.declaration instanceof ElementDeclarationNode && member.declaration.name) ? member.declaration.name : member.declaration;
           const firstNode = seen.get(name);
           if (firstNode) {
@@ -130,52 +130,71 @@ function nodeRefereeOfEnumType (compiler: Compiler, globalSymbol: NodeSymbol, no
 
   // Standalone: try as enum in default schema, ignore if not found (could be a raw type like varchar)
   if (!isAccessExpression(node.parentNode)) {
-    return lookupInDefaultSchema(compiler, globalSymbol, name, { kinds: [SymbolKind.Enum], ignoreNotFound: true });
+    return lookupInDefaultSchema(compiler, globalSymbol, name, { kinds: [SymbolKind.Enum], ignoreNotFound: true, errorNode: node });
   }
 
-  // In access expression: must resolve, report errors
+  // Right side of access - resolve via left sibling
   const left = nodeRefereeOfLeftExpression(compiler, node);
-  if (!left) return new Report(undefined);
+  if (left) {
+    if (left.isKind(SymbolKind.Schema)) {
+      return lookupMember(compiler, left, name, { kinds: [SymbolKind.Enum, SymbolKind.Schema], errorNode: node });
+    }
+    return new Report(undefined);
+  }
 
-  if (left.isKind(SymbolKind.Schema)) {
-    return lookupMember(compiler, left, name, { kinds: [SymbolKind.Enum, SymbolKind.Schema] });
+  // Left side of access - look up as Schema in program scope
+  const parent = node.parentNode as InfixExpressionNode;
+  if (parent.leftExpression === node) {
+    return lookupMember(compiler, globalSymbol, name, { kinds: [SymbolKind.Schema], ignoreNotFound: true, errorNode: node });
   }
 
   return new Report(undefined);
 }
 
-// Inline ref: column or schema.table.column
-// Standalone variables are ignored (could be partial-local column references)
+// Inline ref: table.column or schema.table.column
+// Always report errors, never ignore not found
 function nodeRefereeOfInlineRef (compiler: Compiler, globalSymbol: NodeSymbol, node: SyntaxNode): Report<NodeSymbol | undefined> {
   if (!isExpressionAVariableNode(node)) return new Report(undefined);
   const name = extractVarNameFromPrimaryVariable(node) ?? '';
 
+  // Standalone variable in inline ref - look up in the enclosing table
   if (!isAccessExpression(node.parentNode)) {
-    // Standalone column ref: look up in the enclosing TablePartial
-    const enclosingPartial = node.parent;
-    if (enclosingPartial instanceof ElementDeclarationNode && enclosingPartial.isKind(ElementKind.TablePartial)) {
-      const partialSymbol = compiler.nodeSymbol(enclosingPartial);
-      if (!partialSymbol.hasValue(UNHANDLED)) {
-        return lookupMember(compiler, partialSymbol.getValue(), name, { kinds: [SymbolKind.Column], ignoreNotFound: false, errorNode: node });
+    const enclosingTablePartial = node.parent;
+    if (enclosingTablePartial instanceof ElementDeclarationNode && enclosingTablePartial.isKind(ElementKind.TablePartial)) {
+      const tableSymbol = compiler.nodeSymbol(enclosingTablePartial);
+      if (!tableSymbol.hasValue(UNHANDLED)) {
+        return lookupMember(compiler, tableSymbol.getValue(), name, { kinds: [SymbolKind.Column], ignoreNotFound: false, errorNode: node });
       }
     }
     return lookupMember(compiler, globalSymbol, name, { kinds: [SymbolKind.Column], ignoreNotFound: true, errorNode: node });
   }
 
-  // Right side of access: resolve using the left sibling's referee
+  // Right side of access expression - resolve via left sibling
   const left = nodeRefereeOfLeftExpression(compiler, node);
   if (left) {
     if (left.isKind(SymbolKind.Schema)) {
-      return lookupMember(compiler, left, name, { kinds: [SymbolKind.Table, SymbolKind.Schema] });
+      return lookupMember(compiler, left, name, { kinds: [SymbolKind.Table, SymbolKind.Schema], errorNode: node });
     }
     if (left.isKind(SymbolKind.Table)) {
-      return lookupMember(compiler, left, name, { kinds: [SymbolKind.Column] });
+      return lookupMember(compiler, left, name, { kinds: [SymbolKind.Column], errorNode: node });
     }
     return new Report(undefined);
   }
 
-  // Left side of access: look up as Table or Schema in default schema
-  return lookupInDefaultSchema(compiler, globalSymbol, name, { kinds: [SymbolKind.Table, SymbolKind.Schema], ignoreNotFound: false, errorNode: node });
+  // Left side of access expression - look up as Table or Schema in program scope
+  const parent = node.parentNode as InfixExpressionNode;
+  if (parent.leftExpression === node) {
+    // If our parent is also a left side of another access, this is a schema
+    if (isAccessExpression(parent.parentNode) && (parent.parentNode as InfixExpressionNode).leftExpression === parent) {
+      return lookupMember(compiler, globalSymbol, name, { kinds: [SymbolKind.Schema], errorNode: node });
+    }
+    // First try by table name, then by alias
+    const tableResult = lookupInDefaultSchema(compiler, globalSymbol, name, { kinds: [SymbolKind.Table], ignoreNotFound: true, errorNode: node });
+    if (tableResult.getValue()) return tableResult;
+    return lookupInDefaultSchema(compiler, globalSymbol, name, { kinds: [SymbolKind.Table], errorNode: node });
+  }
+
+  return new Report(undefined);
 }
 
 // Default value: enum.field or schema.enum.field
@@ -183,20 +202,34 @@ function nodeRefereeOfEnumDefault (compiler: Compiler, globalSymbol: NodeSymbol,
   if (!isExpressionAVariableNode(node)) return new Report(undefined);
   const name = extractVarNameFromPrimaryVariable(node) ?? '';
 
-  // Standalone: ignore (could be a literal like null/true/false)
+  // Standalone: ignore default keywords (true/false/null), everything else is an enum lookup
   if (!isAccessExpression(node.parentNode)) {
+    if (KEYWORDS_OF_DEFAULT_SETTING.includes(name.toLowerCase())) {
+      return new Report(undefined);
+    }
+    return lookupInDefaultSchema(compiler, globalSymbol, name, { kinds: [SymbolKind.Enum], ignoreNotFound: true, errorNode: node });
+  }
+
+  // Right side of access - resolve via left sibling
+  const left = nodeRefereeOfLeftExpression(compiler, node);
+  if (left) {
+    if (left.isKind(SymbolKind.Schema)) {
+      return lookupMember(compiler, left, name, { kinds: [SymbolKind.Enum, SymbolKind.Schema], errorNode: node });
+    }
+    if (left.isKind(SymbolKind.Enum)) {
+      return lookupMember(compiler, left, name, { kinds: [SymbolKind.EnumField], errorNode: node });
+    }
     return new Report(undefined);
   }
 
-  // In access expression: must resolve, report errors
-  const left = nodeRefereeOfLeftExpression(compiler, node);
-  if (!left) return new Report(undefined);
-
-  if (left.isKind(SymbolKind.Schema)) {
-    return lookupMember(compiler, left, name, { kinds: [SymbolKind.Enum, SymbolKind.Schema] });
-  }
-  if (left.isKind(SymbolKind.Enum)) {
-    return lookupMember(compiler, left, name, { kinds: [SymbolKind.EnumField] });
+  // Left side of access - look up as Enum in program scope (report errors since it's clearly an enum access)
+  const parent = node.parentNode as InfixExpressionNode;
+  if (parent.leftExpression === node) {
+    // If parent is also left of another access, this is a schema
+    if (isAccessExpression(parent.parentNode) && (parent.parentNode as InfixExpressionNode).leftExpression === parent) {
+      return lookupMember(compiler, globalSymbol, name, { kinds: [SymbolKind.Schema], errorNode: node });
+    }
+    return lookupInDefaultSchema(compiler, globalSymbol, name, { kinds: [SymbolKind.Enum], errorNode: node });
   }
 
   return new Report(undefined);

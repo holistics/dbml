@@ -1854,7 +1854,11 @@
         "id": "<program>@[L0:C0, L12:C1]",
         "snippet": "Project {\r...\r\n    }\r\n}"
       },
-      "members": [],
+      "members": [
+        {
+          "context": {}
+        }
+      ],
       "references": []
     }
   },

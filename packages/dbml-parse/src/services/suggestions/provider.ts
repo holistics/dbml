@@ -206,17 +206,6 @@ function suggestOnRelOp (
   return noSuggestions();
 }
 
-function getMemberName (compiler: Compiler, member: NodeSymbol): { name: string; fullname: string[] | undefined } {
-  const names = compiler.symbolNames(member);
-  const name = names[0] ?? '';
-  if (member instanceof SchemaSymbol) {
-    return { name, fullname: [name] };
-  }
-  const nameResult = member.declaration ? compiler.fullname(member.declaration) : undefined;
-  const fullname = (nameResult && !nameResult.hasValue(UNHANDLED)) ? nameResult.getValue() : undefined;
-  return { name, fullname: fullname ?? undefined };
-}
-
 function suggestMembersOfSymbol (
   compiler: Compiler,
   symbol: NodeSymbol,
@@ -228,15 +217,13 @@ function suggestMembersOfSymbol (
     suggestions: members
       .filter((member) => acceptedKinds.includes(member.kind))
       .filter((member) => {
-        // Schema-qualified members (fullname.length > 1) should only be accessed
-        // through their schema, not shown as direct suggestions at the parent scope.
         // Also exclude the default 'public' schema since it's implicit.
-        if (member instanceof SchemaSymbol && member.name === DEFAULT_SCHEMA_NAME) return false;
-        const { fullname } = getMemberName(compiler, member);
-        return !fullname || fullname.length <= 1;
+        if (member instanceof SchemaSymbol && member.qualifiedName.join('.') === DEFAULT_SCHEMA_NAME) return false;
+        return true;
       })
-      .map((member) => {
-        const { name } = getMemberName(compiler, member);
+      .flatMap((member) => {
+        const name = compiler.symbolName(member);
+        if (name === undefined) return [];
         return {
           label: name,
           insertText: name,
@@ -577,7 +564,7 @@ function resolveNameStack (
   // Walk through the name stack
   for (const name of nameStack) {
     const matching = candidates.filter((member) => {
-      const { name: memberName } = getMemberName(compiler, member);
+      const memberName = compiler.symbolName(member);
       return memberName === name;
     });
     if (matching.length === 0) return [];
@@ -607,7 +594,7 @@ function suggestMembers (
     suggestions: resolvedSymbols
       .flatMap((symbol) => compiler.symbolMembers(symbol).getFiltered(UNHANDLED) || [])
       .map((member) => {
-        const { name } = getMemberName(compiler, member);
+        const name = compiler.symbolName(member)!;
         return {
           label: name,
           insertText: name,
@@ -850,12 +837,10 @@ function suggestInTableGroupField (compiler: Compiler): CompletionList {
       ...addQuoteToSuggestionIfNeeded({
         suggestions: publicMembers.flatMap((member) => {
           if (member.kind !== SymbolKind.Table && member.kind !== SymbolKind.Schema) return [];
-          const { name, fullname } = getMemberName(compiler, member);
-          if (!name) return [];
-          // Skip schema-qualified members (accessible via their schema)
-          if (fullname && fullname.length > 1) return [];
+          const name = compiler.symbolName(member);
+          if (name === undefined) return [];
           // Skip the default 'public' schema
-          if (member instanceof SchemaSymbol && member.name === DEFAULT_SCHEMA_NAME) return [];
+          if (member instanceof SchemaSymbol && member.qualifiedName.join('.') === DEFAULT_SCHEMA_NAME) return [];
 
           return {
             label: name,

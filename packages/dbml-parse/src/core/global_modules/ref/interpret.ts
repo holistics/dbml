@@ -43,12 +43,13 @@ export class RefInterpreter {
   private declarationNode: ElementDeclarationNode;
   private compiler: Compiler;
   private ref: Partial<Ref>;
-  private container: { schemaName: string | null; tableName: string } | undefined;
+  private ownerTable?: string;
+  private ownerSchema?: string | null;
 
   constructor (compiler: Compiler, declarationNode: ElementDeclarationNode) {
     this.declarationNode = declarationNode;
     this.compiler = compiler;
-    this.ref = { };
+    this.ref = {};
     const parent = this.declarationNode.parent;
     if (parent instanceof ElementDeclarationNode && parent.isKind(ElementKind.Table)) {
       const fnResult = compiler.fullname(parent);
@@ -57,7 +58,8 @@ export class RefInterpreter {
         if (segments && segments.length > 0) {
           const tableName = segments[segments.length - 1];
           const schemaName = segments.length > 1 ? segments.slice(0, -1).join('.') : null;
-          this.container = { schemaName, tableName };
+          this.ownerTable = tableName;
+          this.ownerSchema = schemaName;
         }
       }
     }
@@ -116,8 +118,8 @@ export class RefInterpreter {
     const multiplicities = getMultiplicities(op);
     if (!multiplicities) return [];
 
-    const leftNames = extractNamesFromRefOperand(leftExpression!, this.container);
-    const rightNames = extractNamesFromRefOperand(rightExpression!, this.container);
+    const leftNames = extractNamesFromRefOperand(leftExpression!, this.ownerSchema, this.ownerTable);
+    const rightNames = extractNamesFromRefOperand(rightExpression!, this.ownerSchema, this.ownerTable);
     this.ref.endpoints = [
       buildRefEndpoint(leftNames, multiplicities[0], getTokenPosition(leftExpression!)),
       buildRefEndpoint(rightNames, multiplicities[1], getTokenPosition(rightExpression!)),

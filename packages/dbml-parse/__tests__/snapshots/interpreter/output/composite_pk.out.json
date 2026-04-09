@@ -1,4 +1,16 @@
 {
-  "errors": [],
+  "errors": [
+    {
+      "code": "DUPLICATE_NAME",
+      "diagnostic": "Table name 'users' already exists in schema 'public'",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "<primary-expression>@[L15:C6, L15:C11]",
+          "snippet": "users"
+        }
+      }
+    }
+  ],
   "warnings": []
 }

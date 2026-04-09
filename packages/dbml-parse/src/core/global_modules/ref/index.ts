@@ -65,7 +65,7 @@ function getDefaultSchemaSymbol (compiler: Compiler, globalSymbol: NodeSymbol): 
   if (members.hasValue(UNHANDLED)) return undefined;
 
   return members.getValue().find((m: NodeSymbol) =>
-    m instanceof SchemaSymbol && m.name === DEFAULT_SCHEMA_NAME,
+    m instanceof SchemaSymbol && m.qualifiedName.join('.') === DEFAULT_SCHEMA_NAME,
   );
 }
 

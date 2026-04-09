@@ -2,6 +2,7 @@ import { DEFAULT_SCHEMA_NAME, UNHANDLED } from '@/constants';
 import { splitQualifiedIdentifier } from '../utils';
 import type Compiler from '../../index';
 import { NodeSymbol, SymbolKind } from '@/core/types/symbols';
+import { lookupMember } from '@/core/global_modules/utils';
 
 export type TableNameInput = string | { schema?: string; table: string };
 
@@ -57,39 +58,45 @@ export function lookupTableSymbol (
   schema: string,
   table: string,
 ): NodeSymbol | null {
-  const publicSymbols = compiler.parse.publicSymbolTable();
-  if (!publicSymbols) return null;
+  const ast = compiler.parseFile().getValue().ast;
+  const astSymbol = compiler.nodeSymbol(ast).getFiltered(UNHANDLED);
+  if (!astSymbol) return null;
 
-  // Build the expected fullname
-  const expectedFullname = schema === DEFAULT_SCHEMA_NAME ? [table] : [schema, table];
-
-  // First try by table name
-  const byName = publicSymbols.find((sym) => {
-    if (!sym.isKind(SymbolKind.Table)) return false;
-    if (!sym.declaration) return false;
-    const fn = compiler.fullname(sym.declaration);
-    if (fn.hasValue(UNHANDLED)) return false;
-    const parts = fn.getValue();
-    if (!parts) return false;
-    const lastName = parts.at(-1);
-    const schemaPrefix = parts.length >= 2 ? parts[0] : DEFAULT_SCHEMA_NAME;
-    return lastName === table && schemaPrefix === schema;
-  });
-  if (byName) return byName;
-
-  // Fall back to alias lookup (aliases are schema-independent)
   if (schema === DEFAULT_SCHEMA_NAME) {
-    const byAlias = publicSymbols.find((sym) => {
-      if (!sym.isKind(SymbolKind.Table)) return false;
-      if (!sym.declaration) return false;
-      const aliasResult = compiler.alias(sym.declaration);
-      if (aliasResult.hasValue(UNHANDLED)) return false;
-      return aliasResult.getValue() === table;
-    });
-    if (byAlias) return byAlias;
+    const symbol = lookupMember(
+      compiler,
+      astSymbol,
+      table,
+      {
+        kinds: [SymbolKind.Table],
+        ignoreNotFound: true,
+      },
+    );
+    return symbol.getValue() ?? null;
   }
 
-  return null;
+  const schemaSymbol = lookupMember(
+    compiler,
+    astSymbol,
+    schema,
+    {
+      kinds: [SymbolKind.Schema],
+      ignoreNotFound: true,
+    },
+  ).getValue();
+  if (!schemaSymbol) return null;
+
+  const tableSymbol = lookupMember(
+    compiler,
+    schemaSymbol,
+    table,
+    {
+      kinds: [SymbolKind.Table],
+      ignoreNotFound: true,
+    },
+  );
+
+  return tableSymbol.getValue() ?? null;
 }
 
 /**

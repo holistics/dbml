@@ -1372,7 +1372,11 @@
         "id": "<program>@[L0:C0, L5:C1]",
         "snippet": "Test ListE...mpty. ]\r\n}"
       },
-      "members": [],
+      "members": [
+        {
+          "context": {}
+        }
+      ],
       "references": []
     }
   },

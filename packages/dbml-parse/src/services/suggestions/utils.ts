@@ -151,9 +151,8 @@ export function getColumnsFromTableSymbol (
     if (!member.isKind(SymbolKind.Column)) continue;
     // Skip partial injection nodes (~PartialName)
     if (member.declaration instanceof FunctionApplicationNode && isValidPartialInjection(member.declaration.callee)) continue;
-    const names = compiler.symbolNames(member);
-    const columnName = names[0];
-    if (!columnName) continue;
+    const columnName = compiler.symbolName(member);
+    if (columnName === undefined) continue;
     const columnInfo = extractNameAndTypeOfColumnSymbol(member, columnName);
     if (!columnInfo) continue;
     columns.push(columnInfo);

@@ -1227,7 +1227,6 @@ describe('[example] CompletionItemProvider', () => {
       expect(labels).toEqual([
         'myschema',
         'Note',
-
       ]);
 
       // Test insertTexts
@@ -1235,7 +1234,6 @@ describe('[example] CompletionItemProvider', () => {
       expect(insertTexts).toEqual([
         'myschema',
         'Note',
-
       ]);
     });
   });

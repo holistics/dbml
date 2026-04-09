@@ -119,7 +119,11 @@
         "id": "<program>@[L0:C0, L0:C15]",
         "snippet": "Note: Enum E {}"
       },
-      "members": [],
+      "members": [
+        {
+          "context": {}
+        }
+      ],
       "references": []
     }
   },

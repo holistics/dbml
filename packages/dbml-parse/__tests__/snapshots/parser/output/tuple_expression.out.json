@@ -1737,7 +1737,11 @@
         "id": "<program>@[L0:C0, L13:C1]",
         "snippet": "Test Tuple...    12)\r\n}"
       },
-      "members": [],
+      "members": [
+        {
+          "context": {}
+        }
+      ],
       "references": []
     }
   },

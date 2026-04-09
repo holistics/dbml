@@ -20,6 +20,8 @@ function processColumnInDb<T extends Table | TablePartial> (table: T): T {
       type: {
         ...c.type,
         isEnum: undefined,
+        lengthParam: undefined,
+        numericParams: undefined,
       },
     })),
   };
