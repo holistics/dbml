@@ -6,7 +6,7 @@
       "level": "error",
       "token": {
         "context": {
-          "id": "token-<string>:']@[L7:C69, L7:C71]",
+          "id": "token@<string>@:']@[L7:C69, L7:C71]",
           "snippet": "']",
           "isInvalid": true
         }
@@ -18,7 +18,7 @@
       "level": "error",
       "token": {
         "context": {
-          "id": "token-<identifier>:s@[L7:C35, L7:C36]",
+          "id": "token@<identifier>@:s@[L7:C35, L7:C36]",
           "snippet": "s",
           "isInvalid": true
         }
@@ -30,7 +30,7 @@
       "level": "error",
       "token": {
         "context": {
-          "id": "token-<rparen>:)@[L9:C24, L9:C25]",
+          "id": "token@<rparen>@:)@[L9:C24, L9:C25]",
           "snippet": ")",
           "isInvalid": true
         }
@@ -42,7 +42,7 @@
       "level": "error",
       "token": {
         "context": {
-          "id": "token-<rbrace>:}@[L11:C0, L11:C1]",
+          "id": "token@<rbrace>@:}@[L11:C0, L11:C1]",
           "snippet": "}",
           "isInvalid": true
         }
@@ -54,7 +54,7 @@
       "level": "error",
       "node": {
         "context": {
-          "id": "node-<attribute>@[L9:C14, L9:C24]",
+          "id": "node@<attribute>@@[L9:C14, L9:C24]",
           "snippet": "diagram_id"
         }
       }

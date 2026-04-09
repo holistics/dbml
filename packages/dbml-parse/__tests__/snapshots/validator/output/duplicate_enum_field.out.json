@@ -6,7 +6,7 @@
       "level": "error",
       "node": {
         "context": {
-          "id": "node-<function-application>@[L2:C4, L2:C9]",
+          "id": "node@<function-application>@@[L2:C4, L2:C9]",
           "snippet": "churn"
         }
       }
@@ -17,7 +17,7 @@
       "level": "error",
       "node": {
         "context": {
-          "id": "node-<function-application>@[L1:C4, L1:C9]",
+          "id": "node@<function-application>@@[L1:C4, L1:C9]",
           "snippet": "churn"
         }
       }
@@ -28,7 +28,7 @@
       "level": "error",
       "node": {
         "context": {
-          "id": "node-<function-application>@[L3:C4, L3:C9]",
+          "id": "node@<function-application>@@[L3:C4, L3:C9]",
           "snippet": "churn"
         }
       }
@@ -39,7 +39,7 @@
       "level": "error",
       "node": {
         "context": {
-          "id": "node-<function-application>@[L1:C4, L1:C9]",
+          "id": "node@<function-application>@@[L1:C4, L1:C9]",
           "snippet": "churn"
         }
       }
@@ -47,26 +47,26 @@
   ],
   "program": {
     "context": {
-      "id": "node-<program>@[L0:C0, L4:C1]",
+      "id": "node@<program>@@[L0:C0, L4:C1]",
       "snippet": "Enum statu...  churn\r\n}"
     },
     "children": {
       "body": [
         {
           "context": {
-            "id": "node-<element-declaration>:status@[L0:C0, L4:C1]",
+            "id": "node@<element-declaration>@:status@[L0:C0, L4:C1]",
             "snippet": "Enum statu...  churn\r\n}"
           },
           "children": {
             "body": {
               "context": {
-                "id": "node-<block-expression>@[L0:C12, L4:C1]",
+                "id": "node@<block-expression>@@[L0:C12, L4:C1]",
                 "snippet": "{\r\n    chu...  churn\r\n}"
               },
               "children": {
                 "blockCloseBrace": {
                   "context": {
-                    "id": "token-<rbrace>:}@[L4:C0, L4:C1]",
+                    "id": "token@<rbrace>@:}@[L4:C0, L4:C1]",
                     "snippet": "}"
                   },
                   "leadingTrivia": "",
@@ -75,7 +75,7 @@
                 },
                 "blockOpenBrace": {
                   "context": {
-                    "id": "token-<lbrace>:{@[L0:C12, L0:C13]",
+                    "id": "token@<lbrace>@:{@[L0:C12, L0:C13]",
                     "snippet": "{"
                   },
                   "leadingTrivia": "",
@@ -85,20 +85,20 @@
                 "body": [
                   {
                     "context": {
-                      "id": "node-<function-application>@[L1:C4, L1:C9]",
+                      "id": "node@<function-application>@@[L1:C4, L1:C9]",
                       "snippet": "churn"
                     },
                     "children": {
                       "args": [],
                       "callee": {
                         "context": {
-                          "id": "node-<primary-expression>@[L1:C4, L1:C9]",
+                          "id": "node@<primary-expression>@@[L1:C4, L1:C9]",
                           "snippet": "churn"
                         },
                         "children": {
                           "expression": {
                             "context": {
-                              "id": "node-<variable>:churn@[L1:C4, L1:C9]",
+                              "id": "node@<variable>@:churn@[L1:C4, L1:C9]",
                               "snippet": "churn"
                             },
                             "children": {
@@ -106,7 +106,7 @@
                               "fullStart": 15,
                               "variable": {
                                 "context": {
-                                  "id": "token-<identifier>:churn@[L1:C4, L1:C9]",
+                                  "id": "token@<identifier>@:churn@[L1:C4, L1:C9]",
                                   "snippet": "churn"
                                 },
                                 "leadingTrivia": "    ",
@@ -124,11 +124,11 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<function-application>@[L1:C4, L1:C9]",
+                        "id": "symbol@<function-application>@@[L1:C4, L1:C9]",
                         "snippet": "churn"
                       },
                       "declaration": {
-                        "id": "node-<function-application>@[L1:C4, L1:C9]",
+                        "id": "node@<function-application>@@[L1:C4, L1:C9]",
                         "snippet": "churn"
                       },
                       "references": []
@@ -136,20 +136,20 @@
                   },
                   {
                     "context": {
-                      "id": "node-<function-application>@[L2:C4, L2:C9]",
+                      "id": "node@<function-application>@@[L2:C4, L2:C9]",
                       "snippet": "churn"
                     },
                     "children": {
                       "args": [],
                       "callee": {
                         "context": {
-                          "id": "node-<primary-expression>@[L2:C4, L2:C9]",
+                          "id": "node@<primary-expression>@@[L2:C4, L2:C9]",
                           "snippet": "churn"
                         },
                         "children": {
                           "expression": {
                             "context": {
-                              "id": "node-<variable>:churn@[L2:C4, L2:C9]",
+                              "id": "node@<variable>@:churn@[L2:C4, L2:C9]",
                               "snippet": "churn"
                             },
                             "children": {
@@ -157,7 +157,7 @@
                               "fullStart": 26,
                               "variable": {
                                 "context": {
-                                  "id": "token-<identifier>:churn@[L2:C4, L2:C9]",
+                                  "id": "token@<identifier>@:churn@[L2:C4, L2:C9]",
                                   "snippet": "churn"
                                 },
                                 "leadingTrivia": "    ",
@@ -175,11 +175,11 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<function-application>@[L2:C4, L2:C9]",
+                        "id": "symbol@<function-application>@@[L2:C4, L2:C9]",
                         "snippet": "churn"
                       },
                       "declaration": {
-                        "id": "node-<function-application>@[L2:C4, L2:C9]",
+                        "id": "node@<function-application>@@[L2:C4, L2:C9]",
                         "snippet": "churn"
                       },
                       "references": []
@@ -187,20 +187,20 @@
                   },
                   {
                     "context": {
-                      "id": "node-<function-application>@[L3:C4, L3:C9]",
+                      "id": "node@<function-application>@@[L3:C4, L3:C9]",
                       "snippet": "churn"
                     },
                     "children": {
                       "args": [],
                       "callee": {
                         "context": {
-                          "id": "node-<primary-expression>@[L3:C4, L3:C9]",
+                          "id": "node@<primary-expression>@@[L3:C4, L3:C9]",
                           "snippet": "churn"
                         },
                         "children": {
                           "expression": {
                             "context": {
-                              "id": "node-<variable>:churn@[L3:C4, L3:C9]",
+                              "id": "node@<variable>@:churn@[L3:C4, L3:C9]",
                               "snippet": "churn"
                             },
                             "children": {
@@ -208,7 +208,7 @@
                               "fullStart": 37,
                               "variable": {
                                 "context": {
-                                  "id": "token-<identifier>:churn@[L3:C4, L3:C9]",
+                                  "id": "token@<identifier>@:churn@[L3:C4, L3:C9]",
                                   "snippet": "churn"
                                 },
                                 "leadingTrivia": "    ",
@@ -226,11 +226,11 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<function-application>@[L3:C4, L3:C9]",
+                        "id": "symbol@<function-application>@@[L3:C4, L3:C9]",
                         "snippet": "churn"
                       },
                       "declaration": {
-                        "id": "node-<function-application>@[L3:C4, L3:C9]",
+                        "id": "node@<function-application>@@[L3:C4, L3:C9]",
                         "snippet": "churn"
                       },
                       "references": []
@@ -245,13 +245,13 @@
             "fullStart": 0,
             "name": {
               "context": {
-                "id": "node-<primary-expression>@[L0:C5, L0:C11]",
+                "id": "node@<primary-expression>@@[L0:C5, L0:C11]",
                 "snippet": "status"
               },
               "children": {
                 "expression": {
                   "context": {
-                    "id": "node-<variable>:status@[L0:C5, L0:C11]",
+                    "id": "node@<variable>@:status@[L0:C5, L0:C11]",
                     "snippet": "status"
                   },
                   "children": {
@@ -259,7 +259,7 @@
                     "fullStart": 5,
                     "variable": {
                       "context": {
-                        "id": "token-<identifier>:status@[L0:C5, L0:C11]",
+                        "id": "token@<identifier>@:status@[L0:C5, L0:C11]",
                         "snippet": "status"
                       },
                       "leadingTrivia": "",
@@ -274,7 +274,7 @@
             },
             "type": {
               "context": {
-                "id": "token-<identifier>:Enum@[L0:C0, L0:C4]",
+                "id": "token@<identifier>@:Enum@[L0:C0, L0:C4]",
                 "snippet": "Enum"
               },
               "leadingTrivia": "",
@@ -284,17 +284,17 @@
           },
           "symbol": {
             "context": {
-              "id": "symbol-<element-declaration>:status@[L0:C0, L4:C1]",
+              "id": "symbol@<element-declaration>@:status@[L0:C0, L4:C1]",
               "snippet": "Enum statu...  churn\r\n}"
             },
             "declaration": {
-              "id": "node-<element-declaration>:status@[L0:C0, L4:C1]",
+              "id": "node@<element-declaration>@:status@[L0:C0, L4:C1]",
               "snippet": "Enum statu...  churn\r\n}"
             },
             "members": [
               {
                 "context": {
-                  "id": "symbol-<function-application>@[L1:C4, L1:C9]",
+                  "id": "symbol@<function-application>@@[L1:C4, L1:C9]",
                   "snippet": "churn"
                 }
               }
@@ -305,7 +305,7 @@
       ],
       "eof": {
         "context": {
-          "id": "token-<eof>:@[L4:C1, L4:C1]",
+          "id": "token@<eof>@:@[L4:C1, L4:C1]",
           "snippet": ""
         },
         "leadingTrivia": "",
@@ -317,17 +317,17 @@
     },
     "symbol": {
       "context": {
-        "id": "symbol-<program>@[L0:C0, L4:C1]",
+        "id": "symbol@<program>@@[L0:C0, L4:C1]",
         "snippet": "Enum statu...  churn\r\n}"
       },
       "declaration": {
-        "id": "node-<program>@[L0:C0, L4:C1]",
+        "id": "node@<program>@@[L0:C0, L4:C1]",
         "snippet": "Enum statu...  churn\r\n}"
       },
       "members": [
         {
           "context": {
-            "id": "symbol-<element-declaration>:status@[L0:C0, L4:C1]",
+            "id": "symbol@<element-declaration>@:status@[L0:C0, L4:C1]",
             "snippet": "Enum statu...  churn\r\n}"
           }
         }

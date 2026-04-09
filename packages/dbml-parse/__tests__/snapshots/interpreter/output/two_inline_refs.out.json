@@ -6,7 +6,7 @@
       "level": "error",
       "node": {
         "context": {
-          "id": "node-<primary-expression>@[L3:C23, L3:C28]",
+          "id": "node@<primary-expression>@@[L3:C23, L3:C28]",
           "snippet": "staff"
         }
       }
@@ -17,7 +17,7 @@
       "level": "error",
       "node": {
         "context": {
-          "id": "node-<primary-expression>@[L4:C24, L4:C30]",
+          "id": "node@<primary-expression>@@[L4:C24, L4:C30]",
           "snippet": "rental"
         }
       }

@@ -6,7 +6,7 @@
       "level": "error",
       "token": {
         "context": {
-          "id": "token-<function-expression>:`\r\n@[L6:C43, L7:C0]",
+          "id": "token@<function-expression>@:`\r\n@[L6:C43, L7:C0]",
           "snippet": "`\r\n",
           "isInvalid": true
         }
@@ -16,7 +16,7 @@
   "tokens": [
     {
       "context": {
-        "id": "token-<function-expression>:id * 2@[L0:C0, L0:C8]",
+        "id": "token@<function-expression>@:id * 2@[L0:C0, L0:C8]",
         "snippet": "`id * 2`"
       },
       "leadingTrivia": "",
@@ -25,7 +25,7 @@
     },
     {
       "context": {
-        "id": "token-<function-expression>:id@[L0:C9, L0:C13]",
+        "id": "token@<function-expression>@:id@[L0:C9, L0:C13]",
         "snippet": "`id`"
       },
       "leadingTrivia": "",
@@ -34,7 +34,7 @@
     },
     {
       "context": {
-        "id": "token-<function-expression>:\r\n    id * 3\r\n@[L2:C0, L4:C1]",
+        "id": "token@<function-expression>@:\r\n    id * 3\r\n@[L2:C0, L4:C1]",
         "snippet": "`\r\n    id * 3\r\n`"
       },
       "leadingTrivia": "\n",
@@ -43,7 +43,7 @@
     },
     {
       "context": {
-        "id": "token-<function-expression>:no escaped supported! this is an error! \\@[L6:C0, L6:C43]",
+        "id": "token@<function-expression>@:no escaped supported! this is an error! \\@[L6:C0, L6:C43]",
         "snippet": "`no escape... error! \\`"
       },
       "leadingTrivia": "\n",
@@ -52,7 +52,7 @@
     },
     {
       "context": {
-        "id": "token-<eof>:@[L7:C0, L7:C0]",
+        "id": "token@<eof>@:@[L7:C0, L7:C0]",
         "snippet": ""
       },
       "leadingTrivia": "",

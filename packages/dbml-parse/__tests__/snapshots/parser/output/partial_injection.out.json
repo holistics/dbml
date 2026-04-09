@@ -2,26 +2,26 @@
   "errors": [],
   "program": {
     "context": {
-      "id": "node-<program>@[L0:C0, L7:C0]",
+      "id": "node@<program>@@[L0:C0, L7:C0]",
       "snippet": "TableParti...mestamp\n}\n"
     },
     "children": {
       "body": [
         {
           "context": {
-            "id": "node-<element-declaration>:with_timestamp@[L0:C0, L2:C1]",
+            "id": "node@<element-declaration>@:with_timestamp@[L0:C0, L2:C1]",
             "snippet": "TableParti...amp uuid\n}"
           },
           "children": {
             "body": {
               "context": {
-                "id": "node-<block-expression>@[L0:C28, L2:C1]",
+                "id": "node@<block-expression>@@[L0:C28, L2:C1]",
                 "snippet": "{\n  timestamp uuid\n}"
               },
               "children": {
                 "blockCloseBrace": {
                   "context": {
-                    "id": "token-<rbrace>:}@[L2:C0, L2:C1]",
+                    "id": "token@<rbrace>@:}@[L2:C0, L2:C1]",
                     "snippet": "}"
                   },
                   "leadingTrivia": "",
@@ -30,7 +30,7 @@
                 },
                 "blockOpenBrace": {
                   "context": {
-                    "id": "token-<lbrace>:{@[L0:C28, L0:C29]",
+                    "id": "token@<lbrace>@:{@[L0:C28, L0:C29]",
                     "snippet": "{"
                   },
                   "leadingTrivia": "",
@@ -40,20 +40,20 @@
                 "body": [
                   {
                     "context": {
-                      "id": "node-<function-application>@[L1:C2, L1:C16]",
+                      "id": "node@<function-application>@@[L1:C2, L1:C16]",
                       "snippet": "timestamp uuid"
                     },
                     "children": {
                       "args": [
                         {
                           "context": {
-                            "id": "node-<primary-expression>@[L1:C12, L1:C16]",
+                            "id": "node@<primary-expression>@@[L1:C12, L1:C16]",
                             "snippet": "uuid"
                           },
                           "children": {
                             "expression": {
                               "context": {
-                                "id": "node-<variable>:uuid@[L1:C12, L1:C16]",
+                                "id": "node@<variable>@:uuid@[L1:C12, L1:C16]",
                                 "snippet": "uuid"
                               },
                               "children": {
@@ -61,7 +61,7 @@
                                 "fullStart": 42,
                                 "variable": {
                                   "context": {
-                                    "id": "token-<identifier>:uuid@[L1:C12, L1:C16]",
+                                    "id": "token@<identifier>@:uuid@[L1:C12, L1:C16]",
                                     "snippet": "uuid"
                                   },
                                   "leadingTrivia": "",
@@ -77,13 +77,13 @@
                       ],
                       "callee": {
                         "context": {
-                          "id": "node-<primary-expression>@[L1:C2, L1:C11]",
+                          "id": "node@<primary-expression>@@[L1:C2, L1:C11]",
                           "snippet": "timestamp"
                         },
                         "children": {
                           "expression": {
                             "context": {
-                              "id": "node-<variable>:timestamp@[L1:C2, L1:C11]",
+                              "id": "node@<variable>@:timestamp@[L1:C2, L1:C11]",
                               "snippet": "timestamp"
                             },
                             "children": {
@@ -91,7 +91,7 @@
                               "fullStart": 30,
                               "variable": {
                                 "context": {
-                                  "id": "token-<identifier>:timestamp@[L1:C2, L1:C11]",
+                                  "id": "token@<identifier>@:timestamp@[L1:C2, L1:C11]",
                                   "snippet": "timestamp"
                                 },
                                 "leadingTrivia": "  ",
@@ -117,13 +117,13 @@
             "fullStart": 0,
             "name": {
               "context": {
-                "id": "node-<primary-expression>@[L0:C13, L0:C27]",
+                "id": "node@<primary-expression>@@[L0:C13, L0:C27]",
                 "snippet": "with_timestamp"
               },
               "children": {
                 "expression": {
                   "context": {
-                    "id": "node-<variable>:with_timestamp@[L0:C13, L0:C27]",
+                    "id": "node@<variable>@:with_timestamp@[L0:C13, L0:C27]",
                     "snippet": "with_timestamp"
                   },
                   "children": {
@@ -131,7 +131,7 @@
                     "fullStart": 13,
                     "variable": {
                       "context": {
-                        "id": "token-<identifier>:with_timestamp@[L0:C13, L0:C27]",
+                        "id": "token@<identifier>@:with_timestamp@[L0:C13, L0:C27]",
                         "snippet": "with_timestamp"
                       },
                       "leadingTrivia": "",
@@ -146,7 +146,7 @@
             },
             "type": {
               "context": {
-                "id": "token-<identifier>:TablePartial@[L0:C0, L0:C12]",
+                "id": "token@<identifier>@:TablePartial@[L0:C0, L0:C12]",
                 "snippet": "TablePartial"
               },
               "leadingTrivia": "",
@@ -157,19 +157,19 @@
         },
         {
           "context": {
-            "id": "node-<element-declaration>:users@[L4:C0, L6:C1]",
+            "id": "node@<element-declaration>@:users@[L4:C0, L6:C1]",
             "snippet": "Table user...imestamp\n}"
           },
           "children": {
             "body": {
               "context": {
-                "id": "node-<block-expression>@[L4:C12, L6:C1]",
+                "id": "node@<block-expression>@@[L4:C12, L6:C1]",
                 "snippet": "{\n  ~with_...imestamp\n}"
               },
               "children": {
                 "blockCloseBrace": {
                   "context": {
-                    "id": "token-<rbrace>:}@[L6:C0, L6:C1]",
+                    "id": "token@<rbrace>@:}@[L6:C0, L6:C1]",
                     "snippet": "}"
                   },
                   "leadingTrivia": "",
@@ -178,7 +178,7 @@
                 },
                 "blockOpenBrace": {
                   "context": {
-                    "id": "token-<lbrace>:{@[L4:C12, L4:C13]",
+                    "id": "token@<lbrace>@:{@[L4:C12, L4:C13]",
                     "snippet": "{"
                   },
                   "leadingTrivia": "",
@@ -188,26 +188,26 @@
                 "body": [
                   {
                     "context": {
-                      "id": "node-<function-application>@[L5:C2, L5:C17]",
+                      "id": "node@<function-application>@@[L5:C2, L5:C17]",
                       "snippet": "~with_timestamp"
                     },
                     "children": {
                       "args": [],
                       "callee": {
                         "context": {
-                          "id": "node-<prefix-expression>@[L5:C2, L5:C17]",
+                          "id": "node@<prefix-expression>@@[L5:C2, L5:C17]",
                           "snippet": "~with_timestamp"
                         },
                         "children": {
                           "expression": {
                             "context": {
-                              "id": "node-<primary-expression>@[L5:C3, L5:C17]",
+                              "id": "node@<primary-expression>@@[L5:C3, L5:C17]",
                               "snippet": "with_timestamp"
                             },
                             "children": {
                               "expression": {
                                 "context": {
-                                  "id": "node-<variable>:with_timestamp@[L5:C3, L5:C17]",
+                                  "id": "node@<variable>@:with_timestamp@[L5:C3, L5:C17]",
                                   "snippet": "with_timestamp"
                                 },
                                 "children": {
@@ -215,7 +215,7 @@
                                   "fullStart": 67,
                                   "variable": {
                                     "context": {
-                                      "id": "token-<identifier>:with_timestamp@[L5:C3, L5:C17]",
+                                      "id": "token@<identifier>@:with_timestamp@[L5:C3, L5:C17]",
                                       "snippet": "with_timestamp"
                                     },
                                     "leadingTrivia": "",
@@ -232,7 +232,7 @@
                           "fullStart": 64,
                           "op": {
                             "context": {
-                              "id": "token-<op>:~@[L5:C2, L5:C3]",
+                              "id": "token@<op>@:~@[L5:C2, L5:C3]",
                               "snippet": "~"
                             },
                             "leadingTrivia": "  ",
@@ -254,13 +254,13 @@
             "fullStart": 49,
             "name": {
               "context": {
-                "id": "node-<primary-expression>@[L4:C6, L4:C11]",
+                "id": "node@<primary-expression>@@[L4:C6, L4:C11]",
                 "snippet": "users"
               },
               "children": {
                 "expression": {
                   "context": {
-                    "id": "node-<variable>:users@[L4:C6, L4:C11]",
+                    "id": "node@<variable>@:users@[L4:C6, L4:C11]",
                     "snippet": "users"
                   },
                   "children": {
@@ -268,7 +268,7 @@
                     "fullStart": 56,
                     "variable": {
                       "context": {
-                        "id": "token-<identifier>:users@[L4:C6, L4:C11]",
+                        "id": "token@<identifier>@:users@[L4:C6, L4:C11]",
                         "snippet": "users"
                       },
                       "leadingTrivia": "",
@@ -283,7 +283,7 @@
             },
             "type": {
               "context": {
-                "id": "token-<identifier>:Table@[L4:C0, L4:C5]",
+                "id": "token@<identifier>@:Table@[L4:C0, L4:C5]",
                 "snippet": "Table"
               },
               "leadingTrivia": "\n",
@@ -295,7 +295,7 @@
       ],
       "eof": {
         "context": {
-          "id": "token-<eof>:@[L7:C0, L7:C0]",
+          "id": "token@<eof>@:@[L7:C0, L7:C0]",
           "snippet": ""
         },
         "leadingTrivia": "",
