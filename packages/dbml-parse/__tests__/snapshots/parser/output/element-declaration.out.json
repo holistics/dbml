@@ -94,7 +94,7 @@
           },
           "symbol": {
             "context": {
-              "id": "symbol-<element-declaration>:@[L0:C0, L2:C1]",
+              "id": "symbol-Table:@[L0:C0, L2:C1]",
               "snippet": "Table {\r\n\r\n}"
             },
             "declaration": {
@@ -251,7 +251,7 @@
           },
           "symbol": {
             "context": {
-              "id": "symbol-<element-declaration>:group@[L4:C0, L6:C1]",
+              "id": "symbol-TableGroup:group@[L4:C0, L6:C1]",
               "snippet": "TableGroup...oup {\r\n\r\n}"
             },
             "declaration": {
@@ -481,7 +481,7 @@
           },
           "symbol": {
             "context": {
-              "id": "symbol-<element-declaration>:@[L12:C0, L12:C22]",
+              "id": "symbol-Note:@[L12:C0, L12:C22]",
               "snippet": "Note: 'Thi...is a note'"
             },
             "declaration": {
@@ -625,7 +625,7 @@
           },
           "symbol": {
             "context": {
-              "id": "symbol-<element-declaration>:@[L14:C0, L15:C15]",
+              "id": "symbol-Note:@[L14:C0, L15:C15]",
               "snippet": "Note: '''T...er note'''"
             },
             "declaration": {
@@ -854,7 +854,7 @@
           },
           "symbol": {
             "context": {
-              "id": "symbol-<element-declaration>:Users@[L17:C0, L19:C1]",
+              "id": "symbol-Table:Users@[L17:C0, L19:C1]",
               "snippet": "Table User...{\r\n    \r\n}"
             },
             "declaration": {
@@ -897,7 +897,7 @@
     },
     "symbol": {
       "context": {
-        "id": "symbol-<program>@[L0:C0, L19:C1]",
+        "id": "symbol-Program@[L0:C0, L19:C1]",
         "snippet": "Table {\r\n\r...{\r\n    \r\n}"
       },
       "declaration": {
@@ -907,18 +907,18 @@
       "members": [
         {
           "context": {
-            "id": "symbol-?@[L?:C?, L?:C?]"
+            "id": "symbol-Schemapublic@[L?:C?, L?:C?]"
           }
         },
         {
           "context": {
-            "id": "symbol-<element-declaration>:group@[L4:C0, L6:C1]",
+            "id": "symbol-TableGroup:group@[L4:C0, L6:C1]",
             "snippet": "TableGroup...oup {\r\n\r\n}"
           }
         },
         {
           "context": {
-            "id": "symbol-<element-declaration>:Users@[L17:C0, L19:C1]",
+            "id": "symbol-Table:Users@[L17:C0, L19:C1]",
             "snippet": "Table User...{\r\n    \r\n}"
           }
         }

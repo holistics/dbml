@@ -388,7 +388,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<function-application>@[L1:C4, L1:C24]",
+                        "id": "symbol-Column@[L1:C4, L1:C24]",
                         "snippet": "id int [primary key]"
                       },
                       "declaration": {
@@ -506,7 +506,7 @@
           },
           "symbol": {
             "context": {
-              "id": "symbol-<element-declaration>:A@[L0:C0, L2:C1]",
+              "id": "symbol-Table:A@[L0:C0, L2:C1]",
               "snippet": "Table A as...ary key]\n}"
             },
             "declaration": {
@@ -516,7 +516,7 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol-<function-application>@[L1:C4, L1:C24]",
+                  "id": "symbol-Column@[L1:C4, L1:C24]",
                   "snippet": "id int [primary key]"
                 }
               }
@@ -905,7 +905,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<function-application>@[L5:C4, L5:C24]",
+                        "id": "symbol-Column@[L5:C4, L5:C24]",
                         "snippet": "id int [primary key]"
                       },
                       "declaration": {
@@ -1023,7 +1023,7 @@
           },
           "symbol": {
             "context": {
-              "id": "symbol-<element-declaration>:B@[L4:C0, L6:C1]",
+              "id": "symbol-Table:B@[L4:C0, L6:C1]",
               "snippet": "Table \"B\" ...ary key]\n}"
             },
             "declaration": {
@@ -1033,7 +1033,7 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol-<function-application>@[L5:C4, L5:C24]",
+                  "id": "symbol-Column@[L5:C4, L5:C24]",
                   "snippet": "id int [primary key]"
                 }
               }
@@ -1422,7 +1422,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<function-application>@[L9:C4, L9:C24]",
+                        "id": "symbol-Column@[L9:C4, L9:C24]",
                         "snippet": "id int [primary key]"
                       },
                       "declaration": {
@@ -1540,7 +1540,7 @@
           },
           "symbol": {
             "context": {
-              "id": "symbol-<element-declaration>:C@[L8:C0, L10:C1]",
+              "id": "symbol-Table:C@[L8:C0, L10:C1]",
               "snippet": "Table C as...ary key]\n}"
             },
             "declaration": {
@@ -1550,7 +1550,7 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol-<function-application>@[L9:C4, L9:C24]",
+                  "id": "symbol-Column@[L9:C4, L9:C24]",
                   "snippet": "id int [primary key]"
                 }
               }
@@ -1939,7 +1939,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<function-application>@[L13:C4, L13:C24]",
+                        "id": "symbol-Column@[L13:C4, L13:C24]",
                         "snippet": "id int [primary key]"
                       },
                       "declaration": {
@@ -2057,7 +2057,7 @@
           },
           "symbol": {
             "context": {
-              "id": "symbol-<element-declaration>:D@[L12:C0, L14:C1]",
+              "id": "symbol-Table:D@[L12:C0, L14:C1]",
               "snippet": "Table \"D\" ...ary key]\n}"
             },
             "declaration": {
@@ -2067,7 +2067,7 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol-<function-application>@[L13:C4, L13:C24]",
+                  "id": "symbol-Column@[L13:C4, L13:C24]",
                   "snippet": "id int [primary key]"
                 }
               }
@@ -2107,7 +2107,7 @@
     },
     "symbol": {
       "context": {
-        "id": "symbol-<program>@[L0:C0, L14:C1]",
+        "id": "symbol-Program@[L0:C0, L14:C1]",
         "snippet": "Table A as...ary key]\n}"
       },
       "declaration": {
@@ -2117,30 +2117,30 @@
       "members": [
         {
           "context": {
-            "id": "symbol-?@[L?:C?, L?:C?]"
+            "id": "symbol-Schemapublic@[L?:C?, L?:C?]"
           }
         },
         {
           "context": {
-            "id": "symbol-<element-declaration>:A@[L0:C0, L2:C1]",
+            "id": "symbol-Table:A@[L0:C0, L2:C1]",
             "snippet": "Table A as...ary key]\n}"
           }
         },
         {
           "context": {
-            "id": "symbol-<element-declaration>:B@[L4:C0, L6:C1]",
+            "id": "symbol-Table:B@[L4:C0, L6:C1]",
             "snippet": "Table \"B\" ...ary key]\n}"
           }
         },
         {
           "context": {
-            "id": "symbol-<element-declaration>:C@[L8:C0, L10:C1]",
+            "id": "symbol-Table:C@[L8:C0, L10:C1]",
             "snippet": "Table C as...ary key]\n}"
           }
         },
         {
           "context": {
-            "id": "symbol-<element-declaration>:D@[L12:C0, L14:C1]",
+            "id": "symbol-Table:D@[L12:C0, L14:C1]",
             "snippet": "Table \"D\" ...ary key]\n}"
           }
         }

@@ -375,7 +375,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<function-application>@[L1:C2, L1:C8]",
+                        "id": "symbol-Column@[L1:C2, L1:C8]",
                         "snippet": "id int"
                       },
                       "declaration": {
@@ -534,7 +534,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<function-application>@[L2:C2, L2:C10]",
+                        "id": "symbol-Column@[L2:C2, L2:C10]",
                         "snippet": "c_id int"
                       },
                       "declaration": {
@@ -657,7 +657,7 @@
           },
           "symbol": {
             "context": {
-              "id": "symbol-<element-declaration>:b@[L0:C0, L3:C1]",
+              "id": "symbol-Table:b@[L0:C0, L3:C1]",
               "snippet": "Table b [h...c_id int\n}"
             },
             "declaration": {
@@ -667,13 +667,13 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol-<function-application>@[L1:C2, L1:C8]",
+                  "id": "symbol-Column@[L1:C2, L1:C8]",
                   "snippet": "id int"
                 }
               },
               {
                 "context": {
-                  "id": "symbol-<function-application>@[L2:C2, L2:C10]",
+                  "id": "symbol-Column@[L2:C2, L2:C10]",
                   "snippet": "c_id int"
                 }
               }
@@ -873,7 +873,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<function-application>@[L6:C2, L6:C8]",
+                        "id": "symbol-Column@[L6:C2, L6:C8]",
                         "snippet": "id int"
                       },
                       "declaration": {
@@ -1036,7 +1036,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<function-application>@[L7:C2, L7:C10]",
+                        "id": "symbol-Column@[L7:C2, L7:C10]",
                         "snippet": "b_id int"
                       },
                       "declaration": {
@@ -1154,7 +1154,7 @@
           },
           "symbol": {
             "context": {
-              "id": "symbol-<element-declaration>:c@[L5:C0, L8:C1]",
+              "id": "symbol-Table:c@[L5:C0, L8:C1]",
               "snippet": "Table c {\n...b_id int\n}"
             },
             "declaration": {
@@ -1164,13 +1164,13 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol-<function-application>@[L6:C2, L6:C8]",
+                  "id": "symbol-Column@[L6:C2, L6:C8]",
                   "snippet": "id int"
                 }
               },
               {
                 "context": {
-                  "id": "symbol-<function-application>@[L7:C2, L7:C10]",
+                  "id": "symbol-Column@[L7:C2, L7:C10]",
                   "snippet": "b_id int"
                 }
               }
@@ -1476,7 +1476,7 @@
                           },
                           "referee": {
                             "context": {
-                              "id": "symbol-<element-declaration>:b@[L0:C0, L3:C1]",
+                              "id": "symbol-Table:b@[L0:C0, L3:C1]",
                               "snippet": "Table b [h...c_id int\n}"
                             }
                           }
@@ -1554,7 +1554,7 @@
                           },
                           "referee": {
                             "context": {
-                              "id": "symbol-<function-application>@[L1:C2, L1:C8]",
+                              "id": "symbol-Column@[L1:C2, L1:C8]",
                               "snippet": "id int"
                             }
                           }
@@ -1655,7 +1655,7 @@
                           },
                           "referee": {
                             "context": {
-                              "id": "symbol-<element-declaration>:c@[L5:C0, L8:C1]",
+                              "id": "symbol-Table:c@[L5:C0, L8:C1]",
                               "snippet": "Table c {\n...b_id int\n}"
                             }
                           }
@@ -1733,7 +1733,7 @@
                           },
                           "referee": {
                             "context": {
-                              "id": "symbol-<function-application>@[L6:C2, L6:C8]",
+                              "id": "symbol-Column@[L6:C2, L6:C8]",
                               "snippet": "id int"
                             }
                           }
@@ -2195,7 +2195,7 @@
                                 },
                                 "referee": {
                                   "context": {
-                                    "id": "symbol-<element-declaration>:c@[L5:C0, L8:C1]",
+                                    "id": "symbol-Table:c@[L5:C0, L8:C1]",
                                     "snippet": "Table c {\n...b_id int\n}"
                                   }
                                 }
@@ -2273,7 +2273,7 @@
                                 },
                                 "referee": {
                                   "context": {
-                                    "id": "symbol-<function-application>@[L6:C2, L6:C8]",
+                                    "id": "symbol-Column@[L6:C2, L6:C8]",
                                     "snippet": "id int"
                                   }
                                 }
@@ -2374,7 +2374,7 @@
                                 },
                                 "referee": {
                                   "context": {
-                                    "id": "symbol-<element-declaration>:b@[L0:C0, L3:C1]",
+                                    "id": "symbol-Table:b@[L0:C0, L3:C1]",
                                     "snippet": "Table b [h...c_id int\n}"
                                   }
                                 }
@@ -2452,7 +2452,7 @@
                                 },
                                 "referee": {
                                   "context": {
-                                    "id": "symbol-<function-application>@[L2:C2, L2:C10]",
+                                    "id": "symbol-Column@[L2:C2, L2:C10]",
                                     "snippet": "c_id int"
                                   }
                                 }
@@ -2629,7 +2629,7 @@
     },
     "symbol": {
       "context": {
-        "id": "symbol-<program>@[L0:C0, L16:C1]",
+        "id": "symbol-Program@[L0:C0, L16:C1]",
         "snippet": "Table b [h...#123456]\n}"
       },
       "declaration": {
@@ -2639,18 +2639,18 @@
       "members": [
         {
           "context": {
-            "id": "symbol-?@[L?:C?, L?:C?]"
+            "id": "symbol-Schemapublic@[L?:C?, L?:C?]"
           }
         },
         {
           "context": {
-            "id": "symbol-<element-declaration>:b@[L0:C0, L3:C1]",
+            "id": "symbol-Table:b@[L0:C0, L3:C1]",
             "snippet": "Table b [h...c_id int\n}"
           }
         },
         {
           "context": {
-            "id": "symbol-<element-declaration>:c@[L5:C0, L8:C1]",
+            "id": "symbol-Table:c@[L5:C0, L8:C1]",
             "snippet": "Table c {\n...b_id int\n}"
           }
         }

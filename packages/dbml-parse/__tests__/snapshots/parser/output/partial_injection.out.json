@@ -190,7 +190,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<function-application>@[L1:C2, L1:C16]",
+                        "id": "symbol-Column@[L1:C2, L1:C16]",
                         "snippet": "timestamp uuid"
                       },
                       "declaration": {
@@ -309,7 +309,7 @@
           },
           "symbol": {
             "context": {
-              "id": "symbol-<element-declaration>:with_timestamp@[L0:C0, L2:C1]",
+              "id": "symbol-TablePartial:with_timestamp@[L0:C0, L2:C1]",
               "snippet": "TableParti...amp uuid\n}"
             },
             "declaration": {
@@ -319,7 +319,7 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol-<function-application>@[L1:C2, L1:C16]",
+                  "id": "symbol-Column@[L1:C2, L1:C16]",
                   "snippet": "timestamp uuid"
                 }
               }
@@ -450,7 +450,7 @@
                             },
                             "referee": {
                               "context": {
-                                "id": "symbol-<element-declaration>:with_timestamp@[L0:C0, L2:C1]",
+                                "id": "symbol-TablePartial:with_timestamp@[L0:C0, L2:C1]",
                                 "snippet": "TableParti...amp uuid\n}"
                               }
                             }
@@ -497,7 +497,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<function-application>@[L5:C2, L5:C17]",
+                        "id": "symbol-PartialInjection@[L5:C2, L5:C17]",
                         "snippet": "~with_timestamp"
                       },
                       "declaration": {
@@ -615,7 +615,7 @@
           },
           "symbol": {
             "context": {
-              "id": "symbol-<element-declaration>:users@[L4:C0, L6:C1]",
+              "id": "symbol-Table:users@[L4:C0, L6:C1]",
               "snippet": "Table user...imestamp\n}"
             },
             "declaration": {
@@ -625,13 +625,13 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol-<function-application>@[L1:C2, L1:C16]",
+                  "id": "symbol-Column@[L1:C2, L1:C16]",
                   "snippet": "timestamp uuid"
                 }
               },
               {
                 "context": {
-                  "id": "symbol-<function-application>@[L5:C2, L5:C17]",
+                  "id": "symbol-PartialInjection@[L5:C2, L5:C17]",
                   "snippet": "~with_timestamp"
                 }
               }
@@ -671,7 +671,7 @@
     },
     "symbol": {
       "context": {
-        "id": "symbol-<program>@[L0:C0, L7:C0]",
+        "id": "symbol-Program@[L0:C0, L7:C0]",
         "snippet": "TableParti...mestamp\n}\n"
       },
       "declaration": {
@@ -681,18 +681,18 @@
       "members": [
         {
           "context": {
-            "id": "symbol-?@[L?:C?, L?:C?]"
+            "id": "symbol-Schemapublic@[L?:C?, L?:C?]"
           }
         },
         {
           "context": {
-            "id": "symbol-<element-declaration>:with_timestamp@[L0:C0, L2:C1]",
+            "id": "symbol-TablePartial:with_timestamp@[L0:C0, L2:C1]",
             "snippet": "TableParti...amp uuid\n}"
           }
         },
         {
           "context": {
-            "id": "symbol-<element-declaration>:users@[L4:C0, L6:C1]",
+            "id": "symbol-Table:users@[L4:C0, L6:C1]",
             "snippet": "Table user...imestamp\n}"
           }
         }

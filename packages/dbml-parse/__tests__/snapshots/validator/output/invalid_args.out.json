@@ -345,7 +345,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<function-application>@[L1:C4, L1:C10]",
+                        "id": "symbol-Column@[L1:C4, L1:C10]",
                         "snippet": "id int"
                       },
                       "declaration": {
@@ -472,7 +472,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<function-application>@[L2:C4, L2:C8]",
+                        "id": "symbol-Column@[L2:C4, L2:C8]",
                         "snippet": "ssid"
                       },
                       "declaration": {
@@ -590,7 +590,7 @@
           },
           "symbol": {
             "context": {
-              "id": "symbol-<element-declaration>:A@[L0:C0, L3:C1]",
+              "id": "symbol-Table:A@[L0:C0, L3:C1]",
               "snippet": "Table A {\n...    ssid\n}"
             },
             "declaration": {
@@ -600,13 +600,13 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol-<function-application>@[L1:C4, L1:C10]",
+                  "id": "symbol-Column@[L1:C4, L1:C10]",
                   "snippet": "id int"
                 }
               },
               {
                 "context": {
-                  "id": "symbol-<function-application>@[L2:C4, L2:C8]",
+                  "id": "symbol-Column@[L2:C4, L2:C8]",
                   "snippet": "ssid"
                 }
               }
@@ -1023,7 +1023,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<function-application>@[L6:C4, L6:C22]",
+                        "id": "symbol-Enum field@[L6:C4, L6:C22]",
                         "snippet": "a1 e [note: 'abc']"
                       },
                       "declaration": {
@@ -1362,7 +1362,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<function-application>@[L7:C4, L7:C22]",
+                        "id": "symbol-Enum field@[L7:C4, L7:C22]",
                         "snippet": "a2 [note: 'abc'] e"
                       },
                       "declaration": {
@@ -1575,7 +1575,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<function-application>@[L8:C4, L8:C10]",
+                        "id": "symbol-Enum field@[L8:C4, L8:C10]",
                         "snippet": "a3 e f"
                       },
                       "declaration": {
@@ -1729,7 +1729,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<function-application>@[L9:C4, L9:C8]",
+                        "id": "symbol-Enum field@[L9:C4, L9:C8]",
                         "snippet": "a4 e"
                       },
                       "declaration": {
@@ -1847,7 +1847,7 @@
           },
           "symbol": {
             "context": {
-              "id": "symbol-<element-declaration>:E@[L5:C0, L10:C1]",
+              "id": "symbol-Enum:E@[L5:C0, L10:C1]",
               "snippet": "Enum E {\n ...    a4 e\n}"
             },
             "declaration": {
@@ -1857,25 +1857,25 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol-<function-application>@[L6:C4, L6:C22]",
+                  "id": "symbol-Enum field@[L6:C4, L6:C22]",
                   "snippet": "a1 e [note: 'abc']"
                 }
               },
               {
                 "context": {
-                  "id": "symbol-<function-application>@[L7:C4, L7:C22]",
+                  "id": "symbol-Enum field@[L7:C4, L7:C22]",
                   "snippet": "a2 [note: 'abc'] e"
                 }
               },
               {
                 "context": {
-                  "id": "symbol-<function-application>@[L8:C4, L8:C10]",
+                  "id": "symbol-Enum field@[L8:C4, L8:C10]",
                   "snippet": "a3 e f"
                 }
               },
               {
                 "context": {
-                  "id": "symbol-<function-application>@[L9:C4, L9:C8]",
+                  "id": "symbol-Enum field@[L9:C4, L9:C8]",
                   "snippet": "a4 e"
                 }
               }
@@ -2049,7 +2049,7 @@
                         },
                         "referee": {
                           "context": {
-                            "id": "symbol-<element-declaration>:A@[L0:C0, L3:C1]",
+                            "id": "symbol-Table:A@[L0:C0, L3:C1]",
                             "snippet": "Table A {\n...    ssid\n}"
                           }
                         }
@@ -2072,7 +2072,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<function-application>@[L13:C4, L13:C7]",
+                        "id": "symbol-TableGroup field@[L13:C4, L13:C7]",
                         "snippet": "A a"
                       },
                       "declaration": {
@@ -2269,7 +2269,7 @@
                         },
                         "referee": {
                           "context": {
-                            "id": "symbol-<element-declaration>:A@[L0:C0, L3:C1]",
+                            "id": "symbol-Table:A@[L0:C0, L3:C1]",
                             "snippet": "Table A {\n...    ssid\n}"
                           }
                         }
@@ -2292,7 +2292,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<function-application>@[L14:C4, L14:C9]",
+                        "id": "symbol-TableGroup field@[L14:C4, L14:C9]",
                         "snippet": "A a a"
                       },
                       "declaration": {
@@ -2411,7 +2411,7 @@
           },
           "symbol": {
             "context": {
-              "id": "symbol-<element-declaration>:G@[L12:C0, L15:C1]",
+              "id": "symbol-TableGroup:G@[L12:C0, L15:C1]",
               "snippet": "TableGroup...   A a a\n}"
             },
             "declaration": {
@@ -2421,13 +2421,13 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol-<function-application>@[L13:C4, L13:C7]",
+                  "id": "symbol-TableGroup field@[L13:C4, L13:C7]",
                   "snippet": "A a"
                 }
               },
               {
                 "context": {
-                  "id": "symbol-<function-application>@[L14:C4, L14:C9]",
+                  "id": "symbol-TableGroup field@[L14:C4, L14:C9]",
                   "snippet": "A a a"
                 }
               }
@@ -2816,7 +2816,7 @@
                                 },
                                 "referee": {
                                   "context": {
-                                    "id": "symbol-<element-declaration>:A@[L0:C0, L3:C1]",
+                                    "id": "symbol-Table:A@[L0:C0, L3:C1]",
                                     "snippet": "Table A {\n...    ssid\n}"
                                   }
                                 }
@@ -2894,7 +2894,7 @@
                                 },
                                 "referee": {
                                   "context": {
-                                    "id": "symbol-<function-application>@[L1:C4, L1:C10]",
+                                    "id": "symbol-Column@[L1:C4, L1:C10]",
                                     "snippet": "id int"
                                   }
                                 }
@@ -2995,7 +2995,7 @@
                                 },
                                 "referee": {
                                   "context": {
-                                    "id": "symbol-<element-declaration>:A@[L0:C0, L3:C1]",
+                                    "id": "symbol-Table:A@[L0:C0, L3:C1]",
                                     "snippet": "Table A {\n...    ssid\n}"
                                   }
                                 }
@@ -3073,7 +3073,7 @@
                                 },
                                 "referee": {
                                   "context": {
-                                    "id": "symbol-<function-application>@[L1:C4, L1:C10]",
+                                    "id": "symbol-Column@[L1:C4, L1:C10]",
                                     "snippet": "id int"
                                   }
                                 }
@@ -3540,7 +3540,7 @@
                                 },
                                 "referee": {
                                   "context": {
-                                    "id": "symbol-<element-declaration>:A@[L0:C0, L3:C1]",
+                                    "id": "symbol-Table:A@[L0:C0, L3:C1]",
                                     "snippet": "Table A {\n...    ssid\n}"
                                   }
                                 }
@@ -3618,7 +3618,7 @@
                                 },
                                 "referee": {
                                   "context": {
-                                    "id": "symbol-<function-application>@[L1:C4, L1:C10]",
+                                    "id": "symbol-Column@[L1:C4, L1:C10]",
                                     "snippet": "id int"
                                   }
                                 }
@@ -3719,7 +3719,7 @@
                                 },
                                 "referee": {
                                   "context": {
-                                    "id": "symbol-<element-declaration>:A@[L0:C0, L3:C1]",
+                                    "id": "symbol-Table:A@[L0:C0, L3:C1]",
                                     "snippet": "Table A {\n...    ssid\n}"
                                   }
                                 }
@@ -3797,7 +3797,7 @@
                                 },
                                 "referee": {
                                   "context": {
-                                    "id": "symbol-<function-application>@[L1:C4, L1:C10]",
+                                    "id": "symbol-Column@[L1:C4, L1:C10]",
                                     "snippet": "id int"
                                   }
                                 }
@@ -4079,7 +4079,7 @@
                                 },
                                 "referee": {
                                   "context": {
-                                    "id": "symbol-<element-declaration>:A@[L0:C0, L3:C1]",
+                                    "id": "symbol-Table:A@[L0:C0, L3:C1]",
                                     "snippet": "Table A {\n...    ssid\n}"
                                   }
                                 }
@@ -4157,7 +4157,7 @@
                                 },
                                 "referee": {
                                   "context": {
-                                    "id": "symbol-<function-application>@[L1:C4, L1:C10]",
+                                    "id": "symbol-Column@[L1:C4, L1:C10]",
                                     "snippet": "id int"
                                   }
                                 }
@@ -4258,7 +4258,7 @@
                                 },
                                 "referee": {
                                   "context": {
-                                    "id": "symbol-<element-declaration>:A@[L0:C0, L3:C1]",
+                                    "id": "symbol-Table:A@[L0:C0, L3:C1]",
                                     "snippet": "Table A {\n...    ssid\n}"
                                   }
                                 }
@@ -4336,7 +4336,7 @@
                                 },
                                 "referee": {
                                   "context": {
-                                    "id": "symbol-<function-application>@[L1:C4, L1:C10]",
+                                    "id": "symbol-Column@[L1:C4, L1:C10]",
                                     "snippet": "id int"
                                   }
                                 }
@@ -4677,7 +4677,7 @@
                                 },
                                 "referee": {
                                   "context": {
-                                    "id": "symbol-<element-declaration>:A@[L0:C0, L3:C1]",
+                                    "id": "symbol-Table:A@[L0:C0, L3:C1]",
                                     "snippet": "Table A {\n...    ssid\n}"
                                   }
                                 }
@@ -4755,7 +4755,7 @@
                                 },
                                 "referee": {
                                   "context": {
-                                    "id": "symbol-<function-application>@[L1:C4, L1:C10]",
+                                    "id": "symbol-Column@[L1:C4, L1:C10]",
                                     "snippet": "id int"
                                   }
                                 }
@@ -4856,7 +4856,7 @@
                                 },
                                 "referee": {
                                   "context": {
-                                    "id": "symbol-<element-declaration>:A@[L0:C0, L3:C1]",
+                                    "id": "symbol-Table:A@[L0:C0, L3:C1]",
                                     "snippet": "Table A {\n...    ssid\n}"
                                   }
                                 }
@@ -4934,7 +4934,7 @@
                                 },
                                 "referee": {
                                   "context": {
-                                    "id": "symbol-<function-application>@[L1:C4, L1:C10]",
+                                    "id": "symbol-Column@[L1:C4, L1:C10]",
                                     "snippet": "id int"
                                   }
                                 }
@@ -5052,7 +5052,7 @@
     },
     "symbol": {
       "context": {
-        "id": "symbol-<program>@[L0:C0, L31:C1]",
+        "id": "symbol-Program@[L0:C0, L31:C1]",
         "snippet": "Table A {\n...A.id a a\n}"
       },
       "declaration": {
@@ -5062,24 +5062,24 @@
       "members": [
         {
           "context": {
-            "id": "symbol-?@[L?:C?, L?:C?]"
+            "id": "symbol-Schemapublic@[L?:C?, L?:C?]"
           }
         },
         {
           "context": {
-            "id": "symbol-<element-declaration>:A@[L0:C0, L3:C1]",
+            "id": "symbol-Table:A@[L0:C0, L3:C1]",
             "snippet": "Table A {\n...    ssid\n}"
           }
         },
         {
           "context": {
-            "id": "symbol-<element-declaration>:E@[L5:C0, L10:C1]",
+            "id": "symbol-Enum:E@[L5:C0, L10:C1]",
             "snippet": "Enum E {\n ...    a4 e\n}"
           }
         },
         {
           "context": {
-            "id": "symbol-<element-declaration>:G@[L12:C0, L15:C1]",
+            "id": "symbol-TableGroup:G@[L12:C0, L15:C1]",
             "snippet": "TableGroup...   A a a\n}"
           }
         }

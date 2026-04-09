@@ -469,7 +469,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<function-application>@[L1:C4, L1:C32]",
+                        "id": "symbol-Column@[L1:C4, L1:C32]",
                         "snippet": "Indexes wr...x alias {}"
                       },
                       "declaration": {
@@ -732,7 +732,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<function-application>@[L2:C4, L2:C21]",
+                        "id": "symbol-Column@[L2:C4, L2:C21]",
                         "snippet": "Indexes 2 args {}"
                       },
                       "declaration": {
@@ -1113,7 +1113,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<function-application>@[L3:C4, L3:C35]",
+                        "id": "symbol-Column@[L3:C4, L3:C35]",
                         "snippet": "Indexes wr...of args {}"
                       },
                       "declaration": {
@@ -1231,7 +1231,7 @@
           },
           "symbol": {
             "context": {
-              "id": "symbol-<element-declaration>:A@[L0:C0, L4:C1]",
+              "id": "symbol-Table:A@[L0:C0, L4:C1]",
               "snippet": "Table A {\n...s column\n}"
             },
             "declaration": {
@@ -1241,19 +1241,19 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol-<function-application>@[L1:C4, L1:C32]",
+                  "id": "symbol-Column@[L1:C4, L1:C32]",
                   "snippet": "Indexes wr...x alias {}"
                 }
               },
               {
                 "context": {
-                  "id": "symbol-<function-application>@[L2:C4, L2:C21]",
+                  "id": "symbol-Column@[L2:C4, L2:C21]",
                   "snippet": "Indexes 2 args {}"
                 }
               },
               {
                 "context": {
-                  "id": "symbol-<function-application>@[L3:C4, L3:C35]",
+                  "id": "symbol-Column@[L3:C4, L3:C35]",
                   "snippet": "Indexes wr...of args {}"
                 }
               }
@@ -1293,7 +1293,7 @@
     },
     "symbol": {
       "context": {
-        "id": "symbol-<program>@[L0:C0, L5:C0]",
+        "id": "symbol-Program@[L0:C0, L5:C0]",
         "snippet": "Table A {\n... column\n}\n"
       },
       "declaration": {
@@ -1303,12 +1303,12 @@
       "members": [
         {
           "context": {
-            "id": "symbol-?@[L?:C?, L?:C?]"
+            "id": "symbol-Schemapublic@[L?:C?, L?:C?]"
           }
         },
         {
           "context": {
-            "id": "symbol-<element-declaration>:A@[L0:C0, L4:C1]",
+            "id": "symbol-Table:A@[L0:C0, L4:C1]",
             "snippet": "Table A {\n...s column\n}"
           }
         }

@@ -226,7 +226,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<element-declaration>:A@[L1:C4, L3:C5]",
+                        "id": "symbol-Table:A@[L1:C4, L3:C5]",
                         "snippet": "Table A {\r\n\r\n    }"
                       },
                       "declaration": {
@@ -383,7 +383,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<element-declaration>:A@[L5:C4, L7:C5]",
+                        "id": "symbol-Table:A@[L5:C4, L7:C5]",
                         "snippet": "Table A {\r\n\r\n    }"
                       },
                       "declaration": {
@@ -540,7 +540,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<element-declaration>:B@[L9:C4, L11:C5]",
+                        "id": "symbol-Table:B@[L9:C4, L11:C5]",
                         "snippet": "Table B {\r...   \r\n    }"
                       },
                       "declaration": {
@@ -690,7 +690,7 @@
     },
     "symbol": {
       "context": {
-        "id": "symbol-<program>@[L0:C0, L12:C1]",
+        "id": "symbol-Program@[L0:C0, L12:C1]",
         "snippet": "Project B ...\r\n    }\r\n}"
       },
       "declaration": {
@@ -700,7 +700,7 @@
       "members": [
         {
           "context": {
-            "id": "symbol-?@[L?:C?, L?:C?]"
+            "id": "symbol-Schemapublic@[L?:C?, L?:C?]"
           }
         }
       ],

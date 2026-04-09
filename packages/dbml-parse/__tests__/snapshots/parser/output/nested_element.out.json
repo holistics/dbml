@@ -192,7 +192,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<element-declaration>:A@[L1:C4, L3:C5]",
+                        "id": "symbol-Table:A@[L1:C4, L3:C5]",
                         "snippet": "Table A {\r\n\r\n    }"
                       },
                       "declaration": {
@@ -421,7 +421,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<element-declaration>:B@[L5:C4, L7:C5]",
+                        "id": "symbol-Table:B@[L5:C4, L7:C5]",
                         "snippet": "Table B as...   \r\n    }"
                       },
                       "declaration": {
@@ -882,7 +882,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<function-application>@[L11:C4, L11:C35]",
+                        "id": "symbol-Column@[L11:C4, L11:C35]",
                         "snippet": "Indexes wr...element {}"
                       },
                       "declaration": {
@@ -1000,7 +1000,7 @@
           },
           "symbol": {
             "context": {
-              "id": "symbol-<element-declaration>:wrong_nested_element@[L10:C0, L12:C1]",
+              "id": "symbol-Table:wrong_nested_element@[L10:C0, L12:C1]",
               "snippet": "Table wron...ication\r\n}"
             },
             "declaration": {
@@ -1010,7 +1010,7 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol-<function-application>@[L11:C4, L11:C35]",
+                  "id": "symbol-Column@[L11:C4, L11:C35]",
                   "snippet": "Indexes wr...element {}"
                 }
               }
@@ -1050,7 +1050,7 @@
     },
     "symbol": {
       "context": {
-        "id": "symbol-<program>@[L0:C0, L13:C0]",
+        "id": "symbol-Program@[L0:C0, L13:C0]",
         "snippet": "Project {\r...ation\r\n}\r\n"
       },
       "declaration": {
@@ -1060,12 +1060,12 @@
       "members": [
         {
           "context": {
-            "id": "symbol-?@[L?:C?, L?:C?]"
+            "id": "symbol-Schemapublic@[L?:C?, L?:C?]"
           }
         },
         {
           "context": {
-            "id": "symbol-<element-declaration>:wrong_nested_element@[L10:C0, L12:C1]",
+            "id": "symbol-Table:wrong_nested_element@[L10:C0, L12:C1]",
             "snippet": "Table wron...ication\r\n}"
           }
         }

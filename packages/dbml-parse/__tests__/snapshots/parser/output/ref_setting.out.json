@@ -190,7 +190,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<function-application>@[L1:C1, L1:C11]",
+                        "id": "symbol-Column@[L1:C1, L1:C11]",
                         "snippet": "id integer"
                       },
                       "declaration": {
@@ -287,7 +287,7 @@
                               },
                               "referee": {
                                 "context": {
-                                  "id": "symbol-?@[L?:C?, L?:C?]"
+                                  "id": "symbol-Schemav2@[L?:C?, L?:C?]"
                                 }
                               }
                             },
@@ -364,7 +364,7 @@
                               },
                               "referee": {
                                 "context": {
-                                  "id": "symbol-<element-declaration>:v2.status@[L7:C0, L10:C1]",
+                                  "id": "symbol-Enum:v2.status@[L7:C0, L10:C1]",
                                   "snippet": "enum v2.st...loyee']\r\n}"
                                 }
                               }
@@ -547,7 +547,7 @@
                                             },
                                             "referee": {
                                               "context": {
-                                                "id": "symbol-?@[L?:C?, L?:C?]"
+                                                "id": "symbol-Schemav2@[L?:C?, L?:C?]"
                                               }
                                             }
                                           },
@@ -624,7 +624,7 @@
                                             },
                                             "referee": {
                                               "context": {
-                                                "id": "symbol-<element-declaration>:v2.status@[L7:C0, L10:C1]",
+                                                "id": "symbol-Enum:v2.status@[L7:C0, L10:C1]",
                                                 "snippet": "enum v2.st...loyee']\r\n}"
                                               }
                                             }
@@ -710,7 +710,7 @@
                                         },
                                         "referee": {
                                           "context": {
-                                            "id": "symbol-<function-application>@[L9:C4, L9:C40]",
+                                            "id": "symbol-Enum field@[L9:C4, L9:C40]",
                                             "snippet": "new [note:...employee']"
                                           }
                                         }
@@ -847,7 +847,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<function-application>@[L2:C4, L2:C45]",
+                        "id": "symbol-Column@[L2:C4, L2:C45]",
                         "snippet": "status v2....tatus.new]"
                       },
                       "declaration": {
@@ -1075,7 +1075,7 @@
                                         },
                                         "referee": {
                                           "context": {
-                                            "id": "symbol-<function-application>@[L1:C1, L1:C11]",
+                                            "id": "symbol-Column@[L1:C1, L1:C11]",
                                             "snippet": "id integer"
                                           }
                                         }
@@ -1228,7 +1228,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<function-application>@[L4:C4, L4:C31]",
+                        "id": "symbol-Column@[L4:C4, L4:C31]",
                         "snippet": "referrer i...[ref: -id]"
                       },
                       "declaration": {
@@ -1346,7 +1346,7 @@
           },
           "symbol": {
             "context": {
-              "id": "symbol-<element-declaration>:Users@[L0:C0, L5:C1]",
+              "id": "symbol-Table:Users@[L0:C0, L5:C1]",
               "snippet": "Table User...f: -id]\r\n}"
             },
             "declaration": {
@@ -1356,19 +1356,19 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol-<function-application>@[L1:C1, L1:C11]",
+                  "id": "symbol-Column@[L1:C1, L1:C11]",
                   "snippet": "id integer"
                 }
               },
               {
                 "context": {
-                  "id": "symbol-<function-application>@[L2:C4, L2:C45]",
+                  "id": "symbol-Column@[L2:C4, L2:C45]",
                   "snippet": "status v2....tatus.new]"
                 }
               },
               {
                 "context": {
-                  "id": "symbol-<function-application>@[L4:C4, L4:C31]",
+                  "id": "symbol-Column@[L4:C4, L4:C31]",
                   "snippet": "referrer i...[ref: -id]"
                 }
               }
@@ -1499,7 +1499,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<function-application>@[L8:C1, L8:C6]",
+                        "id": "symbol-Enum field@[L8:C1, L8:C6]",
                         "snippet": "churn"
                       },
                       "declaration": {
@@ -1779,7 +1779,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<function-application>@[L9:C4, L9:C40]",
+                        "id": "symbol-Enum field@[L9:C4, L9:C40]",
                         "snippet": "new [note:...employee']"
                       },
                       "declaration": {
@@ -1997,7 +1997,7 @@
           },
           "symbol": {
             "context": {
-              "id": "symbol-<element-declaration>:v2.status@[L7:C0, L10:C1]",
+              "id": "symbol-Enum:v2.status@[L7:C0, L10:C1]",
               "snippet": "enum v2.st...loyee']\r\n}"
             },
             "declaration": {
@@ -2007,13 +2007,13 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol-<function-application>@[L8:C1, L8:C6]",
+                  "id": "symbol-Enum field@[L8:C1, L8:C6]",
                   "snippet": "churn"
                 }
               },
               {
                 "context": {
-                  "id": "symbol-<function-application>@[L9:C4, L9:C40]",
+                  "id": "symbol-Enum field@[L9:C4, L9:C40]",
                   "snippet": "new [note:...employee']"
                 }
               }
@@ -2062,7 +2062,7 @@
     },
     "symbol": {
       "context": {
-        "id": "symbol-<program>@[L0:C0, L10:C1]",
+        "id": "symbol-Program@[L0:C0, L10:C1]",
         "snippet": "Table User...loyee']\r\n}"
       },
       "declaration": {
@@ -2072,17 +2072,17 @@
       "members": [
         {
           "context": {
-            "id": "symbol-?@[L?:C?, L?:C?]"
+            "id": "symbol-Schemapublic@[L?:C?, L?:C?]"
           }
         },
         {
           "context": {
-            "id": "symbol-?@[L?:C?, L?:C?]"
+            "id": "symbol-Schemav2@[L?:C?, L?:C?]"
           }
         },
         {
           "context": {
-            "id": "symbol-<element-declaration>:Users@[L0:C0, L5:C1]",
+            "id": "symbol-Table:Users@[L0:C0, L5:C1]",
             "snippet": "Table User...f: -id]\r\n}"
           }
         }

@@ -235,7 +235,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<function-application>@[L1:C2, L1:C11]",
+                        "id": "symbol-Column@[L1:C2, L1:C11]",
                         "snippet": "name text"
                       },
                       "declaration": {
@@ -354,7 +354,7 @@
           },
           "symbol": {
             "context": {
-              "id": "symbol-<element-declaration>:common@[L0:C0, L2:C1]",
+              "id": "symbol-TablePartial:common@[L0:C0, L2:C1]",
               "snippet": "TableParti...me text\r\n}"
             },
             "declaration": {
@@ -364,7 +364,7 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol-<function-application>@[L1:C2, L1:C11]",
+                  "id": "symbol-Column@[L1:C2, L1:C11]",
                   "snippet": "name text"
                 }
               }
@@ -568,7 +568,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<function-application>@[L5:C2, L5:C8]",
+                        "id": "symbol-Column@[L5:C2, L5:C8]",
                         "snippet": "id int"
                       },
                       "declaration": {
@@ -657,7 +657,7 @@
                             },
                             "referee": {
                               "context": {
-                                "id": "symbol-<element-declaration>:common@[L0:C0, L2:C1]",
+                                "id": "symbol-TablePartial:common@[L0:C0, L2:C1]",
                                 "snippet": "TableParti...me text\r\n}"
                               }
                             }
@@ -704,7 +704,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<function-application>@[L6:C2, L6:C9]",
+                        "id": "symbol-PartialInjection@[L6:C2, L6:C9]",
                         "snippet": "~common"
                       },
                       "declaration": {
@@ -793,7 +793,7 @@
                             },
                             "referee": {
                               "context": {
-                                "id": "symbol-<element-declaration>:common@[L0:C0, L2:C1]",
+                                "id": "symbol-TablePartial:common@[L0:C0, L2:C1]",
                                 "snippet": "TableParti...me text\r\n}"
                               }
                             }
@@ -840,7 +840,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<function-application>@[L7:C2, L7:C9]",
+                        "id": "symbol-PartialInjection@[L7:C2, L7:C9]",
                         "snippet": "~common"
                       },
                       "declaration": {
@@ -929,7 +929,7 @@
                             },
                             "referee": {
                               "context": {
-                                "id": "symbol-<element-declaration>:common@[L0:C0, L2:C1]",
+                                "id": "symbol-TablePartial:common@[L0:C0, L2:C1]",
                                 "snippet": "TableParti...me text\r\n}"
                               }
                             }
@@ -976,7 +976,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<function-application>@[L8:C2, L8:C9]",
+                        "id": "symbol-PartialInjection@[L8:C2, L8:C9]",
                         "snippet": "~common"
                       },
                       "declaration": {
@@ -1094,7 +1094,7 @@
           },
           "symbol": {
             "context": {
-              "id": "symbol-<element-declaration>:Users@[L4:C0, L9:C1]",
+              "id": "symbol-Table:Users@[L4:C0, L9:C1]",
               "snippet": "Table User...~common\r\n}"
             },
             "declaration": {
@@ -1104,43 +1104,43 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol-<function-application>@[L5:C2, L5:C8]",
+                  "id": "symbol-Column@[L5:C2, L5:C8]",
                   "snippet": "id int"
                 }
               },
               {
                 "context": {
-                  "id": "symbol-<function-application>@[L1:C2, L1:C11]",
+                  "id": "symbol-Column@[L1:C2, L1:C11]",
                   "snippet": "name text"
                 }
               },
               {
                 "context": {
-                  "id": "symbol-<function-application>@[L6:C2, L6:C9]",
+                  "id": "symbol-PartialInjection@[L6:C2, L6:C9]",
                   "snippet": "~common"
                 }
               },
               {
                 "context": {
-                  "id": "symbol-<function-application>@[L1:C2, L1:C11]",
+                  "id": "symbol-Column@[L1:C2, L1:C11]",
                   "snippet": "name text"
                 }
               },
               {
                 "context": {
-                  "id": "symbol-<function-application>@[L7:C2, L7:C9]",
+                  "id": "symbol-PartialInjection@[L7:C2, L7:C9]",
                   "snippet": "~common"
                 }
               },
               {
                 "context": {
-                  "id": "symbol-<function-application>@[L1:C2, L1:C11]",
+                  "id": "symbol-Column@[L1:C2, L1:C11]",
                   "snippet": "name text"
                 }
               },
               {
                 "context": {
-                  "id": "symbol-<function-application>@[L8:C2, L8:C9]",
+                  "id": "symbol-PartialInjection@[L8:C2, L8:C9]",
                   "snippet": "~common"
                 }
               }
@@ -1180,7 +1180,7 @@
     },
     "symbol": {
       "context": {
-        "id": "symbol-<program>@[L0:C0, L10:C0]",
+        "id": "symbol-Program@[L0:C0, L10:C0]",
         "snippet": "TableParti...ommon\r\n}\r\n"
       },
       "declaration": {
@@ -1190,18 +1190,18 @@
       "members": [
         {
           "context": {
-            "id": "symbol-?@[L?:C?, L?:C?]"
+            "id": "symbol-Schemapublic@[L?:C?, L?:C?]"
           }
         },
         {
           "context": {
-            "id": "symbol-<element-declaration>:common@[L0:C0, L2:C1]",
+            "id": "symbol-TablePartial:common@[L0:C0, L2:C1]",
             "snippet": "TableParti...me text\r\n}"
           }
         },
         {
           "context": {
-            "id": "symbol-<element-declaration>:Users@[L4:C0, L9:C1]",
+            "id": "symbol-Table:Users@[L4:C0, L9:C1]",
             "snippet": "Table User...~common\r\n}"
           }
         }

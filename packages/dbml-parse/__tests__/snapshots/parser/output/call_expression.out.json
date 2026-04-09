@@ -785,7 +785,7 @@
     },
     "symbol": {
       "context": {
-        "id": "symbol-<program>@[L0:C0, L5:C0]",
+        "id": "symbol-Program@[L0:C0, L5:C0]",
         "snippet": "Test CallE...a.b()\r\n}\r\n"
       },
       "declaration": {
@@ -795,7 +795,7 @@
       "members": [
         {
           "context": {
-            "id": "symbol-?@[L?:C?, L?:C?]"
+            "id": "symbol-Schemapublic@[L?:C?, L?:C?]"
           }
         }
       ],

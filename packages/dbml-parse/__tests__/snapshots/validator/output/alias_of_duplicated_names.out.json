@@ -225,7 +225,7 @@
           },
           "symbol": {
             "context": {
-              "id": "symbol-<element-declaration>:Users@[L0:C0, L2:C1]",
+              "id": "symbol-Table:Users@[L0:C0, L2:C1]",
               "snippet": "Table User... U1 {\r\n\r\n}"
             },
             "declaration": {
@@ -454,7 +454,7 @@
           },
           "symbol": {
             "context": {
-              "id": "symbol-<element-declaration>:Users@[L4:C0, L6:C1]",
+              "id": "symbol-Table:Users@[L4:C0, L6:C1]",
               "snippet": "Table User... U2 {\r\n\r\n}"
             },
             "declaration": {
@@ -683,7 +683,7 @@
           },
           "symbol": {
             "context": {
-              "id": "symbol-<element-declaration>:Products@[L8:C0, L10:C1]",
+              "id": "symbol-Table:Products@[L8:C0, L10:C1]",
               "snippet": "Table Prod...{\r\n    \r\n}"
             },
             "declaration": {
@@ -726,7 +726,7 @@
     },
     "symbol": {
       "context": {
-        "id": "symbol-<program>@[L0:C0, L10:C1]",
+        "id": "symbol-Program@[L0:C0, L10:C1]",
         "snippet": "Table User...{\r\n    \r\n}"
       },
       "declaration": {
@@ -736,24 +736,24 @@
       "members": [
         {
           "context": {
-            "id": "symbol-?@[L?:C?, L?:C?]"
+            "id": "symbol-Schemapublic@[L?:C?, L?:C?]"
           }
         },
         {
           "context": {
-            "id": "symbol-<element-declaration>:Users@[L0:C0, L2:C1]",
+            "id": "symbol-Table:Users@[L0:C0, L2:C1]",
             "snippet": "Table User... U1 {\r\n\r\n}"
           }
         },
         {
           "context": {
-            "id": "symbol-<element-declaration>:Users@[L4:C0, L6:C1]",
+            "id": "symbol-Table:Users@[L4:C0, L6:C1]",
             "snippet": "Table User... U2 {\r\n\r\n}"
           }
         },
         {
           "context": {
-            "id": "symbol-<element-declaration>:Products@[L8:C0, L10:C1]",
+            "id": "symbol-Table:Products@[L8:C0, L10:C1]",
             "snippet": "Table Prod...{\r\n    \r\n}"
           }
         }

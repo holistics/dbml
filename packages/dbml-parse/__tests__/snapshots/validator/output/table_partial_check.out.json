@@ -408,7 +408,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<function-application>@[L1:C2, L1:C36]",
+                        "id": "symbol-Column@[L1:C2, L1:C36]",
                         "snippet": "balance in...ance > 0`]"
                       },
                       "declaration": {
@@ -849,7 +849,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<function-application>@[L2:C2, L2:C69]",
+                        "id": "symbol-Column@[L2:C2, L2:C69]",
                         "snippet": "dependents...nts < 10`]"
                       },
                       "declaration": {
@@ -1774,7 +1774,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<function-application>@[L4:C2, L8:C40]",
+                        "id": "symbol-Column@[L4:C2, L8:C40]",
                         "snippet": "invalid_co...eck: null]"
                       },
                       "declaration": {
@@ -1893,7 +1893,7 @@
           },
           "symbol": {
             "context": {
-              "id": "symbol-<element-declaration>:Users@[L0:C0, L9:C1]",
+              "id": "symbol-TablePartial:Users@[L0:C0, L9:C1]",
               "snippet": "TableParti...k: null]\n}"
             },
             "declaration": {
@@ -1903,19 +1903,19 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol-<function-application>@[L1:C2, L1:C36]",
+                  "id": "symbol-Column@[L1:C2, L1:C36]",
                   "snippet": "balance in...ance > 0`]"
                 }
               },
               {
                 "context": {
-                  "id": "symbol-<function-application>@[L2:C2, L2:C69]",
+                  "id": "symbol-Column@[L2:C2, L2:C69]",
                   "snippet": "dependents...nts < 10`]"
                 }
               },
               {
                 "context": {
-                  "id": "symbol-<function-application>@[L4:C2, L8:C40]",
+                  "id": "symbol-Column@[L4:C2, L8:C40]",
                   "snippet": "invalid_co...eck: null]"
                 }
               }
@@ -1955,7 +1955,7 @@
     },
     "symbol": {
       "context": {
-        "id": "symbol-<program>@[L0:C0, L10:C0]",
+        "id": "symbol-Program@[L0:C0, L10:C0]",
         "snippet": "TableParti...: null]\n}\n"
       },
       "declaration": {
@@ -1965,12 +1965,12 @@
       "members": [
         {
           "context": {
-            "id": "symbol-?@[L?:C?, L?:C?]"
+            "id": "symbol-Schemapublic@[L?:C?, L?:C?]"
           }
         },
         {
           "context": {
-            "id": "symbol-<element-declaration>:Users@[L0:C0, L9:C1]",
+            "id": "symbol-TablePartial:Users@[L0:C0, L9:C1]",
             "snippet": "TableParti...k: null]\n}"
           }
         }

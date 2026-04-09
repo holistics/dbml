@@ -190,7 +190,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<function-application>@[L1:C2, L1:C12]",
+                        "id": "symbol-Column@[L1:C2, L1:C12]",
                         "snippet": "id integer"
                       },
                       "declaration": {
@@ -365,7 +365,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<function-application>@[L2:C2, L2:C17]",
+                        "id": "symbol-Column@[L2:C2, L2:C17]",
                         "snippet": "country varchar"
                       },
                       "declaration": {
@@ -528,7 +528,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<function-application>@[L3:C2, L3:C19]",
+                        "id": "symbol-Column@[L3:C2, L3:C19]",
                         "snippet": "booking_date date"
                       },
                       "declaration": {
@@ -695,7 +695,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<function-application>@[L4:C2, L4:C22]",
+                        "id": "symbol-Column@[L4:C2, L4:C22]",
                         "snippet": "created_at timestamp"
                       },
                       "declaration": {
@@ -952,7 +952,7 @@
                                         },
                                         "referee": {
                                           "context": {
-                                            "id": "symbol-<function-application>@[L1:C2, L1:C12]",
+                                            "id": "symbol-Column@[L1:C2, L1:C12]",
                                             "snippet": "id integer"
                                           }
                                         }
@@ -1017,7 +1017,7 @@
                                         },
                                         "referee": {
                                           "context": {
-                                            "id": "symbol-<function-application>@[L2:C2, L2:C17]",
+                                            "id": "symbol-Column@[L2:C2, L2:C17]",
                                             "snippet": "country varchar"
                                           }
                                         }
@@ -1483,7 +1483,7 @@
                                   },
                                   "referee": {
                                     "context": {
-                                      "id": "symbol-<function-application>@[L4:C2, L4:C22]",
+                                      "id": "symbol-Column@[L4:C2, L4:C22]",
                                       "snippet": "created_at timestamp"
                                     }
                                   }
@@ -1572,7 +1572,7 @@
                                   },
                                   "referee": {
                                     "context": {
-                                      "id": "symbol-<function-application>@[L3:C2, L3:C19]",
+                                      "id": "symbol-Column@[L3:C2, L3:C19]",
                                       "snippet": "booking_date date"
                                     }
                                   }
@@ -1797,7 +1797,7 @@
                                         },
                                         "referee": {
                                           "context": {
-                                            "id": "symbol-<function-application>@[L2:C2, L2:C17]",
+                                            "id": "symbol-Column@[L2:C2, L2:C17]",
                                             "snippet": "country varchar"
                                           }
                                         }
@@ -1862,7 +1862,7 @@
                                         },
                                         "referee": {
                                           "context": {
-                                            "id": "symbol-<function-application>@[L3:C2, L3:C19]",
+                                            "id": "symbol-Column@[L3:C2, L3:C19]",
                                             "snippet": "booking_date date"
                                           }
                                         }
@@ -2181,7 +2181,7 @@
                                   },
                                   "referee": {
                                     "context": {
-                                      "id": "symbol-<function-application>@[L3:C2, L3:C19]",
+                                      "id": "symbol-Column@[L3:C2, L3:C19]",
                                       "snippet": "booking_date date"
                                     }
                                   }
@@ -2293,7 +2293,7 @@
                                             },
                                             "referee": {
                                               "context": {
-                                                "id": "symbol-<function-application>@[L1:C2, L1:C12]",
+                                                "id": "symbol-Column@[L1:C2, L1:C12]",
                                                 "snippet": "id integer"
                                               }
                                             }
@@ -2543,7 +2543,7 @@
                                             },
                                             "referee": {
                                               "context": {
-                                                "id": "symbol-<function-application>@[L1:C2, L1:C12]",
+                                                "id": "symbol-Column@[L1:C2, L1:C12]",
                                                 "snippet": "id integer"
                                               }
                                             }
@@ -2829,7 +2829,7 @@
                                             },
                                             "referee": {
                                               "context": {
-                                                "id": "symbol-<function-application>@[L1:C2, L1:C12]",
+                                                "id": "symbol-Column@[L1:C2, L1:C12]",
                                                 "snippet": "id integer"
                                               }
                                             }
@@ -2974,7 +2974,7 @@
                                         },
                                         "referee": {
                                           "context": {
-                                            "id": "symbol-<function-application>@[L1:C2, L1:C12]",
+                                            "id": "symbol-Column@[L1:C2, L1:C12]",
                                             "snippet": "id integer"
                                           }
                                         }
@@ -3089,7 +3089,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<element-declaration>:@[L6:C2, L15:C3]",
+                        "id": "symbol-Indexes:@[L6:C2, L15:C3]",
                         "snippet": "indexes {\r...3,id)\r\n  }"
                       },
                       "declaration": {
@@ -3208,7 +3208,7 @@
           },
           "symbol": {
             "context": {
-              "id": "symbol-<element-declaration>:bookings@[L0:C0, L16:C1]",
+              "id": "symbol-Table:bookings@[L0:C0, L16:C1]",
               "snippet": "Table book...d)\r\n  }\r\n}"
             },
             "declaration": {
@@ -3218,31 +3218,31 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol-<function-application>@[L1:C2, L1:C12]",
+                  "id": "symbol-Column@[L1:C2, L1:C12]",
                   "snippet": "id integer"
                 }
               },
               {
                 "context": {
-                  "id": "symbol-<function-application>@[L2:C2, L2:C17]",
+                  "id": "symbol-Column@[L2:C2, L2:C17]",
                   "snippet": "country varchar"
                 }
               },
               {
                 "context": {
-                  "id": "symbol-<function-application>@[L3:C2, L3:C19]",
+                  "id": "symbol-Column@[L3:C2, L3:C19]",
                   "snippet": "booking_date date"
                 }
               },
               {
                 "context": {
-                  "id": "symbol-<function-application>@[L4:C2, L4:C22]",
+                  "id": "symbol-Column@[L4:C2, L4:C22]",
                   "snippet": "created_at timestamp"
                 }
               },
               {
                 "context": {
-                  "id": "symbol-<element-declaration>:@[L6:C2, L15:C3]",
+                  "id": "symbol-Indexes:@[L6:C2, L15:C3]",
                   "snippet": "indexes {\r...3,id)\r\n  }"
                 }
               }
@@ -3282,7 +3282,7 @@
     },
     "symbol": {
       "context": {
-        "id": "symbol-<program>@[L0:C0, L17:C17]",
+        "id": "symbol-Program@[L0:C0, L17:C17]",
         "snippet": "Table book...of program"
       },
       "declaration": {
@@ -3292,12 +3292,12 @@
       "members": [
         {
           "context": {
-            "id": "symbol-?@[L?:C?, L?:C?]"
+            "id": "symbol-Schemapublic@[L?:C?, L?:C?]"
           }
         },
         {
           "context": {
-            "id": "symbol-<element-declaration>:bookings@[L0:C0, L16:C1]",
+            "id": "symbol-Table:bookings@[L0:C0, L16:C1]",
             "snippet": "Table book...d)\r\n  }\r\n}"
           }
         }

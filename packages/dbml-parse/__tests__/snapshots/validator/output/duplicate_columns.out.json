@@ -190,7 +190,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<function-application>@[L1:C4, L1:C14]",
+                        "id": "symbol-Column@[L1:C4, L1:C14]",
                         "snippet": "id integer"
                       },
                       "declaration": {
@@ -344,7 +344,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<function-application>@[L2:C4, L2:C14]",
+                        "id": "symbol-Column@[L2:C4, L2:C14]",
                         "snippet": "id integer"
                       },
                       "declaration": {
@@ -498,7 +498,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<function-application>@[L3:C4, L3:C14]",
+                        "id": "symbol-Column@[L3:C4, L3:C14]",
                         "snippet": "id integer"
                       },
                       "declaration": {
@@ -616,7 +616,7 @@
           },
           "symbol": {
             "context": {
-              "id": "symbol-<element-declaration>:Users@[L0:C0, L4:C1]",
+              "id": "symbol-Table:Users@[L0:C0, L4:C1]",
               "snippet": "Table User...integer\r\n}"
             },
             "declaration": {
@@ -626,19 +626,19 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol-<function-application>@[L1:C4, L1:C14]",
+                  "id": "symbol-Column@[L1:C4, L1:C14]",
                   "snippet": "id integer"
                 }
               },
               {
                 "context": {
-                  "id": "symbol-<function-application>@[L2:C4, L2:C14]",
+                  "id": "symbol-Column@[L2:C4, L2:C14]",
                   "snippet": "id integer"
                 }
               },
               {
                 "context": {
-                  "id": "symbol-<function-application>@[L3:C4, L3:C14]",
+                  "id": "symbol-Column@[L3:C4, L3:C14]",
                   "snippet": "id integer"
                 }
               }
@@ -829,7 +829,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<function-application>@[L7:C4, L7:C10]",
+                        "id": "symbol-Column@[L7:C4, L7:C10]",
                         "snippet": "id int"
                       },
                       "declaration": {
@@ -984,7 +984,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<function-application>@[L8:C4, L8:C10]",
+                        "id": "symbol-Column@[L8:C4, L8:C10]",
                         "snippet": "id int"
                       },
                       "declaration": {
@@ -1139,7 +1139,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<function-application>@[L9:C4, L9:C10]",
+                        "id": "symbol-Column@[L9:C4, L9:C10]",
                         "snippet": "id int"
                       },
                       "declaration": {
@@ -1258,7 +1258,7 @@
           },
           "symbol": {
             "context": {
-              "id": "symbol-<element-declaration>:userPartial@[L6:C0, L10:C1]",
+              "id": "symbol-TablePartial:userPartial@[L6:C0, L10:C1]",
               "snippet": "TableParti... id int\r\n}"
             },
             "declaration": {
@@ -1268,19 +1268,19 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol-<function-application>@[L7:C4, L7:C10]",
+                  "id": "symbol-Column@[L7:C4, L7:C10]",
                   "snippet": "id int"
                 }
               },
               {
                 "context": {
-                  "id": "symbol-<function-application>@[L8:C4, L8:C10]",
+                  "id": "symbol-Column@[L8:C4, L8:C10]",
                   "snippet": "id int"
                 }
               },
               {
                 "context": {
-                  "id": "symbol-<function-application>@[L9:C4, L9:C10]",
+                  "id": "symbol-Column@[L9:C4, L9:C10]",
                   "snippet": "id int"
                 }
               }
@@ -1320,7 +1320,7 @@
     },
     "symbol": {
       "context": {
-        "id": "symbol-<program>@[L0:C0, L11:C0]",
+        "id": "symbol-Program@[L0:C0, L11:C0]",
         "snippet": "Table User...d int\r\n}\r\n"
       },
       "declaration": {
@@ -1330,18 +1330,18 @@
       "members": [
         {
           "context": {
-            "id": "symbol-?@[L?:C?, L?:C?]"
+            "id": "symbol-Schemapublic@[L?:C?, L?:C?]"
           }
         },
         {
           "context": {
-            "id": "symbol-<element-declaration>:Users@[L0:C0, L4:C1]",
+            "id": "symbol-Table:Users@[L0:C0, L4:C1]",
             "snippet": "Table User...integer\r\n}"
           }
         },
         {
           "context": {
-            "id": "symbol-<element-declaration>:userPartial@[L6:C0, L10:C1]",
+            "id": "symbol-TablePartial:userPartial@[L6:C0, L10:C1]",
             "snippet": "TableParti... id int\r\n}"
           }
         }

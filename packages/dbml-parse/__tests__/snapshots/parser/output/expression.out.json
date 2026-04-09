@@ -6980,7 +6980,7 @@
     },
     "symbol": {
       "context": {
-        "id": "symbol-<program>@[L0:C0, L50:C0]",
+        "id": "symbol-Program@[L0:C0, L50:C0]",
         "snippet": "Test Expre...---+1\r\n}\r\n"
       },
       "declaration": {
@@ -6990,7 +6990,7 @@
       "members": [
         {
           "context": {
-            "id": "symbol-?@[L?:C?, L?:C?]"
+            "id": "symbol-Schemapublic@[L?:C?, L?:C?]"
           }
         }
       ],

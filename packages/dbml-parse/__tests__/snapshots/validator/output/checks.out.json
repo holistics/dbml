@@ -354,7 +354,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<function-application>@[L3:C2, L3:C13]",
+                        "id": "symbol-Column@[L3:C2, L3:C13]",
                         "snippet": "balance int"
                       },
                       "declaration": {
@@ -1372,7 +1372,7 @@
           },
           "symbol": {
             "context": {
-              "id": "symbol-<element-declaration>:Users@[L2:C0, L12:C1]",
+              "id": "symbol-Table:Users@[L2:C0, L12:C1]",
               "snippet": "Table User...lid]\n  }\n}"
             },
             "declaration": {
@@ -1382,7 +1382,7 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol-<function-application>@[L3:C2, L3:C13]",
+                  "id": "symbol-Column@[L3:C2, L3:C13]",
                   "snippet": "balance int"
                 }
               }
@@ -1573,7 +1573,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<function-application>@[L15:C2, L15:C13]",
+                        "id": "symbol-Column@[L15:C2, L15:C13]",
                         "snippet": "balance int"
                       },
                       "declaration": {
@@ -2592,7 +2592,7 @@
           },
           "symbol": {
             "context": {
-              "id": "symbol-<element-declaration>:Users@[L14:C0, L23:C1]",
+              "id": "symbol-TablePartial:Users@[L14:C0, L23:C1]",
               "snippet": "TableParti...lid]\n  }\n}"
             },
             "declaration": {
@@ -2602,7 +2602,7 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol-<function-application>@[L15:C2, L15:C13]",
+                  "id": "symbol-Column@[L15:C2, L15:C13]",
                   "snippet": "balance int"
                 }
               }
@@ -2642,7 +2642,7 @@
     },
     "symbol": {
       "context": {
-        "id": "symbol-<program>@[L0:C0, L24:C0]",
+        "id": "symbol-Program@[L0:C0, L24:C0]",
         "snippet": "checks {}\n...id]\n  }\n}\n"
       },
       "declaration": {
@@ -2652,18 +2652,18 @@
       "members": [
         {
           "context": {
-            "id": "symbol-?@[L?:C?, L?:C?]"
+            "id": "symbol-Schemapublic@[L?:C?, L?:C?]"
           }
         },
         {
           "context": {
-            "id": "symbol-<element-declaration>:Users@[L2:C0, L12:C1]",
+            "id": "symbol-Table:Users@[L2:C0, L12:C1]",
             "snippet": "Table User...lid]\n  }\n}"
           }
         },
         {
           "context": {
-            "id": "symbol-<element-declaration>:Users@[L14:C0, L23:C1]",
+            "id": "symbol-TablePartial:Users@[L14:C0, L23:C1]",
             "snippet": "TableParti...lid]\n  }\n}"
           }
         }

@@ -828,7 +828,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<element-declaration>:@[L1:C4, L4:C5]",
+                        "id": "symbol-Indexes:@[L1:C4, L4:C5]",
                         "snippet": "indexes [n...ue]\r\n    }"
                       },
                       "declaration": {
@@ -1148,7 +1148,7 @@
     },
     "symbol": {
       "context": {
-        "id": "symbol-<program>@[L0:C0, L11:C1]",
+        "id": "symbol-Program@[L0:C0, L11:C1]",
         "snippet": "Test Liter...\r\n    }\r\n}"
       },
       "declaration": {
@@ -1158,7 +1158,7 @@
       "members": [
         {
           "context": {
-            "id": "symbol-?@[L?:C?, L?:C?]"
+            "id": "symbol-Schemapublic@[L?:C?, L?:C?]"
           }
         }
       ],

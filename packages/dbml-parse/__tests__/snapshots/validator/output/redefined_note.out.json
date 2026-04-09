@@ -501,7 +501,7 @@
           },
           "symbol": {
             "context": {
-              "id": "symbol-<element-declaration>:A@[L0:C0, L5:C1]",
+              "id": "symbol-Table:A@[L0:C0, L5:C1]",
               "snippet": "Table A {\r...\r\n    }\r\n}"
             },
             "declaration": {
@@ -683,7 +683,7 @@
           },
           "symbol": {
             "context": {
-              "id": "symbol-<element-declaration>:@[L7:C0, L9:C1]",
+              "id": "symbol-Note:@[L7:C0, L9:C1]",
               "snippet": "Note {\r\n  ...l note'\r\n}"
             },
             "declaration": {
@@ -827,7 +827,7 @@
           },
           "symbol": {
             "context": {
-              "id": "symbol-<element-declaration>:@[L11:C0, L13:C3]",
+              "id": "symbol-Note:@[L11:C0, L13:C3]",
               "snippet": "Note: '''\r... note\r\n'''"
             },
             "declaration": {
@@ -870,7 +870,7 @@
     },
     "symbol": {
       "context": {
-        "id": "symbol-<program>@[L0:C0, L13:C3]",
+        "id": "symbol-Program@[L0:C0, L13:C3]",
         "snippet": "Table A {\r... note\r\n'''"
       },
       "declaration": {
@@ -880,12 +880,12 @@
       "members": [
         {
           "context": {
-            "id": "symbol-?@[L?:C?, L?:C?]"
+            "id": "symbol-Schemapublic@[L?:C?, L?:C?]"
           }
         },
         {
           "context": {
-            "id": "symbol-<element-declaration>:A@[L0:C0, L5:C1]",
+            "id": "symbol-Table:A@[L0:C0, L5:C1]",
             "snippet": "Table A {\r...\r\n    }\r\n}"
           }
         }

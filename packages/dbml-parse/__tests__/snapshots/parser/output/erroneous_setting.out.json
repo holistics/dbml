@@ -499,7 +499,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<function-application>@[L1:C2, L1:C24]",
+                        "id": "symbol-Column@[L1:C2, L1:C24]",
                         "snippet": "id int [pk...increment]"
                       },
                       "declaration": {
@@ -622,7 +622,7 @@
           },
           "symbol": {
             "context": {
-              "id": "symbol-<element-declaration>:users@[L0:C0, L2:C1]",
+              "id": "symbol-Table:users@[L0:C0, L2:C1]",
               "snippet": "Table user...crement]\n}"
             },
             "declaration": {
@@ -632,7 +632,7 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol-<function-application>@[L1:C2, L1:C24]",
+                  "id": "symbol-Column@[L1:C2, L1:C24]",
                   "snippet": "id int [pk...increment]"
                 }
               }
@@ -828,7 +828,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<function-application>@[L5:C2, L5:C13]",
+                        "id": "symbol-Column@[L5:C2, L5:C13]",
                         "snippet": "user_id int"
                       },
                       "declaration": {
@@ -987,7 +987,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<function-application>@[L6:C2, L6:C16]",
+                        "id": "symbol-Column@[L6:C2, L6:C16]",
                         "snippet": "diagram_id int"
                       },
                       "declaration": {
@@ -1406,7 +1406,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<function-application>@[L7:C2, L9:C30]",
+                        "id": "symbol-Column@[L7:C2, L9:C30]",
                         "snippet": "role int [...m_id) [pk]"
                       },
                       "declaration": {
@@ -1524,7 +1524,7 @@
           },
           "symbol": {
             "context": {
-              "id": "symbol-<element-declaration>:user_role_in_diagram@[L4:C0, L10:C3]",
+              "id": "symbol-Table:user_role_in_diagram@[L4:C0, L10:C3]",
               "snippet": "Table user...) [pk]\n  }"
             },
             "declaration": {
@@ -1534,19 +1534,19 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol-<function-application>@[L5:C2, L5:C13]",
+                  "id": "symbol-Column@[L5:C2, L5:C13]",
                   "snippet": "user_id int"
                 }
               },
               {
                 "context": {
-                  "id": "symbol-<function-application>@[L6:C2, L6:C16]",
+                  "id": "symbol-Column@[L6:C2, L6:C16]",
                   "snippet": "diagram_id int"
                 }
               },
               {
                 "context": {
-                  "id": "symbol-<function-application>@[L7:C2, L9:C30]",
+                  "id": "symbol-Column@[L7:C2, L9:C30]",
                   "snippet": "role int [...m_id) [pk]"
                 }
               }
@@ -1882,7 +1882,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<function-application>@[L14:C2, L14:C14]",
+                        "id": "symbol-Column@[L14:C2, L14:C14]",
                         "snippet": "bit int [pk]"
                       },
                       "declaration": {
@@ -2036,7 +2036,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<function-application>@[L15:C2, L15:C14]",
+                        "id": "symbol-Column@[L15:C2, L15:C14]",
                         "snippet": "name varchar"
                       },
                       "declaration": {
@@ -2154,7 +2154,7 @@
           },
           "symbol": {
             "context": {
-              "id": "symbol-<element-declaration>:permissions@[L13:C0, L16:C1]",
+              "id": "symbol-Table:permissions@[L13:C0, L16:C1]",
               "snippet": "Table perm... varchar\n}"
             },
             "declaration": {
@@ -2164,13 +2164,13 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol-<function-application>@[L14:C2, L14:C14]",
+                  "id": "symbol-Column@[L14:C2, L14:C14]",
                   "snippet": "bit int [pk]"
                 }
               },
               {
                 "context": {
-                  "id": "symbol-<function-application>@[L15:C2, L15:C14]",
+                  "id": "symbol-Column@[L15:C2, L15:C14]",
                   "snippet": "name varchar"
                 }
               }
@@ -2549,7 +2549,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<function-application>@[L19:C2, L19:C24]",
+                        "id": "symbol-Column@[L19:C2, L19:C24]",
                         "snippet": "id int [pk...increment]"
                       },
                       "declaration": {
@@ -2672,7 +2672,7 @@
           },
           "symbol": {
             "context": {
-              "id": "symbol-<element-declaration>:diagrams@[L18:C0, L20:C1]",
+              "id": "symbol-Table:diagrams@[L18:C0, L20:C1]",
               "snippet": "Table diag...ncrement\n}"
             },
             "declaration": {
@@ -2682,7 +2682,7 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol-<function-application>@[L19:C2, L19:C24]",
+                  "id": "symbol-Column@[L19:C2, L19:C24]",
                   "snippet": "id int [pk...increment]"
                 }
               }
@@ -2798,7 +2798,7 @@
                           },
                           "referee": {
                             "context": {
-                              "id": "symbol-<element-declaration>:users@[L0:C0, L2:C1]",
+                              "id": "symbol-Table:users@[L0:C0, L2:C1]",
                               "snippet": "Table user...crement]\n}"
                             }
                           }
@@ -2876,7 +2876,7 @@
                           },
                           "referee": {
                             "context": {
-                              "id": "symbol-<function-application>@[L1:C2, L1:C24]",
+                              "id": "symbol-Column@[L1:C2, L1:C24]",
                               "snippet": "id int [pk...increment]"
                             }
                           }
@@ -2977,7 +2977,7 @@
                           },
                           "referee": {
                             "context": {
-                              "id": "symbol-<element-declaration>:user_role_in_diagram@[L4:C0, L10:C3]",
+                              "id": "symbol-Table:user_role_in_diagram@[L4:C0, L10:C3]",
                               "snippet": "Table user...) [pk]\n  }"
                             }
                           }
@@ -3055,7 +3055,7 @@
                           },
                           "referee": {
                             "context": {
-                              "id": "symbol-<function-application>@[L5:C2, L5:C13]",
+                              "id": "symbol-Column@[L5:C2, L5:C13]",
                               "snippet": "user_id int"
                             }
                           }
@@ -3239,7 +3239,7 @@
                           },
                           "referee": {
                             "context": {
-                              "id": "symbol-<element-declaration>:diagrams@[L18:C0, L20:C1]",
+                              "id": "symbol-Table:diagrams@[L18:C0, L20:C1]",
                               "snippet": "Table diag...ncrement\n}"
                             }
                           }
@@ -3317,7 +3317,7 @@
                           },
                           "referee": {
                             "context": {
-                              "id": "symbol-<function-application>@[L19:C2, L19:C24]",
+                              "id": "symbol-Column@[L19:C2, L19:C24]",
                               "snippet": "id int [pk...increment]"
                             }
                           }
@@ -3418,7 +3418,7 @@
                           },
                           "referee": {
                             "context": {
-                              "id": "symbol-<element-declaration>:user_role_in_diagram@[L4:C0, L10:C3]",
+                              "id": "symbol-Table:user_role_in_diagram@[L4:C0, L10:C3]",
                               "snippet": "Table user...) [pk]\n  }"
                             }
                           }
@@ -3496,7 +3496,7 @@
                           },
                           "referee": {
                             "context": {
-                              "id": "symbol-<function-application>@[L6:C2, L6:C16]",
+                              "id": "symbol-Column@[L6:C2, L6:C16]",
                               "snippet": "diagram_id int"
                             }
                           }
@@ -3609,7 +3609,7 @@
     },
     "symbol": {
       "context": {
-        "id": "symbol-<program>@[L0:C0, L25:C0]",
+        "id": "symbol-Program@[L0:C0, L25:C0]",
         "snippet": "Table user...agram_id\"\n"
       },
       "declaration": {
@@ -3619,30 +3619,30 @@
       "members": [
         {
           "context": {
-            "id": "symbol-?@[L?:C?, L?:C?]"
+            "id": "symbol-Schemapublic@[L?:C?, L?:C?]"
           }
         },
         {
           "context": {
-            "id": "symbol-<element-declaration>:users@[L0:C0, L2:C1]",
+            "id": "symbol-Table:users@[L0:C0, L2:C1]",
             "snippet": "Table user...crement]\n}"
           }
         },
         {
           "context": {
-            "id": "symbol-<element-declaration>:user_role_in_diagram@[L4:C0, L10:C3]",
+            "id": "symbol-Table:user_role_in_diagram@[L4:C0, L10:C3]",
             "snippet": "Table user...) [pk]\n  }"
           }
         },
         {
           "context": {
-            "id": "symbol-<element-declaration>:permissions@[L13:C0, L16:C1]",
+            "id": "symbol-Table:permissions@[L13:C0, L16:C1]",
             "snippet": "Table perm... varchar\n}"
           }
         },
         {
           "context": {
-            "id": "symbol-<element-declaration>:diagrams@[L18:C0, L20:C1]",
+            "id": "symbol-Table:diagrams@[L18:C0, L20:C1]",
             "snippet": "Table diag...ncrement\n}"
           }
         }

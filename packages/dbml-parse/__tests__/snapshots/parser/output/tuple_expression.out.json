@@ -1730,7 +1730,7 @@
     },
     "symbol": {
       "context": {
-        "id": "symbol-<program>@[L0:C0, L13:C1]",
+        "id": "symbol-Program@[L0:C0, L13:C1]",
         "snippet": "Test Tuple...    12)\r\n}"
       },
       "declaration": {
@@ -1740,7 +1740,7 @@
       "members": [
         {
           "context": {
-            "id": "symbol-?@[L?:C?, L?:C?]"
+            "id": "symbol-Schemapublic@[L?:C?, L?:C?]"
           }
         }
       ],

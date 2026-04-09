@@ -1365,7 +1365,7 @@
     },
     "symbol": {
       "context": {
-        "id": "symbol-<program>@[L0:C0, L5:C1]",
+        "id": "symbol-Program@[L0:C0, L5:C1]",
         "snippet": "Test ListE...mpty. ]\r\n}"
       },
       "declaration": {
@@ -1375,7 +1375,7 @@
       "members": [
         {
           "context": {
-            "id": "symbol-?@[L?:C?, L?:C?]"
+            "id": "symbol-Schemapublic@[L?:C?, L?:C?]"
           }
         }
       ],

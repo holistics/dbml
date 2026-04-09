@@ -252,7 +252,7 @@
                               },
                               "symbol": {
                                 "context": {
-                                  "id": "symbol-<function-application>@[L2:C8, L2:C18]",
+                                  "id": "symbol-Column@[L2:C8, L2:C18]",
                                   "snippet": "id integer"
                                 },
                                 "declaration": {
@@ -876,7 +876,7 @@
                               },
                               "symbol": {
                                 "context": {
-                                  "id": "symbol-<function-application>@[L3:C8, L3:C49]",
+                                  "id": "symbol-Column@[L3:C8, L3:C49]",
                                   "snippet": "status v2....tatus.new]"
                                 },
                                 "declaration": {
@@ -1089,7 +1089,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<element-declaration>:v1.Users@[L1:C4, L4:C5]",
+                        "id": "symbol-Table:v1.Users@[L1:C4, L4:C5]",
                         "snippet": "Table v1.U...ew]\r\n    }"
                       },
                       "declaration": {
@@ -1099,13 +1099,13 @@
                       "members": [
                         {
                           "context": {
-                            "id": "symbol-<function-application>@[L2:C8, L2:C18]",
+                            "id": "symbol-Column@[L2:C8, L2:C18]",
                             "snippet": "id integer"
                           }
                         },
                         {
                           "context": {
-                            "id": "symbol-<function-application>@[L3:C8, L3:C49]",
+                            "id": "symbol-Column@[L3:C8, L3:C49]",
                             "snippet": "status v2....tatus.new]"
                           }
                         }
@@ -1236,7 +1236,7 @@
                               },
                               "symbol": {
                                 "context": {
-                                  "id": "symbol-<function-application>@[L7:C8, L7:C11]",
+                                  "id": "symbol-Enum field@[L7:C8, L7:C11]",
                                   "snippet": "new"
                                 },
                                 "declaration": {
@@ -1330,7 +1330,7 @@
                               },
                               "symbol": {
                                 "context": {
-                                  "id": "symbol-<function-application>@[L8:C8, L8:C13]",
+                                  "id": "symbol-Enum field@[L8:C8, L8:C13]",
                                   "snippet": "churn"
                                 },
                                 "declaration": {
@@ -1424,7 +1424,7 @@
                               },
                               "symbol": {
                                 "context": {
-                                  "id": "symbol-<function-application>@[L9:C8, L9:C14]",
+                                  "id": "symbol-Enum field@[L9:C8, L9:C14]",
                                   "snippet": "active"
                                 },
                                 "declaration": {
@@ -1518,7 +1518,7 @@
                               },
                               "symbol": {
                                 "context": {
-                                  "id": "symbol-<function-application>@[L10:C8, L10:C14]",
+                                  "id": "symbol-Enum field@[L10:C8, L10:C14]",
                                   "snippet": "tenant"
                                 },
                                 "declaration": {
@@ -1731,7 +1731,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<element-declaration>:v2.Status@[L6:C4, L11:C5]",
+                        "id": "symbol-Enum:v2.Status@[L6:C4, L11:C5]",
                         "snippet": "Enum v2.St...ant\r\n    }"
                       },
                       "declaration": {
@@ -1741,25 +1741,25 @@
                       "members": [
                         {
                           "context": {
-                            "id": "symbol-<function-application>@[L7:C8, L7:C11]",
+                            "id": "symbol-Enum field@[L7:C8, L7:C11]",
                             "snippet": "new"
                           }
                         },
                         {
                           "context": {
-                            "id": "symbol-<function-application>@[L8:C8, L8:C13]",
+                            "id": "symbol-Enum field@[L8:C8, L8:C13]",
                             "snippet": "churn"
                           }
                         },
                         {
                           "context": {
-                            "id": "symbol-<function-application>@[L9:C8, L9:C14]",
+                            "id": "symbol-Enum field@[L9:C8, L9:C14]",
                             "snippet": "active"
                           }
                         },
                         {
                           "context": {
-                            "id": "symbol-<function-application>@[L10:C8, L10:C14]",
+                            "id": "symbol-Enum field@[L10:C8, L10:C14]",
                             "snippet": "tenant"
                           }
                         }
@@ -1847,7 +1847,7 @@
     },
     "symbol": {
       "context": {
-        "id": "symbol-<program>@[L0:C0, L12:C1]",
+        "id": "symbol-Program@[L0:C0, L12:C1]",
         "snippet": "Project {\r...\r\n    }\r\n}"
       },
       "declaration": {
@@ -1857,7 +1857,7 @@
       "members": [
         {
           "context": {
-            "id": "symbol-?@[L?:C?, L?:C?]"
+            "id": "symbol-Schemapublic@[L?:C?, L?:C?]"
           }
         }
       ],

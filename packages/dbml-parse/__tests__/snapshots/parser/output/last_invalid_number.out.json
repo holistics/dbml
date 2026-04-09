@@ -227,7 +227,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<function-application>@[L1:C4, L1:C14]",
+                        "id": "symbol-Column@[L1:C4, L1:C14]",
                         "snippet": "id integer"
                       },
                       "declaration": {
@@ -345,7 +345,7 @@
           },
           "symbol": {
             "context": {
-              "id": "symbol-<element-declaration>:E@[L0:C0, L2:C1]",
+              "id": "symbol-Table:E@[L0:C0, L2:C1]",
               "snippet": "Table E {\n... integer\n}"
             },
             "declaration": {
@@ -355,7 +355,7 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol-<function-application>@[L1:C4, L1:C14]",
+                  "id": "symbol-Column@[L1:C4, L1:C14]",
                   "snippet": "id integer"
                 }
               }
@@ -460,7 +460,7 @@
           },
           "symbol": {
             "context": {
-              "id": "symbol-<element-declaration>:@[L4:C0, L4:C9]",
+              "id": "symbol-Note:@[L4:C0, L4:C9]",
               "snippet": "Note: 12."
             },
             "declaration": {
@@ -503,7 +503,7 @@
     },
     "symbol": {
       "context": {
-        "id": "symbol-<program>@[L0:C0, L4:C9]",
+        "id": "symbol-Program@[L0:C0, L4:C9]",
         "snippet": "Table E {\n...\nNote: 12."
       },
       "declaration": {
@@ -513,12 +513,12 @@
       "members": [
         {
           "context": {
-            "id": "symbol-?@[L?:C?, L?:C?]"
+            "id": "symbol-Schemapublic@[L?:C?, L?:C?]"
           }
         },
         {
           "context": {
-            "id": "symbol-<element-declaration>:E@[L0:C0, L2:C1]",
+            "id": "symbol-Table:E@[L0:C0, L2:C1]",
             "snippet": "Table E {\n... integer\n}"
           }
         }

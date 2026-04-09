@@ -130,7 +130,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<function-application>@[L1:C4, L1:C9]",
+                        "id": "symbol-Enum field@[L1:C4, L1:C9]",
                         "snippet": "churn"
                       },
                       "declaration": {
@@ -224,7 +224,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<function-application>@[L2:C4, L2:C9]",
+                        "id": "symbol-Enum field@[L2:C4, L2:C9]",
                         "snippet": "churn"
                       },
                       "declaration": {
@@ -318,7 +318,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<function-application>@[L3:C4, L3:C9]",
+                        "id": "symbol-Enum field@[L3:C4, L3:C9]",
                         "snippet": "churn"
                       },
                       "declaration": {
@@ -436,7 +436,7 @@
           },
           "symbol": {
             "context": {
-              "id": "symbol-<element-declaration>:status@[L0:C0, L4:C1]",
+              "id": "symbol-Enum:status@[L0:C0, L4:C1]",
               "snippet": "Enum statu...  churn\r\n}"
             },
             "declaration": {
@@ -446,19 +446,19 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol-<function-application>@[L1:C4, L1:C9]",
+                  "id": "symbol-Enum field@[L1:C4, L1:C9]",
                   "snippet": "churn"
                 }
               },
               {
                 "context": {
-                  "id": "symbol-<function-application>@[L2:C4, L2:C9]",
+                  "id": "symbol-Enum field@[L2:C4, L2:C9]",
                   "snippet": "churn"
                 }
               },
               {
                 "context": {
-                  "id": "symbol-<function-application>@[L3:C4, L3:C9]",
+                  "id": "symbol-Enum field@[L3:C4, L3:C9]",
                   "snippet": "churn"
                 }
               }
@@ -498,7 +498,7 @@
     },
     "symbol": {
       "context": {
-        "id": "symbol-<program>@[L0:C0, L4:C1]",
+        "id": "symbol-Program@[L0:C0, L4:C1]",
         "snippet": "Enum statu...  churn\r\n}"
       },
       "declaration": {
@@ -508,12 +508,12 @@
       "members": [
         {
           "context": {
-            "id": "symbol-?@[L?:C?, L?:C?]"
+            "id": "symbol-Schemapublic@[L?:C?, L?:C?]"
           }
         },
         {
           "context": {
-            "id": "symbol-<element-declaration>:status@[L0:C0, L4:C1]",
+            "id": "symbol-Enum:status@[L0:C0, L4:C1]",
             "snippet": "Enum statu...  churn\r\n}"
           }
         }

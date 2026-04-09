@@ -247,7 +247,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<function-application>@[L1:C2, L1:C8]",
+                        "id": "symbol-Column@[L1:C2, L1:C8]",
                         "snippet": "id int"
                       },
                       "declaration": {
@@ -567,7 +567,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<function-application>@[L3:C2, L5:C9]",
+                        "id": "symbol-Column@[L3:C2, L5:C9]",
                         "snippet": "!common\r\n ...\n  -common"
                       },
                       "declaration": {
@@ -697,7 +697,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<function-application>@[L7:C2, L7:C4]",
+                        "id": "symbol-Column@[L7:C2, L7:C4]",
                         "snippet": "~1"
                       },
                       "declaration": {
@@ -791,7 +791,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<function-application>@[L8:C2, L9:C1]",
+                        "id": "symbol-Column@[L8:C2, L9:C1]",
                         "snippet": "~\r\n}"
                       },
                       "declaration": {
@@ -909,7 +909,7 @@
           },
           "symbol": {
             "context": {
-              "id": "symbol-<element-declaration>:Users@[L0:C0, L9:C1]",
+              "id": "symbol-Table:Users@[L0:C0, L9:C1]",
               "snippet": "Table User...~1\r\n  ~\r\n}"
             },
             "declaration": {
@@ -919,25 +919,25 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol-<function-application>@[L1:C2, L1:C8]",
+                  "id": "symbol-Column@[L1:C2, L1:C8]",
                   "snippet": "id int"
                 }
               },
               {
                 "context": {
-                  "id": "symbol-<function-application>@[L3:C2, L5:C9]",
+                  "id": "symbol-Column@[L3:C2, L5:C9]",
                   "snippet": "!common\r\n ...\n  -common"
                 }
               },
               {
                 "context": {
-                  "id": "symbol-<function-application>@[L7:C2, L7:C4]",
+                  "id": "symbol-Column@[L7:C2, L7:C4]",
                   "snippet": "~1"
                 }
               },
               {
                 "context": {
-                  "id": "symbol-<function-application>@[L8:C2, L9:C1]",
+                  "id": "symbol-Column@[L8:C2, L9:C1]",
                   "snippet": "~\r\n}"
                 }
               }
@@ -977,7 +977,7 @@
     },
     "symbol": {
       "context": {
-        "id": "symbol-<program>@[L0:C0, L10:C0]",
+        "id": "symbol-Program@[L0:C0, L10:C0]",
         "snippet": "Table User...\r\n  ~\r\n}\r\n"
       },
       "declaration": {
@@ -987,12 +987,12 @@
       "members": [
         {
           "context": {
-            "id": "symbol-?@[L?:C?, L?:C?]"
+            "id": "symbol-Schemapublic@[L?:C?, L?:C?]"
           }
         },
         {
           "context": {
-            "id": "symbol-<element-declaration>:Users@[L0:C0, L9:C1]",
+            "id": "symbol-Table:Users@[L0:C0, L9:C1]",
             "snippet": "Table User...~1\r\n  ~\r\n}"
           }
         }

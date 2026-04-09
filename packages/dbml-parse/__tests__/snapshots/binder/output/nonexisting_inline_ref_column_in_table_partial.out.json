@@ -456,7 +456,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<function-application>@[L1:C2, L1:C28]",
+                        "id": "symbol-Column@[L1:C2, L1:C28]",
                         "snippet": "col1 type ...> un_col1]"
                       },
                       "declaration": {
@@ -700,7 +700,7 @@
                                             },
                                             "referee": {
                                               "context": {
-                                                "id": "symbol-<element-declaration>:T1@[L6:C0, L8:C1]",
+                                                "id": "symbol-Table:T1@[L6:C0, L8:C1]",
                                                 "snippet": "Table T1 {... un_col]\n}"
                                               }
                                             }
@@ -933,7 +933,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<function-application>@[L2:C2, L2:C31]",
+                        "id": "symbol-Column@[L2:C2, L2:C31]",
                         "snippet": "col2 type ...1.un_col2]"
                       },
                       "declaration": {
@@ -1404,7 +1404,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<function-application>@[L3:C2, L3:C33]",
+                        "id": "symbol-Column@[L3:C2, L3:C33]",
                         "snippet": "col3 type ...T.un_col3]"
                       },
                       "declaration": {
@@ -1523,7 +1523,7 @@
           },
           "symbol": {
             "context": {
-              "id": "symbol-<element-declaration>:T1@[L0:C0, L4:C1]",
+              "id": "symbol-TablePartial:T1@[L0:C0, L4:C1]",
               "snippet": "TableParti...un_col3]\n}"
             },
             "declaration": {
@@ -1533,19 +1533,19 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol-<function-application>@[L1:C2, L1:C28]",
+                  "id": "symbol-Column@[L1:C2, L1:C28]",
                   "snippet": "col1 type ...> un_col1]"
                 }
               },
               {
                 "context": {
-                  "id": "symbol-<function-application>@[L2:C2, L2:C31]",
+                  "id": "symbol-Column@[L2:C2, L2:C31]",
                   "snippet": "col2 type ...1.un_col2]"
                 }
               },
               {
                 "context": {
-                  "id": "symbol-<function-application>@[L3:C2, L3:C33]",
+                  "id": "symbol-Column@[L3:C2, L3:C33]",
                   "snippet": "col3 type ...T.un_col3]"
                 }
               }
@@ -1957,7 +1957,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<function-application>@[L7:C2, L7:C26]",
+                        "id": "symbol-Column@[L7:C2, L7:C26]",
                         "snippet": "col type [... > un_col]"
                       },
                       "declaration": {
@@ -2075,7 +2075,7 @@
           },
           "symbol": {
             "context": {
-              "id": "symbol-<element-declaration>:T1@[L6:C0, L8:C1]",
+              "id": "symbol-Table:T1@[L6:C0, L8:C1]",
               "snippet": "Table T1 {... un_col]\n}"
             },
             "declaration": {
@@ -2085,7 +2085,7 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol-<function-application>@[L7:C2, L7:C26]",
+                  "id": "symbol-Column@[L7:C2, L7:C26]",
                   "snippet": "col type [... > un_col]"
                 }
               }
@@ -2130,7 +2130,7 @@
     },
     "symbol": {
       "context": {
-        "id": "symbol-<program>@[L0:C0, L9:C0]",
+        "id": "symbol-Program@[L0:C0, L9:C0]",
         "snippet": "TableParti...un_col]\n}\n"
       },
       "declaration": {
@@ -2140,18 +2140,18 @@
       "members": [
         {
           "context": {
-            "id": "symbol-?@[L?:C?, L?:C?]"
+            "id": "symbol-Schemapublic@[L?:C?, L?:C?]"
           }
         },
         {
           "context": {
-            "id": "symbol-<element-declaration>:T1@[L0:C0, L4:C1]",
+            "id": "symbol-TablePartial:T1@[L0:C0, L4:C1]",
             "snippet": "TableParti...un_col3]\n}"
           }
         },
         {
           "context": {
-            "id": "symbol-<element-declaration>:T1@[L6:C0, L8:C1]",
+            "id": "symbol-Table:T1@[L6:C0, L8:C1]",
             "snippet": "Table T1 {... un_col]\n}"
           }
         }

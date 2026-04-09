@@ -524,7 +524,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<function-application>@[L1:C2, L1:C26]",
+                        "id": "symbol-Column@[L1:C2, L1:C26]",
                         "snippet": "id integer...imary key]"
                       },
                       "declaration": {
@@ -1013,7 +1013,7 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-<function-application>@[L2:C2, L2:C42]",
+                        "id": "symbol-Column@[L2:C2, L2:C42]",
                         "snippet": "username v...l, unique]"
                       },
                       "declaration": {
@@ -1131,7 +1131,7 @@
           },
           "symbol": {
             "context": {
-              "id": "symbol-<element-declaration>:users@[L0:C0, L3:C1]",
+              "id": "symbol-Table:users@[L0:C0, L3:C1]",
               "snippet": "Table user... unique]\n}"
             },
             "declaration": {
@@ -1141,13 +1141,13 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol-<function-application>@[L1:C2, L1:C26]",
+                  "id": "symbol-Column@[L1:C2, L1:C26]",
                   "snippet": "id integer...imary key]"
                 }
               },
               {
                 "context": {
-                  "id": "symbol-<function-application>@[L2:C2, L2:C42]",
+                  "id": "symbol-Column@[L2:C2, L2:C42]",
                   "snippet": "username v...l, unique]"
                 }
               }
@@ -1385,7 +1385,7 @@
           },
           "symbol": {
             "context": {
-              "id": "symbol-<element-declaration>:note2@[L5:C0, L7:C1]",
+              "id": "symbol-Note:note2@[L5:C0, L7:C1]",
               "snippet": "Note note2...ne note'\n}"
             },
             "declaration": {
@@ -1626,7 +1626,7 @@
           },
           "symbol": {
             "context": {
-              "id": "symbol-<element-declaration>:note2@[L9:C0, L11:C1]",
+              "id": "symbol-Note:note2@[L9:C0, L11:C1]",
               "snippet": "Note note2...ne note'\n}"
             },
             "declaration": {
@@ -1867,7 +1867,7 @@
           },
           "symbol": {
             "context": {
-              "id": "symbol-<element-declaration>:note3@[L13:C0, L15:C1]",
+              "id": "symbol-Note:note3@[L13:C0, L15:C1]",
               "snippet": "Note note3...ne note'\n}"
             },
             "declaration": {
@@ -2108,7 +2108,7 @@
           },
           "symbol": {
             "context": {
-              "id": "symbol-<element-declaration>:note3@[L17:C0, L19:C1]",
+              "id": "symbol-Note:note3@[L17:C0, L19:C1]",
               "snippet": "Note \"note...ne note'\n}"
             },
             "declaration": {
@@ -2518,7 +2518,7 @@
           },
           "symbol": {
             "context": {
-              "id": "symbol-<element-declaration>:@[L21:C0, L26:C1]",
+              "id": "symbol-Note:@[L21:C0, L26:C1]",
               "snippet": "Note schem...dy\n  '''\n}"
             },
             "declaration": {
@@ -2759,7 +2759,7 @@
           },
           "symbol": {
             "context": {
-              "id": "symbol-<element-declaration>:schema.note4@[L27:C0, L32:C1]",
+              "id": "symbol-Note:schema.note4@[L27:C0, L32:C1]",
               "snippet": "Note \"sche...dy\n  '''\n}"
             },
             "declaration": {
@@ -3280,7 +3280,7 @@
           },
           "symbol": {
             "context": {
-              "id": "symbol-<element-declaration>:schema.note5@[L34:C0, L39:C1]",
+              "id": "symbol-Note:schema.note5@[L34:C0, L39:C1]",
               "snippet": "Note \"sche...dy\n  '''\n}"
             },
             "declaration": {
@@ -3323,7 +3323,7 @@
     },
     "symbol": {
       "context": {
-        "id": "symbol-<program>@[L0:C0, L40:C0]",
+        "id": "symbol-Program@[L0:C0, L40:C0]",
         "snippet": "Table user...y\n  '''\n}\n"
       },
       "declaration": {
@@ -3333,47 +3333,47 @@
       "members": [
         {
           "context": {
-            "id": "symbol-?@[L?:C?, L?:C?]"
+            "id": "symbol-Schemapublic@[L?:C?, L?:C?]"
           }
         },
         {
           "context": {
-            "id": "symbol-?@[L?:C?, L?:C?]"
+            "id": "symbol-Schemaschema@[L?:C?, L?:C?]"
           }
         },
         {
           "context": {
-            "id": "symbol-<element-declaration>:users@[L0:C0, L3:C1]",
+            "id": "symbol-Table:users@[L0:C0, L3:C1]",
             "snippet": "Table user... unique]\n}"
           }
         },
         {
           "context": {
-            "id": "symbol-<element-declaration>:note2@[L5:C0, L7:C1]",
+            "id": "symbol-Note:note2@[L5:C0, L7:C1]",
             "snippet": "Note note2...ne note'\n}"
           }
         },
         {
           "context": {
-            "id": "symbol-<element-declaration>:note2@[L9:C0, L11:C1]",
+            "id": "symbol-Note:note2@[L9:C0, L11:C1]",
             "snippet": "Note note2...ne note'\n}"
           }
         },
         {
           "context": {
-            "id": "symbol-<element-declaration>:note3@[L13:C0, L15:C1]",
+            "id": "symbol-Note:note3@[L13:C0, L15:C1]",
             "snippet": "Note note3...ne note'\n}"
           }
         },
         {
           "context": {
-            "id": "symbol-<element-declaration>:note3@[L17:C0, L19:C1]",
+            "id": "symbol-Note:note3@[L17:C0, L19:C1]",
             "snippet": "Note \"note...ne note'\n}"
           }
         },
         {
           "context": {
-            "id": "symbol-<element-declaration>:schema.note4@[L27:C0, L32:C1]",
+            "id": "symbol-Note:schema.note4@[L27:C0, L32:C1]",
             "snippet": "Note \"sche...dy\n  '''\n}"
           }
         }
