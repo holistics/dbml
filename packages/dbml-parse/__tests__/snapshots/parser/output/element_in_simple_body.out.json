@@ -6,7 +6,7 @@
       "level": "error",
       "node": {
         "context": {
-          "id": "<element-declaration>:E@[L0:C6, L0:C15]",
+          "id": "node-<element-declaration>:E@[L0:C6, L0:C15]",
           "snippet": "Enum E {}"
         }
       }
@@ -14,20 +14,20 @@
   ],
   "program": {
     "context": {
-      "id": "<program>@[L0:C0, L0:C15]",
+      "id": "node-<program>@[L0:C0, L0:C15]",
       "snippet": "Note: Enum E {}"
     },
     "children": {
       "body": [
         {
           "context": {
-            "id": "<element-declaration>:@[L0:C0, L0:C5]",
+            "id": "node-<element-declaration>:@[L0:C0, L0:C5]",
             "snippet": "Note:"
           },
           "children": {
             "bodyColon": {
               "context": {
-                "id": "<colon>::@[L0:C4, L0:C5]",
+                "id": "token-<colon>::@[L0:C4, L0:C5]",
                 "snippet": ":"
               },
               "isInvalid": false,
@@ -55,7 +55,7 @@
             },
             "type": {
               "context": {
-                "id": "<identifier>:Note@[L0:C0, L0:C4]",
+                "id": "token-<identifier>:Note@[L0:C0, L0:C4]",
                 "snippet": "Note"
               },
               "isInvalid": false,
@@ -77,7 +77,7 @@
       },
       "eof": {
         "context": {
-          "id": "<eof>:@[L0:C15, L0:C15]",
+          "id": "token-<eof>:@[L0:C15, L0:C15]",
           "snippet": ""
         },
         "isInvalid": false,
