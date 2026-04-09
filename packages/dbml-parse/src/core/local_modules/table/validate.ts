@@ -362,7 +362,7 @@ export default class TableValidator {
       if (!sub.type) {
         return [];
       }
-      return this.compiler.validate(sub).getErrors();
+      return this.compiler.validateNode(sub).getErrors();
     });
 
     const notes = subs.filter((sub) => sub.type?.value.toLowerCase() === 'note');

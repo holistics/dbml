@@ -1,5 +1,5 @@
 import type Compiler from '../index';
-import { NodeSymbol, SymbolKind } from '@/core/types/symbols';
+import { NodeSymbol, SchemaSymbol, SymbolKind } from '@/core/types/symbols';
 import Report from '@/core/report';
 import { UNHANDLED } from '@/constants';
 import { SyntaxNode } from '@/core/parser/nodes';
@@ -23,7 +23,9 @@ export function lookupMembers (this: Compiler, symbolOrNode: NodeSymbol | Syntax
     members.find((m) => {
       if (!m.isKind(targetKind)) return false;
 
-      return this.symbolNames(m).includes(targetName);
+      const name = this.symbolName(m);
+      const alias = (symbol instanceof SchemaSymbol || symbol.isKind(SymbolKind.Program)) && m.declaration ? this.nodeAlias(m.declaration).getFiltered(UNHANDLED) : undefined;
+      return name === targetName || alias === targetName;
     }),
   );
 }

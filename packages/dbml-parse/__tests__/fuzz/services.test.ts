@@ -6,6 +6,7 @@ import DBMLReferencesProvider from '@/services/references/provider';
 import DBMLCompletionItemProvider from '@/services/suggestions/provider';
 import { dbmlSchemaArbitrary, tableArbitrary } from '../utils/arbitraries';
 import { MockTextModel, createPosition } from '../utils';
+import { DEFAULT_ENTRY } from '@/constants';
 
 const FUZZ_CONFIG = { numRuns: 50 };
 const ROBUSTNESS_CONFIG = { numRuns: 25 };
@@ -29,7 +30,7 @@ describe('[fuzz] DefinitionProvider - robustness', () => {
         fc.nat(),
         (source: string, line: number, col: number) => {
           const compiler = new Compiler();
-          compiler.setSource(source);
+          compiler.setSource(DEFAULT_ENTRY, source);
 
           const definitionProvider = new DBMLDefinitionProvider(compiler);
           const model = new MockTextModel(source) as any;
@@ -56,7 +57,7 @@ describe('[fuzz] DefinitionProvider - robustness', () => {
         fc.nat(),
         (source: string, line: number, col: number) => {
           const compiler = new Compiler();
-          compiler.setSource(source);
+          compiler.setSource(DEFAULT_ENTRY, source);
 
           const definitionProvider = new DBMLDefinitionProvider(compiler);
           const model = new MockTextModel(source) as any;
@@ -79,7 +80,7 @@ describe('[fuzz] DefinitionProvider - robustness', () => {
     fc.assert(
       fc.property(dbmlSchemaArbitrary, fc.nat(), fc.nat(), (source: string, line: number, col: number) => {
         const compiler = new Compiler();
-        compiler.setSource(source);
+        compiler.setSource(DEFAULT_ENTRY, source);
 
         const definitionProvider = new DBMLDefinitionProvider(compiler);
         const model = new MockTextModel(source) as any;
@@ -117,7 +118,7 @@ describe('[fuzz] ReferencesProvider - robustness', () => {
         fc.nat(),
         (source: string, line: number, col: number) => {
           const compiler = new Compiler();
-          compiler.setSource(source);
+          compiler.setSource(DEFAULT_ENTRY, source);
 
           const referencesProvider = new DBMLReferencesProvider(compiler);
           const model = new MockTextModel(source) as any;
@@ -144,7 +145,7 @@ describe('[fuzz] ReferencesProvider - robustness', () => {
         fc.nat(),
         (source: string, line: number, col: number) => {
           const compiler = new Compiler();
-          compiler.setSource(source);
+          compiler.setSource(DEFAULT_ENTRY, source);
 
           const referencesProvider = new DBMLReferencesProvider(compiler);
           const model = new MockTextModel(source) as any;
@@ -167,7 +168,7 @@ describe('[fuzz] ReferencesProvider - robustness', () => {
     fc.assert(
       fc.property(dbmlSchemaArbitrary, fc.nat(), fc.nat(), (source: string, line: number, col: number) => {
         const compiler = new Compiler();
-        compiler.setSource(source);
+        compiler.setSource(DEFAULT_ENTRY, source);
 
         const referencesProvider = new DBMLReferencesProvider(compiler);
         const model = new MockTextModel(source) as any;
@@ -201,7 +202,7 @@ describe('[fuzz] CompletionItemProvider - robustness', () => {
         fc.nat(),
         (source: string, line: number, col: number) => {
           const compiler = new Compiler();
-          compiler.setSource(source);
+          compiler.setSource(DEFAULT_ENTRY, source);
 
           const completionProvider = new DBMLCompletionItemProvider(compiler);
           const model = new MockTextModel(source) as any;
@@ -228,7 +229,7 @@ describe('[fuzz] CompletionItemProvider - robustness', () => {
         fc.nat(),
         (source: string, line: number, col: number) => {
           const compiler = new Compiler();
-          compiler.setSource(source);
+          compiler.setSource(DEFAULT_ENTRY, source);
 
           const completionProvider = new DBMLCompletionItemProvider(compiler);
           const model = new MockTextModel(source) as any;
@@ -251,7 +252,7 @@ describe('[fuzz] CompletionItemProvider - robustness', () => {
     fc.assert(
       fc.property(dbmlSchemaArbitrary, fc.nat(), fc.nat(), (source: string, line: number, col: number) => {
         const compiler = new Compiler();
-        compiler.setSource(source);
+        compiler.setSource(DEFAULT_ENTRY, source);
 
         const completionProvider = new DBMLCompletionItemProvider(compiler);
         const model = new MockTextModel(source) as any;
@@ -262,13 +263,11 @@ describe('[fuzz] CompletionItemProvider - robustness', () => {
         const result = completionProvider.provideCompletionItems(model, position);
 
         // Result should have valid structure
-        if (result && result.suggestions) {
-          expect(result.suggestions).toBeInstanceOf(Array);
-          result.suggestions.forEach((suggestion) => {
-            expect(suggestion.label).toBeDefined();
-            expect(suggestion.insertText).toBeDefined();
-          });
-        }
+        expect(result.suggestions).toBeInstanceOf(Array);
+        result.suggestions.forEach((suggestion) => {
+          expect(suggestion.label).toBeDefined();
+          expect(suggestion.insertText).toBeDefined();
+        });
       }),
       FUZZ_CONFIG,
     );
@@ -280,7 +279,7 @@ describe('[fuzz] services - consistency', () => {
     fc.assert(
       fc.property(dbmlSchemaArbitrary, fc.nat(), fc.nat(), (source: string, line: number, col: number) => {
         const compiler = new Compiler();
-        compiler.setSource(source);
+        compiler.setSource(DEFAULT_ENTRY, source);
 
         const definitionProvider = new DBMLDefinitionProvider(compiler);
         const model = new MockTextModel(source) as any;
@@ -312,7 +311,7 @@ describe('[fuzz] services - consistency', () => {
           const compiler = new Compiler();
 
           // Set first source
-          compiler.setSource(source1);
+          compiler.setSource(DEFAULT_ENTRY, source1);
           const model1 = new MockTextModel(source1) as any;
           const definitionProvider = new DBMLDefinitionProvider(compiler);
 
@@ -321,7 +320,7 @@ describe('[fuzz] services - consistency', () => {
             definitionProvider.provideDefinition(model1, createPosition(1, 1));
 
             // Update source
-            compiler.setSource(source2);
+            compiler.setSource(DEFAULT_ENTRY, source2);
             const model2 = new MockTextModel(source2) as any;
 
             definitionProvider.provideDefinition(model2, createPosition(line + 1, col + 1));
@@ -339,7 +338,7 @@ describe('[fuzz] services - consistency', () => {
 describe('[fuzz] services - edge cases', () => {
   it('should handle empty source', () => {
     const compiler = new Compiler();
-    compiler.setSource('');
+    compiler.setSource(DEFAULT_ENTRY, '');
 
     const model = new MockTextModel('') as any;
     const position = createPosition(1, 1);
@@ -357,7 +356,7 @@ describe('[fuzz] services - edge cases', () => {
     fc.assert(
       fc.property(tableArbitrary, (source: string) => {
         const compiler = new Compiler();
-        compiler.setSource(source);
+        compiler.setSource(DEFAULT_ENTRY, source);
 
         const model = new MockTextModel(source) as any;
 
@@ -386,7 +385,7 @@ describe('[fuzz] services - edge cases', () => {
     fc.assert(
       fc.property(tableArbitrary, (source: string) => {
         const compiler = new Compiler();
-        compiler.setSource(source);
+        compiler.setSource(DEFAULT_ENTRY, source);
 
         const model = new MockTextModel(source) as any;
 
@@ -410,7 +409,7 @@ describe('[fuzz] services - edge cases', () => {
   it('should handle very long single-line source', () => {
     const longLine = 'Table t { ' + 'col int '.repeat(1000) + '}';
     const compiler = new Compiler();
-    compiler.setSource(longLine);
+    compiler.setSource(DEFAULT_ENTRY, longLine);
 
     const model = new MockTextModel(longLine) as any;
 
@@ -429,7 +428,7 @@ describe('[fuzz] services - edge cases', () => {
   it('should handle source with many lines', () => {
     const manyLines = Array.from({ length: 500 }, (_, i) => `Table t${i} { id int }`).join('\n');
     const compiler = new Compiler();
-    compiler.setSource(manyLines);
+    compiler.setSource(DEFAULT_ENTRY, manyLines);
 
     const model = new MockTextModel(manyLines) as any;
     const definitionProvider = new DBMLDefinitionProvider(compiler);
@@ -453,7 +452,7 @@ describe('[fuzz] services - unicode handling', () => {
 
         const source = `Table "${safeName}" { id int }`;
         const compiler = new Compiler();
-        compiler.setSource(source);
+        compiler.setSource(DEFAULT_ENTRY, source);
 
         const model = new MockTextModel(source) as any;
         const definitionProvider = new DBMLDefinitionProvider(compiler);

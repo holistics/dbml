@@ -1,5 +1,5 @@
 import fs from 'node:fs';
-import { NodeSymbol } from '@/core/types/symbols';
+import { NodeSymbol, SchemaSymbol } from '@/core/types/symbols';
 import { SyntaxToken } from '@/core/lexer/tokens';
 import { ElementDeclarationNode, LiteralNode, ProgramNode, SyntaxNode, VariableNode } from '@/core/parser/nodes';
 import { getElementNameString } from '@/core/utils/expression';
@@ -34,14 +34,17 @@ function getNameHint (node: SyntaxNode | SyntaxToken): string {
 // - Avoid snapshot brittleness
 // - Easy for verification
 function getReadableId (nodeOrSymbol: SyntaxNode | SyntaxToken | NodeSymbol): string | undefined {
+  const type = nodeOrSymbol instanceof SyntaxNode ? 'node' : nodeOrSymbol instanceof SyntaxToken ? 'token' : 'symbol';
+
   const node = (nodeOrSymbol instanceof SyntaxNode) || (nodeOrSymbol instanceof SyntaxToken) ? nodeOrSymbol : nodeOrSymbol?.declaration;
-  if (!node) return undefined;
 
-  const start = `L${node.startPos.line}:C${node.startPos.column}`;
-  const end = `L${node.endPos.line}:C${node.endPos.column}`;
-  const nameHint = getNameHint(node);
+  const kind = nodeOrSymbol.kind;
 
-  return `${node.kind}${nameHint}@[${start}, ${end}]`;
+  const start = `L${node?.startPos.line ?? '?'}:C${node?.startPos.column ?? '?'}`;
+  const end = `L${node?.endPos.line ?? '?'}:C${node?.endPos.column ?? '?'}`;
+  const nameHint = node ? getNameHint(node) : nodeOrSymbol instanceof SchemaSymbol ? nodeOrSymbol.qualifiedName.join('.') : '';
+
+  return `${type}@${kind}@${nameHint}@[${start}, ${end}]`;
 }
 
 // Output the code snippet for a node or a symbol for easy verfication
@@ -227,23 +230,27 @@ export function syntaxTokenToSnapshot (
   { simple = false }: { simple?: boolean } = {},
 ): unknown {
   const tokenReadableId = getReadableId(token);
-  const snippet = getCodeSnippet(token, compiler._parse.source());
+  const snippet = getCodeSnippet(token, compiler.parse.source());
   const {
-    kind,
+    kind, // Filter this out as it's in the readable id
     value,
     leadingTrivia,
     trailingTrivia,
-    leadingInvalid,
-    trailingInvalid,
+    leadingInvalid, // Filter this out
+    trailingInvalid, // Filter this out
     isInvalid,
+    startPos, // Filter this out
+    endPos, // Filter this out
+    start, // Filter this out
+    end, // Filter this out
   } = token;
   if (simple) {
     return {
       context: { // context should always be at the top
         id: tokenReadableId,
         snippet,
+        isInvalid,
       },
-      isInvalid,
     };
   }
   const result = {
@@ -252,13 +259,9 @@ export function syntaxTokenToSnapshot (
       snippet,
     },
     ...sortObject({
-      isInvalid,
-      kind,
       value,
       leadingTrivia: leadingTrivia.map((t) => t.value).join(''),
       trailingTrivia: trailingTrivia.map((t) => t.value).join(''),
-      leadingInvalid: leadingInvalid.map((t) => t.value).join(''),
-      trailingInvalid: trailingInvalid.map((t) => t.value).join(''),
     }),
   };
   return result;
@@ -270,11 +273,16 @@ export function syntaxNodeToSnapshot (
   { simple = false }: { simple?: boolean } = {},
 ): unknown {
   const nodeReadableId = getReadableId(node);
-  const snippet = getCodeSnippet(node, compiler._parse.source());
+  const snippet = getCodeSnippet(node, compiler.parse.source());
   const {
     id, // Filter this out
-    parent,
-    parentNode,
+    parent, // Filter this out
+    parentNode, // Filter this out
+    kind, // Filter this out as it's in the readable id
+    startPos, // Filter this out
+    endPos, // Filter this out
+    start, // Filter this out
+    end, // Filter this out
     ...props
   } = node;
   const symbol = compiler.nodeSymbol(node).getFiltered(UNHANDLED);
@@ -317,7 +325,7 @@ export function symbolToSnapshot (
 ): unknown {
   if (!symbol) return undefined;
   const symbolReadableId = getReadableId(symbol);
-  const snippet = getCodeSnippet(symbol, compiler._parse.source());
+  const snippet = getCodeSnippet(symbol, compiler.parse.source());
   const {
     id, // Filter this out
     declaration,
@@ -342,11 +350,11 @@ export function symbolToSnapshot (
       members: symbolTable && sortArray([...symbolTable.entries()].map(([, value]) => symbolToSnapshot(compiler, value, { simple: true }))),
       declaration: declaration && {
         id: getReadableId(declaration),
-        snippet: getCodeSnippet(declaration, compiler._parse.source()),
+        snippet: getCodeSnippet(declaration, compiler.parse.source()),
       },
       references: references && sortArray(references.map((r) => ({
         id: getReadableId(r),
-        snippet: getCodeSnippet(r, compiler._parse.source()),
+        snippet: getCodeSnippet(r, compiler.parse.source()),
       }))),
     }),
   };

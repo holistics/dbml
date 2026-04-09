@@ -3,7 +3,7 @@ import { ElementDeclarationNode, UseDeclarationNode, UseSpecifierListNode, Wildc
 import { SyntaxNode, UseSpecifierNode } from '@/core/parser/nodes';
 import { NodeSymbol, SchemaSymbol, SymbolKind, UseSymbol } from '@/core/types/symbols';
 import type { GlobalModule } from '../types';
-import { PASS_THROUGH, type PassThrough, UNHANDLED } from '@/constants';
+import { PASS_THROUGH, type PassThrough, UNHANDLED, DEFAULT_SCHEMA_NAME } from '@/constants';
 import Report from '@/core/report';
 import type Compiler from '@/compiler/index';
 import { CompileError, CompileErrorCode } from '@/core/errors';
@@ -19,7 +19,7 @@ export const schemaModule: GlobalModule = {
     if (!symbol.isKind(SymbolKind.Schema) || !(symbol instanceof SchemaSymbol)) return Report.create(PASS_THROUGH);
     const qualifiedName = symbol.qualifiedName;
 
-    const usableMembers = compiler.usableMembers(symbol).getFiltered(UNHANDLED);
+    const usableMembers = compiler.fileUsableMembers(symbol).getFiltered(UNHANDLED);
     if (!usableMembers) return Report.create([]);
 
     const members = [...usableMembers.nonSchemaMembers];
@@ -50,10 +50,28 @@ export const schemaModule: GlobalModule = {
     const uniqueExpandedMembers = uniqBy(membersWithExpansions, (m) => m.originalSymbol);
 
     const errors: CompileError[] = [];
-    // Duplicate checking and alias conflict detection
+
+    // Duplicate checking and alias conflict detection (alias is only checked for `public`)
     const seen = new Map<string, NodeSymbol>();
     for (const member of uniqueExpandedMembers) {
-      const names = compiler.symbolNames(member);
+      const isPublicSchema = symbol.qualifiedName.join('.') === DEFAULT_SCHEMA_NAME;
+
+      const fullname = (member.declaration && compiler.nodeFullname(member.declaration).getFiltered(UNHANDLED)) || [];
+      if (fullname.length > 1 && fullname[0] === DEFAULT_SCHEMA_NAME) {
+        fullname.shift();
+      }
+
+      const canonicalName = isPublicSchema
+        ? (fullname.length <= 1 ? compiler.symbolName(member) : undefined) // only include canonical name for public schema if the name is not qualified, or is qualified with DEFAULT_SCHEMA_NAME
+        : compiler.symbolName(member);
+
+      const alias = (
+        isPublicSchema && member.declaration
+      )
+        ? compiler.nodeAlias(member.declaration).getFiltered(UNHANDLED)
+        : undefined;
+
+      const names = [canonicalName, alias].filter(Boolean);
       for (const name of names) {
         const key = `${member.kind}:${name}`;
         const existing = seen.get(key);
@@ -66,38 +84,10 @@ export const schemaModule: GlobalModule = {
             ? member.declaration.name
             : member.declaration;
           if (errorNode) {
-            errors.push(getDuplicateSchemaMemberError(member.kind, name, qualifiedName.join('.'), errorNode));
+            errors.push(getDuplicateSchemaMemberError(member.kind, name!, qualifiedName.join('.'), errorNode));
           }
         } else {
           seen.set(key, member);
-        }
-      }
-
-      // Check alias conflicts (e.g. Table users as U)
-      if (member.declaration) {
-        const alias = compiler.alias(member.declaration).getFiltered(UNHANDLED);
-        if (alias) {
-          const aliasKey = `${member.kind}:${alias}`;
-          const existingAlias = seen.get(aliasKey);
-          if (existingAlias && existingAlias !== member) {
-            const errorNode = (
-              member.declaration instanceof ElementDeclarationNode
-              && member.declaration.alias
-            )
-              ? member.declaration.alias
-              : member.declaration;
-            if (errorNode) {
-              errors.push(
-                new CompileError(
-                  CompileErrorCode.DUPLICATE_NAME,
-                  `${member.kind} alias '${alias}' conflicts with an existing ${member.kind} name or alias`,
-                  errorNode,
-                ),
-              );
-            }
-          } else if (!existingAlias) {
-            seen.set(aliasKey, member);
-          }
         }
       }
     }
@@ -153,7 +143,7 @@ function handleMemberWildcardUses (compiler: Compiler, symbol: SchemaSymbol, imp
   const externalSchemaSymbol = findSchemaSymbolInFilepath(compiler, importPath, symbol.qualifiedName);
   if (!externalSchemaSymbol) return [];
 
-  const usableMembers = compiler.usableMembers(externalSchemaSymbol).getFiltered(UNHANDLED);
+  const usableMembers = compiler.fileUsableMembers(externalSchemaSymbol).getFiltered(UNHANDLED);
   if (!usableMembers) return [];
   const members = usableMembers.nonSchemaMembers.map((m) => compiler.symbolFactory.create(UseSymbol, {
     kind: m.kind,
@@ -197,7 +187,7 @@ function handleMemberWildcardUses (compiler: Compiler, symbol: SchemaSymbol, imp
 function findSchemaSymbolInFilepath (compiler: Compiler, filepath: Filepath, schemaFullname: string[]): SchemaSymbol | undefined {
   if (schemaFullname.length === 0) return undefined;
 
-  const usableSymbols = compiler.usableMembers(filepath).getFiltered(UNHANDLED);
+  const usableSymbols = compiler.fileUsableMembers(filepath).getFiltered(UNHANDLED);
   if (!usableSymbols) return undefined;
 
   let {
@@ -210,7 +200,7 @@ function findSchemaSymbolInFilepath (compiler: Compiler, filepath: Filepath, sch
     const currentSchemaName = fullname.shift();
     currentSchema = schemaMembers.find((member) => member.name === currentSchemaName);
     if (!currentSchema) return undefined;
-    const currentUsableSymbols = compiler.usableMembers(currentSchema).getValue();
+    const currentUsableSymbols = compiler.fileUsableMembers(currentSchema).getValue();
     ({ schemaMembers } = currentUsableSymbols);
   }
 

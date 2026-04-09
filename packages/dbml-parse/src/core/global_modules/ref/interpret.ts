@@ -13,7 +13,6 @@ import Compiler from '@/compiler';
 import Report from '@/core/report';
 import { ElementKind } from '@/core/types/keywords';
 import { UNHANDLED } from '@/constants';
-import { SymbolKind } from '@/core/types/symbols';
 
 function buildRefEndpoint (
   names: { schemaName: string | null; tableName: string; fieldNames: string[] },
@@ -44,21 +43,23 @@ export class RefInterpreter {
   private declarationNode: ElementDeclarationNode;
   private compiler: Compiler;
   private ref: Partial<Ref>;
-  private container: { schemaName: string | null; tableName: string } | undefined;
+  private ownerTable?: string;
+  private ownerSchema?: string | null;
 
   constructor (compiler: Compiler, declarationNode: ElementDeclarationNode) {
     this.declarationNode = declarationNode;
     this.compiler = compiler;
-    this.ref = { };
+    this.ref = {};
     const parent = this.declarationNode.parent;
     if (parent instanceof ElementDeclarationNode && parent.isKind(ElementKind.Table)) {
-      const fnResult = compiler.fullname(parent);
+      const fnResult = compiler.nodeFullname(parent);
       if (!fnResult.hasValue(UNHANDLED)) {
         const segments = fnResult.getValue();
         if (segments && segments.length > 0) {
           const tableName = segments[segments.length - 1];
           const schemaName = segments.length > 1 ? segments.slice(0, -1).join('.') : null;
-          this.container = { schemaName, tableName };
+          this.ownerTable = tableName;
+          this.ownerSchema = schemaName;
         }
       }
     }
@@ -117,41 +118,13 @@ export class RefInterpreter {
     const multiplicities = getMultiplicities(op);
     if (!multiplicities) return [];
 
-    const leftEndpoint = this.resolveEndpoint(leftExpression!, multiplicities[0]);
-    const rightEndpoint = this.resolveEndpoint(rightExpression!, multiplicities[1]);
-
-    if (!leftEndpoint || !rightEndpoint) return [];
-
-    this.ref.endpoints = [leftEndpoint, rightEndpoint];
+    const leftNames = extractNamesFromRefOperand(leftExpression!, this.ownerSchema, this.ownerTable);
+    const rightNames = extractNamesFromRefOperand(rightExpression!, this.ownerSchema, this.ownerTable);
+    this.ref.endpoints = [
+      buildRefEndpoint(leftNames, multiplicities[0], getTokenPosition(leftExpression!)),
+      buildRefEndpoint(rightNames, multiplicities[1], getTokenPosition(rightExpression!)),
+    ];
 
     return [];
-  }
-
-  private resolveEndpoint (node: SyntaxNode, relation: RelationCardinality): RefEndpoint | undefined {
-    let tableNode = node;
-    let fieldNames: string[] = [];
-
-    if (isAccessExpression(node)) {
-      tableNode = node.leftExpression!;
-      const right = node.rightExpression;
-      if (right instanceof TupleExpressionNode) {
-        fieldNames = right.elementList.map((e) => extractVariableFromExpression(e) ?? '');
-      } else {
-        fieldNames = [extractVariableFromExpression(right) ?? ''];
-      }
-    } else {
-      // In standalone Ref, it MUST be an access. If it's not, it's a bare column in a table-level Ref.
-      const names = extractNamesFromRefOperand(node, this.container);
-      return buildRefEndpoint(names, relation, getTokenPosition(node));
-    }
-
-    const result = this.compiler.nodeReferee(tableNode);
-    if (result.hasValue(UNHANDLED)) return undefined;
-    const tableSymbol = result.getValue();
-    if (!tableSymbol || !tableSymbol.isKind(SymbolKind.Table)) return undefined;
-
-    const { schemaName, name: tableName } = getSymbolSchemaAndName(this.compiler, tableSymbol);
-
-    return buildRefEndpoint({ schemaName, tableName, fieldNames }, relation, getTokenPosition(node));
   }
 }

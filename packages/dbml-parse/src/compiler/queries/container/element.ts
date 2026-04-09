@@ -5,7 +5,7 @@ export function containerElement (
   this: Compiler,
   offset: number,
 ): Readonly<ElementDeclarationNode | ProgramNode> {
-  const containers = this._container.stack(offset);
+  const containers = this.container.stack(offset);
 
   for (let i = containers.length - 1; i >= 0; i -= 1) {
     if (containers[i] instanceof ElementDeclarationNode) {
@@ -13,5 +13,5 @@ export function containerElement (
     }
   }
 
-  return this._parse.ast();
+  return this.parse.ast();
 }

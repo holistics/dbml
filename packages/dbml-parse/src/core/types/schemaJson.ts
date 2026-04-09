@@ -1,8 +1,10 @@
+import { Filepath } from './filepath';
 import type { Position } from './position';
 
 export interface TokenPosition {
   start: Position;
   end: Position;
+  filepath: Filepath;
 }
 
 export interface Database {

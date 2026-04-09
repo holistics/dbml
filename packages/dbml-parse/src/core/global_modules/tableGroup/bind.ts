@@ -64,7 +64,7 @@ export default class TableGroupBinder {
         return [];
       }
 
-      return this.compiler.bind(sub).getErrors();
+      return this.compiler.bindNode(sub).getErrors();
     });
   }
 }

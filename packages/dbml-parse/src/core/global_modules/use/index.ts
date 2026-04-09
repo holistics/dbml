@@ -78,11 +78,11 @@ export const useModule: GlobalModule = {
       });
     }
 
-    const usable = compiler.usableMembers(importPath).getFiltered(UNHANDLED);
+    const usable = compiler.fileUsableMembers(importPath).getFiltered(UNHANDLED);
     if (!usable) return Report.create(undefined);
 
     // 1. Direct non-schema members
-    const directMember = usable.nonSchemaMembers.find((m) => compiler.symbolNames(m).includes(name));
+    const directMember = usable.nonSchemaMembers.find((m) => compiler.symbolName(m)?.includes(name));
     if (directMember && (!symbolKind || directMember.isKind(symbolKind))) {
       return Report.create(directMember);
     }
@@ -118,7 +118,7 @@ export const useModule: GlobalModule = {
     );
   },
 
-  bind (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
+  bindNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
     if (isUseDeclaration(node)) {
       const errors: CompileError[] = [];
       if (node.importPath?.value) {
@@ -133,7 +133,7 @@ export const useModule: GlobalModule = {
       }
 
       if (node.specifiers) {
-        const res = compiler.bind(node.specifiers);
+        const res = compiler.bindNode(node.specifiers);
         errors.push(...res.getErrors());
       }
 
@@ -141,7 +141,7 @@ export const useModule: GlobalModule = {
     }
 
     if (node instanceof UseSpecifierListNode) {
-      const errors = node.specifiers.flatMap((s) => compiler.bind(s).getErrors());
+      const errors = node.specifiers.flatMap((s) => compiler.bindNode(s).getErrors());
 
       return new Report(undefined, errors);
     }
@@ -155,7 +155,7 @@ export const useModule: GlobalModule = {
     return Report.create(PASS_THROUGH);
   },
 
-  interpret (compiler: Compiler, node: SyntaxNode): Report<SchemaElement | SchemaElement[] | undefined> | Report<PassThrough> {
+  interpretNode (compiler: Compiler, node: SyntaxNode): Report<SchemaElement | SchemaElement[] | undefined> | Report<PassThrough> {
     if (!isUseSpecifier(node)) return Report.create(PASS_THROUGH);
 
     const symbolResult = compiler.nodeSymbol(node);
@@ -163,16 +163,15 @@ export const useModule: GlobalModule = {
     const symbol = symbolResult.getValue();
     if (!(symbol instanceof UseSymbol) || !symbol.usedSymbol || !symbol.usedSymbol.declaration) return Report.create(undefined);
 
-    const result = compiler.interpret(symbol.usedSymbol.declaration);
+    const result = compiler.interpretNode(symbol.usedSymbol.declaration);
     if (result.hasValue(UNHANDLED)) return Report.create(undefined);
 
     const value = result.getValue();
     if (!value || Array.isArray(value)) return result;
 
-    const names = compiler.symbolNames(symbol);
-    const name = names[0];
+    const name = compiler.symbolName(symbol);
 
-    // Apply alias if it exists
+    // FIXME: Apply alias if it exists
     if (name) {
       const clonedValue = JSON.parse(JSON.stringify(value));
       if ('name' in clonedValue) {
@@ -189,11 +188,11 @@ function lookupMemberInFilepath (compiler: Compiler, importPath: Filepath | unde
   if (!importPath || visited.has(importPath)) return undefined;
   visited.add(importPath);
 
-  const usable = compiler.usableMembers(importPath).getFiltered(UNHANDLED);
+  const usable = compiler.fileUsableMembers(importPath).getFiltered(UNHANDLED);
   if (!usable) return undefined;
 
   // 1. Direct non-schema members
-  const directMember = usable.nonSchemaMembers.find((m) => compiler.symbolNames(m).includes(name));
+  const directMember = usable.nonSchemaMembers.find((m) => compiler.symbolName(m) === name);
   if (directMember && (!symbolKind || directMember.isKind(symbolKind))) {
     return directMember;
   }

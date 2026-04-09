@@ -5,6 +5,7 @@ import { scanTestNames, toSnapshot } from '@tests/utils';
 import Compiler from '@/compiler';
 import type { SyntaxToken } from '@/index';
 import type Report from '@/core/report';
+import { DEFAULT_ENTRY } from '@/constants';
 
 function serializeLexerResult (compiler: Compiler, report: Report<readonly Readonly<SyntaxToken>[]>): string {
   const value = report.getValue();
@@ -24,9 +25,9 @@ describe('[snapshot] lexer', () => {
     const program = readFileSync(path.resolve(__dirname, `./input/${testName}.in.dbml`), 'utf-8');
 
     const compiler = new Compiler();
-    compiler.setSource(program);
+    compiler.setSource(DEFAULT_ENTRY, program);
 
-    const output = serializeLexerResult(compiler, compiler.parse().map(({ tokens }) => tokens));
+    const output = serializeLexerResult(compiler, compiler.parseFile(DEFAULT_ENTRY).map(({ tokens }) => tokens));
 
     it(testName, () => expect(output).toMatchFileSnapshot(path.resolve(__dirname, `./output/${testName}.out.json`)));
   });

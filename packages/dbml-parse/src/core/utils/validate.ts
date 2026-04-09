@@ -238,6 +238,7 @@ export function aggregateSettingList (settingList?: ListExpressionNode): Report<
     if (!name) return;
 
     const existing = map[name];
+
     if (existing) {
       existing.push(attribute);
     } else {

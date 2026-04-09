@@ -45,7 +45,7 @@ export default class IndexesInterpreter {
         args.pop();
       }
 
-      const settingsMap = this.compiler.settings(field).getFiltered(UNHANDLED);
+      const settingsMap = this.compiler.nodeSettings(field).getFiltered(UNHANDLED);
       if (settingsMap) {
         pk = !!settingsMap[SettingName.PK]?.length;
         unique = !!settingsMap[SettingName.Unique]?.length;

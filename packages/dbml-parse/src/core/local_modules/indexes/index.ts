@@ -16,14 +16,14 @@ import type Compiler from '@/compiler';
 import IndexesValidator from './validate';
 
 export const indexesModule: LocalModule = {
-  validate (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
+  validateNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
     if (isElementNode(node, ElementKind.Indexes)) {
       return Report.create(undefined, new IndexesValidator(compiler, node).validate());
     }
     return Report.create(PASS_THROUGH);
   },
 
-  fullname (compiler: Compiler, node: SyntaxNode): Report<string[] | undefined> | Report<PassThrough> {
+  nodeFullname (compiler: Compiler, node: SyntaxNode): Report<string[] | undefined> | Report<PassThrough> {
     if (isElementNode(node, ElementKind.Indexes)) {
       if (node.name) {
         return new Report(undefined, [new CompileError(CompileErrorCode.UNEXPECTED_NAME, 'An Indexes shouldn\'t have a name', node.name)]);
@@ -36,7 +36,7 @@ export const indexesModule: LocalModule = {
     return Report.create(PASS_THROUGH);
   },
 
-  alias (compiler: Compiler, node: SyntaxNode): Report<string | undefined> | Report<PassThrough> {
+  nodeAlias (compiler: Compiler, node: SyntaxNode): Report<string | undefined> | Report<PassThrough> {
     if (isElementNode(node, ElementKind.Indexes)) {
       if (node.alias) {
         return new Report(undefined, [new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'An Indexes shouldn\'t have an alias', node.alias)]);
@@ -49,7 +49,7 @@ export const indexesModule: LocalModule = {
     return Report.create(PASS_THROUGH);
   },
 
-  settings (compiler: Compiler, node: SyntaxNode): Report<Settings> | Report<PassThrough> {
+  nodeSettings (compiler: Compiler, node: SyntaxNode): Report<Settings> | Report<PassThrough> {
     if (isElementNode(node, ElementKind.Indexes)) {
       if (node.attributeList) {
         return new Report(

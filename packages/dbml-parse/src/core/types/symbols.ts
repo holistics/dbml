@@ -17,7 +17,6 @@ export const enum SymbolKind {
   Note = 'Note',
 
   TablePartial = 'TablePartial',
-  TablePartialField = 'TablePartial field',
   PartialInjection = 'PartialInjection',
 
   Indexes = 'Indexes',
@@ -169,5 +168,4 @@ export class SchemaSymbol extends NodeSymbol {
     if (!this.parent) return [this.name];
     return [...this.parent.qualifiedName, this.name];
   }
-
 }

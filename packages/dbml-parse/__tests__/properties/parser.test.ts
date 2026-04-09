@@ -220,7 +220,7 @@ describe('[property] parser - AST structure semantics', () => {
         const result = parse(source);
         const ast = result.getValue().ast;
 
-        ast.body.forEach((node) => {
+        ast.declarations.forEach((node) => {
           if (node.kind === SyntaxNodeKind.ELEMENT_DECLARATION) {
             expect(node.type).toBeDefined();
             expect(node.type?.value).toBeDefined();
@@ -239,7 +239,7 @@ describe('[property] parser - AST structure semantics', () => {
         const result = parse(source);
 
         const ast = result.getValue().ast;
-        const table = ast.body[0];
+        const table = ast.declarations[0];
 
         expect(table.kind).toBe(SyntaxNodeKind.ELEMENT_DECLARATION);
         expect(table.type?.value?.toLowerCase()).toBe('table');
@@ -257,7 +257,7 @@ describe('[property] parser - AST structure semantics', () => {
         const result = parse(source);
 
         const ast = result.getValue().ast;
-        const enumDecl = ast.body[0];
+        const enumDecl = ast.declarations[0];
 
         expect(enumDecl.kind).toBe(SyntaxNodeKind.ELEMENT_DECLARATION);
         expect(enumDecl.type?.value?.toLowerCase()).toBe('enum');
@@ -276,7 +276,7 @@ describe('[property] parser - AST structure semantics', () => {
         const result = parse(source);
 
         const ast = result.getValue().ast;
-        const table = ast.body[0];
+        const table = ast.declarations[0];
 
         // Name should be defined and within source bounds
         expect(table.name).toBeDefined();
@@ -303,7 +303,7 @@ describe('[property] parser - AST structure semantics', () => {
         const result = parse(source);
         const ast = result.getValue().ast;
 
-        const ref = ast.body[0];
+        const ref = ast.declarations[0];
         expect(ref.type?.value?.toLowerCase()).toBe('ref');
         expect(ref.bodyColon).toBeDefined();
       }),

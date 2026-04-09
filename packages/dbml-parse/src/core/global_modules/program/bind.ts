@@ -41,7 +41,7 @@ export default class Binder {
     const reachableFiles = this.compiler.reachableFiles(this.ast.filepath);
 
     for (const filepath of reachableFiles) {
-      const { ast } = this.compiler.parse(filepath).getValue();
+      const { ast } = this.compiler.parseFile(filepath).getValue();
       // Program-level checks (duplicate projects) - only if it's the entry file or we want to check all?
       // Usually project is only one per whole project.
       const projects = ast.body.filter((e): e is ElementDeclarationNode => e instanceof ElementDeclarationNode && e.isKind(ElementKind.Project));
@@ -52,11 +52,11 @@ export default class Binder {
       for (const element of ast.body) {
         if (element instanceof ElementDeclarationNode && element.type) {
           const binder = element as ElementDeclarationNode & { type: SyntaxToken };
-          errors.push(...this.compiler.validate(binder).getErrors());
-          errors.push(...this.compiler.bind(binder).getErrors());
+          errors.push(...this.compiler.validateNode(binder).getErrors());
+          errors.push(...this.compiler.bindNode(binder).getErrors());
         } else {
-          errors.push(...this.compiler.validate(element).getErrors());
-          errors.push(...this.compiler.bind(element).getErrors());
+          errors.push(...this.compiler.validateNode(element).getErrors());
+          errors.push(...this.compiler.bindNode(element).getErrors());
         }
       }
     }
@@ -141,7 +141,7 @@ export default class Binder {
     const reachableFiles = this.compiler.reachableFiles(this.ast.filepath);
 
     for (const filepath of reachableFiles) {
-      const { ast } = this.compiler.parse(filepath).getValue();
+      const { ast } = this.compiler.parseFile(filepath).getValue();
       for (const element of ast.body) {
         if (!(element instanceof ElementDeclarationNode) || !element.type) continue;
         const decl = element as ElementDeclarationNode & { type: SyntaxToken };
@@ -191,7 +191,7 @@ export default class Binder {
             if (!colSym) continue;
 
             // Get settings for this field
-            const settingsResult = this.compiler.settings(field);
+            const settingsResult = this.compiler.nodeSettings(field);
             if (settingsResult.hasValue(UNHANDLED)) continue;
             const settingsMap = settingsResult.getValue();
             const refAttrs = settingsMap[SettingName.Ref];
@@ -236,7 +236,7 @@ export default class Binder {
             const colName = extractVariableFromExpression(field.callee);
             if (!colName) continue;
 
-            const settingsResult = this.compiler.settings(field);
+            const settingsResult = this.compiler.nodeSettings(field);
             if (settingsResult.hasValue(UNHANDLED)) continue;
             const settingsMap = settingsResult.getValue();
             const refAttrs = settingsMap[SettingName.Ref];
@@ -273,7 +273,7 @@ export default class Binder {
     const reachableFiles = this.compiler.reachableFiles(this.ast.filepath);
 
     for (const filepath of reachableFiles) {
-      const { ast } = this.compiler.parse(filepath).getValue();
+      const { ast } = this.compiler.parseFile(filepath).getValue();
       for (const element of ast.body) {
         if (!(element instanceof ElementDeclarationNode) || !element.type) continue;
         const decl = element as ElementDeclarationNode & { type: SyntaxToken };

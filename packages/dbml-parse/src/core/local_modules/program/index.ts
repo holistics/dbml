@@ -8,22 +8,22 @@ import ProgramValidator from './validate';
 import { Settings } from '@/core/utils/validate';
 
 export const programModule: LocalModule = {
-  validate (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
+  validateNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
     if (!isProgramNode(node)) return Report.create(PASS_THROUGH);
     return Report.create(undefined, new ProgramValidator(node as ProgramNode, compiler).validate().getErrors());
   },
 
-  fullname (compiler: Compiler, node: SyntaxNode): Report<string[] | undefined> | Report<PassThrough> {
+  nodeFullname (compiler: Compiler, node: SyntaxNode): Report<string[] | undefined> | Report<PassThrough> {
     if (!isProgramNode(node)) return Report.create(PASS_THROUGH);
     return new Report(undefined);
   },
 
-  alias (compiler: Compiler, node: SyntaxNode): Report<string | undefined> | Report<PassThrough> {
+  nodeAlias (compiler: Compiler, node: SyntaxNode): Report<string | undefined> | Report<PassThrough> {
     if (!isProgramNode(node)) return Report.create(PASS_THROUGH);
     return new Report(undefined);
   },
 
-  settings (compiler: Compiler, node: SyntaxNode): Report<Settings> | Report<PassThrough> {
+  nodeSettings (compiler: Compiler, node: SyntaxNode): Report<Settings> | Report<PassThrough> {
     if (!isProgramNode(node)) return Report.create(PASS_THROUGH);
     return new Report({});
   },

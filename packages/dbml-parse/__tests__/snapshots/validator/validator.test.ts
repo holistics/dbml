@@ -5,6 +5,7 @@ import type { ProgramNode } from '@/core/parser/nodes';
 import { scanTestNames, toSnapshot } from '@tests/utils';
 import Compiler from '@/compiler';
 import Report from '@/core/report';
+import { DEFAULT_ENTRY } from '@/constants';
 
 function serializeValidatorResult (compiler: Compiler, report: Report<ProgramNode>): string {
   const value = report.getValue();
@@ -23,9 +24,9 @@ describe('[snapshot] validator', () => {
     const program = readFileSync(path.resolve(__dirname, `./input/${testName}.in.dbml`), 'utf-8');
 
     const compiler = new Compiler();
-    compiler.setSource(program);
-    const astReport = compiler.parse().map(({ ast }) => ast);
-    const validateReport = compiler.validate(astReport.getValue());
+    compiler.setSource(DEFAULT_ENTRY, program);
+    const astReport = compiler.parseFile(DEFAULT_ENTRY).map(({ ast }) => ast);
+    const validateReport = compiler.validateNode(astReport.getValue());
     const output = serializeValidatorResult(
       compiler,
       Report.create(

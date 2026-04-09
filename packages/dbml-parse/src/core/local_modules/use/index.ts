@@ -14,14 +14,14 @@ import { isValidAlias } from '@/core/utils/validate';
 
 // Handle use declaration, use specifier name, use specifier list
 export const useModule: LocalModule = {
-  validate (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
+  validateNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
     if (node instanceof UseDeclarationNode) {
       return Report.create(undefined, new UseDeclarationValidator(compiler, node).validate());
     }
     return Report.create(PASS_THROUGH);
   },
 
-  fullname (compiler: Compiler, node: SyntaxNode): Report<string[] | undefined> | Report<PassThrough> {
+  nodeFullname (compiler: Compiler, node: SyntaxNode): Report<string[] | undefined> | Report<PassThrough> {
     if (!isUseSpecifier(node)) return Report.create(PASS_THROUGH); // Only use specifiers can have names
 
     const name = destructureComplexVariable(node.name);
@@ -64,7 +64,7 @@ export const useModule: LocalModule = {
     return new Report(name);
   },
 
-  alias (compiler: Compiler, node: SyntaxNode): Report<string | undefined> | Report<PassThrough> {
+  nodeAlias (compiler: Compiler, node: SyntaxNode): Report<string | undefined> | Report<PassThrough> {
     if (!isUseSpecifier(node)) return Report.create(PASS_THROUGH); // Only use specifiers can have aliases
     if (!node.alias) return new Report(undefined);
     if (!isValidAlias(node.alias)) {
@@ -73,7 +73,7 @@ export const useModule: LocalModule = {
     return new Report(extractVariableFromExpression(node.alias));
   },
 
-  settings (compiler: Compiler, node: SyntaxNode): Report<Settings> | Report<PassThrough> {
+  nodeSettings (compiler: Compiler, node: SyntaxNode): Report<Settings> | Report<PassThrough> {
     if (!(node instanceof UseDeclarationNode)) return Report.create(PASS_THROUGH);
     return Report.create({});
   },

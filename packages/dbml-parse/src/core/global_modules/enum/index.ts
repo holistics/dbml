@@ -9,7 +9,7 @@ import { PASS_THROUGH, UNHANDLED, type PassThrough } from '@/constants';
 import Report from '@/core/report';
 import type Compiler from '@/compiler/index';
 import type { SchemaElement } from '@/core/types/schemaJson';
-import { getNodeMemberSymbols, shouldInterpretNode } from '../utils';
+import { shouldInterpretNode } from '../utils';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import EnumBinder from './bind';
 import EnumInterpreter from './interpret';
@@ -64,8 +64,8 @@ export const enumModule: GlobalModule = {
     for (const member of members) {
       if (!member.isKind(SymbolKind.EnumField) || !member.declaration) continue; // Ignore non-enum fields
 
-      const names = compiler.symbolNames(member);
-      for (const name of names) {
+      const name = compiler.symbolName(member);
+      if (name !== undefined) {
         const errorNode = (member.declaration instanceof ElementDeclarationNode && member.declaration.name) ? member.declaration.name : member.declaration;
         const firstNode = seen.get(name);
         if (firstNode) {
@@ -80,7 +80,7 @@ export const enumModule: GlobalModule = {
     return new Report(members, errors);
   },
 
-  bind (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
+  bindNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
     if (!isElementNode(node, ElementKind.Enum)) return Report.create(PASS_THROUGH);
 
     return Report.create(
@@ -89,7 +89,7 @@ export const enumModule: GlobalModule = {
     );
   },
 
-  interpret (compiler: Compiler, node: SyntaxNode): Report<SchemaElement | SchemaElement[] | undefined> | Report<PassThrough> {
+  interpretNode (compiler: Compiler, node: SyntaxNode): Report<SchemaElement | SchemaElement[] | undefined> | Report<PassThrough> {
     if (!isElementNode(node, ElementKind.Enum)) return Report.create(PASS_THROUGH);
 
     if (!shouldInterpretNode(compiler, node)) return Report.create(undefined);

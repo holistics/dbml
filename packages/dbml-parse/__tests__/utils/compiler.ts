@@ -44,10 +44,10 @@ export function analyze (source: string) {
   const compiler = new Compiler();
   compiler.setSource(DEFAULT_ENTRY, source);
 
-  const parseResult = compiler.parse(DEFAULT_ENTRY);
+  const parseResult = compiler.parseFile(DEFAULT_ENTRY);
   const ast = parseResult.getValue().ast;
 
-  const bindResult = compiler.bind(ast);
+  const bindResult = compiler.bindNode(ast);
 
   const errors = [...parseResult.getErrors(), ...bindResult.getErrors()];
   const warnings = [...parseResult.getWarnings(), ...bindResult.getWarnings()];
@@ -66,12 +66,12 @@ export function interpret (source: string): Report<Database | undefined> {
   const compiler = new Compiler();
   compiler.setSource(DEFAULT_ENTRY, source);
 
-  const parseResult = compiler.parse(DEFAULT_ENTRY);
+  const parseResult = compiler.parseFile(DEFAULT_ENTRY);
   const ast = parseResult.getValue().ast;
 
-  const bindResult = compiler.bind(ast);
+  const bindResult = compiler.bindNode(ast);
 
-  const interpretResult = compiler.interpret(ast);
+  const interpretResult = compiler.interpretNode(ast);
   const db = interpretResult.getValue();
 
   return new Report(
@@ -254,7 +254,6 @@ export function print (source: string, ast: SyntaxNode): string {
       case SyntaxNodeKind.USE_DECLARATION: {
         const use = node as UseDeclarationNode;
         if (use.useKeyword) collectTokens(use.useKeyword);
-        if (use.star) collectTokens(use.star);
         if (use.specifiers) collectTokens(use.specifiers);
         if (use.fromKeyword) collectTokens(use.fromKeyword);
         if (use.importPath) collectTokens(use.importPath);

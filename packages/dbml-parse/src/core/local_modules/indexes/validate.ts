@@ -168,7 +168,7 @@ export default class IndexesValidator {
       if (!sub.type) {
         return [];
       }
-      return this.compiler.validate(sub).getErrors();
+      return this.compiler.validateNode(sub).getErrors();
     });
   }
 }

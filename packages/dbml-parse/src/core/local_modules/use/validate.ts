@@ -1,5 +1,5 @@
 import { CompileError, CompileErrorCode } from '@/core/errors';
-import { ProgramNode, UseDeclarationNode, UseSpecifierNode } from '@/core/parser/nodes';
+import { ProgramNode, UseDeclarationNode, UseSpecifierNode, WildcardNode } from '@/core/parser/nodes';
 import { ImportKind } from '@/core/types';
 import { Filepath } from '@/core/types/filepath';
 import type Compiler from '@/compiler';
@@ -37,6 +37,10 @@ export default class UseDeclarationValidator {
       errors.push(new CompileError(CompileErrorCode.INVALID_USE_SPECIFIER_NAME, 'Import path must be a relative path (starting with \'./\' or \'../\')', this.declarationNode.importPath));
     }
 
+    if (this.declarationNode.specifiers instanceof WildcardNode) {
+      return [];
+    }
+
     for (const specifier of this.declarationNode.specifiers?.specifiers || []) {
       errors.push(...this.validateSpecifier(specifier));
     }
@@ -55,8 +59,8 @@ export default class UseDeclarationValidator {
 
     return [
       ...errors,
-      ...this.compiler.fullname(specifier).getErrors(),
-      ...this.compiler.alias(specifier).getErrors(),
+      ...this.compiler.nodeFullname(specifier).getErrors(),
+      ...this.compiler.nodeAlias(specifier).getErrors(),
     ];
   }
 }

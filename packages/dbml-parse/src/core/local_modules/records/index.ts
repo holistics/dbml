@@ -1,9 +1,9 @@
 import { isElementNode, isElementFieldNode } from '@/core/utils/expression';
-import { destructureComplexVariable, extractVariableFromExpression, extractQuotedStringToken } from '@/core/utils/expression';
+import { destructureComplexVariable } from '@/core/utils/expression';
 import { CompileError, CompileErrorCode } from '@/core/errors';
-import { PASS_THROUGH, UNHANDLED, type PassThrough } from '@/constants';
+import { PASS_THROUGH, type PassThrough } from '@/constants';
 import {
-  CallExpressionNode, ElementDeclarationNode, ProgramNode, SyntaxNode, TupleExpressionNode,
+  CallExpressionNode, ProgramNode, SyntaxNode,
 } from '@/core/parser/nodes';
 import { ElementKind } from '@/core/types/keywords';
 import { type LocalModule, type Settings } from '../types';
@@ -14,7 +14,7 @@ import type Compiler from '@/compiler';
 import RecordsValidator from './validate';
 
 export const recordsModule: LocalModule = {
-  validate (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
+  validateNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
     if (isElementNode(node, ElementKind.Records)) {
       return Report.create(undefined, new RecordsValidator(compiler, node).validate());
     }
@@ -24,7 +24,7 @@ export const recordsModule: LocalModule = {
     return Report.create(PASS_THROUGH);
   },
 
-  fullname (compiler: Compiler, node: SyntaxNode): Report<string[] | undefined> | Report<PassThrough> {
+  nodeFullname (compiler: Compiler, node: SyntaxNode): Report<string[] | undefined> | Report<PassThrough> {
     if (isElementNode(node, ElementKind.Records)) {
       const parent = node.parent;
       const isTopLevel = parent instanceof ProgramNode;
@@ -76,7 +76,7 @@ export const recordsModule: LocalModule = {
     return Report.create(PASS_THROUGH);
   },
 
-  alias (compiler: Compiler, node: SyntaxNode): Report<string | undefined> | Report<PassThrough> {
+  nodeAlias (compiler: Compiler, node: SyntaxNode): Report<string | undefined> | Report<PassThrough> {
     if (isElementNode(node, ElementKind.Records)) {
       if (node.alias) {
         return new Report(undefined, [new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'Records cannot have an alias', node.alias)]);
@@ -89,7 +89,7 @@ export const recordsModule: LocalModule = {
     return Report.create(PASS_THROUGH);
   },
 
-  settings (compiler: Compiler, node: SyntaxNode): Report<Settings> | Report<PassThrough> {
+  nodeSettings (compiler: Compiler, node: SyntaxNode): Report<Settings> | Report<PassThrough> {
     if (isElementNode(node, ElementKind.Records)) {
       if (node.attributeList) {
         return new Report({}, [new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'Records cannot have a setting list', node.attributeList)]);

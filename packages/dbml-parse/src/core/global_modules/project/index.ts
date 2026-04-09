@@ -13,7 +13,7 @@ import ProjectBinder from './bind';
 import { ProjectInterpreter } from './interpret';
 
 export const projectModule: GlobalModule = {
-  bind (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
+  bindNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
     if (!isElementNode(node, ElementKind.Project)) return Report.create(PASS_THROUGH);
 
     return Report.create(
@@ -22,7 +22,7 @@ export const projectModule: GlobalModule = {
     );
   },
 
-  interpret (compiler: Compiler, node: SyntaxNode): Report<SchemaElement | SchemaElement[] | undefined> | Report<PassThrough> {
+  interpretNode (compiler: Compiler, node: SyntaxNode): Report<SchemaElement | SchemaElement[] | undefined> | Report<PassThrough> {
     if (!isElementNode(node, ElementKind.Project)) return Report.create(PASS_THROUGH);
 
     if (!shouldInterpretNode(compiler, node)) return Report.create(undefined);

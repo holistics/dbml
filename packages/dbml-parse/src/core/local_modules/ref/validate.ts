@@ -1,23 +1,16 @@
-import { partition, last } from 'lodash-es';
 import Compiler from '@/compiler';
 import { CompileError, CompileErrorCode } from '@/core/errors';
-import {
-  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, IdentiferStreamNode, ListExpressionNode, ProgramNode, SyntaxNode,
-} from '@/core/parser/nodes';
-import {
-  extractStringFromIdentifierStream,
-  isExpressionAVariableNode,
-} from '@/core/utils/expression';
-import { aggregateSettingList, isValidColor, Settings } from '@/core/utils/validate';
-import { destructureComplexVariable, destructureComplexVariableTuple, isBinaryRelationship, isEqualTupleOperands } from '@/core/utils/expression';
 import { SyntaxTokenKind } from '@/core/lexer/tokens';
+import { BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, IdentiferStreamNode, ListExpressionNode, ProgramNode, SyntaxNode } from '@/core/parser/nodes';
 import Report from '@/core/report';
-import { SettingName } from '@/core/types/keywords';
-import { TupleExpressionNode } from '@/core/parser/nodes';
+import { SettingName } from '@/core/types';
+import { destructureComplexVariableTuple, extractStringFromIdentifierStream, isBinaryRelationship, isEqualTupleOperands, isExpressionAVariableNode } from '@/core/utils/expression';
+import { aggregateSettingList, isSimpleName, isValidColor, Settings } from '@/core/utils/validate';
+import { last, partition } from 'lodash-es';
 
 export default class RefValidator {
-  private compiler: Compiler;
   private declarationNode: ElementDeclarationNode;
+  private compiler: Compiler;
 
   constructor (compiler: Compiler, declarationNode: ElementDeclarationNode) {
     this.compiler = compiler;
@@ -42,7 +35,15 @@ export default class RefValidator {
   }
 
   private validateName (nameNode?: SyntaxNode): CompileError[] {
-    return this.compiler.fullname(this.declarationNode).getErrors();
+    if (!nameNode) {
+      return [];
+    }
+
+    if (!isSimpleName(nameNode)) {
+      return [new CompileError(CompileErrorCode.INVALID_NAME, 'A Ref\'s name is optional or must be an identifier or a quoted identifer', nameNode)];
+    }
+
+    return [];
   }
 
   private validateAlias (aliasNode?: SyntaxNode): CompileError[] {
@@ -89,12 +90,14 @@ export default class RefValidator {
       }
 
       if (field.callee && isBinaryRelationship(field.callee)) {
-        const leftOk = this.isValidRefColumnReference(field.callee.leftExpression);
-        const rightOk = this.isValidRefColumnReference(field.callee.rightExpression);
-        if (!leftOk) {
+        const leftFragment = destructureComplexVariableTuple(field.callee.leftExpression) || { variables: [], tupleElements: [] };
+        const leftFragmentCount = leftFragment.variables.length + Math.min(leftFragment.tupleElements.length, 1);
+        const rightFragment = destructureComplexVariableTuple(field.callee.rightExpression) || { variables: [], tupleElements: [] };
+        const rightFragmentCount = rightFragment.variables.length + Math.min(rightFragment.tupleElements.length, 1);
+        if (leftFragmentCount < 2) {
           errors.push(new CompileError(CompileErrorCode.INVALID_REF_FIELD, 'Invalid column reference', field.callee.leftExpression || field.callee));
         }
-        if (!rightOk) {
+        if (rightFragmentCount < 2) {
           errors.push(new CompileError(CompileErrorCode.INVALID_REF_FIELD, 'Invalid column reference', field.callee.rightExpression || field.callee));
         }
       }
@@ -105,11 +108,11 @@ export default class RefValidator {
 
       const args = [...field.args];
       if (last(args) instanceof ListExpressionNode) {
-        const errs = validateFieldSettings(last(args) as ListExpressionNode);
-        errors.push(...errs.getErrors());
+        const errs = this.validateFieldSettings(last(args) as ListExpressionNode);
+        errors.push(...errs);
         args.pop();
       } else if (args[0] instanceof ListExpressionNode) {
-        errors.push(...validateFieldSettings(args[0]).getErrors());
+        errors.push(...this.validateFieldSettings(args[0]));
         args.shift();
       }
 
@@ -121,21 +124,8 @@ export default class RefValidator {
     return errors;
   }
 
-  private isValidRefColumnReference (node?: SyntaxNode): boolean {
-    if (!node) return false;
-    const fragment = destructureComplexVariableTuple(node);
-    if (fragment) {
-      const count = fragment.variables.length + Math.min(fragment.tupleElements.length, 1);
-      return count >= 2;
-    }
-    // Standalone tuple of dotted chains
-    if (node instanceof TupleExpressionNode) {
-      return node.elementList.length > 0 && node.elementList.every((e) => {
-        const v = destructureComplexVariable(e);
-        return v !== undefined && v.length >= 2;
-      });
-    }
-    return false;
+  validateFieldSettings (settings: ListExpressionNode): CompileError[] {
+    return validateFieldSettings(settings).getErrors();
   }
 
   private validateSubElements (subs: ElementDeclarationNode[]): CompileError[] {
@@ -143,9 +133,43 @@ export default class RefValidator {
       if (!sub.type) {
         return [];
       }
-      return this.compiler.validate(sub).getErrors();
+      return this.compiler.validateNode(sub).getErrors();
     });
   }
+}
+
+function isValidPolicy (value?: SyntaxNode): boolean {
+  if (
+    !(
+      isExpressionAVariableNode(value)
+      && value.expression.variable.kind !== SyntaxTokenKind.QUOTED_STRING
+    )
+    && !(value instanceof IdentiferStreamNode)
+  ) {
+    return false;
+  }
+
+  let extractedString: string | undefined;
+  if (value instanceof IdentiferStreamNode) {
+    extractedString = extractStringFromIdentifierStream(value) || '';
+  } else {
+    extractedString = value.expression.variable.value;
+  }
+
+  if (extractedString) {
+    switch (extractedString.toLowerCase()) {
+      case 'cascade':
+      case 'no action':
+      case 'set null':
+      case 'set default':
+      case 'restrict':
+        return true;
+      default:
+        return false;
+    }
+  }
+
+  return false; // unreachable
 }
 
 export function validateFieldSettings (settings: ListExpressionNode): Report<Settings> {
@@ -184,38 +208,4 @@ export function validateFieldSettings (settings: ListExpressionNode): Report<Set
     }
   }
   return new Report(clean, errors);
-}
-
-function isValidPolicy (value?: SyntaxNode): boolean {
-  if (
-    !(
-      isExpressionAVariableNode(value)
-      && value.expression.variable.kind !== SyntaxTokenKind.QUOTED_STRING
-    )
-    && !(value instanceof IdentiferStreamNode)
-  ) {
-    return false;
-  }
-
-  let extractedString: string | undefined;
-  if (value instanceof IdentiferStreamNode) {
-    extractedString = extractStringFromIdentifierStream(value) ?? '';
-  } else {
-    extractedString = value.expression.variable.value;
-  }
-
-  if (extractedString) {
-    switch (extractedString.toLowerCase()) {
-      case 'cascade':
-      case 'no action':
-      case 'set null':
-      case 'set default':
-      case 'restrict':
-        return true;
-      default:
-        return false;
-    }
-  }
-
-  return false; // unreachable
 }

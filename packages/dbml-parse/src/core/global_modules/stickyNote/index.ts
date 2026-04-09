@@ -32,7 +32,7 @@ export const noteModule: GlobalModule = {
     return new Report([]);
   },
 
-  bind (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
+  bindNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
     if (!isElementNode(node, ElementKind.Note)) return Report.create(PASS_THROUGH);
 
     return Report.create(
@@ -41,7 +41,7 @@ export const noteModule: GlobalModule = {
     );
   },
 
-  interpret (compiler: Compiler, node: SyntaxNode): Report<Note | undefined> | Report<PassThrough> {
+  interpretNode (compiler: Compiler, node: SyntaxNode): Report<Note | undefined> | Report<PassThrough> {
     if (!isElementNode(node, ElementKind.Note)) return Report.create(PASS_THROUGH);
 
     if (!shouldInterpretNode(compiler, node)) return Report.create(undefined);

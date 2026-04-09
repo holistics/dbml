@@ -41,7 +41,7 @@ export default class EnumBinder {
         return [];
       }
 
-      return this.compiler.bind(sub).getErrors();
+      return this.compiler.bindNode(sub).getErrors();
     });
   }
 }

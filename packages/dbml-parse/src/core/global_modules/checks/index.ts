@@ -12,7 +12,7 @@ import ChecksInterpreter from './interpret';
 import { shouldInterpretNode } from '../utils';
 
 export const checksModule: GlobalModule = {
-  bind (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
+  bindNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
     if (!isElementNode(node, ElementKind.Checks)) return Report.create(PASS_THROUGH);
 
     return Report.create(
@@ -21,7 +21,7 @@ export const checksModule: GlobalModule = {
     );
   },
 
-  interpret (compiler: Compiler, node: SyntaxNode): Report<SchemaElement | SchemaElement[] | undefined> | Report<PassThrough> {
+  interpretNode (compiler: Compiler, node: SyntaxNode): Report<SchemaElement | SchemaElement[] | undefined> | Report<PassThrough> {
     if (!isElementNode(node, ElementKind.Checks)) return Report.create(PASS_THROUGH);
 
     if (!shouldInterpretNode(compiler, node)) return Report.create(undefined);

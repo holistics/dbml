@@ -32,7 +32,7 @@ export const recordsModule: GlobalModule = {
     const recordsNode = node.parentOfKind(ElementDeclarationNode);
     if (!recordsNode?.isKind(ElementKind.Records)) return Report.create(PASS_THROUGH);
 
-    const programNode = compiler.parse(node.filepath).getValue().ast;
+    const programNode = compiler.parseFile(node.filepath).getValue().ast;
     const globalSymbol = compiler.nodeSymbol(programNode).getValue();
     if (globalSymbol === UNHANDLED) return Report.create(undefined);
 
@@ -57,7 +57,7 @@ export const recordsModule: GlobalModule = {
     return nodeRefereeOfEnumValue(compiler, globalSymbol, node);
   },
 
-  bind (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
+  bindNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
     if (!isElementNode(node, ElementKind.Records)) return Report.create(PASS_THROUGH);
 
     return Report.create(
@@ -66,7 +66,7 @@ export const recordsModule: GlobalModule = {
     );
   },
 
-  interpret (compiler: Compiler, node: SyntaxNode): Report<TableRecord | undefined> | Report<PassThrough> {
+  interpretNode (compiler: Compiler, node: SyntaxNode): Report<TableRecord | undefined> | Report<PassThrough> {
     if (!isElementNode(node, ElementKind.Records)) return Report.create(PASS_THROUGH);
 
     if (!shouldInterpretNode(compiler, node)) return Report.create(undefined);
@@ -201,7 +201,7 @@ function nodeRefereeOfEnumValue (compiler: Compiler, globalSymbol: NodeSymbol, n
 
     if (symbol?.declaration) {
       // Verify the enum is not schema-qualified when accessed without schema
-      const fullname = compiler.fullname(symbol.declaration).getFiltered(UNHANDLED);
+      const fullname = compiler.nodeFullname(symbol.declaration).getFiltered(UNHANDLED);
       if (fullname && fullname.length > 1) {
         // Schema-qualified enum accessed without schema prefix - report error
         return new Report(undefined, [

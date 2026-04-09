@@ -18,8 +18,9 @@ import {
   isWithinNthArgOfField,
   isAccessExpression,
   isExpressionAVariableNode,
+  isElementFieldNode,
 } from '@/core/utils/expression';
-import { getNodeMemberSymbols, lookupMember, nodeRefereeOfLeftExpression, shouldInterpretNode } from '../utils';
+import { lookupMember, nodeRefereeOfLeftExpression, shouldInterpretNode } from '../utils';
 import { isValidPartialInjection } from '@/core/utils/validate';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import TableBinder from './bind';
@@ -43,8 +44,10 @@ export const tableModule: GlobalModule = {
         declaration: node,
       }, node.filepath));
     }
-    if (isInsideElementBody(node, ElementKind.Table) && !isElementNode(node, ElementKind.Records)) {
-      return new Report(compiler.symbolFactory.create(NodeSymbol, { kind: SymbolKind.Column, declaration: node }, node.filepath));
+    if (isElementFieldNode(node, ElementKind.Table)) {
+      return !isValidPartialInjection(node.callee)
+        ? new Report(compiler.symbolFactory.create(NodeSymbol, { kind: SymbolKind.Column, declaration: node }, node.filepath))
+        : new Report(compiler.symbolFactory.create(NodeSymbol, { kind: SymbolKind.PartialInjection, declaration: node }, node.filepath));
     }
     return Report.create(PASS_THROUGH);
   },
@@ -70,12 +73,11 @@ export const tableModule: GlobalModule = {
 
     // Duplicate checking
     const seen = new Map<string, SyntaxNode>();
-    // Duplicate checking
     for (const member of members) {
       if (!member.isKind(SymbolKind.Column) || !member.declaration) continue; // Ignore non-column members
 
-      const names = compiler.symbolNames(member);
-      for (const name of names) {
+      const name = compiler.symbolName(member);
+      if (name !== undefined) {
         const errorNode = (
           member.declaration instanceof ElementDeclarationNode && member.declaration.name
         )
@@ -116,9 +118,8 @@ export const tableModule: GlobalModule = {
         const injectedMembers = tablePartialMembers.flatMap((m) => {
           if (!m.declaration) return [];
 
-          const names = compiler.symbolNames(m);
-          const name = names[0];
-          if (!name) return m;
+          const name = compiler.symbolName(m);
+          if (name === undefined) return m;
 
           return compiler.symbolFactory.create(
             InjectedColumnSymbol,
@@ -144,7 +145,7 @@ export const tableModule: GlobalModule = {
       return Report.create(PASS_THROUGH);
     }
 
-    const programNode = compiler.parse(node.filepath).getValue().ast;
+    const programNode = compiler.parseFile(node.filepath).getValue().ast;
     const globalSymbol = compiler.nodeSymbol(programNode).getValue();
 
     if (globalSymbol === UNHANDLED) {
@@ -176,7 +177,7 @@ export const tableModule: GlobalModule = {
     return nodeRefereeOfEnumDefault(compiler, globalSymbol, node);
   },
 
-  bind (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
+  bindNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
     if (!isElementNode(node, ElementKind.Table)) return Report.create(PASS_THROUGH);
 
     return Report.create(
@@ -185,7 +186,7 @@ export const tableModule: GlobalModule = {
     );
   },
 
-  interpret (compiler: Compiler, node: SyntaxNode): Report<SchemaElement | SchemaElement[] | undefined> | Report<PassThrough> {
+  interpretNode (compiler: Compiler, node: SyntaxNode): Report<SchemaElement | SchemaElement[] | undefined> | Report<PassThrough> {
     if (!isElementNode(node, ElementKind.Table)) return Report.create(PASS_THROUGH);
 
     if (!shouldInterpretNode(compiler, node)) return Report.create(undefined);
@@ -198,7 +199,7 @@ export const tableModule: GlobalModule = {
 function lookupInDefaultSchema (compiler: Compiler, globalSymbol: NodeSymbol, name: string, opts: { kinds?: SymbolKind[]; ignoreNotFound?: boolean; errorNode?: SyntaxNode }): Report<NodeSymbol | undefined> {
   const members = compiler.symbolMembers(globalSymbol);
   if (!members.hasValue(UNHANDLED)) {
-    const publicSchema = members.getValue().find((m: NodeSymbol) => m instanceof SchemaSymbol && m.name === DEFAULT_SCHEMA_NAME);
+    const publicSchema = members.getValue().find((m: NodeSymbol) => m instanceof SchemaSymbol && m.qualifiedName.join('.') === DEFAULT_SCHEMA_NAME);
     if (publicSchema) {
       return lookupMember(compiler, publicSchema, name, opts);
     }
@@ -211,7 +212,7 @@ function nodeRefereeOfPartialInjection (compiler: Compiler, globalSymbol: NodeSy
   const name = extractVariableFromExpression(node) ?? '';
   const members = compiler.symbolMembers(globalSymbol);
   if (!members.hasValue(UNHANDLED)) {
-    const publicSchema = members.getValue().find((m: NodeSymbol) => m instanceof SchemaSymbol && m.name === DEFAULT_SCHEMA_NAME && m.isKind(SymbolKind.Schema));
+    const publicSchema = members.getValue().find((m: NodeSymbol) => m instanceof SchemaSymbol && m.qualifiedName.join('.') === DEFAULT_SCHEMA_NAME && m.isKind(SymbolKind.Schema));
     if (publicSchema) {
       return lookupMember(compiler, publicSchema, name, { kinds: [SymbolKind.TablePartial], errorNode: node });
     }

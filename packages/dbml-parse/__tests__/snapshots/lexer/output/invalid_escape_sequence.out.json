@@ -6,10 +6,10 @@
       "level": "error",
       "token": {
         "context": {
-          "id": "<string>:\\u@[L0:C1, L0:C3]",
-          "snippet": "\\u"
-        },
-        "isInvalid": true
+          "id": "token@<string>@:\\u@[L0:C1, L0:C3]",
+          "snippet": "\\u",
+          "isInvalid": true
+        }
       }
     },
     {
@@ -18,10 +18,10 @@
       "level": "error",
       "token": {
         "context": {
-          "id": "<string>:\\u1@[L2:C1, L2:C4]",
-          "snippet": "\\u1"
-        },
-        "isInvalid": true
+          "id": "token@<string>@:\\u1@[L2:C1, L2:C4]",
+          "snippet": "\\u1",
+          "isInvalid": true
+        }
       }
     },
     {
@@ -30,10 +30,10 @@
       "level": "error",
       "token": {
         "context": {
-          "id": "<string>:\\u12@[L3:C1, L3:C5]",
-          "snippet": "\\u12"
-        },
-        "isInvalid": true
+          "id": "token@<string>@:\\u12@[L3:C1, L3:C5]",
+          "snippet": "\\u12",
+          "isInvalid": true
+        }
       }
     },
     {
@@ -42,10 +42,10 @@
       "level": "error",
       "token": {
         "context": {
-          "id": "<string>:\\uab@[L4:C1, L4:C5]",
-          "snippet": "\\uab"
-        },
-        "isInvalid": true
+          "id": "token@<string>@:\\uab@[L4:C1, L4:C5]",
+          "snippet": "\\uab",
+          "isInvalid": true
+        }
       }
     },
     {
@@ -54,10 +54,10 @@
       "level": "error",
       "token": {
         "context": {
-          "id": "<string>:\\ua1@[L5:C1, L5:C5]",
-          "snippet": "\\ua1"
-        },
-        "isInvalid": true
+          "id": "token@<string>@:\\ua1@[L5:C1, L5:C5]",
+          "snippet": "\\ua1",
+          "isInvalid": true
+        }
       }
     },
     {
@@ -66,10 +66,10 @@
       "level": "error",
       "token": {
         "context": {
-          "id": "<variable>:\\u@[L0:C0, L0:C4]",
-          "snippet": "\"\\u\""
-        },
-        "isInvalid": true
+          "id": "token@<variable>@:\\u@[L0:C0, L0:C4]",
+          "snippet": "\"\\u\"",
+          "isInvalid": true
+        }
       }
     },
     {
@@ -78,10 +78,10 @@
       "level": "error",
       "token": {
         "context": {
-          "id": "<variable>:a@[L1:C0, L1:C4]",
-          "snippet": "\"\\a\""
-        },
-        "isInvalid": true
+          "id": "token@<variable>@:a@[L1:C0, L1:C4]",
+          "snippet": "\"\\a\"",
+          "isInvalid": true
+        }
       }
     },
     {
@@ -90,10 +90,10 @@
       "level": "error",
       "token": {
         "context": {
-          "id": "<variable>:\\u1@[L2:C0, L2:C5]",
-          "snippet": "\"\\u1\""
-        },
-        "isInvalid": true
+          "id": "token@<variable>@:\\u1@[L2:C0, L2:C5]",
+          "snippet": "\"\\u1\"",
+          "isInvalid": true
+        }
       }
     },
     {
@@ -102,10 +102,10 @@
       "level": "error",
       "token": {
         "context": {
-          "id": "<variable>:\\u12@[L3:C0, L3:C6]",
-          "snippet": "\"\\u12\""
-        },
-        "isInvalid": true
+          "id": "token@<variable>@:\\u12@[L3:C0, L3:C6]",
+          "snippet": "\"\\u12\"",
+          "isInvalid": true
+        }
       }
     },
     {
@@ -114,10 +114,10 @@
       "level": "error",
       "token": {
         "context": {
-          "id": "<variable>:\\uab@[L4:C0, L4:C6]",
-          "snippet": "\"\\uab\""
-        },
-        "isInvalid": true
+          "id": "token@<variable>@:\\uab@[L4:C0, L4:C6]",
+          "snippet": "\"\\uab\"",
+          "isInvalid": true
+        }
       }
     },
     {
@@ -126,24 +126,20 @@
       "level": "error",
       "token": {
         "context": {
-          "id": "<variable>:\\ua1@[L5:C0, L5:C6]",
-          "snippet": "\"\\ua1\""
-        },
-        "isInvalid": true
+          "id": "token@<variable>@:\\ua1@[L5:C0, L5:C6]",
+          "snippet": "\"\\ua1\"",
+          "isInvalid": true
+        }
       }
     }
   ],
   "tokens": [
     {
       "context": {
-        "id": "<eof>:@[L5:C6, L5:C6]",
+        "id": "token@<eof>@:@[L5:C6, L5:C6]",
         "snippet": ""
       },
-      "isInvalid": false,
-      "kind": "<eof>",
-      "leadingInvalid": "\\ua\\u1\\u12\\uab\\ua1",
       "leadingTrivia": "",
-      "trailingInvalid": "",
       "trailingTrivia": "",
       "value": ""
     }

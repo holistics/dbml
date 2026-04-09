@@ -6,10 +6,10 @@
       "level": "error",
       "token": {
         "context": {
-          "id": "<variable>:\"This is an unclosed string@[L0:C0, L0:C27]",
-          "snippet": "\"This is a...sed string"
-        },
-        "isInvalid": true
+          "id": "token@<variable>@:\"This is an unclosed string@[L0:C0, L0:C27]",
+          "snippet": "\"This is a...sed string",
+          "isInvalid": true
+        }
       }
     },
     {
@@ -18,10 +18,10 @@
       "level": "error",
       "token": {
         "context": {
-          "id": "<string>:'This is also an unclosed string@[L2:C0, L2:C32]",
-          "snippet": "'This is a...sed string"
-        },
-        "isInvalid": true
+          "id": "token@<string>@:'This is also an unclosed string@[L2:C0, L2:C32]",
+          "snippet": "'This is a...sed string",
+          "isInvalid": true
+        }
       }
     },
     {
@@ -30,24 +30,20 @@
       "level": "error",
       "token": {
         "context": {
-          "id": "<string>:'''This is also an unclosed string\n\n\\'''\n@[L4:C0, L7:C0]",
-          "snippet": "'''This is...ing\n\n\\'''\n"
-        },
-        "isInvalid": true
+          "id": "token@<string>@:'''This is also an unclosed string\n\n\\'''\n@[L4:C0, L7:C0]",
+          "snippet": "'''This is...ing\n\n\\'''\n",
+          "isInvalid": true
+        }
       }
     }
   ],
   "tokens": [
     {
       "context": {
-        "id": "<eof>:@[L7:C0, L7:C0]",
+        "id": "token@<eof>@:@[L7:C0, L7:C0]",
         "snippet": ""
       },
-      "isInvalid": false,
-      "kind": "<eof>",
-      "leadingInvalid": "\"This is an unclosed string'This is also an unclosed string'''This is also an unclosed string\n\n\\'''\n",
       "leadingTrivia": "",
-      "trailingInvalid": "",
       "trailingTrivia": "",
       "value": ""
     }

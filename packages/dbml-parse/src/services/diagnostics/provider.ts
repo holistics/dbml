@@ -3,6 +3,7 @@ import type { CompileError, CompileWarning } from '@/core/errors';
 import { MarkerSeverity, MarkerData } from '@/services/types';
 import type { SyntaxNode } from '@/core/parser/nodes';
 import type { SyntaxToken } from '@/core/lexer/tokens';
+import { Filepath } from '@/core/types/filepath';
 
 // This is the same format that dbdiagram-frontend uses
 interface Diagnostic {
@@ -25,39 +26,33 @@ export default class DBMLDiagnosticsProvider {
   /**
    * Get all diagnostics (errors and warnings) from the current compilation
    */
-  provideDiagnostics (): Diagnostic[] {
-    const diagnostics: Diagnostic[] = [];
-    const report = this.compiler._parse._();
-
-    // Add errors
-    const errors = report.getErrors();
-    for (const error of errors) {
-      diagnostics.push(this.createDiagnostic(error, 'error'));
-    }
-
-    // Add warnings
-    const warnings = report.getWarnings();
-    for (const warning of warnings) {
-      diagnostics.push(this.createDiagnostic(warning, 'warning'));
-    }
-
-    return diagnostics;
+  provideDiagnostics (filepath?: Filepath): Diagnostic[] {
+    return [
+      ...this.provideErrors(filepath),
+      ...this.provideWarnings(filepath),
+    ];
   }
 
   /**
    * Get only errors from the current compilation
    */
-  provideErrors (): Diagnostic[] {
-    const errors = this.compiler._parse._().getErrors();
-    return errors.map((error) => this.createDiagnostic(error, 'error'));
+  provideErrors (filepath?: Filepath): Diagnostic[] {
+    if (filepath) {
+      const errors = this.compiler.interpretFile(filepath).getErrors();
+      return errors.map((error) => this.createDiagnostic(error, 'error'));
+    }
+    return this.compiler.interpretProject().getErrors().map((error) => this.createDiagnostic(error, 'error'));
   }
 
   /**
    * Get only warnings from the current compilation
    */
-  provideWarnings (): Diagnostic[] {
-    const warnings = this.compiler._parse._().getWarnings();
-    return warnings.map((warning) => this.createDiagnostic(warning, 'warning'));
+  provideWarnings (filepath?: Filepath): Diagnostic[] {
+    if (filepath) {
+      const errors = this.compiler.interpretFile(filepath).getWarnings();
+      return errors.map((error) => this.createDiagnostic(error, 'warning'));
+    }
+    return this.compiler.interpretProject().getWarnings().map((error) => this.createDiagnostic(error, 'warning'));
   }
 
   /**

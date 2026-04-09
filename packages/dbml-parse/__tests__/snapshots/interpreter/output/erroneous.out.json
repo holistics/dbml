@@ -1,4 +1,64 @@
 {
-  "errors": [],
+  "errors": [
+    {
+      "code": "UNEXPECTED_NEWLINE",
+      "diagnostic": "Invalid newline encountered while parsing",
+      "level": "error",
+      "token": {
+        "context": {
+          "id": "token@<string>@:']@[L7:C69, L7:C71]",
+          "snippet": "']",
+          "isInvalid": true
+        }
+      }
+    },
+    {
+      "code": "UNEXPECTED_TOKEN",
+      "diagnostic": "Expect a comma ','",
+      "level": "error",
+      "token": {
+        "context": {
+          "id": "token@<identifier>@:s@[L7:C35, L7:C36]",
+          "snippet": "s",
+          "isInvalid": true
+        }
+      }
+    },
+    {
+      "code": "UNEXPECTED_TOKEN",
+      "diagnostic": "Expect an identifier",
+      "level": "error",
+      "token": {
+        "context": {
+          "id": "token@<rparen>@:)@[L9:C24, L9:C25]",
+          "snippet": ")",
+          "isInvalid": true
+        }
+      }
+    },
+    {
+      "code": "UNEXPECTED_TOKEN",
+      "diagnostic": "Expect an identifier",
+      "level": "error",
+      "token": {
+        "context": {
+          "id": "token@<rbrace>@:}@[L11:C0, L11:C1]",
+          "snippet": "}",
+          "isInvalid": true
+        }
+      }
+    },
+    {
+      "code": "UNKNOWN_COLUMN_SETTING",
+      "diagnostic": "Unknown column setting 'diagram_id'",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<attribute>@@[L9:C14, L9:C24]",
+          "snippet": "diagram_id"
+        }
+      }
+    }
+  ],
   "warnings": []
 }

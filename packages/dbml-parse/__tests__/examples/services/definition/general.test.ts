@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import Compiler from '@/compiler';
 import DBMLDefinitionProvider from '@/services/definition/provider';
 import { createMockTextModel, createPosition, extractTextFromRange } from '../../../utils';
+import { DEFAULT_ENTRY } from '@/constants';
 
 describe('[example] DefinitionProvider', () => {
   describe('should find definition for tables', () => {
@@ -16,7 +17,7 @@ Table posts {
 
 Ref: posts.user_id > users.id`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -60,7 +61,7 @@ Table posts {
 
 Ref: posts.user_id > users.id`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -93,7 +94,7 @@ Table posts {
   user_id int [ref: > users.id]
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -128,7 +129,7 @@ Table posts {
 
 Ref: posts.user_id < users.id`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -169,7 +170,7 @@ Ref: posts.user_id < users.id`;
 
 Ref: users.referrer_id > users.id`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -206,7 +207,7 @@ Table posts {
 
 Ref: posts.user_id > users.id`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -246,7 +247,7 @@ Table posts {
 
 Ref: posts.user_id > users.id`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -279,7 +280,7 @@ Table posts {
   user_id int [ref: > users.id]
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -316,7 +317,7 @@ Table orders {
 
 Ref: (orders.merchant_id, orders.country) > (merchants.id, merchants.country_code)`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -359,7 +360,7 @@ Table orders {
   status order_status
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -393,7 +394,7 @@ Table orders {
   status order_status [default: order_status.pending]
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -432,7 +433,7 @@ Table orders {
   status order_status [default: order_status.pending]
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -471,7 +472,7 @@ Table users {
   status true [default: true.value]
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -510,7 +511,7 @@ Table users {
   status true [default: true.value]
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -544,7 +545,7 @@ Table users {
   name varchar [default: "hello"]
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -561,7 +562,7 @@ Table users {
   active boolean [default: true]
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -586,7 +587,7 @@ Table ecommerce.orders {
 
 Ref: ecommerce.orders.user_id > ecommerce.users.id`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -621,7 +622,7 @@ Table ecommerce.orders {
 
 Ref: ecommerce.orders.user_id > ecommerce.users.id`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -655,7 +656,7 @@ Table users {
   user_status myschema.status
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -705,7 +706,7 @@ TableGroup ecommerce {
   orders
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -738,7 +739,7 @@ TableGroup group1 {
   myschema.users
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -774,7 +775,7 @@ TableGroup group1 {
   }
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -809,7 +810,7 @@ TableGroup group1 {
   }
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -843,7 +844,7 @@ TableGroup group1 {
   }
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -880,7 +881,7 @@ Table users {
   ~base_timestamps
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -927,7 +928,7 @@ Table users {
 
 Ref: users.created_at > logs.timestamp`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -961,7 +962,7 @@ Table users {
   ~myschema.timestamps
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -980,7 +981,7 @@ Table users {
   id int pk
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -997,7 +998,7 @@ Table users {
 Table posts { user_id int }
 Ref: posts.user_id > users.id`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -1014,7 +1015,7 @@ Ref: posts.user_id > users.id`;
   id int [default: 123]
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -1031,7 +1032,7 @@ Ref: posts.user_id > users.id`;
   name varchar [note: "User name"]
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -1048,7 +1049,7 @@ Ref: posts.user_id > users.id`;
   id int [pk]
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -1066,7 +1067,7 @@ Table posts {
   id int pk
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -1087,7 +1088,7 @@ Table posts {
 
 Ref: users.id > posts.user_id`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -1104,7 +1105,7 @@ Ref: users.id > posts.user_id`;
   id int pk
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -1121,7 +1122,7 @@ Ref: users.id > posts.user_id`;
   id int pk
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -1142,7 +1143,7 @@ Ref: users.id > posts.user_id`;
 
 Ref: users.id > nonexistent.id`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -1161,7 +1162,7 @@ Ref: users.id > nonexistent.id`;
 
 Ref: users.nonexistent_col > posts.id`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -1178,7 +1179,7 @@ Ref: users.nonexistent_col > posts.id`;
   status nonexistent_enum
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -1196,7 +1197,7 @@ Ref: users.nonexistent_col > posts.id`;
   ~nonexistent_partial
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -1221,7 +1222,7 @@ Table schema2.orders {
 
 Ref: schema1.orders.id > schema2.orders.id`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -1285,7 +1286,7 @@ Table users {
 
 Ref: users.created_at > logs.timestamp`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -1320,7 +1321,7 @@ Table orders {
 
 Ref: orders.user_id > myproject.ecommerce.users.id`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -1364,7 +1365,7 @@ Ref: orders.user_id > myproject.ecommerce.users.id`;
   }
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -1390,7 +1391,7 @@ TableGroup group1 {
   u
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -1411,7 +1412,7 @@ TableGroup group1 {
 
 Ref: users.id > posts.user_id`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -1443,7 +1444,7 @@ Ref: users.id > posts.user_id`;
 
 Ref: users.email > logs.email_col`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -1477,7 +1478,7 @@ Table users {
   user_status status
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -1515,7 +1516,7 @@ Table posts {
 
 Ref: posts.user_id > users.id`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -1553,7 +1554,7 @@ Table posts {
   user_id int [ref: > users.id]
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -1593,7 +1594,7 @@ Table posts {
 
 Ref: users.id < posts.user_id`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -1639,7 +1640,7 @@ Table posts {
 
 Ref: posts.(author_first, author_last) > users.(first_name, last_name)`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -1674,7 +1675,7 @@ Ref: posts.(author_first, author_last) > users.(first_name, last_name)`;
       const program = `Table users {
   id int`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -1697,7 +1698,7 @@ Table posts {
 
 Ref: posts.user_id >`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -1739,7 +1740,7 @@ Table posts {
   user_id int [ref: >]
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -1758,7 +1759,7 @@ Table posts {
 
 Ref: posts.user_id > users.id`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -1774,7 +1775,7 @@ Ref: posts.user_id > users.id`;
       const program = `Enum status {
   active`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -1791,7 +1792,7 @@ Ref: posts.user_id > users.id`;
   id int pk
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -1810,7 +1811,7 @@ Table posts { id int }
 TableGroup my_group {
   users`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -1851,7 +1852,7 @@ Table posts {
 
 Ref: posts.(author_first, author_last) > users.(first_name, last_name)`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -1872,7 +1873,7 @@ Ref: posts.(author_first, author_last) > users.(first_name, last_name)`;
 
 Ref: posts.user_id > users.id`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -1901,7 +1902,7 @@ Ref: posts.user_id > users.id`;
 
 Ref: posts.user_id > users.id`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -1931,7 +1932,7 @@ Table users {
   user_status status
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -1963,7 +1964,7 @@ Table users {
   ~mypartial
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -1992,7 +1993,7 @@ Table users {
 
 Ref: posts.user_id > public.users.id`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -2059,7 +2060,7 @@ Ref: likes.post_id > posts.id
 Ref: post_tags.post_id > posts.id
 Ref: post_tags.tag_id > tags.id`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -2096,7 +2097,7 @@ Table enrollments {
   }
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -2127,7 +2128,7 @@ Table comments {
 Ref: comments.commentable_id > users.id
 Ref: comments.commentable_id > posts.id`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -2150,7 +2151,7 @@ Table users {
   id int pk
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -2174,7 +2175,7 @@ Table users {
 
 Ref: orders.user_id > users.id`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -2196,7 +2197,7 @@ Ref: orders.user_id > users.id`;
 
 Ref: posts.user_id > users.id`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -2224,7 +2225,7 @@ Ref: posts.user_id > users.id`;
   }
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -2247,7 +2248,7 @@ Ref: posts.user_id > users.id`;
   }
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -2287,7 +2288,7 @@ Table users {
 
 Ref: users.created_by > admins.id`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -2319,7 +2320,7 @@ Table articles {
   ~searchable
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -2347,7 +2348,7 @@ Table orders {
   status order_status [default: order_status.pending]
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -2383,7 +2384,7 @@ Table permissions {
   required_role user_role
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -2425,7 +2426,7 @@ TableGroup finance [color: #2ecc71] {
   billing.payments
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -2454,7 +2455,7 @@ TableGroup core {
 
 Ref: o.user_id > u.id`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -2480,7 +2481,7 @@ Table orders {
 
 Ref orders_user [update: cascade, delete: set null, color: #ff0000]: orders.user_id > users.id`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -2507,7 +2508,7 @@ Table inventory {
 
 Ref inventory_warehouse [delete: cascade]: (inventory.warehouse_id, inventory.warehouse_region) > (warehouses.id, warehouses.region_code)`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -2533,7 +2534,7 @@ Table posts {
 
 Ref: posts.user_id > "用户".id`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -2558,7 +2559,7 @@ Table "user" {
 
 Ref: "order".id > "user".id`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -2577,7 +2578,7 @@ Ref: "order".id > "user".id`;
   id int [pk, unique]
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -2594,7 +2595,7 @@ Ref: "order".id > "user".id`;
   name varchar [default: 'test']
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -2611,7 +2612,7 @@ Ref: "order".id > "user".id`;
   id int [pk]
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -2628,7 +2629,7 @@ Ref: "order".id > "user".id`;
   id int [pk]
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -2645,7 +2646,7 @@ Ref: "order".id > "user".id`;
   id int
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -2662,7 +2663,7 @@ Ref: "order".id > "user".id`;
   id int
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -2680,7 +2681,7 @@ Ref: "order".id > "user".id`;
 }
 Ref: users.id > posts.user_id`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -2703,7 +2704,7 @@ Table orders {
 }
 Ref: orders.(merchant_id, country) > merchants.(id, country_code)`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -2719,7 +2720,7 @@ Ref: orders.(merchant_id, country) > merchants.(id, country_code)`;
       const program = `Table users {
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -2738,7 +2739,7 @@ Ref: orders.(merchant_id, country) > merchants.(id, country_code)`;
 }
 Ref: users.id > posts.user_id`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -2756,7 +2757,7 @@ Ref: users.id > posts.user_id`;
 }
 Ref: users.id > posts.user_id`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -2782,7 +2783,7 @@ Records users(id, name, email) {
   2, "Jane", "jane@example.com"
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -2828,7 +2829,7 @@ Records users(id, name, email) {
   1, "John", "john@example.com"
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -2853,7 +2854,7 @@ Records public.orders(id, customer_name) {
   2, "Jane Smith"
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -2894,7 +2895,7 @@ Records orders(id, status) {
   2, order_status.completed
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -2935,7 +2936,7 @@ Records orders(id, status) {
   2, order_status.completed
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -2976,7 +2977,7 @@ Records orders(id, status) {
   }
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);

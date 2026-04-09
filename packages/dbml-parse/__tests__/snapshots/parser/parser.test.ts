@@ -5,6 +5,7 @@ import type { ProgramNode } from '@/core/parser/nodes';
 import { scanTestNames, toSnapshot } from '@tests/utils';
 import Compiler from '@/compiler';
 import type Report from '@/core/report';
+import { DEFAULT_ENTRY } from '@/constants';
 
 function serializeParserResult (compiler: Compiler, report: Report<ProgramNode>): string {
   const value = report.getValue();
@@ -24,11 +25,11 @@ describe('[snapshot] parser', () => {
     const program = readFileSync(path.resolve(__dirname, `./input/${testName}.in.dbml`), 'utf-8');
 
     const compiler = new Compiler();
-    compiler.setSource(program);
+    compiler.setSource(DEFAULT_ENTRY, program);
 
     const output = serializeParserResult(
       compiler,
-      compiler.parse().map(({ ast }) => ast),
+      compiler.parseFile(DEFAULT_ENTRY).map(({ ast }) => ast),
     );
     it(testName, () => expect(output).toMatchFileSnapshot(path.resolve(__dirname, `./output/${testName}.out.json`)));
   });

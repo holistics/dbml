@@ -5,6 +5,7 @@ import type { ProgramNode } from '@/core/parser/nodes';
 import { scanTestNames, toSnapshot } from '@tests/utils';
 import Report from '@/core/report';
 import Compiler from '@/compiler';
+import { DEFAULT_ENTRY } from '@/constants';
 
 function serializeBinderResult (compiler: Compiler, report: Report<ProgramNode>): string {
   const value = report.getValue();
@@ -24,11 +25,11 @@ describe('[snapshot] binder', () => {
     const program = readFileSync(path.resolve(__dirname, `./input/${testName}.in.dbml`), 'utf-8');
 
     const compiler = new Compiler();
-    compiler.setSource(program);
+    compiler.setSource(DEFAULT_ENTRY, program);
 
-    const astReport = compiler.parse().map(({ ast }) => ast);
-    const validateReport = compiler.validate(astReport.getValue());
-    const bindReport = compiler.bind(astReport.getValue());
+    const astReport = compiler.parseFile(DEFAULT_ENTRY).map(({ ast }) => ast);
+    const validateReport = compiler.validateNode(astReport.getValue());
+    const bindReport = compiler.bindNode(astReport.getValue());
     const output = serializeBinderResult(
       compiler,
       Report.create(

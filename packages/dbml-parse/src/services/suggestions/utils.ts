@@ -109,7 +109,7 @@ export function addSuggestAllSuggestion (completionList: CompletionList, separat
 
 // Get the source text of a node or a token
 export function getNodeOrTokenSource (compiler: Compiler, tokenOrNode: SyntaxToken | SyntaxNode): string {
-  return compiler._parse.source().slice(tokenOrNode.start, tokenOrNode.end);
+  return compiler.parse.source().slice(tokenOrNode.start, tokenOrNode.end);
 }
 
 /**
@@ -151,9 +151,8 @@ export function getColumnsFromTableSymbol (
     if (!member.isKind(SymbolKind.Column)) continue;
     // Skip partial injection nodes (~PartialName)
     if (member.declaration instanceof FunctionApplicationNode && isValidPartialInjection(member.declaration.callee)) continue;
-    const names = compiler.symbolNames(member);
-    const columnName = names[0];
-    if (!columnName) continue;
+    const columnName = compiler.symbolName(member);
+    if (columnName === undefined) continue;
     const columnInfo = extractNameAndTypeOfColumnSymbol(member, columnName);
     if (!columnInfo) continue;
     columns.push(columnInfo);

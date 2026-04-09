@@ -2,32 +2,35 @@ import { DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLReferencesProvi
 import { invalidStream, flatStream } from './queries/legacy/token';
 import { splitQualifiedIdentifier, unescapeString, escapeString, formatRecordValue, isValidIdentifier, addDoubleQuoteIfNeeded } from './queries/utils';
 import { containerStack, containerToken, containerElement, containerScope, containerScopeKind } from './queries/container';
-import { renameTable, type TableNameInput } from './queries/transform';
+import { renameTable } from './queries/transform';
 export { ScopeKind } from './types';
 export type { TextEdit, TableNameInput } from './queries/transform';
 import {
   nodeSymbol,
   symbolMembers,
   nodeReferee,
-  bind,
-  interpret,
+  bindNode,
+  interpretNode,
 } from '@/core/global_modules';
 import { symbolReferences } from './queries/symbolReferences';
 import { intern, type Internable, type Primitive } from '@/core/types/internable';
-import { DEFAULT_ENTRY, DEFAULT_SCHEMA_NAME, UNHANDLED } from '@/constants';
-import { alias, nodeFullname as fullname, settings, validate } from '@/core/local_modules';
-import { NodeSymbolIdGenerator, SchemaSymbol, type NodeSymbol } from '@/core/types/symbols';
+import { DEFAULT_ENTRY } from '@/constants';
+import { nodeAlias, nodeFullname as fullname, nodeSettings, validateNode } from '@/core/local_modules';
+import { NodeSymbolIdGenerator } from '@/core/types/symbols';
 import SymbolFactory from '@/core/types/symbolFactory';
 import { lookupMembers } from './queries/lookupMembers';
-import { symbolNames } from './queries/symbolName';
+import { symbolName } from './queries/symbolName';
 import { SyntaxNodeIdGenerator } from '@/core/parser/nodes';
 import { type DbmlProjectLayout, MemoryProjectLayout } from './projectLayout';
 import { fileDependencies } from './queries/fileDependencies';
 import { Filepath } from '@/core/types/filepath';
-import { parse } from './queries/pipeline/parse';
 import { usableMembers } from './queries/usableMembers';
 import { topLevelSchemaMembers } from './queries/topLevelSchemaMembers';
 import { reachableFiles } from './queries/reachableFiles';
+import { parseFile, parseProject } from './queries/pipeline/parse';
+import { ast, errors, publicSymbolTable, rawDb, tokens, warnings } from './queries/legacy/parse';
+import { interpretFile, interpretProject } from './queries/pipeline/interpret';
+import { bindFile, bindProject } from './queries/pipeline/bind';
 
 // Re-export utilities
 export { splitQualifiedIdentifier, unescapeString, escapeString, formatRecordValue, isValidIdentifier, addDoubleQuoteIfNeeded };
@@ -92,7 +95,11 @@ export default class Compiler {
   }
 
   // global queries
-  bind = this.query(bind);
+  parseProject = this.query(parseProject);
+
+  bindNode = this.query(bindNode);
+  bindProject = this.query(bindProject);
+  bindFile = this.query(bindFile);
 
   nodeSymbol = this.query(nodeSymbol);
   symbolMembers = this.query(symbolMembers);
@@ -101,63 +108,46 @@ export default class Compiler {
   symbolReferences = this.query(symbolReferences);
   nodeReferee = this.query(nodeReferee);
 
-  interpret = this.query(interpret);
+  interpretNode = this.query(interpretNode);
+  interpretFile = this.query(interpretFile);
+  interpretProject = this.query(interpretProject);
 
   // local queries
-  parse = this.query(parse);
+  parseFile = this.query(parseFile);
+
   topLevelSchemaMembers = this.query(topLevelSchemaMembers);
   reachableFiles = this.query(reachableFiles);
-  usableMembers = this.query(usableMembers);
+  fileUsableMembers = this.query(usableMembers);
   fileDependencies = this.query(fileDependencies);
-  validate = this.query(validate);
-  fullname = this.query(fullname);
-  symbolNames = this.query(symbolNames);
-  alias = this.query(alias);
-  settings = this.query(settings);
+  validateNode = this.query(validateNode);
+  nodeFullname = this.query(fullname);
+  symbolName = this.query(symbolName);
+  nodeAlias = this.query(nodeAlias);
+  nodeSettings = this.query(nodeSettings);
 
-  renameTable (oldName: TableNameInput, newName: TableNameInput): string {
-    return renameTable.call(this, oldName, newName);
-  }
+  // transform queries
+  renameTable = renameTable.bind(this);
 
   // @deprecated - legacy APIs for services compatibility
-  readonly _token = {
+  readonly token = {
     invalidStream: this.query(invalidStream),
     flatStream: this.query(flatStream),
   };
 
   // @deprecated - legacy APIs for services compatibility
-  readonly _parse = {
-    source: () => this.layout.getSource(DEFAULT_ENTRY),
-    ast: () => this.parse(DEFAULT_ENTRY).getValue().ast,
-    _: () => {
-      const ast = this.parse(DEFAULT_ENTRY).getValue().ast;
-      this.bind(ast);
-      return this.interpret(ast);
-    },
-    publicSymbolTable: () => {
-      const ast = this.parse(DEFAULT_ENTRY).getValue().ast;
-      const sym = this.nodeSymbol(ast);
-      if (sym.hasValue(UNHANDLED)) return undefined;
-      const programMembers = this.symbolMembers(sym.getValue());
-      if (programMembers.hasValue(UNHANDLED)) return undefined;
-
-      // Program symbolMembers flattens public schema, but we also need non-public schema contents
-      const result: NodeSymbol[] = [];
-      for (const member of programMembers.getValue()) {
-        result.push(member);
-        if (member instanceof SchemaSymbol && member.name !== DEFAULT_SCHEMA_NAME) {
-          const schemaMembers = this.symbolMembers(member);
-          if (!schemaMembers.hasValue(UNHANDLED)) {
-            result.push(...schemaMembers.getValue());
-          }
-        }
-      }
-      return result;
-    },
+  readonly parse = {
+    source: () => this.layout.getSource(DEFAULT_ENTRY) as Readonly<string>,
+    _: this.query(interpretFile),
+    ast: this.query(ast),
+    errors: this.query(errors),
+    warnings: this.query(warnings),
+    tokens: this.query(tokens),
+    rawDb: this.query(rawDb),
+    publicSymbolTable: this.query(publicSymbolTable),
   };
 
   // @deprecated - legacy APIs for services compatibility
-  readonly _container = {
+  readonly container = {
     stack: this.query(containerStack),
     token: this.query(containerToken),
     element: this.query(containerElement),

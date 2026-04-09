@@ -158,7 +158,7 @@ export default class EnumValidator {
       if (!sub.type) {
         return [];
       }
-      return this.compiler.validate(sub).getErrors();
+      return this.compiler.validateNode(sub).getErrors();
     });
   }
 }

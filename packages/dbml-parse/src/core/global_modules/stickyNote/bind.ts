@@ -37,7 +37,7 @@ export default class NoteBinder {
         return [];
       }
 
-      return this.compiler.bind(sub).getErrors();
+      return this.compiler.bindNode(sub).getErrors();
     });
   }
 }

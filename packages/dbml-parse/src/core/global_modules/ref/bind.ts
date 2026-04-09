@@ -73,7 +73,7 @@ export default class RefBinder {
         return [];
       }
 
-      return this.compiler.bind(sub).getErrors();
+      return this.compiler.bindNode(sub).getErrors();
     });
   }
 }

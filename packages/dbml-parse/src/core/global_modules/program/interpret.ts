@@ -8,9 +8,9 @@ import { getTokenPosition, getMultiplicities } from '../utils';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import type { CompileWarning } from '@/core/errors';
 import { validateForeignKeys } from '../records/utils/constraints';
-import { buildMergedTableFromElement } from '../records/utils/interpret';
+import { buildMergedTableFromElement, extractInlineRefsFromTablePartials } from '../records/utils/interpret';
 import { getBody } from '@/core/utils/expression';
-import { SchemaSymbol, UseSymbol } from '@/core/types';
+import { UseSymbol } from '@/core/types';
 
 // Strip internal-only properties from columns before exposing in the final Database output
 function processColumnInDb<T extends Table | TablePartial> (table: T): T {
@@ -21,6 +21,8 @@ function processColumnInDb<T extends Table | TablePartial> (table: T): T {
       type: {
         ...c.type,
         isEnum: undefined,
+        lengthParam: undefined,
+        numericParams: undefined,
       },
     })),
   };
@@ -58,7 +60,7 @@ export default class ProgramInterpreter {
     const discoveredElements = new Set<ElementDeclarationNode>();
 
     for (const filepath of reachableFiles) {
-      const { ast } = this.compiler.parse(filepath).getValue();
+      const { ast } = this.compiler.parseFile(filepath).getValue();
       for (const element of ast.body) {
         if (element instanceof ElementDeclarationNode) {
           discoveredElements.add(element);
@@ -68,7 +70,7 @@ export default class ProgramInterpreter {
 
     // Process all discovered elements
     for (const node of discoveredElements) {
-      const result = this.compiler.interpret(node);
+      const result = this.compiler.interpretNode(node);
       if (result.hasValue(UNHANDLED)) continue;
       errors.push(...result.getErrors());
       warnings.push(...result.getWarnings());
@@ -86,7 +88,7 @@ export default class ProgramInterpreter {
       if (members) {
         for (const member of members) {
           if (member instanceof UseSymbol && member.declaration) {
-            const result = this.compiler.interpret(member.declaration);
+            const result = this.compiler.interpretNode(member.declaration);
             if (result.hasValue(UNHANDLED)) continue;
             const value = result.getValue();
             if (!value) continue;
@@ -114,7 +116,7 @@ export default class ProgramInterpreter {
     // Build merged tables (with partial-injected fields) for FK validation and inline ref collection
     const mergedTables = new Map<Table, Table>();
     for (const tableNode of this.tableElements) {
-      const table = db.tables.find((t) => t.name === (this.compiler.interpret(tableNode).getValue() as Table).name); // Simplified lookup
+      const table = db.tables.find((t) => t.name === (this.compiler.interpretNode(tableNode).getValue() as Table).name); // Simplified lookup
       if (!table) continue;
       const merged = buildMergedTableFromElement(tableNode, this.compiler);
       if (merged) mergedTables.set(table, merged);
@@ -162,7 +164,7 @@ export default class ProgramInterpreter {
     // Validate duplicate records blocks for the same table
     for (const [table, records] of this.recordsByTable) {
       if (records.length <= 1) continue;
-      const tableName = this.compiler.fullname(table).getFiltered(UNHANDLED)?.join('.') || '';
+      const tableName = this.compiler.nodeFullname(table).getFiltered(UNHANDLED)?.join('.') || '';
       const msg = `Duplicate Records blocks for the same Table '${tableName}' - A Table can only have one Records block`;
 
       for (let i = 0; i < records.length; i++) {
@@ -176,6 +178,7 @@ export default class ProgramInterpreter {
 
     // Run FK validation
     const recordTableMap = new Map<string, { rows: TableRecord; mergedTable: Table }>();
+    const allRefs: Ref[] = [...db.refs]; // Collect both table partial refs and table refs
     for (const table of db.tables) {
       const key = `${table.schemaName ?? DEFAULT_SCHEMA_NAME}.${table.name}`;
       const merged = mergedTables.get(table) ?? table;
@@ -184,8 +187,9 @@ export default class ProgramInterpreter {
         rows: record ?? { schemaName: table.schemaName ?? undefined, tableName: table.name, columns: [], values: [], token: table.token },
         mergedTable: merged,
       });
+      allRefs.push(...extractInlineRefsFromTablePartials(table, db.tablePartials));
     }
-    warnings.push(...validateForeignKeys(db.refs, recordTableMap));
+    warnings.push(...validateForeignKeys(allRefs, recordTableMap));
 
     return new Report(db, errors, warnings);
   }
@@ -198,7 +202,7 @@ export default class ProgramInterpreter {
         // interpret nested tables also
         for (const subElement of getBody(node)) {
           if (!(subElement instanceof ElementDeclarationNode) || !subElement.isKind(ElementKind.Records)) continue;
-          const record = this.compiler.interpret(subElement).getFiltered(UNHANDLED);
+          const record = this.compiler.interpretNode(subElement).getFiltered(UNHANDLED);
           this.pushRecordsToTable(node, subElement);
           if (record) db.records.push(record as TableRecord);
         }

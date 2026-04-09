@@ -12,12 +12,12 @@ import type Compiler from '@/compiler';
 import NoteValidator from './validate';
 
 export const noteModule: LocalModule = {
-  validate (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
+  validateNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
     if (!isElementNode(node, ElementKind.Note)) return Report.create(PASS_THROUGH);
     return Report.create(undefined, new NoteValidator(compiler, node).validate());
   },
 
-  fullname (compiler: Compiler, node: SyntaxNode): Report<string[] | undefined> | Report<PassThrough> {
+  nodeFullname (compiler: Compiler, node: SyntaxNode): Report<string[] | undefined> | Report<PassThrough> {
     if (!isElementNode(node, ElementKind.Note)) return Report.create(PASS_THROUGH);
 
     const parent = node.parent;
@@ -38,7 +38,7 @@ export const noteModule: LocalModule = {
     return new Report(nameFragments);
   },
 
-  alias (compiler: Compiler, node: SyntaxNode): Report<string | undefined> | Report<PassThrough> {
+  nodeAlias (compiler: Compiler, node: SyntaxNode): Report<string | undefined> | Report<PassThrough> {
     if (!isElementNode(node, ElementKind.Note)) return Report.create(PASS_THROUGH);
     if (node.alias) {
       return new Report(undefined, [new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'A Ref shouldn\'t have an alias', node.alias)]);
@@ -46,7 +46,7 @@ export const noteModule: LocalModule = {
     return new Report(undefined);
   },
 
-  settings (compiler: Compiler, node: SyntaxNode): Report<Settings> | Report<PassThrough> {
+  nodeSettings (compiler: Compiler, node: SyntaxNode): Report<Settings> | Report<PassThrough> {
     if (!isElementNode(node, ElementKind.Note)) return Report.create(PASS_THROUGH);
     if (node.attributeList) {
       return new Report({}, [new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'A Note shouldn\'t have a setting list', node.attributeList)]);

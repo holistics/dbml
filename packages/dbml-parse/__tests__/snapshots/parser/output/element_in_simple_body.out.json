@@ -6,7 +6,7 @@
       "level": "error",
       "node": {
         "context": {
-          "id": "<element-declaration>:E@[L0:C6, L0:C15]",
+          "id": "node@<element-declaration>@:E@[L0:C6, L0:C15]",
           "snippet": "Enum E {}"
         }
       }
@@ -14,66 +14,45 @@
   ],
   "program": {
     "context": {
-      "id": "<program>@[L0:C0, L0:C15]",
+      "id": "node@<program>@@[L0:C0, L0:C15]",
       "snippet": "Note: Enum E {}"
     },
     "children": {
       "body": [
         {
           "context": {
-            "id": "<element-declaration>:@[L0:C0, L0:C5]",
+            "id": "node@<element-declaration>@:@[L0:C0, L0:C5]",
             "snippet": "Note:"
           },
           "children": {
             "bodyColon": {
               "context": {
-                "id": "<colon>::@[L0:C4, L0:C5]",
+                "id": "token@<colon>@::@[L0:C4, L0:C5]",
                 "snippet": ":"
               },
-              "isInvalid": false,
-              "kind": "<colon>",
-              "leadingInvalid": "",
               "leadingTrivia": "",
-              "trailingInvalid": "EnumE{}",
               "trailingTrivia": " ",
               "value": ":"
             },
-            "end": 5,
-            "endPos": {
-              "column": 5,
-              "line": 0,
-              "offset": 5
-            },
             "fullEnd": 6,
             "fullStart": 0,
-            "kind": "<element-declaration>",
-            "start": 0,
-            "startPos": {
-              "column": 0,
-              "line": 0,
-              "offset": 0
-            },
             "type": {
               "context": {
-                "id": "<identifier>:Note@[L0:C0, L0:C4]",
+                "id": "token@<identifier>@:Note@[L0:C0, L0:C4]",
                 "snippet": "Note"
               },
-              "isInvalid": false,
-              "kind": "<identifier>",
-              "leadingInvalid": "",
               "leadingTrivia": "",
-              "trailingInvalid": "",
               "trailingTrivia": "",
               "value": "Note"
             }
           },
           "symbol": {
             "context": {
-              "id": "<element-declaration>:@[L0:C0, L0:C5]",
+              "id": "symbol@Note@:@[L0:C0, L0:C5]",
               "snippet": "Note:"
             },
             "declaration": {
-              "id": "<element-declaration>:@[L0:C0, L0:C5]",
+              "id": "node@<element-declaration>@:@[L0:C0, L0:C5]",
               "snippet": "Note:"
             },
             "members": [],
@@ -81,45 +60,34 @@
           }
         }
       ],
-      "end": 15,
-      "endPos": {
-        "column": 15,
-        "line": 0,
-        "offset": 15
-      },
       "eof": {
         "context": {
-          "id": "<eof>:@[L0:C15, L0:C15]",
+          "id": "token@<eof>@:@[L0:C15, L0:C15]",
           "snippet": ""
         },
-        "isInvalid": false,
-        "kind": "<eof>",
-        "leadingInvalid": "",
         "leadingTrivia": "",
-        "trailingInvalid": "",
         "trailingTrivia": "",
         "value": ""
       },
       "fullEnd": 15,
-      "fullStart": 0,
-      "kind": "<program>",
-      "start": 0,
-      "startPos": {
-        "column": 0,
-        "line": 0,
-        "offset": 0
-      }
+      "fullStart": 0
     },
     "symbol": {
       "context": {
-        "id": "<program>@[L0:C0, L0:C15]",
+        "id": "symbol@Program@@[L0:C0, L0:C15]",
         "snippet": "Note: Enum E {}"
       },
       "declaration": {
-        "id": "<program>@[L0:C0, L0:C15]",
+        "id": "node@<program>@@[L0:C0, L0:C15]",
         "snippet": "Note: Enum E {}"
       },
-      "members": [],
+      "members": [
+        {
+          "context": {
+            "id": "symbol@Schema@public@[L?:C?, L?:C?]"
+          }
+        }
+      ],
       "references": []
     }
   },

@@ -4,7 +4,7 @@ import DBMLCompletionItemProvider from '@/services/suggestions/provider';
 import { createMockTextModel, createPosition } from '@tests/utils';
 import { getColumnsFromTableSymbol } from '@/services/suggestions/utils';
 import { NodeSymbol, SymbolKind } from '@/core/types/symbols';
-import { UNHANDLED } from '@/constants';
+import { DEFAULT_ENTRY, UNHANDLED } from '@/constants';
 
 describe('[example] CompletionItemProvider - Records', () => {
   describe('should NOT suggest record entry snippets in Records body (handled by inline completions)', () => {
@@ -21,7 +21,7 @@ describe('[example] CompletionItemProvider - Records', () => {
         }
       `;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       // Position inside the Records body (between the braces)
@@ -45,7 +45,7 @@ describe('[example] CompletionItemProvider - Records', () => {
         }
       `;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(8, 11);
@@ -69,7 +69,7 @@ describe('[example] Expand * to all columns in Records', () => {
   records ()
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const suggestionProvider = new DBMLCompletionItemProvider(compiler);
       const model = createMockTextModel(program);
@@ -107,7 +107,7 @@ Records users() {
 }
 `;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const suggestionProvider = new DBMLCompletionItemProvider(compiler);
       const model = createMockTextModel(program);
@@ -140,7 +140,7 @@ Records users() {
 Records products(
 `;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const suggestionProvider = new DBMLCompletionItemProvider(compiler);
       const model = createMockTextModel(program);
@@ -184,10 +184,10 @@ describe('[example] Suggestions Utils - Records', () => {
         }
       `;
       const compiler = new Compiler();
-      compiler.setSource(program);
-      compiler._parse._();
+      compiler.setSource(DEFAULT_ENTRY, program);
+      compiler.parse._(DEFAULT_ENTRY);
 
-      const ast = compiler._parse.ast();
+      const ast = compiler.parse.ast();
       const tableElement = ast.body[2]; // users table is the third element
       const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED);
 
@@ -220,10 +220,10 @@ describe('[example] Suggestions Utils - Records', () => {
         }
       `;
       const compiler = new Compiler();
-      compiler.setSource(program);
-      compiler._parse._();
+      compiler.setSource(DEFAULT_ENTRY, program);
+      compiler.parse._(DEFAULT_ENTRY);
 
-      const ast = compiler._parse.ast();
+      const ast = compiler.parse.ast();
       const tableElement = ast.body[1];
 
       const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED);
@@ -253,10 +253,10 @@ describe('[example] Suggestions Utils - Records', () => {
         }
       `;
       const compiler = new Compiler();
-      compiler.setSource(program);
-      compiler._parse._();
+      compiler.setSource(DEFAULT_ENTRY, program);
+      compiler.parse._(DEFAULT_ENTRY);
 
-      const ast = compiler._parse.ast();
+      const ast = compiler.parse.ast();
       const tableElement = ast.body[1];
       const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED);
 
@@ -284,11 +284,11 @@ describe('[example] Suggestions Utils - Records', () => {
         }
       `;
       const compiler = new Compiler();
-      compiler.setSource(program);
-      compiler._parse._(); // Trigger parsing
+      compiler.setSource(DEFAULT_ENTRY, program);
+      compiler.parse._(DEFAULT_ENTRY); // Trigger parsing
 
       // Get the table symbol
-      const ast = compiler._parse.ast();
+      const ast = compiler.parse.ast();
       const tableElement = ast.body[0];
       const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED);
 
@@ -318,10 +318,10 @@ describe('[example] Suggestions Utils - Records', () => {
         }
       `;
       const compiler = new Compiler();
-      compiler.setSource(program);
-      compiler._parse._();
+      compiler.setSource(DEFAULT_ENTRY, program);
+      compiler.parse._(DEFAULT_ENTRY);
 
-      const ast = compiler._parse.ast();
+      const ast = compiler.parse.ast();
       const tableElement = ast.body[0];
       const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED);
 
@@ -353,10 +353,10 @@ describe('[example] Suggestions Utils - Records', () => {
         }
       `;
       const compiler = new Compiler();
-      compiler.setSource(program);
-      compiler._parse._();
+      compiler.setSource(DEFAULT_ENTRY, program);
+      compiler.parse._(DEFAULT_ENTRY);
 
-      const ast = compiler._parse.ast();
+      const ast = compiler.parse.ast();
       const tableElement = ast.body[0];
       const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED);
 
@@ -380,10 +380,10 @@ describe('[example] Suggestions Utils - Records', () => {
         }
       `;
       const compiler = new Compiler();
-      compiler.setSource(program);
-      compiler._parse._();
+      compiler.setSource(DEFAULT_ENTRY, program);
+      compiler.parse._(DEFAULT_ENTRY);
 
-      const ast = compiler._parse.ast();
+      const ast = compiler.parse.ast();
       const tableElement = ast.body[0];
       const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED);
 
@@ -408,10 +408,10 @@ describe('[example] Suggestions Utils - Records', () => {
         }
       `;
       const compiler = new Compiler();
-      compiler.setSource(program);
-      compiler._parse._();
+      compiler.setSource(DEFAULT_ENTRY, program);
+      compiler.parse._(DEFAULT_ENTRY);
 
-      const ast = compiler._parse.ast();
+      const ast = compiler.parse.ast();
       const tableElement = ast.body[0];
       const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED);
 
@@ -435,10 +435,10 @@ describe('[example] Suggestions Utils - Records', () => {
         }
       `;
       const compiler = new Compiler();
-      compiler.setSource(program);
-      compiler._parse._();
+      compiler.setSource(DEFAULT_ENTRY, program);
+      compiler.parse._(DEFAULT_ENTRY);
 
-      const ast = compiler._parse.ast();
+      const ast = compiler.parse.ast();
       const tableElement = ast.body[0];
       const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED);
 
@@ -462,10 +462,10 @@ describe('[example] Suggestions Utils - Records', () => {
         }
       `;
       const compiler = new Compiler();
-      compiler.setSource(program);
-      compiler._parse._();
+      compiler.setSource(DEFAULT_ENTRY, program);
+      compiler.parse._(DEFAULT_ENTRY);
 
-      const ast = compiler._parse.ast();
+      const ast = compiler.parse.ast();
       const tableElement = ast.body[0];
       const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED);
 

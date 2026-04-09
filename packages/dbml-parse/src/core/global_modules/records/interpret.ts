@@ -38,8 +38,8 @@ import { ElementKind } from '@/core/types/keywords';
 import { NodeSymbol, SymbolKind } from '@/core/types/symbols';
 import { PASS_THROUGH, UNHANDLED } from '@/constants';
 import { getTokenPosition, lookupMember, lookupInDefaultSchema } from '../utils';
-import { validatePrimaryKey, validateUnique } from './utils/constraints';
-import { buildMergedTableFromElement, buildMergedTableFromSymbolMembers, getEnumMembers, parseNumericParams, parseLengthParam } from './utils/interpret';
+import { validateForeignKeys, validatePrimaryKey, validateUnique } from './utils/constraints';
+import { buildMergedTableFromElement, getEnumMembers, parseNumericParams, parseLengthParam } from './utils/interpret';
 
 export default class RecordsInterpreter {
   private compiler: Compiler;
@@ -98,6 +98,8 @@ export default class RecordsInterpreter {
     // Validate unique constraints
     warnings.push(...validateUnique(tableRecord, table));
 
+    // FIXME: Validation of FK constraints are performed in the program module
+
     return warnings;
   }
 }
@@ -110,41 +112,45 @@ function getTableAndColumnsOfRecords (records: ElementDeclarationNode, compiler:
   const nameNode = records.name;
   const parent = records.parent;
   if (parent instanceof ElementDeclarationNode) {
-    // For nested records (inside a table), we can't call buildTableFromElement(parent)
-    // because the parent table is currently being interpreted (would cause a cycle).
-    // Instead, build the column list from symbolMembers which includes partial-injected columns.
-    const table = buildMergedTableFromSymbolMembers(parent, compiler);
+    const table = buildMergedTableFromElement(parent, compiler);
     if (!table) return { table: undefined, mergedColumns: [] };
     if (!nameNode) return {
       table,
       mergedColumns: table.fields,
     };
-    const mergedColumns = (nameNode as TupleExpressionNode).elementList.map((e) => table.fields.find((f) => f.name === extractVariableFromExpression(e))!);
+    const mergedColumns = (nameNode as TupleExpressionNode).elementList.flatMap((e) => table.fields.find((f) => f.name === extractVariableFromExpression(e)) || []);
     return {
       table,
       mergedColumns,
     };
   }
-
   const fragments = destructureCallExpression(nameNode!);
   if (!fragments) return { table: undefined, mergedColumns: [] };
+  const tableNameFragments = fragments.variables.map((v) => v.expression.variable?.value ?? '');
+  const tableName = tableNameFragments.at(-1) ?? '';
+  const schemaName = tableNameFragments.length > 1 ? tableNameFragments.slice(0, -1).join('.') : undefined;
 
-  const tableResult = compiler.nodeReferee(fragments.callee!);
-  if (tableResult.hasValue(UNHANDLED)) return { table: undefined, mergedColumns: [] };
-  const tableSymbol = tableResult.getValue();
+  const ast = compiler.parseFile(records.filepath).getValue().ast;
+  const programSymbol = compiler.nodeSymbol(ast);
+  if (programSymbol.hasValue(UNHANDLED)) return { table: undefined, mergedColumns: [] };
 
-  if (!tableSymbol?.declaration || !tableSymbol.isKind(SymbolKind.Table)) return { table: undefined, mergedColumns: [] };
+  let tableSymbol: NodeSymbol | undefined;
+  if (schemaName) {
+    // Schema-qualified: look up the schema first, then the table within it
+    const schemaResult = lookupMember(compiler, programSymbol.getValue(), schemaName, { kinds: [SymbolKind.Schema], ignoreNotFound: true });
+    if (schemaResult.getValue()) {
+      tableSymbol = lookupMember(compiler, schemaResult.getValue()!, tableName, { kinds: [SymbolKind.Table], ignoreNotFound: true }).getValue() ?? undefined;
+    }
+  }
+  if (!tableSymbol) {
+    tableSymbol = lookupInDefaultSchema(compiler, programSymbol.getValue(), tableName, { kinds: [SymbolKind.Table], ignoreNotFound: true }).getValue() ?? undefined;
+  }
+
+  if (!tableSymbol?.declaration) return { table: undefined, mergedColumns: [] };
 
   const tableNode = tableSymbol.declaration as ElementDeclarationNode;
   const table = buildMergedTableFromElement(tableNode, compiler);
   if (!table) return { table: undefined, mergedColumns: [] };
-
-  // Use the alias/effective name for the table in the records object
-  const names = compiler.symbolNames(tableSymbol);
-  table.name = names[0] || table.name;
-  const fullname = tableSymbol.declaration ? compiler.fullname(tableSymbol.declaration).getFiltered(UNHANDLED) : undefined;
-  table.schemaName = (fullname && fullname.length > 1) ? fullname[0] : null;
-
   const mergedColumns = fragments.args.map((e) => table.fields.find((f) => f.name === extractVariableFromExpression(e))!);
   return {
     table,

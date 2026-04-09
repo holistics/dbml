@@ -18,7 +18,7 @@ export interface GlobalModule extends Module {
   // Resolve the symbol that this reference node points to
   nodeReferee? (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol | undefined> | Report<PassThrough>;
   // Resolve cross-references for this node (e.g. link ref endpoints to their target columns)
-  bind? (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough>;
+  bindNode? (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough>;
   // Convert this AST node into its schema JSON representation
-  interpret? (compiler: Compiler, node: SyntaxNode): Report<SchemaElement | SchemaElement[] | undefined> | Report<PassThrough>;
+  interpretNode? (compiler: Compiler, node: SyntaxNode): Report<SchemaElement | SchemaElement[] | undefined> | Report<PassThrough>;
 }

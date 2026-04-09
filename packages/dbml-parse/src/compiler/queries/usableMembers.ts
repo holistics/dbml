@@ -22,7 +22,7 @@ export function usableMembers (this: Compiler, symbolOrFilepath: SchemaSymbol | 
 
   const filepath = symbolOrFilepath instanceof Filepath ? symbolOrFilepath : symbolOrFilepath.filepath;
 
-  const { ast } = this.parse(filepath).getValue();
+  const { ast } = this.parseFile(filepath).getValue();
 
   for (const element of ast.body) {
     // Process reuse declaration
@@ -91,7 +91,7 @@ export function usableMembers (this: Compiler, symbolOrFilepath: SchemaSymbol | 
 // - Return a string for the directly nested schema name that the declaration belongs to
 export function shouldBelongToThisSchema (compiler: Compiler, schemaSymbol: SchemaSymbol, element: ElementDeclarationNode | UseSpecifierNode): boolean | string {
   const qualifiedName = schemaSymbol.qualifiedName;
-  const fullname = compiler.fullname(element).getFiltered(UNHANDLED);
+  const fullname = compiler.nodeFullname(element).getFiltered(UNHANDLED);
   if (!fullname) return false;
 
   // Elements with no name or no schema prefix belong to the default (public) schema

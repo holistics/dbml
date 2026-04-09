@@ -71,12 +71,12 @@ export function nodeReferee (this: Compiler, node: SyntaxNode): Report<NodeSymbo
   return res.hasValue(PASS_THROUGH) ? Report.create(UNHANDLED) : res;
 }
 
-export function bind (this: Compiler, node: SyntaxNode): Report<void> | Report<Unhandled> {
-  const res = dispatch('bind', this, node);
+export function bindNode (this: Compiler, node: SyntaxNode): Report<void> | Report<Unhandled> {
+  const res = dispatch('bindNode', this, node);
   return res.hasValue(PASS_THROUGH) ? Report.create(UNHANDLED) : res;
 }
 
-export function interpret (this: Compiler, node: SyntaxNode): Report<SchemaElement | SchemaElement[] | undefined> | Report<Unhandled> {
-  const res = dispatch('interpret', this, node);
+export function interpretNode (this: Compiler, node: SyntaxNode): Report<SchemaElement | SchemaElement[] | undefined> | Report<Unhandled> {
+  const res = dispatch('interpretNode', this, node);
   return res.hasValue(PASS_THROUGH) ? Report.create(UNHANDLED) : res;
 }

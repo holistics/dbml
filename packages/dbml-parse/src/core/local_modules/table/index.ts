@@ -13,14 +13,14 @@ import type Compiler from '@/compiler';
 import TableValidator, { validateTableSettings, validateFieldSetting } from './validate';
 
 export const tableModule: LocalModule = {
-  validate (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
+  validateNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
     if (isElementNode(node, ElementKind.Table)) {
       return Report.create(undefined, new TableValidator(compiler, node).validate());
     }
     return Report.create(PASS_THROUGH);
   },
 
-  fullname (compiler: Compiler, node: SyntaxNode): Report<string[] | undefined> | Report<PassThrough> {
+  nodeFullname (compiler: Compiler, node: SyntaxNode): Report<string[] | undefined> | Report<PassThrough> {
     if (isElementNode(node, ElementKind.Table)) {
       if (!node.name) {
         return new Report(undefined, [new CompileError(CompileErrorCode.NAME_NOT_FOUND, 'A Table must have a name', node)]);
@@ -37,7 +37,7 @@ export const tableModule: LocalModule = {
     return Report.create(PASS_THROUGH);
   },
 
-  alias (compiler: Compiler, node: SyntaxNode): Report<string | undefined> | Report<PassThrough> {
+  nodeAlias (compiler: Compiler, node: SyntaxNode): Report<string | undefined> | Report<PassThrough> {
     if (isElementNode(node, ElementKind.Table)) {
       if (!node.alias) return new Report(undefined);
       if (!isValidAlias(node.alias)) {
@@ -51,7 +51,7 @@ export const tableModule: LocalModule = {
     return Report.create(PASS_THROUGH);
   },
 
-  settings (compiler: Compiler, node: SyntaxNode): Report<Settings> | Report<PassThrough> {
+  nodeSettings (compiler: Compiler, node: SyntaxNode): Report<Settings> | Report<PassThrough> {
     if (isElementNode(node, ElementKind.Table)) {
       if (!node.attributeList) return new Report({});
       return validateTableSettings(node.attributeList);

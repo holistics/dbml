@@ -4,7 +4,7 @@ import { Filepath, resolveImportFilepath, type FilepathId } from '@/core/types/f
 
 // Returns a set of resolved filepath IDs. Validates that paths are relative and appends .dbml if missing.
 export function fileDependencies (this: Compiler, filepath: Filepath): Set<FilepathId> {
-  const { ast } = this.parse(filepath).getValue();
+  const { ast } = this.parseFile(filepath).getValue();
   const deps = new Set<FilepathId>();
 
   for (const node of ast.body) {

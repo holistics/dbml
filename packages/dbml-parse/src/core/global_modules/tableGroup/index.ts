@@ -60,16 +60,14 @@ export const tableGroupModule: GlobalModule = {
       for (const member of members) {
         if (!member.isKind(SymbolKind.TableGroupField) || !member.declaration) continue; // Ignore non-field members
 
-        const names = compiler.symbolNames(member);
-        for (const name of names) {
-          const errorNode = (member.declaration instanceof ElementDeclarationNode && member.declaration.name) ? member.declaration.name : member.declaration;
-          const firstNode = seen.get(name);
-          if (firstNode) {
-            errors.push(tableGroupUtils.getFieldDuplicateError(name, firstNode));
-            errors.push(tableGroupUtils.getFieldDuplicateError(name, errorNode));
-          } else {
-            seen.set(name, errorNode);
-          }
+        const name = (compiler.nodeFullname(member.declaration).getFiltered(UNHANDLED) || []).map((m) => addDoubleQuoteIfNeeded(m)).join('.');
+        const errorNode = (member.declaration instanceof ElementDeclarationNode && member.declaration.name) ? member.declaration.name : member.declaration;
+        const firstNode = seen.get(name);
+        if (firstNode) {
+          errors.push(tableGroupUtils.getFieldDuplicateError(name, firstNode));
+          errors.push(tableGroupUtils.getFieldDuplicateError(name, errorNode));
+        } else {
+          seen.set(name, errorNode);
         }
       }
 
@@ -87,14 +85,14 @@ export const tableGroupModule: GlobalModule = {
     // Skip variables inside setting lists
     if (node.parent && isInsideSettingList(node)) return Report.create(PASS_THROUGH);
 
-    const programNode = compiler.parse(node.filepath).getValue().ast;
+    const programNode = compiler.parseFile(node.filepath).getValue().ast;
     const globalSymbol = compiler.nodeSymbol(programNode).getValue();
     if (globalSymbol === UNHANDLED) return Report.create(undefined);
 
     return nodeRefereeOfTableGroupField(compiler, globalSymbol, node);
   },
 
-  bind (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
+  bindNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
     if (!isElementNode(node, ElementKind.TableGroup)) return Report.create(PASS_THROUGH);
     return Report.create(
       undefined,
@@ -102,7 +100,7 @@ export const tableGroupModule: GlobalModule = {
     );
   },
 
-  interpret (compiler: Compiler, node: SyntaxNode): Report<SchemaElement | SchemaElement[] | undefined> | Report<PassThrough> {
+  interpretNode (compiler: Compiler, node: SyntaxNode): Report<SchemaElement | SchemaElement[] | undefined> | Report<PassThrough> {
     if (!isElementNode(node, ElementKind.TableGroup)) return Report.create(PASS_THROUGH);
 
     if (!shouldInterpretNode(compiler, node)) return Report.create(undefined);

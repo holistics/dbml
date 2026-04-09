@@ -46,28 +46,28 @@ export class ProjectInterpreter {
       const sub = _sub as ElementDeclarationNode;
       switch (sub.type?.value.toLowerCase()) {
         case 'table': {
-          const report = this.compiler.interpret(sub);
+          const report = this.compiler.interpretNode(sub);
           const errors = report.getErrors();
           this.project.tables!.push(report.getValue() as Table);
 
           return errors;
         }
         case 'ref': {
-          const report = this.compiler.interpret(sub);
+          const report = this.compiler.interpretNode(sub);
           const errors = report.getErrors();
           this.project.refs!.push(report.getValue() as Ref);
 
           return errors;
         }
         case 'tablegroup': {
-          const report = this.compiler.interpret(sub);
+          const report = this.compiler.interpretNode(sub);
           const errors = report.getErrors();
           this.project.tableGroups!.push(report.getValue() as TableGroup);
 
           return errors;
         }
         case 'enum': {
-          const report = this.compiler.interpret(sub);
+          const report = this.compiler.interpretNode(sub);
           const errors = report.getErrors();
           this.project.enums!.push(report.getValue() as Enum);
 
@@ -85,7 +85,7 @@ export class ProjectInterpreter {
           return [];
         }
         case 'tablepartial': {
-          const report = this.compiler.interpret(sub);
+          const report = this.compiler.interpretNode(sub);
           const errors = report.getErrors();
           this.project.tablePartials!.push(report.getValue() as TablePartial);
           return errors;

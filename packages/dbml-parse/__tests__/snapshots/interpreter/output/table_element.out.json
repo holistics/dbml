@@ -1,4 +1,27 @@
 {
-  "errors": [],
+  "errors": [
+    {
+      "code": "NOTE_REDEFINED",
+      "diagnostic": "Duplicate notes are defined",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<element-declaration>@:@[L6:C2, L6:C20]",
+          "snippet": "Note: 'Short note'"
+        }
+      }
+    },
+    {
+      "code": "NOTE_REDEFINED",
+      "diagnostic": "Duplicate notes are defined",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<element-declaration>@:@[L18:C2, L27:C3]",
+          "snippet": "Note {\n   ...   '''\n  }"
+        }
+      }
+    }
+  ],
   "warnings": []
 }

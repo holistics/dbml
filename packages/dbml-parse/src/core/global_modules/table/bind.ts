@@ -176,7 +176,7 @@ export default class TableBinder {
       if (!sub.type) {
         return [];
       }
-      const binder = this.compiler.bind(sub as ElementDeclarationNode & { type: SyntaxToken });
+      const binder = this.compiler.bindNode(sub as ElementDeclarationNode & { type: SyntaxToken });
 
       return binder.getErrors();
     });

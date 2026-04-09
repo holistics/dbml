@@ -1,12 +1,12 @@
 import { ElementKind, SettingName } from '@/core/types/keywords';
-import { isElementNode, isElementFieldNode, isExpressionAVariableNode } from '@/core/utils/expression';
+import { isElementNode, isElementFieldNode } from '@/core/utils/expression';
 import { destructureComplexVariable } from '@/core/utils/expression';
 import { last } from 'lodash-es';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import { type LocalModule, type Settings } from '../types';
 import { PASS_THROUGH, type PassThrough } from '@/constants';
 import {
-  AttributeNode, ElementDeclarationNode, ListExpressionNode, SyntaxNode,
+  AttributeNode, ListExpressionNode, SyntaxNode,
 } from '@/core/parser/nodes';
 import { aggregateSettingList, isValidName } from '@/core/utils/validate';
 import { isExpressionAQuotedString } from '@/core/utils/expression';
@@ -16,7 +16,7 @@ import type Compiler from '@/compiler';
 import EnumValidator from './validate';
 
 export const enumModule: LocalModule = {
-  validate (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
+  validateNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
     if (isElementNode(node, ElementKind.Enum)) {
       return Report.create(undefined, new EnumValidator(compiler, node).validate());
     }
@@ -26,7 +26,7 @@ export const enumModule: LocalModule = {
     return Report.create(PASS_THROUGH);
   },
 
-  fullname (compiler: Compiler, node: SyntaxNode): Report<string[] | undefined> | Report<PassThrough> {
+  nodeFullname (compiler: Compiler, node: SyntaxNode): Report<string[] | undefined> | Report<PassThrough> {
     if (isElementNode(node, ElementKind.Enum)) {
       if (!node.name) {
         return new Report(undefined, [new CompileError(CompileErrorCode.NAME_NOT_FOUND, 'An Enum must have a name', node)]);
@@ -43,7 +43,7 @@ export const enumModule: LocalModule = {
     return Report.create(PASS_THROUGH);
   },
 
-  alias (compiler: Compiler, node: SyntaxNode): Report<string | undefined> | Report<PassThrough> {
+  nodeAlias (compiler: Compiler, node: SyntaxNode): Report<string | undefined> | Report<PassThrough> {
     if (isElementNode(node, ElementKind.Enum)) {
       if (node.alias) {
         return new Report(undefined, [new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'An Enum shouldn\'t have an alias', node.alias)]);
@@ -56,7 +56,7 @@ export const enumModule: LocalModule = {
     return Report.create(PASS_THROUGH);
   },
 
-  settings (compiler: Compiler, node: SyntaxNode): Report<Settings> | Report<PassThrough> {
+  nodeSettings (compiler: Compiler, node: SyntaxNode): Report<Settings> | Report<PassThrough> {
     if (isElementNode(node, ElementKind.Enum)) {
       if (node.attributeList) {
         return new Report({}, [new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'An Enum shouldn\'t have a setting list', node.attributeList)]);

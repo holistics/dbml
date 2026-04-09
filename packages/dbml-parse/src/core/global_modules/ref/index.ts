@@ -35,14 +35,14 @@ export const refModule: GlobalModule = {
     // Skip variables that are inside setting attribute values (e.g. delete: cascade)
     if (node.parentOfKind(AttributeNode)) return Report.create(PASS_THROUGH);
 
-    const programNode = compiler.parse(node.filepath).getValue().ast;
+    const programNode = compiler.parseFile(node.filepath).getValue().ast;
     const globalSymbol = compiler.nodeSymbol(programNode).getValue();
     if (globalSymbol === UNHANDLED) return Report.create(undefined);
 
     return nodeRefereeOfRefEndpoint(compiler, globalSymbol, node);
   },
 
-  bind (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
+  bindNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
     if (!isElementNode(node, ElementKind.Ref)) return Report.create(PASS_THROUGH);
 
     return Report.create(
@@ -51,7 +51,7 @@ export const refModule: GlobalModule = {
     );
   },
 
-  interpret (compiler: Compiler, node: SyntaxNode): Report<Ref | undefined> | Report<PassThrough> {
+  interpretNode (compiler: Compiler, node: SyntaxNode): Report<Ref | undefined> | Report<PassThrough> {
     if (!isElementNode(node, ElementKind.Ref)) return Report.create(PASS_THROUGH);
 
     if (!shouldInterpretNode(compiler, node)) return Report.create(undefined);
@@ -65,7 +65,7 @@ function getDefaultSchemaSymbol (compiler: Compiler, globalSymbol: NodeSymbol): 
   if (members.hasValue(UNHANDLED)) return undefined;
 
   return members.getValue().find((m: NodeSymbol) =>
-    m instanceof SchemaSymbol && m.name === DEFAULT_SCHEMA_NAME,
+    m instanceof SchemaSymbol && m.qualifiedName.join('.') === DEFAULT_SCHEMA_NAME,
   );
 }
 
