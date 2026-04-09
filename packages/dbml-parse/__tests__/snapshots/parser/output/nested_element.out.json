@@ -623,17 +623,6 @@
                                   "trailingTrivia": " ",
                                   "value": "wrong"
                                 }
-                              },
-                              "symbol": {
-                                "context": {
-                                  "id": "<variable>:wrong@[L11:C12, L11:C17]",
-                                  "snippet": "wrong"
-                                },
-                                "declaration": {
-                                  "id": "<variable>:wrong@[L11:C12, L11:C17]",
-                                  "snippet": "wrong"
-                                },
-                                "references": []
                               }
                             },
                             "fullEnd": 130,
@@ -645,17 +634,6 @@
                               "line": 11,
                               "offset": 124
                             }
-                          },
-                          "symbol": {
-                            "context": {
-                              "id": "<primary-expression>@[L11:C12, L11:C17]",
-                              "snippet": "wrong"
-                            },
-                            "declaration": {
-                              "id": "<primary-expression>@[L11:C12, L11:C17]",
-                              "snippet": "wrong"
-                            },
-                            "references": []
                           }
                         },
                         {
@@ -704,17 +682,6 @@
                                   "trailingTrivia": " ",
                                   "value": "nested"
                                 }
-                              },
-                              "symbol": {
-                                "context": {
-                                  "id": "<variable>:nested@[L11:C18, L11:C24]",
-                                  "snippet": "nested"
-                                },
-                                "declaration": {
-                                  "id": "<variable>:nested@[L11:C18, L11:C24]",
-                                  "snippet": "nested"
-                                },
-                                "references": []
                               }
                             },
                             "fullEnd": 137,
@@ -726,17 +693,6 @@
                               "line": 11,
                               "offset": 130
                             }
-                          },
-                          "symbol": {
-                            "context": {
-                              "id": "<primary-expression>@[L11:C18, L11:C24]",
-                              "snippet": "nested"
-                            },
-                            "declaration": {
-                              "id": "<primary-expression>@[L11:C18, L11:C24]",
-                              "snippet": "nested"
-                            },
-                            "references": []
                           }
                         },
                         {
@@ -785,17 +741,6 @@
                                   "trailingTrivia": " ",
                                   "value": "element"
                                 }
-                              },
-                              "symbol": {
-                                "context": {
-                                  "id": "<variable>:element@[L11:C25, L11:C32]",
-                                  "snippet": "element"
-                                },
-                                "declaration": {
-                                  "id": "<variable>:element@[L11:C25, L11:C32]",
-                                  "snippet": "element"
-                                },
-                                "references": []
                               }
                             },
                             "fullEnd": 145,
@@ -807,17 +752,6 @@
                               "line": 11,
                               "offset": 137
                             }
-                          },
-                          "symbol": {
-                            "context": {
-                              "id": "<primary-expression>@[L11:C25, L11:C32]",
-                              "snippet": "element"
-                            },
-                            "declaration": {
-                              "id": "<primary-expression>@[L11:C25, L11:C32]",
-                              "snippet": "element"
-                            },
-                            "references": []
                           }
                         },
                         {
@@ -868,17 +802,6 @@
                               "line": 11,
                               "offset": 145
                             }
-                          },
-                          "symbol": {
-                            "context": {
-                              "id": "<block-expression>@[L11:C33, L11:C35]",
-                              "snippet": "{}"
-                            },
-                            "declaration": {
-                              "id": "<block-expression>@[L11:C33, L11:C35]",
-                              "snippet": "{}"
-                            },
-                            "references": []
                           }
                         }
                       ],
@@ -928,17 +851,6 @@
                                 "trailingTrivia": " ",
                                 "value": "Indexes"
                               }
-                            },
-                            "symbol": {
-                              "context": {
-                                "id": "<variable>:Indexes@[L11:C4, L11:C11]",
-                                "snippet": "Indexes"
-                              },
-                              "declaration": {
-                                "id": "<variable>:Indexes@[L11:C4, L11:C11]",
-                                "snippet": "Indexes"
-                              },
-                              "references": []
                             }
                           },
                           "fullEnd": 124,
@@ -950,17 +862,6 @@
                             "line": 11,
                             "offset": 116
                           }
-                        },
-                        "symbol": {
-                          "context": {
-                            "id": "<primary-expression>@[L11:C4, L11:C11]",
-                            "snippet": "Indexes"
-                          },
-                          "declaration": {
-                            "id": "<primary-expression>@[L11:C4, L11:C11]",
-                            "snippet": "Indexes"
-                          },
-                          "references": []
                         }
                       },
                       "end": 147,

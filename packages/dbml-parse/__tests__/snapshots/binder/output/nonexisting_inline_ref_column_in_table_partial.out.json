@@ -463,6 +463,7 @@
                         "id": "<function-application>@[L1:C2, L1:C28]",
                         "snippet": "col1 type ...> un_col1]"
                       },
+                      "members": [],
                       "references": []
                     }
                   },
@@ -939,6 +940,7 @@
                         "id": "<function-application>@[L2:C2, L2:C31]",
                         "snippet": "col2 type ...1.un_col2]"
                       },
+                      "members": [],
                       "references": []
                     }
                   },
@@ -1409,6 +1411,7 @@
                         "id": "<function-application>@[L3:C2, L3:C33]",
                         "snippet": "col3 type ...T.un_col3]"
                       },
+                      "members": [],
                       "references": []
                     }
                   }
@@ -1642,17 +1645,6 @@
                                   "trailingTrivia": " ",
                                   "value": "type"
                                 }
-                              },
-                              "symbol": {
-                                "context": {
-                                  "id": "<variable>:type@[L7:C6, L7:C10]",
-                                  "snippet": "type"
-                                },
-                                "declaration": {
-                                  "id": "<variable>:type@[L7:C6, L7:C10]",
-                                  "snippet": "type"
-                                },
-                                "references": []
                               }
                             },
                             "fullEnd": 138,
@@ -1664,17 +1656,6 @@
                               "line": 7,
                               "offset": 133
                             }
-                          },
-                          "symbol": {
-                            "context": {
-                              "id": "<primary-expression>@[L7:C6, L7:C10]",
-                              "snippet": "type"
-                            },
-                            "declaration": {
-                              "id": "<primary-expression>@[L7:C6, L7:C10]",
-                              "snippet": "type"
-                            },
-                            "references": []
                           }
                         },
                         {
@@ -1749,17 +1730,6 @@
                                         "line": 7,
                                         "offset": 139
                                       }
-                                    },
-                                    "symbol": {
-                                      "context": {
-                                        "id": "<identifer-stream>@[L7:C12, L7:C15]",
-                                        "snippet": "ref"
-                                      },
-                                      "declaration": {
-                                        "id": "<identifer-stream>@[L7:C12, L7:C15]",
-                                        "snippet": "ref"
-                                      },
-                                      "references": []
                                     }
                                   },
                                   "start": 139,
@@ -1826,17 +1796,6 @@
                                                 "trailingTrivia": "",
                                                 "value": "un_col"
                                               }
-                                            },
-                                            "symbol": {
-                                              "context": {
-                                                "id": "<variable>:un_col@[L7:C19, L7:C25]",
-                                                "snippet": "un_col"
-                                              },
-                                              "declaration": {
-                                                "id": "<variable>:un_col@[L7:C19, L7:C25]",
-                                                "snippet": "un_col"
-                                              },
-                                              "references": []
                                             }
                                           },
                                           "fullEnd": 152,
@@ -1848,17 +1807,6 @@
                                             "line": 7,
                                             "offset": 146
                                           }
-                                        },
-                                        "symbol": {
-                                          "context": {
-                                            "id": "<primary-expression>@[L7:C19, L7:C25]",
-                                            "snippet": "un_col"
-                                          },
-                                          "declaration": {
-                                            "id": "<primary-expression>@[L7:C19, L7:C25]",
-                                            "snippet": "un_col"
-                                          },
-                                          "references": []
                                         }
                                       },
                                       "fullEnd": 152,
@@ -1883,30 +1831,8 @@
                                         "line": 7,
                                         "offset": 144
                                       }
-                                    },
-                                    "symbol": {
-                                      "context": {
-                                        "id": "<prefix-expression>@[L7:C17, L7:C25]",
-                                        "snippet": "> un_col"
-                                      },
-                                      "declaration": {
-                                        "id": "<prefix-expression>@[L7:C17, L7:C25]",
-                                        "snippet": "> un_col"
-                                      },
-                                      "references": []
                                     }
                                   }
-                                },
-                                "symbol": {
-                                  "context": {
-                                    "id": "<attribute>@[L7:C12, L7:C25]",
-                                    "snippet": "ref: > un_col"
-                                  },
-                                  "declaration": {
-                                    "id": "<attribute>@[L7:C12, L7:C25]",
-                                    "snippet": "ref: > un_col"
-                                  },
-                                  "references": []
                                 }
                               }
                             ],
@@ -1951,17 +1877,6 @@
                               "line": 7,
                               "offset": 138
                             }
-                          },
-                          "symbol": {
-                            "context": {
-                              "id": "<list-expression>@[L7:C11, L7:C26]",
-                              "snippet": "[ref: > un_col]"
-                            },
-                            "declaration": {
-                              "id": "<list-expression>@[L7:C11, L7:C26]",
-                              "snippet": "[ref: > un_col]"
-                            },
-                            "references": []
                           }
                         }
                       ],
@@ -2011,17 +1926,6 @@
                                 "trailingTrivia": " ",
                                 "value": "col"
                               }
-                            },
-                            "symbol": {
-                              "context": {
-                                "id": "<variable>:col@[L7:C2, L7:C5]",
-                                "snippet": "col"
-                              },
-                              "declaration": {
-                                "id": "<variable>:col@[L7:C2, L7:C5]",
-                                "snippet": "col"
-                              },
-                              "references": []
                             }
                           },
                           "fullEnd": 133,
@@ -2033,17 +1937,6 @@
                             "line": 7,
                             "offset": 129
                           }
-                        },
-                        "symbol": {
-                          "context": {
-                            "id": "<primary-expression>@[L7:C2, L7:C5]",
-                            "snippet": "col"
-                          },
-                          "declaration": {
-                            "id": "<primary-expression>@[L7:C2, L7:C5]",
-                            "snippet": "col"
-                          },
-                          "references": []
                         }
                       },
                       "end": 153,

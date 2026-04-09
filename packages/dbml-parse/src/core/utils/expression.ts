@@ -164,17 +164,17 @@ export function getBody (node?: ElementDeclarationNode): (FunctionApplicationNod
 }
 
 // Return whether `node` is an ElementDeclarationNode of kind `kind`
-export function isElementNode (node: SyntaxNode, kind: ElementKind): node is ElementDeclarationNode {
+export function isElementNode (node: SyntaxNode | undefined, kind: ElementKind): node is ElementDeclarationNode {
   return node instanceof ElementDeclarationNode && node.isKind(kind);
 }
 
 // Return whether `node` is a ProgramNode
-export function isProgramNode (node: SyntaxNode): node is ProgramNode {
+export function isProgramNode (node: SyntaxNode | undefined): node is ProgramNode {
   return node instanceof ProgramNode;
 }
 
 // Return whether `node` is a field of some element
-export function isElementFieldNode (node: SyntaxNode, kind: ElementKind): node is FunctionApplicationNode {
+export function isElementFieldNode (node: SyntaxNode | undefined, kind: ElementKind): node is FunctionApplicationNode {
   return node instanceof FunctionApplicationNode
     && node.parent instanceof ElementDeclarationNode
     && node.parent.isKind(kind);

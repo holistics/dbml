@@ -18,8 +18,9 @@ import {
   isWithinNthArgOfField,
   isAccessExpression,
   isExpressionAVariableNode,
+  isElementFieldNode,
 } from '@/core/utils/expression';
-import { getNodeMemberSymbols, lookupMember, nodeRefereeOfLeftExpression, shouldInterpretNode } from '../utils';
+import { lookupMember, nodeRefereeOfLeftExpression, shouldInterpretNode } from '../utils';
 import { isValidPartialInjection } from '@/core/utils/validate';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import TableBinder from './bind';
@@ -43,8 +44,10 @@ export const tableModule: GlobalModule = {
         declaration: node,
       }));
     }
-    if (isInsideElementBody(node, ElementKind.Table) && !isElementNode(node, ElementKind.Records)) {
-      return new Report(compiler.symbolFactory.create(NodeSymbol, { kind: SymbolKind.Column, declaration: node }));
+    if (isElementFieldNode(node, ElementKind.Table)) {
+      return !isValidPartialInjection(node.callee)
+        ? new Report(compiler.symbolFactory.create(NodeSymbol, { kind: SymbolKind.Column, declaration: node }))
+        : new Report(compiler.symbolFactory.create(NodeSymbol, { kind: SymbolKind.PartialInjection, declaration: node }));
     }
     return Report.create(PASS_THROUGH);
   },

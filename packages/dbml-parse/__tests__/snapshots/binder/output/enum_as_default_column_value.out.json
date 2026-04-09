@@ -1864,17 +1864,6 @@
                                   "trailingTrivia": "\n",
                                   "value": "text"
                                 }
-                              },
-                              "symbol": {
-                                "context": {
-                                  "id": "<variable>:text@[L20:C7, L20:C11]",
-                                  "snippet": "text"
-                                },
-                                "declaration": {
-                                  "id": "<variable>:text@[L20:C7, L20:C11]",
-                                  "snippet": "text"
-                                },
-                                "references": []
                               }
                             },
                             "fullEnd": 207,
@@ -1886,17 +1875,6 @@
                               "line": 20,
                               "offset": 202
                             }
-                          },
-                          "symbol": {
-                            "context": {
-                              "id": "<primary-expression>@[L20:C7, L20:C11]",
-                              "snippet": "text"
-                            },
-                            "declaration": {
-                              "id": "<primary-expression>@[L20:C7, L20:C11]",
-                              "snippet": "text"
-                            },
-                            "references": []
                           }
                         }
                       ],
@@ -1946,17 +1924,6 @@
                                 "trailingTrivia": " ",
                                 "value": "name"
                               }
-                            },
-                            "symbol": {
-                              "context": {
-                                "id": "<variable>:name@[L20:C2, L20:C6]",
-                                "snippet": "name"
-                              },
-                              "declaration": {
-                                "id": "<variable>:name@[L20:C2, L20:C6]",
-                                "snippet": "name"
-                              },
-                              "references": []
                             }
                           },
                           "fullEnd": 202,
@@ -1968,17 +1935,6 @@
                             "line": 20,
                             "offset": 197
                           }
-                        },
-                        "symbol": {
-                          "context": {
-                            "id": "<primary-expression>@[L20:C2, L20:C6]",
-                            "snippet": "name"
-                          },
-                          "declaration": {
-                            "id": "<primary-expression>@[L20:C2, L20:C6]",
-                            "snippet": "name"
-                          },
-                          "references": []
                         }
                       },
                       "end": 206,
@@ -2062,17 +2018,6 @@
                                   "trailingTrivia": "\n",
                                   "value": "int"
                                 }
-                              },
-                              "symbol": {
-                                "context": {
-                                  "id": "<variable>:int@[L21:C5, L21:C8]",
-                                  "snippet": "int"
-                                },
-                                "declaration": {
-                                  "id": "<variable>:int@[L21:C5, L21:C8]",
-                                  "snippet": "int"
-                                },
-                                "references": []
                               }
                             },
                             "fullEnd": 216,
@@ -2084,17 +2029,6 @@
                               "line": 21,
                               "offset": 212
                             }
-                          },
-                          "symbol": {
-                            "context": {
-                              "id": "<primary-expression>@[L21:C5, L21:C8]",
-                              "snippet": "int"
-                            },
-                            "declaration": {
-                              "id": "<primary-expression>@[L21:C5, L21:C8]",
-                              "snippet": "int"
-                            },
-                            "references": []
                           }
                         }
                       ],
@@ -2144,17 +2078,6 @@
                                 "trailingTrivia": " ",
                                 "value": "id"
                               }
-                            },
-                            "symbol": {
-                              "context": {
-                                "id": "<variable>:id@[L21:C2, L21:C4]",
-                                "snippet": "id"
-                              },
-                              "declaration": {
-                                "id": "<variable>:id@[L21:C2, L21:C4]",
-                                "snippet": "id"
-                              },
-                              "references": []
                             }
                           },
                           "fullEnd": 212,
@@ -2166,17 +2089,6 @@
                             "line": 21,
                             "offset": 209
                           }
-                        },
-                        "symbol": {
-                          "context": {
-                            "id": "<primary-expression>@[L21:C2, L21:C4]",
-                            "snippet": "id"
-                          },
-                          "declaration": {
-                            "id": "<primary-expression>@[L21:C2, L21:C4]",
-                            "snippet": "id"
-                          },
-                          "references": []
                         }
                       },
                       "end": 215,
@@ -2260,17 +2172,6 @@
                                   "trailingTrivia": " ",
                                   "value": "status"
                                 }
-                              },
-                              "symbol": {
-                                "context": {
-                                  "id": "<variable>:status@[L22:C9, L22:C15]",
-                                  "snippet": "status"
-                                },
-                                "declaration": {
-                                  "id": "<variable>:status@[L22:C9, L22:C15]",
-                                  "snippet": "status"
-                                },
-                                "references": []
                               }
                             },
                             "fullEnd": 232,
@@ -2288,17 +2189,6 @@
                               "id": "<element-declaration>:status@[L0:C0, L4:C1]",
                               "snippet": "Enum statu...inactive\n}"
                             }
-                          },
-                          "symbol": {
-                            "context": {
-                              "id": "<primary-expression>@[L22:C9, L22:C15]",
-                              "snippet": "status"
-                            },
-                            "declaration": {
-                              "id": "<primary-expression>@[L22:C9, L22:C15]",
-                              "snippet": "status"
-                            },
-                            "references": []
                           }
                         },
                         {
@@ -2373,17 +2263,6 @@
                                         "line": 22,
                                         "offset": 233
                                       }
-                                    },
-                                    "symbol": {
-                                      "context": {
-                                        "id": "<identifer-stream>@[L22:C17, L22:C24]",
-                                        "snippet": "default"
-                                      },
-                                      "declaration": {
-                                        "id": "<identifer-stream>@[L22:C17, L22:C24]",
-                                        "snippet": "default"
-                                      },
-                                      "references": []
                                     }
                                   },
                                   "start": 233,
@@ -2453,17 +2332,6 @@
                                                 "trailingTrivia": "",
                                                 "value": "status"
                                               }
-                                            },
-                                            "symbol": {
-                                              "context": {
-                                                "id": "<variable>:status@[L22:C26, L22:C32]",
-                                                "snippet": "status"
-                                              },
-                                              "declaration": {
-                                                "id": "<variable>:status@[L22:C26, L22:C32]",
-                                                "snippet": "status"
-                                              },
-                                              "references": []
                                             }
                                           },
                                           "fullEnd": 248,
@@ -2481,17 +2349,6 @@
                                             "id": "<element-declaration>:status@[L0:C0, L4:C1]",
                                             "snippet": "Enum statu...inactive\n}"
                                           }
-                                        },
-                                        "symbol": {
-                                          "context": {
-                                            "id": "<primary-expression>@[L22:C26, L22:C32]",
-                                            "snippet": "status"
-                                          },
-                                          "declaration": {
-                                            "id": "<primary-expression>@[L22:C26, L22:C32]",
-                                            "snippet": "status"
-                                          },
-                                          "references": []
                                         }
                                       },
                                       "op": {
@@ -2553,17 +2410,6 @@
                                                 "trailingTrivia": "",
                                                 "value": "active"
                                               }
-                                            },
-                                            "symbol": {
-                                              "context": {
-                                                "id": "<variable>:active@[L22:C33, L22:C39]",
-                                                "snippet": "active"
-                                              },
-                                              "declaration": {
-                                                "id": "<variable>:active@[L22:C33, L22:C39]",
-                                                "snippet": "active"
-                                              },
-                                              "references": []
                                             }
                                           },
                                           "fullEnd": 255,
@@ -2581,17 +2427,6 @@
                                             "id": "<function-application>@[L1:C2, L1:C8]",
                                             "snippet": "active"
                                           }
-                                        },
-                                        "symbol": {
-                                          "context": {
-                                            "id": "<primary-expression>@[L22:C33, L22:C39]",
-                                            "snippet": "active"
-                                          },
-                                          "declaration": {
-                                            "id": "<primary-expression>@[L22:C33, L22:C39]",
-                                            "snippet": "active"
-                                          },
-                                          "references": []
                                         }
                                       },
                                       "start": 242,
@@ -2600,30 +2435,8 @@
                                         "line": 22,
                                         "offset": 242
                                       }
-                                    },
-                                    "symbol": {
-                                      "context": {
-                                        "id": "<infix-expression>@[L22:C26, L22:C39]",
-                                        "snippet": "status.active"
-                                      },
-                                      "declaration": {
-                                        "id": "<infix-expression>@[L22:C26, L22:C39]",
-                                        "snippet": "status.active"
-                                      },
-                                      "references": []
                                     }
                                   }
-                                },
-                                "symbol": {
-                                  "context": {
-                                    "id": "<attribute>@[L22:C17, L22:C39]",
-                                    "snippet": "default: s...tus.active"
-                                  },
-                                  "declaration": {
-                                    "id": "<attribute>@[L22:C17, L22:C39]",
-                                    "snippet": "default: s...tus.active"
-                                  },
-                                  "references": []
                                 }
                               }
                             ],
@@ -2668,17 +2481,6 @@
                               "line": 22,
                               "offset": 232
                             }
-                          },
-                          "symbol": {
-                            "context": {
-                              "id": "<list-expression>@[L22:C16, L22:C40]",
-                              "snippet": "[default: ...us.active]"
-                            },
-                            "declaration": {
-                              "id": "<list-expression>@[L22:C16, L22:C40]",
-                              "snippet": "[default: ...us.active]"
-                            },
-                            "references": []
                           }
                         }
                       ],
@@ -2728,17 +2530,6 @@
                                 "trailingTrivia": " ",
                                 "value": "status"
                               }
-                            },
-                            "symbol": {
-                              "context": {
-                                "id": "<variable>:status@[L22:C2, L22:C8]",
-                                "snippet": "status"
-                              },
-                              "declaration": {
-                                "id": "<variable>:status@[L22:C2, L22:C8]",
-                                "snippet": "status"
-                              },
-                              "references": []
                             }
                           },
                           "fullEnd": 225,
@@ -2750,17 +2541,6 @@
                             "line": 22,
                             "offset": 218
                           }
-                        },
-                        "symbol": {
-                          "context": {
-                            "id": "<primary-expression>@[L22:C2, L22:C8]",
-                            "snippet": "status"
-                          },
-                          "declaration": {
-                            "id": "<primary-expression>@[L22:C2, L22:C8]",
-                            "snippet": "status"
-                          },
-                          "references": []
                         }
                       },
                       "end": 256,
@@ -2859,17 +2639,6 @@
                                       "trailingTrivia": "",
                                       "value": "demographic"
                                     }
-                                  },
-                                  "symbol": {
-                                    "context": {
-                                      "id": "<variable>:demographic@[L23:C9, L23:C20]",
-                                      "snippet": "demographic"
-                                    },
-                                    "declaration": {
-                                      "id": "<variable>:demographic@[L23:C9, L23:C20]",
-                                      "snippet": "demographic"
-                                    },
-                                    "references": []
                                   }
                                 },
                                 "fullEnd": 277,
@@ -2884,17 +2653,6 @@
                               },
                               "referee": {
                                 "context": {}
-                              },
-                              "symbol": {
-                                "context": {
-                                  "id": "<primary-expression>@[L23:C9, L23:C20]",
-                                  "snippet": "demographic"
-                                },
-                                "declaration": {
-                                  "id": "<primary-expression>@[L23:C9, L23:C20]",
-                                  "snippet": "demographic"
-                                },
-                                "references": []
                               }
                             },
                             "op": {
@@ -2956,17 +2714,6 @@
                                       "trailingTrivia": " ",
                                       "value": "gender"
                                     }
-                                  },
-                                  "symbol": {
-                                    "context": {
-                                      "id": "<variable>:gender@[L23:C21, L23:C27]",
-                                      "snippet": "gender"
-                                    },
-                                    "declaration": {
-                                      "id": "<variable>:gender@[L23:C21, L23:C27]",
-                                      "snippet": "gender"
-                                    },
-                                    "references": []
                                   }
                                 },
                                 "fullEnd": 285,
@@ -2984,17 +2731,6 @@
                                   "id": "<element-declaration>:demographic.gender@[L6:C0, L9:C1]",
                                   "snippet": "Enum demog...  female\n}"
                                 }
-                              },
-                              "symbol": {
-                                "context": {
-                                  "id": "<primary-expression>@[L23:C21, L23:C27]",
-                                  "snippet": "gender"
-                                },
-                                "declaration": {
-                                  "id": "<primary-expression>@[L23:C21, L23:C27]",
-                                  "snippet": "gender"
-                                },
-                                "references": []
                               }
                             },
                             "start": 266,
@@ -3003,17 +2739,6 @@
                               "line": 23,
                               "offset": 266
                             }
-                          },
-                          "symbol": {
-                            "context": {
-                              "id": "<infix-expression>@[L23:C9, L23:C27]",
-                              "snippet": "demographic.gender"
-                            },
-                            "declaration": {
-                              "id": "<infix-expression>@[L23:C9, L23:C27]",
-                              "snippet": "demographic.gender"
-                            },
-                            "references": []
                           }
                         },
                         {
@@ -3088,17 +2813,6 @@
                                         "line": 23,
                                         "offset": 286
                                       }
-                                    },
-                                    "symbol": {
-                                      "context": {
-                                        "id": "<identifer-stream>@[L23:C29, L23:C36]",
-                                        "snippet": "default"
-                                      },
-                                      "declaration": {
-                                        "id": "<identifer-stream>@[L23:C29, L23:C36]",
-                                        "snippet": "default"
-                                      },
-                                      "references": []
                                     }
                                   },
                                   "start": 286,
@@ -3183,17 +2897,6 @@
                                                     "trailingTrivia": "",
                                                     "value": "demographic"
                                                   }
-                                                },
-                                                "symbol": {
-                                                  "context": {
-                                                    "id": "<variable>:demographic@[L23:C38, L23:C49]",
-                                                    "snippet": "demographic"
-                                                  },
-                                                  "declaration": {
-                                                    "id": "<variable>:demographic@[L23:C38, L23:C49]",
-                                                    "snippet": "demographic"
-                                                  },
-                                                  "references": []
                                                 }
                                               },
                                               "fullEnd": 306,
@@ -3208,17 +2911,6 @@
                                             },
                                             "referee": {
                                               "context": {}
-                                            },
-                                            "symbol": {
-                                              "context": {
-                                                "id": "<primary-expression>@[L23:C38, L23:C49]",
-                                                "snippet": "demographic"
-                                              },
-                                              "declaration": {
-                                                "id": "<primary-expression>@[L23:C38, L23:C49]",
-                                                "snippet": "demographic"
-                                              },
-                                              "references": []
                                             }
                                           },
                                           "op": {
@@ -3280,17 +2972,6 @@
                                                     "trailingTrivia": "",
                                                     "value": "gender"
                                                   }
-                                                },
-                                                "symbol": {
-                                                  "context": {
-                                                    "id": "<variable>:gender@[L23:C50, L23:C56]",
-                                                    "snippet": "gender"
-                                                  },
-                                                  "declaration": {
-                                                    "id": "<variable>:gender@[L23:C50, L23:C56]",
-                                                    "snippet": "gender"
-                                                  },
-                                                  "references": []
                                                 }
                                               },
                                               "fullEnd": 313,
@@ -3308,17 +2989,6 @@
                                                 "id": "<element-declaration>:demographic.gender@[L6:C0, L9:C1]",
                                                 "snippet": "Enum demog...  female\n}"
                                               }
-                                            },
-                                            "symbol": {
-                                              "context": {
-                                                "id": "<primary-expression>@[L23:C50, L23:C56]",
-                                                "snippet": "gender"
-                                              },
-                                              "declaration": {
-                                                "id": "<primary-expression>@[L23:C50, L23:C56]",
-                                                "snippet": "gender"
-                                              },
-                                              "references": []
                                             }
                                           },
                                           "start": 295,
@@ -3327,17 +2997,6 @@
                                             "line": 23,
                                             "offset": 295
                                           }
-                                        },
-                                        "symbol": {
-                                          "context": {
-                                            "id": "<infix-expression>@[L23:C38, L23:C56]",
-                                            "snippet": "demographic.gender"
-                                          },
-                                          "declaration": {
-                                            "id": "<infix-expression>@[L23:C38, L23:C56]",
-                                            "snippet": "demographic.gender"
-                                          },
-                                          "references": []
                                         }
                                       },
                                       "op": {
@@ -3399,17 +3058,6 @@
                                                 "trailingTrivia": "",
                                                 "value": "male"
                                               }
-                                            },
-                                            "symbol": {
-                                              "context": {
-                                                "id": "<variable>:male@[L23:C57, L23:C61]",
-                                                "snippet": "male"
-                                              },
-                                              "declaration": {
-                                                "id": "<variable>:male@[L23:C57, L23:C61]",
-                                                "snippet": "male"
-                                              },
-                                              "references": []
                                             }
                                           },
                                           "fullEnd": 318,
@@ -3427,17 +3075,6 @@
                                             "id": "<function-application>@[L7:C2, L7:C6]",
                                             "snippet": "male"
                                           }
-                                        },
-                                        "symbol": {
-                                          "context": {
-                                            "id": "<primary-expression>@[L23:C57, L23:C61]",
-                                            "snippet": "male"
-                                          },
-                                          "declaration": {
-                                            "id": "<primary-expression>@[L23:C57, L23:C61]",
-                                            "snippet": "male"
-                                          },
-                                          "references": []
                                         }
                                       },
                                       "start": 295,
@@ -3446,30 +3083,8 @@
                                         "line": 23,
                                         "offset": 295
                                       }
-                                    },
-                                    "symbol": {
-                                      "context": {
-                                        "id": "<infix-expression>@[L23:C38, L23:C61]",
-                                        "snippet": "demographi...ender.male"
-                                      },
-                                      "declaration": {
-                                        "id": "<infix-expression>@[L23:C38, L23:C61]",
-                                        "snippet": "demographi...ender.male"
-                                      },
-                                      "references": []
                                     }
                                   }
-                                },
-                                "symbol": {
-                                  "context": {
-                                    "id": "<attribute>@[L23:C29, L23:C61]",
-                                    "snippet": "default: d...ender.male"
-                                  },
-                                  "declaration": {
-                                    "id": "<attribute>@[L23:C29, L23:C61]",
-                                    "snippet": "default: d...ender.male"
-                                  },
-                                  "references": []
                                 }
                               }
                             ],
@@ -3514,17 +3129,6 @@
                               "line": 23,
                               "offset": 285
                             }
-                          },
-                          "symbol": {
-                            "context": {
-                              "id": "<list-expression>@[L23:C28, L23:C62]",
-                              "snippet": "[default: ...nder.male]"
-                            },
-                            "declaration": {
-                              "id": "<list-expression>@[L23:C28, L23:C62]",
-                              "snippet": "[default: ...nder.male]"
-                            },
-                            "references": []
                           }
                         }
                       ],
@@ -3574,17 +3178,6 @@
                                 "trailingTrivia": " ",
                                 "value": "gender"
                               }
-                            },
-                            "symbol": {
-                              "context": {
-                                "id": "<variable>:gender@[L23:C2, L23:C8]",
-                                "snippet": "gender"
-                              },
-                              "declaration": {
-                                "id": "<variable>:gender@[L23:C2, L23:C8]",
-                                "snippet": "gender"
-                              },
-                              "references": []
                             }
                           },
                           "fullEnd": 266,
@@ -3596,17 +3189,6 @@
                             "line": 23,
                             "offset": 259
                           }
-                        },
-                        "symbol": {
-                          "context": {
-                            "id": "<primary-expression>@[L23:C2, L23:C8]",
-                            "snippet": "gender"
-                          },
-                          "declaration": {
-                            "id": "<primary-expression>@[L23:C2, L23:C8]",
-                            "snippet": "gender"
-                          },
-                          "references": []
                         }
                       },
                       "end": 319,
@@ -3705,17 +3287,6 @@
                                       "trailingTrivia": "",
                                       "value": "demographic"
                                     }
-                                  },
-                                  "symbol": {
-                                    "context": {
-                                      "id": "<variable>:demographic@[L24:C11, L24:C22]",
-                                      "snippet": "demographic"
-                                    },
-                                    "declaration": {
-                                      "id": "<variable>:demographic@[L24:C11, L24:C22]",
-                                      "snippet": "demographic"
-                                    },
-                                    "references": []
                                   }
                                 },
                                 "fullEnd": 342,
@@ -3730,17 +3301,6 @@
                               },
                               "referee": {
                                 "context": {}
-                              },
-                              "symbol": {
-                                "context": {
-                                  "id": "<primary-expression>@[L24:C11, L24:C22]",
-                                  "snippet": "demographic"
-                                },
-                                "declaration": {
-                                  "id": "<primary-expression>@[L24:C11, L24:C22]",
-                                  "snippet": "demographic"
-                                },
-                                "references": []
                               }
                             },
                             "op": {
@@ -3802,17 +3362,6 @@
                                       "trailingTrivia": " ",
                                       "value": "age segment"
                                     }
-                                  },
-                                  "symbol": {
-                                    "context": {
-                                      "id": "<variable>:age segment@[L24:C23, L24:C36]",
-                                      "snippet": "\"age segment\""
-                                    },
-                                    "declaration": {
-                                      "id": "<variable>:age segment@[L24:C23, L24:C36]",
-                                      "snippet": "\"age segment\""
-                                    },
-                                    "references": []
                                   }
                                 },
                                 "fullEnd": 357,
@@ -3830,17 +3379,6 @@
                                   "id": "<element-declaration>:demographic.age segment@[L11:C0, L17:C1]",
                                   "snippet": "Enum demog...\n  elder\n}"
                                 }
-                              },
-                              "symbol": {
-                                "context": {
-                                  "id": "<primary-expression>@[L24:C23, L24:C36]",
-                                  "snippet": "\"age segment\""
-                                },
-                                "declaration": {
-                                  "id": "<primary-expression>@[L24:C23, L24:C36]",
-                                  "snippet": "\"age segment\""
-                                },
-                                "references": []
                               }
                             },
                             "start": 331,
@@ -3849,17 +3387,6 @@
                               "line": 24,
                               "offset": 331
                             }
-                          },
-                          "symbol": {
-                            "context": {
-                              "id": "<infix-expression>@[L24:C11, L24:C36]",
-                              "snippet": "demographi...e segment\""
-                            },
-                            "declaration": {
-                              "id": "<infix-expression>@[L24:C11, L24:C36]",
-                              "snippet": "demographi...e segment\""
-                            },
-                            "references": []
                           }
                         },
                         {
@@ -3934,17 +3461,6 @@
                                         "line": 24,
                                         "offset": 358
                                       }
-                                    },
-                                    "symbol": {
-                                      "context": {
-                                        "id": "<identifer-stream>@[L24:C38, L24:C45]",
-                                        "snippet": "default"
-                                      },
-                                      "declaration": {
-                                        "id": "<identifer-stream>@[L24:C38, L24:C45]",
-                                        "snippet": "default"
-                                      },
-                                      "references": []
                                     }
                                   },
                                   "start": 358,
@@ -4029,17 +3545,6 @@
                                                     "trailingTrivia": "",
                                                     "value": "demographic"
                                                   }
-                                                },
-                                                "symbol": {
-                                                  "context": {
-                                                    "id": "<variable>:demographic@[L24:C47, L24:C58]",
-                                                    "snippet": "demographic"
-                                                  },
-                                                  "declaration": {
-                                                    "id": "<variable>:demographic@[L24:C47, L24:C58]",
-                                                    "snippet": "demographic"
-                                                  },
-                                                  "references": []
                                                 }
                                               },
                                               "fullEnd": 378,
@@ -4054,17 +3559,6 @@
                                             },
                                             "referee": {
                                               "context": {}
-                                            },
-                                            "symbol": {
-                                              "context": {
-                                                "id": "<primary-expression>@[L24:C47, L24:C58]",
-                                                "snippet": "demographic"
-                                              },
-                                              "declaration": {
-                                                "id": "<primary-expression>@[L24:C47, L24:C58]",
-                                                "snippet": "demographic"
-                                              },
-                                              "references": []
                                             }
                                           },
                                           "op": {
@@ -4126,17 +3620,6 @@
                                                     "trailingTrivia": "",
                                                     "value": "age segment"
                                                   }
-                                                },
-                                                "symbol": {
-                                                  "context": {
-                                                    "id": "<variable>:age segment@[L24:C59, L24:C72]",
-                                                    "snippet": "\"age segment\""
-                                                  },
-                                                  "declaration": {
-                                                    "id": "<variable>:age segment@[L24:C59, L24:C72]",
-                                                    "snippet": "\"age segment\""
-                                                  },
-                                                  "references": []
                                                 }
                                               },
                                               "fullEnd": 392,
@@ -4154,17 +3637,6 @@
                                                 "id": "<element-declaration>:demographic.age segment@[L11:C0, L17:C1]",
                                                 "snippet": "Enum demog...\n  elder\n}"
                                               }
-                                            },
-                                            "symbol": {
-                                              "context": {
-                                                "id": "<primary-expression>@[L24:C59, L24:C72]",
-                                                "snippet": "\"age segment\""
-                                              },
-                                              "declaration": {
-                                                "id": "<primary-expression>@[L24:C59, L24:C72]",
-                                                "snippet": "\"age segment\""
-                                              },
-                                              "references": []
                                             }
                                           },
                                           "start": 367,
@@ -4173,17 +3645,6 @@
                                             "line": 24,
                                             "offset": 367
                                           }
-                                        },
-                                        "symbol": {
-                                          "context": {
-                                            "id": "<infix-expression>@[L24:C47, L24:C72]",
-                                            "snippet": "demographi...e segment\""
-                                          },
-                                          "declaration": {
-                                            "id": "<infix-expression>@[L24:C47, L24:C72]",
-                                            "snippet": "demographi...e segment\""
-                                          },
-                                          "references": []
                                         }
                                       },
                                       "op": {
@@ -4245,17 +3706,6 @@
                                                 "trailingTrivia": "",
                                                 "value": "young_adult"
                                               }
-                                            },
-                                            "symbol": {
-                                              "context": {
-                                                "id": "<variable>:young_adult@[L24:C73, L24:C84]",
-                                                "snippet": "young_adult"
-                                              },
-                                              "declaration": {
-                                                "id": "<variable>:young_adult@[L24:C73, L24:C84]",
-                                                "snippet": "young_adult"
-                                              },
-                                              "references": []
                                             }
                                           },
                                           "fullEnd": 404,
@@ -4273,17 +3723,6 @@
                                             "id": "<function-application>@[L15:C2, L15:C13]",
                                             "snippet": "young_adult"
                                           }
-                                        },
-                                        "symbol": {
-                                          "context": {
-                                            "id": "<primary-expression>@[L24:C73, L24:C84]",
-                                            "snippet": "young_adult"
-                                          },
-                                          "declaration": {
-                                            "id": "<primary-expression>@[L24:C73, L24:C84]",
-                                            "snippet": "young_adult"
-                                          },
-                                          "references": []
                                         }
                                       },
                                       "start": 367,
@@ -4292,30 +3731,8 @@
                                         "line": 24,
                                         "offset": 367
                                       }
-                                    },
-                                    "symbol": {
-                                      "context": {
-                                        "id": "<infix-expression>@[L24:C47, L24:C84]",
-                                        "snippet": "demographi...oung_adult"
-                                      },
-                                      "declaration": {
-                                        "id": "<infix-expression>@[L24:C47, L24:C84]",
-                                        "snippet": "demographi...oung_adult"
-                                      },
-                                      "references": []
                                     }
                                   }
-                                },
-                                "symbol": {
-                                  "context": {
-                                    "id": "<attribute>@[L24:C38, L24:C84]",
-                                    "snippet": "default: d...oung_adult"
-                                  },
-                                  "declaration": {
-                                    "id": "<attribute>@[L24:C38, L24:C84]",
-                                    "snippet": "default: d...oung_adult"
-                                  },
-                                  "references": []
                                 }
                               }
                             ],
@@ -4360,17 +3777,6 @@
                               "line": 24,
                               "offset": 357
                             }
-                          },
-                          "symbol": {
-                            "context": {
-                              "id": "<list-expression>@[L24:C37, L24:C85]",
-                              "snippet": "[default: ...ung_adult]"
-                            },
-                            "declaration": {
-                              "id": "<list-expression>@[L24:C37, L24:C85]",
-                              "snippet": "[default: ...ung_adult]"
-                            },
-                            "references": []
                           }
                         }
                       ],
@@ -4420,17 +3826,6 @@
                                 "trailingTrivia": " ",
                                 "value": "age_type"
                               }
-                            },
-                            "symbol": {
-                              "context": {
-                                "id": "<variable>:age_type@[L24:C2, L24:C10]",
-                                "snippet": "age_type"
-                              },
-                              "declaration": {
-                                "id": "<variable>:age_type@[L24:C2, L24:C10]",
-                                "snippet": "age_type"
-                              },
-                              "references": []
                             }
                           },
                           "fullEnd": 331,
@@ -4442,17 +3837,6 @@
                             "line": 24,
                             "offset": 322
                           }
-                        },
-                        "symbol": {
-                          "context": {
-                            "id": "<primary-expression>@[L24:C2, L24:C10]",
-                            "snippet": "age_type"
-                          },
-                          "declaration": {
-                            "id": "<primary-expression>@[L24:C2, L24:C10]",
-                            "snippet": "age_type"
-                          },
-                          "references": []
                         }
                       },
                       "end": 405,
@@ -4536,17 +3920,6 @@
                                   "trailingTrivia": " ",
                                   "value": "invalid_type"
                                 }
-                              },
-                              "symbol": {
-                                "context": {
-                                  "id": "<variable>:invalid_type@[L26:C23, L26:C35]",
-                                  "snippet": "invalid_type"
-                                },
-                                "declaration": {
-                                  "id": "<variable>:invalid_type@[L26:C23, L26:C35]",
-                                  "snippet": "invalid_type"
-                                },
-                                "references": []
                               }
                             },
                             "fullEnd": 443,
@@ -4558,17 +3931,6 @@
                               "line": 26,
                               "offset": 430
                             }
-                          },
-                          "symbol": {
-                            "context": {
-                              "id": "<primary-expression>@[L26:C23, L26:C35]",
-                              "snippet": "invalid_type"
-                            },
-                            "declaration": {
-                              "id": "<primary-expression>@[L26:C23, L26:C35]",
-                              "snippet": "invalid_type"
-                            },
-                            "references": []
                           }
                         },
                         {
@@ -4643,17 +4005,6 @@
                                         "line": 26,
                                         "offset": 444
                                       }
-                                    },
-                                    "symbol": {
-                                      "context": {
-                                        "id": "<identifer-stream>@[L26:C37, L26:C44]",
-                                        "snippet": "default"
-                                      },
-                                      "declaration": {
-                                        "id": "<identifer-stream>@[L26:C37, L26:C44]",
-                                        "snippet": "default"
-                                      },
-                                      "references": []
                                     }
                                   },
                                   "start": 444,
@@ -4708,17 +4059,6 @@
                                             "trailingTrivia": "",
                                             "value": "invalid_value"
                                           }
-                                        },
-                                        "symbol": {
-                                          "context": {
-                                            "id": "<variable>:invalid_value@[L26:C46, L26:C59]",
-                                            "snippet": "invalid_value"
-                                          },
-                                          "declaration": {
-                                            "id": "<variable>:invalid_value@[L26:C46, L26:C59]",
-                                            "snippet": "invalid_value"
-                                          },
-                                          "references": []
                                         }
                                       },
                                       "fullEnd": 466,
@@ -4730,30 +4070,8 @@
                                         "line": 26,
                                         "offset": 453
                                       }
-                                    },
-                                    "symbol": {
-                                      "context": {
-                                        "id": "<primary-expression>@[L26:C46, L26:C59]",
-                                        "snippet": "invalid_value"
-                                      },
-                                      "declaration": {
-                                        "id": "<primary-expression>@[L26:C46, L26:C59]",
-                                        "snippet": "invalid_value"
-                                      },
-                                      "references": []
                                     }
                                   }
-                                },
-                                "symbol": {
-                                  "context": {
-                                    "id": "<attribute>@[L26:C37, L26:C59]",
-                                    "snippet": "default: i...alid_value"
-                                  },
-                                  "declaration": {
-                                    "id": "<attribute>@[L26:C37, L26:C59]",
-                                    "snippet": "default: i...alid_value"
-                                  },
-                                  "references": []
                                 }
                               }
                             ],
@@ -4798,17 +4116,6 @@
                               "line": 26,
                               "offset": 443
                             }
-                          },
-                          "symbol": {
-                            "context": {
-                              "id": "<list-expression>@[L26:C36, L26:C60]",
-                              "snippet": "[default: ...lid_value]"
-                            },
-                            "declaration": {
-                              "id": "<list-expression>@[L26:C36, L26:C60]",
-                              "snippet": "[default: ...lid_value]"
-                            },
-                            "references": []
                           }
                         }
                       ],
@@ -4858,17 +4165,6 @@
                                 "trailingTrivia": " ",
                                 "value": "invalid_validate_col"
                               }
-                            },
-                            "symbol": {
-                              "context": {
-                                "id": "<variable>:invalid_validate_col@[L26:C2, L26:C22]",
-                                "snippet": "invalid_validate_col"
-                              },
-                              "declaration": {
-                                "id": "<variable>:invalid_validate_col@[L26:C2, L26:C22]",
-                                "snippet": "invalid_validate_col"
-                              },
-                              "references": []
                             }
                           },
                           "fullEnd": 430,
@@ -4880,17 +4176,6 @@
                             "line": 26,
                             "offset": 409
                           }
-                        },
-                        "symbol": {
-                          "context": {
-                            "id": "<primary-expression>@[L26:C2, L26:C22]",
-                            "snippet": "invalid_validate_col"
-                          },
-                          "declaration": {
-                            "id": "<primary-expression>@[L26:C2, L26:C22]",
-                            "snippet": "invalid_validate_col"
-                          },
-                          "references": []
                         }
                       },
                       "end": 467,
@@ -4974,17 +4259,6 @@
                                   "trailingTrivia": " ",
                                   "value": "invalid_type"
                                 }
-                              },
-                              "symbol": {
-                                "context": {
-                                  "id": "<variable>:invalid_type@[L27:C24, L27:C36]",
-                                  "snippet": "invalid_type"
-                                },
-                                "declaration": {
-                                  "id": "<variable>:invalid_type@[L27:C24, L27:C36]",
-                                  "snippet": "invalid_type"
-                                },
-                                "references": []
                               }
                             },
                             "fullEnd": 505,
@@ -4996,17 +4270,6 @@
                               "line": 27,
                               "offset": 492
                             }
-                          },
-                          "symbol": {
-                            "context": {
-                              "id": "<primary-expression>@[L27:C24, L27:C36]",
-                              "snippet": "invalid_type"
-                            },
-                            "declaration": {
-                              "id": "<primary-expression>@[L27:C24, L27:C36]",
-                              "snippet": "invalid_type"
-                            },
-                            "references": []
                           }
                         },
                         {
@@ -5081,17 +4344,6 @@
                                         "line": 27,
                                         "offset": 506
                                       }
-                                    },
-                                    "symbol": {
-                                      "context": {
-                                        "id": "<identifer-stream>@[L27:C38, L27:C45]",
-                                        "snippet": "default"
-                                      },
-                                      "declaration": {
-                                        "id": "<identifer-stream>@[L27:C38, L27:C45]",
-                                        "snippet": "default"
-                                      },
-                                      "references": []
                                     }
                                   },
                                   "start": 506,
@@ -5191,17 +4443,6 @@
                                                         "trailingTrivia": "",
                                                         "value": "field1"
                                                       }
-                                                    },
-                                                    "symbol": {
-                                                      "context": {
-                                                        "id": "<variable>:field1@[L27:C47, L27:C53]",
-                                                        "snippet": "field1"
-                                                      },
-                                                      "declaration": {
-                                                        "id": "<variable>:field1@[L27:C47, L27:C53]",
-                                                        "snippet": "field1"
-                                                      },
-                                                      "references": []
                                                     }
                                                   },
                                                   "fullEnd": 521,
@@ -5213,17 +4454,6 @@
                                                     "line": 27,
                                                     "offset": 515
                                                   }
-                                                },
-                                                "symbol": {
-                                                  "context": {
-                                                    "id": "<primary-expression>@[L27:C47, L27:C53]",
-                                                    "snippet": "field1"
-                                                  },
-                                                  "declaration": {
-                                                    "id": "<primary-expression>@[L27:C47, L27:C53]",
-                                                    "snippet": "field1"
-                                                  },
-                                                  "references": []
                                                 }
                                               },
                                               "op": {
@@ -5285,17 +4515,6 @@
                                                         "trailingTrivia": "",
                                                         "value": "field2"
                                                       }
-                                                    },
-                                                    "symbol": {
-                                                      "context": {
-                                                        "id": "<variable>:field2@[L27:C54, L27:C60]",
-                                                        "snippet": "field2"
-                                                      },
-                                                      "declaration": {
-                                                        "id": "<variable>:field2@[L27:C54, L27:C60]",
-                                                        "snippet": "field2"
-                                                      },
-                                                      "references": []
                                                     }
                                                   },
                                                   "fullEnd": 528,
@@ -5307,17 +4526,6 @@
                                                     "line": 27,
                                                     "offset": 522
                                                   }
-                                                },
-                                                "symbol": {
-                                                  "context": {
-                                                    "id": "<primary-expression>@[L27:C54, L27:C60]",
-                                                    "snippet": "field2"
-                                                  },
-                                                  "declaration": {
-                                                    "id": "<primary-expression>@[L27:C54, L27:C60]",
-                                                    "snippet": "field2"
-                                                  },
-                                                  "references": []
                                                 }
                                               },
                                               "start": 515,
@@ -5326,17 +4534,6 @@
                                                 "line": 27,
                                                 "offset": 515
                                               }
-                                            },
-                                            "symbol": {
-                                              "context": {
-                                                "id": "<infix-expression>@[L27:C47, L27:C60]",
-                                                "snippet": "field1.field2"
-                                              },
-                                              "declaration": {
-                                                "id": "<infix-expression>@[L27:C47, L27:C60]",
-                                                "snippet": "field1.field2"
-                                              },
-                                              "references": []
                                             }
                                           },
                                           "op": {
@@ -5398,17 +4595,6 @@
                                                     "trailingTrivia": "",
                                                     "value": "field3"
                                                   }
-                                                },
-                                                "symbol": {
-                                                  "context": {
-                                                    "id": "<variable>:field3@[L27:C61, L27:C67]",
-                                                    "snippet": "field3"
-                                                  },
-                                                  "declaration": {
-                                                    "id": "<variable>:field3@[L27:C61, L27:C67]",
-                                                    "snippet": "field3"
-                                                  },
-                                                  "references": []
                                                 }
                                               },
                                               "fullEnd": 535,
@@ -5420,17 +4606,6 @@
                                                 "line": 27,
                                                 "offset": 529
                                               }
-                                            },
-                                            "symbol": {
-                                              "context": {
-                                                "id": "<primary-expression>@[L27:C61, L27:C67]",
-                                                "snippet": "field3"
-                                              },
-                                              "declaration": {
-                                                "id": "<primary-expression>@[L27:C61, L27:C67]",
-                                                "snippet": "field3"
-                                              },
-                                              "references": []
                                             }
                                           },
                                           "start": 515,
@@ -5439,17 +4614,6 @@
                                             "line": 27,
                                             "offset": 515
                                           }
-                                        },
-                                        "symbol": {
-                                          "context": {
-                                            "id": "<infix-expression>@[L27:C47, L27:C67]",
-                                            "snippet": "field1.field2.field3"
-                                          },
-                                          "declaration": {
-                                            "id": "<infix-expression>@[L27:C47, L27:C67]",
-                                            "snippet": "field1.field2.field3"
-                                          },
-                                          "references": []
                                         }
                                       },
                                       "op": {
@@ -5511,17 +4675,6 @@
                                                 "trailingTrivia": "",
                                                 "value": "field4"
                                               }
-                                            },
-                                            "symbol": {
-                                              "context": {
-                                                "id": "<variable>:field4@[L27:C68, L27:C74]",
-                                                "snippet": "field4"
-                                              },
-                                              "declaration": {
-                                                "id": "<variable>:field4@[L27:C68, L27:C74]",
-                                                "snippet": "field4"
-                                              },
-                                              "references": []
                                             }
                                           },
                                           "fullEnd": 542,
@@ -5533,17 +4686,6 @@
                                             "line": 27,
                                             "offset": 536
                                           }
-                                        },
-                                        "symbol": {
-                                          "context": {
-                                            "id": "<primary-expression>@[L27:C68, L27:C74]",
-                                            "snippet": "field4"
-                                          },
-                                          "declaration": {
-                                            "id": "<primary-expression>@[L27:C68, L27:C74]",
-                                            "snippet": "field4"
-                                          },
-                                          "references": []
                                         }
                                       },
                                       "start": 515,
@@ -5552,30 +4694,8 @@
                                         "line": 27,
                                         "offset": 515
                                       }
-                                    },
-                                    "symbol": {
-                                      "context": {
-                                        "id": "<infix-expression>@[L27:C47, L27:C74]",
-                                        "snippet": "field1.fie...ld3.field4"
-                                      },
-                                      "declaration": {
-                                        "id": "<infix-expression>@[L27:C47, L27:C74]",
-                                        "snippet": "field1.fie...ld3.field4"
-                                      },
-                                      "references": []
                                     }
                                   }
-                                },
-                                "symbol": {
-                                  "context": {
-                                    "id": "<attribute>@[L27:C38, L27:C74]",
-                                    "snippet": "default: f...ld3.field4"
-                                  },
-                                  "declaration": {
-                                    "id": "<attribute>@[L27:C38, L27:C74]",
-                                    "snippet": "default: f...ld3.field4"
-                                  },
-                                  "references": []
                                 }
                               }
                             ],
@@ -5620,17 +4740,6 @@
                               "line": 27,
                               "offset": 505
                             }
-                          },
-                          "symbol": {
-                            "context": {
-                              "id": "<list-expression>@[L27:C37, L27:C75]",
-                              "snippet": "[default: ...d3.field4]"
-                            },
-                            "declaration": {
-                              "id": "<list-expression>@[L27:C37, L27:C75]",
-                              "snippet": "[default: ...d3.field4]"
-                            },
-                            "references": []
                           }
                         }
                       ],
@@ -5680,17 +4789,6 @@
                                 "trailingTrivia": " ",
                                 "value": "invalid_validate_col2"
                               }
-                            },
-                            "symbol": {
-                              "context": {
-                                "id": "<variable>:invalid_validate_col2@[L27:C2, L27:C23]",
-                                "snippet": "invalid_va...idate_col2"
-                              },
-                              "declaration": {
-                                "id": "<variable>:invalid_validate_col2@[L27:C2, L27:C23]",
-                                "snippet": "invalid_va...idate_col2"
-                              },
-                              "references": []
                             }
                           },
                           "fullEnd": 492,
@@ -5702,17 +4800,6 @@
                             "line": 27,
                             "offset": 470
                           }
-                        },
-                        "symbol": {
-                          "context": {
-                            "id": "<primary-expression>@[L27:C2, L27:C23]",
-                            "snippet": "invalid_va...idate_col2"
-                          },
-                          "declaration": {
-                            "id": "<primary-expression>@[L27:C2, L27:C23]",
-                            "snippet": "invalid_va...idate_col2"
-                          },
-                          "references": []
                         }
                       },
                       "end": 543,
@@ -5796,17 +4883,6 @@
                                   "trailingTrivia": " ",
                                   "value": "invalid_type"
                                 }
-                              },
-                              "symbol": {
-                                "context": {
-                                  "id": "<variable>:invalid_type@[L28:C19, L28:C31]",
-                                  "snippet": "invalid_type"
-                                },
-                                "declaration": {
-                                  "id": "<variable>:invalid_type@[L28:C19, L28:C31]",
-                                  "snippet": "invalid_type"
-                                },
-                                "references": []
                               }
                             },
                             "fullEnd": 576,
@@ -5818,17 +4894,6 @@
                               "line": 28,
                               "offset": 563
                             }
-                          },
-                          "symbol": {
-                            "context": {
-                              "id": "<primary-expression>@[L28:C19, L28:C31]",
-                              "snippet": "invalid_type"
-                            },
-                            "declaration": {
-                              "id": "<primary-expression>@[L28:C19, L28:C31]",
-                              "snippet": "invalid_type"
-                            },
-                            "references": []
                           }
                         },
                         {
@@ -5903,17 +4968,6 @@
                                         "line": 28,
                                         "offset": 577
                                       }
-                                    },
-                                    "symbol": {
-                                      "context": {
-                                        "id": "<identifer-stream>@[L28:C33, L28:C40]",
-                                        "snippet": "default"
-                                      },
-                                      "declaration": {
-                                        "id": "<identifer-stream>@[L28:C33, L28:C40]",
-                                        "snippet": "default"
-                                      },
-                                      "references": []
                                     }
                                   },
                                   "start": 577,
@@ -5983,17 +5037,6 @@
                                                 "trailingTrivia": "",
                                                 "value": "invalid_enum"
                                               }
-                                            },
-                                            "symbol": {
-                                              "context": {
-                                                "id": "<variable>:invalid_enum@[L28:C42, L28:C54]",
-                                                "snippet": "invalid_enum"
-                                              },
-                                              "declaration": {
-                                                "id": "<variable>:invalid_enum@[L28:C42, L28:C54]",
-                                                "snippet": "invalid_enum"
-                                              },
-                                              "references": []
                                             }
                                           },
                                           "fullEnd": 598,
@@ -6005,17 +5048,6 @@
                                             "line": 28,
                                             "offset": 586
                                           }
-                                        },
-                                        "symbol": {
-                                          "context": {
-                                            "id": "<primary-expression>@[L28:C42, L28:C54]",
-                                            "snippet": "invalid_enum"
-                                          },
-                                          "declaration": {
-                                            "id": "<primary-expression>@[L28:C42, L28:C54]",
-                                            "snippet": "invalid_enum"
-                                          },
-                                          "references": []
                                         }
                                       },
                                       "op": {
@@ -6077,17 +5109,6 @@
                                                 "trailingTrivia": "",
                                                 "value": "invalid_field"
                                               }
-                                            },
-                                            "symbol": {
-                                              "context": {
-                                                "id": "<variable>:invalid_field@[L28:C55, L28:C68]",
-                                                "snippet": "invalid_field"
-                                              },
-                                              "declaration": {
-                                                "id": "<variable>:invalid_field@[L28:C55, L28:C68]",
-                                                "snippet": "invalid_field"
-                                              },
-                                              "references": []
                                             }
                                           },
                                           "fullEnd": 612,
@@ -6099,17 +5120,6 @@
                                             "line": 28,
                                             "offset": 599
                                           }
-                                        },
-                                        "symbol": {
-                                          "context": {
-                                            "id": "<primary-expression>@[L28:C55, L28:C68]",
-                                            "snippet": "invalid_field"
-                                          },
-                                          "declaration": {
-                                            "id": "<primary-expression>@[L28:C55, L28:C68]",
-                                            "snippet": "invalid_field"
-                                          },
-                                          "references": []
                                         }
                                       },
                                       "start": 586,
@@ -6118,30 +5128,8 @@
                                         "line": 28,
                                         "offset": 586
                                       }
-                                    },
-                                    "symbol": {
-                                      "context": {
-                                        "id": "<infix-expression>@[L28:C42, L28:C68]",
-                                        "snippet": "invalid_en...alid_field"
-                                      },
-                                      "declaration": {
-                                        "id": "<infix-expression>@[L28:C42, L28:C68]",
-                                        "snippet": "invalid_en...alid_field"
-                                      },
-                                      "references": []
                                     }
                                   }
-                                },
-                                "symbol": {
-                                  "context": {
-                                    "id": "<attribute>@[L28:C33, L28:C68]",
-                                    "snippet": "default: i...alid_field"
-                                  },
-                                  "declaration": {
-                                    "id": "<attribute>@[L28:C33, L28:C68]",
-                                    "snippet": "default: i...alid_field"
-                                  },
-                                  "references": []
                                 }
                               }
                             ],
@@ -6186,17 +5174,6 @@
                               "line": 28,
                               "offset": 576
                             }
-                          },
-                          "symbol": {
-                            "context": {
-                              "id": "<list-expression>@[L28:C32, L28:C69]",
-                              "snippet": "[default: ...lid_field]"
-                            },
-                            "declaration": {
-                              "id": "<list-expression>@[L28:C32, L28:C69]",
-                              "snippet": "[default: ...lid_field]"
-                            },
-                            "references": []
                           }
                         }
                       ],
@@ -6246,17 +5223,6 @@
                                 "trailingTrivia": " ",
                                 "value": "invalid_bind_col"
                               }
-                            },
-                            "symbol": {
-                              "context": {
-                                "id": "<variable>:invalid_bind_col@[L28:C2, L28:C18]",
-                                "snippet": "invalid_bind_col"
-                              },
-                              "declaration": {
-                                "id": "<variable>:invalid_bind_col@[L28:C2, L28:C18]",
-                                "snippet": "invalid_bind_col"
-                              },
-                              "references": []
                             }
                           },
                           "fullEnd": 563,
@@ -6268,17 +5234,6 @@
                             "line": 28,
                             "offset": 546
                           }
-                        },
-                        "symbol": {
-                          "context": {
-                            "id": "<primary-expression>@[L28:C2, L28:C18]",
-                            "snippet": "invalid_bind_col"
-                          },
-                          "declaration": {
-                            "id": "<primary-expression>@[L28:C2, L28:C18]",
-                            "snippet": "invalid_bind_col"
-                          },
-                          "references": []
                         }
                       },
                       "end": 613,

@@ -136,17 +136,6 @@
                                   "trailingTrivia": "\n",
                                   "value": "integer"
                                 }
-                              },
-                              "symbol": {
-                                "context": {
-                                  "id": "<variable>:integer@[L1:C7, L1:C14]",
-                                  "snippet": "integer"
-                                },
-                                "declaration": {
-                                  "id": "<variable>:integer@[L1:C7, L1:C14]",
-                                  "snippet": "integer"
-                                },
-                                "references": []
                               }
                             },
                             "fullEnd": 25,
@@ -158,17 +147,6 @@
                               "line": 1,
                               "offset": 17
                             }
-                          },
-                          "symbol": {
-                            "context": {
-                              "id": "<primary-expression>@[L1:C7, L1:C14]",
-                              "snippet": "integer"
-                            },
-                            "declaration": {
-                              "id": "<primary-expression>@[L1:C7, L1:C14]",
-                              "snippet": "integer"
-                            },
-                            "references": []
                           }
                         }
                       ],
@@ -218,17 +196,6 @@
                                 "trailingTrivia": " ",
                                 "value": "id"
                               }
-                            },
-                            "symbol": {
-                              "context": {
-                                "id": "<variable>:id@[L1:C4, L1:C6]",
-                                "snippet": "id"
-                              },
-                              "declaration": {
-                                "id": "<variable>:id@[L1:C4, L1:C6]",
-                                "snippet": "id"
-                              },
-                              "references": []
                             }
                           },
                           "fullEnd": 17,
@@ -240,17 +207,6 @@
                             "line": 1,
                             "offset": 14
                           }
-                        },
-                        "symbol": {
-                          "context": {
-                            "id": "<primary-expression>@[L1:C4, L1:C6]",
-                            "snippet": "id"
-                          },
-                          "declaration": {
-                            "id": "<primary-expression>@[L1:C4, L1:C6]",
-                            "snippet": "id"
-                          },
-                          "references": []
                         }
                       },
                       "end": 24,
@@ -562,12 +518,6 @@
           "context": {
             "id": "<element-declaration>:E@[L0:C0, L2:C1]",
             "snippet": "Table E {\n... integer\n}"
-          }
-        },
-        {
-          "context": {
-            "id": "<element-declaration>:@[L4:C0, L4:C9]",
-            "snippet": "Note: 12."
           }
         }
       ],

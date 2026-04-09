@@ -846,6 +846,7 @@
                         "id": "<function-application>@[L5:C4, L5:C28]",
                         "snippet": "id integer...imary key]"
                       },
+                      "members": [],
                       "references": []
                     }
                   },
@@ -1126,6 +1127,7 @@
                         "id": "<function-application>@[L6:C4, L6:C26]",
                         "snippet": "name strin...[not null]"
                       },
+                      "members": [],
                       "references": []
                     }
                   },
@@ -1758,6 +1760,7 @@
                         "id": "<function-application>@[L7:C4, L7:C83]",
                         "snippet": "age intege...her note']"
                       },
+                      "members": [],
                       "references": []
                     }
                   },
@@ -2382,6 +2385,7 @@
                         "id": "<function-application>@[L10:C4, L10:C45]",
                         "snippet": "status v2....tatus.new]"
                       },
+                      "members": [],
                       "references": []
                     }
                   },
@@ -2783,6 +2787,7 @@
                         "id": "<function-application>@[L11:C4, L11:C24]",
                         "snippet": "dob char(255) [null]"
                       },
+                      "members": [],
                       "references": []
                     }
                   }
@@ -3682,17 +3687,6 @@
                                   "trailingTrivia": "\n",
                                   "value": "text"
                                 }
-                              },
-                              "symbol": {
-                                "context": {
-                                  "id": "<variable>:text@[L22:C10, L22:C14]",
-                                  "snippet": "text"
-                                },
-                                "declaration": {
-                                  "id": "<variable>:text@[L22:C10, L22:C14]",
-                                  "snippet": "text"
-                                },
-                                "references": []
                               }
                             },
                             "fullEnd": 504,
@@ -3704,17 +3698,6 @@
                               "line": 22,
                               "offset": 498
                             }
-                          },
-                          "symbol": {
-                            "context": {
-                              "id": "<primary-expression>@[L22:C10, L22:C14]",
-                              "snippet": "text"
-                            },
-                            "declaration": {
-                              "id": "<primary-expression>@[L22:C10, L22:C14]",
-                              "snippet": "text"
-                            },
-                            "references": []
                           }
                         }
                       ],
@@ -3764,17 +3747,6 @@
                                 "trailingTrivia": " ",
                                 "value": "email"
                               }
-                            },
-                            "symbol": {
-                              "context": {
-                                "id": "<variable>:email@[L22:C4, L22:C9]",
-                                "snippet": "email"
-                              },
-                              "declaration": {
-                                "id": "<variable>:email@[L22:C4, L22:C9]",
-                                "snippet": "email"
-                              },
-                              "references": []
                             }
                           },
                           "fullEnd": 498,
@@ -3786,17 +3758,6 @@
                             "line": 22,
                             "offset": 492
                           }
-                        },
-                        "symbol": {
-                          "context": {
-                            "id": "<primary-expression>@[L22:C4, L22:C9]",
-                            "snippet": "email"
-                          },
-                          "declaration": {
-                            "id": "<primary-expression>@[L22:C4, L22:C9]",
-                            "snippet": "email"
-                          },
-                          "references": []
                         }
                       },
                       "end": 502,

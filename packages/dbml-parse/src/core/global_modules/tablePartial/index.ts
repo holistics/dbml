@@ -81,7 +81,7 @@ export const tablePartialModule: GlobalModule = {
 
       return new Report(members, errors);
     }
-    if (symbol.isKind(SymbolKind.TablePartialField)) {
+    if (symbol.isKind(SymbolKind.Column) && isElementNode(symbol.declaration?.parent, ElementKind.TablePartial)) {
       return new Report([]);
     }
     return Report.create(PASS_THROUGH);

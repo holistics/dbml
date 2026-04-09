@@ -156,17 +156,6 @@
                                   "trailingTrivia": "\n",
                                   "value": "int"
                                 }
-                              },
-                              "symbol": {
-                                "context": {
-                                  "id": "<variable>:int@[L1:C5, L1:C8]",
-                                  "snippet": "int"
-                                },
-                                "declaration": {
-                                  "id": "<variable>:int@[L1:C5, L1:C8]",
-                                  "snippet": "int"
-                                },
-                                "references": []
                               }
                             },
                             "fullEnd": 25,
@@ -178,17 +167,6 @@
                               "line": 1,
                               "offset": 20
                             }
-                          },
-                          "symbol": {
-                            "context": {
-                              "id": "<primary-expression>@[L1:C5, L1:C8]",
-                              "snippet": "int"
-                            },
-                            "declaration": {
-                              "id": "<primary-expression>@[L1:C5, L1:C8]",
-                              "snippet": "int"
-                            },
-                            "references": []
                           }
                         }
                       ],
@@ -238,17 +216,6 @@
                                 "trailingTrivia": " ",
                                 "value": "id"
                               }
-                            },
-                            "symbol": {
-                              "context": {
-                                "id": "<variable>:id@[L1:C2, L1:C4]",
-                                "snippet": "id"
-                              },
-                              "declaration": {
-                                "id": "<variable>:id@[L1:C2, L1:C4]",
-                                "snippet": "id"
-                              },
-                              "references": []
                             }
                           },
                           "fullEnd": 20,
@@ -260,17 +227,6 @@
                             "line": 1,
                             "offset": 17
                           }
-                        },
-                        "symbol": {
-                          "context": {
-                            "id": "<primary-expression>@[L1:C2, L1:C4]",
-                            "snippet": "id"
-                          },
-                          "declaration": {
-                            "id": "<primary-expression>@[L1:C2, L1:C4]",
-                            "snippet": "id"
-                          },
-                          "references": []
                         }
                       },
                       "end": 23,
@@ -396,17 +352,6 @@
                                             "trailingTrivia": "\n",
                                             "value": "common"
                                           }
-                                        },
-                                        "symbol": {
-                                          "context": {
-                                            "id": "<variable>:common@[L3:C3, L3:C9]",
-                                            "snippet": "common"
-                                          },
-                                          "declaration": {
-                                            "id": "<variable>:common@[L3:C3, L3:C9]",
-                                            "snippet": "common"
-                                          },
-                                          "references": []
                                         }
                                       },
                                       "fullEnd": 38,
@@ -418,17 +363,6 @@
                                         "line": 3,
                                         "offset": 30
                                       }
-                                    },
-                                    "symbol": {
-                                      "context": {
-                                        "id": "<primary-expression>@[L3:C3, L3:C9]",
-                                        "snippet": "common"
-                                      },
-                                      "declaration": {
-                                        "id": "<primary-expression>@[L3:C3, L3:C9]",
-                                        "snippet": "common"
-                                      },
-                                      "references": []
                                     }
                                   },
                                   "fullEnd": 38,
@@ -453,17 +387,6 @@
                                     "line": 3,
                                     "offset": 29
                                   }
-                                },
-                                "symbol": {
-                                  "context": {
-                                    "id": "<prefix-expression>@[L3:C2, L3:C9]",
-                                    "snippet": "!common"
-                                  },
-                                  "declaration": {
-                                    "id": "<prefix-expression>@[L3:C2, L3:C9]",
-                                    "snippet": "!common"
-                                  },
-                                  "references": []
                                 }
                               },
                               "op": {
@@ -525,17 +448,6 @@
                                         "trailingTrivia": "\n",
                                         "value": "common"
                                       }
-                                    },
-                                    "symbol": {
-                                      "context": {
-                                        "id": "<variable>:common@[L4:C3, L4:C9]",
-                                        "snippet": "common"
-                                      },
-                                      "declaration": {
-                                        "id": "<variable>:common@[L4:C3, L4:C9]",
-                                        "snippet": "common"
-                                      },
-                                      "references": []
                                     }
                                   },
                                   "fullEnd": 49,
@@ -547,17 +459,6 @@
                                     "line": 4,
                                     "offset": 41
                                   }
-                                },
-                                "symbol": {
-                                  "context": {
-                                    "id": "<primary-expression>@[L4:C3, L4:C9]",
-                                    "snippet": "common"
-                                  },
-                                  "declaration": {
-                                    "id": "<primary-expression>@[L4:C3, L4:C9]",
-                                    "snippet": "common"
-                                  },
-                                  "references": []
                                 }
                               },
                               "start": 29,
@@ -566,17 +467,6 @@
                                 "line": 3,
                                 "offset": 29
                               }
-                            },
-                            "symbol": {
-                              "context": {
-                                "id": "<infix-expression>@[L3:C2, L4:C9]",
-                                "snippet": "!common\r\n  +common"
-                              },
-                              "declaration": {
-                                "id": "<infix-expression>@[L3:C2, L4:C9]",
-                                "snippet": "!common\r\n  +common"
-                              },
-                              "references": []
                             }
                           },
                           "op": {
@@ -638,17 +528,6 @@
                                     "trailingTrivia": "\n",
                                     "value": "common"
                                   }
-                                },
-                                "symbol": {
-                                  "context": {
-                                    "id": "<variable>:common@[L5:C3, L5:C9]",
-                                    "snippet": "common"
-                                  },
-                                  "declaration": {
-                                    "id": "<variable>:common@[L5:C3, L5:C9]",
-                                    "snippet": "common"
-                                  },
-                                  "references": []
                                 }
                               },
                               "fullEnd": 60,
@@ -660,17 +539,6 @@
                                 "line": 5,
                                 "offset": 52
                               }
-                            },
-                            "symbol": {
-                              "context": {
-                                "id": "<primary-expression>@[L5:C3, L5:C9]",
-                                "snippet": "common"
-                              },
-                              "declaration": {
-                                "id": "<primary-expression>@[L5:C3, L5:C9]",
-                                "snippet": "common"
-                              },
-                              "references": []
                             }
                           },
                           "start": 29,
@@ -679,17 +547,6 @@
                             "line": 3,
                             "offset": 29
                           }
-                        },
-                        "symbol": {
-                          "context": {
-                            "id": "<infix-expression>@[L3:C2, L5:C9]",
-                            "snippet": "!common\r\n ...\n  -common"
-                          },
-                          "declaration": {
-                            "id": "<infix-expression>@[L3:C2, L5:C9]",
-                            "snippet": "!common\r\n ...\n  -common"
-                          },
-                          "references": []
                         }
                       },
                       "end": 58,
@@ -785,17 +642,6 @@
                                     "line": 7,
                                     "offset": 65
                                   }
-                                },
-                                "symbol": {
-                                  "context": {
-                                    "id": "<literal>:1@[L7:C3, L7:C4]",
-                                    "snippet": "1"
-                                  },
-                                  "declaration": {
-                                    "id": "<literal>:1@[L7:C3, L7:C4]",
-                                    "snippet": "1"
-                                  },
-                                  "references": []
                                 }
                               },
                               "fullEnd": 68,
@@ -807,17 +653,6 @@
                                 "line": 7,
                                 "offset": 65
                               }
-                            },
-                            "symbol": {
-                              "context": {
-                                "id": "<primary-expression>@[L7:C3, L7:C4]",
-                                "snippet": "1"
-                              },
-                              "declaration": {
-                                "id": "<primary-expression>@[L7:C3, L7:C4]",
-                                "snippet": "1"
-                              },
-                              "references": []
                             }
                           },
                           "fullEnd": 68,
@@ -842,17 +677,6 @@
                             "line": 7,
                             "offset": 64
                           }
-                        },
-                        "symbol": {
-                          "context": {
-                            "id": "<prefix-expression>@[L7:C2, L7:C4]",
-                            "snippet": "~1"
-                          },
-                          "declaration": {
-                            "id": "<prefix-expression>@[L7:C2, L7:C4]",
-                            "snippet": "~1"
-                          },
-                          "references": []
                         }
                       },
                       "end": 66,
@@ -923,17 +747,6 @@
                                 "line": 9,
                                 "offset": 74
                               }
-                            },
-                            "symbol": {
-                              "context": {
-                                "id": "<dummy>@[L9:C1, L9:C1]",
-                                "snippet": ""
-                              },
-                              "declaration": {
-                                "id": "<dummy>@[L9:C1, L9:C1]",
-                                "snippet": ""
-                              },
-                              "references": []
                             }
                           },
                           "fullEnd": 74,
@@ -958,17 +771,6 @@
                             "line": 8,
                             "offset": 70
                           }
-                        },
-                        "symbol": {
-                          "context": {
-                            "id": "<prefix-expression>@[L8:C2, L9:C1]",
-                            "snippet": "~\r\n}"
-                          },
-                          "declaration": {
-                            "id": "<prefix-expression>@[L8:C2, L9:C1]",
-                            "snippet": "~\r\n}"
-                          },
-                          "references": []
                         }
                       },
                       "end": 74,

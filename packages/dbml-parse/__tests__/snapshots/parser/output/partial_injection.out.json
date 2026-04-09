@@ -197,6 +197,7 @@
                         "id": "<function-application>@[L1:C2, L1:C16]",
                         "snippet": "timestamp uuid"
                       },
+                      "members": [],
                       "references": []
                     }
                   }
@@ -435,17 +436,6 @@
                                     "trailingTrivia": "\n",
                                     "value": "with_timestamp"
                                   }
-                                },
-                                "symbol": {
-                                  "context": {
-                                    "id": "<variable>:with_timestamp@[L5:C3, L5:C17]",
-                                    "snippet": "with_timestamp"
-                                  },
-                                  "declaration": {
-                                    "id": "<variable>:with_timestamp@[L5:C3, L5:C17]",
-                                    "snippet": "with_timestamp"
-                                  },
-                                  "references": []
                                 }
                               },
                               "fullEnd": 82,
@@ -463,17 +453,6 @@
                                 "id": "<element-declaration>:with_timestamp@[L0:C0, L2:C1]",
                                 "snippet": "TableParti...amp uuid\n}"
                               }
-                            },
-                            "symbol": {
-                              "context": {
-                                "id": "<primary-expression>@[L5:C3, L5:C17]",
-                                "snippet": "with_timestamp"
-                              },
-                              "declaration": {
-                                "id": "<primary-expression>@[L5:C3, L5:C17]",
-                                "snippet": "with_timestamp"
-                              },
-                              "references": []
                             }
                           },
                           "fullEnd": 82,
@@ -498,17 +477,6 @@
                             "line": 5,
                             "offset": 66
                           }
-                        },
-                        "symbol": {
-                          "context": {
-                            "id": "<prefix-expression>@[L5:C2, L5:C17]",
-                            "snippet": "~with_timestamp"
-                          },
-                          "declaration": {
-                            "id": "<prefix-expression>@[L5:C2, L5:C17]",
-                            "snippet": "~with_timestamp"
-                          },
-                          "references": []
                         }
                       },
                       "end": 81,

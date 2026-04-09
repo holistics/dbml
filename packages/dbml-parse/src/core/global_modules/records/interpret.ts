@@ -39,7 +39,7 @@ import { NodeSymbol, SymbolKind } from '@/core/types/symbols';
 import { PASS_THROUGH, UNHANDLED } from '@/constants';
 import { getTokenPosition, lookupMember, lookupInDefaultSchema } from '../utils';
 import { validatePrimaryKey, validateUnique } from './utils/constraints';
-import { buildMergedTableFromElement, buildMergedTableFromSymbolMembers, getEnumMembers, parseNumericParams, parseLengthParam } from './utils/interpret';
+import { buildMergedTableFromElement, getEnumMembers, parseNumericParams, parseLengthParam } from './utils/interpret';
 
 export default class RecordsInterpreter {
   private compiler: Compiler;
@@ -110,16 +110,13 @@ function getTableAndColumnsOfRecords (records: ElementDeclarationNode, compiler:
   const nameNode = records.name;
   const parent = records.parent;
   if (parent instanceof ElementDeclarationNode) {
-    // For nested records (inside a table), we can't call buildTableFromElement(parent)
-    // because the parent table is currently being interpreted (would cause a cycle).
-    // Instead, build the column list from symbolMembers which includes partial-injected columns.
-    const table = buildMergedTableFromSymbolMembers(parent, compiler);
+    const table = buildMergedTableFromElement(parent, compiler);
     if (!table) return { table: undefined, mergedColumns: [] };
     if (!nameNode) return {
       table,
       mergedColumns: table.fields,
     };
-    const mergedColumns = (nameNode as TupleExpressionNode).elementList.map((e) => table.fields.find((f) => f.name === extractVariableFromExpression(e))!);
+    const mergedColumns = (nameNode as TupleExpressionNode).elementList.flatMap((e) => table.fields.find((f) => f.name === extractVariableFromExpression(e)) || []);
     return {
       table,
       mergedColumns,

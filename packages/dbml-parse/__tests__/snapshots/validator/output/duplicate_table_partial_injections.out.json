@@ -242,6 +242,7 @@
                         "id": "<function-application>@[L1:C2, L1:C11]",
                         "snippet": "name text"
                       },
+                      "members": [],
                       "references": []
                     }
                   }
@@ -476,17 +477,6 @@
                                   "trailingTrivia": "\n",
                                   "value": "int"
                                 }
-                              },
-                              "symbol": {
-                                "context": {
-                                  "id": "<variable>:int@[L5:C5, L5:C8]",
-                                  "snippet": "int"
-                                },
-                                "declaration": {
-                                  "id": "<variable>:int@[L5:C5, L5:C8]",
-                                  "snippet": "int"
-                                },
-                                "references": []
                               }
                             },
                             "fullEnd": 66,
@@ -498,17 +488,6 @@
                               "line": 5,
                               "offset": 61
                             }
-                          },
-                          "symbol": {
-                            "context": {
-                              "id": "<primary-expression>@[L5:C5, L5:C8]",
-                              "snippet": "int"
-                            },
-                            "declaration": {
-                              "id": "<primary-expression>@[L5:C5, L5:C8]",
-                              "snippet": "int"
-                            },
-                            "references": []
                           }
                         }
                       ],
@@ -558,17 +537,6 @@
                                 "trailingTrivia": " ",
                                 "value": "id"
                               }
-                            },
-                            "symbol": {
-                              "context": {
-                                "id": "<variable>:id@[L5:C2, L5:C4]",
-                                "snippet": "id"
-                              },
-                              "declaration": {
-                                "id": "<variable>:id@[L5:C2, L5:C4]",
-                                "snippet": "id"
-                              },
-                              "references": []
                             }
                           },
                           "fullEnd": 61,
@@ -580,17 +548,6 @@
                             "line": 5,
                             "offset": 58
                           }
-                        },
-                        "symbol": {
-                          "context": {
-                            "id": "<primary-expression>@[L5:C2, L5:C4]",
-                            "snippet": "id"
-                          },
-                          "declaration": {
-                            "id": "<primary-expression>@[L5:C2, L5:C4]",
-                            "snippet": "id"
-                          },
-                          "references": []
                         }
                       },
                       "end": 64,
@@ -686,17 +643,6 @@
                                     "trailingTrivia": "\n",
                                     "value": "common"
                                   }
-                                },
-                                "symbol": {
-                                  "context": {
-                                    "id": "<variable>:common@[L6:C3, L6:C9]",
-                                    "snippet": "common"
-                                  },
-                                  "declaration": {
-                                    "id": "<variable>:common@[L6:C3, L6:C9]",
-                                    "snippet": "common"
-                                  },
-                                  "references": []
                                 }
                               },
                               "fullEnd": 77,
@@ -714,17 +660,6 @@
                                 "id": "<element-declaration>:common@[L0:C0, L2:C1]",
                                 "snippet": "TableParti...me text\r\n}"
                               }
-                            },
-                            "symbol": {
-                              "context": {
-                                "id": "<primary-expression>@[L6:C3, L6:C9]",
-                                "snippet": "common"
-                              },
-                              "declaration": {
-                                "id": "<primary-expression>@[L6:C3, L6:C9]",
-                                "snippet": "common"
-                              },
-                              "references": []
                             }
                           },
                           "fullEnd": 77,
@@ -749,17 +684,6 @@
                             "line": 6,
                             "offset": 68
                           }
-                        },
-                        "symbol": {
-                          "context": {
-                            "id": "<prefix-expression>@[L6:C2, L6:C9]",
-                            "snippet": "~common"
-                          },
-                          "declaration": {
-                            "id": "<prefix-expression>@[L6:C2, L6:C9]",
-                            "snippet": "~common"
-                          },
-                          "references": []
                         }
                       },
                       "end": 75,
@@ -855,17 +779,6 @@
                                     "trailingTrivia": "\n",
                                     "value": "common"
                                   }
-                                },
-                                "symbol": {
-                                  "context": {
-                                    "id": "<variable>:common@[L7:C3, L7:C9]",
-                                    "snippet": "common"
-                                  },
-                                  "declaration": {
-                                    "id": "<variable>:common@[L7:C3, L7:C9]",
-                                    "snippet": "common"
-                                  },
-                                  "references": []
                                 }
                               },
                               "fullEnd": 88,
@@ -883,17 +796,6 @@
                                 "id": "<element-declaration>:common@[L0:C0, L2:C1]",
                                 "snippet": "TableParti...me text\r\n}"
                               }
-                            },
-                            "symbol": {
-                              "context": {
-                                "id": "<primary-expression>@[L7:C3, L7:C9]",
-                                "snippet": "common"
-                              },
-                              "declaration": {
-                                "id": "<primary-expression>@[L7:C3, L7:C9]",
-                                "snippet": "common"
-                              },
-                              "references": []
                             }
                           },
                           "fullEnd": 88,
@@ -918,17 +820,6 @@
                             "line": 7,
                             "offset": 79
                           }
-                        },
-                        "symbol": {
-                          "context": {
-                            "id": "<prefix-expression>@[L7:C2, L7:C9]",
-                            "snippet": "~common"
-                          },
-                          "declaration": {
-                            "id": "<prefix-expression>@[L7:C2, L7:C9]",
-                            "snippet": "~common"
-                          },
-                          "references": []
                         }
                       },
                       "end": 86,
@@ -1024,17 +915,6 @@
                                     "trailingTrivia": "\n",
                                     "value": "common"
                                   }
-                                },
-                                "symbol": {
-                                  "context": {
-                                    "id": "<variable>:common@[L8:C3, L8:C9]",
-                                    "snippet": "common"
-                                  },
-                                  "declaration": {
-                                    "id": "<variable>:common@[L8:C3, L8:C9]",
-                                    "snippet": "common"
-                                  },
-                                  "references": []
                                 }
                               },
                               "fullEnd": 99,
@@ -1052,17 +932,6 @@
                                 "id": "<element-declaration>:common@[L0:C0, L2:C1]",
                                 "snippet": "TableParti...me text\r\n}"
                               }
-                            },
-                            "symbol": {
-                              "context": {
-                                "id": "<primary-expression>@[L8:C3, L8:C9]",
-                                "snippet": "common"
-                              },
-                              "declaration": {
-                                "id": "<primary-expression>@[L8:C3, L8:C9]",
-                                "snippet": "common"
-                              },
-                              "references": []
                             }
                           },
                           "fullEnd": 99,
@@ -1087,17 +956,6 @@
                             "line": 8,
                             "offset": 90
                           }
-                        },
-                        "symbol": {
-                          "context": {
-                            "id": "<prefix-expression>@[L8:C2, L8:C9]",
-                            "snippet": "~common"
-                          },
-                          "declaration": {
-                            "id": "<prefix-expression>@[L8:C2, L8:C9]",
-                            "snippet": "~common"
-                          },
-                          "references": []
                         }
                       },
                       "end": 97,

@@ -263,17 +263,6 @@
                                   "trailingTrivia": "\n",
                                   "value": "int"
                                 }
-                              },
-                              "symbol": {
-                                "context": {
-                                  "id": "<variable>:int@[L3:C10, L3:C13]",
-                                  "snippet": "int"
-                                },
-                                "declaration": {
-                                  "id": "<variable>:int@[L3:C10, L3:C13]",
-                                  "snippet": "int"
-                                },
-                                "references": []
                               }
                             },
                             "fullEnd": 39,
@@ -285,17 +274,6 @@
                               "line": 3,
                               "offset": 35
                             }
-                          },
-                          "symbol": {
-                            "context": {
-                              "id": "<primary-expression>@[L3:C10, L3:C13]",
-                              "snippet": "int"
-                            },
-                            "declaration": {
-                              "id": "<primary-expression>@[L3:C10, L3:C13]",
-                              "snippet": "int"
-                            },
-                            "references": []
                           }
                         }
                       ],
@@ -345,17 +323,6 @@
                                 "trailingTrivia": " ",
                                 "value": "balance"
                               }
-                            },
-                            "symbol": {
-                              "context": {
-                                "id": "<variable>:balance@[L3:C2, L3:C9]",
-                                "snippet": "balance"
-                              },
-                              "declaration": {
-                                "id": "<variable>:balance@[L3:C2, L3:C9]",
-                                "snippet": "balance"
-                              },
-                              "references": []
                             }
                           },
                           "fullEnd": 35,
@@ -367,17 +334,6 @@
                             "line": 3,
                             "offset": 27
                           }
-                        },
-                        "symbol": {
-                          "context": {
-                            "id": "<primary-expression>@[L3:C2, L3:C9]",
-                            "snippet": "balance"
-                          },
-                          "declaration": {
-                            "id": "<primary-expression>@[L3:C2, L3:C9]",
-                            "snippet": "balance"
-                          },
-                          "references": []
                         }
                       },
                       "end": 38,
@@ -1306,17 +1262,6 @@
                         "trailingTrivia": " ",
                         "value": "checks"
                       }
-                    },
-                    "symbol": {
-                      "context": {
-                        "id": "<element-declaration>:@[L6:C2, L11:C3]",
-                        "snippet": "checks {\n ...valid]\n  }"
-                      },
-                      "declaration": {
-                        "id": "<element-declaration>:@[L6:C2, L11:C3]",
-                        "snippet": "checks {\n ...valid]\n  }"
-                      },
-                      "references": []
                     }
                   }
                 ],
@@ -1439,12 +1384,6 @@
                 "context": {
                   "id": "<function-application>@[L3:C2, L3:C13]",
                   "snippet": "balance int"
-                }
-              },
-              {
-                "context": {
-                  "id": "<element-declaration>:@[L6:C2, L11:C3]",
-                  "snippet": "checks {\n ...valid]\n  }"
                 }
               }
             ],
@@ -1641,6 +1580,7 @@
                         "id": "<function-application>@[L15:C2, L15:C13]",
                         "snippet": "balance int"
                       },
+                      "members": [],
                       "references": []
                     }
                   },

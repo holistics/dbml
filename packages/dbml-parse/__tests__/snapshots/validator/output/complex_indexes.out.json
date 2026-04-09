@@ -197,6 +197,7 @@
                         "id": "<function-application>@[L1:C2, L1:C12]",
                         "snippet": "id integer"
                       },
+                      "members": [],
                       "references": []
                     }
                   },
@@ -351,6 +352,7 @@
                         "id": "<function-application>@[L2:C2, L2:C17]",
                         "snippet": "country varchar"
                       },
+                      "members": [],
                       "references": []
                     }
                   },
@@ -505,6 +507,7 @@
                         "id": "<function-application>@[L3:C2, L3:C19]",
                         "snippet": "booking_date date"
                       },
+                      "members": [],
                       "references": []
                     }
                   },
@@ -659,6 +662,7 @@
                         "id": "<function-application>@[L4:C2, L4:C22]",
                         "snippet": "created_at timestamp"
                       },
+                      "members": [],
                       "references": []
                     }
                   },
@@ -2874,17 +2878,6 @@
                                   "trailingTrivia": "\n",
                                   "value": "integer"
                                 }
-                              },
-                              "symbol": {
-                                "context": {
-                                  "id": "<variable>:integer@[L19:C5, L19:C12]",
-                                  "snippet": "integer"
-                                },
-                                "declaration": {
-                                  "id": "<variable>:integer@[L19:C5, L19:C12]",
-                                  "snippet": "integer"
-                                },
-                                "references": []
                               }
                             },
                             "fullEnd": 416,
@@ -2896,17 +2889,6 @@
                               "line": 19,
                               "offset": 407
                             }
-                          },
-                          "symbol": {
-                            "context": {
-                              "id": "<primary-expression>@[L19:C5, L19:C12]",
-                              "snippet": "integer"
-                            },
-                            "declaration": {
-                              "id": "<primary-expression>@[L19:C5, L19:C12]",
-                              "snippet": "integer"
-                            },
-                            "references": []
                           }
                         }
                       ],
@@ -2956,17 +2938,6 @@
                                 "trailingTrivia": " ",
                                 "value": "id"
                               }
-                            },
-                            "symbol": {
-                              "context": {
-                                "id": "<variable>:id@[L19:C2, L19:C4]",
-                                "snippet": "id"
-                              },
-                              "declaration": {
-                                "id": "<variable>:id@[L19:C2, L19:C4]",
-                                "snippet": "id"
-                              },
-                              "references": []
                             }
                           },
                           "fullEnd": 407,
@@ -2978,17 +2949,6 @@
                             "line": 19,
                             "offset": 404
                           }
-                        },
-                        "symbol": {
-                          "context": {
-                            "id": "<primary-expression>@[L19:C2, L19:C4]",
-                            "snippet": "id"
-                          },
-                          "declaration": {
-                            "id": "<primary-expression>@[L19:C2, L19:C4]",
-                            "snippet": "id"
-                          },
-                          "references": []
                         }
                       },
                       "end": 414,
@@ -3081,17 +3041,6 @@
                                   "trailingTrivia": "\n",
                                   "value": "varchar"
                                 }
-                              },
-                              "symbol": {
-                                "context": {
-                                  "id": "<variable>:varchar@[L20:C10, L20:C17]",
-                                  "snippet": "varchar"
-                                },
-                                "declaration": {
-                                  "id": "<variable>:varchar@[L20:C10, L20:C17]",
-                                  "snippet": "varchar"
-                                },
-                                "references": []
                               }
                             },
                             "fullEnd": 435,
@@ -3103,17 +3052,6 @@
                               "line": 20,
                               "offset": 426
                             }
-                          },
-                          "symbol": {
-                            "context": {
-                              "id": "<primary-expression>@[L20:C10, L20:C17]",
-                              "snippet": "varchar"
-                            },
-                            "declaration": {
-                              "id": "<primary-expression>@[L20:C10, L20:C17]",
-                              "snippet": "varchar"
-                            },
-                            "references": []
                           }
                         }
                       ],
@@ -3163,17 +3101,6 @@
                                 "trailingTrivia": " ",
                                 "value": "country"
                               }
-                            },
-                            "symbol": {
-                              "context": {
-                                "id": "<variable>:country@[L20:C2, L20:C9]",
-                                "snippet": "country"
-                              },
-                              "declaration": {
-                                "id": "<variable>:country@[L20:C2, L20:C9]",
-                                "snippet": "country"
-                              },
-                              "references": []
                             }
                           },
                           "fullEnd": 426,
@@ -3185,17 +3112,6 @@
                             "line": 20,
                             "offset": 418
                           }
-                        },
-                        "symbol": {
-                          "context": {
-                            "id": "<primary-expression>@[L20:C2, L20:C9]",
-                            "snippet": "country"
-                          },
-                          "declaration": {
-                            "id": "<primary-expression>@[L20:C2, L20:C9]",
-                            "snippet": "country"
-                          },
-                          "references": []
                         }
                       },
                       "end": 433,
@@ -3288,17 +3204,6 @@
                                   "trailingTrivia": "\n",
                                   "value": "date"
                                 }
-                              },
-                              "symbol": {
-                                "context": {
-                                  "id": "<variable>:date@[L21:C15, L21:C19]",
-                                  "snippet": "date"
-                                },
-                                "declaration": {
-                                  "id": "<variable>:date@[L21:C15, L21:C19]",
-                                  "snippet": "date"
-                                },
-                                "references": []
                               }
                             },
                             "fullEnd": 456,
@@ -3310,17 +3215,6 @@
                               "line": 21,
                               "offset": 450
                             }
-                          },
-                          "symbol": {
-                            "context": {
-                              "id": "<primary-expression>@[L21:C15, L21:C19]",
-                              "snippet": "date"
-                            },
-                            "declaration": {
-                              "id": "<primary-expression>@[L21:C15, L21:C19]",
-                              "snippet": "date"
-                            },
-                            "references": []
                           }
                         }
                       ],
@@ -3370,17 +3264,6 @@
                                 "trailingTrivia": " ",
                                 "value": "booking_date"
                               }
-                            },
-                            "symbol": {
-                              "context": {
-                                "id": "<variable>:booking_date@[L21:C2, L21:C14]",
-                                "snippet": "booking_date"
-                              },
-                              "declaration": {
-                                "id": "<variable>:booking_date@[L21:C2, L21:C14]",
-                                "snippet": "booking_date"
-                              },
-                              "references": []
                             }
                           },
                           "fullEnd": 450,
@@ -3392,17 +3275,6 @@
                             "line": 21,
                             "offset": 437
                           }
-                        },
-                        "symbol": {
-                          "context": {
-                            "id": "<primary-expression>@[L21:C2, L21:C14]",
-                            "snippet": "booking_date"
-                          },
-                          "declaration": {
-                            "id": "<primary-expression>@[L21:C2, L21:C14]",
-                            "snippet": "booking_date"
-                          },
-                          "references": []
                         }
                       },
                       "end": 454,
@@ -3499,17 +3371,6 @@
                                   "trailingTrivia": "\n",
                                   "value": "timestamp"
                                 }
-                              },
-                              "symbol": {
-                                "context": {
-                                  "id": "<variable>:timestamp@[L22:C13, L22:C22]",
-                                  "snippet": "timestamp"
-                                },
-                                "declaration": {
-                                  "id": "<variable>:timestamp@[L22:C13, L22:C22]",
-                                  "snippet": "timestamp"
-                                },
-                                "references": []
                               }
                             },
                             "fullEnd": 480,
@@ -3521,17 +3382,6 @@
                               "line": 22,
                               "offset": 469
                             }
-                          },
-                          "symbol": {
-                            "context": {
-                              "id": "<primary-expression>@[L22:C13, L22:C22]",
-                              "snippet": "timestamp"
-                            },
-                            "declaration": {
-                              "id": "<primary-expression>@[L22:C13, L22:C22]",
-                              "snippet": "timestamp"
-                            },
-                            "references": []
                           }
                         }
                       ],
@@ -3581,17 +3431,6 @@
                                 "trailingTrivia": " ",
                                 "value": "created_at"
                               }
-                            },
-                            "symbol": {
-                              "context": {
-                                "id": "<variable>:created_at@[L22:C2, L22:C12]",
-                                "snippet": "created_at"
-                              },
-                              "declaration": {
-                                "id": "<variable>:created_at@[L22:C2, L22:C12]",
-                                "snippet": "created_at"
-                              },
-                              "references": []
                             }
                           },
                           "fullEnd": 469,
@@ -3603,17 +3442,6 @@
                             "line": 22,
                             "offset": 458
                           }
-                        },
-                        "symbol": {
-                          "context": {
-                            "id": "<primary-expression>@[L22:C2, L22:C12]",
-                            "snippet": "created_at"
-                          },
-                          "declaration": {
-                            "id": "<primary-expression>@[L22:C2, L22:C12]",
-                            "snippet": "created_at"
-                          },
-                          "references": []
                         }
                       },
                       "end": 478,
@@ -5663,6 +5491,7 @@
                         "id": "<element-declaration>:@[L24:C2, L33:C3]",
                         "snippet": "indexes {\r...`,id)\r\n  }"
                       },
+                      "members": [],
                       "references": []
                     }
                   }

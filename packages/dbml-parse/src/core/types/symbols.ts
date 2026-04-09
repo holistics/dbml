@@ -16,7 +16,6 @@ export const enum SymbolKind {
   Note = 'Note',
 
   TablePartial = 'TablePartial',
-  TablePartialField = 'TablePartial field',
   PartialInjection = 'PartialInjection',
 
   Indexes = 'Indexes',

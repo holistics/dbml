@@ -221,17 +221,6 @@
                         "trailingTrivia": "",
                         "value": "Note"
                       }
-                    },
-                    "symbol": {
-                      "context": {
-                        "id": "<element-declaration>:@[L1:C4, L1:C38]",
-                        "snippet": "Note: ''' ...l note '''"
-                      },
-                      "declaration": {
-                        "id": "<element-declaration>:@[L1:C4, L1:C38]",
-                        "snippet": "Note: ''' ...l note '''"
-                      },
-                      "references": []
                     }
                   },
                   {
@@ -402,17 +391,6 @@
                         "trailingTrivia": " ",
                         "value": "Note"
                       }
-                    },
-                    "symbol": {
-                      "context": {
-                        "id": "<element-declaration>:@[L2:C4, L4:C5]",
-                        "snippet": "Note {\r\n  ...te'\r\n    }"
-                      },
-                      "declaration": {
-                        "id": "<element-declaration>:@[L2:C4, L4:C5]",
-                        "snippet": "Note {\r\n  ...te'\r\n    }"
-                      },
-                      "references": []
                     }
                   }
                 ],
@@ -530,20 +508,7 @@
               "id": "<element-declaration>:A@[L0:C0, L5:C1]",
               "snippet": "Table A {\r...\r\n    }\r\n}"
             },
-            "members": [
-              {
-                "context": {
-                  "id": "<element-declaration>:@[L1:C4, L1:C38]",
-                  "snippet": "Note: ''' ...l note '''"
-                }
-              },
-              {
-                "context": {
-                  "id": "<element-declaration>:@[L2:C4, L4:C5]",
-                  "snippet": "Note {\r\n  ...te'\r\n    }"
-                }
-              }
-            ],
+            "members": [],
             "references": []
           }
         },
@@ -920,18 +885,6 @@
           "context": {
             "id": "<element-declaration>:A@[L0:C0, L5:C1]",
             "snippet": "Table A {\r...\r\n    }\r\n}"
-          }
-        },
-        {
-          "context": {
-            "id": "<element-declaration>:@[L7:C0, L9:C1]",
-            "snippet": "Note {\r\n  ...l note'\r\n}"
-          }
-        },
-        {
-          "context": {
-            "id": "<element-declaration>:@[L11:C0, L13:C3]",
-            "snippet": "Note: '''\r... note\r\n'''"
           }
         }
       ],

@@ -254,17 +254,6 @@
                                   "trailingTrivia": "\n",
                                   "value": "int"
                                 }
-                              },
-                              "symbol": {
-                                "context": {
-                                  "id": "<variable>:int@[L1:C7, L1:C10]",
-                                  "snippet": "int"
-                                },
-                                "declaration": {
-                                  "id": "<variable>:int@[L1:C7, L1:C10]",
-                                  "snippet": "int"
-                                },
-                                "references": []
                               }
                             },
                             "fullEnd": 21,
@@ -276,17 +265,6 @@
                               "line": 1,
                               "offset": 17
                             }
-                          },
-                          "symbol": {
-                            "context": {
-                              "id": "<primary-expression>@[L1:C7, L1:C10]",
-                              "snippet": "int"
-                            },
-                            "declaration": {
-                              "id": "<primary-expression>@[L1:C7, L1:C10]",
-                              "snippet": "int"
-                            },
-                            "references": []
                           }
                         }
                       ],
@@ -336,17 +314,6 @@
                                 "trailingTrivia": " ",
                                 "value": "id"
                               }
-                            },
-                            "symbol": {
-                              "context": {
-                                "id": "<variable>:id@[L1:C4, L1:C6]",
-                                "snippet": "id"
-                              },
-                              "declaration": {
-                                "id": "<variable>:id@[L1:C4, L1:C6]",
-                                "snippet": "id"
-                              },
-                              "references": []
                             }
                           },
                           "fullEnd": 17,
@@ -358,17 +325,6 @@
                             "line": 1,
                             "offset": 14
                           }
-                        },
-                        "symbol": {
-                          "context": {
-                            "id": "<primary-expression>@[L1:C4, L1:C6]",
-                            "snippet": "id"
-                          },
-                          "declaration": {
-                            "id": "<primary-expression>@[L1:C4, L1:C6]",
-                            "snippet": "id"
-                          },
-                          "references": []
                         }
                       },
                       "end": 20,
@@ -485,17 +441,6 @@
                                 "trailingTrivia": "\n",
                                 "value": "ssid"
                               }
-                            },
-                            "symbol": {
-                              "context": {
-                                "id": "<variable>:ssid@[L2:C4, L2:C8]",
-                                "snippet": "ssid"
-                              },
-                              "declaration": {
-                                "id": "<variable>:ssid@[L2:C4, L2:C8]",
-                                "snippet": "ssid"
-                              },
-                              "references": []
                             }
                           },
                           "fullEnd": 30,
@@ -507,17 +452,6 @@
                             "line": 2,
                             "offset": 25
                           }
-                        },
-                        "symbol": {
-                          "context": {
-                            "id": "<primary-expression>@[L2:C4, L2:C8]",
-                            "snippet": "ssid"
-                          },
-                          "declaration": {
-                            "id": "<primary-expression>@[L2:C4, L2:C8]",
-                            "snippet": "ssid"
-                          },
-                          "references": []
                         }
                       },
                       "end": 29,

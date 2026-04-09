@@ -99,17 +99,6 @@
                                   "trailingTrivia": "\n",
                                   "value": "integer"
                                 }
-                              },
-                              "symbol": {
-                                "context": {
-                                  "id": "<variable>:integer@[L1:C4, L1:C11]",
-                                  "snippet": "integer"
-                                },
-                                "declaration": {
-                                  "id": "<variable>:integer@[L1:C4, L1:C11]",
-                                  "snippet": "integer"
-                                },
-                                "references": []
                               }
                             },
                             "fullEnd": 28,
@@ -121,17 +110,6 @@
                               "line": 1,
                               "offset": 19
                             }
-                          },
-                          "symbol": {
-                            "context": {
-                              "id": "<primary-expression>@[L1:C4, L1:C11]",
-                              "snippet": "integer"
-                            },
-                            "declaration": {
-                              "id": "<primary-expression>@[L1:C4, L1:C11]",
-                              "snippet": "integer"
-                            },
-                            "references": []
                           }
                         }
                       ],
@@ -181,17 +159,6 @@
                                 "trailingTrivia": " ",
                                 "value": "id"
                               }
-                            },
-                            "symbol": {
-                              "context": {
-                                "id": "<variable>:id@[L1:C1, L1:C3]",
-                                "snippet": "id"
-                              },
-                              "declaration": {
-                                "id": "<variable>:id@[L1:C1, L1:C3]",
-                                "snippet": "id"
-                              },
-                              "references": []
                             }
                           },
                           "fullEnd": 19,
@@ -203,17 +170,6 @@
                             "line": 1,
                             "offset": 16
                           }
-                        },
-                        "symbol": {
-                          "context": {
-                            "id": "<primary-expression>@[L1:C1, L1:C3]",
-                            "snippet": "id"
-                          },
-                          "declaration": {
-                            "id": "<primary-expression>@[L1:C1, L1:C3]",
-                            "snippet": "id"
-                          },
-                          "references": []
                         }
                       },
                       "end": 26,
@@ -317,17 +273,6 @@
                                       "trailingTrivia": "",
                                       "value": "v2"
                                     }
-                                  },
-                                  "symbol": {
-                                    "context": {
-                                      "id": "<variable>:v2@[L2:C11, L2:C13]",
-                                      "snippet": "v2"
-                                    },
-                                    "declaration": {
-                                      "id": "<variable>:v2@[L2:C11, L2:C13]",
-                                      "snippet": "v2"
-                                    },
-                                    "references": []
                                   }
                                 },
                                 "fullEnd": 41,
@@ -342,17 +287,6 @@
                               },
                               "referee": {
                                 "context": {}
-                              },
-                              "symbol": {
-                                "context": {
-                                  "id": "<primary-expression>@[L2:C11, L2:C13]",
-                                  "snippet": "v2"
-                                },
-                                "declaration": {
-                                  "id": "<primary-expression>@[L2:C11, L2:C13]",
-                                  "snippet": "v2"
-                                },
-                                "references": []
                               }
                             },
                             "op": {
@@ -414,17 +348,6 @@
                                       "trailingTrivia": " ",
                                       "value": "status"
                                     }
-                                  },
-                                  "symbol": {
-                                    "context": {
-                                      "id": "<variable>:status@[L2:C14, L2:C20]",
-                                      "snippet": "status"
-                                    },
-                                    "declaration": {
-                                      "id": "<variable>:status@[L2:C14, L2:C20]",
-                                      "snippet": "status"
-                                    },
-                                    "references": []
                                   }
                                 },
                                 "fullEnd": 49,
@@ -442,17 +365,6 @@
                                   "id": "<element-declaration>:v2.status@[L7:C0, L10:C1]",
                                   "snippet": "enum v2.st...loyee']\r\n}"
                                 }
-                              },
-                              "symbol": {
-                                "context": {
-                                  "id": "<primary-expression>@[L2:C14, L2:C20]",
-                                  "snippet": "status"
-                                },
-                                "declaration": {
-                                  "id": "<primary-expression>@[L2:C14, L2:C20]",
-                                  "snippet": "status"
-                                },
-                                "references": []
                               }
                             },
                             "start": 39,
@@ -461,17 +373,6 @@
                               "line": 2,
                               "offset": 39
                             }
-                          },
-                          "symbol": {
-                            "context": {
-                              "id": "<infix-expression>@[L2:C11, L2:C20]",
-                              "snippet": "v2.status"
-                            },
-                            "declaration": {
-                              "id": "<infix-expression>@[L2:C11, L2:C20]",
-                              "snippet": "v2.status"
-                            },
-                            "references": []
                           }
                         },
                         {
@@ -546,17 +447,6 @@
                                         "line": 2,
                                         "offset": 50
                                       }
-                                    },
-                                    "symbol": {
-                                      "context": {
-                                        "id": "<identifer-stream>@[L2:C22, L2:C29]",
-                                        "snippet": "default"
-                                      },
-                                      "declaration": {
-                                        "id": "<identifer-stream>@[L2:C22, L2:C29]",
-                                        "snippet": "default"
-                                      },
-                                      "references": []
                                     }
                                   },
                                   "start": 50,
@@ -641,17 +531,6 @@
                                                     "trailingTrivia": "",
                                                     "value": "v2"
                                                   }
-                                                },
-                                                "symbol": {
-                                                  "context": {
-                                                    "id": "<variable>:v2@[L2:C31, L2:C33]",
-                                                    "snippet": "v2"
-                                                  },
-                                                  "declaration": {
-                                                    "id": "<variable>:v2@[L2:C31, L2:C33]",
-                                                    "snippet": "v2"
-                                                  },
-                                                  "references": []
                                                 }
                                               },
                                               "fullEnd": 61,
@@ -666,17 +545,6 @@
                                             },
                                             "referee": {
                                               "context": {}
-                                            },
-                                            "symbol": {
-                                              "context": {
-                                                "id": "<primary-expression>@[L2:C31, L2:C33]",
-                                                "snippet": "v2"
-                                              },
-                                              "declaration": {
-                                                "id": "<primary-expression>@[L2:C31, L2:C33]",
-                                                "snippet": "v2"
-                                              },
-                                              "references": []
                                             }
                                           },
                                           "op": {
@@ -738,17 +606,6 @@
                                                     "trailingTrivia": "",
                                                     "value": "status"
                                                   }
-                                                },
-                                                "symbol": {
-                                                  "context": {
-                                                    "id": "<variable>:status@[L2:C34, L2:C40]",
-                                                    "snippet": "status"
-                                                  },
-                                                  "declaration": {
-                                                    "id": "<variable>:status@[L2:C34, L2:C40]",
-                                                    "snippet": "status"
-                                                  },
-                                                  "references": []
                                                 }
                                               },
                                               "fullEnd": 68,
@@ -766,17 +623,6 @@
                                                 "id": "<element-declaration>:v2.status@[L7:C0, L10:C1]",
                                                 "snippet": "enum v2.st...loyee']\r\n}"
                                               }
-                                            },
-                                            "symbol": {
-                                              "context": {
-                                                "id": "<primary-expression>@[L2:C34, L2:C40]",
-                                                "snippet": "status"
-                                              },
-                                              "declaration": {
-                                                "id": "<primary-expression>@[L2:C34, L2:C40]",
-                                                "snippet": "status"
-                                              },
-                                              "references": []
                                             }
                                           },
                                           "start": 59,
@@ -785,17 +631,6 @@
                                             "line": 2,
                                             "offset": 59
                                           }
-                                        },
-                                        "symbol": {
-                                          "context": {
-                                            "id": "<infix-expression>@[L2:C31, L2:C40]",
-                                            "snippet": "v2.status"
-                                          },
-                                          "declaration": {
-                                            "id": "<infix-expression>@[L2:C31, L2:C40]",
-                                            "snippet": "v2.status"
-                                          },
-                                          "references": []
                                         }
                                       },
                                       "op": {
@@ -857,17 +692,6 @@
                                                 "trailingTrivia": "",
                                                 "value": "new"
                                               }
-                                            },
-                                            "symbol": {
-                                              "context": {
-                                                "id": "<variable>:new@[L2:C41, L2:C44]",
-                                                "snippet": "new"
-                                              },
-                                              "declaration": {
-                                                "id": "<variable>:new@[L2:C41, L2:C44]",
-                                                "snippet": "new"
-                                              },
-                                              "references": []
                                             }
                                           },
                                           "fullEnd": 72,
@@ -885,17 +709,6 @@
                                             "id": "<function-application>@[L9:C4, L9:C40]",
                                             "snippet": "new [note:...employee']"
                                           }
-                                        },
-                                        "symbol": {
-                                          "context": {
-                                            "id": "<primary-expression>@[L2:C41, L2:C44]",
-                                            "snippet": "new"
-                                          },
-                                          "declaration": {
-                                            "id": "<primary-expression>@[L2:C41, L2:C44]",
-                                            "snippet": "new"
-                                          },
-                                          "references": []
                                         }
                                       },
                                       "start": 59,
@@ -904,30 +717,8 @@
                                         "line": 2,
                                         "offset": 59
                                       }
-                                    },
-                                    "symbol": {
-                                      "context": {
-                                        "id": "<infix-expression>@[L2:C31, L2:C44]",
-                                        "snippet": "v2.status.new"
-                                      },
-                                      "declaration": {
-                                        "id": "<infix-expression>@[L2:C31, L2:C44]",
-                                        "snippet": "v2.status.new"
-                                      },
-                                      "references": []
                                     }
                                   }
-                                },
-                                "symbol": {
-                                  "context": {
-                                    "id": "<attribute>@[L2:C22, L2:C44]",
-                                    "snippet": "default: v...status.new"
-                                  },
-                                  "declaration": {
-                                    "id": "<attribute>@[L2:C22, L2:C44]",
-                                    "snippet": "default: v...status.new"
-                                  },
-                                  "references": []
                                 }
                               }
                             ],
@@ -972,17 +763,6 @@
                               "line": 2,
                               "offset": 49
                             }
-                          },
-                          "symbol": {
-                            "context": {
-                              "id": "<list-expression>@[L2:C21, L2:C45]",
-                              "snippet": "[default: ...tatus.new]"
-                            },
-                            "declaration": {
-                              "id": "<list-expression>@[L2:C21, L2:C45]",
-                              "snippet": "[default: ...tatus.new]"
-                            },
-                            "references": []
                           }
                         }
                       ],
@@ -1032,17 +812,6 @@
                                 "trailingTrivia": " ",
                                 "value": "status"
                               }
-                            },
-                            "symbol": {
-                              "context": {
-                                "id": "<variable>:status@[L2:C4, L2:C10]",
-                                "snippet": "status"
-                              },
-                              "declaration": {
-                                "id": "<variable>:status@[L2:C4, L2:C10]",
-                                "snippet": "status"
-                              },
-                              "references": []
                             }
                           },
                           "fullEnd": 39,
@@ -1054,17 +823,6 @@
                             "line": 2,
                             "offset": 32
                           }
-                        },
-                        "symbol": {
-                          "context": {
-                            "id": "<primary-expression>@[L2:C4, L2:C10]",
-                            "snippet": "status"
-                          },
-                          "declaration": {
-                            "id": "<primary-expression>@[L2:C4, L2:C10]",
-                            "snippet": "status"
-                          },
-                          "references": []
                         }
                       },
                       "end": 73,
@@ -1148,17 +906,6 @@
                                   "trailingTrivia": " ",
                                   "value": "integer"
                                 }
-                              },
-                              "symbol": {
-                                "context": {
-                                  "id": "<variable>:integer@[L4:C13, L4:C20]",
-                                  "snippet": "integer"
-                                },
-                                "declaration": {
-                                  "id": "<variable>:integer@[L4:C13, L4:C20]",
-                                  "snippet": "integer"
-                                },
-                                "references": []
                               }
                             },
                             "fullEnd": 102,
@@ -1170,17 +917,6 @@
                               "line": 4,
                               "offset": 94
                             }
-                          },
-                          "symbol": {
-                            "context": {
-                              "id": "<primary-expression>@[L4:C13, L4:C20]",
-                              "snippet": "integer"
-                            },
-                            "declaration": {
-                              "id": "<primary-expression>@[L4:C13, L4:C20]",
-                              "snippet": "integer"
-                            },
-                            "references": []
                           }
                         },
                         {
@@ -1255,17 +991,6 @@
                                         "line": 4,
                                         "offset": 103
                                       }
-                                    },
-                                    "symbol": {
-                                      "context": {
-                                        "id": "<identifer-stream>@[L4:C22, L4:C25]",
-                                        "snippet": "ref"
-                                      },
-                                      "declaration": {
-                                        "id": "<identifer-stream>@[L4:C22, L4:C25]",
-                                        "snippet": "ref"
-                                      },
-                                      "references": []
                                     }
                                   },
                                   "start": 103,
@@ -1332,17 +1057,6 @@
                                                 "trailingTrivia": "",
                                                 "value": "id"
                                               }
-                                            },
-                                            "symbol": {
-                                              "context": {
-                                                "id": "<variable>:id@[L4:C28, L4:C30]",
-                                                "snippet": "id"
-                                              },
-                                              "declaration": {
-                                                "id": "<variable>:id@[L4:C28, L4:C30]",
-                                                "snippet": "id"
-                                              },
-                                              "references": []
                                             }
                                           },
                                           "fullEnd": 111,
@@ -1360,17 +1074,6 @@
                                             "id": "<function-application>@[L1:C1, L1:C11]",
                                             "snippet": "id integer"
                                           }
-                                        },
-                                        "symbol": {
-                                          "context": {
-                                            "id": "<primary-expression>@[L4:C28, L4:C30]",
-                                            "snippet": "id"
-                                          },
-                                          "declaration": {
-                                            "id": "<primary-expression>@[L4:C28, L4:C30]",
-                                            "snippet": "id"
-                                          },
-                                          "references": []
                                         }
                                       },
                                       "fullEnd": 111,
@@ -1395,30 +1098,8 @@
                                         "line": 4,
                                         "offset": 108
                                       }
-                                    },
-                                    "symbol": {
-                                      "context": {
-                                        "id": "<prefix-expression>@[L4:C27, L4:C30]",
-                                        "snippet": "-id"
-                                      },
-                                      "declaration": {
-                                        "id": "<prefix-expression>@[L4:C27, L4:C30]",
-                                        "snippet": "-id"
-                                      },
-                                      "references": []
                                     }
                                   }
-                                },
-                                "symbol": {
-                                  "context": {
-                                    "id": "<attribute>@[L4:C22, L4:C30]",
-                                    "snippet": "ref: -id"
-                                  },
-                                  "declaration": {
-                                    "id": "<attribute>@[L4:C22, L4:C30]",
-                                    "snippet": "ref: -id"
-                                  },
-                                  "references": []
                                 }
                               }
                             ],
@@ -1463,17 +1144,6 @@
                               "line": 4,
                               "offset": 102
                             }
-                          },
-                          "symbol": {
-                            "context": {
-                              "id": "<list-expression>@[L4:C21, L4:C31]",
-                              "snippet": "[ref: -id]"
-                            },
-                            "declaration": {
-                              "id": "<list-expression>@[L4:C21, L4:C31]",
-                              "snippet": "[ref: -id]"
-                            },
-                            "references": []
                           }
                         }
                       ],
@@ -1523,17 +1193,6 @@
                                 "trailingTrivia": " ",
                                 "value": "referrer"
                               }
-                            },
-                            "symbol": {
-                              "context": {
-                                "id": "<variable>:referrer@[L4:C4, L4:C12]",
-                                "snippet": "referrer"
-                              },
-                              "declaration": {
-                                "id": "<variable>:referrer@[L4:C4, L4:C12]",
-                                "snippet": "referrer"
-                              },
-                              "references": []
                             }
                           },
                           "fullEnd": 94,
@@ -1545,17 +1204,6 @@
                             "line": 4,
                             "offset": 85
                           }
-                        },
-                        "symbol": {
-                          "context": {
-                            "id": "<primary-expression>@[L4:C4, L4:C12]",
-                            "snippet": "referrer"
-                          },
-                          "declaration": {
-                            "id": "<primary-expression>@[L4:C4, L4:C12]",
-                            "snippet": "referrer"
-                          },
-                          "references": []
                         }
                       },
                       "end": 112,
