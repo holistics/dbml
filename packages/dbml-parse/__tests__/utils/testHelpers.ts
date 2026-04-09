@@ -232,21 +232,25 @@ export function syntaxTokenToSnapshot (
   const tokenReadableId = getReadableId(token);
   const snippet = getCodeSnippet(token, compiler.parse.source());
   const {
-    kind,
+    kind, // Filter this out as it's in the readable id
     value,
     leadingTrivia,
     trailingTrivia,
-    leadingInvalid,
-    trailingInvalid,
+    leadingInvalid, // Filter this out
+    trailingInvalid, // Filter this out
     isInvalid,
+    startPos, // Filter this out
+    endPos, // Filter this out
+    start, // Filter this out
+    end, // Filter this out
   } = token;
   if (simple) {
     return {
       context: { // context should always be at the top
         id: tokenReadableId,
         snippet,
+        isInvalid,
       },
-      isInvalid,
     };
   }
   const result = {
@@ -255,13 +259,9 @@ export function syntaxTokenToSnapshot (
       snippet,
     },
     ...sortObject({
-      isInvalid,
-      kind,
       value,
       leadingTrivia: leadingTrivia.map((t) => t.value).join(''),
       trailingTrivia: trailingTrivia.map((t) => t.value).join(''),
-      leadingInvalid: leadingInvalid.map((t) => t.value).join(''),
-      trailingInvalid: trailingInvalid.map((t) => t.value).join(''),
     }),
   };
   return result;
@@ -276,8 +276,13 @@ export function syntaxNodeToSnapshot (
   const snippet = getCodeSnippet(node, compiler.parse.source());
   const {
     id, // Filter this out
-    parent,
-    parentNode,
+    parent, // Filter this out
+    parentNode, // Filter this out
+    kind, // Filter this out as it's in the readable id
+    startPos, // Filter this out
+    endPos, // Filter this out
+    start, // Filter this out
+    end, // Filter this out
     ...props
   } = node;
   const symbol = compiler.nodeSymbol(node).getFiltered(UNHANDLED);

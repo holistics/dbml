@@ -7,9 +7,9 @@
       "token": {
         "context": {
           "id": "token-<identifier>:ج@[L0:C4, L0:C5]",
-          "snippet": "ج"
-        },
-        "isInvalid": true
+          "snippet": "ج",
+          "isInvalid": true
+        }
       }
     },
     {
@@ -19,9 +19,9 @@
       "token": {
         "context": {
           "id": "token-<colon>::@[L42:C231, L42:C232]",
-          "snippet": ":"
-        },
-        "isInvalid": true
+          "snippet": ":",
+          "isInvalid": true
+        }
       }
     },
     {
@@ -31,9 +31,9 @@
       "token": {
         "context": {
           "id": "token-<semicolon>:;@[L42:C240, L42:C241]",
-          "snippet": ";"
-        },
-        "isInvalid": true
+          "snippet": ";",
+          "isInvalid": true
+        }
       }
     },
     {
@@ -43,9 +43,9 @@
       "token": {
         "context": {
           "id": "token-<rparen>:)@[L42:C318, L42:C319]",
-          "snippet": ")"
-        },
-        "isInvalid": true
+          "snippet": ")",
+          "isInvalid": true
+        }
       }
     },
     {
@@ -55,9 +55,9 @@
       "token": {
         "context": {
           "id": "token-<comma>:,@[L42:C319, L42:C320]",
-          "snippet": ","
-        },
-        "isInvalid": true
+          "snippet": ",",
+          "isInvalid": true
+        }
       }
     },
     {
@@ -67,9 +67,9 @@
       "token": {
         "context": {
           "id": "token-<colon>::@[L42:C333, L42:C334]",
-          "snippet": ":"
-        },
-        "isInvalid": true
+          "snippet": ":",
+          "isInvalid": true
+        }
       }
     },
     {
@@ -79,9 +79,9 @@
       "token": {
         "context": {
           "id": "token-<identifier>:は@[L42:C344, L42:C345]",
-          "snippet": "は"
-        },
-        "isInvalid": true
+          "snippet": "は",
+          "isInvalid": true
+        }
       }
     }
   ],
@@ -91,11 +91,7 @@
         "id": "token-<identifier>:ا@[L0:C0, L0:C1]",
         "snippet": "ا"
       },
-      "isInvalid": false,
-      "kind": "<identifier>",
-      "leadingInvalid": "",
       "leadingTrivia": "",
-      "trailingInvalid": "",
       "trailingTrivia": "\t",
       "value": "ا"
     },
@@ -104,11 +100,7 @@
         "id": "token-<identifier>:ب@[L0:C2, L0:C3]",
         "snippet": "ب"
       },
-      "isInvalid": false,
-      "kind": "<identifier>",
-      "leadingInvalid": "",
       "leadingTrivia": "",
-      "trailingInvalid": "جدهوزحطيكلمنصعفضقرستثخذظغشءفيتنامبالفيتناميةرسميًاجمهوريةفيتنامالاشتراكيةهيجمهوريةاشتراكيةفيجنوبشرقيآسياعلىخليجتونكينوبحرالصينعاصمتهاهانوي.تقعفيأقصىشرقشبهجزيرةالهندالصينيةوتحدهامنالشمالالصينومنالشرقخليجتونكينويحدهامنالغربلاوسوتايلاندوكمبوديا.منمدنهامدينةهوتشيمنهأوسايغونسابقاًوهايفونغ.التسمية诶诶必比西西弟迪衣伊艾付艾弗记吉爱耻艾尺挨艾宅杰开饿罗艾勒开饿母艾玛恩艾娜呕哦披屁酷吉吾耳艾儿艾斯艾丝踢提忧伊吾维维大波留豆贝尔维埃克斯艾克斯歪吾艾再得贼德中华人民共和国,通称中国,是位於东亚的社会主义国家[2],首都为北京市[15],领土東至黑龙江省抚远市的黑瞎子岛中部,西达新疆克孜勒苏境内的帕米尔高原,南抵海南省三沙市的南海海域,北及黑龙江省大兴安岭地区的黑龙江航道,领土面積約为961萬平方千米.全国共划分為23個省[註12],5個自治區,4個直轄市和2個特別行政區,是世界上总面積第三或第四大的國家(纯陆地面积为世界第二)[註13][16].1949年,毛泽东领导下的中国共产党和中国人民解放军在与中国国民党的内战中取得优势,于当年10月1日在北京宣布成立中华人民共和国中央人民政府,并实际控制中国大陆地区,与遷至臺灣地區的中華民國政府形成至今的分治格局.あぁかさたなはまやゃらわがざだばぱいぃきしちにひみりゐぎじぢびぴうぅくすつぬふむゆゅるぐずづぶぷえぇけせてねへめれゑげぜでべぺおぉこそとのほもよろをごどぼぽゔっんーゝゞ中華人民共和国(ちゅうかじんみんきょうわこく,簡体字",
       "trailingTrivia": "\t",
       "value": "ب"
     },
@@ -117,11 +109,7 @@
         "id": "token-<colon>::@[L42:C217, L42:C218]",
         "snippet": ":"
       },
-      "isInvalid": false,
-      "kind": "<colon>",
-      "leadingInvalid": "",
       "leadingTrivia": "",
-      "trailingInvalid": "",
       "trailingTrivia": " ",
       "value": ":"
     },
@@ -130,11 +118,7 @@
         "id": "token-<identifier>:中华人民共和国@[L42:C219, L42:C226]",
         "snippet": "中华人民共和国"
       },
-      "isInvalid": false,
-      "kind": "<identifier>",
-      "leadingInvalid": "",
       "leadingTrivia": "",
-      "trailingInvalid": "",
       "trailingTrivia": "",
       "value": "中华人民共和国"
     },
@@ -143,11 +127,7 @@
         "id": "token-<op>:.@[L42:C226, L42:C227]",
         "snippet": "."
       },
-      "isInvalid": false,
-      "kind": "<op>",
-      "leadingInvalid": "",
       "leadingTrivia": "",
-      "trailingInvalid": "",
       "trailingTrivia": " ",
       "value": "."
     },
@@ -156,11 +136,7 @@
         "id": "token-<identifier>:繁体字@[L42:C228, L42:C231]",
         "snippet": "繁体字"
       },
-      "isInvalid": false,
-      "kind": "<identifier>",
-      "leadingInvalid": "",
       "leadingTrivia": "",
-      "trailingInvalid": ":",
       "trailingTrivia": "",
       "value": "繁体字"
     },
@@ -169,11 +145,7 @@
         "id": "token-<identifier>:中華人民共和國@[L42:C233, L42:C240]",
         "snippet": "中華人民共和國"
       },
-      "isInvalid": false,
-      "kind": "<identifier>",
-      "leadingInvalid": "",
       "leadingTrivia": "",
-      "trailingInvalid": ";拼音",
       "trailingTrivia": "",
       "value": "中華人民共和國"
     },
@@ -182,11 +154,7 @@
         "id": "token-<colon>::@[L42:C244, L42:C245]",
         "snippet": ":"
       },
-      "isInvalid": false,
-      "kind": "<colon>",
-      "leadingInvalid": "",
       "leadingTrivia": "",
-      "trailingInvalid": "",
       "trailingTrivia": " ",
       "value": ":"
     },
@@ -195,11 +163,7 @@
         "id": "token-<identifier>:Zhōnghuá@[L42:C246, L42:C254]",
         "snippet": "Zhōnghuá"
       },
-      "isInvalid": false,
-      "kind": "<identifier>",
-      "leadingInvalid": "",
       "leadingTrivia": "",
-      "trailingInvalid": "",
       "trailingTrivia": " ",
       "value": "Zhōnghuá"
     },
@@ -208,11 +172,7 @@
         "id": "token-<identifier>:Rénmín@[L42:C255, L42:C261]",
         "snippet": "Rénmín"
       },
-      "isInvalid": false,
-      "kind": "<identifier>",
-      "leadingInvalid": "",
       "leadingTrivia": "",
-      "trailingInvalid": "",
       "trailingTrivia": " ",
       "value": "Rénmín"
     },
@@ -221,11 +181,7 @@
         "id": "token-<identifier>:GònghéguóPronunciation@[L42:C262, L42:C284]",
         "snippet": "GònghéguóP...nunciation"
       },
-      "isInvalid": false,
-      "kind": "<identifier>",
-      "leadingInvalid": "",
       "leadingTrivia": "",
-      "trailingInvalid": "",
       "trailingTrivia": " ",
       "value": "GònghéguóPronunciation"
     },
@@ -234,11 +190,7 @@
         "id": "token-<identifier>:of@[L42:C285, L42:C287]",
         "snippet": "of"
       },
-      "isInvalid": false,
-      "kind": "<identifier>",
-      "leadingInvalid": "",
       "leadingTrivia": "",
-      "trailingInvalid": "",
       "trailingTrivia": " ",
       "value": "of"
     },
@@ -247,11 +199,7 @@
         "id": "token-<identifier>:Zhonghuarenmingongheguo@[L42:C288, L42:C311]",
         "snippet": "Zhonghuare...ngongheguo"
       },
-      "isInvalid": false,
-      "kind": "<identifier>",
-      "leadingInvalid": "",
       "leadingTrivia": "",
-      "trailingInvalid": "",
       "trailingTrivia": "",
       "value": "Zhonghuarenmingongheguo"
     },
@@ -260,11 +208,7 @@
         "id": "token-<op>:.@[L42:C311, L42:C312]",
         "snippet": "."
       },
-      "isInvalid": false,
-      "kind": "<op>",
-      "leadingInvalid": "",
       "leadingTrivia": "",
-      "trailingInvalid": "",
       "trailingTrivia": "",
       "value": "."
     },
@@ -273,11 +217,7 @@
         "id": "token-<identifier>:ogg@[L42:C312, L42:C315]",
         "snippet": "ogg"
       },
-      "isInvalid": false,
-      "kind": "<identifier>",
-      "leadingInvalid": "",
       "leadingTrivia": "",
-      "trailingInvalid": "",
       "trailingTrivia": " ",
       "value": "ogg"
     },
@@ -286,11 +226,7 @@
         "id": "token-<identifier>:聞く@[L42:C316, L42:C318]",
         "snippet": "聞く"
       },
-      "isInvalid": false,
-      "kind": "<identifier>",
-      "leadingInvalid": "",
       "leadingTrivia": "",
-      "trailingInvalid": "),",
       "trailingTrivia": "",
       "value": "聞く"
     },
@@ -299,11 +235,7 @@
         "id": "token-<identifier>:通称中国@[L42:C320, L42:C324]",
         "snippet": "通称中国"
       },
-      "isInvalid": false,
-      "kind": "<identifier>",
-      "leadingInvalid": "",
       "leadingTrivia": "",
-      "trailingInvalid": "",
       "trailingTrivia": "",
       "value": "通称中国"
     },
@@ -312,11 +244,7 @@
         "id": "token-<lparen>:(@[L42:C324, L42:C325]",
         "snippet": "("
       },
-      "isInvalid": false,
-      "kind": "<lparen>",
-      "leadingInvalid": "",
       "leadingTrivia": "",
-      "trailingInvalid": "",
       "trailingTrivia": "",
       "value": "("
     },
@@ -325,11 +253,7 @@
         "id": "token-<identifier>:ちゅうごく@[L42:C325, L42:C330]",
         "snippet": "ちゅうごく"
       },
-      "isInvalid": false,
-      "kind": "<identifier>",
-      "leadingInvalid": "",
       "leadingTrivia": "",
-      "trailingInvalid": "",
       "trailingTrivia": "",
       "value": "ちゅうごく"
     },
@@ -338,11 +262,7 @@
         "id": "token-<comma>:,@[L42:C330, L42:C331]",
         "snippet": ","
       },
-      "isInvalid": false,
-      "kind": "<comma>",
-      "leadingInvalid": "",
       "leadingTrivia": "",
-      "trailingInvalid": "",
       "trailingTrivia": "",
       "value": ","
     },
@@ -351,11 +271,7 @@
         "id": "token-<identifier>:拼音@[L42:C331, L42:C333]",
         "snippet": "拼音"
       },
-      "isInvalid": false,
-      "kind": "<identifier>",
-      "leadingInvalid": "",
       "leadingTrivia": "",
-      "trailingInvalid": ":Zhōngguó",
       "trailingTrivia": "",
       "value": "拼音"
     },
@@ -364,11 +280,7 @@
         "id": "token-<rparen>:)@[L42:C343, L42:C344]",
         "snippet": ")"
       },
-      "isInvalid": false,
-      "kind": "<rparen>",
-      "leadingInvalid": "",
       "leadingTrivia": "",
-      "trailingInvalid": "は,東アジアに位置する社会主義共和制国家.首都は北京市.二三了子女好姦口品言下不否十古叶計七比叱日旨昆唱晶旧早旦白皆水泉氷永泳泊汁混月湖明脂胆朝火炎淡談丁灯可河訂田町畑胃入人何信化花苦草荷内肉円市肺姉目冒帽自亭停卒方万訪妨肪又双奴文斉済収叫心必怒息思L亡忙忘盲妄慢漫亜悪夕多夢夜液名死外上卓占点宅安字宣喧八穴六沿ム公訟台治始怠能熊態仏立辛幸宰泣位音章暗意億憶門闇間問刀前切召昭照分剤罰刃忍認力加協脅努男九究丸熟執小少劣妙省京涼景示宗寂督幼玄畜蓄糸紹線綿細総索納紛絹系孫係干刊用肝芋汗宇千舌話活辞憩半判伴平評呼土里量黒童憧埋坊吐塾士仕志吉詰結誌老孝者著緒諸署暑煮焦無維唯誰準護馬止雌肯歩渉紫足促踏正是定証歪走超尺駅昼訳沢手択推描提払批指打招拐担接拍挿看耳取最撮趣恥聞斤折丘哲誓訴竹筋簡作昨近辺迫込達進述木林森本体休枠析策刺新集棚松枯相箱想禁果課菓東練案杯膝保繰操染雑稚和秘私秒移利季委香秋愁末未妹味米迷謎断継粘粋粒粉来番審大奥奇寄臭奮器突央映英犬伏黙然燃太駄漢難勤嘆模墓暮募幕漠因恩菌困囚回固個井囲丼王玉国宝理任妊皇望聖程主契喫潔注柱住駐害割素憲青請清精晴情生星性姓朱株遊称乙乾母毒毎梅海悔侮中忠患仲虫蛇蚊騒属居尼泥尿尻刷戸所肩雇房戻涙毛尾革靴甘某謀見寛焼境現親兄克況競児貝買憤噴貨貧貯賭質賃貞偵員損則側測貫慣責績積貴遺兵浜負魚角触売続読窓探深具元完西票標漂酒酔価要腰煙才財材閉夫賛替潜規挟巣光単桜肖削消菜浮受妥授採久各愛客落格絡略路条麦酸秀誘透携及吸級扱穏侵浸緑急当婦掃帰帝締躍濯曜工空控紅功巧与写汚極誇号考拷式拭試武代貸閥惑我賊域戦栽幾機職織識区駆巨拒距臣堅緊賢覧臨姫匹匠四喚換欠欧歌吹炊数枚敏敗故政放教激繁攻敵適滴摘己改起紀記配求救球厳励歴厚圧粧備灰産原源反返坂板仮販成誠越蔵臓歳滅威城幻気決快獣減感憾同筒司伺詞旅派脈遠園環表衣依袋裁褒裏哀衰良娘退浪眼恨根限郷響階障院防陥都隠部剖倍壮装状寝北背制製告造酷先洗面百憂優宿縮石砂砕礎山岩帯滞催崩密幽岸炭岳鳥島鳴豆喜嬉頭夏願頑頃頂額類題顧傾項川順州訓荒慌首道税説脱磁羊南美鮮詳洋遅着養義儀議様天添笑呑送咲関巻圏券勝弓弟第沸費強引弾赤湾跡恋変長張帳険検倹剣験金鋭錆録鏡鎖銀針銅茶傘全企食飲飾飯飼幹舎捨余塗途除倉創介界合給塔拾搭答ラ今含念令鈴領命冷凍尽冬終次姿資寒奏春棒実冊扁編騙偏論倫寸付附討奪守団符村寿慰尋導闘寺詩時持侍等尊噂父交対校郊効絞専博縛薄演恵敷画両満出屈掘缶揺世葉喋歯噛齢凶脳悩離矢疑擬短医族候知失鉄観勧権確車重垂乗陣輪軒較軟載軍揮連運輝華睡郵剰種動働腫非輩悲罪俳排軽経怪友抜雄布希怖右左若有堕賄差在存片版暖援緩髪彩影顔参修惨膨珍診廊磨腐応府庁庫店座床麻摩広拡庶席度渡鬼魔魅醜塊卑氏底紙低婚抵民眠曲豊典遭農濃辱娠振唇登祭際察擦開発廃形研刑型午許牛件特牲犠解物惚易湯揚陽傷場色免逸晩絶勉声肥豚象像縁家嫁稼遂隊行徐徒径後往待得従縦術衝微徴育徹撤流陰充銃統至到致倒去法怯屋室握貿留云転伝魂芸会絵街掛涯封陸勢熱冗肌抗机風飢処拠凡築恐投役設没殺殴股撃盾循真慎県懸直置値植殖別列裂烈例支皮彼枝技鼓破波マ勇予序預野矛柔務束疎頼速整通踊丙柄病痛疲痢痴症痺癒愉諭輸癖避壁療寮僚申痩紳捜伸甲押由抽宙油届偶隅愚雨霧雲曇霜雷震漏雪雰露霊湿業僕撲竜滝電俺亀縄需耐端包胞泡砲飽抱胸句敬警驚局拘旬陶匂渇約的釣均皿盗温盟盛塩監鑑血衆益溢誉挙舟船航般盤猫猛猥猿狩狂独獄獲狭犯印叩卵却範御腕即節厄危抑迎仰服報狙組阻粗査畳助ネ祖視祝社祈祉神福副幅富礼乱札乳初裸被複腹復履谷裕欲俗容溶浴鼻葬算弁昇戒械羽飛翌習弱扇散展譲昔借惜籍黄嬢横共並普供選洪巷港異翼暴爆再甫舗補捕構講購溝降年五語悟違偉衛瞬舞隣料科図斜史更硬使便身射謝窮地池他施曽増贈憎僧層呂宮官館棺追遣管師営労栄学覚党尚賞償常堂善繕周調週彫高豪向商橋過骨滑率渋楽薬兆逃跳眺挑桃書律事筆唐糖逮康棄君群妻凄争静兼嫌謙建健延誕庭銭浅残聴壊懐徳劇慮虚虐膚嘘沈就蹴刻核該咳之乏芝其旗基期欺甚勘堪邪既雅概慨屯純鈍逆以似承蒸段興暇龍襲巡災呉誤娯瓜孤弧為偽融隔丈拝互麗クメラホテオノ丶ユアイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヰヱヲンアイウエオカキクケコガギグゲゴサシスセソザジズゼゾタチツテトダヂヅデドナニヌネノハヒフヘホバビブベボパピプペポマミムメモヤユヨラリルレロワヰヱヲンбвгджзклмнпрстфхцчшщаеёиоуыэюяйъьВлади́мирВлади́мировичПу́тин(род.7октября1952,Ленинград,СССР)-российскийгосударственныйиполитическийдеятель.ДействующийпрезидентРоссийскойФедерации,председательГосударственногоСоветаРоссийскойФедерациииСоветаБезопасностиРоссийскойФедерации.ВерховныйглавнокомандующийВооружённымисиламиРоссийскойФедерациис7мая2012года.Ранеезанималдолжностьпрезидентас7мая2000по7мая2008года,такжев1999-2000и2008-2012годахзанималдолжностьпредседателяправительстваРоссийскойФедерации.ФактическируководитРоссией,согласноразнымоценкам,с1999[7]илис2000года[8].Всентябре2017годаПутинсталсамымдолгоправящимроссийскимлидеромсовремёнИосифаСталинаà,è,ì,ò,ù,À,È,Ì,Ò,Ùá,é,í,ó,ú,ý,Á,É,Í,Ó,Ú,Ýâ,ê,î,ô,û,Â,Ê,Î,Ô,Ûã,ñ,õ,Ã,Ñ,Õä,ë,ï,ö,ü,ÿ,Ä,Ë,Ï,Ö,Ü,Ÿå,Åæ,Æœ,Œç,Çð,Ðø,Øà,è,ì,ò,ù,À,È,Ì,Ò,Ùá,é,í,ó,ú,ý,Á,É,Í,Ó,Ú,Ýâ,ê,î,ô,û,Â,Ê,Î,Ô,Ûã,ñ,õ,Ã,Ñ,Õä,ë,ï,ö,ü,ÿ,Ä,Ë,Ï,Ö,Ü,Ÿå,Åæ,Æœ,Œç,Çð,Ðø,Ø",
       "trailingTrivia": "",
       "value": ")"
     },
@@ -377,11 +289,7 @@
         "id": "token-<eof>:@[L1888:C4, L1888:C4]",
         "snippet": ""
       },
-      "isInvalid": false,
-      "kind": "<eof>",
-      "leadingInvalid": "",
       "leadingTrivia": "",
-      "trailingInvalid": "",
       "trailingTrivia": "",
       "value": ""
     }

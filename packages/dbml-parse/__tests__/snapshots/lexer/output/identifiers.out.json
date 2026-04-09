@@ -7,9 +7,9 @@
       "token": {
         "context": {
           "id": "token-<identifier>:Note@[L2:C8, L2:C12]",
-          "snippet": "Note"
-        },
-        "isInvalid": true
+          "snippet": "Note",
+          "isInvalid": true
+        }
       }
     }
   ],
@@ -19,11 +19,7 @@
         "id": "token-<identifier>:Table@[L0:C0, L0:C5]",
         "snippet": "Table"
       },
-      "isInvalid": false,
-      "kind": "<identifier>",
-      "leadingInvalid": "",
       "leadingTrivia": "",
-      "trailingInvalid": "",
       "trailingTrivia": " ",
       "value": "Table"
     },
@@ -32,11 +28,7 @@
         "id": "token-<identifier>:TableGroup@[L0:C6, L0:C16]",
         "snippet": "TableGroup"
       },
-      "isInvalid": false,
-      "kind": "<identifier>",
-      "leadingInvalid": "",
       "leadingTrivia": "",
-      "trailingInvalid": "",
       "trailingTrivia": "\n",
       "value": "TableGroup"
     },
@@ -45,11 +37,7 @@
         "id": "token-<identifier>:as@[L1:C0, L1:C2]",
         "snippet": "as"
       },
-      "isInvalid": false,
-      "kind": "<identifier>",
-      "leadingInvalid": "",
       "leadingTrivia": "",
-      "trailingInvalid": "",
       "trailingTrivia": "\n",
       "value": "as"
     },
@@ -58,11 +46,7 @@
         "id": "token-<identifier>:indexes@[L2:C0, L2:C7]",
         "snippet": "indexes"
       },
-      "isInvalid": false,
-      "kind": "<identifier>",
-      "leadingInvalid": "",
       "leadingTrivia": "",
-      "trailingInvalid": "Note_ab",
       "trailingTrivia": " ",
       "value": "indexes"
     },
@@ -71,11 +55,7 @@
         "id": "token-<eof>:@[L3:C3, L3:C3]",
         "snippet": ""
       },
-      "isInvalid": false,
-      "kind": "<eof>",
-      "leadingInvalid": "",
       "leadingTrivia": "",
-      "trailingInvalid": "",
       "trailingTrivia": "",
       "value": ""
     }

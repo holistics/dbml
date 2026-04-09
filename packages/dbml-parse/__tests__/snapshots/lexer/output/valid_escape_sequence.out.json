@@ -7,9 +7,9 @@
       "token": {
         "context": {
           "id": "token-<variable>:\n@[L0:C0, L0:C4]",
-          "snippet": "\"\\n\""
-        },
-        "isInvalid": true
+          "snippet": "\"\\n\"",
+          "isInvalid": true
+        }
       }
     },
     {
@@ -19,9 +19,9 @@
       "token": {
         "context": {
           "id": "token-<variable>:\r@[L1:C0, L1:C4]",
-          "snippet": "\"\\r\""
-        },
-        "isInvalid": true
+          "snippet": "\"\\r\"",
+          "isInvalid": true
+        }
       }
     },
     {
@@ -31,9 +31,9 @@
       "token": {
         "context": {
           "id": "token-<variable>:ꯎ@[L2:C0, L2:C8]",
-          "snippet": "\"\\uabce\""
-        },
-        "isInvalid": true
+          "snippet": "\"\\uabce\"",
+          "isInvalid": true
+        }
       }
     },
     {
@@ -43,9 +43,9 @@
       "token": {
         "context": {
           "id": "token-<variable>:ሿ@[L3:C0, L3:C8]",
-          "snippet": "\"\\u123F\""
-        },
-        "isInvalid": true
+          "snippet": "\"\\u123F\"",
+          "isInvalid": true
+        }
       }
     },
     {
@@ -55,9 +55,9 @@
       "token": {
         "context": {
           "id": "token-<variable>:ꯍ@[L4:C0, L4:C8]",
-          "snippet": "\"\\uABCD\""
-        },
-        "isInvalid": true
+          "snippet": "\"\\uABCD\"",
+          "isInvalid": true
+        }
       }
     },
     {
@@ -67,9 +67,9 @@
       "token": {
         "context": {
           "id": "token-<variable>:\t@[L5:C0, L5:C4]",
-          "snippet": "\"\\t\""
-        },
-        "isInvalid": true
+          "snippet": "\"\\t\"",
+          "isInvalid": true
+        }
       }
     },
     {
@@ -79,9 +79,9 @@
       "token": {
         "context": {
           "id": "token-<variable>:\u000b@[L6:C0, L6:C4]",
-          "snippet": "\"\\v\""
-        },
-        "isInvalid": true
+          "snippet": "\"\\v\"",
+          "isInvalid": true
+        }
       }
     },
     {
@@ -91,9 +91,9 @@
       "token": {
         "context": {
           "id": "token-<string>:This is a single line ''' @[L7:C0, L7:C33]",
-          "snippet": "'''This is...e \\''' '''"
-        },
-        "isInvalid": true
+          "snippet": "'''This is...e \\''' '''",
+          "isInvalid": true
+        }
       }
     },
     {
@@ -103,9 +103,9 @@
       "token": {
         "context": {
           "id": "token-<string>:This is a single line here!@[L8:C0, L9:C8]",
-          "snippet": "'''This is...\\\nhere!'''"
-        },
-        "isInvalid": true
+          "snippet": "'''This is...\\\nhere!'''",
+          "isInvalid": true
+        }
       }
     },
     {
@@ -115,9 +115,9 @@
       "token": {
         "context": {
           "id": "token-<string>:This is not a single line \\ !@[L11:C0, L11:C35]",
-          "snippet": "'''This is...ine \\ !'''"
-        },
-        "isInvalid": true
+          "snippet": "'''This is...ine \\ !'''",
+          "isInvalid": true
+        }
       }
     },
     {
@@ -127,9 +127,9 @@
       "token": {
         "context": {
           "id": "token-<string>:This is also not a single line \\    \nas there are spaces after \\@[L12:C0, L13:C31]",
-          "snippet": "'''This is...fter \\\\'''"
-        },
-        "isInvalid": true
+          "snippet": "'''This is...fter \\\\'''",
+          "isInvalid": true
+        }
       }
     },
     {
@@ -139,9 +139,9 @@
       "token": {
         "context": {
           "id": "token-<function-expression>:This is single line\n\n\n@[L14:C0, L17:C1]",
-          "snippet": "`This is s...e line\n\n\n`"
-        },
-        "isInvalid": true
+          "snippet": "`This is s...e line\n\n\n`",
+          "isInvalid": true
+        }
       }
     }
   ],
@@ -151,11 +151,7 @@
         "id": "token-<eof>:@[L18:C0, L18:C0]",
         "snippet": ""
       },
-      "isInvalid": false,
-      "kind": "<eof>",
-      "leadingInvalid": "\n\rꯎሿꯍ\t\u000bThis is a single line ''' This is a single line here!This is not a single line \\ !This is also not a single line \\    \nas there are spaces after \\This is single line\n\n\n",
       "leadingTrivia": "",
-      "trailingInvalid": "",
       "trailingTrivia": "",
       "value": ""
     }

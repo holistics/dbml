@@ -7,9 +7,9 @@
       "token": {
         "context": {
           "id": "token-<number>:1.a@[L5:C0, L5:C3]",
-          "snippet": "1.a"
-        },
-        "isInvalid": true
+          "snippet": "1.a",
+          "isInvalid": true
+        }
       }
     },
     {
@@ -19,9 +19,9 @@
       "token": {
         "context": {
           "id": "token-<number>:1.3.a@[L6:C0, L6:C5]",
-          "snippet": "1.3.a"
-        },
-        "isInvalid": true
+          "snippet": "1.3.a",
+          "isInvalid": true
+        }
       }
     },
     {
@@ -31,9 +31,9 @@
       "token": {
         "context": {
           "id": "token-<number>:1.4.a.b@[L7:C0, L7:C7]",
-          "snippet": "1.4.a.b"
-        },
-        "isInvalid": true
+          "snippet": "1.4.a.b",
+          "isInvalid": true
+        }
       }
     },
     {
@@ -43,9 +43,9 @@
       "token": {
         "context": {
           "id": "token-<identifier>:3a@[L2:C0, L2:C2]",
-          "snippet": "3a"
-        },
-        "isInvalid": true
+          "snippet": "3a",
+          "isInvalid": true
+        }
       }
     }
   ],
@@ -55,11 +55,7 @@
         "id": "token-<identifier>:12_abc@[L0:C0, L0:C6]",
         "snippet": "12_abc"
       },
-      "isInvalid": false,
-      "kind": "<identifier>",
-      "leadingInvalid": "",
       "leadingTrivia": "",
-      "trailingInvalid": "",
       "trailingTrivia": "  Identifier\n",
       "value": "12_abc"
     },
@@ -68,11 +64,7 @@
         "id": "token-<identifier>:226_abc@[L1:C0, L1:C7]",
         "snippet": "226_abc"
       },
-      "isInvalid": false,
-      "kind": "<identifier>",
-      "leadingInvalid": "",
       "leadingTrivia": "",
-      "trailingInvalid": "3a3a.4a3a3",
       "trailingTrivia": "  Identifier\n",
       "value": "226_abc"
     },
@@ -81,11 +73,7 @@
         "id": "token-<eof>:@[L7:C25, L7:C25]",
         "snippet": ""
       },
-      "isInvalid": false,
-      "kind": "<eof>",
-      "leadingInvalid": "",
       "leadingTrivia": "",
-      "trailingInvalid": "",
       "trailingTrivia": "",
       "value": ""
     }

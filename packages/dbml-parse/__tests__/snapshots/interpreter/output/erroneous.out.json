@@ -7,9 +7,9 @@
       "token": {
         "context": {
           "id": "token-<string>:']@[L7:C69, L7:C71]",
-          "snippet": "']"
-        },
-        "isInvalid": true
+          "snippet": "']",
+          "isInvalid": true
+        }
       }
     },
     {
@@ -19,9 +19,9 @@
       "token": {
         "context": {
           "id": "token-<identifier>:s@[L7:C35, L7:C36]",
-          "snippet": "s"
-        },
-        "isInvalid": true
+          "snippet": "s",
+          "isInvalid": true
+        }
       }
     },
     {
@@ -31,9 +31,9 @@
       "token": {
         "context": {
           "id": "token-<rparen>:)@[L9:C24, L9:C25]",
-          "snippet": ")"
-        },
-        "isInvalid": true
+          "snippet": ")",
+          "isInvalid": true
+        }
       }
     },
     {
@@ -43,9 +43,9 @@
       "token": {
         "context": {
           "id": "token-<rbrace>:}@[L11:C0, L11:C1]",
-          "snippet": "}"
-        },
-        "isInvalid": true
+          "snippet": "}",
+          "isInvalid": true
+        }
       }
     },
     {

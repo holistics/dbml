@@ -7,9 +7,9 @@
       "token": {
         "context": {
           "id": "token-<color>:#1234@[L0:C0, L0:C5]",
-          "snippet": "#1234"
-        },
-        "isInvalid": true
+          "snippet": "#1234",
+          "isInvalid": true
+        }
       }
     },
     {
@@ -19,9 +19,9 @@
       "token": {
         "context": {
           "id": "token-<color>:#12acbd@[L1:C0, L1:C7]",
-          "snippet": "#12acbd"
-        },
-        "isInvalid": true
+          "snippet": "#12acbd",
+          "isInvalid": true
+        }
       }
     }
   ],
@@ -31,11 +31,7 @@
         "id": "token-<eof>:@[L1:C7, L1:C7]",
         "snippet": ""
       },
-      "isInvalid": false,
-      "kind": "<eof>",
-      "leadingInvalid": "#1234#12acbd",
       "leadingTrivia": "",
-      "trailingInvalid": "",
       "trailingTrivia": "",
       "value": ""
     }

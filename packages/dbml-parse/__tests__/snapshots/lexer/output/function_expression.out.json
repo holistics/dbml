@@ -7,9 +7,9 @@
       "token": {
         "context": {
           "id": "token-<function-expression>:`\r\n@[L6:C43, L7:C0]",
-          "snippet": "`\r\n"
-        },
-        "isInvalid": true
+          "snippet": "`\r\n",
+          "isInvalid": true
+        }
       }
     },
     {
@@ -19,9 +19,9 @@
       "token": {
         "context": {
           "id": "token-<function-expression>:id * 2@[L0:C0, L0:C8]",
-          "snippet": "`id * 2`"
-        },
-        "isInvalid": true
+          "snippet": "`id * 2`",
+          "isInvalid": true
+        }
       }
     },
     {
@@ -31,9 +31,9 @@
       "token": {
         "context": {
           "id": "token-<function-expression>:id@[L0:C9, L0:C13]",
-          "snippet": "`id`"
-        },
-        "isInvalid": true
+          "snippet": "`id`",
+          "isInvalid": true
+        }
       }
     },
     {
@@ -43,9 +43,9 @@
       "token": {
         "context": {
           "id": "token-<function-expression>:\r\n    id * 3\r\n@[L2:C0, L4:C1]",
-          "snippet": "`\r\n    id * 3\r\n`"
-        },
-        "isInvalid": true
+          "snippet": "`\r\n    id * 3\r\n`",
+          "isInvalid": true
+        }
       }
     },
     {
@@ -55,9 +55,9 @@
       "token": {
         "context": {
           "id": "token-<function-expression>:no escaped supported! this is an error! \\@[L6:C0, L6:C43]",
-          "snippet": "`no escape... error! \\`"
-        },
-        "isInvalid": true
+          "snippet": "`no escape... error! \\`",
+          "isInvalid": true
+        }
       }
     }
   ],
@@ -67,11 +67,7 @@
         "id": "token-<eof>:@[L7:C0, L7:C0]",
         "snippet": ""
       },
-      "isInvalid": false,
-      "kind": "<eof>",
-      "leadingInvalid": "id * 2id\r\n    id * 3\r\nno escaped supported! this is an error! \\",
       "leadingTrivia": "",
-      "trailingInvalid": "",
       "trailingTrivia": "",
       "value": ""
     }

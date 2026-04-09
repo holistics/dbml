@@ -7,9 +7,9 @@
       "token": {
         "context": {
           "id": "token-<variable>:\"This is an unclosed quoted string\r@[L8:C0, L8:C35]",
-          "snippet": "\"This is a...ed string\r"
-        },
-        "isInvalid": true
+          "snippet": "\"This is a...ed string\r",
+          "isInvalid": true
+        }
       }
     },
     {
@@ -19,9 +19,9 @@
       "token": {
         "context": {
           "id": "token-<string>:'This is an unclosed string literal\r@[L10:C0, L10:C36]",
-          "snippet": "'This is a...g literal\r"
-        },
-        "isInvalid": true
+          "snippet": "'This is a...g literal\r",
+          "isInvalid": true
+        }
       }
     },
     {
@@ -31,9 +31,9 @@
       "token": {
         "context": {
           "id": "token-<string>:'''This is an unclosed multiline string\r\n@[L15:C0, L16:C0]",
-          "snippet": "'''This is...e string\r\n"
-        },
-        "isInvalid": true
+          "snippet": "'''This is...e string\r\n",
+          "isInvalid": true
+        }
       }
     },
     {
@@ -43,9 +43,9 @@
       "token": {
         "context": {
           "id": "token-<variable>:This is a quoted string@[L0:C0, L0:C25]",
-          "snippet": "\"This is a...ed string\""
-        },
-        "isInvalid": true
+          "snippet": "\"This is a...ed string\"",
+          "isInvalid": true
+        }
       }
     },
     {
@@ -55,9 +55,9 @@
       "token": {
         "context": {
           "id": "token-<variable>:This is a quoted string \nwith a newline\n@[L2:C0, L2:C44]",
-          "snippet": "\"This is a...newline\\n\""
-        },
-        "isInvalid": true
+          "snippet": "\"This is a...newline\\n\"",
+          "isInvalid": true
+        }
       }
     },
     {
@@ -67,9 +67,9 @@
       "token": {
         "context": {
           "id": "token-<string>:This is a string literal@[L4:C0, L4:C26]",
-          "snippet": "'This is a...g literal'"
-        },
-        "isInvalid": true
+          "snippet": "'This is a...g literal'",
+          "isInvalid": true
+        }
       }
     },
     {
@@ -79,9 +79,9 @@
       "token": {
         "context": {
           "id": "token-<string>:This is a string literal \nwith a newline\n@[L6:C0, L6:C45]",
-          "snippet": "'This is a...newline\\n'"
-        },
-        "isInvalid": true
+          "snippet": "'This is a...newline\\n'",
+          "isInvalid": true
+        }
       }
     },
     {
@@ -91,9 +91,9 @@
       "token": {
         "context": {
           "id": "token-<string>:This is a multiline string\r\n@[L12:C0, L13:C3]",
-          "snippet": "'''This is...tring\r\n'''"
-        },
-        "isInvalid": true
+          "snippet": "'''This is...tring\r\n'''",
+          "isInvalid": true
+        }
       }
     }
   ],
@@ -103,11 +103,7 @@
         "id": "token-<eof>:@[L16:C0, L16:C0]",
         "snippet": ""
       },
-      "isInvalid": false,
-      "kind": "<eof>",
-      "leadingInvalid": "This is a quoted stringThis is a quoted string \nwith a newline\nThis is a string literalThis is a string literal \nwith a newline\nThis is a multiline string\r\n",
       "leadingTrivia": "",
-      "trailingInvalid": "",
       "trailingTrivia": "",
       "value": ""
     }
