@@ -6,7 +6,7 @@
       "level": "error",
       "token": {
         "context": {
-          "id": "<number>:8.6a@[L3:C0, L3:C4]",
+          "id": "token-<number>:8.6a@[L3:C0, L3:C4]",
           "snippet": "8.6a"
         },
         "isInvalid": true
@@ -18,7 +18,7 @@
       "level": "error",
       "token": {
         "context": {
-          "id": "<number>:24.10b@[L3:C5, L3:C11]",
+          "id": "token-<number>:24.10b@[L3:C5, L3:C11]",
           "snippet": "24.10b"
         },
         "isInvalid": true
@@ -30,7 +30,7 @@
       "level": "error",
       "token": {
         "context": {
-          "id": "<number>:1.2.3.4.5@[L3:C12, L3:C21]",
+          "id": "token-<number>:1.2.3.4.5@[L3:C12, L3:C21]",
           "snippet": "1.2.3.4.5"
         },
         "isInvalid": true
@@ -40,7 +40,7 @@
   "tokens": [
     {
       "context": {
-        "id": "<number>:1@[L0:C0, L0:C1]",
+        "id": "token-<number>:1@[L0:C0, L0:C1]",
         "snippet": "1"
       },
       "isInvalid": false,
@@ -53,7 +53,7 @@
     },
     {
       "context": {
-        "id": "<number>:2@[L0:C2, L0:C3]",
+        "id": "token-<number>:2@[L0:C2, L0:C3]",
         "snippet": "2"
       },
       "isInvalid": false,
@@ -66,7 +66,7 @@
     },
     {
       "context": {
-        "id": "<number>:2.33@[L1:C0, L1:C4]",
+        "id": "token-<number>:2.33@[L1:C0, L1:C4]",
         "snippet": "2.33"
       },
       "isInvalid": false,
@@ -79,7 +79,7 @@
     },
     {
       "context": {
-        "id": "<number>:2.8@[L1:C5, L1:C8]",
+        "id": "token-<number>:2.8@[L1:C5, L1:C8]",
         "snippet": "2.8"
       },
       "isInvalid": false,
@@ -92,7 +92,7 @@
     },
     {
       "context": {
-        "id": "<eof>:@[L3:C39, L3:C39]",
+        "id": "token-<eof>:@[L3:C39, L3:C39]",
         "snippet": ""
       },
       "isInvalid": false,
