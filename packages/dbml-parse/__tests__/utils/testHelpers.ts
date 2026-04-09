@@ -1,5 +1,5 @@
 import fs from 'node:fs';
-import { NodeSymbol } from '@/core/types/symbols';
+import { NodeSymbol, SchemaSymbol } from '@/core/types/symbols';
 import { SyntaxToken } from '@/core/lexer/tokens';
 import { ElementDeclarationNode, LiteralNode, ProgramNode, SyntaxNode, VariableNode } from '@/core/parser/nodes';
 import { getElementNameString } from '@/core/utils/expression';
@@ -38,11 +38,11 @@ function getReadableId (nodeOrSymbol: SyntaxNode | SyntaxToken | NodeSymbol): st
 
   const node = (nodeOrSymbol instanceof SyntaxNode) || (nodeOrSymbol instanceof SyntaxToken) ? nodeOrSymbol : nodeOrSymbol?.declaration;
 
-  const kind = node?.kind ?? '?';
+  const kind = nodeOrSymbol.kind;
 
   const start = `L${node?.startPos.line ?? '?'}:C${node?.startPos.column ?? '?'}`;
   const end = `L${node?.endPos.line ?? '?'}:C${node?.endPos.column ?? '?'}`;
-  const nameHint = node ? getNameHint(node) : '';
+  const nameHint = node ? getNameHint(node) : nodeOrSymbol instanceof SchemaSymbol ? nodeOrSymbol.qualifiedName.join('.') : '';
 
   return `${type}-${kind}${nameHint}@[${start}, ${end}]`;
 }
