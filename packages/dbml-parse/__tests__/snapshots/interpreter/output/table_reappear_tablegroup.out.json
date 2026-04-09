@@ -6,7 +6,7 @@
       "level": "error",
       "node": {
         "context": {
-          "id": "<function-application>@[L22:C2, L22:C9]",
+          "id": "node-<function-application>@[L22:C2, L22:C9]",
           "snippet": "follows"
         }
       }
@@ -17,7 +17,7 @@
       "level": "error",
       "node": {
         "context": {
-          "id": "<function-application>@[L27:C2, L27:C7]",
+          "id": "node-<function-application>@[L27:C2, L27:C7]",
           "snippet": "users"
         }
       }
@@ -28,7 +28,7 @@
       "level": "error",
       "node": {
         "context": {
-          "id": "<function-application>@[L31:C4, L31:C5]",
+          "id": "node-<function-application>@[L31:C4, L31:C5]",
           "snippet": "U"
         }
       }
@@ -39,7 +39,7 @@
       "level": "error",
       "node": {
         "context": {
-          "id": "<function-application>@[L39:C2, L39:C9]",
+          "id": "node-<function-application>@[L39:C2, L39:C9]",
           "snippet": "A.users"
         }
       }

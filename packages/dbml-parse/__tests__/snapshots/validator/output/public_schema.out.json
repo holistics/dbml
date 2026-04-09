@@ -6,7 +6,7 @@
       "level": "error",
       "node": {
         "context": {
-          "id": "<element-declaration>:status@[L0:C0, L2:C1]",
+          "id": "node-<element-declaration>:status@[L0:C0, L2:C1]",
           "snippet": "Enum status {\r\n\r\n}"
         }
       }
@@ -17,7 +17,7 @@
       "level": "error",
       "node": {
         "context": {
-          "id": "<element-declaration>:public.status@[L4:C0, L6:C1]",
+          "id": "node-<element-declaration>:public.status@[L4:C0, L6:C1]",
           "snippet": "Enum publi...{\r\n    \r\n}"
         }
       }
@@ -25,26 +25,26 @@
   ],
   "program": {
     "context": {
-      "id": "<program>@[L0:C0, L6:C1]",
+      "id": "node-<program>@[L0:C0, L6:C1]",
       "snippet": "Enum statu...{\r\n    \r\n}"
     },
     "children": {
       "body": [
         {
           "context": {
-            "id": "<element-declaration>:status@[L0:C0, L2:C1]",
+            "id": "node-<element-declaration>:status@[L0:C0, L2:C1]",
             "snippet": "Enum status {\r\n\r\n}"
           },
           "children": {
             "body": {
               "context": {
-                "id": "<block-expression>@[L0:C12, L2:C1]",
+                "id": "node-<block-expression>@[L0:C12, L2:C1]",
                 "snippet": "{\r\n\r\n}"
               },
               "children": {
                 "blockCloseBrace": {
                   "context": {
-                    "id": "<rbrace>:}@[L2:C0, L2:C1]",
+                    "id": "token-<rbrace>:}@[L2:C0, L2:C1]",
                     "snippet": "}"
                   },
                   "isInvalid": false,
@@ -57,7 +57,7 @@
                 },
                 "blockOpenBrace": {
                   "context": {
-                    "id": "<lbrace>:{@[L0:C12, L0:C13]",
+                    "id": "token-<lbrace>:{@[L0:C12, L0:C13]",
                     "snippet": "{"
                   },
                   "isInvalid": false,
@@ -97,7 +97,7 @@
             "kind": "<element-declaration>",
             "name": {
               "context": {
-                "id": "<primary-expression>@[L0:C5, L0:C11]",
+                "id": "node-<primary-expression>@[L0:C5, L0:C11]",
                 "snippet": "status"
               },
               "children": {
@@ -109,7 +109,7 @@
                 },
                 "expression": {
                   "context": {
-                    "id": "<variable>:status@[L0:C5, L0:C11]",
+                    "id": "node-<variable>:status@[L0:C5, L0:C11]",
                     "snippet": "status"
                   },
                   "children": {
@@ -130,7 +130,7 @@
                     },
                     "variable": {
                       "context": {
-                        "id": "<identifier>:status@[L0:C5, L0:C11]",
+                        "id": "token-<identifier>:status@[L0:C5, L0:C11]",
                         "snippet": "status"
                       },
                       "isInvalid": false,
@@ -162,7 +162,7 @@
             },
             "type": {
               "context": {
-                "id": "<identifier>:Enum@[L0:C0, L0:C4]",
+                "id": "token-<identifier>:Enum@[L0:C0, L0:C4]",
                 "snippet": "Enum"
               },
               "isInvalid": false,
@@ -176,11 +176,11 @@
           },
           "symbol": {
             "context": {
-              "id": "<element-declaration>:status@[L0:C0, L2:C1]",
+              "id": "symbol-<element-declaration>:status@[L0:C0, L2:C1]",
               "snippet": "Enum status {\r\n\r\n}"
             },
             "declaration": {
-              "id": "<element-declaration>:status@[L0:C0, L2:C1]",
+              "id": "node-<element-declaration>:status@[L0:C0, L2:C1]",
               "snippet": "Enum status {\r\n\r\n}"
             },
             "members": [],
@@ -189,19 +189,19 @@
         },
         {
           "context": {
-            "id": "<element-declaration>:public.status@[L4:C0, L6:C1]",
+            "id": "node-<element-declaration>:public.status@[L4:C0, L6:C1]",
             "snippet": "Enum publi...{\r\n    \r\n}"
           },
           "children": {
             "body": {
               "context": {
-                "id": "<block-expression>@[L4:C19, L6:C1]",
+                "id": "node-<block-expression>@[L4:C19, L6:C1]",
                 "snippet": "{\r\n    \r\n}"
               },
               "children": {
                 "blockCloseBrace": {
                   "context": {
-                    "id": "<rbrace>:}@[L6:C0, L6:C1]",
+                    "id": "token-<rbrace>:}@[L6:C0, L6:C1]",
                     "snippet": "}"
                   },
                   "isInvalid": false,
@@ -214,7 +214,7 @@
                 },
                 "blockOpenBrace": {
                   "context": {
-                    "id": "<lbrace>:{@[L4:C19, L4:C20]",
+                    "id": "token-<lbrace>:{@[L4:C19, L4:C20]",
                     "snippet": "{"
                   },
                   "isInvalid": false,
@@ -254,7 +254,7 @@
             "kind": "<element-declaration>",
             "name": {
               "context": {
-                "id": "<infix-expression>@[L4:C5, L4:C18]",
+                "id": "node-<infix-expression>@[L4:C5, L4:C18]",
                 "snippet": "public.status"
               },
               "children": {
@@ -269,7 +269,7 @@
                 "kind": "<infix-expression>",
                 "leftExpression": {
                   "context": {
-                    "id": "<primary-expression>@[L4:C5, L4:C11]",
+                    "id": "node-<primary-expression>@[L4:C5, L4:C11]",
                     "snippet": "public"
                   },
                   "children": {
@@ -281,7 +281,7 @@
                     },
                     "expression": {
                       "context": {
-                        "id": "<variable>:public@[L4:C5, L4:C11]",
+                        "id": "node-<variable>:public@[L4:C5, L4:C11]",
                         "snippet": "public"
                       },
                       "children": {
@@ -302,7 +302,7 @@
                         },
                         "variable": {
                           "context": {
-                            "id": "<identifier>:public@[L4:C5, L4:C11]",
+                            "id": "token-<identifier>:public@[L4:C5, L4:C11]",
                             "snippet": "public"
                           },
                           "isInvalid": false,
@@ -328,7 +328,7 @@
                 },
                 "op": {
                   "context": {
-                    "id": "<op>:.@[L4:C11, L4:C12]",
+                    "id": "token-<op>:.@[L4:C11, L4:C12]",
                     "snippet": "."
                   },
                   "isInvalid": false,
@@ -341,7 +341,7 @@
                 },
                 "rightExpression": {
                   "context": {
-                    "id": "<primary-expression>@[L4:C12, L4:C18]",
+                    "id": "node-<primary-expression>@[L4:C12, L4:C18]",
                     "snippet": "status"
                   },
                   "children": {
@@ -353,7 +353,7 @@
                     },
                     "expression": {
                       "context": {
-                        "id": "<variable>:status@[L4:C12, L4:C18]",
+                        "id": "node-<variable>:status@[L4:C12, L4:C18]",
                         "snippet": "status"
                       },
                       "children": {
@@ -374,7 +374,7 @@
                         },
                         "variable": {
                           "context": {
-                            "id": "<identifier>:status@[L4:C12, L4:C18]",
+                            "id": "token-<identifier>:status@[L4:C12, L4:C18]",
                             "snippet": "status"
                           },
                           "isInvalid": false,
@@ -414,7 +414,7 @@
             },
             "type": {
               "context": {
-                "id": "<identifier>:Enum@[L4:C0, L4:C4]",
+                "id": "token-<identifier>:Enum@[L4:C0, L4:C4]",
                 "snippet": "Enum"
               },
               "isInvalid": false,
@@ -428,11 +428,11 @@
           },
           "symbol": {
             "context": {
-              "id": "<element-declaration>:public.status@[L4:C0, L6:C1]",
+              "id": "symbol-<element-declaration>:public.status@[L4:C0, L6:C1]",
               "snippet": "Enum publi...{\r\n    \r\n}"
             },
             "declaration": {
-              "id": "<element-declaration>:public.status@[L4:C0, L6:C1]",
+              "id": "node-<element-declaration>:public.status@[L4:C0, L6:C1]",
               "snippet": "Enum publi...{\r\n    \r\n}"
             },
             "members": [],
@@ -448,7 +448,7 @@
       },
       "eof": {
         "context": {
-          "id": "<eof>:@[L6:C1, L6:C1]",
+          "id": "token-<eof>:@[L6:C1, L6:C1]",
           "snippet": ""
         },
         "isInvalid": false,
@@ -471,26 +471,28 @@
     },
     "symbol": {
       "context": {
-        "id": "<program>@[L0:C0, L6:C1]",
+        "id": "symbol-<program>@[L0:C0, L6:C1]",
         "snippet": "Enum statu...{\r\n    \r\n}"
       },
       "declaration": {
-        "id": "<program>@[L0:C0, L6:C1]",
+        "id": "node-<program>@[L0:C0, L6:C1]",
         "snippet": "Enum statu...{\r\n    \r\n}"
       },
       "members": [
         {
-          "context": {}
+          "context": {
+            "id": "symbol-?@[L?:C?, L?:C?]"
+          }
         },
         {
           "context": {
-            "id": "<element-declaration>:status@[L0:C0, L2:C1]",
+            "id": "symbol-<element-declaration>:status@[L0:C0, L2:C1]",
             "snippet": "Enum status {\r\n\r\n}"
           }
         },
         {
           "context": {
-            "id": "<element-declaration>:public.status@[L4:C0, L6:C1]",
+            "id": "symbol-<element-declaration>:public.status@[L4:C0, L6:C1]",
             "snippet": "Enum publi...{\r\n    \r\n}"
           }
         }

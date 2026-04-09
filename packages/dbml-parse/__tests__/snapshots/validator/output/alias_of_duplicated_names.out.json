@@ -2,20 +2,20 @@
   "errors": [],
   "program": {
     "context": {
-      "id": "<program>@[L0:C0, L10:C1]",
+      "id": "node-<program>@[L0:C0, L10:C1]",
       "snippet": "Table User...{\r\n    \r\n}"
     },
     "children": {
       "body": [
         {
           "context": {
-            "id": "<element-declaration>:Users@[L0:C0, L2:C1]",
+            "id": "node-<element-declaration>:Users@[L0:C0, L2:C1]",
             "snippet": "Table User... U1 {\r\n\r\n}"
           },
           "children": {
             "alias": {
               "context": {
-                "id": "<primary-expression>@[L0:C15, L0:C17]",
+                "id": "node-<primary-expression>@[L0:C15, L0:C17]",
                 "snippet": "U1"
               },
               "children": {
@@ -27,7 +27,7 @@
                 },
                 "expression": {
                   "context": {
-                    "id": "<variable>:U1@[L0:C15, L0:C17]",
+                    "id": "node-<variable>:U1@[L0:C15, L0:C17]",
                     "snippet": "U1"
                   },
                   "children": {
@@ -48,7 +48,7 @@
                     },
                     "variable": {
                       "context": {
-                        "id": "<identifier>:U1@[L0:C15, L0:C17]",
+                        "id": "token-<identifier>:U1@[L0:C15, L0:C17]",
                         "snippet": "U1"
                       },
                       "isInvalid": false,
@@ -74,7 +74,7 @@
             },
             "as": {
               "context": {
-                "id": "<identifier>:as@[L0:C12, L0:C14]",
+                "id": "token-<identifier>:as@[L0:C12, L0:C14]",
                 "snippet": "as"
               },
               "isInvalid": false,
@@ -87,13 +87,13 @@
             },
             "body": {
               "context": {
-                "id": "<block-expression>@[L0:C18, L2:C1]",
+                "id": "node-<block-expression>@[L0:C18, L2:C1]",
                 "snippet": "{\r\n\r\n}"
               },
               "children": {
                 "blockCloseBrace": {
                   "context": {
-                    "id": "<rbrace>:}@[L2:C0, L2:C1]",
+                    "id": "token-<rbrace>:}@[L2:C0, L2:C1]",
                     "snippet": "}"
                   },
                   "isInvalid": false,
@@ -106,7 +106,7 @@
                 },
                 "blockOpenBrace": {
                   "context": {
-                    "id": "<lbrace>:{@[L0:C18, L0:C19]",
+                    "id": "token-<lbrace>:{@[L0:C18, L0:C19]",
                     "snippet": "{"
                   },
                   "isInvalid": false,
@@ -146,7 +146,7 @@
             "kind": "<element-declaration>",
             "name": {
               "context": {
-                "id": "<primary-expression>@[L0:C6, L0:C11]",
+                "id": "node-<primary-expression>@[L0:C6, L0:C11]",
                 "snippet": "Users"
               },
               "children": {
@@ -158,7 +158,7 @@
                 },
                 "expression": {
                   "context": {
-                    "id": "<variable>:Users@[L0:C6, L0:C11]",
+                    "id": "node-<variable>:Users@[L0:C6, L0:C11]",
                     "snippet": "Users"
                   },
                   "children": {
@@ -179,7 +179,7 @@
                     },
                     "variable": {
                       "context": {
-                        "id": "<identifier>:Users@[L0:C6, L0:C11]",
+                        "id": "token-<identifier>:Users@[L0:C6, L0:C11]",
                         "snippet": "Users"
                       },
                       "isInvalid": false,
@@ -211,7 +211,7 @@
             },
             "type": {
               "context": {
-                "id": "<identifier>:Table@[L0:C0, L0:C5]",
+                "id": "token-<identifier>:Table@[L0:C0, L0:C5]",
                 "snippet": "Table"
               },
               "isInvalid": false,
@@ -225,11 +225,11 @@
           },
           "symbol": {
             "context": {
-              "id": "<element-declaration>:Users@[L0:C0, L2:C1]",
+              "id": "symbol-<element-declaration>:Users@[L0:C0, L2:C1]",
               "snippet": "Table User... U1 {\r\n\r\n}"
             },
             "declaration": {
-              "id": "<element-declaration>:Users@[L0:C0, L2:C1]",
+              "id": "node-<element-declaration>:Users@[L0:C0, L2:C1]",
               "snippet": "Table User... U1 {\r\n\r\n}"
             },
             "members": [],
@@ -238,13 +238,13 @@
         },
         {
           "context": {
-            "id": "<element-declaration>:Users@[L4:C0, L6:C1]",
+            "id": "node-<element-declaration>:Users@[L4:C0, L6:C1]",
             "snippet": "Table User... U2 {\r\n\r\n}"
           },
           "children": {
             "alias": {
               "context": {
-                "id": "<primary-expression>@[L4:C15, L4:C17]",
+                "id": "node-<primary-expression>@[L4:C15, L4:C17]",
                 "snippet": "U2"
               },
               "children": {
@@ -256,7 +256,7 @@
                 },
                 "expression": {
                   "context": {
-                    "id": "<variable>:U2@[L4:C15, L4:C17]",
+                    "id": "node-<variable>:U2@[L4:C15, L4:C17]",
                     "snippet": "U2"
                   },
                   "children": {
@@ -277,7 +277,7 @@
                     },
                     "variable": {
                       "context": {
-                        "id": "<identifier>:U2@[L4:C15, L4:C17]",
+                        "id": "token-<identifier>:U2@[L4:C15, L4:C17]",
                         "snippet": "U2"
                       },
                       "isInvalid": false,
@@ -303,7 +303,7 @@
             },
             "as": {
               "context": {
-                "id": "<identifier>:as@[L4:C12, L4:C14]",
+                "id": "token-<identifier>:as@[L4:C12, L4:C14]",
                 "snippet": "as"
               },
               "isInvalid": false,
@@ -316,13 +316,13 @@
             },
             "body": {
               "context": {
-                "id": "<block-expression>@[L4:C18, L6:C1]",
+                "id": "node-<block-expression>@[L4:C18, L6:C1]",
                 "snippet": "{\r\n\r\n}"
               },
               "children": {
                 "blockCloseBrace": {
                   "context": {
-                    "id": "<rbrace>:}@[L6:C0, L6:C1]",
+                    "id": "token-<rbrace>:}@[L6:C0, L6:C1]",
                     "snippet": "}"
                   },
                   "isInvalid": false,
@@ -335,7 +335,7 @@
                 },
                 "blockOpenBrace": {
                   "context": {
-                    "id": "<lbrace>:{@[L4:C18, L4:C19]",
+                    "id": "token-<lbrace>:{@[L4:C18, L4:C19]",
                     "snippet": "{"
                   },
                   "isInvalid": false,
@@ -375,7 +375,7 @@
             "kind": "<element-declaration>",
             "name": {
               "context": {
-                "id": "<primary-expression>@[L4:C6, L4:C11]",
+                "id": "node-<primary-expression>@[L4:C6, L4:C11]",
                 "snippet": "Users"
               },
               "children": {
@@ -387,7 +387,7 @@
                 },
                 "expression": {
                   "context": {
-                    "id": "<variable>:Users@[L4:C6, L4:C11]",
+                    "id": "node-<variable>:Users@[L4:C6, L4:C11]",
                     "snippet": "Users"
                   },
                   "children": {
@@ -408,7 +408,7 @@
                     },
                     "variable": {
                       "context": {
-                        "id": "<identifier>:Users@[L4:C6, L4:C11]",
+                        "id": "token-<identifier>:Users@[L4:C6, L4:C11]",
                         "snippet": "Users"
                       },
                       "isInvalid": false,
@@ -440,7 +440,7 @@
             },
             "type": {
               "context": {
-                "id": "<identifier>:Table@[L4:C0, L4:C5]",
+                "id": "token-<identifier>:Table@[L4:C0, L4:C5]",
                 "snippet": "Table"
               },
               "isInvalid": false,
@@ -454,11 +454,11 @@
           },
           "symbol": {
             "context": {
-              "id": "<element-declaration>:Users@[L4:C0, L6:C1]",
+              "id": "symbol-<element-declaration>:Users@[L4:C0, L6:C1]",
               "snippet": "Table User... U2 {\r\n\r\n}"
             },
             "declaration": {
-              "id": "<element-declaration>:Users@[L4:C0, L6:C1]",
+              "id": "node-<element-declaration>:Users@[L4:C0, L6:C1]",
               "snippet": "Table User... U2 {\r\n\r\n}"
             },
             "members": [],
@@ -467,13 +467,13 @@
         },
         {
           "context": {
-            "id": "<element-declaration>:Products@[L8:C0, L10:C1]",
+            "id": "node-<element-declaration>:Products@[L8:C0, L10:C1]",
             "snippet": "Table Prod...{\r\n    \r\n}"
           },
           "children": {
             "alias": {
               "context": {
-                "id": "<primary-expression>@[L8:C18, L8:C20]",
+                "id": "node-<primary-expression>@[L8:C18, L8:C20]",
                 "snippet": "U1"
               },
               "children": {
@@ -485,7 +485,7 @@
                 },
                 "expression": {
                   "context": {
-                    "id": "<variable>:U1@[L8:C18, L8:C20]",
+                    "id": "node-<variable>:U1@[L8:C18, L8:C20]",
                     "snippet": "U1"
                   },
                   "children": {
@@ -506,7 +506,7 @@
                     },
                     "variable": {
                       "context": {
-                        "id": "<identifier>:U1@[L8:C18, L8:C20]",
+                        "id": "token-<identifier>:U1@[L8:C18, L8:C20]",
                         "snippet": "U1"
                       },
                       "isInvalid": false,
@@ -532,7 +532,7 @@
             },
             "as": {
               "context": {
-                "id": "<identifier>:as@[L8:C15, L8:C17]",
+                "id": "token-<identifier>:as@[L8:C15, L8:C17]",
                 "snippet": "as"
               },
               "isInvalid": false,
@@ -545,13 +545,13 @@
             },
             "body": {
               "context": {
-                "id": "<block-expression>@[L8:C21, L10:C1]",
+                "id": "node-<block-expression>@[L8:C21, L10:C1]",
                 "snippet": "{\r\n    \r\n}"
               },
               "children": {
                 "blockCloseBrace": {
                   "context": {
-                    "id": "<rbrace>:}@[L10:C0, L10:C1]",
+                    "id": "token-<rbrace>:}@[L10:C0, L10:C1]",
                     "snippet": "}"
                   },
                   "isInvalid": false,
@@ -564,7 +564,7 @@
                 },
                 "blockOpenBrace": {
                   "context": {
-                    "id": "<lbrace>:{@[L8:C21, L8:C22]",
+                    "id": "token-<lbrace>:{@[L8:C21, L8:C22]",
                     "snippet": "{"
                   },
                   "isInvalid": false,
@@ -604,7 +604,7 @@
             "kind": "<element-declaration>",
             "name": {
               "context": {
-                "id": "<primary-expression>@[L8:C6, L8:C14]",
+                "id": "node-<primary-expression>@[L8:C6, L8:C14]",
                 "snippet": "Products"
               },
               "children": {
@@ -616,7 +616,7 @@
                 },
                 "expression": {
                   "context": {
-                    "id": "<variable>:Products@[L8:C6, L8:C14]",
+                    "id": "node-<variable>:Products@[L8:C6, L8:C14]",
                     "snippet": "Products"
                   },
                   "children": {
@@ -637,7 +637,7 @@
                     },
                     "variable": {
                       "context": {
-                        "id": "<identifier>:Products@[L8:C6, L8:C14]",
+                        "id": "token-<identifier>:Products@[L8:C6, L8:C14]",
                         "snippet": "Products"
                       },
                       "isInvalid": false,
@@ -669,7 +669,7 @@
             },
             "type": {
               "context": {
-                "id": "<identifier>:Table@[L8:C0, L8:C5]",
+                "id": "token-<identifier>:Table@[L8:C0, L8:C5]",
                 "snippet": "Table"
               },
               "isInvalid": false,
@@ -683,11 +683,11 @@
           },
           "symbol": {
             "context": {
-              "id": "<element-declaration>:Products@[L8:C0, L10:C1]",
+              "id": "symbol-<element-declaration>:Products@[L8:C0, L10:C1]",
               "snippet": "Table Prod...{\r\n    \r\n}"
             },
             "declaration": {
-              "id": "<element-declaration>:Products@[L8:C0, L10:C1]",
+              "id": "node-<element-declaration>:Products@[L8:C0, L10:C1]",
               "snippet": "Table Prod...{\r\n    \r\n}"
             },
             "members": [],
@@ -703,7 +703,7 @@
       },
       "eof": {
         "context": {
-          "id": "<eof>:@[L10:C1, L10:C1]",
+          "id": "token-<eof>:@[L10:C1, L10:C1]",
           "snippet": ""
         },
         "isInvalid": false,
@@ -726,32 +726,34 @@
     },
     "symbol": {
       "context": {
-        "id": "<program>@[L0:C0, L10:C1]",
+        "id": "symbol-<program>@[L0:C0, L10:C1]",
         "snippet": "Table User...{\r\n    \r\n}"
       },
       "declaration": {
-        "id": "<program>@[L0:C0, L10:C1]",
+        "id": "node-<program>@[L0:C0, L10:C1]",
         "snippet": "Table User...{\r\n    \r\n}"
       },
       "members": [
         {
-          "context": {}
+          "context": {
+            "id": "symbol-?@[L?:C?, L?:C?]"
+          }
         },
         {
           "context": {
-            "id": "<element-declaration>:Users@[L0:C0, L2:C1]",
+            "id": "symbol-<element-declaration>:Users@[L0:C0, L2:C1]",
             "snippet": "Table User... U1 {\r\n\r\n}"
           }
         },
         {
           "context": {
-            "id": "<element-declaration>:Users@[L4:C0, L6:C1]",
+            "id": "symbol-<element-declaration>:Users@[L4:C0, L6:C1]",
             "snippet": "Table User... U2 {\r\n\r\n}"
           }
         },
         {
           "context": {
-            "id": "<element-declaration>:Products@[L8:C0, L10:C1]",
+            "id": "symbol-<element-declaration>:Products@[L8:C0, L10:C1]",
             "snippet": "Table Prod...{\r\n    \r\n}"
           }
         }

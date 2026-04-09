@@ -2,26 +2,26 @@
   "errors": [],
   "program": {
     "context": {
-      "id": "<program>@[L0:C0, L2:C0]",
+      "id": "node-<program>@[L0:C0, L2:C0]",
       "snippet": "Table empt...table {\n}\n"
     },
     "children": {
       "body": [
         {
           "context": {
-            "id": "<element-declaration>:empty_table@[L0:C0, L1:C1]",
+            "id": "node-<element-declaration>:empty_table@[L0:C0, L1:C1]",
             "snippet": "Table empt..._table {\n}"
           },
           "children": {
             "body": {
               "context": {
-                "id": "<block-expression>@[L0:C18, L1:C1]",
+                "id": "node-<block-expression>@[L0:C18, L1:C1]",
                 "snippet": "{\n}"
               },
               "children": {
                 "blockCloseBrace": {
                   "context": {
-                    "id": "<rbrace>:}@[L1:C0, L1:C1]",
+                    "id": "token-<rbrace>:}@[L1:C0, L1:C1]",
                     "snippet": "}"
                   },
                   "isInvalid": false,
@@ -34,7 +34,7 @@
                 },
                 "blockOpenBrace": {
                   "context": {
-                    "id": "<lbrace>:{@[L0:C18, L0:C19]",
+                    "id": "token-<lbrace>:{@[L0:C18, L0:C19]",
                     "snippet": "{"
                   },
                   "isInvalid": false,
@@ -74,7 +74,7 @@
             "kind": "<element-declaration>",
             "name": {
               "context": {
-                "id": "<primary-expression>@[L0:C6, L0:C17]",
+                "id": "node-<primary-expression>@[L0:C6, L0:C17]",
                 "snippet": "empty_table"
               },
               "children": {
@@ -86,7 +86,7 @@
                 },
                 "expression": {
                   "context": {
-                    "id": "<variable>:empty_table@[L0:C6, L0:C17]",
+                    "id": "node-<variable>:empty_table@[L0:C6, L0:C17]",
                     "snippet": "empty_table"
                   },
                   "children": {
@@ -107,7 +107,7 @@
                     },
                     "variable": {
                       "context": {
-                        "id": "<identifier>:empty_table@[L0:C6, L0:C17]",
+                        "id": "token-<identifier>:empty_table@[L0:C6, L0:C17]",
                         "snippet": "empty_table"
                       },
                       "isInvalid": false,
@@ -139,7 +139,7 @@
             },
             "type": {
               "context": {
-                "id": "<identifier>:Table@[L0:C0, L0:C5]",
+                "id": "token-<identifier>:Table@[L0:C0, L0:C5]",
                 "snippet": "Table"
               },
               "isInvalid": false,
@@ -153,11 +153,11 @@
           },
           "symbol": {
             "context": {
-              "id": "<element-declaration>:empty_table@[L0:C0, L1:C1]",
+              "id": "symbol-<element-declaration>:empty_table@[L0:C0, L1:C1]",
               "snippet": "Table empt..._table {\n}"
             },
             "declaration": {
-              "id": "<element-declaration>:empty_table@[L0:C0, L1:C1]",
+              "id": "node-<element-declaration>:empty_table@[L0:C0, L1:C1]",
               "snippet": "Table empt..._table {\n}"
             },
             "members": [],
@@ -173,7 +173,7 @@
       },
       "eof": {
         "context": {
-          "id": "<eof>:@[L2:C0, L2:C0]",
+          "id": "token-<eof>:@[L2:C0, L2:C0]",
           "snippet": ""
         },
         "isInvalid": false,
@@ -196,20 +196,22 @@
     },
     "symbol": {
       "context": {
-        "id": "<program>@[L0:C0, L2:C0]",
+        "id": "symbol-<program>@[L0:C0, L2:C0]",
         "snippet": "Table empt...table {\n}\n"
       },
       "declaration": {
-        "id": "<program>@[L0:C0, L2:C0]",
+        "id": "node-<program>@[L0:C0, L2:C0]",
         "snippet": "Table empt...table {\n}\n"
       },
       "members": [
         {
-          "context": {}
+          "context": {
+            "id": "symbol-?@[L?:C?, L?:C?]"
+          }
         },
         {
           "context": {
-            "id": "<element-declaration>:empty_table@[L0:C0, L1:C1]",
+            "id": "symbol-<element-declaration>:empty_table@[L0:C0, L1:C1]",
             "snippet": "Table empt..._table {\n}"
           }
         }

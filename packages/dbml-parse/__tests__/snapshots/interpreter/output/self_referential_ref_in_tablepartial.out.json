@@ -6,7 +6,7 @@
       "level": "error",
       "node": {
         "context": {
-          "id": "<attribute>@[L1:C12, L1:C22]",
+          "id": "node-<attribute>@[L1:C12, L1:C22]",
           "snippet": "ref: > col"
         }
       }

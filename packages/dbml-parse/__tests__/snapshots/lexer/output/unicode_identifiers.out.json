@@ -6,7 +6,7 @@
       "level": "error",
       "token": {
         "context": {
-          "id": "<identifier>:ج@[L0:C4, L0:C5]",
+          "id": "token-<identifier>:ج@[L0:C4, L0:C5]",
           "snippet": "ج"
         },
         "isInvalid": true
@@ -18,7 +18,7 @@
       "level": "error",
       "token": {
         "context": {
-          "id": "<colon>::@[L42:C231, L42:C232]",
+          "id": "token-<colon>::@[L42:C231, L42:C232]",
           "snippet": ":"
         },
         "isInvalid": true
@@ -30,7 +30,7 @@
       "level": "error",
       "token": {
         "context": {
-          "id": "<semicolon>:;@[L42:C240, L42:C241]",
+          "id": "token-<semicolon>:;@[L42:C240, L42:C241]",
           "snippet": ";"
         },
         "isInvalid": true
@@ -42,7 +42,7 @@
       "level": "error",
       "token": {
         "context": {
-          "id": "<rparen>:)@[L42:C318, L42:C319]",
+          "id": "token-<rparen>:)@[L42:C318, L42:C319]",
           "snippet": ")"
         },
         "isInvalid": true
@@ -54,7 +54,7 @@
       "level": "error",
       "token": {
         "context": {
-          "id": "<comma>:,@[L42:C319, L42:C320]",
+          "id": "token-<comma>:,@[L42:C319, L42:C320]",
           "snippet": ","
         },
         "isInvalid": true
@@ -66,7 +66,7 @@
       "level": "error",
       "token": {
         "context": {
-          "id": "<colon>::@[L42:C333, L42:C334]",
+          "id": "token-<colon>::@[L42:C333, L42:C334]",
           "snippet": ":"
         },
         "isInvalid": true
@@ -78,7 +78,7 @@
       "level": "error",
       "token": {
         "context": {
-          "id": "<identifier>:は@[L42:C344, L42:C345]",
+          "id": "token-<identifier>:は@[L42:C344, L42:C345]",
           "snippet": "は"
         },
         "isInvalid": true
@@ -88,7 +88,7 @@
   "tokens": [
     {
       "context": {
-        "id": "<identifier>:ا@[L0:C0, L0:C1]",
+        "id": "token-<identifier>:ا@[L0:C0, L0:C1]",
         "snippet": "ا"
       },
       "isInvalid": false,
@@ -101,7 +101,7 @@
     },
     {
       "context": {
-        "id": "<identifier>:ب@[L0:C2, L0:C3]",
+        "id": "token-<identifier>:ب@[L0:C2, L0:C3]",
         "snippet": "ب"
       },
       "isInvalid": false,
@@ -114,7 +114,7 @@
     },
     {
       "context": {
-        "id": "<colon>::@[L42:C217, L42:C218]",
+        "id": "token-<colon>::@[L42:C217, L42:C218]",
         "snippet": ":"
       },
       "isInvalid": false,
@@ -127,7 +127,7 @@
     },
     {
       "context": {
-        "id": "<identifier>:中华人民共和国@[L42:C219, L42:C226]",
+        "id": "token-<identifier>:中华人民共和国@[L42:C219, L42:C226]",
         "snippet": "中华人民共和国"
       },
       "isInvalid": false,
@@ -140,7 +140,7 @@
     },
     {
       "context": {
-        "id": "<op>:.@[L42:C226, L42:C227]",
+        "id": "token-<op>:.@[L42:C226, L42:C227]",
         "snippet": "."
       },
       "isInvalid": false,
@@ -153,7 +153,7 @@
     },
     {
       "context": {
-        "id": "<identifier>:繁体字@[L42:C228, L42:C231]",
+        "id": "token-<identifier>:繁体字@[L42:C228, L42:C231]",
         "snippet": "繁体字"
       },
       "isInvalid": false,
@@ -166,7 +166,7 @@
     },
     {
       "context": {
-        "id": "<identifier>:中華人民共和國@[L42:C233, L42:C240]",
+        "id": "token-<identifier>:中華人民共和國@[L42:C233, L42:C240]",
         "snippet": "中華人民共和國"
       },
       "isInvalid": false,
@@ -179,7 +179,7 @@
     },
     {
       "context": {
-        "id": "<colon>::@[L42:C244, L42:C245]",
+        "id": "token-<colon>::@[L42:C244, L42:C245]",
         "snippet": ":"
       },
       "isInvalid": false,
@@ -192,7 +192,7 @@
     },
     {
       "context": {
-        "id": "<identifier>:Zhōnghuá@[L42:C246, L42:C254]",
+        "id": "token-<identifier>:Zhōnghuá@[L42:C246, L42:C254]",
         "snippet": "Zhōnghuá"
       },
       "isInvalid": false,
@@ -205,7 +205,7 @@
     },
     {
       "context": {
-        "id": "<identifier>:Rénmín@[L42:C255, L42:C261]",
+        "id": "token-<identifier>:Rénmín@[L42:C255, L42:C261]",
         "snippet": "Rénmín"
       },
       "isInvalid": false,
@@ -218,7 +218,7 @@
     },
     {
       "context": {
-        "id": "<identifier>:GònghéguóPronunciation@[L42:C262, L42:C284]",
+        "id": "token-<identifier>:GònghéguóPronunciation@[L42:C262, L42:C284]",
         "snippet": "GònghéguóP...nunciation"
       },
       "isInvalid": false,
@@ -231,7 +231,7 @@
     },
     {
       "context": {
-        "id": "<identifier>:of@[L42:C285, L42:C287]",
+        "id": "token-<identifier>:of@[L42:C285, L42:C287]",
         "snippet": "of"
       },
       "isInvalid": false,
@@ -244,7 +244,7 @@
     },
     {
       "context": {
-        "id": "<identifier>:Zhonghuarenmingongheguo@[L42:C288, L42:C311]",
+        "id": "token-<identifier>:Zhonghuarenmingongheguo@[L42:C288, L42:C311]",
         "snippet": "Zhonghuare...ngongheguo"
       },
       "isInvalid": false,
@@ -257,7 +257,7 @@
     },
     {
       "context": {
-        "id": "<op>:.@[L42:C311, L42:C312]",
+        "id": "token-<op>:.@[L42:C311, L42:C312]",
         "snippet": "."
       },
       "isInvalid": false,
@@ -270,7 +270,7 @@
     },
     {
       "context": {
-        "id": "<identifier>:ogg@[L42:C312, L42:C315]",
+        "id": "token-<identifier>:ogg@[L42:C312, L42:C315]",
         "snippet": "ogg"
       },
       "isInvalid": false,
@@ -283,7 +283,7 @@
     },
     {
       "context": {
-        "id": "<identifier>:聞く@[L42:C316, L42:C318]",
+        "id": "token-<identifier>:聞く@[L42:C316, L42:C318]",
         "snippet": "聞く"
       },
       "isInvalid": false,
@@ -296,7 +296,7 @@
     },
     {
       "context": {
-        "id": "<identifier>:通称中国@[L42:C320, L42:C324]",
+        "id": "token-<identifier>:通称中国@[L42:C320, L42:C324]",
         "snippet": "通称中国"
       },
       "isInvalid": false,
@@ -309,7 +309,7 @@
     },
     {
       "context": {
-        "id": "<lparen>:(@[L42:C324, L42:C325]",
+        "id": "token-<lparen>:(@[L42:C324, L42:C325]",
         "snippet": "("
       },
       "isInvalid": false,
@@ -322,7 +322,7 @@
     },
     {
       "context": {
-        "id": "<identifier>:ちゅうごく@[L42:C325, L42:C330]",
+        "id": "token-<identifier>:ちゅうごく@[L42:C325, L42:C330]",
         "snippet": "ちゅうごく"
       },
       "isInvalid": false,
@@ -335,7 +335,7 @@
     },
     {
       "context": {
-        "id": "<comma>:,@[L42:C330, L42:C331]",
+        "id": "token-<comma>:,@[L42:C330, L42:C331]",
         "snippet": ","
       },
       "isInvalid": false,
@@ -348,7 +348,7 @@
     },
     {
       "context": {
-        "id": "<identifier>:拼音@[L42:C331, L42:C333]",
+        "id": "token-<identifier>:拼音@[L42:C331, L42:C333]",
         "snippet": "拼音"
       },
       "isInvalid": false,
@@ -361,7 +361,7 @@
     },
     {
       "context": {
-        "id": "<rparen>:)@[L42:C343, L42:C344]",
+        "id": "token-<rparen>:)@[L42:C343, L42:C344]",
         "snippet": ")"
       },
       "isInvalid": false,
@@ -374,7 +374,7 @@
     },
     {
       "context": {
-        "id": "<eof>:@[L1888:C4, L1888:C4]",
+        "id": "token-<eof>:@[L1888:C4, L1888:C4]",
         "snippet": ""
       },
       "isInvalid": false,

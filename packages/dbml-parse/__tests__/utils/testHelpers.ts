@@ -34,14 +34,17 @@ function getNameHint (node: SyntaxNode | SyntaxToken): string {
 // - Avoid snapshot brittleness
 // - Easy for verification
 function getReadableId (nodeOrSymbol: SyntaxNode | SyntaxToken | NodeSymbol): string | undefined {
+  const type = nodeOrSymbol instanceof SyntaxNode ? 'node' : nodeOrSymbol instanceof SyntaxToken ? 'token' : 'symbol';
+
   const node = (nodeOrSymbol instanceof SyntaxNode) || (nodeOrSymbol instanceof SyntaxToken) ? nodeOrSymbol : nodeOrSymbol?.declaration;
-  if (!node) return undefined;
 
-  const start = `L${node.startPos.line}:C${node.startPos.column}`;
-  const end = `L${node.endPos.line}:C${node.endPos.column}`;
-  const nameHint = getNameHint(node);
+  const kind = node?.kind ?? '?';
 
-  return `${node.kind}${nameHint}@[${start}, ${end}]`;
+  const start = `L${node?.startPos.line ?? '?'}:C${node?.startPos.column ?? '?'}`;
+  const end = `L${node?.endPos.line ?? '?'}:C${node?.endPos.column ?? '?'}`;
+  const nameHint = node ? getNameHint(node) : '';
+
+  return `${type}-${kind}${nameHint}@[${start}, ${end}]`;
 }
 
 // Output the code snippet for a node or a symbol for easy verfication

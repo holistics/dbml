@@ -2,26 +2,26 @@
   "errors": [],
   "program": {
     "context": {
-      "id": "<program>@[L0:C0, L6:C1]",
+      "id": "node-<program>@[L0:C0, L6:C1]",
       "snippet": "Table User... int(10)\n}"
     },
     "children": {
       "body": [
         {
           "context": {
-            "id": "<element-declaration>:User@[L0:C0, L6:C1]",
+            "id": "node-<element-declaration>:User@[L0:C0, L6:C1]",
             "snippet": "Table User... int(10)\n}"
           },
           "children": {
             "body": {
               "context": {
-                "id": "<block-expression>@[L0:C11, L6:C1]",
+                "id": "node-<block-expression>@[L0:C11, L6:C1]",
                 "snippet": "{\n    id i... int(10)\n}"
               },
               "children": {
                 "blockCloseBrace": {
                   "context": {
-                    "id": "<rbrace>:}@[L6:C0, L6:C1]",
+                    "id": "token-<rbrace>:}@[L6:C0, L6:C1]",
                     "snippet": "}"
                   },
                   "isInvalid": false,
@@ -34,7 +34,7 @@
                 },
                 "blockOpenBrace": {
                   "context": {
-                    "id": "<lbrace>:{@[L0:C11, L0:C12]",
+                    "id": "token-<lbrace>:{@[L0:C11, L0:C12]",
                     "snippet": "{"
                   },
                   "isInvalid": false,
@@ -48,14 +48,14 @@
                 "body": [
                   {
                     "context": {
-                      "id": "<function-application>@[L1:C4, L1:C10]",
+                      "id": "node-<function-application>@[L1:C4, L1:C10]",
                       "snippet": "id int"
                     },
                     "children": {
                       "args": [
                         {
                           "context": {
-                            "id": "<primary-expression>@[L1:C7, L1:C10]",
+                            "id": "node-<primary-expression>@[L1:C7, L1:C10]",
                             "snippet": "int"
                           },
                           "children": {
@@ -67,7 +67,7 @@
                             },
                             "expression": {
                               "context": {
-                                "id": "<variable>:int@[L1:C7, L1:C10]",
+                                "id": "node-<variable>:int@[L1:C7, L1:C10]",
                                 "snippet": "int"
                               },
                               "children": {
@@ -88,7 +88,7 @@
                                 },
                                 "variable": {
                                   "context": {
-                                    "id": "<identifier>:int@[L1:C7, L1:C10]",
+                                    "id": "token-<identifier>:int@[L1:C7, L1:C10]",
                                     "snippet": "int"
                                   },
                                   "isInvalid": false,
@@ -115,7 +115,7 @@
                       ],
                       "callee": {
                         "context": {
-                          "id": "<primary-expression>@[L1:C4, L1:C6]",
+                          "id": "node-<primary-expression>@[L1:C4, L1:C6]",
                           "snippet": "id"
                         },
                         "children": {
@@ -127,7 +127,7 @@
                           },
                           "expression": {
                             "context": {
-                              "id": "<variable>:id@[L1:C4, L1:C6]",
+                              "id": "node-<variable>:id@[L1:C4, L1:C6]",
                               "snippet": "id"
                             },
                             "children": {
@@ -148,7 +148,7 @@
                               },
                               "variable": {
                                 "context": {
-                                  "id": "<identifier>:id@[L1:C4, L1:C6]",
+                                  "id": "token-<identifier>:id@[L1:C4, L1:C6]",
                                   "snippet": "id"
                                 },
                                 "isInvalid": false,
@@ -190,11 +190,11 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "<function-application>@[L1:C4, L1:C10]",
+                        "id": "symbol-<function-application>@[L1:C4, L1:C10]",
                         "snippet": "id int"
                       },
                       "declaration": {
-                        "id": "<function-application>@[L1:C4, L1:C10]",
+                        "id": "node-<function-application>@[L1:C4, L1:C10]",
                         "snippet": "id int"
                       },
                       "references": []
@@ -202,20 +202,20 @@
                   },
                   {
                     "context": {
-                      "id": "<function-application>@[L2:C4, L2:C26]",
+                      "id": "node-<function-application>@[L2:C4, L2:C26]",
                       "snippet": "secret nva...inary(MAX)"
                     },
                     "children": {
                       "args": [
                         {
                           "context": {
-                            "id": "<call-expression>@[L2:C11, L2:C26]",
+                            "id": "node-<call-expression>@[L2:C11, L2:C26]",
                             "snippet": "nvarbinary(MAX)"
                           },
                           "children": {
                             "argumentList": {
                               "context": {
-                                "id": "<group-expression>@[L2:C21, L2:C26]",
+                                "id": "node-<group-expression>@[L2:C21, L2:C26]",
                                 "snippet": "(MAX)"
                               },
                               "children": {
@@ -223,7 +223,7 @@
                                 "elementList": [
                                   {
                                     "context": {
-                                      "id": "<primary-expression>@[L2:C22, L2:C25]",
+                                      "id": "node-<primary-expression>@[L2:C22, L2:C25]",
                                       "snippet": "MAX"
                                     },
                                     "children": {
@@ -235,7 +235,7 @@
                                       },
                                       "expression": {
                                         "context": {
-                                          "id": "<variable>:MAX@[L2:C22, L2:C25]",
+                                          "id": "node-<variable>:MAX@[L2:C22, L2:C25]",
                                           "snippet": "MAX"
                                         },
                                         "children": {
@@ -256,7 +256,7 @@
                                           },
                                           "variable": {
                                             "context": {
-                                              "id": "<identifier>:MAX@[L2:C22, L2:C25]",
+                                              "id": "token-<identifier>:MAX@[L2:C22, L2:C25]",
                                               "snippet": "MAX"
                                             },
                                             "isInvalid": false,
@@ -298,7 +298,7 @@
                                 },
                                 "tupleCloseParen": {
                                   "context": {
-                                    "id": "<rparen>:)@[L2:C25, L2:C26]",
+                                    "id": "token-<rparen>:)@[L2:C25, L2:C26]",
                                     "snippet": ")"
                                   },
                                   "isInvalid": false,
@@ -311,7 +311,7 @@
                                 },
                                 "tupleOpenParen": {
                                   "context": {
-                                    "id": "<lparen>:(@[L2:C21, L2:C22]",
+                                    "id": "token-<lparen>:(@[L2:C21, L2:C22]",
                                     "snippet": "("
                                   },
                                   "isInvalid": false,
@@ -326,7 +326,7 @@
                             },
                             "callee": {
                               "context": {
-                                "id": "<primary-expression>@[L2:C11, L2:C21]",
+                                "id": "node-<primary-expression>@[L2:C11, L2:C21]",
                                 "snippet": "nvarbinary"
                               },
                               "children": {
@@ -338,7 +338,7 @@
                                 },
                                 "expression": {
                                   "context": {
-                                    "id": "<variable>:nvarbinary@[L2:C11, L2:C21]",
+                                    "id": "node-<variable>:nvarbinary@[L2:C11, L2:C21]",
                                     "snippet": "nvarbinary"
                                   },
                                   "children": {
@@ -359,7 +359,7 @@
                                     },
                                     "variable": {
                                       "context": {
-                                        "id": "<identifier>:nvarbinary@[L2:C11, L2:C21]",
+                                        "id": "token-<identifier>:nvarbinary@[L2:C11, L2:C21]",
                                         "snippet": "nvarbinary"
                                       },
                                       "isInvalid": false,
@@ -403,7 +403,7 @@
                       ],
                       "callee": {
                         "context": {
-                          "id": "<primary-expression>@[L2:C4, L2:C10]",
+                          "id": "node-<primary-expression>@[L2:C4, L2:C10]",
                           "snippet": "secret"
                         },
                         "children": {
@@ -415,7 +415,7 @@
                           },
                           "expression": {
                             "context": {
-                              "id": "<variable>:secret@[L2:C4, L2:C10]",
+                              "id": "node-<variable>:secret@[L2:C4, L2:C10]",
                               "snippet": "secret"
                             },
                             "children": {
@@ -436,7 +436,7 @@
                               },
                               "variable": {
                                 "context": {
-                                  "id": "<identifier>:secret@[L2:C4, L2:C10]",
+                                  "id": "token-<identifier>:secret@[L2:C4, L2:C10]",
                                   "snippet": "secret"
                                 },
                                 "isInvalid": false,
@@ -478,11 +478,11 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "<function-application>@[L2:C4, L2:C26]",
+                        "id": "symbol-<function-application>@[L2:C4, L2:C26]",
                         "snippet": "secret nva...inary(MAX)"
                       },
                       "declaration": {
-                        "id": "<function-application>@[L2:C4, L2:C26]",
+                        "id": "node-<function-application>@[L2:C4, L2:C26]",
                         "snippet": "secret nva...inary(MAX)"
                       },
                       "references": []
@@ -490,20 +490,20 @@
                   },
                   {
                     "context": {
-                      "id": "<function-application>@[L3:C4, L3:C23]",
+                      "id": "node-<function-application>@[L3:C4, L3:C23]",
                       "snippet": "name varchar(\"MAX\")"
                     },
                     "children": {
                       "args": [
                         {
                           "context": {
-                            "id": "<call-expression>@[L3:C9, L3:C23]",
+                            "id": "node-<call-expression>@[L3:C9, L3:C23]",
                             "snippet": "varchar(\"MAX\")"
                           },
                           "children": {
                             "argumentList": {
                               "context": {
-                                "id": "<group-expression>@[L3:C16, L3:C23]",
+                                "id": "node-<group-expression>@[L3:C16, L3:C23]",
                                 "snippet": "(\"MAX\")"
                               },
                               "children": {
@@ -511,7 +511,7 @@
                                 "elementList": [
                                   {
                                     "context": {
-                                      "id": "<primary-expression>@[L3:C17, L3:C22]",
+                                      "id": "node-<primary-expression>@[L3:C17, L3:C22]",
                                       "snippet": "\"MAX\""
                                     },
                                     "children": {
@@ -523,7 +523,7 @@
                                       },
                                       "expression": {
                                         "context": {
-                                          "id": "<variable>:MAX@[L3:C17, L3:C22]",
+                                          "id": "node-<variable>:MAX@[L3:C17, L3:C22]",
                                           "snippet": "\"MAX\""
                                         },
                                         "children": {
@@ -544,7 +544,7 @@
                                           },
                                           "variable": {
                                             "context": {
-                                              "id": "<variable>:MAX@[L3:C17, L3:C22]",
+                                              "id": "token-<variable>:MAX@[L3:C17, L3:C22]",
                                               "snippet": "\"MAX\""
                                             },
                                             "isInvalid": false,
@@ -586,7 +586,7 @@
                                 },
                                 "tupleCloseParen": {
                                   "context": {
-                                    "id": "<rparen>:)@[L3:C22, L3:C23]",
+                                    "id": "token-<rparen>:)@[L3:C22, L3:C23]",
                                     "snippet": ")"
                                   },
                                   "isInvalid": false,
@@ -599,7 +599,7 @@
                                 },
                                 "tupleOpenParen": {
                                   "context": {
-                                    "id": "<lparen>:(@[L3:C16, L3:C17]",
+                                    "id": "token-<lparen>:(@[L3:C16, L3:C17]",
                                     "snippet": "("
                                   },
                                   "isInvalid": false,
@@ -614,7 +614,7 @@
                             },
                             "callee": {
                               "context": {
-                                "id": "<primary-expression>@[L3:C9, L3:C16]",
+                                "id": "node-<primary-expression>@[L3:C9, L3:C16]",
                                 "snippet": "varchar"
                               },
                               "children": {
@@ -626,7 +626,7 @@
                                 },
                                 "expression": {
                                   "context": {
-                                    "id": "<variable>:varchar@[L3:C9, L3:C16]",
+                                    "id": "node-<variable>:varchar@[L3:C9, L3:C16]",
                                     "snippet": "varchar"
                                   },
                                   "children": {
@@ -647,7 +647,7 @@
                                     },
                                     "variable": {
                                       "context": {
-                                        "id": "<identifier>:varchar@[L3:C9, L3:C16]",
+                                        "id": "token-<identifier>:varchar@[L3:C9, L3:C16]",
                                         "snippet": "varchar"
                                       },
                                       "isInvalid": false,
@@ -691,7 +691,7 @@
                       ],
                       "callee": {
                         "context": {
-                          "id": "<primary-expression>@[L3:C4, L3:C8]",
+                          "id": "node-<primary-expression>@[L3:C4, L3:C8]",
                           "snippet": "name"
                         },
                         "children": {
@@ -703,7 +703,7 @@
                           },
                           "expression": {
                             "context": {
-                              "id": "<variable>:name@[L3:C4, L3:C8]",
+                              "id": "node-<variable>:name@[L3:C4, L3:C8]",
                               "snippet": "name"
                             },
                             "children": {
@@ -724,7 +724,7 @@
                               },
                               "variable": {
                                 "context": {
-                                  "id": "<identifier>:name@[L3:C4, L3:C8]",
+                                  "id": "token-<identifier>:name@[L3:C4, L3:C8]",
                                   "snippet": "name"
                                 },
                                 "isInvalid": false,
@@ -766,11 +766,11 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "<function-application>@[L3:C4, L3:C23]",
+                        "id": "symbol-<function-application>@[L3:C4, L3:C23]",
                         "snippet": "name varchar(\"MAX\")"
                       },
                       "declaration": {
-                        "id": "<function-application>@[L3:C4, L3:C23]",
+                        "id": "node-<function-application>@[L3:C4, L3:C23]",
                         "snippet": "name varchar(\"MAX\")"
                       },
                       "references": []
@@ -778,20 +778,20 @@
                   },
                   {
                     "context": {
-                      "id": "<function-application>@[L4:C4, L4:C25]",
+                      "id": "node-<function-application>@[L4:C4, L4:C25]",
                       "snippet": "code varbi...ary('MAX')"
                     },
                     "children": {
                       "args": [
                         {
                           "context": {
-                            "id": "<call-expression>@[L4:C9, L4:C25]",
+                            "id": "node-<call-expression>@[L4:C9, L4:C25]",
                             "snippet": "varbinary('MAX')"
                           },
                           "children": {
                             "argumentList": {
                               "context": {
-                                "id": "<group-expression>@[L4:C18, L4:C25]",
+                                "id": "node-<group-expression>@[L4:C18, L4:C25]",
                                 "snippet": "('MAX')"
                               },
                               "children": {
@@ -799,7 +799,7 @@
                                 "elementList": [
                                   {
                                     "context": {
-                                      "id": "<primary-expression>@[L4:C19, L4:C24]",
+                                      "id": "node-<primary-expression>@[L4:C19, L4:C24]",
                                       "snippet": "'MAX'"
                                     },
                                     "children": {
@@ -811,7 +811,7 @@
                                       },
                                       "expression": {
                                         "context": {
-                                          "id": "<literal>:MAX@[L4:C19, L4:C24]",
+                                          "id": "node-<literal>:MAX@[L4:C19, L4:C24]",
                                           "snippet": "'MAX'"
                                         },
                                         "children": {
@@ -826,7 +826,7 @@
                                           "kind": "<literal>",
                                           "literal": {
                                             "context": {
-                                              "id": "<string>:MAX@[L4:C19, L4:C24]",
+                                              "id": "token-<string>:MAX@[L4:C19, L4:C24]",
                                               "snippet": "'MAX'"
                                             },
                                             "isInvalid": false,
@@ -874,7 +874,7 @@
                                 },
                                 "tupleCloseParen": {
                                   "context": {
-                                    "id": "<rparen>:)@[L4:C24, L4:C25]",
+                                    "id": "token-<rparen>:)@[L4:C24, L4:C25]",
                                     "snippet": ")"
                                   },
                                   "isInvalid": false,
@@ -887,7 +887,7 @@
                                 },
                                 "tupleOpenParen": {
                                   "context": {
-                                    "id": "<lparen>:(@[L4:C18, L4:C19]",
+                                    "id": "token-<lparen>:(@[L4:C18, L4:C19]",
                                     "snippet": "("
                                   },
                                   "isInvalid": false,
@@ -902,7 +902,7 @@
                             },
                             "callee": {
                               "context": {
-                                "id": "<primary-expression>@[L4:C9, L4:C18]",
+                                "id": "node-<primary-expression>@[L4:C9, L4:C18]",
                                 "snippet": "varbinary"
                               },
                               "children": {
@@ -914,7 +914,7 @@
                                 },
                                 "expression": {
                                   "context": {
-                                    "id": "<variable>:varbinary@[L4:C9, L4:C18]",
+                                    "id": "node-<variable>:varbinary@[L4:C9, L4:C18]",
                                     "snippet": "varbinary"
                                   },
                                   "children": {
@@ -935,7 +935,7 @@
                                     },
                                     "variable": {
                                       "context": {
-                                        "id": "<identifier>:varbinary@[L4:C9, L4:C18]",
+                                        "id": "token-<identifier>:varbinary@[L4:C9, L4:C18]",
                                         "snippet": "varbinary"
                                       },
                                       "isInvalid": false,
@@ -979,7 +979,7 @@
                       ],
                       "callee": {
                         "context": {
-                          "id": "<primary-expression>@[L4:C4, L4:C8]",
+                          "id": "node-<primary-expression>@[L4:C4, L4:C8]",
                           "snippet": "code"
                         },
                         "children": {
@@ -991,7 +991,7 @@
                           },
                           "expression": {
                             "context": {
-                              "id": "<variable>:code@[L4:C4, L4:C8]",
+                              "id": "node-<variable>:code@[L4:C4, L4:C8]",
                               "snippet": "code"
                             },
                             "children": {
@@ -1012,7 +1012,7 @@
                               },
                               "variable": {
                                 "context": {
-                                  "id": "<identifier>:code@[L4:C4, L4:C8]",
+                                  "id": "token-<identifier>:code@[L4:C4, L4:C8]",
                                   "snippet": "code"
                                 },
                                 "isInvalid": false,
@@ -1054,11 +1054,11 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "<function-application>@[L4:C4, L4:C25]",
+                        "id": "symbol-<function-application>@[L4:C4, L4:C25]",
                         "snippet": "code varbi...ary('MAX')"
                       },
                       "declaration": {
-                        "id": "<function-application>@[L4:C4, L4:C25]",
+                        "id": "node-<function-application>@[L4:C4, L4:C25]",
                         "snippet": "code varbi...ary('MAX')"
                       },
                       "references": []
@@ -1066,20 +1066,20 @@
                   },
                   {
                     "context": {
-                      "id": "<function-application>@[L5:C4, L5:C16]",
+                      "id": "node-<function-application>@[L5:C4, L5:C16]",
                       "snippet": "ssid int(10)"
                     },
                     "children": {
                       "args": [
                         {
                           "context": {
-                            "id": "<call-expression>@[L5:C9, L5:C16]",
+                            "id": "node-<call-expression>@[L5:C9, L5:C16]",
                             "snippet": "int(10)"
                           },
                           "children": {
                             "argumentList": {
                               "context": {
-                                "id": "<group-expression>@[L5:C12, L5:C16]",
+                                "id": "node-<group-expression>@[L5:C12, L5:C16]",
                                 "snippet": "(10)"
                               },
                               "children": {
@@ -1087,7 +1087,7 @@
                                 "elementList": [
                                   {
                                     "context": {
-                                      "id": "<primary-expression>@[L5:C13, L5:C15]",
+                                      "id": "node-<primary-expression>@[L5:C13, L5:C15]",
                                       "snippet": "10"
                                     },
                                     "children": {
@@ -1099,7 +1099,7 @@
                                       },
                                       "expression": {
                                         "context": {
-                                          "id": "<literal>:10@[L5:C13, L5:C15]",
+                                          "id": "node-<literal>:10@[L5:C13, L5:C15]",
                                           "snippet": "10"
                                         },
                                         "children": {
@@ -1114,7 +1114,7 @@
                                           "kind": "<literal>",
                                           "literal": {
                                             "context": {
-                                              "id": "<number>:10@[L5:C13, L5:C15]",
+                                              "id": "token-<number>:10@[L5:C13, L5:C15]",
                                               "snippet": "10"
                                             },
                                             "isInvalid": false,
@@ -1162,7 +1162,7 @@
                                 },
                                 "tupleCloseParen": {
                                   "context": {
-                                    "id": "<rparen>:)@[L5:C15, L5:C16]",
+                                    "id": "token-<rparen>:)@[L5:C15, L5:C16]",
                                     "snippet": ")"
                                   },
                                   "isInvalid": false,
@@ -1175,7 +1175,7 @@
                                 },
                                 "tupleOpenParen": {
                                   "context": {
-                                    "id": "<lparen>:(@[L5:C12, L5:C13]",
+                                    "id": "token-<lparen>:(@[L5:C12, L5:C13]",
                                     "snippet": "("
                                   },
                                   "isInvalid": false,
@@ -1190,7 +1190,7 @@
                             },
                             "callee": {
                               "context": {
-                                "id": "<primary-expression>@[L5:C9, L5:C12]",
+                                "id": "node-<primary-expression>@[L5:C9, L5:C12]",
                                 "snippet": "int"
                               },
                               "children": {
@@ -1202,7 +1202,7 @@
                                 },
                                 "expression": {
                                   "context": {
-                                    "id": "<variable>:int@[L5:C9, L5:C12]",
+                                    "id": "node-<variable>:int@[L5:C9, L5:C12]",
                                     "snippet": "int"
                                   },
                                   "children": {
@@ -1223,7 +1223,7 @@
                                     },
                                     "variable": {
                                       "context": {
-                                        "id": "<identifier>:int@[L5:C9, L5:C12]",
+                                        "id": "token-<identifier>:int@[L5:C9, L5:C12]",
                                         "snippet": "int"
                                       },
                                       "isInvalid": false,
@@ -1267,7 +1267,7 @@
                       ],
                       "callee": {
                         "context": {
-                          "id": "<primary-expression>@[L5:C4, L5:C8]",
+                          "id": "node-<primary-expression>@[L5:C4, L5:C8]",
                           "snippet": "ssid"
                         },
                         "children": {
@@ -1279,7 +1279,7 @@
                           },
                           "expression": {
                             "context": {
-                              "id": "<variable>:ssid@[L5:C4, L5:C8]",
+                              "id": "node-<variable>:ssid@[L5:C4, L5:C8]",
                               "snippet": "ssid"
                             },
                             "children": {
@@ -1300,7 +1300,7 @@
                               },
                               "variable": {
                                 "context": {
-                                  "id": "<identifier>:ssid@[L5:C4, L5:C8]",
+                                  "id": "token-<identifier>:ssid@[L5:C4, L5:C8]",
                                   "snippet": "ssid"
                                 },
                                 "isInvalid": false,
@@ -1342,11 +1342,11 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "<function-application>@[L5:C4, L5:C16]",
+                        "id": "symbol-<function-application>@[L5:C4, L5:C16]",
                         "snippet": "ssid int(10)"
                       },
                       "declaration": {
-                        "id": "<function-application>@[L5:C4, L5:C16]",
+                        "id": "node-<function-application>@[L5:C4, L5:C16]",
                         "snippet": "ssid int(10)"
                       },
                       "references": []
@@ -1381,7 +1381,7 @@
             "kind": "<element-declaration>",
             "name": {
               "context": {
-                "id": "<primary-expression>@[L0:C6, L0:C10]",
+                "id": "node-<primary-expression>@[L0:C6, L0:C10]",
                 "snippet": "User"
               },
               "children": {
@@ -1393,7 +1393,7 @@
                 },
                 "expression": {
                   "context": {
-                    "id": "<variable>:User@[L0:C6, L0:C10]",
+                    "id": "node-<variable>:User@[L0:C6, L0:C10]",
                     "snippet": "User"
                   },
                   "children": {
@@ -1414,7 +1414,7 @@
                     },
                     "variable": {
                       "context": {
-                        "id": "<identifier>:User@[L0:C6, L0:C10]",
+                        "id": "token-<identifier>:User@[L0:C6, L0:C10]",
                         "snippet": "User"
                       },
                       "isInvalid": false,
@@ -1446,7 +1446,7 @@
             },
             "type": {
               "context": {
-                "id": "<identifier>:Table@[L0:C0, L0:C5]",
+                "id": "token-<identifier>:Table@[L0:C0, L0:C5]",
                 "snippet": "Table"
               },
               "isInvalid": false,
@@ -1460,41 +1460,41 @@
           },
           "symbol": {
             "context": {
-              "id": "<element-declaration>:User@[L0:C0, L6:C1]",
+              "id": "symbol-<element-declaration>:User@[L0:C0, L6:C1]",
               "snippet": "Table User... int(10)\n}"
             },
             "declaration": {
-              "id": "<element-declaration>:User@[L0:C0, L6:C1]",
+              "id": "node-<element-declaration>:User@[L0:C0, L6:C1]",
               "snippet": "Table User... int(10)\n}"
             },
             "members": [
               {
                 "context": {
-                  "id": "<function-application>@[L1:C4, L1:C10]",
+                  "id": "symbol-<function-application>@[L1:C4, L1:C10]",
                   "snippet": "id int"
                 }
               },
               {
                 "context": {
-                  "id": "<function-application>@[L2:C4, L2:C26]",
+                  "id": "symbol-<function-application>@[L2:C4, L2:C26]",
                   "snippet": "secret nva...inary(MAX)"
                 }
               },
               {
                 "context": {
-                  "id": "<function-application>@[L3:C4, L3:C23]",
+                  "id": "symbol-<function-application>@[L3:C4, L3:C23]",
                   "snippet": "name varchar(\"MAX\")"
                 }
               },
               {
                 "context": {
-                  "id": "<function-application>@[L4:C4, L4:C25]",
+                  "id": "symbol-<function-application>@[L4:C4, L4:C25]",
                   "snippet": "code varbi...ary('MAX')"
                 }
               },
               {
                 "context": {
-                  "id": "<function-application>@[L5:C4, L5:C16]",
+                  "id": "symbol-<function-application>@[L5:C4, L5:C16]",
                   "snippet": "ssid int(10)"
                 }
               }
@@ -1511,7 +1511,7 @@
       },
       "eof": {
         "context": {
-          "id": "<eof>:@[L6:C1, L6:C1]",
+          "id": "token-<eof>:@[L6:C1, L6:C1]",
           "snippet": ""
         },
         "isInvalid": false,
@@ -1534,20 +1534,22 @@
     },
     "symbol": {
       "context": {
-        "id": "<program>@[L0:C0, L6:C1]",
+        "id": "symbol-<program>@[L0:C0, L6:C1]",
         "snippet": "Table User... int(10)\n}"
       },
       "declaration": {
-        "id": "<program>@[L0:C0, L6:C1]",
+        "id": "node-<program>@[L0:C0, L6:C1]",
         "snippet": "Table User... int(10)\n}"
       },
       "members": [
         {
-          "context": {}
+          "context": {
+            "id": "symbol-?@[L?:C?, L?:C?]"
+          }
         },
         {
           "context": {
-            "id": "<element-declaration>:User@[L0:C0, L6:C1]",
+            "id": "symbol-<element-declaration>:User@[L0:C0, L6:C1]",
             "snippet": "Table User... int(10)\n}"
           }
         }

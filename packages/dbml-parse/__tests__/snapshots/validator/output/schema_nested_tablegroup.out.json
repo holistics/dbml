@@ -6,7 +6,7 @@
       "level": "error",
       "node": {
         "context": {
-          "id": "<infix-expression>@[L3:C11, L3:C26]",
+          "id": "node-<infix-expression>@[L3:C11, L3:C26]",
           "snippet": "schema.alphabet"
         }
       }
@@ -14,26 +14,26 @@
   ],
   "program": {
     "context": {
-      "id": "<program>@[L0:C0, L6:C0]",
+      "id": "node-<program>@[L0:C0, L6:C0]",
       "snippet": "Table A {\n...t {\n  A\n}\n"
     },
     "children": {
       "body": [
         {
           "context": {
-            "id": "<element-declaration>:A@[L0:C0, L1:C1]",
+            "id": "node-<element-declaration>:A@[L0:C0, L1:C1]",
             "snippet": "Table A {\n}"
           },
           "children": {
             "body": {
               "context": {
-                "id": "<block-expression>@[L0:C8, L1:C1]",
+                "id": "node-<block-expression>@[L0:C8, L1:C1]",
                 "snippet": "{\n}"
               },
               "children": {
                 "blockCloseBrace": {
                   "context": {
-                    "id": "<rbrace>:}@[L1:C0, L1:C1]",
+                    "id": "token-<rbrace>:}@[L1:C0, L1:C1]",
                     "snippet": "}"
                   },
                   "isInvalid": false,
@@ -46,7 +46,7 @@
                 },
                 "blockOpenBrace": {
                   "context": {
-                    "id": "<lbrace>:{@[L0:C8, L0:C9]",
+                    "id": "token-<lbrace>:{@[L0:C8, L0:C9]",
                     "snippet": "{"
                   },
                   "isInvalid": false,
@@ -86,7 +86,7 @@
             "kind": "<element-declaration>",
             "name": {
               "context": {
-                "id": "<primary-expression>@[L0:C6, L0:C7]",
+                "id": "node-<primary-expression>@[L0:C6, L0:C7]",
                 "snippet": "A"
               },
               "children": {
@@ -98,7 +98,7 @@
                 },
                 "expression": {
                   "context": {
-                    "id": "<variable>:A@[L0:C6, L0:C7]",
+                    "id": "node-<variable>:A@[L0:C6, L0:C7]",
                     "snippet": "A"
                   },
                   "children": {
@@ -119,7 +119,7 @@
                     },
                     "variable": {
                       "context": {
-                        "id": "<identifier>:A@[L0:C6, L0:C7]",
+                        "id": "token-<identifier>:A@[L0:C6, L0:C7]",
                         "snippet": "A"
                       },
                       "isInvalid": false,
@@ -151,7 +151,7 @@
             },
             "type": {
               "context": {
-                "id": "<identifier>:Table@[L0:C0, L0:C5]",
+                "id": "token-<identifier>:Table@[L0:C0, L0:C5]",
                 "snippet": "Table"
               },
               "isInvalid": false,
@@ -165,17 +165,17 @@
           },
           "symbol": {
             "context": {
-              "id": "<element-declaration>:A@[L0:C0, L1:C1]",
+              "id": "symbol-<element-declaration>:A@[L0:C0, L1:C1]",
               "snippet": "Table A {\n}"
             },
             "declaration": {
-              "id": "<element-declaration>:A@[L0:C0, L1:C1]",
+              "id": "node-<element-declaration>:A@[L0:C0, L1:C1]",
               "snippet": "Table A {\n}"
             },
             "members": [],
             "references": [
               {
-                "id": "<primary-expression>@[L4:C2, L4:C3]",
+                "id": "node-<primary-expression>@[L4:C2, L4:C3]",
                 "snippet": "A"
               }
             ]
@@ -183,19 +183,19 @@
         },
         {
           "context": {
-            "id": "<element-declaration>:schema.alphabet@[L3:C0, L5:C1]",
+            "id": "node-<element-declaration>:schema.alphabet@[L3:C0, L5:C1]",
             "snippet": "TableGroup...et {\n  A\n}"
           },
           "children": {
             "body": {
               "context": {
-                "id": "<block-expression>@[L3:C27, L5:C1]",
+                "id": "node-<block-expression>@[L3:C27, L5:C1]",
                 "snippet": "{\n  A\n}"
               },
               "children": {
                 "blockCloseBrace": {
                   "context": {
-                    "id": "<rbrace>:}@[L5:C0, L5:C1]",
+                    "id": "token-<rbrace>:}@[L5:C0, L5:C1]",
                     "snippet": "}"
                   },
                   "isInvalid": false,
@@ -208,7 +208,7 @@
                 },
                 "blockOpenBrace": {
                   "context": {
-                    "id": "<lbrace>:{@[L3:C27, L3:C28]",
+                    "id": "token-<lbrace>:{@[L3:C27, L3:C28]",
                     "snippet": "{"
                   },
                   "isInvalid": false,
@@ -222,14 +222,14 @@
                 "body": [
                   {
                     "context": {
-                      "id": "<function-application>@[L4:C2, L4:C3]",
+                      "id": "node-<function-application>@[L4:C2, L4:C3]",
                       "snippet": "A"
                     },
                     "children": {
                       "args": [],
                       "callee": {
                         "context": {
-                          "id": "<primary-expression>@[L4:C2, L4:C3]",
+                          "id": "node-<primary-expression>@[L4:C2, L4:C3]",
                           "snippet": "A"
                         },
                         "children": {
@@ -241,7 +241,7 @@
                           },
                           "expression": {
                             "context": {
-                              "id": "<variable>:A@[L4:C2, L4:C3]",
+                              "id": "node-<variable>:A@[L4:C2, L4:C3]",
                               "snippet": "A"
                             },
                             "children": {
@@ -262,7 +262,7 @@
                               },
                               "variable": {
                                 "context": {
-                                  "id": "<identifier>:A@[L4:C2, L4:C3]",
+                                  "id": "token-<identifier>:A@[L4:C2, L4:C3]",
                                   "snippet": "A"
                                 },
                                 "isInvalid": false,
@@ -287,7 +287,7 @@
                         },
                         "referee": {
                           "context": {
-                            "id": "<element-declaration>:A@[L0:C0, L1:C1]",
+                            "id": "symbol-<element-declaration>:A@[L0:C0, L1:C1]",
                             "snippet": "Table A {\n}"
                           }
                         }
@@ -310,11 +310,11 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "<function-application>@[L4:C2, L4:C3]",
+                        "id": "symbol-<function-application>@[L4:C2, L4:C3]",
                         "snippet": "A"
                       },
                       "declaration": {
-                        "id": "<function-application>@[L4:C2, L4:C3]",
+                        "id": "node-<function-application>@[L4:C2, L4:C3]",
                         "snippet": "A"
                       },
                       "members": [],
@@ -350,7 +350,7 @@
             "kind": "<element-declaration>",
             "name": {
               "context": {
-                "id": "<infix-expression>@[L3:C11, L3:C26]",
+                "id": "node-<infix-expression>@[L3:C11, L3:C26]",
                 "snippet": "schema.alphabet"
               },
               "children": {
@@ -365,7 +365,7 @@
                 "kind": "<infix-expression>",
                 "leftExpression": {
                   "context": {
-                    "id": "<primary-expression>@[L3:C11, L3:C17]",
+                    "id": "node-<primary-expression>@[L3:C11, L3:C17]",
                     "snippet": "schema"
                   },
                   "children": {
@@ -377,7 +377,7 @@
                     },
                     "expression": {
                       "context": {
-                        "id": "<variable>:schema@[L3:C11, L3:C17]",
+                        "id": "node-<variable>:schema@[L3:C11, L3:C17]",
                         "snippet": "schema"
                       },
                       "children": {
@@ -398,7 +398,7 @@
                         },
                         "variable": {
                           "context": {
-                            "id": "<identifier>:schema@[L3:C11, L3:C17]",
+                            "id": "token-<identifier>:schema@[L3:C11, L3:C17]",
                             "snippet": "schema"
                           },
                           "isInvalid": false,
@@ -424,7 +424,7 @@
                 },
                 "op": {
                   "context": {
-                    "id": "<op>:.@[L3:C17, L3:C18]",
+                    "id": "token-<op>:.@[L3:C17, L3:C18]",
                     "snippet": "."
                   },
                   "isInvalid": false,
@@ -437,7 +437,7 @@
                 },
                 "rightExpression": {
                   "context": {
-                    "id": "<primary-expression>@[L3:C18, L3:C26]",
+                    "id": "node-<primary-expression>@[L3:C18, L3:C26]",
                     "snippet": "alphabet"
                   },
                   "children": {
@@ -449,7 +449,7 @@
                     },
                     "expression": {
                       "context": {
-                        "id": "<variable>:alphabet@[L3:C18, L3:C26]",
+                        "id": "node-<variable>:alphabet@[L3:C18, L3:C26]",
                         "snippet": "alphabet"
                       },
                       "children": {
@@ -470,7 +470,7 @@
                         },
                         "variable": {
                           "context": {
-                            "id": "<identifier>:alphabet@[L3:C18, L3:C26]",
+                            "id": "token-<identifier>:alphabet@[L3:C18, L3:C26]",
                             "snippet": "alphabet"
                           },
                           "isInvalid": false,
@@ -510,7 +510,7 @@
             },
             "type": {
               "context": {
-                "id": "<identifier>:TableGroup@[L3:C0, L3:C10]",
+                "id": "token-<identifier>:TableGroup@[L3:C0, L3:C10]",
                 "snippet": "TableGroup"
               },
               "isInvalid": false,
@@ -524,17 +524,17 @@
           },
           "symbol": {
             "context": {
-              "id": "<element-declaration>:schema.alphabet@[L3:C0, L5:C1]",
+              "id": "symbol-<element-declaration>:schema.alphabet@[L3:C0, L5:C1]",
               "snippet": "TableGroup...et {\n  A\n}"
             },
             "declaration": {
-              "id": "<element-declaration>:schema.alphabet@[L3:C0, L5:C1]",
+              "id": "node-<element-declaration>:schema.alphabet@[L3:C0, L5:C1]",
               "snippet": "TableGroup...et {\n  A\n}"
             },
             "members": [
               {
                 "context": {
-                  "id": "<function-application>@[L4:C2, L4:C3]",
+                  "id": "symbol-<function-application>@[L4:C2, L4:C3]",
                   "snippet": "A"
                 }
               }
@@ -551,7 +551,7 @@
       },
       "eof": {
         "context": {
-          "id": "<eof>:@[L6:C0, L6:C0]",
+          "id": "token-<eof>:@[L6:C0, L6:C0]",
           "snippet": ""
         },
         "isInvalid": false,
@@ -574,20 +574,22 @@
     },
     "symbol": {
       "context": {
-        "id": "<program>@[L0:C0, L6:C0]",
+        "id": "symbol-<program>@[L0:C0, L6:C0]",
         "snippet": "Table A {\n...t {\n  A\n}\n"
       },
       "declaration": {
-        "id": "<program>@[L0:C0, L6:C0]",
+        "id": "node-<program>@[L0:C0, L6:C0]",
         "snippet": "Table A {\n...t {\n  A\n}\n"
       },
       "members": [
         {
-          "context": {}
+          "context": {
+            "id": "symbol-?@[L?:C?, L?:C?]"
+          }
         },
         {
           "context": {
-            "id": "<element-declaration>:A@[L0:C0, L1:C1]",
+            "id": "symbol-<element-declaration>:A@[L0:C0, L1:C1]",
             "snippet": "Table A {\n}"
           }
         }
