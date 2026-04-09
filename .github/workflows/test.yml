@@ -113,6 +113,7 @@ jobs:
   comment-coverage:
     runs-on: ubuntu-22.04
     timeout-minutes: 20
+    continue-on-error: true
     needs: build
     steps:
     - name: Download test coverage
@@ -122,7 +123,6 @@ jobs:
         path: ./coverage-report.md
     - name: Comment PR with coverage report
       uses: marocchino/sticky-pull-request-comment@v2
-      continue-on-error: true
       if: github.event_name == 'pull_request'
       with:
         recreate: true
