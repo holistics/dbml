@@ -110,7 +110,7 @@ jobs:
         path: ./coverage-report.md
         include-hidden-files: true
 
-  coverage:
+  comment-coverage:
     runs-on: ubuntu-22.04
     timeout-minutes: 20
     needs: build
