@@ -112,7 +112,7 @@ jobs:
 
   comment-coverage:
     runs-on: ubuntu-22.04
-    timeout-minutes: 20
+    timeout-minutes: 5
     continue-on-error: true
     needs: build
     steps:
