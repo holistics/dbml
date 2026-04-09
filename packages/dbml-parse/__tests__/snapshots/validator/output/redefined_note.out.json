@@ -6,7 +6,7 @@
       "level": "error",
       "node": {
         "context": {
-          "id": "node-<element-declaration>:@[L1:C4, L1:C38]",
+          "id": "node@<element-declaration>@:@[L1:C4, L1:C38]",
           "snippet": "Note: ''' ...l note '''"
         }
       }
@@ -17,7 +17,7 @@
       "level": "error",
       "node": {
         "context": {
-          "id": "node-<element-declaration>:@[L2:C4, L4:C5]",
+          "id": "node@<element-declaration>@:@[L2:C4, L4:C5]",
           "snippet": "Note {\r\n  ...te'\r\n    }"
         }
       }
@@ -28,7 +28,7 @@
       "level": "error",
       "node": {
         "context": {
-          "id": "node-<element-declaration>:@[L7:C0, L9:C1]",
+          "id": "node@<element-declaration>@:@[L7:C0, L9:C1]",
           "snippet": "Note {\r\n  ...l note'\r\n}"
         }
       }
@@ -39,7 +39,7 @@
       "level": "error",
       "node": {
         "context": {
-          "id": "node-<element-declaration>:@[L11:C0, L13:C3]",
+          "id": "node@<element-declaration>@:@[L11:C0, L13:C3]",
           "snippet": "Note: '''\r... note\r\n'''"
         }
       }
@@ -47,26 +47,26 @@
   ],
   "program": {
     "context": {
-      "id": "node-<program>@[L0:C0, L13:C3]",
+      "id": "node@<program>@@[L0:C0, L13:C3]",
       "snippet": "Table A {\r... note\r\n'''"
     },
     "children": {
       "body": [
         {
           "context": {
-            "id": "node-<element-declaration>:A@[L0:C0, L5:C1]",
+            "id": "node@<element-declaration>@:A@[L0:C0, L5:C1]",
             "snippet": "Table A {\r...\r\n    }\r\n}"
           },
           "children": {
             "body": {
               "context": {
-                "id": "node-<block-expression>@[L0:C8, L5:C1]",
+                "id": "node@<block-expression>@@[L0:C8, L5:C1]",
                 "snippet": "{\r\n    Not...\r\n    }\r\n}"
               },
               "children": {
                 "blockCloseBrace": {
                   "context": {
-                    "id": "token-<rbrace>:}@[L5:C0, L5:C1]",
+                    "id": "token@<rbrace>@:}@[L5:C0, L5:C1]",
                     "snippet": "}"
                   },
                   "leadingTrivia": "",
@@ -75,7 +75,7 @@
                 },
                 "blockOpenBrace": {
                   "context": {
-                    "id": "token-<lbrace>:{@[L0:C8, L0:C9]",
+                    "id": "token@<lbrace>@:{@[L0:C8, L0:C9]",
                     "snippet": "{"
                   },
                   "leadingTrivia": "",
@@ -85,26 +85,26 @@
                 "body": [
                   {
                     "context": {
-                      "id": "node-<element-declaration>:@[L1:C4, L1:C38]",
+                      "id": "node@<element-declaration>@:@[L1:C4, L1:C38]",
                       "snippet": "Note: ''' ...l note '''"
                     },
                     "children": {
                       "body": {
                         "context": {
-                          "id": "node-<function-application>@[L1:C10, L1:C38]",
+                          "id": "node@<function-application>@@[L1:C10, L1:C38]",
                           "snippet": "''' This i...l note '''"
                         },
                         "children": {
                           "args": [],
                           "callee": {
                             "context": {
-                              "id": "node-<primary-expression>@[L1:C10, L1:C38]",
+                              "id": "node@<primary-expression>@@[L1:C10, L1:C38]",
                               "snippet": "''' This i...l note '''"
                             },
                             "children": {
                               "expression": {
                                 "context": {
-                                  "id": "node-<literal>: This is a local note @[L1:C10, L1:C38]",
+                                  "id": "node@<literal>@: This is a local note @[L1:C10, L1:C38]",
                                   "snippet": "''' This i...l note '''"
                                 },
                                 "children": {
@@ -112,7 +112,7 @@
                                   "fullStart": 21,
                                   "literal": {
                                     "context": {
-                                      "id": "token-<string>: This is a local note @[L1:C10, L1:C38]",
+                                      "id": "token@<string>@: This is a local note @[L1:C10, L1:C38]",
                                       "snippet": "''' This i...l note '''"
                                     },
                                     "leadingTrivia": "",
@@ -131,7 +131,7 @@
                       },
                       "bodyColon": {
                         "context": {
-                          "id": "token-<colon>::@[L1:C8, L1:C9]",
+                          "id": "token@<colon>@::@[L1:C8, L1:C9]",
                           "snippet": ":"
                         },
                         "leadingTrivia": "",
@@ -142,7 +142,7 @@
                       "fullStart": 11,
                       "type": {
                         "context": {
-                          "id": "token-<identifier>:Note@[L1:C4, L1:C8]",
+                          "id": "token@<identifier>@:Note@[L1:C4, L1:C8]",
                           "snippet": "Note"
                         },
                         "leadingTrivia": "    ",
@@ -153,19 +153,19 @@
                   },
                   {
                     "context": {
-                      "id": "node-<element-declaration>:@[L2:C4, L4:C5]",
+                      "id": "node@<element-declaration>@:@[L2:C4, L4:C5]",
                       "snippet": "Note {\r\n  ...te'\r\n    }"
                     },
                     "children": {
                       "body": {
                         "context": {
-                          "id": "node-<block-expression>@[L2:C9, L4:C5]",
+                          "id": "node@<block-expression>@@[L2:C9, L4:C5]",
                           "snippet": "{\r\n       ...te'\r\n    }"
                         },
                         "children": {
                           "blockCloseBrace": {
                             "context": {
-                              "id": "token-<rbrace>:}@[L4:C4, L4:C5]",
+                              "id": "token@<rbrace>@:}@[L4:C4, L4:C5]",
                               "snippet": "}"
                             },
                             "leadingTrivia": "    ",
@@ -174,7 +174,7 @@
                           },
                           "blockOpenBrace": {
                             "context": {
-                              "id": "token-<lbrace>:{@[L2:C9, L2:C10]",
+                              "id": "token@<lbrace>@:{@[L2:C9, L2:C10]",
                               "snippet": "{"
                             },
                             "leadingTrivia": "",
@@ -184,20 +184,20 @@
                           "body": [
                             {
                               "context": {
-                                "id": "node-<function-application>@[L3:C8, L3:C36]",
+                                "id": "node@<function-application>@@[L3:C8, L3:C36]",
                                 "snippet": "'This is a...ocal note'"
                               },
                               "children": {
                                 "args": [],
                                 "callee": {
                                   "context": {
-                                    "id": "node-<primary-expression>@[L3:C8, L3:C36]",
+                                    "id": "node@<primary-expression>@@[L3:C8, L3:C36]",
                                     "snippet": "'This is a...ocal note'"
                                   },
                                   "children": {
                                     "expression": {
                                       "context": {
-                                        "id": "node-<literal>:This is another local note@[L3:C8, L3:C36]",
+                                        "id": "node@<literal>@:This is another local note@[L3:C8, L3:C36]",
                                         "snippet": "'This is a...ocal note'"
                                       },
                                       "children": {
@@ -205,7 +205,7 @@
                                         "fullStart": 63,
                                         "literal": {
                                           "context": {
-                                            "id": "token-<string>:This is another local note@[L3:C8, L3:C36]",
+                                            "id": "token@<string>@:This is another local note@[L3:C8, L3:C36]",
                                             "snippet": "'This is a...ocal note'"
                                           },
                                           "leadingTrivia": "        ",
@@ -231,7 +231,7 @@
                       "fullStart": 51,
                       "type": {
                         "context": {
-                          "id": "token-<identifier>:Note@[L2:C4, L2:C8]",
+                          "id": "token@<identifier>@:Note@[L2:C4, L2:C8]",
                           "snippet": "Note"
                         },
                         "leadingTrivia": "    ",
@@ -249,13 +249,13 @@
             "fullStart": 0,
             "name": {
               "context": {
-                "id": "node-<primary-expression>@[L0:C6, L0:C7]",
+                "id": "node@<primary-expression>@@[L0:C6, L0:C7]",
                 "snippet": "A"
               },
               "children": {
                 "expression": {
                   "context": {
-                    "id": "node-<variable>:A@[L0:C6, L0:C7]",
+                    "id": "node@<variable>@:A@[L0:C6, L0:C7]",
                     "snippet": "A"
                   },
                   "children": {
@@ -263,7 +263,7 @@
                     "fullStart": 6,
                     "variable": {
                       "context": {
-                        "id": "token-<identifier>:A@[L0:C6, L0:C7]",
+                        "id": "token@<identifier>@:A@[L0:C6, L0:C7]",
                         "snippet": "A"
                       },
                       "leadingTrivia": "",
@@ -278,7 +278,7 @@
             },
             "type": {
               "context": {
-                "id": "token-<identifier>:Table@[L0:C0, L0:C5]",
+                "id": "token@<identifier>@:Table@[L0:C0, L0:C5]",
                 "snippet": "Table"
               },
               "leadingTrivia": "",
@@ -288,11 +288,11 @@
           },
           "symbol": {
             "context": {
-              "id": "symbol-Table:A@[L0:C0, L5:C1]",
+              "id": "symbol@Table@:A@[L0:C0, L5:C1]",
               "snippet": "Table A {\r...\r\n    }\r\n}"
             },
             "declaration": {
-              "id": "node-<element-declaration>:A@[L0:C0, L5:C1]",
+              "id": "node@<element-declaration>@:A@[L0:C0, L5:C1]",
               "snippet": "Table A {\r...\r\n    }\r\n}"
             },
             "members": [],
@@ -301,19 +301,19 @@
         },
         {
           "context": {
-            "id": "node-<element-declaration>:@[L7:C0, L9:C1]",
+            "id": "node@<element-declaration>@:@[L7:C0, L9:C1]",
             "snippet": "Note {\r\n  ...l note'\r\n}"
           },
           "children": {
             "body": {
               "context": {
-                "id": "node-<block-expression>@[L7:C5, L9:C1]",
+                "id": "node@<block-expression>@@[L7:C5, L9:C1]",
                 "snippet": "{\r\n    'Th...l note'\r\n}"
               },
               "children": {
                 "blockCloseBrace": {
                   "context": {
-                    "id": "token-<rbrace>:}@[L9:C0, L9:C1]",
+                    "id": "token@<rbrace>@:}@[L9:C0, L9:C1]",
                     "snippet": "}"
                   },
                   "leadingTrivia": "",
@@ -322,7 +322,7 @@
                 },
                 "blockOpenBrace": {
                   "context": {
-                    "id": "token-<lbrace>:{@[L7:C5, L7:C6]",
+                    "id": "token@<lbrace>@:{@[L7:C5, L7:C6]",
                     "snippet": "{"
                   },
                   "leadingTrivia": "",
@@ -332,20 +332,20 @@
                 "body": [
                   {
                     "context": {
-                      "id": "node-<function-application>@[L8:C4, L8:C27]",
+                      "id": "node@<function-application>@@[L8:C4, L8:C27]",
                       "snippet": "'This is a...obal note'"
                     },
                     "children": {
                       "args": [],
                       "callee": {
                         "context": {
-                          "id": "node-<primary-expression>@[L8:C4, L8:C27]",
+                          "id": "node@<primary-expression>@@[L8:C4, L8:C27]",
                           "snippet": "'This is a...obal note'"
                         },
                         "children": {
                           "expression": {
                             "context": {
-                              "id": "node-<literal>:This is a global note@[L8:C4, L8:C27]",
+                              "id": "node@<literal>@:This is a global note@[L8:C4, L8:C27]",
                               "snippet": "'This is a...obal note'"
                             },
                             "children": {
@@ -353,7 +353,7 @@
                               "fullStart": 121,
                               "literal": {
                                 "context": {
-                                  "id": "token-<string>:This is a global note@[L8:C4, L8:C27]",
+                                  "id": "token@<string>@:This is a global note@[L8:C4, L8:C27]",
                                   "snippet": "'This is a...obal note'"
                                 },
                                 "leadingTrivia": "    ",
@@ -379,7 +379,7 @@
             "fullStart": 112,
             "type": {
               "context": {
-                "id": "token-<identifier>:Note@[L7:C0, L7:C4]",
+                "id": "token@<identifier>@:Note@[L7:C0, L7:C4]",
                 "snippet": "Note"
               },
               "leadingTrivia": "\n",
@@ -389,11 +389,11 @@
           },
           "symbol": {
             "context": {
-              "id": "symbol-Note:@[L7:C0, L9:C1]",
+              "id": "symbol@Note@:@[L7:C0, L9:C1]",
               "snippet": "Note {\r\n  ...l note'\r\n}"
             },
             "declaration": {
-              "id": "node-<element-declaration>:@[L7:C0, L9:C1]",
+              "id": "node@<element-declaration>@:@[L7:C0, L9:C1]",
               "snippet": "Note {\r\n  ...l note'\r\n}"
             },
             "members": [],
@@ -402,26 +402,26 @@
         },
         {
           "context": {
-            "id": "node-<element-declaration>:@[L11:C0, L13:C3]",
+            "id": "node@<element-declaration>@:@[L11:C0, L13:C3]",
             "snippet": "Note: '''\r... note\r\n'''"
           },
           "children": {
             "body": {
               "context": {
-                "id": "node-<function-application>@[L11:C6, L13:C3]",
+                "id": "node@<function-application>@@[L11:C6, L13:C3]",
                 "snippet": "'''\r\n    T... note\r\n'''"
               },
               "children": {
                 "args": [],
                 "callee": {
                   "context": {
-                    "id": "node-<primary-expression>@[L11:C6, L13:C3]",
+                    "id": "node@<primary-expression>@@[L11:C6, L13:C3]",
                     "snippet": "'''\r\n    T... note\r\n'''"
                   },
                   "children": {
                     "expression": {
                       "context": {
-                        "id": "node-<literal>:\r\n    This is another global note\r\n@[L11:C6, L13:C3]",
+                        "id": "node@<literal>@:\r\n    This is another global note\r\n@[L11:C6, L13:C3]",
                         "snippet": "'''\r\n    T... note\r\n'''"
                       },
                       "children": {
@@ -429,7 +429,7 @@
                         "fullStart": 161,
                         "literal": {
                           "context": {
-                            "id": "token-<string>:\r\n    This is another global note\r\n@[L11:C6, L13:C3]",
+                            "id": "token@<string>@:\r\n    This is another global note\r\n@[L11:C6, L13:C3]",
                             "snippet": "'''\r\n    T... note\r\n'''"
                           },
                           "leadingTrivia": "",
@@ -448,7 +448,7 @@
             },
             "bodyColon": {
               "context": {
-                "id": "token-<colon>::@[L11:C4, L11:C5]",
+                "id": "token@<colon>@::@[L11:C4, L11:C5]",
                 "snippet": ":"
               },
               "leadingTrivia": "",
@@ -459,7 +459,7 @@
             "fullStart": 154,
             "type": {
               "context": {
-                "id": "token-<identifier>:Note@[L11:C0, L11:C4]",
+                "id": "token@<identifier>@:Note@[L11:C0, L11:C4]",
                 "snippet": "Note"
               },
               "leadingTrivia": "\n",
@@ -469,11 +469,11 @@
           },
           "symbol": {
             "context": {
-              "id": "symbol-Note:@[L11:C0, L13:C3]",
+              "id": "symbol@Note@:@[L11:C0, L13:C3]",
               "snippet": "Note: '''\r... note\r\n'''"
             },
             "declaration": {
-              "id": "node-<element-declaration>:@[L11:C0, L13:C3]",
+              "id": "node@<element-declaration>@:@[L11:C0, L13:C3]",
               "snippet": "Note: '''\r... note\r\n'''"
             },
             "members": [],
@@ -483,7 +483,7 @@
       ],
       "eof": {
         "context": {
-          "id": "token-<eof>:@[L13:C3, L13:C3]",
+          "id": "token@<eof>@:@[L13:C3, L13:C3]",
           "snippet": ""
         },
         "leadingTrivia": "",
@@ -495,22 +495,22 @@
     },
     "symbol": {
       "context": {
-        "id": "symbol-Program@[L0:C0, L13:C3]",
+        "id": "symbol@Program@@[L0:C0, L13:C3]",
         "snippet": "Table A {\r... note\r\n'''"
       },
       "declaration": {
-        "id": "node-<program>@[L0:C0, L13:C3]",
+        "id": "node@<program>@@[L0:C0, L13:C3]",
         "snippet": "Table A {\r... note\r\n'''"
       },
       "members": [
         {
           "context": {
-            "id": "symbol-Schemapublic@[L?:C?, L?:C?]"
+            "id": "symbol@Schema@public@[L?:C?, L?:C?]"
           }
         },
         {
           "context": {
-            "id": "symbol-Table:A@[L0:C0, L5:C1]",
+            "id": "symbol@Table@:A@[L0:C0, L5:C1]",
             "snippet": "Table A {\r...\r\n    }\r\n}"
           }
         }

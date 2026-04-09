@@ -6,7 +6,7 @@
       "level": "error",
       "node": {
         "context": {
-          "id": "node-<primary-expression>@[L5:C3, L5:C5]",
+          "id": "node@<primary-expression>@@[L5:C3, L5:C5]",
           "snippet": "p2"
         }
       }
@@ -14,26 +14,26 @@
   ],
   "program": {
     "context": {
-      "id": "node-<program>@[L0:C0, L7:C0]",
+      "id": "node@<program>@@[L0:C0, L7:C0]",
       "snippet": "TableParti...1\n  ~p2\n}\n"
     },
     "children": {
       "body": [
         {
           "context": {
-            "id": "node-<element-declaration>:p1@[L0:C0, L0:C18]",
+            "id": "node@<element-declaration>@:p1@[L0:C0, L0:C18]",
             "snippet": "TablePartial p1 {}"
           },
           "children": {
             "body": {
               "context": {
-                "id": "node-<block-expression>@[L0:C16, L0:C18]",
+                "id": "node@<block-expression>@@[L0:C16, L0:C18]",
                 "snippet": "{}"
               },
               "children": {
                 "blockCloseBrace": {
                   "context": {
-                    "id": "token-<rbrace>:}@[L0:C17, L0:C18]",
+                    "id": "token@<rbrace>@:}@[L0:C17, L0:C18]",
                     "snippet": "}"
                   },
                   "leadingTrivia": "",
@@ -42,7 +42,7 @@
                 },
                 "blockOpenBrace": {
                   "context": {
-                    "id": "token-<lbrace>:{@[L0:C16, L0:C17]",
+                    "id": "token@<lbrace>@:{@[L0:C16, L0:C17]",
                     "snippet": "{"
                   },
                   "leadingTrivia": "",
@@ -58,13 +58,13 @@
             "fullStart": 0,
             "name": {
               "context": {
-                "id": "node-<primary-expression>@[L0:C13, L0:C15]",
+                "id": "node@<primary-expression>@@[L0:C13, L0:C15]",
                 "snippet": "p1"
               },
               "children": {
                 "expression": {
                   "context": {
-                    "id": "node-<variable>:p1@[L0:C13, L0:C15]",
+                    "id": "node@<variable>@:p1@[L0:C13, L0:C15]",
                     "snippet": "p1"
                   },
                   "children": {
@@ -72,7 +72,7 @@
                     "fullStart": 13,
                     "variable": {
                       "context": {
-                        "id": "token-<identifier>:p1@[L0:C13, L0:C15]",
+                        "id": "token@<identifier>@:p1@[L0:C13, L0:C15]",
                         "snippet": "p1"
                       },
                       "leadingTrivia": "",
@@ -87,7 +87,7 @@
             },
             "type": {
               "context": {
-                "id": "token-<identifier>:TablePartial@[L0:C0, L0:C12]",
+                "id": "token@<identifier>@:TablePartial@[L0:C0, L0:C12]",
                 "snippet": "TablePartial"
               },
               "leadingTrivia": "",
@@ -97,17 +97,17 @@
           },
           "symbol": {
             "context": {
-              "id": "symbol-TablePartial:p1@[L0:C0, L0:C18]",
+              "id": "symbol@TablePartial@:p1@[L0:C0, L0:C18]",
               "snippet": "TablePartial p1 {}"
             },
             "declaration": {
-              "id": "node-<element-declaration>:p1@[L0:C0, L0:C18]",
+              "id": "node@<element-declaration>@:p1@[L0:C0, L0:C18]",
               "snippet": "TablePartial p1 {}"
             },
             "members": [],
             "references": [
               {
-                "id": "node-<primary-expression>@[L4:C3, L4:C5]",
+                "id": "node@<primary-expression>@@[L4:C3, L4:C5]",
                 "snippet": "p1"
               }
             ]
@@ -115,19 +115,19 @@
         },
         {
           "context": {
-            "id": "node-<element-declaration>:t1@[L2:C0, L6:C1]",
+            "id": "node@<element-declaration>@:t1@[L2:C0, L6:C1]",
             "snippet": "Table t1 {...p1\n  ~p2\n}"
           },
           "children": {
             "body": {
               "context": {
-                "id": "node-<block-expression>@[L2:C9, L6:C1]",
+                "id": "node@<block-expression>@@[L2:C9, L6:C1]",
                 "snippet": "{\n  id int...p1\n  ~p2\n}"
               },
               "children": {
                 "blockCloseBrace": {
                   "context": {
-                    "id": "token-<rbrace>:}@[L6:C0, L6:C1]",
+                    "id": "token@<rbrace>@:}@[L6:C0, L6:C1]",
                     "snippet": "}"
                   },
                   "leadingTrivia": "",
@@ -136,7 +136,7 @@
                 },
                 "blockOpenBrace": {
                   "context": {
-                    "id": "token-<lbrace>:{@[L2:C9, L2:C10]",
+                    "id": "token@<lbrace>@:{@[L2:C9, L2:C10]",
                     "snippet": "{"
                   },
                   "leadingTrivia": "",
@@ -146,20 +146,20 @@
                 "body": [
                   {
                     "context": {
-                      "id": "node-<function-application>@[L3:C2, L3:C8]",
+                      "id": "node@<function-application>@@[L3:C2, L3:C8]",
                       "snippet": "id int"
                     },
                     "children": {
                       "args": [
                         {
                           "context": {
-                            "id": "node-<primary-expression>@[L3:C5, L3:C8]",
+                            "id": "node@<primary-expression>@@[L3:C5, L3:C8]",
                             "snippet": "int"
                           },
                           "children": {
                             "expression": {
                               "context": {
-                                "id": "node-<variable>:int@[L3:C5, L3:C8]",
+                                "id": "node@<variable>@:int@[L3:C5, L3:C8]",
                                 "snippet": "int"
                               },
                               "children": {
@@ -167,7 +167,7 @@
                                 "fullStart": 36,
                                 "variable": {
                                   "context": {
-                                    "id": "token-<identifier>:int@[L3:C5, L3:C8]",
+                                    "id": "token@<identifier>@:int@[L3:C5, L3:C8]",
                                     "snippet": "int"
                                   },
                                   "leadingTrivia": "",
@@ -183,13 +183,13 @@
                       ],
                       "callee": {
                         "context": {
-                          "id": "node-<primary-expression>@[L3:C2, L3:C4]",
+                          "id": "node@<primary-expression>@@[L3:C2, L3:C4]",
                           "snippet": "id"
                         },
                         "children": {
                           "expression": {
                             "context": {
-                              "id": "node-<variable>:id@[L3:C2, L3:C4]",
+                              "id": "node@<variable>@:id@[L3:C2, L3:C4]",
                               "snippet": "id"
                             },
                             "children": {
@@ -197,7 +197,7 @@
                               "fullStart": 31,
                               "variable": {
                                 "context": {
-                                  "id": "token-<identifier>:id@[L3:C2, L3:C4]",
+                                  "id": "token@<identifier>@:id@[L3:C2, L3:C4]",
                                   "snippet": "id"
                                 },
                                 "leadingTrivia": "  ",
@@ -215,11 +215,11 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-Column@[L3:C2, L3:C8]",
+                        "id": "symbol@Column@@[L3:C2, L3:C8]",
                         "snippet": "id int"
                       },
                       "declaration": {
-                        "id": "node-<function-application>@[L3:C2, L3:C8]",
+                        "id": "node@<function-application>@@[L3:C2, L3:C8]",
                         "snippet": "id int"
                       },
                       "references": []
@@ -227,26 +227,26 @@
                   },
                   {
                     "context": {
-                      "id": "node-<function-application>@[L4:C2, L4:C5]",
+                      "id": "node@<function-application>@@[L4:C2, L4:C5]",
                       "snippet": "~p1"
                     },
                     "children": {
                       "args": [],
                       "callee": {
                         "context": {
-                          "id": "node-<prefix-expression>@[L4:C2, L4:C5]",
+                          "id": "node@<prefix-expression>@@[L4:C2, L4:C5]",
                           "snippet": "~p1"
                         },
                         "children": {
                           "expression": {
                             "context": {
-                              "id": "node-<primary-expression>@[L4:C3, L4:C5]",
+                              "id": "node@<primary-expression>@@[L4:C3, L4:C5]",
                               "snippet": "p1"
                             },
                             "children": {
                               "expression": {
                                 "context": {
-                                  "id": "node-<variable>:p1@[L4:C3, L4:C5]",
+                                  "id": "node@<variable>@:p1@[L4:C3, L4:C5]",
                                   "snippet": "p1"
                                 },
                                 "children": {
@@ -254,7 +254,7 @@
                                   "fullStart": 43,
                                   "variable": {
                                     "context": {
-                                      "id": "token-<identifier>:p1@[L4:C3, L4:C5]",
+                                      "id": "token@<identifier>@:p1@[L4:C3, L4:C5]",
                                       "snippet": "p1"
                                     },
                                     "leadingTrivia": "",
@@ -268,7 +268,7 @@
                             },
                             "referee": {
                               "context": {
-                                "id": "symbol-TablePartial:p1@[L0:C0, L0:C18]",
+                                "id": "symbol@TablePartial@:p1@[L0:C0, L0:C18]",
                                 "snippet": "TablePartial p1 {}"
                               }
                             }
@@ -277,7 +277,7 @@
                           "fullStart": 40,
                           "op": {
                             "context": {
-                              "id": "token-<op>:~@[L4:C2, L4:C3]",
+                              "id": "token@<op>@:~@[L4:C2, L4:C3]",
                               "snippet": "~"
                             },
                             "leadingTrivia": "  ",
@@ -291,11 +291,11 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-PartialInjection@[L4:C2, L4:C5]",
+                        "id": "symbol@PartialInjection@@[L4:C2, L4:C5]",
                         "snippet": "~p1"
                       },
                       "declaration": {
-                        "id": "node-<function-application>@[L4:C2, L4:C5]",
+                        "id": "node@<function-application>@@[L4:C2, L4:C5]",
                         "snippet": "~p1"
                       },
                       "references": []
@@ -303,26 +303,26 @@
                   },
                   {
                     "context": {
-                      "id": "node-<function-application>@[L5:C2, L5:C5]",
+                      "id": "node@<function-application>@@[L5:C2, L5:C5]",
                       "snippet": "~p2"
                     },
                     "children": {
                       "args": [],
                       "callee": {
                         "context": {
-                          "id": "node-<prefix-expression>@[L5:C2, L5:C5]",
+                          "id": "node@<prefix-expression>@@[L5:C2, L5:C5]",
                           "snippet": "~p2"
                         },
                         "children": {
                           "expression": {
                             "context": {
-                              "id": "node-<primary-expression>@[L5:C3, L5:C5]",
+                              "id": "node@<primary-expression>@@[L5:C3, L5:C5]",
                               "snippet": "p2"
                             },
                             "children": {
                               "expression": {
                                 "context": {
-                                  "id": "node-<variable>:p2@[L5:C3, L5:C5]",
+                                  "id": "node@<variable>@:p2@[L5:C3, L5:C5]",
                                   "snippet": "p2"
                                 },
                                 "children": {
@@ -330,7 +330,7 @@
                                   "fullStart": 49,
                                   "variable": {
                                     "context": {
-                                      "id": "token-<identifier>:p2@[L5:C3, L5:C5]",
+                                      "id": "token@<identifier>@:p2@[L5:C3, L5:C5]",
                                       "snippet": "p2"
                                     },
                                     "leadingTrivia": "",
@@ -347,7 +347,7 @@
                           "fullStart": 46,
                           "op": {
                             "context": {
-                              "id": "token-<op>:~@[L5:C2, L5:C3]",
+                              "id": "token@<op>@:~@[L5:C2, L5:C3]",
                               "snippet": "~"
                             },
                             "leadingTrivia": "  ",
@@ -361,11 +361,11 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol-PartialInjection@[L5:C2, L5:C5]",
+                        "id": "symbol@PartialInjection@@[L5:C2, L5:C5]",
                         "snippet": "~p2"
                       },
                       "declaration": {
-                        "id": "node-<function-application>@[L5:C2, L5:C5]",
+                        "id": "node@<function-application>@@[L5:C2, L5:C5]",
                         "snippet": "~p2"
                       },
                       "references": []
@@ -380,13 +380,13 @@
             "fullStart": 19,
             "name": {
               "context": {
-                "id": "node-<primary-expression>@[L2:C6, L2:C8]",
+                "id": "node@<primary-expression>@@[L2:C6, L2:C8]",
                 "snippet": "t1"
               },
               "children": {
                 "expression": {
                   "context": {
-                    "id": "node-<variable>:t1@[L2:C6, L2:C8]",
+                    "id": "node@<variable>@:t1@[L2:C6, L2:C8]",
                     "snippet": "t1"
                   },
                   "children": {
@@ -394,7 +394,7 @@
                     "fullStart": 26,
                     "variable": {
                       "context": {
-                        "id": "token-<identifier>:t1@[L2:C6, L2:C8]",
+                        "id": "token@<identifier>@:t1@[L2:C6, L2:C8]",
                         "snippet": "t1"
                       },
                       "leadingTrivia": "",
@@ -409,7 +409,7 @@
             },
             "type": {
               "context": {
-                "id": "token-<identifier>:Table@[L2:C0, L2:C5]",
+                "id": "token@<identifier>@:Table@[L2:C0, L2:C5]",
                 "snippet": "Table"
               },
               "leadingTrivia": "\n",
@@ -419,29 +419,29 @@
           },
           "symbol": {
             "context": {
-              "id": "symbol-Table:t1@[L2:C0, L6:C1]",
+              "id": "symbol@Table@:t1@[L2:C0, L6:C1]",
               "snippet": "Table t1 {...p1\n  ~p2\n}"
             },
             "declaration": {
-              "id": "node-<element-declaration>:t1@[L2:C0, L6:C1]",
+              "id": "node@<element-declaration>@:t1@[L2:C0, L6:C1]",
               "snippet": "Table t1 {...p1\n  ~p2\n}"
             },
             "members": [
               {
                 "context": {
-                  "id": "symbol-Column@[L3:C2, L3:C8]",
+                  "id": "symbol@Column@@[L3:C2, L3:C8]",
                   "snippet": "id int"
                 }
               },
               {
                 "context": {
-                  "id": "symbol-PartialInjection@[L4:C2, L4:C5]",
+                  "id": "symbol@PartialInjection@@[L4:C2, L4:C5]",
                   "snippet": "~p1"
                 }
               },
               {
                 "context": {
-                  "id": "symbol-PartialInjection@[L5:C2, L5:C5]",
+                  "id": "symbol@PartialInjection@@[L5:C2, L5:C5]",
                   "snippet": "~p2"
                 }
               }
@@ -452,7 +452,7 @@
       ],
       "eof": {
         "context": {
-          "id": "token-<eof>:@[L7:C0, L7:C0]",
+          "id": "token@<eof>@:@[L7:C0, L7:C0]",
           "snippet": ""
         },
         "leadingTrivia": "",
@@ -464,28 +464,28 @@
     },
     "symbol": {
       "context": {
-        "id": "symbol-Program@[L0:C0, L7:C0]",
+        "id": "symbol@Program@@[L0:C0, L7:C0]",
         "snippet": "TableParti...1\n  ~p2\n}\n"
       },
       "declaration": {
-        "id": "node-<program>@[L0:C0, L7:C0]",
+        "id": "node@<program>@@[L0:C0, L7:C0]",
         "snippet": "TableParti...1\n  ~p2\n}\n"
       },
       "members": [
         {
           "context": {
-            "id": "symbol-Schemapublic@[L?:C?, L?:C?]"
+            "id": "symbol@Schema@public@[L?:C?, L?:C?]"
           }
         },
         {
           "context": {
-            "id": "symbol-TablePartial:p1@[L0:C0, L0:C18]",
+            "id": "symbol@TablePartial@:p1@[L0:C0, L0:C18]",
             "snippet": "TablePartial p1 {}"
           }
         },
         {
           "context": {
-            "id": "symbol-Table:t1@[L2:C0, L6:C1]",
+            "id": "symbol@Table@:t1@[L2:C0, L6:C1]",
             "snippet": "Table t1 {...p1\n  ~p2\n}"
           }
         }

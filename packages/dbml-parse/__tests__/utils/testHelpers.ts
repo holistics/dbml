@@ -44,7 +44,7 @@ function getReadableId (nodeOrSymbol: SyntaxNode | SyntaxToken | NodeSymbol): st
   const end = `L${node?.endPos.line ?? '?'}:C${node?.endPos.column ?? '?'}`;
   const nameHint = node ? getNameHint(node) : nodeOrSymbol instanceof SchemaSymbol ? nodeOrSymbol.qualifiedName.join('.') : '';
 
-  return `${type}-${kind}${nameHint}@[${start}, ${end}]`;
+  return `${type}@${kind}@${nameHint}@[${start}, ${end}]`;
 }
 
 // Output the code snippet for a node or a symbol for easy verfication
