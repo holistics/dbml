@@ -3,7 +3,7 @@
   "tokens": [
     {
       "context": {
-        "id": "token-<color>:#1234@[L0:C0, L0:C5]",
+        "id": "token@<color>@:#1234@[L0:C0, L0:C5]",
         "snippet": "#1234"
       },
       "leadingTrivia": "",
@@ -12,7 +12,7 @@
     },
     {
       "context": {
-        "id": "token-<color>:#12acbd@[L1:C0, L1:C7]",
+        "id": "token@<color>@:#12acbd@[L1:C0, L1:C7]",
         "snippet": "#12acbd"
       },
       "leadingTrivia": "",
@@ -21,7 +21,7 @@
     },
     {
       "context": {
-        "id": "token-<eof>:@[L1:C7, L1:C7]",
+        "id": "token@<eof>@:@[L1:C7, L1:C7]",
         "snippet": ""
       },
       "leadingTrivia": "",

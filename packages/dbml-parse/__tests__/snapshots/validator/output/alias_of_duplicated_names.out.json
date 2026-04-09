@@ -6,7 +6,7 @@
       "level": "error",
       "node": {
         "context": {
-          "id": "node-<primary-expression>@[L4:C6, L4:C11]",
+          "id": "node@<primary-expression>@@[L4:C6, L4:C11]",
           "snippet": "Users"
         }
       }
@@ -17,7 +17,7 @@
       "level": "error",
       "node": {
         "context": {
-          "id": "node-<primary-expression>@[L8:C6, L8:C14]",
+          "id": "node@<primary-expression>@@[L8:C6, L8:C14]",
           "snippet": "Products"
         }
       }
@@ -25,26 +25,26 @@
   ],
   "program": {
     "context": {
-      "id": "node-<program>@[L0:C0, L10:C1]",
+      "id": "node@<program>@@[L0:C0, L10:C1]",
       "snippet": "Table User...{\r\n    \r\n}"
     },
     "children": {
       "body": [
         {
           "context": {
-            "id": "node-<element-declaration>:Users@[L0:C0, L2:C1]",
+            "id": "node@<element-declaration>@:Users@[L0:C0, L2:C1]",
             "snippet": "Table User... U1 {\r\n\r\n}"
           },
           "children": {
             "alias": {
               "context": {
-                "id": "node-<primary-expression>@[L0:C15, L0:C17]",
+                "id": "node@<primary-expression>@@[L0:C15, L0:C17]",
                 "snippet": "U1"
               },
               "children": {
                 "expression": {
                   "context": {
-                    "id": "node-<variable>:U1@[L0:C15, L0:C17]",
+                    "id": "node@<variable>@:U1@[L0:C15, L0:C17]",
                     "snippet": "U1"
                   },
                   "children": {
@@ -52,7 +52,7 @@
                     "fullStart": 15,
                     "variable": {
                       "context": {
-                        "id": "token-<identifier>:U1@[L0:C15, L0:C17]",
+                        "id": "token@<identifier>@:U1@[L0:C15, L0:C17]",
                         "snippet": "U1"
                       },
                       "leadingTrivia": "",
@@ -67,7 +67,7 @@
             },
             "as": {
               "context": {
-                "id": "token-<identifier>:as@[L0:C12, L0:C14]",
+                "id": "token@<identifier>@:as@[L0:C12, L0:C14]",
                 "snippet": "as"
               },
               "leadingTrivia": "",
@@ -76,13 +76,13 @@
             },
             "body": {
               "context": {
-                "id": "node-<block-expression>@[L0:C18, L2:C1]",
+                "id": "node@<block-expression>@@[L0:C18, L2:C1]",
                 "snippet": "{\r\n\r\n}"
               },
               "children": {
                 "blockCloseBrace": {
                   "context": {
-                    "id": "token-<rbrace>:}@[L2:C0, L2:C1]",
+                    "id": "token@<rbrace>@:}@[L2:C0, L2:C1]",
                     "snippet": "}"
                   },
                   "leadingTrivia": "\n",
@@ -91,7 +91,7 @@
                 },
                 "blockOpenBrace": {
                   "context": {
-                    "id": "token-<lbrace>:{@[L0:C18, L0:C19]",
+                    "id": "token@<lbrace>@:{@[L0:C18, L0:C19]",
                     "snippet": "{"
                   },
                   "leadingTrivia": "",
@@ -107,13 +107,13 @@
             "fullStart": 0,
             "name": {
               "context": {
-                "id": "node-<primary-expression>@[L0:C6, L0:C11]",
+                "id": "node@<primary-expression>@@[L0:C6, L0:C11]",
                 "snippet": "Users"
               },
               "children": {
                 "expression": {
                   "context": {
-                    "id": "node-<variable>:Users@[L0:C6, L0:C11]",
+                    "id": "node@<variable>@:Users@[L0:C6, L0:C11]",
                     "snippet": "Users"
                   },
                   "children": {
@@ -121,7 +121,7 @@
                     "fullStart": 6,
                     "variable": {
                       "context": {
-                        "id": "token-<identifier>:Users@[L0:C6, L0:C11]",
+                        "id": "token@<identifier>@:Users@[L0:C6, L0:C11]",
                         "snippet": "Users"
                       },
                       "leadingTrivia": "",
@@ -136,7 +136,7 @@
             },
             "type": {
               "context": {
-                "id": "token-<identifier>:Table@[L0:C0, L0:C5]",
+                "id": "token@<identifier>@:Table@[L0:C0, L0:C5]",
                 "snippet": "Table"
               },
               "leadingTrivia": "",
@@ -146,11 +146,11 @@
           },
           "symbol": {
             "context": {
-              "id": "symbol-<element-declaration>:Users@[L0:C0, L2:C1]",
+              "id": "symbol@<element-declaration>@:Users@[L0:C0, L2:C1]",
               "snippet": "Table User... U1 {\r\n\r\n}"
             },
             "declaration": {
-              "id": "node-<element-declaration>:Users@[L0:C0, L2:C1]",
+              "id": "node@<element-declaration>@:Users@[L0:C0, L2:C1]",
               "snippet": "Table User... U1 {\r\n\r\n}"
             },
             "members": [],
@@ -159,19 +159,19 @@
         },
         {
           "context": {
-            "id": "node-<element-declaration>:Users@[L4:C0, L6:C1]",
+            "id": "node@<element-declaration>@:Users@[L4:C0, L6:C1]",
             "snippet": "Table User... U2 {\r\n\r\n}"
           },
           "children": {
             "alias": {
               "context": {
-                "id": "node-<primary-expression>@[L4:C15, L4:C17]",
+                "id": "node@<primary-expression>@@[L4:C15, L4:C17]",
                 "snippet": "U2"
               },
               "children": {
                 "expression": {
                   "context": {
-                    "id": "node-<variable>:U2@[L4:C15, L4:C17]",
+                    "id": "node@<variable>@:U2@[L4:C15, L4:C17]",
                     "snippet": "U2"
                   },
                   "children": {
@@ -179,7 +179,7 @@
                     "fullStart": 43,
                     "variable": {
                       "context": {
-                        "id": "token-<identifier>:U2@[L4:C15, L4:C17]",
+                        "id": "token@<identifier>@:U2@[L4:C15, L4:C17]",
                         "snippet": "U2"
                       },
                       "leadingTrivia": "",
@@ -194,7 +194,7 @@
             },
             "as": {
               "context": {
-                "id": "token-<identifier>:as@[L4:C12, L4:C14]",
+                "id": "token@<identifier>@:as@[L4:C12, L4:C14]",
                 "snippet": "as"
               },
               "leadingTrivia": "",
@@ -203,13 +203,13 @@
             },
             "body": {
               "context": {
-                "id": "node-<block-expression>@[L4:C18, L6:C1]",
+                "id": "node@<block-expression>@@[L4:C18, L6:C1]",
                 "snippet": "{\r\n\r\n}"
               },
               "children": {
                 "blockCloseBrace": {
                   "context": {
-                    "id": "token-<rbrace>:}@[L6:C0, L6:C1]",
+                    "id": "token@<rbrace>@:}@[L6:C0, L6:C1]",
                     "snippet": "}"
                   },
                   "leadingTrivia": "\n",
@@ -218,7 +218,7 @@
                 },
                 "blockOpenBrace": {
                   "context": {
-                    "id": "token-<lbrace>:{@[L4:C18, L4:C19]",
+                    "id": "token@<lbrace>@:{@[L4:C18, L4:C19]",
                     "snippet": "{"
                   },
                   "leadingTrivia": "",
@@ -234,13 +234,13 @@
             "fullStart": 27,
             "name": {
               "context": {
-                "id": "node-<primary-expression>@[L4:C6, L4:C11]",
+                "id": "node@<primary-expression>@@[L4:C6, L4:C11]",
                 "snippet": "Users"
               },
               "children": {
                 "expression": {
                   "context": {
-                    "id": "node-<variable>:Users@[L4:C6, L4:C11]",
+                    "id": "node@<variable>@:Users@[L4:C6, L4:C11]",
                     "snippet": "Users"
                   },
                   "children": {
@@ -248,7 +248,7 @@
                     "fullStart": 34,
                     "variable": {
                       "context": {
-                        "id": "token-<identifier>:Users@[L4:C6, L4:C11]",
+                        "id": "token@<identifier>@:Users@[L4:C6, L4:C11]",
                         "snippet": "Users"
                       },
                       "leadingTrivia": "",
@@ -263,7 +263,7 @@
             },
             "type": {
               "context": {
-                "id": "token-<identifier>:Table@[L4:C0, L4:C5]",
+                "id": "token@<identifier>@:Table@[L4:C0, L4:C5]",
                 "snippet": "Table"
               },
               "leadingTrivia": "\n",
@@ -273,11 +273,11 @@
           },
           "symbol": {
             "context": {
-              "id": "symbol-<element-declaration>:Users@[L4:C0, L6:C1]",
+              "id": "symbol@<element-declaration>@:Users@[L4:C0, L6:C1]",
               "snippet": "Table User... U2 {\r\n\r\n}"
             },
             "declaration": {
-              "id": "node-<element-declaration>:Users@[L4:C0, L6:C1]",
+              "id": "node@<element-declaration>@:Users@[L4:C0, L6:C1]",
               "snippet": "Table User... U2 {\r\n\r\n}"
             },
             "members": [],
@@ -286,19 +286,19 @@
         },
         {
           "context": {
-            "id": "node-<element-declaration>:Products@[L8:C0, L10:C1]",
+            "id": "node@<element-declaration>@:Products@[L8:C0, L10:C1]",
             "snippet": "Table Prod...{\r\n    \r\n}"
           },
           "children": {
             "alias": {
               "context": {
-                "id": "node-<primary-expression>@[L8:C18, L8:C20]",
+                "id": "node@<primary-expression>@@[L8:C18, L8:C20]",
                 "snippet": "U1"
               },
               "children": {
                 "expression": {
                   "context": {
-                    "id": "node-<variable>:U1@[L8:C18, L8:C20]",
+                    "id": "node@<variable>@:U1@[L8:C18, L8:C20]",
                     "snippet": "U1"
                   },
                   "children": {
@@ -306,7 +306,7 @@
                     "fullStart": 74,
                     "variable": {
                       "context": {
-                        "id": "token-<identifier>:U1@[L8:C18, L8:C20]",
+                        "id": "token@<identifier>@:U1@[L8:C18, L8:C20]",
                         "snippet": "U1"
                       },
                       "leadingTrivia": "",
@@ -321,7 +321,7 @@
             },
             "as": {
               "context": {
-                "id": "token-<identifier>:as@[L8:C15, L8:C17]",
+                "id": "token@<identifier>@:as@[L8:C15, L8:C17]",
                 "snippet": "as"
               },
               "leadingTrivia": "",
@@ -330,13 +330,13 @@
             },
             "body": {
               "context": {
-                "id": "node-<block-expression>@[L8:C21, L10:C1]",
+                "id": "node@<block-expression>@@[L8:C21, L10:C1]",
                 "snippet": "{\r\n    \r\n}"
               },
               "children": {
                 "blockCloseBrace": {
                   "context": {
-                    "id": "token-<rbrace>:}@[L10:C0, L10:C1]",
+                    "id": "token@<rbrace>@:}@[L10:C0, L10:C1]",
                     "snippet": "}"
                   },
                   "leadingTrivia": "    \n",
@@ -345,7 +345,7 @@
                 },
                 "blockOpenBrace": {
                   "context": {
-                    "id": "token-<lbrace>:{@[L8:C21, L8:C22]",
+                    "id": "token@<lbrace>@:{@[L8:C21, L8:C22]",
                     "snippet": "{"
                   },
                   "leadingTrivia": "",
@@ -361,13 +361,13 @@
             "fullStart": 55,
             "name": {
               "context": {
-                "id": "node-<primary-expression>@[L8:C6, L8:C14]",
+                "id": "node@<primary-expression>@@[L8:C6, L8:C14]",
                 "snippet": "Products"
               },
               "children": {
                 "expression": {
                   "context": {
-                    "id": "node-<variable>:Products@[L8:C6, L8:C14]",
+                    "id": "node@<variable>@:Products@[L8:C6, L8:C14]",
                     "snippet": "Products"
                   },
                   "children": {
@@ -375,7 +375,7 @@
                     "fullStart": 62,
                     "variable": {
                       "context": {
-                        "id": "token-<identifier>:Products@[L8:C6, L8:C14]",
+                        "id": "token@<identifier>@:Products@[L8:C6, L8:C14]",
                         "snippet": "Products"
                       },
                       "leadingTrivia": "",
@@ -390,7 +390,7 @@
             },
             "type": {
               "context": {
-                "id": "token-<identifier>:Table@[L8:C0, L8:C5]",
+                "id": "token@<identifier>@:Table@[L8:C0, L8:C5]",
                 "snippet": "Table"
               },
               "leadingTrivia": "\n",
@@ -400,11 +400,11 @@
           },
           "symbol": {
             "context": {
-              "id": "symbol-<element-declaration>:Products@[L8:C0, L10:C1]",
+              "id": "symbol@<element-declaration>@:Products@[L8:C0, L10:C1]",
               "snippet": "Table Prod...{\r\n    \r\n}"
             },
             "declaration": {
-              "id": "node-<element-declaration>:Products@[L8:C0, L10:C1]",
+              "id": "node@<element-declaration>@:Products@[L8:C0, L10:C1]",
               "snippet": "Table Prod...{\r\n    \r\n}"
             },
             "members": [],
@@ -414,7 +414,7 @@
       ],
       "eof": {
         "context": {
-          "id": "token-<eof>:@[L10:C1, L10:C1]",
+          "id": "token@<eof>@:@[L10:C1, L10:C1]",
           "snippet": ""
         },
         "leadingTrivia": "",
@@ -426,35 +426,35 @@
     },
     "symbol": {
       "context": {
-        "id": "symbol-<program>@[L0:C0, L10:C1]",
+        "id": "symbol@<program>@@[L0:C0, L10:C1]",
         "snippet": "Table User...{\r\n    \r\n}"
       },
       "declaration": {
-        "id": "node-<program>@[L0:C0, L10:C1]",
+        "id": "node@<program>@@[L0:C0, L10:C1]",
         "snippet": "Table User...{\r\n    \r\n}"
       },
       "members": [
         {
           "context": {
-            "id": "symbol-<element-declaration>:Users@[L4:C0, L6:C1]",
+            "id": "symbol@<element-declaration>@:Users@[L4:C0, L6:C1]",
             "snippet": "Table User... U2 {\r\n\r\n}"
           }
         },
         {
           "context": {
-            "id": "symbol-<element-declaration>:Products@[L8:C0, L10:C1]",
+            "id": "symbol@<element-declaration>@:Products@[L8:C0, L10:C1]",
             "snippet": "Table Prod...{\r\n    \r\n}"
           }
         },
         {
           "context": {
-            "id": "symbol-<element-declaration>:Users@[L4:C0, L6:C1]",
+            "id": "symbol@<element-declaration>@:Users@[L4:C0, L6:C1]",
             "snippet": "Table User... U2 {\r\n\r\n}"
           }
         },
         {
           "context": {
-            "id": "symbol-<element-declaration>:Products@[L8:C0, L10:C1]",
+            "id": "symbol@<element-declaration>@:Products@[L8:C0, L10:C1]",
             "snippet": "Table Prod...{\r\n    \r\n}"
           }
         }

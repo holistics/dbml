@@ -6,7 +6,7 @@
       "level": "error",
       "token": {
         "context": {
-          "id": "token-<string>:\\u@[L0:C1, L0:C3]",
+          "id": "token@<string>@:\\u@[L0:C1, L0:C3]",
           "snippet": "\\u",
           "isInvalid": true
         }
@@ -18,7 +18,7 @@
       "level": "error",
       "token": {
         "context": {
-          "id": "token-<string>:\\u1@[L2:C1, L2:C4]",
+          "id": "token@<string>@:\\u1@[L2:C1, L2:C4]",
           "snippet": "\\u1",
           "isInvalid": true
         }
@@ -30,7 +30,7 @@
       "level": "error",
       "token": {
         "context": {
-          "id": "token-<string>:\\u12@[L3:C1, L3:C5]",
+          "id": "token@<string>@:\\u12@[L3:C1, L3:C5]",
           "snippet": "\\u12",
           "isInvalid": true
         }
@@ -42,7 +42,7 @@
       "level": "error",
       "token": {
         "context": {
-          "id": "token-<string>:\\uab@[L4:C1, L4:C5]",
+          "id": "token@<string>@:\\uab@[L4:C1, L4:C5]",
           "snippet": "\\uab",
           "isInvalid": true
         }
@@ -54,7 +54,7 @@
       "level": "error",
       "token": {
         "context": {
-          "id": "token-<string>:\\ua1@[L5:C1, L5:C5]",
+          "id": "token@<string>@:\\ua1@[L5:C1, L5:C5]",
           "snippet": "\\ua1",
           "isInvalid": true
         }
@@ -64,7 +64,7 @@
   "tokens": [
     {
       "context": {
-        "id": "token-<variable>:\\u@[L0:C0, L0:C4]",
+        "id": "token@<variable>@:\\u@[L0:C0, L0:C4]",
         "snippet": "\"\\u\""
       },
       "leadingTrivia": "",
@@ -73,7 +73,7 @@
     },
     {
       "context": {
-        "id": "token-<variable>:a@[L1:C0, L1:C4]",
+        "id": "token@<variable>@:a@[L1:C0, L1:C4]",
         "snippet": "\"\\a\""
       },
       "leadingTrivia": "",
@@ -82,7 +82,7 @@
     },
     {
       "context": {
-        "id": "token-<variable>:\\u1@[L2:C0, L2:C5]",
+        "id": "token@<variable>@:\\u1@[L2:C0, L2:C5]",
         "snippet": "\"\\u1\""
       },
       "leadingTrivia": "",
@@ -91,7 +91,7 @@
     },
     {
       "context": {
-        "id": "token-<variable>:\\u12@[L3:C0, L3:C6]",
+        "id": "token@<variable>@:\\u12@[L3:C0, L3:C6]",
         "snippet": "\"\\u12\""
       },
       "leadingTrivia": "",
@@ -100,7 +100,7 @@
     },
     {
       "context": {
-        "id": "token-<variable>:\\uab@[L4:C0, L4:C6]",
+        "id": "token@<variable>@:\\uab@[L4:C0, L4:C6]",
         "snippet": "\"\\uab\""
       },
       "leadingTrivia": "",
@@ -109,7 +109,7 @@
     },
     {
       "context": {
-        "id": "token-<variable>:\\ua1@[L5:C0, L5:C6]",
+        "id": "token@<variable>@:\\ua1@[L5:C0, L5:C6]",
         "snippet": "\"\\ua1\""
       },
       "leadingTrivia": "",
@@ -118,7 +118,7 @@
     },
     {
       "context": {
-        "id": "token-<eof>:@[L5:C6, L5:C6]",
+        "id": "token@<eof>@:@[L5:C6, L5:C6]",
         "snippet": ""
       },
       "leadingTrivia": "",

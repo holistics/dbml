@@ -6,7 +6,7 @@
       "level": "error",
       "token": {
         "context": {
-          "id": "token-<string>:']@[L7:C69, L7:C71]",
+          "id": "token@<string>@:']@[L7:C69, L7:C71]",
           "snippet": "']",
           "isInvalid": true
         }
@@ -18,7 +18,7 @@
       "level": "error",
       "token": {
         "context": {
-          "id": "token-<identifier>:s@[L7:C35, L7:C36]",
+          "id": "token@<identifier>@:s@[L7:C35, L7:C36]",
           "snippet": "s",
           "isInvalid": true
         }
@@ -30,7 +30,7 @@
       "level": "error",
       "token": {
         "context": {
-          "id": "token-<rparen>:)@[L9:C24, L9:C25]",
+          "id": "token@<rparen>@:)@[L9:C24, L9:C25]",
           "snippet": ")",
           "isInvalid": true
         }
@@ -42,7 +42,7 @@
       "level": "error",
       "token": {
         "context": {
-          "id": "token-<rbrace>:}@[L11:C0, L11:C1]",
+          "id": "token@<rbrace>@:}@[L11:C0, L11:C1]",
           "snippet": "}",
           "isInvalid": true
         }
@@ -51,26 +51,26 @@
   ],
   "program": {
     "context": {
-      "id": "node-<program>@[L0:C0, L25:C0]",
+      "id": "node@<program>@@[L0:C0, L25:C0]",
       "snippet": "Table user...agram_id\"\n"
     },
     "children": {
       "body": [
         {
           "context": {
-            "id": "node-<element-declaration>:users@[L0:C0, L2:C1]",
+            "id": "node@<element-declaration>@:users@[L0:C0, L2:C1]",
             "snippet": "Table user...crement]\n}"
           },
           "children": {
             "alias": {
               "context": {
-                "id": "node-<primary-expression>@[L0:C15, L0:C16]",
+                "id": "node@<primary-expression>@@[L0:C15, L0:C16]",
                 "snippet": "U"
               },
               "children": {
                 "expression": {
                   "context": {
-                    "id": "node-<variable>:U@[L0:C15, L0:C16]",
+                    "id": "node@<variable>@:U@[L0:C15, L0:C16]",
                     "snippet": "U"
                   },
                   "children": {
@@ -78,7 +78,7 @@
                     "fullStart": 15,
                     "variable": {
                       "context": {
-                        "id": "token-<identifier>:U@[L0:C15, L0:C16]",
+                        "id": "token@<identifier>@:U@[L0:C15, L0:C16]",
                         "snippet": "U"
                       },
                       "leadingTrivia": "",
@@ -93,7 +93,7 @@
             },
             "as": {
               "context": {
-                "id": "token-<identifier>:as@[L0:C12, L0:C14]",
+                "id": "token@<identifier>@:as@[L0:C12, L0:C14]",
                 "snippet": "as"
               },
               "leadingTrivia": "",
@@ -102,13 +102,13 @@
             },
             "body": {
               "context": {
-                "id": "node-<block-expression>@[L0:C17, L2:C1]",
+                "id": "node@<block-expression>@@[L0:C17, L2:C1]",
                 "snippet": "{\n  id int...crement]\n}"
               },
               "children": {
                 "blockCloseBrace": {
                   "context": {
-                    "id": "token-<rbrace>:}@[L2:C0, L2:C1]",
+                    "id": "token@<rbrace>@:}@[L2:C0, L2:C1]",
                     "snippet": "}"
                   },
                   "leadingTrivia": "",
@@ -117,7 +117,7 @@
                 },
                 "blockOpenBrace": {
                   "context": {
-                    "id": "token-<lbrace>:{@[L0:C17, L0:C18]",
+                    "id": "token@<lbrace>@:{@[L0:C17, L0:C18]",
                     "snippet": "{"
                   },
                   "leadingTrivia": "",
@@ -127,20 +127,20 @@
                 "body": [
                   {
                     "context": {
-                      "id": "node-<function-application>@[L1:C2, L1:C24]",
+                      "id": "node@<function-application>@@[L1:C2, L1:C24]",
                       "snippet": "id int [pk...increment]"
                     },
                     "children": {
                       "args": [
                         {
                           "context": {
-                            "id": "node-<primary-expression>@[L1:C5, L1:C8]",
+                            "id": "node@<primary-expression>@@[L1:C5, L1:C8]",
                             "snippet": "int"
                           },
                           "children": {
                             "expression": {
                               "context": {
-                                "id": "node-<variable>:int@[L1:C5, L1:C8]",
+                                "id": "node@<variable>@:int@[L1:C5, L1:C8]",
                                 "snippet": "int"
                               },
                               "children": {
@@ -148,7 +148,7 @@
                                 "fullStart": 24,
                                 "variable": {
                                   "context": {
-                                    "id": "token-<identifier>:int@[L1:C5, L1:C8]",
+                                    "id": "token@<identifier>@:int@[L1:C5, L1:C8]",
                                     "snippet": "int"
                                   },
                                   "leadingTrivia": "",
@@ -163,14 +163,14 @@
                         },
                         {
                           "context": {
-                            "id": "node-<list-expression>@[L1:C9, L1:C24]",
+                            "id": "node@<list-expression>@@[L1:C9, L1:C24]",
                             "snippet": "[pk, increment]"
                           },
                           "children": {
                             "commaList": [
                               {
                                 "context": {
-                                  "id": "token-<comma>:,@[L1:C12, L1:C13]",
+                                  "id": "token@<comma>@:,@[L1:C12, L1:C13]",
                                   "snippet": ","
                                 },
                                 "leadingTrivia": "",
@@ -181,7 +181,7 @@
                             "elementList": [
                               {
                                 "context": {
-                                  "id": "node-<attribute>@[L1:C10, L1:C12]",
+                                  "id": "node@<attribute>@@[L1:C10, L1:C12]",
                                   "snippet": "pk"
                                 },
                                 "children": {
@@ -189,7 +189,7 @@
                                   "fullStart": 29,
                                   "name": {
                                     "context": {
-                                      "id": "node-<identifer-stream>@[L1:C10, L1:C12]",
+                                      "id": "node@<identifer-stream>@@[L1:C10, L1:C12]",
                                       "snippet": "pk"
                                     },
                                     "children": {
@@ -198,7 +198,7 @@
                                       "identifiers": [
                                         {
                                           "context": {
-                                            "id": "token-<identifier>:pk@[L1:C10, L1:C12]",
+                                            "id": "token@<identifier>@:pk@[L1:C10, L1:C12]",
                                             "snippet": "pk"
                                           },
                                           "leadingTrivia": "",
@@ -212,7 +212,7 @@
                               },
                               {
                                 "context": {
-                                  "id": "node-<attribute>@[L1:C14, L1:C23]",
+                                  "id": "node@<attribute>@@[L1:C14, L1:C23]",
                                   "snippet": "increment"
                                 },
                                 "children": {
@@ -220,7 +220,7 @@
                                   "fullStart": 33,
                                   "name": {
                                     "context": {
-                                      "id": "node-<identifer-stream>@[L1:C14, L1:C23]",
+                                      "id": "node@<identifer-stream>@@[L1:C14, L1:C23]",
                                       "snippet": "increment"
                                     },
                                     "children": {
@@ -229,7 +229,7 @@
                                       "identifiers": [
                                         {
                                           "context": {
-                                            "id": "token-<identifier>:increment@[L1:C14, L1:C23]",
+                                            "id": "token@<identifier>@:increment@[L1:C14, L1:C23]",
                                             "snippet": "increment"
                                           },
                                           "leadingTrivia": "",
@@ -246,7 +246,7 @@
                             "fullStart": 28,
                             "listCloseBracket": {
                               "context": {
-                                "id": "token-<rbracket>:]@[L1:C23, L1:C24]",
+                                "id": "token@<rbracket>@:]@[L1:C23, L1:C24]",
                                 "snippet": "]"
                               },
                               "leadingTrivia": "",
@@ -255,7 +255,7 @@
                             },
                             "listOpenBracket": {
                               "context": {
-                                "id": "token-<lbracket>:[@[L1:C9, L1:C10]",
+                                "id": "token@<lbracket>@:[@[L1:C9, L1:C10]",
                                 "snippet": "["
                               },
                               "leadingTrivia": "",
@@ -267,13 +267,13 @@
                       ],
                       "callee": {
                         "context": {
-                          "id": "node-<primary-expression>@[L1:C2, L1:C4]",
+                          "id": "node@<primary-expression>@@[L1:C2, L1:C4]",
                           "snippet": "id"
                         },
                         "children": {
                           "expression": {
                             "context": {
-                              "id": "node-<variable>:id@[L1:C2, L1:C4]",
+                              "id": "node@<variable>@:id@[L1:C2, L1:C4]",
                               "snippet": "id"
                             },
                             "children": {
@@ -281,7 +281,7 @@
                               "fullStart": 19,
                               "variable": {
                                 "context": {
-                                  "id": "token-<identifier>:id@[L1:C2, L1:C4]",
+                                  "id": "token@<identifier>@:id@[L1:C2, L1:C4]",
                                   "snippet": "id"
                                 },
                                 "leadingTrivia": "  ",
@@ -307,13 +307,13 @@
             "fullStart": 0,
             "name": {
               "context": {
-                "id": "node-<primary-expression>@[L0:C6, L0:C11]",
+                "id": "node@<primary-expression>@@[L0:C6, L0:C11]",
                 "snippet": "users"
               },
               "children": {
                 "expression": {
                   "context": {
-                    "id": "node-<variable>:users@[L0:C6, L0:C11]",
+                    "id": "node@<variable>@:users@[L0:C6, L0:C11]",
                     "snippet": "users"
                   },
                   "children": {
@@ -321,7 +321,7 @@
                     "fullStart": 6,
                     "variable": {
                       "context": {
-                        "id": "token-<identifier>:users@[L0:C6, L0:C11]",
+                        "id": "token@<identifier>@:users@[L0:C6, L0:C11]",
                         "snippet": "users"
                       },
                       "leadingTrivia": "",
@@ -336,7 +336,7 @@
             },
             "type": {
               "context": {
-                "id": "token-<identifier>:Table@[L0:C0, L0:C5]",
+                "id": "token@<identifier>@:Table@[L0:C0, L0:C5]",
                 "snippet": "Table"
               },
               "leadingTrivia": "",
@@ -347,19 +347,19 @@
         },
         {
           "context": {
-            "id": "node-<element-declaration>:user_role_in_diagram@[L4:C0, L10:C3]",
+            "id": "node@<element-declaration>@:user_role_in_diagram@[L4:C0, L10:C3]",
             "snippet": "Table user...) [pk]\n  }"
           },
           "children": {
             "body": {
               "context": {
-                "id": "node-<block-expression>@[L4:C27, L10:C3]",
+                "id": "node@<block-expression>@@[L4:C27, L10:C3]",
                 "snippet": "{\n  user_i...) [pk]\n  }"
               },
               "children": {
                 "blockCloseBrace": {
                   "context": {
-                    "id": "token-<rbrace>:}@[L10:C2, L10:C3]",
+                    "id": "token@<rbrace>@:}@[L10:C2, L10:C3]",
                     "snippet": "}"
                   },
                   "leadingTrivia": "  ",
@@ -368,7 +368,7 @@
                 },
                 "blockOpenBrace": {
                   "context": {
-                    "id": "token-<lbrace>:{@[L4:C27, L4:C28]",
+                    "id": "token@<lbrace>@:{@[L4:C27, L4:C28]",
                     "snippet": "{"
                   },
                   "leadingTrivia": "",
@@ -378,20 +378,20 @@
                 "body": [
                   {
                     "context": {
-                      "id": "node-<function-application>@[L5:C2, L5:C13]",
+                      "id": "node@<function-application>@@[L5:C2, L5:C13]",
                       "snippet": "user_id int"
                     },
                     "children": {
                       "args": [
                         {
                           "context": {
-                            "id": "node-<primary-expression>@[L5:C10, L5:C13]",
+                            "id": "node@<primary-expression>@@[L5:C10, L5:C13]",
                             "snippet": "int"
                           },
                           "children": {
                             "expression": {
                               "context": {
-                                "id": "node-<variable>:int@[L5:C10, L5:C13]",
+                                "id": "node@<variable>@:int@[L5:C10, L5:C13]",
                                 "snippet": "int"
                               },
                               "children": {
@@ -399,7 +399,7 @@
                                 "fullStart": 86,
                                 "variable": {
                                   "context": {
-                                    "id": "token-<identifier>:int@[L5:C10, L5:C13]",
+                                    "id": "token@<identifier>@:int@[L5:C10, L5:C13]",
                                     "snippet": "int"
                                   },
                                   "leadingTrivia": "",
@@ -415,13 +415,13 @@
                       ],
                       "callee": {
                         "context": {
-                          "id": "node-<primary-expression>@[L5:C2, L5:C9]",
+                          "id": "node@<primary-expression>@@[L5:C2, L5:C9]",
                           "snippet": "user_id"
                         },
                         "children": {
                           "expression": {
                             "context": {
-                              "id": "node-<variable>:user_id@[L5:C2, L5:C9]",
+                              "id": "node@<variable>@:user_id@[L5:C2, L5:C9]",
                               "snippet": "user_id"
                             },
                             "children": {
@@ -429,7 +429,7 @@
                               "fullStart": 76,
                               "variable": {
                                 "context": {
-                                  "id": "token-<identifier>:user_id@[L5:C2, L5:C9]",
+                                  "id": "token@<identifier>@:user_id@[L5:C2, L5:C9]",
                                   "snippet": "user_id"
                                 },
                                 "leadingTrivia": "  ",
@@ -448,20 +448,20 @@
                   },
                   {
                     "context": {
-                      "id": "node-<function-application>@[L6:C2, L6:C16]",
+                      "id": "node@<function-application>@@[L6:C2, L6:C16]",
                       "snippet": "diagram_id int"
                     },
                     "children": {
                       "args": [
                         {
                           "context": {
-                            "id": "node-<primary-expression>@[L6:C13, L6:C16]",
+                            "id": "node@<primary-expression>@@[L6:C13, L6:C16]",
                             "snippet": "int"
                           },
                           "children": {
                             "expression": {
                               "context": {
-                                "id": "node-<variable>:int@[L6:C13, L6:C16]",
+                                "id": "node@<variable>@:int@[L6:C13, L6:C16]",
                                 "snippet": "int"
                               },
                               "children": {
@@ -469,7 +469,7 @@
                                 "fullStart": 103,
                                 "variable": {
                                   "context": {
-                                    "id": "token-<identifier>:int@[L6:C13, L6:C16]",
+                                    "id": "token@<identifier>@:int@[L6:C13, L6:C16]",
                                     "snippet": "int"
                                   },
                                   "leadingTrivia": "",
@@ -485,13 +485,13 @@
                       ],
                       "callee": {
                         "context": {
-                          "id": "node-<primary-expression>@[L6:C2, L6:C12]",
+                          "id": "node@<primary-expression>@@[L6:C2, L6:C12]",
                           "snippet": "diagram_id"
                         },
                         "children": {
                           "expression": {
                             "context": {
-                              "id": "node-<variable>:diagram_id@[L6:C2, L6:C12]",
+                              "id": "node@<variable>@:diagram_id@[L6:C2, L6:C12]",
                               "snippet": "diagram_id"
                             },
                             "children": {
@@ -499,7 +499,7 @@
                               "fullStart": 90,
                               "variable": {
                                 "context": {
-                                  "id": "token-<identifier>:diagram_id@[L6:C2, L6:C12]",
+                                  "id": "token@<identifier>@:diagram_id@[L6:C2, L6:C12]",
                                   "snippet": "diagram_id"
                                 },
                                 "leadingTrivia": "  ",
@@ -518,20 +518,20 @@
                   },
                   {
                     "context": {
-                      "id": "node-<function-application>@[L7:C2, L9:C30]",
+                      "id": "node@<function-application>@@[L7:C2, L9:C30]",
                       "snippet": "role int [...m_id) [pk]"
                     },
                     "children": {
                       "args": [
                         {
                           "context": {
-                            "id": "node-<primary-expression>@[L7:C7, L7:C10]",
+                            "id": "node@<primary-expression>@@[L7:C7, L7:C10]",
                             "snippet": "int"
                           },
                           "children": {
                             "expression": {
                               "context": {
-                                "id": "node-<variable>:int@[L7:C7, L7:C10]",
+                                "id": "node@<variable>@:int@[L7:C7, L7:C10]",
                                 "snippet": "int"
                               },
                               "children": {
@@ -539,7 +539,7 @@
                                 "fullStart": 114,
                                 "variable": {
                                   "context": {
-                                    "id": "token-<identifier>:int@[L7:C7, L7:C10]",
+                                    "id": "token@<identifier>@:int@[L7:C7, L7:C10]",
                                     "snippet": "int"
                                   },
                                   "leadingTrivia": "",
@@ -554,14 +554,14 @@
                         },
                         {
                           "context": {
-                            "id": "node-<list-expression>@[L7:C11, L9:C30]",
+                            "id": "node@<list-expression>@@[L7:C11, L9:C30]",
                             "snippet": "[note: 'Ro...m_id) [pk]"
                           },
                           "children": {
                             "commaList": [
                               {
                                 "context": {
-                                  "id": "token-<comma>:,@[L9:C12, L9:C13]",
+                                  "id": "token@<comma>@:,@[L9:C12, L9:C13]",
                                   "snippet": ","
                                 },
                                 "leadingTrivia": "",
@@ -572,13 +572,13 @@
                             "elementList": [
                               {
                                 "context": {
-                                  "id": "node-<attribute>@[L7:C12, L7:C35]",
+                                  "id": "node@<attribute>@@[L7:C12, L7:C35]",
                                   "snippet": "note: 'Rol... sum(user'"
                                 },
                                 "children": {
                                   "colon": {
                                     "context": {
-                                      "id": "token-<colon>::@[L7:C16, L7:C17]",
+                                      "id": "token@<colon>@::@[L7:C16, L7:C17]",
                                       "snippet": ":"
                                     },
                                     "leadingTrivia": "",
@@ -589,7 +589,7 @@
                                   "fullStart": 119,
                                   "name": {
                                     "context": {
-                                      "id": "node-<identifer-stream>@[L7:C12, L7:C16]",
+                                      "id": "node@<identifer-stream>@@[L7:C12, L7:C16]",
                                       "snippet": "note"
                                     },
                                     "children": {
@@ -598,7 +598,7 @@
                                       "identifiers": [
                                         {
                                           "context": {
-                                            "id": "token-<identifier>:note@[L7:C12, L7:C16]",
+                                            "id": "token@<identifier>@:note@[L7:C12, L7:C16]",
                                             "snippet": "note"
                                           },
                                           "leadingTrivia": "",
@@ -610,13 +610,13 @@
                                   },
                                   "value": {
                                     "context": {
-                                      "id": "node-<primary-expression>@[L7:C18, L7:C35]",
+                                      "id": "node@<primary-expression>@@[L7:C18, L7:C35]",
                                       "snippet": "'Role = sum(user'"
                                     },
                                     "children": {
                                       "expression": {
                                         "context": {
-                                          "id": "node-<literal>:Role = sum(user@[L7:C18, L7:C35]",
+                                          "id": "node@<literal>@:Role = sum(user@[L7:C18, L7:C35]",
                                           "snippet": "'Role = sum(user'"
                                         },
                                         "children": {
@@ -624,7 +624,7 @@
                                           "fullStart": 125,
                                           "literal": {
                                             "context": {
-                                              "id": "token-<string>:Role = sum(user@[L7:C18, L7:C35]",
+                                              "id": "token@<string>@:Role = sum(user@[L7:C18, L7:C35]",
                                               "snippet": "'Role = sum(user'"
                                             },
                                             "leadingTrivia": "",
@@ -641,7 +641,7 @@
                               },
                               {
                                 "context": {
-                                  "id": "node-<attribute>@[L9:C14, L9:C24]",
+                                  "id": "node@<attribute>@@[L9:C14, L9:C24]",
                                   "snippet": "diagram_id"
                                 },
                                 "children": {
@@ -649,7 +649,7 @@
                                   "fullStart": 205,
                                   "name": {
                                     "context": {
-                                      "id": "node-<identifer-stream>@[L9:C14, L9:C24]",
+                                      "id": "node@<identifer-stream>@@[L9:C14, L9:C24]",
                                       "snippet": "diagram_id"
                                     },
                                     "children": {
@@ -658,7 +658,7 @@
                                       "identifiers": [
                                         {
                                           "context": {
-                                            "id": "token-<identifier>:diagram_id@[L9:C14, L9:C24]",
+                                            "id": "token@<identifier>@:diagram_id@[L9:C14, L9:C24]",
                                             "snippet": "diagram_id"
                                           },
                                           "leadingTrivia": "",
@@ -675,7 +675,7 @@
                             "fullStart": 118,
                             "listCloseBracket": {
                               "context": {
-                                "id": "token-<rbracket>:]@[L9:C29, L9:C30]",
+                                "id": "token@<rbracket>@:]@[L9:C29, L9:C30]",
                                 "snippet": "]"
                               },
                               "leadingTrivia": "",
@@ -684,7 +684,7 @@
                             },
                             "listOpenBracket": {
                               "context": {
-                                "id": "token-<lbracket>:[@[L7:C11, L7:C12]",
+                                "id": "token@<lbracket>@:[@[L7:C11, L7:C12]",
                                 "snippet": "["
                               },
                               "leadingTrivia": "",
@@ -696,13 +696,13 @@
                       ],
                       "callee": {
                         "context": {
-                          "id": "node-<primary-expression>@[L7:C2, L7:C6]",
+                          "id": "node@<primary-expression>@@[L7:C2, L7:C6]",
                           "snippet": "role"
                         },
                         "children": {
                           "expression": {
                             "context": {
-                              "id": "node-<variable>:role@[L7:C2, L7:C6]",
+                              "id": "node@<variable>@:role@[L7:C2, L7:C6]",
                               "snippet": "role"
                             },
                             "children": {
@@ -710,7 +710,7 @@
                               "fullStart": 107,
                               "variable": {
                                 "context": {
-                                  "id": "token-<identifier>:role@[L7:C2, L7:C6]",
+                                  "id": "token@<identifier>@:role@[L7:C2, L7:C6]",
                                   "snippet": "role"
                                 },
                                 "leadingTrivia": "  ",
@@ -736,13 +736,13 @@
             "fullStart": 46,
             "name": {
               "context": {
-                "id": "node-<primary-expression>@[L4:C6, L4:C26]",
+                "id": "node@<primary-expression>@@[L4:C6, L4:C26]",
                 "snippet": "user_role_in_diagram"
               },
               "children": {
                 "expression": {
                   "context": {
-                    "id": "node-<variable>:user_role_in_diagram@[L4:C6, L4:C26]",
+                    "id": "node@<variable>@:user_role_in_diagram@[L4:C6, L4:C26]",
                     "snippet": "user_role_in_diagram"
                   },
                   "children": {
@@ -750,7 +750,7 @@
                     "fullStart": 53,
                     "variable": {
                       "context": {
-                        "id": "token-<identifier>:user_role_in_diagram@[L4:C6, L4:C26]",
+                        "id": "token@<identifier>@:user_role_in_diagram@[L4:C6, L4:C26]",
                         "snippet": "user_role_in_diagram"
                       },
                       "leadingTrivia": "",
@@ -765,7 +765,7 @@
             },
             "type": {
               "context": {
-                "id": "token-<identifier>:Table@[L4:C0, L4:C5]",
+                "id": "token@<identifier>@:Table@[L4:C0, L4:C5]",
                 "snippet": "Table"
               },
               "leadingTrivia": "\n",
@@ -776,7 +776,7 @@
         },
         {
           "context": {
-            "id": "node-<element-declaration>:@[LNaN:CNaN, LNaN:CNaN]",
+            "id": "node@<element-declaration>@:@[LNaN:CNaN, LNaN:CNaN]",
             "snippet": ""
           },
           "children": {
@@ -786,19 +786,19 @@
         },
         {
           "context": {
-            "id": "node-<element-declaration>:permissions@[L13:C0, L16:C1]",
+            "id": "node@<element-declaration>@:permissions@[L13:C0, L16:C1]",
             "snippet": "Table perm... varchar\n}"
           },
           "children": {
             "body": {
               "context": {
-                "id": "node-<block-expression>@[L13:C18, L16:C1]",
+                "id": "node@<block-expression>@@[L13:C18, L16:C1]",
                 "snippet": "{\n  bit in... varchar\n}"
               },
               "children": {
                 "blockCloseBrace": {
                   "context": {
-                    "id": "token-<rbrace>:}@[L16:C0, L16:C1]",
+                    "id": "token@<rbrace>@:}@[L16:C0, L16:C1]",
                     "snippet": "}"
                   },
                   "leadingTrivia": "",
@@ -807,7 +807,7 @@
                 },
                 "blockOpenBrace": {
                   "context": {
-                    "id": "token-<lbrace>:{@[L13:C18, L13:C19]",
+                    "id": "token@<lbrace>@:{@[L13:C18, L13:C19]",
                     "snippet": "{"
                   },
                   "leadingTrivia": "",
@@ -817,20 +817,20 @@
                 "body": [
                   {
                     "context": {
-                      "id": "node-<function-application>@[L14:C2, L14:C14]",
+                      "id": "node@<function-application>@@[L14:C2, L14:C14]",
                       "snippet": "bit int [pk]"
                     },
                     "children": {
                       "args": [
                         {
                           "context": {
-                            "id": "node-<primary-expression>@[L14:C6, L14:C9]",
+                            "id": "node@<primary-expression>@@[L14:C6, L14:C9]",
                             "snippet": "int"
                           },
                           "children": {
                             "expression": {
                               "context": {
-                                "id": "node-<variable>:int@[L14:C6, L14:C9]",
+                                "id": "node@<variable>@:int@[L14:C6, L14:C9]",
                                 "snippet": "int"
                               },
                               "children": {
@@ -838,7 +838,7 @@
                                 "fullStart": 255,
                                 "variable": {
                                   "context": {
-                                    "id": "token-<identifier>:int@[L14:C6, L14:C9]",
+                                    "id": "token@<identifier>@:int@[L14:C6, L14:C9]",
                                     "snippet": "int"
                                   },
                                   "leadingTrivia": "",
@@ -853,7 +853,7 @@
                         },
                         {
                           "context": {
-                            "id": "node-<list-expression>@[L14:C10, L14:C14]",
+                            "id": "node@<list-expression>@@[L14:C10, L14:C14]",
                             "snippet": "[pk]"
                           },
                           "children": {
@@ -861,7 +861,7 @@
                             "elementList": [
                               {
                                 "context": {
-                                  "id": "node-<attribute>@[L14:C11, L14:C13]",
+                                  "id": "node@<attribute>@@[L14:C11, L14:C13]",
                                   "snippet": "pk"
                                 },
                                 "children": {
@@ -869,7 +869,7 @@
                                   "fullStart": 260,
                                   "name": {
                                     "context": {
-                                      "id": "node-<identifer-stream>@[L14:C11, L14:C13]",
+                                      "id": "node@<identifer-stream>@@[L14:C11, L14:C13]",
                                       "snippet": "pk"
                                     },
                                     "children": {
@@ -878,7 +878,7 @@
                                       "identifiers": [
                                         {
                                           "context": {
-                                            "id": "token-<identifier>:pk@[L14:C11, L14:C13]",
+                                            "id": "token@<identifier>@:pk@[L14:C11, L14:C13]",
                                             "snippet": "pk"
                                           },
                                           "leadingTrivia": "",
@@ -895,7 +895,7 @@
                             "fullStart": 259,
                             "listCloseBracket": {
                               "context": {
-                                "id": "token-<rbracket>:]@[L14:C13, L14:C14]",
+                                "id": "token@<rbracket>@:]@[L14:C13, L14:C14]",
                                 "snippet": "]"
                               },
                               "leadingTrivia": "",
@@ -904,7 +904,7 @@
                             },
                             "listOpenBracket": {
                               "context": {
-                                "id": "token-<lbracket>:[@[L14:C10, L14:C11]",
+                                "id": "token@<lbracket>@:[@[L14:C10, L14:C11]",
                                 "snippet": "["
                               },
                               "leadingTrivia": "",
@@ -916,13 +916,13 @@
                       ],
                       "callee": {
                         "context": {
-                          "id": "node-<primary-expression>@[L14:C2, L14:C5]",
+                          "id": "node@<primary-expression>@@[L14:C2, L14:C5]",
                           "snippet": "bit"
                         },
                         "children": {
                           "expression": {
                             "context": {
-                              "id": "node-<variable>:bit@[L14:C2, L14:C5]",
+                              "id": "node@<variable>@:bit@[L14:C2, L14:C5]",
                               "snippet": "bit"
                             },
                             "children": {
@@ -930,7 +930,7 @@
                               "fullStart": 249,
                               "variable": {
                                 "context": {
-                                  "id": "token-<identifier>:bit@[L14:C2, L14:C5]",
+                                  "id": "token@<identifier>@:bit@[L14:C2, L14:C5]",
                                   "snippet": "bit"
                                 },
                                 "leadingTrivia": "  ",
@@ -949,20 +949,20 @@
                   },
                   {
                     "context": {
-                      "id": "node-<function-application>@[L15:C2, L15:C14]",
+                      "id": "node@<function-application>@@[L15:C2, L15:C14]",
                       "snippet": "name varchar"
                     },
                     "children": {
                       "args": [
                         {
                           "context": {
-                            "id": "node-<primary-expression>@[L15:C7, L15:C14]",
+                            "id": "node@<primary-expression>@@[L15:C7, L15:C14]",
                             "snippet": "varchar"
                           },
                           "children": {
                             "expression": {
                               "context": {
-                                "id": "node-<variable>:varchar@[L15:C7, L15:C14]",
+                                "id": "node@<variable>@:varchar@[L15:C7, L15:C14]",
                                 "snippet": "varchar"
                               },
                               "children": {
@@ -970,7 +970,7 @@
                                 "fullStart": 272,
                                 "variable": {
                                   "context": {
-                                    "id": "token-<identifier>:varchar@[L15:C7, L15:C14]",
+                                    "id": "token@<identifier>@:varchar@[L15:C7, L15:C14]",
                                     "snippet": "varchar"
                                   },
                                   "leadingTrivia": "",
@@ -986,13 +986,13 @@
                       ],
                       "callee": {
                         "context": {
-                          "id": "node-<primary-expression>@[L15:C2, L15:C6]",
+                          "id": "node@<primary-expression>@@[L15:C2, L15:C6]",
                           "snippet": "name"
                         },
                         "children": {
                           "expression": {
                             "context": {
-                              "id": "node-<variable>:name@[L15:C2, L15:C6]",
+                              "id": "node@<variable>@:name@[L15:C2, L15:C6]",
                               "snippet": "name"
                             },
                             "children": {
@@ -1000,7 +1000,7 @@
                               "fullStart": 265,
                               "variable": {
                                 "context": {
-                                  "id": "token-<identifier>:name@[L15:C2, L15:C6]",
+                                  "id": "token@<identifier>@:name@[L15:C2, L15:C6]",
                                   "snippet": "name"
                                 },
                                 "leadingTrivia": "  ",
@@ -1026,13 +1026,13 @@
             "fullStart": 228,
             "name": {
               "context": {
-                "id": "node-<primary-expression>@[L13:C6, L13:C17]",
+                "id": "node@<primary-expression>@@[L13:C6, L13:C17]",
                 "snippet": "permissions"
               },
               "children": {
                 "expression": {
                   "context": {
-                    "id": "node-<variable>:permissions@[L13:C6, L13:C17]",
+                    "id": "node@<variable>@:permissions@[L13:C6, L13:C17]",
                     "snippet": "permissions"
                   },
                   "children": {
@@ -1040,7 +1040,7 @@
                     "fullStart": 235,
                     "variable": {
                       "context": {
-                        "id": "token-<identifier>:permissions@[L13:C6, L13:C17]",
+                        "id": "token@<identifier>@:permissions@[L13:C6, L13:C17]",
                         "snippet": "permissions"
                       },
                       "leadingTrivia": "",
@@ -1055,7 +1055,7 @@
             },
             "type": {
               "context": {
-                "id": "token-<identifier>:Table@[L13:C0, L13:C5]",
+                "id": "token@<identifier>@:Table@[L13:C0, L13:C5]",
                 "snippet": "Table"
               },
               "leadingTrivia": "\n",
@@ -1066,19 +1066,19 @@
         },
         {
           "context": {
-            "id": "node-<element-declaration>:diagrams@[L18:C0, L20:C1]",
+            "id": "node@<element-declaration>@:diagrams@[L18:C0, L20:C1]",
             "snippet": "Table diag...ncrement\n}"
           },
           "children": {
             "body": {
               "context": {
-                "id": "node-<block-expression>@[L18:C15, L20:C1]",
+                "id": "node@<block-expression>@@[L18:C15, L20:C1]",
                 "snippet": "{\n  id int...ncrement\n}"
               },
               "children": {
                 "blockCloseBrace": {
                   "context": {
-                    "id": "token-<rbrace>:}@[L20:C0, L20:C1]",
+                    "id": "token@<rbrace>@:}@[L20:C0, L20:C1]",
                     "snippet": "}"
                   },
                   "leadingTrivia": "",
@@ -1087,7 +1087,7 @@
                 },
                 "blockOpenBrace": {
                   "context": {
-                    "id": "token-<lbrace>:{@[L18:C15, L18:C16]",
+                    "id": "token@<lbrace>@:{@[L18:C15, L18:C16]",
                     "snippet": "{"
                   },
                   "leadingTrivia": "",
@@ -1097,20 +1097,20 @@
                 "body": [
                   {
                     "context": {
-                      "id": "node-<function-application>@[L19:C2, L19:C24]",
+                      "id": "node@<function-application>@@[L19:C2, L19:C24]",
                       "snippet": "id int [pk...increment]"
                     },
                     "children": {
                       "args": [
                         {
                           "context": {
-                            "id": "node-<primary-expression>@[L19:C5, L19:C8]",
+                            "id": "node@<primary-expression>@@[L19:C5, L19:C8]",
                             "snippet": "int"
                           },
                           "children": {
                             "expression": {
                               "context": {
-                                "id": "node-<variable>:int@[L19:C5, L19:C8]",
+                                "id": "node@<variable>@:int@[L19:C5, L19:C8]",
                                 "snippet": "int"
                               },
                               "children": {
@@ -1118,7 +1118,7 @@
                                 "fullStart": 305,
                                 "variable": {
                                   "context": {
-                                    "id": "token-<identifier>:int@[L19:C5, L19:C8]",
+                                    "id": "token@<identifier>@:int@[L19:C5, L19:C8]",
                                     "snippet": "int"
                                   },
                                   "leadingTrivia": "",
@@ -1133,14 +1133,14 @@
                         },
                         {
                           "context": {
-                            "id": "node-<list-expression>@[L19:C9, L19:C24]",
+                            "id": "node@<list-expression>@@[L19:C9, L19:C24]",
                             "snippet": "[pk, increment]"
                           },
                           "children": {
                             "commaList": [
                               {
                                 "context": {
-                                  "id": "token-<comma>:,@[L19:C12, L19:C13]",
+                                  "id": "token@<comma>@:,@[L19:C12, L19:C13]",
                                   "snippet": ","
                                 },
                                 "leadingTrivia": "",
@@ -1151,7 +1151,7 @@
                             "elementList": [
                               {
                                 "context": {
-                                  "id": "node-<attribute>@[L19:C10, L19:C12]",
+                                  "id": "node@<attribute>@@[L19:C10, L19:C12]",
                                   "snippet": "pk"
                                 },
                                 "children": {
@@ -1159,7 +1159,7 @@
                                   "fullStart": 310,
                                   "name": {
                                     "context": {
-                                      "id": "node-<identifer-stream>@[L19:C10, L19:C12]",
+                                      "id": "node@<identifer-stream>@@[L19:C10, L19:C12]",
                                       "snippet": "pk"
                                     },
                                     "children": {
@@ -1168,7 +1168,7 @@
                                       "identifiers": [
                                         {
                                           "context": {
-                                            "id": "token-<identifier>:pk@[L19:C10, L19:C12]",
+                                            "id": "token@<identifier>@:pk@[L19:C10, L19:C12]",
                                             "snippet": "pk"
                                           },
                                           "leadingTrivia": "",
@@ -1182,7 +1182,7 @@
                               },
                               {
                                 "context": {
-                                  "id": "node-<attribute>@[L19:C14, L19:C23]",
+                                  "id": "node@<attribute>@@[L19:C14, L19:C23]",
                                   "snippet": "increment"
                                 },
                                 "children": {
@@ -1190,7 +1190,7 @@
                                   "fullStart": 314,
                                   "name": {
                                     "context": {
-                                      "id": "node-<identifer-stream>@[L19:C14, L19:C23]",
+                                      "id": "node@<identifer-stream>@@[L19:C14, L19:C23]",
                                       "snippet": "increment"
                                     },
                                     "children": {
@@ -1199,7 +1199,7 @@
                                       "identifiers": [
                                         {
                                           "context": {
-                                            "id": "token-<identifier>:increment@[L19:C14, L19:C23]",
+                                            "id": "token@<identifier>@:increment@[L19:C14, L19:C23]",
                                             "snippet": "increment"
                                           },
                                           "leadingTrivia": "",
@@ -1216,7 +1216,7 @@
                             "fullStart": 309,
                             "listCloseBracket": {
                               "context": {
-                                "id": "token-<rbracket>:]@[L19:C23, L19:C24]",
+                                "id": "token@<rbracket>@:]@[L19:C23, L19:C24]",
                                 "snippet": "]"
                               },
                               "leadingTrivia": "",
@@ -1225,7 +1225,7 @@
                             },
                             "listOpenBracket": {
                               "context": {
-                                "id": "token-<lbracket>:[@[L19:C9, L19:C10]",
+                                "id": "token@<lbracket>@:[@[L19:C9, L19:C10]",
                                 "snippet": "["
                               },
                               "leadingTrivia": "",
@@ -1237,13 +1237,13 @@
                       ],
                       "callee": {
                         "context": {
-                          "id": "node-<primary-expression>@[L19:C2, L19:C4]",
+                          "id": "node@<primary-expression>@@[L19:C2, L19:C4]",
                           "snippet": "id"
                         },
                         "children": {
                           "expression": {
                             "context": {
-                              "id": "node-<variable>:id@[L19:C2, L19:C4]",
+                              "id": "node@<variable>@:id@[L19:C2, L19:C4]",
                               "snippet": "id"
                             },
                             "children": {
@@ -1251,7 +1251,7 @@
                               "fullStart": 300,
                               "variable": {
                                 "context": {
-                                  "id": "token-<identifier>:id@[L19:C2, L19:C4]",
+                                  "id": "token@<identifier>@:id@[L19:C2, L19:C4]",
                                   "snippet": "id"
                                 },
                                 "leadingTrivia": "  ",
@@ -1277,13 +1277,13 @@
             "fullStart": 282,
             "name": {
               "context": {
-                "id": "node-<primary-expression>@[L18:C6, L18:C14]",
+                "id": "node@<primary-expression>@@[L18:C6, L18:C14]",
                 "snippet": "diagrams"
               },
               "children": {
                 "expression": {
                   "context": {
-                    "id": "node-<variable>:diagrams@[L18:C6, L18:C14]",
+                    "id": "node@<variable>@:diagrams@[L18:C6, L18:C14]",
                     "snippet": "diagrams"
                   },
                   "children": {
@@ -1291,7 +1291,7 @@
                     "fullStart": 289,
                     "variable": {
                       "context": {
-                        "id": "token-<identifier>:diagrams@[L18:C6, L18:C14]",
+                        "id": "token@<identifier>@:diagrams@[L18:C6, L18:C14]",
                         "snippet": "diagrams"
                       },
                       "leadingTrivia": "",
@@ -1306,7 +1306,7 @@
             },
             "type": {
               "context": {
-                "id": "token-<identifier>:Table@[L18:C0, L18:C5]",
+                "id": "token@<identifier>@:Table@[L18:C0, L18:C5]",
                 "snippet": "Table"
               },
               "leadingTrivia": "\n",
@@ -1317,20 +1317,20 @@
         },
         {
           "context": {
-            "id": "node-<element-declaration>:@[L22:C0, L22:C52]",
+            "id": "node@<element-declaration>@:@[L22:C0, L22:C52]",
             "snippet": "Ref: \"user....\"user_id\""
           },
           "children": {
             "body": {
               "context": {
-                "id": "node-<function-application>@[L22:C5, L22:C52]",
+                "id": "node@<function-application>@@[L22:C5, L22:C52]",
                 "snippet": "\"users\".\"i....\"user_id\""
               },
               "children": {
                 "args": [],
                 "callee": {
                   "context": {
-                    "id": "node-<infix-expression>@[L22:C5, L22:C52]",
+                    "id": "node@<infix-expression>@@[L22:C5, L22:C52]",
                     "snippet": "\"users\".\"i....\"user_id\""
                   },
                   "children": {
@@ -1338,7 +1338,7 @@
                     "fullStart": 351,
                     "leftExpression": {
                       "context": {
-                        "id": "node-<infix-expression>@[L22:C5, L22:C17]",
+                        "id": "node@<infix-expression>@@[L22:C5, L22:C17]",
                         "snippet": "\"users\".\"id\""
                       },
                       "children": {
@@ -1346,13 +1346,13 @@
                         "fullStart": 351,
                         "leftExpression": {
                           "context": {
-                            "id": "node-<primary-expression>@[L22:C5, L22:C12]",
+                            "id": "node@<primary-expression>@@[L22:C5, L22:C12]",
                             "snippet": "\"users\""
                           },
                           "children": {
                             "expression": {
                               "context": {
-                                "id": "node-<variable>:users@[L22:C5, L22:C12]",
+                                "id": "node@<variable>@:users@[L22:C5, L22:C12]",
                                 "snippet": "\"users\""
                               },
                               "children": {
@@ -1360,7 +1360,7 @@
                                 "fullStart": 351,
                                 "variable": {
                                   "context": {
-                                    "id": "token-<variable>:users@[L22:C5, L22:C12]",
+                                    "id": "token@<variable>@:users@[L22:C5, L22:C12]",
                                     "snippet": "\"users\""
                                   },
                                   "leadingTrivia": "",
@@ -1375,7 +1375,7 @@
                         },
                         "op": {
                           "context": {
-                            "id": "token-<op>:.@[L22:C12, L22:C13]",
+                            "id": "token@<op>@:.@[L22:C12, L22:C13]",
                             "snippet": "."
                           },
                           "leadingTrivia": "",
@@ -1384,13 +1384,13 @@
                         },
                         "rightExpression": {
                           "context": {
-                            "id": "node-<primary-expression>@[L22:C13, L22:C17]",
+                            "id": "node@<primary-expression>@@[L22:C13, L22:C17]",
                             "snippet": "\"id\""
                           },
                           "children": {
                             "expression": {
                               "context": {
-                                "id": "node-<variable>:id@[L22:C13, L22:C17]",
+                                "id": "node@<variable>@:id@[L22:C13, L22:C17]",
                                 "snippet": "\"id\""
                               },
                               "children": {
@@ -1398,7 +1398,7 @@
                                 "fullStart": 359,
                                 "variable": {
                                   "context": {
-                                    "id": "token-<variable>:id@[L22:C13, L22:C17]",
+                                    "id": "token@<variable>@:id@[L22:C13, L22:C17]",
                                     "snippet": "\"id\""
                                   },
                                   "leadingTrivia": "",
@@ -1415,7 +1415,7 @@
                     },
                     "op": {
                       "context": {
-                        "id": "token-<op>:-@[L22:C18, L22:C19]",
+                        "id": "token@<op>@:-@[L22:C18, L22:C19]",
                         "snippet": "-"
                       },
                       "leadingTrivia": "",
@@ -1424,7 +1424,7 @@
                     },
                     "rightExpression": {
                       "context": {
-                        "id": "node-<infix-expression>@[L22:C20, L22:C52]",
+                        "id": "node@<infix-expression>@@[L22:C20, L22:C52]",
                         "snippet": "\"user_role....\"user_id\""
                       },
                       "children": {
@@ -1432,13 +1432,13 @@
                         "fullStart": 366,
                         "leftExpression": {
                           "context": {
-                            "id": "node-<primary-expression>@[L22:C20, L22:C42]",
+                            "id": "node@<primary-expression>@@[L22:C20, L22:C42]",
                             "snippet": "\"user_role...n_diagram\""
                           },
                           "children": {
                             "expression": {
                               "context": {
-                                "id": "node-<variable>:user_role_in_diagram@[L22:C20, L22:C42]",
+                                "id": "node@<variable>@:user_role_in_diagram@[L22:C20, L22:C42]",
                                 "snippet": "\"user_role...n_diagram\""
                               },
                               "children": {
@@ -1446,7 +1446,7 @@
                                 "fullStart": 366,
                                 "variable": {
                                   "context": {
-                                    "id": "token-<variable>:user_role_in_diagram@[L22:C20, L22:C42]",
+                                    "id": "token@<variable>@:user_role_in_diagram@[L22:C20, L22:C42]",
                                     "snippet": "\"user_role...n_diagram\""
                                   },
                                   "leadingTrivia": "",
@@ -1461,7 +1461,7 @@
                         },
                         "op": {
                           "context": {
-                            "id": "token-<op>:.@[L22:C42, L22:C43]",
+                            "id": "token@<op>@:.@[L22:C42, L22:C43]",
                             "snippet": "."
                           },
                           "leadingTrivia": "",
@@ -1470,13 +1470,13 @@
                         },
                         "rightExpression": {
                           "context": {
-                            "id": "node-<primary-expression>@[L22:C43, L22:C52]",
+                            "id": "node@<primary-expression>@@[L22:C43, L22:C52]",
                             "snippet": "\"user_id\""
                           },
                           "children": {
                             "expression": {
                               "context": {
-                                "id": "node-<variable>:user_id@[L22:C43, L22:C52]",
+                                "id": "node@<variable>@:user_id@[L22:C43, L22:C52]",
                                 "snippet": "\"user_id\""
                               },
                               "children": {
@@ -1484,7 +1484,7 @@
                                 "fullStart": 389,
                                 "variable": {
                                   "context": {
-                                    "id": "token-<variable>:user_id@[L22:C43, L22:C52]",
+                                    "id": "token@<variable>@:user_id@[L22:C43, L22:C52]",
                                     "snippet": "\"user_id\""
                                   },
                                   "leadingTrivia": "",
@@ -1507,7 +1507,7 @@
             },
             "bodyColon": {
               "context": {
-                "id": "token-<colon>::@[L22:C3, L22:C4]",
+                "id": "token@<colon>@::@[L22:C3, L22:C4]",
                 "snippet": ":"
               },
               "leadingTrivia": "",
@@ -1518,7 +1518,7 @@
             "fullStart": 345,
             "type": {
               "context": {
-                "id": "token-<identifier>:Ref@[L22:C0, L22:C3]",
+                "id": "token@<identifier>@:Ref@[L22:C0, L22:C3]",
                 "snippet": "Ref"
               },
               "leadingTrivia": "\n",
@@ -1529,20 +1529,20 @@
         },
         {
           "context": {
-            "id": "node-<element-declaration>:@[L24:C0, L24:C58]",
+            "id": "node@<element-declaration>@:@[L24:C0, L24:C58]",
             "snippet": "Ref: \"diag...iagram_id\""
           },
           "children": {
             "body": {
               "context": {
-                "id": "node-<function-application>@[L24:C5, L24:C58]",
+                "id": "node@<function-application>@@[L24:C5, L24:C58]",
                 "snippet": "\"diagrams\"...iagram_id\""
               },
               "children": {
                 "args": [],
                 "callee": {
                   "context": {
-                    "id": "node-<infix-expression>@[L24:C5, L24:C58]",
+                    "id": "node@<infix-expression>@@[L24:C5, L24:C58]",
                     "snippet": "\"diagrams\"...iagram_id\""
                   },
                   "children": {
@@ -1550,7 +1550,7 @@
                     "fullStart": 405,
                     "leftExpression": {
                       "context": {
-                        "id": "node-<infix-expression>@[L24:C5, L24:C20]",
+                        "id": "node@<infix-expression>@@[L24:C5, L24:C20]",
                         "snippet": "\"diagrams\".\"id\""
                       },
                       "children": {
@@ -1558,13 +1558,13 @@
                         "fullStart": 405,
                         "leftExpression": {
                           "context": {
-                            "id": "node-<primary-expression>@[L24:C5, L24:C15]",
+                            "id": "node@<primary-expression>@@[L24:C5, L24:C15]",
                             "snippet": "\"diagrams\""
                           },
                           "children": {
                             "expression": {
                               "context": {
-                                "id": "node-<variable>:diagrams@[L24:C5, L24:C15]",
+                                "id": "node@<variable>@:diagrams@[L24:C5, L24:C15]",
                                 "snippet": "\"diagrams\""
                               },
                               "children": {
@@ -1572,7 +1572,7 @@
                                 "fullStart": 405,
                                 "variable": {
                                   "context": {
-                                    "id": "token-<variable>:diagrams@[L24:C5, L24:C15]",
+                                    "id": "token@<variable>@:diagrams@[L24:C5, L24:C15]",
                                     "snippet": "\"diagrams\""
                                   },
                                   "leadingTrivia": "",
@@ -1587,7 +1587,7 @@
                         },
                         "op": {
                           "context": {
-                            "id": "token-<op>:.@[L24:C15, L24:C16]",
+                            "id": "token@<op>@:.@[L24:C15, L24:C16]",
                             "snippet": "."
                           },
                           "leadingTrivia": "",
@@ -1596,13 +1596,13 @@
                         },
                         "rightExpression": {
                           "context": {
-                            "id": "node-<primary-expression>@[L24:C16, L24:C20]",
+                            "id": "node@<primary-expression>@@[L24:C16, L24:C20]",
                             "snippet": "\"id\""
                           },
                           "children": {
                             "expression": {
                               "context": {
-                                "id": "node-<variable>:id@[L24:C16, L24:C20]",
+                                "id": "node@<variable>@:id@[L24:C16, L24:C20]",
                                 "snippet": "\"id\""
                               },
                               "children": {
@@ -1610,7 +1610,7 @@
                                 "fullStart": 416,
                                 "variable": {
                                   "context": {
-                                    "id": "token-<variable>:id@[L24:C16, L24:C20]",
+                                    "id": "token@<variable>@:id@[L24:C16, L24:C20]",
                                     "snippet": "\"id\""
                                   },
                                   "leadingTrivia": "",
@@ -1627,7 +1627,7 @@
                     },
                     "op": {
                       "context": {
-                        "id": "token-<op>:-@[L24:C21, L24:C22]",
+                        "id": "token@<op>@:-@[L24:C21, L24:C22]",
                         "snippet": "-"
                       },
                       "leadingTrivia": "",
@@ -1636,7 +1636,7 @@
                     },
                     "rightExpression": {
                       "context": {
-                        "id": "node-<infix-expression>@[L24:C23, L24:C58]",
+                        "id": "node@<infix-expression>@@[L24:C23, L24:C58]",
                         "snippet": "\"user_role...iagram_id\""
                       },
                       "children": {
@@ -1644,13 +1644,13 @@
                         "fullStart": 423,
                         "leftExpression": {
                           "context": {
-                            "id": "node-<primary-expression>@[L24:C23, L24:C45]",
+                            "id": "node@<primary-expression>@@[L24:C23, L24:C45]",
                             "snippet": "\"user_role...n_diagram\""
                           },
                           "children": {
                             "expression": {
                               "context": {
-                                "id": "node-<variable>:user_role_in_diagram@[L24:C23, L24:C45]",
+                                "id": "node@<variable>@:user_role_in_diagram@[L24:C23, L24:C45]",
                                 "snippet": "\"user_role...n_diagram\""
                               },
                               "children": {
@@ -1658,7 +1658,7 @@
                                 "fullStart": 423,
                                 "variable": {
                                   "context": {
-                                    "id": "token-<variable>:user_role_in_diagram@[L24:C23, L24:C45]",
+                                    "id": "token@<variable>@:user_role_in_diagram@[L24:C23, L24:C45]",
                                     "snippet": "\"user_role...n_diagram\""
                                   },
                                   "leadingTrivia": "",
@@ -1673,7 +1673,7 @@
                         },
                         "op": {
                           "context": {
-                            "id": "token-<op>:.@[L24:C45, L24:C46]",
+                            "id": "token@<op>@:.@[L24:C45, L24:C46]",
                             "snippet": "."
                           },
                           "leadingTrivia": "",
@@ -1682,13 +1682,13 @@
                         },
                         "rightExpression": {
                           "context": {
-                            "id": "node-<primary-expression>@[L24:C46, L24:C58]",
+                            "id": "node@<primary-expression>@@[L24:C46, L24:C58]",
                             "snippet": "\"diagram_id\""
                           },
                           "children": {
                             "expression": {
                               "context": {
-                                "id": "node-<variable>:diagram_id@[L24:C46, L24:C58]",
+                                "id": "node@<variable>@:diagram_id@[L24:C46, L24:C58]",
                                 "snippet": "\"diagram_id\""
                               },
                               "children": {
@@ -1696,7 +1696,7 @@
                                 "fullStart": 446,
                                 "variable": {
                                   "context": {
-                                    "id": "token-<variable>:diagram_id@[L24:C46, L24:C58]",
+                                    "id": "token@<variable>@:diagram_id@[L24:C46, L24:C58]",
                                     "snippet": "\"diagram_id\""
                                   },
                                   "leadingTrivia": "",
@@ -1719,7 +1719,7 @@
             },
             "bodyColon": {
               "context": {
-                "id": "token-<colon>::@[L24:C3, L24:C4]",
+                "id": "token@<colon>@::@[L24:C3, L24:C4]",
                 "snippet": ":"
               },
               "leadingTrivia": "",
@@ -1730,7 +1730,7 @@
             "fullStart": 399,
             "type": {
               "context": {
-                "id": "token-<identifier>:Ref@[L24:C0, L24:C3]",
+                "id": "token@<identifier>@:Ref@[L24:C0, L24:C3]",
                 "snippet": "Ref"
               },
               "leadingTrivia": "\n",
@@ -1742,7 +1742,7 @@
       ],
       "eof": {
         "context": {
-          "id": "token-<eof>:@[L25:C0, L25:C0]",
+          "id": "token@<eof>@:@[L25:C0, L25:C0]",
           "snippet": ""
         },
         "leadingTrivia": "",
