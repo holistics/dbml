@@ -7,10 +7,10 @@ import { SyntaxToken } from '../../../lexer/tokens';
 import { CompileError } from '@/core/types/errors';
 import { lookupAndBindInScope, pickBinder, scanNonListNodeForBinding } from '../utils';
 import { aggregateSettingList, isValidPartialInjection } from '../../validator/utils';
-import { SymbolKind, createColumnSymbolIndex } from '../../symbol/symbolIndex';
+import { SymbolKind, createColumnSymbolIndex } from '@/core/types/symbol/symbolIndex';
 import { destructureComplexVariableTuple, extractVariableFromExpression } from '../../utils';
-import { TablePartialInjectedColumnSymbol, TablePartialSymbol } from '../../symbol/symbols';
-import SymbolFactory from '../../symbol/factory';
+import { TablePartialInjectedColumnSymbol, TablePartialSymbol } from '@/core/types/symbol/symbols';
+import SymbolFactory from '@/core/types/symbol/factory';
 import { isExpressionAQuotedString, isExpressionAVariableNode } from '../../../parser/utils';
 import { KEYWORDS_OF_DEFAULT_SETTING } from '@/constants';
 

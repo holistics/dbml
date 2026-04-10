@@ -11,8 +11,8 @@ import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import { pickBinder, scanNonListNodeForBinding } from '../utils';
 import { destructureComplexVariable, extractVarNameFromPrimaryVariable, getElementKind } from '../../utils';
 import { ElementKind } from '../../types';
-import { createColumnSymbolIndex } from '../../symbol/symbolIndex';
-import SymbolFactory from '../../symbol/factory';
+import { createColumnSymbolIndex } from '@/core/types/symbol/symbolIndex';
+import SymbolFactory from '@/core/types/symbol/factory';
 
 export default class IndexesBinder implements ElementBinder {
   private symbolFactory: SymbolFactory;

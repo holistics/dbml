@@ -24,8 +24,9 @@ import {
   VariableNode,
   PrimaryExpressionNode,
   ArrayNode,
+  WildcardNode,
 } from '@/core/parser/nodes';
-import { NodeSymbolIdGenerator } from '@/core/analyzer/symbol/symbols';
+import { NodeSymbolIdGenerator } from '@/core/types/symbol/symbols';
 import Report from '@/core/types/report';
 import { Compiler, SyntaxToken } from '@/index';
 import { Database } from '@/core/types/schemaJson';
@@ -211,6 +212,12 @@ export function print (source: string, ast: SyntaxNode): string {
         const arr = node as ArrayNode;
         if (arr.array) collectTokens(arr.array);
         if (arr.indexer) collectTokens(arr.indexer);
+        break;
+      }
+
+      case SyntaxNodeKind.WILDCARD: {
+        const wildcard = node as WildcardNode;
+        if (wildcard.token) collectTokens(wildcard.token);
         break;
       }
 

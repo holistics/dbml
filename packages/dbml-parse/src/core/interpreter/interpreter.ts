@@ -7,6 +7,7 @@ import { TableGroupInterpreter } from '@/core/interpreter/elementInterpreter/tab
 import { EnumInterpreter } from '@/core/interpreter/elementInterpreter/enum';
 import { ProjectInterpreter } from '@/core/interpreter/elementInterpreter/project';
 import { TablePartialInterpreter } from '@/core/interpreter/elementInterpreter/tablePartial';
+import { DiagramViewInterpreter } from '@/core/interpreter/elementInterpreter/diagramView';
 import { RecordsInterpreter } from '@/core/interpreter/records';
 import Report from '@/core/types/report';
 import { getElementKind } from '@/core/analyzer/utils';
@@ -28,6 +29,34 @@ function processColumnInDb<T extends Table | TablePartial> (table: T): T {
       },
     })),
   };
+}
+
+/**
+ * Expand explicit wildcard ([]) for tableGroups in DiagramView visibleEntities
+ * to the concrete list of table group names.
+ *
+ * Only expands when:
+ * 1. The user wrote `TableGroups { * }` (tracked via diagramViewWildcards)
+ * 2. No other Trinity dim (Tables, Schemas) is explicitly set —
+ *    i.e. tableGroups is the only Trinity dim declared.
+ *    When other Trinity dims are also declared, [] keeps its "show all" meaning.
+ */
+function expandDiagramViewWildcards (env: InterpreterDatabase): void {
+  for (const view of env.diagramViews.values()) {
+    const ve = view.visibleEntities;
+    const wildcards = env.diagramViewWildcards.get(view);
+    const explicitlySet = env.diagramViewExplicitlySet.get(view);
+    if (!wildcards || !explicitlySet) continue;
+
+    if (wildcards.has('tableGroups') && ve.tableGroups && ve.tableGroups.length === 0) {
+      const otherTrinitySet = explicitlySet.has('tables') || explicitlySet.has('schemas');
+      if (!otherTrinitySet) {
+        ve.tableGroups = Array.from(env.tableGroups.values()).map((tg) => ({
+          name: tg.name!,
+        }));
+      }
+    }
+  }
 }
 
 function convertEnvToDb (env: InterpreterDatabase): Database {
@@ -65,6 +94,7 @@ function convertEnvToDb (env: InterpreterDatabase): Database {
     project: Array.from(env.project.values())[0] || {},
     tablePartials: Array.from(env.tablePartials.values()).map(processColumnInDb),
     records,
+    diagramViews: Array.from(env.diagramViews.values()),
   };
 }
 
@@ -91,6 +121,9 @@ export default class Interpreter {
       recordsElements: [],
       cachedMergedTables: new Map(),
       source: ast.source,
+      diagramViews: new Map(),
+      diagramViewWildcards: new Map(),
+      diagramViewExplicitlySet: new Map(),
     };
   }
 
@@ -112,8 +145,9 @@ export default class Interpreter {
           return (new EnumInterpreter(element, this.env)).interpret();
         case ElementKind.Project:
           return (new ProjectInterpreter(element, this.env)).interpret();
+        case ElementKind.DiagramView:
+          return (new DiagramViewInterpreter(element, this.env)).interpret();
         case ElementKind.Records:
-          // Defer records interpretation - collect for later
           this.env.recordsElements.push(element);
           return [];
         default:
@@ -122,6 +156,7 @@ export default class Interpreter {
     });
 
     const warnings: CompileWarning[] = [];
+
     if (this.env.recordsElements.length) {
     // Second pass: interpret all records elements grouped by table
     // Now that all tables, enums, etc. are interpreted, we can validate records properly
@@ -129,6 +164,10 @@ export default class Interpreter {
       errors.push(...recordsResult.getErrors());
       warnings.push(...recordsResult.getWarnings());
     }
+
+    // Post-processing: expand wildcards in DiagramView visibleEntities
+    // At this point all tables, tableGroups, notes are fully interpreted
+    expandDiagramViewWildcards(this.env);
 
     return new Report(convertEnvToDb(this.env), errors, warnings);
   }

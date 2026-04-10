@@ -3,7 +3,7 @@ import {
   FunctionApplicationNode,
 } from '@/core/parser/nodes';
 import { extractNumericLiteral } from '@/core/analyzer/utils';
-import { ColumnSymbol } from '@/core/analyzer/symbol/symbols';
+import { ColumnSymbol } from '@/core/types/symbol/symbols';
 
 export type SqlDialect = 'mysql' | 'postgres' | 'mssql' | 'oracle' | 'snowflake';
 

@@ -162,3 +162,37 @@ export class TablePartialInjectedColumnSymbol extends NodeSymbol {
     this.tablePartialSymbol = tablePartialSymbol;
   }
 }
+
+// A symbol for a DiagramView block
+export class DiagramViewSymbol extends NodeSymbol {
+  declare symbolTable: SymbolTable;
+  declare declaration: SyntaxNode;
+  declare filepath: Filepath;
+
+  constructor (
+    { symbolTable, declaration }: { symbolTable: SymbolTable; declaration: SyntaxNode },
+    id: NodeSymbolId,
+  ) {
+    super({ symbolTable, declaration }, id);
+  }
+}
+
+// A symbol for a DiagramView field (table/note/group/schema reference)
+export class DiagramViewFieldSymbol extends NodeSymbol {
+  declare declaration: SyntaxNode;
+  declare filepath: Filepath;
+
+  constructor ({ declaration }: { declaration: SyntaxNode }, id: NodeSymbolId) {
+    super({ declaration }, id);
+  }
+}
+
+// A symbol for a sticky note
+export class StickyNoteSymbol extends NodeSymbol {
+  declare declaration: SyntaxNode;
+  declare filepath: Filepath;
+
+  constructor ({ declaration }: { declaration: SyntaxNode }, id: NodeSymbolId) {
+    super({ declaration }, id);
+  }
+}

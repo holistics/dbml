@@ -31,6 +31,7 @@ export enum SyntaxTokenKind {
 
   SINGLE_LINE_COMMENT = '<single-line-comment>',
   MULTILINE_COMMENT = '<multiline-comment>',
+  WILDCARD = '<wildcard>',
 }
 
 export function isTriviaToken (token: SyntaxToken): boolean {
@@ -54,7 +55,6 @@ export function isOp (c?: string): boolean {
   switch (c) {
     case '+':
     case '-':
-    case '*':
     case '/':
     case '%':
     case '<':

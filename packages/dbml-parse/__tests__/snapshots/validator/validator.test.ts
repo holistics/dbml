@@ -6,7 +6,7 @@ import type { ProgramNode } from '@/core/parser/nodes';
 import Lexer from '@/core/lexer/lexer';
 import Parser from '@/core/parser/parser';
 import Validator from '@/core/analyzer/validator/validator';
-import SymbolFactory from '@/core/analyzer/symbol/factory';
+import SymbolFactory from '@/core/types/symbol/factory';
 import { scanTestNames, toSnapshot } from '@tests/utils';
 import Compiler from '@/compiler';
 import type Report from '@/core/types/report';

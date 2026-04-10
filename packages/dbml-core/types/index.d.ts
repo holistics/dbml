@@ -4,9 +4,13 @@ import importer from './import';
 import exporter from './export';
 import {
   renameTable,
+  syncDiagramView,
+  findDiagramViewBlocks,
 } from './transform';
 export {
   renameTable,
+  syncDiagramView,
+  findDiagramViewBlocks,
   importer,
   exporter,
   ModelExporter,
@@ -37,3 +41,4 @@ export {
   addDoubleQuoteIfNeeded,
   formatRecordValue,
 } from '@dbml/parse';
+export type { DiagramView, DiagramViewSyncOperation, DiagramViewBlock, FilterConfig, TextEdit } from '@dbml/parse';

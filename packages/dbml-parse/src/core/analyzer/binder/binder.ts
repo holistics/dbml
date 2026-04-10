@@ -3,7 +3,7 @@ import { ElementDeclarationNode, ProgramNode } from '@/core/parser/nodes';
 import { pickBinder } from '@/core/analyzer/binder/utils';
 import Report from '@/core/types/report';
 import { SyntaxToken } from '@/core/lexer/tokens';
-import SymbolFactory from '@/core/analyzer/symbol/factory';
+import SymbolFactory from '@/core/types/symbol/factory';
 import { getElementKind } from '@/core/analyzer/utils';
 import { ElementKind } from '@/core/analyzer/types';
 import TableBinder from './elementBinder/table';

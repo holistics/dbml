@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import { TableSymbol, EnumSymbol, ColumnSymbol, EnumFieldSymbol, SchemaSymbol } from '@/core/analyzer/symbol/symbols';
+import { TableSymbol, EnumSymbol, ColumnSymbol, EnumFieldSymbol, SchemaSymbol } from '@/core/types/symbol/symbols';
 import { analyze } from '@tests/utils';
 
 describe('[example] records binder', () => {

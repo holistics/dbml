@@ -3,6 +3,7 @@ import { ElementDeclarationNode, InfixExpressionNode, PostfixExpressionNode, Pre
 import { ElementKind } from '@/core/analyzer/types';
 import ChecksBinder from './elementBinder/checks';
 import CustomBinder from './elementBinder/custom';
+import DiagramViewBinder from './elementBinder/diagramView';
 import EnumBinder from './elementBinder/enum';
 import IndexesBinder from './elementBinder/indexes';
 import NoteBinder from './elementBinder/note';
@@ -13,7 +14,7 @@ import TableGroupBinder from './elementBinder/tableGroup';
 import TablePartialBinder from './elementBinder/tablePartial';
 import { destructureComplexVariableTuple, extractVarNameFromPrimaryVariable } from '@/core/analyzer/utils';
 import { SymbolKind, createNodeSymbolIndex } from '@/core/types/symbol';
-import { getSymbolKind } from '@/core/analyzer/symbol/utils';
+import { getSymbolKind } from '@/core/types/symbol/utils';
 import { getElementNameString, isExpressionAVariableNode } from '@/core/parser/utils';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import { DEFAULT_SCHEMA_NAME } from '@/constants';
@@ -41,6 +42,8 @@ export function pickBinder (element: ElementDeclarationNode & { type: SyntaxToke
       return ChecksBinder;
     case ElementKind.Records:
       return RecordsBinder;
+    case ElementKind.DiagramView:
+      return DiagramViewBinder;
     default:
       return CustomBinder;
   }

@@ -898,6 +898,17 @@
               "trailingTrivia": " ",
               "value": "Note"
             }
+          },
+          "symbol": {
+            "context": {
+              "id": "symbol@<element-declaration>@:nodeName@[L5:C0, L9:C1]",
+              "snippet": "Note nodeN...r.\n  '''\n}"
+            },
+            "declaration": {
+              "id": "node@<element-declaration>@:nodeName@[L5:C0, L9:C1]",
+              "snippet": "Note nodeN...r.\n  '''\n}"
+            },
+            "references": []
           }
         }
       ],
@@ -929,7 +940,12 @@
             "snippet": "Table user... unique]\n}"
           }
         },
-        null
+        {
+          "context": {
+            "id": "symbol@<element-declaration>@:nodeName@[L5:C0, L9:C1]",
+            "snippet": "Note nodeN...r.\n  '''\n}"
+          }
+        }
       ],
       "references": []
     }

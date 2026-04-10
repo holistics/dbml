@@ -829,6 +829,17 @@
               "trailingTrivia": " ",
               "value": "Note"
             }
+          },
+          "symbol": {
+            "context": {
+              "id": "symbol@<element-declaration>@:note2@[L5:C0, L7:C1]",
+              "snippet": "Note note2...ne note'\n}"
+            },
+            "declaration": {
+              "id": "node@<element-declaration>@:note2@[L5:C0, L7:C1]",
+              "snippet": "Note note2...ne note'\n}"
+            },
+            "references": []
           }
         },
         {
@@ -1079,6 +1090,17 @@
               "trailingTrivia": " ",
               "value": "Note"
             }
+          },
+          "symbol": {
+            "context": {
+              "id": "symbol@<element-declaration>@:note3@[L13:C0, L15:C1]",
+              "snippet": "Note note3...ne note'\n}"
+            },
+            "declaration": {
+              "id": "node@<element-declaration>@:note3@[L13:C0, L15:C1]",
+              "snippet": "Note note3...ne note'\n}"
+            },
+            "references": []
           }
         },
         {
@@ -1547,6 +1569,17 @@
               "trailingTrivia": " ",
               "value": "Note"
             }
+          },
+          "symbol": {
+            "context": {
+              "id": "symbol@<element-declaration>@:schema.note4@[L27:C0, L32:C1]",
+              "snippet": "Note \"sche...dy\n  '''\n}"
+            },
+            "declaration": {
+              "id": "node@<element-declaration>@:schema.note4@[L27:C0, L32:C1]",
+              "snippet": "Note \"sche...dy\n  '''\n}"
+            },
+            "references": []
           }
         },
         {
@@ -1828,6 +1861,17 @@
               "trailingTrivia": " ",
               "value": "Note"
             }
+          },
+          "symbol": {
+            "context": {
+              "id": "symbol@<element-declaration>@:schema.note5@[L34:C0, L39:C1]",
+              "snippet": "Note \"sche...dy\n  '''\n}"
+            },
+            "declaration": {
+              "id": "node@<element-declaration>@:schema.note5@[L34:C0, L39:C1]",
+              "snippet": "Note \"sche...dy\n  '''\n}"
+            },
+            "references": []
           }
         }
       ],
@@ -1859,10 +1903,30 @@
             "snippet": "Table user... unique]\n}"
           }
         },
-        null,
-        null,
-        null,
-        null
+        {
+          "context": {
+            "id": "symbol@<element-declaration>@:note2@[L5:C0, L7:C1]",
+            "snippet": "Note note2...ne note'\n}"
+          }
+        },
+        {
+          "context": {
+            "id": "symbol@<element-declaration>@:note3@[L13:C0, L15:C1]",
+            "snippet": "Note note3...ne note'\n}"
+          }
+        },
+        {
+          "context": {
+            "id": "symbol@<element-declaration>@:schema.note4@[L27:C0, L32:C1]",
+            "snippet": "Note \"sche...dy\n  '''\n}"
+          }
+        },
+        {
+          "context": {
+            "id": "symbol@<element-declaration>@:schema.note5@[L34:C0, L39:C1]",
+            "snippet": "Note \"sche...dy\n  '''\n}"
+          }
+        }
       ],
       "references": []
     }

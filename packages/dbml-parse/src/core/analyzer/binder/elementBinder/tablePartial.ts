@@ -8,8 +8,8 @@ import { CompileError } from '@/core/types/errors';
 import { aggregateSettingList } from '../../validator/utils';
 import { destructureComplexVariableTuple } from '../../utils';
 import { lookupAndBindInScope, pickBinder, scanNonListNodeForBinding } from '../utils';
-import { SymbolKind } from '../../symbol/symbolIndex';
-import SymbolFactory from '../../symbol/factory';
+import { SymbolKind } from '@/core/types/symbol/symbolIndex';
+import SymbolFactory from '@/core/types/symbol/factory';
 
 export default class TablePartialBinder implements ElementBinder {
   private symbolFactory: SymbolFactory;
