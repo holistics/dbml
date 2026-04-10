@@ -95,6 +95,94 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
     return results;
   }
 
+  /**
+   * Create completion item for cross-file symbol with additionalTextEdits
+   * to auto-insert the use statement
+   */
+  private createCrossFileCompletionItem (
+    symbolName: string,
+    symbolKind: SymbolKind,
+    fileHint: string,
+    sourceFilepath: Filepath,
+    currentFileContent: string,
+  ): CompletionItem {
+    // Calculate the use statement that should be inserted
+    const mergeResult = UseStatementMerger.mergeSymbolIntoUses(
+      currentFileContent,
+      symbolName,
+      sourceFilepath,
+    );
+
+    // Extract just the new use statement line(s) to insert
+    const lines = mergeResult.newContent.split('\n');
+    const textToInsert = lines.slice(0, 1).join('\n') + '\n';
+
+    return {
+      label: symbolName,
+      insertText: symbolName,
+      insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
+      kind: pickCompletionItemKind(symbolKind),
+      sortText: pickCompletionItemKind(symbolKind).toString().padStart(2, '0'),
+      detail: fileHint,
+      // Use zzz_ prefix to sort cross-file suggestions after local ones
+      sortText: `zzz_${pickCompletionItemKind(symbolKind).toString().padStart(2, '0')}_${symbolName}`,
+      range: undefined as any,
+      // Add the use statement as additional text edits
+      additionalTextEdits: [
+        {
+          range: { startLineNumber: 1, startColumn: 1, endLineNumber: 1, endColumn: 1 },
+          text: textToInsert,
+        },
+      ],
+    };
+  }
+
+  /**
+   * Search for cross-file symbols that match the context and return them
+   * with additionalTextEdits for use statement insertion
+   */
+  private suggestCrossFileSymbols (
+    acceptedKinds: SymbolKind[],
+    currentFilepath: Filepath,
+    currentFileContent: string,
+  ): CompletionList {
+    const results: CompletionList = { suggestions: [] };
+
+    if (!this.compiler.layout) return results;
+
+    // Get all symbols from all files
+    const allFiles = (this.compiler.layout as any).allFiles?.() || [];
+    const seenNames = new Set<string>();
+
+    for (const fileInfo of allFiles) {
+      // Skip current file - we already suggest local symbols
+      if (fileInfo.filepath.equals(currentFilepath)) continue;
+
+      const symbols = (this.compiler.layout as any).getSymbols?.(fileInfo.filepath) || [];
+
+      for (const sym of symbols) {
+        const symbolName = this.compiler.symbolName(sym);
+        if (!symbolName || seenNames.has(symbolName)) continue;
+        if (!acceptedKinds.includes(sym.kind)) continue;
+
+        seenNames.add(symbolName);
+
+        const fileHint = `from ${fileInfo.filepath.basename}`;
+        const item = this.createCrossFileCompletionItem(
+          symbolName,
+          sym.kind,
+          fileHint,
+          fileInfo.filepath,
+          currentFileContent,
+        );
+
+        results.suggestions.push(item);
+      }
+    }
+
+    return results;
+  }
+
   provideCompletionItems (model: TextModel, position: Position): CompletionList {
     const offset = getOffsetFromMonacoPosition(model, position);
 
@@ -154,6 +242,8 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
               this.compiler,
               offset,
               container as PrefixExpressionNode & { op: SyntaxToken },
+              model,
+              this,
             );
           case '~':
             return suggestOnPartialInjectionOp(
@@ -172,6 +262,8 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
               this.compiler,
               offset,
               container as InfixExpressionNode & { op: SyntaxToken },
+              model,
+              this,
             );
           case '.':
             return suggestMembers(
@@ -222,6 +314,8 @@ function suggestOnRelOp (
   compiler: Compiler,
   offset: number,
   container: (PrefixExpressionNode | InfixExpressionNode) & { op: SyntaxToken },
+  model?: TextModel,
+  provider?: DBMLCompletionItemProvider,
 ): CompletionList {
   const scopeKind = compiler.container.scopeKind(offset);
 
@@ -235,6 +329,18 @@ function suggestOnRelOp (
       SymbolKind.Schema,
       SymbolKind.Column,
     ]);
+
+    // Add cross-file symbol suggestions if available
+    if (model && provider && model.uri) {
+      const currentFilepath = Filepath.fromUri(model.uri);
+      const fileContent = model.getValue();
+      const crossFileSuggestions = provider['suggestCrossFileSymbols'](
+        [SymbolKind.Table, SymbolKind.Schema, SymbolKind.Column],
+        currentFilepath,
+        fileContent,
+      );
+      res.suggestions.push(...crossFileSuggestions.suggestions);
+    }
 
     return !shouldPrependSpace(container.op, offset) ? res : prependSpace(res);
   }
