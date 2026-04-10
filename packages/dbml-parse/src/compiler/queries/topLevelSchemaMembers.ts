@@ -1,6 +1,6 @@
 import type Compiler from '@/compiler';
 import { DEFAULT_SCHEMA_NAME } from '@/constants';
-import { SchemaSymbol } from '@/core/types';
+import { SchemaSymbol } from '@/core/types/symbols';
 import type { Filepath } from '@/core/types/filepath';
 
 export function topLevelSchemaMembers (this: Compiler, filepath: Filepath): SchemaSymbol[] {

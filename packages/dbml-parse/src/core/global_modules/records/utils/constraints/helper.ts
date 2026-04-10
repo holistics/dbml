@@ -1,5 +1,5 @@
 import type { RecordValue, Column, TableRecord } from '@/core/types/schemaJson';
-import { CompileWarning, CompileErrorCode } from '@/core/errors';
+import { CompileWarning, CompileErrorCode } from '@/core/types/errors';
 import { isSerialType } from '../data';
 
 export function buildColumnIndex (record: TableRecord): Map<string, number> {

@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import { CompileErrorCode } from '@/core/errors';
+import { CompileErrorCode } from '@/core/types/errors';
 import { validate } from '@tests/utils';
 
 describe('[example] use declaration validation', () => {

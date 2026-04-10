@@ -1,8 +1,8 @@
 import { SymbolKind, NodeSymbol } from '@/core/types/symbols';
 import { CompletionItemKind, CompletionItemInsertTextRule, type CompletionList } from '@/services/types';
-import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
+import { SyntaxToken, SyntaxTokenKind } from '@/core/types/tokens';
 import { hasTrailingSpaces } from '@/core/lexer/utils';
-import { SyntaxNode, TupleExpressionNode, FunctionApplicationNode } from '@/core/parser/nodes';
+import { SyntaxNode, TupleExpressionNode, FunctionApplicationNode } from '@/core/types/nodes';
 import Compiler from '@/compiler';
 import { extractVariableFromExpression } from '@/core/utils/expression';
 import { isValidPartialInjection } from '@/core/utils/validate';

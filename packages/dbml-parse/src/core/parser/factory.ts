@@ -1,5 +1,5 @@
-import { SyntaxNode, SyntaxNodeId, SyntaxNodeIdGenerator } from '@/core/parser/nodes';
-import { Filepath } from '../types/filepath';
+import { SyntaxNode, SyntaxNodeId, SyntaxNodeIdGenerator } from '@/core/types/nodes';
+import { Filepath } from '@/core/types/filepath';
 
 export default class NodeFactory {
   private generator: SyntaxNodeIdGenerator;

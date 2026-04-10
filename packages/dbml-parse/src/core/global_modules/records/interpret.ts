@@ -6,9 +6,9 @@ import {
   FunctionExpressionNode,
   SyntaxNode,
   TupleExpressionNode,
-} from '@/core/parser/nodes';
-import { CompileError, CompileErrorCode, CompileWarning } from '@/core/errors';
-import Report from '@/core/report';
+} from '@/core/types/nodes';
+import { CompileError, CompileErrorCode, CompileWarning } from '@/core/types/errors';
+import Report from '@/core/types/report';
 import type {
   RecordValue,
   Table,

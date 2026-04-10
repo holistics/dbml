@@ -10,17 +10,17 @@ import {
   getBody,
 } from '@/core/utils/expression';
 import { ElementKind, SettingName } from '@/core/types/keywords';
-import { InfixExpressionNode, ElementDeclarationNode } from '@/core/parser/nodes';
-import type { SyntaxNode } from '@/core/parser/nodes';
-import type { SyntaxToken } from '@/core/lexer/tokens';
+import { InfixExpressionNode, ElementDeclarationNode } from '@/core/types/nodes';
+import type { SyntaxNode } from '@/core/types/nodes';
+import type { SyntaxToken } from '@/core/types/tokens';
 import { NodeSymbol, SymbolKind } from '@/core/types/symbols';
 import type { GlobalModule } from '../types';
 import { PASS_THROUGH, type PassThrough, UNHANDLED, KEYWORDS_OF_DEFAULT_SETTING } from '@/constants';
-import Report from '@/core/report';
+import Report from '@/core/types/report';
 import type Compiler from '@/compiler/index';
 import type { SchemaElement } from '@/core/types/schemaJson';
 import { lookupMember, nodeRefereeOfLeftExpression, lookupInDefaultSchema, shouldInterpretNode } from '../utils';
-import { CompileError, CompileErrorCode } from '@/core/errors';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import { tableUtils } from '../table';
 import TablePartialBinder from './bind';
 import { TablePartialInterpreter } from './interpret';

@@ -25,6 +25,19 @@
           "filepath": "/main.dbml"
         }
       }
+    },
+    {
+      "code": "DUPLICATE_NAME",
+      "diagnostic": "Enum name status already exists in schema 'public'",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<infix-expression>@@[L4:C5, L4:C18]",
+          "snippet": "public.status",
+          "filepath": "/main.dbml"
+        }
+      }
     }
   ],
   "program": {

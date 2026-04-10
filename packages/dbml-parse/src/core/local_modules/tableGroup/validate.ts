@@ -1,12 +1,12 @@
 import { partition } from 'lodash-es';
 import Compiler from '@/compiler';
-import { CompileError, CompileErrorCode } from '@/core/errors';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import {
   isSimpleName, isValidColor, aggregateSettingList, Settings } from '@/core/utils/validate';
-import Report from '@/core/report';
+import Report from '@/core/types/report';
 import {
-  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode,
-} from '@/core/parser/nodes';
+  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode, WildcardNode,
+} from '@/core/types/nodes';
 import { destructureComplexVariable, isExpressionAQuotedString } from '@/core/utils/expression';
 
 export default class TableGroupValidator {
@@ -46,6 +46,9 @@ export default class TableGroupValidator {
         'A TableGroup must have a name',
         this.declarationNode,
       )];
+    }
+    if (nameNode instanceof WildcardNode) {
+      return [new CompileError(CompileErrorCode.INVALID_NAME, 'Wildcard (*) is not allowed as a TableGroup name', nameNode)];
     }
     if (!isSimpleName(nameNode)) {
       return [new CompileError(

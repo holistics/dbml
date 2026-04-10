@@ -1,5 +1,5 @@
 import type Compiler from '@/compiler/index';
-import { UseDeclarationNode } from '@/core/parser/nodes';
+import { UseDeclarationNode } from '@/core/types/nodes';
 import { Filepath, resolveImportFilepath, type FilepathId } from '@/core/types/filepath';
 
 // Returns a set of resolved filepath IDs. Validates that paths are relative and appends .dbml if missing.

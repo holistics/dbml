@@ -3,6 +3,7 @@
     "files": {
       "/main.dbml": {
         "aliases": [],
+        "diagramViews": [],
         "enums": [],
         "externals": {
           "enums": [
@@ -129,6 +130,7 @@
       },
       "/types.dbml": {
         "aliases": [],
+        "diagramViews": [],
         "enums": [
           {
             "name": "job_status",
@@ -239,6 +241,7 @@
     },
     "items": {
       "aliases": [],
+      "diagramViews": [],
       "enums": [
         {
           "name": "job_status",

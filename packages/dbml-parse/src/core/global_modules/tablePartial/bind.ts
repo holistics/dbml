@@ -1,9 +1,9 @@
 import { last, partition } from 'lodash-es';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, ProgramNode, SyntaxNode,
-} from '../../parser/nodes';
-import { SyntaxToken } from '../../lexer/tokens';
-import { CompileError } from '../../errors';
+} from '@/core/types/nodes';
+import { SyntaxToken } from '@/core/types/tokens';
+import { CompileError } from '@/core/types/errors';
 import { aggregateSettingList } from '../../utils/validate';
 import { destructureComplexVariableTuple } from '../../utils/expression';
 import { scanNonListNodeForBinding } from '../utils';

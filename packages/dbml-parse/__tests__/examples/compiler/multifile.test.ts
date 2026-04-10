@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest';
 import { Compiler } from '@/index';
 import { Filepath } from '@/core/types/filepath';
-import { SyntaxNodeKind } from '@/core/parser/nodes';
+import { SyntaxNodeKind } from '@/core/types/nodes';
 
 const fileA = Filepath.from('/project/a.dbml');
 const fileB = Filepath.from('/project/b.dbml');

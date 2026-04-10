@@ -1,16 +1,16 @@
 import Compiler from '@/compiler/index';
-import { CallExpressionNode, ElementDeclarationNode, ProgramNode, UseSpecifierListNode } from '@/core/parser/nodes';
+import { CallExpressionNode, ElementDeclarationNode, ProgramNode, UseSpecifierListNode } from '@/core/types/nodes';
 import { ElementKind } from '@/core/types/keywords';
 import { DEFAULT_SCHEMA_NAME, UNHANDLED } from '@/constants';
-import Report from '@/core/report';
-import type { Database, ElementRef, Ref, RefEndpoint, Table, TableRecord, SchemaElement, Enum, TableGroup, TablePartial, Note, Project } from '@/core/types/schemaJson';
+import Report from '@/core/types/report';
+import type { Database, DiagramView, ElementRef, Ref, RefEndpoint, Table, TableRecord, SchemaElement, Enum, TableGroup, TablePartial, Note, Project } from '@/core/types/schemaJson';
 import { getTokenPosition, getMultiplicities } from '../utils';
-import { CompileError, CompileErrorCode } from '@/core/errors';
-import type { CompileWarning } from '@/core/errors';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import type { CompileWarning } from '@/core/types/errors';
 import { validateForeignKeys } from '../records/utils/constraints';
 import { buildMergedTableFromElement, extractInlineRefsFromTablePartials } from '../records/utils/interpret';
 import { getBody } from '@/core/utils/expression';
-import { UseSymbol, SymbolKind } from '@/core/types';
+import { UseSymbol, SymbolKind } from '@/core/types/symbols';
 
 export default class ProgramInterpreter {
   private compiler: Compiler;
@@ -37,6 +37,7 @@ export default class ProgramInterpreter {
       aliases: [],
       tablePartials: [],
       records: [],
+      diagramViews: [],
       token,
       externals: {
         tables: [],
@@ -246,6 +247,9 @@ export default class ProgramInterpreter {
         break;
       case ElementKind.Project:
         db.project = value as Project;
+        break;
+      case ElementKind.DiagramView:
+        db.diagramViews.push(value as DiagramView);
         break;
       case ElementKind.Records: {
         db.records.push(value as TableRecord);

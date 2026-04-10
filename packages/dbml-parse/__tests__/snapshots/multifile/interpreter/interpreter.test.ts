@@ -2,7 +2,7 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { toSnapshot } from '@tests/utils';
 import Compiler from '@/compiler';
-import type Report from '@/core/report';
+import type Report from '@/core/types/report';
 import type { MasterDatabase, SchemaElement } from '@/core/types';
 import { loadAllSampleProjects } from '@tests/samples/loader';
 

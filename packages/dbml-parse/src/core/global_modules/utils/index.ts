@@ -1,11 +1,12 @@
-import Compiler from '@/compiler';
+import type Compiler from '@/compiler';
 import { DEFAULT_SCHEMA_NAME, UNHANDLED } from '@/constants';
-import { CompileError, CompileErrorCode } from '@/core/errors';
-import { SyntaxTokenKind } from '@/core/lexer/tokens';
-import { ArrayNode, CallExpressionNode, FunctionExpressionNode, InfixExpressionNode, LiteralNode, PostfixExpressionNode, PrefixExpressionNode, PrimaryExpressionNode, SyntaxNode, TupleExpressionNode, VariableNode } from '@/core/parser/nodes';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import { SyntaxTokenKind } from '@/core/types/tokens';
+import { ArrayNode, CallExpressionNode, FunctionExpressionNode, InfixExpressionNode, LiteralNode, PostfixExpressionNode, PrefixExpressionNode, PrimaryExpressionNode, SyntaxNode, TupleExpressionNode, VariableNode } from '@/core/types/nodes';
 import { getMemberChain } from '@/core/parser/utils';
-import Report from '@/core/report';
-import { ColumnType, NodeSymbol, RelationCardinality, SchemaSymbol, SymbolKind, TokenPosition, UseSymbol } from '@/core/types';
+import Report from '@/core/types/report';
+import { NodeSymbol, SchemaSymbol, SymbolKind, UseSymbol } from '@/core/types/symbols';
+import type { ColumnType, RelationCardinality, Table, TokenPosition } from '@/core/types';
 import { destructureComplexVariable, destructureComplexVariableTuple, destructureMemberAccessExpression, extractQuotedStringToken, extractVariableFromExpression, extractVarNameFromPrimaryVariable, getNumberTextFromExpression, isAccessExpression, isDotDelimitedIdentifier, isExpressionAnIdentifierNode, isExpressionAQuotedString, isExpressionASignedNumberExpression, isExpressionAVariableNode, parseNumber } from '@/core/utils/expression';
 import { zip } from 'lodash-es';
 
@@ -354,7 +355,7 @@ export function lookupMember (
 
   const match = members.find((m: NodeSymbol) => {
     if (kinds && !m.isKind(...kinds)) return false;
-    if (parentSymbol.isKind(SymbolKind.Program) || (parentSymbol instanceof SchemaSymbol && parentSymbol.qualifiedName.join('.') === DEFAULT_SCHEMA_NAME)) {
+    if (parentSymbol.isProgram() || (parentSymbol.isPublicSchema())) {
       // For UseSymbols, use the specifier node (which carries the local alias) rather than
       // the original declaration (which has the source schema-qualified name).
       const lookupDecl = (m instanceof UseSymbol && m.useSpecifierDeclaration) ? m.useSpecifierDeclaration : m.declaration;
@@ -403,7 +404,7 @@ export function lookupInDefaultSchema (
   const members = compiler.symbolMembers(globalSymbol).getFiltered(UNHANDLED);
 
   if (members) {
-    const publicSchema = members.find((m: NodeSymbol) => m instanceof SchemaSymbol && m.qualifiedName.join('.') === DEFAULT_SCHEMA_NAME);
+    const publicSchema = members.find((m: NodeSymbol) => m.isPublicSchema());
     if (publicSchema) {
       const result = lookupMember(compiler, publicSchema, name, { ...options, ignoreNotFound: true });
       if (result.getValue()) return result;

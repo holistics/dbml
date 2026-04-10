@@ -1,3 +1,12 @@
+## v7.0.0 (2026-04-10)
+
+#### :rocket: New Feature
+* `dbml-core`, `dbml-parse`
+  * [#849](https://github.com/holistics/dbml/pull/849) DBX-6689 Support Diagram View as code syntax ([@huyphung1602](https://github.com/huyphung1602))
+
+#### Committers: 2
+- harryphung ([@huyphung1602](https://github.com/huyphung1602))
+
 ## v6.6.0 (2026-04-02)
 
 #### :memo: Documentation

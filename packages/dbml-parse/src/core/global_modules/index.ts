@@ -13,9 +13,10 @@ import { checksModule } from './checks';
 import { programModule } from './program';
 import { schemaModule } from './schema';
 import { useModule } from './use';
+import { diagramViewModule } from './diagramView';
 import type Compiler from '@/compiler/index';
-import type { SyntaxNode } from '@/core/parser/nodes';
-import Report from '@/core/report';
+import type { SyntaxNode } from '@/core/types/nodes';
+import Report from '@/core/types/report';
 import type { NodeSymbol } from '@/core/types/symbols';
 import type { SchemaElement } from '@/core/types/schemaJson';
 import type { Unhandled } from '@/constants';
@@ -35,6 +36,7 @@ export const modules: GlobalModule[] = [
   noteModule,
   useModule,
   schemaModule,
+  diagramViewModule,
   programModule,
 ];
 

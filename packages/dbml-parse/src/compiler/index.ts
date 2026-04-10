@@ -17,10 +17,10 @@ import { intern, type Internable, type Primitive } from '@/core/types/internable
 import { DEFAULT_ENTRY } from '@/constants';
 import { nodeAlias, nodeFullname as fullname, nodeSettings, validateNode } from '@/core/local_modules';
 import { NodeSymbolIdGenerator } from '@/core/types/symbols';
-import SymbolFactory from '@/core/types/symbolFactory';
+import { SymbolFactory } from '@/core/types/symbols';
 import { lookupMembers } from './queries/lookupMembers';
 import { symbolName } from './queries/symbolName';
-import { SyntaxNodeIdGenerator } from '@/core/parser/nodes';
+import { SyntaxNodeIdGenerator } from '@/core/types/nodes';
 import { type DbmlProjectLayout, MemoryProjectLayout } from './projectLayout';
 import { fileDependencies } from './queries/fileDependencies';
 import { Filepath } from '@/core/types/filepath';

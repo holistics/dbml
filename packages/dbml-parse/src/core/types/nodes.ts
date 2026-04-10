@@ -1,9 +1,12 @@
 import { flatten, zip } from 'lodash-es';
-import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
-import { ElementKind, convertImportKindToSymbolKind, ImportKind, Internable, Position, type SymbolKind } from '@/core/types';
+import { SyntaxToken, SyntaxTokenKind } from '@/core/types/tokens';
+import { ElementKind, ImportKind } from '@/core/types/keywords';
+import { Internable } from '@/core/types/internable';
+import { Position } from '@/core/types/position';
+import type { SymbolKind } from '@/core/types/symbols';
 import { getTokenFullEnd, getTokenFullStart } from '@/core/lexer/utils';
-import { Filepath } from '../types/filepath';
-import { isReuseKeyword } from '../utils/expression';
+import { Filepath } from '@/core/types/filepath';
+import { isReuseKeyword } from '@/core/utils/expression';
 
 export type SyntaxNodeId = number;
 export type InternedSyntaxNode = string;
@@ -294,7 +297,16 @@ export class UseSpecifierNode extends SyntaxNode {
   getSymbolKind (): SymbolKind | undefined {
     const importKind = this.getImportKind();
     if (importKind === undefined) return undefined;
-    return convertImportKindToSymbolKind(importKind);
+    // Inline to avoid circular dep: nodes ↔ symbols
+    const map: Record<ImportKind, SymbolKind> = {
+      [ImportKind.Table]: 'Table' as SymbolKind,
+      [ImportKind.Enum]: 'Enum' as SymbolKind,
+      [ImportKind.TableGroup]: 'TableGroup' as SymbolKind,
+      [ImportKind.TablePartial]: 'TablePartial' as SymbolKind,
+      [ImportKind.Note]: 'Note' as SymbolKind,
+      [ImportKind.Schema]: 'Schema' as SymbolKind,
+    };
+    return map[importKind];
   }
 }
 

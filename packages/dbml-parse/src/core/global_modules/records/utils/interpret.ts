@@ -1,4 +1,4 @@
-import { ElementDeclarationNode, FunctionApplicationNode } from '@/core/parser/nodes';
+import { ElementDeclarationNode, FunctionApplicationNode } from '@/core/types/nodes';
 import type Compiler from '@/compiler/index';
 import { NodeSymbol, SymbolKind } from '@/core/types/symbols';
 import { UNHANDLED } from '@/constants';

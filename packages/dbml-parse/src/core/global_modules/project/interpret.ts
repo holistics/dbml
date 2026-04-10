@@ -1,12 +1,12 @@
 import { extractQuotedStringToken } from '@/core/utils/expression';
-import { CompileError } from '@/core/errors';
+import { CompileError } from '@/core/types/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, SyntaxNode,
-} from '@/core/parser/nodes';
+} from '@/core/types/nodes';
 import type { Enum, Project, Ref, Table, TableGroup, TablePartial } from '@/core/types/schemaJson';
 import { extractElementName, getTokenPosition, normalizeNoteContent } from '../utils';
 import Compiler from '@/compiler';
-import Report from '@/core/report';
+import Report from '@/core/types/report';
 
 export class ProjectInterpreter {
   private compiler: Compiler;

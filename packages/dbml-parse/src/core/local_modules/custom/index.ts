@@ -1,10 +1,10 @@
-import { CompileError, CompileErrorCode } from '@/core/errors';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import {
   ElementDeclarationNode, SyntaxNode,
-} from '@/core/parser/nodes';
+} from '@/core/types/nodes';
 import type { LocalModule } from '../types';
 import { PASS_THROUGH, type PassThrough } from '@/constants';
-import Report from '@/core/report';
+import Report from '@/core/types/report';
 import type Compiler from '@/compiler';
 import CustomValidator from './validate';
 import { Settings } from '@/core/utils/validate';

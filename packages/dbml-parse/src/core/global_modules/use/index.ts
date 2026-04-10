@@ -1,7 +1,7 @@
-import Report from '@/core/report';
+import Report from '@/core/types/report';
 import { GlobalModule } from '../types';
 import Compiler from '@/compiler';
-import { InfixExpressionNode, SyntaxNode, UseDeclarationNode, UseSpecifierNode, UseSpecifierListNode } from '@/core/parser/nodes';
+import { InfixExpressionNode, SyntaxNode, UseDeclarationNode, UseSpecifierNode, UseSpecifierListNode } from '@/core/types/nodes';
 import { PASS_THROUGH, UNHANDLED, type PassThrough } from '@/constants';
 import {
   destructureComplexVariable,
@@ -12,9 +12,9 @@ import {
   isUseDeclaration,
   isUseSpecifier,
 } from '@/core/utils/expression';
-import { NodeSymbol, SymbolKind, UseSymbol } from '@/core/types';
+import { NodeSymbol, SymbolKind, UseSymbol } from '@/core/types/symbols';
 import { Filepath, resolveImportFilepath } from '@/core/types/filepath';
-import { CompileError, CompileErrorCode } from '@/core/errors';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import { lookupMember } from '../utils';
 import type { SchemaElement } from '@/core/types/schemaJson';
 

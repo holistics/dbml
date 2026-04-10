@@ -2,8 +2,8 @@ import {
   CallExpressionNode,
   ListExpressionNode, PrefixExpressionNode,
   ArrayNode,
-} from '@/core/parser/nodes';
-import type { SyntaxNode } from '@/core/parser/nodes';
+} from '@/core/types/nodes';
+import type { SyntaxNode } from '@/core/types/nodes';
 import { getTokenPosition } from '../utils';
 import {
   destructureComplexVariable, extractQuotedStringToken,

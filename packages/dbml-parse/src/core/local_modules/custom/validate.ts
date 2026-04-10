@@ -1,7 +1,7 @@
-import { CompileError, CompileErrorCode } from '@/core/errors';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, ProgramNode, SyntaxNode,
-} from '@/core/parser/nodes';
+} from '@/core/types/nodes';
 import Compiler from '@/compiler';
 import { isExpressionAQuotedString } from '@/core/utils/expression';
 import { ElementKind } from '@/core/types/keywords';

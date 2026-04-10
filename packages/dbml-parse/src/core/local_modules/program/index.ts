@@ -1,8 +1,8 @@
 import { isProgramNode } from '@/core/utils/expression';
-import type { SyntaxNode, ProgramNode } from '@/core/parser/nodes';
+import type { SyntaxNode, ProgramNode } from '@/core/types/nodes';
 import { type LocalModule } from '../types';
 import { PASS_THROUGH, type PassThrough } from '@/constants';
-import Report from '@/core/report';
+import Report from '@/core/types/report';
 import type Compiler from '@/compiler';
 import ProgramValidator from './validate';
 import { Settings } from '@/core/utils/validate';

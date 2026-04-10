@@ -3,11 +3,11 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { scanTestNames, toSnapshot } from '@tests/utils';
 import Compiler from '@/compiler';
-import type Report from '@/core/report';
-import type { SchemaElement } from '@/core/types';
+import type { Database } from '@/core/types/schemaJson';
+import type Report from '@/core/types/report';
 import { DEFAULT_ENTRY } from '@/constants';
 
-function serializeInterpreterResult (compiler: Compiler, report: Report<SchemaElement | SchemaElement[] | undefined>): string {
+function serializeInterpreterResult (compiler: Compiler, report: Report<Database | undefined>): string {
   const value = report.getValue();
   const errors = report.getErrors();
   const warnings = report.getWarnings();
@@ -23,6 +23,7 @@ describe('[snapshot] nan', () => {
 
   testNames.forEach((testName) => {
     const program = readFileSync(path.resolve(__dirname, `./input/${testName}.in.dbml`), 'utf-8');
+
     const compiler = new Compiler();
     compiler.setSource(DEFAULT_ENTRY, program);
     const report = compiler.parse._(DEFAULT_ENTRY);

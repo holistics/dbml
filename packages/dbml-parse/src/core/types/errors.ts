@@ -1,6 +1,6 @@
-import { SyntaxToken } from '@/core/lexer/tokens';
-import { SyntaxNode } from './parser/nodes';
-import { Filepath } from './types/filepath';
+import { SyntaxToken } from '@/core/types/tokens';
+import { SyntaxNode } from '@/core/types/nodes';
+import { Filepath } from '@/core/types/filepath';
 
 export enum CompileErrorCode {
   UNKNOWN_SYMBOL = 1000,
@@ -119,6 +119,11 @@ export enum CompileErrorCode {
   INVALID_USE_CONTEXT,
   INVALID_USE_SPECIFIER_KIND,
   INVALID_USE_SPECIFIER_NAME,
+
+  INVALID_DIAGRAMVIEW_CONTEXT,
+  DUPLICATE_DIAGRAMVIEW_NAME,
+  INVALID_DIAGRAMVIEW_FIELD,
+  DUPLICATE_DIAGRAMVIEW_FIELD,
 
   BINDING_ERROR = 4000,
   NONEXISTENT_MODULE,

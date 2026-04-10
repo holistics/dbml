@@ -1,5 +1,5 @@
 import type Compiler from '../../index';
-import Report from '@/core/report';
+import Report from '@/core/types/report';
 import type { Filepath } from '@/core/types/filepath';
 import { collectTransitiveDependencies } from '../utils';
 

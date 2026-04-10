@@ -1,16 +1,16 @@
 import { destructureComplexVariable, extractVariableFromExpression } from '@/core/utils/expression';
 import { aggregateSettingList } from '@/core/utils/validate';
-import { CompileError, CompileErrorCode } from '@/core/errors';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, IdentiferStreamNode, InfixExpressionNode, ListExpressionNode, SyntaxNode, TupleExpressionNode,
-} from '@/core/parser/nodes';
+} from '@/core/types/nodes';
 import type { Ref, RefEndpoint, RelationCardinality, TokenPosition } from '@/core/types/schemaJson';
 import {
   extractColor, extractNamesFromRefOperand, getMultiplicities, getTokenPosition, getSymbolSchemaAndName,
 } from '../utils';
 import { extractStringFromIdentifierStream, isAccessExpression } from '@/core/utils/expression';
 import Compiler from '@/compiler';
-import Report from '@/core/report';
+import Report from '@/core/types/report';
 import { ElementKind } from '@/core/types/keywords';
 import { UNHANDLED } from '@/constants';
 

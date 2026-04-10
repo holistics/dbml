@@ -3,7 +3,7 @@ import {
 } from '@/services/types';
 import { getOffsetFromMonacoPosition } from '@/services/utils';
 import Compiler from '@/compiler';
-import { SyntaxNode, SyntaxNodeKind } from '@/core/parser/nodes';
+import { SyntaxNode, SyntaxNodeKind } from '@/core/types/nodes';
 import { UNHANDLED } from '@/constants';
 
 export default class DBMLDefinitionProvider implements DefinitionProvider {

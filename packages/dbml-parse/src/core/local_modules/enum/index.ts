@@ -2,15 +2,15 @@ import { ElementKind, SettingName } from '@/core/types/keywords';
 import { isElementNode, isElementFieldNode } from '@/core/utils/expression';
 import { destructureComplexVariable } from '@/core/utils/expression';
 import { last } from 'lodash-es';
-import { CompileError, CompileErrorCode } from '@/core/errors';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import { type LocalModule, type Settings } from '../types';
 import { PASS_THROUGH, type PassThrough } from '@/constants';
 import {
-  AttributeNode, ListExpressionNode, SyntaxNode,
-} from '@/core/parser/nodes';
+  AttributeNode, ElementDeclarationNode, ListExpressionNode, SyntaxNode,
+} from '@/core/types/nodes';
 import { aggregateSettingList, isValidName } from '@/core/utils/validate';
 import { isExpressionAQuotedString } from '@/core/utils/expression';
-import Report from '@/core/report';
+import Report from '@/core/types/report';
 import { extractVariableFromExpression } from '@/core/utils/expression';
 import type Compiler from '@/compiler';
 import EnumValidator from './validate';

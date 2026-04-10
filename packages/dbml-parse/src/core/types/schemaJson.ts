@@ -27,6 +27,26 @@ export interface DatabaseExternals {
   notes: ElementRef[];
 }
 
+/**
+ * FilterConfig is a tri-state filter:
+ * - [] (empty array) = show all
+ * - [...] (array with items) = show only these specific items
+ * - null = hide all
+ */
+export interface FilterConfig {
+  tables: Array<{ name: string; schemaName: string }> | null;
+  stickyNotes: Array<{ name: string }> | null;
+  tableGroups: Array<{ name: string }> | null;
+  schemas: Array<{ name: string }> | null;
+}
+
+export interface DiagramView {
+  name: string;
+  schemaName: string | null;
+  visibleEntities: FilterConfig;
+  token: TokenPosition;
+}
+
 export interface Database {
   schemas: [];
   tables: Table[];
@@ -39,6 +59,7 @@ export interface Database {
   tablePartials: TablePartial[];
   records: TableRecord[];
   externals: DatabaseExternals;
+  diagramViews: DiagramView[];
   token?: TokenPosition;
 }
 
@@ -51,7 +72,7 @@ export interface Table {
   name: string;
   schemaName: string | null;
   alias: string | null;
-  fields: Column[]; // The order of fields must match the order of declaration
+  fields: Column[];
   checks: Check[];
   partials: TablePartialInjection[];
   token: TokenPosition;
@@ -74,10 +95,8 @@ export interface ColumnType {
   schemaName: string | null;
   type_name: string;
   args: string | null;
-  // Parsed type parameters - stripped when passed to @dbml/core
   numericParams?: { precision: number; scale: number };
   lengthParam?: { length: number };
-  // Whether this type references an enum - stripped when passed to @dbml/core
   isEnum?: boolean;
 }
 
@@ -219,7 +238,6 @@ export interface TablePartialInjection {
   token: TokenPosition;
 }
 
-// Record value type
 export type RecordValueType = 'string' | 'bool' | 'integer' | 'real' | 'date' | 'time' | 'datetime' | string;
 
 export interface RecordValue {
@@ -249,9 +267,7 @@ export type Project =
       token: TokenPosition;
     };
     token: TokenPosition;
-    [
-    index: string & Omit<any, 'name' | 'tables' | 'refs' | 'enums' | 'tableGroups' | 'note' | 'tablePartials' | 'records'>
-    ]: string;
+    [index: string & Omit<any, 'name' | 'tables' | 'refs' | 'enums' | 'tableGroups' | 'note' | 'tablePartials' | 'records'>]: string;
   };
 
 export type SchemaElement =

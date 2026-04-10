@@ -1,9 +1,9 @@
 import type Compiler from '@/compiler';
 import { DEFAULT_ENTRY, UNHANDLED } from '@/constants';
-import Report from '@/core/report';
+import Report from '@/core/types/report';
 import type { AliasKind, Database, ElementRef, MasterDatabase, Table, TablePartial } from '@/core/types';
 import { Filepath, type FilepathId } from '@/core/types/filepath';
-import type { CompileError, CompileWarning } from '@/core/errors';
+import type { CompileError, CompileWarning } from '@/core/types/errors';
 import { ElementKind } from '@/core/types/keywords';
 
 // Strip internal-only column type properties for public JSON export.
@@ -83,6 +83,7 @@ export function interpretProject (this: Compiler): Report<MasterDatabase> {
       tablePartials: [],
       notes: [],
     },
+    diagramViews: [],
   };
 
   const files: Record<string, Database> = {};
@@ -99,6 +100,7 @@ export function interpretProject (this: Compiler): Report<MasterDatabase> {
     merged.aliases.push(...db.aliases);
     merged.tablePartials.push(...db.tablePartials);
     merged.records.push(...db.records);
+    merged.diagramViews.push(...db.diagramViews);
     if (db.project && !merged.project) merged.project = db.project;
   }
 

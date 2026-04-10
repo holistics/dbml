@@ -1,11 +1,13 @@
+import { DEFAULT_ENTRY } from '@/constants';
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
-import type { ProgramNode } from '@/core/parser/nodes';
+import Lexer from '@/core/lexer/lexer';
+import Parser from '@/core/parser/parser';
+import type { ProgramNode } from '@/core/types/nodes';
 import { scanTestNames, toSnapshot } from '@tests/utils';
 import Compiler from '@/compiler';
-import type Report from '@/core/report';
-import { DEFAULT_ENTRY } from '@/constants';
+import type Report from '@/core/types/report';
 
 function serializeParserResult (compiler: Compiler, report: Report<ProgramNode>): string {
   const value = report.getValue();
@@ -27,6 +29,9 @@ describe('[snapshot] parser', () => {
     const compiler = new Compiler();
     compiler.setSource(DEFAULT_ENTRY, program);
 
+    const { nodeIdGenerator } = compiler;
+
+    const lexer = new Lexer(program, DEFAULT_ENTRY);
     const output = serializeParserResult(
       compiler,
       compiler.parseFile(DEFAULT_ENTRY).map(({ ast }) => ast),

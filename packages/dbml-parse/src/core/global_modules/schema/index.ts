@@ -1,12 +1,12 @@
 import { uniqBy } from 'lodash-es';
-import { ElementDeclarationNode, UseDeclarationNode, UseSpecifierListNode, WildcardNode } from '@/core/parser/nodes';
-import { SyntaxNode, UseSpecifierNode } from '@/core/parser/nodes';
+import { ElementDeclarationNode, UseDeclarationNode, UseSpecifierListNode, WildcardNode } from '@/core/types/nodes';
+import { SyntaxNode, UseSpecifierNode } from '@/core/types/nodes';
 import { NodeSymbol, SchemaSymbol, SymbolKind, UseSymbol } from '@/core/types/symbols';
 import type { GlobalModule } from '../types';
 import { PASS_THROUGH, type PassThrough, UNHANDLED, DEFAULT_SCHEMA_NAME } from '@/constants';
-import Report from '@/core/report';
+import Report from '@/core/types/report';
 import type Compiler from '@/compiler/index';
-import { CompileError, CompileErrorCode } from '@/core/errors';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import { tableUtils } from '../table';
 import { enumUtils } from '../enum';
 import { tablePartialUtils } from '../tablePartial';
@@ -62,7 +62,7 @@ export const schemaModule: GlobalModule = {
     // Duplicate checking and alias conflict detection (alias is only checked for `public`)
     const seen = new Map<string, NodeSymbol>();
     for (const member of uniqueExpandedMembers) {
-      const isPublicSchema = symbol.qualifiedName.join('.') === DEFAULT_SCHEMA_NAME;
+      const isPublicSchema = symbol.isPublicSchema();
 
       const fullname = (member.declaration && compiler.nodeFullname(member.declaration).getFiltered(UNHANDLED)) || [];
       if (fullname.length > 1 && fullname[0] === DEFAULT_SCHEMA_NAME) {

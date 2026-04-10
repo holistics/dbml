@@ -1,17 +1,17 @@
 import { isElementNode, isElementFieldNode, isExpressionAVariableNode } from '@/core/utils/expression';
 import { last } from 'lodash-es';
-import { CompileError, CompileErrorCode } from '@/core/errors';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import {
   AttributeNode,
   ListExpressionNode,
   type SyntaxNode,
-} from '@/core/parser/nodes';
+} from '@/core/types/nodes';
 import { ElementKind, SettingName } from '@/core/types/keywords';
 import { type LocalModule } from '../types';
 import { PASS_THROUGH, type PassThrough } from '@/constants';
 import { aggregateSettingList, isVoid, Settings } from '@/core/utils/validate';
 import { isExpressionAQuotedString } from '@/core/utils/expression';
-import Report from '@/core/report';
+import Report from '@/core/types/report';
 import type Compiler from '@/compiler';
 import IndexesValidator from './validate';
 

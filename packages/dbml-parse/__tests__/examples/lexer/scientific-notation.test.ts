@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
-import { SyntaxTokenKind, isTriviaToken } from '@/core/lexer/tokens';
-import { CompileErrorCode } from '@/core/errors';
+import { SyntaxTokenKind, isTriviaToken } from '@/core/types/tokens';
+import { CompileErrorCode } from '@/core/types/errors';
 import { lex } from '@tests/utils';
 
 // Helper to get non-trivia, non-EOF tokens

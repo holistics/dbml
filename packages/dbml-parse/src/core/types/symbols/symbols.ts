@@ -1,6 +1,8 @@
-import { type SyntaxNode, UseDeclarationNode, type UseSpecifierNode, type WildcardNode } from '@/core/parser/nodes';
+import { type SyntaxNode, UseDeclarationNode, type UseSpecifierNode, type WildcardNode } from '@/core/types/nodes';
 import type { Internable } from '@/core/types/internable';
-import type { Filepath } from './filepath';
+import { DEFAULT_SCHEMA_NAME } from '@/constants';
+import type { Filepath } from '@/core/types/filepath';
+import { ImportKind } from '@/core/types/keywords';
 
 export enum SymbolKind {
   Schema = 'Schema',
@@ -22,7 +24,24 @@ export enum SymbolKind {
   Indexes = 'Indexes',
   IndexesField = 'Indexes field',
 
+  DiagramView = 'DiagramView',
+
   Program = 'Program',
+}
+
+export function convertImportKindToSymbolKind (importKind: ImportKind): SymbolKind {
+  switch (importKind) {
+    case ImportKind.Table: return SymbolKind.Table;
+    case ImportKind.Enum: return SymbolKind.Enum;
+    case ImportKind.TableGroup: return SymbolKind.TableGroup;
+    case ImportKind.TablePartial: return SymbolKind.TablePartial;
+    case ImportKind.Note: return SymbolKind.Note;
+    case ImportKind.Schema: return SymbolKind.Schema;
+    default: {
+      const _: never = importKind;
+      throw new Error('Unreachable in convertImportKindToSymbolKind');
+    }
+  }
 }
 
 declare const __nodeSymbolBrand: unique symbol;
@@ -82,6 +101,14 @@ export class NodeSymbol implements Internable<InternedNodeSymbol> {
 
   isKind (...kinds: SymbolKind[]): boolean {
     return kinds.includes(this.kind);
+  }
+
+  isPublicSchema (): this is SchemaSymbol {
+    return false;
+  }
+
+  isProgram (): boolean {
+    return this.kind === SymbolKind.Program;
   }
 }
 
@@ -145,6 +172,7 @@ export class InjectedColumnSymbol extends NodeSymbol {
 }
 
 export class SchemaSymbol extends NodeSymbol {
+  declare kind: SymbolKind.Schema;
   name: string;
   parent?: SchemaSymbol;
 
@@ -167,5 +195,9 @@ export class SchemaSymbol extends NodeSymbol {
   get qualifiedName (): string[] {
     if (!this.parent) return [this.name];
     return [...this.parent.qualifiedName, this.name];
+  }
+
+  override isPublicSchema (): this is SchemaSymbol {
+    return this.qualifiedName.join('.') === DEFAULT_SCHEMA_NAME;
   }
 }

@@ -1,9 +1,9 @@
 import type Compiler from '@/compiler';
-import type { ProgramNode } from '@/core/parser/nodes';
-import type { SyntaxToken } from '@/core/lexer/tokens';
-import type { CompileError, CompileWarning } from '@/core/errors';
-import { type NodeSymbol } from '@/core/types/symbols';
-import { DEFAULT_ENTRY, UNHANDLED } from '@/constants';
+import type { ProgramNode } from '@/core/types/nodes';
+import type { SyntaxToken } from '@/core/types/tokens';
+import type { CompileError, CompileWarning } from '@/core/types/errors';
+import { type NodeSymbol, SchemaSymbol } from '@/core/types/symbols';
+import { DEFAULT_ENTRY, DEFAULT_SCHEMA_NAME, UNHANDLED } from '@/constants';
 import { Database } from '@/core/types';
 
 export function ast (this: Compiler): Readonly<ProgramNode> {

@@ -1,5 +1,5 @@
 import { Position } from '@/core/types/position';
-import { Filepath } from '../types/filepath';
+import { Filepath } from '@/core/types/filepath';
 
 export enum SyntaxTokenKind {
   SPACE = '<space>',
@@ -79,6 +79,8 @@ export function isOpToken (token?: SyntaxToken): boolean {
 export class SyntaxToken {
   kind: SyntaxTokenKind;
 
+  filepath: Filepath;
+
   value: string;
 
   leadingTrivia: SyntaxToken[];
@@ -98,8 +100,6 @@ export class SyntaxToken {
   end: Readonly<number>;
 
   isInvalid: boolean;
-
-  filepath: Filepath;
 
   protected constructor (
     kind: SyntaxTokenKind,

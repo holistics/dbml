@@ -1,6 +1,6 @@
 import { last, partition } from 'lodash-es';
 import Compiler from '@/compiler';
-import { CompileError, CompileErrorCode } from '@/core/errors';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import {
   BlockExpressionNode,
   CallExpressionNode,
@@ -11,7 +11,7 @@ import {
   ProgramNode,
   SyntaxNode,
   VariableNode,
-} from '@/core/parser/nodes';
+} from '@/core/types/nodes';
 import { isExpressionAQuotedString, isExpressionAVariableNode } from '@/core/utils/expression';
 import { destructureIndexNode } from '@/core/utils/expression';
 import { aggregateSettingList, isVoid } from '@/core/utils/validate';

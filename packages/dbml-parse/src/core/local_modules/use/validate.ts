@@ -1,5 +1,5 @@
-import { CompileError, CompileErrorCode } from '@/core/errors';
-import { ProgramNode, UseDeclarationNode, UseSpecifierNode, WildcardNode } from '@/core/parser/nodes';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import { ProgramNode, UseDeclarationNode, UseSpecifierNode, WildcardNode } from '@/core/types/nodes';
 import { ImportKind } from '@/core/types';
 import { Filepath } from '@/core/types/filepath';
 import type Compiler from '@/compiler';

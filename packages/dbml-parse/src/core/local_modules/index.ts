@@ -13,9 +13,10 @@ import { tablePartialModule } from './tablePartial';
 import { noteModule } from './note';
 import { programModule } from './program';
 import { useModule } from './use';
+import { diagramViewModule } from './diagramView';
 import type Compiler from '@/compiler';
-import type { SyntaxNode } from '@/core/parser/nodes';
-import Report from '@/core/report';
+import type { SyntaxNode } from '@/core/types/nodes';
+import Report from '@/core/types/report';
 
 // Each time you add a new element, register its module here.
 export const modules: LocalModule[] = [
@@ -29,6 +30,7 @@ export const modules: LocalModule[] = [
   tableGroupModule,
   tablePartialModule,
   noteModule,
+  diagramViewModule,
   programModule,
   useModule,
   customModule,

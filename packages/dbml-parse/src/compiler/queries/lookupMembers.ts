@@ -1,8 +1,8 @@
 import type Compiler from '../index';
 import { NodeSymbol, SchemaSymbol, SymbolKind } from '@/core/types/symbols';
-import Report from '@/core/report';
+import Report from '@/core/types/report';
 import { UNHANDLED } from '@/constants';
-import { SyntaxNode } from '@/core/parser/nodes';
+import { SyntaxNode } from '@/core/types/nodes';
 
 export function lookupMembers (this: Compiler, symbolOrNode: NodeSymbol | SyntaxNode, targetKind: SymbolKind, targetName: string): Report<NodeSymbol | undefined> {
   let symbol: NodeSymbol;

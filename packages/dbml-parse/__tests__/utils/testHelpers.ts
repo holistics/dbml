@@ -1,9 +1,9 @@
 import fs from 'node:fs';
 import { NodeSymbol, SchemaSymbol } from '@/core/types/symbols';
-import { SyntaxToken } from '@/core/lexer/tokens';
-import { ElementDeclarationNode, LiteralNode, ProgramNode, SyntaxNode, VariableNode } from '@/core/parser/nodes';
+import { SyntaxToken } from '@/core/types/tokens';
+import { ElementDeclarationNode, LiteralNode, ProgramNode, SyntaxNode, VariableNode } from '@/core/types/nodes';
 import { getElementNameString } from '@/core/utils/expression';
-import { CompileError, CompileErrorCode, CompileWarning } from '@/core/errors';
+import { CompileError, CompileErrorCode, CompileWarning } from '@/core/types/errors';
 import type Compiler from '@/compiler';
 import { UNHANDLED } from '@/constants';
 import { SchemaElement, TokenPosition } from '@/core/types';

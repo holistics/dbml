@@ -1,10 +1,10 @@
 import { isElementNode } from '@/core/utils/expression';
 import { ElementKind } from '@/core/types/keywords';
-import { type SyntaxNode, type ElementDeclarationNode } from '@/core/parser/nodes';
-import type { SyntaxToken } from '@/core/lexer/tokens';
+import { type SyntaxNode, type ElementDeclarationNode } from '@/core/types/nodes';
+import type { SyntaxToken } from '@/core/types/tokens';
 import type { GlobalModule } from '../types';
 import { PASS_THROUGH, type PassThrough } from '@/constants';
-import Report from '@/core/report';
+import Report from '@/core/types/report';
 import type Compiler from '@/compiler/index';
 import type { SchemaElement } from '@/core/types/schemaJson';
 import ChecksBinder from './bind';

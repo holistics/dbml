@@ -13,19 +13,19 @@ export {
   ElementDeclarationNode,
   ProgramNode,
   SyntaxNodeKind,
-} from '@/core/parser/nodes';
+} from '@/core/types/nodes';
 
 export {
   // Token types
   SyntaxToken,
   SyntaxTokenKind,
-} from '@/core/lexer/tokens';
+} from '@/core/types/tokens';
 
 export {
   // Error types
   CompileError,
   CompileErrorCode,
-} from '@/core/errors';
+} from '@/core/types/errors';
 
 export {
   // Scope kinds from compiler

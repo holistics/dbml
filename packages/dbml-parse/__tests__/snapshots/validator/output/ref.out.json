@@ -1,5 +1,32 @@
 {
-  "errors": [],
+  "errors": [
+    {
+      "code": "BINDING_ERROR",
+      "diagnostic": "Table 'Users' does not exist in Schema 'public'",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<primary-expression>@@[L0:C7, L0:C12]",
+          "snippet": "Users",
+          "filepath": "/main.dbml"
+        }
+      }
+    },
+    {
+      "code": "BINDING_ERROR",
+      "diagnostic": "Table 'Products' does not exist in Schema 'public'",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<primary-expression>@@[L0:C18, L0:C26]",
+          "snippet": "Products",
+          "filepath": "/main.dbml"
+        }
+      }
+    }
+  ],
   "program": {
     "context": {
       "id": "node@<program>@@[L0:C0, L0:C50]",

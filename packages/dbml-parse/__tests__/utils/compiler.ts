@@ -1,5 +1,6 @@
 import Lexer from '@/core/lexer/lexer';
 import Parser from '@/core/parser/parser';
+import { DEFAULT_ENTRY } from '@/constants';
 import {
   ProgramNode,
   SyntaxNode,
@@ -21,16 +22,15 @@ import {
   VariableNode,
   PrimaryExpressionNode,
   ArrayNode,
+  WildcardNode,
   SyntaxNodeIdGenerator,
   UseDeclarationNode,
   UseSpecifierListNode,
   UseSpecifierNode,
-  WildcardNode,
-} from '@/core/parser/nodes';
-import Report from '@/core/report';
+} from '@/core/types/nodes';
+import Report from '@/core/types/report';
 import { Compiler, SyntaxToken } from '@/index';
 import type { Database } from '@/core/types/schemaJson';
-import { DEFAULT_ENTRY } from '@/constants';
 
 export function lex (source: string): Report<SyntaxToken[]> {
   return new Lexer(source, DEFAULT_ENTRY).lex();
@@ -267,7 +267,6 @@ export function print (source: string, ast: SyntaxNode): string {
       }
 
       case SyntaxNodeKind.EMPTY:
-        // Empty nodes don't contribute to output
         break;
 
       case SyntaxNodeKind.USE_DECLARATION: {

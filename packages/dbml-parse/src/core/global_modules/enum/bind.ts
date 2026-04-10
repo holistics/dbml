@@ -1,8 +1,8 @@
-import { CompileError } from '@/core/errors';
+import { CompileError } from '@/core/types/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ProgramNode,
-} from '@/core/parser/nodes';
-import { SyntaxToken } from '@/core/lexer/tokens';
+} from '@/core/types/nodes';
+import { SyntaxToken } from '@/core/types/tokens';
 import Compiler from '@/compiler';
 
 export default class EnumBinder {

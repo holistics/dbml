@@ -1,9 +1,9 @@
 import Compiler from '@/compiler';
-import { CompileError } from '../../errors';
+import { CompileError } from '@/core/types/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ProgramNode,
-} from '../../parser/nodes';
-import { SyntaxToken } from '../../lexer/tokens';
+} from '@/core/types/nodes';
+import { SyntaxToken } from '@/core/types/tokens';
 
 export default class NoteBinder {
   private compiler: Compiler;

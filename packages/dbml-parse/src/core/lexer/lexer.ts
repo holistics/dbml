@@ -1,12 +1,10 @@
-import { CompileError, CompileErrorCode } from '@/core/errors';
-import Report from '@/core/report';
-import { isAlphaOrUnderscore, isAlphaNumeric, isDigit } from '@/core/utils/chars';
-import {
-  SyntaxToken, SyntaxTokenKind, isOp, isTriviaToken,
-} from '@/core/lexer/tokens';
-import type { Position } from '@/core/types';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import Report from '@/core/types/report';
+import { Position } from '@/core/types/position';
 import { isInvalidToken } from '@/core/parser/utils';
-import { Filepath } from '../types/filepath';
+import { isOp, isTriviaToken, SyntaxToken, SyntaxTokenKind } from '@/core/types/tokens';
+import { isAlphaNumeric, isAlphaOrUnderscore, isDigit } from '@/core/utils/chars';
+import { Filepath } from '@/core/types/filepath';
 
 export default class Lexer {
   private start: Position = {
@@ -147,6 +145,9 @@ export default class Lexer {
           break;
         case ':':
           this.addToken(SyntaxTokenKind.COLON);
+          break;
+        case '*':
+          this.addToken(SyntaxTokenKind.WILDCARD);
           break;
         case "'":
           if (this.match("''")) {

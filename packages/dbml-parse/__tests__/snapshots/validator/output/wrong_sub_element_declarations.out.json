@@ -129,6 +129,58 @@
           "filepath": "/main.dbml"
         }
       }
+    },
+    {
+      "code": "DUPLICATE_COLUMN_NAME",
+      "diagnostic": "Duplicate column Indexes",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<function-application>@@[L1:C4, L1:C32]",
+          "snippet": "Indexes wr...x alias {}",
+          "filepath": "/main.dbml"
+        }
+      }
+    },
+    {
+      "code": "DUPLICATE_COLUMN_NAME",
+      "diagnostic": "Duplicate column Indexes",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<function-application>@@[L2:C4, L2:C21]",
+          "snippet": "Indexes 2 args {}",
+          "filepath": "/main.dbml"
+        }
+      }
+    },
+    {
+      "code": "DUPLICATE_COLUMN_NAME",
+      "diagnostic": "Duplicate column Indexes",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<function-application>@@[L1:C4, L1:C32]",
+          "snippet": "Indexes wr...x alias {}",
+          "filepath": "/main.dbml"
+        }
+      }
+    },
+    {
+      "code": "DUPLICATE_COLUMN_NAME",
+      "diagnostic": "Duplicate column Indexes",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<function-application>@@[L3:C4, L3:C35]",
+          "snippet": "Indexes wr...of args {}",
+          "filepath": "/main.dbml"
+        }
+      }
     }
   ],
   "program": {

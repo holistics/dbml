@@ -1,4 +1,4 @@
-import { SyntaxToken } from '@/core/lexer/tokens';
+import { SyntaxToken } from '@/core/types/tokens';
 import { SyntaxTokenKind } from '@/index';
 import { last } from 'lodash-es';
 

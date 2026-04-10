@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 import { parse } from '@tests/utils';
-import { UseSpecifierListNode, WildcardNode, SyntaxNodeKind, InfixExpressionNode } from '@/core/parser/nodes';
+import { UseSpecifierListNode, WildcardNode, SyntaxNodeKind, InfixExpressionNode } from '@/core/types/nodes';
 import { extractVariableFromExpression } from '@/core/utils/expression';
 
 describe('[example] use declaration parsing', () => {

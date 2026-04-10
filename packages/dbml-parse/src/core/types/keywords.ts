@@ -1,5 +1,3 @@
-import { SymbolKind } from './symbols';
-
 // Allowable import kinds for use declaration
 export enum ImportKind {
   Table = 'table',
@@ -9,27 +7,6 @@ export enum ImportKind {
   Note = 'note',
   Schema = 'schema',
 }
-
-export function convertImportKindToSymbolKind (importKind: ImportKind): SymbolKind {
-  switch (importKind) {
-    case ImportKind.Table:
-      return SymbolKind.Table;
-    case ImportKind.Enum:
-      return SymbolKind.Enum;
-    case ImportKind.TableGroup:
-      return SymbolKind.TableGroup;
-    case ImportKind.TablePartial:
-      return SymbolKind.TablePartial;
-    case ImportKind.Note:
-      return SymbolKind.Note;
-    case ImportKind.Schema:
-      return SymbolKind.Schema;
-    default: {
-      const _: never = importKind; // exhaustive check
-      throw new Error('Unreachable in convertImportKindToSymbolKind');
-    }
-  }
-};
 
 export enum ElementKind {
   Table = 'table',
@@ -42,6 +19,7 @@ export enum ElementKind {
   TablePartial = 'tablepartial',
   Checks = 'checks',
   Records = 'records',
+  DiagramView = 'diagramview',
 }
 
 export enum SettingName {
