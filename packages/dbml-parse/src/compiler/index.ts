@@ -21,6 +21,7 @@ import { lookupMembers } from './queries/lookupMembers';
 import { symbolName } from './queries/symbolName';
 import { SyntaxNodeIdGenerator } from '@/core/parser/nodes';
 import { parseFile } from './queries/pipeline/parse';
+import { DEFAULT_FILEPATH } from '@/core/types/filepath';
 import { ast, errors, publicSymbolTable, rawDb, tokens, warnings } from './queries/legacy/parse';
 import { interpretFile } from './queries/pipeline/interpret';
 
@@ -38,7 +39,7 @@ export default class Compiler {
   nodeIdGenerator = new SyntaxNodeIdGenerator();
 
   symbolIdGenerator = new NodeSymbolIdGenerator();
-  symbolFactory = new SymbolFactory(this.symbolIdGenerator);
+  symbolFactory = new SymbolFactory(this.symbolIdGenerator, DEFAULT_FILEPATH);
 
   setSource (source: string) {
     this.source = source;

@@ -1,8 +1,9 @@
 import Lexer from '@/core/lexer/lexer';
 import Parser from '@/core/parser/parser';
 import { ElementKind } from '@/core/types/keywords';
-import { DEFAULT_SCHEMA_NAME, DEFAULT_ENTRY } from '@/constants';
+import { DEFAULT_SCHEMA_NAME } from '@/constants';
 import { SyntaxNodeIdGenerator } from '@/core/parser/nodes';
+import { DEFAULT_FILEPATH } from '@/core/types/filepath';
 import { destructureComplexVariable } from '@/core/utils/expression';
 import { applyTextEdits, TextEdit } from './applyTextEdits';
 import { addDoubleQuoteIfNeeded } from '../utils';
@@ -27,11 +28,11 @@ export interface DiagramViewBlock {
 
 export function findDiagramViewBlocks (source: string): DiagramViewBlock[] {
   const blocks: DiagramViewBlock[] = [];
-  const lexerResult = new Lexer(source, DEFAULT_ENTRY).lex();
+  const lexerResult = new Lexer(source, DEFAULT_FILEPATH).lex();
   if (lexerResult.getErrors().length > 0) return blocks;
 
   const tokens = lexerResult.getValue();
-  const ast = new Parser(source, tokens, new SyntaxNodeIdGenerator(), DEFAULT_ENTRY).parse();
+  const ast = new Parser(DEFAULT_FILEPATH, source, tokens, new SyntaxNodeIdGenerator()).parse();
   if (ast.getErrors().length > 0) return blocks;
 
   const program = ast.getValue().ast;

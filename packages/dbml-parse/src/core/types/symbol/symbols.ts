@@ -1,7 +1,7 @@
 import SymbolTable from './symbolTable';
 import { SyntaxNode } from '@/core/parser/nodes';
 import { Filepath } from '@/core/types/filepath';
-import { DEFAULT_ENTRY } from '@/constants';
+import { DEFAULT_FILEPATH } from '@/core/types/filepath';
 
 export type NodeSymbolId = number;
 export class NodeSymbolIdGenerator {
@@ -40,7 +40,7 @@ export class NodeSymbol {
     this.id = id;
     this.declaration = declaration;
     this.symbolTable = symbolTable;
-    this.filepath = filepath ?? declaration?.filepath ?? DEFAULT_ENTRY;
+    this.filepath = filepath ?? (declaration as { filepath?: Filepath } | undefined)?.filepath ?? DEFAULT_FILEPATH;
   }
 }
 

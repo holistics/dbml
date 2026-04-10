@@ -2,9 +2,9 @@ import { describe, expect, it } from 'vitest';
 import { syncDiagramView } from '@/compiler/queries/transform/syncDiagramView';
 import Compiler from '@/compiler/index';
 import Lexer from '@/core/lexer/lexer';
-import { DEFAULT_ENTRY } from '@/constants';
 import Parser from '@/core/parser/parser';
 import { SyntaxNodeIdGenerator } from '@/core/parser/nodes';
+import { DEFAULT_FILEPATH } from '@/core/types/filepath';
 
 // update operation
 
@@ -48,8 +48,8 @@ DiagramView my_view {
 describe('Parser - * wildcard in DiagramView', () => {
   it('parses DiagramView with { * } without errors', () => {
     const source = 'DiagramView v { * }';
-    const tokens = new Lexer(source, DEFAULT_ENTRY).lex().getValue();
-    const result = new Parser(source, tokens, new SyntaxNodeIdGenerator(), DEFAULT_ENTRY).parse();
+    const tokens = new Lexer(source, DEFAULT_FILEPATH).lex().getValue();
+    const result = new Parser(DEFAULT_FILEPATH, source, tokens, new SyntaxNodeIdGenerator()).parse();
     expect(result.getErrors()).toHaveLength(0);
   });
 
@@ -61,8 +61,8 @@ DiagramView v {
   }
 }
 `;
-    const tokens = new Lexer(source, DEFAULT_ENTRY).lex().getValue();
-    const result = new Parser(source, tokens, new SyntaxNodeIdGenerator(), DEFAULT_ENTRY).parse();
+    const tokens = new Lexer(source, DEFAULT_FILEPATH).lex().getValue();
+    const result = new Parser(DEFAULT_FILEPATH, source, tokens, new SyntaxNodeIdGenerator()).parse();
     expect(result.getErrors()).toHaveLength(0);
   });
 

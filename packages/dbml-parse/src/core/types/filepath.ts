@@ -75,6 +75,9 @@ export class Filepath implements Internable<FilepathId> {
   }
 }
 
+// Virtual filepath used when no real filesystem path is available (single-file / in-memory mode)
+export const DEFAULT_FILEPATH = new Filepath('/main.dbml');
+
 // Resolve the relativePath
 // based on the currentFilepath
 // Append `.dbml` if relativePath does not ends with `.dbml`
