@@ -1,6 +1,5 @@
 import Compiler from '@/compiler/index';
-// TODO: migrate services
-// import * as services from '@/services/index';
+export { dbmlMonarchTokensProvider } from '@/services/monarch';
 
 // Export the types that playground and other consumers need
 export {
@@ -40,5 +39,7 @@ export {
 } from '@/compiler/index';
 
 export * from '@/core/global_modules/records/utils/data';
+
+export type { Database } from '@/core/types/schemaJson';
 
 export { Compiler };
