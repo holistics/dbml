@@ -1,9 +1,9 @@
 import Compiler from '@/compiler';
 import { PASS_THROUGH, PassThrough } from '@/constants';
-import { CompileError, CompileErrorCode } from '@/core/errors';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import { ElementKind } from '@/core/types/keywords';
 import { SyntaxNode } from '@/core/parser/nodes';
-import Report from '@/core/report';
+import Report from '@/core/types/report';
 import { isElementNode } from '@/core/utils/expression';
 import { LocalModule } from '../types';
 import { Settings } from '@/core/utils/validate';

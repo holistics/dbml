@@ -1,6 +1,6 @@
 import { extractQuotedStringToken, extractVariableFromExpression } from '@/core/utils/expression';
 import { aggregateSettingList } from '@/core/utils/validate';
-import { CompileError, CompileErrorCode } from '@/core/errors';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode,
 } from '@/core/parser/nodes';
@@ -9,7 +9,7 @@ import type {
 } from '@/core/types/schemaJson';
 import { extractElementName, getTokenPosition, normalizeNoteContent } from '../utils';
 import Compiler from '@/compiler';
-import Report from '@/core/report';
+import Report from '@/core/types/report';
 
 export default class EnumInterpreter {
   private declarationNode: ElementDeclarationNode;

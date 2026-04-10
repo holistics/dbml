@@ -3,7 +3,7 @@ import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ProgramNode,
 } from '../../parser/nodes';
 import { SyntaxToken } from '../../lexer/tokens';
-import { CompileError } from '../../errors';
+import { CompileError } from '@/core/types/errors';
 import { scanNonListNodeForBinding } from '../utils';
 import Compiler from '@/compiler';
 

@@ -1,6 +1,6 @@
 import { isElementNode, isElementFieldNode } from '@/core/utils/expression';
 import { destructureComplexVariable, extractVariableFromExpression, extractQuotedStringToken } from '@/core/utils/expression';
-import { CompileError, CompileErrorCode } from '@/core/errors';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import { PASS_THROUGH, UNHANDLED, type PassThrough } from '@/constants';
 import {
   CallExpressionNode, ElementDeclarationNode, ProgramNode, SyntaxNode, TupleExpressionNode,
@@ -9,7 +9,7 @@ import { ElementKind } from '@/core/types/keywords';
 import { type LocalModule, type Settings } from '../types';
 import { isValidName } from '@/core/utils/validate';
 import { isTupleOfVariables } from '@/core/utils/expression';
-import Report from '@/core/report';
+import Report from '@/core/types/report';
 import type Compiler from '@/compiler';
 import RecordsValidator from './validate';
 

@@ -3,7 +3,7 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import type { ProgramNode } from '@/core/parser/nodes';
 import { scanTestNames, toSnapshot } from '@tests/utils';
-import Report from '@/core/report';
+import Report from '@/core/types/report';
 import Compiler from '@/compiler';
 
 function serializeBinderResult (compiler: Compiler, report: Report<ProgramNode>): string {

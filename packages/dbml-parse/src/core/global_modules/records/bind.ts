@@ -2,7 +2,7 @@ import { SyntaxToken } from '../../lexer/tokens';
 import {
   BlockExpressionNode, CommaExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ProgramNode, SyntaxNode,
 } from '../../parser/nodes';
-import { CompileError, CompileErrorCode } from '../../errors';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import { scanNonListNodeForBinding } from '../utils';
 import {
   destructureCallExpression,

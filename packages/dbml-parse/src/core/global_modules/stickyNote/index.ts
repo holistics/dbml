@@ -5,7 +5,7 @@ import type { SyntaxToken } from '@/core/lexer/tokens';
 import { NodeSymbol, SymbolKind } from '@/core/types/symbols';
 import type { GlobalModule } from '../types';
 import { PASS_THROUGH, type PassThrough } from '@/constants';
-import Report from '@/core/report';
+import Report from '@/core/types/report';
 import type Compiler from '@/compiler/index';
 import type { Note } from '@/core/types/schemaJson';
 import NoteBinder from './bind';

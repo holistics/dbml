@@ -23,12 +23,12 @@ import {
   isExpressionAQuotedString, isExpressionAVariableNode,
   parseNumber, isRelationshipOp,
 } from '@/core/utils/expression';
-import { CompileError, CompileErrorCode } from '@/core/errors';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import { aggregateSettingList } from '@/core/utils/validate';
 import { ElementKind, SettingName } from '@/core/types/keywords';
 import { PASS_THROUGH, UNHANDLED } from '@/constants';
 import { SymbolKind } from '@/core/types/symbols';
-import Report from '@/core/report';
+import Report from '@/core/types/report';
 
 export class TablePartialInterpreter {
   private declarationNode: ElementDeclarationNode;

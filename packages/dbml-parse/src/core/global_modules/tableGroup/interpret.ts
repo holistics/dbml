@@ -1,6 +1,6 @@
 import { partition } from 'lodash-es';
 import { extractQuotedStringToken, destructureComplexVariable } from '@/core/utils/expression';
-import { CompileError, CompileErrorCode } from '@/core/errors';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, SyntaxNode, ListExpressionNode,
 } from '@/core/parser/nodes';
@@ -10,7 +10,7 @@ import {
 } from '../utils';
 import { aggregateSettingList } from '@/core/utils/validate';
 import Compiler from '@/compiler';
-import Report from '@/core/report';
+import Report from '@/core/types/report';
 
 export class TableGroupInterpreter {
   private declarationNode: ElementDeclarationNode;

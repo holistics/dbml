@@ -16,7 +16,7 @@ import { symbolReferences } from './queries/symbolReferences';
 import { intern, type Internable, type Primitive } from '@/core/types/internable';
 import { alias, nodeFullname as fullname, settings, validate } from '@/core/local_modules';
 import { NodeSymbolIdGenerator } from '@/core/types/symbols';
-import SymbolFactory from '@/core/types/symbolFactory';
+import { SymbolFactory } from '@/core/types/symbols';
 import { lookupMembers } from './queries/lookupMembers';
 import { symbolName } from './queries/symbolName';
 import { SyntaxNodeIdGenerator } from '@/core/parser/nodes';

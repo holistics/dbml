@@ -2,7 +2,7 @@ import type { PassThrough } from '@/constants';
 import type Compiler from '@/compiler/index';
 import type { SyntaxNode } from '@/core/parser/nodes';
 import type { NodeSymbol, SymbolKind } from '../types/symbols';
-import type Report from '../report';
+import type Report from '@/core/types/report';
 import type { SchemaElement } from '../types/schemaJson';
 import type { Module } from '../types/module';
 

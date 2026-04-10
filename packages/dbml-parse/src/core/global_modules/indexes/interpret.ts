@@ -3,7 +3,7 @@ import { ElementKind, SettingName } from '@/core/types/keywords';
 import { BlockExpressionNode, CallExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode } from '@/core/parser/nodes';
 import type { SyntaxNode } from '@/core/parser/nodes';
 import { PASS_THROUGH, UNHANDLED } from '@/constants';
-import Report from '@/core/report';
+import Report from '@/core/types/report';
 import type { Index, TokenPosition, SchemaElement } from '@/core/types/schemaJson';
 import { getTokenPosition } from '../utils';
 import { isElementNode, extractQuotedStringToken, extractVariableFromExpression, destructureIndexNode, extractVarNameFromPrimaryVariable } from '@/core/utils/expression';

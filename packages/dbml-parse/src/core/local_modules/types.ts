@@ -2,7 +2,7 @@ import type Compiler from '@/compiler';
 import type { PassThrough } from '@/constants';
 import type { Module } from '@/core/types/module';
 import type { SyntaxNode } from '@/core/parser/nodes';
-import type Report from '@/core/report';
+import type Report from '@/core/types/report';
 import type { Settings } from '@/core/utils/validate';
 export type { Settings };
 

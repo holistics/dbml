@@ -1,5 +1,5 @@
-import Report from '@/core/report';
-import { CompileError, CompileErrorCode } from '@/core/errors';
+import Report from '@/core/types/report';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import { ElementDeclarationNode, ProgramNode } from '@/core/parser/nodes';
 import Compiler from '@/compiler';
 import { SyntaxToken } from '@/core/lexer/tokens';

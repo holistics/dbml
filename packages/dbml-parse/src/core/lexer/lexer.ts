@@ -1,5 +1,5 @@
-import { CompileError, CompileErrorCode } from '@/core/errors';
-import Report from '@/core/report';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import Report from '@/core/types/report';
 import { Position } from '@/core/types/position';
 import { isInvalidToken } from '@/core/parser/utils';
 import { isOp, isTriviaToken, SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';

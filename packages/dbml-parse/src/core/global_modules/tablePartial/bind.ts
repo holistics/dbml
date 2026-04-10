@@ -3,7 +3,7 @@ import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, ProgramNode, SyntaxNode,
 } from '../../parser/nodes';
 import { SyntaxToken } from '../../lexer/tokens';
-import { CompileError } from '../../errors';
+import { CompileError } from '@/core/types/errors';
 import { aggregateSettingList } from '../../utils/validate';
 import { destructureComplexVariableTuple } from '../../utils/expression';
 import { scanNonListNodeForBinding } from '../utils';

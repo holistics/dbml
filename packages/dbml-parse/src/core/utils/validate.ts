@@ -19,8 +19,8 @@ import { destructureComplexVariable, destructureMemberAccessExpression,
   extractStringFromIdentifierStream, isAccessExpression, isDotDelimitedIdentifier, isExpressionAQuotedString, isExpressionAVariableNode, isExpressionAnIdentifierNode,
 } from './expression';
 import { NUMERIC_LITERAL_PREFIX } from '@/constants';
-import Report from '../report';
-import { CompileError, CompileErrorCode } from '../errors';
+import Report from '@/core/types/report';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import { SettingName } from '../types/keywords';
 
 // Is the name valid (either simple or complex)

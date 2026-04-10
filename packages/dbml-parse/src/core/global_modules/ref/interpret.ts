@@ -1,6 +1,6 @@
 import { destructureComplexVariable, extractVariableFromExpression } from '@/core/utils/expression';
 import { aggregateSettingList } from '@/core/utils/validate';
-import { CompileError, CompileErrorCode } from '@/core/errors';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, IdentiferStreamNode, InfixExpressionNode, ListExpressionNode, SyntaxNode,
 } from '@/core/parser/nodes';
@@ -35,7 +35,7 @@ function buildRefEndpoint (
 }
 import { extractStringFromIdentifierStream } from '@/core/utils/expression';
 import Compiler from '@/compiler';
-import Report from '@/core/report';
+import Report from '@/core/types/report';
 import { ElementKind } from '@/core/types/keywords';
 import { UNHANDLED } from '@/constants';
 

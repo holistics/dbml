@@ -5,7 +5,7 @@ import type { SyntaxNode } from '@/core/parser/nodes';
 import type { SyntaxToken } from '@/core/lexer/tokens';
 import type { GlobalModule } from '../types';
 import { PASS_THROUGH, type PassThrough } from '@/constants';
-import Report from '@/core/report';
+import Report from '@/core/types/report';
 import type Compiler from '@/compiler/index';
 import type { SchemaElement } from '@/core/types/schemaJson';
 import { shouldInterpretNode } from '../utils';

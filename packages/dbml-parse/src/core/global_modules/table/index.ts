@@ -5,7 +5,7 @@ import type { SyntaxToken } from '@/core/lexer/tokens';
 import { NodeSymbol, SchemaSymbol, InjectedColumnSymbol, SymbolKind } from '@/core/types/symbols';
 import type { GlobalModule } from '../types';
 import { DEFAULT_SCHEMA_NAME, KEYWORDS_OF_DEFAULT_SETTING, PASS_THROUGH, type PassThrough, UNHANDLED } from '@/constants';
-import Report from '@/core/report';
+import Report from '@/core/types/report';
 import type Compiler from '@/compiler/index';
 import type { SchemaElement } from '@/core/types/schemaJson';
 import {
@@ -22,7 +22,7 @@ import {
 } from '@/core/utils/expression';
 import { lookupMember, nodeRefereeOfLeftExpression, shouldInterpretNode } from '../utils';
 import { isValidPartialInjection } from '@/core/utils/validate';
-import { CompileError, CompileErrorCode } from '@/core/errors';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import TableBinder from './bind';
 import { TableInterpreter } from './interpret';
 

@@ -1,4 +1,4 @@
-import { CompileError } from '@/core/errors';
+import { CompileError } from '@/core/types/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ProgramNode,
 } from '@/core/parser/nodes';

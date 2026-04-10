@@ -3,7 +3,7 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { scanTestNames, toSnapshot } from '@tests/utils';
 import Compiler from '@/compiler';
-import type Report from '@/core/report';
+import type Report from '@/core/types/report';
 import type { SchemaElement } from '@/core/types';
 
 function serializeInterpreterResult (compiler: Compiler, report: Report<SchemaElement | SchemaElement[] | undefined>): string {

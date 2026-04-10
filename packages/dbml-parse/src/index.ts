@@ -25,7 +25,7 @@ export {
   // Error types
   CompileError,
   CompileErrorCode,
-} from '@/core/errors';
+} from '@/core/types/errors';
 
 export {
   // Scope kinds from compiler

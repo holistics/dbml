@@ -1,4 +1,4 @@
-import { CompileError, CompileErrorCode } from '@/core/errors';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import {
   ElementDeclarationNode,
   FunctionApplicationNode,
@@ -8,7 +8,7 @@ import {
   SyntaxNode,
   TupleExpressionNode,
 } from '@/core/parser/nodes';
-import Report from '@/core/report';
+import Report from '@/core/types/report';
 import { SyntaxToken } from '@/core/lexer/tokens';
 import Compiler from '@/compiler';
 import {

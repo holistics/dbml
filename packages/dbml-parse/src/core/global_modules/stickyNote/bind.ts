@@ -1,5 +1,5 @@
 import Compiler from '@/compiler';
-import { CompileError } from '../../errors';
+import { CompileError } from '@/core/types/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ProgramNode,
 } from '../../parser/nodes';

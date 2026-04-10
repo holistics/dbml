@@ -23,7 +23,7 @@ import {
   ArrayNode,
   SyntaxNodeIdGenerator,
 } from '@/core/parser/nodes';
-import Report from '@/core/report';
+import Report from '@/core/types/report';
 import { Compiler, SyntaxToken } from '@/index';
 import type { Database } from '@/core/types/schemaJson';
 

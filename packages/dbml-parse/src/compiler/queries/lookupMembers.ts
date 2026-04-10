@@ -1,6 +1,6 @@
 import type Compiler from '../index';
 import { NodeSymbol, SchemaSymbol, SymbolKind } from '@/core/types/symbols';
-import Report from '@/core/report';
+import Report from '@/core/types/report';
 import { UNHANDLED } from '@/constants';
 import { SyntaxNode } from '@/core/parser/nodes';
 

@@ -3,7 +3,7 @@ import { isElementNode, isElementFieldNode } from '@/core/utils/expression';
 import { type LocalModule, type Settings } from '../types';
 import { PASS_THROUGH, type PassThrough } from '@/constants';
 import { SyntaxNode } from '@/core/parser/nodes';
-import Report from '@/core/report';
+import Report from '@/core/types/report';
 import type Compiler from '@/compiler';
 import ProjectValidator from './validate';
 

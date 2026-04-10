@@ -4,7 +4,7 @@ import { NodeSymbol, SymbolKind } from '@/core/types/symbols';
 import { UNHANDLED } from '@/constants';
 import { isExpressionAVariableNode, isAccessExpression } from '@/core/utils/expression';
 import { getMemberChain } from '@/core/parser/utils';
-import Report from '@/core/report';
+import Report from '@/core/types/report';
 import { nodeReferee } from '@/core/global_modules';
 
 // Get the right-most variable node in a member access chain (e.g., for schema.table, returns the table node)

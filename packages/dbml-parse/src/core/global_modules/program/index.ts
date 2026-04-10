@@ -3,7 +3,7 @@ import { ProgramNode, type SyntaxNode } from '@/core/parser/nodes';
 import { NodeSymbol, SchemaSymbol, SymbolKind } from '@/core/types/symbols';
 import type { GlobalModule } from '../types';
 import { DEFAULT_SCHEMA_NAME, PASS_THROUGH, type PassThrough, UNHANDLED } from '@/constants';
-import Report from '@/core/report';
+import Report from '@/core/types/report';
 import type Compiler from '@/compiler/index';
 import { shouldInterpretNode } from '../utils';
 import type { Database } from '@/core/types/schemaJson';

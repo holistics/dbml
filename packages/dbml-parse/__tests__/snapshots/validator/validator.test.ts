@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest';
 import type { ProgramNode } from '@/core/parser/nodes';
 import { scanTestNames, toSnapshot } from '@tests/utils';
 import Compiler from '@/compiler';
-import Report from '@/core/report';
+import Report from '@/core/types/report';
 
 function serializeValidatorResult (compiler: Compiler, report: Report<ProgramNode>): string {
   const value = report.getValue();

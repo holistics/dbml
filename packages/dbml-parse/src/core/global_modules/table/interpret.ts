@@ -17,13 +17,13 @@ import {
   destructureComplexVariable, destructureIndexNode, extractQuotedStringToken, extractVarNameFromPrimaryVariable,
   extractVariableFromExpression,
 } from '@/core/utils/expression';
-import { CompileError, CompileErrorCode } from '@/core/errors';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import { aggregateSettingList, isValidPartialInjection } from '@/core/utils/validate';
 import { SymbolKind } from '@/core/types/symbols';
 import { ElementKind, SettingName } from '@/core/types/keywords';
 import Compiler from '@/compiler';
 import { UNHANDLED } from '@/constants';
-import Report from '@/core/report';
+import Report from '@/core/types/report';
 
 export class TableInterpreter {
   private declarationNode: ElementDeclarationNode;

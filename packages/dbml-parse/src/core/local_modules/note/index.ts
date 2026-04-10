@@ -1,13 +1,13 @@
 import { isElementNode } from '@/core/utils/expression';
 import { destructureComplexVariable } from '@/core/utils/expression';
-import { CompileError, CompileErrorCode } from '@/core/errors';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import {
   ElementDeclarationNode, ProgramNode, SyntaxNode,
 } from '@/core/parser/nodes';
 import { ElementKind } from '@/core/types/keywords';
 import { type LocalModule, type Settings } from '../types';
 import { PASS_THROUGH, type PassThrough } from '@/constants';
-import Report from '@/core/report';
+import Report from '@/core/types/report';
 import type Compiler from '@/compiler';
 import NoteValidator from './validate';
 

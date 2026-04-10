@@ -6,11 +6,11 @@ import type { SyntaxToken } from '@/core/lexer/tokens';
 import { NodeSymbol, SymbolKind } from '@/core/types/symbols';
 import type { GlobalModule } from '../types';
 import { PASS_THROUGH, UNHANDLED, type PassThrough } from '@/constants';
-import Report from '@/core/report';
+import Report from '@/core/types/report';
 import type Compiler from '@/compiler/index';
 import type { SchemaElement } from '@/core/types/schemaJson';
 import { getNodeMemberSymbols, shouldInterpretNode } from '../utils';
-import { CompileError, CompileErrorCode } from '@/core/errors';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import EnumBinder from './bind';
 import EnumInterpreter from './interpret';
 

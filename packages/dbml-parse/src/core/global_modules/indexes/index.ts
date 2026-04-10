@@ -6,7 +6,7 @@ import type { SyntaxToken } from '@/core/lexer/tokens';
 import { NodeSymbol, SymbolKind } from '@/core/types/symbols';
 import type { GlobalModule } from '../types';
 import { PASS_THROUGH, type PassThrough, UNHANDLED } from '@/constants';
-import Report from '@/core/report';
+import Report from '@/core/types/report';
 import type Compiler from '@/compiler/index';
 import type { SchemaElement } from '@/core/types/schemaJson';
 import { getNodeMemberSymbols, lookupMember, shouldInterpretNode } from '../utils';

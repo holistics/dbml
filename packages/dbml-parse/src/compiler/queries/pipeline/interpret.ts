@@ -1,6 +1,6 @@
 import type Compiler from '@/compiler';
 import { UNHANDLED } from '@/constants';
-import type Report from '@/core/report';
+import type Report from '@/core/types/report';
 import type { Database } from '@/core/types';
 
 export function interpretFile (this: Compiler): Report<Readonly<Database> | undefined> {

@@ -1,5 +1,5 @@
 import Compiler from '@/compiler';
-import { CompileError, CompileErrorCode } from '@/core/errors';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import { ElementKind, SettingName } from '@/core/types/keywords';
 import { BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode } from '@/core/parser/nodes';
 import { isElementFieldNode, isExpressionAQuotedString, isExpressionAVariableNode } from '@/core/utils/expression';

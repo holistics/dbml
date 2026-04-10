@@ -6,7 +6,7 @@ import {
   ProgramNode,
 } from '../../parser/nodes';
 import { SyntaxToken } from '../../lexer/tokens';
-import { CompileError, CompileErrorCode } from '../../errors';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import { scanNonListNodeForBinding } from '../utils';
 import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '../../utils/expression';
 import { ElementKind } from '../../types';

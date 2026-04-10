@@ -1,6 +1,6 @@
 import { partition, forIn, last } from 'lodash-es';
 import Compiler from '@/compiler';
-import { CompileError, CompileErrorCode } from '@/core/errors';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import { ElementKind, SettingName } from '@/core/types/keywords';
 import {
   AttributeNode,
@@ -24,7 +24,7 @@ import {
   isVoid,
   Settings,
 } from '@/core/utils/validate';
-import Report from '@/core/report';
+import Report from '@/core/types/report';
 
 export default class TablePartialValidator {
   private compiler: Compiler;

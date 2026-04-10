@@ -14,7 +14,7 @@ import { programModule } from './program';
 import { schemaModule } from './schema';
 import type Compiler from '@/compiler/index';
 import type { SyntaxNode } from '@/core/parser/nodes';
-import Report from '@/core/report';
+import Report from '@/core/types/report';
 import type { NodeSymbol } from '@/core/types/symbols';
 import type { SchemaElement } from '@/core/types/schemaJson';
 import type { Unhandled } from '@/constants';

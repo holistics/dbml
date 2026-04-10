@@ -1,10 +1,10 @@
 import Compiler from '@/compiler';
 import { DEFAULT_SCHEMA_NAME, UNHANDLED } from '@/constants';
-import { CompileError, CompileErrorCode } from '@/core/errors';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import { SyntaxTokenKind } from '@/core/lexer/tokens';
 import { ArrayNode, CallExpressionNode, FunctionExpressionNode, InfixExpressionNode, LiteralNode, PostfixExpressionNode, PrefixExpressionNode, PrimaryExpressionNode, SyntaxNode, TupleExpressionNode, VariableNode } from '@/core/parser/nodes';
 import { getMemberChain } from '@/core/parser/utils';
-import Report from '@/core/report';
+import Report from '@/core/types/report';
 import { ColumnType, NodeSymbol, RelationCardinality, SchemaSymbol, SymbolKind, Table, TokenPosition } from '@/core/types';
 import { destructureComplexVariable, destructureComplexVariableTuple, destructureMemberAccessExpression, extractQuotedStringToken, extractVariableFromExpression, extractVarNameFromPrimaryVariable, getNumberTextFromExpression, isAccessExpression, isDotDelimitedIdentifier, isExpressionAnIdentifierNode, isExpressionAQuotedString, isExpressionASignedNumberExpression, isExpressionAVariableNode, parseNumber } from '@/core/utils/expression';
 import { zip } from 'lodash-es';
