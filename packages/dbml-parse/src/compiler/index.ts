@@ -1,7 +1,9 @@
 import { SyntaxNodeIdGenerator, ProgramNode } from '@/core/parser/nodes';
+import { Filepath } from '@/core/types/filepath';
+import { DEFAULT_ENTRY } from '@/constants';
 import { NodeSymbolIdGenerator } from '@/core/analyzer/symbol/symbols';
 import { SyntaxToken } from '@/core/lexer/tokens';
-import { Database } from '@/core/interpreter/types';
+import { Database } from '@/core/types/schemaJson';
 import Report from '@/core/types/report';
 import Lexer from '@/core/lexer/lexer';
 import Parser from '@/core/parser/parser';
@@ -68,9 +70,10 @@ export default class Compiler {
   }
 
   private interpret (): Report<{ ast: ProgramNode; tokens: SyntaxToken[]; rawDb?: Database }> {
-    const parseRes: Report<{ ast: ProgramNode; tokens: SyntaxToken[] }> = new Lexer(this.source)
+    const filepath = DEFAULT_ENTRY;
+    const parseRes: Report<{ ast: ProgramNode; tokens: SyntaxToken[] }> = new Lexer(this.source, filepath)
       .lex()
-      .chain((lexedTokens) => new Parser(this.source, lexedTokens as SyntaxToken[], this.nodeIdGenerator).parse())
+      .chain((lexedTokens) => new Parser(this.source, lexedTokens as SyntaxToken[], this.nodeIdGenerator, filepath).parse())
       .chain(({ ast, tokens }) => new Analyzer(ast, this.symbolIdGenerator).analyze().map(() => ({ ast, tokens })));
 
     if (parseRes.getErrors().length > 0) {

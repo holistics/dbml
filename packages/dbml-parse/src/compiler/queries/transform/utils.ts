@@ -1,6 +1,6 @@
 import { DEFAULT_SCHEMA_NAME } from '@/constants';
 import { splitQualifiedIdentifier } from '../utils';
-import { createTableSymbolIndex, createSchemaSymbolIndex } from '@/core/analyzer/symbol/symbolIndex';
+import { createTableSymbolIndex, createSchemaSymbolIndex } from '@/core/types/symbol';
 import type SymbolTable from '@/core/analyzer/symbol/symbolTable';
 import { TableSymbol } from '@/core/analyzer/symbol/symbols';
 

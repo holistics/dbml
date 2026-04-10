@@ -3,6 +3,7 @@
   "program": {
     "context": {
       "id": "node@<program>@@[L0:C0, L2:C0]",
+      "filepath": "/main.dbml",
       "snippet": "Table empt...table {\n}\n"
     },
     "children": {
@@ -10,12 +11,14 @@
         {
           "context": {
             "id": "node@<element-declaration>@:empty_table@[L0:C0, L1:C1]",
+            "filepath": "/main.dbml",
             "snippet": "Table empt..._table {\n}"
           },
           "children": {
             "body": {
               "context": {
                 "id": "node@<block-expression>@@[L0:C18, L1:C1]",
+                "filepath": "/main.dbml",
                 "snippet": "{\n}"
               },
               "children": {
@@ -47,12 +50,14 @@
             "name": {
               "context": {
                 "id": "node@<primary-expression>@@[L0:C6, L0:C17]",
+                "filepath": "/main.dbml",
                 "snippet": "empty_table"
               },
               "children": {
                 "expression": {
                   "context": {
                     "id": "node@<variable>@:empty_table@[L0:C6, L0:C17]",
+                    "filepath": "/main.dbml",
                     "snippet": "empty_table"
                   },
                   "children": {

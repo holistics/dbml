@@ -11,10 +11,9 @@ import { CompileError, CompileErrorCode, CompileWarning } from '@/core/types/err
 import Report from '@/core/types/report';
 import {
   RecordValue,
-  InterpreterDatabase,
   Table,
   Column,
-} from '@/core/interpreter/types';
+} from '@/core/types/schemaJson';
 import {
   isNullish,
   isEmptyStringLiteral,
@@ -37,6 +36,7 @@ import {
 import { destructureCallExpression, destructureComplexVariable, extractQuotedStringToken, extractVariableFromExpression } from '@/core/analyzer/utils';
 import { last } from 'lodash-es';
 import { mergeTableAndPartials } from '../utils';
+import { InterpreterDatabase } from '../types';
 
 export class RecordsInterpreter {
   private env: InterpreterDatabase;

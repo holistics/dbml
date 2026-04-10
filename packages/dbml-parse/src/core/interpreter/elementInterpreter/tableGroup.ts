@@ -4,11 +4,12 @@ import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, SyntaxNode, ListExpressionNode,
 } from '@/core/parser/nodes';
-import { ElementInterpreter, InterpreterDatabase, TableGroup } from '@/core/interpreter/types';
+import { TableGroup } from '@/core/types/schemaJson';
 import {
   extractElementName, getTokenPosition, normalizeNoteContent, extractColor,
 } from '@/core/interpreter/utils';
 import { aggregateSettingList } from '@/core/analyzer/validator/utils';
+import { ElementInterpreter, InterpreterDatabase } from '../types';
 
 export class TableGroupInterpreter implements ElementInterpreter {
   private declarationNode: ElementDeclarationNode;

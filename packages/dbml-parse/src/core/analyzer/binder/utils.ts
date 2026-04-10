@@ -12,7 +12,7 @@ import TableBinder from './elementBinder/table';
 import TableGroupBinder from './elementBinder/tableGroup';
 import TablePartialBinder from './elementBinder/tablePartial';
 import { destructureComplexVariableTuple, extractVarNameFromPrimaryVariable } from '@/core/analyzer/utils';
-import { SymbolKind, createNodeSymbolIndex } from '@/core/analyzer/symbol/symbolIndex';
+import { SymbolKind, createNodeSymbolIndex } from '@/core/types/symbol';
 import { getSymbolKind } from '@/core/analyzer/symbol/utils';
 import { getElementNameString, isExpressionAVariableNode } from '@/core/parser/utils';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';

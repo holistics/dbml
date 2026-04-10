@@ -3,13 +3,14 @@ import { CompileError } from '@/core/types/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, SyntaxNode,
 } from '@/core/parser/nodes';
-import { ElementInterpreter, InterpreterDatabase, Project } from '@/core/interpreter/types';
+import { Project } from '@/core/types/schemaJson';
 import { extractElementName, getTokenPosition, normalizeNoteContent } from '@/core/interpreter/utils';
 import { EnumInterpreter } from './enum';
 import { RefInterpreter } from './ref';
 import { TableInterpreter } from './table';
 import { TableGroupInterpreter } from './tableGroup';
 import { TablePartialInterpreter } from './tablePartial';
+import { ElementInterpreter, InterpreterDatabase } from '../types';
 
 export class ProjectInterpreter implements ElementInterpreter {
   private declarationNode: ElementDeclarationNode;

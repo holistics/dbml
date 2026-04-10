@@ -21,6 +21,9 @@
                 "line": 2,
                 "offset": 33
               },
+              "filepath": {
+                "path": "/main.dbml"
+              },
               "start": {
                 "column": 13,
                 "line": 2,
@@ -41,6 +44,9 @@
                 "line": 2,
                 "offset": 34
               },
+              "filepath": {
+                "path": "/main.dbml"
+              },
               "start": {
                 "column": 5,
                 "line": 2,
@@ -56,6 +62,9 @@
             "column": 24,
             "line": 2,
             "offset": 33
+          },
+          "filepath": {
+            "path": "/main.dbml"
           },
           "start": {
             "column": 13,
@@ -90,6 +99,9 @@
                     "line": 2,
                     "offset": 33
                   },
+                  "filepath": {
+                    "path": "/main.dbml"
+                  },
                   "start": {
                     "column": 13,
                     "line": 2,
@@ -105,6 +117,9 @@
                 "column": 25,
                 "line": 2,
                 "offset": 34
+              },
+              "filepath": {
+                "path": "/main.dbml"
               },
               "start": {
                 "column": 5,
@@ -130,6 +145,9 @@
             "line": 3,
             "offset": 36
           },
+          "filepath": {
+            "path": "/main.dbml"
+          },
           "start": {
             "column": 1,
             "line": 1,
@@ -152,6 +170,9 @@
                 "column": 25,
                 "line": 6,
                 "offset": 72
+              },
+              "filepath": {
+                "path": "/main.dbml"
               },
               "start": {
                 "column": 5,
@@ -177,6 +198,9 @@
             "line": 7,
             "offset": 74
           },
+          "filepath": {
+            "path": "/main.dbml"
+          },
           "start": {
             "column": 1,
             "line": 5,
@@ -194,6 +218,7 @@
       "node": {
         "context": {
           "id": "node@<attribute>@@[L5:C12, L5:C23]",
+          "filepath": "/main.dbml",
           "snippet": "ref: > A.id"
         }
       }
@@ -205,6 +230,7 @@
       "node": {
         "context": {
           "id": "node@<attribute>@@[L1:C12, L1:C23]",
+          "filepath": "/main.dbml",
           "snippet": "ref: > B.id"
         }
       }

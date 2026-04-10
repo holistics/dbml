@@ -12,7 +12,7 @@ import {
   aggregateSettingList } from '@/core/analyzer/validator/utils';
 import { isValidName, pickValidator } from '@/core/analyzer/validator/utils';
 import { registerSchemaStack } from '@/core/analyzer/validator/utils';
-import { createEnumFieldSymbolIndex, createEnumSymbolIndex } from '@/core/analyzer/symbol/symbolIndex';
+import { createEnumFieldSymbolIndex, createEnumSymbolIndex } from '@/core/types/symbol';
 import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '@/core/analyzer/utils';
 import SymbolTable from '@/core/analyzer/symbol/symbolTable';
 import { EnumFieldSymbol, EnumSymbol } from '@/core/analyzer/symbol/symbols';

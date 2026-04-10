@@ -1,3 +1,4 @@
+import { DEFAULT_ENTRY } from '@/constants';
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
@@ -27,7 +28,7 @@ describe('[snapshot] lexer', () => {
     const compiler = new Compiler();
     compiler.setSource(program);
 
-    const lexer = new Lexer(program);
+    const lexer = new Lexer(program, DEFAULT_ENTRY);
 
     const output = serializeLexerResult(compiler, lexer.lex());
 

@@ -3,6 +3,7 @@
   "program": {
     "context": {
       "id": "node@<program>@@[L0:C0, L6:C1]",
+      "filepath": "/main.dbml",
       "snippet": "Table User... int(10)\n}"
     },
     "children": {
@@ -10,12 +11,14 @@
         {
           "context": {
             "id": "node@<element-declaration>@:User@[L0:C0, L6:C1]",
+            "filepath": "/main.dbml",
             "snippet": "Table User... int(10)\n}"
           },
           "children": {
             "body": {
               "context": {
                 "id": "node@<block-expression>@@[L0:C11, L6:C1]",
+                "filepath": "/main.dbml",
                 "snippet": "{\n    id i... int(10)\n}"
               },
               "children": {
@@ -41,6 +44,7 @@
                   {
                     "context": {
                       "id": "node@<function-application>@@[L1:C4, L1:C10]",
+                      "filepath": "/main.dbml",
                       "snippet": "id int"
                     },
                     "children": {
@@ -48,12 +52,14 @@
                         {
                           "context": {
                             "id": "node@<primary-expression>@@[L1:C7, L1:C10]",
+                            "filepath": "/main.dbml",
                             "snippet": "int"
                           },
                           "children": {
                             "expression": {
                               "context": {
                                 "id": "node@<variable>@:int@[L1:C7, L1:C10]",
+                                "filepath": "/main.dbml",
                                 "snippet": "int"
                               },
                               "children": {
@@ -78,12 +84,14 @@
                       "callee": {
                         "context": {
                           "id": "node@<primary-expression>@@[L1:C4, L1:C6]",
+                          "filepath": "/main.dbml",
                           "snippet": "id"
                         },
                         "children": {
                           "expression": {
                             "context": {
                               "id": "node@<variable>@:id@[L1:C4, L1:C6]",
+                              "filepath": "/main.dbml",
                               "snippet": "id"
                             },
                             "children": {
@@ -122,6 +130,7 @@
                   {
                     "context": {
                       "id": "node@<function-application>@@[L2:C4, L2:C26]",
+                      "filepath": "/main.dbml",
                       "snippet": "secret nva...inary(MAX)"
                     },
                     "children": {
@@ -129,12 +138,14 @@
                         {
                           "context": {
                             "id": "node@<call-expression>@@[L2:C11, L2:C26]",
+                            "filepath": "/main.dbml",
                             "snippet": "nvarbinary(MAX)"
                           },
                           "children": {
                             "argumentList": {
                               "context": {
                                 "id": "node@<group-expression>@@[L2:C21, L2:C26]",
+                                "filepath": "/main.dbml",
                                 "snippet": "(MAX)"
                               },
                               "children": {
@@ -143,12 +154,14 @@
                                   {
                                     "context": {
                                       "id": "node@<primary-expression>@@[L2:C22, L2:C25]",
+                                      "filepath": "/main.dbml",
                                       "snippet": "MAX"
                                     },
                                     "children": {
                                       "expression": {
                                         "context": {
                                           "id": "node@<variable>@:MAX@[L2:C22, L2:C25]",
+                                          "filepath": "/main.dbml",
                                           "snippet": "MAX"
                                         },
                                         "children": {
@@ -195,12 +208,14 @@
                             "callee": {
                               "context": {
                                 "id": "node@<primary-expression>@@[L2:C11, L2:C21]",
+                                "filepath": "/main.dbml",
                                 "snippet": "nvarbinary"
                               },
                               "children": {
                                 "expression": {
                                   "context": {
                                     "id": "node@<variable>@:nvarbinary@[L2:C11, L2:C21]",
+                                    "filepath": "/main.dbml",
                                     "snippet": "nvarbinary"
                                   },
                                   "children": {
@@ -229,12 +244,14 @@
                       "callee": {
                         "context": {
                           "id": "node@<primary-expression>@@[L2:C4, L2:C10]",
+                          "filepath": "/main.dbml",
                           "snippet": "secret"
                         },
                         "children": {
                           "expression": {
                             "context": {
                               "id": "node@<variable>@:secret@[L2:C4, L2:C10]",
+                              "filepath": "/main.dbml",
                               "snippet": "secret"
                             },
                             "children": {
@@ -273,6 +290,7 @@
                   {
                     "context": {
                       "id": "node@<function-application>@@[L3:C4, L3:C23]",
+                      "filepath": "/main.dbml",
                       "snippet": "name varchar(\"MAX\")"
                     },
                     "children": {
@@ -280,12 +298,14 @@
                         {
                           "context": {
                             "id": "node@<call-expression>@@[L3:C9, L3:C23]",
+                            "filepath": "/main.dbml",
                             "snippet": "varchar(\"MAX\")"
                           },
                           "children": {
                             "argumentList": {
                               "context": {
                                 "id": "node@<group-expression>@@[L3:C16, L3:C23]",
+                                "filepath": "/main.dbml",
                                 "snippet": "(\"MAX\")"
                               },
                               "children": {
@@ -294,12 +314,14 @@
                                   {
                                     "context": {
                                       "id": "node@<primary-expression>@@[L3:C17, L3:C22]",
+                                      "filepath": "/main.dbml",
                                       "snippet": "\"MAX\""
                                     },
                                     "children": {
                                       "expression": {
                                         "context": {
                                           "id": "node@<variable>@:MAX@[L3:C17, L3:C22]",
+                                          "filepath": "/main.dbml",
                                           "snippet": "\"MAX\""
                                         },
                                         "children": {
@@ -346,12 +368,14 @@
                             "callee": {
                               "context": {
                                 "id": "node@<primary-expression>@@[L3:C9, L3:C16]",
+                                "filepath": "/main.dbml",
                                 "snippet": "varchar"
                               },
                               "children": {
                                 "expression": {
                                   "context": {
                                     "id": "node@<variable>@:varchar@[L3:C9, L3:C16]",
+                                    "filepath": "/main.dbml",
                                     "snippet": "varchar"
                                   },
                                   "children": {
@@ -380,12 +404,14 @@
                       "callee": {
                         "context": {
                           "id": "node@<primary-expression>@@[L3:C4, L3:C8]",
+                          "filepath": "/main.dbml",
                           "snippet": "name"
                         },
                         "children": {
                           "expression": {
                             "context": {
                               "id": "node@<variable>@:name@[L3:C4, L3:C8]",
+                              "filepath": "/main.dbml",
                               "snippet": "name"
                             },
                             "children": {
@@ -424,6 +450,7 @@
                   {
                     "context": {
                       "id": "node@<function-application>@@[L4:C4, L4:C25]",
+                      "filepath": "/main.dbml",
                       "snippet": "code varbi...ary('MAX')"
                     },
                     "children": {
@@ -431,12 +458,14 @@
                         {
                           "context": {
                             "id": "node@<call-expression>@@[L4:C9, L4:C25]",
+                            "filepath": "/main.dbml",
                             "snippet": "varbinary('MAX')"
                           },
                           "children": {
                             "argumentList": {
                               "context": {
                                 "id": "node@<group-expression>@@[L4:C18, L4:C25]",
+                                "filepath": "/main.dbml",
                                 "snippet": "('MAX')"
                               },
                               "children": {
@@ -445,12 +474,14 @@
                                   {
                                     "context": {
                                       "id": "node@<primary-expression>@@[L4:C19, L4:C24]",
+                                      "filepath": "/main.dbml",
                                       "snippet": "'MAX'"
                                     },
                                     "children": {
                                       "expression": {
                                         "context": {
                                           "id": "node@<literal>@:MAX@[L4:C19, L4:C24]",
+                                          "filepath": "/main.dbml",
                                           "snippet": "'MAX'"
                                         },
                                         "children": {
@@ -497,12 +528,14 @@
                             "callee": {
                               "context": {
                                 "id": "node@<primary-expression>@@[L4:C9, L4:C18]",
+                                "filepath": "/main.dbml",
                                 "snippet": "varbinary"
                               },
                               "children": {
                                 "expression": {
                                   "context": {
                                     "id": "node@<variable>@:varbinary@[L4:C9, L4:C18]",
+                                    "filepath": "/main.dbml",
                                     "snippet": "varbinary"
                                   },
                                   "children": {
@@ -531,12 +564,14 @@
                       "callee": {
                         "context": {
                           "id": "node@<primary-expression>@@[L4:C4, L4:C8]",
+                          "filepath": "/main.dbml",
                           "snippet": "code"
                         },
                         "children": {
                           "expression": {
                             "context": {
                               "id": "node@<variable>@:code@[L4:C4, L4:C8]",
+                              "filepath": "/main.dbml",
                               "snippet": "code"
                             },
                             "children": {
@@ -575,6 +610,7 @@
                   {
                     "context": {
                       "id": "node@<function-application>@@[L5:C4, L5:C16]",
+                      "filepath": "/main.dbml",
                       "snippet": "ssid int(10)"
                     },
                     "children": {
@@ -582,12 +618,14 @@
                         {
                           "context": {
                             "id": "node@<call-expression>@@[L5:C9, L5:C16]",
+                            "filepath": "/main.dbml",
                             "snippet": "int(10)"
                           },
                           "children": {
                             "argumentList": {
                               "context": {
                                 "id": "node@<group-expression>@@[L5:C12, L5:C16]",
+                                "filepath": "/main.dbml",
                                 "snippet": "(10)"
                               },
                               "children": {
@@ -596,12 +634,14 @@
                                   {
                                     "context": {
                                       "id": "node@<primary-expression>@@[L5:C13, L5:C15]",
+                                      "filepath": "/main.dbml",
                                       "snippet": "10"
                                     },
                                     "children": {
                                       "expression": {
                                         "context": {
                                           "id": "node@<literal>@:10@[L5:C13, L5:C15]",
+                                          "filepath": "/main.dbml",
                                           "snippet": "10"
                                         },
                                         "children": {
@@ -648,12 +688,14 @@
                             "callee": {
                               "context": {
                                 "id": "node@<primary-expression>@@[L5:C9, L5:C12]",
+                                "filepath": "/main.dbml",
                                 "snippet": "int"
                               },
                               "children": {
                                 "expression": {
                                   "context": {
                                     "id": "node@<variable>@:int@[L5:C9, L5:C12]",
+                                    "filepath": "/main.dbml",
                                     "snippet": "int"
                                   },
                                   "children": {
@@ -682,12 +724,14 @@
                       "callee": {
                         "context": {
                           "id": "node@<primary-expression>@@[L5:C4, L5:C8]",
+                          "filepath": "/main.dbml",
                           "snippet": "ssid"
                         },
                         "children": {
                           "expression": {
                             "context": {
                               "id": "node@<variable>@:ssid@[L5:C4, L5:C8]",
+                              "filepath": "/main.dbml",
                               "snippet": "ssid"
                             },
                             "children": {
@@ -733,12 +777,14 @@
             "name": {
               "context": {
                 "id": "node@<primary-expression>@@[L0:C6, L0:C10]",
+                "filepath": "/main.dbml",
                 "snippet": "User"
               },
               "children": {
                 "expression": {
                   "context": {
                     "id": "node@<variable>@:User@[L0:C6, L0:C10]",
+                    "filepath": "/main.dbml",
                     "snippet": "User"
                   },
                   "children": {

@@ -1,5 +1,6 @@
 import Lexer from '@/core/lexer/lexer';
 import Parser from '@/core/parser/parser';
+import { DEFAULT_ENTRY } from '@/constants';
 import Analyzer from '@/core/analyzer/analyzer';
 import {
   ProgramNode,
@@ -27,14 +28,14 @@ import {
 import { NodeSymbolIdGenerator } from '@/core/analyzer/symbol/symbols';
 import Report from '@/core/types/report';
 import { Compiler, SyntaxToken } from '@/index';
-import { Database } from '@/core/interpreter/types';
+import { Database } from '@/core/types/schemaJson';
 
 export function lex (source: string): Report<SyntaxToken[]> {
-  return new Lexer(source).lex();
+  return new Lexer(source, DEFAULT_ENTRY).lex();
 }
 
 export function parse (source: string): Report<{ ast: ProgramNode; tokens: SyntaxToken[] }> {
-  return new Lexer(source).lex().chain((tokens) => new Parser(source, tokens, new SyntaxNodeIdGenerator()).parse());
+  return new Lexer(source, DEFAULT_ENTRY).lex().chain((tokens) => new Parser(source, tokens, new SyntaxNodeIdGenerator(), DEFAULT_ENTRY).parse());
 }
 
 export function analyze (source: string): Report<ProgramNode> {

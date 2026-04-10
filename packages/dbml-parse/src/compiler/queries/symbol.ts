@@ -1,7 +1,7 @@
 import type Compiler from '../index';
 import { ElementDeclarationNode, ProgramNode } from '@/core/parser/nodes';
 import { NodeSymbol } from '@/core/analyzer/symbol/symbols';
-import { SymbolKind, destructureIndex } from '@/core/analyzer/symbol/symbolIndex';
+import { SymbolKind, destructureIndex } from '@/core/types/symbol';
 import { generatePossibleIndexes } from '@/core/analyzer/symbol/utils';
 import SymbolTable from '@/core/analyzer/symbol/symbolTable';
 

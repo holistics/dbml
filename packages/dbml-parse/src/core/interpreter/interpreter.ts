@@ -1,5 +1,5 @@
 import { ProgramNode } from '@/core/parser/nodes';
-import { Database, InterpreterDatabase, Table, TablePartial, TableRecord } from '@/core/interpreter/types';
+import { Database, Table, TablePartial, TableRecord } from '@/core/types/schemaJson';
 import { TableInterpreter } from '@/core/interpreter/elementInterpreter/table';
 import { StickyNoteInterpreter } from '@/core/interpreter/elementInterpreter/sticky_note';
 import { RefInterpreter } from '@/core/interpreter/elementInterpreter/ref';
@@ -13,6 +13,7 @@ import { getElementKind } from '@/core/analyzer/utils';
 import { ElementKind } from '@/core/analyzer/types';
 import { CompileWarning } from '@/core/types/errors';
 import { getTokenPosition } from './utils';
+import { InterpreterDatabase } from './types';
 
 function processColumnInDb<T extends Table | TablePartial> (table: T): T {
   return {

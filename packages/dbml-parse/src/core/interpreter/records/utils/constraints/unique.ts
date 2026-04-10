@@ -1,5 +1,5 @@
 import { CompileError } from '@/core/types/errors';
-import { InterpreterDatabase, Table, Column, TableRecordRow } from '@/core/interpreter/types';
+import { Table, Column } from '@/core/types/schemaJson';
 import {
   extractKeyValueWithDefault,
   hasNullWithoutDefaultInKey,
@@ -9,6 +9,7 @@ import {
 } from './helper';
 import { mergeTableAndPartials } from '@/core/interpreter/utils';
 import { keyBy, groupBy, compact, isEmpty, filter, flatMap } from 'lodash-es';
+import { InterpreterDatabase, TableRecordRow } from '@/core/interpreter/types';
 
 const getConstraintType = (columnCount: number) =>
   columnCount > 1 ? 'Composite UNIQUE' : 'UNIQUE';

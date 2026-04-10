@@ -1,5 +1,5 @@
 import fs from 'node:fs';
-import type { NodeSymbol } from '@/core/analyzer/symbol/symbols';
+import { NodeSymbol } from '@/core/analyzer/symbol/symbols';
 import { SyntaxToken } from '@/core/lexer/tokens';
 import { ElementDeclarationNode, LiteralNode, ProgramNode, SyntaxNode, VariableNode } from '@/core/parser/nodes';
 import { getElementNameString } from '@/core/parser/utils';
@@ -149,13 +149,8 @@ export function toSnapshot (
   if (value === null) {
     return null;
   }
-  // An adhoc check for NodeSymbol
-  // because it's just an interface
-  if (
-    typeof value === 'object' && value !== null
-    && 'id' in value
-  ) {
-    return symbolToSnapshot(compiler, value as NodeSymbol);
+  if (value instanceof NodeSymbol) {
+    return symbolToSnapshot(compiler, value);
   }
   if (typeof value === 'object') {
     return sortObject(Object.fromEntries(
@@ -275,6 +270,7 @@ export function syntaxNodeToSnapshot (
   const {
     id, // Filter this out
     kind, // Filter this out as it's in the readable id
+    filepath, // Filter this out, shown in context instead
     symbol,
     referee,
     startPos, // Filter this out
@@ -293,13 +289,15 @@ export function syntaxNodeToSnapshot (
     return {
       context: { // context should always be at the top
         id: nodeReadableId,
+        filepath: filepath.absolute,
         snippet,
       },
     };
   }
   const result = {
-    context: { // context should ways be at the top
+    context: { // context should always be at the top
       id: nodeReadableId,
+      filepath: filepath.absolute,
       snippet,
     },
     ...sortObject({

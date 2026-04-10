@@ -5,12 +5,13 @@ import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, IdentiferStreamNode, InfixExpressionNode, ListExpressionNode, SyntaxNode,
 } from '@/core/parser/nodes';
 import {
-  ElementInterpreter, InterpreterDatabase, Ref, Table,
-} from '@/core/interpreter/types';
+  Ref, Table,
+} from '@/core/types/schemaJson';
 import {
   extractColor, extractNamesFromRefOperand, getColumnSymbolsOfRefOperand, getMultiplicities, getRefId, getTokenPosition, isSameEndpoint,
 } from '@/core/interpreter/utils';
 import { extractStringFromIdentifierStream } from '@/core/parser/utils';
+import { ElementInterpreter, InterpreterDatabase } from '../types';
 
 export class RefInterpreter implements ElementInterpreter {
   private declarationNode: ElementDeclarationNode;

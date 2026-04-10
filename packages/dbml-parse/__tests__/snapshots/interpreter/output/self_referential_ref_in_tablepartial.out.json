@@ -24,6 +24,9 @@
                 "line": 2,
                 "offset": 40
               },
+              "filepath": {
+                "path": "/main.dbml"
+              },
               "start": {
                 "column": 3,
                 "line": 2,
@@ -46,6 +49,9 @@
             "line": 3,
             "offset": 42
           },
+          "filepath": {
+            "path": "/main.dbml"
+          },
           "start": {
             "column": 1,
             "line": 1,
@@ -64,6 +70,7 @@
       "node": {
         "context": {
           "id": "node@<attribute>@@[L1:C12, L1:C22]",
+          "filepath": "/main.dbml",
           "snippet": "ref: > col"
         }
       }

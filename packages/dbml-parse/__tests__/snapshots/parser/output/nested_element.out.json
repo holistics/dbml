@@ -3,6 +3,7 @@
   "program": {
     "context": {
       "id": "node@<program>@@[L0:C0, L13:C0]",
+      "filepath": "/main.dbml",
       "snippet": "Project {\r...ation\r\n}\r\n"
     },
     "children": {
@@ -10,12 +11,14 @@
         {
           "context": {
             "id": "node@<element-declaration>@:@[L0:C0, L8:C1]",
+            "filepath": "/main.dbml",
             "snippet": "Project {\r...\r\n    }\r\n}"
           },
           "children": {
             "body": {
               "context": {
                 "id": "node@<block-expression>@@[L0:C8, L8:C1]",
+                "filepath": "/main.dbml",
                 "snippet": "{\r\n    Tab...\r\n    }\r\n}"
               },
               "children": {
@@ -41,12 +44,14 @@
                   {
                     "context": {
                       "id": "node@<element-declaration>@:A@[L1:C4, L3:C5]",
+                      "filepath": "/main.dbml",
                       "snippet": "Table A {\r\n\r\n    }"
                     },
                     "children": {
                       "body": {
                         "context": {
                           "id": "node@<block-expression>@@[L1:C12, L3:C5]",
+                          "filepath": "/main.dbml",
                           "snippet": "{\r\n\r\n    }"
                         },
                         "children": {
@@ -78,12 +83,14 @@
                       "name": {
                         "context": {
                           "id": "node@<primary-expression>@@[L1:C10, L1:C11]",
+                          "filepath": "/main.dbml",
                           "snippet": "A"
                         },
                         "children": {
                           "expression": {
                             "context": {
                               "id": "node@<variable>@:A@[L1:C10, L1:C11]",
+                              "filepath": "/main.dbml",
                               "snippet": "A"
                             },
                             "children": {
@@ -118,18 +125,21 @@
                   {
                     "context": {
                       "id": "node@<element-declaration>@:B@[L5:C4, L7:C5]",
+                      "filepath": "/main.dbml",
                       "snippet": "Table B as...   \r\n    }"
                     },
                     "children": {
                       "alias": {
                         "context": {
                           "id": "node@<primary-expression>@@[L5:C15, L5:C16]",
+                          "filepath": "/main.dbml",
                           "snippet": "C"
                         },
                         "children": {
                           "expression": {
                             "context": {
                               "id": "node@<variable>@:C@[L5:C15, L5:C16]",
+                              "filepath": "/main.dbml",
                               "snippet": "C"
                             },
                             "children": {
@@ -162,6 +172,7 @@
                       "body": {
                         "context": {
                           "id": "node@<block-expression>@@[L5:C17, L7:C5]",
+                          "filepath": "/main.dbml",
                           "snippet": "{\r\n        \r\n    }"
                         },
                         "children": {
@@ -193,12 +204,14 @@
                       "name": {
                         "context": {
                           "id": "node@<primary-expression>@@[L5:C10, L5:C11]",
+                          "filepath": "/main.dbml",
                           "snippet": "B"
                         },
                         "children": {
                           "expression": {
                             "context": {
                               "id": "node@<variable>@:B@[L5:C10, L5:C11]",
+                              "filepath": "/main.dbml",
                               "snippet": "B"
                             },
                             "children": {
@@ -251,12 +264,14 @@
         {
           "context": {
             "id": "node@<element-declaration>@:wrong_nested_element@[L10:C0, L12:C1]",
+            "filepath": "/main.dbml",
             "snippet": "Table wron...ication\r\n}"
           },
           "children": {
             "attributeList": {
               "context": {
                 "id": "node@<list-expression>@@[L10:C27, L10:C29]",
+                "filepath": "/main.dbml",
                 "snippet": "[]"
               },
               "children": {
@@ -287,6 +302,7 @@
             "body": {
               "context": {
                 "id": "node@<block-expression>@@[L10:C30, L12:C1]",
+                "filepath": "/main.dbml",
                 "snippet": "{\r\n    Ind...ication\r\n}"
               },
               "children": {
@@ -312,6 +328,7 @@
                   {
                     "context": {
                       "id": "node@<function-application>@@[L11:C4, L11:C35]",
+                      "filepath": "/main.dbml",
                       "snippet": "Indexes wr...element {}"
                     },
                     "children": {
@@ -319,12 +336,14 @@
                         {
                           "context": {
                             "id": "node@<primary-expression>@@[L11:C12, L11:C17]",
+                            "filepath": "/main.dbml",
                             "snippet": "wrong"
                           },
                           "children": {
                             "expression": {
                               "context": {
                                 "id": "node@<variable>@:wrong@[L11:C12, L11:C17]",
+                                "filepath": "/main.dbml",
                                 "snippet": "wrong"
                               },
                               "children": {
@@ -348,12 +367,14 @@
                         {
                           "context": {
                             "id": "node@<primary-expression>@@[L11:C18, L11:C24]",
+                            "filepath": "/main.dbml",
                             "snippet": "nested"
                           },
                           "children": {
                             "expression": {
                               "context": {
                                 "id": "node@<variable>@:nested@[L11:C18, L11:C24]",
+                                "filepath": "/main.dbml",
                                 "snippet": "nested"
                               },
                               "children": {
@@ -377,12 +398,14 @@
                         {
                           "context": {
                             "id": "node@<primary-expression>@@[L11:C25, L11:C32]",
+                            "filepath": "/main.dbml",
                             "snippet": "element"
                           },
                           "children": {
                             "expression": {
                               "context": {
                                 "id": "node@<variable>@:element@[L11:C25, L11:C32]",
+                                "filepath": "/main.dbml",
                                 "snippet": "element"
                               },
                               "children": {
@@ -406,6 +429,7 @@
                         {
                           "context": {
                             "id": "node@<block-expression>@@[L11:C33, L11:C35]",
+                            "filepath": "/main.dbml",
                             "snippet": "{}"
                           },
                           "children": {
@@ -436,12 +460,14 @@
                       "callee": {
                         "context": {
                           "id": "node@<primary-expression>@@[L11:C4, L11:C11]",
+                          "filepath": "/main.dbml",
                           "snippet": "Indexes"
                         },
                         "children": {
                           "expression": {
                             "context": {
                               "id": "node@<variable>@:Indexes@[L11:C4, L11:C11]",
+                              "filepath": "/main.dbml",
                               "snippet": "Indexes"
                             },
                             "children": {
@@ -476,12 +502,14 @@
             "name": {
               "context": {
                 "id": "node@<primary-expression>@@[L10:C6, L10:C26]",
+                "filepath": "/main.dbml",
                 "snippet": "wrong_nested_element"
               },
               "children": {
                 "expression": {
                   "context": {
                     "id": "node@<variable>@:wrong_nested_element@[L10:C6, L10:C26]",
+                    "filepath": "/main.dbml",
                     "snippet": "wrong_nested_element"
                   },
                   "children": {

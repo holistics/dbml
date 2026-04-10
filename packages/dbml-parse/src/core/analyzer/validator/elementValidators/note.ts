@@ -11,7 +11,7 @@ import { pickValidator } from '@/core/analyzer/validator/utils';
 import SymbolTable from '@/core/analyzer/symbol/symbolTable';
 import { ElementKind } from '@/core/analyzer/types';
 import { destructureComplexVariable, getElementKind } from '@/core/analyzer/utils';
-import { createStickyNoteSymbolIndex } from '@/core/analyzer/symbol/symbolIndex';
+import { createStickyNoteSymbolIndex } from '@/core/types/symbol';
 
 export default class NoteValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };

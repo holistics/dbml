@@ -1,8 +1,8 @@
 import { partition, last } from 'lodash-es';
 import {
-  Column, Check, ElementInterpreter, Index, InlineRef,
-  InterpreterDatabase, Table, TablePartialInjection,
-} from '@/core/interpreter/types';
+  Column, Check, Index, InlineRef,
+  Table, TablePartialInjection,
+} from '@/core/types/schemaJson';
 import {
   AttributeNode, BlockExpressionNode, CallExpressionNode, ElementDeclarationNode,
   FunctionApplicationNode, FunctionExpressionNode, ListExpressionNode, PrefixExpressionNode,
@@ -20,8 +20,9 @@ import {
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import { aggregateSettingList, isValidPartialInjection } from '@/core/analyzer/validator/utils';
 import { ColumnSymbol } from '@/core/analyzer/symbol/symbols';
-import { destructureIndex, SymbolKind } from '@/core/analyzer/symbol/symbolIndex';
+import { destructureIndex, SymbolKind } from '@/core/types/symbol';
 import { ElementKind, SettingName } from '@/core/analyzer/types';
+import { ElementInterpreter, InterpreterDatabase } from '../types';
 
 export class TableInterpreter implements ElementInterpreter {
   private declarationNode: ElementDeclarationNode;
@@ -65,6 +66,7 @@ export class TableInterpreter implements ElementInterpreter {
         token: {
           start: { offset: -1, line: -1, column: -1 }, // do not make sense to have a meaningful start (?)
           end: { offset: -1, line: -1, column: -1 }, // do not make sense to have a meaningful end (?)
+          filepath: this.declarationNode.filepath,
         },
         pk: true,
       });

@@ -3,7 +3,7 @@ import type Compiler from '../../index';
 import { SyntaxNode } from '@/core/parser/nodes';
 import SymbolTable from '@/core/analyzer/symbol/symbolTable';
 import { TableSymbol } from '@/core/analyzer/symbol/symbols';
-import { createSchemaSymbolIndex, createTableSymbolIndex } from '@/core/analyzer/symbol/symbolIndex';
+import { createSchemaSymbolIndex, createTableSymbolIndex } from '@/core/types/symbol';
 import { applyTextEdits, TextEdit } from './applyTextEdits';
 import { isAlphaOrUnderscore, isDigit } from '@/core/utils';
 import { normalizeTableName, lookupTableSymbol, stripQuotes, type TableNameInput } from './utils';

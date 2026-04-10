@@ -2,7 +2,7 @@ import type Compiler from '../index';
 import type { ProgramNode } from '@/core/parser/nodes';
 import type { SyntaxToken } from '@/core/lexer/tokens';
 import type { CompileError, CompileWarning } from '@/core/types/errors';
-import type { Database } from '@/core/interpreter/types';
+import type { Database } from '@/core/types/schemaJson';
 import type SymbolTable from '@/core/analyzer/symbol/symbolTable';
 
 export function ast (this: Compiler): Readonly<ProgramNode> {
