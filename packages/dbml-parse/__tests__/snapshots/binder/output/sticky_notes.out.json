@@ -12,19 +12,6 @@
           "filepath": "/main.dbml"
         }
       }
-    },
-    {
-      "code": "UNEXPECTED_SETTINGS",
-      "diagnostic": "A Note shouldn't have a setting list",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<list-expression>@@[L5:C14, L5:C36]",
-          "snippet": "[headercol...: #3457DB]",
-          "filepath": "/main.dbml"
-        }
-      }
     }
   ],
   "program": {

@@ -68,19 +68,6 @@
           "filepath": "/main.dbml"
         }
       }
-    },
-    {
-      "code": "UNKNOWN_COLUMN_SETTING",
-      "diagnostic": "Unknown column setting 'diagram_id'",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<attribute>@@[L9:C14, L9:C24]",
-          "snippet": "diagram_id",
-          "filepath": "/main.dbml"
-        }
-      }
     }
   ],
   "program": {

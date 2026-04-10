@@ -115,10 +115,19 @@
                 "specifiers": [
                   {
                     "context": {
-                      "id": "node@<use-specifier>@@[L2:C8, L2:C16]",
-                      "snippet": "my_table"
+                      "id": "node@<use-specifier>@@[L2:C2, L2:C16]",
+                      "snippet": "table my_table"
                     },
                     "children": {
+                      "importKind": {
+                        "context": {
+                          "id": "token@<identifier>@table@[L2:C2, L2:C7]",
+                          "snippet": "table"
+                        },
+                        "leadingTrivia": "  ",
+                        "trailingTrivia": " ",
+                        "value": "table"
+                      },
                       "name": {
                         "context": {
                           "id": "node@<primary-expression>@@[L2:C8, L2:C16]",
@@ -150,14 +159,30 @@
                       }
                     },
                     "fullEnd": 49,
-                    "fullStart": 40
+                    "fullStart": 32,
+                    "symbol": {
+                      "context": {
+                        "id": "symbol@Table@@[L?:C?, L?:C?]"
+                      },
+                      "members": [],
+                      "references": []
+                    }
                   },
                   {
                     "context": {
-                      "id": "node@<use-specifier>@@[L3:C15, L3:C30]",
-                      "snippet": "my_tablepartial"
+                      "id": "node@<use-specifier>@@[L3:C2, L3:C30]",
+                      "snippet": "tableparti...blepartial"
                     },
                     "children": {
+                      "importKind": {
+                        "context": {
+                          "id": "token@<identifier>@tablepartial@[L3:C2, L3:C14]",
+                          "snippet": "tablepartial"
+                        },
+                        "leadingTrivia": "  ",
+                        "trailingTrivia": " ",
+                        "value": "tablepartial"
+                      },
                       "name": {
                         "context": {
                           "id": "node@<primary-expression>@@[L3:C15, L3:C30]",
@@ -189,12 +214,19 @@
                       }
                     },
                     "fullEnd": 80,
-                    "fullStart": 64
+                    "fullStart": 49,
+                    "symbol": {
+                      "context": {
+                        "id": "symbol@TablePartial@@[L?:C?, L?:C?]"
+                      },
+                      "members": [],
+                      "references": []
+                    }
                   },
                   {
                     "context": {
-                      "id": "node@<use-specifier>@@[L4:C7, L4:C25]",
-                      "snippet": "my_enum as MY_ENUM"
+                      "id": "node@<use-specifier>@@[L4:C2, L4:C25]",
+                      "snippet": "enum my_en...as MY_ENUM"
                     },
                     "children": {
                       "alias": {
@@ -235,6 +267,15 @@
                         "trailingTrivia": " ",
                         "value": "as"
                       },
+                      "importKind": {
+                        "context": {
+                          "id": "token@<identifier>@enum@[L4:C2, L4:C6]",
+                          "snippet": "enum"
+                        },
+                        "leadingTrivia": "  ",
+                        "trailingTrivia": " ",
+                        "value": "enum"
+                      },
                       "name": {
                         "context": {
                           "id": "node@<primary-expression>@@[L4:C7, L4:C14]",
@@ -266,12 +307,19 @@
                       }
                     },
                     "fullEnd": 106,
-                    "fullStart": 87
+                    "fullStart": 80,
+                    "symbol": {
+                      "context": {
+                        "id": "symbol@Enum@@[L?:C?, L?:C?]"
+                      },
+                      "members": [],
+                      "references": []
+                    }
                   },
                   {
                     "context": {
-                      "id": "node@<use-specifier>@@[L5:C13, L5:C23]",
-                      "snippet": "group as G"
+                      "id": "node@<use-specifier>@@[L5:C2, L5:C23]",
+                      "snippet": "tableGROUP...group as G"
                     },
                     "children": {
                       "alias": {
@@ -312,6 +360,15 @@
                         "trailingTrivia": " ",
                         "value": "as"
                       },
+                      "importKind": {
+                        "context": {
+                          "id": "token@<identifier>@tableGROUP@[L5:C2, L5:C12]",
+                          "snippet": "tableGROUP"
+                        },
+                        "leadingTrivia": "  ",
+                        "trailingTrivia": " ",
+                        "value": "tableGROUP"
+                      },
                       "name": {
                         "context": {
                           "id": "node@<primary-expression>@@[L5:C13, L5:C18]",
@@ -343,12 +400,19 @@
                       }
                     },
                     "fullEnd": 130,
-                    "fullStart": 119
+                    "fullStart": 106,
+                    "symbol": {
+                      "context": {
+                        "id": "symbol@TableGroup@@[L?:C?, L?:C?]"
+                      },
+                      "members": [],
+                      "references": []
+                    }
                   },
                   {
                     "context": {
-                      "id": "node@<use-specifier>@@[L6:C7, L6:C19]",
-                      "snippet": "note as note"
+                      "id": "node@<use-specifier>@@[L6:C2, L6:C19]",
+                      "snippet": "note note as note"
                     },
                     "children": {
                       "alias": {
@@ -389,6 +453,15 @@
                         "trailingTrivia": " ",
                         "value": "as"
                       },
+                      "importKind": {
+                        "context": {
+                          "id": "token@<identifier>@note@[L6:C2, L6:C6]",
+                          "snippet": "note"
+                        },
+                        "leadingTrivia": "  ",
+                        "trailingTrivia": " ",
+                        "value": "note"
+                      },
                       "name": {
                         "context": {
                           "id": "node@<primary-expression>@@[L6:C7, L6:C11]",
@@ -420,7 +493,14 @@
                       }
                     },
                     "fullEnd": 150,
-                    "fullStart": 137
+                    "fullStart": 130,
+                    "symbol": {
+                      "context": {
+                        "id": "symbol@Note@@[L?:C?, L?:C?]"
+                      },
+                      "members": [],
+                      "references": []
+                    }
                   }
                 ]
               },
@@ -548,10 +628,19 @@
                 "specifiers": [
                   {
                     "context": {
-                      "id": "node@<use-specifier>@@[L11:C8, L11:C16]",
-                      "snippet": "my_table"
+                      "id": "node@<use-specifier>@@[L11:C2, L11:C16]",
+                      "snippet": "table my_table"
                     },
                     "children": {
+                      "importKind": {
+                        "context": {
+                          "id": "token@<identifier>@table@[L11:C2, L11:C7]",
+                          "snippet": "table"
+                        },
+                        "leadingTrivia": "  ",
+                        "trailingTrivia": " ",
+                        "value": "table"
+                      },
                       "name": {
                         "context": {
                           "id": "node@<primary-expression>@@[L11:C8, L11:C16]",
@@ -583,14 +672,30 @@
                       }
                     },
                     "fullEnd": 227,
-                    "fullStart": 218
+                    "fullStart": 210,
+                    "symbol": {
+                      "context": {
+                        "id": "symbol@Table@@[L?:C?, L?:C?]"
+                      },
+                      "members": [],
+                      "references": []
+                    }
                   },
                   {
                     "context": {
-                      "id": "node@<use-specifier>@@[L12:C15, L12:C30]",
-                      "snippet": "my_tablepartial"
+                      "id": "node@<use-specifier>@@[L12:C2, L12:C30]",
+                      "snippet": "tableparti...blepartial"
                     },
                     "children": {
+                      "importKind": {
+                        "context": {
+                          "id": "token@<identifier>@tablepartial@[L12:C2, L12:C14]",
+                          "snippet": "tablepartial"
+                        },
+                        "leadingTrivia": "  ",
+                        "trailingTrivia": " ",
+                        "value": "tablepartial"
+                      },
                       "name": {
                         "context": {
                           "id": "node@<primary-expression>@@[L12:C15, L12:C30]",
@@ -622,12 +727,19 @@
                       }
                     },
                     "fullEnd": 258,
-                    "fullStart": 242
+                    "fullStart": 227,
+                    "symbol": {
+                      "context": {
+                        "id": "symbol@TablePartial@@[L?:C?, L?:C?]"
+                      },
+                      "members": [],
+                      "references": []
+                    }
                   },
                   {
                     "context": {
-                      "id": "node@<use-specifier>@@[L13:C7, L13:C25]",
-                      "snippet": "my_enum as MY_ENUM"
+                      "id": "node@<use-specifier>@@[L13:C2, L13:C25]",
+                      "snippet": "enum my_en...as MY_ENUM"
                     },
                     "children": {
                       "alias": {
@@ -668,6 +780,15 @@
                         "trailingTrivia": " ",
                         "value": "as"
                       },
+                      "importKind": {
+                        "context": {
+                          "id": "token@<identifier>@enum@[L13:C2, L13:C6]",
+                          "snippet": "enum"
+                        },
+                        "leadingTrivia": "  ",
+                        "trailingTrivia": " ",
+                        "value": "enum"
+                      },
                       "name": {
                         "context": {
                           "id": "node@<primary-expression>@@[L13:C7, L13:C14]",
@@ -699,12 +820,19 @@
                       }
                     },
                     "fullEnd": 284,
-                    "fullStart": 265
+                    "fullStart": 258,
+                    "symbol": {
+                      "context": {
+                        "id": "symbol@Enum@@[L?:C?, L?:C?]"
+                      },
+                      "members": [],
+                      "references": []
+                    }
                   },
                   {
                     "context": {
-                      "id": "node@<use-specifier>@@[L14:C13, L14:C23]",
-                      "snippet": "group as G"
+                      "id": "node@<use-specifier>@@[L14:C2, L14:C23]",
+                      "snippet": "tableGROUP...group as G"
                     },
                     "children": {
                       "alias": {
@@ -745,6 +873,15 @@
                         "trailingTrivia": " ",
                         "value": "as"
                       },
+                      "importKind": {
+                        "context": {
+                          "id": "token@<identifier>@tableGROUP@[L14:C2, L14:C12]",
+                          "snippet": "tableGROUP"
+                        },
+                        "leadingTrivia": "  ",
+                        "trailingTrivia": " ",
+                        "value": "tableGROUP"
+                      },
                       "name": {
                         "context": {
                           "id": "node@<primary-expression>@@[L14:C13, L14:C18]",
@@ -776,12 +913,19 @@
                       }
                     },
                     "fullEnd": 308,
-                    "fullStart": 297
+                    "fullStart": 284,
+                    "symbol": {
+                      "context": {
+                        "id": "symbol@TableGroup@@[L?:C?, L?:C?]"
+                      },
+                      "members": [],
+                      "references": []
+                    }
                   },
                   {
                     "context": {
-                      "id": "node@<use-specifier>@@[L15:C7, L15:C19]",
-                      "snippet": "note as note"
+                      "id": "node@<use-specifier>@@[L15:C2, L15:C19]",
+                      "snippet": "note note as note"
                     },
                     "children": {
                       "alias": {
@@ -822,6 +966,15 @@
                         "trailingTrivia": " ",
                         "value": "as"
                       },
+                      "importKind": {
+                        "context": {
+                          "id": "token@<identifier>@note@[L15:C2, L15:C6]",
+                          "snippet": "note"
+                        },
+                        "leadingTrivia": "  ",
+                        "trailingTrivia": " ",
+                        "value": "note"
+                      },
                       "name": {
                         "context": {
                           "id": "node@<primary-expression>@@[L15:C7, L15:C11]",
@@ -853,7 +1006,14 @@
                       }
                     },
                     "fullEnd": 328,
-                    "fullStart": 315
+                    "fullStart": 308,
+                    "symbol": {
+                      "context": {
+                        "id": "symbol@Note@@[L?:C?, L?:C?]"
+                      },
+                      "members": [],
+                      "references": []
+                    }
                   }
                 ]
               },
@@ -899,6 +1059,147 @@
         {
           "context": {
             "id": "symbol@Schema@public@[L?:C?, L?:C?]"
+          },
+          "members": [
+            {
+              "context": {
+                "id": "symbol@Table@@[L?:C?, L?:C?]"
+              },
+              "members": [],
+              "references": []
+            },
+            {
+              "context": {
+                "id": "symbol@TablePartial@@[L?:C?, L?:C?]"
+              },
+              "members": [],
+              "references": []
+            },
+            {
+              "context": {
+                "id": "symbol@Enum@@[L?:C?, L?:C?]"
+              },
+              "members": [],
+              "references": []
+            },
+            {
+              "context": {
+                "id": "symbol@TableGroup@@[L?:C?, L?:C?]"
+              },
+              "members": [],
+              "references": []
+            },
+            {
+              "context": {
+                "id": "symbol@Note@@[L?:C?, L?:C?]"
+              },
+              "members": [],
+              "references": []
+            },
+            {
+              "context": {
+                "id": "symbol@Table@@[L?:C?, L?:C?]"
+              },
+              "members": [],
+              "references": []
+            },
+            {
+              "context": {
+                "id": "symbol@TablePartial@@[L?:C?, L?:C?]"
+              },
+              "members": [],
+              "references": []
+            },
+            {
+              "context": {
+                "id": "symbol@Enum@@[L?:C?, L?:C?]"
+              },
+              "members": [],
+              "references": []
+            },
+            {
+              "context": {
+                "id": "symbol@TableGroup@@[L?:C?, L?:C?]"
+              },
+              "members": [],
+              "references": []
+            },
+            {
+              "context": {
+                "id": "symbol@Note@@[L?:C?, L?:C?]"
+              },
+              "members": [],
+              "references": []
+            }
+          ],
+          "references": []
+        },
+        {
+          "context": {
+            "id": "symbol@Table@@[L?:C?, L?:C?]"
+          },
+          "members": [],
+          "references": []
+        },
+        {
+          "context": {
+            "id": "symbol@TablePartial@@[L?:C?, L?:C?]"
+          },
+          "members": [],
+          "references": []
+        },
+        {
+          "context": {
+            "id": "symbol@Enum@@[L?:C?, L?:C?]"
+          },
+          "members": [],
+          "references": []
+        },
+        {
+          "context": {
+            "id": "symbol@TableGroup@@[L?:C?, L?:C?]"
+          },
+          "members": [],
+          "references": []
+        },
+        {
+          "context": {
+            "id": "symbol@Note@@[L?:C?, L?:C?]"
+          },
+          "members": [],
+          "references": []
+        },
+        {
+          "context": {
+            "id": "symbol@Table@@[L?:C?, L?:C?]"
+          },
+          "members": [],
+          "references": []
+        },
+        {
+          "context": {
+            "id": "symbol@TablePartial@@[L?:C?, L?:C?]"
+          },
+          "members": [],
+          "references": []
+        },
+        {
+          "context": {
+            "id": "symbol@Enum@@[L?:C?, L?:C?]"
+          },
+          "members": [],
+          "references": []
+        },
+        {
+          "context": {
+            "id": "symbol@TableGroup@@[L?:C?, L?:C?]"
+          },
+          "members": [],
+          "references": []
+        },
+        {
+          "context": {
+            "id": "symbol@Note@@[L?:C?, L?:C?]"
           },
           "members": [],
           "references": []

@@ -29,7 +29,7 @@ import { topLevelSchemaMembers } from './queries/topLevelSchemaMembers';
 import { reachableFiles } from './queries/reachableFiles';
 import { parseFile, parseProject } from './queries/pipeline/parse';
 import { ast, errors, publicSymbolTable, rawDb, tokens, warnings } from './queries/legacy/parse';
-import { interpretFile, interpretProject } from './queries/pipeline/interpret';
+import { interpretFile, interpretProject, exportSchemaJson } from './queries/pipeline/interpret';
 import { bindFile, bindProject } from './queries/pipeline/bind';
 
 // Re-export utilities
@@ -111,6 +111,7 @@ export default class Compiler {
   interpretNode = this.query(interpretNode);
   interpretFile = this.query(interpretFile);
   interpretProject = this.query(interpretProject);
+  exportSchemaJson = this.query(exportSchemaJson);
 
   // local queries
   parseFile = this.query(parseFile);
@@ -137,7 +138,7 @@ export default class Compiler {
   // @deprecated - legacy APIs for services compatibility
   readonly parse = {
     source: () => this.layout.getSource(DEFAULT_ENTRY) as Readonly<string>,
-    _: this.query(interpretFile),
+    _: this.query(exportSchemaJson),
     ast: this.query(ast),
     errors: this.query(errors),
     warnings: this.query(warnings),

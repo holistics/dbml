@@ -25,15 +25,22 @@ export const schemaModule: GlobalModule = {
     const members = [...usableMembers.nonSchemaMembers];
     const childSchemas = new Map(usableMembers.schemaMembers.map((m) => [m.name, m]));
 
-    const { selective, wildcard } = usableMembers.reuses;
-    for (const specifier of selective) {
+    // Process reuses (transitive - re-exported to importers)
+    for (const specifier of usableMembers.reuses.selective) {
       const useSymbol = handleMemberSelectiveUses(compiler, symbol, specifier, childSchemas);
       if (useSymbol) members.push(useSymbol);
     }
+    for (const { importPath, node } of usableMembers.reuses.wildcard) {
+      members.push(...handleMemberWildcardUses(compiler, symbol, importPath, node, childSchemas));
+    }
 
-    for (const { importPath, node } of wildcard) {
-      const useSymbols = handleMemberWildcardUses(compiler, symbol, importPath, node, childSchemas);
-      members.push(...useSymbols);
+    // Process uses (local only - not re-exported)
+    for (const specifier of usableMembers.uses.selective) {
+      const useSymbol = handleMemberSelectiveUses(compiler, symbol, specifier, childSchemas);
+      if (useSymbol) members.push(useSymbol);
+    }
+    for (const { importPath, node } of usableMembers.uses.wildcard) {
+      members.push(...handleMemberWildcardUses(compiler, symbol, importPath, node, childSchemas));
     }
 
     members.push(...childSchemas.values());

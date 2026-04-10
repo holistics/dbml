@@ -9,7 +9,13 @@ import { Filepath, resolveImportFilepath } from '@/core/types/filepath';
 export function usableMembers (this: Compiler, symbolOrFilepath: SchemaSymbol | Filepath): Report<{
   nonSchemaMembers: NodeSymbol[];
   schemaMembers: SchemaSymbol[];
+  // reuses are transitive (re-exported to importers)
   reuses: {
+    selective: UseSpecifierNode[];
+    wildcard: { importPath: Filepath; node: WildcardNode }[];
+  };
+  // uses are local only (not re-exported)
+  uses: {
     selective: UseSpecifierNode[];
     wildcard: { importPath: Filepath; node: WildcardNode }[];
   };
@@ -19,29 +25,46 @@ export function usableMembers (this: Compiler, symbolOrFilepath: SchemaSymbol | 
 
   const wildcardReuses: { importPath: Filepath; node: WildcardNode }[] = [];
   const selectiveReuses: UseSpecifierNode[] = [];
+  const wildcardUses: { importPath: Filepath; node: WildcardNode }[] = [];
+  const selectiveUses: UseSpecifierNode[] = [];
 
   const filepath = symbolOrFilepath instanceof Filepath ? symbolOrFilepath : symbolOrFilepath.filepath;
 
   const { ast } = this.parseFile(filepath).getValue();
 
   for (const element of ast.body) {
-    // Process reuse declaration
-    if (element instanceof UseDeclarationNode && element.specifiers && element.importPath && element.isReuse) {
-      const importPath = resolveImportFilepath(filepath, element.importPath.value);
-      if (!importPath) continue;
+    if (!(element instanceof UseDeclarationNode) || !element.specifiers || !element.importPath) continue;
+    const importPath = resolveImportFilepath(filepath, element.importPath.value);
+    if (!importPath) continue;
+
+    if (element.isReuse) {
       if (element.specifiers instanceof WildcardNode) {
         wildcardReuses.push({ importPath, node: element.specifiers });
-        continue;
+      } else {
+        selectiveReuses.push(...element.specifiers.specifiers);
       }
-      const specifiers = element.specifiers.specifiers;
-      selectiveReuses.push(...specifiers);
+    } else {
+      if (element.specifiers instanceof WildcardNode) {
+        wildcardUses.push({ importPath, node: element.specifiers });
+      } else {
+        selectiveUses.push(...element.specifiers.specifiers);
+      }
     }
   }
 
   const schemaMembers: SchemaSymbol[] = [];
 
   if (symbolOrFilepath instanceof Filepath) {
-    schemaMembers.push(...(this.topLevelSchemaMembers(symbolOrFilepath) as SchemaSymbol[]));
+    const schemas = this.topLevelSchemaMembers(symbolOrFilepath) as SchemaSymbol[];
+    schemaMembers.push(...schemas);
+    // Also collect non-schema members from the public schema
+    const publicSchema = schemas.find((s) => s.qualifiedName.join('.') === DEFAULT_SCHEMA_NAME);
+    if (publicSchema) {
+      const publicUsable = this.fileUsableMembers(publicSchema).getFiltered(UNHANDLED);
+      if (publicUsable) {
+        nonSchemaMembers.push(...publicUsable.nonSchemaMembers);
+      }
+    }
   } else {
     const symbol = symbolOrFilepath;
     for (const element of ast.body) {
@@ -81,6 +104,10 @@ export function usableMembers (this: Compiler, symbolOrFilepath: SchemaSymbol | 
     reuses: {
       selective: selectiveReuses,
       wildcard: wildcardReuses,
+    },
+    uses: {
+      selective: selectiveUses,
+      wildcard: wildcardUses,
     },
   });
 }

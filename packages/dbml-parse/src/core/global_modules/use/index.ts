@@ -5,6 +5,7 @@ import { InfixExpressionNode, SyntaxNode, UseDeclarationNode, UseSpecifierNode, 
 import { PASS_THROUGH, UNHANDLED, type PassThrough } from '@/constants';
 import {
   destructureComplexVariable,
+  extractVariableFromExpression,
   isAccessExpression,
   isDotDelimitedIdentifier,
   isExpressionAVariableNode,
@@ -51,8 +52,8 @@ export const useModule: GlobalModule = {
     if (symbolKind === undefined) return Report.create(undefined);
 
     const fullname = destructureComplexVariable(node.parentOfKind(InfixExpressionNode));
-    const name = fullname?.at(-1);
-    if (!fullname || name === undefined) return Report.create(undefined);
+    const name = fullname?.at(-1) ?? extractVariableFromExpression(node);
+    if (name === undefined) return Report.create(undefined);
 
     const useDeclaration = node.parentOfKind(UseDeclarationNode);
     if (useDeclaration?.importPath?.value === undefined) return Report.create(undefined);
@@ -63,7 +64,7 @@ export const useModule: GlobalModule = {
     if (!compiler.layout.exists(importPath)) return Report.create(
       undefined,
       [
-        new CompileError(CompileErrorCode.NONEXISTENT_MODULE, `${symbolKind} '${fullname.join('.')} does not exist in file ${importPath.toString()}'. Does the file exist?`, node),
+        new CompileError(CompileErrorCode.NONEXISTENT_MODULE, `${symbolKind} '${fullname?.join('.') ?? name} does not exist in file ${importPath.toString()}'. Does the file exist?`, node),
       ],
     );
 
@@ -82,7 +83,7 @@ export const useModule: GlobalModule = {
     if (!usable) return Report.create(undefined);
 
     // 1. Direct non-schema members
-    const directMember = usable.nonSchemaMembers.find((m) => compiler.symbolName(m)?.includes(name));
+    const directMember = usable.nonSchemaMembers.find((m) => compiler.symbolName(m) === name);
     if (directMember && (!symbolKind || directMember.isKind(symbolKind))) {
       return Report.create(directMember);
     }

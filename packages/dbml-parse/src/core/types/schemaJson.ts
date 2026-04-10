@@ -7,6 +7,23 @@ export interface TokenPosition {
   filepath: Filepath;
 }
 
+// A reference to an element imported via `use` or `reuse`.
+// `name` + `schemaName` identify the original element in the source file.
+// `aliasedName` is the local name used in this file (from `as` clause), defaults to `name`.
+export interface ElementRef {
+  name: string;
+  schemaName: string | null;
+  aliasedName: string;
+}
+
+export interface DatabaseExternals {
+  tables: ElementRef[];
+  enums: ElementRef[];
+  tableGroups: ElementRef[];
+  tablePartials: ElementRef[];
+  notes: ElementRef[];
+}
+
 export interface Database {
   schemas: [];
   tables: Table[];
@@ -18,7 +35,13 @@ export interface Database {
   project?: Project;
   tablePartials: TablePartial[];
   records: TableRecord[];
-  token: TokenPosition;
+  externals: DatabaseExternals;
+  token?: TokenPosition;
+}
+
+export interface MasterDatabase {
+  files: Record<string, Database>;
+  items: Database;
 }
 
 export interface Table {

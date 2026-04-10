@@ -153,6 +153,13 @@
         ]
       }
     ],
+    "externals": {
+      "enums": [],
+      "notes": [],
+      "tableGroups": [],
+      "tablePartials": [],
+      "tables": []
+    },
     "notes": [],
     "project": {
       "database_type": "PostgreSQL",

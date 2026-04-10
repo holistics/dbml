@@ -71,6 +71,7 @@ export const programModule: GlobalModule = {
 
     if (!shouldInterpretNode(compiler, node)) return Report.create(undefined, [
       ...[...compiler.parseProject().values()].flatMap((r) => r.getErrors()),
+      ...compiler.validateNode(node).getErrors(),
       ...compiler.bindNode(node).getErrors()],
     );
 

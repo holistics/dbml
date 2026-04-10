@@ -52,10 +52,8 @@ export default class Binder {
       for (const element of ast.body) {
         if (element instanceof ElementDeclarationNode && element.type) {
           const binder = element as ElementDeclarationNode & { type: SyntaxToken };
-          errors.push(...this.compiler.validateNode(binder).getErrors());
           errors.push(...this.compiler.bindNode(binder).getErrors());
         } else {
-          errors.push(...this.compiler.validateNode(element).getErrors());
           errors.push(...this.compiler.bindNode(element).getErrors());
         }
       }

@@ -4,152 +4,132 @@ import { UseSpecifierListNode, WildcardNode, SyntaxNodeKind, InfixExpressionNode
 import { extractVariableFromExpression } from '@/core/utils/expression';
 
 describe('[example] use declaration parsing', () => {
-  test('should parse selective use with single specifier', () => {
+  test('selective use: kind, name, from, path', () => {
     const { ast } = parse(`use { table users } from './schema'`).getValue();
     expect(ast.uses).toHaveLength(1);
-    expect(ast.declarations).toHaveLength(0);
-
     const use = ast.uses[0];
     expect(use.useKeyword?.value).toBe('use');
     expect(use.isReuse).toBe(false);
     expect(use.fromKeyword?.value).toBe('from');
     expect(use.importPath?.value).toBe('./schema');
-
-    const list = use.specifiers as UseSpecifierListNode;
-    expect(list.specifiers).toHaveLength(1);
-
-    const spec = list.specifiers[0];
+    const spec = (use.specifiers as UseSpecifierListNode).specifiers[0];
     expect(spec.importKind?.value).toBe('table');
     expect(extractVariableFromExpression(spec.name)).toBe('users');
     expect(spec.asKeyword).toBeUndefined();
     expect(spec.alias).toBeUndefined();
   });
 
-  test('should parse selective use with multiple specifiers on separate lines', () => {
-    const { ast } = parse(`use {
-  table users
-  enum status
-  tablepartial timestamps
-} from './models'`).getValue();
-
-    const list = ast.uses[0].specifiers as UseSpecifierListNode;
+  test('multiple specifiers on separate lines', () => {
+    const list = parse(`use {\n  table users\n  enum status\n  tablepartial timestamps\n} from './m'`).getValue().ast.uses[0].specifiers as UseSpecifierListNode;
     expect(list.specifiers).toHaveLength(3);
-    expect(list.specifiers[0].importKind?.value).toBe('table');
-    expect(extractVariableFromExpression(list.specifiers[0].name)).toBe('users');
-    expect(list.specifiers[1].importKind?.value).toBe('enum');
-    expect(extractVariableFromExpression(list.specifiers[1].name)).toBe('status');
-    expect(list.specifiers[2].importKind?.value).toBe('tablepartial');
-    expect(extractVariableFromExpression(list.specifiers[2].name)).toBe('timestamps');
+    expect(list.specifiers.map((s) => s.importKind?.value)).toEqual(['table', 'enum', 'tablepartial']);
+    expect(list.specifiers.map((s) => extractVariableFromExpression(s.name))).toEqual(['users', 'status', 'timestamps']);
   });
 
-  test('should parse use with alias', () => {
-    const { ast } = parse(`use { table users as u } from './schema'`).getValue();
-    const spec = (ast.uses[0].specifiers as UseSpecifierListNode).specifiers[0];
-
-    expect(spec.importKind?.value).toBe('table');
-    expect(extractVariableFromExpression(spec.name)).toBe('users');
-    expect(spec.asKeyword?.value).toBe('as');
-    expect(extractVariableFromExpression(spec.alias)).toBe('u');
+  test('alias inline, on next line, and split across three lines', () => {
+    for (const src of [
+      `use { table users as u } from './a'`,
+      `use { table users\n  as u } from './a'`,
+      `use { table users\n  as\n  u } from './a'`,
+    ]) {
+      const spec = (parse(src).getValue().ast.uses[0].specifiers as UseSpecifierListNode).specifiers[0];
+      expect(spec.asKeyword?.value).toBe('as');
+      expect(extractVariableFromExpression(spec.alias)).toBe('u');
+    }
   });
 
-  test('should parse use with alias on next line', () => {
-    const { ast } = parse(`use { table users
-  as u } from './schema'`).getValue();
-    const spec = (ast.uses[0].specifiers as UseSpecifierListNode).specifiers[0];
+  test('wildcard use and reuse', () => {
+    const u = parse(`use * from './a'`).getValue().ast.uses[0];
+    expect(u.specifiers).toBeInstanceOf(WildcardNode);
+    expect(u.isReuse).toBe(false);
 
-    expect(spec.importKind?.value).toBe('table');
-    expect(extractVariableFromExpression(spec.name)).toBe('users');
-    expect(spec.asKeyword?.value).toBe('as');
-    expect(extractVariableFromExpression(spec.alias)).toBe('u');
+    const r = parse(`reuse * from './a'`).getValue().ast.uses[0];
+    expect(r.specifiers).toBeInstanceOf(WildcardNode);
+    expect(r.isReuse).toBe(true);
   });
 
-  test('should parse use with alias split across three lines', () => {
-    const { ast } = parse(`use { table users
-  as
-  u } from './schema'`).getValue();
-    const spec = (ast.uses[0].specifiers as UseSpecifierListNode).specifiers[0];
-
-    expect(spec.importKind?.value).toBe('table');
-    expect(extractVariableFromExpression(spec.name)).toBe('users');
-    expect(spec.asKeyword?.value).toBe('as');
-    expect(extractVariableFromExpression(spec.alias)).toBe('u');
+  test('case-insensitive keywords and import kinds', () => {
+    for (const kw of ['Use', 'USE']) expect(parse(`${kw} { table x } from './a'`).getValue().ast.uses).toHaveLength(1);
+    for (const kw of ['Reuse', 'REUSE']) expect(parse(`${kw} * from './a'`).getValue().ast.uses[0].isReuse).toBe(true);
+    const list = parse(`use {\n  Table x\n  ENUM y\n  TablePartial z\n} from './a'`).getValue().ast.uses[0].specifiers as UseSpecifierListNode;
+    expect(list.specifiers.map((s) => s.getImportKind())).toEqual(['table', 'enum', 'tablepartial']);
   });
 
-  test('should parse wildcard use', () => {
-    const { ast } = parse(`use * from './common'`).getValue();
-    expect(ast.uses).toHaveLength(1);
-
-    const use = ast.uses[0];
-    expect(use.specifiers).toBeInstanceOf(WildcardNode);
-    expect(use.importPath?.value).toBe('./common');
-    expect(use.isReuse).toBe(false);
-  });
-
-  test('should parse reuse with selective specifiers', () => {
-    const { ast } = parse(`reuse { table users } from './schema'`).getValue();
-    const use = ast.uses[0];
-    expect(use.isReuse).toBe(true);
-    expect(use.useKeyword?.value).toBe('reuse');
-    expect((use.specifiers as UseSpecifierListNode).specifiers).toHaveLength(1);
-  });
-
-  test('should parse reuse with wildcard', () => {
-    const { ast } = parse(`reuse * from './common'`).getValue();
-    const use = ast.uses[0];
-    expect(use.isReuse).toBe(true);
-    expect(use.specifiers).toBeInstanceOf(WildcardNode);
-  });
-
-  test('should be case-insensitive for import kind', () => {
-    const { ast } = parse(`use {
-  Table users
-  ENUM status
-  TablePartial timestamps
-} from './schema'`).getValue();
-
-    const list = ast.uses[0].specifiers as UseSpecifierListNode;
-    expect(list.specifiers).toHaveLength(3);
-    expect(list.specifiers[0].importKind?.value).toBe('Table');
-    expect(list.specifiers[1].importKind?.value).toBe('ENUM');
-    expect(list.specifiers[2].importKind?.value).toBe('TablePartial');
-
-    // getImportKind() should normalize
-    expect(list.specifiers[0].getImportKind()).toBe('table');
-    expect(list.specifiers[1].getImportKind()).toBe('enum');
-    expect(list.specifiers[2].getImportKind()).toBe('tablepartial');
-  });
-
-  test('should be case-insensitive for use/reuse keyword', () => {
-    const r1 = parse(`Use { table users } from './a'`).getValue().ast;
-    const r2 = parse(`USE { table users } from './a'`).getValue().ast;
-    const r3 = parse(`Reuse { table users } from './a'`).getValue().ast;
-    const r4 = parse(`REUSE { table users } from './a'`).getValue().ast;
-
-    expect(r1.uses).toHaveLength(1);
-    expect(r2.uses).toHaveLength(1);
-    expect(r3.uses[0].isReuse).toBe(true);
-    expect(r4.uses[0].isReuse).toBe(true);
-  });
-
-  test('should parse schema-qualified specifier name', () => {
-    const { ast } = parse(`use { table auth.users } from './schema'`).getValue();
-    const spec = (ast.uses[0].specifiers as UseSpecifierListNode).specifiers[0];
+  test('schema-qualified specifier name', () => {
+    const spec = (parse(`use { table auth.users } from './a'`).getValue().ast.uses[0].specifiers as UseSpecifierListNode).specifiers[0];
     expect(spec.name).toBeInstanceOf(InfixExpressionNode);
   });
 
-  test('should parse use alongside element declarations', () => {
-    const { ast } = parse(`
-      use { table users } from './schema'
-      Table posts { id int }
-      use * from './common'
-    `).getValue();
+  test('mixed use and elements preserve source order', () => {
+    const { ast } = parse(`use { table x } from './a'\nTable t { id int }\nuse * from './b'`).getValue();
+    expect(ast.body.map((n) => n.kind)).toEqual([SyntaxNodeKind.USE_DECLARATION, SyntaxNodeKind.ELEMENT_DECLARATION, SyntaxNodeKind.USE_DECLARATION]);
+  });
 
-    expect(ast.uses).toHaveLength(2);
-    expect(ast.declarations).toHaveLength(1);
-    expect(ast.body).toHaveLength(3);
-    // Body preserves source order
-    expect(ast.body[0].kind).toBe(SyntaxNodeKind.USE_DECLARATION);
-    expect(ast.body[1].kind).toBe(SyntaxNodeKind.ELEMENT_DECLARATION);
-    expect(ast.body[2].kind).toBe(SyntaxNodeKind.USE_DECLARATION);
+  describe('parser recovery', () => {
+    test('missing from keyword: 1 error', () => {
+      const r = parse(`use { table users } './schema'`);
+      expect(r.getErrors()).toHaveLength(1);
+      expect(r.getErrors()[0].diagnostic).toBe("Expect 'from' after specifier list");
+      expect(r.getValue().ast.uses).toHaveLength(1);
+    });
+
+    test('missing import path: 2 errors', () => {
+      const r = parse(`use { table users } from`);
+      expect(r.getErrors()).toHaveLength(2);
+      expect(r.getErrors()[0].diagnostic).toBe('Expect a string literal path');
+      expect(r.getErrors()[1].diagnostic).toBe('Unexpected EOF');
+      expect(r.getValue().ast.uses[0].importPath).toBeUndefined();
+    });
+
+    test('missing closing brace: 1 error, partial specifier list', () => {
+      const r = parse(`use { table users from './schema'`);
+      expect(r.getErrors()).toHaveLength(1);
+      expect(r.getErrors()[0].diagnostic).toBe('Expect an element name');
+      expect(r.getValue().ast.uses).toHaveLength(1);
+    });
+
+    test('missing specifiers: 2 errors, continues parsing elements', () => {
+      const r = parse(`use from './schema'\nTable posts { id int }`);
+      expect(r.getErrors()).toHaveLength(2);
+      expect(r.getErrors()[0].diagnostic).toBe("Expect an opening brace '{'");
+      expect(r.getErrors()[1].diagnostic).toBe('Expect an identifier');
+      expect(r.getValue().ast.declarations.length).toBeGreaterThanOrEqual(1);
+    });
+
+    test('truncated use: 2 errors each, does not crash', () => {
+      const r1 = parse('use');
+      expect(r1.getErrors()).toHaveLength(2);
+      expect(r1.getErrors()[0].diagnostic).toBe("Expect an opening brace '{'");
+
+      const r2 = parse('use {');
+      expect(r2.getErrors()).toHaveLength(2);
+      expect(r2.getErrors()[0].diagnostic).toBe("Expect a closing brace '}'");
+
+      const r3 = parse('use *');
+      expect(r3.getErrors()).toHaveLength(2);
+      expect(r3.getErrors()[0].diagnostic).toBe("Expect 'from' after '*'");
+    });
+
+    test('as without alias: 2 errors, alias is undefined', () => {
+      const r = parse(`use { table users as } from './a'`);
+      expect(r.getErrors()).toHaveLength(2);
+      expect(r.getErrors()[0].diagnostic).toBe("Expect an alias name after 'as'");
+      expect(r.getValue().ast.uses).toHaveLength(1);
+      const spec = (r.getValue().ast.uses[0].specifiers as UseSpecifierListNode).specifiers[0];
+      expect(spec.asKeyword?.value).toBe('as');
+      expect(spec.alias).toBeUndefined();
+    });
+
+    test('as then newline then close brace: 2 errors', () => {
+      const r = parse(`use { table users as\n} from './a'`);
+      expect(r.getErrors()).toHaveLength(2);
+      expect(r.getErrors()[0].diagnostic).toBe("Expect an alias name after 'as'");
+    });
+
+    test('recovery after malformed use still parses elements', () => {
+      const r = parse(`use { table\nTable users { id int }`);
+      expect(r.getErrors()).toHaveLength(2);
+      expect(r.getValue().ast.body.length).toBeGreaterThanOrEqual(1);
+    });
   });
 });

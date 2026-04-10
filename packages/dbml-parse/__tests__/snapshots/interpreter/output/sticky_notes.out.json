@@ -2,6 +2,13 @@
   "database": {
     "aliases": [],
     "enums": [],
+    "externals": {
+      "enums": [],
+      "notes": [],
+      "tableGroups": [],
+      "tablePartials": [],
+      "tables": []
+    },
     "notes": [
       {
         "content": "One line note",

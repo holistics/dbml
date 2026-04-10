@@ -40,6 +40,24 @@ export function parse (source: string): Report<{ ast: ProgramNode; tokens: Synta
   return new Lexer(source, DEFAULT_ENTRY).lex().chain((tokens) => new Parser(DEFAULT_ENTRY, source, tokens, new SyntaxNodeIdGenerator()).parse());
 }
 
+export function validate (source: string) {
+  const compiler = new Compiler();
+  compiler.setSource(DEFAULT_ENTRY, source);
+
+  const astResult = compiler.parseFile(DEFAULT_ENTRY);
+  const ast = astResult.getValue().ast;
+  const validateResult = compiler.validateNode(ast);
+
+  return Report.create(
+    {
+      ast: astResult,
+      compiler,
+    },
+    [...astResult.getErrors(), ...validateResult.getErrors()],
+    [...astResult.getWarnings(), ...validateResult.getWarnings()],
+  );
+}
+
 export function analyze (source: string) {
   const compiler = new Compiler();
   compiler.setSource(DEFAULT_ENTRY, source);
@@ -47,10 +65,11 @@ export function analyze (source: string) {
   const parseResult = compiler.parseFile(DEFAULT_ENTRY);
   const ast = parseResult.getValue().ast;
 
+  const validateResult = compiler.validateNode(ast);
   const bindResult = compiler.bindNode(ast);
 
-  const errors = [...parseResult.getErrors(), ...bindResult.getErrors()];
-  const warnings = [...parseResult.getWarnings(), ...bindResult.getWarnings()];
+  const errors = [...parseResult.getErrors(), ...validateResult.getErrors(), ...bindResult.getErrors()];
+  const warnings = [...parseResult.getWarnings(), ...validateResult.getWarnings(), ...bindResult.getWarnings()];
 
   return Report.create(
     {

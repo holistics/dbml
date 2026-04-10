@@ -1,0 +1,3 @@
+// should pull in both tables and records
+
+use * from './records-and-tables'

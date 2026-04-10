@@ -27,32 +27,6 @@
       }
     },
     {
-      "code": "INVALID_COLUMN_SETTING_VALUE",
-      "diagnostic": "'default' must be an enum value, a string literal, number literal, function expression, true, false or null",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<primary-expression>@@[L26:C46, L26:C59]",
-          "snippet": "invalid_value",
-          "filepath": "/main.dbml"
-        }
-      }
-    },
-    {
-      "code": "INVALID_COLUMN_SETTING_VALUE",
-      "diagnostic": "'default' must be an enum value, a string literal, number literal, function expression, true, false or null",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<infix-expression>@@[L27:C47, L27:C74]",
-          "snippet": "field1.fie...ld3.field4",
-          "filepath": "/main.dbml"
-        }
-      }
-    },
-    {
       "code": "BINDING_ERROR",
       "diagnostic": "Enum 'invalid_enum' does not exist in Schema 'public'",
       "filepath": "/main.dbml",
