@@ -336,7 +336,7 @@ export default class Parser {
 
   private useSpecifier (): UseSpecifierNode {
     const args: {
-      elementKind?: SyntaxToken;
+      importKind?: SyntaxToken;
       name?: NormalExpressionNode;
       asKeyword?: SyntaxToken;
       alias?: NormalExpressionNode;
@@ -345,7 +345,7 @@ export default class Parser {
 
     try {
       this.consume('Expect an element kind (e.g. table, enum)', SyntaxTokenKind.IDENTIFIER);
-      args.elementKind = this.previous();
+      args.importKind = this.previous();
     } catch (e) {
       if (!(e instanceof PartialParsingError)) {
         throw e;
