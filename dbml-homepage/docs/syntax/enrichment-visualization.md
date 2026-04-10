@@ -18,7 +18,6 @@ This part covers features specific to diagram & wiki tools like [dbdiagram.io](h
   - [TableGroup Settings](#tablegroup-settings)
 - [DiagramView](#diagramview)
   - [DiagramView Syntax](#diagramview-syntax)
-  - [DiagramView Settings](#diagramview-settings)
 - [Colors](#colors)
 
 ## Note Definition
