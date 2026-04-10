@@ -26,7 +26,7 @@ const dbmlMonarchTokensProvider: languages.IMonarchLanguage = {
     'tables', 'tablegroups', 'notes', 'schemas',
   ],
 
-  symbols: /[=><!~?:&|+\-\/\^%]+/,
+  symbols: /[=><!~?:&|+\-/^%]+/,
   escapes: /\\(?:[abfnrtv\\"']|x[0-9A-Fa-f]{1,4}|u[0-9A-Fa-f]{4}|U[0-9A-Fa-f]{8})/,
   newline: /[\r\n]/,
   digits: /\d+(_+\d+)*/,
@@ -36,7 +36,7 @@ const dbmlMonarchTokensProvider: languages.IMonarchLanguage = {
 
   tokenizer: {
     root: [
-      [/[{}\[\]\(\)]/, '@bracket'],
+      [/[{}[\]()]/, '@bracket'],
       [/[,.:]/, 'delimiter'],
       { include: '@numbers' },
       { include: 'common' },
@@ -86,7 +86,7 @@ const dbmlMonarchTokensProvider: languages.IMonarchLanguage = {
     numbers: [
       [/0[xX][0-9a-fA-F]*/, 'number'],
       [/[$][+-]*\d*(\.\d*)?/, 'number'],
-      [/((\d+(\.\d*)?)|(\.\d+))([eE][\-+]?\d+)?/, 'number'],
+      [/((\d+(\.\d*)?)|(\.\d+))([eE][-+]?\d+)?/, 'number'],
       [/#([0-9A-F]{3}){1,2}/, 'number.hex'],
     ],
 
@@ -125,9 +125,9 @@ const dbmlMonarchTokensProvider: languages.IMonarchLanguage = {
     ],
 
     comment: [
-      [/[^\/*]+/, 'comment'],
+      [/[^/*]+/, 'comment'],
       [/\*\//, 'comment', '@pop'],
-      [/[\/*]/, 'comment'],
+      [/[/*]/, 'comment'],
     ],
   },
 };

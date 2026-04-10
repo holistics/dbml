@@ -54,7 +54,7 @@ export default class TablePartialValidator implements ElementValidator {
     this.publicSymbolTable = publicSymbolTable;
   }
 
-  validate (): { errors: CompileError[], warnings: CompileWarning[] } {
+  validate (): { errors: CompileError[]; warnings: CompileWarning[] } {
     return {
       errors: [
         ...this.validateContext(),

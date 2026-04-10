@@ -28,7 +28,7 @@ export default class EnumValidator implements ElementValidator {
     this.symbolFactory = symbolFactory;
   }
 
-  validate (): { errors: CompileError[], warnings: CompileWarning[] } {
+  validate (): { errors: CompileError[]; warnings: CompileWarning[] } {
     return {
       errors: [
         ...this.validateContext(),

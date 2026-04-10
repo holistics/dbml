@@ -149,7 +149,7 @@ export class DiagramViewSymbol implements NodeSymbol {
   declaration: SyntaxNode;
   references: SyntaxNode[] = [];
 
-  constructor(
+  constructor (
     { symbolTable, declaration }: { symbolTable: SymbolTable; declaration: SyntaxNode },
     id: NodeSymbolId,
   ) {
@@ -165,7 +165,7 @@ export class DiagramViewFieldSymbol implements NodeSymbol {
   declaration: SyntaxNode;
   references: SyntaxNode[] = [];
 
-  constructor({ declaration }: { declaration: SyntaxNode }, id: NodeSymbolId) {
+  constructor ({ declaration }: { declaration: SyntaxNode }, id: NodeSymbolId) {
     this.id = id;
     this.declaration = declaration;
   }

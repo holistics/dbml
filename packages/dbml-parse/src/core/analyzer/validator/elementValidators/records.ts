@@ -24,7 +24,7 @@ export default class RecordsValidator implements ElementValidator {
     this.symbolFactory = symbolFactory;
   }
 
-  validate (): { errors: CompileError[], warnings: CompileWarning[] } {
+  validate (): { errors: CompileError[]; warnings: CompileWarning[] } {
     return {
       errors: [...this.validateContext(), ...this.validateName(this.declarationNode.name), ...this.validateAlias(this.declarationNode.alias), ...this.validateSettingList(this.declarationNode.attributeList), ...this.validateBody(this.declarationNode.body)],
       warnings: [],
