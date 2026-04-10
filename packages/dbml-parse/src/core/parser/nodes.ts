@@ -219,12 +219,12 @@ export class UseDeclarationNode extends SyntaxNode {
       useKeyword,
       specifiers,
       fromKeyword,
-      path,
+      importPath,
     }: {
       useKeyword?: SyntaxToken;
       specifiers?: UseSpecifierListNode | WildcardNode;
       fromKeyword?: SyntaxToken;
-      path?: SyntaxToken;
+      importPath?: SyntaxToken;
     },
     id: SyntaxNodeId,
     filepath: Filepath,
@@ -233,12 +233,12 @@ export class UseDeclarationNode extends SyntaxNode {
       id,
       SyntaxNodeKind.USE_DECLARATION,
       filepath,
-      [useKeyword, specifiers, fromKeyword, path],
+      [useKeyword, specifiers, fromKeyword, importPath],
     );
     this.useKeyword = useKeyword;
     this.specifiers = specifiers;
     this.fromKeyword = fromKeyword;
-    this.importPath = path;
+    this.importPath = importPath;
   }
 
   get isReuse (): boolean {

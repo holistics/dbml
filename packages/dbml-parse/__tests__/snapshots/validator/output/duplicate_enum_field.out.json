@@ -9,7 +9,7 @@
       "body": [
         {
           "context": {
-            "id": "node@<element-declaration>@:status@[L0:C0, L4:C1]",
+            "id": "node@<element-declaration>@status@[L0:C0, L4:C1]",
             "snippet": "Enum statu...  churn\r\n}"
           },
           "children": {
@@ -21,7 +21,7 @@
               "children": {
                 "blockCloseBrace": {
                   "context": {
-                    "id": "token@<rbrace>@:}@[L4:C0, L4:C1]",
+                    "id": "token@<rbrace>@}@[L4:C0, L4:C1]",
                     "snippet": "}"
                   },
                   "leadingTrivia": "",
@@ -30,7 +30,7 @@
                 },
                 "blockOpenBrace": {
                   "context": {
-                    "id": "token@<lbrace>@:{@[L0:C12, L0:C13]",
+                    "id": "token@<lbrace>@{@[L0:C12, L0:C13]",
                     "snippet": "{"
                   },
                   "leadingTrivia": "",
@@ -53,30 +53,30 @@
                         "children": {
                           "expression": {
                             "context": {
-                              "id": "node@<variable>@:churn@[L1:C4, L1:C9]",
+                              "id": "node@<variable>@churn@[L1:C4, L1:C9]",
                               "snippet": "churn"
                             },
                             "children": {
-                              "fullEnd": 26,
-                              "fullStart": 15,
                               "variable": {
                                 "context": {
-                                  "id": "token@<identifier>@:churn@[L1:C4, L1:C9]",
+                                  "id": "token@<identifier>@churn@[L1:C4, L1:C9]",
                                   "snippet": "churn"
                                 },
                                 "leadingTrivia": "    ",
                                 "trailingTrivia": "\n",
                                 "value": "churn"
                               }
-                            }
-                          },
-                          "fullEnd": 26,
-                          "fullStart": 15
-                        }
-                      },
-                      "fullEnd": 26,
-                      "fullStart": 15
+                            },
+                            "fullEnd": 26,
+                            "fullStart": 15
+                          }
+                        },
+                        "fullEnd": 26,
+                        "fullStart": 15
+                      }
                     },
+                    "fullEnd": 26,
+                    "fullStart": 15,
                     "symbol": {
                       "context": {
                         "id": "symbol@Enum field@@[L1:C4, L1:C9]",
@@ -104,30 +104,30 @@
                         "children": {
                           "expression": {
                             "context": {
-                              "id": "node@<variable>@:churn@[L2:C4, L2:C9]",
+                              "id": "node@<variable>@churn@[L2:C4, L2:C9]",
                               "snippet": "churn"
                             },
                             "children": {
-                              "fullEnd": 37,
-                              "fullStart": 26,
                               "variable": {
                                 "context": {
-                                  "id": "token@<identifier>@:churn@[L2:C4, L2:C9]",
+                                  "id": "token@<identifier>@churn@[L2:C4, L2:C9]",
                                   "snippet": "churn"
                                 },
                                 "leadingTrivia": "    ",
                                 "trailingTrivia": "\n",
                                 "value": "churn"
                               }
-                            }
-                          },
-                          "fullEnd": 37,
-                          "fullStart": 26
-                        }
-                      },
-                      "fullEnd": 37,
-                      "fullStart": 26
+                            },
+                            "fullEnd": 37,
+                            "fullStart": 26
+                          }
+                        },
+                        "fullEnd": 37,
+                        "fullStart": 26
+                      }
                     },
+                    "fullEnd": 37,
+                    "fullStart": 26,
                     "symbol": {
                       "context": {
                         "id": "symbol@Enum field@@[L2:C4, L2:C9]",
@@ -155,30 +155,30 @@
                         "children": {
                           "expression": {
                             "context": {
-                              "id": "node@<variable>@:churn@[L3:C4, L3:C9]",
+                              "id": "node@<variable>@churn@[L3:C4, L3:C9]",
                               "snippet": "churn"
                             },
                             "children": {
-                              "fullEnd": 48,
-                              "fullStart": 37,
                               "variable": {
                                 "context": {
-                                  "id": "token@<identifier>@:churn@[L3:C4, L3:C9]",
+                                  "id": "token@<identifier>@churn@[L3:C4, L3:C9]",
                                   "snippet": "churn"
                                 },
                                 "leadingTrivia": "    ",
                                 "trailingTrivia": "\n",
                                 "value": "churn"
                               }
-                            }
-                          },
-                          "fullEnd": 48,
-                          "fullStart": 37
-                        }
-                      },
-                      "fullEnd": 48,
-                      "fullStart": 37
+                            },
+                            "fullEnd": 48,
+                            "fullStart": 37
+                          }
+                        },
+                        "fullEnd": 48,
+                        "fullStart": 37
+                      }
                     },
+                    "fullEnd": 48,
+                    "fullStart": 37,
                     "symbol": {
                       "context": {
                         "id": "symbol@Enum field@@[L3:C4, L3:C9]",
@@ -191,13 +191,11 @@
                       "references": []
                     }
                   }
-                ],
-                "fullEnd": 49,
-                "fullStart": 12
-              }
+                ]
+              },
+              "fullEnd": 49,
+              "fullStart": 12
             },
-            "fullEnd": 49,
-            "fullStart": 0,
             "name": {
               "context": {
                 "id": "node@<primary-expression>@@[L0:C5, L0:C11]",
@@ -206,30 +204,30 @@
               "children": {
                 "expression": {
                   "context": {
-                    "id": "node@<variable>@:status@[L0:C5, L0:C11]",
+                    "id": "node@<variable>@status@[L0:C5, L0:C11]",
                     "snippet": "status"
                   },
                   "children": {
-                    "fullEnd": 12,
-                    "fullStart": 5,
                     "variable": {
                       "context": {
-                        "id": "token@<identifier>@:status@[L0:C5, L0:C11]",
+                        "id": "token@<identifier>@status@[L0:C5, L0:C11]",
                         "snippet": "status"
                       },
                       "leadingTrivia": "",
                       "trailingTrivia": " ",
                       "value": "status"
                     }
-                  }
-                },
-                "fullEnd": 12,
-                "fullStart": 5
-              }
+                  },
+                  "fullEnd": 12,
+                  "fullStart": 5
+                }
+              },
+              "fullEnd": 12,
+              "fullStart": 5
             },
             "type": {
               "context": {
-                "id": "token@<identifier>@:Enum@[L0:C0, L0:C4]",
+                "id": "token@<identifier>@Enum@[L0:C0, L0:C4]",
                 "snippet": "Enum"
               },
               "leadingTrivia": "",
@@ -237,13 +235,15 @@
               "value": "Enum"
             }
           },
+          "fullEnd": 49,
+          "fullStart": 0,
           "symbol": {
             "context": {
-              "id": "symbol@Enum@:status@[L0:C0, L4:C1]",
+              "id": "symbol@Enum@status@[L0:C0, L4:C1]",
               "snippet": "Enum statu...  churn\r\n}"
             },
             "declaration": {
-              "id": "node@<element-declaration>@:status@[L0:C0, L4:C1]",
+              "id": "node@<element-declaration>@status@[L0:C0, L4:C1]",
               "snippet": "Enum statu...  churn\r\n}"
             },
             "members": [
@@ -251,19 +251,34 @@
                 "context": {
                   "id": "symbol@Enum field@@[L1:C4, L1:C9]",
                   "snippet": "churn"
-                }
+                },
+                "declaration": {
+                  "id": "node@<function-application>@@[L1:C4, L1:C9]",
+                  "snippet": "churn"
+                },
+                "references": []
               },
               {
                 "context": {
                   "id": "symbol@Enum field@@[L2:C4, L2:C9]",
                   "snippet": "churn"
-                }
+                },
+                "declaration": {
+                  "id": "node@<function-application>@@[L2:C4, L2:C9]",
+                  "snippet": "churn"
+                },
+                "references": []
               },
               {
                 "context": {
                   "id": "symbol@Enum field@@[L3:C4, L3:C9]",
                   "snippet": "churn"
-                }
+                },
+                "declaration": {
+                  "id": "node@<function-application>@@[L3:C4, L3:C9]",
+                  "snippet": "churn"
+                },
+                "references": []
               }
             ],
             "references": []
@@ -272,16 +287,16 @@
       ],
       "eof": {
         "context": {
-          "id": "token@<eof>@:@[L4:C1, L4:C1]",
+          "id": "token@<eof>@@[L4:C1, L4:C1]",
           "snippet": ""
         },
         "leadingTrivia": "",
         "trailingTrivia": "",
         "value": ""
-      },
-      "fullEnd": 49,
-      "fullStart": 0
+      }
     },
+    "fullEnd": 49,
+    "fullStart": 0,
     "symbol": {
       "context": {
         "id": "symbol@Program@@[L0:C0, L4:C1]",
@@ -295,13 +310,102 @@
         {
           "context": {
             "id": "symbol@Schema@public@[L?:C?, L?:C?]"
-          }
+          },
+          "members": [
+            {
+              "context": {
+                "id": "symbol@Enum@status@[L0:C0, L4:C1]",
+                "snippet": "Enum statu...  churn\r\n}"
+              },
+              "declaration": {
+                "id": "node@<element-declaration>@status@[L0:C0, L4:C1]",
+                "snippet": "Enum statu...  churn\r\n}"
+              },
+              "members": [
+                {
+                  "context": {
+                    "id": "symbol@Enum field@@[L1:C4, L1:C9]",
+                    "snippet": "churn"
+                  },
+                  "declaration": {
+                    "id": "node@<function-application>@@[L1:C4, L1:C9]",
+                    "snippet": "churn"
+                  },
+                  "references": []
+                },
+                {
+                  "context": {
+                    "id": "symbol@Enum field@@[L2:C4, L2:C9]",
+                    "snippet": "churn"
+                  },
+                  "declaration": {
+                    "id": "node@<function-application>@@[L2:C4, L2:C9]",
+                    "snippet": "churn"
+                  },
+                  "references": []
+                },
+                {
+                  "context": {
+                    "id": "symbol@Enum field@@[L3:C4, L3:C9]",
+                    "snippet": "churn"
+                  },
+                  "declaration": {
+                    "id": "node@<function-application>@@[L3:C4, L3:C9]",
+                    "snippet": "churn"
+                  },
+                  "references": []
+                }
+              ],
+              "references": []
+            }
+          ],
+          "references": []
         },
         {
           "context": {
-            "id": "symbol@Enum@:status@[L0:C0, L4:C1]",
+            "id": "symbol@Enum@status@[L0:C0, L4:C1]",
             "snippet": "Enum statu...  churn\r\n}"
-          }
+          },
+          "declaration": {
+            "id": "node@<element-declaration>@status@[L0:C0, L4:C1]",
+            "snippet": "Enum statu...  churn\r\n}"
+          },
+          "members": [
+            {
+              "context": {
+                "id": "symbol@Enum field@@[L1:C4, L1:C9]",
+                "snippet": "churn"
+              },
+              "declaration": {
+                "id": "node@<function-application>@@[L1:C4, L1:C9]",
+                "snippet": "churn"
+              },
+              "references": []
+            },
+            {
+              "context": {
+                "id": "symbol@Enum field@@[L2:C4, L2:C9]",
+                "snippet": "churn"
+              },
+              "declaration": {
+                "id": "node@<function-application>@@[L2:C4, L2:C9]",
+                "snippet": "churn"
+              },
+              "references": []
+            },
+            {
+              "context": {
+                "id": "symbol@Enum field@@[L3:C4, L3:C9]",
+                "snippet": "churn"
+              },
+              "declaration": {
+                "id": "node@<function-application>@@[L3:C4, L3:C9]",
+                "snippet": "churn"
+              },
+              "references": []
+            }
+          ],
+          "references": []
         }
       ],
       "references": []

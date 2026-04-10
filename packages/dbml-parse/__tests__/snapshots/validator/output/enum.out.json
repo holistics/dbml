@@ -3,33 +3,39 @@
     {
       "code": "EMPTY_ENUM",
       "diagnostic": "An Enum must have at least one element",
+      "filepath": "/main.dbml",
       "level": "error",
       "node": {
         "context": {
-          "id": "node@<element-declaration>@:v.A@[L0:C0, L2:C1]",
-          "snippet": "enum v.\"A\" {\r\n\r\n}"
+          "id": "node@<element-declaration>@v.A@[L0:C0, L2:C1]",
+          "snippet": "enum v.\"A\" {\r\n\r\n}",
+          "filepath": "/main.dbml"
         }
       }
     },
     {
       "code": "NAME_NOT_FOUND",
       "diagnostic": "An Enum must have a name",
+      "filepath": "/main.dbml",
       "level": "error",
       "node": {
         "context": {
-          "id": "node@<element-declaration>@:@[L4:C0, L10:C1]",
-          "snippet": "enum {\r\n  ...   \"ab\"\r\n}"
+          "id": "node@<element-declaration>@@[L4:C0, L10:C1]",
+          "snippet": "enum {\r\n  ...   \"ab\"\r\n}",
+          "filepath": "/main.dbml"
         }
       }
     },
     {
       "code": "INVALID_ENUM_ELEMENT_NAME",
       "diagnostic": "An enum field must be an identifier or a quoted identifier",
+      "filepath": "/main.dbml",
       "level": "error",
       "node": {
         "context": {
           "id": "node@<primary-expression>@@[L7:C4, L7:C5]",
-          "snippet": "1"
+          "snippet": "1",
+          "filepath": "/main.dbml"
         }
       }
     }
@@ -43,7 +49,7 @@
       "body": [
         {
           "context": {
-            "id": "node@<element-declaration>@:v.A@[L0:C0, L2:C1]",
+            "id": "node@<element-declaration>@v.A@[L0:C0, L2:C1]",
             "snippet": "enum v.\"A\" {\r\n\r\n}"
           },
           "children": {
@@ -55,7 +61,7 @@
               "children": {
                 "blockCloseBrace": {
                   "context": {
-                    "id": "token@<rbrace>@:}@[L2:C0, L2:C1]",
+                    "id": "token@<rbrace>@}@[L2:C0, L2:C1]",
                     "snippet": "}"
                   },
                   "leadingTrivia": "\n",
@@ -64,28 +70,24 @@
                 },
                 "blockOpenBrace": {
                   "context": {
-                    "id": "token@<lbrace>@:{@[L0:C11, L0:C12]",
+                    "id": "token@<lbrace>@{@[L0:C11, L0:C12]",
                     "snippet": "{"
                   },
                   "leadingTrivia": "",
                   "trailingTrivia": "\n",
                   "value": "{"
                 },
-                "body": [],
-                "fullEnd": 19,
-                "fullStart": 11
-              }
+                "body": []
+              },
+              "fullEnd": 19,
+              "fullStart": 11
             },
-            "fullEnd": 19,
-            "fullStart": 0,
             "name": {
               "context": {
                 "id": "node@<infix-expression>@@[L0:C5, L0:C10]",
                 "snippet": "v.\"A\""
               },
               "children": {
-                "fullEnd": 11,
-                "fullStart": 5,
                 "leftExpression": {
                   "context": {
                     "id": "node@<primary-expression>@@[L0:C5, L0:C6]",
@@ -94,30 +96,30 @@
                   "children": {
                     "expression": {
                       "context": {
-                        "id": "node@<variable>@:v@[L0:C5, L0:C6]",
+                        "id": "node@<variable>@v@[L0:C5, L0:C6]",
                         "snippet": "v"
                       },
                       "children": {
-                        "fullEnd": 6,
-                        "fullStart": 5,
                         "variable": {
                           "context": {
-                            "id": "token@<identifier>@:v@[L0:C5, L0:C6]",
+                            "id": "token@<identifier>@v@[L0:C5, L0:C6]",
                             "snippet": "v"
                           },
                           "leadingTrivia": "",
                           "trailingTrivia": "",
                           "value": "v"
                         }
-                      }
-                    },
-                    "fullEnd": 6,
-                    "fullStart": 5
-                  }
+                      },
+                      "fullEnd": 6,
+                      "fullStart": 5
+                    }
+                  },
+                  "fullEnd": 6,
+                  "fullStart": 5
                 },
                 "op": {
                   "context": {
-                    "id": "token@<op>@:.@[L0:C6, L0:C7]",
+                    "id": "token@<op>@.@[L0:C6, L0:C7]",
                     "snippet": "."
                   },
                   "leadingTrivia": "",
@@ -132,32 +134,34 @@
                   "children": {
                     "expression": {
                       "context": {
-                        "id": "node@<variable>@:A@[L0:C7, L0:C10]",
+                        "id": "node@<variable>@A@[L0:C7, L0:C10]",
                         "snippet": "\"A\""
                       },
                       "children": {
-                        "fullEnd": 11,
-                        "fullStart": 7,
                         "variable": {
                           "context": {
-                            "id": "token@<variable>@:A@[L0:C7, L0:C10]",
+                            "id": "token@<variable>@A@[L0:C7, L0:C10]",
                             "snippet": "\"A\""
                           },
                           "leadingTrivia": "",
                           "trailingTrivia": " ",
                           "value": "A"
                         }
-                      }
-                    },
-                    "fullEnd": 11,
-                    "fullStart": 7
-                  }
+                      },
+                      "fullEnd": 11,
+                      "fullStart": 7
+                    }
+                  },
+                  "fullEnd": 11,
+                  "fullStart": 7
                 }
-              }
+              },
+              "fullEnd": 11,
+              "fullStart": 5
             },
             "type": {
               "context": {
-                "id": "token@<identifier>@:enum@[L0:C0, L0:C4]",
+                "id": "token@<identifier>@enum@[L0:C0, L0:C4]",
                 "snippet": "enum"
               },
               "leadingTrivia": "",
@@ -165,13 +169,15 @@
               "value": "enum"
             }
           },
+          "fullEnd": 19,
+          "fullStart": 0,
           "symbol": {
             "context": {
-              "id": "symbol@Enum@:v.A@[L0:C0, L2:C1]",
+              "id": "symbol@Enum@v.A@[L0:C0, L2:C1]",
               "snippet": "enum v.\"A\" {\r\n\r\n}"
             },
             "declaration": {
-              "id": "node@<element-declaration>@:v.A@[L0:C0, L2:C1]",
+              "id": "node@<element-declaration>@v.A@[L0:C0, L2:C1]",
               "snippet": "enum v.\"A\" {\r\n\r\n}"
             },
             "members": [],
@@ -180,7 +186,7 @@
         },
         {
           "context": {
-            "id": "node@<element-declaration>@:@[L4:C0, L10:C1]",
+            "id": "node@<element-declaration>@@[L4:C0, L10:C1]",
             "snippet": "enum {\r\n  ...   \"ab\"\r\n}"
           },
           "children": {
@@ -192,7 +198,7 @@
               "children": {
                 "blockCloseBrace": {
                   "context": {
-                    "id": "token@<rbrace>@:}@[L10:C0, L10:C1]",
+                    "id": "token@<rbrace>@}@[L10:C0, L10:C1]",
                     "snippet": "}"
                   },
                   "leadingTrivia": "",
@@ -201,7 +207,7 @@
                 },
                 "blockOpenBrace": {
                   "context": {
-                    "id": "token@<lbrace>@:{@[L4:C5, L4:C6]",
+                    "id": "token@<lbrace>@{@[L4:C5, L4:C6]",
                     "snippet": "{"
                   },
                   "leadingTrivia": "",
@@ -224,30 +230,30 @@
                         "children": {
                           "expression": {
                             "context": {
-                              "id": "node@<variable>@:1@[L5:C4, L5:C7]",
+                              "id": "node@<variable>@1@[L5:C4, L5:C7]",
                               "snippet": "\"1\""
                             },
                             "children": {
-                              "fullEnd": 38,
-                              "fullStart": 29,
                               "variable": {
                                 "context": {
-                                  "id": "token@<variable>@:1@[L5:C4, L5:C7]",
+                                  "id": "token@<variable>@1@[L5:C4, L5:C7]",
                                   "snippet": "\"1\""
                                 },
                                 "leadingTrivia": "    ",
                                 "trailingTrivia": "\n",
                                 "value": "1"
                               }
-                            }
-                          },
-                          "fullEnd": 38,
-                          "fullStart": 29
-                        }
-                      },
-                      "fullEnd": 38,
-                      "fullStart": 29
+                            },
+                            "fullEnd": 38,
+                            "fullStart": 29
+                          }
+                        },
+                        "fullEnd": 38,
+                        "fullStart": 29
+                      }
                     },
+                    "fullEnd": 38,
+                    "fullStart": 29,
                     "symbol": {
                       "context": {
                         "id": "symbol@Enum field@@[L5:C4, L5:C7]",
@@ -275,30 +281,30 @@
                         "children": {
                           "expression": {
                             "context": {
-                              "id": "node@<variable>@:1@[L6:C4, L6:C7]",
+                              "id": "node@<variable>@1@[L6:C4, L6:C7]",
                               "snippet": "\"1\""
                             },
                             "children": {
-                              "fullEnd": 47,
-                              "fullStart": 38,
                               "variable": {
                                 "context": {
-                                  "id": "token@<variable>@:1@[L6:C4, L6:C7]",
+                                  "id": "token@<variable>@1@[L6:C4, L6:C7]",
                                   "snippet": "\"1\""
                                 },
                                 "leadingTrivia": "    ",
                                 "trailingTrivia": "\n",
                                 "value": "1"
                               }
-                            }
-                          },
-                          "fullEnd": 47,
-                          "fullStart": 38
-                        }
-                      },
-                      "fullEnd": 47,
-                      "fullStart": 38
+                            },
+                            "fullEnd": 47,
+                            "fullStart": 38
+                          }
+                        },
+                        "fullEnd": 47,
+                        "fullStart": 38
+                      }
                     },
+                    "fullEnd": 47,
+                    "fullStart": 38,
                     "symbol": {
                       "context": {
                         "id": "symbol@Enum field@@[L6:C4, L6:C7]",
@@ -326,30 +332,30 @@
                         "children": {
                           "expression": {
                             "context": {
-                              "id": "node@<literal>@:1@[L7:C4, L7:C5]",
+                              "id": "node@<literal>@1@[L7:C4, L7:C5]",
                               "snippet": "1"
                             },
                             "children": {
-                              "fullEnd": 54,
-                              "fullStart": 47,
                               "literal": {
                                 "context": {
-                                  "id": "token@<number>@:1@[L7:C4, L7:C5]",
+                                  "id": "token@<number>@1@[L7:C4, L7:C5]",
                                   "snippet": "1"
                                 },
                                 "leadingTrivia": "    ",
                                 "trailingTrivia": "\n",
                                 "value": "1"
                               }
-                            }
-                          },
-                          "fullEnd": 54,
-                          "fullStart": 47
-                        }
-                      },
-                      "fullEnd": 54,
-                      "fullStart": 47
+                            },
+                            "fullEnd": 54,
+                            "fullStart": 47
+                          }
+                        },
+                        "fullEnd": 54,
+                        "fullStart": 47
+                      }
                     },
+                    "fullEnd": 54,
+                    "fullStart": 47,
                     "symbol": {
                       "context": {
                         "id": "symbol@Enum field@@[L7:C4, L7:C5]",
@@ -377,30 +383,30 @@
                         "children": {
                           "expression": {
                             "context": {
-                              "id": "node@<variable>@:a@[L8:C4, L8:C5]",
+                              "id": "node@<variable>@a@[L8:C4, L8:C5]",
                               "snippet": "a"
                             },
                             "children": {
-                              "fullEnd": 61,
-                              "fullStart": 54,
                               "variable": {
                                 "context": {
-                                  "id": "token@<identifier>@:a@[L8:C4, L8:C5]",
+                                  "id": "token@<identifier>@a@[L8:C4, L8:C5]",
                                   "snippet": "a"
                                 },
                                 "leadingTrivia": "    ",
                                 "trailingTrivia": "\n",
                                 "value": "a"
                               }
-                            }
-                          },
-                          "fullEnd": 61,
-                          "fullStart": 54
-                        }
-                      },
-                      "fullEnd": 61,
-                      "fullStart": 54
+                            },
+                            "fullEnd": 61,
+                            "fullStart": 54
+                          }
+                        },
+                        "fullEnd": 61,
+                        "fullStart": 54
+                      }
                     },
+                    "fullEnd": 61,
+                    "fullStart": 54,
                     "symbol": {
                       "context": {
                         "id": "symbol@Enum field@@[L8:C4, L8:C5]",
@@ -428,30 +434,30 @@
                         "children": {
                           "expression": {
                             "context": {
-                              "id": "node@<variable>@:ab@[L9:C4, L9:C8]",
+                              "id": "node@<variable>@ab@[L9:C4, L9:C8]",
                               "snippet": "\"ab\""
                             },
                             "children": {
-                              "fullEnd": 71,
-                              "fullStart": 61,
                               "variable": {
                                 "context": {
-                                  "id": "token@<variable>@:ab@[L9:C4, L9:C8]",
+                                  "id": "token@<variable>@ab@[L9:C4, L9:C8]",
                                   "snippet": "\"ab\""
                                 },
                                 "leadingTrivia": "    ",
                                 "trailingTrivia": "\n",
                                 "value": "ab"
                               }
-                            }
-                          },
-                          "fullEnd": 71,
-                          "fullStart": 61
-                        }
-                      },
-                      "fullEnd": 71,
-                      "fullStart": 61
+                            },
+                            "fullEnd": 71,
+                            "fullStart": 61
+                          }
+                        },
+                        "fullEnd": 71,
+                        "fullStart": 61
+                      }
                     },
+                    "fullEnd": 71,
+                    "fullStart": 61,
                     "symbol": {
                       "context": {
                         "id": "symbol@Enum field@@[L9:C4, L9:C8]",
@@ -464,16 +470,14 @@
                       "references": []
                     }
                   }
-                ],
-                "fullEnd": 72,
-                "fullStart": 26
-              }
+                ]
+              },
+              "fullEnd": 72,
+              "fullStart": 26
             },
-            "fullEnd": 72,
-            "fullStart": 20,
             "type": {
               "context": {
-                "id": "token@<identifier>@:enum@[L4:C0, L4:C4]",
+                "id": "token@<identifier>@enum@[L4:C0, L4:C4]",
                 "snippet": "enum"
               },
               "leadingTrivia": "\n",
@@ -481,13 +485,15 @@
               "value": "enum"
             }
           },
+          "fullEnd": 72,
+          "fullStart": 20,
           "symbol": {
             "context": {
-              "id": "symbol@Enum@:@[L4:C0, L10:C1]",
+              "id": "symbol@Enum@@[L4:C0, L10:C1]",
               "snippet": "enum {\r\n  ...   \"ab\"\r\n}"
             },
             "declaration": {
-              "id": "node@<element-declaration>@:@[L4:C0, L10:C1]",
+              "id": "node@<element-declaration>@@[L4:C0, L10:C1]",
               "snippet": "enum {\r\n  ...   \"ab\"\r\n}"
             },
             "members": [
@@ -495,31 +501,56 @@
                 "context": {
                   "id": "symbol@Enum field@@[L5:C4, L5:C7]",
                   "snippet": "\"1\""
-                }
+                },
+                "declaration": {
+                  "id": "node@<function-application>@@[L5:C4, L5:C7]",
+                  "snippet": "\"1\""
+                },
+                "references": []
               },
               {
                 "context": {
                   "id": "symbol@Enum field@@[L6:C4, L6:C7]",
                   "snippet": "\"1\""
-                }
+                },
+                "declaration": {
+                  "id": "node@<function-application>@@[L6:C4, L6:C7]",
+                  "snippet": "\"1\""
+                },
+                "references": []
               },
               {
                 "context": {
                   "id": "symbol@Enum field@@[L7:C4, L7:C5]",
                   "snippet": "1"
-                }
+                },
+                "declaration": {
+                  "id": "node@<function-application>@@[L7:C4, L7:C5]",
+                  "snippet": "1"
+                },
+                "references": []
               },
               {
                 "context": {
                   "id": "symbol@Enum field@@[L8:C4, L8:C5]",
                   "snippet": "a"
-                }
+                },
+                "declaration": {
+                  "id": "node@<function-application>@@[L8:C4, L8:C5]",
+                  "snippet": "a"
+                },
+                "references": []
               },
               {
                 "context": {
                   "id": "symbol@Enum field@@[L9:C4, L9:C8]",
                   "snippet": "\"ab\""
-                }
+                },
+                "declaration": {
+                  "id": "node@<function-application>@@[L9:C4, L9:C8]",
+                  "snippet": "\"ab\""
+                },
+                "references": []
               }
             ],
             "references": []
@@ -528,16 +559,16 @@
       ],
       "eof": {
         "context": {
-          "id": "token@<eof>@:@[L10:C1, L10:C1]",
+          "id": "token@<eof>@@[L10:C1, L10:C1]",
           "snippet": ""
         },
         "leadingTrivia": "",
         "trailingTrivia": "",
         "value": ""
-      },
-      "fullEnd": 72,
-      "fullStart": 0
+      }
     },
+    "fullEnd": 72,
+    "fullStart": 0,
     "symbol": {
       "context": {
         "id": "symbol@Program@@[L0:C0, L10:C1]",
@@ -551,12 +582,29 @@
         {
           "context": {
             "id": "symbol@Schema@public@[L?:C?, L?:C?]"
-          }
+          },
+          "members": [],
+          "references": []
         },
         {
           "context": {
             "id": "symbol@Schema@v@[L?:C?, L?:C?]"
-          }
+          },
+          "members": [
+            {
+              "context": {
+                "id": "symbol@Enum@v.A@[L0:C0, L2:C1]",
+                "snippet": "enum v.\"A\" {\r\n\r\n}"
+              },
+              "declaration": {
+                "id": "node@<element-declaration>@v.A@[L0:C0, L2:C1]",
+                "snippet": "enum v.\"A\" {\r\n\r\n}"
+              },
+              "members": [],
+              "references": []
+            }
+          ],
+          "references": []
         }
       ],
       "references": []

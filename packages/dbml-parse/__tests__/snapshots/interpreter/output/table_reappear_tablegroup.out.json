@@ -1,46 +1,54 @@
 {
   "errors": [
     {
+      "code": "BINDING_ERROR",
+      "diagnostic": "Table 'U2' does not exist in Schema 'public'",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<primary-expression>@@[L35:C2, L35:C4]",
+          "snippet": "U2",
+          "filepath": "/main.dbml"
+        }
+      }
+    },
+    {
       "code": "TABLE_REAPPEAR_IN_TABLEGROUP",
       "diagnostic": "Table \"follows\" already appears in group \"A1\"",
+      "filepath": "/main.dbml",
       "level": "error",
       "node": {
         "context": {
           "id": "node@<function-application>@@[L22:C2, L22:C9]",
-          "snippet": "follows"
+          "snippet": "follows",
+          "filepath": "/main.dbml"
         }
       }
     },
     {
       "code": "TABLE_REAPPEAR_IN_TABLEGROUP",
       "diagnostic": "Table \"users\" already appears in group \"A2\"",
+      "filepath": "/main.dbml",
       "level": "error",
       "node": {
         "context": {
           "id": "node@<function-application>@@[L27:C2, L27:C7]",
-          "snippet": "users"
+          "snippet": "users",
+          "filepath": "/main.dbml"
         }
       }
     },
     {
       "code": "TABLE_REAPPEAR_IN_TABLEGROUP",
       "diagnostic": "Table \"U\" already appears in group \"A2\"",
+      "filepath": "/main.dbml",
       "level": "error",
       "node": {
         "context": {
           "id": "node@<function-application>@@[L31:C4, L31:C5]",
-          "snippet": "U"
-        }
-      }
-    },
-    {
-      "code": "TABLE_REAPPEAR_IN_TABLEGROUP",
-      "diagnostic": "Table \"A.users\" already appears in group \"A5\"",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<function-application>@@[L39:C2, L39:C9]",
-          "snippet": "A.users"
+          "snippet": "U",
+          "filepath": "/main.dbml"
         }
       }
     }

@@ -3,11 +3,13 @@
     {
       "code": "UNEXPECTED_ELEMENT_DECLARATION",
       "diagnostic": "An element's simple body must not be an element declaration",
+      "filepath": "/main.dbml",
       "level": "error",
       "node": {
         "context": {
-          "id": "node@<element-declaration>@:E@[L0:C6, L0:C15]",
-          "snippet": "Enum E {}"
+          "id": "node@<element-declaration>@E@[L0:C6, L0:C15]",
+          "snippet": "Enum E {}",
+          "filepath": "/main.dbml"
         }
       }
     }
@@ -21,24 +23,22 @@
       "body": [
         {
           "context": {
-            "id": "node@<element-declaration>@:@[L0:C0, L0:C5]",
+            "id": "node@<element-declaration>@@[L0:C0, L0:C5]",
             "snippet": "Note:"
           },
           "children": {
             "bodyColon": {
               "context": {
-                "id": "token@<colon>@::@[L0:C4, L0:C5]",
+                "id": "token@<colon>@:@[L0:C4, L0:C5]",
                 "snippet": ":"
               },
               "leadingTrivia": "",
               "trailingTrivia": " ",
               "value": ":"
             },
-            "fullEnd": 6,
-            "fullStart": 0,
             "type": {
               "context": {
-                "id": "token@<identifier>@:Note@[L0:C0, L0:C4]",
+                "id": "token@<identifier>@Note@[L0:C0, L0:C4]",
                 "snippet": "Note"
               },
               "leadingTrivia": "",
@@ -46,13 +46,15 @@
               "value": "Note"
             }
           },
+          "fullEnd": 6,
+          "fullStart": 0,
           "symbol": {
             "context": {
-              "id": "symbol@Note@:@[L0:C0, L0:C5]",
+              "id": "symbol@Note@@[L0:C0, L0:C5]",
               "snippet": "Note:"
             },
             "declaration": {
-              "id": "node@<element-declaration>@:@[L0:C0, L0:C5]",
+              "id": "node@<element-declaration>@@[L0:C0, L0:C5]",
               "snippet": "Note:"
             },
             "members": [],
@@ -62,16 +64,16 @@
       ],
       "eof": {
         "context": {
-          "id": "token@<eof>@:@[L0:C15, L0:C15]",
+          "id": "token@<eof>@@[L0:C15, L0:C15]",
           "snippet": ""
         },
         "leadingTrivia": "",
         "trailingTrivia": "",
         "value": ""
-      },
-      "fullEnd": 15,
-      "fullStart": 0
+      }
     },
+    "fullEnd": 15,
+    "fullStart": 0,
     "symbol": {
       "context": {
         "id": "symbol@Program@@[L0:C0, L0:C15]",
@@ -85,7 +87,9 @@
         {
           "context": {
             "id": "symbol@Schema@public@[L?:C?, L?:C?]"
-          }
+          },
+          "members": [],
+          "references": []
         }
       ],
       "references": []

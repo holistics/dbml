@@ -3,22 +3,26 @@
     {
       "code": "NOTE_REDEFINED",
       "diagnostic": "Duplicate notes are defined",
+      "filepath": "/main.dbml",
       "level": "error",
       "node": {
         "context": {
-          "id": "node@<element-declaration>@:@[L6:C2, L6:C20]",
-          "snippet": "Note: 'Short note'"
+          "id": "node@<element-declaration>@@[L6:C2, L6:C20]",
+          "snippet": "Note: 'Short note'",
+          "filepath": "/main.dbml"
         }
       }
     },
     {
       "code": "NOTE_REDEFINED",
       "diagnostic": "Duplicate notes are defined",
+      "filepath": "/main.dbml",
       "level": "error",
       "node": {
         "context": {
-          "id": "node@<element-declaration>@:@[L18:C2, L27:C3]",
-          "snippet": "Note {\n   ...   '''\n  }"
+          "id": "node@<element-declaration>@@[L18:C2, L27:C3]",
+          "snippet": "Note {\n   ...   '''\n  }",
+          "filepath": "/main.dbml"
         }
       }
     }

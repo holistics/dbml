@@ -122,11 +122,11 @@ export default class ProgramInterpreter {
       if (merged) mergedTables.set(table, merged);
     }
 
-    // Convert inline refs from table fields
+    // Convert inline refs from direct table fields only
+    // Partial-injected field refs are handled separately by extractInlineRefsFromTablePartials
     const inlineRefs: Ref[] = [];
     for (const table of db.tables) {
-      const merged = mergedTables.get(table) ?? table;
-      for (const field of merged.fields) {
+      for (const field of table.fields) {
         for (const inlineRef of field.inline_refs) {
           if (!this.isTableInDb(db, inlineRef.schemaName, inlineRef.tableName)) continue;
 

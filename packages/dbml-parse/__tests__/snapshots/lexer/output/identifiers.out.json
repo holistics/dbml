@@ -3,12 +3,14 @@
     {
       "code": "UNEXPECTED_TOKEN",
       "diagnostic": "Expect an opening brace '{' or a colon ':'",
+      "filepath": "/main.dbml",
       "level": "error",
       "token": {
         "context": {
-          "id": "token@<identifier>@:Note@[L2:C8, L2:C12]",
+          "id": "token@<identifier>@Note@[L2:C8, L2:C12]",
           "snippet": "Note",
-          "isInvalid": true
+          "isInvalid": true,
+          "filepath": "/main.dbml"
         }
       }
     }
@@ -16,7 +18,7 @@
   "tokens": [
     {
       "context": {
-        "id": "token@<identifier>@:Table@[L0:C0, L0:C5]",
+        "id": "token@<identifier>@Table@[L0:C0, L0:C5]",
         "snippet": "Table"
       },
       "leadingTrivia": "",
@@ -25,7 +27,7 @@
     },
     {
       "context": {
-        "id": "token@<identifier>@:TableGroup@[L0:C6, L0:C16]",
+        "id": "token@<identifier>@TableGroup@[L0:C6, L0:C16]",
         "snippet": "TableGroup"
       },
       "leadingTrivia": "",
@@ -34,7 +36,7 @@
     },
     {
       "context": {
-        "id": "token@<identifier>@:as@[L1:C0, L1:C2]",
+        "id": "token@<identifier>@as@[L1:C0, L1:C2]",
         "snippet": "as"
       },
       "leadingTrivia": "",
@@ -43,7 +45,7 @@
     },
     {
       "context": {
-        "id": "token@<identifier>@:indexes@[L2:C0, L2:C7]",
+        "id": "token@<identifier>@indexes@[L2:C0, L2:C7]",
         "snippet": "indexes"
       },
       "leadingTrivia": "",
@@ -52,7 +54,7 @@
     },
     {
       "context": {
-        "id": "token@<eof>@:@[L3:C3, L3:C3]",
+        "id": "token@<eof>@@[L3:C3, L3:C3]",
         "snippet": ""
       },
       "leadingTrivia": "",

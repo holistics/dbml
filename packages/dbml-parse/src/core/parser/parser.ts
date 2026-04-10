@@ -250,8 +250,11 @@ export default class Parser {
     args.useKeyword = this.previous();
 
     // Entire-file use: use * from './path.dbml'
-    if (this.peek().kind === SyntaxTokenKind.OP && this.peek().value === '*') {
-      args.specifiers = this.extractOperand() as WildcardNode;
+    if (this.peek().kind === SyntaxTokenKind.WILDCARD) {
+      this.advance();
+      args.specifiers = this.nodeFactory.create(WildcardNode, {
+        token: this.previous(),
+      });
     } else {
       // Selective use: use { ... } from './path.dbml'
       try {
@@ -304,7 +307,7 @@ export default class Parser {
       throw new PartialParsingError(e.token, buildNode(), e.handlerContext);
     }
 
-    if (!this.isAtEnd() && !this.check(SyntaxTokenKind.RBRACE)) {
+    while (!this.isAtEnd() && !this.check(SyntaxTokenKind.RBRACE)) {
       try {
         args.specifiers.push(this.useSpecifier());
       } catch (e) {
@@ -315,24 +318,6 @@ export default class Parser {
           args.specifiers.push(e.partialNode);
         }
         throw new PartialParsingError(e.token, buildNode(), e.handlerContext);
-      }
-
-      while (!this.isAtEnd() && !this.check(SyntaxTokenKind.RBRACE)) {
-        try {
-          this.consume('Expect a comma \',\'', SyntaxTokenKind.COMMA);
-          args.commaList.push(this.previous());
-          if (!this.check(SyntaxTokenKind.RBRACE)) {
-            args.specifiers.push(this.useSpecifier());
-          }
-        } catch (e) {
-          if (!(e instanceof PartialParsingError)) {
-            throw e;
-          }
-          if (e.partialNode instanceof UseSpecifierNode) {
-            args.specifiers.push(e.partialNode);
-          }
-          throw new PartialParsingError(e.token, buildNode(), e.handlerContext);
-        }
       }
     }
 
