@@ -1,3 +1,4 @@
+import { DEFAULT_ENTRY } from '@/constants';
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
@@ -33,10 +34,10 @@ describe('[snapshot] validator', () => {
     // @ts-expect-error "Current workaround to use compiler but only trigger analyzer"
     const { nodeIdGenerator, symbolIdGenerator } = compiler;
 
-    const report = new Lexer(program)
+    const report = new Lexer(program, DEFAULT_ENTRY)
       .lex()
       .chain((tokens) => {
-        return new Parser(program, tokens, nodeIdGenerator).parse();
+        return new Parser(program, tokens, nodeIdGenerator, DEFAULT_ENTRY).parse();
       })
       .chain(({ ast }) => {
         return new Validator(ast, new SymbolFactory(symbolIdGenerator)).validate();

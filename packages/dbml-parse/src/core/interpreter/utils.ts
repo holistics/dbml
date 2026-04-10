@@ -10,15 +10,16 @@ import {
   PrimaryExpressionNode, SyntaxNode, TupleExpressionNode,
 } from '@/core/parser/nodes';
 import {
-  ColumnType, RelationCardinality, Table, TokenPosition, InterpreterDatabase, Ref,
+  ColumnType, RelationCardinality, Table, TokenPosition, Ref,
   Column,
-} from '@/core/interpreter/types';
+} from '@/core/types/schemaJson';
 import { SyntaxTokenKind } from '@/core/lexer/tokens';
 import { isDotDelimitedIdentifier, isExpressionAnIdentifierNode, isExpressionAQuotedString } from '@/core/parser/utils';
 import Report from '@/core/types/report';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import { getNumberTextFromExpression, parseNumber } from '@/core/utils';
 import { isExpressionASignedNumberExpression, isValidPartialInjection } from '../analyzer/validator/utils';
+import { InterpreterDatabase } from './types';
 
 export function extractNamesFromRefOperand (operand: SyntaxNode, owner?: Table): { schemaName: string | null; tableName: string; fieldNames: string[] } {
   const { variables, tupleElements } = destructureComplexVariableTuple(operand).unwrap();
@@ -86,6 +87,7 @@ export function getTokenPosition (node: SyntaxNode): TokenPosition {
       line: node.endPos.line + 1,
       column: node.endPos.column + 1,
     },
+    filepath: node.filepath,
   };
 }
 

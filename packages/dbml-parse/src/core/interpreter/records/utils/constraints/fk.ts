@@ -1,5 +1,5 @@
 import { CompileError } from '@/core/types/errors';
-import { InterpreterDatabase, Ref, RefEndpoint, Table, TableRecordRow } from '@/core/interpreter/types';
+import { Ref, RefEndpoint, Table } from '@/core/types/schemaJson';
 import {
   extractKeyValueWithDefault,
   hasNullWithoutDefaultInKey,
@@ -10,6 +10,7 @@ import {
 import { DEFAULT_SCHEMA_NAME } from '@/constants';
 import { mergeTableAndPartials, extractInlineRefsFromTablePartials } from '@/core/interpreter/utils';
 import { isEmpty, flatMap } from 'lodash-es';
+import { InterpreterDatabase, TableRecordRow } from '@/core/interpreter/types';
 
 type TableInfo = {
   rows: TableRecordRow[];

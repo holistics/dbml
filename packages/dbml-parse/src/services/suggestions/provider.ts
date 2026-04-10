@@ -19,7 +19,7 @@ import {
   CompletionItemInsertTextRule,
 } from '@/services/types';
 import { TableSymbol, type NodeSymbol } from '@/core/analyzer/symbol/symbols';
-import { SymbolKind, destructureIndex } from '@/core/analyzer/symbol/symbolIndex';
+import { SymbolKind, destructureIndex } from '@/core/types/symbol';
 import {
   pickCompletionItemKind,
   shouldPrependSpace,

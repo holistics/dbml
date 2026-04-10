@@ -5,9 +5,10 @@ import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode,
 } from '@/core/parser/nodes';
 import {
-  ElementInterpreter, Enum, EnumField, InterpreterDatabase,
-} from '@/core/interpreter/types';
+  Enum, EnumField,
+} from '@/core/types/schemaJson';
 import { extractElementName, getTokenPosition, normalizeNoteContent } from '@/core/interpreter/utils';
+import { ElementInterpreter, InterpreterDatabase } from '../types';
 
 export class EnumInterpreter implements ElementInterpreter {
   private declarationNode: ElementDeclarationNode;

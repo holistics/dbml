@@ -32,7 +32,7 @@ import {
 } from '@/core/analyzer/validator/utils';
 import { ElementValidator } from '@/core/analyzer/validator/types';
 import { ColumnSymbol, PartialInjectionSymbol, TableSymbol } from '@/core/analyzer/symbol/symbols';
-import { createColumnSymbolIndex, createPartialInjectionSymbolIndex, createTableSymbolIndex } from '@/core/analyzer/symbol/symbolIndex';
+import { createColumnSymbolIndex, createPartialInjectionSymbolIndex, createTableSymbolIndex } from '@/core/types/symbol';
 import {
   isExpressionAQuotedString,
   isExpressionAVariableNode,

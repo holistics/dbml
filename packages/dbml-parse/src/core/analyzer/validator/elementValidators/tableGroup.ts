@@ -10,7 +10,7 @@ import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode,
 } from '@/core/parser/nodes';
 import SymbolFactory from '@/core/analyzer/symbol/factory';
-import { createTableGroupFieldSymbolIndex, createTableGroupSymbolIndex } from '@/core/analyzer/symbol/symbolIndex';
+import { createTableGroupFieldSymbolIndex, createTableGroupSymbolIndex } from '@/core/types/symbol';
 import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '@/core/analyzer/utils';
 import { TableGroupFieldSymbol, TableGroupSymbol } from '@/core/analyzer/symbol/symbols';
 import { isExpressionAVariableNode, isExpressionAQuotedString } from '@/core/parser/utils';

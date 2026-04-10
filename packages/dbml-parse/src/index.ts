@@ -56,6 +56,6 @@ export {
   type Project,
   type TableGroup,
   type TablePartial,
-} from '@/core/interpreter/types';
+} from '@/core/types/schemaJson';
 
 export { Compiler, services };

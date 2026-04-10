@@ -1,4 +1,4 @@
-import { SymbolKind, destructureIndex, createColumnSymbolIndex } from '@/core/analyzer/symbol/symbolIndex';
+import { SymbolKind, destructureIndex, createColumnSymbolIndex } from '@/core/types/symbol';
 import { CompletionItemKind, CompletionItemInsertTextRule, type CompletionList } from '@/services/types';
 import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
 import { hasTrailingSpaces } from '@/core/lexer/utils';

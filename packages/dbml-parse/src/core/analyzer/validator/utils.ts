@@ -25,7 +25,7 @@ import ProjectValidator from './elementValidators/project';
 import RefValidator from './elementValidators/ref';
 import TableValidator from './elementValidators/table';
 import TableGroupValidator from './elementValidators/tableGroup';
-import { createSchemaSymbolIndex } from '@/core/analyzer/symbol/symbolIndex';
+import { createSchemaSymbolIndex } from '@/core/types/symbol';
 import { SchemaSymbol } from '@/core/analyzer/symbol/symbols';
 import SymbolTable from '@/core/analyzer/symbol/symbolTable';
 import SymbolFactory from '@/core/analyzer/symbol/factory';

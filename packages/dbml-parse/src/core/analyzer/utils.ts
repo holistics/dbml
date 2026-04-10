@@ -14,7 +14,7 @@ import {
 } from '@/core/parser/nodes';
 import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
 import { isRelationshipOp, isTupleOfVariables } from '@/core/analyzer/validator/utils';
-import { NodeSymbolIndex, isPublicSchemaIndex } from '@/core/analyzer/symbol/symbolIndex';
+import { NodeSymbolIndex, isPublicSchemaIndex } from '@/core/types/symbol';
 import { NodeSymbol } from '@/core/analyzer/symbol/symbols';
 import {
   isAccessExpression,

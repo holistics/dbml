@@ -26,7 +26,7 @@ import {
 } from '@/core/analyzer/validator/utils';
 import { ElementValidator } from '@/core/analyzer/validator/types';
 import { ColumnSymbol, TablePartialSymbol } from '@/core/analyzer/symbol/symbols';
-import { createColumnSymbolIndex, createTablePartialSymbolIndex } from '@/core/analyzer/symbol/symbolIndex';
+import { createColumnSymbolIndex, createTablePartialSymbolIndex } from '@/core/types/symbol';
 import {
   isExpressionAQuotedString,
   isExpressionAVariableNode,
