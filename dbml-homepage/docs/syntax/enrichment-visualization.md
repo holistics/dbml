@@ -17,7 +17,6 @@ This part covers features specific to diagram & wiki tools like [dbdiagram.io](h
   - [TableGroup Notes](#tablegroup-notes-1)
   - [TableGroup Settings](#tablegroup-settings)
 - [DiagramView](#diagramview)
-  - [DiagramView Syntax](#diagramview-syntax)
 - [Colors](#colors)
 
 ## Note Definition
@@ -174,19 +173,8 @@ The list of table group settings you can use:
 
 ## DiagramView
 
-`DiagramView` allows users to define multiple views of a database diagram, each focusing on different tables, notes, table groups, or schemas. Views can be defined directly in DBML code for version control and automation.
+`DiagramView` allows users to define multiple views of a database diagram, each focusing on different tables, notes, table groups, or schemas.
 
-```text
-DiagramView view_name { ... }
-
-// example
-DiagramView sales_team {
-  Tables { customers orders products }
-  TableGroups { sales }
-}
-```
-
-### DiagramView Syntax
 
 Each view can include one or more of the following categories:
 
@@ -195,7 +183,7 @@ Each view can include one or more of the following categories:
 - `TableGroups`: specific table groups to include
 - `Schemas`: specific schemas to include
 
-Use `{ * }` to include all items in a category, or list specific item names one per line:
+Use `{ * }` to include all items in a category, or specify a line-separated list of names:
 
 ```text
 // Show all items in all categories
