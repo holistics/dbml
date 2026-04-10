@@ -1,5 +1,5 @@
-import Report from '@/core/report';
-import { CompileError, CompileErrorCode } from '@/core/errors';
+import Report from '@/core/types/report';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import { ElementDeclarationNode, ProgramNode } from '@/core/parser/nodes';
 import { SchemaSymbol } from '@/core/analyzer/symbol/symbols';
 import SymbolFactory from '@/core/analyzer/symbol/factory';

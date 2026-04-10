@@ -1,6 +1,6 @@
 import { ElementDeclarationNode, FunctionApplicationNode, SyntaxNode } from '@/core/parser/nodes';
 import { Position } from '@/core/types';
-import { CompileError } from '@/core/errors';
+import { CompileError } from '@/core/types/errors';
 
 export interface TokenPosition {
   start: Position;

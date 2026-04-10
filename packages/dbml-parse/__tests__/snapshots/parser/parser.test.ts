@@ -6,7 +6,7 @@ import Parser from '@/core/parser/parser';
 import type { ProgramNode } from '@/core/parser/nodes';
 import { scanTestNames, toSnapshot } from '@tests/utils';
 import Compiler from '@/compiler';
-import type Report from '@/core/report';
+import type Report from '@/core/types/report';
 
 function serializeParserResult (compiler: Compiler, report: Report<ProgramNode>): string {
   const value = report.getValue();

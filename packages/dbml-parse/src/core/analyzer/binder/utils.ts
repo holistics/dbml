@@ -15,7 +15,7 @@ import { destructureComplexVariableTuple, extractVarNameFromPrimaryVariable } fr
 import { SymbolKind, createNodeSymbolIndex } from '@/core/analyzer/symbol/symbolIndex';
 import { getSymbolKind } from '@/core/analyzer/symbol/utils';
 import { getElementNameString, isExpressionAVariableNode } from '@/core/parser/utils';
-import { CompileError, CompileErrorCode } from '@/core/errors';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import { DEFAULT_SCHEMA_NAME } from '@/constants';
 import RecordsBinder from './elementBinder/records';
 

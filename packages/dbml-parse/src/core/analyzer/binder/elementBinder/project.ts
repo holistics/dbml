@@ -3,7 +3,7 @@ import { ElementBinder } from '../types';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ProgramNode,
 } from '../../../parser/nodes';
-import { CompileError } from '../../../errors';
+import { CompileError } from '@/core/types/errors';
 import { pickBinder } from '../utils';
 import SymbolFactory from '../../symbol/factory';
 

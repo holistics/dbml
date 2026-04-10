@@ -5,7 +5,7 @@ import Lexer from '@/core/lexer/lexer';
 import { scanTestNames, toSnapshot } from '@tests/utils';
 import Compiler from '@/compiler';
 import type { SyntaxToken } from '@/index';
-import type Report from '@/core/report';
+import type Report from '@/core/types/report';
 
 function serializeLexerResult (compiler: Compiler, report: Report<SyntaxToken[]>): string {
   const value = report.getValue();

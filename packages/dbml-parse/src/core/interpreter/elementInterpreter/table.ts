@@ -17,7 +17,7 @@ import {
   destructureComplexVariable, destructureIndexNode, extractQuotedStringToken, extractVarNameFromPrimaryVariable,
   extractVariableFromExpression,
 } from '@/core/analyzer/utils';
-import { CompileError, CompileErrorCode } from '@/core/errors';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import { aggregateSettingList, isValidPartialInjection } from '@/core/analyzer/validator/utils';
 import { ColumnSymbol } from '@/core/analyzer/symbol/symbols';
 import { destructureIndex, SymbolKind } from '@/core/analyzer/symbol/symbolIndex';

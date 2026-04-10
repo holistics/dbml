@@ -1,5 +1,5 @@
 import { extractQuotedStringToken } from '@/core/analyzer/utils';
-import { CompileError } from '@/core/errors';
+import { CompileError } from '@/core/types/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, SyntaxNode,
 } from '@/core/parser/nodes';

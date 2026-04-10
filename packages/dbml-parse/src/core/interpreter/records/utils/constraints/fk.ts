@@ -1,4 +1,4 @@
-import { CompileError } from '@/core/errors';
+import { CompileError } from '@/core/types/errors';
 import { InterpreterDatabase, Ref, RefEndpoint, Table, TableRecordRow } from '@/core/interpreter/types';
 import {
   extractKeyValueWithDefault,

@@ -1,5 +1,5 @@
 import type Compiler from '@/compiler';
-import type { CompileError, CompileWarning } from '@/core/errors';
+import type { CompileError, CompileWarning } from '@/core/types/errors';
 import { MarkerSeverity, MarkerData } from '@/services/types';
 import type { SyntaxNode } from '@/core/parser/nodes';
 import type { SyntaxToken } from '@/core/lexer/tokens';

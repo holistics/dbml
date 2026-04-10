@@ -1,5 +1,5 @@
 import { forIn, partition } from 'lodash-es';
-import { CompileError, CompileErrorCode } from '@/core/errors';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import {
   isSimpleName, pickValidator } from '@/core/analyzer/validator/utils';
 import { isValidColor, registerSchemaStack, aggregateSettingList } from '@/core/analyzer/validator/utils';

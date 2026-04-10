@@ -4,7 +4,7 @@ import {
 } from '../../../parser/nodes';
 import { SyntaxToken } from '../../../lexer/tokens';
 import { ElementBinder } from '../types';
-import { CompileError } from '../../../errors';
+import { CompileError } from '@/core/types/errors';
 import { aggregateSettingList } from '../../validator/utils';
 import { destructureComplexVariableTuple } from '../../utils';
 import { lookupAndBindInScope, pickBinder, scanNonListNodeForBinding } from '../utils';

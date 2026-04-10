@@ -15,8 +15,8 @@ import {
 } from '@/core/interpreter/types';
 import { SyntaxTokenKind } from '@/core/lexer/tokens';
 import { isDotDelimitedIdentifier, isExpressionAnIdentifierNode, isExpressionAQuotedString } from '@/core/parser/utils';
-import Report from '@/core/report';
-import { CompileError, CompileErrorCode } from '@/core/errors';
+import Report from '@/core/types/report';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import { getNumberTextFromExpression, parseNumber } from '@/core/utils';
 import { isExpressionASignedNumberExpression, isValidPartialInjection } from '../analyzer/validator/utils';
 

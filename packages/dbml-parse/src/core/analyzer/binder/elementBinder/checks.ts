@@ -1,5 +1,5 @@
 import { ElementDeclarationNode, ProgramNode, SyntaxToken } from '../../../..';
-import { CompileError } from '../../../errors';
+import { CompileError } from '@/core/types/errors';
 import SymbolFactory from '../../symbol/factory';
 import { ElementBinder } from '../types';
 

@@ -3,7 +3,7 @@ import type { NodeSymbol } from '@/core/analyzer/symbol/symbols';
 import { SyntaxToken } from '@/core/lexer/tokens';
 import { ElementDeclarationNode, LiteralNode, ProgramNode, SyntaxNode, VariableNode } from '@/core/parser/nodes';
 import { getElementNameString } from '@/core/parser/utils';
-import { CompileError, CompileErrorCode, CompileWarning } from '@/core/errors';
+import { CompileError, CompileErrorCode, CompileWarning } from '@/core/types/errors';
 import type Compiler from '@/compiler';
 
 export function scanTestNames (path: string) {

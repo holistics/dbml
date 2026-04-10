@@ -1,5 +1,5 @@
 import { describe, expect } from 'vitest';
-import { CompileErrorCode } from '@/core/errors';
+import { CompileErrorCode } from '@/core/types/errors';
 import { SyntaxToken } from '@/core/lexer/tokens';
 import { analyze } from '@tests/utils';
 

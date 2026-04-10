@@ -6,7 +6,7 @@ import Parser from '@/core/parser/parser';
 import type { ProgramNode } from '@/core/parser/nodes';
 import Analyzer from '@/core/analyzer/analyzer';
 import { scanTestNames, toSnapshot } from '@tests/utils';
-import type Report from '@/core/report';
+import type Report from '@/core/types/report';
 import Compiler from '@/compiler';
 
 function serializeBinderResult (compiler: Compiler, report: Report<ProgramNode>): string {

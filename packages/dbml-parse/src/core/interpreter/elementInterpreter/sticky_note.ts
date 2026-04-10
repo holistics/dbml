@@ -6,7 +6,7 @@ import {
 import {
   extractColor, extractElementName, getTokenPosition, normalizeNoteContent,
 } from '@/core/interpreter/utils';
-import { CompileError, CompileErrorCode } from '@/core/errors';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import { aggregateSettingList } from '@/core/analyzer/validator/utils';
 
 export class StickyNoteInterpreter implements ElementInterpreter {
