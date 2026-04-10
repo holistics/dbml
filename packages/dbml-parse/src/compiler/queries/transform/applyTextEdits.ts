@@ -11,8 +11,8 @@ export interface TextEdit {
  * @param edits - Array of text edits to apply
  * @returns The modified source string with all edits applied
  */
-export function applyTextEdits (source: string, edits: TextEdit[]): string {
-  const sortedEdits = [...edits].sort((a, b) => b.start - a.start);
+export function applyTextEdits (source: string, edits: TextEdit[], sorted = false): string {
+  const sortedEdits = sorted ? edits : [...edits].sort((a, b) => b.start - a.start);
 
   let result = source;
   for (const { start, end, newText } of sortedEdits) {

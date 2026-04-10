@@ -23,3 +23,29 @@ export function renameTable (oldName, newName, dbmlCode) {
   compiler.setSource(dbmlCode);
   return compiler.renameTable(oldName, newName);
 }
+
+/**
+ * Synchronizes DiagramView blocks in DBML source code.
+ *
+ * @param {string} dbmlCode - The DBML source code
+ * @param {import('@dbml/parse').DiagramViewSyncOperation[]} operations - Operations to apply
+ * @param {import('@dbml/parse').DiagramViewBlock[]} [blocks] - Optional pre-parsed blocks
+ * @returns {{ newDbml: string, edits: import('@dbml/parse').TextEdit[] }}
+ */
+export function syncDiagramView (dbmlCode, operations, blocks) {
+  const compiler = new Compiler();
+  compiler.setSource(dbmlCode);
+  return compiler.syncDiagramView(operations, blocks);
+}
+
+/**
+ * Finds all DiagramView blocks in DBML source code.
+ *
+ * @param {string} dbmlCode - The DBML source code
+ * @returns {import('@dbml/parse').DiagramViewBlock[]}
+ */
+export function findDiagramViewBlocks (dbmlCode) {
+  const compiler = new Compiler();
+  compiler.setSource(dbmlCode);
+  return compiler.findDiagramViewBlocks();
+}

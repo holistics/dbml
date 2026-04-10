@@ -1018,6 +1018,50 @@ Table users { name varchar }`;
     });
   });
 
+  describe('DiagramView validation', () => {
+    test('should accept DiagramView with body-level wildcard {*}', () => {
+      const source = 'DiagramView name { * }';
+      const errors = analyze(source).getErrors();
+
+      expect(errors).toHaveLength(0);
+    });
+
+    test('should accept DiagramView with Tables sub-block', () => {
+      const source = `
+        Table users { id int }
+        DiagramView name {
+          Tables {
+            users
+          }
+        }
+      `;
+      const errors = analyze(source).getErrors();
+
+      expect(errors).toHaveLength(0);
+    });
+
+    test('should reject DiagramView body-level non-wildcard field', () => {
+      const source = `
+        Table users { id int }
+        DiagramView name {
+          users
+        }
+      `;
+      const errors = analyze(source).getErrors();
+
+      expect(errors).toHaveLength(1);
+      expect(errors[0].code).toBe(CompileErrorCode.INVALID_DIAGRAMVIEW_FIELD);
+    });
+
+    test('should reject DiagramView without a name', () => {
+      const source = 'DiagramView { * }';
+      const errors = analyze(source).getErrors();
+
+      expect(errors).toHaveLength(1);
+      expect(errors[0].code).toBe(CompileErrorCode.NAME_NOT_FOUND);
+    });
+  });
+
   describe('error message quality', () => {
     test('should include entity name in duplicate error messages', () => {
       const source = `
