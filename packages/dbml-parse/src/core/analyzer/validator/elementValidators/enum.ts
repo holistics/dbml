@@ -4,9 +4,9 @@ import SymbolFactory from '@/core/types/symbol/factory';
 import { CompileError, CompileErrorCode, CompileWarning } from '@/core/types/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode, WildcardNode,
-} from '@/core/parser/nodes';
+} from '@/core/types/nodes';
 import { isExpressionAQuotedString, isExpressionAVariableNode } from '@/core/parser/utils';
-import { SyntaxToken } from '@/core/lexer/tokens';
+import { SyntaxToken } from '@/core/types/tokens';
 import { ElementValidator } from '@/core/analyzer/validator/types';
 import {
   aggregateSettingList } from '@/core/analyzer/validator/utils';

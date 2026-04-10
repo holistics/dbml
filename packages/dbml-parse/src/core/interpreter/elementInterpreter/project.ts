@@ -2,7 +2,7 @@ import { extractQuotedStringToken } from '@/core/analyzer/utils';
 import { CompileError } from '@/core/types/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, SyntaxNode,
-} from '@/core/parser/nodes';
+} from '@/core/types/nodes';
 import { Project } from '@/core/types/schemaJson';
 import { extractElementName, getTokenPosition, normalizeNoteContent } from '@/core/interpreter/utils';
 import { EnumInterpreter } from './enum';

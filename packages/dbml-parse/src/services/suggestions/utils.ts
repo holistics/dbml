@@ -1,8 +1,8 @@
 import { SymbolKind, destructureIndex, createColumnSymbolIndex } from '@/core/types/symbol';
 import { CompletionItemKind, CompletionItemInsertTextRule, type CompletionList } from '@/services/types';
-import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
+import { SyntaxToken, SyntaxTokenKind } from '@/core/types/tokens';
 import { hasTrailingSpaces } from '@/core/lexer/utils';
-import { SyntaxNode, TupleExpressionNode, FunctionApplicationNode } from '@/core/parser/nodes';
+import { SyntaxNode, TupleExpressionNode, FunctionApplicationNode } from '@/core/types/nodes';
 import Compiler from '@/compiler';
 import { ColumnSymbol, TablePartialInjectedColumnSymbol, TablePartialSymbol, TableSymbol } from '@/core/types/symbol/symbols';
 import { extractVariableFromExpression } from '@/core/analyzer/utils';

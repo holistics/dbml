@@ -1,5 +1,5 @@
 import type Compiler from '../index';
-import { ElementDeclarationNode, ProgramNode } from '@/core/parser/nodes';
+import { ElementDeclarationNode, ProgramNode } from '@/core/types/nodes';
 import { NodeSymbol } from '@/core/types/symbol/symbols';
 import { SymbolKind, destructureIndex } from '@/core/types/symbol';
 import { generatePossibleIndexes } from '@/core/types/symbol/utils';

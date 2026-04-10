@@ -1,11 +1,11 @@
 import Report from '@/core/types/report';
 import { CompileError, CompileErrorCode, CompileWarning } from '@/core/types/errors';
-import { ElementDeclarationNode, ProgramNode } from '@/core/parser/nodes';
+import { ElementDeclarationNode, ProgramNode } from '@/core/types/nodes';
 import { SchemaSymbol } from '@/core/types/symbol/symbols';
 import SymbolFactory from '@/core/types/symbol/factory';
 import { pickValidator } from '@/core/analyzer/validator/utils';
 import SymbolTable from '@/core/types/symbol/symbolTable';
-import { SyntaxToken } from '@/core/lexer/tokens';
+import { SyntaxToken } from '@/core/types/tokens';
 import { getElementKind } from '@/core/analyzer/utils';
 import { ElementKind } from '@/core/analyzer/types';
 

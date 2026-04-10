@@ -2,7 +2,7 @@ import { DEFAULT_ENTRY } from '@/constants';
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
-import type { ProgramNode } from '@/core/parser/nodes';
+import type { ProgramNode } from '@/core/types/nodes';
 import Lexer from '@/core/lexer/lexer';
 import Parser from '@/core/parser/parser';
 import Validator from '@/core/analyzer/validator/validator';

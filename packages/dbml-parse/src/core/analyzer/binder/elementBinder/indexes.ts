@@ -4,9 +4,9 @@ import {
   ElementDeclarationNode,
   FunctionApplicationNode,
   ProgramNode,
-} from '../../../parser/nodes';
+} from '../../../types/nodes';
 import { ElementBinder } from '../types';
-import { SyntaxToken } from '../../../lexer/tokens';
+import { SyntaxToken } from '../../../types/tokens';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import { pickBinder, scanNonListNodeForBinding } from '../utils';
 import { destructureComplexVariable, extractVarNameFromPrimaryVariable, getElementKind } from '../../utils';

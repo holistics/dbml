@@ -2,7 +2,7 @@ import { partition, get } from 'lodash-es';
 import { Note } from '@/core/types/schemaJson';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode,
-} from '@/core/parser/nodes';
+} from '@/core/types/nodes';
 import {
   extractColor, extractElementName, getTokenPosition, normalizeNoteContent,
 } from '@/core/interpreter/utils';

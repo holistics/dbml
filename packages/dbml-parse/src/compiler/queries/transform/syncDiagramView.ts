@@ -2,7 +2,7 @@ import Lexer from '@/core/lexer/lexer';
 import Parser from '@/core/parser/parser';
 import { ElementKind } from '@/core/analyzer/types';
 import { DEFAULT_SCHEMA_NAME, DEFAULT_ENTRY } from '@/constants';
-import { SyntaxNodeIdGenerator } from '@/core/parser/nodes';
+import { SyntaxNodeIdGenerator } from '@/core/types/nodes';
 import { destructureComplexVariable } from '@/core/analyzer/utils';
 import { applyTextEdits, TextEdit } from './applyTextEdits';
 import { addDoubleQuoteIfNeeded } from '../utils';

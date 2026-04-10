@@ -4,7 +4,7 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import Lexer from '@/core/lexer/lexer';
 import Parser from '@/core/parser/parser';
-import type { ProgramNode } from '@/core/parser/nodes';
+import type { ProgramNode } from '@/core/types/nodes';
 import Analyzer from '@/core/analyzer/analyzer';
 import { scanTestNames, toSnapshot } from '@tests/utils';
 import type Report from '@/core/types/report';

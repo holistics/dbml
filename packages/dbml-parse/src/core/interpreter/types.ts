@@ -1,4 +1,4 @@
-import { ElementDeclarationNode, FunctionApplicationNode, SyntaxNode } from '@/core/parser/nodes';
+import { ElementDeclarationNode, FunctionApplicationNode, SyntaxNode } from '@/core/types/nodes';
 import { CompileError } from '@/core/types/errors';
 import type {
   TokenPosition,

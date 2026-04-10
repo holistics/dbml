@@ -1,5 +1,5 @@
 import { flatten, zip } from 'lodash-es';
-import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
+import { SyntaxToken, SyntaxTokenKind } from '@/core/types/tokens';
 import { NodeSymbol } from '@/core/types/symbol/symbols';
 import { Position } from '@/core/types';
 import { getTokenFullEnd, getTokenFullStart } from '@/core/lexer/utils';

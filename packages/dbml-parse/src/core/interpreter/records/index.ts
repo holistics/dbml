@@ -6,7 +6,7 @@ import {
   FunctionExpressionNode,
   SyntaxNode,
   TupleExpressionNode,
-} from '@/core/parser/nodes';
+} from '@/core/types/nodes';
 import { CompileError, CompileErrorCode, CompileWarning } from '@/core/types/errors';
 import Report from '@/core/types/report';
 import {

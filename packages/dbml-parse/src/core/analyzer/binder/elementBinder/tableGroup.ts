@@ -1,9 +1,9 @@
 import { partition } from 'lodash-es';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ProgramNode,
-} from '../../../parser/nodes';
+} from '../../../types/nodes';
 import { ElementBinder } from '../types';
-import { SyntaxToken } from '../../../lexer/tokens';
+import { SyntaxToken } from '../../../types/tokens';
 import { CompileError } from '@/core/types/errors';
 import { lookupAndBindInScope, pickBinder, scanNonListNodeForBinding } from '../utils';
 import { SymbolKind } from '@/core/types/symbol/symbolIndex';

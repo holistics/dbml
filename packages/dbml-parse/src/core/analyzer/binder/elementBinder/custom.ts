@@ -2,8 +2,8 @@ import { CompileError } from '@/core/types/errors';
 import { ElementBinder } from '../types';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ProgramNode,
-} from '../../../parser/nodes';
-import { SyntaxToken } from '../../../lexer/tokens';
+} from '../../../types/nodes';
+import { SyntaxToken } from '../../../types/tokens';
 import { pickBinder } from '../utils';
 import SymbolFactory from '@/core/types/symbol/factory';
 

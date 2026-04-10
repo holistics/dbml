@@ -10,10 +10,10 @@ import {
   ProgramNode,
   SyntaxNode,
   WildcardNode,
-} from '@/core/parser/nodes';
+} from '@/core/types/nodes';
 import { isExpressionAQuotedString } from '@/core/parser/utils';
 import { aggregateSettingList, pickValidator } from '@/core/analyzer/validator/utils';
-import { SyntaxToken } from '@/core/lexer/tokens';
+import { SyntaxToken } from '@/core/types/tokens';
 import { ElementValidator } from '@/core/analyzer/validator/types';
 import { getElementKind } from '@/core/analyzer/utils';
 import SymbolTable from '@/core/types/symbol/symbolTable';

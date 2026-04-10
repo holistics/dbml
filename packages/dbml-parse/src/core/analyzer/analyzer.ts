@@ -1,6 +1,6 @@
 import Validator from '@/core/analyzer/validator/validator';
 import Binder from '@/core/analyzer/binder/binder';
-import { ProgramNode } from '@/core/parser/nodes';
+import { ProgramNode } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import { NodeSymbolIdGenerator } from '@/core/types/symbol/symbols';
 import SymbolFactory from '@/core/types/symbol/factory';

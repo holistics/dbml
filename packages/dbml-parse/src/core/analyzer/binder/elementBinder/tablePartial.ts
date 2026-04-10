@@ -1,8 +1,8 @@
 import { last, partition } from 'lodash-es';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, ProgramNode, SyntaxNode,
-} from '../../../parser/nodes';
-import { SyntaxToken } from '../../../lexer/tokens';
+} from '../../../types/nodes';
+import { SyntaxToken } from '../../../types/tokens';
 import { ElementBinder } from '../types';
 import { CompileError } from '@/core/types/errors';
 import { aggregateSettingList } from '../../validator/utils';

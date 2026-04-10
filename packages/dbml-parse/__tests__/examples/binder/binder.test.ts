@@ -1,5 +1,5 @@
 import { describe, expect } from 'vitest';
-import { SyntaxNodeKind, ElementDeclarationNode, BlockExpressionNode } from '@/core/parser/nodes';
+import { SyntaxNodeKind, ElementDeclarationNode, BlockExpressionNode } from '@/core/types/nodes';
 import { TableSymbol, EnumSymbol, TableGroupSymbol, TablePartialSymbol, ColumnSymbol, EnumFieldSymbol, SchemaSymbol } from '@/core/types/symbol/symbols';
 import { analyze } from '@tests/utils';
 

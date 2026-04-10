@@ -1,6 +1,6 @@
 import { getOffsetFromMonacoPosition } from '@/services/utils';
 import Compiler from '@/compiler';
-import { SyntaxNodeKind } from '@/core/parser/nodes';
+import { SyntaxNodeKind } from '@/core/types/nodes';
 import {
   Location, ReferenceProvider, TextModel, Position,
 } from '@/services/types';

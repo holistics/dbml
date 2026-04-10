@@ -3,7 +3,7 @@ import * as fc from 'fast-check';
 import { dbmlSchemaArbitrary, tableArbitrary, enumArbitrary, tablePartialArbitrary, partialInjectionArbitrary } from '../utils/arbitraries';
 import { isEqual } from 'lodash-es';
 import { parse, print, lex } from '../utils';
-import { SyntaxNodeKind, BlockExpressionNode } from '@/core/parser/nodes';
+import { SyntaxNodeKind, BlockExpressionNode } from '@/core/types/nodes';
 
 const PROPERTY_TEST_CONFIG = { numRuns: 50 };
 const EXTENDED_CONFIG = { numRuns: 25 };

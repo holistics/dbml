@@ -9,7 +9,7 @@ import {
   ElementDeclarationNode,
   ProgramNode,
   TupleExpressionNode,
-} from '@/core/parser/nodes';
+} from '@/core/types/nodes';
 import {
   type CompletionList,
   type TextModel,

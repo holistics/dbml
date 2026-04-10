@@ -8,7 +8,7 @@ import {
   isExpressionAVariableNode,
 } from '@/core/parser/utils';
 import Compiler, { ScopeKind } from '@/compiler';
-import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
+import { SyntaxToken, SyntaxTokenKind } from '@/core/types/tokens';
 import { isOffsetWithinSpan } from '@/core/utils';
 import {
   type CompletionList,
@@ -44,7 +44,7 @@ import {
   ProgramNode,
   SyntaxNode,
   TupleExpressionNode,
-} from '@/core/parser/nodes';
+} from '@/core/types/nodes';
 import { getOffsetFromMonacoPosition } from '@/services/utils';
 import { isComment } from '@/core/lexer/utils';
 import { ElementKind, SettingName } from '@/core/analyzer/types';

@@ -7,7 +7,7 @@ import {
   AttributeNode, BlockExpressionNode, CallExpressionNode, ElementDeclarationNode,
   FunctionApplicationNode, FunctionExpressionNode, ListExpressionNode, PrefixExpressionNode,
   SyntaxNode,
-} from '@/core/parser/nodes';
+} from '@/core/types/nodes';
 import {
   extractColor, extractElementName, getColumnSymbolsOfRefOperand, getMultiplicities,
   getRefId, getTokenPosition, isSameEndpoint, normalizeNoteContent,

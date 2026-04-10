@@ -1,8 +1,8 @@
-import { SyntaxToken } from '../../../lexer/tokens';
+import { SyntaxToken } from '../../../types/tokens';
 import { ElementBinder } from '../types';
 import {
   BlockExpressionNode, CommaExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ProgramNode, SyntaxNode,
-} from '../../../parser/nodes';
+} from '../../../types/nodes';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import { lookupAndBindInScope, pickBinder, scanNonListNodeForBinding } from '../utils';
 import SymbolFactory from '@/core/types/symbol/factory';

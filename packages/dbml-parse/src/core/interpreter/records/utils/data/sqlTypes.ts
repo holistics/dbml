@@ -1,7 +1,7 @@
 import {
   CallExpressionNode,
   FunctionApplicationNode,
-} from '@/core/parser/nodes';
+} from '@/core/types/nodes';
 import { extractNumericLiteral } from '@/core/analyzer/utils';
 import { ColumnSymbol } from '@/core/types/symbol/symbols';
 

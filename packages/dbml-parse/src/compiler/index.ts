@@ -1,8 +1,8 @@
-import { SyntaxNodeIdGenerator, ProgramNode } from '@/core/parser/nodes';
+import { SyntaxNodeIdGenerator, ProgramNode } from '@/core/types/nodes';
 import { Filepath } from '@/core/types/filepath';
 import { DEFAULT_ENTRY } from '@/constants';
 import { NodeSymbolIdGenerator } from '@/core/types/symbol/symbols';
-import { SyntaxToken } from '@/core/lexer/tokens';
+import { SyntaxToken } from '@/core/types/tokens';
 import { Database } from '@/core/types/schemaJson';
 import Report from '@/core/types/report';
 import Lexer from '@/core/lexer/lexer';
