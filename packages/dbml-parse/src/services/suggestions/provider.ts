@@ -99,7 +99,7 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
    * Create completion item for cross-file symbol with additionalTextEdits
    * to auto-insert the use statement
    */
-  private createCrossFileCompletionItem (
+  createCrossFileCompletionItem (
     symbolName: string,
     symbolKind: SymbolKind,
     fileHint: string,
@@ -141,7 +141,7 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
    * Search for cross-file symbols that match the context and return them
    * with additionalTextEdits for use statement insertion
    */
-  private suggestCrossFileSymbols (
+  suggestCrossFileSymbols (
     acceptedKinds: SymbolKind[],
     currentFilepath: Filepath,
     currentFileContent: string,
@@ -334,7 +334,7 @@ function suggestOnRelOp (
     if (model && provider && model.uri) {
       const currentFilepath = Filepath.fromUri(model.uri);
       const fileContent = model.getValue();
-      const crossFileSuggestions = provider['suggestCrossFileSymbols'](
+      const crossFileSuggestions = provider.suggestCrossFileSymbols(
         [SymbolKind.Table, SymbolKind.Schema, SymbolKind.Column],
         currentFilepath,
         fileContent,
