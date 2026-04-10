@@ -1,9 +1,9 @@
 import type Compiler from '../index';
 import { ElementDeclarationNode, ProgramNode } from '@/core/parser/nodes';
-import { NodeSymbol } from '@/core/analyzer/symbol/symbols';
+import { NodeSymbol } from '@/core/types/symbol/symbols';
 import { SymbolKind, destructureIndex } from '@/core/types/symbol';
-import { generatePossibleIndexes } from '@/core/analyzer/symbol/utils';
-import SymbolTable from '@/core/analyzer/symbol/symbolTable';
+import { generatePossibleIndexes } from '@/core/types/symbol/utils';
+import SymbolTable from '@/core/types/symbol/symbolTable';
 
 export function symbolMembers (this: Compiler, ownerSymbol: NodeSymbol) {
   if (!ownerSymbol.symbolTable) {

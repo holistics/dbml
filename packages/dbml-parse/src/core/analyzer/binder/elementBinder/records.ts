@@ -5,16 +5,16 @@ import {
 } from '../../../parser/nodes';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import { lookupAndBindInScope, pickBinder, scanNonListNodeForBinding } from '../utils';
-import SymbolFactory from '../../symbol/factory';
+import SymbolFactory from '@/core/types/symbol/factory';
 import {
   destructureCallExpression,
   extractVarNameFromPrimaryVariable,
   getElementKind,
 } from '../../utils';
-import { createColumnSymbolIndex, SymbolKind } from '../../symbol/symbolIndex';
+import { createColumnSymbolIndex, SymbolKind } from '@/core/types/symbol/symbolIndex';
 import { ElementKind } from '../../types';
 import { isTupleOfVariables } from '../../validator/utils';
-import { NodeSymbol } from '../../symbol/symbols';
+import { NodeSymbol } from '@/core/types/symbol/symbols';
 import { getElementNameString } from '@/core/parser/utils';
 
 export default class RecordsBinder implements ElementBinder {

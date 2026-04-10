@@ -1,10 +1,10 @@
 import Report from '@/core/types/report';
-import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import { CompileError, CompileErrorCode, CompileWarning } from '@/core/types/errors';
 import { ElementDeclarationNode, ProgramNode } from '@/core/parser/nodes';
-import { SchemaSymbol } from '@/core/analyzer/symbol/symbols';
-import SymbolFactory from '@/core/analyzer/symbol/factory';
+import { SchemaSymbol } from '@/core/types/symbol/symbols';
+import SymbolFactory from '@/core/types/symbol/factory';
 import { pickValidator } from '@/core/analyzer/validator/utils';
-import SymbolTable from '@/core/analyzer/symbol/symbolTable';
+import SymbolTable from '@/core/types/symbol/symbolTable';
 import { SyntaxToken } from '@/core/lexer/tokens';
 import { getElementKind } from '@/core/analyzer/utils';
 import { ElementKind } from '@/core/analyzer/types';
@@ -29,6 +29,7 @@ export default class Validator {
 
   validate (): Report<ProgramNode> {
     const errors: CompileError[] = [];
+    const warnings: CompileWarning[] = [];
 
     this.ast.body.forEach((element) => {
       element.parent = this.ast;
@@ -42,7 +43,9 @@ export default class Validator {
         this.publicSchemaSymbol.symbolTable,
         this.symbolFactory,
       );
-      errors.push(...validatorObject.validate());
+      const result = validatorObject.validate();
+      errors.push(...result.errors);
+      warnings.push(...result.warnings);
     });
 
     const projects = this.ast.body.filter((e) => getElementKind(e).unwrap_or(undefined) === ElementKind.Project);
@@ -50,6 +53,6 @@ export default class Validator {
       projects.forEach((project) => errors.push(new CompileError(CompileErrorCode.PROJECT_REDEFINED, 'Only one project can exist', project)));
     }
 
-    return new Report(this.ast, errors);
+    return new Report(this.ast, errors, warnings);
   }
 }

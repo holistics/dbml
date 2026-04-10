@@ -1,7 +1,7 @@
 import { SyntaxNodeIdGenerator, ProgramNode } from '@/core/parser/nodes';
 import { Filepath } from '@/core/types/filepath';
 import { DEFAULT_ENTRY } from '@/constants';
-import { NodeSymbolIdGenerator } from '@/core/analyzer/symbol/symbols';
+import { NodeSymbolIdGenerator } from '@/core/types/symbol/symbols';
 import { SyntaxToken } from '@/core/lexer/tokens';
 import { Database } from '@/core/types/schemaJson';
 import Report from '@/core/types/report';
@@ -17,14 +17,18 @@ import { containerStack, containerToken, containerElement, containerScope, conta
 import {
   renameTable,
   applyTextEdits,
+  syncDiagramView,
+  findDiagramViewBlocks,
   type TextEdit,
   type TableNameInput,
+  type DiagramViewSyncOperation,
+  type DiagramViewBlock,
 } from './queries/transform';
 import { splitQualifiedIdentifier, unescapeString, escapeString, formatRecordValue, isValidIdentifier, addDoubleQuoteIfNeeded } from './queries/utils';
 
 // Re-export types
 export { ScopeKind } from './types';
-export type { TextEdit, TableNameInput };
+export type { TextEdit, TableNameInput, DiagramViewSyncOperation, DiagramViewBlock };
 
 // Re-export utilities
 export { splitQualifiedIdentifier, unescapeString, escapeString, formatRecordValue, isValidIdentifier, addDoubleQuoteIfNeeded };
@@ -90,6 +94,17 @@ export default class Compiler {
     newName: TableNameInput,
   ): string {
     return renameTable.call(this, oldName, newName);
+  }
+
+  syncDiagramView (
+    operations: DiagramViewSyncOperation[],
+    blocks?: DiagramViewBlock[],
+  ): { newDbml: string; edits: TextEdit[] } {
+    return syncDiagramView(this.parse.source(), operations, blocks);
+  }
+
+  findDiagramViewBlocks (): DiagramViewBlock[] {
+    return findDiagramViewBlocks(this.parse.source());
   }
 
   applyTextEdits (edits: TextEdit[]): string {

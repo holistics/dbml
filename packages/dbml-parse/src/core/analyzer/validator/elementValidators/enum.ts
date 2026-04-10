@@ -1,9 +1,9 @@
 import { DEFAULT_SCHEMA_NAME } from '@/constants';
 import { last, partition } from 'lodash-es';
-import SymbolFactory from '@/core/analyzer/symbol/factory';
-import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import SymbolFactory from '@/core/types/symbol/factory';
+import { CompileError, CompileErrorCode, CompileWarning } from '@/core/types/errors';
 import {
-  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode,
+  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode, WildcardNode,
 } from '@/core/parser/nodes';
 import { isExpressionAQuotedString, isExpressionAVariableNode } from '@/core/parser/utils';
 import { SyntaxToken } from '@/core/lexer/tokens';
@@ -12,10 +12,10 @@ import {
   aggregateSettingList } from '@/core/analyzer/validator/utils';
 import { isValidName, pickValidator } from '@/core/analyzer/validator/utils';
 import { registerSchemaStack } from '@/core/analyzer/validator/utils';
-import { createEnumFieldSymbolIndex, createEnumSymbolIndex } from '@/core/types/symbol';
+import { createEnumFieldSymbolIndex, createEnumSymbolIndex } from '@/core/types/symbol/symbolIndex';
 import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '@/core/analyzer/utils';
-import SymbolTable from '@/core/analyzer/symbol/symbolTable';
-import { EnumFieldSymbol, EnumSymbol } from '@/core/analyzer/symbol/symbols';
+import SymbolTable from '@/core/types/symbol/symbolTable';
+import { EnumFieldSymbol, EnumSymbol } from '@/core/types/symbol/symbols';
 
 export default class EnumValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
@@ -28,15 +28,18 @@ export default class EnumValidator implements ElementValidator {
     this.symbolFactory = symbolFactory;
   }
 
-  validate (): CompileError[] {
-    return [
-      ...this.validateContext(),
-      ...this.validateName(this.declarationNode.name),
-      ...this.validateAlias(this.declarationNode.alias),
-      ...this.validateSettingList(this.declarationNode.attributeList),
-      ...this.registerElement(),
-      ...this.validateBody(this.declarationNode.body),
-    ];
+  validate (): { errors: CompileError[]; warnings: CompileWarning[] } {
+    return {
+      errors: [
+        ...this.validateContext(),
+        ...this.validateName(this.declarationNode.name),
+        ...this.validateAlias(this.declarationNode.alias),
+        ...this.validateSettingList(this.declarationNode.attributeList),
+        ...this.registerElement(),
+        ...this.validateBody(this.declarationNode.body),
+      ],
+      warnings: [],
+    };
   }
 
   private validateContext (): CompileError[] {
@@ -50,6 +53,9 @@ export default class EnumValidator implements ElementValidator {
   private validateName (nameNode?: SyntaxNode): CompileError[] {
     if (!nameNode) {
       return [new CompileError(CompileErrorCode.NAME_NOT_FOUND, 'An Enum must have a name', this.declarationNode)];
+    }
+    if (nameNode instanceof WildcardNode) {
+      return [new CompileError(CompileErrorCode.INVALID_NAME, 'Wildcard (*) is not allowed as an Enum name', nameNode)];
     }
     if (!isValidName(nameNode)) {
       return [new CompileError(CompileErrorCode.INVALID_NAME, 'An Enum name must be of the form <enum> or <schema>.<enum>', nameNode)];
@@ -170,7 +176,7 @@ export default class EnumValidator implements ElementValidator {
       }
       const _Validator = pickValidator(sub as ElementDeclarationNode & { type: SyntaxToken });
       const validator = new _Validator(sub as ElementDeclarationNode & { type: SyntaxToken }, this.publicSymbolTable, this.symbolFactory);
-      return validator.validate();
+      return validator.validate().errors;
     });
   }
 

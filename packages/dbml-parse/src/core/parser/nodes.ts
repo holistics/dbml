@@ -1,6 +1,6 @@
 import { flatten, zip } from 'lodash-es';
 import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
-import { NodeSymbol } from '@/core/analyzer/symbol/symbols';
+import { NodeSymbol } from '@/core/types/symbol/symbols';
 import { Position } from '@/core/types';
 import { getTokenFullEnd, getTokenFullStart } from '@/core/lexer/utils';
 import { Filepath } from '@/core/types/filepath';
@@ -132,6 +132,7 @@ export enum SyntaxNodeKind {
   PRIMARY_EXPRESSION = '<primary-expression>',
   GROUP_EXPRESSION = '<group-expression>',
   COMMA_EXPRESSION = '<comma-expression>',
+  WILDCARD = '<wildcard>',
   EMPTY = '<dummy>',
   ARRAY = '<array>',
 }
@@ -610,6 +611,16 @@ export class LiteralNode extends SyntaxNode {
   constructor ({ literal }: { literal?: SyntaxToken }, id: SyntaxNodeId, filepath: Filepath) {
     super(id, SyntaxNodeKind.LITERAL, filepath, [literal]);
     this.literal = literal;
+  }
+}
+
+// A wildcard (*) expression used in DiagramView blocks
+export class WildcardNode extends SyntaxNode {
+  token?: SyntaxToken;
+
+  constructor ({ token }: { token?: SyntaxToken }, id: SyntaxNodeId, filepath: Filepath) {
+    super(id, SyntaxNodeKind.WILDCARD, filepath, [token]);
+    this.token = token;
   }
 }
 

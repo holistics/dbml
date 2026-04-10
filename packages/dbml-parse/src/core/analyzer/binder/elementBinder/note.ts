@@ -5,7 +5,7 @@ import {
 } from '../../../parser/nodes';
 import { SyntaxToken } from '../../../lexer/tokens';
 import { pickBinder } from '../utils';
-import SymbolFactory from '../../symbol/factory';
+import SymbolFactory from '@/core/types/symbol/factory';
 
 export default class NoteBinder implements ElementBinder {
   private symbolFactory: SymbolFactory;

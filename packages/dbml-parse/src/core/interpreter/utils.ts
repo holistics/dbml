@@ -1,5 +1,5 @@
 import { last, zip, uniqBy } from 'lodash-es';
-import { ColumnSymbol } from '@/core/analyzer/symbol/symbols';
+import { ColumnSymbol } from '@/core/types/symbol/symbols';
 import {
   destructureComplexVariableTuple, destructureComplexVariable, destructureMemberAccessExpression, extractQuotedStringToken,
   extractVariableFromExpression,

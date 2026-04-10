@@ -26,9 +26,9 @@ import RefValidator from './elementValidators/ref';
 import TableValidator from './elementValidators/table';
 import TableGroupValidator from './elementValidators/tableGroup';
 import { createSchemaSymbolIndex } from '@/core/types/symbol';
-import { SchemaSymbol } from '@/core/analyzer/symbol/symbols';
-import SymbolTable from '@/core/analyzer/symbol/symbolTable';
-import SymbolFactory from '@/core/analyzer/symbol/factory';
+import { SchemaSymbol } from '@/core/types/symbol/symbols';
+import SymbolTable from '@/core/types/symbol/symbolTable';
+import SymbolFactory from '@/core/types/symbol/factory';
 import {
   extractStringFromIdentifierStream, isAccessExpression, isDotDelimitedIdentifier, isExpressionAQuotedString, isExpressionAVariableNode, isExpressionAnIdentifierNode,
 } from '@/core/parser/utils';
@@ -39,6 +39,7 @@ import { ElementKind } from '@/core/analyzer/types';
 import TablePartialValidator from './elementValidators/tablePartial';
 import ChecksValidator from './elementValidators/checks';
 import RecordsValidator from './elementValidators/records';
+import DiagramViewValidator from './elementValidators/diagramView';
 
 export function pickValidator (element: ElementDeclarationNode & { type: SyntaxToken }) {
   switch (element.type.value.toLowerCase() as ElementKind) {
@@ -62,6 +63,8 @@ export function pickValidator (element: ElementDeclarationNode & { type: SyntaxT
       return ChecksValidator;
     case ElementKind.Records:
       return RecordsValidator;
+    case ElementKind.DiagramView:
+      return DiagramViewValidator;
     default:
       return CustomValidator;
   }

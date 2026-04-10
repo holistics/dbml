@@ -139,7 +139,7 @@ describe('[example] lexer', () => {
       expect(tokens.map((t) => ({ kind: t.kind, value: t.value }))).toEqual([
         { kind: SyntaxTokenKind.OP, value: '+' },
         { kind: SyntaxTokenKind.OP, value: '-' },
-        { kind: SyntaxTokenKind.OP, value: '*' },
+        { kind: SyntaxTokenKind.WILDCARD, value: '*' },
         { kind: SyntaxTokenKind.OP, value: '/' },
         { kind: SyntaxTokenKind.OP, value: '<' },
         { kind: SyntaxTokenKind.OP, value: '>' },

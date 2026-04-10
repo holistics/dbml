@@ -5,7 +5,7 @@ import {
 } from '../../../parser/nodes';
 import { CompileError } from '@/core/types/errors';
 import { pickBinder } from '../utils';
-import SymbolFactory from '../../symbol/factory';
+import SymbolFactory from '@/core/types/symbol/factory';
 
 export default class ProjectBinder implements ElementBinder {
   private symbolFactory: SymbolFactory;

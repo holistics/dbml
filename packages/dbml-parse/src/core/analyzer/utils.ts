@@ -15,7 +15,7 @@ import {
 import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
 import { isRelationshipOp, isTupleOfVariables } from '@/core/analyzer/validator/utils';
 import { NodeSymbolIndex, isPublicSchemaIndex } from '@/core/types/symbol';
-import { NodeSymbol } from '@/core/analyzer/symbol/symbols';
+import { NodeSymbol } from '@/core/types/symbol/symbols';
 import {
   isAccessExpression,
   isExpressionAQuotedString,
@@ -36,6 +36,7 @@ export function getElementKind (node?: ElementDeclarationNode): Option<ElementKi
     case ElementKind.TablePartial:
     case ElementKind.Check:
     case ElementKind.Records:
+    case ElementKind.DiagramView:
       return new Some(kind as ElementKind);
     default:
       return new None();

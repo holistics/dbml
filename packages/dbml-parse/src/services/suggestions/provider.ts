@@ -18,7 +18,7 @@ import {
   CompletionItemKind,
   CompletionItemInsertTextRule,
 } from '@/services/types';
-import { TableSymbol, type NodeSymbol } from '@/core/analyzer/symbol/symbols';
+import { TableSymbol, type NodeSymbol } from '@/core/types/symbol/symbols';
 import { SymbolKind, destructureIndex } from '@/core/types/symbol';
 import {
   pickCompletionItemKind,
@@ -48,6 +48,7 @@ import {
 import { getOffsetFromMonacoPosition } from '@/services/utils';
 import { isComment } from '@/core/lexer/utils';
 import { ElementKind, SettingName } from '@/core/analyzer/types';
+import { DEFAULT_SCHEMA_NAME } from '@/constants';
 
 export default class DBMLCompletionItemProvider implements CompletionItemProvider {
   private compiler: Compiler;
@@ -572,6 +573,20 @@ function suggestInSubField (
     }
     case ScopeKind.TABLEGROUP:
       return suggestInTableGroupField(compiler);
+    case ScopeKind.DIAGRAMVIEW:
+      return suggestInDiagramViewField();
+    case ScopeKind.CUSTOM: {
+      // Check if inside a DiagramView sub-block (Tables, Schemas, etc.)
+      const element = compiler.container.element(offset);
+      if (
+        element instanceof ElementDeclarationNode
+        && element.parent instanceof ElementDeclarationNode
+        && getElementKind(element.parent).unwrap_or(undefined) === ElementKind.DiagramView
+      ) {
+        return suggestInDiagramViewSubBlock(compiler, offset);
+      }
+      return noSuggestions();
+    }
     default:
       return noSuggestions();
   }
@@ -579,7 +594,7 @@ function suggestInSubField (
 
 function suggestTopLevelElementType (): CompletionList {
   return {
-    suggestions: ['Table', 'TableGroup', 'Enum', 'Project', 'Ref', 'TablePartial', 'Records'].map((name) => ({
+    suggestions: ['Table', 'TableGroup', 'Enum', 'Project', 'Ref', 'TablePartial', 'Records', 'DiagramView'].map((name) => ({
       label: name,
       insertText: name,
       insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
@@ -796,6 +811,69 @@ function suggestInTableGroupField (compiler: Compiler): CompletionList {
       })),
     ],
   };
+}
+
+function suggestInDiagramViewField (): CompletionList {
+  return {
+    suggestions: [
+      ...['Tables', 'TableGroups', 'Notes', 'Schemas'].map((name) => ({
+        label: name,
+        insertText: name,
+        insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
+        kind: CompletionItemKind.Keyword,
+        range: undefined as any,
+      })),
+      {
+        label: '*',
+        insertText: '*',
+        insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
+        kind: CompletionItemKind.Keyword,
+        range: undefined as any,
+      },
+    ],
+  };
+}
+
+function suggestInDiagramViewSubBlock (compiler: Compiler, offset: number): CompletionList {
+  const element = compiler.container.element(offset);
+  if (!(element instanceof ElementDeclarationNode)) return noSuggestions();
+
+  const blockType = (element as ElementDeclarationNode).type?.value.toLowerCase();
+  const wildcard = {
+    label: '*',
+    insertText: '*',
+    insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
+    kind: CompletionItemKind.Keyword,
+    range: undefined as any,
+  };
+
+  switch (blockType) {
+    case 'tables': {
+      const namesInScope = suggestNamesInScope(compiler, offset, compiler.parse.ast(), [SymbolKind.Table, SymbolKind.Schema]);
+      return { suggestions: [wildcard, ...namesInScope.suggestions] };
+    }
+    case 'tablegroups': {
+      const namesInScope = suggestNamesInScope(compiler, offset, compiler.parse.ast(), [SymbolKind.TableGroup]);
+      return { suggestions: [wildcard, ...namesInScope.suggestions] };
+    }
+    case 'schemas': {
+      const defaultSchema = {
+        label: DEFAULT_SCHEMA_NAME,
+        insertText: DEFAULT_SCHEMA_NAME,
+        insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
+        kind: CompletionItemKind.Module,
+        range: undefined as any,
+      };
+      const namesInScope = suggestNamesInScope(compiler, offset, compiler.parse.ast(), [SymbolKind.Schema]);
+      return { suggestions: [wildcard, defaultSchema, ...namesInScope.suggestions] };
+    }
+    case 'notes': {
+      const namesInScope = suggestNamesInScope(compiler, offset, compiler.parse.ast(), [SymbolKind.Note]);
+      return { suggestions: [wildcard, ...namesInScope.suggestions] };
+    }
+    default:
+      return noSuggestions();
+  }
 }
 
 function suggestInIndex (compiler: Compiler, offset: number): CompletionList {

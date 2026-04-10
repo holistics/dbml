@@ -16,6 +16,26 @@ export interface ElementRef {
   visibleNames: { schemaName: string | null; name: string }[];
 }
 
+/**
+ * FilterConfig is a tri-state filter:
+ * - [] (empty array) = show all
+ * - [...] (array with items) = show only these specific items
+ * - null = hide all
+ */
+export interface FilterConfig {
+  tables: Array<{ name: string; schemaName: string }> | null;
+  stickyNotes: Array<{ name: string }> | null;
+  tableGroups: Array<{ name: string }> | null;
+  schemas: Array<{ name: string }> | null;
+}
+
+export interface DiagramView {
+  name: string;
+  schemaName: string | null;
+  visibleEntities: FilterConfig;
+  token: TokenPosition;
+}
+
 export interface Database {
   schemas: [];
   tables: Table[];
@@ -27,6 +47,7 @@ export interface Database {
   project?: Project;
   tablePartials: TablePartial[];
   records: TableRecord[];
+  diagramViews: DiagramView[];
   token?: TokenPosition;
 }
 

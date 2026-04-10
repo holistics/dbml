@@ -11,8 +11,8 @@ import { CompileError } from '@/core/types/errors';
 import { lookupAndBindInScope, pickBinder, scanNonListNodeForBinding } from '../utils';
 import { getElementKind } from '../../utils';
 import { ElementKind } from '../../types';
-import { SymbolKind } from '../../symbol/symbolIndex';
-import SymbolFactory from '../../symbol/factory';
+import { SymbolKind } from '@/core/types/symbol/symbolIndex';
+import SymbolFactory from '@/core/types/symbol/factory';
 
 export default class RefBinder implements ElementBinder {
   private symbolFactory: SymbolFactory;

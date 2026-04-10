@@ -19,7 +19,7 @@ import {
 } from '@/core/analyzer/utils';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import { aggregateSettingList, isValidPartialInjection } from '@/core/analyzer/validator/utils';
-import { ColumnSymbol } from '@/core/analyzer/symbol/symbols';
+import { ColumnSymbol } from '@/core/types/symbol/symbols';
 import { destructureIndex, SymbolKind } from '@/core/types/symbol';
 import { ElementKind, SettingName } from '@/core/analyzer/types';
 import { ElementInterpreter, InterpreterDatabase } from '../types';

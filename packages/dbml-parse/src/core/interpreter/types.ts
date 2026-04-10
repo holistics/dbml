@@ -1,6 +1,7 @@
 import { ElementDeclarationNode, FunctionApplicationNode, SyntaxNode } from '@/core/parser/nodes';
 import { CompileError } from '@/core/types/errors';
 import type {
+  TokenPosition,
   Table,
   Note,
   Ref,
@@ -10,7 +11,11 @@ import type {
   TablePartial,
   RecordValueType,
   Project,
+  DiagramView,
+  FilterConfig,
 } from '@/core/types/schemaJson';
+
+export type { DiagramView, FilterConfig };
 
 export interface ElementInterpreter {
   interpret(): CompileError[];
@@ -33,6 +38,9 @@ export interface InterpreterDatabase {
   recordsElements: ElementDeclarationNode[];
   cachedMergedTables: Map<Table, Table>; // map Table to Table that has been merged with table partials
   source: string;
+  diagramViews: Map<ElementDeclarationNode, DiagramView>;
+  diagramViewWildcards: Map<DiagramView, Set<string>>;
+  diagramViewExplicitlySet: Map<DiagramView, Set<string>>;
 }
 
 export interface TableRecordRow {
