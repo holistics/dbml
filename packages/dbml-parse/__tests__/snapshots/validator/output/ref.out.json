@@ -3,6 +3,7 @@
   "program": {
     "context": {
       "id": "node@<program>@@[L0:C0, L0:C50]",
+      "filepath": "/main.dbml",
       "snippet": "Ref a: Use...no action]"
     },
     "children": {
@@ -10,12 +11,14 @@
         {
           "context": {
             "id": "node@<element-declaration>@:a@[L0:C0, L0:C50]",
+            "filepath": "/main.dbml",
             "snippet": "Ref a: Use...no action]"
           },
           "children": {
             "body": {
               "context": {
                 "id": "node@<function-application>@@[L0:C7, L0:C50]",
+                "filepath": "/main.dbml",
                 "snippet": "Users.id <...no action]"
               },
               "children": {
@@ -23,6 +26,7 @@
                   {
                     "context": {
                       "id": "node@<list-expression>@@[L0:C31, L0:C50]",
+                      "filepath": "/main.dbml",
                       "snippet": "[update: no action]"
                     },
                     "children": {
@@ -31,6 +35,7 @@
                         {
                           "context": {
                             "id": "node@<attribute>@@[L0:C32, L0:C49]",
+                            "filepath": "/main.dbml",
                             "snippet": "update: no action"
                           },
                           "children": {
@@ -48,6 +53,7 @@
                             "name": {
                               "context": {
                                 "id": "node@<identifer-stream>@@[L0:C32, L0:C38]",
+                                "filepath": "/main.dbml",
                                 "snippet": "update"
                               },
                               "children": {
@@ -69,6 +75,7 @@
                             "value": {
                               "context": {
                                 "id": "node@<identifer-stream>@@[L0:C40, L0:C49]",
+                                "filepath": "/main.dbml",
                                 "snippet": "no action"
                               },
                               "children": {
@@ -125,6 +132,7 @@
                 "callee": {
                   "context": {
                     "id": "node@<infix-expression>@@[L0:C7, L0:C30]",
+                    "filepath": "/main.dbml",
                     "snippet": "Users.id <...oducts.uid"
                   },
                   "children": {
@@ -133,6 +141,7 @@
                     "leftExpression": {
                       "context": {
                         "id": "node@<infix-expression>@@[L0:C7, L0:C15]",
+                        "filepath": "/main.dbml",
                         "snippet": "Users.id"
                       },
                       "children": {
@@ -141,12 +150,14 @@
                         "leftExpression": {
                           "context": {
                             "id": "node@<primary-expression>@@[L0:C7, L0:C12]",
+                            "filepath": "/main.dbml",
                             "snippet": "Users"
                           },
                           "children": {
                             "expression": {
                               "context": {
                                 "id": "node@<variable>@:Users@[L0:C7, L0:C12]",
+                                "filepath": "/main.dbml",
                                 "snippet": "Users"
                               },
                               "children": {
@@ -179,12 +190,14 @@
                         "rightExpression": {
                           "context": {
                             "id": "node@<primary-expression>@@[L0:C13, L0:C15]",
+                            "filepath": "/main.dbml",
                             "snippet": "id"
                           },
                           "children": {
                             "expression": {
                               "context": {
                                 "id": "node@<variable>@:id@[L0:C13, L0:C15]",
+                                "filepath": "/main.dbml",
                                 "snippet": "id"
                               },
                               "children": {
@@ -219,6 +232,7 @@
                     "rightExpression": {
                       "context": {
                         "id": "node@<infix-expression>@@[L0:C18, L0:C30]",
+                        "filepath": "/main.dbml",
                         "snippet": "Products.uid"
                       },
                       "children": {
@@ -227,12 +241,14 @@
                         "leftExpression": {
                           "context": {
                             "id": "node@<primary-expression>@@[L0:C18, L0:C26]",
+                            "filepath": "/main.dbml",
                             "snippet": "Products"
                           },
                           "children": {
                             "expression": {
                               "context": {
                                 "id": "node@<variable>@:Products@[L0:C18, L0:C26]",
+                                "filepath": "/main.dbml",
                                 "snippet": "Products"
                               },
                               "children": {
@@ -265,12 +281,14 @@
                         "rightExpression": {
                           "context": {
                             "id": "node@<primary-expression>@@[L0:C27, L0:C30]",
+                            "filepath": "/main.dbml",
                             "snippet": "uid"
                           },
                           "children": {
                             "expression": {
                               "context": {
                                 "id": "node@<variable>@:uid@[L0:C27, L0:C30]",
+                                "filepath": "/main.dbml",
                                 "snippet": "uid"
                               },
                               "children": {
@@ -313,12 +331,14 @@
             "name": {
               "context": {
                 "id": "node@<primary-expression>@@[L0:C4, L0:C5]",
+                "filepath": "/main.dbml",
                 "snippet": "a"
               },
               "children": {
                 "expression": {
                   "context": {
                     "id": "node@<variable>@:a@[L0:C4, L0:C5]",
+                    "filepath": "/main.dbml",
                     "snippet": "a"
                   },
                   "children": {

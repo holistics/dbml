@@ -1,3 +1,4 @@
+<<<<<<<< HEAD:packages/dbml-parse/src/core/types/schemaJson.ts
 import type { Position } from './position';
 
 export interface TokenPosition {
@@ -243,3 +244,56 @@ export type SchemaElement =
   | TablePartialInjection
   | TableRecord
   | RecordValue;
+========
+import { ElementDeclarationNode, FunctionApplicationNode, SyntaxNode } from '@/core/parser/nodes';
+import { CompileError } from '@/core/types/errors';
+import type {
+  Table,
+  Note,
+  Ref,
+  Enum,
+  TableGroup,
+  Alias,
+  TablePartial,
+  RecordValueType,
+  Project,
+} from '@/core/types/schemaJson';
+
+export interface ElementInterpreter {
+  interpret(): CompileError[];
+}
+
+export interface InterpreterDatabase {
+  schema: [];
+  tables: Map<ElementDeclarationNode, Table>;
+  notes: Map<ElementDeclarationNode, Note>;
+  // for keeping track of circular refs
+  refIds: { [refid: string]: ElementDeclarationNode };
+  ref: Map<ElementDeclarationNode, Ref>;
+  enums: Map<ElementDeclarationNode, Enum>;
+  tableOwnerGroup: { [tableid: string]: ElementDeclarationNode };
+  tableGroups: Map<ElementDeclarationNode, TableGroup>;
+  tablePartials: Map<ElementDeclarationNode, TablePartial>;
+  aliases: Alias[];
+  project: Map<ElementDeclarationNode, Project>;
+  records: Map<Table, { element: ElementDeclarationNode; rows: TableRecordRow[] }>;
+  recordsElements: ElementDeclarationNode[];
+  cachedMergedTables: Map<Table, Table>; // map Table to Table that has been merged with table partials
+  source: string;
+}
+
+export interface TableRecordRow {
+  values: Record<string, {
+    value: any;
+    type: RecordValueType;
+    node?: SyntaxNode; // The specific node for this column value
+  }>;
+  node: FunctionApplicationNode;
+  columnNodes: Record<string, SyntaxNode>; // Map of column name to its value node
+}
+
+export interface TableRecordsData {
+  table: Table;
+  rows: TableRecordRow[];
+}
+>>>>>>>> 7bb3bb90 (refactor: reorganize types):packages/dbml-parse/src/core/interpreter/types.ts

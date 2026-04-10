@@ -3,6 +3,7 @@
   "program": {
     "context": {
       "id": "node@<program>@@[L0:C0, L7:C0]",
+      "filepath": "/main.dbml",
       "snippet": "TableParti...mestamp\n}\n"
     },
     "children": {
@@ -10,12 +11,14 @@
         {
           "context": {
             "id": "node@<element-declaration>@:with_timestamp@[L0:C0, L2:C1]",
+            "filepath": "/main.dbml",
             "snippet": "TableParti...amp uuid\n}"
           },
           "children": {
             "body": {
               "context": {
                 "id": "node@<block-expression>@@[L0:C28, L2:C1]",
+                "filepath": "/main.dbml",
                 "snippet": "{\n  timestamp uuid\n}"
               },
               "children": {
@@ -41,6 +44,7 @@
                   {
                     "context": {
                       "id": "node@<function-application>@@[L1:C2, L1:C16]",
+                      "filepath": "/main.dbml",
                       "snippet": "timestamp uuid"
                     },
                     "children": {
@@ -48,12 +52,14 @@
                         {
                           "context": {
                             "id": "node@<primary-expression>@@[L1:C12, L1:C16]",
+                            "filepath": "/main.dbml",
                             "snippet": "uuid"
                           },
                           "children": {
                             "expression": {
                               "context": {
                                 "id": "node@<variable>@:uuid@[L1:C12, L1:C16]",
+                                "filepath": "/main.dbml",
                                 "snippet": "uuid"
                               },
                               "children": {
@@ -78,12 +84,14 @@
                       "callee": {
                         "context": {
                           "id": "node@<primary-expression>@@[L1:C2, L1:C11]",
+                          "filepath": "/main.dbml",
                           "snippet": "timestamp"
                         },
                         "children": {
                           "expression": {
                             "context": {
                               "id": "node@<variable>@:timestamp@[L1:C2, L1:C11]",
+                              "filepath": "/main.dbml",
                               "snippet": "timestamp"
                             },
                             "children": {
@@ -130,12 +138,14 @@
             "name": {
               "context": {
                 "id": "node@<primary-expression>@@[L0:C13, L0:C27]",
+                "filepath": "/main.dbml",
                 "snippet": "with_timestamp"
               },
               "children": {
                 "expression": {
                   "context": {
                     "id": "node@<variable>@:with_timestamp@[L0:C13, L0:C27]",
+                    "filepath": "/main.dbml",
                     "snippet": "with_timestamp"
                   },
                   "children": {
@@ -194,12 +204,14 @@
         {
           "context": {
             "id": "node@<element-declaration>@:users@[L4:C0, L6:C1]",
+            "filepath": "/main.dbml",
             "snippet": "Table user...imestamp\n}"
           },
           "children": {
             "body": {
               "context": {
                 "id": "node@<block-expression>@@[L4:C12, L6:C1]",
+                "filepath": "/main.dbml",
                 "snippet": "{\n  ~with_...imestamp\n}"
               },
               "children": {
@@ -225,6 +237,7 @@
                   {
                     "context": {
                       "id": "node@<function-application>@@[L5:C2, L5:C17]",
+                      "filepath": "/main.dbml",
                       "snippet": "~with_timestamp"
                     },
                     "children": {
@@ -232,18 +245,21 @@
                       "callee": {
                         "context": {
                           "id": "node@<prefix-expression>@@[L5:C2, L5:C17]",
+                          "filepath": "/main.dbml",
                           "snippet": "~with_timestamp"
                         },
                         "children": {
                           "expression": {
                             "context": {
                               "id": "node@<primary-expression>@@[L5:C3, L5:C17]",
+                              "filepath": "/main.dbml",
                               "snippet": "with_timestamp"
                             },
                             "children": {
                               "expression": {
                                 "context": {
                                   "id": "node@<variable>@:with_timestamp@[L5:C3, L5:C17]",
+                                  "filepath": "/main.dbml",
                                   "snippet": "with_timestamp"
                                 },
                                 "children": {
@@ -308,12 +324,14 @@
             "name": {
               "context": {
                 "id": "node@<primary-expression>@@[L4:C6, L4:C11]",
+                "filepath": "/main.dbml",
                 "snippet": "users"
               },
               "children": {
                 "expression": {
                   "context": {
                     "id": "node@<variable>@:users@[L4:C6, L4:C11]",
+                    "filepath": "/main.dbml",
                     "snippet": "users"
                   },
                   "children": {
