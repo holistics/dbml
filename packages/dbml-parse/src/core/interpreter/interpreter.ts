@@ -14,6 +14,7 @@ import { getElementKind } from '@/core/analyzer/utils';
 import { ElementKind } from '@/core/analyzer/types';
 import { CompileWarning } from '../errors';
 import { DEFAULT_SCHEMA_NAME } from '@/constants';
+import { getTokenPosition } from './utils';
 
 function processColumnInDb<T extends Table | TablePartial> (table: T): T {
   return {
@@ -61,14 +62,15 @@ function expandDiagramViewWildcards (env: InterpreterDatabase): void {
 function convertEnvToDb (env: InterpreterDatabase): Database {
   // Convert records Map to array of TableRecord
   const records: TableRecord[] = [];
-  for (const [table, block] of env.records) {
-    if (!block.length) continue;
-    const columns = Object.keys(block[0].columnNodes);
+  for (const [table, { element, rows }] of env.records) {
+    if (!rows.length) continue;
+    const columns = Object.keys(rows[0].columnNodes);
     records.push({
       schemaName: table.schemaName || undefined,
       tableName: table.name,
       columns,
-      values: block.map((r) => {
+      token: getTokenPosition(element),
+      values: rows.map((r) => {
         // Convert object-based values to array-based values ordered by columns
         return columns.map((col) => {
           const val = r.values[col];
