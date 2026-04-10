@@ -7,6 +7,7 @@
       "node": {
         "context": {
           "id": "node@<element-declaration>@:@[L9:C0, L9:C16]",
+          "filepath": "/main.dbml",
           "snippet": "Ref: B.id > A.id"
         }
       }
@@ -18,6 +19,7 @@
       "node": {
         "context": {
           "id": "node@<element-declaration>@:@[L8:C0, L8:C16]",
+          "filepath": "/main.dbml",
           "snippet": "Ref: A.id > B.id"
         }
       }

@@ -1,9 +1,6 @@
 import type { Position } from './position';
 
-export interface TokenPosition {
-  start: Position;
-  end: Position;
-}
+export type { DiagramView, FilterConfig };
 
 export interface Database {
   schemas: [];

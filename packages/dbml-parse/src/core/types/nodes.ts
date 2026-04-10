@@ -625,6 +625,16 @@ export class LiteralNode extends SyntaxNode {
   }
 }
 
+// A wildcard (*) expression used in DiagramView blocks
+export class WildcardNode extends SyntaxNode {
+  token?: SyntaxToken;
+
+  constructor ({ token }: { token?: SyntaxToken }, id: SyntaxNodeId, filepath: Filepath) {
+    super(id, SyntaxNodeKind.WILDCARD, filepath, [token]);
+    this.token = token;
+  }
+}
+
 // Form: <identifier> | <quoted-string>
 // A variable reference
 // e.g. users

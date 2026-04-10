@@ -3,6 +3,7 @@
   "program": {
     "context": {
       "id": "node@<program>@@[L0:C0, L4:C1]",
+      "filepath": "/main.dbml",
       "snippet": "Enum statu...  churn\r\n}"
     },
     "children": {
@@ -10,12 +11,14 @@
         {
           "context": {
             "id": "node@<element-declaration>@:status@[L0:C0, L4:C1]",
+            "filepath": "/main.dbml",
             "snippet": "Enum statu...  churn\r\n}"
           },
           "children": {
             "body": {
               "context": {
                 "id": "node@<block-expression>@@[L0:C12, L4:C1]",
+                "filepath": "/main.dbml",
                 "snippet": "{\r\n    chu...  churn\r\n}"
               },
               "children": {
@@ -41,6 +44,7 @@
                   {
                     "context": {
                       "id": "node@<function-application>@@[L1:C4, L1:C9]",
+                      "filepath": "/main.dbml",
                       "snippet": "churn"
                     },
                     "children": {
@@ -48,12 +52,14 @@
                       "callee": {
                         "context": {
                           "id": "node@<primary-expression>@@[L1:C4, L1:C9]",
+                          "filepath": "/main.dbml",
                           "snippet": "churn"
                         },
                         "children": {
                           "expression": {
                             "context": {
                               "id": "node@<variable>@:churn@[L1:C4, L1:C9]",
+                              "filepath": "/main.dbml",
                               "snippet": "churn"
                             },
                             "children": {
@@ -92,6 +98,7 @@
                   {
                     "context": {
                       "id": "node@<function-application>@@[L2:C4, L2:C9]",
+                      "filepath": "/main.dbml",
                       "snippet": "churn"
                     },
                     "children": {
@@ -99,12 +106,14 @@
                       "callee": {
                         "context": {
                           "id": "node@<primary-expression>@@[L2:C4, L2:C9]",
+                          "filepath": "/main.dbml",
                           "snippet": "churn"
                         },
                         "children": {
                           "expression": {
                             "context": {
                               "id": "node@<variable>@:churn@[L2:C4, L2:C9]",
+                              "filepath": "/main.dbml",
                               "snippet": "churn"
                             },
                             "children": {
@@ -143,6 +152,7 @@
                   {
                     "context": {
                       "id": "node@<function-application>@@[L3:C4, L3:C9]",
+                      "filepath": "/main.dbml",
                       "snippet": "churn"
                     },
                     "children": {
@@ -150,12 +160,14 @@
                       "callee": {
                         "context": {
                           "id": "node@<primary-expression>@@[L3:C4, L3:C9]",
+                          "filepath": "/main.dbml",
                           "snippet": "churn"
                         },
                         "children": {
                           "expression": {
                             "context": {
                               "id": "node@<variable>@:churn@[L3:C4, L3:C9]",
+                              "filepath": "/main.dbml",
                               "snippet": "churn"
                             },
                             "children": {
@@ -201,12 +213,14 @@
             "name": {
               "context": {
                 "id": "node@<primary-expression>@@[L0:C5, L0:C11]",
+                "filepath": "/main.dbml",
                 "snippet": "status"
               },
               "children": {
                 "expression": {
                   "context": {
                     "id": "node@<variable>@:status@[L0:C5, L0:C11]",
+                    "filepath": "/main.dbml",
                     "snippet": "status"
                   },
                   "children": {

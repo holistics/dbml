@@ -47,6 +47,9 @@ export default class TableGroupValidator {
         this.declarationNode,
       )];
     }
+    if (nameNode instanceof WildcardNode) {
+      return [new CompileError(CompileErrorCode.INVALID_NAME, 'Wildcard (*) is not allowed as a TableGroup name', nameNode)];
+    }
     if (!isSimpleName(nameNode)) {
       return [new CompileError(
         CompileErrorCode.INVALID_NAME,

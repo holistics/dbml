@@ -7,7 +7,7 @@ import {
   BlockExpressionNode, CallExpressionNode, ElementDeclarationNode,
   FunctionApplicationNode, FunctionExpressionNode, ListExpressionNode, PrefixExpressionNode,
   SyntaxNode,
-} from '@/core/parser/nodes';
+} from '@/core/types/nodes';
 import {
   extractColor, extractElementName, getColumnSymbolsOfRefOperand,
   getTokenPosition, isSameEndpoint, normalizeNoteContent,
@@ -66,6 +66,7 @@ export class TableInterpreter {
         token: {
           start: { offset: -1, line: -1, column: -1 }, // do not make sense to have a meaningful start (?)
           end: { offset: -1, line: -1, column: -1 }, // do not make sense to have a meaningful end (?)
+          filepath: this.declarationNode.filepath,
         },
         pk: true,
       });

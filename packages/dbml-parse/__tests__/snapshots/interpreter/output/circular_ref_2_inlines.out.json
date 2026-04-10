@@ -7,6 +7,7 @@
       "node": {
         "context": {
           "id": "node@<attribute>@@[L5:C12, L5:C23]",
+          "filepath": "/main.dbml",
           "snippet": "ref: > A.id"
         }
       }
@@ -18,6 +19,7 @@
       "node": {
         "context": {
           "id": "node@<attribute>@@[L1:C12, L1:C23]",
+          "filepath": "/main.dbml",
           "snippet": "ref: > B.id"
         }
       }

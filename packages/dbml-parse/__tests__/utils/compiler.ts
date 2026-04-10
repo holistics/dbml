@@ -243,6 +243,12 @@ export function print (source: string, ast: SyntaxNode): string {
         break;
       }
 
+      case SyntaxNodeKind.WILDCARD: {
+        const wildcard = node as WildcardNode;
+        if (wildcard.token) collectTokens(wildcard.token);
+        break;
+      }
+
       case SyntaxNodeKind.EMPTY:
         // Empty nodes don't contribute to output
         break;

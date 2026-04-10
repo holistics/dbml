@@ -19,7 +19,7 @@ export {
   // Token types
   SyntaxToken,
   SyntaxTokenKind,
-} from '@/core/lexer/tokens';
+} from '@/core/types/tokens';
 
 export {
   // Error types

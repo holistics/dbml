@@ -7,6 +7,7 @@
       "node": {
         "context": {
           "id": "node@<function-application>@@[L22:C2, L22:C9]",
+          "filepath": "/main.dbml",
           "snippet": "follows"
         }
       }
@@ -18,6 +19,7 @@
       "node": {
         "context": {
           "id": "node@<function-application>@@[L27:C2, L27:C7]",
+          "filepath": "/main.dbml",
           "snippet": "users"
         }
       }
@@ -29,6 +31,7 @@
       "node": {
         "context": {
           "id": "node@<function-application>@@[L31:C4, L31:C5]",
+          "filepath": "/main.dbml",
           "snippet": "U"
         }
       }
@@ -40,6 +43,7 @@
       "node": {
         "context": {
           "id": "node@<function-application>@@[L39:C2, L39:C9]",
+          "filepath": "/main.dbml",
           "snippet": "A.users"
         }
       }
