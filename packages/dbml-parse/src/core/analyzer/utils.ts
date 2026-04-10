@@ -11,8 +11,8 @@ import {
   TupleExpressionNode,
   VariableNode,
   CallExpressionNode,
-} from '@/core/parser/nodes';
-import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
+} from '@/core/types/nodes';
+import { SyntaxToken, SyntaxTokenKind } from '@/core/types/tokens';
 import { isRelationshipOp, isTupleOfVariables } from '@/core/analyzer/validator/utils';
 import { NodeSymbolIndex, isPublicSchemaIndex } from '@/core/types/symbol';
 import { NodeSymbol } from '@/core/types/symbol/symbols';

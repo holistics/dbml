@@ -3,7 +3,7 @@ import { destructureComplexVariable, destructureMemberAccessExpression, extractQ
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, SyntaxNode, ListExpressionNode,
-} from '@/core/parser/nodes';
+} from '@/core/types/nodes';
 import { TableGroup } from '@/core/types/schemaJson';
 import {
   extractElementName, getTokenPosition, normalizeNoteContent, extractColor,

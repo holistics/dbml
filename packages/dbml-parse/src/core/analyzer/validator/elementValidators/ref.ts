@@ -1,10 +1,10 @@
 import { partition, last } from 'lodash-es';
-import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
+import { SyntaxToken, SyntaxTokenKind } from '@/core/types/tokens';
 import SymbolFactory from '@/core/types/symbol/factory';
 import { CompileError, CompileErrorCode, CompileWarning } from '@/core/types/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, IdentiferStreamNode, ListExpressionNode, ProgramNode, SyntaxNode, WildcardNode,
-} from '@/core/parser/nodes';
+} from '@/core/types/nodes';
 import {
   extractStringFromIdentifierStream,
   isExpressionAVariableNode,

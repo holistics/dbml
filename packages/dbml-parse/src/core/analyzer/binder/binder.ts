@@ -1,8 +1,8 @@
 import { CompileError } from '@/core/types/errors';
-import { ElementDeclarationNode, ProgramNode } from '@/core/parser/nodes';
+import { ElementDeclarationNode, ProgramNode } from '@/core/types/nodes';
 import { pickBinder } from '@/core/analyzer/binder/utils';
 import Report from '@/core/types/report';
-import { SyntaxToken } from '@/core/lexer/tokens';
+import { SyntaxToken } from '@/core/types/tokens';
 import SymbolFactory from '@/core/types/symbol/factory';
 import { getElementKind } from '@/core/analyzer/utils';
 import { ElementKind } from '@/core/analyzer/types';

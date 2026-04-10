@@ -4,7 +4,7 @@ import Compiler from '@/compiler/index';
 import Lexer from '@/core/lexer/lexer';
 import { DEFAULT_ENTRY } from '@/constants';
 import Parser from '@/core/parser/parser';
-import { SyntaxNodeIdGenerator } from '@/core/parser/nodes';
+import { SyntaxNodeIdGenerator } from '@/core/types/nodes';
 
 // update operation
 

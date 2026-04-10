@@ -3,7 +3,7 @@ import {
   FunctionExpressionNode,
   PrefixExpressionNode,
   SyntaxNode,
-} from '@/core/parser/nodes';
+} from '@/core/types/nodes';
 import { isExpressionAnIdentifierNode } from '@/core/parser/utils';
 import { isExpressionASignedNumberExpression } from '@/core/analyzer/validator/utils';
 import { destructureComplexVariable, extractQuotedStringToken, extractNumericLiteral } from '@/core/analyzer/utils';

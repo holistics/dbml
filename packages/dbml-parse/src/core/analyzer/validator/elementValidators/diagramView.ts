@@ -6,10 +6,10 @@ import {
 import { registerSchemaStack, aggregateSettingList } from '@/core/analyzer/validator/utils';
 import { ElementValidator } from '@/core/analyzer/validator/types';
 import SymbolTable from '@/core/types/symbol/symbolTable';
-import { SyntaxToken } from '@/core/lexer/tokens';
+import { SyntaxToken } from '@/core/types/tokens';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, PrimaryExpressionNode, SyntaxNode, VariableNode,
-} from '@/core/parser/nodes';
+} from '@/core/types/nodes';
 import SymbolFactory from '@/core/types/symbol/factory';
 import { createDiagramViewFieldSymbolIndex, createDiagramViewSymbolIndex } from '@/core/types/symbol/symbolIndex';
 import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '@/core/analyzer/utils';

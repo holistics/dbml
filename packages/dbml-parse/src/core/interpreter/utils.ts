@@ -8,12 +8,12 @@ import {
 import {
   ArrayNode, BlockExpressionNode, CallExpressionNode, FunctionExpressionNode, FunctionApplicationNode, LiteralNode,
   PrimaryExpressionNode, SyntaxNode, TupleExpressionNode,
-} from '@/core/parser/nodes';
+} from '@/core/types/nodes';
 import {
   ColumnType, RelationCardinality, Table, TokenPosition, Ref,
   Column,
 } from '@/core/types/schemaJson';
-import { SyntaxTokenKind } from '@/core/lexer/tokens';
+import { SyntaxTokenKind } from '@/core/types/tokens';
 import { isDotDelimitedIdentifier, isExpressionAnIdentifierNode, isExpressionAQuotedString } from '@/core/parser/utils';
 import Report from '@/core/types/report';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';

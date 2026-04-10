@@ -1,7 +1,7 @@
-import { SyntaxToken } from './lexer/tokens';
+import { SyntaxToken } from './types/tokens';
 import {
   LiteralNode, PrefixExpressionNode, PrimaryExpressionNode, SyntaxNode,
-} from './parser/nodes';
+} from './types/nodes';
 import { getTokenFullEnd, getTokenFullStart } from './lexer/utils';
 
 export function isAlphaOrUnderscore (char: string): boolean {

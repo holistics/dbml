@@ -12,7 +12,7 @@ import {
   PrimaryExpressionNode,
   SyntaxNode,
   WildcardNode,
-} from '@/core/parser/nodes';
+} from '@/core/types/nodes';
 import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '@/core/analyzer/utils';
 import {
   aggregateSettingList,
@@ -33,7 +33,7 @@ import {
   isExpressionAVariableNode,
   isExpressionAnIdentifierNode,
 } from '@/core/parser/utils';
-import { SyntaxToken } from '@/core/lexer/tokens';
+import { SyntaxToken } from '@/core/types/tokens';
 import SymbolTable from '@/core/types/symbol/symbolTable';
 import { ElementKind, SettingName } from '@/core/analyzer/types';
 

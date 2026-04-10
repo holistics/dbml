@@ -3,8 +3,8 @@ import SymbolFactory from '@/core/types/symbol/factory';
 import { CompileError, CompileErrorCode, CompileWarning } from '@/core/types/errors';
 import {
   BlockExpressionNode, CallExpressionNode, CommaExpressionNode, ElementDeclarationNode, EmptyNode, FunctionApplicationNode, FunctionExpressionNode, ListExpressionNode, ProgramNode, SyntaxNode, WildcardNode,
-} from '@/core/parser/nodes';
-import { SyntaxToken } from '@/core/lexer/tokens';
+} from '@/core/types/nodes';
+import { SyntaxToken } from '@/core/types/tokens';
 import { ElementValidator } from '@/core/analyzer/validator/types';
 import { isExpressionASignedNumberExpression, isTupleOfVariables, isValidName, pickValidator } from '@/core/analyzer/validator/utils';
 import SymbolTable from '@/core/types/symbol/symbolTable';

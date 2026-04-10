@@ -1,5 +1,5 @@
 import { DEFAULT_SCHEMA_NAME } from '@/constants';
-import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
+import { SyntaxToken, SyntaxTokenKind } from '@/core/types/tokens';
 import {
   AttributeNode,
   BlockExpressionNode,
@@ -14,7 +14,7 @@ import {
   VariableNode,
   CallExpressionNode,
   ArrayNode,
-} from '@/core/parser/nodes';
+} from '@/core/types/nodes';
 import { isHexChar } from '@/core/utils';
 import { destructureComplexVariable, destructureMemberAccessExpression } from '@/core/analyzer/utils';
 import CustomValidator from './elementValidators/custom';

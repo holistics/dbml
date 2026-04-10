@@ -5,7 +5,7 @@ import {
   markInvalid,
 } from '@/core/parser/utils';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
-import { SyntaxToken, SyntaxTokenKind, isOpToken } from '@/core/lexer/tokens';
+import { SyntaxToken, SyntaxTokenKind, isOpToken } from '@/core/types/tokens';
 import Report from '@/core/types/report';
 import { ParsingContext, ParsingContextStack } from '@/core/parser/contextStack';
 import {
@@ -34,7 +34,7 @@ import {
   TupleExpressionNode,
   VariableNode,
   WildcardNode,
-} from '@/core/parser/nodes';
+} from '@/core/types/nodes';
 import NodeFactory from '@/core/parser/factory';
 import { hasTrailingNewLines, hasTrailingSpaces, isAtStartOfLine } from '@/core/lexer/utils';
 import { Filepath } from '@/core/types/filepath';

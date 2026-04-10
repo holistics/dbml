@@ -1,5 +1,5 @@
 import type Compiler from '../../index';
-import type { SyntaxToken } from '@/core/lexer/tokens';
+import type { SyntaxToken } from '@/core/types/tokens';
 
 export function containerToken (this: Compiler, offset: number): { token: SyntaxToken; index: number } | { token: undefined; index: undefined } {
   const id = this.token.flatStream().findIndex((t) => t.start >= offset);

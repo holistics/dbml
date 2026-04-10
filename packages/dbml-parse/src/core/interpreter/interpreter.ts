@@ -1,4 +1,4 @@
-import { ProgramNode } from '@/core/parser/nodes';
+import { ProgramNode } from '@/core/types/nodes';
 import { Database, Table, TablePartial, TableRecord } from '@/core/types/schemaJson';
 import { TableInterpreter } from '@/core/interpreter/elementInterpreter/table';
 import { StickyNoteInterpreter } from '@/core/interpreter/elementInterpreter/sticky_note';

@@ -25,7 +25,7 @@ import {
   PrimaryExpressionNode,
   ArrayNode,
   WildcardNode,
-} from '@/core/parser/nodes';
+} from '@/core/types/nodes';
 import { NodeSymbolIdGenerator } from '@/core/types/symbol/symbols';
 import Report from '@/core/types/report';
 import { Compiler, SyntaxToken } from '@/index';

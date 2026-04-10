@@ -11,8 +11,8 @@ import {
   CommaExpressionNode,
   BlockExpressionNode,
   IdentiferStreamNode,
-} from '@/core/parser/nodes';
-import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
+} from '@/core/types/nodes';
+import { SyntaxToken, SyntaxTokenKind } from '@/core/types/tokens';
 import { isOffsetWithinSpan } from '@/core/utils';
 import { getMemberChain } from '@/core/parser/utils';
 

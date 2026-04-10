@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import { NodeSymbol } from '@/core/types/symbol/symbols';
-import { SyntaxToken } from '@/core/lexer/tokens';
-import { ElementDeclarationNode, LiteralNode, ProgramNode, SyntaxNode, VariableNode } from '@/core/parser/nodes';
+import { SyntaxToken } from '@/core/types/tokens';
+import { ElementDeclarationNode, LiteralNode, ProgramNode, SyntaxNode, VariableNode } from '@/core/types/nodes';
 import { getElementNameString } from '@/core/parser/utils';
 import { CompileError, CompileErrorCode, CompileWarning } from '@/core/types/errors';
 import type Compiler from '@/compiler';

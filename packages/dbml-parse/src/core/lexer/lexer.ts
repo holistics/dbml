@@ -3,7 +3,7 @@ import Report from '@/core/types/report';
 import { isAlphaOrUnderscore, isAlphaNumeric, isDigit } from '@/core/utils';
 import {
   SyntaxToken, SyntaxTokenKind, isOp, isTriviaToken,
-} from '@/core/lexer/tokens';
+} from '@/core/types/tokens';
 import { Position } from '@/core/types';
 import { isInvalidToken } from '@/core/parser/utils';
 import { Filepath } from '@/core/types/filepath';

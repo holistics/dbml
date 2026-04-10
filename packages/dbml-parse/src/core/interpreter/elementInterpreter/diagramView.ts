@@ -1,7 +1,7 @@
 import { partition } from 'lodash-es';
 import { destructureComplexVariable, extractReferee } from '@/core/analyzer/utils';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
-import { BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, SyntaxNode } from '@/core/parser/nodes';
+import { BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, SyntaxNode } from '@/core/types/nodes';
 import { isWildcardExpression } from '@/core/parser/utils';
 import { ElementInterpreter, InterpreterDatabase, DiagramView } from '@/core/interpreter/types';
 import { getTokenPosition } from '@/core/interpreter/utils';

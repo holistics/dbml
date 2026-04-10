@@ -1,5 +1,5 @@
-import { SyntaxToken } from '@/core/lexer/tokens';
-import { ElementDeclarationNode, InfixExpressionNode, PostfixExpressionNode, PrefixExpressionNode, PrimaryExpressionNode, ProgramNode, SyntaxNode, TupleExpressionNode, VariableNode } from '@/core/parser/nodes';
+import { SyntaxToken } from '@/core/types/tokens';
+import { ElementDeclarationNode, InfixExpressionNode, PostfixExpressionNode, PrefixExpressionNode, PrimaryExpressionNode, ProgramNode, SyntaxNode, TupleExpressionNode, VariableNode } from '@/core/types/nodes';
 import { ElementKind } from '@/core/analyzer/types';
 import ChecksBinder from './elementBinder/checks';
 import CustomBinder from './elementBinder/custom';
