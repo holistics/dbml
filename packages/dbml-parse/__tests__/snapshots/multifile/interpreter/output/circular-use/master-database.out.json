@@ -11,9 +11,14 @@
           "tablePartials": [],
           "tables": [
             {
-              "aliasedName": "b_table",
               "name": "b_table",
-              "schemaName": null
+              "schemaName": null,
+              "visibleNames": [
+                {
+                  "name": "b_table",
+                  "schemaName": null
+                }
+              ]
             }
           ]
         },
@@ -226,9 +231,14 @@
           "tablePartials": [],
           "tables": [
             {
-              "aliasedName": "c_table",
               "name": "c_table",
-              "schemaName": null
+              "schemaName": null,
+              "visibleNames": [
+                {
+                  "name": "c_table",
+                  "schemaName": null
+                }
+              ]
             }
           ]
         },
@@ -441,9 +451,14 @@
           "tablePartials": [],
           "tables": [
             {
-              "aliasedName": "a_table",
               "name": "a_table",
-              "schemaName": null
+              "schemaName": null,
+              "visibleNames": [
+                {
+                  "name": "a_table",
+                  "schemaName": null
+                }
+              ]
             }
           ]
         },

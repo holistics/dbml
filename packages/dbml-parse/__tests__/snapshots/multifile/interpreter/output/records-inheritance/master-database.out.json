@@ -1,7 +1,7 @@
 {
   "database": {
     "files": {
-      "/main-1.dbml": {
+      "/main-selective-reuse.dbml": {
         "aliases": [],
         "enums": [],
         "externals": {
@@ -11,14 +11,24 @@
           "tablePartials": [],
           "tables": [
             {
-              "aliasedName": "a",
               "name": "a",
-              "schemaName": null
+              "schemaName": null,
+              "visibleNames": [
+                {
+                  "name": "c",
+                  "schemaName": null
+                }
+              ]
             },
             {
-              "aliasedName": "b",
               "name": "b",
-              "schemaName": null
+              "schemaName": null,
+              "visibleNames": [
+                {
+                  "name": "b",
+                  "schemaName": null
+                }
+              ]
             }
           ]
         },
@@ -31,21 +41,75 @@
         "tables": [],
         "token": {
           "end": {
+            "column": 1,
+            "line": 7,
+            "offset": 111
+          },
+          "filepath": {
+            "path": "/main-selective-reuse.dbml"
+          },
+          "start": {
+            "column": 1,
+            "line": 3,
+            "offset": 43
+          }
+        }
+      },
+      "/main-selective-use.dbml": {
+        "aliases": [],
+        "enums": [],
+        "externals": {
+          "enums": [],
+          "notes": [],
+          "tableGroups": [],
+          "tablePartials": [],
+          "tables": [
+            {
+              "name": "a",
+              "schemaName": null,
+              "visibleNames": [
+                {
+                  "name": "a",
+                  "schemaName": null
+                }
+              ]
+            },
+            {
+              "name": "b",
+              "schemaName": null,
+              "visibleNames": [
+                {
+                  "name": "d",
+                  "schemaName": null
+                }
+              ]
+            }
+          ]
+        },
+        "notes": [],
+        "records": [],
+        "refs": [],
+        "schemas": [],
+        "tableGroups": [],
+        "tablePartials": [],
+        "tables": [],
+        "token": {
+          "end": {
+            "column": 1,
+            "line": 6,
+            "offset": 108
+          },
+          "filepath": {
+            "path": "/main-selective-use.dbml"
+          },
+          "start": {
             "column": 1,
             "line": 2,
-            "offset": 34
-          },
-          "filepath": {
-            "path": "/main-1.dbml"
-          },
-          "start": {
-            "column": 1,
-            "line": 1,
-            "offset": 0
+            "offset": 42
           }
         }
       },
-      "/main-2.dbml": {
+      "/main-wildcard-reuse.dbml": {
         "aliases": [],
         "enums": [],
         "externals": {
@@ -53,18 +117,7 @@
           "notes": [],
           "tableGroups": [],
           "tablePartials": [],
-          "tables": [
-            {
-              "aliasedName": "a",
-              "name": "a",
-              "schemaName": null
-            },
-            {
-              "aliasedName": "b",
-              "name": "b",
-              "schemaName": null
-            }
-          ]
+          "tables": []
         },
         "notes": [],
         "records": [],
@@ -76,20 +129,20 @@
         "token": {
           "end": {
             "column": 1,
-            "line": 2,
-            "offset": 36
+            "line": 4,
+            "offset": 79
           },
           "filepath": {
-            "path": "/main-2.dbml"
+            "path": "/main-wildcard-reuse.dbml"
           },
           "start": {
             "column": 1,
-            "line": 1,
-            "offset": 0
+            "line": 3,
+            "offset": 43
           }
         }
       },
-      "/main-3.dbml": {
+      "/main-wildcard-use.dbml": {
         "aliases": [],
         "enums": [],
         "externals": {
@@ -97,18 +150,7 @@
           "notes": [],
           "tableGroups": [],
           "tablePartials": [],
-          "tables": [
-            {
-              "aliasedName": "c",
-              "name": "a",
-              "schemaName": null
-            },
-            {
-              "aliasedName": "d",
-              "name": "b",
-              "schemaName": null
-            }
-          ]
+          "tables": []
         },
         "notes": [],
         "records": [],
@@ -120,60 +162,16 @@
         "token": {
           "end": {
             "column": 1,
-            "line": 5,
-            "offset": 71
+            "line": 4,
+            "offset": 77
           },
           "filepath": {
-            "path": "/main-3.dbml"
+            "path": "/main-wildcard-use.dbml"
           },
           "start": {
             "column": 1,
-            "line": 1,
-            "offset": 0
-          }
-        }
-      },
-      "/main-4.dbml": {
-        "aliases": [],
-        "enums": [],
-        "externals": {
-          "enums": [],
-          "notes": [],
-          "tableGroups": [],
-          "tablePartials": [],
-          "tables": [
-            {
-              "aliasedName": "c",
-              "name": "a",
-              "schemaName": null
-            },
-            {
-              "aliasedName": "d",
-              "name": "b",
-              "schemaName": null
-            }
-          ]
-        },
-        "notes": [],
-        "records": [],
-        "refs": [],
-        "schemas": [],
-        "tableGroups": [],
-        "tablePartials": [],
-        "tables": [],
-        "token": {
-          "end": {
-            "column": 1,
-            "line": 5,
-            "offset": 73
-          },
-          "filepath": {
-            "path": "/main-4.dbml"
-          },
-          "start": {
-            "column": 1,
-            "line": 1,
-            "offset": 0
+            "line": 3,
+            "offset": 43
           }
         }
       },

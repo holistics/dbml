@@ -1,0 +1,12 @@
+// tests that a use-imported schema-qualified table, once aliased,
+// can be referenced by the alias inside a TableGroup
+use { table auth.users as u } from './auth-tables.dbml'
+
+Table orders {
+  id int [pk]
+}
+
+TableGroup admins {
+  u
+  orders
+}

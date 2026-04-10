@@ -9,9 +9,14 @@
       "tablePartials": [],
       "tables": [
         {
-          "aliasedName": "users",
           "name": "users",
-          "schemaName": null
+          "schemaName": null,
+          "visibleNames": [
+            {
+              "name": "users",
+              "schemaName": null
+            }
+          ]
         }
       ]
     },

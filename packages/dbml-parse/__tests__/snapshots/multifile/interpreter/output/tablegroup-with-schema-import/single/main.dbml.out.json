@@ -1,0 +1,207 @@
+{
+  "database": {
+    "aliases": [],
+    "enums": [],
+    "externals": {
+      "enums": [],
+      "notes": [],
+      "tableGroups": [],
+      "tablePartials": [],
+      "tables": [
+        {
+          "name": "users",
+          "schemaName": "auth",
+          "visibleNames": [
+            {
+              "name": "u",
+              "schemaName": null
+            }
+          ]
+        }
+      ]
+    },
+    "notes": [],
+    "records": [],
+    "refs": [],
+    "schemas": [],
+    "tableGroups": [
+      {
+        "name": "admins",
+        "schemaName": null,
+        "tables": [
+          {
+            "name": "orders",
+            "schemaName": null
+          }
+        ],
+        "token": {
+          "end": {
+            "column": 2,
+            "line": 12,
+            "offset": 244
+          },
+          "filepath": {
+            "path": "/main.dbml"
+          },
+          "start": {
+            "column": 1,
+            "line": 9,
+            "offset": 210
+          }
+        }
+      }
+    ],
+    "tablePartials": [],
+    "tables": [
+      {
+        "alias": null,
+        "checks": [],
+        "fields": [
+          {
+            "checks": [],
+            "increment": false,
+            "inline_refs": [],
+            "name": "id",
+            "pk": true,
+            "token": {
+              "end": {
+                "column": 14,
+                "line": 3,
+                "offset": 66
+              },
+              "filepath": {
+                "path": "/auth-tables.dbml"
+              },
+              "start": {
+                "column": 3,
+                "line": 3,
+                "offset": 55
+              }
+            },
+            "type": {
+              "args": null,
+              "schemaName": null,
+              "type_name": "int"
+            },
+            "unique": false
+          },
+          {
+            "inline_refs": [],
+            "name": "email",
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 16,
+                "line": 4,
+                "offset": 82
+              },
+              "filepath": {
+                "path": "/auth-tables.dbml"
+              },
+              "start": {
+                "column": 3,
+                "line": 4,
+                "offset": 69
+              }
+            },
+            "type": {
+              "args": null,
+              "schemaName": null,
+              "type_name": "varchar"
+            },
+            "unique": false
+          }
+        ],
+        "indexes": [],
+        "name": "u",
+        "partials": [],
+        "schemaName": null,
+        "token": {
+          "end": {
+            "column": 2,
+            "line": 5,
+            "offset": 84
+          },
+          "filepath": {
+            "path": "/auth-tables.dbml"
+          },
+          "start": {
+            "column": 1,
+            "line": 2,
+            "offset": 34
+          }
+        }
+      },
+      {
+        "alias": null,
+        "checks": [],
+        "fields": [
+          {
+            "checks": [],
+            "increment": false,
+            "inline_refs": [],
+            "name": "id",
+            "pk": true,
+            "token": {
+              "end": {
+                "column": 14,
+                "line": 6,
+                "offset": 206
+              },
+              "filepath": {
+                "path": "/main.dbml"
+              },
+              "start": {
+                "column": 3,
+                "line": 6,
+                "offset": 195
+              }
+            },
+            "type": {
+              "args": null,
+              "schemaName": null,
+              "type_name": "int"
+            },
+            "unique": false
+          }
+        ],
+        "indexes": [],
+        "name": "orders",
+        "partials": [],
+        "schemaName": null,
+        "token": {
+          "end": {
+            "column": 2,
+            "line": 7,
+            "offset": 208
+          },
+          "filepath": {
+            "path": "/main.dbml"
+          },
+          "start": {
+            "column": 1,
+            "line": 5,
+            "offset": 178
+          }
+        }
+      }
+    ],
+    "token": {
+      "end": {
+        "column": 1,
+        "line": 13,
+        "offset": 245
+      },
+      "filepath": {
+        "path": "/main.dbml"
+      },
+      "start": {
+        "column": 1,
+        "line": 3,
+        "offset": 121
+      }
+    }
+  },
+  "errors": [],
+  "warnings": []
+}

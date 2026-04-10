@@ -24,6 +24,14 @@ export const useModule: LocalModule = {
   nodeFullname (compiler: Compiler, node: SyntaxNode): Report<string[] | undefined> | Report<PassThrough> {
     if (!isUseSpecifier(node)) return Report.create(PASS_THROUGH); // Only use specifiers can have names
 
+    // When an alias is present, the local visible name has no schema prefix.
+    // Returning [alias] makes shouldBelongToThisSchema place this element in the public
+    // (default) scope rather than the source element's schema.
+    if (node.alias) {
+      const alias = extractVariableFromExpression(node.alias);
+      if (alias) return Report.create([alias]);
+    }
+
     const name = destructureComplexVariable(node.name);
 
     if (!name || name.length === 0) return Report.create(undefined, [

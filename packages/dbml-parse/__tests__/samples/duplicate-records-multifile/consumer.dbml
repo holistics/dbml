@@ -1,0 +1,7 @@
+// reuse pulls users (and its records); consumer also defines its own records for users
+reuse { table users } from './base.dbml'
+
+records users(id, name) {
+  3, 'Carol'
+  4, 'Dave'
+}

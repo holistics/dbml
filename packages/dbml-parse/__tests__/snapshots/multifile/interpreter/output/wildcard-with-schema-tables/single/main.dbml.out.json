@@ -1,0 +1,117 @@
+{
+  "database": {
+    "aliases": [],
+    "enums": [],
+    "externals": {
+      "enums": [],
+      "notes": [],
+      "tableGroups": [],
+      "tablePartials": [],
+      "tables": []
+    },
+    "notes": [],
+    "records": [],
+    "refs": [],
+    "schemas": [],
+    "tableGroups": [],
+    "tablePartials": [],
+    "tables": [
+      {
+        "alias": null,
+        "checks": [],
+        "fields": [
+          {
+            "checks": [],
+            "increment": false,
+            "inline_refs": [],
+            "name": "id",
+            "pk": true,
+            "token": {
+              "end": {
+                "column": 14,
+                "line": 5,
+                "offset": 125
+              },
+              "filepath": {
+                "path": "/main.dbml"
+              },
+              "start": {
+                "column": 3,
+                "line": 5,
+                "offset": 114
+              }
+            },
+            "type": {
+              "args": null,
+              "schemaName": null,
+              "type_name": "int"
+            },
+            "unique": false
+          },
+          {
+            "inline_refs": [],
+            "name": "user_id",
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 14,
+                "line": 6,
+                "offset": 139
+              },
+              "filepath": {
+                "path": "/main.dbml"
+              },
+              "start": {
+                "column": 3,
+                "line": 6,
+                "offset": 128
+              }
+            },
+            "type": {
+              "args": null,
+              "schemaName": null,
+              "type_name": "int"
+            },
+            "unique": false
+          }
+        ],
+        "indexes": [],
+        "name": "orders",
+        "partials": [],
+        "schemaName": null,
+        "token": {
+          "end": {
+            "column": 2,
+            "line": 7,
+            "offset": 141
+          },
+          "filepath": {
+            "path": "/main.dbml"
+          },
+          "start": {
+            "column": 1,
+            "line": 4,
+            "offset": 97
+          }
+        }
+      }
+    ],
+    "token": {
+      "end": {
+        "column": 1,
+        "line": 8,
+        "offset": 142
+      },
+      "filepath": {
+        "path": "/main.dbml"
+      },
+      "start": {
+        "column": 1,
+        "line": 2,
+        "offset": 64
+      }
+    }
+  },
+  "errors": [],
+  "warnings": []
+}

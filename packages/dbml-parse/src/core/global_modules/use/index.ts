@@ -52,7 +52,7 @@ export const useModule: GlobalModule = {
     if (symbolKind === undefined) return Report.create(undefined);
 
     const fullname = destructureComplexVariable(node.parentOfKind(InfixExpressionNode));
-    const name = fullname?.at(-1) ?? extractVariableFromExpression(node);
+    const name = extractVariableFromExpression(node) ?? fullname?.at(-1);
     if (name === undefined) return Report.create(undefined);
 
     const useDeclaration = node.parentOfKind(UseDeclarationNode);
@@ -69,7 +69,7 @@ export const useModule: GlobalModule = {
     );
 
     const leftNode = node.parentOfKind(InfixExpressionNode)?.leftExpression;
-    if (leftNode) {
+    if (leftNode && leftNode !== node) {
       const parentSymbol = compiler.nodeReferee(leftNode).getFiltered(UNHANDLED);
       if (!parentSymbol) return Report.create(undefined);
 
@@ -148,7 +148,10 @@ export const useModule: GlobalModule = {
     }
 
     if (isUseSpecifier(node)) {
-      const errors = compiler.nodeReferee(node).getErrors();
+      // Call nodeReferee on the name expression (not the specifier itself) so that
+      // kind-mismatch and nonexistent-name errors are produced during binding.
+      if (!node.name) return new Report(undefined);
+      const errors = compiler.nodeReferee(node.name).getErrors();
 
       return new Report(undefined, errors);
     }

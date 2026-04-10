@@ -96,7 +96,7 @@ export class SyntaxNode implements Internable<InternedSyntaxNode> {
   }
 
   parentOfKind<T extends SyntaxNode> (cls: (new (...args: any[]) => T)): T | undefined {
-    let current: SyntaxNode | undefined = this.parentNode;
+    let current: SyntaxNode | undefined = this;
     while (current) {
       if (current instanceof cls) {
         return current;

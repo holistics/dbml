@@ -1,9 +1,9 @@
 import Compiler from '@/compiler/index';
-import { CallExpressionNode, ElementDeclarationNode, ProgramNode } from '@/core/parser/nodes';
+import { CallExpressionNode, ElementDeclarationNode, ProgramNode, UseSpecifierListNode } from '@/core/parser/nodes';
 import { ElementKind } from '@/core/types/keywords';
 import { DEFAULT_SCHEMA_NAME, UNHANDLED } from '@/constants';
 import Report from '@/core/report';
-import type { Database, Ref, RefEndpoint, Table, TableRecord, SchemaElement, Enum, TableGroup, TablePartial, Note, Project } from '@/core/types/schemaJson';
+import type { Database, ElementRef, Ref, RefEndpoint, Table, TableRecord, SchemaElement, Enum, TableGroup, TablePartial, Note, Project } from '@/core/types/schemaJson';
 import { getTokenPosition, getMultiplicities } from '../utils';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import type { CompileWarning } from '@/core/errors';
@@ -60,26 +60,62 @@ export default class ProgramInterpreter {
       this.collectElementToDb(db, kind, node, value);
     }
 
-    // Collect external references from use/reuse declarations
-    const programSymbol = this.compiler.nodeSymbol(this.programNode).getFiltered(UNHANDLED);
-    if (programSymbol) {
-      const members = this.compiler.symbolMembers(programSymbol).getFiltered(UNHANDLED);
-      if (members) {
-        for (const member of members) {
+    // Collect external references from use/reuse declarations.
+    // UseSymbols are the symbols of UseSpecifierNodes — not members of the program scope —
+    // so we walk the use declarations directly instead of going through symbolMembers.
+    // Group by canonical (kind + schema + name) so multiple imports of the same element
+    // accumulate into a single ElementRef with multiple visibleNames.
+    {
+      const extMap = new Map<string, ElementRef>();
+
+      const listForKind = (member: UseSymbol): ElementRef[] | undefined => {
+        if (member.isKind(SymbolKind.Table)) return db.externals.tables;
+        if (member.isKind(SymbolKind.Enum)) return db.externals.enums;
+        if (member.isKind(SymbolKind.TableGroup)) return db.externals.tableGroups;
+        if (member.isKind(SymbolKind.TablePartial)) return db.externals.tablePartials;
+        if (member.isKind(SymbolKind.Note)) return db.externals.notes;
+        return undefined;
+      };
+
+      const kindKey = (member: UseSymbol): string => {
+        if (member.isKind(SymbolKind.Table)) return ElementKind.Table;
+        if (member.isKind(SymbolKind.Enum)) return ElementKind.Enum;
+        if (member.isKind(SymbolKind.TableGroup)) return ElementKind.TableGroup;
+        if (member.isKind(SymbolKind.TablePartial)) return ElementKind.TablePartial;
+        if (member.isKind(SymbolKind.Note)) return ElementKind.Note;
+        return '';
+      };
+
+      for (const useDecl of this.programNode.uses) {
+        if (!(useDecl.specifiers instanceof UseSpecifierListNode)) continue;
+        for (const spec of useDecl.specifiers.specifiers) {
+          const member = this.compiler.nodeSymbol(spec).getFiltered(UNHANDLED);
           if (!(member instanceof UseSymbol)) continue;
           const name = member.usedSymbol ? this.compiler.symbolName(member.usedSymbol) : undefined;
           if (!name) continue;
-          const aliasedName = this.compiler.symbolName(member) ?? name;
+          const list = listForKind(member);
+          if (!list) continue;
+
+          const localName = this.compiler.symbolName(member) ?? name;
           const schemaName = member.usedSymbol?.declaration
             ? (this.compiler.nodeFullname(member.usedSymbol.declaration).getFiltered(UNHANDLED)?.slice(0, -1).join('.') || null)
             : null;
-          const ref = { name, schemaName, aliasedName };
 
-          if (member.isKind(SymbolKind.Table)) db.externals.tables.push(ref);
-          else if (member.isKind(SymbolKind.Enum)) db.externals.enums.push(ref);
-          else if (member.isKind(SymbolKind.TableGroup)) db.externals.tableGroups.push(ref);
-          else if (member.isKind(SymbolKind.TablePartial)) db.externals.tablePartials.push(ref);
-          else if (member.isKind(SymbolKind.Note)) db.externals.notes.push(ref);
+          // Direct imports retain the original schemaName.
+          // Explicit aliases replace schema with null.
+          const isDirect = localName === name;
+          const visibleName = isDirect
+            ? { schemaName, name: localName }
+            : { schemaName: null, name: localName };
+
+          const canonicalKey = `${kindKey(member)}:${schemaName ?? ''}.${name}`;
+          if (extMap.has(canonicalKey)) {
+            extMap.get(canonicalKey)!.visibleNames.push(visibleName);
+          } else {
+            const ref: ElementRef = { name, schemaName, visibleNames: [visibleName] };
+            extMap.set(canonicalKey, ref);
+            list.push(ref);
+          }
         }
       }
     }
@@ -90,7 +126,7 @@ export default class ProgramInterpreter {
         db.aliases.push({
           name: table.alias,
           kind: 'table' as const,
-          value: { tableName: table.name, schemaName: table.schemaName },
+          value: { elementName: table.name, tableName: table.name, schemaName: table.schemaName },
         });
       }
     }
@@ -239,8 +275,10 @@ export default class ProgramInterpreter {
     const sName = schemaName ?? DEFAULT_SCHEMA_NAME;
     // Check local tables
     if (db.tables.some((t) => t.name === tableName && (t.schemaName ?? DEFAULT_SCHEMA_NAME) === sName)) return true;
-    // Check imported tables (via use/reuse)
-    if (db.externals.tables.some((t) => t.aliasedName === tableName && (t.schemaName ?? DEFAULT_SCHEMA_NAME) === sName)) return true;
+    // Check imported tables (via use/reuse), any visible name matches
+    if (db.externals.tables.some((t) => t.visibleNames.some(
+      (v) => v.name === tableName && (v.schemaName ?? DEFAULT_SCHEMA_NAME) === sName,
+    ))) return true;
     return false;
   }
 

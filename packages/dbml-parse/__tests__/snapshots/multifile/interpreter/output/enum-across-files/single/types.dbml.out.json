@@ -1,0 +1,113 @@
+{
+  "database": {
+    "aliases": [],
+    "enums": [
+      {
+        "name": "job_status",
+        "schemaName": null,
+        "token": {
+          "end": {
+            "column": 2,
+            "line": 6,
+            "offset": 61
+          },
+          "filepath": {
+            "path": "/types.dbml"
+          },
+          "start": {
+            "column": 1,
+            "line": 2,
+            "offset": 15
+          }
+        },
+        "values": [
+          {
+            "name": "pending",
+            "token": {
+              "end": {
+                "column": 10,
+                "line": 3,
+                "offset": 42
+              },
+              "filepath": {
+                "path": "/types.dbml"
+              },
+              "start": {
+                "column": 3,
+                "line": 3,
+                "offset": 35
+              }
+            }
+          },
+          {
+            "name": "running",
+            "token": {
+              "end": {
+                "column": 10,
+                "line": 4,
+                "offset": 52
+              },
+              "filepath": {
+                "path": "/types.dbml"
+              },
+              "start": {
+                "column": 3,
+                "line": 4,
+                "offset": 45
+              }
+            }
+          },
+          {
+            "name": "done",
+            "token": {
+              "end": {
+                "column": 7,
+                "line": 5,
+                "offset": 59
+              },
+              "filepath": {
+                "path": "/types.dbml"
+              },
+              "start": {
+                "column": 3,
+                "line": 5,
+                "offset": 55
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "externals": {
+      "enums": [],
+      "notes": [],
+      "tableGroups": [],
+      "tablePartials": [],
+      "tables": []
+    },
+    "notes": [],
+    "records": [],
+    "refs": [],
+    "schemas": [],
+    "tableGroups": [],
+    "tablePartials": [],
+    "tables": [],
+    "token": {
+      "end": {
+        "column": 1,
+        "line": 7,
+        "offset": 62
+      },
+      "filepath": {
+        "path": "/types.dbml"
+      },
+      "start": {
+        "column": 1,
+        "line": 2,
+        "offset": 15
+      }
+    }
+  },
+  "errors": [],
+  "warnings": []
+}

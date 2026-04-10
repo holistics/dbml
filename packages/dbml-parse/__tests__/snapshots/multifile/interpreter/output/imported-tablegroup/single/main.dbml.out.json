@@ -1,0 +1,78 @@
+{
+  "database": {
+    "aliases": [],
+    "enums": [],
+    "externals": {
+      "enums": [],
+      "notes": [],
+      "tableGroups": [
+        {
+          "name": "content",
+          "schemaName": null,
+          "visibleNames": [
+            {
+              "name": "content",
+              "schemaName": null
+            }
+          ]
+        }
+      ],
+      "tablePartials": [],
+      "tables": []
+    },
+    "notes": [],
+    "records": [],
+    "refs": [],
+    "schemas": [],
+    "tableGroups": [
+      {
+        "name": "content",
+        "schemaName": null,
+        "tables": [
+          {
+            "name": "users",
+            "schemaName": null
+          },
+          {
+            "name": "posts",
+            "schemaName": null
+          }
+        ],
+        "token": {
+          "end": {
+            "column": 2,
+            "line": 15,
+            "offset": 174
+          },
+          "filepath": {
+            "path": "/base.dbml"
+          },
+          "start": {
+            "column": 1,
+            "line": 12,
+            "offset": 136
+          }
+        }
+      }
+    ],
+    "tablePartials": [],
+    "tables": [],
+    "token": {
+      "end": {
+        "column": 1,
+        "line": 3,
+        "offset": 114
+      },
+      "filepath": {
+        "path": "/main.dbml"
+      },
+      "start": {
+        "column": 1,
+        "line": 2,
+        "offset": 68
+      }
+    }
+  },
+  "errors": [],
+  "warnings": []
+}

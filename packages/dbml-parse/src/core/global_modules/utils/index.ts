@@ -5,7 +5,7 @@ import { SyntaxTokenKind } from '@/core/lexer/tokens';
 import { ArrayNode, CallExpressionNode, FunctionExpressionNode, InfixExpressionNode, LiteralNode, PostfixExpressionNode, PrefixExpressionNode, PrimaryExpressionNode, SyntaxNode, TupleExpressionNode, VariableNode } from '@/core/parser/nodes';
 import { getMemberChain } from '@/core/parser/utils';
 import Report from '@/core/report';
-import { ColumnType, NodeSymbol, RelationCardinality, SchemaSymbol, SymbolKind, TokenPosition } from '@/core/types';
+import { ColumnType, NodeSymbol, RelationCardinality, SchemaSymbol, SymbolKind, TokenPosition, UseSymbol } from '@/core/types';
 import { destructureComplexVariable, destructureComplexVariableTuple, destructureMemberAccessExpression, extractQuotedStringToken, extractVariableFromExpression, extractVarNameFromPrimaryVariable, getNumberTextFromExpression, isAccessExpression, isDotDelimitedIdentifier, isExpressionAnIdentifierNode, isExpressionAQuotedString, isExpressionASignedNumberExpression, isExpressionAVariableNode, parseNumber } from '@/core/utils/expression';
 import { zip } from 'lodash-es';
 
@@ -355,8 +355,11 @@ export function lookupMember (
   const match = members.find((m: NodeSymbol) => {
     if (kinds && !m.isKind(...kinds)) return false;
     if (parentSymbol.isKind(SymbolKind.Program) || (parentSymbol instanceof SchemaSymbol && parentSymbol.qualifiedName.join('.') === DEFAULT_SCHEMA_NAME)) {
-      if (m.declaration && compiler.nodeAlias(m.declaration).getFiltered(UNHANDLED) === name) return true; // Aliases can be found in public
-      if (m.declaration && (compiler.nodeFullname(m.declaration).getFiltered(UNHANDLED) || []).length > 1) return false; // This is a qualfied element
+      // For UseSymbols, use the specifier node (which carries the local alias) rather than
+      // the original declaration (which has the source schema-qualified name).
+      const lookupDecl = (m instanceof UseSymbol && m.useSpecifierDeclaration) ? m.useSpecifierDeclaration : m.declaration;
+      if (lookupDecl && compiler.nodeAlias(lookupDecl).getFiltered(UNHANDLED) === name) return true; // Aliases (table `as`) and use-specifier aliases can be found in public
+      if (lookupDecl && (compiler.nodeFullname(lookupDecl).getFiltered(UNHANDLED) || []).length > 1) return false; // This is a qualified element
     }
     return compiler.symbolName(m) === name;
   });

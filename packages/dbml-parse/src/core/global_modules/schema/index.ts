@@ -53,8 +53,9 @@ export const schemaModule: GlobalModule = {
       }
     }
 
-    // Filter out duplicate symbols (same real symbol)
-    const uniqueExpandedMembers = uniqBy(membersWithExpansions, (m) => m.originalSymbol);
+    // Filter out duplicate symbols (same real symbol), but keep distinct UseSymbols even if they
+    // wrap the same underlying symbol (e.g. two aliases for the same table).
+    const uniqueExpandedMembers = uniqBy(membersWithExpansions, (m) => (m instanceof UseSymbol ? m : m.originalSymbol));
 
     const errors: CompileError[] = [];
 

@@ -9,9 +9,14 @@
       "tablePartials": [],
       "tables": [
         {
-          "aliasedName": "b_table",
           "name": "b_table",
-          "schemaName": null
+          "schemaName": null,
+          "visibleNames": [
+            {
+              "name": "b_table",
+              "schemaName": null
+            }
+          ]
         }
       ]
     },

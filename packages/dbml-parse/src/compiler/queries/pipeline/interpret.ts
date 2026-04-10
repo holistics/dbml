@@ -1,9 +1,10 @@
 import type Compiler from '@/compiler';
 import { DEFAULT_ENTRY, UNHANDLED } from '@/constants';
 import Report from '@/core/report';
-import type { Database, MasterDatabase, Table, TablePartial } from '@/core/types';
+import type { AliasKind, Database, ElementRef, MasterDatabase, Table, TablePartial } from '@/core/types';
 import { Filepath, type FilepathId } from '@/core/types/filepath';
 import type { CompileError, CompileWarning } from '@/core/errors';
+import { ElementKind } from '@/core/types/keywords';
 
 // Strip internal-only column type properties for public JSON export.
 function stripColumnInternals<T extends Table | TablePartial> (table: T): T {
@@ -105,7 +106,12 @@ export function interpretProject (this: Compiler): Report<MasterDatabase> {
 }
 
 // Export a reconciled, stripped Database for a single file
-// Consumers should use this query
+// Export a reconciled, stripped Database for a single file.
+// 1. Collect all items by canonical name (schemaName.name), using filepath to disambiguate
+// 2. For each external, find the canonical item and add it with the primary local name
+// 3. If an element has multiple aliases, original name (if directly imported) or first alias becomes primary; rest go to Alias array
+// 4. Rename refs/records endpoints to use local names
+// 5. Alias replaces both schema and name: use { table auth.users as u } -> name: 'u', schemaName: null
 export function exportSchemaJson (this: Compiler, filepath: Filepath): Report<Readonly<Database> | undefined> {
   const fp = filepath ?? DEFAULT_ENTRY;
   const projectResult = this.interpretProject();
@@ -116,10 +122,14 @@ export function exportSchemaJson (this: Compiler, filepath: Filepath): Report<Re
     return projectResult.map(() => undefined);
   }
 
-  // Start with the file's own local items
+  const allItems = master.items;
+
+  // Build rename map: canonical "schemaName.name" -> local primary name
+  const renameMap = new Map<string, string>();
+
+  // Start with local items (identity mapping in rename map)
   const reconciled: Database = {
     ...fileDb,
-    // Clone arrays so we can push imported items
     tables: [...fileDb.tables],
     notes: [...fileDb.notes],
     refs: [...fileDb.refs],
@@ -130,46 +140,104 @@ export function exportSchemaJson (this: Compiler, filepath: Filepath): Report<Re
     records: [...fileDb.records],
   };
 
-  // Resolve externals: find actual items from master.items and add them with aliased names
-  const allItems = master.items;
+  for (const t of fileDb.tables) renameMap.set(canonicalElementKey(t.schemaName, t.name), t.name);
 
-  for (const ext of fileDb.externals.tables) {
-    const found = allItems.tables.find((t) => t.name === ext.name && (t.schemaName ?? null) === ext.schemaName);
-    if (found) reconciled.tables.push(ext.aliasedName !== ext.name ? { ...found, name: ext.aliasedName, alias: found.alias } : found);
-  }
-  for (const ext of fileDb.externals.enums) {
-    const found = allItems.enums.find((e) => e.name === ext.name && (e.schemaName ?? null) === ext.schemaName);
-    if (found) reconciled.enums.push(ext.aliasedName !== ext.name ? { ...found, name: ext.aliasedName } : found);
-  }
-  for (const ext of fileDb.externals.tableGroups) {
-    const found = allItems.tableGroups.find((g) => g.name === ext.name);
-    if (found) reconciled.tableGroups.push(ext.aliasedName !== ext.name ? { ...found, name: ext.aliasedName } : found);
-  }
-  for (const ext of fileDb.externals.tablePartials) {
-    const found = allItems.tablePartials.find((p) => p.name === ext.name);
-    if (found) reconciled.tablePartials.push(ext.aliasedName !== ext.name ? { ...found, name: ext.aliasedName } : found);
-  }
-  for (const ext of fileDb.externals.notes) {
-    const found = allItems.notes.find((n) => (n as any).name === ext.name);
-    if (found) reconciled.notes.push(found);
+  // Reconcile externals: visibleNames[0] is the primary name, the rest become aliases.
+  const externalKinds: Array<[ElementRef[], AliasKind]> = [
+    [fileDb.externals.tables, ElementKind.Table as AliasKind],
+    [fileDb.externals.enums, ElementKind.Enum as AliasKind],
+    [fileDb.externals.tableGroups, ElementKind.TableGroup as AliasKind],
+    [fileDb.externals.tablePartials, ElementKind.TablePartial as AliasKind],
+    [fileDb.externals.notes, ElementKind.Note as AliasKind],
+  ];
+
+  for (const [refs, kind] of externalKinds) {
+    for (const ext of refs) {
+      if (ext.visibleNames.length === 0) continue;
+      const [primaryVisible, ...restVisible] = ext.visibleNames;
+      const primaryName = primaryVisible.name;
+
+      // Find canonical item from merged items
+      const found = findItem(allItems, kind, ext.name, ext.schemaName);
+      if (!found) continue;
+
+      // Add with primary name; strip schema if renamed
+      const isRenamed = primaryName !== ext.name || ext.schemaName !== null;
+      pushItem(reconciled, kind, isRenamed ? { ...found, name: primaryName, schemaName: null } : found);
+
+      if (kind === ElementKind.Table) {
+        renameMap.set(canonicalElementKey(ext.schemaName, ext.name), primaryName);
+      }
+
+      // Remaining visible names -> Alias array
+      for (const visible of restVisible) {
+        reconciled.aliases.push({
+          name: visible.name,
+          kind,
+          value: { elementName: primaryName, tableName: primaryName, schemaName: null },
+        });
+      }
+    }
   }
 
-  const visibleTables = new Set(reconciled.tables.map((t) => `${t.schemaName ?? ''}.${t.name}`));
-  // Also include refs that reference tables visible in this file
+  // Collect cross-file refs whose endpoints are all visible (by canonical name)
   for (const ref of allItems.refs) {
-    if (reconciled.refs.includes(ref)) continue; // already local
-    if (ref.endpoints.every((ep) => visibleTables.has(`${ep.schemaName ?? ''}.${ep.tableName}`))) {
+    if (reconciled.refs.includes(ref)) continue;
+    if (ref.endpoints.every((ep) => renameMap.has(canonicalElementKey(ep.schemaName, ep.tableName)))) {
       reconciled.refs.push(ref);
     }
   }
 
-  // Also include records that reference tables visible in this file
-  for (const records of allItems.records) {
-    if (reconciled.records.includes(records)) continue; // already local
-    if (visibleTables.has(`${records.schemaName ?? ''}.${records.tableName}`)) {
-      reconciled.records.push(records);
+  // Collect cross-file records whose table is visible
+  for (const rec of allItems.records) {
+    if (reconciled.records.includes(rec)) continue;
+    if (renameMap.has(canonicalElementKey(rec.schemaName ?? null, rec.tableName))) {
+      reconciled.records.push(rec);
     }
   }
 
+  // Rewrite ref endpoints to local names
+  reconciled.refs = reconciled.refs.map((ref) => ({
+    ...ref,
+    endpoints: ref.endpoints.map((ep) => {
+      const local = renameMap.get(canonicalElementKey(ep.schemaName, ep.tableName));
+      return (local && (local !== ep.tableName || ep.schemaName))
+        ? { ...ep, tableName: local, schemaName: null }
+        : ep;
+    }) as typeof ref.endpoints,
+  }));
+
+  // Rewrite record table references to local names
+  reconciled.records = reconciled.records.map((rec) => {
+    const local = renameMap.get(canonicalElementKey(rec.schemaName ?? null, rec.tableName));
+    return (local && (local !== rec.tableName || rec.schemaName))
+      ? { ...rec, tableName: local, schemaName: undefined }
+      : rec;
+  });
+
   return new Report(stripDatabase(reconciled), projectResult.getErrors(), projectResult.getWarnings());
+}
+
+function canonicalElementKey (schema: string | null | undefined, name: string): string {
+  return `${schema ?? ''}.${name}`;
+}
+
+function findItem (items: Database, kind: AliasKind, name: string, schema: string | null): any {
+  switch (kind) {
+    case ElementKind.Table: return items.tables.find((t) => t.name === name && (t.schemaName ?? null) === schema);
+    case ElementKind.Enum: return items.enums.find((e) => e.name === name && (e.schemaName ?? null) === schema);
+    case ElementKind.TableGroup: return items.tableGroups.find((g) => g.name === name);
+    case ElementKind.TablePartial: return items.tablePartials.find((p) => p.name === name);
+    case ElementKind.Note: return items.notes.find((n) => (n as any).name === name);
+  }
+}
+
+function pushItem (db: Database, kind: AliasKind, item: any): void {
+  switch (kind) {
+    case ElementKind.Table: db.tables.push(item); break;
+    case ElementKind.Enum: db.enums.push(item); break;
+    case ElementKind.TableGroup: db.tableGroups.push(item); break;
+    case ElementKind.TablePartial: db.tablePartials.push(item); break;
+    case ElementKind.Note: db.notes.push(item); break;
+  }
 }

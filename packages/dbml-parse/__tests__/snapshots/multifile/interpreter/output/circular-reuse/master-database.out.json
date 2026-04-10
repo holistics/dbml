@@ -11,9 +11,14 @@
           "tablePartials": [],
           "tables": [
             {
-              "aliasedName": "shared_types",
               "name": "shared_types",
-              "schemaName": null
+              "schemaName": null,
+              "visibleNames": [
+                {
+                  "name": "shared_types",
+                  "schemaName": null
+                }
+              ]
             }
           ]
         },
@@ -105,9 +110,14 @@
           "tablePartials": [],
           "tables": [
             {
-              "aliasedName": "users",
               "name": "users",
-              "schemaName": null
+              "schemaName": null,
+              "visibleNames": [
+                {
+                  "name": "users",
+                  "schemaName": null
+                }
+              ]
             }
           ]
         },

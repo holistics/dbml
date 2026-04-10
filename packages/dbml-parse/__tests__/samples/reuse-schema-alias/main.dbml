@@ -1,0 +1,8 @@
+// reuse (not use) with schema-qualified source and local alias;
+// inline ref binds against the alias 'u'
+reuse { table auth.users as u } from './auth-tables.dbml'
+
+Table orders {
+  id int [pk]
+  user_id int [ref: > u.id]
+}

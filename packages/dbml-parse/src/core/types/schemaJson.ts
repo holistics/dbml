@@ -9,11 +9,14 @@ export interface TokenPosition {
 
 // A reference to an element imported via `use` or `reuse`.
 // `name` + `schemaName` identify the original element in the source file.
-// `aliasedName` is the local name used in this file (from `as` clause), defaults to `name`.
+// `visibleNames` lists every local name under which the element is reachable in this file.
+// The first entry wins (primary name).
+// Direct imports and explicit `as` aliases both appear here.
+// Aliases have `schemaName: null`; direct imports retain the original `schemaName`.
 export interface ElementRef {
   name: string;
   schemaName: string | null;
-  aliasedName: string;
+  visibleNames: { schemaName: string | null; name: string }[];
 }
 
 export interface DatabaseExternals {
@@ -184,10 +187,14 @@ export interface TableGroupField {
   schemaName: string | null;
 }
 
+export type AliasKind = 'table' | 'enum' | 'tablegroup' | 'tablepartial' | 'note';
+
 export interface Alias {
   name: string;
-  kind: 'table';
+  kind: AliasKind;
   value: {
+    elementName: string;
+    /** @deprecated Use elementName instead */
     tableName: string;
     schemaName: string | null;
   };

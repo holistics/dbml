@@ -1,0 +1,6 @@
+// imports users under its original name
+use { table users } from './base.dbml'
+
+TableGroup group_b {
+  users
+}
