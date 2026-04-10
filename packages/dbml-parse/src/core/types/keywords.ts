@@ -10,13 +10,25 @@ export enum ImportKind {
   Schema = 'schema',
 }
 
-export const IMPORT_KINDS_TO_SYMBOL_KINDS = {
-  [ImportKind.Table]: SymbolKind.Table,
-  [ImportKind.Enum]: SymbolKind.Enum,
-  [ImportKind.TableGroup]: SymbolKind.TableGroup,
-  [ImportKind.TablePartial]: SymbolKind.TablePartial,
-  [ImportKind.Note]: SymbolKind.Note,
-  [ImportKind.Schema]: SymbolKind.Schema,
+export function convertImportKindToSymbolKind (importKind: ImportKind): SymbolKind {
+  switch (importKind) {
+    case ImportKind.Table:
+      return SymbolKind.Table;
+    case ImportKind.Enum:
+      return SymbolKind.Enum;
+    case ImportKind.TableGroup:
+      return SymbolKind.TableGroup;
+    case ImportKind.TablePartial:
+      return SymbolKind.TablePartial;
+    case ImportKind.Note:
+      return SymbolKind.Note;
+    case ImportKind.Schema:
+      return SymbolKind.Schema;
+    default: {
+      const _: never = importKind; // exhaustive check
+      throw new Error('Unreachable in convertImportKindToSymbolKind');
+    }
+  }
 };
 
 export enum ElementKind {

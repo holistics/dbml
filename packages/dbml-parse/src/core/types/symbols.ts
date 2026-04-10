@@ -2,7 +2,7 @@ import { type SyntaxNode, UseDeclarationNode, type UseSpecifierNode, type Wildca
 import type { Internable } from '@/core/types/internable';
 import type { Filepath } from './filepath';
 
-export const enum SymbolKind {
+export enum SymbolKind {
   Schema = 'Schema',
 
   Table = 'Table',
