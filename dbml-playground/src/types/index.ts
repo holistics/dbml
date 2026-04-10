@@ -36,6 +36,10 @@ export interface ParserError {
     readonly line: number;
     readonly column: number;
   };
+  readonly endLocation: {
+    readonly line: number;
+    readonly column: number;
+  };
 }
 
 export interface ParserResult {

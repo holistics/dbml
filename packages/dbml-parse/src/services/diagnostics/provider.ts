@@ -83,21 +83,41 @@ export default class DBMLDiagnosticsProvider {
     errorOrWarning: CompileError | CompileWarning,
     severity: 'error' | 'warning',
   ): Diagnostic {
-    const nodeOrToken = errorOrWarning.nodeOrToken;
+    const n = errorOrWarning.nodeOrToken as any;
 
-    // Get position from the node or token
-    // Both SyntaxNode and SyntaxToken always have startPos and endPos
-    const item = nodeOrToken as SyntaxNode | SyntaxToken;
-    const startPos = item.startPos;
-    const endPos = item.endPos;
+    // SyntaxNode or SyntaxToken: has startPos/endPos (0-based)
+    if (n?.startPos) {
+      return {
+        type: severity,
+        text: errorOrWarning.diagnostic,
+        startRow: n.startPos.line + 1,
+        startColumn: n.startPos.column + 1,
+        endRow: n.endPos.line + 1,
+        endColumn: n.endPos.column + 1,
+        code: errorOrWarning.code,
+      };
+    }
+
+    // Schema objects (e.g. TableRecord): has token.start/end (1-based)
+    if (n?.token?.start) {
+      return {
+        type: severity,
+        text: errorOrWarning.diagnostic,
+        startRow: n.token.start.line,
+        startColumn: n.token.start.column,
+        endRow: n.token.end?.line ?? n.token.start.line,
+        endColumn: n.token.end?.column ?? n.token.start.column,
+        code: errorOrWarning.code,
+      };
+    }
 
     return {
       type: severity,
       text: errorOrWarning.diagnostic,
-      startRow: startPos.line + 1,
-      startColumn: startPos.column + 1,
-      endRow: endPos.line + 1,
-      endColumn: endPos.column + 1,
+      startRow: 1,
+      startColumn: 1,
+      endRow: 1,
+      endColumn: 1,
       code: errorOrWarning.code,
     };
   }
