@@ -8,7 +8,7 @@ import Validator from '@/core/analyzer/validator/validator';
 import SymbolFactory from '@/core/analyzer/symbol/factory';
 import { scanTestNames, toSnapshot } from '@tests/utils';
 import Compiler from '@/compiler';
-import type Report from '@/core/report';
+import type Report from '@/core/types/report';
 
 function serializeValidatorResult (compiler: Compiler, report: Report<ProgramNode>): string {
   const value = report.getValue();

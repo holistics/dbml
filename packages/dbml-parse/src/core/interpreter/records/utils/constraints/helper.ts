@@ -1,6 +1,6 @@
 import { RecordValue, Column, TableRecordRow } from '@/core/interpreter/types';
 import { isSerialType } from '../data';
-import { CompileError, CompileErrorCode } from '@/core/errors';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
 
 export function extractKeyValueWithDefault (
   row: Record<string, RecordValue>,

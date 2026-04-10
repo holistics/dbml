@@ -8,10 +8,10 @@ import { EnumInterpreter } from '@/core/interpreter/elementInterpreter/enum';
 import { ProjectInterpreter } from '@/core/interpreter/elementInterpreter/project';
 import { TablePartialInterpreter } from '@/core/interpreter/elementInterpreter/tablePartial';
 import { RecordsInterpreter } from '@/core/interpreter/records';
-import Report from '@/core/report';
+import Report from '@/core/types/report';
 import { getElementKind } from '@/core/analyzer/utils';
 import { ElementKind } from '@/core/analyzer/types';
-import { CompileWarning } from '../errors';
+import { CompileWarning } from '@/core/types/errors';
 import { getTokenPosition } from './utils';
 
 function processColumnInDb<T extends Table | TablePartial> (table: T): T {

@@ -7,7 +7,7 @@ import {
 } from '../../../parser/nodes';
 import { ElementBinder } from '../types';
 import { SyntaxToken } from '../../../lexer/tokens';
-import { CompileError, CompileErrorCode } from '../../../errors';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import { pickBinder, scanNonListNodeForBinding } from '../utils';
 import { destructureComplexVariable, extractVarNameFromPrimaryVariable, getElementKind } from '../../utils';
 import { ElementKind } from '../../types';

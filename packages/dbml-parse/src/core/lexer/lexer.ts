@@ -1,5 +1,5 @@
-import { CompileError, CompileErrorCode } from '@/core/errors';
-import Report from '@/core/report';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import Report from '@/core/types/report';
 import { isAlphaOrUnderscore, isAlphaNumeric, isDigit } from '@/core/utils';
 import {
   SyntaxToken, SyntaxTokenKind, isOp, isTriviaToken,

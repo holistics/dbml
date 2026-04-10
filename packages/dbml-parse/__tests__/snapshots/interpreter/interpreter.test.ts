@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest';
 import { scanTestNames, Snappable, toSnapshot } from '@tests/utils';
 import Compiler from '@/compiler';
 import type { Database } from '@/index';
-import type Report from '@/core/report';
+import type Report from '@/core/types/report';
 
 function serializeInterpreterResult (compiler: Compiler, report: Report<Database | undefined>): string {
   const value = report.getValue();

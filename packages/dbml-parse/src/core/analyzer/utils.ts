@@ -1,5 +1,5 @@
 import { last } from 'lodash-es';
-import { None, Option, Some } from '@/core/option';
+import { None, Option, Some } from '@/core/types/option';
 import {
   ElementDeclarationNode,
   FunctionExpressionNode,

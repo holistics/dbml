@@ -1,4 +1,4 @@
-import { CompileError } from '../../../errors';
+import { CompileError } from '@/core/types/errors';
 import { ElementBinder } from '../types';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ProgramNode,

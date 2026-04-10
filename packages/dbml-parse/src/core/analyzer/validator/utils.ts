@@ -33,8 +33,8 @@ import {
   extractStringFromIdentifierStream, isAccessExpression, isDotDelimitedIdentifier, isExpressionAQuotedString, isExpressionAVariableNode, isExpressionAnIdentifierNode,
 } from '@/core/parser/utils';
 import { NUMERIC_LITERAL_PREFIX } from '@/constants';
-import Report from '@/core/report';
-import { CompileError, CompileErrorCode } from '@/core/errors';
+import Report from '@/core/types/report';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import { ElementKind } from '@/core/analyzer/types';
 import TablePartialValidator from './elementValidators/tablePartial';
 import ChecksValidator from './elementValidators/checks';

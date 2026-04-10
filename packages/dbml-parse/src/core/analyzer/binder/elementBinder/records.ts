@@ -3,7 +3,7 @@ import { ElementBinder } from '../types';
 import {
   BlockExpressionNode, CommaExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ProgramNode, SyntaxNode,
 } from '../../../parser/nodes';
-import { CompileError, CompileErrorCode } from '../../../errors';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import { lookupAndBindInScope, pickBinder, scanNonListNodeForBinding } from '../utils';
 import SymbolFactory from '../../symbol/factory';
 import {

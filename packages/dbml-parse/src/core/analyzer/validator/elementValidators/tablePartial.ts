@@ -1,6 +1,6 @@
 import { partition, forIn, last } from 'lodash-es';
 import SymbolFactory from '@/core/analyzer/symbol/factory';
-import { CompileError, CompileErrorCode } from '@/core/errors';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import {
   AttributeNode,
   BlockExpressionNode,

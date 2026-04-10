@@ -1,6 +1,6 @@
 import { extractQuotedStringToken, extractVariableFromExpression } from '@/core/analyzer/utils';
 import { aggregateSettingList } from '@/core/analyzer/validator/utils';
-import { CompileError, CompileErrorCode } from '@/core/errors';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode,
 } from '@/core/parser/nodes';

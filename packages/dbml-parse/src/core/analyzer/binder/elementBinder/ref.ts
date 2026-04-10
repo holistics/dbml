@@ -7,7 +7,7 @@ import {
 } from '../../../parser/nodes';
 import { ElementBinder } from '../types';
 import { SyntaxToken } from '../../../lexer/tokens';
-import { CompileError } from '../../../errors';
+import { CompileError } from '@/core/types/errors';
 import { lookupAndBindInScope, pickBinder, scanNonListNodeForBinding } from '../utils';
 import { getElementKind } from '../../utils';
 import { ElementKind } from '../../types';

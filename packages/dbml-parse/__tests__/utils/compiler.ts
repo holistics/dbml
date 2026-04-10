@@ -25,7 +25,7 @@ import {
   ArrayNode,
 } from '@/core/parser/nodes';
 import { NodeSymbolIdGenerator } from '@/core/analyzer/symbol/symbols';
-import Report from '@/core/report';
+import Report from '@/core/types/report';
 import { Compiler, SyntaxToken } from '@/index';
 import { Database } from '@/core/interpreter/types';
 
