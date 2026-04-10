@@ -1,5 +1,5 @@
 import type Compiler from '../index';
-import { SyntaxNode, PrimaryExpressionNode, TupleExpressionNode, InfixExpressionNode } from '@/core/parser/nodes';
+import { SyntaxNode, PrimaryExpressionNode, TupleExpressionNode, InfixExpressionNode } from '@/core/types/nodes';
 import { NodeSymbol, SymbolKind } from '@/core/types/symbols';
 import { UNHANDLED } from '@/constants';
 import { isExpressionAVariableNode, isAccessExpression } from '@/core/utils/expression';

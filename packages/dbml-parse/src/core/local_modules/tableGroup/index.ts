@@ -5,7 +5,7 @@ import { type LocalModule } from '../types';
 import { PASS_THROUGH, type PassThrough } from '@/constants';
 import {
   SyntaxNode,
-} from '@/core/parser/nodes';
+} from '@/core/types/nodes';
 import { isSimpleName, Settings } from '@/core/utils/validate';
 import Report from '@/core/types/report';
 import type Compiler from '@/compiler';

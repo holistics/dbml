@@ -1,4 +1,4 @@
-import { SyntaxToken, SyntaxTokenKind } from '../lexer/tokens';
+import { SyntaxToken, SyntaxTokenKind } from '@/core/types/tokens';
 import {
   AttributeNode,
   BlockExpressionNode,
@@ -13,7 +13,7 @@ import {
   VariableNode,
   CallExpressionNode,
   ArrayNode,
-} from '../parser/nodes';
+} from '@/core/types/nodes';
 import { isHexChar } from './chars';
 import { destructureComplexVariable, destructureMemberAccessExpression,
   extractStringFromIdentifierStream, isAccessExpression, isDotDelimitedIdentifier, isExpressionAQuotedString, isExpressionAVariableNode, isExpressionAnIdentifierNode,

@@ -11,9 +11,9 @@ import {
   ElementDeclarationNode,
   InfixExpressionNode,
   TupleExpressionNode,
-} from '@/core/parser/nodes';
-import type { SyntaxNode } from '@/core/parser/nodes';
-import type { SyntaxToken } from '@/core/lexer/tokens';
+} from '@/core/types/nodes';
+import type { SyntaxNode } from '@/core/types/nodes';
+import type { SyntaxToken } from '@/core/types/tokens';
 import { NodeSymbol, SymbolKind } from '@/core/types/symbols';
 import type { GlobalModule } from '../types';
 import { PASS_THROUGH, UNHANDLED, type PassThrough } from '@/constants';

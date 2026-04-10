@@ -1,31 +1,24 @@
 {
-  "errors": [
+  "errors": [],
+  "tokens": [
     {
-      "code": "UNEXPECTED_TOKEN",
-      "diagnostic": "Expect an identifier",
-      "level": "error",
-      "token": {
-        "context": {
-          "id": "token@<color>@:#1234@[L0:C0, L0:C5]",
-          "snippet": "#1234",
-          "isInvalid": true
-        }
-      }
+      "context": {
+        "id": "token@<color>@:#1234@[L0:C0, L0:C5]",
+        "snippet": "#1234"
+      },
+      "leadingTrivia": "",
+      "trailingTrivia": " \n",
+      "value": "#1234"
     },
     {
-      "code": "UNEXPECTED_TOKEN",
-      "diagnostic": "Expect an identifier",
-      "level": "error",
-      "token": {
-        "context": {
-          "id": "token@<color>@:#12acbd@[L1:C0, L1:C7]",
-          "snippet": "#12acbd",
-          "isInvalid": true
-        }
-      }
-    }
-  ],
-  "tokens": [
+      "context": {
+        "id": "token@<color>@:#12acbd@[L1:C0, L1:C7]",
+        "snippet": "#12acbd"
+      },
+      "leadingTrivia": "",
+      "trailingTrivia": "",
+      "value": "#12acbd"
+    },
     {
       "context": {
         "id": "token@<eof>@:@[L1:C7, L1:C7]",

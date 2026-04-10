@@ -1,5 +1,5 @@
-import { ElementDeclarationNode } from '@/core/parser/nodes';
-import type { SyntaxNode } from '@/core/parser/nodes';
+import { ElementDeclarationNode } from '@/core/types/nodes';
+import type { SyntaxNode } from '@/core/types/nodes';
 import { NodeSymbol, SchemaSymbol, SymbolKind } from '@/core/types/symbols';
 import type { GlobalModule } from '../types';
 import { DEFAULT_SCHEMA_NAME, PASS_THROUGH, type PassThrough, UNHANDLED } from '@/constants';
@@ -54,7 +54,7 @@ export const schemaModule: GlobalModule = {
     // Duplicate checking and alias conflict detection (alias is only checked for `public`)
     const seen = new Map<string, NodeSymbol>();
     for (const member of members) {
-      const isPublicSchema = symbol.qualifiedName.join('.') === DEFAULT_SCHEMA_NAME;
+      const isPublicSchema = symbol.isPublicSchema();
 
       const fullname = (member.declaration && compiler.fullname(member.declaration).getFiltered(UNHANDLED)) || [];
       if (fullname.length > 1 && fullname[0] === DEFAULT_SCHEMA_NAME) {
@@ -116,7 +116,7 @@ function getDuplicateSchemaMemberError (kind: SymbolKind, name: string, schemaLa
 // - Return false if the declaration doesn't belong to the schemaSymbol
 // - Return a string for the directly nested schema name that the declaration belongs to
 function shouldElementBelongToThisSchema (compiler: Compiler, schemaSymbol: SchemaSymbol, element: ElementDeclarationNode): boolean | string {
-  if (schemaSymbol.qualifiedName.join('.') === DEFAULT_SCHEMA_NAME && element.alias) return true;
+  if (schemaSymbol.isPublicSchema() && element.alias) return true;
 
   const qualifiedName = schemaSymbol.qualifiedName;
   const fullname = compiler.fullname(element).getFiltered(UNHANDLED);

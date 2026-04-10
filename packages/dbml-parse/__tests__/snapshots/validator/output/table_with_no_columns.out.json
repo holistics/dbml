@@ -1,5 +1,17 @@
 {
-  "errors": [],
+  "errors": [
+    {
+      "code": "EMPTY_TABLE",
+      "diagnostic": "A Table must have at least one column",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<element-declaration>@:empty_table@[L0:C0, L1:C1]",
+          "snippet": "Table empt..._table {\n}"
+        }
+      }
+    }
+  ],
   "program": {
     "context": {
       "id": "node@<program>@@[L0:C0, L2:C0]",
@@ -38,9 +50,15 @@
                   "value": "{"
                 },
                 "body": [],
+                "filepath": {
+                  "path": "/main.dbml"
+                },
                 "fullEnd": 22,
                 "fullStart": 18
               }
+            },
+            "filepath": {
+              "path": "/main.dbml"
             },
             "fullEnd": 22,
             "fullStart": 0,
@@ -56,6 +74,9 @@
                     "snippet": "empty_table"
                   },
                   "children": {
+                    "filepath": {
+                      "path": "/main.dbml"
+                    },
                     "fullEnd": 18,
                     "fullStart": 6,
                     "variable": {
@@ -68,6 +89,9 @@
                       "value": "empty_table"
                     }
                   }
+                },
+                "filepath": {
+                  "path": "/main.dbml"
                 },
                 "fullEnd": 18,
                 "fullStart": 6
@@ -105,6 +129,9 @@
         "leadingTrivia": "",
         "trailingTrivia": "",
         "value": ""
+      },
+      "filepath": {
+        "path": "/main.dbml"
       },
       "fullEnd": 22,
       "fullStart": 0

@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import { SyntaxTokenKind, SyntaxToken, isTriviaToken } from '@/core/lexer/tokens';
+import { SyntaxTokenKind, SyntaxToken, isTriviaToken } from '@/core/types/tokens';
 import { CompileErrorCode } from '@/core/types/errors';
 import { lex } from '@tests/utils';
 
@@ -139,7 +139,7 @@ describe('[example] lexer', () => {
       expect(tokens.map((t) => ({ kind: t.kind, value: t.value }))).toEqual([
         { kind: SyntaxTokenKind.OP, value: '+' },
         { kind: SyntaxTokenKind.OP, value: '-' },
-        { kind: SyntaxTokenKind.OP, value: '*' },
+        { kind: SyntaxTokenKind.WILDCARD, value: '*' },
         { kind: SyntaxTokenKind.OP, value: '/' },
         { kind: SyntaxTokenKind.OP, value: '<' },
         { kind: SyntaxTokenKind.OP, value: '>' },

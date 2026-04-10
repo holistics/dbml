@@ -14,8 +14,8 @@ import {
   VariableNode,
   CommaExpressionNode,
   LiteralNode,
-} from '@/core/parser/nodes';
-import { SyntaxTokenKind } from '@/core/lexer/tokens';
+} from '@/core/types/nodes';
+import { SyntaxTokenKind } from '@/core/types/tokens';
 import { parse } from '@tests/utils';
 
 // Helper to extract a value from a PrimaryExpressionNode

@@ -12,8 +12,9 @@ import { indexesModule } from './indexes';
 import { checksModule } from './checks';
 import { programModule } from './program';
 import { schemaModule } from './schema';
+import { diagramViewModule } from './diagramView';
 import type Compiler from '@/compiler/index';
-import type { SyntaxNode } from '@/core/parser/nodes';
+import type { SyntaxNode } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import type { NodeSymbol } from '@/core/types/symbols';
 import type { SchemaElement } from '@/core/types/schemaJson';
@@ -33,6 +34,7 @@ export const modules: GlobalModule[] = [
   tablePartialModule,
   noteModule,
   schemaModule,
+  diagramViewModule,
   programModule,
 ];
 

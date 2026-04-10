@@ -1,6 +1,6 @@
 import type Compiler from '../../index';
-import type { ProgramNode } from '@/core/parser/nodes';
-import type { SyntaxToken } from '@/core/lexer/tokens';
+import type { ProgramNode } from '@/core/types/nodes';
+import type { SyntaxToken } from '@/core/types/tokens';
 import type { CompileError, CompileWarning } from '@/core/types/errors';
 import { type NodeSymbol, SchemaSymbol } from '@/core/types/symbols';
 import { DEFAULT_SCHEMA_NAME, UNHANDLED } from '@/constants';

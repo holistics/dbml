@@ -1,18 +1,5 @@
 {
-  "errors": [
-    {
-      "code": "UNEXPECTED_TOKEN",
-      "diagnostic": "Expect an opening brace '{' or a colon ':'",
-      "level": "error",
-      "token": {
-        "context": {
-          "id": "token@<identifier>@:Note@[L2:C8, L2:C12]",
-          "snippet": "Note",
-          "isInvalid": true
-        }
-      }
-    }
-  ],
+  "errors": [],
   "tokens": [
     {
       "context": {
@@ -49,6 +36,24 @@
       "leadingTrivia": "",
       "trailingTrivia": " ",
       "value": "indexes"
+    },
+    {
+      "context": {
+        "id": "token@<identifier>@:Note@[L2:C8, L2:C12]",
+        "snippet": "Note"
+      },
+      "leadingTrivia": "",
+      "trailingTrivia": "\n",
+      "value": "Note"
+    },
+    {
+      "context": {
+        "id": "token@<identifier>@:_ab@[L3:C0, L3:C3]",
+        "snippet": "_ab"
+      },
+      "leadingTrivia": "",
+      "trailingTrivia": "",
+      "value": "_ab"
     },
     {
       "context": {

@@ -1,7 +1,10 @@
+import { DEFAULT_ENTRY } from '@/constants';
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
-import type { ProgramNode } from '@/core/parser/nodes';
+import Lexer from '@/core/lexer/lexer';
+import Parser from '@/core/parser/parser';
+import type { ProgramNode } from '@/core/types/nodes';
 import { scanTestNames, toSnapshot } from '@tests/utils';
 import Compiler from '@/compiler';
 import type Report from '@/core/types/report';
@@ -26,9 +29,16 @@ describe('[snapshot] parser', () => {
     const compiler = new Compiler();
     compiler.setSource(program);
 
+    // @ts-expect-error "Current workaround to use compiler but only trigger validator"
+    const { nodeIdGenerator } = compiler;
+
+    const lexer = new Lexer(program, DEFAULT_ENTRY);
     const output = serializeParserResult(
       compiler,
-      compiler.parseFile().map(({ ast }) => ast),
+      lexer.lex().chain((tokens) => {
+        const parser = new Parser(program, tokens, nodeIdGenerator, DEFAULT_ENTRY);
+        return parser.parse().map((_) => _.ast);
+      }),
     );
     it(testName, () => expect(output).toMatchFileSnapshot(path.resolve(__dirname, `./output/${testName}.out.json`)));
   });

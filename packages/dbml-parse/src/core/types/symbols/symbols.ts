@@ -1,7 +1,8 @@
-import { ElementDeclarationNode, SyntaxNode } from '@/core/parser/nodes';
+import { ElementDeclarationNode, SyntaxNode } from '@/core/types/nodes';
 import type { Internable } from '@/core/types/internable';
+import { DEFAULT_SCHEMA_NAME } from '@/constants';
 
-export const enum SymbolKind {
+export enum SymbolKind {
   Schema = 'Schema',
 
   Table = 'Table',
@@ -20,6 +21,8 @@ export const enum SymbolKind {
 
   Indexes = 'Indexes',
   IndexesField = 'Indexes field',
+
+  DiagramView = 'DiagramView',
 
   Program = 'Program',
 }
@@ -66,6 +69,10 @@ export class NodeSymbol implements Internable<InternedNodeSymbol> {
   isKind (...kinds: SymbolKind[]): boolean {
     return kinds.includes(this.kind);
   }
+
+  isPublicSchema (): this is SchemaSymbol {
+    return false;
+  }
 }
 
 // A symbol injected from another scope (e.g. partial-injected columns).
@@ -96,6 +103,7 @@ export class InjectedColumnSymbol extends NodeSymbol {
 }
 
 export class SchemaSymbol extends NodeSymbol {
+  declare kind: SymbolKind.Schema;
   name: string;
   parent?: SchemaSymbol;
 
@@ -108,5 +116,9 @@ export class SchemaSymbol extends NodeSymbol {
   get qualifiedName (): string[] {
     if (!this.parent) return [this.name];
     return [...this.parent.qualifiedName, this.name];
+  }
+
+  override isPublicSchema (): this is SchemaSymbol {
+    return this.qualifiedName.join('.') === DEFAULT_SCHEMA_NAME;
   }
 }

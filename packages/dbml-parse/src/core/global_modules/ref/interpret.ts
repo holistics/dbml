@@ -3,7 +3,7 @@ import { aggregateSettingList } from '@/core/utils/validate';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, IdentiferStreamNode, InfixExpressionNode, ListExpressionNode, SyntaxNode,
-} from '@/core/parser/nodes';
+} from '@/core/types/nodes';
 import type { Ref, RefEndpoint, RelationCardinality, TokenPosition } from '@/core/types/schemaJson';
 import {
   extractColor, extractNamesFromRefOperand, getMultiplicities, getTokenPosition,

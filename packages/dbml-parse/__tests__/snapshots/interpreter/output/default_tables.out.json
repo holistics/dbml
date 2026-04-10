@@ -1,6 +1,7 @@
 {
   "database": {
     "aliases": [],
+    "diagramViews": [],
     "enums": [],
     "notes": [],
     "records": [],
@@ -29,6 +30,9 @@
                 "line": 2,
                 "offset": 42
               },
+              "filepath": {
+                "path": "/main.dbml"
+              },
               "start": {
                 "column": 3,
                 "line": 2,
@@ -54,6 +58,9 @@
                 "column": 33,
                 "line": 3,
                 "offset": 75
+              },
+              "filepath": {
+                "path": "/main.dbml"
               },
               "start": {
                 "column": 3,
@@ -84,6 +91,9 @@
                 "line": 4,
                 "offset": 115
               },
+              "filepath": {
+                "path": "/main.dbml"
+              },
               "start": {
                 "column": 3,
                 "line": 4,
@@ -113,6 +123,9 @@
                 "line": 5,
                 "offset": 155
               },
+              "filepath": {
+                "path": "/main.dbml"
+              },
               "start": {
                 "column": 3,
                 "line": 5,
@@ -137,6 +150,9 @@
             "line": 6,
             "offset": 157
           },
+          "filepath": {
+            "path": "/main.dbml"
+          },
           "start": {
             "column": 1,
             "line": 1,
@@ -157,6 +173,9 @@
                 "column": 15,
                 "line": 9,
                 "offset": 193
+              },
+              "filepath": {
+                "path": "/main.dbml"
               },
               "start": {
                 "column": 3,
@@ -181,6 +200,9 @@
                 "line": 10,
                 "offset": 210
               },
+              "filepath": {
+                "path": "/main.dbml"
+              },
               "start": {
                 "column": 3,
                 "line": 10,
@@ -203,6 +225,9 @@
                 "column": 15,
                 "line": 11,
                 "offset": 225
+              },
+              "filepath": {
+                "path": "/main.dbml"
               },
               "start": {
                 "column": 3,
@@ -228,6 +253,9 @@
             "line": 12,
             "offset": 227
           },
+          "filepath": {
+            "path": "/main.dbml"
+          },
           "start": {
             "column": 1,
             "line": 8,
@@ -250,6 +278,9 @@
                 "column": 14,
                 "line": 15,
                 "offset": 259
+              },
+              "filepath": {
+                "path": "/main.dbml"
               },
               "start": {
                 "column": 3,
@@ -279,6 +310,9 @@
                 "column": 31,
                 "line": 16,
                 "offset": 290
+              },
+              "filepath": {
+                "path": "/main.dbml"
               },
               "start": {
                 "column": 3,
@@ -310,6 +344,9 @@
                 "line": 17,
                 "offset": 332
               },
+              "filepath": {
+                "path": "/main.dbml"
+              },
               "start": {
                 "column": 3,
                 "line": 17,
@@ -338,6 +375,9 @@
                 "column": 33,
                 "line": 18,
                 "offset": 365
+              },
+              "filepath": {
+                "path": "/main.dbml"
               },
               "start": {
                 "column": 3,
@@ -368,6 +408,9 @@
                 "line": 19,
                 "offset": 397
               },
+              "filepath": {
+                "path": "/main.dbml"
+              },
               "start": {
                 "column": 3,
                 "line": 19,
@@ -397,6 +440,9 @@
                 "line": 20,
                 "offset": 458
               },
+              "filepath": {
+                "path": "/main.dbml"
+              },
               "start": {
                 "column": 3,
                 "line": 20,
@@ -421,6 +467,9 @@
             "line": 21,
             "offset": 460
           },
+          "filepath": {
+            "path": "/main.dbml"
+          },
           "start": {
             "column": 1,
             "line": 14,
@@ -434,6 +483,9 @@
         "column": 2,
         "line": 21,
         "offset": 460
+      },
+      "filepath": {
+        "path": "/main.dbml"
       },
       "start": {
         "column": 1,

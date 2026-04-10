@@ -1,5 +1,6 @@
 import Lexer from '@/core/lexer/lexer';
 import Parser from '@/core/parser/parser';
+import { DEFAULT_ENTRY } from '@/constants';
 import {
   ProgramNode,
   SyntaxNode,
@@ -21,18 +22,19 @@ import {
   VariableNode,
   PrimaryExpressionNode,
   ArrayNode,
+  WildcardNode,
   SyntaxNodeIdGenerator,
-} from '@/core/parser/nodes';
+} from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import { Compiler, SyntaxToken } from '@/index';
 import type { Database } from '@/core/types/schemaJson';
 
 export function lex (source: string): Report<SyntaxToken[]> {
-  return new Lexer(source).lex();
+  return new Lexer(source, DEFAULT_ENTRY).lex();
 }
 
 export function parse (source: string): Report<{ ast: ProgramNode; tokens: SyntaxToken[] }> {
-  return new Lexer(source).lex().chain((tokens) => new Parser(source, tokens, new SyntaxNodeIdGenerator()).parse());
+  return new Lexer(source, DEFAULT_ENTRY).lex().chain((tokens) => new Parser(source, tokens, new SyntaxNodeIdGenerator(), DEFAULT_ENTRY).parse());
 }
 
 export function analyze (source: string) {
@@ -243,8 +245,13 @@ export function print (source: string, ast: SyntaxNode): string {
       }
 
       case SyntaxNodeKind.EMPTY:
-        // Empty nodes don't contribute to output
         break;
+
+      case SyntaxNodeKind.WILDCARD: {
+        const wildcard = node as WildcardNode;
+        if (wildcard.token) collectTokens(wildcard.token);
+        break;
+      }
 
       default: {
         // TypeScript exhaustiveness check - this should never be reached

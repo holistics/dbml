@@ -1,9 +1,9 @@
 import Compiler from '@/compiler/index';
-import { CallExpressionNode, ElementDeclarationNode, ProgramNode } from '@/core/parser/nodes';
+import { CallExpressionNode, ElementDeclarationNode, ProgramNode } from '@/core/types/nodes';
 import { ElementKind } from '@/core/types/keywords';
 import { DEFAULT_SCHEMA_NAME, UNHANDLED } from '@/constants';
 import Report from '@/core/types/report';
-import type { Database, Ref, RefEndpoint, Table, TableRecord, SchemaElement, Enum, TableGroup, TablePartial, Note, Project } from '@/core/types/schemaJson';
+import type { Database, DiagramView, Ref, RefEndpoint, Table, TableRecord, SchemaElement, Enum, TableGroup, TablePartial, Note, Project } from '@/core/types/schemaJson';
 import { getTokenPosition, getMultiplicities } from '../utils';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import type { CompileWarning } from '@/core/types/errors';
@@ -52,6 +52,7 @@ export default class ProgramInterpreter {
       aliases: [],
       tablePartials: [],
       records: [],
+      diagramViews: [],
       token,
     };
 
@@ -96,6 +97,9 @@ export default class ProgramInterpreter {
           break;
         case ElementKind.Project:
           db.project = value as Project;
+          break;
+        case ElementKind.DiagramView:
+          db.diagramViews.push(value as DiagramView);
           break;
         case ElementKind.Records: {
           db.records.push(value as TableRecord);

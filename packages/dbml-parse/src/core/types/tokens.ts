@@ -1,4 +1,5 @@
 import { Position } from '@/core/types/position';
+import { Filepath } from '@/core/types/filepath';
 
 export enum SyntaxTokenKind {
   SPACE = '<space>',
@@ -30,6 +31,8 @@ export enum SyntaxTokenKind {
 
   SINGLE_LINE_COMMENT = '<single-line-comment>',
   MULTILINE_COMMENT = '<multiline-comment>',
+
+  WILDCARD = '<wildcard>',
 }
 
 export function isTriviaToken (token: SyntaxToken): boolean {
@@ -53,7 +56,6 @@ export function isOp (c?: string): boolean {
   switch (c) {
     case '+':
     case '-':
-    case '*':
     case '/':
     case '%':
     case '<':
@@ -77,6 +79,8 @@ export function isOpToken (token?: SyntaxToken): boolean {
 export class SyntaxToken {
   kind: SyntaxTokenKind;
 
+  filepath: Filepath;
+
   value: string;
 
   leadingTrivia: SyntaxToken[];
@@ -99,12 +103,14 @@ export class SyntaxToken {
 
   protected constructor (
     kind: SyntaxTokenKind,
+    filepath: Filepath,
     startPos: Position,
     endPos: Position,
     value: string,
     isInvalid: boolean,
   ) {
     this.kind = kind;
+    this.filepath = filepath;
     this.startPos = startPos;
     this.endPos = endPos;
     this.value = value;
@@ -120,11 +126,12 @@ export class SyntaxToken {
 
   static create (
     kind: SyntaxTokenKind,
+    filepath: Filepath,
     startPos: Position,
     endPos: Position,
     value: string,
     isInvalid: boolean,
   ) {
-    return new SyntaxToken(kind, startPos, endPos, value, isInvalid);
+    return new SyntaxToken(kind, filepath, startPos, endPos, value, isInvalid);
   }
 }

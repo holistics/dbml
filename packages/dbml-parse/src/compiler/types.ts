@@ -11,4 +11,5 @@ export const enum ScopeKind {
   TABLEPARTIAL,
   CHECKS,
   RECORDS,
+  DIAGRAMVIEW,
 }

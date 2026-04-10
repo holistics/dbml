@@ -19,7 +19,7 @@ import { NodeSymbolIdGenerator } from '@/core/types/symbols';
 import { SymbolFactory } from '@/core/types/symbols';
 import { lookupMembers } from './queries/lookupMembers';
 import { symbolName } from './queries/symbolName';
-import { SyntaxNodeIdGenerator } from '@/core/parser/nodes';
+import { SyntaxNodeIdGenerator } from '@/core/types/nodes';
 import { parseFile } from './queries/pipeline/parse';
 import { ast, errors, publicSymbolTable, rawDb, tokens, warnings } from './queries/legacy/parse';
 import { interpretFile } from './queries/pipeline/interpret';

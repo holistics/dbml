@@ -113,6 +113,9 @@
                                 "snippet": "int"
                               },
                               "children": {
+                                "filepath": {
+                                  "path": "/main.dbml"
+                                },
                                 "fullEnd": 28,
                                 "fullStart": 24,
                                 "variable": {
@@ -125,6 +128,9 @@
                                   "value": "int"
                                 }
                               }
+                            },
+                            "filepath": {
+                              "path": "/main.dbml"
                             },
                             "fullEnd": 28,
                             "fullStart": 24
@@ -153,6 +159,9 @@
                                     "trailingTrivia": " ",
                                     "value": ":"
                                   },
+                                  "filepath": {
+                                    "path": "/main.dbml"
+                                  },
                                   "fullEnd": 49,
                                   "fullStart": 29,
                                   "name": {
@@ -161,6 +170,9 @@
                                       "snippet": "check"
                                     },
                                     "children": {
+                                      "filepath": {
+                                        "path": "/main.dbml"
+                                      },
                                       "fullEnd": 34,
                                       "fullStart": 29,
                                       "identifiers": [
@@ -182,6 +194,9 @@
                                       "snippet": "`balance > 0`"
                                     },
                                     "children": {
+                                      "filepath": {
+                                        "path": "/main.dbml"
+                                      },
                                       "fullEnd": 49,
                                       "fullStart": 36,
                                       "value": {
@@ -198,6 +213,9 @@
                                 }
                               }
                             ],
+                            "filepath": {
+                              "path": "/main.dbml"
+                            },
                             "fullEnd": 51,
                             "fullStart": 28,
                             "listCloseBracket": {
@@ -233,6 +251,9 @@
                               "snippet": "balance"
                             },
                             "children": {
+                              "filepath": {
+                                "path": "/main.dbml"
+                              },
                               "fullEnd": 24,
                               "fullStart": 14,
                               "variable": {
@@ -246,9 +267,15 @@
                               }
                             }
                           },
+                          "filepath": {
+                            "path": "/main.dbml"
+                          },
                           "fullEnd": 24,
                           "fullStart": 14
                         }
+                      },
+                      "filepath": {
+                        "path": "/main.dbml"
                       },
                       "fullEnd": 51,
                       "fullStart": 14
@@ -284,6 +311,9 @@
                                 "snippet": "int"
                               },
                               "children": {
+                                "filepath": {
+                                  "path": "/main.dbml"
+                                },
                                 "fullEnd": 68,
                                 "fullStart": 64,
                                 "variable": {
@@ -296,6 +326,9 @@
                                   "value": "int"
                                 }
                               }
+                            },
+                            "filepath": {
+                              "path": "/main.dbml"
                             },
                             "fullEnd": 68,
                             "fullStart": 64
@@ -334,6 +367,9 @@
                                     "trailingTrivia": " ",
                                     "value": ":"
                                   },
+                                  "filepath": {
+                                    "path": "/main.dbml"
+                                  },
                                   "fullEnd": 93,
                                   "fullStart": 69,
                                   "name": {
@@ -342,6 +378,9 @@
                                       "snippet": "check"
                                     },
                                     "children": {
+                                      "filepath": {
+                                        "path": "/main.dbml"
+                                      },
                                       "fullEnd": 74,
                                       "fullStart": 69,
                                       "identifiers": [
@@ -363,6 +402,9 @@
                                       "snippet": "`dependents >= 0`"
                                     },
                                     "children": {
+                                      "filepath": {
+                                        "path": "/main.dbml"
+                                      },
                                       "fullEnd": 93,
                                       "fullStart": 76,
                                       "value": {
@@ -393,6 +435,9 @@
                                     "trailingTrivia": " ",
                                     "value": ":"
                                   },
+                                  "filepath": {
+                                    "path": "/main.dbml"
+                                  },
                                   "fullEnd": 119,
                                   "fullStart": 95,
                                   "name": {
@@ -401,6 +446,9 @@
                                       "snippet": "check"
                                     },
                                     "children": {
+                                      "filepath": {
+                                        "path": "/main.dbml"
+                                      },
                                       "fullEnd": 100,
                                       "fullStart": 95,
                                       "identifiers": [
@@ -422,6 +470,9 @@
                                       "snippet": "`dependents < 10`"
                                     },
                                     "children": {
+                                      "filepath": {
+                                        "path": "/main.dbml"
+                                      },
                                       "fullEnd": 119,
                                       "fullStart": 102,
                                       "value": {
@@ -438,6 +489,9 @@
                                 }
                               }
                             ],
+                            "filepath": {
+                              "path": "/main.dbml"
+                            },
                             "fullEnd": 121,
                             "fullStart": 68,
                             "listCloseBracket": {
@@ -473,6 +527,9 @@
                               "snippet": "dependents"
                             },
                             "children": {
+                              "filepath": {
+                                "path": "/main.dbml"
+                              },
                               "fullEnd": 64,
                               "fullStart": 51,
                               "variable": {
@@ -486,9 +543,15 @@
                               }
                             }
                           },
+                          "filepath": {
+                            "path": "/main.dbml"
+                          },
                           "fullEnd": 64,
                           "fullStart": 51
                         }
+                      },
+                      "filepath": {
+                        "path": "/main.dbml"
                       },
                       "fullEnd": 121,
                       "fullStart": 51
@@ -524,6 +587,9 @@
                                 "snippet": "invalid_type"
                               },
                               "children": {
+                                "filepath": {
+                                  "path": "/main.dbml"
+                                },
                                 "fullEnd": 151,
                                 "fullStart": 138,
                                 "variable": {
@@ -536,6 +602,9 @@
                                   "value": "invalid_type"
                                 }
                               }
+                            },
+                            "filepath": {
+                              "path": "/main.dbml"
                             },
                             "fullEnd": 151,
                             "fullStart": 138
@@ -601,6 +670,9 @@
                                     "trailingTrivia": " ",
                                     "value": ":"
                                   },
+                                  "filepath": {
+                                    "path": "/main.dbml"
+                                  },
                                   "fullEnd": 176,
                                   "fullStart": 152,
                                   "name": {
@@ -609,6 +681,9 @@
                                       "snippet": "check"
                                     },
                                     "children": {
+                                      "filepath": {
+                                        "path": "/main.dbml"
+                                      },
                                       "fullEnd": 157,
                                       "fullStart": 152,
                                       "identifiers": [
@@ -636,6 +711,9 @@
                                           "snippet": "\"invalid check 1\""
                                         },
                                         "children": {
+                                          "filepath": {
+                                            "path": "/main.dbml"
+                                          },
                                           "fullEnd": 176,
                                           "fullStart": 159,
                                           "variable": {
@@ -648,6 +726,9 @@
                                             "value": "invalid check 1"
                                           }
                                         }
+                                      },
+                                      "filepath": {
+                                        "path": "/main.dbml"
                                       },
                                       "fullEnd": 176,
                                       "fullStart": 159
@@ -670,6 +751,9 @@
                                     "trailingTrivia": " ",
                                     "value": ":"
                                   },
+                                  "filepath": {
+                                    "path": "/main.dbml"
+                                  },
                                   "fullEnd": 230,
                                   "fullStart": 178,
                                   "name": {
@@ -678,6 +762,9 @@
                                       "snippet": "check"
                                     },
                                     "children": {
+                                      "filepath": {
+                                        "path": "/main.dbml"
+                                      },
                                       "fullEnd": 211,
                                       "fullStart": 178,
                                       "identifiers": [
@@ -705,6 +792,9 @@
                                           "snippet": "'invalid check 2'"
                                         },
                                         "children": {
+                                          "filepath": {
+                                            "path": "/main.dbml"
+                                          },
                                           "fullEnd": 230,
                                           "fullStart": 213,
                                           "literal": {
@@ -717,6 +807,9 @@
                                             "value": "invalid check 2"
                                           }
                                         }
+                                      },
+                                      "filepath": {
+                                        "path": "/main.dbml"
                                       },
                                       "fullEnd": 230,
                                       "fullStart": 213
@@ -739,6 +832,9 @@
                                     "trailingTrivia": " ",
                                     "value": ":"
                                   },
+                                  "filepath": {
+                                    "path": "/main.dbml"
+                                  },
                                   "fullEnd": 268,
                                   "fullStart": 232,
                                   "name": {
@@ -747,6 +843,9 @@
                                       "snippet": "check"
                                     },
                                     "children": {
+                                      "filepath": {
+                                        "path": "/main.dbml"
+                                      },
                                       "fullEnd": 265,
                                       "fullStart": 232,
                                       "identifiers": [
@@ -774,6 +873,9 @@
                                           "snippet": "3"
                                         },
                                         "children": {
+                                          "filepath": {
+                                            "path": "/main.dbml"
+                                          },
                                           "fullEnd": 268,
                                           "fullStart": 267,
                                           "literal": {
@@ -786,6 +888,9 @@
                                             "value": "3"
                                           }
                                         }
+                                      },
+                                      "filepath": {
+                                        "path": "/main.dbml"
                                       },
                                       "fullEnd": 268,
                                       "fullStart": 267
@@ -808,6 +913,9 @@
                                     "trailingTrivia": " ",
                                     "value": ":"
                                   },
+                                  "filepath": {
+                                    "path": "/main.dbml"
+                                  },
                                   "fullEnd": 310,
                                   "fullStart": 270,
                                   "name": {
@@ -816,6 +924,9 @@
                                       "snippet": "check"
                                     },
                                     "children": {
+                                      "filepath": {
+                                        "path": "/main.dbml"
+                                      },
                                       "fullEnd": 303,
                                       "fullStart": 270,
                                       "identifiers": [
@@ -843,6 +954,9 @@
                                           "snippet": "false"
                                         },
                                         "children": {
+                                          "filepath": {
+                                            "path": "/main.dbml"
+                                          },
                                           "fullEnd": 310,
                                           "fullStart": 305,
                                           "variable": {
@@ -855,6 +969,9 @@
                                             "value": "false"
                                           }
                                         }
+                                      },
+                                      "filepath": {
+                                        "path": "/main.dbml"
                                       },
                                       "fullEnd": 310,
                                       "fullStart": 305
@@ -877,6 +994,9 @@
                                     "trailingTrivia": " ",
                                     "value": ":"
                                   },
+                                  "filepath": {
+                                    "path": "/main.dbml"
+                                  },
                                   "fullEnd": 351,
                                   "fullStart": 312,
                                   "name": {
@@ -885,6 +1005,9 @@
                                       "snippet": "check"
                                     },
                                     "children": {
+                                      "filepath": {
+                                        "path": "/main.dbml"
+                                      },
                                       "fullEnd": 345,
                                       "fullStart": 312,
                                       "identifiers": [
@@ -912,6 +1035,9 @@
                                           "snippet": "null"
                                         },
                                         "children": {
+                                          "filepath": {
+                                            "path": "/main.dbml"
+                                          },
                                           "fullEnd": 351,
                                           "fullStart": 347,
                                           "variable": {
@@ -925,6 +1051,9 @@
                                           }
                                         }
                                       },
+                                      "filepath": {
+                                        "path": "/main.dbml"
+                                      },
                                       "fullEnd": 351,
                                       "fullStart": 347
                                     }
@@ -932,6 +1061,9 @@
                                 }
                               }
                             ],
+                            "filepath": {
+                              "path": "/main.dbml"
+                            },
                             "fullEnd": 353,
                             "fullStart": 151,
                             "listCloseBracket": {
@@ -967,6 +1099,9 @@
                               "snippet": "invalid_col"
                             },
                             "children": {
+                              "filepath": {
+                                "path": "/main.dbml"
+                              },
                               "fullEnd": 138,
                               "fullStart": 121,
                               "variable": {
@@ -980,9 +1115,15 @@
                               }
                             }
                           },
+                          "filepath": {
+                            "path": "/main.dbml"
+                          },
                           "fullEnd": 138,
                           "fullStart": 121
                         }
+                      },
+                      "filepath": {
+                        "path": "/main.dbml"
                       },
                       "fullEnd": 353,
                       "fullStart": 121
@@ -1000,9 +1141,15 @@
                     }
                   }
                 ],
+                "filepath": {
+                  "path": "/main.dbml"
+                },
                 "fullEnd": 355,
                 "fullStart": 12
               }
+            },
+            "filepath": {
+              "path": "/main.dbml"
             },
             "fullEnd": 355,
             "fullStart": 0,
@@ -1018,6 +1165,9 @@
                     "snippet": "Users"
                   },
                   "children": {
+                    "filepath": {
+                      "path": "/main.dbml"
+                    },
                     "fullEnd": 12,
                     "fullStart": 6,
                     "variable": {
@@ -1030,6 +1180,9 @@
                       "value": "Users"
                     }
                   }
+                },
+                "filepath": {
+                  "path": "/main.dbml"
                 },
                 "fullEnd": 12,
                 "fullStart": 6
@@ -1086,6 +1239,9 @@
         "leadingTrivia": "",
         "trailingTrivia": "",
         "value": ""
+      },
+      "filepath": {
+        "path": "/main.dbml"
       },
       "fullEnd": 355,
       "fullStart": 0

@@ -1,8 +1,8 @@
 import Compiler from '@/compiler';
 import { DEFAULT_SCHEMA_NAME, UNHANDLED } from '@/constants';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
-import { SyntaxTokenKind } from '@/core/lexer/tokens';
-import { ArrayNode, CallExpressionNode, FunctionExpressionNode, InfixExpressionNode, LiteralNode, PostfixExpressionNode, PrefixExpressionNode, PrimaryExpressionNode, SyntaxNode, TupleExpressionNode, VariableNode } from '@/core/parser/nodes';
+import { SyntaxTokenKind } from '@/core/types/tokens';
+import { ArrayNode, CallExpressionNode, FunctionExpressionNode, InfixExpressionNode, LiteralNode, PostfixExpressionNode, PrefixExpressionNode, PrimaryExpressionNode, SyntaxNode, TupleExpressionNode, VariableNode } from '@/core/types/nodes';
 import { getMemberChain } from '@/core/parser/utils';
 import Report from '@/core/types/report';
 import { ColumnType, NodeSymbol, RelationCardinality, SchemaSymbol, SymbolKind, Table, TokenPosition } from '@/core/types';
@@ -75,6 +75,7 @@ export function getTokenPosition (node: SyntaxNode): TokenPosition {
       line: node.endPos.line + 1,
       column: node.endPos.column + 1,
     },
+    filepath: node.filepath,
   };
 }
 
@@ -370,7 +371,7 @@ export function lookupMember (
 
   const match = members.find((m: NodeSymbol) => {
     if (kinds && !m.isKind(...kinds)) return false;
-    if (parentSymbol.isKind(SymbolKind.Program) || (parentSymbol instanceof SchemaSymbol && parentSymbol.qualifiedName.join('.') === DEFAULT_SCHEMA_NAME)) {
+    if (parentSymbol.isKind(SymbolKind.Program) || (parentSymbol.isPublicSchema())) {
       if (m.declaration && compiler.alias(m.declaration).getFiltered(UNHANDLED) === name) return true; // Aliases can be found in public
       if (m.declaration && (compiler.fullname(m.declaration).getFiltered(UNHANDLED) || []).length > 1) return false; // This is a qualfied element
     }
@@ -414,7 +415,7 @@ export function lookupInDefaultSchema (
   const members = compiler.symbolMembers(globalSymbol).getFiltered(UNHANDLED);
 
   if (members) {
-    const publicSchema = members.find((m: NodeSymbol) => m instanceof SchemaSymbol && m.qualifiedName.join('.') === DEFAULT_SCHEMA_NAME);
+    const publicSchema = members.find((m: NodeSymbol) => m.isPublicSchema());
     if (publicSchema) {
       const result = lookupMember(compiler, publicSchema, name, { ...options, ignoreNotFound: true });
       if (result.getValue()) return result;

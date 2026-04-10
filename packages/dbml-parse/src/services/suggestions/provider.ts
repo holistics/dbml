@@ -7,7 +7,7 @@ import {
   isExpressionAVariableNode,
 } from '@/core/utils/expression';
 import Compiler, { ScopeKind } from '@/compiler';
-import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
+import { SyntaxToken, SyntaxTokenKind } from '@/core/types/tokens';
 import { isOffsetWithinSpan } from '@/core/utils/span';
 import {
   type CompletionList,
@@ -17,7 +17,7 @@ import {
   CompletionItemKind,
   CompletionItemInsertTextRule,
 } from '@/services/types';
-import { type NodeSymbol, SchemaSymbol } from '@/core/types/symbols';
+import { type NodeSymbol } from '@/core/types/symbols';
 import { SymbolKind } from '@/core/types/symbols';
 import {
   pickCompletionItemKind,
@@ -32,6 +32,7 @@ import {
 import { suggestRecordRowSnippet } from '@/services/suggestions/recordRowSnippet';
 import {
   AttributeNode,
+  BlockExpressionNode,
   CallExpressionNode,
   CommaExpressionNode,
   ElementDeclarationNode,
@@ -43,7 +44,7 @@ import {
   ProgramNode,
   SyntaxNode,
   TupleExpressionNode,
-} from '@/core/parser/nodes';
+} from '@/core/types/nodes';
 import { getOffsetFromMonacoPosition } from '@/services/utils';
 import { isComment } from '@/core/lexer/utils';
 import { ElementKind, SettingName } from '@/core/types/keywords';
@@ -218,7 +219,7 @@ function suggestMembersOfSymbol (
       .filter((member) => acceptedKinds.includes(member.kind))
       .filter((member) => {
         // Also exclude the default 'public' schema since it's implicit.
-        if (member instanceof SchemaSymbol && member.qualifiedName.join('.') === DEFAULT_SCHEMA_NAME) return false;
+        if (member.isPublicSchema()) return false;
         return true;
       })
       .flatMap((member) => {
@@ -635,6 +636,19 @@ function suggestInSubField (
     }
     case ScopeKind.TABLEGROUP:
       return suggestInTableGroupField(compiler);
+    case ScopeKind.DIAGRAMVIEW:
+      return suggestInDiagramViewBody();
+    case ScopeKind.CUSTOM: {
+      const elem = compiler.container.element(offset);
+      if (elem instanceof ElementDeclarationNode) {
+        const bodyBlock = elem.parentNode;
+        const parentElem = bodyBlock instanceof BlockExpressionNode ? bodyBlock.parentNode : undefined;
+        if (parentElem instanceof ElementDeclarationNode && parentElem.isKind(ElementKind.DiagramView)) {
+          return suggestInDiagramViewSubBlock(compiler, offset, elem);
+        }
+      }
+      return noSuggestions();
+    }
     default:
       return noSuggestions();
   }
@@ -642,7 +656,7 @@ function suggestInSubField (
 
 function suggestTopLevelElementType (): CompletionList {
   return {
-    suggestions: ['Table', 'TableGroup', 'Enum', 'Project', 'Ref', 'TablePartial', 'Records'].map((name) => ({
+    suggestions: ['Table', 'TableGroup', 'Enum', 'Project', 'Ref', 'TablePartial', 'Records', 'DiagramView'].map((name) => ({
       label: name,
       insertText: name,
       insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
@@ -840,7 +854,7 @@ function suggestInTableGroupField (compiler: Compiler): CompletionList {
           const name = compiler.symbolName(member);
           if (name === undefined) return [];
           // Skip the default 'public' schema
-          if (member instanceof SchemaSymbol && member.qualifiedName.join('.') === DEFAULT_SCHEMA_NAME) return [];
+          if (member.isPublicSchema()) return [];
 
           return {
             label: name,
@@ -978,4 +992,62 @@ function findContainerArg (offset: number, node: FunctionApplicationNode): numbe
   const containerArgId = args.findIndex((c) => offset <= c.end);
 
   return containerArgId === -1 ? args.length : containerArgId;
+}
+
+const wildcardSuggestion = {
+  label: '*',
+  insertText: '*',
+  insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
+  kind: CompletionItemKind.Keyword,
+  range: undefined as any,
+};
+
+function suggestInDiagramViewBody (): CompletionList {
+  return {
+    suggestions: [
+      ...['Tables', 'TableGroups', 'Notes', 'Schemas'].map((name) => ({
+        label: name,
+        insertText: name,
+        insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
+        kind: CompletionItemKind.Keyword,
+        range: undefined as any,
+      })),
+      wildcardSuggestion,
+    ],
+  };
+}
+
+function suggestInDiagramViewSubBlock (
+  compiler: Compiler,
+  offset: number,
+  elem: ElementDeclarationNode,
+): CompletionList {
+  const blockType = elem.type?.value.toLowerCase();
+  switch (blockType) {
+    case 'tables': {
+      const namesInScope = suggestNamesInScope(compiler, offset, compiler.parse.ast(), [SymbolKind.Table, SymbolKind.Schema]);
+      return { suggestions: [wildcardSuggestion, ...namesInScope.suggestions] };
+    }
+    case 'tablegroups': {
+      const namesInScope = suggestNamesInScope(compiler, offset, compiler.parse.ast(), [SymbolKind.TableGroup]);
+      return { suggestions: [wildcardSuggestion, ...namesInScope.suggestions] };
+    }
+    case 'schemas': {
+      const defaultSchema = {
+        label: DEFAULT_SCHEMA_NAME,
+        insertText: DEFAULT_SCHEMA_NAME,
+        insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
+        kind: CompletionItemKind.Module,
+        range: undefined as any,
+      };
+      const namesInScope = suggestNamesInScope(compiler, offset, compiler.parse.ast(), [SymbolKind.Schema]);
+      return { suggestions: [wildcardSuggestion, defaultSchema, ...namesInScope.suggestions] };
+    }
+    case 'notes': {
+      const namesInScope = suggestNamesInScope(compiler, offset, compiler.parse.ast(), [SymbolKind.Note]);
+      return { suggestions: [wildcardSuggestion, ...namesInScope.suggestions] };
+    }
+    default:
+      return noSuggestions();
+  }
 }

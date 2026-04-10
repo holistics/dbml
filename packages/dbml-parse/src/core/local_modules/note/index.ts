@@ -2,8 +2,8 @@ import { isElementNode } from '@/core/utils/expression';
 import { destructureComplexVariable } from '@/core/utils/expression';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import {
-  ElementDeclarationNode, ProgramNode, SyntaxNode,
-} from '@/core/parser/nodes';
+  ElementDeclarationNode, ProgramNode, SyntaxNode, WildcardNode,
+} from '@/core/types/nodes';
 import { ElementKind } from '@/core/types/keywords';
 import { type LocalModule, type Settings } from '../types';
 import { PASS_THROUGH, type PassThrough } from '@/constants';
@@ -32,6 +32,9 @@ export const noteModule: LocalModule = {
       return new Report(undefined, [new CompileError(CompileErrorCode.INVALID_NAME, 'Sticky note must have a name', node)]);
     }
 
+    if (node.name instanceof WildcardNode) {
+      return new Report(undefined, [new CompileError(CompileErrorCode.INVALID_NAME, 'Wildcard (*) is not allowed as a Note name', node.name)]);
+    }
     const nameFragments = destructureComplexVariable(node.name);
     if (nameFragments === undefined) return new Report(undefined, [new CompileError(CompileErrorCode.INVALID_NAME, 'Invalid name for sticky note ', node)]);
 

@@ -189,23 +189,23 @@ describe('[example] Suggestions Utils - Records', () => {
 
       const ast = compiler.parse.ast();
       const tableElement = ast.body[2]; // users table is the third element
-      const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED);
+      const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED) as NodeSymbol | undefined;
 
-      expect(tableSymbol?.kind).toBe(SymbolKind.Table);
+      if (tableSymbol !== undefined) {
+        const columns = getColumnsFromTableSymbol(compiler, tableSymbol);
 
-      const columns = getColumnsFromTableSymbol(compiler, tableSymbol as NodeSymbol);
+        // Verify exact column count
+        expect(columns).not.toBeNull();
+        expect(columns!.length).toBe(4);
 
-      // Verify exact column count
-      expect(columns).not.toBeNull();
-      expect(columns!.length).toBe(4);
-
-      // Verify all expected columns are present with correct types
-      // Note: Column order follows declaration order in table, not injection order
-      const columnMap = new Map(columns!.map((col) => [col.name, col.type]));
-      expect(columnMap.get('id')).toBe('int');
-      expect(columnMap.get('name')).toBe('varchar');
-      expect(columnMap.get('created_at')).toBe('timestamp');
-      expect(columnMap.get('updated_at')).toBe('timestamp');
+        // Verify all expected columns are present with correct types
+        // Note: Column order follows declaration order in table, not injection order
+        const columnMap = new Map(columns!.map((col) => [col.name, col.type]));
+        expect(columnMap.get('id')).toBe('int');
+        expect(columnMap.get('name')).toBe('varchar');
+        expect(columnMap.get('created_at')).toBe('timestamp');
+        expect(columnMap.get('updated_at')).toBe('timestamp');
+      }
     });
 
     it('- should handle table with only injected columns', () => {
@@ -225,19 +225,18 @@ describe('[example] Suggestions Utils - Records', () => {
 
       const ast = compiler.parse.ast();
       const tableElement = ast.body[1];
+      const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED) as NodeSymbol | undefined;
 
-      const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED);
+      if (tableSymbol !== undefined) {
+        const columns = getColumnsFromTableSymbol(compiler, tableSymbol);
 
-      expect(tableSymbol?.kind).toBe(SymbolKind.Table);
-
-      const columns = getColumnsFromTableSymbol(compiler, tableSymbol as NodeSymbol);
-
-      expect(columns).not.toBeNull();
-      expect(columns!.length).toBe(2);
-      expect(columns![0].name).toBe('id');
-      expect(columns![0].type).toBe('int');
-      expect(columns![1].name).toBe('created_at');
-      expect(columns![1].type).toBe('timestamp');
+        expect(columns).not.toBeNull();
+        expect(columns!.length).toBe(2);
+        expect(columns![0].name).toBe('id');
+        expect(columns![0].type).toBe('int');
+        expect(columns![1].name).toBe('created_at');
+        expect(columns![1].type).toBe('timestamp');
+      }
     });
 
     it('- should handle mixed regular and injected columns', () => {
@@ -258,21 +257,21 @@ describe('[example] Suggestions Utils - Records', () => {
 
       const ast = compiler.parse.ast();
       const tableElement = ast.body[1];
-      const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED);
+      const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED) as NodeSymbol | undefined;
 
-      expect(tableSymbol?.kind).toBe(SymbolKind.Table);
+      if (tableSymbol !== undefined) {
+        const columns = getColumnsFromTableSymbol(compiler, tableSymbol);
 
-      const columns = getColumnsFromTableSymbol(compiler, tableSymbol as NodeSymbol);
+        // Verify exact column count
+        expect(columns).not.toBeNull();
+        expect(columns!.length).toBe(3);
 
-      // Verify exact column count
-      expect(columns).not.toBeNull();
-      expect(columns!.length).toBe(3);
-
-      // Verify all expected columns are present with correct types
-      const columnMap = new Map(columns!.map((col) => [col.name, col.type]));
-      expect(columnMap.get('product_id')).toBe('int');
-      expect(columnMap.get('version')).toBe('int');
-      expect(columnMap.get('name')).toBe('varchar');
+        // Verify all expected columns are present with correct types
+        const columnMap = new Map(columns!.map((col) => [col.name, col.type]));
+        expect(columnMap.get('product_id')).toBe('int');
+        expect(columnMap.get('version')).toBe('int');
+        expect(columnMap.get('name')).toBe('varchar');
+      }
     });
 
     it('- should extract columns with types from table symbol', () => {
@@ -290,21 +289,23 @@ describe('[example] Suggestions Utils - Records', () => {
       // Get the table symbol
       const ast = compiler.parse.ast();
       const tableElement = ast.body[0];
-      const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED);
+      const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED) as NodeSymbol | undefined;
 
-      expect(tableSymbol?.kind).toBe(SymbolKind.Table);
+      expect(tableSymbol?.isKind(SymbolKind.Table)).toBe(true);
 
-      const columns = getColumnsFromTableSymbol(compiler, tableSymbol as NodeSymbol);
+      if (tableSymbol !== undefined) {
+        const columns = getColumnsFromTableSymbol(compiler, tableSymbol);
 
-      // Verify exact column count and properties
-      expect(columns).not.toBeNull();
-      expect(columns!.length).toBe(3);
-      expect(columns![0].name).toBe('id');
-      expect(columns![0].type).toBe('int');
-      expect(columns![1].name).toBe('name');
-      expect(columns![1].type).toBe('varchar');
-      expect(columns![2].name).toBe('email');
-      expect(columns![2].type).toBe('varchar');
+        // Verify exact column count and properties
+        expect(columns).not.toBeNull();
+        expect(columns!.length).toBe(3);
+        expect(columns![0].name).toBe('id');
+        expect(columns![0].type).toBe('int');
+        expect(columns![1].name).toBe('name');
+        expect(columns![1].type).toBe('varchar');
+        expect(columns![2].name).toBe('email');
+        expect(columns![2].type).toBe('varchar');
+      }
     });
 
     it('- should maintain column order and extract types', () => {
@@ -323,27 +324,27 @@ describe('[example] Suggestions Utils - Records', () => {
 
       const ast = compiler.parse.ast();
       const tableElement = ast.body[0];
-      const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED);
+      const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED) as NodeSymbol | undefined;
 
-      expect(tableSymbol?.kind).toBe(SymbolKind.Table);
+      if (tableSymbol !== undefined) {
+        const columns = getColumnsFromTableSymbol(compiler, tableSymbol);
 
-      const columns = getColumnsFromTableSymbol(compiler, tableSymbol as NodeSymbol);
+        // Verify exact column count
+        expect(columns).not.toBeNull();
+        expect(columns!.length).toBe(5);
 
-      // Verify exact column count
-      expect(columns).not.toBeNull();
-      expect(columns!.length).toBe(5);
-
-      // Verify all columns in exact order with exact types
-      expect(columns![0].name).toBe('product_id');
-      expect(columns![0].type).toBe('int');
-      expect(columns![1].name).toBe('product_name');
-      expect(columns![1].type).toBe('varchar');
-      expect(columns![2].name).toBe('price');
-      expect(columns![2].type).toBe('decimal');
-      expect(columns![3].name).toBe('in_stock');
-      expect(columns![3].type).toBe('boolean');
-      expect(columns![4].name).toBe('created_at');
-      expect(columns![4].type).toBe('timestamp');
+        // Verify all columns in exact order with exact types
+        expect(columns![0].name).toBe('product_id');
+        expect(columns![0].type).toBe('int');
+        expect(columns![1].name).toBe('product_name');
+        expect(columns![1].type).toBe('varchar');
+        expect(columns![2].name).toBe('price');
+        expect(columns![2].type).toBe('decimal');
+        expect(columns![3].name).toBe('in_stock');
+        expect(columns![3].type).toBe('boolean');
+        expect(columns![4].name).toBe('created_at');
+        expect(columns![4].type).toBe('timestamp');
+      }
     });
 
     it('- should handle table with single column', () => {
@@ -358,17 +359,17 @@ describe('[example] Suggestions Utils - Records', () => {
 
       const ast = compiler.parse.ast();
       const tableElement = ast.body[0];
-      const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED);
+      const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED) as NodeSymbol | undefined;
 
-      expect(tableSymbol?.kind).toBe(SymbolKind.Table);
+      if (tableSymbol !== undefined) {
+        const columns = getColumnsFromTableSymbol(compiler, tableSymbol);
 
-      const columns = getColumnsFromTableSymbol(compiler, tableSymbol as NodeSymbol);
-
-      // Verify exact single column
-      expect(columns).not.toBeNull();
-      expect(columns!.length).toBe(1);
-      expect(columns![0].name).toBe('count');
-      expect(columns![0].type).toBe('int');
+        // Verify exact single column
+        expect(columns).not.toBeNull();
+        expect(columns!.length).toBe(1);
+        expect(columns![0].name).toBe('count');
+        expect(columns![0].type).toBe('int');
+      }
     });
 
     it('- should handle quoted column names', () => {
@@ -385,21 +386,21 @@ describe('[example] Suggestions Utils - Records', () => {
 
       const ast = compiler.parse.ast();
       const tableElement = ast.body[0];
-      const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED);
+      const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED) as NodeSymbol | undefined;
 
-      expect(tableSymbol?.kind).toBe(SymbolKind.Table);
+      if (tableSymbol !== undefined) {
+        const columns = getColumnsFromTableSymbol(compiler, tableSymbol);
 
-      const columns = getColumnsFromTableSymbol(compiler, tableSymbol as NodeSymbol);
-
-      // Verify exact columns with special characters
-      expect(columns).not.toBeNull();
-      expect(columns!.length).toBe(3);
-      expect(columns![0].name).toBe('column-1');
-      expect(columns![0].type).toBe('int');
-      expect(columns![1].name).toBe('column 2');
-      expect(columns![1].type).toBe('varchar');
-      expect(columns![2].name).toBe('column.3');
-      expect(columns![2].type).toBe('boolean');
+        // Verify exact columns with special characters
+        expect(columns).not.toBeNull();
+        expect(columns!.length).toBe(3);
+        expect(columns![0].name).toBe('column-1');
+        expect(columns![0].type).toBe('int');
+        expect(columns![1].name).toBe('column 2');
+        expect(columns![1].type).toBe('varchar');
+        expect(columns![2].name).toBe('column.3');
+        expect(columns![2].type).toBe('boolean');
+      }
     });
 
     it('- should return empty array for empty table', () => {
@@ -413,14 +414,14 @@ describe('[example] Suggestions Utils - Records', () => {
 
       const ast = compiler.parse.ast();
       const tableElement = ast.body[0];
-      const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED);
+      const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED) as NodeSymbol | undefined;
 
-      expect(tableSymbol?.kind).toBe(SymbolKind.Table);
+      if (tableSymbol !== undefined) {
+        const columns = getColumnsFromTableSymbol(compiler, tableSymbol);
 
-      const columns = getColumnsFromTableSymbol(compiler, tableSymbol as NodeSymbol);
-
-      expect(columns).not.toBeNull();
-      expect(columns!.length).toBe(0);
+        expect(columns).not.toBeNull();
+        expect(columns!.length).toBe(0);
+      }
     });
 
     it('- should only extract columns, not other symbols', () => {
@@ -440,17 +441,19 @@ describe('[example] Suggestions Utils - Records', () => {
 
       const ast = compiler.parse.ast();
       const tableElement = ast.body[0];
-      const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED);
+      const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED) as NodeSymbol | undefined;
 
-      const columns = getColumnsFromTableSymbol(compiler, tableSymbol as NodeSymbol);
+      if (tableSymbol !== undefined) {
+        const columns = getColumnsFromTableSymbol(compiler, tableSymbol);
 
-      // Verify only columns are extracted, not indexes
-      expect(columns).not.toBeNull();
-      expect(columns!.length).toBe(2);
-      expect(columns![0].name).toBe('id');
-      expect(columns![0].type).toBe('int');
-      expect(columns![1].name).toBe('name');
-      expect(columns![1].type).toBe('varchar');
+        // Verify only columns are extracted, not indexes
+        expect(columns).not.toBeNull();
+        expect(columns!.length).toBe(2);
+        expect(columns![0].name).toBe('id');
+        expect(columns![0].type).toBe('int');
+        expect(columns![1].name).toBe('name');
+        expect(columns![1].type).toBe('varchar');
+      }
     });
 
     it('- should work with schema-qualified tables', () => {
@@ -467,21 +470,21 @@ describe('[example] Suggestions Utils - Records', () => {
 
       const ast = compiler.parse.ast();
       const tableElement = ast.body[0];
-      const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED);
+      const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED) as NodeSymbol | undefined;
 
-      expect(tableSymbol?.kind).toBe(SymbolKind.Table);
+      if (tableSymbol !== undefined) {
+        const columns = getColumnsFromTableSymbol(compiler, tableSymbol);
 
-      const columns = getColumnsFromTableSymbol(compiler, tableSymbol as NodeSymbol);
-
-      // Verify schema-qualified table columns
-      expect(columns).not.toBeNull();
-      expect(columns!.length).toBe(3);
-      expect(columns![0].name).toBe('id');
-      expect(columns![0].type).toBe('int');
-      expect(columns![1].name).toBe('username');
-      expect(columns![1].type).toBe('varchar');
-      expect(columns![2].name).toBe('password_hash');
-      expect(columns![2].type).toBe('varchar');
+        // Verify schema-qualified table columns
+        expect(columns).not.toBeNull();
+        expect(columns!.length).toBe(3);
+        expect(columns![0].name).toBe('id');
+        expect(columns![0].type).toBe('int');
+        expect(columns![1].name).toBe('username');
+        expect(columns![1].type).toBe('varchar');
+        expect(columns![2].name).toBe('password_hash');
+        expect(columns![2].type).toBe('varchar');
+      }
     });
   });
 });

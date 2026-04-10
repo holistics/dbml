@@ -13,7 +13,8 @@ import {
   PrefixExpressionNode,
   PrimaryExpressionNode,
   SyntaxNode,
-} from '@/core/parser/nodes';
+  WildcardNode,
+} from '@/core/types/nodes';
 import { extractVariableFromExpression } from '@/core/utils/expression';
 import {
   aggregateSettingList,
@@ -70,6 +71,9 @@ export default class TableValidator {
     }
     if (nameNode instanceof ArrayNode) {
       return [new CompileError(CompileErrorCode.INVALID_NAME, 'Invalid array as Table name, maybe you forget to add a space between the name and the setting list?', nameNode)];
+    }
+    if (nameNode instanceof WildcardNode) {
+      return [new CompileError(CompileErrorCode.INVALID_NAME, 'Wildcard (*) is not allowed as a Table name', nameNode)];
     }
     if (!isValidName(nameNode)) {
       return [new CompileError(CompileErrorCode.INVALID_NAME, 'A Table name must be of the form <table> or <schema>.<table>', nameNode)];

@@ -1,5 +1,5 @@
 import { last } from 'lodash-es';
-import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
+import { SyntaxToken, SyntaxTokenKind } from '@/core/types/tokens';
 import { alternateLists } from '@/core/utils/chars';
 import NodeFactory from '@/core/parser/factory';
 import {
@@ -26,7 +26,8 @@ import {
   SyntaxNode,
   TupleExpressionNode,
   VariableNode,
-} from '@/core/parser/nodes';
+  WildcardNode,
+} from '@/core/types/nodes';
 import { extractVariableNode, isAsKeyword, isExpressionAnIdentifierNode } from '../utils/expression';
 
 // Try to interpret a function application as an element
@@ -295,9 +296,18 @@ export function getMemberChain (node: SyntaxNode): Readonly<(SyntaxNode | Syntax
     return [];
   }
 
+  if (node instanceof WildcardNode) {
+    return node.token ? [node.token] : [];
+  }
+
   if (node instanceof GroupExpressionNode) {
     throw new Error('This case is already handled by TupleExpressionNode');
   }
 
   throw new Error('Unreachable - no other possible cases');
+}
+
+
+export function isWildcardExpression (node: SyntaxNode | undefined): node is WildcardNode {
+  return node instanceof WildcardNode;
 }

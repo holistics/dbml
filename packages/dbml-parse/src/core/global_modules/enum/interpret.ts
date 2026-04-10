@@ -3,7 +3,7 @@ import { aggregateSettingList } from '@/core/utils/validate';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode,
-} from '@/core/parser/nodes';
+} from '@/core/types/nodes';
 import type {
   Enum, EnumField,
 } from '@/core/types/schemaJson';

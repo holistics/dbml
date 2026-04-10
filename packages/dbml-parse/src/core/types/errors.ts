@@ -1,5 +1,5 @@
-import { SyntaxToken } from '@/core/lexer/tokens';
-import { SyntaxNode } from '@/core/parser/nodes';
+import { SyntaxToken } from '@/core/types/tokens';
+import { SyntaxNode } from '@/core/types/nodes';
 
 export enum CompileErrorCode {
   UNKNOWN_SYMBOL = 1000,
@@ -114,6 +114,11 @@ export enum CompileErrorCode {
   INVALID_RECORDS_FIELD,
   DUPLICATE_COLUMN_REFERENCES_IN_RECORDS,
   DUPLICATE_RECORDS_FOR_TABLE,
+
+  INVALID_DIAGRAMVIEW_CONTEXT,
+  DUPLICATE_DIAGRAMVIEW_NAME,
+  INVALID_DIAGRAMVIEW_FIELD,
+  DUPLICATE_DIAGRAMVIEW_FIELD,
 
   BINDING_ERROR = 4000,
 

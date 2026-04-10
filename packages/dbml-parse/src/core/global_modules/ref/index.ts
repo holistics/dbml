@@ -1,8 +1,8 @@
 import { isElementNode, isExpressionAVariableNode, isAccessExpression } from '@/core/utils/expression';
 import { ElementKind } from '@/core/types/keywords';
-import { AttributeNode, ElementDeclarationNode } from '@/core/parser/nodes';
-import type { InfixExpressionNode, SyntaxNode } from '@/core/parser/nodes';
-import type { SyntaxToken } from '@/core/lexer/tokens';
+import { AttributeNode, ElementDeclarationNode } from '@/core/types/nodes';
+import type { InfixExpressionNode, SyntaxNode } from '@/core/types/nodes';
+import type { SyntaxToken } from '@/core/types/tokens';
 import { NodeSymbol, SchemaSymbol, SymbolKind } from '@/core/types/symbols';
 import type { GlobalModule } from '../types';
 import { DEFAULT_SCHEMA_NAME, PASS_THROUGH, UNHANDLED, type PassThrough } from '@/constants';
@@ -65,7 +65,7 @@ function getDefaultSchemaSymbol (compiler: Compiler, globalSymbol: NodeSymbol): 
   if (members.hasValue(UNHANDLED)) return undefined;
 
   return members.getValue().find((m: NodeSymbol) =>
-    m instanceof SchemaSymbol && m.qualifiedName.join('.') === DEFAULT_SCHEMA_NAME,
+    m.isPublicSchema(),
   );
 }
 

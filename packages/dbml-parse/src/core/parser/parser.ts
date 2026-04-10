@@ -5,7 +5,7 @@ import {
   markInvalid,
 } from '@/core/parser/utils';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
-import { type SyntaxToken, SyntaxTokenKind, isOpToken } from '@/core/lexer/tokens';
+import { type SyntaxToken, SyntaxTokenKind, isOpToken } from '@/core/types/tokens';
 import Report from '@/core/types/report';
 import { ParsingContext, ParsingContextStack } from '@/core/parser/contextStack';
 import {
@@ -32,11 +32,13 @@ import {
   SyntaxNode,
   TupleExpressionNode,
   VariableNode,
+  WildcardNode,
   SyntaxNodeIdGenerator,
-} from '@/core/parser/nodes';
+} from '@/core/types/nodes';
 import NodeFactory from '@/core/parser/factory';
 import { hasTrailingNewLines, hasTrailingSpaces, isAtStartOfLine } from '@/core/lexer/utils';
 import { isAsKeyword } from '@/core/utils/expression';
+import { Filepath } from '@/core/types/filepath';
 
 // A class of errors that represent a parsing failure and contain the node that was partially parsed
 class PartialParsingError<T extends SyntaxNode> {
@@ -65,10 +67,10 @@ export default class Parser {
 
   private source: string;
 
-  constructor (source: string, tokens: SyntaxToken[], nodeIdGenerator: SyntaxNodeIdGenerator) {
+  constructor (source: string, tokens: SyntaxToken[], nodeIdGenerator: SyntaxNodeIdGenerator, filepath: Filepath) {
     this.source = source;
     this.tokens = tokens;
-    this.nodeFactory = new NodeFactory(nodeIdGenerator);
+    this.nodeFactory = new NodeFactory(nodeIdGenerator, filepath);
   }
 
   private isAtEnd (): boolean {
@@ -730,7 +732,8 @@ export default class Parser {
     | BlockExpressionNode
     | TupleExpressionNode
     | FunctionExpressionNode
-    | GroupExpressionNode {
+    | GroupExpressionNode
+    | WildcardNode {
     if (
       this.check(
         SyntaxTokenKind.NUMERIC_LITERAL,
@@ -745,6 +748,10 @@ export default class Parser {
 
     if (this.check(SyntaxTokenKind.FUNCTION_EXPRESSION)) {
       return this.functionExpression();
+    }
+
+    if (this.check(SyntaxTokenKind.WILDCARD)) {
+      return this.wildcardExpression();
     }
 
     if (this.check(SyntaxTokenKind.LBRACKET)) {
@@ -796,6 +803,12 @@ export default class Parser {
 
     return this.nodeFactory.create(FunctionExpressionNode, args);
   }
+
+  private wildcardExpression (): WildcardNode {
+    this.advance();
+    return this.nodeFactory.create(WildcardNode, { token: this.previous() });
+  }
+
 
   /* Parsing and synchronizing BlockExpression */
 
