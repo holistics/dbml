@@ -83,6 +83,8 @@ export class SyntaxToken {
 
   value: string;
 
+  filepath: Filepath;
+
   leadingTrivia: SyntaxToken[];
 
   trailingTrivia: SyntaxToken[];

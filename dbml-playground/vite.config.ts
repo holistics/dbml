@@ -26,6 +26,7 @@ export default defineConfig({
     include: [
       'monaco-editor',
       'vue',
+      'lzbase62',
     ],
   },
 });
