@@ -56,6 +56,14 @@ export {
   type Project,
   type TableGroup,
   type TablePartial,
+  type DiagramView,
+  type FilterConfig,
 } from '@/core/interpreter/types';
+
+// DiagramView types (methods exposed via Compiler)
+export type { DiagramViewSyncOperation, DiagramViewBlock } from '@/compiler/queries/transform/syncDiagramView';
+export type { TextEdit } from '@/compiler/queries/transform/applyTextEdits';
+
+export { dbmlMonarchTokensProvider } from '@/services/monarch';
 
 export { Compiler, services };

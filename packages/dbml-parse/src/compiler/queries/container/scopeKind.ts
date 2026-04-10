@@ -30,6 +30,8 @@ export function containerScopeKind (this: Compiler, offset: number): ScopeKind {
       return ScopeKind.CHECKS;
     case 'records':
       return ScopeKind.RECORDS;
+    case 'diagramview':
+      return ScopeKind.DIAGRAMVIEW;
     default:
       return ScopeKind.CUSTOM;
   }

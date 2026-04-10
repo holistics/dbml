@@ -2220,7 +2220,8 @@
             "end": 204
           }
         },
-        "parent": 43
+        "parent": 43,
+        "symbol": 4
       }
     ],
     "eof": {
@@ -2262,6 +2263,11 @@
             }
           },
           "declaration": 30
+        },
+        "Note:nodeName": {
+          "references": [],
+          "id": 4,
+          "declaration": 42
         }
       },
       "id": 0,

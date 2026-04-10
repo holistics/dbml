@@ -1,5 +1,5 @@
-import { CompileError } from '@/core/errors';
+import { CompileError, CompileWarning } from '@/core/errors';
 
 export interface ElementValidator {
-  validate(): CompileError[];
+  validate(): { errors: CompileError[]; warnings: CompileWarning[] };
 }

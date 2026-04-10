@@ -99,6 +99,7 @@ export enum SyntaxNodeKind {
   PRIMARY_EXPRESSION = '<primary-expression>',
   GROUP_EXPRESSION = '<group-expression>',
   COMMA_EXPRESSION = '<comma-expression>',
+  WILDCARD = '<wildcard>',
   EMPTY = '<dummy>',
   ARRAY = '<array>',
 }
@@ -563,6 +564,16 @@ export class LiteralNode extends SyntaxNode {
   constructor ({ literal }: { literal?: SyntaxToken }, id: SyntaxNodeId) {
     super(id, SyntaxNodeKind.LITERAL, [literal]);
     this.literal = literal;
+  }
+}
+
+// A wildcard (*) expression used in DiagramView blocks
+export class WildcardNode extends SyntaxNode {
+  token?: SyntaxToken;
+
+  constructor ({ token }: { token?: SyntaxToken }, id: SyntaxNodeId) {
+    super(id, SyntaxNodeKind.WILDCARD, [token]);
+    this.token = token;
   }
 }
 
