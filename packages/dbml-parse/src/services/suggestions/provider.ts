@@ -49,6 +49,8 @@ import { getOffsetFromMonacoPosition } from '@/services/utils';
 import { isComment } from '@/core/lexer/utils';
 import { ElementKind, SettingName } from '@/core/types/keywords';
 import { UNHANDLED, DEFAULT_SCHEMA_NAME } from '@/constants';
+import { UseStatementMerger } from '@/services/completion/utils/useStatementMerger';
+import { Filepath } from '@/core/types/filepath';
 
 export default class DBMLCompletionItemProvider implements CompletionItemProvider {
   private compiler: Compiler;
@@ -58,6 +60,39 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
   constructor (compiler: Compiler, triggerCharacters: string[] = []) {
     this.compiler = compiler;
     this.triggerCharacters = triggerCharacters;
+  }
+
+  /**
+   * Search compiler.layout for symbols matching the given name.
+   * Returns results with file hints for disambiguation.
+   */
+  private searchLayoutForSymbol (symbolName: string): Array<{
+    symbol: NodeSymbol;
+    fileHint: string;
+    filepath: Filepath;
+  }> {
+    const results: Array<{ symbol: NodeSymbol; fileHint: string; filepath: Filepath }> = [];
+
+    if (!this.compiler.layout) return results;
+
+    // Search all files in the layout
+    const allFiles = (this.compiler.layout as any).allFiles?.() || [];
+    for (const fileInfo of allFiles) {
+      const symbols = (this.compiler.layout as any).getSymbols?.(fileInfo.filepath) || [];
+
+      for (const sym of symbols) {
+        if ((sym as any).name === symbolName) {
+          const fileHint = `from ${fileInfo.filepath.basename}`;
+          results.push({
+            symbol: sym,
+            fileHint,
+            filepath: fileInfo.filepath,
+          });
+        }
+      }
+    }
+
+    return results;
   }
 
   provideCompletionItems (model: TextModel, position: Position): CompletionList {

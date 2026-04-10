@@ -5,6 +5,7 @@ import { getOffsetFromMonacoPosition } from '@/services/utils';
 import Compiler from '@/compiler';
 import { SyntaxNode, SyntaxNodeKind } from '@/core/types/nodes';
 import { UNHANDLED } from '@/constants';
+import { Filepath } from '@/core/types/filepath';
 
 export default class DBMLDefinitionProvider implements DefinitionProvider {
   private compiler: Compiler;
@@ -39,6 +40,15 @@ export default class DBMLDefinitionProvider implements DefinitionProvider {
 
       if (declaration) {
         const { startPos, endPos } = declaration;
+        // Use filepath from declaration if available and in multi-file mode (uri is set)
+        let definitionUri = uri;
+        if (uri) {
+          const declarationFilepath = (declaration as any).filepath as Filepath | undefined;
+          if (declarationFilepath) {
+            definitionUri = declarationFilepath.toUri();
+          }
+        }
+
         return [
           {
             range: {
@@ -47,7 +57,7 @@ export default class DBMLDefinitionProvider implements DefinitionProvider {
               endColumn: endPos.column + 1,
               endLineNumber: endPos.line + 1,
             },
-            uri,
+            uri: definitionUri,
           },
         ];
       }
