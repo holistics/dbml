@@ -8,13 +8,10 @@ export default class Report<T> {
 
   private warnings?: CompileWarning[];
 
-<<<<<<< HEAD
   static create<T> (value: T, errors?: CompileError[], warnings?: CompileWarning[]) {
     return new Report(value, errors, warnings);
   }
 
-=======
->>>>>>> 158bfeab (refactor: reorganize types)
   constructor (value: T, errors?: CompileError[], warnings?: CompileWarning[]) {
     this.value = value;
     this.errors = errors === undefined ? [] : errors;
@@ -23,7 +20,6 @@ export default class Report<T> {
     }
   }
 
-<<<<<<< HEAD
   filter<S extends symbol> (filteredValue: S): Report<undefined | Exclude<T, S>> {
     if (this.value as any === filteredValue) return new Report(undefined, this.errors, this.warnings);
     return this as Report<Exclude<T, S>>;
@@ -37,8 +33,6 @@ export default class Report<T> {
     return this.value as any === filteredValue ? undefined : this.value as Exclude<T, typeof filteredValue>;
   }
 
-=======
->>>>>>> 158bfeab (refactor: reorganize types)
   getValue (): T {
     return this.value;
   }
@@ -51,7 +45,6 @@ export default class Report<T> {
     return this.warnings || [];
   }
 
-<<<<<<< HEAD
   chainFiltered<S extends symbol, U>(filteredValue: S, fn: (_: Exclude<T, S>) => Report<U>): Report<U | undefined> {
     if (this.value as any === filteredValue) return new Report(undefined, this.errors, this.warnings);
     const res = fn(this.value as Exclude<T, S>);
@@ -61,8 +54,6 @@ export default class Report<T> {
     return new Report<U>(res.value, errors, warnings);
   }
 
-=======
->>>>>>> 158bfeab (refactor: reorganize types)
   chain<U>(fn: (_: T) => Report<U>): Report<U> {
     const res = fn(this.value);
     const errors = [...this.errors, ...res.errors];
@@ -71,14 +62,11 @@ export default class Report<T> {
     return new Report<U>(res.value, errors, warnings);
   }
 
-<<<<<<< HEAD
   mapFiltered<S extends symbol, U>(filteredValue: S, fn: (_: T) => U): Report<U | undefined> {
     if (this.value as any === filteredValue) return new Report(undefined, this.errors, this.warnings);
     return new Report<U>(fn(this.value), this.errors, this.warnings);
   }
 
-=======
->>>>>>> 158bfeab (refactor: reorganize types)
   map<U>(fn: (_: T) => U): Report<U> {
     return new Report<U>(fn(this.value), this.errors, this.warnings);
   }

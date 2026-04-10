@@ -85,7 +85,7 @@ export default class DBMLDiagnosticsProvider {
   ): Diagnostic {
     const n = errorOrWarning.nodeOrToken as any;
 
-    // SyntaxNode or SyntaxToken: has startPos/endPos (0-based)
+    // SyntaxNode / SyntaxToken: has 0-based startPos / endPos directly
     if (n?.startPos) {
       return {
         type: severity,
@@ -98,7 +98,8 @@ export default class DBMLDiagnosticsProvider {
       };
     }
 
-    // Schema objects (e.g. TableRecord): has token.start/end (1-based)
+    // Schema objects (e.g. TableRecord): position is in .token: TokenPosition
+    // whose .start/.end are already 1-based (set by getTokenPosition).
     if (n?.token?.start) {
       return {
         type: severity,

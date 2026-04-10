@@ -26,6 +26,7 @@ describe('[example] binder', () => {
       expect(columnSymbol?.kind).toBe(SymbolKind.Column);
 
       // Verify column symbol properties
+      const columnSymbol = findMember(compiler, tableSymbol!, SymbolKind.Column, 'id')!
       const tableBody = tableNode.body as BlockExpressionNode;
       const columnNode = tableBody.body[0];
       expect(columnSymbol?.declaration).toBe(columnNode);

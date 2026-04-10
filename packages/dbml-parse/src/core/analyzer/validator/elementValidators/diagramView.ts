@@ -12,7 +12,7 @@ import {
 } from '@/core/parser/nodes';
 import SymbolFactory from '@/core/types/symbol/factory';
 import { createDiagramViewFieldSymbolIndex, createDiagramViewSymbolIndex } from '@/core/types/symbol/symbolIndex';
-import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '@/core/analyzer/utils';
+import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '@/core/utils/expression';
 import { DiagramViewFieldSymbol, DiagramViewSymbol } from '@/core/types/symbol/symbols';
 import { isExpressionAVariableNode, isWildcardExpression } from '@/core/parser/utils';
 

@@ -1,6 +1,6 @@
 import Compiler from '@/compiler/index';
-// TODO: migrate services
-// import * as services from '@/services/index';
+export { dbmlMonarchTokensProvider } from '@/services/monarch';
+export type { Database } from '@/core/types/schemaJson';
 
 // Export the types that playground and other consumers need
 export {
@@ -25,7 +25,15 @@ export {
   // Error types
   CompileError,
   CompileErrorCode,
+  CompileWarning,
 } from '@/core/types/errors';
+
+export {
+  NodeSymbol,
+  SymbolKind,
+  SchemaSymbol,
+  InjectedColumnSymbol,
+} from '@/core/types/symbols/symbols';
 
 export {
   // Scope kinds from compiler
@@ -41,4 +49,8 @@ export {
 
 export * from '@/core/global_modules/records/utils/data';
 
+export { Filepath } from '@/core/types/filepath';
+export { DEFAULT_ENTRY, DBML_EXT } from '@/constants';
+export { type Position } from '@/core/types/position';
 export { Compiler };
+export { default as DBMLDiagnosticsProvider } from '@/services/diagnostics/provider';
