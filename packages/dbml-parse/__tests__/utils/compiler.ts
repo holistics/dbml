@@ -1,6 +1,6 @@
 import Lexer from '@/core/lexer/lexer';
 import Parser from '@/core/parser/parser';
-import { DEFAULT_ENTRY } from '@/constants';
+import { DEFAULT_FILEPATH } from '@/core/types/filepath';
 import Analyzer from '@/core/analyzer/analyzer';
 import {
   ProgramNode,
@@ -32,11 +32,11 @@ import { Compiler, SyntaxToken } from '@/index';
 import { Database } from '@/core/types/schemaJson';
 
 export function lex (source: string): Report<SyntaxToken[]> {
-  return new Lexer(source, DEFAULT_ENTRY).lex();
+  return new Lexer(source, DEFAULT_FILEPATH).lex();
 }
 
 export function parse (source: string): Report<{ ast: ProgramNode; tokens: SyntaxToken[] }> {
-  return new Lexer(source, DEFAULT_ENTRY).lex().chain((tokens) => new Parser(source, tokens, new SyntaxNodeIdGenerator(), DEFAULT_ENTRY).parse());
+  return new Lexer(source, DEFAULT_FILEPATH).lex().chain((tokens) => new Parser(DEFAULT_FILEPATH, source, tokens, new SyntaxNodeIdGenerator()).parse());
 }
 
 export function analyze (source: string): Report<ProgramNode> {

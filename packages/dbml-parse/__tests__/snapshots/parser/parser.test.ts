@@ -1,4 +1,4 @@
-import { DEFAULT_ENTRY } from '@/constants';
+import { DEFAULT_FILEPATH } from '@/core/types/filepath';
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
@@ -32,11 +32,11 @@ describe('[snapshot] parser', () => {
     // @ts-expect-error "Current workaround to use compiler but only trigger validator"
     const { nodeIdGenerator } = compiler;
 
-    const lexer = new Lexer(program, DEFAULT_ENTRY);
+    const lexer = new Lexer(program, DEFAULT_FILEPATH);
     const output = serializeParserResult(
       compiler,
       lexer.lex().chain((tokens) => {
-        const parser = new Parser(program, tokens, nodeIdGenerator, DEFAULT_ENTRY);
+        const parser = new Parser(DEFAULT_FILEPATH, program, tokens, nodeIdGenerator);
         return parser.parse().map((_) => _.ast);
       }),
     );
