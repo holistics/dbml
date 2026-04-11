@@ -37,18 +37,6 @@
       }
     },
     {
-      "code": "INVALID_COLUMN_TYPE",
-      "diagnostic": "Invalid column type",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<primary-expression>@@[L2:C12, L2:C13]",
-          "snippet": "2"
-        }
-      }
-    },
-    {
       "code": "INVALID_COLUMN",
       "diagnostic": "These fields must be some inline settings optionally ended with a setting list",
       "filepath": "/main.dbml",
@@ -121,6 +109,30 @@
       }
     },
     {
+      "code": "INVALID_COLUMN_TYPE",
+      "diagnostic": "Invalid column type",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<primary-expression>@@[L2:C12, L2:C13]",
+          "snippet": "2"
+        }
+      }
+    },
+    {
+      "code": "DUPLICATE_COLUMN_NAME",
+      "diagnostic": "Duplicate column Indexes",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<function-application>@@[L1:C4, L1:C32]",
+          "snippet": "Indexes wr...x alias {}"
+        }
+      }
+    },
+    {
       "code": "DUPLICATE_COLUMN_NAME",
       "diagnostic": "Duplicate column Indexes",
       "filepath": "/main.dbml",
@@ -141,18 +153,6 @@
         "context": {
           "id": "node@<function-application>@@[L2:C4, L2:C21]",
           "snippet": "Indexes 2 args {}"
-        }
-      }
-    },
-    {
-      "code": "DUPLICATE_COLUMN_NAME",
-      "diagnostic": "Duplicate column Indexes",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<function-application>@@[L1:C4, L1:C32]",
-          "snippet": "Indexes wr...x alias {}"
         }
       }
     },

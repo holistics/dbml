@@ -19,7 +19,7 @@
       "level": "error",
       "node": {
         "context": {
-          "id": "node@<function-application>@@[L2:C4, L2:C14]",
+          "id": "node@<function-application>@@[L1:C4, L1:C14]",
           "snippet": "id integer"
         }
       }
@@ -31,7 +31,7 @@
       "level": "error",
       "node": {
         "context": {
-          "id": "node@<function-application>@@[L1:C4, L1:C14]",
+          "id": "node@<function-application>@@[L2:C4, L2:C14]",
           "snippet": "id integer"
         }
       }
@@ -67,7 +67,7 @@
       "level": "error",
       "node": {
         "context": {
-          "id": "node@<function-application>@@[L8:C4, L8:C10]",
+          "id": "node@<function-application>@@[L7:C4, L7:C10]",
           "snippet": "id int"
         }
       }
@@ -79,7 +79,7 @@
       "level": "error",
       "node": {
         "context": {
-          "id": "node@<function-application>@@[L7:C4, L7:C10]",
+          "id": "node@<function-application>@@[L8:C4, L8:C10]",
           "snippet": "id int"
         }
       }

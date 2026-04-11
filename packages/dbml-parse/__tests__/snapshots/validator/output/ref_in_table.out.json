@@ -13,18 +13,6 @@
       }
     },
     {
-      "code": "INVALID_REF_FIELD",
-      "diagnostic": "Invalid column reference",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<primary-expression>@@[L13:C9, L13:C11]",
-          "snippet": "id"
-        }
-      }
-    },
-    {
       "code": "INVALID_REF_CONTEXT",
       "diagnostic": "A Ref must appear top-level",
       "filepath": "/main.dbml",
@@ -33,6 +21,18 @@
         "context": {
           "id": "node@<element-declaration>@@[L14:C4, L14:C22]",
           "snippet": "Ref: code > B.code"
+        }
+      }
+    },
+    {
+      "code": "INVALID_REF_FIELD",
+      "diagnostic": "Invalid column reference",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<primary-expression>@@[L13:C9, L13:C11]",
+          "snippet": "id"
         }
       }
     },

@@ -1,76 +1,6 @@
 {
   "errors": [
     {
-      "code": "INVALID_ESCAPE_SEQUENCE",
-      "diagnostic": "Invalid unicode escape sequence '\\u', only unicode escape sequences of the form '\\uHHHH' where H is a hexadecimal number are allowed",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "token": {
-        "context": {
-          "id": "token@<string>@\\u@[L0:C1, L0:C3]",
-          "snippet": "\\u",
-          "isInvalid": true,
-          "filepath": "/main.dbml"
-        }
-      }
-    },
-    {
-      "code": "INVALID_ESCAPE_SEQUENCE",
-      "diagnostic": "Invalid unicode escape sequence '\\u1', only unicode escape sequences of the form '\\uHHHH' where H is a hexadecimal number are allowed",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "token": {
-        "context": {
-          "id": "token@<string>@\\u1@[L2:C1, L2:C4]",
-          "snippet": "\\u1",
-          "isInvalid": true,
-          "filepath": "/main.dbml"
-        }
-      }
-    },
-    {
-      "code": "INVALID_ESCAPE_SEQUENCE",
-      "diagnostic": "Invalid unicode escape sequence '\\u12', only unicode escape sequences of the form '\\uHHHH' where H is a hexadecimal number are allowed",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "token": {
-        "context": {
-          "id": "token@<string>@\\u12@[L3:C1, L3:C5]",
-          "snippet": "\\u12",
-          "isInvalid": true,
-          "filepath": "/main.dbml"
-        }
-      }
-    },
-    {
-      "code": "INVALID_ESCAPE_SEQUENCE",
-      "diagnostic": "Invalid unicode escape sequence '\\uab', only unicode escape sequences of the form '\\uHHHH' where H is a hexadecimal number are allowed",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "token": {
-        "context": {
-          "id": "token@<string>@\\uab@[L4:C1, L4:C5]",
-          "snippet": "\\uab",
-          "isInvalid": true,
-          "filepath": "/main.dbml"
-        }
-      }
-    },
-    {
-      "code": "INVALID_ESCAPE_SEQUENCE",
-      "diagnostic": "Invalid unicode escape sequence '\\ua1', only unicode escape sequences of the form '\\uHHHH' where H is a hexadecimal number are allowed",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "token": {
-        "context": {
-          "id": "token@<string>@\\ua1@[L5:C1, L5:C5]",
-          "snippet": "\\ua1",
-          "isInvalid": true,
-          "filepath": "/main.dbml"
-        }
-      }
-    },
-    {
       "code": "UNEXPECTED_TOKEN",
       "diagnostic": "Expect an identifier",
       "filepath": "/main.dbml",
@@ -149,6 +79,76 @@
         "context": {
           "id": "token@<variable>@\\ua1@[L5:C0, L5:C6]",
           "snippet": "\"\\ua1\"",
+          "isInvalid": true,
+          "filepath": "/main.dbml"
+        }
+      }
+    },
+    {
+      "code": "INVALID_ESCAPE_SEQUENCE",
+      "diagnostic": "Invalid unicode escape sequence '\\u', only unicode escape sequences of the form '\\uHHHH' where H is a hexadecimal number are allowed",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "token": {
+        "context": {
+          "id": "token@<string>@\\u@[L0:C1, L0:C3]",
+          "snippet": "\\u",
+          "isInvalid": true,
+          "filepath": "/main.dbml"
+        }
+      }
+    },
+    {
+      "code": "INVALID_ESCAPE_SEQUENCE",
+      "diagnostic": "Invalid unicode escape sequence '\\u1', only unicode escape sequences of the form '\\uHHHH' where H is a hexadecimal number are allowed",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "token": {
+        "context": {
+          "id": "token@<string>@\\u1@[L2:C1, L2:C4]",
+          "snippet": "\\u1",
+          "isInvalid": true,
+          "filepath": "/main.dbml"
+        }
+      }
+    },
+    {
+      "code": "INVALID_ESCAPE_SEQUENCE",
+      "diagnostic": "Invalid unicode escape sequence '\\u12', only unicode escape sequences of the form '\\uHHHH' where H is a hexadecimal number are allowed",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "token": {
+        "context": {
+          "id": "token@<string>@\\u12@[L3:C1, L3:C5]",
+          "snippet": "\\u12",
+          "isInvalid": true,
+          "filepath": "/main.dbml"
+        }
+      }
+    },
+    {
+      "code": "INVALID_ESCAPE_SEQUENCE",
+      "diagnostic": "Invalid unicode escape sequence '\\uab', only unicode escape sequences of the form '\\uHHHH' where H is a hexadecimal number are allowed",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "token": {
+        "context": {
+          "id": "token@<string>@\\uab@[L4:C1, L4:C5]",
+          "snippet": "\\uab",
+          "isInvalid": true,
+          "filepath": "/main.dbml"
+        }
+      }
+    },
+    {
+      "code": "INVALID_ESCAPE_SEQUENCE",
+      "diagnostic": "Invalid unicode escape sequence '\\ua1', only unicode escape sequences of the form '\\uHHHH' where H is a hexadecimal number are allowed",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "token": {
+        "context": {
+          "id": "token@<string>@\\ua1@[L5:C1, L5:C5]",
+          "snippet": "\\ua1",
           "isInvalid": true,
           "filepath": "/main.dbml"
         }

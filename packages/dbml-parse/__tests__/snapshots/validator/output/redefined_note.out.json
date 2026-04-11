@@ -1,30 +1,6 @@
 {
   "errors": [
     {
-      "code": "NOTE_REDEFINED",
-      "diagnostic": "Duplicate notes are defined",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<element-declaration>@@[L1:C4, L1:C38]",
-          "snippet": "Note: ''' ...l note '''"
-        }
-      }
-    },
-    {
-      "code": "NOTE_REDEFINED",
-      "diagnostic": "Duplicate notes are defined",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<element-declaration>@@[L2:C4, L4:C5]",
-          "snippet": "Note {\r\n  ...te'\r\n    }"
-        }
-      }
-    },
-    {
       "code": "INVALID_NAME",
       "diagnostic": "Sticky note must have a name",
       "filepath": "/main.dbml",
@@ -45,6 +21,30 @@
         "context": {
           "id": "node@<element-declaration>@@[L11:C0, L13:C3]",
           "snippet": "Note: '''\r... note\r\n'''"
+        }
+      }
+    },
+    {
+      "code": "NOTE_REDEFINED",
+      "diagnostic": "Duplicate notes are defined",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<element-declaration>@@[L1:C4, L1:C38]",
+          "snippet": "Note: ''' ...l note '''"
+        }
+      }
+    },
+    {
+      "code": "NOTE_REDEFINED",
+      "diagnostic": "Duplicate notes are defined",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<element-declaration>@@[L2:C4, L4:C5]",
+          "snippet": "Note {\r\n  ...te'\r\n    }"
         }
       }
     }

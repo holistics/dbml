@@ -29,20 +29,6 @@
       }
     },
     {
-      "code": "INVALID_OPERAND",
-      "diagnostic": "Invalid start of operand \";\"",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "token": {
-        "context": {
-          "id": "token@<semicolon>@;@[L42:C240, L42:C241]",
-          "snippet": ";",
-          "isInvalid": true,
-          "filepath": "/main.dbml"
-        }
-      }
-    },
-    {
       "code": "UNEXPECTED_TOKEN",
       "diagnostic": "Expect an identifier",
       "filepath": "/main.dbml",
@@ -93,6 +79,20 @@
         "context": {
           "id": "token@<identifier>@は@[L42:C344, L42:C345]",
           "snippet": "は",
+          "isInvalid": true,
+          "filepath": "/main.dbml"
+        }
+      }
+    },
+    {
+      "code": "INVALID_OPERAND",
+      "diagnostic": "Invalid start of operand \";\"",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "token": {
+        "context": {
+          "id": "token@<semicolon>@;@[L42:C240, L42:C241]",
+          "snippet": ";",
           "isInvalid": true,
           "filepath": "/main.dbml"
         }

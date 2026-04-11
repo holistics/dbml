@@ -13,14 +13,14 @@
       }
     },
     {
-      "code": "INVALID_REF_SETTING_VALUE",
-      "diagnostic": "'color' must be a color literal",
+      "code": "UNEXPECTED_SETTINGS",
+      "diagnostic": "A Ref shouldn't have a setting list",
       "filepath": "/main.dbml",
       "level": "error",
       "node": {
         "context": {
-          "id": "node@<attribute>@@[L35:C17, L35:C36]",
-          "snippet": "color: #not_a_color"
+          "id": "node@<list-expression>@@[L42:C20, L42:C36]",
+          "snippet": "[color: #123456]"
         }
       }
     },
@@ -37,14 +37,26 @@
       }
     },
     {
-      "code": "UNEXPECTED_SETTINGS",
-      "diagnostic": "A Ref shouldn't have a setting list",
+      "code": "UNKNOWN_REF_SETTING",
+      "diagnostic": "Unknown ref setting 'hello'",
       "filepath": "/main.dbml",
       "level": "error",
       "node": {
         "context": {
-          "id": "node@<list-expression>@@[L42:C20, L42:C36]",
-          "snippet": "[color: #123456]"
+          "id": "node@<attribute>@@[L44:C36, L44:C50]",
+          "snippet": "hello: goodbye"
+        }
+      }
+    },
+    {
+      "code": "INVALID_REF_SETTING_VALUE",
+      "diagnostic": "'color' must be a color literal",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<attribute>@@[L35:C17, L35:C36]",
+          "snippet": "color: #not_a_color"
         }
       }
     },
@@ -57,18 +69,6 @@
         "context": {
           "id": "node@<attribute>@@[L43:C36, L43:C55]",
           "snippet": "color: #not_a_color"
-        }
-      }
-    },
-    {
-      "code": "UNKNOWN_REF_SETTING",
-      "diagnostic": "Unknown ref setting 'hello'",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<attribute>@@[L44:C36, L44:C50]",
-          "snippet": "hello: goodbye"
         }
       }
     }

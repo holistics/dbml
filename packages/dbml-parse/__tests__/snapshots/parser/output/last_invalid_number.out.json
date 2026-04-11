@@ -1,6 +1,34 @@
 {
   "errors": [
     {
+      "code": "UNEXPECTED_EOF",
+      "diagnostic": "Unexpected EOF",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "token": {
+        "context": {
+          "id": "token@<eof>@@[L4:C9, L4:C9]",
+          "snippet": "",
+          "isInvalid": false,
+          "filepath": "/main.dbml"
+        }
+      }
+    },
+    {
+      "code": "UNEXPECTED_EOF",
+      "diagnostic": "Unexpected EOF",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "token": {
+        "context": {
+          "id": "token@<eof>@@[L4:C9, L4:C9]",
+          "snippet": "",
+          "isInvalid": false,
+          "filepath": "/main.dbml"
+        }
+      }
+    },
+    {
       "code": "UNKNOWN_TOKEN",
       "diagnostic": "Invalid number",
       "filepath": "/main.dbml",
@@ -10,34 +38,6 @@
           "id": "token@<number>@12.@[L4:C6, L4:C9]",
           "snippet": "12.",
           "isInvalid": true,
-          "filepath": "/main.dbml"
-        }
-      }
-    },
-    {
-      "code": "UNEXPECTED_EOF",
-      "diagnostic": "Unexpected EOF",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "token": {
-        "context": {
-          "id": "token@<eof>@@[L4:C9, L4:C9]",
-          "snippet": "",
-          "isInvalid": false,
-          "filepath": "/main.dbml"
-        }
-      }
-    },
-    {
-      "code": "UNEXPECTED_EOF",
-      "diagnostic": "Unexpected EOF",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "token": {
-        "context": {
-          "id": "token@<eof>@@[L4:C9, L4:C9]",
-          "snippet": "",
-          "isInvalid": false,
           "filepath": "/main.dbml"
         }
       }

@@ -1,6 +1,18 @@
 {
   "errors": [
     {
+      "code": "UNKNOWN_TABLE_SETTING",
+      "diagnostic": "Unknown 'what' setting",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<attribute>@@[L8:C4, L8:C17]",
+          "snippet": "what: 'ye ye'"
+        }
+      }
+    },
+    {
       "code": "DUPLICATE_TABLE_SETTING",
       "diagnostic": "'note' can only appear once",
       "filepath": "/main.dbml",
@@ -21,18 +33,6 @@
         "context": {
           "id": "node@<attribute>@@[L6:C4, L6:C32]",
           "snippet": "note: 'Thi...ther note'"
-        }
-      }
-    },
-    {
-      "code": "UNKNOWN_TABLE_SETTING",
-      "diagnostic": "Unknown 'what' setting",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<attribute>@@[L8:C4, L8:C17]",
-          "snippet": "what: 'ye ye'"
         }
       }
     },

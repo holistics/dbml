@@ -1,20 +1,6 @@
 {
   "errors": [
     {
-      "code": "INVALID_OPERAND",
-      "diagnostic": "Invalid start of operand \")\"",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "token": {
-        "context": {
-          "id": "token@<rparen>@)@[L8:C6, L8:C7]",
-          "snippet": ")",
-          "isInvalid": false,
-          "filepath": "/main.dbml"
-        }
-      }
-    },
-    {
       "code": "UNEXPECTED_TOKEN",
       "diagnostic": "Expect a comma ','",
       "filepath": "/main.dbml",
@@ -24,6 +10,20 @@
           "id": "token@<wildcard>@*@[L10:C14, L10:C15]",
           "snippet": "*",
           "isInvalid": true,
+          "filepath": "/main.dbml"
+        }
+      }
+    },
+    {
+      "code": "INVALID_OPERAND",
+      "diagnostic": "Invalid start of operand \")\"",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "token": {
+        "context": {
+          "id": "token@<rparen>@)@[L8:C6, L8:C7]",
+          "snippet": ")",
+          "isInvalid": false,
           "filepath": "/main.dbml"
         }
       }

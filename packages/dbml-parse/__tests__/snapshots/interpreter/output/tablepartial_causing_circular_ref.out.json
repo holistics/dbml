@@ -1,18 +1,6 @@
 {
   "errors": [
     {
-      "code": "SAME_ENDPOINT",
-      "diagnostic": "Two endpoints are the same",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<attribute>@@[L1:C13, L1:C26]",
-          "snippet": "ref: > T.col1"
-        }
-      }
-    },
-    {
       "code": "CIRCULAR_REF",
       "diagnostic": "References with same endpoints exist",
       "filepath": "/main.dbml",
@@ -33,6 +21,18 @@
         "context": {
           "id": "node@<attribute>@@[L7:C13, L7:C24]",
           "snippet": "ref: > col3"
+        }
+      }
+    },
+    {
+      "code": "SAME_ENDPOINT",
+      "diagnostic": "Two endpoints are the same",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<attribute>@@[L1:C13, L1:C26]",
+          "snippet": "ref: > T.col1"
         }
       }
     }

@@ -1,6 +1,66 @@
 {
   "errors": [
     {
+      "code": "DUPLICATE_NAME",
+      "diagnostic": "Duplicate TableGroupField 'A'",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<function-application>@@[L13:C4, L13:C7]",
+          "snippet": "A a"
+        }
+      }
+    },
+    {
+      "code": "DUPLICATE_NAME",
+      "diagnostic": "Duplicate TableGroupField 'A'",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<function-application>@@[L14:C4, L14:C9]",
+          "snippet": "A a a"
+        }
+      }
+    },
+    {
+      "code": "INVALID_TABLEGROUP_FIELD",
+      "diagnostic": "A TableGroup field should only have a single Table name",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<primary-expression>@@[L13:C6, L13:C7]",
+          "snippet": "a"
+        }
+      }
+    },
+    {
+      "code": "INVALID_TABLEGROUP_FIELD",
+      "diagnostic": "A TableGroup field should only have a single Table name",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<primary-expression>@@[L14:C6, L14:C7]",
+          "snippet": "a"
+        }
+      }
+    },
+    {
+      "code": "INVALID_TABLEGROUP_FIELD",
+      "diagnostic": "A TableGroup field should only have a single Table name",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<primary-expression>@@[L14:C8, L14:C9]",
+          "snippet": "a"
+        }
+      }
+    },
+    {
       "code": "INVALID_COLUMN",
       "diagnostic": "A column must have a type",
       "filepath": "/main.dbml",
@@ -69,42 +129,6 @@
         "context": {
           "id": "node@<primary-expression>@@[L9:C7, L9:C8]",
           "snippet": "e"
-        }
-      }
-    },
-    {
-      "code": "INVALID_TABLEGROUP_FIELD",
-      "diagnostic": "A TableGroup field should only have a single Table name",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<primary-expression>@@[L13:C6, L13:C7]",
-          "snippet": "a"
-        }
-      }
-    },
-    {
-      "code": "INVALID_TABLEGROUP_FIELD",
-      "diagnostic": "A TableGroup field should only have a single Table name",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<primary-expression>@@[L14:C6, L14:C7]",
-          "snippet": "a"
-        }
-      }
-    },
-    {
-      "code": "INVALID_TABLEGROUP_FIELD",
-      "diagnostic": "A TableGroup field should only have a single Table name",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<primary-expression>@@[L14:C8, L14:C9]",
-          "snippet": "a"
         }
       }
     },
@@ -201,30 +225,6 @@
         "context": {
           "id": "node@<primary-expression>@@[L14:C8, L14:C9]",
           "snippet": "a"
-        }
-      }
-    },
-    {
-      "code": "DUPLICATE_NAME",
-      "diagnostic": "Duplicate TableGroupField 'A'",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<function-application>@@[L13:C4, L13:C7]",
-          "snippet": "A a"
-        }
-      }
-    },
-    {
-      "code": "DUPLICATE_NAME",
-      "diagnostic": "Duplicate TableGroupField 'A'",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<function-application>@@[L14:C4, L14:C9]",
-          "snippet": "A a a"
         }
       }
     },

@@ -1,20 +1,6 @@
 {
   "errors": [
     {
-      "code": "EMPTY_ATTRIBUTE_NAME",
-      "diagnostic": "Expect a non-empty attribute name",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "token": {
-        "context": {
-          "id": "token@<colon>@:@[L3:C21, L3:C22]",
-          "snippet": ":",
-          "isInvalid": false,
-          "filepath": "/main.dbml"
-        }
-      }
-    },
-    {
       "code": "INVALID_OPERAND",
       "diagnostic": "Invalid start of operand \"]\"",
       "filepath": "/main.dbml",
@@ -23,6 +9,20 @@
         "context": {
           "id": "token@<rbracket>@]@[L4:C40, L4:C41]",
           "snippet": "]",
+          "isInvalid": false,
+          "filepath": "/main.dbml"
+        }
+      }
+    },
+    {
+      "code": "EMPTY_ATTRIBUTE_NAME",
+      "diagnostic": "Expect a non-empty attribute name",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "token": {
+        "context": {
+          "id": "token@<colon>@:@[L3:C21, L3:C22]",
+          "snippet": ":",
           "isInvalid": false,
           "filepath": "/main.dbml"
         }

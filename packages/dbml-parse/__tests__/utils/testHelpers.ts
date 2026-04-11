@@ -138,7 +138,7 @@ export function toSnapshot (
   { simple = false }: { simple?: boolean } = {},
 ): unknown {
   if (Array.isArray(value)) {
-    return sortArray(value.map((v) => toSnapshot(compiler, v, { simple })));
+    return sortArray([...value]).map((v) => toSnapshot(compiler, v as Snappable, { simple }));
   }
   if (value instanceof CompileWarning) {
     return warningToSnapshot(compiler, value, { simple });
