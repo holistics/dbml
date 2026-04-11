@@ -1,6 +1,6 @@
 import { isProgramNode } from '@/core/utils/expression';
 import { ProgramNode, type SyntaxNode } from '@/core/types/nodes';
-import { NodeSymbol, SchemaSymbol, SymbolKind } from '@/core/types/symbols';
+import { NodeSymbol, SchemaSymbol, SymbolKind } from '@/core/types/symbol';
 import type { GlobalModule } from '../types';
 import { DEFAULT_SCHEMA_NAME, PASS_THROUGH, type PassThrough, UNHANDLED } from '@/constants';
 import Report from '@/core/types/report';

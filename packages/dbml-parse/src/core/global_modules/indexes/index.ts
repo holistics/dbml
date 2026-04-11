@@ -3,7 +3,7 @@ import { ElementKind } from '@/core/types/keywords';
 import { ElementDeclarationNode, PrimaryExpressionNode } from '@/core/types/nodes';
 import type { SyntaxNode } from '@/core/types/nodes';
 import type { SyntaxToken } from '@/core/types/tokens';
-import { NodeSymbol, SymbolKind } from '@/core/types/symbols';
+import { NodeSymbol, SymbolKind } from '@/core/types/symbol';
 import type { GlobalModule } from '../types';
 import { PASS_THROUGH, type PassThrough, UNHANDLED } from '@/constants';
 import Report from '@/core/types/report';

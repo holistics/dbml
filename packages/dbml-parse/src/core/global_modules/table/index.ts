@@ -2,7 +2,7 @@ import { ElementKind, SettingName } from '@/core/types/keywords';
 import { ElementDeclarationNode, FunctionApplicationNode, PrefixExpressionNode, InfixExpressionNode, ProgramNode } from '@/core/types/nodes';
 import type { SyntaxNode } from '@/core/types/nodes';
 import type { SyntaxToken } from '@/core/types/tokens';
-import { NodeSymbol, SchemaSymbol, InjectedColumnSymbol, SymbolKind } from '@/core/types/symbols';
+import { NodeSymbol, SchemaSymbol, InjectedColumnSymbol, SymbolKind } from '@/core/types/symbol';
 import type { GlobalModule } from '../types';
 import { DEFAULT_SCHEMA_NAME, KEYWORDS_OF_DEFAULT_SETTING, PASS_THROUGH, type PassThrough, UNHANDLED } from '@/constants';
 import Report from '@/core/types/report';

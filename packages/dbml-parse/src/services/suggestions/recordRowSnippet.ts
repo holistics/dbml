@@ -2,7 +2,7 @@ import {
   extractVariableFromExpression,
 } from '@/core/utils/expression';
 import { extractReferee } from '@/services/utils';
-import { SymbolKind } from '@/core/types/symbols';
+import { SymbolKind } from '@/core/types/symbol';
 import {
   BlockExpressionNode,
   CallExpressionNode,

@@ -12,7 +12,7 @@ import {
   isUseDeclaration,
   isUseSpecifier,
 } from '@/core/utils/expression';
-import { NodeSymbol, SymbolKind, UseSymbol } from '@/core/types/symbols';
+import { NodeSymbol, SymbolKind, UseSymbol } from '@/core/types/symbol';
 import { Filepath, resolveImportFilepath } from '@/core/types/filepath';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import { lookupMember } from '../utils';

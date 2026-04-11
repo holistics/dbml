@@ -1,6 +1,6 @@
 import { ElementDeclarationNode, FunctionApplicationNode } from '@/core/types/nodes';
 import type Compiler from '@/compiler/index';
-import { NodeSymbol, SymbolKind } from '@/core/types/symbols';
+import { NodeSymbol, SymbolKind } from '@/core/types/symbol';
 import { UNHANDLED } from '@/constants';
 import type { Table, Column, TablePartial, Ref } from '@/core/types/schemaJson';
 import { isValidPartialInjection } from '@/core/utils/validate';

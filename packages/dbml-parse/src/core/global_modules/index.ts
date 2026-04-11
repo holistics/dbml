@@ -17,7 +17,7 @@ import { diagramViewModule } from './diagramView';
 import type Compiler from '@/compiler/index';
 import type { SyntaxNode } from '@/core/types/nodes';
 import Report from '@/core/types/report';
-import type { NodeSymbol } from '@/core/types/symbols';
+import type { NodeSymbol } from '@/core/types/symbol';
 import type { SchemaElement } from '@/core/types/schemaJson';
 import type { Unhandled } from '@/constants';
 

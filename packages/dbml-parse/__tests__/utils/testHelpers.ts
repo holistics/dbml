@@ -1,5 +1,5 @@
 import fs from 'node:fs';
-import { NodeSymbol, SchemaSymbol } from '@/core/types/symbols';
+import { NodeSymbol, SchemaSymbol } from '@/core/types/symbol';
 import { SyntaxToken } from '@/core/types/tokens';
 import { ElementDeclarationNode, LiteralNode, ProgramNode, SyntaxNode, VariableNode } from '@/core/types/nodes';
 import { getElementNameString } from '@/core/utils/expression';

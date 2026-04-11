@@ -1,7 +1,7 @@
 import { DEFAULT_SCHEMA_NAME, UNHANDLED } from '@/constants';
 import { splitQualifiedIdentifier } from '../utils';
 import type Compiler from '../../index';
-import { NodeSymbol, SymbolKind } from '@/core/types/symbols';
+import { NodeSymbol, SymbolKind } from '@/core/types/symbol';
 import { lookupMember } from '@/core/global_modules/utils';
 import { Filepath } from '@/core/types/filepath';
 

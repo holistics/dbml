@@ -1,5 +1,5 @@
 import type Compiler from '../index';
-import { NodeSymbol, SchemaSymbol, InjectedColumnSymbol, UseSymbol } from '@/core/types/symbols';
+import { NodeSymbol, SchemaSymbol, InjectedColumnSymbol, UseSymbol } from '@/core/types/symbol';
 import { UNHANDLED } from '@/constants';
 
 // Get the names associated with a symbol for duplicate checking and lookup.

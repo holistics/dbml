@@ -1,5 +1,5 @@
 import type Compiler from '../../index';
-import { NodeSymbol } from '@/core/types/symbols';
+import { NodeSymbol } from '@/core/types/symbol';
 import { UNHANDLED } from '@/constants';
 
 // @deprecated - returns the members of the element at offset

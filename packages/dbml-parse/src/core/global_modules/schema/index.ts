@@ -1,7 +1,7 @@
 import { uniqBy } from 'lodash-es';
 import { ElementDeclarationNode, UseDeclarationNode, UseSpecifierListNode, WildcardNode } from '@/core/types/nodes';
 import { SyntaxNode, UseSpecifierNode } from '@/core/types/nodes';
-import { NodeSymbol, SchemaSymbol, SymbolKind, UseSymbol } from '@/core/types/symbols';
+import { NodeSymbol, SchemaSymbol, SymbolKind, UseSymbol } from '@/core/types/symbol';
 import type { GlobalModule } from '../types';
 import { PASS_THROUGH, type PassThrough, UNHANDLED, DEFAULT_SCHEMA_NAME } from '@/constants';
 import Report from '@/core/types/report';

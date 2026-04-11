@@ -2,7 +2,7 @@ import type Compiler from '@/compiler';
 import { DEFAULT_SCHEMA_NAME, UNHANDLED } from '@/constants';
 import { ElementDeclarationNode, UseDeclarationNode, type UseSpecifierNode, WildcardNode } from '@/core/types/nodes';
 import Report from '@/core/types/report';
-import { type NodeSymbol, SchemaSymbol } from '@/core/types/symbols';
+import { type NodeSymbol, SchemaSymbol } from '@/core/types/symbol';
 import { Filepath, resolveImportFilepath } from '@/core/types/filepath';
 
 // This does not perform duplicate checks

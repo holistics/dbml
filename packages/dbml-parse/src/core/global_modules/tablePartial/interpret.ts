@@ -27,7 +27,7 @@ import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import { aggregateSettingList } from '@/core/utils/validate';
 import { ElementKind, SettingName } from '@/core/types/keywords';
 import { PASS_THROUGH, UNHANDLED } from '@/constants';
-import { SymbolKind } from '@/core/types/symbols';
+import { SymbolKind } from '@/core/types/symbol';
 import Report from '@/core/types/report';
 
 export class TablePartialInterpreter {

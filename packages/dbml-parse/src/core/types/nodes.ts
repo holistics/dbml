@@ -3,7 +3,7 @@ import { SyntaxToken, SyntaxTokenKind } from '@/core/types/tokens';
 import { ElementKind, ImportKind } from '@/core/types/keywords';
 import { Internable } from '@/core/types/internable';
 import { Position } from '@/core/types/position';
-import type { SymbolKind } from '@/core/types/symbols';
+import type { SymbolKind } from '@/core/types/symbol';
 import { getTokenFullEnd, getTokenFullStart } from '@/core/lexer/utils';
 import { Filepath } from '@/core/types/filepath';
 import { isReuseKeyword } from '@/core/utils/expression';

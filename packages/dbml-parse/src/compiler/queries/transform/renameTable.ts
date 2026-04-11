@@ -1,7 +1,7 @@
 import { DEFAULT_SCHEMA_NAME } from '@/constants';
 import type Compiler from '../../index';
 import { SyntaxNode } from '@/core/types/nodes';
-import { NodeSymbol } from '@/core/types/symbols';
+import { NodeSymbol } from '@/core/types/symbol';
 import { applyTextEdits, TextEdit } from './applyTextEdits';
 import { isAlphaOrUnderscore, isDigit } from '@/core/utils/chars';
 import { normalizeTableName, lookupTableSymbol, stripQuotes, type TableNameInput } from './utils';

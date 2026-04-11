@@ -1,6 +1,6 @@
 import type Compiler from '../index';
 import { SyntaxNode, PrimaryExpressionNode, TupleExpressionNode, InfixExpressionNode } from '@/core/types/nodes';
-import { NodeSymbol, SymbolKind } from '@/core/types/symbols';
+import { NodeSymbol, SymbolKind } from '@/core/types/symbol';
 import { UNHANDLED } from '@/constants';
 import { isExpressionAVariableNode, isAccessExpression } from '@/core/utils/expression';
 import { getMemberChain } from '@/core/parser/utils';

@@ -2,7 +2,7 @@ import { isElementNode } from '@/core/utils/expression';
 import { ElementKind } from '@/core/types/keywords';
 import { type SyntaxNode, type ElementDeclarationNode, ProgramNode } from '@/core/types/nodes';
 import type { SyntaxToken } from '@/core/types/tokens';
-import { NodeSymbol, SymbolKind } from '@/core/types/symbols';
+import { NodeSymbol, SymbolKind } from '@/core/types/symbol';
 import type { GlobalModule } from '../types';
 import { PASS_THROUGH, type PassThrough } from '@/constants';
 import Report from '@/core/types/report';

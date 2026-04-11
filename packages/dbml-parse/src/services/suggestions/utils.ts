@@ -1,4 +1,4 @@
-import { SymbolKind, NodeSymbol } from '@/core/types/symbols';
+import { SymbolKind, NodeSymbol } from '@/core/types/symbol';
 import { CompletionItemKind, CompletionItemInsertTextRule, type CompletionList } from '@/services/types';
 import { SyntaxToken, SyntaxTokenKind } from '@/core/types/tokens';
 import { hasTrailingSpaces } from '@/core/lexer/utils';

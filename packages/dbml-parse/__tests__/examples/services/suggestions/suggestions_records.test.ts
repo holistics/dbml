@@ -3,7 +3,7 @@ import Compiler from '@/compiler';
 import DBMLCompletionItemProvider from '@/services/suggestions/provider';
 import { createMockTextModel, createPosition } from '@tests/utils';
 import { getColumnsFromTableSymbol } from '@/services/suggestions/utils';
-import { NodeSymbol, SymbolKind } from '@/core/types/symbols';
+import { NodeSymbol, SymbolKind } from '@/core/types/symbol';
 import { DEFAULT_ENTRY, UNHANDLED } from '@/constants';
 
 describe('[example] CompletionItemProvider - Records', () => {

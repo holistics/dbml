@@ -5,7 +5,7 @@ import { SyntaxTokenKind } from '@/core/types/tokens';
 import { ArrayNode, CallExpressionNode, FunctionExpressionNode, InfixExpressionNode, LiteralNode, PostfixExpressionNode, PrefixExpressionNode, PrimaryExpressionNode, SyntaxNode, TupleExpressionNode, VariableNode } from '@/core/types/nodes';
 import { getMemberChain } from '@/core/parser/utils';
 import Report from '@/core/types/report';
-import { NodeSymbol, SchemaSymbol, SymbolKind, UseSymbol } from '@/core/types/symbols';
+import { NodeSymbol, SchemaSymbol, SymbolKind, UseSymbol } from '@/core/types/symbol';
 import type { ColumnType, RelationCardinality, Table, TokenPosition } from '@/core/types';
 import { destructureComplexVariable, destructureComplexVariableTuple, destructureMemberAccessExpression, extractQuotedStringToken, extractVariableFromExpression, extractVarNameFromPrimaryVariable, getNumberTextFromExpression, isAccessExpression, isDotDelimitedIdentifier, isExpressionAnIdentifierNode, isExpressionAQuotedString, isExpressionASignedNumberExpression, isExpressionAVariableNode, parseNumber } from '@/core/utils/expression';
 import { zip } from 'lodash-es';

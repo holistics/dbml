@@ -10,7 +10,7 @@ import type { CompileWarning } from '@/core/types/errors';
 import { validateForeignKeys } from '../records/utils/constraints';
 import { buildMergedTableFromElement, extractInlineRefsFromTablePartials } from '../records/utils/interpret';
 import { getBody } from '@/core/utils/expression';
-import { UseSymbol, SymbolKind } from '@/core/types/symbols';
+import { UseSymbol, SymbolKind } from '@/core/types/symbol';
 
 export default class ProgramInterpreter {
   private compiler: Compiler;

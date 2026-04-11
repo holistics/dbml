@@ -1,5 +1,5 @@
 export * from './module';
-export * from './symbols';
+export * from './symbol';
 export * from './schemaJson';
 export * from './position';
 export * from './keywords';

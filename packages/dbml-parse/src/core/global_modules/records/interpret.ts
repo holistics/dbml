@@ -35,7 +35,7 @@ import {
 import { destructureCallExpression, extractQuotedStringToken, extractVariableFromExpression, isExpressionAVariableNode, isElementNode } from '@/core/utils/expression';
 import Compiler from '@/compiler/index';
 import { ElementKind } from '@/core/types/keywords';
-import { NodeSymbol, SymbolKind } from '@/core/types/symbols';
+import { NodeSymbol, SymbolKind } from '@/core/types/symbol';
 import { PASS_THROUGH, UNHANDLED } from '@/constants';
 import { getTokenPosition, lookupMember, lookupInDefaultSchema } from '../utils';
 import { validateForeignKeys, validatePrimaryKey, validateUnique } from './utils/constraints';

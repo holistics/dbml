@@ -23,7 +23,7 @@ import {
 } from '@/core/utils/expression';
 import { ElementKind, SettingName } from '@/core/types/keywords';
 import { UNHANDLED } from '@/constants';
-import { SchemaSymbol } from '@/core/types/symbols';
+import { SchemaSymbol } from '@/core/types/symbol';
 
 export default class Binder {
   private ast: ProgramNode;

@@ -12,7 +12,7 @@ import { aggregateSettingList } from '@/core/utils/validate';
 import Compiler from '@/compiler';
 import Report from '@/core/types/report';
 import { UNHANDLED } from '@/constants';
-import { SymbolKind } from '@/core/types/symbols';
+import { SymbolKind } from '@/core/types/symbol';
 
 export class TableGroupInterpreter {
   private declarationNode: ElementDeclarationNode;

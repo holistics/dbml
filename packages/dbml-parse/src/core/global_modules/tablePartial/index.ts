@@ -13,7 +13,7 @@ import { ElementKind, SettingName } from '@/core/types/keywords';
 import { InfixExpressionNode, ElementDeclarationNode } from '@/core/types/nodes';
 import type { SyntaxNode } from '@/core/types/nodes';
 import type { SyntaxToken } from '@/core/types/tokens';
-import { NodeSymbol, SymbolKind } from '@/core/types/symbols';
+import { NodeSymbol, SymbolKind } from '@/core/types/symbol';
 import type { GlobalModule } from '../types';
 import { PASS_THROUGH, type PassThrough, UNHANDLED, KEYWORDS_OF_DEFAULT_SETTING } from '@/constants';
 import Report from '@/core/types/report';

@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import { SchemaSymbol, NodeSymbol, SymbolKind } from '@/core/types/symbols';
+import { SchemaSymbol, NodeSymbol, SymbolKind } from '@/core/types/symbol';
 import { UNHANDLED } from '@/constants';
 import { analyze } from '@tests/utils';
 import { ProgramNode, ElementDeclarationNode } from '@/core/types/nodes';

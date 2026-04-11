@@ -18,8 +18,8 @@ import {
   CompletionItemKind,
   CompletionItemInsertTextRule,
 } from '@/services/types';
-import { type NodeSymbol } from '@/core/types/symbols';
-import { SymbolKind } from '@/core/types/symbols';
+import { type NodeSymbol } from '@/core/types/symbol';
+import { SymbolKind } from '@/core/types/symbol';
 import {
   pickCompletionItemKind,
   shouldPrependSpace,
