@@ -1,4 +1,4 @@
-import { Compiler, DEFAULT_ENTRY } from '@dbml/parse';
+import { Compiler, DEFAULT_ENTRY, type DbmlProjectLayout, MemoryProjectLayout, Filepath } from '@dbml/parse';
 import Database from '../model_structure/database';
 import { parse } from './ANTLR/ASTGeneration';
 import { CompilerError } from './error';
@@ -100,67 +100,92 @@ class Parser {
     return parse(str, 'oracle');
   }
 
-  static parse (str: string, format: ParseFormat) {
-    return new Parser().parse(str, format);
+  static parse (layoutOrStr: string | DbmlProjectLayout, format: ParseFormat) {
+    return new Parser().parse(layoutOrStr, format);
   }
 
-  parse (str: string, format: ParseFormat): Database {
+  parse (layoutOrStr: string | DbmlProjectLayout, format: ParseFormat): Database {
     try {
-      let rawDatabase: RawDatabase ;
+      if (typeof layoutOrStr !== 'string' && format !== 'dbmlv2') {
+        throw new Error('Layout is only supported for dbmlv2 format');
+      }
+
+      let rawDatabase: RawDatabase;
       switch (format) {
         case 'mysql':
-          rawDatabase = Parser.parseMySQLToJSONv2(str);
+          rawDatabase = Parser.parseMySQLToJSONv2(layoutOrStr as string);
           break;
 
         case 'mysqlLegacy':
           // @ts-expect-error "Deprecated functions are not type safe"
-          rawDatabase = Parser.parseMySQLToJSON(str);
+          rawDatabase = Parser.parseMySQLToJSON(layoutOrStr as string);
           break;
 
         case 'postgres':
-          rawDatabase = Parser.parsePostgresToJSONv2(str);
+          rawDatabase = Parser.parsePostgresToJSONv2(layoutOrStr as string);
           break;
 
         case 'snowflake':
-          rawDatabase = Parser.parseSnowflakeToJSON(str);
+          rawDatabase = Parser.parseSnowflakeToJSON(layoutOrStr as string);
           break;
 
         case 'postgresLegacy':
           // @ts-expect-error "Deprecated functions are not type safe"
-          rawDatabase = Parser.parsePostgresToJSON(str);
+          rawDatabase = Parser.parsePostgresToJSON(layoutOrStr as string);
           break;
 
         case 'dbml':
           // @ts-expect-error "Deprecated functions are not type safe"
-          rawDatabase = Parser.parseDBMLToJSON(str);
+          rawDatabase = Parser.parseDBMLToJSON(layoutOrStr as string);
           break;
 
         case 'dbmlv2':
-          // @ts-expect-error "The type definition of @dbml/core's RawDatabase and @dbml/parse's Database have some mismatches"
-          rawDatabase = Parser.parseDBMLToJSONv2(str, this.DBMLCompiler);
+          if (typeof layoutOrStr === 'string') {
+            // @ts-expect-error "The type definition of @dbml/core's RawDatabase and @dbml/parse's Database have some mismatches"
+            rawDatabase = Parser.parseDBMLToJSONv2(layoutOrStr, this.DBMLCompiler);
+          } else {
+            this.DBMLCompiler.layout = layoutOrStr;
+            const diags = this.DBMLCompiler.parse.errors().map((error) => ({
+              message: error.diagnostic,
+              location: {
+                start: {
+                  line: error.nodeOrToken.startPos.line + 1,
+                  column: error.nodeOrToken.startPos.column + 1,
+                },
+                end: {
+                  line: error.nodeOrToken.endPos.line + 1,
+                  column: error.nodeOrToken.endPos.column + 1,
+                },
+              },
+              code: error.code,
+            }));
+            if (diags.length > 0) throw CompilerError.create(diags);
+            // @ts-expect-error "The type definition of @dbml/core's RawDatabase and @dbml/parse's Database have some mismatches"
+            rawDatabase = this.DBMLCompiler.parse.rawDb();
+          }
           break;
 
         case 'schemarb':
-          rawDatabase = Parser.parseSchemaRbToJSON(str);
+          rawDatabase = Parser.parseSchemaRbToJSON(layoutOrStr as string);
           break;
 
         case 'mssqlLegacy':
-          rawDatabase = Parser.parseMSSQLToJSON(str);
+          rawDatabase = Parser.parseMSSQLToJSON(layoutOrStr as string);
           break;
 
         case 'mssql':
-          rawDatabase = Parser.parseMSSQLToJSONv2(str);
+          rawDatabase = Parser.parseMSSQLToJSONv2(layoutOrStr as string);
           break;
 
         case 'oracle':
-          rawDatabase = Parser.parseOracleToJSON(str);
+          rawDatabase = Parser.parseOracleToJSON(layoutOrStr as string);
           break;
 
         case 'json':
-          if (typeof str === 'object') {
-            rawDatabase = str;
+          if (typeof layoutOrStr === 'object') {
+            rawDatabase = layoutOrStr as any;
           } else {
-            rawDatabase = JSON.parse(str);
+            rawDatabase = JSON.parse(layoutOrStr);
           }
           break;
 

@@ -1,0 +1,128 @@
+{
+  "database": {
+    "aliases": [
+      {
+        "kind": "table",
+        "name": "EU",
+        "value": {
+          "elementName": "users",
+          "schemaName": "ecommerce",
+          "tableName": "users"
+        }
+      }
+    ],
+    "diagramViews": [],
+    "enums": [],
+    "externals": {
+      "enums": [],
+      "notes": [],
+      "tableGroups": [],
+      "tablePartials": [],
+      "tables": []
+    },
+    "notes": [],
+    "records": [],
+    "refs": [],
+    "schemas": [],
+    "tableGroups": [],
+    "tablePartials": [],
+    "tables": [
+      {
+        "alias": "EU",
+        "checks": [],
+        "fields": [
+          {
+            "checks": [],
+            "increment": false,
+            "inline_refs": [],
+            "name": "id",
+            "pk": true,
+            "token": {
+              "end": {
+                "column": 14,
+                "line": 2,
+                "offset": 43
+              },
+              "filepath": {
+                "path": "/tables.dbml"
+              },
+              "start": {
+                "column": 3,
+                "line": 2,
+                "offset": 32
+              }
+            },
+            "type": {
+              "args": null,
+              "schemaName": null,
+              "type_name": "int"
+            },
+            "unique": false
+          },
+          {
+            "inline_refs": [],
+            "name": "name",
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 15,
+                "line": 3,
+                "offset": 58
+              },
+              "filepath": {
+                "path": "/tables.dbml"
+              },
+              "start": {
+                "column": 3,
+                "line": 3,
+                "offset": 46
+              }
+            },
+            "type": {
+              "args": null,
+              "schemaName": null,
+              "type_name": "varchar"
+            },
+            "unique": false
+          }
+        ],
+        "indexes": [],
+        "name": "users",
+        "partials": [],
+        "schemaName": "ecommerce",
+        "token": {
+          "end": {
+            "column": 2,
+            "line": 4,
+            "offset": 60
+          },
+          "filepath": {
+            "path": "/tables.dbml"
+          },
+          "start": {
+            "column": 1,
+            "line": 1,
+            "offset": 0
+          }
+        }
+      }
+    ],
+    "token": {
+      "end": {
+        "column": 1,
+        "line": 5,
+        "offset": 61
+      },
+      "filepath": {
+        "path": "/tables.dbml"
+      },
+      "start": {
+        "column": 1,
+        "line": 1,
+        "offset": 0
+      }
+    }
+  },
+  "errors": [],
+  "warnings": []
+}

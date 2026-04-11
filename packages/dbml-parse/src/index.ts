@@ -44,10 +44,9 @@ export * from '@/core/global_modules/records/utils/data';
 export type { Database, AliasKind, DiagramView, FilterConfig } from '@/core/types/schemaJson';
 export type {
   DiagramViewSyncOperation,
-  DiagramViewBlock,
   TextEdit,
 } from '@/compiler/queries/transform';
-export { syncDiagramView, findDiagramViewBlocks } from '@/compiler/queries/transform';
+export { syncDiagramView } from '@/compiler/queries/transform';
 
 
 export { Filepath } from '@/core/types/filepath';

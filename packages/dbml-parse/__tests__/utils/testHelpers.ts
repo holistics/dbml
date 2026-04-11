@@ -48,11 +48,12 @@ function getReadableId (nodeOrSymbol: SyntaxNode | SyntaxToken | NodeSymbol): st
 }
 
 // Output the code snippet for a node or a symbol for easy verfication
-function getCodeSnippet (nodeOrSymbol: SyntaxNode | SyntaxToken | NodeSymbol, source: string): string | undefined {
+function getCodeSnippet (nodeOrSymbol: SyntaxNode | SyntaxToken | NodeSymbol, compiler: Compiler): string | undefined {
   const node = (nodeOrSymbol instanceof SyntaxNode) || (nodeOrSymbol instanceof SyntaxToken) ? nodeOrSymbol : nodeOrSymbol?.declaration;
 
   if (!node) return undefined;
 
+  const source = compiler.layout.getSource(node.filepath) ?? compiler.parse.source();
   const text = source.slice(node.start, node.end);
   if (text.length <= 20) {
     return text;
@@ -236,7 +237,7 @@ export function syntaxTokenToSnapshot (
   { simple = false }: { simple?: boolean } = {},
 ): unknown {
   const tokenReadableId = getReadableId(token);
-  const snippet = getCodeSnippet(token, compiler.parse.source());
+  const snippet = getCodeSnippet(token, compiler);
   const {
     kind, // Filter this out as it's in the readable id
     filepath,
@@ -281,7 +282,7 @@ export function syntaxNodeToSnapshot (
   { simple = false }: { simple?: boolean } = {},
 ): unknown {
   const nodeReadableId = getReadableId(node);
-  const snippet = getCodeSnippet(node, compiler.parse.source());
+  const snippet = getCodeSnippet(node, compiler);
   const {
     id, // Filter this out
     parent, // Filter this out
@@ -339,7 +340,7 @@ export function symbolToSnapshot (
 ): unknown {
   if (!symbol) return undefined;
   const symbolReadableId = getReadableId(symbol);
-  const snippet = getCodeSnippet(symbol, compiler.parse.source());
+  const snippet = getCodeSnippet(symbol, compiler);
   const {
     id, // Filter this out
     declaration,
@@ -366,11 +367,11 @@ export function symbolToSnapshot (
       members: symbolTable && sortArray([...symbolTable.entries()].map(([, value]) => symbolToSnapshot(compiler, value))),
       declaration: declaration && {
         id: getReadableId(declaration),
-        snippet: getCodeSnippet(declaration, compiler.parse.source()),
+        snippet: getCodeSnippet(declaration, compiler),
       },
       references: references && sortArray(references.map((r) => ({
         id: getReadableId(r),
-        snippet: getCodeSnippet(r, compiler.parse.source()),
+        snippet: getCodeSnippet(r, compiler),
       }))),
     }),
   };

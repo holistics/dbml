@@ -1,4 +1,4 @@
-import type { DiagramViewSyncOperation, DiagramViewBlock, TextEdit } from '@dbml/parse';
+import type { DiagramViewSyncOperation, TextEdit } from '@dbml/parse';
 
 export type TableNameInput = string | { schema?: string; table: string };
 
@@ -11,9 +11,4 @@ export function renameTable(
 export function syncDiagramView(
   dbmlCode: string,
   operations: DiagramViewSyncOperation[],
-  blocks?: DiagramViewBlock[],
 ): { newDbml: string; edits: TextEdit[] };
-
-export function findDiagramViewBlocks(
-  dbmlCode: string,
-): DiagramViewBlock[];

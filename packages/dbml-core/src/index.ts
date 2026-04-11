@@ -6,7 +6,6 @@ import exporter from './export';
 import {
   renameTable,
   syncDiagramView,
-  findDiagramViewBlocks,
 } from './transform';
 import { VERSION } from './utils/version';
 
@@ -15,7 +14,6 @@ export {
   exporter,
   renameTable,
   syncDiagramView,
-  findDiagramViewBlocks,
   ModelExporter,
   CompilerError,
   Parser,
@@ -47,7 +45,6 @@ export {
 // Re-export types
 export type {
   DiagramViewSyncOperation,
-  DiagramViewBlock,
   DiagramView,
   FilterConfig,
   TextEdit,

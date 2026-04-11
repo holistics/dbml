@@ -1,0 +1,4 @@
+use * from './base.dbml'
+
+// Declaring the same ref endpoints again should produce an error
+Ref: orders.user_id > users.id
