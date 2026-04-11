@@ -5,6 +5,7 @@
         "kind": "table",
         "name": "U",
         "value": {
+          "elementName": "users",
           "schemaName": null,
           "tableName": "users"
         }
@@ -12,78 +13,16 @@
     ],
     "diagramViews": [],
     "enums": [],
+    "externals": {
+      "enums": [],
+      "notes": [],
+      "tableGroups": [],
+      "tablePartials": [],
+      "tables": []
+    },
     "notes": [],
-    "project": {},
     "records": [],
-    "refs": [
-      {
-        "endpoints": [
-          {
-            "fieldNames": [
-              "id"
-            ],
-            "relation": "1",
-            "schemaName": null,
-            "tableName": "U",
-            "token": {
-              "end": {
-                "column": 28,
-                "line": 13,
-                "offset": 212
-              },
-              "filepath": {
-                "path": "/main.dbml"
-              },
-              "start": {
-                "column": 17,
-                "line": 13,
-                "offset": 201
-              }
-            }
-          },
-          {
-            "fieldNames": [
-              "admin_id"
-            ],
-            "relation": "*",
-            "schemaName": null,
-            "tableName": "merchants",
-            "token": {
-              "end": {
-                "column": 29,
-                "line": 13,
-                "offset": 213
-              },
-              "filepath": {
-                "path": "/main.dbml"
-              },
-              "start": {
-                "column": 3,
-                "line": 13,
-                "offset": 187
-              }
-            }
-          }
-        ],
-        "name": null,
-        "schemaName": null,
-        "token": {
-          "end": {
-            "column": 28,
-            "line": 13,
-            "offset": 212
-          },
-          "filepath": {
-            "path": "/main.dbml"
-          },
-          "start": {
-            "column": 17,
-            "line": 13,
-            "offset": 201
-          }
-        }
-      }
-    ],
+    "refs": [],
     "schemas": [],
     "tableGroups": [
       {
@@ -92,11 +31,11 @@
         "tables": [
           {
             "name": "users",
-            "schemaName": ""
+            "schemaName": null
           },
           {
             "name": "merchants",
-            "schemaName": ""
+            "schemaName": null
           }
         ],
         "token": {
@@ -428,7 +367,22 @@
           }
         }
       }
-    ]
+    ],
+    "token": {
+      "end": {
+        "column": 2,
+        "line": 19,
+        "offset": 291
+      },
+      "filepath": {
+        "path": "/main.dbml"
+      },
+      "start": {
+        "column": 1,
+        "line": 1,
+        "offset": 0
+      }
+    }
   },
   "errors": [],
   "warnings": []

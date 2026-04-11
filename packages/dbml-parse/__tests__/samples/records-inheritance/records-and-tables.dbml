@@ -1,0 +1,20 @@
+table a {
+  id int
+  name string
+
+  records (id) {
+    1
+    2
+    3
+  }
+}
+
+table b {
+  id int
+}
+
+records b(id) {
+  5
+  6
+  7
+}

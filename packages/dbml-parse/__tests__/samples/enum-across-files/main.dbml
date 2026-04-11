@@ -1,0 +1,7 @@
+// import enum and use it as a field type
+use { enum job_status } from './types.dbml'
+
+Table jobs {
+  id int [pk]
+  status job_status
+}

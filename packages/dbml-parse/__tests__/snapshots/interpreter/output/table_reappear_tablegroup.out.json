@@ -1,521 +1,54 @@
 {
-  "database": {
-    "aliases": [
-      {
-        "kind": "table",
-        "name": "U",
-        "value": {
-          "schemaName": null,
-          "tableName": "users"
-        }
-      },
-      {
-        "kind": "table",
-        "name": "U2",
-        "value": {
-          "schemaName": "A",
-          "tableName": "users"
-        }
-      }
-    ],
-    "diagramViews": [],
-    "enums": [],
-    "notes": [],
-    "project": {},
-    "records": [],
-    "refs": [],
-    "schemas": [],
-    "tableGroups": [
-      {
-        "name": "A1",
-        "schemaName": null,
-        "tables": [
-          {
-            "name": "follows",
-            "schemaName": ""
-          }
-        ],
-        "token": {
-          "end": {
-            "column": 2,
-            "line": 20,
-            "offset": 269
-          },
-          "filepath": {
-            "path": "/main.dbml"
-          },
-          "start": {
-            "column": 1,
-            "line": 18,
-            "offset": 242
-          }
-        }
-      },
-      {
-        "name": "A2",
-        "schemaName": null,
-        "tables": [
-          {
-            "name": "follows",
-            "schemaName": ""
-          },
-          {
-            "name": "users",
-            "schemaName": ""
-          }
-        ],
-        "token": {
-          "end": {
-            "column": 2,
-            "line": 25,
-            "offset": 306
-          },
-          "filepath": {
-            "path": "/main.dbml"
-          },
-          "start": {
-            "column": 1,
-            "line": 22,
-            "offset": 271
-          }
-        }
-      },
-      {
-        "name": "A3",
-        "schemaName": null,
-        "tables": [
-          {
-            "name": "users",
-            "schemaName": ""
-          }
-        ],
-        "token": {
-          "end": {
-            "column": 2,
-            "line": 29,
-            "offset": 333
-          },
-          "filepath": {
-            "path": "/main.dbml"
-          },
-          "start": {
-            "column": 1,
-            "line": 27,
-            "offset": 308
-          }
-        }
-      },
-      {
-        "name": "A4",
-        "schemaName": null,
-        "tables": [
-          {
-            "name": "U",
-            "schemaName": ""
-          }
-        ],
-        "token": {
-          "end": {
-            "column": 2,
-            "line": 33,
-            "offset": 358
-          },
-          "filepath": {
-            "path": "/main.dbml"
-          },
-          "start": {
-            "column": 1,
-            "line": 31,
-            "offset": 335
-          }
-        }
-      },
-      {
-        "name": "A5",
-        "schemaName": null,
-        "tables": [
-          {
-            "name": "U2",
-            "schemaName": ""
-          }
-        ],
-        "token": {
-          "end": {
-            "column": 2,
-            "line": 37,
-            "offset": 382
-          },
-          "filepath": {
-            "path": "/main.dbml"
-          },
-          "start": {
-            "column": 1,
-            "line": 35,
-            "offset": 360
-          }
-        }
-      },
-      {
-        "name": "A6",
-        "schemaName": null,
-        "tables": [
-          {
-            "name": "users",
-            "schemaName": "A"
-          }
-        ],
-        "token": {
-          "end": {
-            "column": 2,
-            "line": 41,
-            "offset": 411
-          },
-          "filepath": {
-            "path": "/main.dbml"
-          },
-          "start": {
-            "column": 1,
-            "line": 39,
-            "offset": 384
-          }
-        }
-      }
-    ],
-    "tablePartials": [],
-    "tables": [
-      {
-        "alias": null,
-        "checks": [],
-        "fields": [
-          {
-            "inline_refs": [],
-            "name": "following_user_id",
-            "pk": false,
-            "token": {
-              "end": {
-                "column": 28,
-                "line": 2,
-                "offset": 43
-              },
-              "filepath": {
-                "path": "/main.dbml"
-              },
-              "start": {
-                "column": 3,
-                "line": 2,
-                "offset": 18
-              }
-            },
-            "type": {
-              "args": null,
-              "schemaName": null,
-              "type_name": "integer"
-            },
-            "unique": false
-          },
-          {
-            "inline_refs": [],
-            "name": "followed_user_id",
-            "pk": false,
-            "token": {
-              "end": {
-                "column": 27,
-                "line": 3,
-                "offset": 70
-              },
-              "filepath": {
-                "path": "/main.dbml"
-              },
-              "start": {
-                "column": 3,
-                "line": 3,
-                "offset": 46
-              }
-            },
-            "type": {
-              "args": null,
-              "schemaName": null,
-              "type_name": "integer"
-            },
-            "unique": false
-          },
-          {
-            "inline_refs": [],
-            "name": "created_at",
-            "pk": false,
-            "token": {
-              "end": {
-                "column": 23,
-                "line": 4,
-                "offset": 93
-              },
-              "filepath": {
-                "path": "/main.dbml"
-              },
-              "start": {
-                "column": 3,
-                "line": 4,
-                "offset": 73
-              }
-            },
-            "type": {
-              "args": null,
-              "schemaName": null,
-              "type_name": "timestamp"
-            },
-            "unique": false
-          }
-        ],
-        "indexes": [],
-        "name": "follows",
-        "partials": [],
-        "schemaName": null,
-        "token": {
-          "end": {
-            "column": 2,
-            "line": 5,
-            "offset": 96
-          },
-          "filepath": {
-            "path": "/main.dbml"
-          },
-          "start": {
-            "column": 1,
-            "line": 1,
-            "offset": 0
-          }
-        }
-      },
-      {
-        "alias": "U",
-        "checks": [],
-        "fields": [
-          {
-            "checks": [],
-            "increment": false,
-            "inline_refs": [],
-            "name": "id",
-            "pk": true,
-            "token": {
-              "end": {
-                "column": 27,
-                "line": 8,
-                "offset": 143
-              },
-              "filepath": {
-                "path": "/main.dbml"
-              },
-              "start": {
-                "column": 3,
-                "line": 8,
-                "offset": 119
-              }
-            },
-            "type": {
-              "args": null,
-              "schemaName": null,
-              "type_name": "integer"
-            },
-            "unique": false
-          },
-          {
-            "inline_refs": [],
-            "name": "username",
-            "pk": false,
-            "token": {
-              "end": {
-                "column": 19,
-                "line": 9,
-                "offset": 162
-              },
-              "filepath": {
-                "path": "/main.dbml"
-              },
-              "start": {
-                "column": 3,
-                "line": 9,
-                "offset": 146
-              }
-            },
-            "type": {
-              "args": null,
-              "schemaName": null,
-              "type_name": "varchar"
-            },
-            "unique": false
-          },
-          {
-            "inline_refs": [],
-            "name": "role",
-            "pk": false,
-            "token": {
-              "end": {
-                "column": 15,
-                "line": 10,
-                "offset": 177
-              },
-              "filepath": {
-                "path": "/main.dbml"
-              },
-              "start": {
-                "column": 3,
-                "line": 10,
-                "offset": 165
-              }
-            },
-            "type": {
-              "args": null,
-              "schemaName": null,
-              "type_name": "varchar"
-            },
-            "unique": false
-          },
-          {
-            "inline_refs": [],
-            "name": "created_at",
-            "pk": false,
-            "token": {
-              "end": {
-                "column": 23,
-                "line": 11,
-                "offset": 200
-              },
-              "filepath": {
-                "path": "/main.dbml"
-              },
-              "start": {
-                "column": 3,
-                "line": 11,
-                "offset": 180
-              }
-            },
-            "type": {
-              "args": null,
-              "schemaName": null,
-              "type_name": "timestamp"
-            },
-            "unique": false
-          }
-        ],
-        "indexes": [],
-        "name": "users",
-        "partials": [],
-        "schemaName": null,
-        "token": {
-          "end": {
-            "column": 2,
-            "line": 12,
-            "offset": 202
-          },
-          "filepath": {
-            "path": "/main.dbml"
-          },
-          "start": {
-            "column": 1,
-            "line": 7,
-            "offset": 98
-          }
-        }
-      },
-      {
-        "alias": "U2",
-        "checks": [],
-        "fields": [
-          {
-            "inline_refs": [],
-            "name": "id",
-            "pk": false,
-            "token": {
-              "end": {
-                "column": 13,
-                "line": 15,
-                "offset": 238
-              },
-              "filepath": {
-                "path": "/main.dbml"
-              },
-              "start": {
-                "column": 3,
-                "line": 15,
-                "offset": 228
-              }
-            },
-            "type": {
-              "args": null,
-              "schemaName": null,
-              "type_name": "integer"
-            },
-            "unique": false
-          }
-        ],
-        "indexes": [],
-        "name": "users",
-        "partials": [],
-        "schemaName": "A",
-        "token": {
-          "end": {
-            "column": 2,
-            "line": 16,
-            "offset": 240
-          },
-          "filepath": {
-            "path": "/main.dbml"
-          },
-          "start": {
-            "column": 1,
-            "line": 14,
-            "offset": 204
-          }
-        }
-      }
-    ]
-  },
   "errors": [
+    {
+      "code": "BINDING_ERROR",
+      "diagnostic": "Table 'U2' does not exist in Schema 'public'",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<primary-expression>@@[L35:C2, L35:C4]",
+          "snippet": "U2",
+          "filepath": "/main.dbml"
+        }
+      }
+    },
     {
       "code": "TABLE_REAPPEAR_IN_TABLEGROUP",
       "diagnostic": "Table \"follows\" already appears in group \"A1\"",
+      "filepath": "/main.dbml",
       "level": "error",
       "node": {
         "context": {
           "id": "node@<function-application>@@[L22:C2, L22:C9]",
-          "filepath": "/main.dbml",
-          "snippet": "follows"
+          "snippet": "follows",
+          "filepath": "/main.dbml"
         }
       }
     },
     {
       "code": "TABLE_REAPPEAR_IN_TABLEGROUP",
       "diagnostic": "Table \"users\" already appears in group \"A2\"",
+      "filepath": "/main.dbml",
       "level": "error",
       "node": {
         "context": {
           "id": "node@<function-application>@@[L27:C2, L27:C7]",
-          "filepath": "/main.dbml",
-          "snippet": "users"
+          "snippet": "users",
+          "filepath": "/main.dbml"
         }
       }
     },
     {
       "code": "TABLE_REAPPEAR_IN_TABLEGROUP",
       "diagnostic": "Table \"U\" already appears in group \"A2\"",
+      "filepath": "/main.dbml",
       "level": "error",
       "node": {
         "context": {
           "id": "node@<function-application>@@[L31:C4, L31:C5]",
-          "filepath": "/main.dbml",
-          "snippet": "U"
-        }
-      }
-    },
-    {
-      "code": "TABLE_REAPPEAR_IN_TABLEGROUP",
-      "diagnostic": "Table \"A.users\" already appears in group \"A5\"",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<function-application>@@[L39:C2, L39:C9]",
-          "filepath": "/main.dbml",
-          "snippet": "A.users"
+          "snippet": "U",
+          "filepath": "/main.dbml"
         }
       }
     }

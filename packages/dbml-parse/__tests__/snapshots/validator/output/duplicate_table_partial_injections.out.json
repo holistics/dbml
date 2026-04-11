@@ -1,50 +1,54 @@
 {
   "errors": [
     {
-      "code": "DUPLICATE_TABLE_PARTIAL_INJECTION_NAME",
+      "code": "INVALID_TABLE_PARTIAL_INJECTION",
       "diagnostic": "Duplicate table partial injection 'common'",
+      "filepath": "/main.dbml",
       "level": "error",
       "node": {
         "context": {
-          "id": "node@<function-application>@@[L7:C2, L7:C9]",
-          "filepath": "/main.dbml",
-          "snippet": "~common"
+          "id": "node@<prefix-expression>@@[L6:C2, L6:C9]",
+          "snippet": "~common",
+          "filepath": "/main.dbml"
         }
       }
     },
     {
-      "code": "DUPLICATE_TABLE_PARTIAL_INJECTION_NAME",
+      "code": "INVALID_TABLE_PARTIAL_INJECTION",
       "diagnostic": "Duplicate table partial injection 'common'",
+      "filepath": "/main.dbml",
       "level": "error",
       "node": {
         "context": {
-          "id": "node@<function-application>@@[L6:C2, L6:C9]",
-          "filepath": "/main.dbml",
-          "snippet": "~common"
+          "id": "node@<prefix-expression>@@[L7:C2, L7:C9]",
+          "snippet": "~common",
+          "filepath": "/main.dbml"
         }
       }
     },
     {
-      "code": "DUPLICATE_TABLE_PARTIAL_INJECTION_NAME",
+      "code": "INVALID_TABLE_PARTIAL_INJECTION",
       "diagnostic": "Duplicate table partial injection 'common'",
+      "filepath": "/main.dbml",
       "level": "error",
       "node": {
         "context": {
-          "id": "node@<function-application>@@[L8:C2, L8:C9]",
-          "filepath": "/main.dbml",
-          "snippet": "~common"
+          "id": "node@<prefix-expression>@@[L6:C2, L6:C9]",
+          "snippet": "~common",
+          "filepath": "/main.dbml"
         }
       }
     },
     {
-      "code": "DUPLICATE_TABLE_PARTIAL_INJECTION_NAME",
+      "code": "INVALID_TABLE_PARTIAL_INJECTION",
       "diagnostic": "Duplicate table partial injection 'common'",
+      "filepath": "/main.dbml",
       "level": "error",
       "node": {
         "context": {
-          "id": "node@<function-application>@@[L6:C2, L6:C9]",
-          "filepath": "/main.dbml",
-          "snippet": "~common"
+          "id": "node@<prefix-expression>@@[L8:C2, L8:C9]",
+          "snippet": "~common",
+          "filepath": "/main.dbml"
         }
       }
     }
@@ -52,28 +56,25 @@
   "program": {
     "context": {
       "id": "node@<program>@@[L0:C0, L10:C0]",
-      "filepath": "/main.dbml",
       "snippet": "TableParti...ommon\r\n}\r\n"
     },
     "children": {
       "body": [
         {
           "context": {
-            "id": "node@<element-declaration>@:common@[L0:C0, L2:C1]",
-            "filepath": "/main.dbml",
+            "id": "node@<element-declaration>@common@[L0:C0, L2:C1]",
             "snippet": "TableParti...me text\r\n}"
           },
           "children": {
             "body": {
               "context": {
                 "id": "node@<block-expression>@@[L0:C20, L2:C1]",
-                "filepath": "/main.dbml",
                 "snippet": "{\r\n  name text\r\n}"
               },
               "children": {
                 "blockCloseBrace": {
                   "context": {
-                    "id": "token@<rbrace>@:}@[L2:C0, L2:C1]",
+                    "id": "token@<rbrace>@}@[L2:C0, L2:C1]",
                     "snippet": "}"
                   },
                   "leadingTrivia": "",
@@ -82,7 +83,7 @@
                 },
                 "blockOpenBrace": {
                   "context": {
-                    "id": "token@<lbrace>@:{@[L0:C20, L0:C21]",
+                    "id": "token@<lbrace>@{@[L0:C20, L0:C21]",
                     "snippet": "{"
                   },
                   "leadingTrivia": "",
@@ -93,7 +94,6 @@
                   {
                     "context": {
                       "id": "node@<function-application>@@[L1:C2, L1:C11]",
-                      "filepath": "/main.dbml",
                       "snippet": "name text"
                     },
                     "children": {
@@ -101,122 +101,115 @@
                         {
                           "context": {
                             "id": "node@<primary-expression>@@[L1:C7, L1:C11]",
-                            "filepath": "/main.dbml",
                             "snippet": "text"
                           },
                           "children": {
                             "expression": {
                               "context": {
-                                "id": "node@<variable>@:text@[L1:C7, L1:C11]",
-                                "filepath": "/main.dbml",
+                                "id": "node@<variable>@text@[L1:C7, L1:C11]",
                                 "snippet": "text"
                               },
                               "children": {
-                                "fullEnd": 36,
-                                "fullStart": 30,
                                 "variable": {
                                   "context": {
-                                    "id": "token@<identifier>@:text@[L1:C7, L1:C11]",
+                                    "id": "token@<identifier>@text@[L1:C7, L1:C11]",
                                     "snippet": "text"
                                   },
                                   "leadingTrivia": "",
                                   "trailingTrivia": "\n",
                                   "value": "text"
                                 }
-                              }
-                            },
-                            "fullEnd": 36,
-                            "fullStart": 30
-                          }
+                              },
+                              "fullEnd": 36,
+                              "fullStart": 30
+                            }
+                          },
+                          "fullEnd": 36,
+                          "fullStart": 30
                         }
                       ],
                       "callee": {
                         "context": {
                           "id": "node@<primary-expression>@@[L1:C2, L1:C6]",
-                          "filepath": "/main.dbml",
                           "snippet": "name"
                         },
                         "children": {
                           "expression": {
                             "context": {
-                              "id": "node@<variable>@:name@[L1:C2, L1:C6]",
-                              "filepath": "/main.dbml",
+                              "id": "node@<variable>@name@[L1:C2, L1:C6]",
                               "snippet": "name"
                             },
                             "children": {
-                              "fullEnd": 30,
-                              "fullStart": 23,
                               "variable": {
                                 "context": {
-                                  "id": "token@<identifier>@:name@[L1:C2, L1:C6]",
+                                  "id": "token@<identifier>@name@[L1:C2, L1:C6]",
                                   "snippet": "name"
                                 },
                                 "leadingTrivia": "  ",
                                 "trailingTrivia": " ",
                                 "value": "name"
                               }
-                            }
-                          },
-                          "fullEnd": 30,
-                          "fullStart": 23
-                        }
-                      },
-                      "fullEnd": 36,
-                      "fullStart": 23
+                            },
+                            "fullEnd": 30,
+                            "fullStart": 23
+                          }
+                        },
+                        "fullEnd": 30,
+                        "fullStart": 23
+                      }
                     },
+                    "fullEnd": 36,
+                    "fullStart": 23,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L1:C2, L1:C11]",
+                        "id": "symbol@Column@@[L1:C2, L1:C11]",
                         "snippet": "name text"
                       },
                       "declaration": {
                         "id": "node@<function-application>@@[L1:C2, L1:C11]",
                         "snippet": "name text"
                       },
+                      "members": [],
                       "references": []
                     }
                   }
-                ],
-                "fullEnd": 39,
-                "fullStart": 20
-              }
+                ]
+              },
+              "fullEnd": 39,
+              "fullStart": 20
             },
-            "fullEnd": 39,
-            "fullStart": 0,
             "name": {
               "context": {
                 "id": "node@<primary-expression>@@[L0:C13, L0:C19]",
-                "filepath": "/main.dbml",
                 "snippet": "common"
               },
               "children": {
                 "expression": {
                   "context": {
-                    "id": "node@<variable>@:common@[L0:C13, L0:C19]",
-                    "filepath": "/main.dbml",
+                    "id": "node@<variable>@common@[L0:C13, L0:C19]",
                     "snippet": "common"
                   },
                   "children": {
-                    "fullEnd": 20,
-                    "fullStart": 13,
                     "variable": {
                       "context": {
-                        "id": "token@<identifier>@:common@[L0:C13, L0:C19]",
+                        "id": "token@<identifier>@common@[L0:C13, L0:C19]",
                         "snippet": "common"
                       },
                       "leadingTrivia": "",
                       "trailingTrivia": " ",
                       "value": "common"
                     }
-                  }
-                },
-                "fullEnd": 20,
-                "fullStart": 13
-              }
+                  },
+                  "fullEnd": 20,
+                  "fullStart": 13
+                }
+              },
+              "fullEnd": 20,
+              "fullStart": 13
             },
             "type": {
               "context": {
-                "id": "token@<identifier>@:TablePartial@[L0:C0, L0:C12]",
+                "id": "token@<identifier>@TablePartial@[L0:C0, L0:C12]",
                 "snippet": "TablePartial"
               },
               "leadingTrivia": "",
@@ -224,43 +217,62 @@
               "value": "TablePartial"
             }
           },
+          "fullEnd": 39,
+          "fullStart": 0,
           "symbol": {
             "context": {
-              "id": "symbol@<element-declaration>@:common@[L0:C0, L2:C1]",
+              "id": "symbol@TablePartial@common@[L0:C0, L2:C1]",
               "snippet": "TableParti...me text\r\n}"
             },
             "declaration": {
-              "id": "node@<element-declaration>@:common@[L0:C0, L2:C1]",
+              "id": "node@<element-declaration>@common@[L0:C0, L2:C1]",
               "snippet": "TableParti...me text\r\n}"
             },
             "members": [
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L1:C2, L1:C11]",
+                  "id": "symbol@Column@@[L1:C2, L1:C11]",
                   "snippet": "name text"
-                }
+                },
+                "declaration": {
+                  "id": "node@<function-application>@@[L1:C2, L1:C11]",
+                  "snippet": "name text"
+                },
+                "members": [],
+                "references": []
               }
             ],
-            "references": []
+            "references": [
+              {
+                "id": "node@<primary-expression>@@[L6:C3, L6:C9]",
+                "snippet": "common"
+              },
+              {
+                "id": "node@<primary-expression>@@[L7:C3, L7:C9]",
+                "snippet": "common"
+              },
+              {
+                "id": "node@<primary-expression>@@[L8:C3, L8:C9]",
+                "snippet": "common"
+              }
+            ]
           }
         },
         {
           "context": {
-            "id": "node@<element-declaration>@:Users@[L4:C0, L9:C1]",
-            "filepath": "/main.dbml",
+            "id": "node@<element-declaration>@Users@[L4:C0, L9:C1]",
             "snippet": "Table User...~common\r\n}"
           },
           "children": {
             "body": {
               "context": {
                 "id": "node@<block-expression>@@[L4:C12, L9:C1]",
-                "filepath": "/main.dbml",
                 "snippet": "{\r\n  id in...~common\r\n}"
               },
               "children": {
                 "blockCloseBrace": {
                   "context": {
-                    "id": "token@<rbrace>@:}@[L9:C0, L9:C1]",
+                    "id": "token@<rbrace>@}@[L9:C0, L9:C1]",
                     "snippet": "}"
                   },
                   "leadingTrivia": "",
@@ -269,7 +281,7 @@
                 },
                 "blockOpenBrace": {
                   "context": {
-                    "id": "token@<lbrace>@:{@[L4:C12, L4:C13]",
+                    "id": "token@<lbrace>@{@[L4:C12, L4:C13]",
                     "snippet": "{"
                   },
                   "leadingTrivia": "",
@@ -280,7 +292,6 @@
                   {
                     "context": {
                       "id": "node@<function-application>@@[L5:C2, L5:C8]",
-                      "filepath": "/main.dbml",
                       "snippet": "id int"
                     },
                     "children": {
@@ -288,72 +299,68 @@
                         {
                           "context": {
                             "id": "node@<primary-expression>@@[L5:C5, L5:C8]",
-                            "filepath": "/main.dbml",
                             "snippet": "int"
                           },
                           "children": {
                             "expression": {
                               "context": {
-                                "id": "node@<variable>@:int@[L5:C5, L5:C8]",
-                                "filepath": "/main.dbml",
+                                "id": "node@<variable>@int@[L5:C5, L5:C8]",
                                 "snippet": "int"
                               },
                               "children": {
-                                "fullEnd": 66,
-                                "fullStart": 61,
                                 "variable": {
                                   "context": {
-                                    "id": "token@<identifier>@:int@[L5:C5, L5:C8]",
+                                    "id": "token@<identifier>@int@[L5:C5, L5:C8]",
                                     "snippet": "int"
                                   },
                                   "leadingTrivia": "",
                                   "trailingTrivia": "\n",
                                   "value": "int"
                                 }
-                              }
-                            },
-                            "fullEnd": 66,
-                            "fullStart": 61
-                          }
+                              },
+                              "fullEnd": 66,
+                              "fullStart": 61
+                            }
+                          },
+                          "fullEnd": 66,
+                          "fullStart": 61
                         }
                       ],
                       "callee": {
                         "context": {
                           "id": "node@<primary-expression>@@[L5:C2, L5:C4]",
-                          "filepath": "/main.dbml",
                           "snippet": "id"
                         },
                         "children": {
                           "expression": {
                             "context": {
-                              "id": "node@<variable>@:id@[L5:C2, L5:C4]",
-                              "filepath": "/main.dbml",
+                              "id": "node@<variable>@id@[L5:C2, L5:C4]",
                               "snippet": "id"
                             },
                             "children": {
-                              "fullEnd": 61,
-                              "fullStart": 56,
                               "variable": {
                                 "context": {
-                                  "id": "token@<identifier>@:id@[L5:C2, L5:C4]",
+                                  "id": "token@<identifier>@id@[L5:C2, L5:C4]",
                                   "snippet": "id"
                                 },
                                 "leadingTrivia": "  ",
                                 "trailingTrivia": " ",
                                 "value": "id"
                               }
-                            }
-                          },
-                          "fullEnd": 61,
-                          "fullStart": 56
-                        }
-                      },
-                      "fullEnd": 66,
-                      "fullStart": 56
+                            },
+                            "fullEnd": 61,
+                            "fullStart": 56
+                          }
+                        },
+                        "fullEnd": 61,
+                        "fullStart": 56
+                      }
                     },
+                    "fullEnd": 66,
+                    "fullStart": 56,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L5:C2, L5:C8]",
+                        "id": "symbol@Column@@[L5:C2, L5:C8]",
                         "snippet": "id int"
                       },
                       "declaration": {
@@ -366,7 +373,6 @@
                   {
                     "context": {
                       "id": "node@<function-application>@@[L6:C2, L6:C9]",
-                      "filepath": "/main.dbml",
                       "snippet": "~common"
                     },
                     "children": {
@@ -374,62 +380,76 @@
                       "callee": {
                         "context": {
                           "id": "node@<prefix-expression>@@[L6:C2, L6:C9]",
-                          "filepath": "/main.dbml",
                           "snippet": "~common"
                         },
                         "children": {
                           "expression": {
                             "context": {
                               "id": "node@<primary-expression>@@[L6:C3, L6:C9]",
-                              "filepath": "/main.dbml",
                               "snippet": "common"
                             },
                             "children": {
                               "expression": {
                                 "context": {
-                                  "id": "node@<variable>@:common@[L6:C3, L6:C9]",
-                                  "filepath": "/main.dbml",
+                                  "id": "node@<variable>@common@[L6:C3, L6:C9]",
                                   "snippet": "common"
                                 },
                                 "children": {
-                                  "fullEnd": 77,
-                                  "fullStart": 69,
                                   "variable": {
                                     "context": {
-                                      "id": "token@<identifier>@:common@[L6:C3, L6:C9]",
+                                      "id": "token@<identifier>@common@[L6:C3, L6:C9]",
                                       "snippet": "common"
                                     },
                                     "leadingTrivia": "",
                                     "trailingTrivia": "\n",
                                     "value": "common"
                                   }
-                                }
-                              },
-                              "fullEnd": 77,
-                              "fullStart": 69
+                                },
+                                "fullEnd": 77,
+                                "fullStart": 69
+                              }
+                            },
+                            "fullEnd": 77,
+                            "fullStart": 69,
+                            "referee": {
+                              "context": {
+                                "id": "symbol@TablePartial@common@[L0:C0, L2:C1]",
+                                "snippet": "TableParti...me text\r\n}",
+                                "filepath": "/main.dbml"
+                              }
                             }
                           },
-                          "fullEnd": 77,
-                          "fullStart": 66,
                           "op": {
                             "context": {
-                              "id": "token@<op>@:~@[L6:C2, L6:C3]",
+                              "id": "token@<op>@~@[L6:C2, L6:C3]",
                               "snippet": "~"
                             },
                             "leadingTrivia": "  ",
                             "trailingTrivia": "",
                             "value": "~"
                           }
-                        }
+                        },
+                        "fullEnd": 77,
+                        "fullStart": 66
+                      }
+                    },
+                    "fullEnd": 77,
+                    "fullStart": 66,
+                    "symbol": {
+                      "context": {
+                        "id": "symbol@PartialInjection@@[L6:C2, L6:C9]",
+                        "snippet": "~common"
                       },
-                      "fullEnd": 77,
-                      "fullStart": 66
+                      "declaration": {
+                        "id": "node@<function-application>@@[L6:C2, L6:C9]",
+                        "snippet": "~common"
+                      },
+                      "references": []
                     }
                   },
                   {
                     "context": {
                       "id": "node@<function-application>@@[L7:C2, L7:C9]",
-                      "filepath": "/main.dbml",
                       "snippet": "~common"
                     },
                     "children": {
@@ -437,62 +457,76 @@
                       "callee": {
                         "context": {
                           "id": "node@<prefix-expression>@@[L7:C2, L7:C9]",
-                          "filepath": "/main.dbml",
                           "snippet": "~common"
                         },
                         "children": {
                           "expression": {
                             "context": {
                               "id": "node@<primary-expression>@@[L7:C3, L7:C9]",
-                              "filepath": "/main.dbml",
                               "snippet": "common"
                             },
                             "children": {
                               "expression": {
                                 "context": {
-                                  "id": "node@<variable>@:common@[L7:C3, L7:C9]",
-                                  "filepath": "/main.dbml",
+                                  "id": "node@<variable>@common@[L7:C3, L7:C9]",
                                   "snippet": "common"
                                 },
                                 "children": {
-                                  "fullEnd": 88,
-                                  "fullStart": 80,
                                   "variable": {
                                     "context": {
-                                      "id": "token@<identifier>@:common@[L7:C3, L7:C9]",
+                                      "id": "token@<identifier>@common@[L7:C3, L7:C9]",
                                       "snippet": "common"
                                     },
                                     "leadingTrivia": "",
                                     "trailingTrivia": "\n",
                                     "value": "common"
                                   }
-                                }
-                              },
-                              "fullEnd": 88,
-                              "fullStart": 80
+                                },
+                                "fullEnd": 88,
+                                "fullStart": 80
+                              }
+                            },
+                            "fullEnd": 88,
+                            "fullStart": 80,
+                            "referee": {
+                              "context": {
+                                "id": "symbol@TablePartial@common@[L0:C0, L2:C1]",
+                                "snippet": "TableParti...me text\r\n}",
+                                "filepath": "/main.dbml"
+                              }
                             }
                           },
-                          "fullEnd": 88,
-                          "fullStart": 77,
                           "op": {
                             "context": {
-                              "id": "token@<op>@:~@[L7:C2, L7:C3]",
+                              "id": "token@<op>@~@[L7:C2, L7:C3]",
                               "snippet": "~"
                             },
                             "leadingTrivia": "  ",
                             "trailingTrivia": "",
                             "value": "~"
                           }
-                        }
+                        },
+                        "fullEnd": 88,
+                        "fullStart": 77
+                      }
+                    },
+                    "fullEnd": 88,
+                    "fullStart": 77,
+                    "symbol": {
+                      "context": {
+                        "id": "symbol@PartialInjection@@[L7:C2, L7:C9]",
+                        "snippet": "~common"
                       },
-                      "fullEnd": 88,
-                      "fullStart": 77
+                      "declaration": {
+                        "id": "node@<function-application>@@[L7:C2, L7:C9]",
+                        "snippet": "~common"
+                      },
+                      "references": []
                     }
                   },
                   {
                     "context": {
                       "id": "node@<function-application>@@[L8:C2, L8:C9]",
-                      "filepath": "/main.dbml",
                       "snippet": "~common"
                     },
                     "children": {
@@ -500,99 +534,110 @@
                       "callee": {
                         "context": {
                           "id": "node@<prefix-expression>@@[L8:C2, L8:C9]",
-                          "filepath": "/main.dbml",
                           "snippet": "~common"
                         },
                         "children": {
                           "expression": {
                             "context": {
                               "id": "node@<primary-expression>@@[L8:C3, L8:C9]",
-                              "filepath": "/main.dbml",
                               "snippet": "common"
                             },
                             "children": {
                               "expression": {
                                 "context": {
-                                  "id": "node@<variable>@:common@[L8:C3, L8:C9]",
-                                  "filepath": "/main.dbml",
+                                  "id": "node@<variable>@common@[L8:C3, L8:C9]",
                                   "snippet": "common"
                                 },
                                 "children": {
-                                  "fullEnd": 99,
-                                  "fullStart": 91,
                                   "variable": {
                                     "context": {
-                                      "id": "token@<identifier>@:common@[L8:C3, L8:C9]",
+                                      "id": "token@<identifier>@common@[L8:C3, L8:C9]",
                                       "snippet": "common"
                                     },
                                     "leadingTrivia": "",
                                     "trailingTrivia": "\n",
                                     "value": "common"
                                   }
-                                }
-                              },
-                              "fullEnd": 99,
-                              "fullStart": 91
+                                },
+                                "fullEnd": 99,
+                                "fullStart": 91
+                              }
+                            },
+                            "fullEnd": 99,
+                            "fullStart": 91,
+                            "referee": {
+                              "context": {
+                                "id": "symbol@TablePartial@common@[L0:C0, L2:C1]",
+                                "snippet": "TableParti...me text\r\n}",
+                                "filepath": "/main.dbml"
+                              }
                             }
                           },
-                          "fullEnd": 99,
-                          "fullStart": 88,
                           "op": {
                             "context": {
-                              "id": "token@<op>@:~@[L8:C2, L8:C3]",
+                              "id": "token@<op>@~@[L8:C2, L8:C3]",
                               "snippet": "~"
                             },
                             "leadingTrivia": "  ",
                             "trailingTrivia": "",
                             "value": "~"
                           }
-                        }
+                        },
+                        "fullEnd": 99,
+                        "fullStart": 88
+                      }
+                    },
+                    "fullEnd": 99,
+                    "fullStart": 88,
+                    "symbol": {
+                      "context": {
+                        "id": "symbol@PartialInjection@@[L8:C2, L8:C9]",
+                        "snippet": "~common"
                       },
-                      "fullEnd": 99,
-                      "fullStart": 88
+                      "declaration": {
+                        "id": "node@<function-application>@@[L8:C2, L8:C9]",
+                        "snippet": "~common"
+                      },
+                      "references": []
                     }
                   }
-                ],
-                "fullEnd": 102,
-                "fullStart": 53
-              }
+                ]
+              },
+              "fullEnd": 102,
+              "fullStart": 53
             },
-            "fullEnd": 102,
-            "fullStart": 40,
             "name": {
               "context": {
                 "id": "node@<primary-expression>@@[L4:C6, L4:C11]",
-                "filepath": "/main.dbml",
                 "snippet": "Users"
               },
               "children": {
                 "expression": {
                   "context": {
-                    "id": "node@<variable>@:Users@[L4:C6, L4:C11]",
-                    "filepath": "/main.dbml",
+                    "id": "node@<variable>@Users@[L4:C6, L4:C11]",
                     "snippet": "Users"
                   },
                   "children": {
-                    "fullEnd": 53,
-                    "fullStart": 47,
                     "variable": {
                       "context": {
-                        "id": "token@<identifier>@:Users@[L4:C6, L4:C11]",
+                        "id": "token@<identifier>@Users@[L4:C6, L4:C11]",
                         "snippet": "Users"
                       },
                       "leadingTrivia": "",
                       "trailingTrivia": " ",
                       "value": "Users"
                     }
-                  }
-                },
-                "fullEnd": 53,
-                "fullStart": 47
-              }
+                  },
+                  "fullEnd": 53,
+                  "fullStart": 47
+                }
+              },
+              "fullEnd": 53,
+              "fullStart": 47
             },
             "type": {
               "context": {
-                "id": "token@<identifier>@:Table@[L4:C0, L4:C5]",
+                "id": "token@<identifier>@Table@[L4:C0, L4:C5]",
                 "snippet": "Table"
               },
               "leadingTrivia": "\n",
@@ -600,27 +645,97 @@
               "value": "Table"
             }
           },
+          "fullEnd": 102,
+          "fullStart": 40,
           "symbol": {
             "context": {
-              "id": "symbol@<element-declaration>@:Users@[L4:C0, L9:C1]",
+              "id": "symbol@Table@Users@[L4:C0, L9:C1]",
               "snippet": "Table User...~common\r\n}"
             },
             "declaration": {
-              "id": "node@<element-declaration>@:Users@[L4:C0, L9:C1]",
+              "id": "node@<element-declaration>@Users@[L4:C0, L9:C1]",
               "snippet": "Table User...~common\r\n}"
             },
             "members": [
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L5:C2, L5:C8]",
-                  "snippet": "id int"
-                }
+                  "id": "symbol@Column@@[L1:C2, L1:C11]",
+                  "snippet": "name text"
+                },
+                "declaration": {
+                  "id": "node@<function-application>@@[L1:C2, L1:C11]",
+                  "snippet": "name text"
+                },
+                "members": [],
+                "references": []
               },
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L6:C2, L6:C9]",
+                  "id": "symbol@Column@@[L1:C2, L1:C11]",
+                  "snippet": "name text"
+                },
+                "declaration": {
+                  "id": "node@<function-application>@@[L1:C2, L1:C11]",
+                  "snippet": "name text"
+                },
+                "members": [],
+                "references": []
+              },
+              {
+                "context": {
+                  "id": "symbol@Column@@[L1:C2, L1:C11]",
+                  "snippet": "name text"
+                },
+                "declaration": {
+                  "id": "node@<function-application>@@[L1:C2, L1:C11]",
+                  "snippet": "name text"
+                },
+                "members": [],
+                "references": []
+              },
+              {
+                "context": {
+                  "id": "symbol@Column@@[L5:C2, L5:C8]",
+                  "snippet": "id int"
+                },
+                "declaration": {
+                  "id": "node@<function-application>@@[L5:C2, L5:C8]",
+                  "snippet": "id int"
+                },
+                "references": []
+              },
+              {
+                "context": {
+                  "id": "symbol@PartialInjection@@[L6:C2, L6:C9]",
                   "snippet": "~common"
-                }
+                },
+                "declaration": {
+                  "id": "node@<function-application>@@[L6:C2, L6:C9]",
+                  "snippet": "~common"
+                },
+                "references": []
+              },
+              {
+                "context": {
+                  "id": "symbol@PartialInjection@@[L7:C2, L7:C9]",
+                  "snippet": "~common"
+                },
+                "declaration": {
+                  "id": "node@<function-application>@@[L7:C2, L7:C9]",
+                  "snippet": "~common"
+                },
+                "references": []
+              },
+              {
+                "context": {
+                  "id": "symbol@PartialInjection@@[L8:C2, L8:C9]",
+                  "snippet": "~common"
+                },
+                "declaration": {
+                  "id": "node@<function-application>@@[L8:C2, L8:C9]",
+                  "snippet": "~common"
+                },
+                "references": []
               }
             ],
             "references": []
@@ -629,19 +744,19 @@
       ],
       "eof": {
         "context": {
-          "id": "token@<eof>@:@[L10:C0, L10:C0]",
+          "id": "token@<eof>@@[L10:C0, L10:C0]",
           "snippet": ""
         },
         "leadingTrivia": "",
         "trailingTrivia": "",
         "value": ""
-      },
-      "fullEnd": 102,
-      "fullStart": 0
+      }
     },
+    "fullEnd": 102,
+    "fullStart": 0,
     "symbol": {
       "context": {
-        "id": "symbol@<program>@@[L0:C0, L10:C0]",
+        "id": "symbol@Program@@[L0:C0, L10:C0]",
         "snippet": "TableParti...ommon\r\n}\r\n"
       },
       "declaration": {
@@ -651,15 +766,273 @@
       "members": [
         {
           "context": {
-            "id": "symbol@<element-declaration>@:common@[L0:C0, L2:C1]",
-            "snippet": "TableParti...me text\r\n}"
-          }
+            "id": "symbol@Schema@public@[L?:C?, L?:C?]"
+          },
+          "members": [
+            {
+              "context": {
+                "id": "symbol@Table@Users@[L4:C0, L9:C1]",
+                "snippet": "Table User...~common\r\n}"
+              },
+              "declaration": {
+                "id": "node@<element-declaration>@Users@[L4:C0, L9:C1]",
+                "snippet": "Table User...~common\r\n}"
+              },
+              "members": [
+                {
+                  "context": {
+                    "id": "symbol@Column@@[L1:C2, L1:C11]",
+                    "snippet": "name text"
+                  },
+                  "declaration": {
+                    "id": "node@<function-application>@@[L1:C2, L1:C11]",
+                    "snippet": "name text"
+                  },
+                  "members": [],
+                  "references": []
+                },
+                {
+                  "context": {
+                    "id": "symbol@Column@@[L1:C2, L1:C11]",
+                    "snippet": "name text"
+                  },
+                  "declaration": {
+                    "id": "node@<function-application>@@[L1:C2, L1:C11]",
+                    "snippet": "name text"
+                  },
+                  "members": [],
+                  "references": []
+                },
+                {
+                  "context": {
+                    "id": "symbol@Column@@[L1:C2, L1:C11]",
+                    "snippet": "name text"
+                  },
+                  "declaration": {
+                    "id": "node@<function-application>@@[L1:C2, L1:C11]",
+                    "snippet": "name text"
+                  },
+                  "members": [],
+                  "references": []
+                },
+                {
+                  "context": {
+                    "id": "symbol@Column@@[L5:C2, L5:C8]",
+                    "snippet": "id int"
+                  },
+                  "declaration": {
+                    "id": "node@<function-application>@@[L5:C2, L5:C8]",
+                    "snippet": "id int"
+                  },
+                  "references": []
+                },
+                {
+                  "context": {
+                    "id": "symbol@PartialInjection@@[L6:C2, L6:C9]",
+                    "snippet": "~common"
+                  },
+                  "declaration": {
+                    "id": "node@<function-application>@@[L6:C2, L6:C9]",
+                    "snippet": "~common"
+                  },
+                  "references": []
+                },
+                {
+                  "context": {
+                    "id": "symbol@PartialInjection@@[L7:C2, L7:C9]",
+                    "snippet": "~common"
+                  },
+                  "declaration": {
+                    "id": "node@<function-application>@@[L7:C2, L7:C9]",
+                    "snippet": "~common"
+                  },
+                  "references": []
+                },
+                {
+                  "context": {
+                    "id": "symbol@PartialInjection@@[L8:C2, L8:C9]",
+                    "snippet": "~common"
+                  },
+                  "declaration": {
+                    "id": "node@<function-application>@@[L8:C2, L8:C9]",
+                    "snippet": "~common"
+                  },
+                  "references": []
+                }
+              ],
+              "references": []
+            },
+            {
+              "context": {
+                "id": "symbol@TablePartial@common@[L0:C0, L2:C1]",
+                "snippet": "TableParti...me text\r\n}"
+              },
+              "declaration": {
+                "id": "node@<element-declaration>@common@[L0:C0, L2:C1]",
+                "snippet": "TableParti...me text\r\n}"
+              },
+              "members": [
+                {
+                  "context": {
+                    "id": "symbol@Column@@[L1:C2, L1:C11]",
+                    "snippet": "name text"
+                  },
+                  "declaration": {
+                    "id": "node@<function-application>@@[L1:C2, L1:C11]",
+                    "snippet": "name text"
+                  },
+                  "members": [],
+                  "references": []
+                }
+              ],
+              "references": [
+                {
+                  "id": "node@<primary-expression>@@[L6:C3, L6:C9]",
+                  "snippet": "common"
+                },
+                {
+                  "id": "node@<primary-expression>@@[L7:C3, L7:C9]",
+                  "snippet": "common"
+                },
+                {
+                  "id": "node@<primary-expression>@@[L8:C3, L8:C9]",
+                  "snippet": "common"
+                }
+              ]
+            }
+          ],
+          "references": []
         },
         {
           "context": {
-            "id": "symbol@<element-declaration>@:Users@[L4:C0, L9:C1]",
+            "id": "symbol@Table@Users@[L4:C0, L9:C1]",
             "snippet": "Table User...~common\r\n}"
-          }
+          },
+          "declaration": {
+            "id": "node@<element-declaration>@Users@[L4:C0, L9:C1]",
+            "snippet": "Table User...~common\r\n}"
+          },
+          "members": [
+            {
+              "context": {
+                "id": "symbol@Column@@[L1:C2, L1:C11]",
+                "snippet": "name text"
+              },
+              "declaration": {
+                "id": "node@<function-application>@@[L1:C2, L1:C11]",
+                "snippet": "name text"
+              },
+              "members": [],
+              "references": []
+            },
+            {
+              "context": {
+                "id": "symbol@Column@@[L1:C2, L1:C11]",
+                "snippet": "name text"
+              },
+              "declaration": {
+                "id": "node@<function-application>@@[L1:C2, L1:C11]",
+                "snippet": "name text"
+              },
+              "members": [],
+              "references": []
+            },
+            {
+              "context": {
+                "id": "symbol@Column@@[L1:C2, L1:C11]",
+                "snippet": "name text"
+              },
+              "declaration": {
+                "id": "node@<function-application>@@[L1:C2, L1:C11]",
+                "snippet": "name text"
+              },
+              "members": [],
+              "references": []
+            },
+            {
+              "context": {
+                "id": "symbol@Column@@[L5:C2, L5:C8]",
+                "snippet": "id int"
+              },
+              "declaration": {
+                "id": "node@<function-application>@@[L5:C2, L5:C8]",
+                "snippet": "id int"
+              },
+              "references": []
+            },
+            {
+              "context": {
+                "id": "symbol@PartialInjection@@[L6:C2, L6:C9]",
+                "snippet": "~common"
+              },
+              "declaration": {
+                "id": "node@<function-application>@@[L6:C2, L6:C9]",
+                "snippet": "~common"
+              },
+              "references": []
+            },
+            {
+              "context": {
+                "id": "symbol@PartialInjection@@[L7:C2, L7:C9]",
+                "snippet": "~common"
+              },
+              "declaration": {
+                "id": "node@<function-application>@@[L7:C2, L7:C9]",
+                "snippet": "~common"
+              },
+              "references": []
+            },
+            {
+              "context": {
+                "id": "symbol@PartialInjection@@[L8:C2, L8:C9]",
+                "snippet": "~common"
+              },
+              "declaration": {
+                "id": "node@<function-application>@@[L8:C2, L8:C9]",
+                "snippet": "~common"
+              },
+              "references": []
+            }
+          ],
+          "references": []
+        },
+        {
+          "context": {
+            "id": "symbol@TablePartial@common@[L0:C0, L2:C1]",
+            "snippet": "TableParti...me text\r\n}"
+          },
+          "declaration": {
+            "id": "node@<element-declaration>@common@[L0:C0, L2:C1]",
+            "snippet": "TableParti...me text\r\n}"
+          },
+          "members": [
+            {
+              "context": {
+                "id": "symbol@Column@@[L1:C2, L1:C11]",
+                "snippet": "name text"
+              },
+              "declaration": {
+                "id": "node@<function-application>@@[L1:C2, L1:C11]",
+                "snippet": "name text"
+              },
+              "members": [],
+              "references": []
+            }
+          ],
+          "references": [
+            {
+              "id": "node@<primary-expression>@@[L6:C3, L6:C9]",
+              "snippet": "common"
+            },
+            {
+              "id": "node@<primary-expression>@@[L7:C3, L7:C9]",
+              "snippet": "common"
+            },
+            {
+              "id": "node@<primary-expression>@@[L8:C3, L8:C9]",
+              "snippet": "common"
+            }
+          ]
         }
       ],
       "references": []

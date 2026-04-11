@@ -1,8 +1,9 @@
-import { DEFAULT_SCHEMA_NAME } from '@/constants';
+import { DEFAULT_SCHEMA_NAME, UNHANDLED } from '@/constants';
 import { splitQualifiedIdentifier } from '../utils';
-import { createTableSymbolIndex, createSchemaSymbolIndex } from '@/core/types/symbol';
-import type SymbolTable from '@/core/types/symbol/symbolTable';
-import { TableSymbol } from '@/core/types/symbol/symbols';
+import type Compiler from '../../index';
+import { NodeSymbol, SymbolKind } from '@/core/types/symbols';
+import { lookupMember } from '@/core/global_modules/utils';
+import { Filepath } from '@/core/types/filepath';
 
 export type TableNameInput = string | { schema?: string; table: string };
 
@@ -51,29 +52,53 @@ export function normalizeTableName (input: TableNameInput): { schema: string; ta
 }
 
 /**
- * Looks up a table symbol from the symbol table.
+ * Looks up a table symbol by matching its full qualified name.
  */
 export function lookupTableSymbol (
-  symbolTable: Readonly<SymbolTable>,
+  compiler: Compiler,
+  filepath: Filepath,
   schema: string,
   table: string,
-): TableSymbol | null {
-  const tableSymbolIndex = createTableSymbolIndex(table);
+): NodeSymbol | null {
+  const ast = compiler.parseFile(filepath).getValue().ast;
+  const astSymbol = compiler.nodeSymbol(ast).getFiltered(UNHANDLED);
+  if (!astSymbol) return null;
 
   if (schema === DEFAULT_SCHEMA_NAME) {
-    const symbol = symbolTable.get(tableSymbolIndex);
-    return symbol instanceof TableSymbol ? symbol : null;
+    const symbol = lookupMember(
+      compiler,
+      astSymbol,
+      table,
+      {
+        kinds: [SymbolKind.Table],
+        ignoreNotFound: true,
+      },
+    );
+    return symbol.getValue() ?? null;
   }
 
-  const schemaSymbolIndex = createSchemaSymbolIndex(schema);
-  const schemaSymbol = symbolTable.get(schemaSymbolIndex);
+  const schemaSymbol = lookupMember(
+    compiler,
+    astSymbol,
+    schema,
+    {
+      kinds: [SymbolKind.Schema],
+      ignoreNotFound: true,
+    },
+  ).getValue();
+  if (!schemaSymbol) return null;
 
-  if (!schemaSymbol || !schemaSymbol.symbolTable) {
-    return null;
-  }
+  const tableSymbol = lookupMember(
+    compiler,
+    schemaSymbol,
+    table,
+    {
+      kinds: [SymbolKind.Table],
+      ignoreNotFound: true,
+    },
+  );
 
-  const symbol = schemaSymbol.symbolTable.get(tableSymbolIndex);
-  return symbol instanceof TableSymbol ? symbol : null;
+  return tableSymbol.getValue() ?? null;
 }
 
 /**

@@ -1,0 +1,15 @@
+// tables and a tablegroup defined together
+Table users {
+  id int [pk]
+  email varchar
+}
+
+Table posts {
+  id int [pk]
+  user_id int
+}
+
+TableGroup content {
+  users
+  posts
+}

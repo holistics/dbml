@@ -208,8 +208,14 @@
         ]
       }
     ],
+    "externals": {
+      "enums": [],
+      "notes": [],
+      "tableGroups": [],
+      "tablePartials": [],
+      "tables": []
+    },
     "notes": [],
-    "project": {},
     "records": [],
     "refs": [],
     "schemas": [],
@@ -470,7 +476,22 @@
           }
         }
       }
-    ]
+    ],
+    "token": {
+      "end": {
+        "column": 10,
+        "line": 58,
+        "offset": 931
+      },
+      "filepath": {
+        "path": "/main.dbml"
+      },
+      "start": {
+        "column": 1,
+        "line": 14,
+        "offset": 93
+      }
+    }
   },
   "errors": [],
   "warnings": []

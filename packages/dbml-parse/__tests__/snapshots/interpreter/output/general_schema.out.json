@@ -154,8 +154,14 @@
         ]
       }
     ],
+    "externals": {
+      "enums": [],
+      "notes": [],
+      "tableGroups": [],
+      "tablePartials": [],
+      "tables": []
+    },
     "notes": [],
-    "project": {},
     "records": [],
     "refs": [
       {
@@ -569,11 +575,11 @@
         "tables": [
           {
             "name": "users",
-            "schemaName": ""
+            "schemaName": null
           },
           {
             "name": "merchants",
-            "schemaName": ""
+            "schemaName": null
           }
         ],
         "token": {
@@ -598,11 +604,11 @@
         "tables": [
           {
             "name": "countries",
-            "schemaName": ""
+            "schemaName": null
           },
           {
             "name": "orders",
-            "schemaName": ""
+            "schemaName": null
           }
         ],
         "token": {
@@ -1635,7 +1641,22 @@
           }
         }
       }
-    ]
+    ],
+    "token": {
+      "end": {
+        "column": 1,
+        "line": 86,
+        "offset": 1397
+      },
+      "filepath": {
+        "path": "/main.dbml"
+      },
+      "start": {
+        "column": 1,
+        "line": 1,
+        "offset": 0
+      }
+    }
   },
   "errors": [],
   "warnings": []

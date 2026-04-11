@@ -2,12 +2,13 @@ import { describe, expect, it } from 'vitest';
 import Compiler from '@/compiler';
 import DBMLReferencesProvider from '@/services/references/provider';
 import { createPosition, createMockTextModel, extractTextFromRange } from '../../../utils';
+import { DEFAULT_ENTRY } from '@/constants';
 
 describe('[example] ReferencesProvider', () => {
   it('should return empty array when no references found', () => {
     const program = 'Table test { id int }';
     const compiler = new Compiler();
-    compiler.setSource(program);
+    compiler.setSource(DEFAULT_ENTRY, program);
 
     const referencesProvider = new DBMLReferencesProvider(compiler);
     const model = createMockTextModel(program);
@@ -30,7 +31,7 @@ Table posts {
 
 Ref: posts.user_id > users.id`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const referencesProvider = new DBMLReferencesProvider(compiler);
       const model = createMockTextModel(program);
@@ -70,7 +71,7 @@ Table posts {
   user_id int [ref: > users.id]
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const referencesProvider = new DBMLReferencesProvider(compiler);
       const model = createMockTextModel(program);
@@ -115,7 +116,7 @@ TableGroup my_group {
   posts
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const referencesProvider = new DBMLReferencesProvider(compiler);
       const model = createMockTextModel(program);
@@ -153,7 +154,7 @@ TableGroup my_group {
 
 Ref: posts.user_id > myschema.users.id`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const referencesProvider = new DBMLReferencesProvider(compiler);
       const model = createMockTextModel(program);
@@ -197,7 +198,7 @@ Table posts {
 
 Ref: posts.user_id > users.id`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const referencesProvider = new DBMLReferencesProvider(compiler);
       const model = createMockTextModel(program);
@@ -241,7 +242,7 @@ Table posts {
 Ref: posts.user_id > users.id
 Ref: posts.author_id > users.id`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const referencesProvider = new DBMLReferencesProvider(compiler);
       const model = createMockTextModel(program);
@@ -293,7 +294,7 @@ Table users {
   user_status status
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const referencesProvider = new DBMLReferencesProvider(compiler);
       const model = createMockTextModel(program);
@@ -334,7 +335,7 @@ Table users {
   user_status myschema.status
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const referencesProvider = new DBMLReferencesProvider(compiler);
       const model = createMockTextModel(program);
@@ -375,7 +376,7 @@ Table users {
   status true [default: true.value]
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const referencesProvider = new DBMLReferencesProvider(compiler);
       const model = createMockTextModel(program);
@@ -402,7 +403,7 @@ Table users {
   status true [default: true.value]
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const referencesProvider = new DBMLReferencesProvider(compiler);
       const model = createMockTextModel(program);
@@ -420,7 +421,7 @@ Table users {
   name varchar [default: "hello"]
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const referencesProvider = new DBMLReferencesProvider(compiler);
       const model = createMockTextModel(program);
@@ -437,7 +438,7 @@ Table users {
   active boolean [default: true]
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const referencesProvider = new DBMLReferencesProvider(compiler);
       const model = createMockTextModel(program);
@@ -467,7 +468,7 @@ Table orders {
   ~timestamps
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const referencesProvider = new DBMLReferencesProvider(compiler);
       const model = createMockTextModel(program);
@@ -490,7 +491,7 @@ Table users {
   ~myschema.timestamps
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const referencesProvider = new DBMLReferencesProvider(compiler);
       const model = createMockTextModel(program);
@@ -524,7 +525,7 @@ Table comments {
 Ref: comments.post_id > posts.id
 Ref: comments.user_id > users.id`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const referencesProvider = new DBMLReferencesProvider(compiler);
       const model = createMockTextModel(program);
@@ -546,7 +547,7 @@ Ref: comments.user_id > users.id`;
 
 Ref: employees.mentor_id > employees.id`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const referencesProvider = new DBMLReferencesProvider(compiler);
       const model = createMockTextModel(program);
@@ -573,7 +574,7 @@ Table orders {
 
 Ref: orders.(merchant_id, merchant_country) > merchants.(id, country_code)`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const referencesProvider = new DBMLReferencesProvider(compiler);
       const model = createMockTextModel(program);
@@ -605,7 +606,7 @@ Table orders {
 
 Ref: orders.(merchant_id, merchant_country) > merchants.(id, country_code)`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const referencesProvider = new DBMLReferencesProvider(compiler);
       const model = createMockTextModel(program);
@@ -640,7 +641,7 @@ Table user_roles {
   }
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const referencesProvider = new DBMLReferencesProvider(compiler);
       const model = createMockTextModel(program);
@@ -670,7 +671,7 @@ Table billing.invoices {
 Ref: public.posts.user_id > auth.users.id
 Ref: billing.invoices.user_id > auth.users.id`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const referencesProvider = new DBMLReferencesProvider(compiler);
       const model = createMockTextModel(program);
@@ -700,7 +701,7 @@ TableGroup social {
 
 Ref: posts.author_id > u.id`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const referencesProvider = new DBMLReferencesProvider(compiler);
       const model = createMockTextModel(program);
@@ -736,7 +737,7 @@ Table order_history {
   status order_status
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const referencesProvider = new DBMLReferencesProvider(compiler);
       const model = createMockTextModel(program);
@@ -765,7 +766,7 @@ Table orders {
   status order_status [default: order_status.pending]
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const referencesProvider = new DBMLReferencesProvider(compiler);
       const model = createMockTextModel(program);
@@ -795,7 +796,7 @@ Table project.ecommerce.orders {
 
 Ref: project.ecommerce.orders.user_id > project.ecommerce.users.id`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const referencesProvider = new DBMLReferencesProvider(compiler);
       const model = createMockTextModel(program);
@@ -821,7 +822,7 @@ Table table_b {
 Ref: table_a.b_id > table_b.id
 Ref: table_b.a_id > table_a.id`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const referencesProvider = new DBMLReferencesProvider(compiler);
       const model = createMockTextModel(program);
@@ -847,7 +848,7 @@ Ref: table_b.a_id > table_a.id`;
   }
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const referencesProvider = new DBMLReferencesProvider(compiler);
       const model = createMockTextModel(program);
@@ -865,7 +866,7 @@ Ref: table_b.a_id > table_a.id`;
     it('- should handle empty schema gracefully', () => {
       const program = '';
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const referencesProvider = new DBMLReferencesProvider(compiler);
       const model = createMockTextModel(program);
@@ -887,7 +888,7 @@ Table posts {
   id int pk
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const referencesProvider = new DBMLReferencesProvider(compiler);
       const model = createMockTextModel(program);
@@ -906,7 +907,7 @@ Table posts {
 
 Ref: posts.user_id > users.`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const referencesProvider = new DBMLReferencesProvider(compiler);
       const model = createMockTextModel(program);
@@ -929,7 +930,7 @@ Table posts {
 
 Ref: posts.user_id > "user-data".id`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const referencesProvider = new DBMLReferencesProvider(compiler);
       const model = createMockTextModel(program);
@@ -958,7 +959,7 @@ Records users(id) {
   3
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const referencesProvider = new DBMLReferencesProvider(compiler);
       const model = createMockTextModel(program);
@@ -986,7 +987,7 @@ Records users(email, name) {
   "jane@example.com", "Jane"
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const referencesProvider = new DBMLReferencesProvider(compiler);
       const model = createMockTextModel(program);
@@ -1016,7 +1017,7 @@ Records users(id, user_status) {
   3, status.active
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const referencesProvider = new DBMLReferencesProvider(compiler);
       const model = createMockTextModel(program);
@@ -1043,7 +1044,7 @@ Records public.orders(id) {
   2
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const referencesProvider = new DBMLReferencesProvider(compiler);
       const model = createMockTextModel(program);
@@ -1068,7 +1069,7 @@ Records public.orders(id) {
   }
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const referencesProvider = new DBMLReferencesProvider(compiler);
       const model = createMockTextModel(program);

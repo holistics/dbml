@@ -1,78 +1,15 @@
 {
-  "database": {
-    "aliases": [],
-    "diagramViews": [],
-    "enums": [],
-    "notes": [],
-    "project": {},
-    "records": [],
-    "refs": [],
-    "schemas": [],
-    "tableGroups": [],
-    "tablePartials": [
-      {
-        "checks": [],
-        "fields": [
-          {
-            "checks": [],
-            "increment": false,
-            "inline_refs": [],
-            "name": "col",
-            "pk": false,
-            "token": {
-              "end": {
-                "column": 24,
-                "line": 2,
-                "offset": 40
-              },
-              "filepath": {
-                "path": "/main.dbml"
-              },
-              "start": {
-                "column": 3,
-                "line": 2,
-                "offset": 19
-              }
-            },
-            "type": {
-              "args": null,
-              "schemaName": null,
-              "type_name": "type"
-            },
-            "unique": false
-          }
-        ],
-        "indexes": [],
-        "name": "T",
-        "token": {
-          "end": {
-            "column": 2,
-            "line": 3,
-            "offset": 42
-          },
-          "filepath": {
-            "path": "/main.dbml"
-          },
-          "start": {
-            "column": 1,
-            "line": 1,
-            "offset": 0
-          }
-        }
-      }
-    ],
-    "tables": []
-  },
   "errors": [
     {
       "code": "SAME_ENDPOINT",
       "diagnostic": "Two endpoints are the same",
+      "filepath": "/main.dbml",
       "level": "error",
       "node": {
         "context": {
           "id": "node@<attribute>@@[L1:C12, L1:C22]",
-          "filepath": "/main.dbml",
-          "snippet": "ref: > col"
+          "snippet": "ref: > col",
+          "filepath": "/main.dbml"
         }
       }
     }

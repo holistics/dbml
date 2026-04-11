@@ -1,11 +1,9 @@
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import Report from '@/core/types/report';
-import { isAlphaOrUnderscore, isAlphaNumeric, isDigit } from '@/core/utils';
-import {
-  SyntaxToken, SyntaxTokenKind, isOp, isTriviaToken,
-} from '@/core/types/tokens';
-import { Position } from '@/core/types';
+import { Position } from '@/core/types/position';
 import { isInvalidToken } from '@/core/parser/utils';
+import { isOp, isTriviaToken, SyntaxToken, SyntaxTokenKind } from '@/core/types/tokens';
+import { isAlphaNumeric, isAlphaOrUnderscore, isDigit } from '@/core/utils/chars';
 import { Filepath } from '@/core/types/filepath';
 
 export default class Lexer {
@@ -148,6 +146,9 @@ export default class Lexer {
         case ':':
           this.addToken(SyntaxTokenKind.COLON);
           break;
+        case '*':
+          this.addToken(SyntaxTokenKind.WILDCARD);
+          break;
         case "'":
           if (this.match("''")) {
             this.multilineStringLiteral();
@@ -241,7 +242,7 @@ export default class Lexer {
   }
 
   gatherInvalid () {
-    let i;
+    let i: number;
     const newTokenList: SyntaxToken[] = [];
 
     const leadingInvalidList: SyntaxToken[] = [];

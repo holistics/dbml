@@ -1,7 +1,6 @@
 import { basename, dirname, extname, isAbsolute, join, normalize, relative, resolve } from 'pathe';
 import type { Internable } from './internable';
-
-const DBML_EXT = '.dbml';
+import { DBML_EXT } from '@/constants';
 
 declare const __filepathIdBrand: unique symbol;
 export type FilepathId = string & { [__filepathIdBrand]: true };
@@ -26,6 +25,22 @@ export class Filepath implements Internable<FilepathId> {
 
   static resolve (fromDir: string, relativePath: string): Filepath {
     return new Filepath(resolve(fromDir, relativePath));
+  }
+
+  static fromUri (uri: string): Filepath {
+    // Parse file:// URIs to absolute paths
+    // file:///C:/Users/... (Windows) or file:///home/user/... (Unix)
+    let path = uri;
+    if (uri.startsWith('file://')) {
+      path = uri.slice(7); // Remove 'file://'
+      // On Windows, file:///C:/path becomes C:/path after removing file://
+      // On Unix, file:///path stays /path
+      if (path.startsWith('/') && /^\/[a-zA-Z]:/.test(path)) {
+        // Windows: file:///C:/path → C:/path (remove leading /)
+        path = path.slice(1);
+      }
+    }
+    return new Filepath(resolve(path));
   }
 
   get absolute (): string {
@@ -69,6 +84,16 @@ export class Filepath implements Internable<FilepathId> {
 
   equals (other: Filepath): boolean {
     return this.path === other.path;
+  }
+
+  toUri (): string {
+    // Convert absolute path to file:// URI
+    // C:/Users/... → file:///C:/Users/...
+    // /home/user/... → file:///home/user/...
+    if (process.platform === 'win32') {
+      return `file:///${this.path.replace(/\\/g, '/')}`;
+    }
+    return `file://${this.path}`;
   }
 
   static isRelative (p: string): boolean {

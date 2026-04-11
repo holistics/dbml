@@ -1,0 +1,11 @@
+// TableGroup members are imported tables: they should be pulled into
+// this file's single-file export along with the group itself
+use {
+  table users
+  table posts
+} from './base-tables.dbml'
+
+TableGroup content_group {
+  users
+  posts
+}

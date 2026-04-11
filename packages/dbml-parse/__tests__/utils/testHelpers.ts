@@ -1,10 +1,12 @@
 import fs from 'node:fs';
-import { NodeSymbol } from '@/core/types/symbol/symbols';
+import { NodeSymbol, SchemaSymbol } from '@/core/types/symbols';
 import { SyntaxToken } from '@/core/types/tokens';
 import { ElementDeclarationNode, LiteralNode, ProgramNode, SyntaxNode, VariableNode } from '@/core/types/nodes';
-import { getElementNameString } from '@/core/parser/utils';
+import { getElementNameString } from '@/core/utils/expression';
 import { CompileError, CompileErrorCode, CompileWarning } from '@/core/types/errors';
 import type Compiler from '@/compiler';
+import { UNHANDLED } from '@/constants';
+import { SchemaElement, TokenPosition } from '@/core/types';
 
 export function scanTestNames (path: string) {
   const files = fs.readdirSync(path);
@@ -14,16 +16,16 @@ export function scanTestNames (path: string) {
 
 function getNameHint (node: SyntaxNode | SyntaxToken): string {
   if (node instanceof SyntaxToken) {
-    return `:${node.value}`;
+    return `${node.value}`;
   }
   if (node instanceof VariableNode) {
-    return `:${node.variable?.value || ''}`;
+    return `${node.variable?.value || ''}`;
   }
   if (node instanceof LiteralNode) {
-    return `:${node.literal?.value || ''}`;
+    return `${node.literal?.value || ''}`;
   }
   if (node instanceof ElementDeclarationNode) {
-    return `:${getElementNameString(node).unwrap_or(undefined) || ''}`;
+    return `${getElementNameString(node) || ''}`;
   }
   return '';
 }
@@ -36,11 +38,11 @@ function getReadableId (nodeOrSymbol: SyntaxNode | SyntaxToken | NodeSymbol): st
 
   const node = (nodeOrSymbol instanceof SyntaxNode) || (nodeOrSymbol instanceof SyntaxToken) ? nodeOrSymbol : nodeOrSymbol?.declaration;
 
-  const kind = node?.kind ?? '?';
+  const kind = nodeOrSymbol.kind;
 
   const start = `L${node?.startPos.line ?? '?'}:C${node?.startPos.column ?? '?'}`;
   const end = `L${node?.endPos.line ?? '?'}:C${node?.endPos.column ?? '?'}`;
-  const nameHint = node ? getNameHint(node) : '';
+  const nameHint = node ? getNameHint(node) : nodeOrSymbol instanceof SchemaSymbol ? nodeOrSymbol.qualifiedName.join('.') : '';
 
   return `${type}@${kind}@${nameHint}@[${start}, ${end}]`;
 }
@@ -65,7 +67,8 @@ export type Snappable =
   | CompileError
   | SyntaxNode
   | SyntaxToken
-  | NodeSymbol;
+  | NodeSymbol
+  | SchemaElement;
 
 // Accept an object
 // Output a stable key-value object
@@ -93,6 +96,7 @@ function sortArray (array: unknown[]): unknown[] {
     if (s instanceof CompileError) return 6;
     if (s instanceof SyntaxNode) return 7;
     if (s instanceof SyntaxToken) return 8;
+    if ((s as any)?.token) return 9; // possibly a schema element
     return 1000;
   }
 
@@ -107,6 +111,7 @@ function sortArray (array: unknown[]): unknown[] {
     if (s instanceof SyntaxNode) return s.start;
     if (s instanceof SyntaxToken) return s.start;
     if ((s as any)?.declaration) return getIntraKindRank((s as any).declaration);
+    if ((s as any)?.token) return ((s as any).token as TokenPosition)?.start?.offset || 0; // possibly a schema element
     if ((s as any)?.id) return getIntraKindRank((s as any).id);
     return 0;
   }
@@ -128,7 +133,7 @@ function sortArray (array: unknown[]): unknown[] {
 // Get a stable snapshot of the value
 export function toSnapshot (
   compiler: Compiler,
-  value: Readonly<Snappable | Readonly<Snappable>[] | Record<string, Readonly<Snappable> | Readonly<Snappable>[]>>,
+  value: Readonly<Snappable | readonly Readonly<Snappable>[] | Record<string, Readonly<Snappable> | readonly Readonly<Snappable>[]>>,
   { simple = false }: { simple?: boolean } = {},
 ): unknown {
   if (Array.isArray(value)) {
@@ -149,8 +154,10 @@ export function toSnapshot (
   if (value === null) {
     return null;
   }
+  // An adhoc check for NodeSymbol
+  // because it's just an interface
   if (value instanceof NodeSymbol) {
-    return symbolToSnapshot(compiler, value);
+    return symbolToSnapshot(compiler, value as NodeSymbol);
   }
   if (typeof value === 'object') {
     return sortObject(Object.fromEntries(
@@ -172,18 +179,21 @@ export function errorToSnapshot (
     code,
     diagnostic,
     nodeOrToken,
+    filepath,
   } = error;
   if (simple) {
     return sortObject({
       level: 'error',
       code: CompileErrorCode[code],
       diagnostic,
+      filepath: filepath.toString(),
     });
   }
   return sortObject({
     level: 'error',
     code: CompileErrorCode[code],
     diagnostic,
+    filepath: filepath.toString(),
     ...(nodeOrToken instanceof SyntaxNode
       ? { node: syntaxNodeToSnapshot(compiler, nodeOrToken, { simple: true }) }
       : { token: syntaxTokenToSnapshot(compiler, nodeOrToken as SyntaxToken, { simple: true }) }),
@@ -199,18 +209,21 @@ export function warningToSnapshot (
     code,
     diagnostic,
     nodeOrToken,
+    filepath,
   } = warning;
   if (simple) {
     return sortObject({
       level: 'warning',
       code: CompileErrorCode[code],
       diagnostic,
+      filepath: filepath.toString(),
     });
   }
   return sortObject({
     level: 'warning',
     code: CompileErrorCode[code],
     diagnostic,
+    filepath: filepath.toString(),
     ...(nodeOrToken instanceof SyntaxNode
       ? { node: syntaxNodeToSnapshot(compiler, nodeOrToken, { simple: true }) }
       : { token: syntaxTokenToSnapshot(compiler, nodeOrToken as SyntaxToken, { simple: true }) }),
@@ -226,6 +239,7 @@ export function syntaxTokenToSnapshot (
   const snippet = getCodeSnippet(token, compiler.parse.source());
   const {
     kind, // Filter this out as it's in the readable id
+    filepath,
     value,
     leadingTrivia,
     trailingTrivia,
@@ -243,6 +257,7 @@ export function syntaxTokenToSnapshot (
         id: tokenReadableId,
         snippet,
         isInvalid,
+        filepath: filepath.toString(),
       },
     };
   }
@@ -269,19 +284,20 @@ export function syntaxNodeToSnapshot (
   const snippet = getCodeSnippet(node, compiler.parse.source());
   const {
     id, // Filter this out
+    parent, // Filter this out
+    parentNode, // Filter this out
     kind, // Filter this out as it's in the readable id
-    filepath, // Filter this out, shown in context instead
-    symbol,
-    referee,
     startPos, // Filter this out
     endPos, // Filter this out
     start, // Filter this out
     end, // Filter this out
+    filepath,
+    fullStart,
+    fullEnd,
     ...props
   } = node;
-  if (node instanceof ElementDeclarationNode) {
-    delete (props as any).parent;
-  }
+  const symbol = compiler.nodeSymbol(node).getFiltered(UNHANDLED);
+  const referee = compiler.nodeReferee(node).getFiltered(UNHANDLED);
   if (node instanceof ProgramNode) {
     delete (props as any).source;
   }
@@ -289,20 +305,21 @@ export function syntaxNodeToSnapshot (
     return {
       context: { // context should always be at the top
         id: nodeReadableId,
-        filepath: filepath.absolute,
         snippet,
+        filepath: filepath.toString(),
       },
     };
   }
   const result = {
-    context: { // context should always be at the top
+    context: { // context should ways be at the top
       id: nodeReadableId,
-      filepath: filepath.absolute,
       snippet,
     },
     ...sortObject({
       symbol: symbol && symbolToSnapshot(compiler, symbol),
       referee: referee && symbolToSnapshot(compiler, referee, { simple: true }),
+      fullStart,
+      fullEnd,
       children: sortObject(Object.fromEntries(
         Object.entries(props)
           .map(
@@ -317,7 +334,7 @@ export function syntaxNodeToSnapshot (
 
 export function symbolToSnapshot (
   compiler: Compiler,
-  symbol?: NodeSymbol,
+  symbol: NodeSymbol,
   { simple = false }: { simple?: boolean } = {},
 ): unknown {
   if (!symbol) return undefined;
@@ -325,15 +342,18 @@ export function symbolToSnapshot (
   const snippet = getCodeSnippet(symbol, compiler.parse.source());
   const {
     id, // Filter this out
-    symbolTable,
     declaration,
-    references,
+    filepath,
   } = symbol;
+  const references = compiler.symbolReferences(symbol).getFiltered(UNHANDLED);
+  const symbolTable = compiler.symbolMembers(symbol).getFiltered(UNHANDLED);
+
   if (simple) {
     return {
       context: {
         id: symbolReadableId, // context should always be at the top
         snippet,
+        filepath: filepath.toString(),
       },
     };
   }
@@ -343,7 +363,7 @@ export function symbolToSnapshot (
       snippet,
     },
     ...sortObject({
-      members: symbolTable && sortArray([...symbolTable.entries()].map(([, value]) => symbolToSnapshot(compiler, value, { simple: true }))),
+      members: symbolTable && sortArray([...symbolTable.entries()].map(([, value]) => symbolToSnapshot(compiler, value))),
       declaration: declaration && {
         id: getReadableId(declaration),
         snippet: getCodeSnippet(declaration, compiler.parse.source()),

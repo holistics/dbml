@@ -3,12 +3,13 @@
     {
       "code": "DUPLICATE_NAME",
       "diagnostic": "Table name 'users' already exists in schema 'public'",
+      "filepath": "/main.dbml",
       "level": "error",
       "node": {
         "context": {
           "id": "node@<primary-expression>@@[L15:C6, L15:C11]",
-          "filepath": "/main.dbml",
-          "snippet": "users"
+          "snippet": "users",
+          "filepath": "/main.dbml"
         }
       }
     }

@@ -2,13 +2,14 @@ import { describe, expect, it } from 'vitest';
 import Compiler from '@/compiler';
 import DBMLCompletionItemProvider from '@/services/suggestions/provider';
 import { createMockTextModel, createPosition } from '@tests/utils';
+import { DEFAULT_ENTRY } from '@/constants';
 
 describe('[DiagramView] CompletionItemProvider', () => {
   describe('top-level suggestions should include DiagramView', () => {
     it('suggests DiagramView at top level', () => {
       const program = '';
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(1, 1);
@@ -23,7 +24,7 @@ describe('[DiagramView] CompletionItemProvider', () => {
     it('suggests sub-block keywords (Tables, TableGroups, Notes, Schemas) and wildcard', () => {
       const program = 'DiagramView my_view {\n  \n}';
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(2, 3);
@@ -54,7 +55,7 @@ describe('[DiagramView] CompletionItemProvider', () => {
         '}',
       ].join('\n');
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(9, 5);
@@ -83,7 +84,7 @@ describe('[DiagramView] CompletionItemProvider', () => {
         '}',
       ].join('\n');
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(9, 5);
@@ -108,7 +109,7 @@ describe('[DiagramView] CompletionItemProvider', () => {
         '}',
       ].join('\n');
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(6, 5);
@@ -130,7 +131,7 @@ describe('[DiagramView] CompletionItemProvider', () => {
         '}',
       ].join('\n');
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(3, 5);

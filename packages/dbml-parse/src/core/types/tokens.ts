@@ -1,4 +1,4 @@
-import { Position } from '@/core/types';
+import { Position } from '@/core/types/position';
 import { Filepath } from '@/core/types/filepath';
 
 export enum SyntaxTokenKind {
@@ -31,6 +31,7 @@ export enum SyntaxTokenKind {
 
   SINGLE_LINE_COMMENT = '<single-line-comment>',
   MULTILINE_COMMENT = '<multiline-comment>',
+
   WILDCARD = '<wildcard>',
 }
 
@@ -78,6 +79,8 @@ export function isOpToken (token?: SyntaxToken): boolean {
 export class SyntaxToken {
   kind: SyntaxTokenKind;
 
+  filepath: Filepath;
+
   value: string;
 
   leadingTrivia: SyntaxToken[];
@@ -97,8 +100,6 @@ export class SyntaxToken {
   end: Readonly<number>;
 
   isInvalid: boolean;
-
-  filepath: Filepath;
 
   protected constructor (
     kind: SyntaxTokenKind,

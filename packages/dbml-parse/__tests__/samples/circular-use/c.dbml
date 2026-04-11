@@ -1,0 +1,5 @@
+use { table a_table } from './a.dbml'
+Table c_table {
+  id int [pk]
+  a_id int [ref: > a_table.id]
+}

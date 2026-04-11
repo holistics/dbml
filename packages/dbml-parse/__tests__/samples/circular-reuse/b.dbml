@@ -1,0 +1,5 @@
+reuse { table users } from './a.dbml'
+
+Table shared_types {
+  id int [pk]
+}

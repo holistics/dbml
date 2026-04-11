@@ -1,0 +1,2 @@
+// import only the tablegroup; member tables should be pulled along
+use { tablegroup content } from './base.dbml'

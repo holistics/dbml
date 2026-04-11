@@ -1,4 +1,4 @@
-import { DEFAULT_FILEPATH } from '@/core/types/filepath';
+import { DEFAULT_ENTRY } from '@/constants';
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
@@ -8,7 +8,7 @@ import Compiler from '@/compiler';
 import type { SyntaxToken } from '@/index';
 import type Report from '@/core/types/report';
 
-function serializeLexerResult (compiler: Compiler, report: Report<SyntaxToken[]>): string {
+function serializeLexerResult (compiler: Compiler, report: Report<readonly Readonly<SyntaxToken>[]>): string {
   const value = report.getValue();
   const errors = report.getErrors();
   const warnings = report.getWarnings();
@@ -26,11 +26,9 @@ describe('[snapshot] lexer', () => {
     const program = readFileSync(path.resolve(__dirname, `./input/${testName}.in.dbml`), 'utf-8');
 
     const compiler = new Compiler();
-    compiler.setSource(program);
+    compiler.setSource(DEFAULT_ENTRY, program);
 
-    const lexer = new Lexer(program, DEFAULT_FILEPATH);
-
-    const output = serializeLexerResult(compiler, lexer.lex());
+    const output = serializeLexerResult(compiler, compiler.parseFile(DEFAULT_ENTRY).map(({ tokens }) => tokens));
 
     it(testName, () => expect(output).toMatchFileSnapshot(path.resolve(__dirname, `./output/${testName}.out.json`)));
   });
