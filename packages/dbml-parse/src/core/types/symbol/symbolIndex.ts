@@ -11,7 +11,7 @@ export enum SymbolKind {
   TableGroupField = 'TableGroup field',
   Enum = 'Enum',
   EnumField = 'Enum field',
-  Note = 'Note',
+  StickyNote = 'Note',
   TablePartial = 'TablePartial',
   PartialInjection = 'PartialInjection',
   DiagramView = 'DiagramView',
@@ -47,7 +47,7 @@ export function createTableGroupFieldSymbolIndex (key: string): NodeSymbolIndex 
 }
 
 export function createStickyNoteSymbolIndex (key: string): NodeSymbolIndex {
-  return `${SymbolKind.Note}:${key}`;
+  return `${SymbolKind.StickyNote}:${key}`;
 }
 
 export function createTablePartialSymbolIndex (key: string): NodeSymbolIndex {
@@ -82,6 +82,8 @@ export function createNodeSymbolIndex (key: string, symbolKind: SymbolKind): Nod
       return createTableGroupSymbolIndex(key);
     case SymbolKind.TableGroupField:
       return createTableGroupFieldSymbolIndex(key);
+    case SymbolKind.StickyNote:
+      return createStickyNoteSymbolIndex(key);
     case SymbolKind.TablePartial:
       return createTablePartialSymbolIndex(key);
     case SymbolKind.PartialInjection:

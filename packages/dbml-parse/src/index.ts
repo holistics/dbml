@@ -56,12 +56,9 @@ export {
   type Project,
   type TableGroup,
   type TablePartial,
+  type DiagramView,
+  type FilterConfig,
 } from '@/core/types/schemaJson';
-
-export type {
-  DiagramView,
-  FilterConfig,
-} from '@/core/interpreter/types';
 
 // DiagramView types (methods exposed via Compiler)
 export type { DiagramViewSyncOperation, DiagramViewBlock } from '@/compiler/queries/transform/syncDiagramView';

@@ -126,7 +126,7 @@ export default class DiagramViewBinder implements ElementBinder {
         }
 
         return lookupAndBindInScope(this.ast, [
-          { node: noteBindee, kind: SymbolKind.Note },
+          { node: noteBindee, kind: SymbolKind.StickyNote },
         ]);
       });
     });

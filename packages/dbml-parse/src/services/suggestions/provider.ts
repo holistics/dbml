@@ -868,7 +868,7 @@ function suggestInDiagramViewSubBlock (compiler: Compiler, offset: number): Comp
       return { suggestions: [wildcard, defaultSchema, ...namesInScope.suggestions] };
     }
     case 'notes': {
-      const namesInScope = suggestNamesInScope(compiler, offset, compiler.parse.ast(), [SymbolKind.Note]);
+      const namesInScope = suggestNamesInScope(compiler, offset, compiler.parse.ast(), [SymbolKind.StickyNote]);
       return { suggestions: [wildcard, ...namesInScope.suggestions] };
     }
     default:
