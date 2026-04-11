@@ -3,7 +3,7 @@ import Compiler from '@/compiler';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, ProgramNode, SyntaxNode,
-} from '@/core/parser/nodes';
+} from '@/core/types/nodes';
 import { ElementKind } from '@/core/types/keywords';
 import { isExpressionAQuotedString } from '@/core/utils/expression';
 
@@ -48,7 +48,7 @@ export default class NoteValidator {
   }
 
   private validateName (nameNode?: SyntaxNode): CompileError[] {
-    return this.compiler.fullname(this.declarationNode).getErrors();
+    return this.compiler.nodeFullname(this.declarationNode).getErrors();
   }
 
   private validateAlias (aliasNode?: SyntaxNode): CompileError[] {
@@ -101,7 +101,7 @@ export default class NoteValidator {
       if (!sub.type) {
         return [];
       }
-      return this.compiler.validate(sub).getErrors();
+      return this.compiler.validateNode(sub).getErrors();
     });
   }
 }

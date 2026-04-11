@@ -1,7 +1,7 @@
-import { SyntaxToken } from '@/core/lexer/tokens';
+import { SyntaxToken } from '@/core/types/tokens';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ProgramNode,
-} from '@/core/parser/nodes';
+} from '@/core/types/nodes';
 import { CompileError } from '@/core/types/errors';
 import Compiler from '@/compiler';
 
@@ -41,7 +41,7 @@ export default class ProjectBinder {
         return [];
       }
 
-      return this.compiler.bind(sub).getErrors();
+      return this.compiler.bindNode(sub).getErrors();
     });
   }
 }

@@ -1,8 +1,8 @@
 import { ElementKind, SettingName } from '@/core/types/keywords';
-import { ElementDeclarationNode, FunctionApplicationNode, PrefixExpressionNode, InfixExpressionNode, ProgramNode } from '@/core/parser/nodes';
-import type { SyntaxNode } from '@/core/parser/nodes';
-import type { SyntaxToken } from '@/core/lexer/tokens';
-import { NodeSymbol, SchemaSymbol, InjectedColumnSymbol, SymbolKind } from '@/core/types/symbols';
+import { ElementDeclarationNode, FunctionApplicationNode, PrefixExpressionNode, InfixExpressionNode, ProgramNode } from '@/core/types/nodes';
+import type { SyntaxNode } from '@/core/types/nodes';
+import type { SyntaxToken } from '@/core/types/tokens';
+import { NodeSymbol, SchemaSymbol, InjectedColumnSymbol, SymbolKind } from '@/core/types/symbol';
 import type { GlobalModule } from '../types';
 import { DEFAULT_SCHEMA_NAME, KEYWORDS_OF_DEFAULT_SETTING, PASS_THROUGH, type PassThrough, UNHANDLED } from '@/constants';
 import Report from '@/core/types/report';
@@ -42,12 +42,12 @@ export const tableModule: GlobalModule = {
       return new Report(compiler.symbolFactory.create(NodeSymbol, {
         kind: SymbolKind.Table,
         declaration: node,
-      }));
+      }, node.filepath));
     }
     if (isElementFieldNode(node, ElementKind.Table)) {
       return !isValidPartialInjection(node.callee)
-        ? new Report(compiler.symbolFactory.create(NodeSymbol, { kind: SymbolKind.Column, declaration: node }))
-        : new Report(compiler.symbolFactory.create(NodeSymbol, { kind: SymbolKind.PartialInjection, declaration: node }));
+        ? new Report(compiler.symbolFactory.create(NodeSymbol, { kind: SymbolKind.Column, declaration: node }, node.filepath))
+        : new Report(compiler.symbolFactory.create(NodeSymbol, { kind: SymbolKind.PartialInjection, declaration: node }, node.filepath));
     }
     return Report.create(PASS_THROUGH);
   },
@@ -76,19 +76,23 @@ export const tableModule: GlobalModule = {
     for (const member of members) {
       if (!member.isKind(SymbolKind.Column) || !member.declaration) continue; // Ignore non-column members
 
-      const name = compiler.fullname(member.declaration).getFiltered(UNHANDLED)?.at(-1);
-      if (name === undefined) continue; // Column must always have a name!
+      const name = compiler.symbolName(member);
+      if (name !== undefined) {
+        const errorNode = (
+          member.declaration instanceof ElementDeclarationNode && member.declaration.name
+        )
+          ? member.declaration.name
+          : member.declaration;
 
-      const errorNode = (member.declaration instanceof ElementDeclarationNode && member.declaration.name) ? member.declaration.name : member.declaration;
-      const firstNode = seen.get(name);
-      if (firstNode) {
-        errors.push(tableUtils.getColumnDuplicateError(name, firstNode));
-        errors.push(tableUtils.getColumnDuplicateError(name, errorNode));
-      } else {
-        seen.set(name, errorNode);
+        const firstNode = seen.get(name);
+        if (firstNode) {
+          errors.push(tableUtils.getColumnDuplicateError(name, firstNode));
+          errors.push(tableUtils.getColumnDuplicateError(name, errorNode));
+        } else {
+          seen.set(name, errorNode);
+        }
       }
     }
-
     // Detect partial injections (~partial_name) and insert their columns at the injection position
     // Process in reverse so that insertion indices remain valid
     const injections: { index: number; partialMembers: NodeSymbol[] }[] = [];
@@ -119,7 +123,9 @@ export const tableModule: GlobalModule = {
 
           return compiler.symbolFactory.create(
             InjectedColumnSymbol,
-            { kind: SymbolKind.Column, injectionDeclaration: member.declaration!, declaration: m.declaration, name });
+            { kind: SymbolKind.Column, injectionDeclaration: member.declaration!, declaration: m.declaration, name },
+            node.filepath,
+          );
         });
         injections.push({ index: i, partialMembers: injectedMembers });
       }
@@ -139,7 +145,7 @@ export const tableModule: GlobalModule = {
       return Report.create(PASS_THROUGH);
     }
 
-    const programNode = compiler.parseFile().getValue().ast;
+    const programNode = compiler.parseFile(node.filepath).getValue().ast;
     const globalSymbol = compiler.nodeSymbol(programNode).getValue();
 
     if (globalSymbol === UNHANDLED) {
@@ -171,7 +177,7 @@ export const tableModule: GlobalModule = {
     return nodeRefereeOfEnumDefault(compiler, globalSymbol, node);
   },
 
-  bind (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
+  bindNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
     if (!isElementNode(node, ElementKind.Table)) return Report.create(PASS_THROUGH);
 
     return Report.create(
@@ -180,7 +186,7 @@ export const tableModule: GlobalModule = {
     );
   },
 
-  interpret (compiler: Compiler, node: SyntaxNode): Report<SchemaElement | SchemaElement[] | undefined> | Report<PassThrough> {
+  interpretNode (compiler: Compiler, node: SyntaxNode): Report<SchemaElement | SchemaElement[] | undefined> | Report<PassThrough> {
     if (!isElementNode(node, ElementKind.Table)) return Report.create(PASS_THROUGH);
 
     if (!shouldInterpretNode(compiler, node)) return Report.create(undefined);
@@ -193,7 +199,7 @@ export const tableModule: GlobalModule = {
 function lookupInDefaultSchema (compiler: Compiler, globalSymbol: NodeSymbol, name: string, opts: { kinds?: SymbolKind[]; ignoreNotFound?: boolean; errorNode?: SyntaxNode }): Report<NodeSymbol | undefined> {
   const members = compiler.symbolMembers(globalSymbol);
   if (!members.hasValue(UNHANDLED)) {
-    const publicSchema = members.getValue().find((m: NodeSymbol) => m instanceof SchemaSymbol && m.qualifiedName.join('.') === DEFAULT_SCHEMA_NAME);
+    const publicSchema = members.getValue().find((m: NodeSymbol) => m.isPublicSchema());
     if (publicSchema) {
       return lookupMember(compiler, publicSchema, name, opts);
     }
@@ -206,7 +212,7 @@ function nodeRefereeOfPartialInjection (compiler: Compiler, globalSymbol: NodeSy
   const name = extractVariableFromExpression(node) ?? '';
   const members = compiler.symbolMembers(globalSymbol);
   if (!members.hasValue(UNHANDLED)) {
-    const publicSchema = members.getValue().find((m: NodeSymbol) => m instanceof SchemaSymbol && m.qualifiedName.join('.') === DEFAULT_SCHEMA_NAME && m.isKind(SymbolKind.Schema));
+    const publicSchema = members.getValue().find((m: NodeSymbol) => m.isPublicSchema() && m.isKind(SymbolKind.Schema));
     if (publicSchema) {
       return lookupMember(compiler, publicSchema, name, { kinds: [SymbolKind.TablePartial], errorNode: node });
     }

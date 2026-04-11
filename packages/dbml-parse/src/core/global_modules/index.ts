@@ -12,10 +12,12 @@ import { indexesModule } from './indexes';
 import { checksModule } from './checks';
 import { programModule } from './program';
 import { schemaModule } from './schema';
+import { useModule } from './use';
+import { diagramViewModule } from './diagramView';
 import type Compiler from '@/compiler/index';
-import type { SyntaxNode } from '@/core/parser/nodes';
+import type { SyntaxNode } from '@/core/types/nodes';
 import Report from '@/core/types/report';
-import type { NodeSymbol } from '@/core/types/symbols';
+import type { NodeSymbol } from '@/core/types/symbol';
 import type { SchemaElement } from '@/core/types/schemaJson';
 import type { Unhandled } from '@/constants';
 
@@ -32,7 +34,9 @@ export const modules: GlobalModule[] = [
   tableGroupModule,
   tablePartialModule,
   noteModule,
+  useModule,
   schemaModule,
+  diagramViewModule,
   programModule,
 ];
 
@@ -45,7 +49,7 @@ function dispatch<K extends keyof GlobalModule> (
     const fn = module[method] as any;
     if (fn) {
       const result = fn(...args);
-      if (!result.hasValue(PASS_THROUGH)) {
+      if (result instanceof Report && !result.hasValue(PASS_THROUGH)) {
         return result;
       }
     }
@@ -69,12 +73,12 @@ export function nodeReferee (this: Compiler, node: SyntaxNode): Report<NodeSymbo
   return res.hasValue(PASS_THROUGH) ? Report.create(UNHANDLED) : res;
 }
 
-export function bind (this: Compiler, node: SyntaxNode): Report<void> | Report<Unhandled> {
-  const res = dispatch('bind', this, node);
+export function bindNode (this: Compiler, node: SyntaxNode): Report<void> | Report<Unhandled> {
+  const res = dispatch('bindNode', this, node);
   return res.hasValue(PASS_THROUGH) ? Report.create(UNHANDLED) : res;
 }
 
-export function interpret (this: Compiler, node: SyntaxNode): Report<SchemaElement | SchemaElement[] | undefined> | Report<Unhandled> {
-  const res = dispatch('interpret', this, node);
+export function interpretNode (this: Compiler, node: SyntaxNode): Report<SchemaElement | SchemaElement[] | undefined> | Report<Unhandled> {
+  const res = dispatch('interpretNode', this, node);
   return res.hasValue(PASS_THROUGH) ? Report.create(UNHANDLED) : res;
 }

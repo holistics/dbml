@@ -1,7 +1,7 @@
 import { isElementNode } from '@/core/utils/expression';
 import { ElementKind } from '@/core/types/keywords';
-import { type SyntaxNode, type ElementDeclarationNode } from '@/core/parser/nodes';
-import type { SyntaxToken } from '@/core/lexer/tokens';
+import { type SyntaxNode, type ElementDeclarationNode } from '@/core/types/nodes';
+import type { SyntaxToken } from '@/core/types/tokens';
 import type { GlobalModule } from '../types';
 import { PASS_THROUGH, type PassThrough } from '@/constants';
 import Report from '@/core/types/report';
@@ -12,7 +12,7 @@ import ChecksInterpreter from './interpret';
 import { shouldInterpretNode } from '../utils';
 
 export const checksModule: GlobalModule = {
-  bind (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
+  bindNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
     if (!isElementNode(node, ElementKind.Checks)) return Report.create(PASS_THROUGH);
 
     return Report.create(
@@ -21,7 +21,7 @@ export const checksModule: GlobalModule = {
     );
   },
 
-  interpret (compiler: Compiler, node: SyntaxNode): Report<SchemaElement | SchemaElement[] | undefined> | Report<PassThrough> {
+  interpretNode (compiler: Compiler, node: SyntaxNode): Report<SchemaElement | SchemaElement[] | undefined> | Report<PassThrough> {
     if (!isElementNode(node, ElementKind.Checks)) return Report.create(PASS_THROUGH);
 
     if (!shouldInterpretNode(compiler, node)) return Report.create(undefined);

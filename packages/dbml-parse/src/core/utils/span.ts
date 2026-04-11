@@ -1,5 +1,5 @@
-import { SyntaxNode } from '@/core/parser/nodes';
-import { SyntaxToken } from '@/core/lexer/tokens';
+import { SyntaxNode } from '@/core/types/nodes';
+import { SyntaxToken } from '@/core/types/tokens';
 import { getTokenFullEnd, getTokenFullStart } from '@/core/lexer/utils';
 
 export function isOffsetWithinFullSpan (

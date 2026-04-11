@@ -1,5 +1,5 @@
-import type { ElementDeclarationNode } from '@/core/parser/nodes';
-import type { SyntaxToken } from '@/core/lexer/tokens';
+import type { ElementDeclarationNode } from '@/core/types/nodes';
+import type { SyntaxToken } from '@/core/types/tokens';
 import type { CompileError } from '@/core/types/errors';
 import type Compiler from '@/compiler';
 

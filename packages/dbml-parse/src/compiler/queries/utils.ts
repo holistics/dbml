@@ -8,6 +8,8 @@ import {
   tryExtractDateTime,
 } from '@/core/global_modules/records/utils/data';
 import { isAlphaOrUnderscore, isDigit } from '@/core/utils/chars';
+import Compiler from '..';
+import { Filepath, FilepathId } from '@/core/types/filepath';
 
 /**
  * Checks if an identifier is valid (can be used without quotes in DBML).
@@ -290,4 +292,27 @@ export function splitQualifiedIdentifier (identifier: string): string[] {
       return match.trim();
     })
     .filter((component) => component.length > 0);
+}
+
+export function collectTransitiveDependencies (
+  compiler: Compiler,
+  entrypoints: Filepath[],
+): Filepath[] {
+  const visited = new Set<FilepathId>();
+  const order: Filepath[] = [];
+
+  const collect = (fp: Filepath) => {
+    const id = fp.intern();
+    if (visited.has(id)) return;
+    visited.add(id);
+    order.push(fp);
+
+    for (const depId of compiler.fileDependencies(fp)) {
+      collect(Filepath.from(depId));
+    }
+  };
+  for (const e of entrypoints) {
+    collect(e);
+  }
+  return order;
 }

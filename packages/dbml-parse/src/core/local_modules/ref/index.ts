@@ -6,21 +6,21 @@ import { type LocalModule } from '../types';
 import { PASS_THROUGH, type PassThrough } from '@/constants';
 import {
   ListExpressionNode, SyntaxNode,
-} from '@/core/parser/nodes';
+} from '@/core/types/nodes';
 import { isSimpleName, Settings } from '@/core/utils/validate';
 import Report from '@/core/types/report';
 import type Compiler from '@/compiler';
 import RefValidator, { validateFieldSettings } from './validate';
 
 export const refModule: LocalModule = {
-  validate (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
+  validateNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
     if (isElementNode(node, ElementKind.Ref)) {
       return Report.create(undefined, new RefValidator(compiler, node).validate());
     }
     return Report.create(PASS_THROUGH);
   },
 
-  fullname (compiler: Compiler, node: SyntaxNode): Report<string[] | undefined> | Report<PassThrough> {
+  nodeFullname (compiler: Compiler, node: SyntaxNode): Report<string[] | undefined> | Report<PassThrough> {
     if (isElementNode(node, ElementKind.Ref)) {
       if (!node.name) return new Report(undefined);
       if (!isSimpleName(node.name)) {
@@ -34,7 +34,7 @@ export const refModule: LocalModule = {
     return Report.create(PASS_THROUGH);
   },
 
-  alias (compiler: Compiler, node: SyntaxNode): Report<string | undefined> | Report<PassThrough> {
+  nodeAlias (compiler: Compiler, node: SyntaxNode): Report<string | undefined> | Report<PassThrough> {
     if (isElementNode(node, ElementKind.Ref)) {
       if (node.alias) {
         return new Report(undefined, [new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'A Ref shouldn\'t have an alias', node.alias)]);
@@ -47,7 +47,7 @@ export const refModule: LocalModule = {
     return Report.create(PASS_THROUGH);
   },
 
-  settings (compiler: Compiler, node: SyntaxNode): Report<Settings> | Report<PassThrough> {
+  nodeSettings (compiler: Compiler, node: SyntaxNode): Report<Settings> | Report<PassThrough> {
     if (isElementNode(node, ElementKind.Ref)) {
       if (node.attributeList) {
         return new Report({}, [

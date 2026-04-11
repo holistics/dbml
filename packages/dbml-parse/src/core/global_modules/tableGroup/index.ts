@@ -1,11 +1,11 @@
 import { isElementNode, isExpressionAVariableNode, isAccessExpression, isElementFieldNode, isInsideElementBody, isInsideSettingList, getBody } from '@/core/utils/expression';
 import { ElementKind } from '@/core/types/keywords';
-import { PrimaryExpressionNode, VariableNode, ElementDeclarationNode } from '@/core/parser/nodes';
-import type { SyntaxNode } from '@/core/parser/nodes';
-import type { SyntaxToken } from '@/core/lexer/tokens';
-import { NodeSymbol, SchemaSymbol, SymbolKind } from '@/core/types/symbols';
+import { PrimaryExpressionNode, VariableNode, ElementDeclarationNode } from '@/core/types/nodes';
+import type { SyntaxNode } from '@/core/types/nodes';
+import type { SyntaxToken } from '@/core/types/tokens';
+import { NodeSymbol, SchemaSymbol, SymbolKind } from '@/core/types/symbol';
 import type { GlobalModule } from '../types';
-import { DEFAULT_SCHEMA_NAME, PASS_THROUGH, type PassThrough, UNHANDLED } from '@/constants';
+import { DEFAULT_SCHEMA_NAME, PASS_THROUGH, type PassThrough, UNHANDLED, DEFAULT_ENTRY } from '@/constants';
 import Report from '@/core/types/report';
 import type Compiler from '@/compiler/index';
 import type { SchemaElement } from '@/core/types/schemaJson';
@@ -32,10 +32,10 @@ export const tableGroupModule: GlobalModule = {
       return new Report(compiler.symbolFactory.create(NodeSymbol, {
         kind: SymbolKind.TableGroup,
         declaration: node,
-      }));
+      }, node.filepath));
     }
     if (isElementFieldNode(node, ElementKind.TableGroup)) {
-      return new Report(compiler.symbolFactory.create(NodeSymbol, { kind: SymbolKind.TableGroupField, declaration: node }));
+      return new Report(compiler.symbolFactory.create(NodeSymbol, { kind: SymbolKind.TableGroupField, declaration: node }, node.filepath));
     }
     return Report.create(PASS_THROUGH);
   },
@@ -60,7 +60,7 @@ export const tableGroupModule: GlobalModule = {
       for (const member of members) {
         if (!member.isKind(SymbolKind.TableGroupField) || !member.declaration) continue; // Ignore non-field members
 
-        const name = (compiler.fullname(member.declaration).getFiltered(UNHANDLED) || []).map((m) => addDoubleQuoteIfNeeded(m)).join('.');
+        const name = (compiler.nodeFullname(member.declaration).getFiltered(UNHANDLED) || []).map((m) => addDoubleQuoteIfNeeded(m)).join('.');
         const errorNode = (member.declaration instanceof ElementDeclarationNode && member.declaration.name) ? member.declaration.name : member.declaration;
         const firstNode = seen.get(name);
         if (firstNode) {
@@ -85,14 +85,14 @@ export const tableGroupModule: GlobalModule = {
     // Skip variables inside setting lists
     if (node.parent && isInsideSettingList(node)) return Report.create(PASS_THROUGH);
 
-    const programNode = compiler.parseFile().getValue().ast;
+    const programNode = compiler.parseFile(node.filepath).getValue().ast;
     const globalSymbol = compiler.nodeSymbol(programNode).getValue();
     if (globalSymbol === UNHANDLED) return Report.create(undefined);
 
     return nodeRefereeOfTableGroupField(compiler, globalSymbol, node);
   },
 
-  bind (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
+  bindNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
     if (!isElementNode(node, ElementKind.TableGroup)) return Report.create(PASS_THROUGH);
     return Report.create(
       undefined,
@@ -100,7 +100,7 @@ export const tableGroupModule: GlobalModule = {
     );
   },
 
-  interpret (compiler: Compiler, node: SyntaxNode): Report<SchemaElement | SchemaElement[] | undefined> | Report<PassThrough> {
+  interpretNode (compiler: Compiler, node: SyntaxNode): Report<SchemaElement | SchemaElement[] | undefined> | Report<PassThrough> {
     if (!isElementNode(node, ElementKind.TableGroup)) return Report.create(PASS_THROUGH);
 
     if (!shouldInterpretNode(compiler, node)) return Report.create(undefined);

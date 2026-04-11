@@ -1,19 +1,19 @@
-import { ElementDeclarationNode, FunctionApplicationNode } from '@/core/parser/nodes';
+import { ElementDeclarationNode, FunctionApplicationNode } from '@/core/types/nodes';
 import type Compiler from '@/compiler/index';
-import { SchemaSymbol, SymbolKind } from '@/core/types/symbols';
+import { NodeSymbol, SymbolKind } from '@/core/types/symbol';
 import { UNHANDLED } from '@/constants';
 import type { Table, Column, TablePartial, Ref } from '@/core/types/schemaJson';
 import { isValidPartialInjection } from '@/core/utils/validate';
 import { extractVariableFromExpression, getBody, isElementNode } from '@/core/utils/expression';
 import { ElementKind } from '@/core/types';
 import { uniqBy } from 'lodash-es';
-import { getMultiplicities } from '../../utils';
+import { getMultiplicities, lookupInDefaultSchema, lookupMember } from '../../utils';
 
 // Build a Table object from an element node using interpret (includes indexes, checks, etc.)
 // and symbolMembers (includes partial-injected columns).
 // The returned table respects (injected) column definition order
 export function buildMergedTableFromElement (tableNode: ElementDeclarationNode, compiler: Compiler): Table | undefined {
-  const baseTable = compiler.interpret(tableNode).getFiltered(UNHANDLED) as Table | undefined;
+  const baseTable = compiler.interpretNode(tableNode).getFiltered(UNHANDLED) as Table | undefined;
   if (!baseTable) return undefined;
 
   const tableSymbol = compiler.nodeSymbol(tableNode).getFiltered(UNHANDLED);
@@ -35,7 +35,7 @@ export function buildMergedTableFromElement (tableNode: ElementDeclarationNode, 
     const tablePartialNode = compiler.nodeReferee(partialInjection.declaration.callee.expression).getFiltered(UNHANDLED)?.declaration;
     if (!isElementNode(tablePartialNode, ElementKind.TablePartial)) continue;
 
-    const tablePartial = compiler.interpret(tablePartialNode).getFiltered(UNHANDLED) as TablePartial | undefined;
+    const tablePartial = compiler.interpretNode(tablePartialNode).getFiltered(UNHANDLED) as TablePartial | undefined;
     if (!tablePartial) continue;
 
     partialMap.set(tablePartial.name, tablePartial);
@@ -100,40 +100,35 @@ export function buildMergedTableFromElement (tableNode: ElementDeclarationNode, 
 
 // Look up enum field names for a column's enum type via the compiler's symbol graph.
 export function getEnumMembers (column: Column, compiler: Compiler): string[] {
-  const ast = compiler.parseFile().getValue().ast;
+  // column is an interpreted object, we need to find its declaration to use nodeReferee
+  // but column doesn't have declaration. We should ideally pass the column symbol or declaration here.
+  // For now, use the compiler to find the enum symbol by its interpreted names.
+  const ast = compiler.parseFile(column.token.filepath).getValue().ast;
   const programSymbol = compiler.nodeSymbol(ast).getFiltered(UNHANDLED);
   if (!programSymbol) return [];
-  const schemas = compiler.symbolMembers(programSymbol).getFiltered(UNHANDLED);
-  if (!schemas) return [];
 
-  // Flatten through schemas to find enums
-  const allMembers = schemas.flatMap((s) => {
-    if (!(s instanceof SchemaSymbol)) return [s];
-    const schemaMembers = compiler.symbolMembers(s).getFiltered(UNHANDLED);
-    return schemaMembers ? [s, ...schemaMembers] : [s];
-  });
-
-  for (const member of allMembers) {
-    if (!member.isKind(SymbolKind.Enum) || !member.declaration) continue;
-
-    const fullname = compiler.fullname(member.declaration).getFiltered(UNHANDLED);
-    if (!fullname || fullname.at(-1) !== column.type.type_name) continue;
-
-    const enumSchemaName = fullname.length > 1 ? fullname.slice(0, -1).join('.') : null;
-    if (enumSchemaName !== column.type.schemaName) continue;
-
-    const enumSymbol = compiler.nodeSymbol(member.declaration).getFiltered(UNHANDLED);
-    if (!enumSymbol) continue;
-    const enumFields = compiler.symbolMembers(enumSymbol).getFiltered(UNHANDLED);
-    if (!enumFields) continue;
-
-    return enumFields
-      .filter((field) => field.declaration)
-      .map((field) => compiler.fullname(field.declaration!).getFiltered(UNHANDLED)?.at(-1))
-      .filter(Boolean) as string[];
+  let enumSymbol: NodeSymbol | undefined;
+  if (column.type.schemaName) {
+    const schemaResult = lookupMember(compiler, programSymbol, column.type.schemaName, { kinds: [SymbolKind.Schema], ignoreNotFound: true });
+    if (schemaResult.getValue()) {
+      enumSymbol = lookupMember(compiler, schemaResult.getValue()!, column.type.type_name, { kinds: [SymbolKind.Enum], ignoreNotFound: true }).getValue();
+    }
   }
 
-  return [];
+  if (!enumSymbol) {
+    enumSymbol = lookupInDefaultSchema(compiler, programSymbol, column.type.type_name, { kinds: [SymbolKind.Enum], ignoreNotFound: true }).getValue();
+  }
+
+  if (!enumSymbol) return [];
+
+  const enumFields = compiler.symbolMembers(enumSymbol).getFiltered(UNHANDLED);
+  if (!enumFields) return [];
+
+  return enumFields
+    .map((field) => {
+      return compiler.symbolName(field);
+    })
+    .filter(Boolean) as string[];
 }
 
 export function parseNumericParams (column: Column): { precision: number; scale: number } | undefined {

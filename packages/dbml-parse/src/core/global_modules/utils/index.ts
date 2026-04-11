@@ -1,11 +1,12 @@
-import Compiler from '@/compiler';
+import type Compiler from '@/compiler';
 import { DEFAULT_SCHEMA_NAME, UNHANDLED } from '@/constants';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
-import { SyntaxTokenKind } from '@/core/lexer/tokens';
-import { ArrayNode, CallExpressionNode, FunctionExpressionNode, InfixExpressionNode, LiteralNode, PostfixExpressionNode, PrefixExpressionNode, PrimaryExpressionNode, SyntaxNode, TupleExpressionNode, VariableNode } from '@/core/parser/nodes';
+import { SyntaxTokenKind } from '@/core/types/tokens';
+import { ArrayNode, CallExpressionNode, FunctionExpressionNode, InfixExpressionNode, LiteralNode, PostfixExpressionNode, PrefixExpressionNode, PrimaryExpressionNode, SyntaxNode, TupleExpressionNode, VariableNode } from '@/core/types/nodes';
 import { getMemberChain } from '@/core/parser/utils';
 import Report from '@/core/types/report';
-import { ColumnType, NodeSymbol, RelationCardinality, SchemaSymbol, SymbolKind, Table, TokenPosition } from '@/core/types';
+import { NodeSymbol, SchemaSymbol, SymbolKind, UseSymbol } from '@/core/types/symbol';
+import type { ColumnType, RelationCardinality, Table, TokenPosition } from '@/core/types';
 import { destructureComplexVariable, destructureComplexVariableTuple, destructureMemberAccessExpression, extractQuotedStringToken, extractVariableFromExpression, extractVarNameFromPrimaryVariable, getNumberTextFromExpression, isAccessExpression, isDotDelimitedIdentifier, isExpressionAnIdentifierNode, isExpressionAQuotedString, isExpressionASignedNumberExpression, isExpressionAVariableNode, parseNumber } from '@/core/utils/expression';
 import { zip } from 'lodash-es';
 
@@ -46,23 +47,6 @@ export function extractNamesFromRefOperand (operand: SyntaxNode, ownerSchema?: s
   };
 }
 
-export function getMultiplicities (
-  op: string,
-): [RelationCardinality, RelationCardinality] {
-  switch (op) {
-    case '<':
-      return ['1', '*'];
-    case '<>':
-      return ['*', '*'];
-    case '>':
-      return ['*', '1'];
-    case '-':
-      return ['1', '1'];
-    default:
-      throw new Error('Invalid relation op');
-  }
-}
-
 export function getTokenPosition (node: SyntaxNode): TokenPosition {
   return {
     start: {
@@ -75,6 +59,7 @@ export function getTokenPosition (node: SyntaxNode): TokenPosition {
       line: node.endPos.line + 1,
       column: node.endPos.column + 1,
     },
+    filepath: node.filepath,
   };
 }
 
@@ -274,9 +259,9 @@ export function processColumnType (compiler: Compiler, typeNode: SyntaxNode): Re
 }
 
 export function shouldInterpretNode (compiler: Compiler, node: SyntaxNode): boolean {
-  const hasParseError = compiler.parseFile().getErrors().length > 0;
-  const hasValidateError = compiler.validate(node).getErrors().length > 0;
-  const hasBindError = compiler.bind(node).getErrors().length > 0;
+  const hasParseError = [...compiler.parseProject().values()].some((r) => r.getErrors().length > 0);
+  const hasValidateError = compiler.validateNode(node).getErrors().length > 0;
+  const hasBindError = compiler.bindNode(node).getErrors().length > 0;
   return !hasParseError && !hasValidateError && !hasBindError;
 }
 
@@ -370,9 +355,12 @@ export function lookupMember (
 
   const match = members.find((m: NodeSymbol) => {
     if (kinds && !m.isKind(...kinds)) return false;
-    if (parentSymbol.isKind(SymbolKind.Program) || (parentSymbol instanceof SchemaSymbol && parentSymbol.qualifiedName.join('.') === DEFAULT_SCHEMA_NAME)) {
-      if (m.declaration && compiler.alias(m.declaration).getFiltered(UNHANDLED) === name) return true; // Aliases can be found in public
-      if (m.declaration && (compiler.fullname(m.declaration).getFiltered(UNHANDLED) || []).length > 1) return false; // This is a qualfied element
+    if (parentSymbol.isProgram() || (parentSymbol.isPublicSchema())) {
+      // For UseSymbols, use the specifier node (which carries the local alias) rather than
+      // the original declaration (which has the source schema-qualified name).
+      const lookupDecl = (m instanceof UseSymbol && m.useSpecifierDeclaration) ? m.useSpecifierDeclaration : m.declaration;
+      if (lookupDecl && compiler.nodeAlias(lookupDecl).getFiltered(UNHANDLED) === name) return true; // Aliases (table `as`) and use-specifier aliases can be found in public
+      if (lookupDecl && (compiler.nodeFullname(lookupDecl).getFiltered(UNHANDLED) || []).length > 1) return false; // This is a qualified element
     }
     return compiler.symbolName(m) === name;
   });
@@ -380,7 +368,7 @@ export function lookupMember (
   // Report symbol not found
   if (!match && !ignoreNotFound) {
     const kindLabel = kinds?.length ? kinds[0] : 'member';
-    const parentName = parentSymbol.declaration ? compiler.fullname(parentSymbol.declaration).getFiltered(UNHANDLED)?.join('.') : undefined;
+    const parentName = parentSymbol.declaration ? compiler.nodeFullname(parentSymbol.declaration).getFiltered(UNHANDLED)?.join('.') : undefined;
     const scopeLabel = parentSymbol instanceof SchemaSymbol
       ? `Schema '${parentSymbol.name}'`
       : parentName
@@ -389,13 +377,15 @@ export function lookupMember (
             ? `Schema '${DEFAULT_SCHEMA_NAME}'`
             : 'global scope');
 
-    return new Report(undefined, [
-      new CompileError(
-        CompileErrorCode.BINDING_ERROR,
-        `${kindLabel} '${name}' does not exist in ${scopeLabel}`,
-        errorNode ?? parentSymbol.declaration ?? compiler.parseFile().getValue().ast,
-      ),
-    ]);
+    return new Report(undefined, errorNode || parentSymbol.declaration
+      ? [
+          new CompileError(
+            CompileErrorCode.BINDING_ERROR,
+            `${kindLabel} '${name}' does not exist in ${scopeLabel}`,
+            (errorNode ?? parentSymbol.declaration)!,
+          ),
+        ]
+      : []);
   }
 
   return new Report(match);
@@ -414,7 +404,7 @@ export function lookupInDefaultSchema (
   const members = compiler.symbolMembers(globalSymbol).getFiltered(UNHANDLED);
 
   if (members) {
-    const publicSchema = members.find((m: NodeSymbol) => m instanceof SchemaSymbol && m.qualifiedName.join('.') === DEFAULT_SCHEMA_NAME);
+    const publicSchema = members.find((m: NodeSymbol) => m.isPublicSchema());
     if (publicSchema) {
       const result = lookupMember(compiler, publicSchema, name, { ...options, ignoreNotFound: true });
       if (result.getValue()) return result;
@@ -436,4 +426,30 @@ export function nodeRefereeOfLeftExpression (compiler: Compiler, node: SyntaxNod
   const result = compiler.nodeReferee(leftExpr);
   if (result.hasValue(UNHANDLED)) return undefined;
   return result.getValue() ?? undefined;
+}
+
+export function getMultiplicities (
+  op: string,
+): [RelationCardinality, RelationCardinality] | undefined {
+  switch (op) {
+    case '<':
+      return ['1', '*'];
+    case '<>':
+      return ['*', '*'];
+    case '>':
+      return ['*', '1'];
+    case '-':
+      return ['1', '1'];
+    default:
+      return undefined;
+  }
+}
+
+export function getSymbolSchemaAndName (compiler: Compiler, symbol: NodeSymbol): { schemaName: string | null; name: string } {
+  const name = compiler.symbolName(symbol);
+
+  const fullname = symbol.declaration ? compiler.nodeFullname(symbol.declaration).getFiltered(UNHANDLED) : undefined;
+  const schemaName = (fullname && fullname.length > 1) ? fullname[0] : null;
+
+  return { schemaName, name: name || '' };
 }

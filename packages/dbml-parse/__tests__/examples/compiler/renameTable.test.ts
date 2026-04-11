@@ -1,6 +1,7 @@
 import { describe, expect, test } from 'vitest';
 import Compiler from '@/compiler/index';
 import { TableNameInput } from '@/compiler/queries/transform';
+import { DEFAULT_ENTRY } from '@/constants';
 
 function renameTable (
   oldName: TableNameInput,
@@ -8,8 +9,8 @@ function renameTable (
   input: string,
 ): string {
   const compiler = new Compiler();
-  compiler.setSource(input);
-  return compiler.renameTable(oldName, newName);
+  compiler.setSource(DEFAULT_ENTRY, input);
+  return compiler.renameTable(DEFAULT_ENTRY, oldName, newName);
 }
 
 describe('[example] renameTable (string format)', () => {

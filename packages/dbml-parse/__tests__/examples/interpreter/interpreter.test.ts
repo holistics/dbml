@@ -979,6 +979,279 @@ describe('[example] interpreter', () => {
     });
   });
 
+  describe('DiagramView interpretation (Trinity omit rule)', () => {
+    test('should apply Trinity rule: Tables explicit → tableGroups and schemas default to []', () => {
+      const source = `
+        Table users { id int }
+        DiagramView myView {
+          Tables { users }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+
+      expect(db.diagramViews).toHaveLength(1);
+      const ve = db.diagramViews[0].visibleEntities;
+      expect(ve.tables).toEqual([{ name: 'users', schemaName: 'public' }]);
+      expect(ve.tableGroups).toEqual([]);
+      expect(ve.schemas).toEqual([]);
+      expect(ve.stickyNotes).toBeNull();
+    });
+
+    test('should apply Trinity rule: Tables {*} → tableGroups and schemas default to []', () => {
+      const source = `
+        DiagramView myView {
+          Tables { * }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+
+      const ve = db.diagramViews[0].visibleEntities;
+      expect(ve.tables).toEqual([]);
+      expect(ve.tableGroups).toEqual([]);
+      expect(ve.schemas).toEqual([]);
+      expect(ve.stickyNotes).toBeNull();
+    });
+
+    test('should apply Trinity rule: Tables explicit + Notes explicit → tableGroups/schemas default to [], stickyNotes is []', () => {
+      const source = `
+        Table users { id int }
+        DiagramView myView {
+          Tables { users }
+          Notes { * }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+
+      const ve = db.diagramViews[0].visibleEntities;
+      expect(ve.tables).toEqual([{ name: 'users', schemaName: 'public' }]);
+      expect(ve.tableGroups).toEqual([]);
+      expect(ve.schemas).toEqual([]);
+      expect(ve.stickyNotes).toEqual([]);
+    });
+
+    test('should produce all null when body is empty (no Trinity non-null)', () => {
+      const source = `
+        DiagramView myView {
+        }
+      `;
+      const db = interpret(source).getValue()!;
+
+      const ve = db.diagramViews[0].visibleEntities;
+      expect(ve.tables).toBeNull();
+      expect(ve.tableGroups).toBeNull();
+      expect(ve.schemas).toBeNull();
+      expect(ve.stickyNotes).toBeNull();
+    });
+
+    test('should produce all [] when body-level wildcard {*} is used', () => {
+      const source = `
+        DiagramView myView { * }
+      `;
+      const db = interpret(source).getValue()!;
+
+      const ve = db.diagramViews[0].visibleEntities;
+      expect(ve.tables).toEqual([]);
+      expect(ve.tableGroups).toEqual([]);
+      expect(ve.schemas).toEqual([]);
+      expect(ve.stickyNotes).toEqual([]);
+    });
+
+    test('should NOT apply Trinity rule when Tables {} is explicitly empty (null stays null)', () => {
+      const source = `
+        DiagramView myView {
+          Tables {}
+        }
+      `;
+      const db = interpret(source).getValue()!;
+
+      const ve = db.diagramViews[0].visibleEntities;
+      expect(ve.tables).toBeNull();
+      expect(ve.tableGroups).toBeNull();
+      expect(ve.schemas).toBeNull();
+      expect(ve.stickyNotes).toBeNull();
+    });
+
+    test('should apply Trinity rule: TableGroups {*} as sole trigger → tables and schemas default to []', () => {
+      const source = `
+        DiagramView myView {
+          TableGroups { * }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+
+      const ve = db.diagramViews[0].visibleEntities;
+      expect(ve.tables).toEqual([]);
+      expect(ve.tableGroups).toEqual([]);
+      expect(ve.schemas).toEqual([]);
+      expect(ve.stickyNotes).toBeNull();
+    });
+  });
+
+  describe('DiagramView wildcard expansion for TableGroups', () => {
+    test('should expand explicit TableGroups {*} to concrete group names', () => {
+      const source = `
+        Table users { id int }
+        Table posts { id int }
+        TableGroup auth_tables { users }
+        TableGroup content_tables { posts }
+        DiagramView myView {
+          TableGroups { * }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+
+      const ve = db.diagramViews[0].visibleEntities;
+      expect(ve.tableGroups).toEqual([
+        { name: 'auth_tables' },
+        { name: 'content_tables' },
+      ]);
+      // Trinity rule still applies for tables/schemas (promoted to [])
+      expect(ve.tables).toEqual([]);
+      expect(ve.schemas).toEqual([]);
+      expect(ve.stickyNotes).toBeNull();
+    });
+
+    test('should NOT expand TableGroups {*} in body-level wildcard {*} (all dims are set)', () => {
+      const source = `
+        Table users { id int }
+        TableGroup auth_tables { users }
+        DiagramView myView { * }
+      `;
+      const db = interpret(source).getValue()!;
+
+      const ve = db.diagramViews[0].visibleEntities;
+      // Body-level {*} sets all dims — Tables/Schemas are also set, so no expansion
+      expect(ve.tableGroups).toEqual([]);
+      expect(ve.tables).toEqual([]);
+      expect(ve.schemas).toEqual([]);
+      expect(ve.stickyNotes).toEqual([]);
+    });
+
+    test('should NOT expand tableGroups [] from Trinity promotion', () => {
+      const source = `
+        Table users { id int }
+        TableGroup auth_tables { users }
+        DiagramView myView {
+          Tables { users }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+
+      const ve = db.diagramViews[0].visibleEntities;
+      // tableGroups [] comes from Trinity promotion, not explicit wildcard — should stay []
+      expect(ve.tableGroups).toEqual([]);
+      expect(ve.tables).toEqual([{ name: 'users', schemaName: 'public' }]);
+      expect(ve.schemas).toEqual([]);
+    });
+
+    test('should NOT expand TableGroups {*} when Tables is also explicitly set', () => {
+      const source = `
+        Table users { id int }
+        TableGroup auth_tables { users }
+        DiagramView myView {
+          Tables { users }
+          TableGroups { * }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+
+      const ve = db.diagramViews[0].visibleEntities;
+      // Tables is explicitly set, so TableGroups wildcard stays as []
+      expect(ve.tableGroups).toEqual([]);
+      expect(ve.tables).toEqual([{ name: 'users', schemaName: 'public' }]);
+      expect(ve.schemas).toEqual([]);
+    });
+
+    test('should return empty list when TableGroups {*} but no groups exist', () => {
+      const source = `
+        Table users { id int }
+        DiagramView myView {
+          TableGroups { * }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+
+      const ve = db.diagramViews[0].visibleEntities;
+      expect(ve.tableGroups).toEqual([]);
+    });
+  });
+
+  describe('DiagramView alias resolution', () => {
+    test('should resolve table alias to real name', () => {
+      const source = `
+        Table users as U { id int }
+        DiagramView myView {
+          Tables { U }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+      const ve = db.diagramViews[0].visibleEntities;
+      expect(ve.tables).toEqual([{ name: 'users', schemaName: 'public' }]);
+    });
+
+    test('should resolve schema-qualified table alias', () => {
+      const source = `
+        Table public.articles as A { id int }
+        DiagramView myView {
+          Tables { A }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+      const ve = db.diagramViews[0].visibleEntities;
+      expect(ve.tables).toEqual([{ name: 'articles', schemaName: 'public' }]);
+    });
+
+    test('should keep real name when no alias is used', () => {
+      const source = `
+        Table users { id int }
+        DiagramView myView {
+          Tables { users }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+      const ve = db.diagramViews[0].visibleEntities;
+      expect(ve.tables).toEqual([{ name: 'users', schemaName: 'public' }]);
+    });
+
+    test('should resolve multiple aliases in same block', () => {
+      const source = `
+        Table users as U { id int }
+        Table posts as P { id int }
+        DiagramView myView {
+          Tables {
+            U
+            P
+          }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+      const ve = db.diagramViews[0].visibleEntities;
+      expect(ve.tables).toEqual([
+        { name: 'users', schemaName: 'public' },
+        { name: 'posts', schemaName: 'public' },
+      ]);
+    });
+
+    test('should resolve mixed aliases and real names', () => {
+      const source = `
+        Table users as U { id int }
+        Table posts { id int }
+        DiagramView myView {
+          Tables {
+            U
+            posts
+          }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+      const ve = db.diagramViews[0].visibleEntities;
+      expect(ve.tables).toEqual([
+        { name: 'users', schemaName: 'public' },
+        { name: 'posts', schemaName: 'public' },
+      ]);
+    });
+  });
+
   describe('standalone note interpretation', () => {
     test('should interpret standalone note', () => {
       const source = `

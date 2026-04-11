@@ -2,12 +2,17 @@ import { destructureComplexVariable, extractVariableFromExpression } from '@/cor
 import { aggregateSettingList } from '@/core/utils/validate';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import {
-  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, IdentiferStreamNode, InfixExpressionNode, ListExpressionNode, SyntaxNode,
-} from '@/core/parser/nodes';
+  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, IdentiferStreamNode, InfixExpressionNode, ListExpressionNode, SyntaxNode, TupleExpressionNode,
+} from '@/core/types/nodes';
 import type { Ref, RefEndpoint, RelationCardinality, TokenPosition } from '@/core/types/schemaJson';
 import {
-  extractColor, extractNamesFromRefOperand, getMultiplicities, getTokenPosition,
+  extractColor, extractNamesFromRefOperand, getMultiplicities, getTokenPosition, getSymbolSchemaAndName,
 } from '../utils';
+import { extractStringFromIdentifierStream, isAccessExpression } from '@/core/utils/expression';
+import Compiler from '@/compiler';
+import Report from '@/core/types/report';
+import { ElementKind } from '@/core/types/keywords';
+import { UNHANDLED } from '@/constants';
 
 function buildRefEndpoint (
   names: { schemaName: string | null; tableName: string; fieldNames: string[] },
@@ -33,11 +38,6 @@ function buildRefEndpoint (
     token,
   };
 }
-import { extractStringFromIdentifierStream } from '@/core/utils/expression';
-import Compiler from '@/compiler';
-import Report from '@/core/types/report';
-import { ElementKind } from '@/core/types/keywords';
-import { UNHANDLED } from '@/constants';
 
 export class RefInterpreter {
   private declarationNode: ElementDeclarationNode;
@@ -52,7 +52,7 @@ export class RefInterpreter {
     this.ref = {};
     const parent = this.declarationNode.parent;
     if (parent instanceof ElementDeclarationNode && parent.isKind(ElementKind.Table)) {
-      const fnResult = compiler.fullname(parent);
+      const fnResult = compiler.nodeFullname(parent);
       if (!fnResult.hasValue(UNHANDLED)) {
         const segments = fnResult.getValue();
         if (segments && segments.length > 0) {

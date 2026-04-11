@@ -1,8 +1,9 @@
 import { DEFAULT_SCHEMA_NAME, UNHANDLED } from '@/constants';
 import { splitQualifiedIdentifier } from '../utils';
 import type Compiler from '../../index';
-import { NodeSymbol, SymbolKind } from '@/core/types/symbols';
+import { NodeSymbol, SymbolKind } from '@/core/types/symbol';
 import { lookupMember } from '@/core/global_modules/utils';
+import { Filepath } from '@/core/types/filepath';
 
 export type TableNameInput = string | { schema?: string; table: string };
 
@@ -55,10 +56,11 @@ export function normalizeTableName (input: TableNameInput): { schema: string; ta
  */
 export function lookupTableSymbol (
   compiler: Compiler,
+  filepath: Filepath,
   schema: string,
   table: string,
 ): NodeSymbol | null {
-  const ast = compiler.parseFile().getValue().ast;
+  const ast = compiler.parseFile(filepath).getValue().ast;
   const astSymbol = compiler.nodeSymbol(ast).getFiltered(UNHANDLED);
   if (!astSymbol) return null;
 

@@ -10,10 +10,10 @@ import {
   getBody,
 } from '@/core/utils/expression';
 import { ElementKind, SettingName } from '@/core/types/keywords';
-import { InfixExpressionNode, ElementDeclarationNode } from '@/core/parser/nodes';
-import type { SyntaxNode } from '@/core/parser/nodes';
-import type { SyntaxToken } from '@/core/lexer/tokens';
-import { NodeSymbol, SymbolKind } from '@/core/types/symbols';
+import { InfixExpressionNode, ElementDeclarationNode } from '@/core/types/nodes';
+import type { SyntaxNode } from '@/core/types/nodes';
+import type { SyntaxToken } from '@/core/types/tokens';
+import { NodeSymbol, SymbolKind } from '@/core/types/symbol';
 import type { GlobalModule } from '../types';
 import { PASS_THROUGH, type PassThrough, UNHANDLED, KEYWORDS_OF_DEFAULT_SETTING } from '@/constants';
 import Report from '@/core/types/report';
@@ -38,10 +38,10 @@ export const tablePartialModule: GlobalModule = {
       return new Report(compiler.symbolFactory.create(NodeSymbol, {
         kind: SymbolKind.TablePartial,
         declaration: node,
-      }));
+      }, node.filepath));
     }
     if (isElementFieldNode(node, ElementKind.TablePartial)) {
-      return new Report(compiler.symbolFactory.create(NodeSymbol, { kind: SymbolKind.Column, declaration: node }));
+      return new Report(compiler.symbolFactory.create(NodeSymbol, { kind: SymbolKind.Column, declaration: node }, node.filepath));
     }
     return Report.create(PASS_THROUGH);
   },
@@ -91,7 +91,7 @@ export const tablePartialModule: GlobalModule = {
     if (!isExpressionAVariableNode(node) && !isAccessExpression(node)) return Report.create(PASS_THROUGH);
     if (!isInsideElementBody(node, ElementKind.TablePartial)) return Report.create(PASS_THROUGH);
 
-    const programNode = compiler.parseFile().getValue().ast;
+    const programNode = compiler.parseFile(node.filepath).getValue().ast;
     const globalSymbol = compiler.nodeSymbol(programNode).getValue();
     if (globalSymbol === UNHANDLED) return Report.create(undefined);
 
@@ -109,12 +109,12 @@ export const tablePartialModule: GlobalModule = {
     return nodeRefereeOfEnumDefault(compiler, globalSymbol, node);
   },
 
-  bind (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
+  bindNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
     if (!isElementNode(node, ElementKind.TablePartial)) return Report.create(PASS_THROUGH);
     return Report.create(undefined, new TablePartialBinder(compiler, node as ElementDeclarationNode & { type: SyntaxToken }).bind());
   },
 
-  interpret (compiler: Compiler, node: SyntaxNode): Report<SchemaElement | SchemaElement[] | undefined> | Report<PassThrough> {
+  interpretNode (compiler: Compiler, node: SyntaxNode): Report<SchemaElement | SchemaElement[] | undefined> | Report<PassThrough> {
     if (!isElementNode(node, ElementKind.TablePartial)) return Report.create(PASS_THROUGH);
 
     if (!shouldInterpretNode(compiler, node)) return Report.create(undefined);

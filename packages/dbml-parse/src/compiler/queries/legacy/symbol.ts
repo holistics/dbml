@@ -1,7 +1,7 @@
 import type Compiler from '../../index';
-import { ElementDeclarationNode, ProgramNode } from '@/core/parser/nodes';
-import { NodeSymbol, SchemaSymbol, SymbolKind } from '@/core/types/symbols';
-import { DEFAULT_SCHEMA_NAME, UNHANDLED } from '@/constants';
+import { ElementDeclarationNode, ProgramNode } from '@/core/types/nodes';
+import { NodeSymbol, SchemaSymbol, SymbolKind } from '@/core/types/symbol';
+import { UNHANDLED } from '@/constants';
 
 export function symbolOfName (this: Compiler, nameStack: string[], owner: ElementDeclarationNode | ProgramNode) {
   if (nameStack.length === 0) {
@@ -36,9 +36,9 @@ export function symbolOfName (this: Compiler, nameStack: string[], owner: Elemen
         .filter((s) =>
           this.symbolName(s) === name || (
             (ownerSymbol.isKind(SymbolKind.Program)
-              || (ownerSymbol instanceof SchemaSymbol && ownerSymbol.qualifiedName.join('.') === DEFAULT_SCHEMA_NAME))
+              || (ownerSymbol.isPublicSchema()))
             && s.declaration
-            && this.alias(s.declaration).getFiltered(UNHANDLED) === name),
+            && this.nodeAlias(s.declaration).getFiltered(UNHANDLED) === name),
         )
         .map((symbol) => ({
           symbol,

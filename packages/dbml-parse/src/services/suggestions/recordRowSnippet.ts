@@ -2,14 +2,14 @@ import {
   extractVariableFromExpression,
 } from '@/core/utils/expression';
 import { extractReferee } from '@/services/utils';
-import { SymbolKind } from '@/core/types/symbols';
+import { SymbolKind } from '@/core/types/symbol';
 import {
   BlockExpressionNode,
   CallExpressionNode,
   ElementDeclarationNode,
   ProgramNode,
   TupleExpressionNode,
-} from '@/core/parser/nodes';
+} from '@/core/types/nodes';
 import {
   type CompletionList,
   type TextModel,

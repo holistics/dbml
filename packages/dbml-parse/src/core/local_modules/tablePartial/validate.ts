@@ -12,7 +12,7 @@ import {
   ListExpressionNode,
   PrimaryExpressionNode,
   SyntaxNode,
-} from '@/core/parser/nodes';
+} from '@/core/types/nodes';
 import { isExpressionAVariableNode, isExpressionAnIdentifierNode, isExpressionAQuotedString, extractVariableFromExpression } from '@/core/utils/expression';
 import {
   aggregateSettingList,
@@ -341,7 +341,7 @@ export default class TablePartialValidator {
       if (!sub.type) {
         return [];
       }
-      return this.compiler.validate(sub).getErrors();
+      return this.compiler.validateNode(sub).getErrors();
     });
 
     const notes = subs.filter((sub) => sub.type?.value.toLowerCase() === ElementKind.Note);

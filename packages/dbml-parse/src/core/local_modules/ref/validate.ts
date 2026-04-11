@@ -1,7 +1,7 @@
 import Compiler from '@/compiler';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
-import { SyntaxTokenKind } from '@/core/lexer/tokens';
-import { BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, IdentiferStreamNode, ListExpressionNode, ProgramNode, SyntaxNode } from '@/core/parser/nodes';
+import { SyntaxTokenKind } from '@/core/types/tokens';
+import { BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, IdentiferStreamNode, ListExpressionNode, ProgramNode, SyntaxNode, WildcardNode } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import { SettingName } from '@/core/types';
 import { destructureComplexVariableTuple, extractStringFromIdentifierStream, isBinaryRelationship, isEqualTupleOperands, isExpressionAVariableNode } from '@/core/utils/expression';
@@ -39,6 +39,9 @@ export default class RefValidator {
       return [];
     }
 
+    if (nameNode instanceof WildcardNode) {
+      return [new CompileError(CompileErrorCode.INVALID_NAME, 'Wildcard (*) is not allowed as a Ref name', nameNode)];
+    }
     if (!isSimpleName(nameNode)) {
       return [new CompileError(CompileErrorCode.INVALID_NAME, 'A Ref\'s name is optional or must be an identifier or a quoted identifer', nameNode)];
     }
@@ -133,7 +136,7 @@ export default class RefValidator {
       if (!sub.type) {
         return [];
       }
-      return this.compiler.validate(sub).getErrors();
+      return this.compiler.validateNode(sub).getErrors();
     });
   }
 }

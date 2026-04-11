@@ -7,18 +7,19 @@ import {
   isExpressionAVariableNode,
 } from '@/core/utils/expression';
 import Compiler, { ScopeKind } from '@/compiler';
-import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
+import { SyntaxToken, SyntaxTokenKind } from '@/core/types/tokens';
 import { isOffsetWithinSpan } from '@/core/utils/span';
 import {
   type CompletionList,
+  type CompletionItem,
   type TextModel,
   type CompletionItemProvider,
   type Position,
   CompletionItemKind,
   CompletionItemInsertTextRule,
 } from '@/services/types';
-import { type NodeSymbol, SchemaSymbol } from '@/core/types/symbols';
-import { SymbolKind } from '@/core/types/symbols';
+import { type NodeSymbol } from '@/core/types/symbol';
+import { SymbolKind } from '@/core/types/symbol';
 import {
   pickCompletionItemKind,
   shouldPrependSpace,
@@ -32,6 +33,7 @@ import {
 import { suggestRecordRowSnippet } from '@/services/suggestions/recordRowSnippet';
 import {
   AttributeNode,
+  BlockExpressionNode,
   CallExpressionNode,
   CommaExpressionNode,
   ElementDeclarationNode,
@@ -43,11 +45,13 @@ import {
   ProgramNode,
   SyntaxNode,
   TupleExpressionNode,
-} from '@/core/parser/nodes';
+} from '@/core/types/nodes';
 import { getOffsetFromMonacoPosition } from '@/services/utils';
 import { isComment } from '@/core/lexer/utils';
 import { ElementKind, SettingName } from '@/core/types/keywords';
 import { UNHANDLED, DEFAULT_SCHEMA_NAME } from '@/constants';
+import { UseStatementMerger } from '@/services/completion/utils/useStatementMerger';
+import { Filepath } from '@/core/types/filepath';
 
 export default class DBMLCompletionItemProvider implements CompletionItemProvider {
   private compiler: Compiler;
@@ -57,6 +61,130 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
   constructor (compiler: Compiler, triggerCharacters: string[] = []) {
     this.compiler = compiler;
     this.triggerCharacters = triggerCharacters;
+  }
+
+  /**
+   * Search compiler.layout for symbols matching the given name.
+   * Returns results with file hints for disambiguation.
+   */
+  private searchLayoutForSymbol (symbolName: string): Array<{
+    symbol: NodeSymbol;
+    fileHint: string;
+    filepath: Filepath;
+  }> {
+    const results: Array<{ symbol: NodeSymbol; fileHint: string; filepath: Filepath }> = [];
+
+    if (!this.compiler.layout) return results;
+
+    // Search all files in the layout
+    const allFiles = (this.compiler.layout as any).allFiles?.() || [];
+    for (const fileInfo of allFiles) {
+      const symbols = (this.compiler.layout as any).getSymbols?.(fileInfo.filepath) || [];
+
+      for (const sym of symbols) {
+        if ((sym as any).name === symbolName) {
+          const fileHint = `from ${fileInfo.filepath.basename}`;
+          results.push({
+            symbol: sym,
+            fileHint,
+            filepath: fileInfo.filepath,
+          });
+        }
+      }
+    }
+
+    return results;
+  }
+
+  /**
+   * Create completion item for cross-file symbol with additionalTextEdits
+   * to auto-insert the use statement
+   */
+  createCrossFileCompletionItem (
+    symbolName: string,
+    symbolKind: SymbolKind,
+    fileHint: string,
+    sourceFilepath: Filepath,
+    currentFilepath: Filepath,
+    currentFileContent: string,
+  ): CompletionItem {
+    // Calculate the use statement that should be inserted
+    const mergeResult = UseStatementMerger.mergeSymbolIntoUses(
+      this.compiler,
+      currentFilepath,
+      currentFileContent,
+      symbolName,
+      sourceFilepath,
+    );
+
+    // Extract just the new use statement line(s) to insert
+    const lines = mergeResult.newContent.split('\n');
+    const textToInsert = lines.slice(0, 1).join('\n') + '\n';
+
+    return {
+      label: symbolName,
+      insertText: symbolName,
+      insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
+      kind: pickCompletionItemKind(symbolKind),
+      detail: fileHint,
+      // Use zzz_ prefix to sort cross-file suggestions after local ones
+      sortText: `zzz_${pickCompletionItemKind(symbolKind).toString().padStart(2, '0')}_${symbolName}`,
+      range: undefined as any,
+      // Add the use statement as additional text edits
+      additionalTextEdits: [
+        {
+          range: { startLineNumber: 1, startColumn: 1, endLineNumber: 1, endColumn: 1 },
+          text: textToInsert,
+        },
+      ],
+    };
+  }
+
+  /**
+   * Search for cross-file symbols that match the context and return them
+   * with additionalTextEdits for use statement insertion
+   */
+  suggestCrossFileSymbols (
+    acceptedKinds: SymbolKind[],
+    currentFilepath: Filepath,
+    currentFileContent: string,
+  ): CompletionList {
+    const results: CompletionList = { suggestions: [] };
+
+    if (!this.compiler.layout) return results;
+
+    // Get all symbols from all files
+    const allFiles = (this.compiler.layout as any).allFiles?.() || [];
+    const seenNames = new Set<string>();
+
+    for (const fileInfo of allFiles) {
+      // Skip current file - we already suggest local symbols
+      if (fileInfo.filepath.equals(currentFilepath)) continue;
+
+      const symbols = (this.compiler.layout as any).getSymbols?.(fileInfo.filepath) || [];
+
+      for (const sym of symbols) {
+        const symbolName = this.compiler.symbolName(sym);
+        if (!symbolName || seenNames.has(symbolName)) continue;
+        if (!acceptedKinds.includes(sym.kind)) continue;
+
+        seenNames.add(symbolName);
+
+        const fileHint = `from ${fileInfo.filepath.basename}`;
+        const item = this.createCrossFileCompletionItem(
+          symbolName,
+          sym.kind,
+          fileHint,
+          fileInfo.filepath,
+          currentFilepath,
+          currentFileContent,
+        );
+
+        results.suggestions.push(item);
+      }
+    }
+
+    return results;
   }
 
   provideCompletionItems (model: TextModel, position: Position): CompletionList {
@@ -118,6 +246,8 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
               this.compiler,
               offset,
               container as PrefixExpressionNode & { op: SyntaxToken },
+              model,
+              this,
             );
           case '~':
             return suggestOnPartialInjectionOp(
@@ -136,6 +266,8 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
               this.compiler,
               offset,
               container as InfixExpressionNode & { op: SyntaxToken },
+              model,
+              this,
             );
           case '.':
             return suggestMembers(
@@ -186,6 +318,8 @@ function suggestOnRelOp (
   compiler: Compiler,
   offset: number,
   container: (PrefixExpressionNode | InfixExpressionNode) & { op: SyntaxToken },
+  model?: TextModel,
+  provider?: DBMLCompletionItemProvider,
 ): CompletionList {
   const scopeKind = compiler.container.scopeKind(offset);
 
@@ -199,6 +333,18 @@ function suggestOnRelOp (
       SymbolKind.Schema,
       SymbolKind.Column,
     ]);
+
+    // Add cross-file symbol suggestions if available
+    if (model && provider && model.uri) {
+      const currentFilepath = Filepath.fromUri(model.uri as any);
+      const fileContent = model.getValue();
+      const crossFileSuggestions = provider.suggestCrossFileSymbols(
+        [SymbolKind.Table, SymbolKind.Schema, SymbolKind.Column],
+        currentFilepath,
+        fileContent,
+      );
+      res.suggestions.push(...crossFileSuggestions.suggestions);
+    }
 
     return !shouldPrependSpace(container.op, offset) ? res : prependSpace(res);
   }
@@ -218,7 +364,7 @@ function suggestMembersOfSymbol (
       .filter((member) => acceptedKinds.includes(member.kind))
       .filter((member) => {
         // Also exclude the default 'public' schema since it's implicit.
-        if (member instanceof SchemaSymbol && member.qualifiedName.join('.') === DEFAULT_SCHEMA_NAME) return false;
+        if (member.isPublicSchema()) return false;
         return true;
       })
       .flatMap((member) => {
@@ -635,6 +781,19 @@ function suggestInSubField (
     }
     case ScopeKind.TABLEGROUP:
       return suggestInTableGroupField(compiler);
+    case ScopeKind.DIAGRAMVIEW:
+      return suggestInDiagramViewBody();
+    case ScopeKind.CUSTOM: {
+      const elem = compiler.container.element(offset);
+      if (elem instanceof ElementDeclarationNode) {
+        const bodyBlock = elem.parentNode;
+        const parentElem = bodyBlock instanceof BlockExpressionNode ? bodyBlock.parentNode : undefined;
+        if (parentElem instanceof ElementDeclarationNode && parentElem.isKind(ElementKind.DiagramView)) {
+          return suggestInDiagramViewSubBlock(compiler, offset, elem);
+        }
+      }
+      return noSuggestions();
+    }
     default:
       return noSuggestions();
   }
@@ -642,7 +801,7 @@ function suggestInSubField (
 
 function suggestTopLevelElementType (): CompletionList {
   return {
-    suggestions: ['Table', 'TableGroup', 'Enum', 'Project', 'Ref', 'TablePartial', 'Records'].map((name) => ({
+    suggestions: ['Table', 'TableGroup', 'Enum', 'Project', 'Ref', 'TablePartial', 'Records', 'DiagramView'].map((name) => ({
       label: name,
       insertText: name,
       insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
@@ -840,7 +999,7 @@ function suggestInTableGroupField (compiler: Compiler): CompletionList {
           const name = compiler.symbolName(member);
           if (name === undefined) return [];
           // Skip the default 'public' schema
-          if (member instanceof SchemaSymbol && member.qualifiedName.join('.') === DEFAULT_SCHEMA_NAME) return [];
+          if (member.isPublicSchema()) return [];
 
           return {
             label: name,
@@ -955,7 +1114,7 @@ function suggestColumnNameInIndexes (compiler: Compiler, offset: number): Comple
 
   return addQuoteToSuggestionIfNeeded({
     suggestions: members.flatMap((member) => {
-      const nameResult = member.declaration ? compiler.fullname(member.declaration) : undefined;
+      const nameResult = member.declaration ? compiler.nodeFullname(member.declaration) : undefined;
       const name = (nameResult && !nameResult.hasValue(UNHANDLED)) ? nameResult.getValue()?.at(-1) : undefined;
       if (!name) return [];
 
@@ -978,4 +1137,62 @@ function findContainerArg (offset: number, node: FunctionApplicationNode): numbe
   const containerArgId = args.findIndex((c) => offset <= c.end);
 
   return containerArgId === -1 ? args.length : containerArgId;
+}
+
+const wildcardSuggestion = {
+  label: '*',
+  insertText: '*',
+  insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
+  kind: CompletionItemKind.Keyword,
+  range: undefined as any,
+};
+
+function suggestInDiagramViewBody (): CompletionList {
+  return {
+    suggestions: [
+      ...['Tables', 'TableGroups', 'Notes', 'Schemas'].map((name) => ({
+        label: name,
+        insertText: name,
+        insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
+        kind: CompletionItemKind.Keyword,
+        range: undefined as any,
+      })),
+      wildcardSuggestion,
+    ],
+  };
+}
+
+function suggestInDiagramViewSubBlock (
+  compiler: Compiler,
+  offset: number,
+  elem: ElementDeclarationNode,
+): CompletionList {
+  const blockType = elem.type?.value.toLowerCase();
+  switch (blockType) {
+    case 'tables': {
+      const namesInScope = suggestNamesInScope(compiler, offset, compiler.parse.ast(), [SymbolKind.Table, SymbolKind.Schema]);
+      return { suggestions: [wildcardSuggestion, ...namesInScope.suggestions] };
+    }
+    case 'tablegroups': {
+      const namesInScope = suggestNamesInScope(compiler, offset, compiler.parse.ast(), [SymbolKind.TableGroup]);
+      return { suggestions: [wildcardSuggestion, ...namesInScope.suggestions] };
+    }
+    case 'schemas': {
+      const defaultSchema = {
+        label: DEFAULT_SCHEMA_NAME,
+        insertText: DEFAULT_SCHEMA_NAME,
+        insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
+        kind: CompletionItemKind.Module,
+        range: undefined as any,
+      };
+      const namesInScope = suggestNamesInScope(compiler, offset, compiler.parse.ast(), [SymbolKind.Schema]);
+      return { suggestions: [wildcardSuggestion, defaultSchema, ...namesInScope.suggestions] };
+    }
+    case 'notes': {
+      const namesInScope = suggestNamesInScope(compiler, offset, compiler.parse.ast(), [SymbolKind.Note]);
+      return { suggestions: [wildcardSuggestion, ...namesInScope.suggestions] };
+    }
+    default:
+      return noSuggestions();
+  }
 }

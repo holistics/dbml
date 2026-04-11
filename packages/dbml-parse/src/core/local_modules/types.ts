@@ -1,7 +1,7 @@
 import type Compiler from '@/compiler';
 import type { PassThrough } from '@/constants';
 import type { Module } from '@/core/types/module';
-import type { SyntaxNode } from '@/core/parser/nodes';
+import type { SyntaxNode } from '@/core/types/nodes';
 import type Report from '@/core/types/report';
 import type { Settings } from '@/core/utils/validate';
 export type { Settings };
@@ -10,11 +10,11 @@ export type { Settings };
 // All methods are optional, missing methods are treated as returning PASS_THROUGH.
 export interface LocalModule extends Module {
   // Validate the syntax of this node, return errors in Report
-  validate? (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough>;
+  validateNode? (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough>;
   // Extract the fully-qualified name segments (e.g. ['myschema', 'users'])
-  fullname? (compiler: Compiler, node: SyntaxNode): Report<string[] | undefined> | Report<PassThrough>;
+  nodeFullname? (compiler: Compiler, node: SyntaxNode): Report<string[] | undefined> | Report<PassThrough>;
   // Extract the short alias (e.g. 'U' for Table users as U)
-  alias? (compiler: Compiler, node: SyntaxNode): Report<string | undefined> | Report<PassThrough>;
+  nodeAlias? (compiler: Compiler, node: SyntaxNode): Report<string | undefined> | Report<PassThrough>;
   // Parse and validate the [bracket] settings, return clean settings with errors
-  settings? (compiler: Compiler, node: SyntaxNode): Report<Settings> | Report<PassThrough>;
+  nodeSettings? (compiler: Compiler, node: SyntaxNode): Report<Settings> | Report<PassThrough>;
 }

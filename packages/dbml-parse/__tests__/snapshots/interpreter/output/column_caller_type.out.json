@@ -1,7 +1,15 @@
 {
   "database": {
     "aliases": [],
+    "diagramViews": [],
     "enums": [],
+    "externals": {
+      "enums": [],
+      "notes": [],
+      "tableGroups": [],
+      "tablePartials": [],
+      "tables": []
+    },
     "notes": [],
     "records": [],
     "refs": [],
@@ -22,6 +30,9 @@
                 "column": 11,
                 "line": 2,
                 "offset": 23
+              },
+              "filepath": {
+                "path": "/main.dbml"
               },
               "start": {
                 "column": 5,
@@ -46,6 +57,9 @@
                 "line": 3,
                 "offset": 50
               },
+              "filepath": {
+                "path": "/main.dbml"
+              },
               "start": {
                 "column": 5,
                 "line": 3,
@@ -68,6 +82,9 @@
                 "column": 24,
                 "line": 4,
                 "offset": 74
+              },
+              "filepath": {
+                "path": "/main.dbml"
               },
               "start": {
                 "column": 5,
@@ -92,6 +109,9 @@
                 "line": 5,
                 "offset": 100
               },
+              "filepath": {
+                "path": "/main.dbml"
+              },
               "start": {
                 "column": 5,
                 "line": 5,
@@ -114,6 +134,9 @@
                 "column": 17,
                 "line": 6,
                 "offset": 117
+              },
+              "filepath": {
+                "path": "/main.dbml"
               },
               "start": {
                 "column": 5,
@@ -139,6 +162,9 @@
             "line": 7,
             "offset": 119
           },
+          "filepath": {
+            "path": "/main.dbml"
+          },
           "start": {
             "column": 1,
             "line": 1,
@@ -152,6 +178,9 @@
         "column": 2,
         "line": 7,
         "offset": 119
+      },
+      "filepath": {
+        "path": "/main.dbml"
       },
       "start": {
         "column": 1,

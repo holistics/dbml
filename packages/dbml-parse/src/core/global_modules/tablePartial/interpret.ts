@@ -8,7 +8,7 @@ import {
   BlockExpressionNode, CallExpressionNode, ElementDeclarationNode, FunctionApplicationNode,
   FunctionExpressionNode,
   ListExpressionNode, PrefixExpressionNode, SyntaxNode, ArrayNode,
-} from '@/core/parser/nodes';
+} from '@/core/types/nodes';
 import {
   extractColor, extractElementName, getTokenPosition,
   normalizeNoteContent,
@@ -27,7 +27,7 @@ import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import { aggregateSettingList } from '@/core/utils/validate';
 import { ElementKind, SettingName } from '@/core/types/keywords';
 import { PASS_THROUGH, UNHANDLED } from '@/constants';
-import { SymbolKind } from '@/core/types/symbols';
+import { SymbolKind } from '@/core/types/symbol';
 import Report from '@/core/types/report';
 
 export class TablePartialInterpreter {
@@ -81,6 +81,7 @@ export class TablePartialInterpreter {
         token: {
           start: { offset: -1, line: -1, column: -1 }, // do not make sense to have a meaningful start (?)
           end: { offset: -1, line: -1, column: -1 }, // do not make sense to have a meaningful end (?)
+          filepath: this.declarationNode.filepath,
         },
       });
       this.pkColumns.forEach((column) => {

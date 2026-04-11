@@ -1,7 +1,7 @@
-import { SyntaxToken } from '../../lexer/tokens';
+import { SyntaxToken } from '@/core/types/tokens';
 import {
   BlockExpressionNode, CommaExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ProgramNode, SyntaxNode,
-} from '../../parser/nodes';
+} from '@/core/types/nodes';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import { scanNonListNodeForBinding } from '../utils';
 import {
@@ -224,7 +224,7 @@ export default class RecordsBinder {
         return [];
       }
 
-      return this.compiler.bind(sub).getErrors();
+      return this.compiler.bindNode(sub).getErrors();
     });
   }
 }

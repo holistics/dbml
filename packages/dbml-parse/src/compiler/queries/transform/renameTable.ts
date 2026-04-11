@@ -1,10 +1,11 @@
 import { DEFAULT_SCHEMA_NAME } from '@/constants';
 import type Compiler from '../../index';
-import { SyntaxNode } from '@/core/parser/nodes';
-import { NodeSymbol } from '@/core/types/symbols';
+import { SyntaxNode } from '@/core/types/nodes';
+import { NodeSymbol } from '@/core/types/symbol';
 import { applyTextEdits, TextEdit } from './applyTextEdits';
 import { isAlphaOrUnderscore, isDigit } from '@/core/utils/chars';
 import { normalizeTableName, lookupTableSymbol, stripQuotes, type TableNameInput } from './utils';
+import { Filepath } from '@/core/types/filepath';
 
 interface FormattedTableName {
   schema: string;
@@ -76,13 +77,14 @@ function formatTableName (
  */
 function checkForNameCollision (
   compiler: Compiler,
+  filepath: Filepath,
   oldSchema: string,
   oldTable: string,
   newSchema: string,
   newTable: string,
 ): boolean {
   if (oldSchema === newSchema && oldTable === newTable) return false;
-  const existing = lookupTableSymbol(compiler, newSchema, newTable);
+  const existing = lookupTableSymbol(compiler, filepath, newSchema, newTable);
   return existing !== null;
 }
 
@@ -201,6 +203,7 @@ function findReplacements (
  */
 export function renameTable (
   this: Compiler,
+  filepath: Filepath,
   oldName: TableNameInput,
   newName: TableNameInput,
 ): string {
@@ -215,13 +218,13 @@ export function renameTable (
   const newTable = normalizedNew.table;
 
   // Look up the table symbol
-  const tableSymbol = lookupTableSymbol(this, oldSchema, oldTable);
+  const tableSymbol = lookupTableSymbol(this, filepath, oldSchema, oldTable);
   if (!tableSymbol) {
     return source;
   }
 
   // Check for name collision
-  if (checkForNameCollision(this, oldSchema, oldTable, newSchema, newTable)) {
+  if (checkForNameCollision(this, filepath, oldSchema, oldTable, newSchema, newTable)) {
     return source;
   }
 

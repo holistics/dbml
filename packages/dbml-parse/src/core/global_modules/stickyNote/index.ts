@@ -1,8 +1,8 @@
 import { isElementNode } from '@/core/utils/expression';
 import { ElementKind } from '@/core/types/keywords';
-import { type SyntaxNode, type ElementDeclarationNode, ProgramNode } from '@/core/parser/nodes';
-import type { SyntaxToken } from '@/core/lexer/tokens';
-import { NodeSymbol, SymbolKind } from '@/core/types/symbols';
+import { type SyntaxNode, type ElementDeclarationNode, ProgramNode } from '@/core/types/nodes';
+import type { SyntaxToken } from '@/core/types/tokens';
+import { NodeSymbol, SymbolKind } from '@/core/types/symbol';
 import type { GlobalModule } from '../types';
 import { PASS_THROUGH, type PassThrough } from '@/constants';
 import Report from '@/core/types/report';
@@ -21,7 +21,7 @@ export const noteModule: GlobalModule = {
     return new Report(compiler.symbolFactory.create(NodeSymbol, {
       kind: SymbolKind.Note,
       declaration: node,
-    }));
+    }, node.filepath));
   },
 
   symbolMembers (compiler: Compiler, symbol: NodeSymbol): Report<NodeSymbol[]> | Report<PassThrough> {
@@ -32,7 +32,7 @@ export const noteModule: GlobalModule = {
     return new Report([]);
   },
 
-  bind (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
+  bindNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
     if (!isElementNode(node, ElementKind.Note)) return Report.create(PASS_THROUGH);
 
     return Report.create(
@@ -41,7 +41,7 @@ export const noteModule: GlobalModule = {
     );
   },
 
-  interpret (compiler: Compiler, node: SyntaxNode): Report<Note | undefined> | Report<PassThrough> {
+  interpretNode (compiler: Compiler, node: SyntaxNode): Report<Note | undefined> | Report<PassThrough> {
     if (!isElementNode(node, ElementKind.Note)) return Report.create(PASS_THROUGH);
 
     if (!shouldInterpretNode(compiler, node)) return Report.create(undefined);

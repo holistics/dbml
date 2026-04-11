@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/package",
   "name": "@dbml/parse",
-  "version": "6.6.0",
+  "version": "7.0.0",
   "description": "DBML parser v2",
   "author": "Holistics <dev@holistics.io>",
   "license": "Apache-2.0",
@@ -30,7 +30,6 @@
     "test": "vitest run",
     "test:watch": "vitest watch",
     "coverage": "vitest run --coverage",
-    "prepublish": "npm run build",
     "prepare": "npm run build",
     "lint": "eslint .",
     "lint:fix": "eslint --fix ."

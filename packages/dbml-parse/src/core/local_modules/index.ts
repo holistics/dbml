@@ -12,8 +12,10 @@ import { tableGroupModule } from './tableGroup';
 import { tablePartialModule } from './tablePartial';
 import { noteModule } from './note';
 import { programModule } from './program';
+import { useModule } from './use';
+import { diagramViewModule } from './diagramView';
 import type Compiler from '@/compiler';
-import type { SyntaxNode } from '@/core/parser/nodes';
+import type { SyntaxNode } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 
 // Each time you add a new element, register its module here.
@@ -28,7 +30,9 @@ export const modules: LocalModule[] = [
   tableGroupModule,
   tablePartialModule,
   noteModule,
+  diagramViewModule,
   programModule,
+  useModule,
   customModule,
 ];
 
@@ -50,22 +54,22 @@ function dispatch<K extends keyof LocalModule> (
   return Report.create(PASS_THROUGH);
 }
 
-export function validate (this: Compiler, node: SyntaxNode): Report<void> | Report<Unhandled> {
-  const res = dispatch('validate', this, node);
+export function validateNode (this: Compiler, node: SyntaxNode): Report<void> | Report<Unhandled> {
+  const res = dispatch('validateNode', this, node);
   return res.hasValue(PASS_THROUGH) ? Report.create(UNHANDLED) : res;
 }
 
-export function settings (this: Compiler, node: SyntaxNode): Report<Settings> | Report<Unhandled> {
-  const res = dispatch('settings', this, node);
+export function nodeSettings (this: Compiler, node: SyntaxNode): Report<Settings> | Report<Unhandled> {
+  const res = dispatch('nodeSettings', this, node);
   return res.hasValue(PASS_THROUGH) ? Report.create(UNHANDLED) : res;
 }
 
 export function nodeFullname (this: Compiler, node: SyntaxNode): Report<string[] | undefined> | Report<Unhandled> {
-  const res = dispatch('fullname', this, node);
+  const res = dispatch('nodeFullname', this, node);
   return res.hasValue(PASS_THROUGH) ? Report.create(UNHANDLED) : res;
 }
 
-export function alias (this: Compiler, node: SyntaxNode): Report<string | undefined> | Report<Unhandled> {
-  const res = dispatch('alias', this, node);
+export function nodeAlias (this: Compiler, node: SyntaxNode): Report<string | undefined> | Report<Unhandled> {
+  const res = dispatch('nodeAlias', this, node);
   return res.hasValue(PASS_THROUGH) ? Report.create(UNHANDLED) : res;
 }

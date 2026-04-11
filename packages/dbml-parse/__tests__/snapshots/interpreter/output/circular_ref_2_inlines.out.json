@@ -3,22 +3,26 @@
     {
       "code": "CIRCULAR_REF",
       "diagnostic": "References with same endpoints exist",
+      "filepath": "/main.dbml",
       "level": "error",
       "node": {
         "context": {
           "id": "node@<attribute>@@[L5:C12, L5:C23]",
-          "snippet": "ref: > A.id"
+          "snippet": "ref: > A.id",
+          "filepath": "/main.dbml"
         }
       }
     },
     {
       "code": "CIRCULAR_REF",
       "diagnostic": "References with same endpoints exist",
+      "filepath": "/main.dbml",
       "level": "error",
       "node": {
         "context": {
           "id": "node@<attribute>@@[L1:C12, L1:C23]",
-          "snippet": "ref: > B.id"
+          "snippet": "ref: > B.id",
+          "filepath": "/main.dbml"
         }
       }
     }

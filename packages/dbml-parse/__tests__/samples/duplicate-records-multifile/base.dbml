@@ -1,0 +1,10 @@
+// table with records defined at the source
+Table users {
+  id int [pk]
+  name varchar
+}
+
+records users(id, name) {
+  1, 'Alice'
+  2, 'Bob'
+}

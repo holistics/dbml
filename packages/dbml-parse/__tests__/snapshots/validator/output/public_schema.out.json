@@ -3,22 +3,39 @@
     {
       "code": "EMPTY_ENUM",
       "diagnostic": "An Enum must have at least one element",
+      "filepath": "/main.dbml",
       "level": "error",
       "node": {
         "context": {
-          "id": "node@<element-declaration>@:status@[L0:C0, L2:C1]",
-          "snippet": "Enum status {\r\n\r\n}"
+          "id": "node@<element-declaration>@status@[L0:C0, L2:C1]",
+          "snippet": "Enum status {\r\n\r\n}",
+          "filepath": "/main.dbml"
         }
       }
     },
     {
       "code": "EMPTY_ENUM",
       "diagnostic": "An Enum must have at least one element",
+      "filepath": "/main.dbml",
       "level": "error",
       "node": {
         "context": {
-          "id": "node@<element-declaration>@:public.status@[L4:C0, L6:C1]",
-          "snippet": "Enum publi...{\r\n    \r\n}"
+          "id": "node@<element-declaration>@public.status@[L4:C0, L6:C1]",
+          "snippet": "Enum publi...{\r\n    \r\n}",
+          "filepath": "/main.dbml"
+        }
+      }
+    },
+    {
+      "code": "DUPLICATE_NAME",
+      "diagnostic": "Enum name status already exists in schema 'public'",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<infix-expression>@@[L4:C5, L4:C18]",
+          "snippet": "public.status",
+          "filepath": "/main.dbml"
         }
       }
     }
@@ -32,7 +49,7 @@
       "body": [
         {
           "context": {
-            "id": "node@<element-declaration>@:status@[L0:C0, L2:C1]",
+            "id": "node@<element-declaration>@status@[L0:C0, L2:C1]",
             "snippet": "Enum status {\r\n\r\n}"
           },
           "children": {
@@ -44,7 +61,7 @@
               "children": {
                 "blockCloseBrace": {
                   "context": {
-                    "id": "token@<rbrace>@:}@[L2:C0, L2:C1]",
+                    "id": "token@<rbrace>@}@[L2:C0, L2:C1]",
                     "snippet": "}"
                   },
                   "leadingTrivia": "\n",
@@ -53,20 +70,18 @@
                 },
                 "blockOpenBrace": {
                   "context": {
-                    "id": "token@<lbrace>@:{@[L0:C12, L0:C13]",
+                    "id": "token@<lbrace>@{@[L0:C12, L0:C13]",
                     "snippet": "{"
                   },
                   "leadingTrivia": "",
                   "trailingTrivia": "\n",
                   "value": "{"
                 },
-                "body": [],
-                "fullEnd": 20,
-                "fullStart": 12
-              }
+                "body": []
+              },
+              "fullEnd": 20,
+              "fullStart": 12
             },
-            "fullEnd": 20,
-            "fullStart": 0,
             "name": {
               "context": {
                 "id": "node@<primary-expression>@@[L0:C5, L0:C11]",
@@ -75,30 +90,30 @@
               "children": {
                 "expression": {
                   "context": {
-                    "id": "node@<variable>@:status@[L0:C5, L0:C11]",
+                    "id": "node@<variable>@status@[L0:C5, L0:C11]",
                     "snippet": "status"
                   },
                   "children": {
-                    "fullEnd": 12,
-                    "fullStart": 5,
                     "variable": {
                       "context": {
-                        "id": "token@<identifier>@:status@[L0:C5, L0:C11]",
+                        "id": "token@<identifier>@status@[L0:C5, L0:C11]",
                         "snippet": "status"
                       },
                       "leadingTrivia": "",
                       "trailingTrivia": " ",
                       "value": "status"
                     }
-                  }
-                },
-                "fullEnd": 12,
-                "fullStart": 5
-              }
+                  },
+                  "fullEnd": 12,
+                  "fullStart": 5
+                }
+              },
+              "fullEnd": 12,
+              "fullStart": 5
             },
             "type": {
               "context": {
-                "id": "token@<identifier>@:Enum@[L0:C0, L0:C4]",
+                "id": "token@<identifier>@Enum@[L0:C0, L0:C4]",
                 "snippet": "Enum"
               },
               "leadingTrivia": "",
@@ -106,13 +121,15 @@
               "value": "Enum"
             }
           },
+          "fullEnd": 20,
+          "fullStart": 0,
           "symbol": {
             "context": {
-              "id": "symbol@Enum@:status@[L0:C0, L2:C1]",
+              "id": "symbol@Enum@status@[L0:C0, L2:C1]",
               "snippet": "Enum status {\r\n\r\n}"
             },
             "declaration": {
-              "id": "node@<element-declaration>@:status@[L0:C0, L2:C1]",
+              "id": "node@<element-declaration>@status@[L0:C0, L2:C1]",
               "snippet": "Enum status {\r\n\r\n}"
             },
             "members": [],
@@ -121,7 +138,7 @@
         },
         {
           "context": {
-            "id": "node@<element-declaration>@:public.status@[L4:C0, L6:C1]",
+            "id": "node@<element-declaration>@public.status@[L4:C0, L6:C1]",
             "snippet": "Enum publi...{\r\n    \r\n}"
           },
           "children": {
@@ -133,7 +150,7 @@
               "children": {
                 "blockCloseBrace": {
                   "context": {
-                    "id": "token@<rbrace>@:}@[L6:C0, L6:C1]",
+                    "id": "token@<rbrace>@}@[L6:C0, L6:C1]",
                     "snippet": "}"
                   },
                   "leadingTrivia": "    \n",
@@ -142,28 +159,24 @@
                 },
                 "blockOpenBrace": {
                   "context": {
-                    "id": "token@<lbrace>@:{@[L4:C19, L4:C20]",
+                    "id": "token@<lbrace>@{@[L4:C19, L4:C20]",
                     "snippet": "{"
                   },
                   "leadingTrivia": "",
                   "trailingTrivia": "\n",
                   "value": "{"
                 },
-                "body": [],
-                "fullEnd": 51,
-                "fullStart": 41
-              }
+                "body": []
+              },
+              "fullEnd": 51,
+              "fullStart": 41
             },
-            "fullEnd": 51,
-            "fullStart": 21,
             "name": {
               "context": {
                 "id": "node@<infix-expression>@@[L4:C5, L4:C18]",
                 "snippet": "public.status"
               },
               "children": {
-                "fullEnd": 41,
-                "fullStart": 27,
                 "leftExpression": {
                   "context": {
                     "id": "node@<primary-expression>@@[L4:C5, L4:C11]",
@@ -172,30 +185,30 @@
                   "children": {
                     "expression": {
                       "context": {
-                        "id": "node@<variable>@:public@[L4:C5, L4:C11]",
+                        "id": "node@<variable>@public@[L4:C5, L4:C11]",
                         "snippet": "public"
                       },
                       "children": {
-                        "fullEnd": 33,
-                        "fullStart": 27,
                         "variable": {
                           "context": {
-                            "id": "token@<identifier>@:public@[L4:C5, L4:C11]",
+                            "id": "token@<identifier>@public@[L4:C5, L4:C11]",
                             "snippet": "public"
                           },
                           "leadingTrivia": "",
                           "trailingTrivia": "",
                           "value": "public"
                         }
-                      }
-                    },
-                    "fullEnd": 33,
-                    "fullStart": 27
-                  }
+                      },
+                      "fullEnd": 33,
+                      "fullStart": 27
+                    }
+                  },
+                  "fullEnd": 33,
+                  "fullStart": 27
                 },
                 "op": {
                   "context": {
-                    "id": "token@<op>@:.@[L4:C11, L4:C12]",
+                    "id": "token@<op>@.@[L4:C11, L4:C12]",
                     "snippet": "."
                   },
                   "leadingTrivia": "",
@@ -210,32 +223,34 @@
                   "children": {
                     "expression": {
                       "context": {
-                        "id": "node@<variable>@:status@[L4:C12, L4:C18]",
+                        "id": "node@<variable>@status@[L4:C12, L4:C18]",
                         "snippet": "status"
                       },
                       "children": {
-                        "fullEnd": 41,
-                        "fullStart": 34,
                         "variable": {
                           "context": {
-                            "id": "token@<identifier>@:status@[L4:C12, L4:C18]",
+                            "id": "token@<identifier>@status@[L4:C12, L4:C18]",
                             "snippet": "status"
                           },
                           "leadingTrivia": "",
                           "trailingTrivia": " ",
                           "value": "status"
                         }
-                      }
-                    },
-                    "fullEnd": 41,
-                    "fullStart": 34
-                  }
+                      },
+                      "fullEnd": 41,
+                      "fullStart": 34
+                    }
+                  },
+                  "fullEnd": 41,
+                  "fullStart": 34
                 }
-              }
+              },
+              "fullEnd": 41,
+              "fullStart": 27
             },
             "type": {
               "context": {
-                "id": "token@<identifier>@:Enum@[L4:C0, L4:C4]",
+                "id": "token@<identifier>@Enum@[L4:C0, L4:C4]",
                 "snippet": "Enum"
               },
               "leadingTrivia": "\n",
@@ -243,13 +258,15 @@
               "value": "Enum"
             }
           },
+          "fullEnd": 51,
+          "fullStart": 21,
           "symbol": {
             "context": {
-              "id": "symbol@Enum@:public.status@[L4:C0, L6:C1]",
+              "id": "symbol@Enum@public.status@[L4:C0, L6:C1]",
               "snippet": "Enum publi...{\r\n    \r\n}"
             },
             "declaration": {
-              "id": "node@<element-declaration>@:public.status@[L4:C0, L6:C1]",
+              "id": "node@<element-declaration>@public.status@[L4:C0, L6:C1]",
               "snippet": "Enum publi...{\r\n    \r\n}"
             },
             "members": [],
@@ -259,16 +276,16 @@
       ],
       "eof": {
         "context": {
-          "id": "token@<eof>@:@[L6:C1, L6:C1]",
+          "id": "token@<eof>@@[L6:C1, L6:C1]",
           "snippet": ""
         },
         "leadingTrivia": "",
         "trailingTrivia": "",
         "value": ""
-      },
-      "fullEnd": 51,
-      "fullStart": 0
+      }
     },
+    "fullEnd": 51,
+    "fullStart": 0,
     "symbol": {
       "context": {
         "id": "symbol@Program@@[L0:C0, L6:C1]",
@@ -282,19 +299,58 @@
         {
           "context": {
             "id": "symbol@Schema@public@[L?:C?, L?:C?]"
-          }
+          },
+          "members": [
+            {
+              "context": {
+                "id": "symbol@Enum@public.status@[L4:C0, L6:C1]",
+                "snippet": "Enum publi...{\r\n    \r\n}"
+              },
+              "declaration": {
+                "id": "node@<element-declaration>@public.status@[L4:C0, L6:C1]",
+                "snippet": "Enum publi...{\r\n    \r\n}"
+              },
+              "members": [],
+              "references": []
+            },
+            {
+              "context": {
+                "id": "symbol@Enum@status@[L0:C0, L2:C1]",
+                "snippet": "Enum status {\r\n\r\n}"
+              },
+              "declaration": {
+                "id": "node@<element-declaration>@status@[L0:C0, L2:C1]",
+                "snippet": "Enum status {\r\n\r\n}"
+              },
+              "members": [],
+              "references": []
+            }
+          ],
+          "references": []
         },
         {
           "context": {
-            "id": "symbol@Enum@:status@[L0:C0, L2:C1]",
-            "snippet": "Enum status {\r\n\r\n}"
-          }
-        },
-        {
-          "context": {
-            "id": "symbol@Enum@:public.status@[L4:C0, L6:C1]",
+            "id": "symbol@Enum@public.status@[L4:C0, L6:C1]",
             "snippet": "Enum publi...{\r\n    \r\n}"
-          }
+          },
+          "declaration": {
+            "id": "node@<element-declaration>@public.status@[L4:C0, L6:C1]",
+            "snippet": "Enum publi...{\r\n    \r\n}"
+          },
+          "members": [],
+          "references": []
+        },
+        {
+          "context": {
+            "id": "symbol@Enum@status@[L0:C0, L2:C1]",
+            "snippet": "Enum status {\r\n\r\n}"
+          },
+          "declaration": {
+            "id": "node@<element-declaration>@status@[L0:C0, L2:C1]",
+            "snippet": "Enum status {\r\n\r\n}"
+          },
+          "members": [],
+          "references": []
         }
       ],
       "references": []

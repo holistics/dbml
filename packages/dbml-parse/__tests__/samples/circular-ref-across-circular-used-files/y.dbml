@@ -1,0 +1,7 @@
+// y uses x_table and references it via an inline ref
+use { table x_table } from './x.dbml'
+
+Table y_table {
+  id int [pk]
+  x_id int [ref: > x_table.id]
+}

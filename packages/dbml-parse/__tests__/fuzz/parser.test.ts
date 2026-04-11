@@ -31,7 +31,7 @@ import {
   crlfSchemaArbitrary,
 } from '../utils/arbitraries';
 import { parse, lex } from '../utils';
-import { SyntaxNodeKind } from '@/core/parser/nodes';
+import { SyntaxNodeKind } from '@/core/types/nodes';
 
 const FUZZ_CONFIG = { numRuns: 50 };
 const ROBUSTNESS_CONFIG = { numRuns: 25 };

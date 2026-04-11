@@ -11,3 +11,5 @@ export {
   DBMLReferencesProvider,
   DBMLDiagnosticsProvider,
 };
+
+export { dbmlMonarchTokensProvider } from './monarch';

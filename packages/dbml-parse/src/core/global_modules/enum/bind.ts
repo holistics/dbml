@@ -1,8 +1,8 @@
 import { CompileError } from '@/core/types/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ProgramNode,
-} from '@/core/parser/nodes';
-import { SyntaxToken } from '@/core/lexer/tokens';
+} from '@/core/types/nodes';
+import { SyntaxToken } from '@/core/types/tokens';
 import Compiler from '@/compiler';
 
 export default class EnumBinder {
@@ -41,7 +41,7 @@ export default class EnumBinder {
         return [];
       }
 
-      return this.compiler.bind(sub).getErrors();
+      return this.compiler.bindNode(sub).getErrors();
     });
   }
 }

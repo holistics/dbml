@@ -1,8 +1,50 @@
+import { Filepath } from './filepath';
 import type { Position } from './position';
 
 export interface TokenPosition {
   start: Position;
   end: Position;
+  filepath: Filepath;
+}
+
+// A reference to an element imported via `use` or `reuse`.
+// `name` + `schemaName` identify the original element in the source file.
+// `visibleNames` lists every local name under which the element is reachable in this file.
+// The first entry wins (primary name).
+// Direct imports and explicit `as` aliases both appear here.
+// Aliases have `schemaName: null`; direct imports retain the original `schemaName`.
+export interface ElementRef {
+  name: string;
+  schemaName: string | null;
+  visibleNames: { schemaName: string | null; name: string }[];
+}
+
+export interface DatabaseExternals {
+  tables: ElementRef[];
+  enums: ElementRef[];
+  tableGroups: ElementRef[];
+  tablePartials: ElementRef[];
+  notes: ElementRef[];
+}
+
+/**
+ * FilterConfig is a tri-state filter:
+ * - [] (empty array) = show all
+ * - [...] (array with items) = show only these specific items
+ * - null = hide all
+ */
+export interface FilterConfig {
+  tables: Array<{ name: string; schemaName: string }> | null;
+  stickyNotes: Array<{ name: string }> | null;
+  tableGroups: Array<{ name: string }> | null;
+  schemas: Array<{ name: string }> | null;
+}
+
+export interface DiagramView {
+  name: string;
+  schemaName: string | null;
+  visibleEntities: FilterConfig;
+  token: TokenPosition;
 }
 
 export interface Database {
@@ -16,14 +58,21 @@ export interface Database {
   project?: Project;
   tablePartials: TablePartial[];
   records: TableRecord[];
-  token: TokenPosition;
+  externals: DatabaseExternals;
+  diagramViews: DiagramView[];
+  token?: TokenPosition;
+}
+
+export interface MasterDatabase {
+  files: Record<string, Database>;
+  items: Database;
 }
 
 export interface Table {
   name: string;
   schemaName: string | null;
   alias: string | null;
-  fields: Column[]; // The order of fields must match the order of declaration
+  fields: Column[];
   checks: Check[];
   partials: TablePartialInjection[];
   token: TokenPosition;
@@ -46,10 +95,8 @@ export interface ColumnType {
   schemaName: string | null;
   type_name: string;
   args: string | null;
-  // Parsed type parameters - stripped when passed to @dbml/core
   numericParams?: { precision: number; scale: number };
   lengthParam?: { length: number };
-  // Whether this type references an enum - stripped when passed to @dbml/core
   isEnum?: boolean;
 }
 
@@ -159,10 +206,14 @@ export interface TableGroupField {
   schemaName: string | null;
 }
 
+export type AliasKind = 'table' | 'enum' | 'tablegroup' | 'tablepartial' | 'note';
+
 export interface Alias {
   name: string;
-  kind: 'table';
+  kind: AliasKind;
   value: {
+    elementName: string;
+    /** @deprecated Use elementName instead */
     tableName: string;
     schemaName: string | null;
   };
@@ -187,7 +238,6 @@ export interface TablePartialInjection {
   token: TokenPosition;
 }
 
-// Record value type
 export type RecordValueType = 'string' | 'bool' | 'integer' | 'real' | 'date' | 'time' | 'datetime' | string;
 
 export interface RecordValue {
@@ -217,9 +267,7 @@ export type Project =
       token: TokenPosition;
     };
     token: TokenPosition;
-    [
-    index: string & Omit<any, 'name' | 'tables' | 'refs' | 'enums' | 'tableGroups' | 'note' | 'tablePartials' | 'records'>
-    ]: string;
+    [index: string & Omit<any, 'name' | 'tables' | 'refs' | 'enums' | 'tableGroups' | 'note' | 'tablePartials' | 'records'>]: string;
   };
 
 export type SchemaElement =

@@ -1,0 +1,6 @@
+// source enum
+Enum job_status {
+  pending
+  running
+  done
+}

@@ -1,6 +1,7 @@
 import { describe, expect, test } from 'vitest';
 import Compiler from '@/compiler/index';
 import { applyTextEdits } from '@/compiler/queries/transform/applyTextEdits';
+import { DEFAULT_ENTRY } from '@/constants';
 
 describe('[example] applyTextEdits', () => {
   describe('standalone function', () => {
@@ -220,7 +221,7 @@ describe('[example] applyTextEdits', () => {
   describe('Compiler.applyTextEdits method', () => {
     test('should apply edits to compiler source', () => {
       const compiler = new Compiler();
-      compiler.setSource('Table users { id int }');
+      compiler.setSource(DEFAULT_ENTRY, 'Table users { id int }');
 
       const result = applyTextEdits(compiler.parse.source(), [
         { start: 6, end: 11, newText: 'customers' },
@@ -231,7 +232,7 @@ describe('[example] applyTextEdits', () => {
 
     test('should apply multiple edits to DBML', () => {
       const compiler = new Compiler();
-      compiler.setSource(`Table users {
+      compiler.setSource(DEFAULT_ENTRY, `Table users {
   id int [pk]
   email varchar
 }`);
@@ -248,7 +249,7 @@ describe('[example] applyTextEdits', () => {
     test('should not modify the original source in compiler', () => {
       const originalSource = 'Table users { id int }';
       const compiler = new Compiler();
-      compiler.setSource(originalSource);
+      compiler.setSource(DEFAULT_ENTRY, originalSource);
 
       applyTextEdits(compiler.parse.source(), [
         { start: 6, end: 11, newText: 'customers' },

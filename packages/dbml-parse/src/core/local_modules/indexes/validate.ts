@@ -11,7 +11,7 @@ import {
   ProgramNode,
   SyntaxNode,
   VariableNode,
-} from '@/core/parser/nodes';
+} from '@/core/types/nodes';
 import { isExpressionAQuotedString, isExpressionAVariableNode } from '@/core/utils/expression';
 import { destructureIndexNode } from '@/core/utils/expression';
 import { aggregateSettingList, isVoid } from '@/core/utils/validate';
@@ -168,7 +168,7 @@ export default class IndexesValidator {
       if (!sub.type) {
         return [];
       }
-      return this.compiler.validate(sub).getErrors();
+      return this.compiler.validateNode(sub).getErrors();
     });
   }
 }

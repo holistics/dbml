@@ -3,7 +3,7 @@ import Compiler from '@/compiler';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import {
   BlockExpressionNode, CallExpressionNode, CommaExpressionNode, ElementDeclarationNode, EmptyNode, FunctionApplicationNode, FunctionExpressionNode, ListExpressionNode, ProgramNode, SyntaxNode,
-} from '@/core/parser/nodes';
+} from '@/core/types/nodes';
 import { isExpressionASignedNumberExpression, isTupleOfVariables, isValidName } from '@/core/utils/validate';
 import { destructureComplexVariable } from '@/core/utils/expression';
 import { ElementKind } from '@/core/types/keywords';
@@ -246,7 +246,7 @@ export default class RecordsValidator {
       if (!sub.type) {
         return [];
       }
-      return this.compiler.validate(sub).getErrors();
+      return this.compiler.validateNode(sub).getErrors();
     });
   }
 }

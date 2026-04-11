@@ -1,6 +1,6 @@
 import { isProgramNode } from '@/core/utils/expression';
-import { ProgramNode, type SyntaxNode } from '@/core/parser/nodes';
-import { NodeSymbol, SchemaSymbol, SymbolKind } from '@/core/types/symbols';
+import { ProgramNode, type SyntaxNode } from '@/core/types/nodes';
+import { NodeSymbol, SchemaSymbol, SymbolKind } from '@/core/types/symbol';
 import type { GlobalModule } from '../types';
 import { DEFAULT_SCHEMA_NAME, PASS_THROUGH, type PassThrough, UNHANDLED } from '@/constants';
 import Report from '@/core/types/report';
@@ -16,10 +16,16 @@ export const programModule: GlobalModule = {
       return Report.create(PASS_THROUGH);
     }
 
-    return new Report(compiler.symbolFactory.create(NodeSymbol, {
-      kind: SymbolKind.Program,
-      declaration: node,
-    }));
+    return Report.create(
+      compiler.symbolFactory.create(
+        NodeSymbol,
+        {
+          kind: SymbolKind.Program,
+          declaration: node,
+        },
+        node.filepath,
+      ),
+    );
   },
 
   // Return all member symbols that are part of this program
@@ -33,16 +39,16 @@ export const programModule: GlobalModule = {
 
     // Collect and create schemas
     const schemaMembers = new Map<string, SchemaSymbol>([
-      [DEFAULT_SCHEMA_NAME, compiler.symbolFactory.create(SchemaSymbol, { name: DEFAULT_SCHEMA_NAME })],
+      [DEFAULT_SCHEMA_NAME, compiler.symbolFactory.create(SchemaSymbol, { name: DEFAULT_SCHEMA_NAME }, symbol.filepath)],
     ]);
 
     for (const element of ast.body) {
-      const fullname = compiler.fullname(element).getValue();
+      const fullname = compiler.nodeFullname(element).getValue();
       if (!Array.isArray(fullname)) continue; // No schema here
 
       const schemaName = fullname.length <= 1 ? DEFAULT_SCHEMA_NAME : fullname[0]; // When fullname doesn't have a schema name, `public` is assumed
       if (!schemaMembers.has(schemaName)) {
-        schemaMembers.set(schemaName, compiler.symbolFactory.create(SchemaSymbol, { name: schemaName }));
+        schemaMembers.set(schemaName, compiler.symbolFactory.create(SchemaSymbol, { name: schemaName }, symbol.filepath));
       }
     }
 
@@ -55,15 +61,19 @@ export const programModule: GlobalModule = {
     return Report.create([...schemaMembers.values(), ...publicMembers.getValue()]);
   },
 
-  bind (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
+  bindNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
     if (!isProgramNode(node)) return Report.create(PASS_THROUGH);
     return new Binder(node, compiler).resolve();
   },
 
-  interpret (compiler: Compiler, node: SyntaxNode): Report<Database | undefined> | Report<PassThrough> {
+  interpretNode (compiler: Compiler, node: SyntaxNode): Report<Database | undefined> | Report<PassThrough> {
     if (!isProgramNode(node)) return Report.create(PASS_THROUGH);
 
-    if (!shouldInterpretNode(compiler, node)) return Report.create(undefined, [...compiler.parseFile().getErrors(), ...compiler.bind(node).getErrors()]);
+    if (!shouldInterpretNode(compiler, node)) return Report.create(undefined, [
+      ...[...compiler.parseProject().values()].flatMap((r) => r.getErrors()),
+      ...compiler.validateNode(node).getErrors(),
+      ...compiler.bindNode(node).getErrors()],
+    );
 
     return new ProgramInterpreter(compiler, node).interpret() as Report<Database | undefined>;
   },

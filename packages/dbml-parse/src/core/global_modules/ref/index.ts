@@ -1,9 +1,9 @@
 import { isElementNode, isExpressionAVariableNode, isAccessExpression } from '@/core/utils/expression';
 import { ElementKind } from '@/core/types/keywords';
-import { AttributeNode, ElementDeclarationNode } from '@/core/parser/nodes';
-import type { InfixExpressionNode, SyntaxNode } from '@/core/parser/nodes';
-import type { SyntaxToken } from '@/core/lexer/tokens';
-import { NodeSymbol, SchemaSymbol, SymbolKind } from '@/core/types/symbols';
+import { AttributeNode, ElementDeclarationNode } from '@/core/types/nodes';
+import type { InfixExpressionNode, SyntaxNode } from '@/core/types/nodes';
+import type { SyntaxToken } from '@/core/types/tokens';
+import { NodeSymbol, SchemaSymbol, SymbolKind } from '@/core/types/symbol';
 import type { GlobalModule } from '../types';
 import { DEFAULT_SCHEMA_NAME, PASS_THROUGH, UNHANDLED, type PassThrough } from '@/constants';
 import Report from '@/core/types/report';
@@ -35,14 +35,14 @@ export const refModule: GlobalModule = {
     // Skip variables that are inside setting attribute values (e.g. delete: cascade)
     if (node.parentOfKind(AttributeNode)) return Report.create(PASS_THROUGH);
 
-    const programNode = compiler.parseFile().getValue().ast;
+    const programNode = compiler.parseFile(node.filepath).getValue().ast;
     const globalSymbol = compiler.nodeSymbol(programNode).getValue();
     if (globalSymbol === UNHANDLED) return Report.create(undefined);
 
     return nodeRefereeOfRefEndpoint(compiler, globalSymbol, node);
   },
 
-  bind (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
+  bindNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
     if (!isElementNode(node, ElementKind.Ref)) return Report.create(PASS_THROUGH);
 
     return Report.create(
@@ -51,7 +51,7 @@ export const refModule: GlobalModule = {
     );
   },
 
-  interpret (compiler: Compiler, node: SyntaxNode): Report<Ref | undefined> | Report<PassThrough> {
+  interpretNode (compiler: Compiler, node: SyntaxNode): Report<Ref | undefined> | Report<PassThrough> {
     if (!isElementNode(node, ElementKind.Ref)) return Report.create(PASS_THROUGH);
 
     if (!shouldInterpretNode(compiler, node)) return Report.create(undefined);
@@ -65,7 +65,7 @@ function getDefaultSchemaSymbol (compiler: Compiler, globalSymbol: NodeSymbol): 
   if (members.hasValue(UNHANDLED)) return undefined;
 
   return members.getValue().find((m: NodeSymbol) =>
-    m instanceof SchemaSymbol && m.qualifiedName.join('.') === DEFAULT_SCHEMA_NAME,
+    m.isPublicSchema(),
   );
 }
 

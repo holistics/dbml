@@ -1,5 +1,5 @@
 import { last } from 'lodash-es';
-import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
+import { SyntaxToken, SyntaxTokenKind } from '@/core/types/tokens';
 import { alternateLists } from '@/core/utils/chars';
 import NodeFactory from '@/core/parser/factory';
 import {
@@ -26,7 +26,11 @@ import {
   SyntaxNode,
   TupleExpressionNode,
   VariableNode,
-} from '@/core/parser/nodes';
+  UseDeclarationNode,
+  UseSpecifierListNode,
+  UseSpecifierNode,
+  WildcardNode,
+} from '@/core/types/nodes';
 import { extractVariableNode, isAsKeyword, isExpressionAnIdentifierNode } from '../utils/expression';
 
 // Try to interpret a function application as an element
@@ -180,6 +184,21 @@ function markInvalidNode (node: SyntaxNode) {
   } else if (node instanceof ProgramNode) {
     node.body.forEach(markInvalid);
     markInvalid(node.eof);
+  } else if (node instanceof UseDeclarationNode) {
+    markInvalid(node.useKeyword);
+    markInvalid(node.specifiers);
+    markInvalid(node.fromKeyword);
+    markInvalid(node.importPath);
+  } else if (node instanceof UseSpecifierListNode) {
+    markInvalid(node.openBrace);
+    node.specifiers.forEach(markInvalid);
+    node.commaList.forEach(markInvalid);
+    markInvalid(node.closeBrace);
+  } else if (node instanceof UseSpecifierNode) {
+    markInvalid(node.importKind);
+    markInvalid(node.name);
+  } else if (node instanceof WildcardNode) {
+    markInvalid(node.token);
   } else if (node instanceof EmptyNode) {
     // DummyNode has no children to mark invalid
   } else {
@@ -295,9 +314,30 @@ export function getMemberChain (node: SyntaxNode): Readonly<(SyntaxNode | Syntax
     return [];
   }
 
+  if (node instanceof UseDeclarationNode) {
+    return filterUndefined(node.useKeyword, node.specifiers, node.fromKeyword, node.importPath);
+  }
+
+  if (node instanceof UseSpecifierListNode) {
+    return filterUndefined(node.openBrace, ...alternateLists(node.specifiers, node.commaList), node.closeBrace);
+  }
+
+  if (node instanceof UseSpecifierNode) {
+    return filterUndefined(node.importKind, node.name);
+  }
+
+  if (node instanceof WildcardNode) {
+    return filterUndefined(node.token);
+  }
+
   if (node instanceof GroupExpressionNode) {
     throw new Error('This case is already handled by TupleExpressionNode');
   }
 
   throw new Error('Unreachable - no other possible cases');
+}
+
+
+export function isWildcardExpression (node: SyntaxNode | undefined): node is WildcardNode {
+  return node instanceof WildcardNode;
 }

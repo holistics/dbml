@@ -6,7 +6,7 @@ import {
   FunctionExpressionNode,
   SyntaxNode,
   TupleExpressionNode,
-} from '@/core/parser/nodes';
+} from '@/core/types/nodes';
 import { CompileError, CompileErrorCode, CompileWarning } from '@/core/types/errors';
 import Report from '@/core/types/report';
 import type {
@@ -35,7 +35,7 @@ import {
 import { destructureCallExpression, extractQuotedStringToken, extractVariableFromExpression, isExpressionAVariableNode, isElementNode } from '@/core/utils/expression';
 import Compiler from '@/compiler/index';
 import { ElementKind } from '@/core/types/keywords';
-import { NodeSymbol, SymbolKind } from '@/core/types/symbols';
+import { NodeSymbol, SymbolKind } from '@/core/types/symbol';
 import { PASS_THROUGH, UNHANDLED } from '@/constants';
 import { getTokenPosition, lookupMember, lookupInDefaultSchema } from '../utils';
 import { validateForeignKeys, validatePrimaryKey, validateUnique } from './utils/constraints';
@@ -130,7 +130,7 @@ function getTableAndColumnsOfRecords (records: ElementDeclarationNode, compiler:
   const tableName = tableNameFragments.at(-1) ?? '';
   const schemaName = tableNameFragments.length > 1 ? tableNameFragments.slice(0, -1).join('.') : undefined;
 
-  const ast = compiler.parseFile().getValue().ast;
+  const ast = compiler.parseFile(records.filepath).getValue().ast;
   const programSymbol = compiler.nodeSymbol(ast);
   if (programSymbol.hasValue(UNHANDLED)) return { table: undefined, mergedColumns: [] };
 

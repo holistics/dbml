@@ -7,7 +7,7 @@ import {
   BlockExpressionNode, CallExpressionNode, ElementDeclarationNode,
   FunctionApplicationNode, FunctionExpressionNode, ListExpressionNode, PrefixExpressionNode,
   SyntaxNode,
-} from '@/core/parser/nodes';
+} from '@/core/types/nodes';
 import {
   extractColor, extractElementName, getColumnSymbolsOfRefOperand,
   getTokenPosition, isSameEndpoint, normalizeNoteContent,
@@ -19,7 +19,7 @@ import {
 } from '@/core/utils/expression';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import { aggregateSettingList, isValidPartialInjection } from '@/core/utils/validate';
-import { SymbolKind } from '@/core/types/symbols';
+import { SymbolKind } from '@/core/types/symbol';
 import { ElementKind, SettingName } from '@/core/types/keywords';
 import Compiler from '@/compiler';
 import { UNHANDLED } from '@/constants';
@@ -66,6 +66,7 @@ export class TableInterpreter {
         token: {
           start: { offset: -1, line: -1, column: -1 }, // do not make sense to have a meaningful start (?)
           end: { offset: -1, line: -1, column: -1 }, // do not make sense to have a meaningful end (?)
+          filepath: this.declarationNode.filepath,
         },
         pk: true,
       });

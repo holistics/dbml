@@ -1,0 +1,8 @@
+// imports a schema-qualified table alongside a local table;
+// verifies cross-schema use and that the imported table appears in externals
+use { table auth.users } from './auth-tables.dbml'
+
+Table orders {
+  id int [pk]
+  user_id int
+}

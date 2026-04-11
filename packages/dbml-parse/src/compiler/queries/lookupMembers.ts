@@ -1,8 +1,8 @@
 import type Compiler from '../index';
-import { NodeSymbol, SchemaSymbol, SymbolKind } from '@/core/types/symbols';
+import { NodeSymbol, SchemaSymbol, SymbolKind } from '@/core/types/symbol';
 import Report from '@/core/types/report';
 import { UNHANDLED } from '@/constants';
-import { SyntaxNode } from '@/core/parser/nodes';
+import { SyntaxNode } from '@/core/types/nodes';
 
 export function lookupMembers (this: Compiler, symbolOrNode: NodeSymbol | SyntaxNode, targetKind: SymbolKind, targetName: string): Report<NodeSymbol | undefined> {
   let symbol: NodeSymbol;
@@ -24,7 +24,7 @@ export function lookupMembers (this: Compiler, symbolOrNode: NodeSymbol | Syntax
       if (!m.isKind(targetKind)) return false;
 
       const name = this.symbolName(m);
-      const alias = (symbol instanceof SchemaSymbol || symbol.isKind(SymbolKind.Program)) && m.declaration ? this.alias(m.declaration).getFiltered(UNHANDLED) : undefined;
+      const alias = (symbol instanceof SchemaSymbol || symbol.isKind(SymbolKind.Program)) && m.declaration ? this.nodeAlias(m.declaration).getFiltered(UNHANDLED) : undefined;
       return name === targetName || alias === targetName;
     }),
   );

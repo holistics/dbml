@@ -1,3 +1,13 @@
+// Allowable import kinds for use declaration
+export enum ImportKind {
+  Table = 'table',
+  Enum = 'enum',
+  TableGroup = 'tablegroup',
+  TablePartial = 'tablepartial',
+  Note = 'note',
+  Schema = 'schema',
+}
+
 export enum ElementKind {
   Table = 'table',
   Enum = 'enum',
@@ -9,6 +19,7 @@ export enum ElementKind {
   TablePartial = 'tablepartial',
   Checks = 'checks',
   Records = 'records',
+  DiagramView = 'diagramview',
 }
 
 export enum SettingName {

@@ -9,7 +9,7 @@ import {
   ListExpressionNode,
   ProgramNode,
   SyntaxNode,
-} from '@/core/parser/nodes';
+} from '@/core/types/nodes';
 import { isExpressionAQuotedString } from '@/core/utils/expression';
 import { aggregateSettingList } from '@/core/utils/validate';
 import { ElementKind } from '@/core/types/keywords';
@@ -131,7 +131,7 @@ export default class ChecksValidator {
       if (!sub.type) {
         return [];
       }
-      return this.compiler.validate(sub).getErrors();
+      return this.compiler.validateNode(sub).getErrors();
     });
   }
 }

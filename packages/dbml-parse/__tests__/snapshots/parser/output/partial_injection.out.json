@@ -9,7 +9,7 @@
       "body": [
         {
           "context": {
-            "id": "node@<element-declaration>@:with_timestamp@[L0:C0, L2:C1]",
+            "id": "node@<element-declaration>@with_timestamp@[L0:C0, L2:C1]",
             "snippet": "TableParti...amp uuid\n}"
           },
           "children": {
@@ -21,7 +21,7 @@
               "children": {
                 "blockCloseBrace": {
                   "context": {
-                    "id": "token@<rbrace>@:}@[L2:C0, L2:C1]",
+                    "id": "token@<rbrace>@}@[L2:C0, L2:C1]",
                     "snippet": "}"
                   },
                   "leadingTrivia": "",
@@ -30,7 +30,7 @@
                 },
                 "blockOpenBrace": {
                   "context": {
-                    "id": "token@<lbrace>@:{@[L0:C28, L0:C29]",
+                    "id": "token@<lbrace>@{@[L0:C28, L0:C29]",
                     "snippet": "{"
                   },
                   "leadingTrivia": "",
@@ -53,26 +53,26 @@
                           "children": {
                             "expression": {
                               "context": {
-                                "id": "node@<variable>@:uuid@[L1:C12, L1:C16]",
+                                "id": "node@<variable>@uuid@[L1:C12, L1:C16]",
                                 "snippet": "uuid"
                               },
                               "children": {
-                                "fullEnd": 47,
-                                "fullStart": 42,
                                 "variable": {
                                   "context": {
-                                    "id": "token@<identifier>@:uuid@[L1:C12, L1:C16]",
+                                    "id": "token@<identifier>@uuid@[L1:C12, L1:C16]",
                                     "snippet": "uuid"
                                   },
                                   "leadingTrivia": "",
                                   "trailingTrivia": "\n",
                                   "value": "uuid"
                                 }
-                              }
-                            },
-                            "fullEnd": 47,
-                            "fullStart": 42
-                          }
+                              },
+                              "fullEnd": 47,
+                              "fullStart": 42
+                            }
+                          },
+                          "fullEnd": 47,
+                          "fullStart": 42
                         }
                       ],
                       "callee": {
@@ -83,30 +83,30 @@
                         "children": {
                           "expression": {
                             "context": {
-                              "id": "node@<variable>@:timestamp@[L1:C2, L1:C11]",
+                              "id": "node@<variable>@timestamp@[L1:C2, L1:C11]",
                               "snippet": "timestamp"
                             },
                             "children": {
-                              "fullEnd": 42,
-                              "fullStart": 30,
                               "variable": {
                                 "context": {
-                                  "id": "token@<identifier>@:timestamp@[L1:C2, L1:C11]",
+                                  "id": "token@<identifier>@timestamp@[L1:C2, L1:C11]",
                                   "snippet": "timestamp"
                                 },
                                 "leadingTrivia": "  ",
                                 "trailingTrivia": " ",
                                 "value": "timestamp"
                               }
-                            }
-                          },
-                          "fullEnd": 42,
-                          "fullStart": 30
-                        }
-                      },
-                      "fullEnd": 47,
-                      "fullStart": 30
+                            },
+                            "fullEnd": 42,
+                            "fullStart": 30
+                          }
+                        },
+                        "fullEnd": 42,
+                        "fullStart": 30
+                      }
                     },
+                    "fullEnd": 47,
+                    "fullStart": 30,
                     "symbol": {
                       "context": {
                         "id": "symbol@Column@@[L1:C2, L1:C16]",
@@ -120,13 +120,11 @@
                       "references": []
                     }
                   }
-                ],
-                "fullEnd": 49,
-                "fullStart": 28
-              }
+                ]
+              },
+              "fullEnd": 49,
+              "fullStart": 28
             },
-            "fullEnd": 49,
-            "fullStart": 0,
             "name": {
               "context": {
                 "id": "node@<primary-expression>@@[L0:C13, L0:C27]",
@@ -135,30 +133,30 @@
               "children": {
                 "expression": {
                   "context": {
-                    "id": "node@<variable>@:with_timestamp@[L0:C13, L0:C27]",
+                    "id": "node@<variable>@with_timestamp@[L0:C13, L0:C27]",
                     "snippet": "with_timestamp"
                   },
                   "children": {
-                    "fullEnd": 28,
-                    "fullStart": 13,
                     "variable": {
                       "context": {
-                        "id": "token@<identifier>@:with_timestamp@[L0:C13, L0:C27]",
+                        "id": "token@<identifier>@with_timestamp@[L0:C13, L0:C27]",
                         "snippet": "with_timestamp"
                       },
                       "leadingTrivia": "",
                       "trailingTrivia": " ",
                       "value": "with_timestamp"
                     }
-                  }
-                },
-                "fullEnd": 28,
-                "fullStart": 13
-              }
+                  },
+                  "fullEnd": 28,
+                  "fullStart": 13
+                }
+              },
+              "fullEnd": 28,
+              "fullStart": 13
             },
             "type": {
               "context": {
-                "id": "token@<identifier>@:TablePartial@[L0:C0, L0:C12]",
+                "id": "token@<identifier>@TablePartial@[L0:C0, L0:C12]",
                 "snippet": "TablePartial"
               },
               "leadingTrivia": "",
@@ -166,13 +164,15 @@
               "value": "TablePartial"
             }
           },
+          "fullEnd": 49,
+          "fullStart": 0,
           "symbol": {
             "context": {
-              "id": "symbol@TablePartial@:with_timestamp@[L0:C0, L2:C1]",
+              "id": "symbol@TablePartial@with_timestamp@[L0:C0, L2:C1]",
               "snippet": "TableParti...amp uuid\n}"
             },
             "declaration": {
-              "id": "node@<element-declaration>@:with_timestamp@[L0:C0, L2:C1]",
+              "id": "node@<element-declaration>@with_timestamp@[L0:C0, L2:C1]",
               "snippet": "TableParti...amp uuid\n}"
             },
             "members": [
@@ -180,7 +180,13 @@
                 "context": {
                   "id": "symbol@Column@@[L1:C2, L1:C16]",
                   "snippet": "timestamp uuid"
-                }
+                },
+                "declaration": {
+                  "id": "node@<function-application>@@[L1:C2, L1:C16]",
+                  "snippet": "timestamp uuid"
+                },
+                "members": [],
+                "references": []
               }
             ],
             "references": [
@@ -193,7 +199,7 @@
         },
         {
           "context": {
-            "id": "node@<element-declaration>@:users@[L4:C0, L6:C1]",
+            "id": "node@<element-declaration>@users@[L4:C0, L6:C1]",
             "snippet": "Table user...imestamp\n}"
           },
           "children": {
@@ -205,7 +211,7 @@
               "children": {
                 "blockCloseBrace": {
                   "context": {
-                    "id": "token@<rbrace>@:}@[L6:C0, L6:C1]",
+                    "id": "token@<rbrace>@}@[L6:C0, L6:C1]",
                     "snippet": "}"
                   },
                   "leadingTrivia": "",
@@ -214,7 +220,7 @@
                 },
                 "blockOpenBrace": {
                   "context": {
-                    "id": "token@<lbrace>@:{@[L4:C12, L4:C13]",
+                    "id": "token@<lbrace>@{@[L4:C12, L4:C13]",
                     "snippet": "{"
                   },
                   "leadingTrivia": "",
@@ -243,49 +249,50 @@
                             "children": {
                               "expression": {
                                 "context": {
-                                  "id": "node@<variable>@:with_timestamp@[L5:C3, L5:C17]",
+                                  "id": "node@<variable>@with_timestamp@[L5:C3, L5:C17]",
                                   "snippet": "with_timestamp"
                                 },
                                 "children": {
-                                  "fullEnd": 82,
-                                  "fullStart": 67,
                                   "variable": {
                                     "context": {
-                                      "id": "token@<identifier>@:with_timestamp@[L5:C3, L5:C17]",
+                                      "id": "token@<identifier>@with_timestamp@[L5:C3, L5:C17]",
                                       "snippet": "with_timestamp"
                                     },
                                     "leadingTrivia": "",
                                     "trailingTrivia": "\n",
                                     "value": "with_timestamp"
                                   }
-                                }
-                              },
-                              "fullEnd": 82,
-                              "fullStart": 67
+                                },
+                                "fullEnd": 82,
+                                "fullStart": 67
+                              }
                             },
+                            "fullEnd": 82,
+                            "fullStart": 67,
                             "referee": {
                               "context": {
-                                "id": "symbol@TablePartial@:with_timestamp@[L0:C0, L2:C1]",
-                                "snippet": "TableParti...amp uuid\n}"
+                                "id": "symbol@TablePartial@with_timestamp@[L0:C0, L2:C1]",
+                                "snippet": "TableParti...amp uuid\n}",
+                                "filepath": "/main.dbml"
                               }
                             }
                           },
-                          "fullEnd": 82,
-                          "fullStart": 64,
                           "op": {
                             "context": {
-                              "id": "token@<op>@:~@[L5:C2, L5:C3]",
+                              "id": "token@<op>@~@[L5:C2, L5:C3]",
                               "snippet": "~"
                             },
                             "leadingTrivia": "  ",
                             "trailingTrivia": "",
                             "value": "~"
                           }
-                        }
-                      },
-                      "fullEnd": 82,
-                      "fullStart": 64
+                        },
+                        "fullEnd": 82,
+                        "fullStart": 64
+                      }
                     },
+                    "fullEnd": 82,
+                    "fullStart": 64,
                     "symbol": {
                       "context": {
                         "id": "symbol@PartialInjection@@[L5:C2, L5:C17]",
@@ -298,13 +305,11 @@
                       "references": []
                     }
                   }
-                ],
-                "fullEnd": 84,
-                "fullStart": 62
-              }
+                ]
+              },
+              "fullEnd": 84,
+              "fullStart": 62
             },
-            "fullEnd": 84,
-            "fullStart": 49,
             "name": {
               "context": {
                 "id": "node@<primary-expression>@@[L4:C6, L4:C11]",
@@ -313,30 +318,30 @@
               "children": {
                 "expression": {
                   "context": {
-                    "id": "node@<variable>@:users@[L4:C6, L4:C11]",
+                    "id": "node@<variable>@users@[L4:C6, L4:C11]",
                     "snippet": "users"
                   },
                   "children": {
-                    "fullEnd": 62,
-                    "fullStart": 56,
                     "variable": {
                       "context": {
-                        "id": "token@<identifier>@:users@[L4:C6, L4:C11]",
+                        "id": "token@<identifier>@users@[L4:C6, L4:C11]",
                         "snippet": "users"
                       },
                       "leadingTrivia": "",
                       "trailingTrivia": " ",
                       "value": "users"
                     }
-                  }
-                },
-                "fullEnd": 62,
-                "fullStart": 56
-              }
+                  },
+                  "fullEnd": 62,
+                  "fullStart": 56
+                }
+              },
+              "fullEnd": 62,
+              "fullStart": 56
             },
             "type": {
               "context": {
-                "id": "token@<identifier>@:Table@[L4:C0, L4:C5]",
+                "id": "token@<identifier>@Table@[L4:C0, L4:C5]",
                 "snippet": "Table"
               },
               "leadingTrivia": "\n",
@@ -344,13 +349,15 @@
               "value": "Table"
             }
           },
+          "fullEnd": 84,
+          "fullStart": 49,
           "symbol": {
             "context": {
-              "id": "symbol@Table@:users@[L4:C0, L6:C1]",
+              "id": "symbol@Table@users@[L4:C0, L6:C1]",
               "snippet": "Table user...imestamp\n}"
             },
             "declaration": {
-              "id": "node@<element-declaration>@:users@[L4:C0, L6:C1]",
+              "id": "node@<element-declaration>@users@[L4:C0, L6:C1]",
               "snippet": "Table user...imestamp\n}"
             },
             "members": [
@@ -358,13 +365,24 @@
                 "context": {
                   "id": "symbol@Column@@[L1:C2, L1:C16]",
                   "snippet": "timestamp uuid"
-                }
+                },
+                "declaration": {
+                  "id": "node@<function-application>@@[L1:C2, L1:C16]",
+                  "snippet": "timestamp uuid"
+                },
+                "members": [],
+                "references": []
               },
               {
                 "context": {
                   "id": "symbol@PartialInjection@@[L5:C2, L5:C17]",
                   "snippet": "~with_timestamp"
-                }
+                },
+                "declaration": {
+                  "id": "node@<function-application>@@[L5:C2, L5:C17]",
+                  "snippet": "~with_timestamp"
+                },
+                "references": []
               }
             ],
             "references": []
@@ -373,16 +391,16 @@
       ],
       "eof": {
         "context": {
-          "id": "token@<eof>@:@[L7:C0, L7:C0]",
+          "id": "token@<eof>@@[L7:C0, L7:C0]",
           "snippet": ""
         },
         "leadingTrivia": "",
         "trailingTrivia": "",
         "value": ""
-      },
-      "fullEnd": 84,
-      "fullStart": 0
+      }
     },
+    "fullEnd": 84,
+    "fullStart": 0,
     "symbol": {
       "context": {
         "id": "symbol@Program@@[L0:C0, L7:C0]",
@@ -396,19 +414,142 @@
         {
           "context": {
             "id": "symbol@Schema@public@[L?:C?, L?:C?]"
-          }
+          },
+          "members": [
+            {
+              "context": {
+                "id": "symbol@Table@users@[L4:C0, L6:C1]",
+                "snippet": "Table user...imestamp\n}"
+              },
+              "declaration": {
+                "id": "node@<element-declaration>@users@[L4:C0, L6:C1]",
+                "snippet": "Table user...imestamp\n}"
+              },
+              "members": [
+                {
+                  "context": {
+                    "id": "symbol@Column@@[L1:C2, L1:C16]",
+                    "snippet": "timestamp uuid"
+                  },
+                  "declaration": {
+                    "id": "node@<function-application>@@[L1:C2, L1:C16]",
+                    "snippet": "timestamp uuid"
+                  },
+                  "members": [],
+                  "references": []
+                },
+                {
+                  "context": {
+                    "id": "symbol@PartialInjection@@[L5:C2, L5:C17]",
+                    "snippet": "~with_timestamp"
+                  },
+                  "declaration": {
+                    "id": "node@<function-application>@@[L5:C2, L5:C17]",
+                    "snippet": "~with_timestamp"
+                  },
+                  "references": []
+                }
+              ],
+              "references": []
+            },
+            {
+              "context": {
+                "id": "symbol@TablePartial@with_timestamp@[L0:C0, L2:C1]",
+                "snippet": "TableParti...amp uuid\n}"
+              },
+              "declaration": {
+                "id": "node@<element-declaration>@with_timestamp@[L0:C0, L2:C1]",
+                "snippet": "TableParti...amp uuid\n}"
+              },
+              "members": [
+                {
+                  "context": {
+                    "id": "symbol@Column@@[L1:C2, L1:C16]",
+                    "snippet": "timestamp uuid"
+                  },
+                  "declaration": {
+                    "id": "node@<function-application>@@[L1:C2, L1:C16]",
+                    "snippet": "timestamp uuid"
+                  },
+                  "members": [],
+                  "references": []
+                }
+              ],
+              "references": [
+                {
+                  "id": "node@<primary-expression>@@[L5:C3, L5:C17]",
+                  "snippet": "with_timestamp"
+                }
+              ]
+            }
+          ],
+          "references": []
         },
         {
           "context": {
-            "id": "symbol@TablePartial@:with_timestamp@[L0:C0, L2:C1]",
-            "snippet": "TableParti...amp uuid\n}"
-          }
-        },
-        {
-          "context": {
-            "id": "symbol@Table@:users@[L4:C0, L6:C1]",
+            "id": "symbol@Table@users@[L4:C0, L6:C1]",
             "snippet": "Table user...imestamp\n}"
-          }
+          },
+          "declaration": {
+            "id": "node@<element-declaration>@users@[L4:C0, L6:C1]",
+            "snippet": "Table user...imestamp\n}"
+          },
+          "members": [
+            {
+              "context": {
+                "id": "symbol@Column@@[L1:C2, L1:C16]",
+                "snippet": "timestamp uuid"
+              },
+              "declaration": {
+                "id": "node@<function-application>@@[L1:C2, L1:C16]",
+                "snippet": "timestamp uuid"
+              },
+              "members": [],
+              "references": []
+            },
+            {
+              "context": {
+                "id": "symbol@PartialInjection@@[L5:C2, L5:C17]",
+                "snippet": "~with_timestamp"
+              },
+              "declaration": {
+                "id": "node@<function-application>@@[L5:C2, L5:C17]",
+                "snippet": "~with_timestamp"
+              },
+              "references": []
+            }
+          ],
+          "references": []
+        },
+        {
+          "context": {
+            "id": "symbol@TablePartial@with_timestamp@[L0:C0, L2:C1]",
+            "snippet": "TableParti...amp uuid\n}"
+          },
+          "declaration": {
+            "id": "node@<element-declaration>@with_timestamp@[L0:C0, L2:C1]",
+            "snippet": "TableParti...amp uuid\n}"
+          },
+          "members": [
+            {
+              "context": {
+                "id": "symbol@Column@@[L1:C2, L1:C16]",
+                "snippet": "timestamp uuid"
+              },
+              "declaration": {
+                "id": "node@<function-application>@@[L1:C2, L1:C16]",
+                "snippet": "timestamp uuid"
+              },
+              "members": [],
+              "references": []
+            }
+          ],
+          "references": [
+            {
+              "id": "node@<primary-expression>@@[L5:C3, L5:C17]",
+              "snippet": "with_timestamp"
+            }
+          ]
         }
       ],
       "references": []

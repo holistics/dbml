@@ -1,9 +1,9 @@
 import { isElementNode, isElementFieldNode, getBody } from '@/core/utils/expression';
 import { ElementKind } from '@/core/types/keywords';
-import { ElementDeclarationNode } from '@/core/parser/nodes';
-import type { SyntaxNode } from '@/core/parser/nodes';
-import type { SyntaxToken } from '@/core/lexer/tokens';
-import { NodeSymbol, SymbolKind } from '@/core/types/symbols';
+import { ElementDeclarationNode } from '@/core/types/nodes';
+import type { SyntaxNode } from '@/core/types/nodes';
+import type { SyntaxToken } from '@/core/types/tokens';
+import { NodeSymbol, SymbolKind } from '@/core/types/symbol';
 import type { GlobalModule } from '../types';
 import { PASS_THROUGH, UNHANDLED, type PassThrough } from '@/constants';
 import Report from '@/core/types/report';
@@ -30,13 +30,13 @@ export const enumModule: GlobalModule = {
       return new Report(compiler.symbolFactory.create(NodeSymbol, {
         kind: SymbolKind.Enum,
         declaration: node,
-      }));
+      }, node.filepath));
     }
     if (isElementFieldNode(node, ElementKind.Enum)) {
       return new Report(compiler.symbolFactory.create(NodeSymbol, {
         kind: SymbolKind.EnumField,
         declaration: node,
-      }));
+      }, node.filepath));
     }
     return Report.create(PASS_THROUGH);
   },
@@ -80,7 +80,7 @@ export const enumModule: GlobalModule = {
     return new Report(members, errors);
   },
 
-  bind (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
+  bindNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
     if (!isElementNode(node, ElementKind.Enum)) return Report.create(PASS_THROUGH);
 
     return Report.create(
@@ -89,7 +89,7 @@ export const enumModule: GlobalModule = {
     );
   },
 
-  interpret (compiler: Compiler, node: SyntaxNode): Report<SchemaElement | SchemaElement[] | undefined> | Report<PassThrough> {
+  interpretNode (compiler: Compiler, node: SyntaxNode): Report<SchemaElement | SchemaElement[] | undefined> | Report<PassThrough> {
     if (!isElementNode(node, ElementKind.Enum)) return Report.create(PASS_THROUGH);
 
     if (!shouldInterpretNode(compiler, node)) return Report.create(undefined);

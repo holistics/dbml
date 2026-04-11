@@ -1,0 +1,5 @@
+// deepest level: payment source
+Table payments {
+  id int [pk]
+  amount int
+}

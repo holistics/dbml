@@ -1,9 +1,9 @@
-import type { SyntaxNode } from '@/core/parser/nodes';
+import type { SyntaxNode } from '@/core/types/nodes';
 import {
   FunctionExpressionNode,
   PrefixExpressionNode,
   EmptyNode,
-} from '@/core/parser/nodes';
+} from '@/core/types/nodes';
 import { isExpressionAnIdentifierNode, isExpressionASignedNumberExpression } from '@/core/utils/expression';
 import { destructureComplexVariable, extractQuotedStringToken, extractNumericLiteral } from '@/core/utils/expression';
 import { last } from 'lodash-es';

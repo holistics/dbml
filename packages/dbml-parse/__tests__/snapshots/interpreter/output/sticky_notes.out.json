@@ -1,7 +1,15 @@
 {
   "database": {
     "aliases": [],
+    "diagramViews": [],
     "enums": [],
+    "externals": {
+      "enums": [],
+      "notes": [],
+      "tableGroups": [],
+      "tablePartials": [],
+      "tables": []
+    },
     "notes": [
       {
         "content": "One line note",
@@ -11,6 +19,9 @@
             "column": 2,
             "line": 8,
             "offset": 141
+          },
+          "filepath": {
+            "path": "/main.dbml"
           },
           "start": {
             "column": 1,
@@ -27,6 +38,9 @@
             "column": 2,
             "line": 15,
             "offset": 190
+          },
+          "filepath": {
+            "path": "/main.dbml"
           },
           "start": {
             "column": 1,
@@ -58,6 +72,9 @@
                 "line": 2,
                 "offset": 63
               },
+              "filepath": {
+                "path": "/main.dbml"
+              },
               "start": {
                 "column": 3,
                 "line": 2,
@@ -84,6 +101,9 @@
                 "line": 3,
                 "offset": 106
               },
+              "filepath": {
+                "path": "/main.dbml"
+              },
               "start": {
                 "column": 3,
                 "line": 3,
@@ -109,6 +129,9 @@
             "line": 4,
             "offset": 108
           },
+          "filepath": {
+            "path": "/main.dbml"
+          },
           "start": {
             "column": 1,
             "line": 1,
@@ -122,6 +145,9 @@
         "column": 1,
         "line": 16,
         "offset": 191
+      },
+      "filepath": {
+        "path": "/main.dbml"
       },
       "start": {
         "column": 1,
