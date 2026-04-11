@@ -9,7 +9,6 @@ import {
   createConstraintErrors,
 } from './helper';
 import { keyBy, groupBy, compact, isEmpty, filter, flatMap } from 'lodash-es';
-import { InterpreterDatabase, TableRecordRow } from '@/core/interpreter/types';
 
 type CompileError = CompileWarning;
 

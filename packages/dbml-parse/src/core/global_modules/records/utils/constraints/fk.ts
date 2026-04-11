@@ -10,7 +10,6 @@ import {
 } from './helper';
 import { DEFAULT_SCHEMA_NAME } from '@/constants';
 import { isEmpty, flatMap } from 'lodash-es';
-import { InterpreterDatabase, TableRecordRow } from '@/core/interpreter/types';
 
 type TableInfo = {
   rows: TableRecord;
