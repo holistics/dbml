@@ -194,8 +194,8 @@ export default class TableValidator {
       if (!name) continue;
       const existing = seenPartials.get(name);
       if (existing) {
-        fieldErrors.push(new CompileError(CompileErrorCode.INVALID_TABLE_PARTIAL_INJECTION, `Duplicate table partial injection '${name}'`, existing.callee!));
-        fieldErrors.push(new CompileError(CompileErrorCode.INVALID_TABLE_PARTIAL_INJECTION, `Duplicate table partial injection '${name}'`, injection.callee!));
+        fieldErrors.push(new CompileError(CompileErrorCode.DUPLICATE_TABLE_PARTIAL_INJECTION_NAME, `Duplicate table partial injection '${name}'`, existing.callee!));
+        fieldErrors.push(new CompileError(CompileErrorCode.DUPLICATE_TABLE_PARTIAL_INJECTION_NAME, `Duplicate table partial injection '${name}'`, injection.callee!));
       } else {
         seenPartials.set(name, injection);
       }
