@@ -1,18 +1,6 @@
 {
   "errors": [
     {
-      "code": "BINDING_ERROR",
-      "diagnostic": "Table 'U2' does not exist in Schema 'public'",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<primary-expression>@@[L35:C2, L35:C4]",
-          "snippet": "U2"
-        }
-      }
-    },
-    {
       "code": "TABLE_REAPPEAR_IN_TABLEGROUP",
       "diagnostic": "Table \"follows\" already appears in group \"A1\"",
       "filepath": "/main.dbml",
@@ -45,6 +33,18 @@
         "context": {
           "id": "node@<function-application>@@[L31:C4, L31:C5]",
           "snippet": "U"
+        }
+      }
+    },
+    {
+      "code": "TABLE_REAPPEAR_IN_TABLEGROUP",
+      "diagnostic": "Table \"A.users\" already appears in group \"A5\"",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<function-application>@@[L39:C2, L39:C9]",
+          "snippet": "A.users"
         }
       }
     }

@@ -119,8 +119,19 @@ function nodeRefereeOfTableGroupField (compiler: Compiler, globalSymbol: NodeSym
     if (!schemas.hasValue(UNHANDLED)) {
       for (const schema of schemas.getValue()) {
         if (!(schema instanceof SchemaSymbol)) continue;
+        // lookupMember checks aliases only for public schemas; for non-public, also check aliases explicitly
         const result = lookupMember(compiler, schema, name, { kinds: [SymbolKind.Table], ignoreNotFound: true, errorNode: node });
         if (result.getValue()) return result;
+        if (!schema.isPublicSchema()) {
+          const members = compiler.symbolMembers(schema);
+          if (!members.hasValue(UNHANDLED)) {
+            const match = members.getValue().find((m) => {
+              if (!m.isKind(SymbolKind.Table) || !m.declaration) return false;
+              return compiler.nodeAlias(m.declaration).getFiltered(UNHANDLED) === name;
+            });
+            if (match) return new Report(match);
+          }
+        }
       }
     }
     return lookupMember(compiler, globalSymbol, name, { kinds: [SymbolKind.Table], ignoreNotFound: false, errorNode: node });
