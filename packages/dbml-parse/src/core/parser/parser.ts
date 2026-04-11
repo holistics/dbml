@@ -34,13 +34,10 @@ import {
   VariableNode,
   WildcardNode,
   SyntaxNodeIdGenerator,
-  UseDeclarationNode,
-  UseSpecifierListNode,
-  UseSpecifierNode,
 } from '@/core/types/nodes';
 import NodeFactory from '@/core/parser/factory';
 import { hasTrailingNewLines, hasTrailingSpaces, isAtStartOfLine } from '@/core/lexer/utils';
-import { isAsKeyword, isFromKeyword, isReuseKeyword, isUseKeyword } from '@/core/utils/expression';
+import { isAsKeyword } from '@/core/utils/expression';
 import { Filepath } from '@/core/types/filepath';
 
 // A class of errors that represent a parsing failure and contain the node that was partially parsed
@@ -70,13 +67,10 @@ export default class Parser {
 
   private source: string;
 
-  private filepath: Filepath;
-
   constructor (filepath: Filepath, source: string, tokens: SyntaxToken[], nodeIdGenerator: SyntaxNodeIdGenerator) {
     this.source = source;
     this.tokens = tokens;
     this.nodeFactory = new NodeFactory(nodeIdGenerator, filepath);
-    this.filepath = filepath;
   }
 
   private isAtEnd (): boolean {
@@ -204,200 +198,22 @@ export default class Parser {
 
   /* Parsing and synchronizing ProgramNode */
 
-  private program (): (UseDeclarationNode | ElementDeclarationNode)[] {
-    const statements: (UseDeclarationNode | ElementDeclarationNode)[] = [];
+  private program () {
+    const body: ElementDeclarationNode[] = [];
     while (!this.isAtEnd()) {
-      if (isUseKeyword(this.peek()) || isReuseKeyword(this.peek())) {
-        try {
-          statements.push(this.useDeclaration());
-        } catch (e) {
-          if (!(e instanceof PartialParsingError)) {
-            throw e;
-          }
-          if (e.partialNode instanceof UseDeclarationNode) {
-            statements.push(e.partialNode);
-          }
-          this.synchronizeProgram();
-        }
-      } else {
-        try {
-          statements.push(this.elementDeclaration());
-        } catch (e) {
-          if (!(e instanceof PartialParsingError)) {
-            throw e;
-          }
-          statements.push(e.partialNode);
-          this.synchronizeProgram();
-        }
-      }
-    }
-
-    return statements;
-  }
-
-  /* Parsing UseDeclarationNode: use { <specifiers> } from <path> | use * from <path> */
-  private useDeclaration (): UseDeclarationNode {
-    const args: {
-      useKeyword?: SyntaxToken;
-      specifiers?: UseSpecifierListNode | WildcardNode;
-      fromKeyword?: SyntaxToken;
-      importPath?: SyntaxToken;
-    } = {};
-    const buildNode = () => this.nodeFactory.create(UseDeclarationNode, args);
-
-    // consume 'use' keyword
-    this.advance();
-    args.useKeyword = this.previous();
-
-    // Entire-file use: use * from './path.dbml'
-    if (this.peek().kind === SyntaxTokenKind.WILDCARD) {
-      this.advance();
-      args.specifiers = this.nodeFactory.create(WildcardNode, {
-        token: this.previous(),
-      });
-    } else {
-      // Selective use: use { ... } from './path.dbml'
       try {
-        args.specifiers = this.useSpecifierList();
+        const elem = this.elementDeclaration();
+        body.push(elem);
       } catch (e) {
         if (!(e instanceof PartialParsingError)) {
           throw e;
         }
-        args.specifiers = e.partialNode;
-        throw new PartialParsingError(e.token, buildNode(), e.handlerContext);
+        body.push(e.partialNode);
+        this.synchronizeProgram();
       }
     }
 
-    // consume 'from' keyword
-    const afterWhat = args.specifiers instanceof WildcardNode ? "'*'" : 'specifier list';
-    if (isFromKeyword(this.peek())) {
-      args.fromKeyword = this.advance();
-    } else {
-      this.logError(this.peek(), CompileErrorCode.UNEXPECTED_TOKEN, `Expect 'from' after ${afterWhat}`);
-      throw new PartialParsingError(this.peek(), buildNode(), this.contextStack.findHandlerContext(this.tokens, this.current));
-    }
-
-    // consume path (string literal)
-    if (this.match(SyntaxTokenKind.STRING_LITERAL)) {
-      args.importPath = this.previous();
-    } else {
-      this.logError(this.peek(), CompileErrorCode.UNEXPECTED_TOKEN, 'Expect a string literal path');
-      throw new PartialParsingError(this.peek(), buildNode(), this.contextStack.findHandlerContext(this.tokens, this.current));
-    }
-
-    return buildNode();
-  }
-
-  private useSpecifierList (): UseSpecifierListNode {
-    const args: {
-      openBrace?: SyntaxToken;
-      specifiers: UseSpecifierNode[];
-      commaList: SyntaxToken[];
-      closeBrace?: SyntaxToken;
-    } = { specifiers: [], commaList: [] };
-    const buildNode = () => this.nodeFactory.create(UseSpecifierListNode, args);
-
-    try {
-      this.consume('Expect an opening brace \'{\'', SyntaxTokenKind.LBRACE);
-      args.openBrace = this.previous();
-    } catch (e) {
-      if (!(e instanceof PartialParsingError)) {
-        throw e;
-      }
-      throw new PartialParsingError(e.token, buildNode(), e.handlerContext);
-    }
-
-    while (!this.isAtEnd() && !this.check(SyntaxTokenKind.RBRACE)) {
-      try {
-        args.specifiers.push(this.useSpecifier());
-      } catch (e) {
-        if (!(e instanceof PartialParsingError)) {
-          throw e;
-        }
-        if (e.partialNode instanceof UseSpecifierNode) {
-          args.specifiers.push(e.partialNode);
-        }
-        throw new PartialParsingError(e.token, buildNode(), e.handlerContext);
-      }
-    }
-
-    try {
-      this.consume('Expect a closing brace \'}\'', SyntaxTokenKind.RBRACE);
-      args.closeBrace = this.previous();
-    } catch (e) {
-      if (!(e instanceof PartialParsingError)) {
-        throw e;
-      }
-      throw new PartialParsingError(e.token, buildNode(), e.handlerContext);
-    }
-
-    return buildNode();
-  }
-
-  private useSpecifier (): UseSpecifierNode {
-    const args: {
-      importKind?: SyntaxToken;
-      name?: NormalExpressionNode;
-      asKeyword?: SyntaxToken;
-      alias?: NormalExpressionNode;
-    } = {};
-    const buildNode = () => this.nodeFactory.create(UseSpecifierNode, args);
-
-    try {
-      this.consume('Expect an element kind (e.g. table, enum)', SyntaxTokenKind.IDENTIFIER);
-      args.importKind = this.previous();
-    } catch (e) {
-      if (!(e instanceof PartialParsingError)) {
-        throw e;
-      }
-      throw new PartialParsingError(e.token, buildNode(), e.handlerContext);
-    }
-
-    try {
-      if (
-        this.peek().kind !== SyntaxTokenKind.IDENTIFIER
-        && this.peek().kind !== SyntaxTokenKind.QUOTED_STRING
-      ) {
-        this.logError(this.peek(), CompileErrorCode.UNEXPECTED_TOKEN, 'Expect an element name');
-        throw new PartialParsingError(
-          this.peek(),
-          buildNode(),
-          this.contextStack.findHandlerContext(this.tokens, this.current),
-        );
-      }
-      args.name = this.normalExpression();
-    } catch (e) {
-      if (!(e instanceof PartialParsingError)) {
-        throw e;
-      }
-      throw new PartialParsingError(e.token, buildNode(), e.handlerContext);
-    }
-
-    // Optional: as <alias>
-    if (isAsKeyword(this.peek())) {
-      args.asKeyword = this.advance();
-      try {
-        if (
-          this.peek().kind !== SyntaxTokenKind.IDENTIFIER
-          && this.peek().kind !== SyntaxTokenKind.QUOTED_STRING
-        ) {
-          this.logError(this.peek(), CompileErrorCode.UNEXPECTED_TOKEN, "Expect an alias name after 'as'");
-          throw new PartialParsingError(
-            this.peek(),
-            buildNode(),
-            this.contextStack.findHandlerContext(this.tokens, this.current),
-          );
-        }
-        args.alias = this.normalExpression();
-      } catch (e) {
-        if (!(e instanceof PartialParsingError)) {
-          throw e;
-        }
-        throw new PartialParsingError(e.token, buildNode(), e.handlerContext);
-      }
-    }
-
-    return buildNode();
+    return body;
   }
 
   private synchronizeProgram = () => {
@@ -925,7 +741,6 @@ export default class Parser {
       });
     }
 
-
     if (
       this.check(
         SyntaxTokenKind.NUMERIC_LITERAL,
@@ -940,10 +755,6 @@ export default class Parser {
 
     if (this.check(SyntaxTokenKind.FUNCTION_EXPRESSION)) {
       return this.functionExpression();
-    }
-
-    if (this.check(SyntaxTokenKind.WILDCARD)) {
-      return this.wildcardExpression();
     }
 
     if (this.check(SyntaxTokenKind.LBRACKET)) {
@@ -995,12 +806,6 @@ export default class Parser {
 
     return this.nodeFactory.create(FunctionExpressionNode, args);
   }
-
-  private wildcardExpression (): WildcardNode {
-    this.advance();
-    return this.nodeFactory.create(WildcardNode, { token: this.previous() });
-  }
-
 
   /* Parsing and synchronizing BlockExpression */
 
@@ -1412,7 +1217,6 @@ const infixBindingPowerMap: {
   [index: string]: { left: number; right: number } | undefined;
 } = {
   '+': { left: 9, right: 10 },
-  // '*': { left: 11, right: 12 },
   '-': { left: 9, right: 10 },
   '/': { left: 11, right: 12 },
   '%': { left: 11, right: 12 },

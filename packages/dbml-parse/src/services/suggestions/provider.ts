@@ -1129,6 +1129,16 @@ function suggestColumnNameInIndexes (compiler: Compiler, offset: number): Comple
   });
 }
 
+function getElementKind (node: ElementDeclarationNode | undefined): any {
+  if (!node || !node.type) {
+    return { unwrap_or: () => undefined };
+  }
+  const kind = node.type.value as ElementKind;
+  return {
+    unwrap_or: () => kind,
+  };
+}
+
 // Return the index of the argument we're at in an element's subfield
 function findContainerArg (offset: number, node: FunctionApplicationNode): number {
   if (!node.callee) return -1;

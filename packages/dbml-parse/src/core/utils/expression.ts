@@ -15,12 +15,8 @@ import {
   AttributeNode,
   FunctionExpressionNode,
   CallExpressionNode,
-  UseDeclarationNode,
-  UseSpecifierNode,
-  WildcardNode,
-  UseSpecifierListNode,
 } from '@/core/types/nodes';
-import type { ElementKind, ImportKind, SettingName } from '@/core/types/keywords';
+import type { ElementKind, SettingName } from '@/core/types/keywords';
 import { SyntaxToken, SyntaxTokenKind } from '@/core/types/tokens';
 import { last } from 'lodash-es';
 import { NUMERIC_LITERAL_PREFIX } from '@/constants';
@@ -116,8 +112,7 @@ type AccessExpression = InfixExpressionNode & {
 };
 
 type DotDelimitedIdentifier = PrimaryExpressionNode | (AccessExpression & {
-  leftExpression: AccessExpression | PrimaryExpressionNode;
-  rightExpression: PrimaryExpressionNode;
+  rightExpression: AccessExpression | PrimaryExpressionNode;
 });
 
 export function isAccessExpression (node?: SyntaxNode): node is AccessExpression {
@@ -153,27 +148,6 @@ export function isAsKeyword (
   return token?.kind === SyntaxTokenKind.IDENTIFIER && token.value.toLowerCase() === 'as';
 }
 
-// Check if a token is the `use` keyword (case-insensitive)
-export function isUseKeyword (
-  token?: SyntaxToken,
-): token is SyntaxToken & { kind: SyntaxTokenKind.IDENTIFIER } {
-  return token?.kind === SyntaxTokenKind.IDENTIFIER && token.value.toLowerCase() === 'use';
-}
-
-// Check if a token is the `from` keyword (case-insensitive)
-export function isFromKeyword (
-  token?: SyntaxToken,
-): token is SyntaxToken & { kind: SyntaxTokenKind.IDENTIFIER } {
-  return token?.kind === SyntaxTokenKind.IDENTIFIER && token.value.toLowerCase() === 'from';
-}
-
-// Check if a token is the `reuse` keyword (case-insensitive)
-export function isReuseKeyword (
-  token?: SyntaxToken,
-): token is SyntaxToken & { kind: SyntaxTokenKind.IDENTIFIER } {
-  return token?.kind === SyntaxTokenKind.IDENTIFIER && token.value.toLowerCase() === 'reuse';
-}
-
 export function isTupleOfVariables (value?: SyntaxNode): value is TupleExpressionNode & {
   elementList: (PrimaryExpressionNode & { expression: VariableNode })[];
 } {
@@ -192,21 +166,6 @@ export function getBody (node?: ElementDeclarationNode): (FunctionApplicationNod
 // Return whether `node` is an ElementDeclarationNode of kind `kind`
 export function isElementNode (node: SyntaxNode | undefined, kind: ElementKind): node is ElementDeclarationNode {
   return node instanceof ElementDeclarationNode && node.isKind(kind);
-}
-
-// Return whether `node` is a UseDeclarationNode
-export function isUseDeclaration (node: SyntaxNode): node is UseDeclarationNode {
-  return node instanceof UseDeclarationNode;
-}
-
-// Return whether `node` is an UseDeclarationNode with import kind `kind`
-export function isUseSpecifier (node: SyntaxNode, kind?: ImportKind): node is UseSpecifierNode {
-  return node instanceof UseSpecifierNode && (kind === undefined || node.isKind(kind));
-}
-
-// Return whether `node` is a WilcardNode inside use all import
-export function isWildcardSpecifier (node: SyntaxNode): node is WildcardNode {
-  return node instanceof WildcardNode && !!node.parentOfKind(UseDeclarationNode) && !node.parentOfKind(UseSpecifierListNode); // inside UseDeclarationNode but outside UseSepcifierListNode
 }
 
 // Return whether `node` is a ProgramNode

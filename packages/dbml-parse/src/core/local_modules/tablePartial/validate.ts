@@ -12,6 +12,7 @@ import {
   ListExpressionNode,
   PrimaryExpressionNode,
   SyntaxNode,
+  WildcardNode,
 } from '@/core/types/nodes';
 import { isExpressionAVariableNode, isExpressionAnIdentifierNode, isExpressionAQuotedString, extractVariableFromExpression } from '@/core/utils/expression';
 import {
@@ -63,6 +64,9 @@ export default class TablePartialValidator {
         'A TablePartial must have a name',
         this.declarationNode,
       )];
+    }
+    if (nameNode instanceof WildcardNode) {
+      return [new CompileError(CompileErrorCode.INVALID_NAME, 'Wildcard (*) is not allowed as a TablePartial name', nameNode)];
     }
     if (!isSimpleName(nameNode)) {
       return [new CompileError(
@@ -341,7 +345,7 @@ export default class TablePartialValidator {
       if (!sub.type) {
         return [];
       }
-      return this.compiler.validateNode(sub).getErrors();
+      return this.compiler.validate(sub).getErrors();
     });
 
     const notes = subs.filter((sub) => sub.type?.value.toLowerCase() === ElementKind.Note);

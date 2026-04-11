@@ -18,7 +18,8 @@ import IndexesValidator from './validate';
 export const indexesModule: LocalModule = {
   validateNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
     if (isElementNode(node, ElementKind.Indexes)) {
-      return Report.create(undefined, new IndexesValidator(compiler, node).validate());
+      const result = new IndexesValidator(compiler, node).validate();
+      return Report.create(undefined, result.errors, result.warnings);
     }
     return Report.create(PASS_THROUGH);
   },

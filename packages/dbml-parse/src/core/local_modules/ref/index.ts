@@ -15,7 +15,8 @@ import RefValidator, { validateFieldSettings } from './validate';
 export const refModule: LocalModule = {
   validateNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
     if (isElementNode(node, ElementKind.Ref)) {
-      return Report.create(undefined, new RefValidator(compiler, node).validate());
+      const result = new RefValidator(compiler, node).validate();
+      return Report.create(undefined, result.errors, result.warnings);
     }
     return Report.create(PASS_THROUGH);
   },

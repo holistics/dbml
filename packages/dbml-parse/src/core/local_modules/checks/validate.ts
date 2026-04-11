@@ -1,6 +1,6 @@
 import { last, partition } from 'lodash-es';
 import Compiler from '@/compiler';
-import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import { CompileError, CompileErrorCode, CompileWarning } from '@/core/types/errors';
 import {
   BlockExpressionNode,
   ElementDeclarationNode,
@@ -9,6 +9,7 @@ import {
   ListExpressionNode,
   ProgramNode,
   SyntaxNode,
+  WildcardNode,
 } from '@/core/types/nodes';
 import { isExpressionAQuotedString } from '@/core/utils/expression';
 import { aggregateSettingList } from '@/core/utils/validate';
@@ -23,14 +24,17 @@ export default class ChecksValidator {
     this.declarationNode = declarationNode;
   }
 
-  validate (): CompileError[] {
-    return [
-      ...this.validateContext(),
-      ...this.validateName(this.declarationNode.name),
-      ...this.validateAlias(this.declarationNode.alias),
-      ...this.validateSettingList(this.declarationNode.attributeList),
-      ...this.validateBody(this.declarationNode.body),
-    ];
+  validate (): { errors: CompileError[]; warnings: CompileWarning[] } {
+    return {
+      errors: [
+        ...this.validateContext(),
+        ...this.validateName(this.declarationNode.name),
+        ...this.validateAlias(this.declarationNode.alias),
+        ...this.validateSettingList(this.declarationNode.attributeList),
+        ...this.validateBody(this.declarationNode.body),
+      ],
+      warnings: [],
+    };
   }
 
   private validateContext (): CompileError[] {
@@ -47,6 +51,9 @@ export default class ChecksValidator {
   }
 
   private validateName (nameNode?: SyntaxNode): CompileError[] {
+    if (nameNode instanceof WildcardNode) {
+      return [new CompileError(CompileErrorCode.INVALID_NAME, 'Wildcard (*) is not allowed as a Checks name', nameNode)];
+    }
     if (nameNode) {
       return [new CompileError(CompileErrorCode.UNEXPECTED_NAME, 'A Checks shouldn\'t have a name', nameNode)];
     }
@@ -131,7 +138,7 @@ export default class ChecksValidator {
       if (!sub.type) {
         return [];
       }
-      return this.compiler.validateNode(sub).getErrors();
+      return this.compiler.validate(sub).getErrors();
     });
   }
 }

@@ -1,6 +1,6 @@
-import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import { CompileError, CompileErrorCode, CompileWarning } from '@/core/types/errors';
 import {
-  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, ProgramNode, SyntaxNode,
+  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, ProgramNode, SyntaxNode, WildcardNode,
 } from '@/core/types/nodes';
 import Compiler from '@/compiler';
 import { isExpressionAQuotedString } from '@/core/utils/expression';
@@ -15,14 +15,17 @@ export default class CustomValidator {
     this.compiler = compiler;
   }
 
-  validate (): CompileError[] {
-    return [
-      ...this.validateContext(),
-      ...this.validateName(this.declarationNode.name),
-      ...this.validateAlias(this.declarationNode.alias),
-      ...this.validateSettingList(this.declarationNode.attributeList),
-      ...this.validateBody(this.declarationNode.body),
-    ];
+  validate (): { errors: CompileError[]; warnings: CompileWarning[] } {
+    return {
+      errors: [
+        ...this.validateContext(),
+        ...this.validateName(this.declarationNode.name),
+        ...this.validateAlias(this.declarationNode.alias),
+        ...this.validateSettingList(this.declarationNode.attributeList),
+        ...this.validateBody(this.declarationNode.body),
+      ],
+      warnings: [],
+    };
   }
 
   private validateContext (): CompileError[] {
@@ -33,6 +36,9 @@ export default class CustomValidator {
   }
 
   private validateName (nameNode?: SyntaxNode): CompileError[] {
+    if (nameNode instanceof WildcardNode) {
+      return [new CompileError(CompileErrorCode.INVALID_NAME, 'Wildcard (*) is not allowed as a Custom element name', nameNode)];
+    }
     if (nameNode) {
       return [new CompileError(CompileErrorCode.UNEXPECTED_NAME, 'A Custom element shouldn\'t have a name', nameNode)];
     }
