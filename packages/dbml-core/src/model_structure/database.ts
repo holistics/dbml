@@ -5,17 +5,84 @@ import Enum from './enum';
 import TableGroup from './tableGroup';
 import Table from './table';
 import StickyNote from './stickyNote';
-import Element from './element';
+import Element, { Token, RawNote } from './element';
 import {
-  DEFAULT_SCHEMA_NAME, TABLE, TABLE_GROUP, ENUM, REF, NOTE,
+  DEFAULT_SCHEMA_NAME, TABLE, TABLE_GROUP, ENUM, REF,
 } from './config';
 import DbState from './dbState';
 import TablePartial from './tablePartial';
 
+export interface TableRecord {
+  id: number;
+  schemaName?: string;
+  tableName: string;
+  columns: string[];
+  token: Token;
+  values: any[][];
+  tableId?: number;
+}
+
+export interface RawTableRecord {
+  schemaName: string | undefined;
+  tableName: string;
+  columns: string[];
+  token: Token;
+  values: any[][];
+}
+
+export interface Project {
+  note: RawNote;
+  database_type: string;
+  name: string;
+  token?: Token;
+  noteToken?: Token;
+}
+
+export interface RawDatabase {
+  schemas?: any[];
+  tables?: any[];
+  notes?: any[];
+  enums?: any[];
+  refs?: any[];
+  tableGroups?: any[];
+  project?: any;
+  aliases?: any[];
+  records?: RawTableRecord[];
+  tablePartials?: any[];
+}
+
+export interface NormalizedModel {
+  database: Record<number, any>;
+  schemas: Record<number, any>;
+  endpoints: Record<number, any>;
+  refs: Record<number, any>;
+  fields: Record<number, any>;
+  tables: Record<number, any>;
+  tableGroups: Record<number, any>;
+  enums: Record<number, any>;
+  enumValues: Record<number, any>;
+  indexes: Record<number, any>;
+  indexColumns: Record<number, any>;
+  notes: Record<number, any>;
+  checks: Record<number, any>;
+  tablePartials: Record<number, any>;
+  records: Record<number, any>;
+}
+
 class Database extends Element {
-  /**
-    * @param {import('../../types/model_structure/database').RawDatabase} param0
-    */
+  dbState: DbState;
+  hasDefaultSchema: boolean;
+  schemas: Schema[];
+  notes: StickyNote[];
+  note: string | null;
+  noteToken: Token | null;
+  databaseType: string;
+  name: string;
+  aliases: any[];
+  records: TableRecord[];
+  tablePartials: TablePartial[];
+  injectedRawRefs: any[];
+
   constructor ({
     schemas = [],
     tables = [],
@@ -23,16 +90,15 @@ class Database extends Element {
     enums = [],
     refs = [],
     tableGroups = [],
-    project = {},
+    project = {} as any,
     aliases = [],
     records = [],
     tablePartials = [],
-  }) {
-    super();
+  }: RawDatabase) {
+    super(undefined as any);
     this.dbState = new DbState();
     this.generateId();
     this.hasDefaultSchema = false;
-    /** @type {import('../../types/model_structure/schema').default[]} */
     this.schemas = [];
     this.notes = [];
     this.note = project.note ? get(project, 'note.value', project.note) : null;
@@ -50,13 +116,13 @@ class Database extends Element {
 
     // The process order is important. Do not change !
     this.processNotes(notes);
-    this.processRecords(records);
+    this.processRecords(records as RawTableRecord[]);
     this.processTablePartials(tablePartials);
     this.processSchemas(schemas);
     this.processSchemaElements(enums, ENUM);
     this.processSchemaElements(tables, TABLE);
     this.linkRecordsToTables();
-    this.processSchemaElements(notes, NOTE);
+    this.processSchemaElements(notes, 'note');
     this.processSchemaElements(refs, REF);
     this.processSchemaElements(tableGroups, TABLE_GROUP);
 
@@ -72,13 +138,13 @@ class Database extends Element {
     this.id = this.dbState.generateId('dbId');
   }
 
-  processNotes (rawNotes) {
+  processNotes (rawNotes: any[]) {
     rawNotes.forEach((note) => {
       this.pushNote(new StickyNote({ ...note, database: this }));
     });
   }
 
-  processRecords (rawRecords) {
+  processRecords (rawRecords: RawTableRecord[]) {
     rawRecords.forEach(({
       schemaName, tableName, columns, values, token,
     }) => {
@@ -93,42 +159,42 @@ class Database extends Element {
     });
   }
 
-  processTablePartials (rawTablePartials) {
+  processTablePartials (rawTablePartials: any[]) {
     rawTablePartials.forEach((rawTablePartial) => {
       this.tablePartials.push(new TablePartial({ ...rawTablePartial, dbState: this.dbState }));
     });
   }
 
-  pushNote (note) {
+  pushNote (note: StickyNote) {
     this.checkNote(note);
     this.notes.push(note);
   }
 
-  checkNote (note) {
+  checkNote (note: StickyNote) {
     if (this.notes.some((n) => n.name === note.name)) {
       note.error(`Notes ${note.name} existed`);
     }
   }
 
-  processSchemas (rawSchemas) {
+  processSchemas (rawSchemas: any[]) {
     rawSchemas.forEach((schema) => {
       this.pushSchema(new Schema({ ...schema, database: this }));
     });
   }
 
-  pushSchema (schema) {
+  pushSchema (schema: Schema) {
     this.checkSchema(schema);
     this.schemas.push(schema);
   }
 
-  checkSchema (schema) {
+  checkSchema (schema: Schema) {
     if (this.schemas.some((s) => s.name === schema.name)) {
       schema.error(`Schemas ${schema.name} existed`);
     }
   }
 
-  processSchemaElements (elements, elementType) {
-    let schema;
+  processSchemaElements (elements: any[], elementType: string) {
+    let schema: Schema;
 
     elements.forEach((element) => {
       if (element.schemaName) {
@@ -165,7 +231,7 @@ class Database extends Element {
 
   linkRecordsToTables () {
     // Build a map of [schemaName][tableName] -> table for O(1) lookup
-    const tableMap = {};
+    const tableMap: Record<string, Record<string, Table>> = {};
     this.schemas.forEach((schema) => {
       tableMap[schema.name] = {};
       schema.tables.forEach((table) => {
@@ -185,14 +251,15 @@ class Database extends Element {
     });
   }
 
-  findOrCreateSchema (schemaName) {
+  findOrCreateSchema (schemaName: string): Schema {
     let schema = this.schemas.find((s) => s.name === schemaName || s.alias === schemaName);
     // create new schema if schema not found
     if (!schema) {
       schema = new Schema({
         name: schemaName,
         note: {
-          value: schemaName === DEFAULT_SCHEMA_NAME ? `Default ${capitalize(DEFAULT_SCHEMA_NAME)} Schema` : null,
+          value: schemaName === DEFAULT_SCHEMA_NAME ? `Default ${capitalize(DEFAULT_SCHEMA_NAME)} Schema` : (null as any),
+          token: undefined as any,
         },
         database: this,
       });
@@ -203,21 +270,21 @@ class Database extends Element {
     return schema;
   }
 
-  findTableAlias (alias) {
+  findTableAlias (alias: string): Table | undefined {
     const sym = this.aliases.find((a) => a.name === alias);
-    if (!sym || sym.kind !== 'table') return null;
+    if (!sym || sym.kind !== 'table') return undefined;
 
     const schemaName = sym.value.schemaName || DEFAULT_SCHEMA_NAME;
     const schema = this.schemas.find((s) => s.name === schemaName);
-    if (!schema) return null;
+    if (!schema) return undefined;
 
     const { tableName } = sym.value;
     const table = schema.tables.find((t) => t.name === tableName);
     return table;
   }
 
-  findTable (schemaName, tableName) {
-    let table = null;
+  findTable (schemaName: string | null, tableName: string): Table | undefined {
+    let table: Table | undefined = undefined;
     if (!schemaName) {
       table = this.findTableAlias(tableName);
       if (table) return table;
@@ -230,14 +297,14 @@ class Database extends Element {
     return schema.findTable(tableName);
   }
 
-  findEnum (schemaName, name) {
+  findEnum (schemaName: string, name: string): Enum | undefined {
     const schema = this.schemas.find((s) => s.name === schemaName || s.alias === schemaName);
-    if (!schema) return null;
+    if (!schema) return undefined;
     const _enum = schema.enums.find((e) => e.name === name);
     return _enum;
   }
 
-  findTablePartial (name) {
+  findTablePartial (name: string): TablePartial | undefined {
     return this.tablePartials.find((tp) => tp.name === name);
   }
 
@@ -271,8 +338,8 @@ class Database extends Element {
     };
   }
 
-  normalize () {
-    const normalizedModel = {
+  normalize (): NormalizedModel {
+    const normalizedModel: NormalizedModel = {
       database: {
         [this.id]: {
           id: this.id,

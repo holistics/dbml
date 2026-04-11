@@ -28,8 +28,8 @@ export interface InterpreterDatabase {
   tables: Map<ElementDeclarationNode, Table>;
   notes: Map<ElementDeclarationNode, Note>;
   // for keeping track of circular refs
-  refIds: { [refid: string]: ElementDeclarationNode };
-  ref: Map<ElementDeclarationNode, Ref>;
+  refIds: { [refid: string]: SyntaxNode };
+  ref: Map<SyntaxNode, Ref>;
   enums: Map<ElementDeclarationNode, Enum>;
   tableOwnerGroup: { [tableid: string]: ElementDeclarationNode };
   tableGroups: Map<ElementDeclarationNode, TableGroup>;

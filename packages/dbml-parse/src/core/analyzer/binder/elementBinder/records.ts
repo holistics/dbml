@@ -83,7 +83,7 @@ export default class RecordsBinder implements ElementBinder {
       return [];
     }
 
-    const tableName = getElementNameString(tableBindee.referee?.declaration) ?? '<invalid name>';
+    const tableName = getElementNameString(tableBindee.referee?.declaration as ElementDeclarationNode | undefined) ?? '<invalid name>';
 
     const errors: CompileError[] = [];
     for (const columnBindee of fragments.args) {

@@ -34,7 +34,7 @@ export default class EnumBinder implements ElementBinder {
       return [];
     }
 
-    const subs = body.body.filter((e) => e instanceof FunctionApplicationNode);
+    const subs = body.body.filter((e) => e instanceof ElementDeclarationNode);
 
     return this.bindSubElements(subs as ElementDeclarationNode[]);
   }

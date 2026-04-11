@@ -1,31 +1,40 @@
-/// <reference path="../../types/model_structure/check.d.ts" />
-// @ts-check
-import Element from './element';
+import Element, { Token } from './element';
+import Table from './table';
+import Field from './field';
+import TablePartial from './tablePartial';
+import DbState from './dbState';
 
-/**
-  * @type  Check
-  */
+export interface RawCheck {
+  token: Token;
+  name: string;
+  expression: string;
+  table: Table;
+  column?: Field | null;
+  injectedPartial?: TablePartial | null;
+}
+
 class Check extends Element {
+  name: string;
+  expression: string;
+  table: Table;
+  column: Field | null;
+  injectedPartial: TablePartial | null;
+  dbState: DbState;
+
   constructor ({
     token, name, expression, table, column = null, injectedPartial = null,
-  } = {}) {
+  }: RawCheck) {
     super(token);
     this.name = name;
-    /** @type {string} */
     this.expression = expression;
-    /** @type {import('../../types/model_structure/table').default} */
     this.table = table;
-    /** @type {import('../../types/model_structure/field').default} */
     this.column = column;
-    /** @type {import('../../types/model_structure/tablePartial').default} */
     this.injectedPartial = injectedPartial;
-    /** @type {import('../../types/model_structure/dbState').default} */
     this.dbState = this.table.dbState;
     this.generateId();
   }
 
   generateId () {
-    /** @type {number} */
     this.id = this.dbState.generateId('checkId');
   }
 
@@ -38,8 +47,8 @@ class Check extends Element {
   exportParentIds () {
     return {
       tableId: this.table.id,
-      columnId: this.column?.id,
-      injectedPartialId: this.injectedPartial?.id,
+      columnId: this.column?.id ?? null,
+      injectedPartialId: this.injectedPartial?.id ?? null,
     };
   }
 
@@ -50,12 +59,10 @@ class Check extends Element {
     };
   }
 
-  /**
-   * @param {import('../../types/model_structure/database').NormalizedDatabase} model
-   */
-  normalize (model) {
-    model.checks[this.id] = {
-      id: this.id,
+  normalize (model: any) {
+    const id = this.id as number;
+    model.checks[id] = {
+      id,
       ...this.shallowExport(),
       ...this.exportParentIds(),
     };

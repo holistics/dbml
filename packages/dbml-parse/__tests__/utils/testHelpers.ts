@@ -291,7 +291,7 @@ export function syntaxNodeToSnapshot (
     fullStart,
     fullEnd,
     ...props
-  } = node;
+  } = node as SyntaxNode & { parent?: unknown };
   const symbol = (props as any).symbol;
   delete (props as any).symbol;
   const referee = (props as any).referee;

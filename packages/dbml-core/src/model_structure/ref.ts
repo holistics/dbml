@@ -1,40 +1,49 @@
-import Element from './element';
+import Element, { Token } from './element';
 import Endpoint from './endpoint';
 import { DEFAULT_SCHEMA_NAME } from './config';
+import Schema from './schema';
+import TablePartial from './tablePartial';
+import DbState from './dbState';
+
+export interface RawRef {
+  name: string;
+  color?: string;
+  endpoints: any[];
+  onDelete: any;
+  onUpdate: any;
+  token: Token;
+  schema: Schema;
+  injectedPartial?: TablePartial;
+}
 
 /**
  * Compare two pairs of objects
- * @param {Array} pair1
- * @param {Array} pair2
- * @returns {Boolean}
  */
-function isEqualPair (pair1, pair2) {
+function isEqualPair (pair1: Endpoint[], pair2: Endpoint[]): boolean {
   return pair1[0].equals(pair2[0]) && pair1[1].equals(pair2[1]);
 }
 
 class Ref extends Element {
-  /**
-   * @param {import('../../types/model_structure/ref').RawRef} param0
-   */
+  name: string;
+  color?: string;
+  onDelete: any;
+  onUpdate: any;
+  endpoints: Endpoint[];
+  schema: Schema;
+  injectedPartial?: TablePartial;
+  dbState: DbState;
+
   constructor ({
-    name, color, endpoints, onDelete, onUpdate, token, schema = {}, injectedPartial = null,
-  } = {}) {
+    name, color, endpoints, onDelete, onUpdate, token, schema = {} as Schema, injectedPartial = undefined,
+  }: RawRef) {
     super(token);
-    /** @type {string} */
     this.name = name;
-    /** @type {string} */
     this.color = color;
-    /** @type {any} */
     this.onDelete = onDelete;
-    /** @type {any} */
     this.onUpdate = onUpdate;
-    /** @type {import('../../types/model_structure/endpoint').default[]} */
     this.endpoints = [];
-    /** @type {import('../../types/model_structure/schema').default} */
     this.schema = schema;
-    /** @type {import('../../types/model_structure/tablePartial').default} */
     this.injectedPartial = injectedPartial;
-    /** @type {import('../../types/model_structure/dbState').default} */
     this.dbState = this.schema.dbState;
     this.generateId();
 
@@ -42,14 +51,10 @@ class Ref extends Element {
   }
 
   generateId () {
-    /** @type {number} */
     this.id = this.dbState.generateId('refId');
   }
 
-  /**
-   * @param {any[]} rawEndpoints
-   */
-  processEndpoints (rawEndpoints) {
+  processEndpoints (rawEndpoints: any[]) {
     rawEndpoints.forEach((endpoint) => {
       this.endpoints.push(new Endpoint({ ...endpoint, ref: this }));
       if (endpoint.schemaName === DEFAULT_SCHEMA_NAME) {
@@ -67,11 +72,7 @@ class Ref extends Element {
     // TODO: Handle Error with different number of fields
   }
 
-  /**
-   * @param {import('../../types/model_structure/ref').default} ref
-   * @returns {boolean}
-   */
-  equals (ref) {
+  equals (ref: Ref): boolean {
     return isEqualPair(this.endpoints, ref.endpoints)
       || isEqualPair(this.endpoints, ref.endpoints.slice().reverse());
   }
@@ -111,10 +112,7 @@ class Ref extends Element {
     };
   }
 
-  /**
-   * @param {import('../../types/model_structure/database').NormalizedDatabase} model
-   */
-  normalize (model) {
+  normalize (model: any) {
     model.refs[this.id] = {
       id: this.id,
       ...this.shallowExport(),
