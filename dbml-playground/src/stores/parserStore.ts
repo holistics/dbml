@@ -2,7 +2,7 @@ import { ref, shallowRef, computed, watch } from 'vue';
 import { defineStore } from 'pinia';
 import { debounce } from 'lodash-es';
 import * as monaco from 'monaco-editor';
-import { Compiler, DBMLDiagnosticsProvider } from '@dbml/parse';
+import { Compiler, DBMLDiagnosticsProvider, Filepath } from '@dbml/parse';
 import type { SyntaxToken, ProgramNode, Database, NodeSymbol } from '@dbml/parse';
 import { registerLanguageServices } from '@/services/language-services';
 import type { ParserError } from '../types';
@@ -85,14 +85,31 @@ export const useParser = defineStore('parser', () => {
 
   const hasDatabase = computed(() => database.value !== null);
 
-  const debouncedParse = debounce((content: string) => {
+  const debouncedParse = debounce(() => {
     isLoading.value = true;
     try {
-      compiler.setSource(content);
+      // Load all project files into the compiler
+      for (const [path, content] of Object.entries(project.files)) {
+        const filepath = new Filepath(path);
+        compiler.setSource(filepath, content);
+      }
 
-      // SyntaxTokenKind.EOF = '<eof>' — filter it out for display
-      tokens.value = [...compiler.parse.tokens()].filter((t) => (t.kind as string) !== '<eof>');
-      ast.value = compiler.parse.ast() as ProgramNode;
+      // Bind the entire project to establish cross-file relationships
+      compiler.bindProject();
+
+      // Parse the current file for tokens and AST
+      const currentFilepath = new Filepath(project.currentFile);
+      const parseResult = compiler.parseFile(currentFilepath);
+
+      if (!parseResult.getErrors().some(e => e)) {
+        const parseIndex = parseResult.getValue();
+        // SyntaxTokenKind.EOF = '<eof>' — filter it out for display
+        tokens.value = [...parseIndex.tokens].filter((t) => (t.kind as string) !== '<eof>');
+        ast.value = parseIndex.ast as ProgramNode;
+      } else {
+        tokens.value = [];
+        ast.value = null;
+      }
 
       errors.value = (diagnosticsProvider.provideErrors() as Array<Record<string, unknown>>).map(diagnosticToParserError);
 
@@ -128,9 +145,17 @@ export const useParser = defineStore('parser', () => {
     }
   }, DEBOUNCE_MS);
 
-  watch(() => project.currentContent, (content) => {
-    debouncedParse(content);
-  }, { immediate: true });
+  // Watch both files and currentFile to trigger reparse when project changes
+  watch(() => project.files, () => {
+    debouncedParse();
+  }, { deep: true });
+
+  watch(() => project.currentFile, () => {
+    debouncedParse();
+  });
+
+  // Initial parse
+  debouncedParse();
 
   async function setupMonacoServices (_editor: monaco.editor.IStandaloneCodeEditor) {
     try {

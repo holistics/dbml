@@ -42,11 +42,8 @@ export default class DBMLDefinitionProvider implements DefinitionProvider {
         const { startPos, endPos } = declaration;
         // Use filepath from declaration if available and in multi-file mode (uri is set)
         let definitionUri = uri;
-        if (uri) {
-          const declarationFilepath = (declaration as any).filepath as Filepath | undefined;
-          if (declarationFilepath) {
-            definitionUri = declarationFilepath.toUri();
-          }
+        if (uri && declaration.filepath) {
+          definitionUri = declaration.filepath.toUri() as any;
         }
 
         return [

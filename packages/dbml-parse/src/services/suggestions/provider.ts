@@ -11,6 +11,7 @@ import { SyntaxToken, SyntaxTokenKind } from '@/core/types/tokens';
 import { isOffsetWithinSpan } from '@/core/utils/span';
 import {
   type CompletionList,
+  type CompletionItem,
   type TextModel,
   type CompletionItemProvider,
   type Position,
@@ -335,7 +336,7 @@ function suggestOnRelOp (
 
     // Add cross-file symbol suggestions if available
     if (model && provider && model.uri) {
-      const currentFilepath = Filepath.fromUri(model.uri);
+      const currentFilepath = Filepath.fromUri(model.uri as any);
       const fileContent = model.getValue();
       const crossFileSuggestions = provider.suggestCrossFileSymbols(
         [SymbolKind.Table, SymbolKind.Schema, SymbolKind.Column],

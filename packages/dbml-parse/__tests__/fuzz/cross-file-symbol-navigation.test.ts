@@ -117,7 +117,8 @@ describe('multifile language services', () => {
       const definitions = definitionProvider.provideDefinition(emptyUriModel, createPosition(1, 10));
 
       // All definitions should have the same URI as the model
-      for (const def of definitions) {
+      const defs = Array.isArray(definitions) ? definitions : [definitions];
+      for (const def of defs) {
         expect(def.uri).toBe('');
       }
     });
@@ -134,7 +135,8 @@ describe('multifile language services', () => {
       const definitions = definitionProvider.provideDefinition(modelWithUri, createPosition(1, 10));
 
       // When model has a URI set, definitions should respect it
-      for (const def of definitions) {
+      const defs = Array.isArray(definitions) ? definitions : (definitions ? [definitions] : []);
+      for (const def of defs) {
         // In this simple case, there's no definition, so check it's handled gracefully
         expect(def.uri).toBeDefined();
       }

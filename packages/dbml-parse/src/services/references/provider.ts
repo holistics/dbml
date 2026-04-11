@@ -41,11 +41,8 @@ export default class DBMLReferencesProvider implements ReferenceProvider {
             return references.map((refNode) => {
               // Use filepath from reference node if available and in multi-file mode (uri is set)
               let refUri = uri;
-              if (uri) {
-                const refFilepath = (refNode as any).filepath as Filepath | undefined;
-                if (refFilepath) {
-                  refUri = refFilepath.toUri();
-                }
+              if (uri && refNode.filepath) {
+                refUri = refNode.filepath.toUri() as any;
               }
 
               return {
