@@ -39,30 +39,38 @@ export { splitQualifiedIdentifier, unescapeString, escapeString, formatRecordVal
 // Indicating that a query is being computed, but we're trying to compute it again
 const COMPUTING = Symbol('COMPUTING');
 
+type QuerySubCache = Map<string, any>;
+
 export default class Compiler {
-  private cache = new Map<symbol, any>();
+  private globalCache = new Map<symbol, QuerySubCache>();
+
+  // Outer key: FilepathId; inner key: queryKey symbol; innermost key: serialized remaining args
+  private localCache = new Map<string, Map<symbol, QuerySubCache>>();
 
   layout: DbmlProjectLayout = new MemoryProjectLayout();
 
   nodeIdGenerator = new SyntaxNodeIdGenerator();
 
-  symbolIdGenerator = new NodeSymbolIdGenerator();
+  private symbolIdGenerator = new NodeSymbolIdGenerator();
 
   symbolFactory = new SymbolFactory(this.symbolIdGenerator);
 
   setSource (filepath: Filepath, source: string) {
     this.layout.setSource(filepath, source);
-    this.cache.clear();
+    this.localCache.delete(filepath.intern());
+    this.globalCache.clear();
   }
 
   clearSource () {
     this.layout = new MemoryProjectLayout();
-    this.cache.clear();
+    this.localCache.clear();
+    this.globalCache.clear();
   }
 
   deleteSource (filepath: Filepath) {
     this.layout.deleteSource(filepath);
-    this.cache.clear();
+    this.localCache.delete(filepath.intern());
+    this.globalCache.clear();
   }
 
   private query<Args extends (Primitive | Primitive[] | Internable<Primitive>)[], Return> (
@@ -71,7 +79,7 @@ export default class Compiler {
     const queryKey = Symbol();
     return ((...args: Args): Return => {
       const argKey = args.map((a) => intern(a)).join('\0');
-      let subCache = this.cache.get(queryKey);
+      let subCache = this.globalCache.get(queryKey);
       if (subCache instanceof Map) {
         if (subCache.has(argKey)) {
           const cached = subCache.get(argKey);
@@ -84,7 +92,7 @@ export default class Compiler {
 
       if (!(subCache instanceof Map)) {
         subCache = new Map();
-        this.cache.set(queryKey, subCache);
+        this.globalCache.set(queryKey, subCache);
       }
       subCache.set(argKey, COMPUTING);
 
@@ -94,37 +102,144 @@ export default class Compiler {
     }) as (...args: Args) => Return;
   }
 
-  // global queries
+  private localQuery<Args extends [Filepath, ...(Primitive | Primitive[] | Internable<Primitive>)[]], Return> (
+    fn: (this: Compiler, ...args: Args) => Return,
+  ): (...args: Args) => Return {
+    const queryKey = Symbol();
+    return ((...args: Args): Return => {
+      const [filepath, ...rest] = args;
+      const filepathId = filepath.intern();
+      const argKey = rest.map((a) => intern(a)).join('\0');
+
+      let filepathCache = this.localCache.get(filepathId);
+      if (!filepathCache) {
+        filepathCache = new Map();
+        this.localCache.set(filepathId, filepathCache);
+      }
+
+      let subCache = filepathCache.get(queryKey);
+      if (!subCache) {
+        subCache = new Map();
+        filepathCache.set(queryKey, subCache);
+      }
+
+      if (subCache.has(argKey)) {
+        const cached = subCache.get(argKey);
+        if (cached === COMPUTING) {
+          throw new Error(`Cycle detected in query: ${fn.name}(${filepathId}, ${argKey})`);
+        }
+        return cached;
+      }
+
+      subCache.set(argKey, COMPUTING);
+      const result = fn.apply(this, args);
+      subCache.set(argKey, result);
+      return result;
+    }) as (...args: Args) => Return;
+  }
+
+  // A local query.
+  // Lex + parse a single file into an AST. Related: parseProject.
+  // (filepath: Filepath) => Report<FileParseIndex>
+  parseFile = this.localQuery(parseFile);
+  // A global query.
+  // Lex + parse all entry-point files. Related: parseFile.
+  // () => Map<string, Report<FileParseIndex>>
   parseProject = this.query(parseProject);
 
+
+  // A global query.
+  // Run the binder on a single AST node (dispatches to global modules). Related: bindFile, bindProject.
+  // (node: SyntaxNode) => Report<void> | Report<Unhandled>
   bindNode = this.query(bindNode);
-  bindProject = this.query(bindProject);
+  // A global query.
+  // Bind a single file's AST (calls bindNode on the root). Related: bindNode, bindProject.
+  // (filepath: Filepath) => Report<void>
   bindFile = this.query(bindFile);
+  // A global query.
+  // Bind all entry-point files in dependency order. Related: bindFile.
+  // () => Map<string, Report<void>>
+  bindProject = this.query(bindProject);
 
-  nodeSymbol = this.query(nodeSymbol);
-  symbolMembers = this.query(symbolMembers);
-  lookupMembers = this.query(lookupMembers);
 
-  symbolReferences = this.query(symbolReferences);
-  nodeReferee = this.query(nodeReferee);
-
+  // A global query.
+  // Interpret a single AST node into a SchemaElement (dispatches to global modules). Related: interpretFile, interpretProject.
+  // (node: SyntaxNode) => Report<SchemaElement | SchemaElement[] | undefined> | Report<Unhandled>
   interpretNode = this.query(interpretNode);
+  // A global query.
+  // Interpret a single file's AST into a raw Database. Related: interpretNode, interpretProject.
+  // (filepath: Filepath) => Report<Readonly<Database> | undefined>
   interpretFile = this.query(interpretFile);
+  // A global query.
+  // Interpret all reachable files and merge into a MasterDatabase. Related: interpretFile.
+  // () => Report<MasterDatabase>
   interpretProject = this.query(interpretProject);
+  // A global query.
+  // Export a reconciled, alias-resolved Database for a single file (calls interpretProject internally). Related: interpretProject.
+  // (filepath: Filepath) => Report<Readonly<Database> | undefined>
   exportSchemaJson = this.query(exportSchemaJson);
 
-  // local queries
-  parseFile = this.query(parseFile);
 
-  topLevelSchemaMembers = this.query(topLevelSchemaMembers);
-  reachableFiles = this.query(reachableFiles);
-  fileUsableMembers = this.query(usableMembers);
-  fileDependencies = this.query(fileDependencies);
+  // A global query.
+  // Resolve the NodeSymbol declared by a given AST node. Related: symbolMembers, nodeReferee.
+  // (node: SyntaxNode) => Report<NodeSymbol> | Report<Unhandled>
+  nodeSymbol = this.query(nodeSymbol);
+  // A global query.
+  // Return all direct child symbols of a symbol. Related: nodeSymbol, lookupMembers.
+  // (symbol: NodeSymbol) => Report<NodeSymbol[]> | Report<Unhandled>
+  symbolMembers = this.query(symbolMembers);
+  // A global query.
+  // Look up a member by kind and name inside a symbol or node scope. Related: symbolMembers.
+  // (symbolOrNode: NodeSymbol | SyntaxNode, targetKind: SymbolKind, targetName: string) => Report<NodeSymbol | undefined>
+  lookupMembers = this.query(lookupMembers);
+  // A global query.
+  // Resolve what symbol a reference node points to. Related: nodeSymbol, symbolReferences.
+  // (node: SyntaxNode) => Report<NodeSymbol | undefined> | Report<Unhandled>
+  nodeReferee = this.query(nodeReferee);
+  // A global query.
+  // Find all reference nodes that point to a given symbol. Related: nodeReferee.
+  // (symbol: NodeSymbol) => Report<SyntaxNode[]>
+  symbolReferences = this.query(symbolReferences);
+
+
+  // A global query.
+  // Validate an AST node and return any compile errors.
+  // (node: SyntaxNode) => Report<void> | Report<Unhandled>
   validateNode = this.query(validateNode);
+  // A global query.
+  // Return the fully-qualified name segments of an AST node (e.g. ['public', 'users']).
+  // (node: SyntaxNode) => Report<string[] | undefined> | Report<Unhandled>
   nodeFullname = this.query(fullname);
+  // A global query.
+  // Return the display name string of a symbol (last segment of its fullname, or alias). Related: nodeFullname.
+  // (symbol: NodeSymbol) => string | undefined
   symbolName = this.query(symbolName);
+  // A global query.
+  // Return the alias string of an AST node if one is declared. Related: nodeFullname.
+  // (node: SyntaxNode) => Report<string | undefined> | Report<Unhandled>
   nodeAlias = this.query(nodeAlias);
+  // A global query.
+  // Return the settings/options map of an AST node.
+  // (node: SyntaxNode) => Report<Settings> | Report<Unhandled>
   nodeSettings = this.query(nodeSettings);
+
+
+  // A local query.
+  // Return the direct import filepath IDs declared by use statements in a file. Related: reachableFiles.
+  // (filepath: Filepath) => Set<string>
+  fileDependencies = this.localQuery(fileDependencies);
+  // A local query.
+  // BFS-traverse imports from an entry filepath and return all reachable files. Related: fileDependencies.
+  // (entry: Filepath) => Set<Filepath>
+  reachableFiles = this.localQuery(reachableFiles);
+  // A local query.
+  // Return the top-level SchemaSymbols declared directly in a file. Related: fileUsableMembers.
+  // (filepath: Filepath) => SchemaSymbol[]
+  topLevelSchemaMembers = this.localQuery(topLevelSchemaMembers);
+  // A global query.
+  // Return the importable members (non-schema, schema, reuses, uses) of a schema symbol or file. Related: topLevelSchemaMembers.
+  // (symbolOrFilepath: SchemaSymbol | Filepath) => Report<{ nonSchemaMembers, schemaMembers, reuses, uses }>
+  fileUsableMembers = this.query(usableMembers);
 
   // transform queries
   renameTable = renameTable.bind(this);
