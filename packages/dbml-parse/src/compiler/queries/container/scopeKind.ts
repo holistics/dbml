@@ -9,7 +9,9 @@ export function containerScopeKind (this: Compiler, offset: number): ScopeKind {
     return ScopeKind.TOPLEVEL;
   }
 
-  switch ((elem as ElementDeclarationNode).type?.value.toLowerCase()) {
+  const typeVal = (elem as ElementDeclarationNode).type?.value.toLowerCase();
+
+  switch (typeVal) {
     case 'table':
       return ScopeKind.TABLE;
     case 'enum':

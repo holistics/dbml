@@ -1,25 +1,25 @@
 import {
   destructureMemberAccessExpression,
   extractVariableFromExpression,
-  getElementKind,
-} from '@/core/analyzer/utils';
+} from '@/core/utils/expression';
 import {
   extractStringFromIdentifierStream,
   isExpressionAVariableNode,
-} from '@/core/parser/utils';
+} from '@/core/utils/expression';
 import Compiler, { ScopeKind } from '@/compiler';
 import { SyntaxToken, SyntaxTokenKind } from '@/core/types/tokens';
-import { isOffsetWithinSpan } from '@/core/utils';
+import { isOffsetWithinSpan } from '@/core/utils/span';
 import {
   type CompletionList,
+  type CompletionItem,
   type TextModel,
   type CompletionItemProvider,
   type Position,
   CompletionItemKind,
   CompletionItemInsertTextRule,
 } from '@/services/types';
-import { TableSymbol, type NodeSymbol } from '@/core/types/symbol/symbols';
-import { SymbolKind, destructureIndex } from '@/core/types/symbol';
+import { type NodeSymbol } from '@/core/types/symbol';
+import { SymbolKind } from '@/core/types/symbol';
 import {
   pickCompletionItemKind,
   shouldPrependSpace,
@@ -33,6 +33,7 @@ import {
 import { suggestRecordRowSnippet } from '@/services/suggestions/recordRowSnippet';
 import {
   AttributeNode,
+  BlockExpressionNode,
   CallExpressionNode,
   CommaExpressionNode,
   ElementDeclarationNode,
@@ -47,8 +48,10 @@ import {
 } from '@/core/types/nodes';
 import { getOffsetFromMonacoPosition } from '@/services/utils';
 import { isComment } from '@/core/lexer/utils';
-import { ElementKind, SettingName } from '@/core/analyzer/types';
-import { DEFAULT_SCHEMA_NAME } from '@/constants';
+import { ElementKind, SettingName } from '@/core/types/keywords';
+import { UNHANDLED, DEFAULT_SCHEMA_NAME } from '@/constants';
+import { UseStatementMerger } from '@/services/completion/utils/useStatementMerger';
+import { Filepath } from '@/core/types/filepath';
 
 export default class DBMLCompletionItemProvider implements CompletionItemProvider {
   private compiler: Compiler;
@@ -58,6 +61,130 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
   constructor (compiler: Compiler, triggerCharacters: string[] = []) {
     this.compiler = compiler;
     this.triggerCharacters = triggerCharacters;
+  }
+
+  /**
+   * Search compiler.layout for symbols matching the given name.
+   * Returns results with file hints for disambiguation.
+   */
+  private searchLayoutForSymbol (symbolName: string): Array<{
+    symbol: NodeSymbol;
+    fileHint: string;
+    filepath: Filepath;
+  }> {
+    const results: Array<{ symbol: NodeSymbol; fileHint: string; filepath: Filepath }> = [];
+
+    if (!this.compiler.layout) return results;
+
+    // Search all files in the layout
+    const allFiles = (this.compiler.layout as any).allFiles?.() || [];
+    for (const fileInfo of allFiles) {
+      const symbols = (this.compiler.layout as any).getSymbols?.(fileInfo.filepath) || [];
+
+      for (const sym of symbols) {
+        if ((sym as any).name === symbolName) {
+          const fileHint = `from ${fileInfo.filepath.basename}`;
+          results.push({
+            symbol: sym,
+            fileHint,
+            filepath: fileInfo.filepath,
+          });
+        }
+      }
+    }
+
+    return results;
+  }
+
+  /**
+   * Create completion item for cross-file symbol with additionalTextEdits
+   * to auto-insert the use statement
+   */
+  createCrossFileCompletionItem (
+    symbolName: string,
+    symbolKind: SymbolKind,
+    fileHint: string,
+    sourceFilepath: Filepath,
+    currentFilepath: Filepath,
+    currentFileContent: string,
+  ): CompletionItem {
+    // Calculate the use statement that should be inserted
+    const mergeResult = UseStatementMerger.mergeSymbolIntoUses(
+      this.compiler,
+      currentFilepath,
+      currentFileContent,
+      symbolName,
+      sourceFilepath,
+    );
+
+    // Extract just the new use statement line(s) to insert
+    const lines = mergeResult.newContent.split('\n');
+    const textToInsert = lines.slice(0, 1).join('\n') + '\n';
+
+    return {
+      label: symbolName,
+      insertText: symbolName,
+      insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
+      kind: pickCompletionItemKind(symbolKind),
+      detail: fileHint,
+      // Use zzz_ prefix to sort cross-file suggestions after local ones
+      sortText: `zzz_${pickCompletionItemKind(symbolKind).toString().padStart(2, '0')}_${symbolName}`,
+      range: undefined as any,
+      // Add the use statement as additional text edits
+      additionalTextEdits: [
+        {
+          range: { startLineNumber: 1, startColumn: 1, endLineNumber: 1, endColumn: 1 },
+          text: textToInsert,
+        },
+      ],
+    };
+  }
+
+  /**
+   * Search for cross-file symbols that match the context and return them
+   * with additionalTextEdits for use statement insertion
+   */
+  suggestCrossFileSymbols (
+    acceptedKinds: SymbolKind[],
+    currentFilepath: Filepath,
+    currentFileContent: string,
+  ): CompletionList {
+    const results: CompletionList = { suggestions: [] };
+
+    if (!this.compiler.layout) return results;
+
+    // Get all symbols from all files
+    const allFiles = (this.compiler.layout as any).allFiles?.() || [];
+    const seenNames = new Set<string>();
+
+    for (const fileInfo of allFiles) {
+      // Skip current file - we already suggest local symbols
+      if (fileInfo.filepath.equals(currentFilepath)) continue;
+
+      const symbols = (this.compiler.layout as any).getSymbols?.(fileInfo.filepath) || [];
+
+      for (const sym of symbols) {
+        const symbolName = this.compiler.symbolName(sym);
+        if (!symbolName || seenNames.has(symbolName)) continue;
+        if (!acceptedKinds.includes(sym.kind)) continue;
+
+        seenNames.add(symbolName);
+
+        const fileHint = `from ${fileInfo.filepath.basename}`;
+        const item = this.createCrossFileCompletionItem(
+          symbolName,
+          sym.kind,
+          fileHint,
+          fileInfo.filepath,
+          currentFilepath,
+          currentFileContent,
+        );
+
+        results.suggestions.push(item);
+      }
+    }
+
+    return results;
   }
 
   provideCompletionItems (model: TextModel, position: Position): CompletionList {
@@ -119,6 +246,8 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
               this.compiler,
               offset,
               container as PrefixExpressionNode & { op: SyntaxToken },
+              model,
+              this,
             );
           case '~':
             return suggestOnPartialInjectionOp(
@@ -137,6 +266,8 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
               this.compiler,
               offset,
               container as InfixExpressionNode & { op: SyntaxToken },
+              model,
+              this,
             );
           case '.':
             return suggestMembers(
@@ -187,6 +318,8 @@ function suggestOnRelOp (
   compiler: Compiler,
   offset: number,
   container: (PrefixExpressionNode | InfixExpressionNode) & { op: SyntaxToken },
+  model?: TextModel,
+  provider?: DBMLCompletionItemProvider,
 ): CompletionList {
   const scopeKind = compiler.container.scopeKind(offset);
 
@@ -201,6 +334,18 @@ function suggestOnRelOp (
       SymbolKind.Column,
     ]);
 
+    // Add cross-file symbol suggestions if available
+    if (model && provider && model.uri) {
+      const currentFilepath = Filepath.fromUri(model.uri as any);
+      const fileContent = model.getValue();
+      const crossFileSuggestions = provider.suggestCrossFileSymbols(
+        [SymbolKind.Table, SymbolKind.Schema, SymbolKind.Column],
+        currentFilepath,
+        fileContent,
+      );
+      res.suggestions.push(...crossFileSuggestions.suggestions);
+    }
+
     return !shouldPrependSpace(container.op, offset) ? res : prependSpace(res);
   }
 
@@ -212,18 +357,29 @@ function suggestMembersOfSymbol (
   symbol: NodeSymbol,
   acceptedKinds: SymbolKind[],
 ): CompletionList {
+  const members = compiler.symbolMembers(symbol).getFiltered(UNHANDLED);
+  if (!members) return noSuggestions();
   return addQuoteToSuggestionIfNeeded({
-    suggestions: compiler.symbol
-      .members(symbol)
-      .filter(({ kind }) => acceptedKinds.includes(kind))
-      .map(({ name, kind }) => ({
-        label: name,
-        insertText: name,
-        insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
-        kind: pickCompletionItemKind(kind),
-        sortText: pickCompletionItemKind(kind).toString().padStart(2, '0'),
-        range: undefined as any,
-      })),
+    suggestions: members
+      .filter((member) => acceptedKinds.includes(member.kind))
+      .filter((member) => {
+        // Also exclude the default 'public' schema since it's implicit.
+        if (member.isPublicSchema()) return false;
+        return true;
+      })
+      .flatMap((member) => {
+        const name = compiler.symbolName(member);
+        if (name === undefined) return [];
+        return {
+          label: name,
+          insertText: name,
+          insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
+          kind: pickCompletionItemKind(member.kind),
+          sortText: pickCompletionItemKind(member.kind).toString().padStart(2, '0'),
+          range: undefined as any,
+        };
+      })
+      .filter((s) => s.label !== ''),
   });
 }
 
@@ -240,11 +396,20 @@ function suggestNamesInScope (
   let curElement: SyntaxNode | undefined = parent;
   const res: CompletionList = { suggestions: [] };
   while (curElement) {
-    if (curElement?.symbol?.symbolTable) {
-      const { symbol } = curElement;
-      res.suggestions.push(
-        ...suggestMembersOfSymbol(compiler, symbol, acceptedKinds).suggestions,
-      );
+    const symbol = compiler.nodeSymbol(curElement).getFiltered(UNHANDLED);
+    if (symbol) {
+      const memberSuggestions = suggestMembersOfSymbol(compiler, symbol, acceptedKinds).suggestions;
+      // Sort within each scope level: columns first, then schemas, then tables/other
+      const kindPriority = (kind: number): number => {
+        switch (kind) {
+          case CompletionItemKind.Field: return 0; // Column
+          case CompletionItemKind.Module: return 1; // Schema
+          case CompletionItemKind.Class: return 2; // Table
+          default: return 3;
+        }
+      };
+      memberSuggestions.sort((a, b) => kindPriority(a.kind) - kindPriority(b.kind));
+      res.suggestions.push(...memberSuggestions);
     }
     curElement = curElement instanceof ElementDeclarationNode ? curElement.parent : undefined;
   }
@@ -267,11 +432,14 @@ function suggestInTuple (compiler: Compiler, offset: number, tupleContainer: Tup
   // Check if we're in a Records element header
   if (
     element instanceof ElementDeclarationNode
-    && getElementKind(element).unwrap_or(undefined) === ElementKind.Records
+    && element.isKind(ElementKind.Records)
     && !(element.name instanceof CallExpressionNode)
     && isOffsetWithinElementHeader(offset, element)
   ) {
-    const tableSymbol = element.parent?.symbol || element.name?.referee;
+    const parentSymbol = element.parent ? compiler.nodeSymbol(element.parent).getFiltered(UNHANDLED) : undefined;
+    const refereeSymbol = element.name ? compiler.nodeReferee(element.name).getFiltered(UNHANDLED) : undefined;
+
+    const tableSymbol = parentSymbol || refereeSymbol;
     if (tableSymbol) {
       const suggestions = suggestMembersOfSymbol(compiler, tableSymbol, [SymbolKind.Column]);
       // If the user already typed some columns, we do not suggest "all columns" anymore
@@ -343,7 +511,7 @@ function suggestInAttribute (
     const res = suggestAttributeValue(
       compiler,
       offset,
-      extractStringFromIdentifierStream(container.name).unwrap_or(''),
+      extractStringFromIdentifierStream(container.name) ?? '',
     );
 
     return (token?.kind === SyntaxTokenKind.COLON && shouldPrependSpace(token, offset)) ? prependSpace(res) : res;
@@ -518,29 +686,69 @@ function suggestAttributeValue (
   return noSuggestions();
 }
 
+// Resolve a name stack (e.g. ['schema', 'table']) to matching symbols
+// by walking from the scope element's symbol through its members
+function resolveNameStack (
+  compiler: Compiler,
+  nameStack: string[],
+  scopeElement: SyntaxNode | undefined,
+): NodeSymbol[] {
+  if (!scopeElement) return [];
+
+  // Collect all symbols from the scope hierarchy
+  let candidates: NodeSymbol[] = [];
+  let curElement: SyntaxNode | undefined = scopeElement;
+  while (curElement) {
+    const symbol = compiler.nodeSymbol(curElement).getFiltered(UNHANDLED);
+    if (symbol) {
+      const members = compiler.symbolMembers(symbol).getFiltered(UNHANDLED);
+      candidates.push(...members || []);
+    }
+    curElement = curElement instanceof ElementDeclarationNode ? curElement.parent : undefined;
+  }
+
+  // Walk through the name stack
+  for (const name of nameStack) {
+    const matching = candidates.filter((member) => {
+      const memberName = compiler.symbolName(member);
+      return memberName === name;
+    });
+    if (matching.length === 0) return [];
+    candidates = matching;
+  }
+
+  return candidates;
+}
+
 function suggestMembers (
   compiler: Compiler,
   offset: number,
   container: InfixExpressionNode & { op: SyntaxToken },
 ): CompletionList {
-  const fragments = destructureMemberAccessExpression(container).unwrap_or([]);
+  const fragments = destructureMemberAccessExpression(container) ?? [];
   fragments.pop(); // The last fragment is not used in suggestions: v1.table.a<>
   if (fragments.some((f) => !isExpressionAVariableNode(f))) {
     return noSuggestions();
   }
 
-  const nameStack = fragments.map((f) => extractVariableFromExpression(f).unwrap());
+  const nameStack = fragments.map((f) => extractVariableFromExpression(f)!);
+
+  // Resolve the name stack by walking from the scope's symbol through members
+  const resolvedSymbols = resolveNameStack(compiler, nameStack, compiler.container.element(offset));
 
   return addQuoteToSuggestionIfNeeded({
-    suggestions: compiler.symbol
-      .ofName(nameStack, compiler.container.element(offset))
-      .flatMap(({ symbol }) => compiler.symbol.members(symbol))
-      .map(({ kind, name }) => ({
-        label: name,
-        insertText: name,
-        kind: pickCompletionItemKind(kind),
-        range: undefined as any,
-      })),
+    suggestions: resolvedSymbols
+      .flatMap((symbol) => compiler.symbolMembers(symbol).getFiltered(UNHANDLED) || [])
+      .map((member) => {
+        const name = compiler.symbolName(member)!;
+        return {
+          label: name,
+          insertText: name,
+          kind: pickCompletionItemKind(member.kind),
+          range: undefined as any,
+        };
+      })
+      .filter((s) => s.label !== ''),
   });
 }
 
@@ -574,16 +782,15 @@ function suggestInSubField (
     case ScopeKind.TABLEGROUP:
       return suggestInTableGroupField(compiler);
     case ScopeKind.DIAGRAMVIEW:
-      return suggestInDiagramViewField();
+      return suggestInDiagramViewBody();
     case ScopeKind.CUSTOM: {
-      // Check if inside a DiagramView sub-block (Tables, Schemas, etc.)
-      const element = compiler.container.element(offset);
-      if (
-        element instanceof ElementDeclarationNode
-        && element.parent instanceof ElementDeclarationNode
-        && getElementKind(element.parent).unwrap_or(undefined) === ElementKind.DiagramView
-      ) {
-        return suggestInDiagramViewSubBlock(compiler, offset);
+      const elem = compiler.container.element(offset);
+      if (elem instanceof ElementDeclarationNode) {
+        const bodyBlock = elem.parentNode;
+        const parentElem = bodyBlock instanceof BlockExpressionNode ? bodyBlock.parentNode : undefined;
+        if (parentElem instanceof ElementDeclarationNode && parentElem.isKind(ElementKind.DiagramView)) {
+          return suggestInDiagramViewSubBlock(compiler, offset, elem);
+        }
       }
       return noSuggestions();
     }
@@ -712,8 +919,7 @@ function suggestInElementHeader (
   offset: number,
   container: ElementDeclarationNode,
 ): CompletionList {
-  const elementKind = getElementKind(container).unwrap_or(undefined);
-  if (elementKind === ElementKind.Records) {
+  if (container.isKind(ElementKind.Records)) {
     return suggestNamesInScope(compiler, offset, container.parent, [
       SymbolKind.Schema,
       SymbolKind.Table,
@@ -736,7 +942,7 @@ function suggestInCallExpression (
   // Check if we're in a Records element header (top-level Records)
   if (
     element instanceof ElementDeclarationNode
-    && getElementKind(element).unwrap_or(undefined) === ElementKind.Records
+    && element.isKind(ElementKind.Records)
     && isOffsetWithinElementHeader(offset, element)
   ) {
     if (inCallee) return suggestNamesInScope(compiler, offset, element.parent, [
@@ -748,9 +954,9 @@ function suggestInCallExpression (
     const callee = container.callee;
     if (!callee) return noSuggestions();
 
-    const fragments = destructureMemberAccessExpression(callee).unwrap_or([callee]);
+    const fragments = destructureMemberAccessExpression(callee) ?? [callee];
     const rightmostExpr = fragments[fragments.length - 1];
-    const tableSymbol = rightmostExpr?.referee;
+    const tableSymbol = rightmostExpr ? compiler.nodeReferee(rightmostExpr).getFiltered(UNHANDLED) : undefined;
 
     if (!tableSymbol) return noSuggestions();
     const suggestions = suggestMembersOfSymbol(compiler, tableSymbol, [SymbolKind.Column]);
@@ -770,8 +976,8 @@ function suggestInCallExpression (
     if (!inArgs) continue;
     if (!(c instanceof FunctionApplicationNode)) continue;
     if (c.callee !== container) continue;
-    if (extractVariableFromExpression(container.callee).unwrap_or('').toLowerCase() !== ElementKind.Records) continue;
-    const tableSymbol = compiler.container.element(offset).symbol;
+    if ((extractVariableFromExpression(container.callee) ?? '').toLowerCase() !== ElementKind.Records) continue;
+    const tableSymbol = compiler.nodeSymbol(compiler.container.element(offset)).getFiltered(UNHANDLED);
     if (!tableSymbol) return noSuggestions();
     const suggestions = suggestMembersOfSymbol(compiler, tableSymbol, [SymbolKind.Column]);
     const { argumentList } = container;
@@ -784,20 +990,22 @@ function suggestInCallExpression (
 }
 
 function suggestInTableGroupField (compiler: Compiler): CompletionList {
+  const publicMembers = compiler.parse.publicSymbolTable() ?? [];
   return {
     suggestions: [
       ...addQuoteToSuggestionIfNeeded({
-        suggestions: [...compiler.parse.publicSymbolTable().entries()].flatMap(([index]) => {
-          const res = destructureIndex(index).unwrap_or(undefined);
-          if (res === undefined) return [];
-          const { kind, name } = res;
-          if (kind !== SymbolKind.Table && kind !== SymbolKind.Schema) return [];
+        suggestions: publicMembers.flatMap((member) => {
+          if (member.kind !== SymbolKind.Table && member.kind !== SymbolKind.Schema) return [];
+          const name = compiler.symbolName(member);
+          if (name === undefined) return [];
+          // Skip the default 'public' schema
+          if (member.isPublicSchema()) return [];
 
           return {
             label: name,
             insertText: name,
             insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
-            kind: pickCompletionItemKind(kind),
+            kind: pickCompletionItemKind(member.kind),
             range: undefined as any,
           };
         }),
@@ -811,69 +1019,6 @@ function suggestInTableGroupField (compiler: Compiler): CompletionList {
       })),
     ],
   };
-}
-
-function suggestInDiagramViewField (): CompletionList {
-  return {
-    suggestions: [
-      ...['Tables', 'TableGroups', 'Notes', 'Schemas'].map((name) => ({
-        label: name,
-        insertText: name,
-        insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
-        kind: CompletionItemKind.Keyword,
-        range: undefined as any,
-      })),
-      {
-        label: '*',
-        insertText: '*',
-        insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
-        kind: CompletionItemKind.Keyword,
-        range: undefined as any,
-      },
-    ],
-  };
-}
-
-function suggestInDiagramViewSubBlock (compiler: Compiler, offset: number): CompletionList {
-  const element = compiler.container.element(offset);
-  if (!(element instanceof ElementDeclarationNode)) return noSuggestions();
-
-  const blockType = (element as ElementDeclarationNode).type?.value.toLowerCase();
-  const wildcard = {
-    label: '*',
-    insertText: '*',
-    insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
-    kind: CompletionItemKind.Keyword,
-    range: undefined as any,
-  };
-
-  switch (blockType) {
-    case 'tables': {
-      const namesInScope = suggestNamesInScope(compiler, offset, compiler.parse.ast(), [SymbolKind.Table, SymbolKind.Schema]);
-      return { suggestions: [wildcard, ...namesInScope.suggestions] };
-    }
-    case 'tablegroups': {
-      const namesInScope = suggestNamesInScope(compiler, offset, compiler.parse.ast(), [SymbolKind.TableGroup]);
-      return { suggestions: [wildcard, ...namesInScope.suggestions] };
-    }
-    case 'schemas': {
-      const defaultSchema = {
-        label: DEFAULT_SCHEMA_NAME,
-        insertText: DEFAULT_SCHEMA_NAME,
-        insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
-        kind: CompletionItemKind.Module,
-        range: undefined as any,
-      };
-      const namesInScope = suggestNamesInScope(compiler, offset, compiler.parse.ast(), [SymbolKind.Schema]);
-      return { suggestions: [wildcard, defaultSchema, ...namesInScope.suggestions] };
-    }
-    case 'notes': {
-      const namesInScope = suggestNamesInScope(compiler, offset, compiler.parse.ast(), [SymbolKind.StickyNote]);
-      return { suggestions: [wildcard, ...namesInScope.suggestions] };
-    }
-    default:
-      return noSuggestions();
-  }
 }
 
 function suggestInIndex (compiler: Compiler, offset: number): CompletionList {
@@ -959,19 +1104,19 @@ function suggestColumnType (compiler: Compiler, offset: number): CompletionList 
 function suggestColumnNameInIndexes (compiler: Compiler, offset: number): CompletionList {
   const indexesNode = compiler.container.element(offset);
   const tableNode = (indexesNode as any)?.parent;
-  if (!(tableNode?.symbol instanceof TableSymbol)) {
+  const tableSymbol = tableNode ? compiler.nodeSymbol(tableNode).getFiltered(UNHANDLED) : undefined;
+  if (!tableSymbol || !tableSymbol?.isKind(SymbolKind.Table)) {
     return noSuggestions();
   }
 
-  const { symbolTable } = tableNode.symbol;
+  const members = compiler.symbolMembers(tableSymbol).getFiltered(UNHANDLED);
+  if (!members) return noSuggestions();
 
   return addQuoteToSuggestionIfNeeded({
-    suggestions: [...symbolTable.entries()].flatMap(([index]) => {
-      const res = destructureIndex(index).unwrap_or(undefined);
-      if (res === undefined) {
-        return [];
-      }
-      const { name } = res;
+    suggestions: members.flatMap((member) => {
+      const nameResult = member.declaration ? compiler.nodeFullname(member.declaration) : undefined;
+      const name = (nameResult && !nameResult.hasValue(UNHANDLED)) ? nameResult.getValue()?.at(-1) : undefined;
+      if (!name) return [];
 
       return {
         label: name,
@@ -992,4 +1137,62 @@ function findContainerArg (offset: number, node: FunctionApplicationNode): numbe
   const containerArgId = args.findIndex((c) => offset <= c.end);
 
   return containerArgId === -1 ? args.length : containerArgId;
+}
+
+const wildcardSuggestion = {
+  label: '*',
+  insertText: '*',
+  insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
+  kind: CompletionItemKind.Keyword,
+  range: undefined as any,
+};
+
+function suggestInDiagramViewBody (): CompletionList {
+  return {
+    suggestions: [
+      ...['Tables', 'TableGroups', 'Notes', 'Schemas'].map((name) => ({
+        label: name,
+        insertText: name,
+        insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
+        kind: CompletionItemKind.Keyword,
+        range: undefined as any,
+      })),
+      wildcardSuggestion,
+    ],
+  };
+}
+
+function suggestInDiagramViewSubBlock (
+  compiler: Compiler,
+  offset: number,
+  elem: ElementDeclarationNode,
+): CompletionList {
+  const blockType = elem.type?.value.toLowerCase();
+  switch (blockType) {
+    case 'tables': {
+      const namesInScope = suggestNamesInScope(compiler, offset, compiler.parse.ast(), [SymbolKind.Table, SymbolKind.Schema]);
+      return { suggestions: [wildcardSuggestion, ...namesInScope.suggestions] };
+    }
+    case 'tablegroups': {
+      const namesInScope = suggestNamesInScope(compiler, offset, compiler.parse.ast(), [SymbolKind.TableGroup]);
+      return { suggestions: [wildcardSuggestion, ...namesInScope.suggestions] };
+    }
+    case 'schemas': {
+      const defaultSchema = {
+        label: DEFAULT_SCHEMA_NAME,
+        insertText: DEFAULT_SCHEMA_NAME,
+        insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
+        kind: CompletionItemKind.Module,
+        range: undefined as any,
+      };
+      const namesInScope = suggestNamesInScope(compiler, offset, compiler.parse.ast(), [SymbolKind.Schema]);
+      return { suggestions: [wildcardSuggestion, defaultSchema, ...namesInScope.suggestions] };
+    }
+    case 'notes': {
+      const namesInScope = suggestNamesInScope(compiler, offset, compiler.parse.ast(), [SymbolKind.Note]);
+      return { suggestions: [wildcardSuggestion, ...namesInScope.suggestions] };
+    }
+    default:
+      return noSuggestions();
+  }
 }

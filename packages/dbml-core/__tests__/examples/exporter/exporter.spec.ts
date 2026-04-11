@@ -1,9 +1,9 @@
 import exporter from '../../../src/export';
 import { scanTestNames, getFileExtension } from '../testHelpers';
-import { ExportFormat } from '../../../types/export/ModelExporter';
 import { readFileSync } from 'fs';
 import path from 'path';
 import { test, expect, describe } from 'vitest';
+import { ExportFormat } from '../../../types';
 
 const DBML_WITH_RECORDS = `
 Table users {

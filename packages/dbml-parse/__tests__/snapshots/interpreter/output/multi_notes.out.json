@@ -115,6 +115,13 @@
         ]
       }
     ],
+    "externals": {
+      "enums": [],
+      "notes": [],
+      "tableGroups": [],
+      "tablePartials": [],
+      "tables": []
+    },
     "notes": [],
     "project": {
       "database_type": "PostgreSQL",
@@ -843,7 +850,22 @@
           }
         }
       }
-    ]
+    ],
+    "token": {
+      "end": {
+        "column": 2,
+        "line": 38,
+        "offset": 695
+      },
+      "filepath": {
+        "path": "/main.dbml"
+      },
+      "start": {
+        "column": 1,
+        "line": 1,
+        "offset": 0
+      }
+    }
   },
   "errors": [],
   "warnings": []

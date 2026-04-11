@@ -13,7 +13,7 @@ import {
   IdentiferStreamNode,
 } from '@/core/types/nodes';
 import { SyntaxToken, SyntaxTokenKind } from '@/core/types/tokens';
-import { isOffsetWithinSpan } from '@/core/utils';
+import { isOffsetWithinSpan } from '@/core/utils/span';
 import { getMemberChain } from '@/core/parser/utils';
 
 export function containerStack (this: Compiler, offset: number): readonly Readonly<SyntaxNode>[] {

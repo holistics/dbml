@@ -15,6 +15,7 @@ export * from './testHelpers';
 export {
   lex,
   parse,
+  validate,
   analyze,
   interpret,
   flattenTokens,

@@ -3,35 +3,18 @@
     "aliases": [],
     "diagramViews": [],
     "enums": [],
+    "externals": {
+      "enums": [],
+      "notes": [],
+      "tableGroups": [],
+      "tablePartials": [],
+      "tables": []
+    },
     "notes": [],
-    "project": {},
     "records": [],
     "refs": [
       {
         "endpoints": [
-          {
-            "fieldNames": [
-              "email"
-            ],
-            "relation": "1",
-            "schemaName": null,
-            "tableName": "user",
-            "token": {
-              "end": {
-                "column": 36,
-                "line": 54,
-                "offset": 1024
-              },
-              "filepath": {
-                "path": "/main.dbml"
-              },
-              "start": {
-                "column": 19,
-                "line": 54,
-                "offset": 1007
-              }
-            }
-          },
           {
             "fieldNames": [
               "email"
@@ -52,6 +35,29 @@
                 "column": 3,
                 "line": 54,
                 "offset": 991
+              }
+            }
+          },
+          {
+            "fieldNames": [
+              "email"
+            ],
+            "relation": "1",
+            "schemaName": null,
+            "tableName": "user",
+            "token": {
+              "end": {
+                "column": 36,
+                "line": 54,
+                "offset": 1024
+              },
+              "filepath": {
+                "path": "/main.dbml"
+              },
+              "start": {
+                "column": 19,
+                "line": 54,
+                "offset": 1007
               }
             }
           }
@@ -1172,7 +1178,22 @@
           }
         }
       }
-    ]
+    ],
+    "token": {
+      "end": {
+        "column": 1,
+        "line": 60,
+        "offset": 1189
+      },
+      "filepath": {
+        "path": "/main.dbml"
+      },
+      "start": {
+        "column": 1,
+        "line": 1,
+        "offset": 0
+      }
+    }
   },
   "errors": [],
   "warnings": []

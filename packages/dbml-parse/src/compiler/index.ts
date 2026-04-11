@@ -1,124 +1,144 @@
-import { SyntaxNodeIdGenerator, ProgramNode } from '@/core/types/nodes';
-import { Filepath } from '@/core/types/filepath';
-import { DEFAULT_ENTRY } from '@/constants';
-import { NodeSymbolIdGenerator } from '@/core/types/symbol/symbols';
-import { SyntaxToken } from '@/core/types/tokens';
-import { Database } from '@/core/types/schemaJson';
-import Report from '@/core/types/report';
-import Lexer from '@/core/lexer/lexer';
-import Parser from '@/core/parser/parser';
-import Analyzer from '@/core/analyzer/analyzer';
-import Interpreter from '@/core/interpreter/interpreter';
 import { DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLReferencesProvider, DBMLDiagnosticsProvider } from '@/services/index';
-import { ast, errors, warnings, tokens, rawDb, publicSymbolTable } from './queries/parse';
-import { invalidStream, flatStream } from './queries/token';
-import { symbolOfName, symbolOfNameToKey, symbolMembers } from './queries/symbol';
-import { containerStack, containerToken, containerElement, containerScope, containerScopeKind } from './queries/container';
-import {
-  renameTable,
-  applyTextEdits,
-  syncDiagramView,
-  findDiagramViewBlocks,
-  type TextEdit,
-  type TableNameInput,
-  type DiagramViewSyncOperation,
-  type DiagramViewBlock,
-} from './queries/transform';
+import { invalidStream, flatStream } from './queries/legacy/token';
 import { splitQualifiedIdentifier, unescapeString, escapeString, formatRecordValue, isValidIdentifier, addDoubleQuoteIfNeeded } from './queries/utils';
-
-// Re-export types
+import { containerStack, containerToken, containerElement, containerScope, containerScopeKind } from './queries/container';
+import { renameTable } from './queries/transform';
 export { ScopeKind } from './types';
-export type { TextEdit, TableNameInput, DiagramViewSyncOperation, DiagramViewBlock };
+export type { TextEdit, TableNameInput } from './queries/transform';
+import {
+  nodeSymbol,
+  symbolMembers,
+  nodeReferee,
+  bindNode,
+  interpretNode,
+} from '@/core/global_modules';
+import { symbolReferences } from './queries/symbolReferences';
+import { intern, type Internable, type Primitive } from '@/core/types/internable';
+import { DEFAULT_ENTRY } from '@/constants';
+import { nodeAlias, nodeFullname as fullname, nodeSettings, validateNode } from '@/core/local_modules';
+import { NodeSymbolIdGenerator } from '@/core/types/symbol';
+import { SymbolFactory } from '@/core/types/symbol';
+import { lookupMembers } from './queries/lookupMembers';
+import { symbolName } from './queries/symbolName';
+import { SyntaxNodeIdGenerator } from '@/core/types/nodes';
+import { type DbmlProjectLayout, MemoryProjectLayout } from './projectLayout';
+import { fileDependencies } from './queries/fileDependencies';
+import { Filepath } from '@/core/types/filepath';
+import { usableMembers } from './queries/usableMembers';
+import { topLevelSchemaMembers } from './queries/topLevelSchemaMembers';
+import { reachableFiles } from './queries/reachableFiles';
+import { parseFile, parseProject } from './queries/pipeline/parse';
+import { ast, errors, publicSymbolTable, rawDb, tokens, warnings } from './queries/legacy/parse';
+import { interpretFile, interpretProject, exportSchemaJson } from './queries/pipeline/interpret';
+import { bindFile, bindProject } from './queries/pipeline/bind';
 
 // Re-export utilities
 export { splitQualifiedIdentifier, unescapeString, escapeString, formatRecordValue, isValidIdentifier, addDoubleQuoteIfNeeded };
 
-export default class Compiler {
-  private source = '';
-  private cache = new Map<symbol, any>();
-  private nodeIdGenerator = new SyntaxNodeIdGenerator();
-  private symbolIdGenerator = new NodeSymbolIdGenerator();
+// To detect cyclic queries
+// Indicating that a query is being computed, but we're trying to compute it again
+const COMPUTING = Symbol('COMPUTING');
 
-  setSource (source: string) {
-    this.source = source;
+export default class Compiler {
+  private cache = new Map<symbol, any>();
+
+  layout: DbmlProjectLayout = new MemoryProjectLayout();
+
+  nodeIdGenerator = new SyntaxNodeIdGenerator();
+
+  symbolIdGenerator = new NodeSymbolIdGenerator();
+
+  symbolFactory = new SymbolFactory(this.symbolIdGenerator);
+
+  setSource (filepath: Filepath, source: string) {
+    this.layout.setSource(filepath, source);
     this.cache.clear();
-    this.nodeIdGenerator.reset();
-    this.symbolIdGenerator.reset();
   }
 
-  private query<Args extends unknown[], Return> (
+  clearSource () {
+    this.layout = new MemoryProjectLayout();
+    this.cache.clear();
+  }
+
+  deleteSource (filepath: Filepath) {
+    this.layout.deleteSource(filepath);
+    this.cache.clear();
+  }
+
+  private query<Args extends (Primitive | Primitive[] | Internable<Primitive>)[], Return> (
     fn: (this: Compiler, ...args: Args) => Return,
-    toKey?: (...args: Args) => unknown,
   ): (...args: Args) => Return {
-    const cacheKey = Symbol();
+    const queryKey = Symbol();
     return ((...args: Args): Return => {
-      if (args.length === 0) {
-        if (this.cache.has(cacheKey)) return this.cache.get(cacheKey);
-        const result = fn.apply(this, args);
-        this.cache.set(cacheKey, result);
-        return result;
+      const argKey = args.map((a) => intern(a)).join('\0');
+      let subCache = this.cache.get(queryKey);
+      if (subCache instanceof Map) {
+        if (subCache.has(argKey)) {
+          const cached = subCache.get(argKey);
+          if (cached === COMPUTING) {
+            throw new Error(`Cycle detected in query: ${fn.name}(${argKey})`);
+          }
+          return cached;
+        }
       }
 
-      const key = toKey ? toKey(...args) : args[0];
-      let mapCache = this.cache.get(cacheKey);
-      if (mapCache instanceof Map && mapCache.has(key)) return mapCache.get(key);
+      if (!(subCache instanceof Map)) {
+        subCache = new Map();
+        this.cache.set(queryKey, subCache);
+      }
+      subCache.set(argKey, COMPUTING);
 
       const result = fn.apply(this, args);
-      if (!(mapCache instanceof Map)) {
-        mapCache = new Map();
-        this.cache.set(cacheKey, mapCache);
-      }
-      mapCache.set(key, result);
+      subCache.set(argKey, result);
       return result;
     }) as (...args: Args) => Return;
   }
 
-  private interpret (): Report<{ ast: ProgramNode; tokens: SyntaxToken[]; rawDb?: Database }> {
-    const filepath = DEFAULT_ENTRY;
-    const parseRes: Report<{ ast: ProgramNode; tokens: SyntaxToken[] }> = new Lexer(this.source, filepath)
-      .lex()
-      .chain((lexedTokens) => new Parser(this.source, lexedTokens as SyntaxToken[], this.nodeIdGenerator, filepath).parse())
-      .chain(({ ast, tokens }) => new Analyzer(ast, this.symbolIdGenerator).analyze().map(() => ({ ast, tokens })));
+  // global queries
+  parseProject = this.query(parseProject);
 
-    if (parseRes.getErrors().length > 0) {
-      return parseRes as Report<{ ast: ProgramNode; tokens: SyntaxToken[]; rawDb?: Database }>;
-    }
+  bindNode = this.query(bindNode);
+  bindProject = this.query(bindProject);
+  bindFile = this.query(bindFile);
 
-    return parseRes.chain(({ ast, tokens }) =>
-      new Interpreter(ast).interpret().map((rawDb) => ({ ast, tokens, rawDb })),
-    );
-  }
+  nodeSymbol = this.query(nodeSymbol);
+  symbolMembers = this.query(symbolMembers);
+  lookupMembers = this.query(lookupMembers);
 
-  renameTable (
-    oldName: TableNameInput,
-    newName: TableNameInput,
-  ): string {
-    return renameTable.call(this, oldName, newName);
-  }
+  symbolReferences = this.query(symbolReferences);
+  nodeReferee = this.query(nodeReferee);
 
-  syncDiagramView (
-    operations: DiagramViewSyncOperation[],
-    blocks?: DiagramViewBlock[],
-  ): { newDbml: string; edits: TextEdit[] } {
-    return syncDiagramView(this.parse.source(), operations, blocks);
-  }
+  interpretNode = this.query(interpretNode);
+  interpretFile = this.query(interpretFile);
+  interpretProject = this.query(interpretProject);
+  exportSchemaJson = this.query(exportSchemaJson);
 
-  findDiagramViewBlocks (): DiagramViewBlock[] {
-    return findDiagramViewBlocks(this.parse.source());
-  }
+  // local queries
+  parseFile = this.query(parseFile);
 
-  applyTextEdits (edits: TextEdit[]): string {
-    return applyTextEdits(this.parse.source(), edits);
-  }
+  topLevelSchemaMembers = this.query(topLevelSchemaMembers);
+  reachableFiles = this.query(reachableFiles);
+  fileUsableMembers = this.query(usableMembers);
+  fileDependencies = this.query(fileDependencies);
+  validateNode = this.query(validateNode);
+  nodeFullname = this.query(fullname);
+  symbolName = this.query(symbolName);
+  nodeAlias = this.query(nodeAlias);
+  nodeSettings = this.query(nodeSettings);
 
+  // transform queries
+  renameTable = renameTable.bind(this);
+
+  // @deprecated - legacy APIs for services compatibility
   readonly token = {
     invalidStream: this.query(invalidStream),
     flatStream: this.query(flatStream),
   };
 
+  // @deprecated - legacy APIs for services compatibility
   readonly parse = {
-    source: () => this.source as Readonly<string>,
-    _: this.query(this.interpret),
+    source: () => this.layout.getSource(DEFAULT_ENTRY) as Readonly<string>,
+    _: this.query(exportSchemaJson),
     ast: this.query(ast),
     errors: this.query(errors),
     warnings: this.query(warnings),
@@ -127,6 +147,7 @@ export default class Compiler {
     publicSymbolTable: this.query(publicSymbolTable),
   };
 
+  // @deprecated - legacy APIs for services compatibility
   readonly container = {
     stack: this.query(containerStack),
     token: this.query(containerToken),
@@ -135,12 +156,7 @@ export default class Compiler {
     scopeKind: this.query(containerScopeKind),
   };
 
-  readonly symbol = {
-    ofName: this.query(symbolOfName, symbolOfNameToKey),
-    members: this.query(symbolMembers),
-  };
-
-  initMonacoServices () {
+  async initMonacoServices () {
     return {
       definitionProvider: new DBMLDefinitionProvider(this),
       referenceProvider: new DBMLReferencesProvider(this),

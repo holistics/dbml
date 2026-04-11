@@ -1,5 +1,6 @@
+import { SyntaxToken } from '@/core/types/tokens';
+import { SyntaxTokenKind } from '@/index';
 import { last } from 'lodash-es';
-import { SyntaxToken, SyntaxTokenKind } from '@/core/types/tokens';
 
 export function hasTrailingNewLines (token: SyntaxToken): boolean {
   return token.trailingTrivia.find(({ kind }) => kind === SyntaxTokenKind.NEWLINE) !== undefined;

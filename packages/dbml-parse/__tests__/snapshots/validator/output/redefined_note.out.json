@@ -3,48 +3,52 @@
     {
       "code": "NOTE_REDEFINED",
       "diagnostic": "Duplicate notes are defined",
+      "filepath": "/main.dbml",
       "level": "error",
       "node": {
         "context": {
-          "id": "node@<element-declaration>@:@[L1:C4, L1:C38]",
-          "filepath": "/main.dbml",
-          "snippet": "Note: ''' ...l note '''"
+          "id": "node@<element-declaration>@@[L1:C4, L1:C38]",
+          "snippet": "Note: ''' ...l note '''",
+          "filepath": "/main.dbml"
         }
       }
     },
     {
       "code": "NOTE_REDEFINED",
       "diagnostic": "Duplicate notes are defined",
+      "filepath": "/main.dbml",
       "level": "error",
       "node": {
         "context": {
-          "id": "node@<element-declaration>@:@[L2:C4, L4:C5]",
-          "filepath": "/main.dbml",
-          "snippet": "Note {\r\n  ...te'\r\n    }"
+          "id": "node@<element-declaration>@@[L2:C4, L4:C5]",
+          "snippet": "Note {\r\n  ...te'\r\n    }",
+          "filepath": "/main.dbml"
         }
       }
     },
     {
       "code": "INVALID_NAME",
       "diagnostic": "Sticky note must have a name",
+      "filepath": "/main.dbml",
       "level": "error",
       "node": {
         "context": {
-          "id": "node@<element-declaration>@:@[L7:C0, L9:C1]",
-          "filepath": "/main.dbml",
-          "snippet": "Note {\r\n  ...l note'\r\n}"
+          "id": "node@<element-declaration>@@[L7:C0, L9:C1]",
+          "snippet": "Note {\r\n  ...l note'\r\n}",
+          "filepath": "/main.dbml"
         }
       }
     },
     {
       "code": "INVALID_NAME",
       "diagnostic": "Sticky note must have a name",
+      "filepath": "/main.dbml",
       "level": "error",
       "node": {
         "context": {
-          "id": "node@<element-declaration>@:@[L11:C0, L13:C3]",
-          "filepath": "/main.dbml",
-          "snippet": "Note: '''\r... note\r\n'''"
+          "id": "node@<element-declaration>@@[L11:C0, L13:C3]",
+          "snippet": "Note: '''\r... note\r\n'''",
+          "filepath": "/main.dbml"
         }
       }
     }
@@ -52,28 +56,25 @@
   "program": {
     "context": {
       "id": "node@<program>@@[L0:C0, L13:C3]",
-      "filepath": "/main.dbml",
       "snippet": "Table A {\r... note\r\n'''"
     },
     "children": {
       "body": [
         {
           "context": {
-            "id": "node@<element-declaration>@:A@[L0:C0, L5:C1]",
-            "filepath": "/main.dbml",
+            "id": "node@<element-declaration>@A@[L0:C0, L5:C1]",
             "snippet": "Table A {\r...\r\n    }\r\n}"
           },
           "children": {
             "body": {
               "context": {
                 "id": "node@<block-expression>@@[L0:C8, L5:C1]",
-                "filepath": "/main.dbml",
                 "snippet": "{\r\n    Not...\r\n    }\r\n}"
               },
               "children": {
                 "blockCloseBrace": {
                   "context": {
-                    "id": "token@<rbrace>@:}@[L5:C0, L5:C1]",
+                    "id": "token@<rbrace>@}@[L5:C0, L5:C1]",
                     "snippet": "}"
                   },
                   "leadingTrivia": "",
@@ -82,7 +83,7 @@
                 },
                 "blockOpenBrace": {
                   "context": {
-                    "id": "token@<lbrace>@:{@[L0:C8, L0:C9]",
+                    "id": "token@<lbrace>@{@[L0:C8, L0:C9]",
                     "snippet": "{"
                   },
                   "leadingTrivia": "",
@@ -92,15 +93,13 @@
                 "body": [
                   {
                     "context": {
-                      "id": "node@<element-declaration>@:@[L1:C4, L1:C38]",
-                      "filepath": "/main.dbml",
+                      "id": "node@<element-declaration>@@[L1:C4, L1:C38]",
                       "snippet": "Note: ''' ...l note '''"
                     },
                     "children": {
                       "body": {
                         "context": {
                           "id": "node@<function-application>@@[L1:C10, L1:C38]",
-                          "filepath": "/main.dbml",
                           "snippet": "''' This i...l note '''"
                         },
                         "children": {
@@ -108,77 +107,73 @@
                           "callee": {
                             "context": {
                               "id": "node@<primary-expression>@@[L1:C10, L1:C38]",
-                              "filepath": "/main.dbml",
                               "snippet": "''' This i...l note '''"
                             },
                             "children": {
                               "expression": {
                                 "context": {
-                                  "id": "node@<literal>@: This is a local note @[L1:C10, L1:C38]",
-                                  "filepath": "/main.dbml",
+                                  "id": "node@<literal>@ This is a local note @[L1:C10, L1:C38]",
                                   "snippet": "''' This i...l note '''"
                                 },
                                 "children": {
-                                  "fullEnd": 51,
-                                  "fullStart": 21,
                                   "literal": {
                                     "context": {
-                                      "id": "token@<string>@: This is a local note @[L1:C10, L1:C38]",
+                                      "id": "token@<string>@ This is a local note @[L1:C10, L1:C38]",
                                       "snippet": "''' This i...l note '''"
                                     },
                                     "leadingTrivia": "",
                                     "trailingTrivia": "\n",
                                     "value": " This is a local note "
                                   }
-                                }
-                              },
-                              "fullEnd": 51,
-                              "fullStart": 21
-                            }
-                          },
-                          "fullEnd": 51,
-                          "fullStart": 21
-                        }
+                                },
+                                "fullEnd": 51,
+                                "fullStart": 21
+                              }
+                            },
+                            "fullEnd": 51,
+                            "fullStart": 21
+                          }
+                        },
+                        "fullEnd": 51,
+                        "fullStart": 21
                       },
                       "bodyColon": {
                         "context": {
-                          "id": "token@<colon>@::@[L1:C8, L1:C9]",
+                          "id": "token@<colon>@:@[L1:C8, L1:C9]",
                           "snippet": ":"
                         },
                         "leadingTrivia": "",
                         "trailingTrivia": " ",
                         "value": ":"
                       },
-                      "fullEnd": 51,
-                      "fullStart": 11,
                       "type": {
                         "context": {
-                          "id": "token@<identifier>@:Note@[L1:C4, L1:C8]",
+                          "id": "token@<identifier>@Note@[L1:C4, L1:C8]",
                           "snippet": "Note"
                         },
                         "leadingTrivia": "    ",
                         "trailingTrivia": "",
                         "value": "Note"
                       }
-                    }
+                    },
+                    "fullEnd": 51,
+                    "fullStart": 11
                   },
                   {
                     "context": {
-                      "id": "node@<element-declaration>@:@[L2:C4, L4:C5]",
-                      "filepath": "/main.dbml",
+                      "id": "node@<element-declaration>@@[L2:C4, L4:C5]",
                       "snippet": "Note {\r\n  ...te'\r\n    }"
                     },
                     "children": {
                       "body": {
                         "context": {
                           "id": "node@<block-expression>@@[L2:C9, L4:C5]",
-                          "filepath": "/main.dbml",
                           "snippet": "{\r\n       ...te'\r\n    }"
                         },
                         "children": {
                           "blockCloseBrace": {
                             "context": {
-                              "id": "token@<rbrace>@:}@[L4:C4, L4:C5]",
+                              "id": "token@<rbrace>@}@[L4:C4, L4:C5]",
                               "snippet": "}"
                             },
                             "leadingTrivia": "    ",
@@ -187,7 +182,7 @@
                           },
                           "blockOpenBrace": {
                             "context": {
-                              "id": "token@<lbrace>@:{@[L2:C9, L2:C10]",
+                              "id": "token@<lbrace>@{@[L2:C9, L2:C10]",
                               "snippet": "{"
                             },
                             "leadingTrivia": "",
@@ -198,7 +193,6 @@
                             {
                               "context": {
                                 "id": "node@<function-application>@@[L3:C8, L3:C36]",
-                                "filepath": "/main.dbml",
                                 "snippet": "'This is a...ocal note'"
                               },
                               "children": {
@@ -206,97 +200,91 @@
                                 "callee": {
                                   "context": {
                                     "id": "node@<primary-expression>@@[L3:C8, L3:C36]",
-                                    "filepath": "/main.dbml",
                                     "snippet": "'This is a...ocal note'"
                                   },
                                   "children": {
                                     "expression": {
                                       "context": {
-                                        "id": "node@<literal>@:This is another local note@[L3:C8, L3:C36]",
-                                        "filepath": "/main.dbml",
+                                        "id": "node@<literal>@This is another local note@[L3:C8, L3:C36]",
                                         "snippet": "'This is a...ocal note'"
                                       },
                                       "children": {
-                                        "fullEnd": 101,
-                                        "fullStart": 63,
                                         "literal": {
                                           "context": {
-                                            "id": "token@<string>@:This is another local note@[L3:C8, L3:C36]",
+                                            "id": "token@<string>@This is another local note@[L3:C8, L3:C36]",
                                             "snippet": "'This is a...ocal note'"
                                           },
                                           "leadingTrivia": "        ",
                                           "trailingTrivia": "\n",
                                           "value": "This is another local note"
                                         }
-                                      }
-                                    },
-                                    "fullEnd": 101,
-                                    "fullStart": 63
-                                  }
-                                },
-                                "fullEnd": 101,
-                                "fullStart": 63
-                              }
+                                      },
+                                      "fullEnd": 101,
+                                      "fullStart": 63
+                                    }
+                                  },
+                                  "fullEnd": 101,
+                                  "fullStart": 63
+                                }
+                              },
+                              "fullEnd": 101,
+                              "fullStart": 63
                             }
-                          ],
-                          "fullEnd": 108,
-                          "fullStart": 60
-                        }
+                          ]
+                        },
+                        "fullEnd": 108,
+                        "fullStart": 60
                       },
-                      "fullEnd": 108,
-                      "fullStart": 51,
                       "type": {
                         "context": {
-                          "id": "token@<identifier>@:Note@[L2:C4, L2:C8]",
+                          "id": "token@<identifier>@Note@[L2:C4, L2:C8]",
                           "snippet": "Note"
                         },
                         "leadingTrivia": "    ",
                         "trailingTrivia": " ",
                         "value": "Note"
                       }
-                    }
+                    },
+                    "fullEnd": 108,
+                    "fullStart": 51
                   }
-                ],
-                "fullEnd": 111,
-                "fullStart": 8
-              }
+                ]
+              },
+              "fullEnd": 111,
+              "fullStart": 8
             },
-            "fullEnd": 111,
-            "fullStart": 0,
             "name": {
               "context": {
                 "id": "node@<primary-expression>@@[L0:C6, L0:C7]",
-                "filepath": "/main.dbml",
                 "snippet": "A"
               },
               "children": {
                 "expression": {
                   "context": {
-                    "id": "node@<variable>@:A@[L0:C6, L0:C7]",
-                    "filepath": "/main.dbml",
+                    "id": "node@<variable>@A@[L0:C6, L0:C7]",
                     "snippet": "A"
                   },
                   "children": {
-                    "fullEnd": 8,
-                    "fullStart": 6,
                     "variable": {
                       "context": {
-                        "id": "token@<identifier>@:A@[L0:C6, L0:C7]",
+                        "id": "token@<identifier>@A@[L0:C6, L0:C7]",
                         "snippet": "A"
                       },
                       "leadingTrivia": "",
                       "trailingTrivia": " ",
                       "value": "A"
                     }
-                  }
-                },
-                "fullEnd": 8,
-                "fullStart": 6
-              }
+                  },
+                  "fullEnd": 8,
+                  "fullStart": 6
+                }
+              },
+              "fullEnd": 8,
+              "fullStart": 6
             },
             "type": {
               "context": {
-                "id": "token@<identifier>@:Table@[L0:C0, L0:C5]",
+                "id": "token@<identifier>@Table@[L0:C0, L0:C5]",
                 "snippet": "Table"
               },
               "leadingTrivia": "",
@@ -304,13 +292,15 @@
               "value": "Table"
             }
           },
+          "fullEnd": 111,
+          "fullStart": 0,
           "symbol": {
             "context": {
-              "id": "symbol@<element-declaration>@:A@[L0:C0, L5:C1]",
+              "id": "symbol@Table@A@[L0:C0, L5:C1]",
               "snippet": "Table A {\r...\r\n    }\r\n}"
             },
             "declaration": {
-              "id": "node@<element-declaration>@:A@[L0:C0, L5:C1]",
+              "id": "node@<element-declaration>@A@[L0:C0, L5:C1]",
               "snippet": "Table A {\r...\r\n    }\r\n}"
             },
             "members": [],
@@ -319,21 +309,19 @@
         },
         {
           "context": {
-            "id": "node@<element-declaration>@:@[L7:C0, L9:C1]",
-            "filepath": "/main.dbml",
+            "id": "node@<element-declaration>@@[L7:C0, L9:C1]",
             "snippet": "Note {\r\n  ...l note'\r\n}"
           },
           "children": {
             "body": {
               "context": {
                 "id": "node@<block-expression>@@[L7:C5, L9:C1]",
-                "filepath": "/main.dbml",
                 "snippet": "{\r\n    'Th...l note'\r\n}"
               },
               "children": {
                 "blockCloseBrace": {
                   "context": {
-                    "id": "token@<rbrace>@:}@[L9:C0, L9:C1]",
+                    "id": "token@<rbrace>@}@[L9:C0, L9:C1]",
                     "snippet": "}"
                   },
                   "leadingTrivia": "",
@@ -342,7 +330,7 @@
                 },
                 "blockOpenBrace": {
                   "context": {
-                    "id": "token@<lbrace>@:{@[L7:C5, L7:C6]",
+                    "id": "token@<lbrace>@{@[L7:C5, L7:C6]",
                     "snippet": "{"
                   },
                   "leadingTrivia": "",
@@ -353,7 +341,6 @@
                   {
                     "context": {
                       "id": "node@<function-application>@@[L8:C4, L8:C27]",
-                      "filepath": "/main.dbml",
                       "snippet": "'This is a...obal note'"
                     },
                     "children": {
@@ -361,67 +348,75 @@
                       "callee": {
                         "context": {
                           "id": "node@<primary-expression>@@[L8:C4, L8:C27]",
-                          "filepath": "/main.dbml",
                           "snippet": "'This is a...obal note'"
                         },
                         "children": {
                           "expression": {
                             "context": {
-                              "id": "node@<literal>@:This is a global note@[L8:C4, L8:C27]",
-                              "filepath": "/main.dbml",
+                              "id": "node@<literal>@This is a global note@[L8:C4, L8:C27]",
                               "snippet": "'This is a...obal note'"
                             },
                             "children": {
-                              "fullEnd": 150,
-                              "fullStart": 121,
                               "literal": {
                                 "context": {
-                                  "id": "token@<string>@:This is a global note@[L8:C4, L8:C27]",
+                                  "id": "token@<string>@This is a global note@[L8:C4, L8:C27]",
                                   "snippet": "'This is a...obal note'"
                                 },
                                 "leadingTrivia": "    ",
                                 "trailingTrivia": "\n",
                                 "value": "This is a global note"
                               }
-                            }
-                          },
-                          "fullEnd": 150,
-                          "fullStart": 121
-                        }
-                      },
-                      "fullEnd": 150,
-                      "fullStart": 121
-                    }
+                            },
+                            "fullEnd": 150,
+                            "fullStart": 121
+                          }
+                        },
+                        "fullEnd": 150,
+                        "fullStart": 121
+                      }
+                    },
+                    "fullEnd": 150,
+                    "fullStart": 121
                   }
-                ],
-                "fullEnd": 153,
-                "fullStart": 118
-              }
+                ]
+              },
+              "fullEnd": 153,
+              "fullStart": 118
             },
-            "fullEnd": 153,
-            "fullStart": 112,
             "type": {
               "context": {
-                "id": "token@<identifier>@:Note@[L7:C0, L7:C4]",
+                "id": "token@<identifier>@Note@[L7:C0, L7:C4]",
                 "snippet": "Note"
               },
               "leadingTrivia": "\n",
               "trailingTrivia": " ",
               "value": "Note"
             }
+          },
+          "fullEnd": 153,
+          "fullStart": 112,
+          "symbol": {
+            "context": {
+              "id": "symbol@Note@@[L7:C0, L9:C1]",
+              "snippet": "Note {\r\n  ...l note'\r\n}"
+            },
+            "declaration": {
+              "id": "node@<element-declaration>@@[L7:C0, L9:C1]",
+              "snippet": "Note {\r\n  ...l note'\r\n}"
+            },
+            "members": [],
+            "references": []
           }
         },
         {
           "context": {
-            "id": "node@<element-declaration>@:@[L11:C0, L13:C3]",
-            "filepath": "/main.dbml",
+            "id": "node@<element-declaration>@@[L11:C0, L13:C3]",
             "snippet": "Note: '''\r... note\r\n'''"
           },
           "children": {
             "body": {
               "context": {
                 "id": "node@<function-application>@@[L11:C6, L13:C3]",
-                "filepath": "/main.dbml",
                 "snippet": "'''\r\n    T... note\r\n'''"
               },
               "children": {
@@ -429,76 +424,86 @@
                 "callee": {
                   "context": {
                     "id": "node@<primary-expression>@@[L11:C6, L13:C3]",
-                    "filepath": "/main.dbml",
                     "snippet": "'''\r\n    T... note\r\n'''"
                   },
                   "children": {
                     "expression": {
                       "context": {
-                        "id": "node@<literal>@:\r\n    This is another global note\r\n@[L11:C6, L13:C3]",
-                        "filepath": "/main.dbml",
+                        "id": "node@<literal>@\r\n    This is another global note\r\n@[L11:C6, L13:C3]",
                         "snippet": "'''\r\n    T... note\r\n'''"
                       },
                       "children": {
-                        "fullEnd": 202,
-                        "fullStart": 161,
                         "literal": {
                           "context": {
-                            "id": "token@<string>@:\r\n    This is another global note\r\n@[L11:C6, L13:C3]",
+                            "id": "token@<string>@\r\n    This is another global note\r\n@[L11:C6, L13:C3]",
                             "snippet": "'''\r\n    T... note\r\n'''"
                           },
                           "leadingTrivia": "",
                           "trailingTrivia": "",
                           "value": "\r\n    This is another global note\r\n"
                         }
-                      }
-                    },
-                    "fullEnd": 202,
-                    "fullStart": 161
-                  }
-                },
-                "fullEnd": 202,
-                "fullStart": 161
-              }
+                      },
+                      "fullEnd": 202,
+                      "fullStart": 161
+                    }
+                  },
+                  "fullEnd": 202,
+                  "fullStart": 161
+                }
+              },
+              "fullEnd": 202,
+              "fullStart": 161
             },
             "bodyColon": {
               "context": {
-                "id": "token@<colon>@::@[L11:C4, L11:C5]",
+                "id": "token@<colon>@:@[L11:C4, L11:C5]",
                 "snippet": ":"
               },
               "leadingTrivia": "",
               "trailingTrivia": " ",
               "value": ":"
             },
-            "fullEnd": 202,
-            "fullStart": 154,
             "type": {
               "context": {
-                "id": "token@<identifier>@:Note@[L11:C0, L11:C4]",
+                "id": "token@<identifier>@Note@[L11:C0, L11:C4]",
                 "snippet": "Note"
               },
               "leadingTrivia": "\n",
               "trailingTrivia": "",
               "value": "Note"
             }
+          },
+          "fullEnd": 202,
+          "fullStart": 154,
+          "symbol": {
+            "context": {
+              "id": "symbol@Note@@[L11:C0, L13:C3]",
+              "snippet": "Note: '''\r... note\r\n'''"
+            },
+            "declaration": {
+              "id": "node@<element-declaration>@@[L11:C0, L13:C3]",
+              "snippet": "Note: '''\r... note\r\n'''"
+            },
+            "members": [],
+            "references": []
           }
         }
       ],
       "eof": {
         "context": {
-          "id": "token@<eof>@:@[L13:C3, L13:C3]",
+          "id": "token@<eof>@@[L13:C3, L13:C3]",
           "snippet": ""
         },
         "leadingTrivia": "",
         "trailingTrivia": "",
         "value": ""
-      },
-      "fullEnd": 202,
-      "fullStart": 0
+      }
     },
+    "fullEnd": 202,
+    "fullStart": 0,
     "symbol": {
       "context": {
-        "id": "symbol@<program>@@[L0:C0, L13:C3]",
+        "id": "symbol@Program@@[L0:C0, L13:C3]",
         "snippet": "Table A {\r... note\r\n'''"
       },
       "declaration": {
@@ -508,9 +513,35 @@
       "members": [
         {
           "context": {
-            "id": "symbol@<element-declaration>@:A@[L0:C0, L5:C1]",
+            "id": "symbol@Schema@public@[L?:C?, L?:C?]"
+          },
+          "members": [
+            {
+              "context": {
+                "id": "symbol@Table@A@[L0:C0, L5:C1]",
+                "snippet": "Table A {\r...\r\n    }\r\n}"
+              },
+              "declaration": {
+                "id": "node@<element-declaration>@A@[L0:C0, L5:C1]",
+                "snippet": "Table A {\r...\r\n    }\r\n}"
+              },
+              "members": [],
+              "references": []
+            }
+          ],
+          "references": []
+        },
+        {
+          "context": {
+            "id": "symbol@Table@A@[L0:C0, L5:C1]",
             "snippet": "Table A {\r...\r\n    }\r\n}"
-          }
+          },
+          "declaration": {
+            "id": "node@<element-declaration>@A@[L0:C0, L5:C1]",
+            "snippet": "Table A {\r...\r\n    }\r\n}"
+          },
+          "members": [],
+          "references": []
         }
       ],
       "references": []

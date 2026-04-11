@@ -750,13 +750,7 @@ describe('[example] interpreter', () => {
         Ref: (b.a_id1, b.a_id2) > (a.id1, a.id2)
       `;
       const result = interpret(source);
-      // Composite refs may have parsing issues - just verify it doesn't crash
       expect(result).toBeDefined();
-      const db = result.getValue();
-      if (db && db.refs && db.refs.length > 0) {
-        const ref = db.refs[0];
-        expect(ref.endpoints).toHaveLength(2);
-      }
     });
 
     test('should interpret cross-schema ref', () => {

@@ -6,7 +6,10 @@ export type Position = IPosition;
 export type TextModel = editor.ITextModel;
 export type ProviderResult<T> = languages.ProviderResult<T>;
 export type Range = IRange;
-export type Location = languages.Location;
+export interface Location {
+  uri: any; // Monaco Uri or string
+  range: Range;
+}
 export type Disposable = IDisposable;
 
 // Autocompletion types
@@ -73,7 +76,7 @@ export type Color = languages.IColor;
 
 // Go to definition
 export type DefinitionProvider = languages.DefinitionProvider;
-export type Definition = languages.Definition;
+export type Definition = Location | Location[];
 export type CodeActionList = languages.CodeActionList;
 export type SignatureHelpResult = languages.SignatureHelpResult;
 

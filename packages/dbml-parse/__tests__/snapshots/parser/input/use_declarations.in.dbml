@@ -1,0 +1,17 @@
+use * from './index.dbml'
+use {
+  table my_table
+  tablepartial my_tablepartial
+  enum my_enum as MY_ENUM
+  tableGROUP group as G
+  note note as note
+} from '../index.dbml'
+
+reuse * from './index.dbml'
+reuse {
+  table my_table
+  tablepartial my_tablepartial
+  enum my_enum as MY_ENUM
+  tableGROUP group as G
+  note note as note
+} from '../index.dbml'

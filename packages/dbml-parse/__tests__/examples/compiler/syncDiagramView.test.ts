@@ -49,7 +49,7 @@ describe('Parser - * wildcard in DiagramView', () => {
   it('parses DiagramView with { * } without errors', () => {
     const source = 'DiagramView v { * }';
     const tokens = new Lexer(source, DEFAULT_ENTRY).lex().getValue();
-    const result = new Parser(source, tokens, new SyntaxNodeIdGenerator(), DEFAULT_ENTRY).parse();
+    const result = new Parser(DEFAULT_ENTRY, source, tokens, new SyntaxNodeIdGenerator()).parse();
     expect(result.getErrors()).toHaveLength(0);
   });
 
@@ -62,7 +62,7 @@ DiagramView v {
 }
 `;
     const tokens = new Lexer(source, DEFAULT_ENTRY).lex().getValue();
-    const result = new Parser(source, tokens, new SyntaxNodeIdGenerator(), DEFAULT_ENTRY).parse();
+    const result = new Parser(DEFAULT_ENTRY, source, tokens, new SyntaxNodeIdGenerator()).parse();
     expect(result.getErrors()).toHaveLength(0);
   });
 
@@ -76,7 +76,7 @@ DiagramView "New View" {
 }
 `;
     const compiler = new Compiler();
-    compiler.setSource(source);
+    compiler.setSource(DEFAULT_ENTRY, source);
     expect(compiler.parse.errors()).toHaveLength(0);
   });
 });

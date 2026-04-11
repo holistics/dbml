@@ -3,7 +3,8 @@ import Compiler from '@/compiler';
 import DBMLCompletionItemProvider from '@/services/suggestions/provider';
 import { createMockTextModel, createPosition } from '@tests/utils';
 import { getColumnsFromTableSymbol } from '@/services/suggestions/utils';
-import { TableSymbol } from '@/core/types/symbol/symbols';
+import { NodeSymbol, SymbolKind } from '@/core/types/symbol';
+import { DEFAULT_ENTRY, UNHANDLED } from '@/constants';
 
 describe('[example] CompletionItemProvider - Records', () => {
   describe('should NOT suggest record entry snippets in Records body (handled by inline completions)', () => {
@@ -20,7 +21,7 @@ describe('[example] CompletionItemProvider - Records', () => {
         }
       `;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       // Position inside the Records body (between the braces)
@@ -44,7 +45,7 @@ describe('[example] CompletionItemProvider - Records', () => {
         }
       `;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(8, 11);
@@ -68,7 +69,7 @@ describe('[example] Expand * to all columns in Records', () => {
   records ()
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const suggestionProvider = new DBMLCompletionItemProvider(compiler);
       const model = createMockTextModel(program);
@@ -106,7 +107,7 @@ Records users() {
 }
 `;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const suggestionProvider = new DBMLCompletionItemProvider(compiler);
       const model = createMockTextModel(program);
@@ -139,7 +140,7 @@ Records users() {
 Records products(
 `;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const suggestionProvider = new DBMLCompletionItemProvider(compiler);
       const model = createMockTextModel(program);
@@ -183,15 +184,15 @@ describe('[example] Suggestions Utils - Records', () => {
         }
       `;
       const compiler = new Compiler();
-      compiler.setSource(program);
-      compiler.parse._();
+      compiler.setSource(DEFAULT_ENTRY, program);
+      compiler.parse._(DEFAULT_ENTRY);
 
       const ast = compiler.parse.ast();
       const tableElement = ast.body[2]; // users table is the third element
-      const tableSymbol = tableElement.symbol;
+      const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED) as NodeSymbol | undefined;
 
-      if (tableSymbol instanceof TableSymbol) {
-        const columns = getColumnsFromTableSymbol(tableSymbol);
+      if (tableSymbol !== undefined) {
+        const columns = getColumnsFromTableSymbol(compiler, tableSymbol);
 
         // Verify exact column count
         expect(columns).not.toBeNull();
@@ -219,15 +220,15 @@ describe('[example] Suggestions Utils - Records', () => {
         }
       `;
       const compiler = new Compiler();
-      compiler.setSource(program);
-      compiler.parse._();
+      compiler.setSource(DEFAULT_ENTRY, program);
+      compiler.parse._(DEFAULT_ENTRY);
 
       const ast = compiler.parse.ast();
       const tableElement = ast.body[1];
-      const tableSymbol = tableElement.symbol;
+      const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED) as NodeSymbol | undefined;
 
-      if (tableSymbol instanceof TableSymbol) {
-        const columns = getColumnsFromTableSymbol(tableSymbol);
+      if (tableSymbol !== undefined) {
+        const columns = getColumnsFromTableSymbol(compiler, tableSymbol);
 
         expect(columns).not.toBeNull();
         expect(columns!.length).toBe(2);
@@ -251,15 +252,15 @@ describe('[example] Suggestions Utils - Records', () => {
         }
       `;
       const compiler = new Compiler();
-      compiler.setSource(program);
-      compiler.parse._();
+      compiler.setSource(DEFAULT_ENTRY, program);
+      compiler.parse._(DEFAULT_ENTRY);
 
       const ast = compiler.parse.ast();
       const tableElement = ast.body[1];
-      const tableSymbol = tableElement.symbol;
+      const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED) as NodeSymbol | undefined;
 
-      if (tableSymbol instanceof TableSymbol) {
-        const columns = getColumnsFromTableSymbol(tableSymbol);
+      if (tableSymbol !== undefined) {
+        const columns = getColumnsFromTableSymbol(compiler, tableSymbol);
 
         // Verify exact column count
         expect(columns).not.toBeNull();
@@ -282,18 +283,18 @@ describe('[example] Suggestions Utils - Records', () => {
         }
       `;
       const compiler = new Compiler();
-      compiler.setSource(program);
-      compiler.parse._(); // Trigger parsing
+      compiler.setSource(DEFAULT_ENTRY, program);
+      compiler.parse._(DEFAULT_ENTRY); // Trigger parsing
 
       // Get the table symbol
       const ast = compiler.parse.ast();
       const tableElement = ast.body[0];
-      const tableSymbol = tableElement.symbol;
+      const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED) as NodeSymbol | undefined;
 
-      expect(tableSymbol).toBeInstanceOf(TableSymbol);
+      expect(tableSymbol?.isKind(SymbolKind.Table)).toBe(true);
 
-      if (tableSymbol instanceof TableSymbol) {
-        const columns = getColumnsFromTableSymbol(tableSymbol);
+      if (tableSymbol !== undefined) {
+        const columns = getColumnsFromTableSymbol(compiler, tableSymbol);
 
         // Verify exact column count and properties
         expect(columns).not.toBeNull();
@@ -318,15 +319,15 @@ describe('[example] Suggestions Utils - Records', () => {
         }
       `;
       const compiler = new Compiler();
-      compiler.setSource(program);
-      compiler.parse._();
+      compiler.setSource(DEFAULT_ENTRY, program);
+      compiler.parse._(DEFAULT_ENTRY);
 
       const ast = compiler.parse.ast();
       const tableElement = ast.body[0];
-      const tableSymbol = tableElement.symbol;
+      const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED) as NodeSymbol | undefined;
 
-      if (tableSymbol instanceof TableSymbol) {
-        const columns = getColumnsFromTableSymbol(tableSymbol);
+      if (tableSymbol !== undefined) {
+        const columns = getColumnsFromTableSymbol(compiler, tableSymbol);
 
         // Verify exact column count
         expect(columns).not.toBeNull();
@@ -353,15 +354,15 @@ describe('[example] Suggestions Utils - Records', () => {
         }
       `;
       const compiler = new Compiler();
-      compiler.setSource(program);
-      compiler.parse._();
+      compiler.setSource(DEFAULT_ENTRY, program);
+      compiler.parse._(DEFAULT_ENTRY);
 
       const ast = compiler.parse.ast();
       const tableElement = ast.body[0];
-      const tableSymbol = tableElement.symbol;
+      const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED) as NodeSymbol | undefined;
 
-      if (tableSymbol instanceof TableSymbol) {
-        const columns = getColumnsFromTableSymbol(tableSymbol);
+      if (tableSymbol !== undefined) {
+        const columns = getColumnsFromTableSymbol(compiler, tableSymbol);
 
         // Verify exact single column
         expect(columns).not.toBeNull();
@@ -380,15 +381,15 @@ describe('[example] Suggestions Utils - Records', () => {
         }
       `;
       const compiler = new Compiler();
-      compiler.setSource(program);
-      compiler.parse._();
+      compiler.setSource(DEFAULT_ENTRY, program);
+      compiler.parse._(DEFAULT_ENTRY);
 
       const ast = compiler.parse.ast();
       const tableElement = ast.body[0];
-      const tableSymbol = tableElement.symbol;
+      const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED) as NodeSymbol | undefined;
 
-      if (tableSymbol instanceof TableSymbol) {
-        const columns = getColumnsFromTableSymbol(tableSymbol);
+      if (tableSymbol !== undefined) {
+        const columns = getColumnsFromTableSymbol(compiler, tableSymbol);
 
         // Verify exact columns with special characters
         expect(columns).not.toBeNull();
@@ -408,15 +409,15 @@ describe('[example] Suggestions Utils - Records', () => {
         }
       `;
       const compiler = new Compiler();
-      compiler.setSource(program);
-      compiler.parse._();
+      compiler.setSource(DEFAULT_ENTRY, program);
+      compiler.parse._(DEFAULT_ENTRY);
 
       const ast = compiler.parse.ast();
       const tableElement = ast.body[0];
-      const tableSymbol = tableElement.symbol;
+      const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED) as NodeSymbol | undefined;
 
-      if (tableSymbol instanceof TableSymbol) {
-        const columns = getColumnsFromTableSymbol(tableSymbol);
+      if (tableSymbol !== undefined) {
+        const columns = getColumnsFromTableSymbol(compiler, tableSymbol);
 
         expect(columns).not.toBeNull();
         expect(columns!.length).toBe(0);
@@ -435,15 +436,15 @@ describe('[example] Suggestions Utils - Records', () => {
         }
       `;
       const compiler = new Compiler();
-      compiler.setSource(program);
-      compiler.parse._();
+      compiler.setSource(DEFAULT_ENTRY, program);
+      compiler.parse._(DEFAULT_ENTRY);
 
       const ast = compiler.parse.ast();
       const tableElement = ast.body[0];
-      const tableSymbol = tableElement.symbol;
+      const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED) as NodeSymbol | undefined;
 
-      if (tableSymbol instanceof TableSymbol) {
-        const columns = getColumnsFromTableSymbol(tableSymbol);
+      if (tableSymbol !== undefined) {
+        const columns = getColumnsFromTableSymbol(compiler, tableSymbol);
 
         // Verify only columns are extracted, not indexes
         expect(columns).not.toBeNull();
@@ -464,15 +465,15 @@ describe('[example] Suggestions Utils - Records', () => {
         }
       `;
       const compiler = new Compiler();
-      compiler.setSource(program);
-      compiler.parse._();
+      compiler.setSource(DEFAULT_ENTRY, program);
+      compiler.parse._(DEFAULT_ENTRY);
 
       const ast = compiler.parse.ast();
       const tableElement = ast.body[0];
-      const tableSymbol = tableElement.symbol;
+      const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED) as NodeSymbol | undefined;
 
-      if (tableSymbol instanceof TableSymbol) {
-        const columns = getColumnsFromTableSymbol(tableSymbol);
+      if (tableSymbol !== undefined) {
+        const columns = getColumnsFromTableSymbol(compiler, tableSymbol);
 
         // Verify schema-qualified table columns
         expect(columns).not.toBeNull();

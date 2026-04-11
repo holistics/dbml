@@ -3,8 +3,14 @@
     "aliases": [],
     "diagramViews": [],
     "enums": [],
+    "externals": {
+      "enums": [],
+      "notes": [],
+      "tableGroups": [],
+      "tablePartials": [],
+      "tables": []
+    },
     "notes": [],
-    "project": {},
     "records": [],
     "refs": [
       {
@@ -304,7 +310,22 @@
           }
         }
       }
-    ]
+    ],
+    "token": {
+      "end": {
+        "column": 61,
+        "line": 12,
+        "offset": 202
+      },
+      "filepath": {
+        "path": "/main.dbml"
+      },
+      "start": {
+        "column": 1,
+        "line": 1,
+        "offset": 0
+      }
+    }
   },
   "errors": [],
   "warnings": []

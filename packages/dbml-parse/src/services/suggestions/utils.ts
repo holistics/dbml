@@ -1,12 +1,13 @@
-import { SymbolKind, destructureIndex, createColumnSymbolIndex } from '@/core/types/symbol';
+import { SymbolKind, NodeSymbol } from '@/core/types/symbol';
 import { CompletionItemKind, CompletionItemInsertTextRule, type CompletionList } from '@/services/types';
 import { SyntaxToken, SyntaxTokenKind } from '@/core/types/tokens';
 import { hasTrailingSpaces } from '@/core/lexer/utils';
 import { SyntaxNode, TupleExpressionNode, FunctionApplicationNode } from '@/core/types/nodes';
 import Compiler from '@/compiler';
-import { ColumnSymbol, TablePartialInjectedColumnSymbol, TablePartialSymbol, TableSymbol } from '@/core/types/symbol/symbols';
-import { extractVariableFromExpression } from '@/core/analyzer/utils';
+import { extractVariableFromExpression } from '@/core/utils/expression';
+import { isValidPartialInjection } from '@/core/utils/validate';
 import { addDoubleQuoteIfNeeded } from '@/compiler/queries/utils';
+import { UNHANDLED } from '@/constants';
 
 export function pickCompletionItemKind (symbolKind: SymbolKind): CompletionItemKind {
   switch (symbolKind) {
@@ -140,15 +141,19 @@ export function isTupleEmpty (tuple: TupleExpressionNode): boolean {
  * @returns Array of column objects with name and type information
  */
 export function getColumnsFromTableSymbol (
-  tableSymbol: TableSymbol | TablePartialSymbol,
+  compiler: Compiler,
+  tableSymbol: NodeSymbol,
 ): Array<{ name: string; type: string }> | null {
   const columns: Array<{ name: string; type: string }> = [];
 
-  for (const [index, columnSymbol] of tableSymbol.symbolTable.entries()) {
-    const res = destructureIndex(index).unwrap_or(undefined);
-    if (res === undefined || res.kind !== SymbolKind.Column) continue;
-    if (!(columnSymbol instanceof ColumnSymbol || columnSymbol instanceof TablePartialInjectedColumnSymbol)) continue;
-    const columnInfo = extractNameAndTypeOfColumnSymbol(columnSymbol, res.name);
+  const members = compiler.symbolMembers(tableSymbol).getFiltered(UNHANDLED) || [];
+  for (const member of members) {
+    if (!member.isKind(SymbolKind.Column)) continue;
+    // Skip partial injection nodes (~PartialName)
+    if (member.declaration instanceof FunctionApplicationNode && isValidPartialInjection(member.declaration.callee)) continue;
+    const columnName = compiler.symbolName(member);
+    if (columnName === undefined) continue;
+    const columnInfo = extractNameAndTypeOfColumnSymbol(member, columnName);
     if (!columnInfo) continue;
     columns.push(columnInfo);
   }
@@ -158,17 +163,14 @@ export function getColumnsFromTableSymbol (
 
 // This function also works with injected columns
 export function extractNameAndTypeOfColumnSymbol (
-  columnSymbol: ColumnSymbol | TablePartialInjectedColumnSymbol,
+  columnSymbol: NodeSymbol,
   columnName: string,
 ): { name: string; type: string } | null {
-  const columnIndex = createColumnSymbolIndex(columnName);
-  const columnDeclaration = columnSymbol instanceof TablePartialInjectedColumnSymbol
-    ? columnSymbol.tablePartialSymbol.symbolTable.get(columnIndex)?.declaration
-    : columnSymbol.declaration;
+  const columnDeclaration = columnSymbol.declaration;
   if (!(columnDeclaration instanceof FunctionApplicationNode)) return null;
 
-  const name = extractVariableFromExpression(columnDeclaration.callee).unwrap_or(null);
-  const type = extractVariableFromExpression(columnDeclaration.args[0]).unwrap_or(null);
+  const name = extractVariableFromExpression(columnDeclaration.callee) ?? null;
+  const type = extractVariableFromExpression(columnDeclaration.args[0]) ?? null;
 
   if (name === null || type === null) return null;
 

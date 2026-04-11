@@ -3,8 +3,14 @@
     "aliases": [],
     "diagramViews": [],
     "enums": [],
+    "externals": {
+      "enums": [],
+      "notes": [],
+      "tableGroups": [],
+      "tablePartials": [],
+      "tables": []
+    },
     "notes": [],
-    "project": {},
     "records": [],
     "refs": [],
     "schemas": [],
@@ -434,25 +440,6 @@
               {
                 "token": {
                   "end": {
-                    "column": 32,
-                    "line": 16,
-                    "offset": 358
-                  },
-                  "filepath": {
-                    "path": "/main.dbml"
-                  },
-                  "start": {
-                    "column": 14,
-                    "line": 16,
-                    "offset": 340
-                  }
-                },
-                "type": "expression",
-                "value": "lower(full_name)"
-              },
-              {
-                "token": {
-                  "end": {
                     "column": 12,
                     "line": 16,
                     "offset": 338
@@ -468,6 +455,25 @@
                 },
                 "type": "column",
                 "value": "active"
+              },
+              {
+                "token": {
+                  "end": {
+                    "column": 32,
+                    "line": 16,
+                    "offset": 358
+                  },
+                  "filepath": {
+                    "path": "/main.dbml"
+                  },
+                  "start": {
+                    "column": 14,
+                    "line": 16,
+                    "offset": 340
+                  }
+                },
+                "type": "expression",
+                "value": "lower(full_name)"
               }
             ],
             "token": {
@@ -601,7 +607,22 @@
           }
         }
       }
-    ]
+    ],
+    "token": {
+      "end": {
+        "column": 2,
+        "line": 20,
+        "offset": 430
+      },
+      "filepath": {
+        "path": "/main.dbml"
+      },
+      "start": {
+        "column": 1,
+        "line": 1,
+        "offset": 0
+      }
+    }
   },
   "errors": [],
   "warnings": []

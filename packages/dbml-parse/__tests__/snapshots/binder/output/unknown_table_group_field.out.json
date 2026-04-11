@@ -3,12 +3,13 @@
     {
       "code": "BINDING_ERROR",
       "diagnostic": "Table 'Products' does not exist in Schema 'public'",
+      "filepath": "/main.dbml",
       "level": "error",
       "node": {
         "context": {
           "id": "node@<primary-expression>@@[L6:C4, L6:C12]",
-          "filepath": "/main.dbml",
-          "snippet": "Products"
+          "snippet": "Products",
+          "filepath": "/main.dbml"
         }
       }
     }
@@ -16,28 +17,25 @@
   "program": {
     "context": {
       "id": "node@<program>@@[L0:C0, L7:C1]",
-      "filepath": "/main.dbml",
       "snippet": "Table User...roducts\r\n}"
     },
     "children": {
       "body": [
         {
           "context": {
-            "id": "node@<element-declaration>@:Users@[L0:C0, L2:C1]",
-            "filepath": "/main.dbml",
+            "id": "node@<element-declaration>@Users@[L0:C0, L2:C1]",
             "snippet": "Table Users {\r\n\r\n}"
           },
           "children": {
             "body": {
               "context": {
                 "id": "node@<block-expression>@@[L0:C12, L2:C1]",
-                "filepath": "/main.dbml",
                 "snippet": "{\r\n\r\n}"
               },
               "children": {
                 "blockCloseBrace": {
                   "context": {
-                    "id": "token@<rbrace>@:}@[L2:C0, L2:C1]",
+                    "id": "token@<rbrace>@}@[L2:C0, L2:C1]",
                     "snippet": "}"
                   },
                   "leadingTrivia": "\n",
@@ -46,54 +44,50 @@
                 },
                 "blockOpenBrace": {
                   "context": {
-                    "id": "token@<lbrace>@:{@[L0:C12, L0:C13]",
+                    "id": "token@<lbrace>@{@[L0:C12, L0:C13]",
                     "snippet": "{"
                   },
                   "leadingTrivia": "",
                   "trailingTrivia": "\n",
                   "value": "{"
                 },
-                "body": [],
-                "fullEnd": 20,
-                "fullStart": 12
-              }
+                "body": []
+              },
+              "fullEnd": 20,
+              "fullStart": 12
             },
-            "fullEnd": 20,
-            "fullStart": 0,
             "name": {
               "context": {
                 "id": "node@<primary-expression>@@[L0:C6, L0:C11]",
-                "filepath": "/main.dbml",
                 "snippet": "Users"
               },
               "children": {
                 "expression": {
                   "context": {
-                    "id": "node@<variable>@:Users@[L0:C6, L0:C11]",
-                    "filepath": "/main.dbml",
+                    "id": "node@<variable>@Users@[L0:C6, L0:C11]",
                     "snippet": "Users"
                   },
                   "children": {
-                    "fullEnd": 12,
-                    "fullStart": 6,
                     "variable": {
                       "context": {
-                        "id": "token@<identifier>@:Users@[L0:C6, L0:C11]",
+                        "id": "token@<identifier>@Users@[L0:C6, L0:C11]",
                         "snippet": "Users"
                       },
                       "leadingTrivia": "",
                       "trailingTrivia": " ",
                       "value": "Users"
                     }
-                  }
-                },
-                "fullEnd": 12,
-                "fullStart": 6
-              }
+                  },
+                  "fullEnd": 12,
+                  "fullStart": 6
+                }
+              },
+              "fullEnd": 12,
+              "fullStart": 6
             },
             "type": {
               "context": {
-                "id": "token@<identifier>@:Table@[L0:C0, L0:C5]",
+                "id": "token@<identifier>@Table@[L0:C0, L0:C5]",
                 "snippet": "Table"
               },
               "leadingTrivia": "",
@@ -101,13 +95,15 @@
               "value": "Table"
             }
           },
+          "fullEnd": 20,
+          "fullStart": 0,
           "symbol": {
             "context": {
-              "id": "symbol@<element-declaration>@:Users@[L0:C0, L2:C1]",
+              "id": "symbol@Table@Users@[L0:C0, L2:C1]",
               "snippet": "Table Users {\r\n\r\n}"
             },
             "declaration": {
-              "id": "node@<element-declaration>@:Users@[L0:C0, L2:C1]",
+              "id": "node@<element-declaration>@Users@[L0:C0, L2:C1]",
               "snippet": "Table Users {\r\n\r\n}"
             },
             "members": [],
@@ -121,21 +117,19 @@
         },
         {
           "context": {
-            "id": "node@<element-declaration>@:Group@[L4:C0, L7:C1]",
-            "filepath": "/main.dbml",
+            "id": "node@<element-declaration>@Group@[L4:C0, L7:C1]",
             "snippet": "Tablegroup...roducts\r\n}"
           },
           "children": {
             "body": {
               "context": {
                 "id": "node@<block-expression>@@[L4:C17, L7:C1]",
-                "filepath": "/main.dbml",
                 "snippet": "{\r\n    Use...roducts\r\n}"
               },
               "children": {
                 "blockCloseBrace": {
                   "context": {
-                    "id": "token@<rbrace>@:}@[L7:C0, L7:C1]",
+                    "id": "token@<rbrace>@}@[L7:C0, L7:C1]",
                     "snippet": "}"
                   },
                   "leadingTrivia": "",
@@ -144,7 +138,7 @@
                 },
                 "blockOpenBrace": {
                   "context": {
-                    "id": "token@<lbrace>@:{@[L4:C17, L4:C18]",
+                    "id": "token@<lbrace>@{@[L4:C17, L4:C18]",
                     "snippet": "{"
                   },
                   "leadingTrivia": "",
@@ -155,7 +149,6 @@
                   {
                     "context": {
                       "id": "node@<function-application>@@[L5:C4, L5:C9]",
-                      "filepath": "/main.dbml",
                       "snippet": "Users"
                     },
                     "children": {
@@ -163,59 +156,58 @@
                       "callee": {
                         "context": {
                           "id": "node@<primary-expression>@@[L5:C4, L5:C9]",
-                          "filepath": "/main.dbml",
                           "snippet": "Users"
                         },
                         "children": {
                           "expression": {
                             "context": {
-                              "id": "node@<variable>@:Users@[L5:C4, L5:C9]",
-                              "filepath": "/main.dbml",
+                              "id": "node@<variable>@Users@[L5:C4, L5:C9]",
                               "snippet": "Users"
                             },
                             "children": {
-                              "fullEnd": 53,
-                              "fullStart": 42,
                               "variable": {
                                 "context": {
-                                  "id": "token@<identifier>@:Users@[L5:C4, L5:C9]",
+                                  "id": "token@<identifier>@Users@[L5:C4, L5:C9]",
                                   "snippet": "Users"
                                 },
                                 "leadingTrivia": "    ",
                                 "trailingTrivia": "\n",
                                 "value": "Users"
                               }
-                            }
-                          },
-                          "fullEnd": 53,
-                          "fullStart": 42
+                            },
+                            "fullEnd": 53,
+                            "fullStart": 42
+                          }
                         },
+                        "fullEnd": 53,
+                        "fullStart": 42,
                         "referee": {
                           "context": {
-                            "id": "symbol@<element-declaration>@:Users@[L0:C0, L2:C1]",
-                            "snippet": "Table Users {\r\n\r\n}"
+                            "id": "symbol@Table@Users@[L0:C0, L2:C1]",
+                            "snippet": "Table Users {\r\n\r\n}",
+                            "filepath": "/main.dbml"
                           }
                         }
-                      },
-                      "fullEnd": 53,
-                      "fullStart": 42
+                      }
                     },
+                    "fullEnd": 53,
+                    "fullStart": 42,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L5:C4, L5:C9]",
+                        "id": "symbol@TableGroup field@@[L5:C4, L5:C9]",
                         "snippet": "Users"
                       },
                       "declaration": {
                         "id": "node@<function-application>@@[L5:C4, L5:C9]",
                         "snippet": "Users"
                       },
+                      "members": [],
                       "references": []
                     }
                   },
                   {
                     "context": {
                       "id": "node@<function-application>@@[L6:C4, L6:C12]",
-                      "filepath": "/main.dbml",
                       "snippet": "Products"
                     },
                     "children": {
@@ -223,90 +215,85 @@
                       "callee": {
                         "context": {
                           "id": "node@<primary-expression>@@[L6:C4, L6:C12]",
-                          "filepath": "/main.dbml",
                           "snippet": "Products"
                         },
                         "children": {
                           "expression": {
                             "context": {
-                              "id": "node@<variable>@:Products@[L6:C4, L6:C12]",
-                              "filepath": "/main.dbml",
+                              "id": "node@<variable>@Products@[L6:C4, L6:C12]",
                               "snippet": "Products"
                             },
                             "children": {
-                              "fullEnd": 67,
-                              "fullStart": 53,
                               "variable": {
                                 "context": {
-                                  "id": "token@<identifier>@:Products@[L6:C4, L6:C12]",
+                                  "id": "token@<identifier>@Products@[L6:C4, L6:C12]",
                                   "snippet": "Products"
                                 },
                                 "leadingTrivia": "    ",
                                 "trailingTrivia": "\n",
                                 "value": "Products"
                               }
-                            }
-                          },
-                          "fullEnd": 67,
-                          "fullStart": 53
-                        }
-                      },
-                      "fullEnd": 67,
-                      "fullStart": 53
+                            },
+                            "fullEnd": 67,
+                            "fullStart": 53
+                          }
+                        },
+                        "fullEnd": 67,
+                        "fullStart": 53
+                      }
                     },
+                    "fullEnd": 67,
+                    "fullStart": 53,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L6:C4, L6:C12]",
+                        "id": "symbol@TableGroup field@@[L6:C4, L6:C12]",
                         "snippet": "Products"
                       },
                       "declaration": {
                         "id": "node@<function-application>@@[L6:C4, L6:C12]",
                         "snippet": "Products"
                       },
+                      "members": [],
                       "references": []
                     }
                   }
-                ],
-                "fullEnd": 68,
-                "fullStart": 39
-              }
+                ]
+              },
+              "fullEnd": 68,
+              "fullStart": 39
             },
-            "fullEnd": 68,
-            "fullStart": 21,
             "name": {
               "context": {
                 "id": "node@<primary-expression>@@[L4:C11, L4:C16]",
-                "filepath": "/main.dbml",
                 "snippet": "Group"
               },
               "children": {
                 "expression": {
                   "context": {
-                    "id": "node@<variable>@:Group@[L4:C11, L4:C16]",
-                    "filepath": "/main.dbml",
+                    "id": "node@<variable>@Group@[L4:C11, L4:C16]",
                     "snippet": "Group"
                   },
                   "children": {
-                    "fullEnd": 39,
-                    "fullStart": 33,
                     "variable": {
                       "context": {
-                        "id": "token@<identifier>@:Group@[L4:C11, L4:C16]",
+                        "id": "token@<identifier>@Group@[L4:C11, L4:C16]",
                         "snippet": "Group"
                       },
                       "leadingTrivia": "",
                       "trailingTrivia": " ",
                       "value": "Group"
                     }
-                  }
-                },
-                "fullEnd": 39,
-                "fullStart": 33
-              }
+                  },
+                  "fullEnd": 39,
+                  "fullStart": 33
+                }
+              },
+              "fullEnd": 39,
+              "fullStart": 33
             },
             "type": {
               "context": {
-                "id": "token@<identifier>@:Tablegroup@[L4:C0, L4:C10]",
+                "id": "token@<identifier>@Tablegroup@[L4:C0, L4:C10]",
                 "snippet": "Tablegroup"
               },
               "leadingTrivia": "\n",
@@ -314,27 +301,41 @@
               "value": "Tablegroup"
             }
           },
+          "fullEnd": 68,
+          "fullStart": 21,
           "symbol": {
             "context": {
-              "id": "symbol@<element-declaration>@:Group@[L4:C0, L7:C1]",
+              "id": "symbol@TableGroup@Group@[L4:C0, L7:C1]",
               "snippet": "Tablegroup...roducts\r\n}"
             },
             "declaration": {
-              "id": "node@<element-declaration>@:Group@[L4:C0, L7:C1]",
+              "id": "node@<element-declaration>@Group@[L4:C0, L7:C1]",
               "snippet": "Tablegroup...roducts\r\n}"
             },
             "members": [
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L5:C4, L5:C9]",
+                  "id": "symbol@TableGroup field@@[L5:C4, L5:C9]",
                   "snippet": "Users"
-                }
+                },
+                "declaration": {
+                  "id": "node@<function-application>@@[L5:C4, L5:C9]",
+                  "snippet": "Users"
+                },
+                "members": [],
+                "references": []
               },
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L6:C4, L6:C12]",
+                  "id": "symbol@TableGroup field@@[L6:C4, L6:C12]",
                   "snippet": "Products"
-                }
+                },
+                "declaration": {
+                  "id": "node@<function-application>@@[L6:C4, L6:C12]",
+                  "snippet": "Products"
+                },
+                "members": [],
+                "references": []
               }
             ],
             "references": []
@@ -343,19 +344,19 @@
       ],
       "eof": {
         "context": {
-          "id": "token@<eof>@:@[L7:C1, L7:C1]",
+          "id": "token@<eof>@@[L7:C1, L7:C1]",
           "snippet": ""
         },
         "leadingTrivia": "",
         "trailingTrivia": "",
         "value": ""
-      },
-      "fullEnd": 68,
-      "fullStart": 0
+      }
     },
+    "fullEnd": 68,
+    "fullStart": 0,
     "symbol": {
       "context": {
-        "id": "symbol@<program>@@[L0:C0, L7:C1]",
+        "id": "symbol@Program@@[L0:C0, L7:C1]",
         "snippet": "Table User...roducts\r\n}"
       },
       "declaration": {
@@ -365,15 +366,119 @@
       "members": [
         {
           "context": {
-            "id": "symbol@<element-declaration>@:Users@[L0:C0, L2:C1]",
-            "snippet": "Table Users {\r\n\r\n}"
-          }
+            "id": "symbol@Schema@public@[L?:C?, L?:C?]"
+          },
+          "members": [
+            {
+              "context": {
+                "id": "symbol@TableGroup@Group@[L4:C0, L7:C1]",
+                "snippet": "Tablegroup...roducts\r\n}"
+              },
+              "declaration": {
+                "id": "node@<element-declaration>@Group@[L4:C0, L7:C1]",
+                "snippet": "Tablegroup...roducts\r\n}"
+              },
+              "members": [
+                {
+                  "context": {
+                    "id": "symbol@TableGroup field@@[L5:C4, L5:C9]",
+                    "snippet": "Users"
+                  },
+                  "declaration": {
+                    "id": "node@<function-application>@@[L5:C4, L5:C9]",
+                    "snippet": "Users"
+                  },
+                  "members": [],
+                  "references": []
+                },
+                {
+                  "context": {
+                    "id": "symbol@TableGroup field@@[L6:C4, L6:C12]",
+                    "snippet": "Products"
+                  },
+                  "declaration": {
+                    "id": "node@<function-application>@@[L6:C4, L6:C12]",
+                    "snippet": "Products"
+                  },
+                  "members": [],
+                  "references": []
+                }
+              ],
+              "references": []
+            },
+            {
+              "context": {
+                "id": "symbol@Table@Users@[L0:C0, L2:C1]",
+                "snippet": "Table Users {\r\n\r\n}"
+              },
+              "declaration": {
+                "id": "node@<element-declaration>@Users@[L0:C0, L2:C1]",
+                "snippet": "Table Users {\r\n\r\n}"
+              },
+              "members": [],
+              "references": [
+                {
+                  "id": "node@<primary-expression>@@[L5:C4, L5:C9]",
+                  "snippet": "Users"
+                }
+              ]
+            }
+          ],
+          "references": []
         },
         {
           "context": {
-            "id": "symbol@<element-declaration>@:Group@[L4:C0, L7:C1]",
+            "id": "symbol@TableGroup@Group@[L4:C0, L7:C1]",
             "snippet": "Tablegroup...roducts\r\n}"
-          }
+          },
+          "declaration": {
+            "id": "node@<element-declaration>@Group@[L4:C0, L7:C1]",
+            "snippet": "Tablegroup...roducts\r\n}"
+          },
+          "members": [
+            {
+              "context": {
+                "id": "symbol@TableGroup field@@[L5:C4, L5:C9]",
+                "snippet": "Users"
+              },
+              "declaration": {
+                "id": "node@<function-application>@@[L5:C4, L5:C9]",
+                "snippet": "Users"
+              },
+              "members": [],
+              "references": []
+            },
+            {
+              "context": {
+                "id": "symbol@TableGroup field@@[L6:C4, L6:C12]",
+                "snippet": "Products"
+              },
+              "declaration": {
+                "id": "node@<function-application>@@[L6:C4, L6:C12]",
+                "snippet": "Products"
+              },
+              "members": [],
+              "references": []
+            }
+          ],
+          "references": []
+        },
+        {
+          "context": {
+            "id": "symbol@Table@Users@[L0:C0, L2:C1]",
+            "snippet": "Table Users {\r\n\r\n}"
+          },
+          "declaration": {
+            "id": "node@<element-declaration>@Users@[L0:C0, L2:C1]",
+            "snippet": "Table Users {\r\n\r\n}"
+          },
+          "members": [],
+          "references": [
+            {
+              "id": "node@<primary-expression>@@[L5:C4, L5:C9]",
+              "snippet": "Users"
+            }
+          ]
         }
       ],
       "references": []

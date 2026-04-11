@@ -1,27 +1,38 @@
 {
-  "errors": [],
+  "errors": [
+    {
+      "code": "UNEXPECTED_TOKEN",
+      "diagnostic": "Expect an identifier",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "token": {
+        "context": {
+          "id": "token@<color>@#1234@[L0:C0, L0:C5]",
+          "snippet": "#1234",
+          "isInvalid": true,
+          "filepath": "/main.dbml"
+        }
+      }
+    },
+    {
+      "code": "UNEXPECTED_TOKEN",
+      "diagnostic": "Expect an identifier",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "token": {
+        "context": {
+          "id": "token@<color>@#12acbd@[L1:C0, L1:C7]",
+          "snippet": "#12acbd",
+          "isInvalid": true,
+          "filepath": "/main.dbml"
+        }
+      }
+    }
+  ],
   "tokens": [
     {
       "context": {
-        "id": "token@<color>@:#1234@[L0:C0, L0:C5]",
-        "snippet": "#1234"
-      },
-      "leadingTrivia": "",
-      "trailingTrivia": " \n",
-      "value": "#1234"
-    },
-    {
-      "context": {
-        "id": "token@<color>@:#12acbd@[L1:C0, L1:C7]",
-        "snippet": "#12acbd"
-      },
-      "leadingTrivia": "",
-      "trailingTrivia": "",
-      "value": "#12acbd"
-    },
-    {
-      "context": {
-        "id": "token@<eof>@:@[L1:C7, L1:C7]",
+        "id": "token@<eof>@@[L1:C7, L1:C7]",
         "snippet": ""
       },
       "leadingTrivia": "",

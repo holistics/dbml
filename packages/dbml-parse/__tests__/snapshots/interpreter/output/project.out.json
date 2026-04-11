@@ -154,6 +154,13 @@
         ]
       }
     ],
+    "externals": {
+      "enums": [],
+      "notes": [],
+      "tableGroups": [],
+      "tablePartials": [],
+      "tables": []
+    },
     "notes": [],
     "project": {
       "database_type": "PostgreSQL",
@@ -610,11 +617,11 @@
         "tables": [
           {
             "name": "users",
-            "schemaName": ""
+            "schemaName": null
           },
           {
             "name": "merchants",
-            "schemaName": ""
+            "schemaName": null
           }
         ],
         "token": {
@@ -639,11 +646,11 @@
         "tables": [
           {
             "name": "countries",
-            "schemaName": ""
+            "schemaName": null
           },
           {
             "name": "orders",
-            "schemaName": ""
+            "schemaName": null
           }
         ],
         "token": {
@@ -1676,7 +1683,22 @@
           }
         }
       }
-    ]
+    ],
+    "token": {
+      "end": {
+        "column": 1,
+        "line": 97,
+        "offset": 1547
+      },
+      "filepath": {
+        "path": "/main.dbml"
+      },
+      "start": {
+        "column": 1,
+        "line": 1,
+        "offset": 0
+      }
+    }
   },
   "errors": [],
   "warnings": []

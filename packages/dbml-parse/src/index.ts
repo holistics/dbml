@@ -1,12 +1,10 @@
 import Compiler from '@/compiler/index';
-import * as services from '@/services/index';
+export { dbmlMonarchTokensProvider } from '@/services/monarch';
 
 // Export the types that playground and other consumers need
 export {
   ElementKind,
-} from '@/core/analyzer/types';
-
-export * from '@/core/interpreter/records/utils';
+} from '@/core/types/keywords';
 
 export {
   // Core AST node types
@@ -14,7 +12,6 @@ export {
   ElementDeclarationNode,
   ProgramNode,
   SyntaxNodeKind,
-  type SyntaxNodeId,
 } from '@/core/types/nodes';
 
 export {
@@ -30,11 +27,6 @@ export {
 } from '@/core/types/errors';
 
 export {
-  // Position interface
-  type Position,
-} from '@/core/types';
-
-export {
   // Scope kinds from compiler
   ScopeKind,
   // Utilities
@@ -46,24 +38,8 @@ export {
   addDoubleQuoteIfNeeded,
 } from '@/compiler/index';
 
-// Export interpreted types for structured data
-export {
-  type Database,
-  type Table,
-  type Column,
-  type Enum,
-  type Ref,
-  type Project,
-  type TableGroup,
-  type TablePartial,
-  type DiagramView,
-  type FilterConfig,
-} from '@/core/types/schemaJson';
+export * from '@/core/global_modules/records/utils/data';
 
-// DiagramView types (methods exposed via Compiler)
-export type { DiagramViewSyncOperation, DiagramViewBlock } from '@/compiler/queries/transform/syncDiagramView';
-export type { TextEdit } from '@/compiler/queries/transform/applyTextEdits';
+export type { Database } from '@/core/types/schemaJson';
 
-export { dbmlMonarchTokensProvider } from '@/services/monarch';
-
-export { Compiler, services };
+export { Compiler };
