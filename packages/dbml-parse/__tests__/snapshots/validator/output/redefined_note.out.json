@@ -8,8 +8,7 @@
       "node": {
         "context": {
           "id": "node@<element-declaration>@@[L1:C4, L1:C38]",
-          "snippet": "Note: ''' ...l note '''",
-          "filepath": "/main.dbml"
+          "snippet": "Note: ''' ...l note '''"
         }
       }
     },
@@ -21,8 +20,7 @@
       "node": {
         "context": {
           "id": "node@<element-declaration>@@[L2:C4, L4:C5]",
-          "snippet": "Note {\r\n  ...te'\r\n    }",
-          "filepath": "/main.dbml"
+          "snippet": "Note {\r\n  ...te'\r\n    }"
         }
       }
     },
@@ -34,8 +32,7 @@
       "node": {
         "context": {
           "id": "node@<element-declaration>@@[L7:C0, L9:C1]",
-          "snippet": "Note {\r\n  ...l note'\r\n}",
-          "filepath": "/main.dbml"
+          "snippet": "Note {\r\n  ...l note'\r\n}"
         }
       }
     },
@@ -47,8 +44,7 @@
       "node": {
         "context": {
           "id": "node@<element-declaration>@@[L11:C0, L13:C3]",
-          "snippet": "Note: '''\r... note\r\n'''",
-          "filepath": "/main.dbml"
+          "snippet": "Note: '''\r... note\r\n'''"
         }
       }
     }

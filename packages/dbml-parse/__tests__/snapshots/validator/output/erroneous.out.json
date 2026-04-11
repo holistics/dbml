@@ -120,8 +120,7 @@
       "node": {
         "context": {
           "id": "node@<attribute>@@[L9:C14, L9:C24]",
-          "snippet": "diagram_id",
-          "filepath": "/main.dbml"
+          "snippet": "diagram_id"
         }
       }
     }
@@ -1712,8 +1711,7 @@
                           "referee": {
                             "context": {
                               "id": "symbol@Table@users@[L0:C0, L2:C1]",
-                              "snippet": "Table user...crement]\n}",
-                              "filepath": "/main.dbml"
+                              "snippet": "Table user...crement]\n}"
                             }
                           }
                         },
@@ -1757,8 +1755,7 @@
                           "referee": {
                             "context": {
                               "id": "symbol@Column@@[L1:C2, L1:C24]",
-                              "snippet": "id int [pk...increment]",
-                              "filepath": "/main.dbml"
+                              "snippet": "id int [pk...increment]"
                             }
                           }
                         }
@@ -1812,8 +1809,7 @@
                           "referee": {
                             "context": {
                               "id": "symbol@Table@user_role_in_diagram@[L4:C0, L10:C3]",
-                              "snippet": "Table user...) [pk]\n  }",
-                              "filepath": "/main.dbml"
+                              "snippet": "Table user...) [pk]\n  }"
                             }
                           }
                         },
@@ -1857,8 +1853,7 @@
                           "referee": {
                             "context": {
                               "id": "symbol@Column@@[L5:C2, L5:C13]",
-                              "snippet": "user_id int",
-                              "filepath": "/main.dbml"
+                              "snippet": "user_id int"
                             }
                           }
                         }
@@ -1952,8 +1947,7 @@
                           "referee": {
                             "context": {
                               "id": "symbol@Table@diagrams@[L18:C0, L20:C1]",
-                              "snippet": "Table diag...ncrement\n}",
-                              "filepath": "/main.dbml"
+                              "snippet": "Table diag...ncrement\n}"
                             }
                           }
                         },
@@ -1997,8 +1991,7 @@
                           "referee": {
                             "context": {
                               "id": "symbol@Column@@[L19:C2, L19:C24]",
-                              "snippet": "id int [pk...increment]",
-                              "filepath": "/main.dbml"
+                              "snippet": "id int [pk...increment]"
                             }
                           }
                         }
@@ -2052,8 +2045,7 @@
                           "referee": {
                             "context": {
                               "id": "symbol@Table@user_role_in_diagram@[L4:C0, L10:C3]",
-                              "snippet": "Table user...) [pk]\n  }",
-                              "filepath": "/main.dbml"
+                              "snippet": "Table user...) [pk]\n  }"
                             }
                           }
                         },
@@ -2097,8 +2089,7 @@
                           "referee": {
                             "context": {
                               "id": "symbol@Column@@[L6:C2, L6:C16]",
-                              "snippet": "diagram_id int",
-                              "filepath": "/main.dbml"
+                              "snippet": "diagram_id int"
                             }
                           }
                         }

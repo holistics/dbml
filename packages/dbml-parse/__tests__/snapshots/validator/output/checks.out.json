@@ -8,8 +8,7 @@
       "node": {
         "context": {
           "id": "node@<element-declaration>@@[L0:C0, L0:C9]",
-          "snippet": "checks {}",
-          "filepath": "/main.dbml"
+          "snippet": "checks {}"
         }
       }
     },
@@ -21,8 +20,7 @@
       "node": {
         "context": {
           "id": "node@<attribute>@@[L9:C22, L9:C33]",
-          "snippet": "name: 'dup'",
-          "filepath": "/main.dbml"
+          "snippet": "name: 'dup'"
         }
       }
     },
@@ -34,8 +32,7 @@
       "node": {
         "context": {
           "id": "node@<attribute>@@[L9:C35, L9:C46]",
-          "snippet": "name: 'dup'",
-          "filepath": "/main.dbml"
+          "snippet": "name: 'dup'"
         }
       }
     },
@@ -47,8 +44,7 @@
       "node": {
         "context": {
           "id": "node@<attribute>@@[L10:C23, L10:C30]",
-          "snippet": "invalid",
-          "filepath": "/main.dbml"
+          "snippet": "invalid"
         }
       }
     },
@@ -60,8 +56,7 @@
       "node": {
         "context": {
           "id": "node@<attribute>@@[L20:C22, L20:C33]",
-          "snippet": "name: 'dup'",
-          "filepath": "/main.dbml"
+          "snippet": "name: 'dup'"
         }
       }
     },
@@ -73,8 +68,7 @@
       "node": {
         "context": {
           "id": "node@<attribute>@@[L20:C35, L20:C46]",
-          "snippet": "name: 'dup'",
-          "filepath": "/main.dbml"
+          "snippet": "name: 'dup'"
         }
       }
     },
@@ -86,8 +80,7 @@
       "node": {
         "context": {
           "id": "node@<attribute>@@[L21:C23, L21:C30]",
-          "snippet": "invalid",
-          "filepath": "/main.dbml"
+          "snippet": "invalid"
         }
       }
     }

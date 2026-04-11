@@ -870,8 +870,7 @@
                           "referee": {
                             "context": {
                               "id": "symbol@Table@b@[L0:C0, L3:C1]",
-                              "snippet": "Table b [h...c_id int\n}",
-                              "filepath": "/main.dbml"
+                              "snippet": "Table b [h...c_id int\n}"
                             }
                           }
                         },
@@ -915,8 +914,7 @@
                           "referee": {
                             "context": {
                               "id": "symbol@Column@@[L1:C2, L1:C8]",
-                              "snippet": "id int",
-                              "filepath": "/main.dbml"
+                              "snippet": "id int"
                             }
                           }
                         }
@@ -970,8 +968,7 @@
                           "referee": {
                             "context": {
                               "id": "symbol@Table@c@[L5:C0, L8:C1]",
-                              "snippet": "Table c {\n...b_id int\n}",
-                              "filepath": "/main.dbml"
+                              "snippet": "Table c {\n...b_id int\n}"
                             }
                           }
                         },
@@ -1015,8 +1012,7 @@
                           "referee": {
                             "context": {
                               "id": "symbol@Column@@[L6:C2, L6:C8]",
-                              "snippet": "id int",
-                              "filepath": "/main.dbml"
+                              "snippet": "id int"
                             }
                           }
                         }
@@ -1265,8 +1261,7 @@
                                 "referee": {
                                   "context": {
                                     "id": "symbol@Table@c@[L5:C0, L8:C1]",
-                                    "snippet": "Table c {\n...b_id int\n}",
-                                    "filepath": "/main.dbml"
+                                    "snippet": "Table c {\n...b_id int\n}"
                                   }
                                 }
                               },
@@ -1310,8 +1305,7 @@
                                 "referee": {
                                   "context": {
                                     "id": "symbol@Column@@[L6:C2, L6:C8]",
-                                    "snippet": "id int",
-                                    "filepath": "/main.dbml"
+                                    "snippet": "id int"
                                   }
                                 }
                               }
@@ -1365,8 +1359,7 @@
                                 "referee": {
                                   "context": {
                                     "id": "symbol@Table@b@[L0:C0, L3:C1]",
-                                    "snippet": "Table b [h...c_id int\n}",
-                                    "filepath": "/main.dbml"
+                                    "snippet": "Table b [h...c_id int\n}"
                                   }
                                 }
                               },
@@ -1410,8 +1403,7 @@
                                 "referee": {
                                   "context": {
                                     "id": "symbol@Column@@[L2:C2, L2:C10]",
-                                    "snippet": "c_id int",
-                                    "filepath": "/main.dbml"
+                                    "snippet": "c_id int"
                                   }
                                 }
                               }

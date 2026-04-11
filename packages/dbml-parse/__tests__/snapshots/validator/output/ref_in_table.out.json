@@ -8,8 +8,7 @@
       "node": {
         "context": {
           "id": "node@<element-declaration>@@[L13:C4, L13:C18]",
-          "snippet": "Ref: id > A.id",
-          "filepath": "/main.dbml"
+          "snippet": "Ref: id > A.id"
         }
       }
     },
@@ -21,8 +20,7 @@
       "node": {
         "context": {
           "id": "node@<primary-expression>@@[L13:C9, L13:C11]",
-          "snippet": "id",
-          "filepath": "/main.dbml"
+          "snippet": "id"
         }
       }
     },
@@ -34,8 +32,7 @@
       "node": {
         "context": {
           "id": "node@<element-declaration>@@[L14:C4, L14:C22]",
-          "snippet": "Ref: code > B.code",
-          "filepath": "/main.dbml"
+          "snippet": "Ref: code > B.code"
         }
       }
     },
@@ -47,8 +44,7 @@
       "node": {
         "context": {
           "id": "node@<primary-expression>@@[L14:C9, L14:C13]",
-          "snippet": "code",
-          "filepath": "/main.dbml"
+          "snippet": "code"
         }
       }
     }
@@ -927,8 +923,7 @@
                                     "referee": {
                                       "context": {
                                         "id": "symbol@Table@A@[L0:C0, L3:C1]",
-                                        "snippet": "Table A {\n...e number\n}",
-                                        "filepath": "/main.dbml"
+                                        "snippet": "Table A {\n...e number\n}"
                                       }
                                     }
                                   },
@@ -972,8 +967,7 @@
                                     "referee": {
                                       "context": {
                                         "id": "symbol@Column@@[L1:C4, L1:C14]",
-                                        "snippet": "id integer",
-                                        "filepath": "/main.dbml"
+                                        "snippet": "id integer"
                                       }
                                     }
                                   }
@@ -1105,8 +1099,7 @@
                                     "referee": {
                                       "context": {
                                         "id": "symbol@Table@B@[L5:C0, L8:C1]",
-                                        "snippet": "Table B {\n...e number\n}",
-                                        "filepath": "/main.dbml"
+                                        "snippet": "Table B {\n...e number\n}"
                                       }
                                     }
                                   },
@@ -1150,8 +1143,7 @@
                                     "referee": {
                                       "context": {
                                         "id": "symbol@Column@@[L7:C4, L7:C15]",
-                                        "snippet": "code number",
-                                        "filepath": "/main.dbml"
+                                        "snippet": "code number"
                                       }
                                     }
                                   }

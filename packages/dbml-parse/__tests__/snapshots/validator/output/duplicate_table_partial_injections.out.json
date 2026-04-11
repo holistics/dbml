@@ -1,54 +1,50 @@
 {
   "errors": [
     {
-      "code": "INVALID_TABLE_PARTIAL_INJECTION",
+      "code": "DUPLICATE_TABLE_PARTIAL_INJECTION_NAME",
       "diagnostic": "Duplicate table partial injection 'common'",
       "filepath": "/main.dbml",
       "level": "error",
       "node": {
         "context": {
           "id": "node@<prefix-expression>@@[L6:C2, L6:C9]",
-          "snippet": "~common",
-          "filepath": "/main.dbml"
+          "snippet": "~common"
         }
       }
     },
     {
-      "code": "INVALID_TABLE_PARTIAL_INJECTION",
+      "code": "DUPLICATE_TABLE_PARTIAL_INJECTION_NAME",
       "diagnostic": "Duplicate table partial injection 'common'",
       "filepath": "/main.dbml",
       "level": "error",
       "node": {
         "context": {
           "id": "node@<prefix-expression>@@[L7:C2, L7:C9]",
-          "snippet": "~common",
-          "filepath": "/main.dbml"
+          "snippet": "~common"
         }
       }
     },
     {
-      "code": "INVALID_TABLE_PARTIAL_INJECTION",
+      "code": "DUPLICATE_TABLE_PARTIAL_INJECTION_NAME",
       "diagnostic": "Duplicate table partial injection 'common'",
       "filepath": "/main.dbml",
       "level": "error",
       "node": {
         "context": {
           "id": "node@<prefix-expression>@@[L6:C2, L6:C9]",
-          "snippet": "~common",
-          "filepath": "/main.dbml"
+          "snippet": "~common"
         }
       }
     },
     {
-      "code": "INVALID_TABLE_PARTIAL_INJECTION",
+      "code": "DUPLICATE_TABLE_PARTIAL_INJECTION_NAME",
       "diagnostic": "Duplicate table partial injection 'common'",
       "filepath": "/main.dbml",
       "level": "error",
       "node": {
         "context": {
           "id": "node@<prefix-expression>@@[L8:C2, L8:C9]",
-          "snippet": "~common",
-          "filepath": "/main.dbml"
+          "snippet": "~common"
         }
       }
     }
@@ -414,8 +410,7 @@
                             "referee": {
                               "context": {
                                 "id": "symbol@TablePartial@common@[L0:C0, L2:C1]",
-                                "snippet": "TableParti...me text\r\n}",
-                                "filepath": "/main.dbml"
+                                "snippet": "TableParti...me text\r\n}"
                               }
                             }
                           },
@@ -491,8 +486,7 @@
                             "referee": {
                               "context": {
                                 "id": "symbol@TablePartial@common@[L0:C0, L2:C1]",
-                                "snippet": "TableParti...me text\r\n}",
-                                "filepath": "/main.dbml"
+                                "snippet": "TableParti...me text\r\n}"
                               }
                             }
                           },
@@ -568,8 +562,7 @@
                             "referee": {
                               "context": {
                                 "id": "symbol@TablePartial@common@[L0:C0, L2:C1]",
-                                "snippet": "TableParti...me text\r\n}",
-                                "filepath": "/main.dbml"
+                                "snippet": "TableParti...me text\r\n}"
                               }
                             }
                           },

@@ -8,8 +8,7 @@
       "node": {
         "context": {
           "id": "node@<primary-expression>@@[L0:C6, L0:C7]",
-          "snippet": "A",
-          "filepath": "/main.dbml"
+          "snippet": "A"
         }
       }
     },
@@ -21,8 +20,7 @@
       "node": {
         "context": {
           "id": "node@<primary-expression>@@[L4:C6, L4:C9]",
-          "snippet": "\"B\"",
-          "filepath": "/main.dbml"
+          "snippet": "\"B\""
         }
       }
     },
@@ -34,8 +32,7 @@
       "node": {
         "context": {
           "id": "node@<primary-expression>@@[L8:C6, L8:C7]",
-          "snippet": "C",
-          "filepath": "/main.dbml"
+          "snippet": "C"
         }
       }
     },
@@ -47,8 +44,7 @@
       "node": {
         "context": {
           "id": "node@<primary-expression>@@[L12:C6, L12:C9]",
-          "snippet": "\"D\"",
-          "filepath": "/main.dbml"
+          "snippet": "\"D\""
         }
       }
     }

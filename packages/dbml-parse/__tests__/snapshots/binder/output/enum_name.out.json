@@ -36,8 +36,7 @@
       "node": {
         "context": {
           "id": "node@<infix-expression>@@[L6:C12, L6:C18]",
-          "snippet": "v2. []",
-          "filepath": "/main.dbml"
+          "snippet": "v2. []"
         }
       }
     },
@@ -49,8 +48,7 @@
       "node": {
         "context": {
           "id": "node@<infix-expression>@@[L7:C12, L7:C15]",
-          "snippet": "v2.",
-          "filepath": "/main.dbml"
+          "snippet": "v2."
         }
       }
     }
@@ -217,8 +215,7 @@
                               "fullStart": 43,
                               "referee": {
                                 "context": {
-                                  "id": "symbol@Schema@v2@[L?:C?, L?:C?]",
-                                  "filepath": "/main.dbml"
+                                  "id": "symbol@Schema@v2@[L?:C?, L?:C?]"
                                 }
                               }
                             },
@@ -262,8 +259,7 @@
                               "referee": {
                                 "context": {
                                   "id": "symbol@Enum@v2.status@[L10:C0, L15:C1]",
-                                  "snippet": "Enum v2.st... tenant\r\n}",
-                                  "filepath": "/main.dbml"
+                                  "snippet": "Enum v2.st... tenant\r\n}"
                                 }
                               }
                             }
@@ -359,8 +355,7 @@
                               "fullStart": 66,
                               "referee": {
                                 "context": {
-                                  "id": "symbol@Schema@public@[L?:C?, L?:C?]",
-                                  "filepath": "/main.dbml"
+                                  "id": "symbol@Schema@public@[L?:C?, L?:C?]"
                                 }
                               }
                             },
@@ -404,8 +399,7 @@
                               "referee": {
                                 "context": {
                                   "id": "symbol@Enum@status@[L17:C0, L22:C1]",
-                                  "snippet": "Enum statu... tenant\r\n}",
-                                  "filepath": "/main.dbml"
+                                  "snippet": "Enum statu... tenant\r\n}"
                                 }
                               }
                             }
@@ -501,8 +495,7 @@
                               "fullStart": 93,
                               "referee": {
                                 "context": {
-                                  "id": "symbol@Schema@public@[L?:C?, L?:C?]",
-                                  "filepath": "/main.dbml"
+                                  "id": "symbol@Schema@public@[L?:C?, L?:C?]"
                                 }
                               }
                             },
@@ -636,8 +629,7 @@
                               "fullStart": 121,
                               "referee": {
                                 "context": {
-                                  "id": "symbol@Schema@v2@[L?:C?, L?:C?]",
-                                  "filepath": "/main.dbml"
+                                  "id": "symbol@Schema@v2@[L?:C?, L?:C?]"
                                 }
                               }
                             },
@@ -771,8 +763,7 @@
                               "fullStart": 145,
                               "referee": {
                                 "context": {
-                                  "id": "symbol@Schema@v2@[L?:C?, L?:C?]",
-                                  "filepath": "/main.dbml"
+                                  "id": "symbol@Schema@v2@[L?:C?, L?:C?]"
                                 }
                               }
                             },
@@ -907,8 +898,7 @@
                               "fullStart": 165,
                               "referee": {
                                 "context": {
-                                  "id": "symbol@Schema@v2@[L?:C?, L?:C?]",
-                                  "filepath": "/main.dbml"
+                                  "id": "symbol@Schema@v2@[L?:C?, L?:C?]"
                                 }
                               }
                             },

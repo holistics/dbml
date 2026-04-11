@@ -392,8 +392,7 @@
                                 "referee": {
                                   "context": {
                                     "id": "symbol@Table@Users@[L0:C0, L3:C1]",
-                                    "snippet": "Table User...integer \n}",
-                                    "filepath": "/main.dbml"
+                                    "snippet": "Table User...integer \n}"
                                   }
                                 }
                               },
@@ -437,8 +436,7 @@
                                 "referee": {
                                   "context": {
                                     "id": "symbol@Column@@[L1:C4, L1:C14]",
-                                    "snippet": "id integer",
-                                    "filepath": "/main.dbml"
+                                    "snippet": "id integer"
                                   }
                                 }
                               }
@@ -492,8 +490,7 @@
                                 "referee": {
                                   "context": {
                                     "id": "symbol@Table@Users@[L0:C0, L3:C1]",
-                                    "snippet": "Table User...integer \n}",
-                                    "filepath": "/main.dbml"
+                                    "snippet": "Table User...integer \n}"
                                   }
                                 }
                               },
@@ -537,8 +534,7 @@
                                 "referee": {
                                   "context": {
                                     "id": "symbol@Column@@[L2:C4, L2:C23]",
-                                    "snippet": "referrer_id integer",
-                                    "filepath": "/main.dbml"
+                                    "snippet": "referrer_id integer"
                                   }
                                 }
                               }

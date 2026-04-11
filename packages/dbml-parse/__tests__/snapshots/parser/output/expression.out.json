@@ -8,8 +8,7 @@
       "node": {
         "context": {
           "id": "node@<wildcard>@@[L1:C4, L1:C5]",
-          "snippet": "*",
-          "filepath": "/main.dbml"
+          "snippet": "*"
         }
       }
     },
@@ -21,8 +20,7 @@
       "node": {
         "context": {
           "id": "node@<wildcard>@@[L1:C5, L1:C6]",
-          "snippet": "*",
-          "filepath": "/main.dbml"
+          "snippet": "*"
         }
       }
     }

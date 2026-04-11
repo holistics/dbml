@@ -8,8 +8,7 @@
       "node": {
         "context": {
           "id": "node@<element-declaration>@v.A@[L0:C0, L2:C1]",
-          "snippet": "enum v.\"A\" {\r\n\r\n}",
-          "filepath": "/main.dbml"
+          "snippet": "enum v.\"A\" {\r\n\r\n}"
         }
       }
     },
@@ -21,8 +20,7 @@
       "node": {
         "context": {
           "id": "node@<element-declaration>@@[L4:C0, L10:C1]",
-          "snippet": "enum {\r\n  ...   \"ab\"\r\n}",
-          "filepath": "/main.dbml"
+          "snippet": "enum {\r\n  ...   \"ab\"\r\n}"
         }
       }
     },
@@ -34,8 +32,7 @@
       "node": {
         "context": {
           "id": "node@<primary-expression>@@[L7:C4, L7:C5]",
-          "snippet": "1",
-          "filepath": "/main.dbml"
+          "snippet": "1"
         }
       }
     }

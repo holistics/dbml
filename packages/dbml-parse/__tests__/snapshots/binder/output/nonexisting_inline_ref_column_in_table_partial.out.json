@@ -8,8 +8,7 @@
       "node": {
         "context": {
           "id": "node@<primary-expression>@@[L1:C20, L1:C27]",
-          "snippet": "un_col1",
-          "filepath": "/main.dbml"
+          "snippet": "un_col1"
         }
       }
     },
@@ -21,8 +20,7 @@
       "node": {
         "context": {
           "id": "node@<primary-expression>@@[L2:C23, L2:C30]",
-          "snippet": "un_col2",
-          "filepath": "/main.dbml"
+          "snippet": "un_col2"
         }
       }
     },
@@ -34,8 +32,7 @@
       "node": {
         "context": {
           "id": "node@<primary-expression>@@[L3:C20, L3:C24]",
-          "snippet": "un_T",
-          "filepath": "/main.dbml"
+          "snippet": "un_T"
         }
       }
     },
@@ -47,8 +44,7 @@
       "node": {
         "context": {
           "id": "node@<primary-expression>@@[L7:C19, L7:C25]",
-          "snippet": "un_col",
-          "filepath": "/main.dbml"
+          "snippet": "un_col"
         }
       }
     }
@@ -415,8 +411,7 @@
                                             "referee": {
                                               "context": {
                                                 "id": "symbol@Table@T1@[L6:C0, L8:C1]",
-                                                "snippet": "Table T1 {... un_col]\n}",
-                                                "filepath": "/main.dbml"
+                                                "snippet": "Table T1 {... un_col]\n}"
                                               }
                                             }
                                           },

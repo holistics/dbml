@@ -8,8 +8,7 @@
       "node": {
         "context": {
           "id": "node@<primary-expression>@@[L6:C4, L6:C12]",
-          "snippet": "Products",
-          "filepath": "/main.dbml"
+          "snippet": "Products"
         }
       }
     }
@@ -184,8 +183,7 @@
                         "referee": {
                           "context": {
                             "id": "symbol@Table@Users@[L0:C0, L2:C1]",
-                            "snippet": "Table Users {\r\n\r\n}",
-                            "filepath": "/main.dbml"
+                            "snippet": "Table Users {\r\n\r\n}"
                           }
                         }
                       }

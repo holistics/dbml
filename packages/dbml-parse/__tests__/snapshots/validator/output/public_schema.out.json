@@ -8,8 +8,7 @@
       "node": {
         "context": {
           "id": "node@<element-declaration>@status@[L0:C0, L2:C1]",
-          "snippet": "Enum status {\r\n\r\n}",
-          "filepath": "/main.dbml"
+          "snippet": "Enum status {\r\n\r\n}"
         }
       }
     },
@@ -21,8 +20,7 @@
       "node": {
         "context": {
           "id": "node@<element-declaration>@public.status@[L4:C0, L6:C1]",
-          "snippet": "Enum publi...{\r\n    \r\n}",
-          "filepath": "/main.dbml"
+          "snippet": "Enum publi...{\r\n    \r\n}"
         }
       }
     },
@@ -34,8 +32,7 @@
       "node": {
         "context": {
           "id": "node@<infix-expression>@@[L4:C5, L4:C18]",
-          "snippet": "public.status",
-          "filepath": "/main.dbml"
+          "snippet": "public.status"
         }
       }
     }

@@ -8,8 +8,7 @@
       "node": {
         "context": {
           "id": "node@<element-declaration>@A@[L1:C4, L3:C5]",
-          "snippet": "Table A {\r\n\r\n    }",
-          "filepath": "/main.dbml"
+          "snippet": "Table A {\r\n\r\n    }"
         }
       }
     },
@@ -21,8 +20,7 @@
       "node": {
         "context": {
           "id": "node@<element-declaration>@A@[L5:C4, L7:C5]",
-          "snippet": "Table A {\r\n\r\n    }",
-          "filepath": "/main.dbml"
+          "snippet": "Table A {\r\n\r\n    }"
         }
       }
     },
@@ -34,8 +32,7 @@
       "node": {
         "context": {
           "id": "node@<element-declaration>@B@[L9:C4, L11:C5]",
-          "snippet": "Table B {\r...   \r\n    }",
-          "filepath": "/main.dbml"
+          "snippet": "Table B {\r...   \r\n    }"
         }
       }
     }

@@ -8,8 +8,7 @@
       "node": {
         "context": {
           "id": "node@<primary-expression>@@[L2:C4, L2:C8]",
-          "snippet": "ssid",
-          "filepath": "/main.dbml"
+          "snippet": "ssid"
         }
       }
     },
@@ -21,8 +20,7 @@
       "node": {
         "context": {
           "id": "node@<primary-expression>@@[L6:C7, L6:C8]",
-          "snippet": "e",
-          "filepath": "/main.dbml"
+          "snippet": "e"
         }
       }
     },
@@ -34,8 +32,7 @@
       "node": {
         "context": {
           "id": "node@<primary-expression>@@[L7:C21, L7:C22]",
-          "snippet": "e",
-          "filepath": "/main.dbml"
+          "snippet": "e"
         }
       }
     },
@@ -47,8 +44,7 @@
       "node": {
         "context": {
           "id": "node@<primary-expression>@@[L8:C7, L8:C8]",
-          "snippet": "e",
-          "filepath": "/main.dbml"
+          "snippet": "e"
         }
       }
     },
@@ -60,8 +56,7 @@
       "node": {
         "context": {
           "id": "node@<primary-expression>@@[L8:C9, L8:C10]",
-          "snippet": "f",
-          "filepath": "/main.dbml"
+          "snippet": "f"
         }
       }
     },
@@ -73,8 +68,7 @@
       "node": {
         "context": {
           "id": "node@<primary-expression>@@[L9:C7, L9:C8]",
-          "snippet": "e",
-          "filepath": "/main.dbml"
+          "snippet": "e"
         }
       }
     },
@@ -86,8 +80,7 @@
       "node": {
         "context": {
           "id": "node@<primary-expression>@@[L13:C6, L13:C7]",
-          "snippet": "a",
-          "filepath": "/main.dbml"
+          "snippet": "a"
         }
       }
     },
@@ -99,8 +92,7 @@
       "node": {
         "context": {
           "id": "node@<primary-expression>@@[L14:C6, L14:C7]",
-          "snippet": "a",
-          "filepath": "/main.dbml"
+          "snippet": "a"
         }
       }
     },
@@ -112,8 +104,7 @@
       "node": {
         "context": {
           "id": "node@<primary-expression>@@[L14:C8, L14:C9]",
-          "snippet": "a",
-          "filepath": "/main.dbml"
+          "snippet": "a"
         }
       }
     },
@@ -125,8 +116,7 @@
       "node": {
         "context": {
           "id": "node@<primary-expression>@@[L18:C34, L18:C35]",
-          "snippet": "a",
-          "filepath": "/main.dbml"
+          "snippet": "a"
         }
       }
     },
@@ -138,8 +128,7 @@
       "node": {
         "context": {
           "id": "node@<primary-expression>@@[L22:C16, L22:C17]",
-          "snippet": "a",
-          "filepath": "/main.dbml"
+          "snippet": "a"
         }
       }
     },
@@ -151,8 +140,7 @@
       "node": {
         "context": {
           "id": "node@<primary-expression>@@[L26:C16, L26:C17]",
-          "snippet": "a",
-          "filepath": "/main.dbml"
+          "snippet": "a"
         }
       }
     },
@@ -164,8 +152,7 @@
       "node": {
         "context": {
           "id": "node@<primary-expression>@@[L30:C16, L30:C17]",
-          "snippet": "a",
-          "filepath": "/main.dbml"
+          "snippet": "a"
         }
       }
     },
@@ -177,8 +164,7 @@
       "node": {
         "context": {
           "id": "node@<primary-expression>@@[L30:C18, L30:C19]",
-          "snippet": "a",
-          "filepath": "/main.dbml"
+          "snippet": "a"
         }
       }
     },
@@ -190,8 +176,7 @@
       "node": {
         "context": {
           "id": "node@<primary-expression>@@[L13:C6, L13:C7]",
-          "snippet": "a",
-          "filepath": "/main.dbml"
+          "snippet": "a"
         }
       }
     },
@@ -203,8 +188,7 @@
       "node": {
         "context": {
           "id": "node@<primary-expression>@@[L14:C6, L14:C7]",
-          "snippet": "a",
-          "filepath": "/main.dbml"
+          "snippet": "a"
         }
       }
     },
@@ -216,8 +200,7 @@
       "node": {
         "context": {
           "id": "node@<primary-expression>@@[L14:C8, L14:C9]",
-          "snippet": "a",
-          "filepath": "/main.dbml"
+          "snippet": "a"
         }
       }
     },
@@ -229,8 +212,7 @@
       "node": {
         "context": {
           "id": "node@<function-application>@@[L13:C4, L13:C7]",
-          "snippet": "A a",
-          "filepath": "/main.dbml"
+          "snippet": "A a"
         }
       }
     },
@@ -242,8 +224,7 @@
       "node": {
         "context": {
           "id": "node@<function-application>@@[L14:C4, L14:C9]",
-          "snippet": "A a a",
-          "filepath": "/main.dbml"
+          "snippet": "A a a"
         }
       }
     },
@@ -255,8 +236,7 @@
       "node": {
         "context": {
           "id": "node@<element-declaration>@@[L17:C0, L19:C1]",
-          "snippet": "Ref {\n    ...scade] a\n}",
-          "filepath": "/main.dbml"
+          "snippet": "Ref {\n    ...scade] a\n}"
         }
       }
     },
@@ -268,8 +248,7 @@
       "node": {
         "context": {
           "id": "node@<element-declaration>@@[L21:C0, L23:C1]",
-          "snippet": "Ref {\n    ...cascade]\n}",
-          "filepath": "/main.dbml"
+          "snippet": "Ref {\n    ...cascade]\n}"
         }
       }
     },
@@ -281,8 +260,7 @@
       "node": {
         "context": {
           "id": "node@<element-declaration>@@[L25:C0, L27:C1]",
-          "snippet": "Ref {\n    ...> A.id a\n}",
-          "filepath": "/main.dbml"
+          "snippet": "Ref {\n    ...> A.id a\n}"
         }
       }
     },
@@ -294,8 +272,7 @@
       "node": {
         "context": {
           "id": "node@<element-declaration>@@[L29:C0, L31:C1]",
-          "snippet": "Ref {\n    ...A.id a a\n}",
-          "filepath": "/main.dbml"
+          "snippet": "Ref {\n    ...A.id a a\n}"
         }
       }
     },
@@ -307,8 +284,7 @@
       "node": {
         "context": {
           "id": "node@<function-application>@@[L14:C4, L14:C9]",
-          "snippet": "A a a",
-          "filepath": "/main.dbml"
+          "snippet": "A a a"
         }
       }
     }
@@ -1459,8 +1435,7 @@
                         "referee": {
                           "context": {
                             "id": "symbol@Table@A@[L0:C0, L3:C1]",
-                            "snippet": "Table A {\n...    ssid\n}",
-                            "filepath": "/main.dbml"
+                            "snippet": "Table A {\n...    ssid\n}"
                           }
                         }
                       }
@@ -1577,8 +1552,7 @@
                         "referee": {
                           "context": {
                             "id": "symbol@Table@A@[L0:C0, L3:C1]",
-                            "snippet": "Table A {\n...    ssid\n}",
-                            "filepath": "/main.dbml"
+                            "snippet": "Table A {\n...    ssid\n}"
                           }
                         }
                       }
@@ -1893,8 +1867,7 @@
                                 "referee": {
                                   "context": {
                                     "id": "symbol@Table@A@[L0:C0, L3:C1]",
-                                    "snippet": "Table A {\n...    ssid\n}",
-                                    "filepath": "/main.dbml"
+                                    "snippet": "Table A {\n...    ssid\n}"
                                   }
                                 }
                               },
@@ -1938,8 +1911,7 @@
                                 "referee": {
                                   "context": {
                                     "id": "symbol@Column@@[L1:C4, L1:C10]",
-                                    "snippet": "id int",
-                                    "filepath": "/main.dbml"
+                                    "snippet": "id int"
                                   }
                                 }
                               }
@@ -1993,8 +1965,7 @@
                                 "referee": {
                                   "context": {
                                     "id": "symbol@Table@A@[L0:C0, L3:C1]",
-                                    "snippet": "Table A {\n...    ssid\n}",
-                                    "filepath": "/main.dbml"
+                                    "snippet": "Table A {\n...    ssid\n}"
                                   }
                                 }
                               },
@@ -2038,8 +2009,7 @@
                                 "referee": {
                                   "context": {
                                     "id": "symbol@Column@@[L1:C4, L1:C10]",
-                                    "snippet": "id int",
-                                    "filepath": "/main.dbml"
+                                    "snippet": "id int"
                                   }
                                 }
                               }
@@ -2284,8 +2254,7 @@
                                 "referee": {
                                   "context": {
                                     "id": "symbol@Table@A@[L0:C0, L3:C1]",
-                                    "snippet": "Table A {\n...    ssid\n}",
-                                    "filepath": "/main.dbml"
+                                    "snippet": "Table A {\n...    ssid\n}"
                                   }
                                 }
                               },
@@ -2329,8 +2298,7 @@
                                 "referee": {
                                   "context": {
                                     "id": "symbol@Column@@[L1:C4, L1:C10]",
-                                    "snippet": "id int",
-                                    "filepath": "/main.dbml"
+                                    "snippet": "id int"
                                   }
                                 }
                               }
@@ -2384,8 +2352,7 @@
                                 "referee": {
                                   "context": {
                                     "id": "symbol@Table@A@[L0:C0, L3:C1]",
-                                    "snippet": "Table A {\n...    ssid\n}",
-                                    "filepath": "/main.dbml"
+                                    "snippet": "Table A {\n...    ssid\n}"
                                   }
                                 }
                               },
@@ -2429,8 +2396,7 @@
                                 "referee": {
                                   "context": {
                                     "id": "symbol@Column@@[L1:C4, L1:C10]",
-                                    "snippet": "id int",
-                                    "filepath": "/main.dbml"
+                                    "snippet": "id int"
                                   }
                                 }
                               }
@@ -2575,8 +2541,7 @@
                                 "referee": {
                                   "context": {
                                     "id": "symbol@Table@A@[L0:C0, L3:C1]",
-                                    "snippet": "Table A {\n...    ssid\n}",
-                                    "filepath": "/main.dbml"
+                                    "snippet": "Table A {\n...    ssid\n}"
                                   }
                                 }
                               },
@@ -2620,8 +2585,7 @@
                                 "referee": {
                                   "context": {
                                     "id": "symbol@Column@@[L1:C4, L1:C10]",
-                                    "snippet": "id int",
-                                    "filepath": "/main.dbml"
+                                    "snippet": "id int"
                                   }
                                 }
                               }
@@ -2675,8 +2639,7 @@
                                 "referee": {
                                   "context": {
                                     "id": "symbol@Table@A@[L0:C0, L3:C1]",
-                                    "snippet": "Table A {\n...    ssid\n}",
-                                    "filepath": "/main.dbml"
+                                    "snippet": "Table A {\n...    ssid\n}"
                                   }
                                 }
                               },
@@ -2720,8 +2683,7 @@
                                 "referee": {
                                   "context": {
                                     "id": "symbol@Column@@[L1:C4, L1:C10]",
-                                    "snippet": "id int",
-                                    "filepath": "/main.dbml"
+                                    "snippet": "id int"
                                   }
                                 }
                               }
@@ -2895,8 +2857,7 @@
                                 "referee": {
                                   "context": {
                                     "id": "symbol@Table@A@[L0:C0, L3:C1]",
-                                    "snippet": "Table A {\n...    ssid\n}",
-                                    "filepath": "/main.dbml"
+                                    "snippet": "Table A {\n...    ssid\n}"
                                   }
                                 }
                               },
@@ -2940,8 +2901,7 @@
                                 "referee": {
                                   "context": {
                                     "id": "symbol@Column@@[L1:C4, L1:C10]",
-                                    "snippet": "id int",
-                                    "filepath": "/main.dbml"
+                                    "snippet": "id int"
                                   }
                                 }
                               }
@@ -2995,8 +2955,7 @@
                                 "referee": {
                                   "context": {
                                     "id": "symbol@Table@A@[L0:C0, L3:C1]",
-                                    "snippet": "Table A {\n...    ssid\n}",
-                                    "filepath": "/main.dbml"
+                                    "snippet": "Table A {\n...    ssid\n}"
                                   }
                                 }
                               },
@@ -3040,8 +2999,7 @@
                                 "referee": {
                                   "context": {
                                     "id": "symbol@Column@@[L1:C4, L1:C10]",
-                                    "snippet": "id int",
-                                    "filepath": "/main.dbml"
+                                    "snippet": "id int"
                                   }
                                 }
                               }

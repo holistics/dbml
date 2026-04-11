@@ -8,8 +8,7 @@
       "node": {
         "context": {
           "id": "node@<element-declaration>@v1.Users@[L1:C4, L4:C5]",
-          "snippet": "Table v1.U...ew]\r\n    }",
-          "filepath": "/main.dbml"
+          "snippet": "Table v1.U...ew]\r\n    }"
         }
       }
     },
@@ -21,8 +20,7 @@
       "node": {
         "context": {
           "id": "node@<element-declaration>@v2.Status@[L6:C4, L11:C5]",
-          "snippet": "Enum v2.St...ant\r\n    }",
-          "filepath": "/main.dbml"
+          "snippet": "Enum v2.St...ant\r\n    }"
         }
       }
     }

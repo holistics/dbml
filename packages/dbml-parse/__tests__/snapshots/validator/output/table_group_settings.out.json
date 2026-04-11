@@ -8,8 +8,7 @@
       "node": {
         "context": {
           "id": "node@<attribute>@@[L5:C4, L5:C26]",
-          "snippet": "note: 'Thi...is a note'",
-          "filepath": "/main.dbml"
+          "snippet": "note: 'Thi...is a note'"
         }
       }
     },
@@ -21,8 +20,7 @@
       "node": {
         "context": {
           "id": "node@<attribute>@@[L6:C4, L6:C32]",
-          "snippet": "note: 'Thi...ther note'",
-          "filepath": "/main.dbml"
+          "snippet": "note: 'Thi...ther note'"
         }
       }
     },
@@ -34,8 +32,7 @@
       "node": {
         "context": {
           "id": "node@<attribute>@@[L8:C4, L8:C17]",
-          "snippet": "what: 'ye ye'",
-          "filepath": "/main.dbml"
+          "snippet": "what: 'ye ye'"
         }
       }
     },
@@ -47,8 +44,7 @@
       "node": {
         "context": {
           "id": "node@<primary-expression>@@[L18:C9, L18:C12]",
-          "snippet": "#aa",
-          "filepath": "/main.dbml"
+          "snippet": "#aa"
         }
       }
     }
@@ -652,8 +648,7 @@
                         "referee": {
                           "context": {
                             "id": "symbol@Table@t1@[L0:C0, L2:C1]",
-                            "snippet": "Table t1 {... integer\n}",
-                            "filepath": "/main.dbml"
+                            "snippet": "Table t1 {... integer\n}"
                           }
                         }
                       }
@@ -1164,8 +1159,7 @@
                         "referee": {
                           "context": {
                             "id": "symbol@Table@table2@[L13:C0, L15:C1]",
-                            "snippet": "Table tabl...int [pk]\n}",
-                            "filepath": "/main.dbml"
+                            "snippet": "Table tabl...int [pk]\n}"
                           }
                         }
                       }

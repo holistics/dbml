@@ -167,8 +167,7 @@
                               "fullStart": 39,
                               "referee": {
                                 "context": {
-                                  "id": "symbol@Schema@v2@[L?:C?, L?:C?]",
-                                  "filepath": "/main.dbml"
+                                  "id": "symbol@Schema@v2@[L?:C?, L?:C?]"
                                 }
                               }
                             },
@@ -212,8 +211,7 @@
                               "referee": {
                                 "context": {
                                   "id": "symbol@Enum@v2.status@[L7:C0, L10:C1]",
-                                  "snippet": "enum v2.st...loyee']\r\n}",
-                                  "filepath": "/main.dbml"
+                                  "snippet": "enum v2.st...loyee']\r\n}"
                                 }
                               }
                             }
@@ -307,8 +305,7 @@
                                             "fullStart": 59,
                                             "referee": {
                                               "context": {
-                                                "id": "symbol@Schema@v2@[L?:C?, L?:C?]",
-                                                "filepath": "/main.dbml"
+                                                "id": "symbol@Schema@v2@[L?:C?, L?:C?]"
                                               }
                                             }
                                           },
@@ -352,8 +349,7 @@
                                             "referee": {
                                               "context": {
                                                 "id": "symbol@Enum@v2.status@[L7:C0, L10:C1]",
-                                                "snippet": "enum v2.st...loyee']\r\n}",
-                                                "filepath": "/main.dbml"
+                                                "snippet": "enum v2.st...loyee']\r\n}"
                                               }
                                             }
                                           }
@@ -401,8 +397,7 @@
                                         "referee": {
                                           "context": {
                                             "id": "symbol@Enum field@@[L9:C4, L9:C40]",
-                                            "snippet": "new [note:...employee']",
-                                            "filepath": "/main.dbml"
+                                            "snippet": "new [note:...employee']"
                                           }
                                         }
                                       }
@@ -599,8 +594,7 @@
                                         "referee": {
                                           "context": {
                                             "id": "symbol@Column@@[L1:C1, L1:C11]",
-                                            "snippet": "id integer",
-                                            "filepath": "/main.dbml"
+                                            "snippet": "id integer"
                                           }
                                         }
                                       },

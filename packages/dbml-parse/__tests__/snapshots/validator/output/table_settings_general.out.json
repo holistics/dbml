@@ -8,8 +8,7 @@
       "node": {
         "context": {
           "id": "node@<attribute>@@[L2:C4, L2:C26]",
-          "snippet": "note: 'Thi...is a note'",
-          "filepath": "/main.dbml"
+          "snippet": "note: 'Thi...is a note'"
         }
       }
     },
@@ -21,8 +20,7 @@
       "node": {
         "context": {
           "id": "node@<attribute>@@[L3:C4, L3:C36]",
-          "snippet": "note: 'Thi...cate note'",
-          "filepath": "/main.dbml"
+          "snippet": "note: 'Thi...cate note'"
         }
       }
     },
@@ -34,8 +32,7 @@
       "node": {
         "context": {
           "id": "node@<attribute>@@[L7:C30, L7:C52]",
-          "snippet": "note: 'Thi...is a note'",
-          "filepath": "/main.dbml"
+          "snippet": "note: 'Thi...is a note'"
         }
       }
     },
@@ -47,8 +44,7 @@
       "node": {
         "context": {
           "id": "node@<attribute>@@[L7:C54, L7:C82]",
-          "snippet": "note: 'Thi...ther note'",
-          "filepath": "/main.dbml"
+          "snippet": "note: 'Thi...ther note'"
         }
       }
     }
@@ -1033,8 +1029,7 @@
                               "fullStart": 326,
                               "referee": {
                                 "context": {
-                                  "id": "symbol@Schema@v2@[L?:C?, L?:C?]",
-                                  "filepath": "/main.dbml"
+                                  "id": "symbol@Schema@v2@[L?:C?, L?:C?]"
                                 }
                               }
                             },
@@ -1078,8 +1073,7 @@
                               "referee": {
                                 "context": {
                                   "id": "symbol@Enum@v2.status@[L14:C0, L19:C1]",
-                                  "snippet": "Enum v2.st... tenant\r\n}",
-                                  "filepath": "/main.dbml"
+                                  "snippet": "Enum v2.st... tenant\r\n}"
                                 }
                               }
                             }
@@ -1173,8 +1167,7 @@
                                             "fullStart": 346,
                                             "referee": {
                                               "context": {
-                                                "id": "symbol@Schema@v2@[L?:C?, L?:C?]",
-                                                "filepath": "/main.dbml"
+                                                "id": "symbol@Schema@v2@[L?:C?, L?:C?]"
                                               }
                                             }
                                           },
@@ -1218,8 +1211,7 @@
                                             "referee": {
                                               "context": {
                                                 "id": "symbol@Enum@v2.status@[L14:C0, L19:C1]",
-                                                "snippet": "Enum v2.st... tenant\r\n}",
-                                                "filepath": "/main.dbml"
+                                                "snippet": "Enum v2.st... tenant\r\n}"
                                               }
                                             }
                                           }
@@ -1267,8 +1259,7 @@
                                         "referee": {
                                           "context": {
                                             "id": "symbol@Enum field@@[L16:C4, L16:C7]",
-                                            "snippet": "new",
-                                            "filepath": "/main.dbml"
+                                            "snippet": "new"
                                           }
                                         }
                                       }

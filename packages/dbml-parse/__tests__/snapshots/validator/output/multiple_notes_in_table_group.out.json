@@ -8,8 +8,7 @@
       "node": {
         "context": {
           "id": "node@<element-declaration>@@[L5:C2, L5:C21]",
-          "snippet": "note: 'inline note'",
-          "filepath": "/main.dbml"
+          "snippet": "note: 'inline note'"
         }
       }
     },
@@ -21,8 +20,7 @@
       "node": {
         "context": {
           "id": "node@<element-declaration>@@[L7:C2, L13:C3]",
-          "snippet": "note: '''\n...syntax\n'''",
-          "filepath": "/main.dbml"
+          "snippet": "note: '''\n...syntax\n'''"
         }
       }
     },
@@ -34,8 +32,7 @@
       "node": {
         "context": {
           "id": "node@<element-declaration>@@[L15:C2, L17:C3]",
-          "snippet": "note {\n   ... note'\n  }",
-          "filepath": "/main.dbml"
+          "snippet": "note {\n   ... note'\n  }"
         }
       }
     }
@@ -434,8 +431,7 @@
                         "referee": {
                           "context": {
                             "id": "symbol@Table@table1@[L0:C0, L2:C1]",
-                            "snippet": "Table tabl...int [pk]\n}",
-                            "filepath": "/main.dbml"
+                            "snippet": "Table tabl...int [pk]\n}"
                           }
                         }
                       }

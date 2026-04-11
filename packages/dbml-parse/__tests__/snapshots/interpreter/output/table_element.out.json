@@ -8,8 +8,7 @@
       "node": {
         "context": {
           "id": "node@<element-declaration>@@[L6:C2, L6:C20]",
-          "snippet": "Note: 'Short note'",
-          "filepath": "/main.dbml"
+          "snippet": "Note: 'Short note'"
         }
       }
     },
@@ -21,8 +20,7 @@
       "node": {
         "context": {
           "id": "node@<element-declaration>@@[L18:C2, L27:C3]",
-          "snippet": "Note {\n   ...   '''\n  }",
-          "filepath": "/main.dbml"
+          "snippet": "Note {\n   ...   '''\n  }"
         }
       }
     }

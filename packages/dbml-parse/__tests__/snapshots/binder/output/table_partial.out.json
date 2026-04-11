@@ -8,8 +8,7 @@
       "node": {
         "context": {
           "id": "node@<primary-expression>@@[L5:C3, L5:C5]",
-          "snippet": "p2",
-          "filepath": "/main.dbml"
+          "snippet": "p2"
         }
       }
     }
@@ -271,8 +270,7 @@
                             "referee": {
                               "context": {
                                 "id": "symbol@TablePartial@p1@[L0:C0, L0:C18]",
-                                "snippet": "TablePartial p1 {}",
-                                "filepath": "/main.dbml"
+                                "snippet": "TablePartial p1 {}"
                               }
                             }
                           },

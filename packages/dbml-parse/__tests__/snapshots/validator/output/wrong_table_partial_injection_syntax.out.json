@@ -36,8 +36,7 @@
       "node": {
         "context": {
           "id": "node@<infix-expression>@@[L3:C2, L5:C9]",
-          "snippet": "!common\r\n ...\n  -common",
-          "filepath": "/main.dbml"
+          "snippet": "!common\r\n ...\n  -common"
         }
       }
     },
@@ -49,8 +48,7 @@
       "node": {
         "context": {
           "id": "node@<infix-expression>@@[L3:C2, L5:C9]",
-          "snippet": "!common\r\n ...\n  -common",
-          "filepath": "/main.dbml"
+          "snippet": "!common\r\n ...\n  -common"
         }
       }
     },
@@ -62,8 +60,7 @@
       "node": {
         "context": {
           "id": "node@<prefix-expression>@@[L7:C2, L7:C4]",
-          "snippet": "~1",
-          "filepath": "/main.dbml"
+          "snippet": "~1"
         }
       }
     },
@@ -75,8 +72,7 @@
       "node": {
         "context": {
           "id": "node@<prefix-expression>@@[L8:C2, L9:C1]",
-          "snippet": "~\r\n}",
-          "filepath": "/main.dbml"
+          "snippet": "~\r\n}"
         }
       }
     }

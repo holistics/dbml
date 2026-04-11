@@ -8,8 +8,7 @@
       "node": {
         "context": {
           "id": "node@<element-declaration>@@[L10:C0, L10:C16]",
-          "snippet": "Ref: B.id > A.id",
-          "filepath": "/main.dbml"
+          "snippet": "Ref: B.id > A.id"
         }
       }
     },
@@ -21,8 +20,7 @@
       "node": {
         "context": {
           "id": "node@<attribute>@@[L1:C12, L1:C23]",
-          "snippet": "ref: > B.id",
-          "filepath": "/main.dbml"
+          "snippet": "ref: > B.id"
         }
       }
     },
@@ -34,8 +32,7 @@
       "node": {
         "context": {
           "id": "node@<element-declaration>@@[L34:C0, L34:C29]",
-          "snippet": "Ref: posts...> users.id",
-          "filepath": "/main.dbml"
+          "snippet": "Ref: posts...> users.id"
         }
       }
     },
@@ -47,8 +44,7 @@
       "node": {
         "context": {
           "id": "node@<attribute>@@[L29:C19, L29:C34]",
-          "snippet": "ref: > users.id",
-          "filepath": "/main.dbml"
+          "snippet": "ref: > users.id"
         }
       }
     }

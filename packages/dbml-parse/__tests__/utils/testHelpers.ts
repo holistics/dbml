@@ -307,7 +307,6 @@ export function syntaxNodeToSnapshot (
       context: { // context should always be at the top
         id: nodeReadableId,
         snippet,
-        filepath: filepath.toString(),
       },
     };
   }
@@ -354,7 +353,6 @@ export function symbolToSnapshot (
       context: {
         id: symbolReadableId, // context should always be at the top
         snippet,
-        filepath: filepath.toString(),
       },
     };
   }

@@ -8,8 +8,7 @@
       "node": {
         "context": {
           "id": "node@<primary-expression>@@[L1:C18, L1:C23]",
-          "snippet": "index",
-          "filepath": "/main.dbml"
+          "snippet": "index"
         }
       }
     },
@@ -21,8 +20,7 @@
       "node": {
         "context": {
           "id": "node@<primary-expression>@@[L1:C24, L1:C29]",
-          "snippet": "alias",
-          "filepath": "/main.dbml"
+          "snippet": "alias"
         }
       }
     },
@@ -34,8 +32,7 @@
       "node": {
         "context": {
           "id": "node@<block-expression>@@[L1:C30, L1:C32]",
-          "snippet": "{}",
-          "filepath": "/main.dbml"
+          "snippet": "{}"
         }
       }
     },
@@ -47,8 +44,7 @@
       "node": {
         "context": {
           "id": "node@<primary-expression>@@[L2:C12, L2:C13]",
-          "snippet": "2",
-          "filepath": "/main.dbml"
+          "snippet": "2"
         }
       }
     },
@@ -60,8 +56,7 @@
       "node": {
         "context": {
           "id": "node@<primary-expression>@@[L2:C14, L2:C18]",
-          "snippet": "args",
-          "filepath": "/main.dbml"
+          "snippet": "args"
         }
       }
     },
@@ -73,8 +68,7 @@
       "node": {
         "context": {
           "id": "node@<block-expression>@@[L2:C19, L2:C21]",
-          "snippet": "{}",
-          "filepath": "/main.dbml"
+          "snippet": "{}"
         }
       }
     },
@@ -86,8 +80,7 @@
       "node": {
         "context": {
           "id": "node@<primary-expression>@@[L3:C18, L3:C24]",
-          "snippet": "number",
-          "filepath": "/main.dbml"
+          "snippet": "number"
         }
       }
     },
@@ -99,8 +92,7 @@
       "node": {
         "context": {
           "id": "node@<primary-expression>@@[L3:C25, L3:C27]",
-          "snippet": "of",
-          "filepath": "/main.dbml"
+          "snippet": "of"
         }
       }
     },
@@ -112,8 +104,7 @@
       "node": {
         "context": {
           "id": "node@<primary-expression>@@[L3:C28, L3:C32]",
-          "snippet": "args",
-          "filepath": "/main.dbml"
+          "snippet": "args"
         }
       }
     },
@@ -125,8 +116,7 @@
       "node": {
         "context": {
           "id": "node@<block-expression>@@[L3:C33, L3:C35]",
-          "snippet": "{}",
-          "filepath": "/main.dbml"
+          "snippet": "{}"
         }
       }
     },
@@ -138,8 +128,7 @@
       "node": {
         "context": {
           "id": "node@<function-application>@@[L1:C4, L1:C32]",
-          "snippet": "Indexes wr...x alias {}",
-          "filepath": "/main.dbml"
+          "snippet": "Indexes wr...x alias {}"
         }
       }
     },
@@ -151,8 +140,7 @@
       "node": {
         "context": {
           "id": "node@<function-application>@@[L2:C4, L2:C21]",
-          "snippet": "Indexes 2 args {}",
-          "filepath": "/main.dbml"
+          "snippet": "Indexes 2 args {}"
         }
       }
     },
@@ -164,8 +152,7 @@
       "node": {
         "context": {
           "id": "node@<function-application>@@[L1:C4, L1:C32]",
-          "snippet": "Indexes wr...x alias {}",
-          "filepath": "/main.dbml"
+          "snippet": "Indexes wr...x alias {}"
         }
       }
     },
@@ -177,8 +164,7 @@
       "node": {
         "context": {
           "id": "node@<function-application>@@[L3:C4, L3:C35]",
-          "snippet": "Indexes wr...of args {}",
-          "filepath": "/main.dbml"
+          "snippet": "Indexes wr...of args {}"
         }
       }
     }

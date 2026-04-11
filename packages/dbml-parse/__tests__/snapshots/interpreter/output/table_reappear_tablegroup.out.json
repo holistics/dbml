@@ -8,8 +8,7 @@
       "node": {
         "context": {
           "id": "node@<primary-expression>@@[L35:C2, L35:C4]",
-          "snippet": "U2",
-          "filepath": "/main.dbml"
+          "snippet": "U2"
         }
       }
     },
@@ -21,8 +20,7 @@
       "node": {
         "context": {
           "id": "node@<function-application>@@[L22:C2, L22:C9]",
-          "snippet": "follows",
-          "filepath": "/main.dbml"
+          "snippet": "follows"
         }
       }
     },
@@ -34,8 +32,7 @@
       "node": {
         "context": {
           "id": "node@<function-application>@@[L27:C2, L27:C7]",
-          "snippet": "users",
-          "filepath": "/main.dbml"
+          "snippet": "users"
         }
       }
     },
@@ -47,8 +44,7 @@
       "node": {
         "context": {
           "id": "node@<function-application>@@[L31:C4, L31:C5]",
-          "snippet": "U",
-          "filepath": "/main.dbml"
+          "snippet": "U"
         }
       }
     }

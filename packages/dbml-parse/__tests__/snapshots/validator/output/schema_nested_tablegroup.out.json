@@ -8,8 +8,7 @@
       "node": {
         "context": {
           "id": "node@<infix-expression>@@[L3:C11, L3:C26]",
-          "snippet": "schema.alphabet",
-          "filepath": "/main.dbml"
+          "snippet": "schema.alphabet"
         }
       }
     }
@@ -184,8 +183,7 @@
                         "referee": {
                           "context": {
                             "id": "symbol@Table@A@[L0:C0, L1:C1]",
-                            "snippet": "Table A {\n}",
-                            "filepath": "/main.dbml"
+                            "snippet": "Table A {\n}"
                           }
                         }
                       }

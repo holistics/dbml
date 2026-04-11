@@ -8,8 +8,7 @@
       "node": {
         "context": {
           "id": "node@<element-declaration>@Users@[L16:C0, L18:C1]",
-          "snippet": "Enum Users {\r\n\r\n}",
-          "filepath": "/main.dbml"
+          "snippet": "Enum Users {\r\n\r\n}"
         }
       }
     },
@@ -21,8 +20,7 @@
       "node": {
         "context": {
           "id": "node@<element-declaration>@Users@[L20:C0, L22:C1]",
-          "snippet": "Enum Users {\r\n\r\n}",
-          "filepath": "/main.dbml"
+          "snippet": "Enum Users {\r\n\r\n}"
         }
       }
     },
@@ -34,8 +32,7 @@
       "node": {
         "context": {
           "id": "node@<primary-expression>@@[L4:C6, L4:C11]",
-          "snippet": "Users",
-          "filepath": "/main.dbml"
+          "snippet": "Users"
         }
       }
     },
@@ -47,8 +44,7 @@
       "node": {
         "context": {
           "id": "node@<primary-expression>@@[L12:C11, L12:C16]",
-          "snippet": "Users",
-          "filepath": "/main.dbml"
+          "snippet": "Users"
         }
       }
     },
@@ -60,8 +56,7 @@
       "node": {
         "context": {
           "id": "node@<primary-expression>@@[L20:C5, L20:C10]",
-          "snippet": "Users",
-          "filepath": "/main.dbml"
+          "snippet": "Users"
         }
       }
     },
@@ -73,8 +68,7 @@
       "node": {
         "context": {
           "id": "node@<primary-expression>@@[L28:C13, L28:C18]",
-          "snippet": "Users",
-          "filepath": "/main.dbml"
+          "snippet": "Users"
         }
       }
     }
