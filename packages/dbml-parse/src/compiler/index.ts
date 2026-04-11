@@ -2,28 +2,35 @@ import { DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLReferencesProvi
 import { invalidStream, flatStream } from './queries/legacy/token';
 import { splitQualifiedIdentifier, unescapeString, escapeString, formatRecordValue, isValidIdentifier, addDoubleQuoteIfNeeded } from './queries/utils';
 import { containerStack, containerToken, containerElement, containerScope, containerScopeKind } from './queries/container';
-import { renameTable, type TableNameInput } from './queries/transform';
+import { renameTable } from './queries/transform';
 export { ScopeKind } from './types';
 export type { TextEdit, TableNameInput } from './queries/transform';
 import {
   nodeSymbol,
   symbolMembers,
   nodeReferee,
-  bind,
-  interpret,
+  bindNode,
+  interpretNode,
 } from '@/core/global_modules';
 import { symbolReferences } from './queries/symbolReferences';
 import { intern, type Internable, type Primitive } from '@/core/types/internable';
-import { alias, nodeFullname as fullname, settings, validate } from '@/core/local_modules';
+import { DEFAULT_ENTRY } from '@/constants';
+import { nodeAlias, nodeFullname as fullname, nodeSettings, validateNode } from '@/core/local_modules';
 import { NodeSymbolIdGenerator } from '@/core/types/symbols';
 import { SymbolFactory } from '@/core/types/symbols';
 import { lookupMembers } from './queries/lookupMembers';
 import { symbolName } from './queries/symbolName';
 import { SyntaxNodeIdGenerator } from '@/core/types/nodes';
-import { parseFile } from './queries/pipeline/parse';
-import { DEFAULT_FILEPATH } from '@/core/types/filepath';
+import { type DbmlProjectLayout, MemoryProjectLayout } from './projectLayout';
+import { fileDependencies } from './queries/fileDependencies';
+import { Filepath } from '@/core/types/filepath';
+import { usableMembers } from './queries/usableMembers';
+import { topLevelSchemaMembers } from './queries/topLevelSchemaMembers';
+import { reachableFiles } from './queries/reachableFiles';
+import { parseFile, parseProject } from './queries/pipeline/parse';
 import { ast, errors, publicSymbolTable, rawDb, tokens, warnings } from './queries/legacy/parse';
-import { interpretFile } from './queries/pipeline/interpret';
+import { interpretFile, interpretProject, exportSchemaJson } from './queries/pipeline/interpret';
+import { bindFile, bindProject } from './queries/pipeline/bind';
 
 // Re-export utilities
 export { splitQualifiedIdentifier, unescapeString, escapeString, formatRecordValue, isValidIdentifier, addDoubleQuoteIfNeeded };
@@ -33,16 +40,28 @@ export { splitQualifiedIdentifier, unescapeString, escapeString, formatRecordVal
 const COMPUTING = Symbol('COMPUTING');
 
 export default class Compiler {
-  private source = '';
   private cache = new Map<symbol, any>();
+
+  layout: DbmlProjectLayout = new MemoryProjectLayout();
 
   nodeIdGenerator = new SyntaxNodeIdGenerator();
 
   symbolIdGenerator = new NodeSymbolIdGenerator();
-  symbolFactory = new SymbolFactory(this.symbolIdGenerator, DEFAULT_FILEPATH);
 
-  setSource (source: string) {
-    this.source = source;
+  symbolFactory = new SymbolFactory(this.symbolIdGenerator);
+
+  setSource (filepath: Filepath, source: string) {
+    this.layout.setSource(filepath, source);
+    this.cache.clear();
+  }
+
+  clearSource () {
+    this.layout = new MemoryProjectLayout();
+    this.cache.clear();
+  }
+
+  deleteSource (filepath: Filepath) {
+    this.layout.deleteSource(filepath);
     this.cache.clear();
   }
 
@@ -76,7 +95,11 @@ export default class Compiler {
   }
 
   // global queries
-  bind = this.query(bind);
+  parseProject = this.query(parseProject);
+
+  bindNode = this.query(bindNode);
+  bindProject = this.query(bindProject);
+  bindFile = this.query(bindFile);
 
   nodeSymbol = this.query(nodeSymbol);
   symbolMembers = this.query(symbolMembers);
@@ -85,20 +108,26 @@ export default class Compiler {
   symbolReferences = this.query(symbolReferences);
   nodeReferee = this.query(nodeReferee);
 
-  interpret = this.query(interpret);
+  interpretNode = this.query(interpretNode);
   interpretFile = this.query(interpretFile);
+  interpretProject = this.query(interpretProject);
+  exportSchemaJson = this.query(exportSchemaJson);
 
   // local queries
   parseFile = this.query(parseFile);
-  validate = this.query(validate);
-  fullname = this.query(fullname);
-  symbolName = this.query(symbolName);
-  alias = this.query(alias);
-  settings = this.query(settings);
 
-  renameTable (oldName: TableNameInput, newName: TableNameInput): string {
-    return renameTable.call(this, oldName, newName);
-  }
+  topLevelSchemaMembers = this.query(topLevelSchemaMembers);
+  reachableFiles = this.query(reachableFiles);
+  fileUsableMembers = this.query(usableMembers);
+  fileDependencies = this.query(fileDependencies);
+  validateNode = this.query(validateNode);
+  nodeFullname = this.query(fullname);
+  symbolName = this.query(symbolName);
+  nodeAlias = this.query(nodeAlias);
+  nodeSettings = this.query(nodeSettings);
+
+  // transform queries
+  renameTable = renameTable.bind(this);
 
   // @deprecated - legacy APIs for services compatibility
   readonly token = {
@@ -108,8 +137,8 @@ export default class Compiler {
 
   // @deprecated - legacy APIs for services compatibility
   readonly parse = {
-    source: () => this.source as Readonly<string>,
-    _: this.query(interpretFile),
+    source: () => this.layout.getSource(DEFAULT_ENTRY) as Readonly<string>,
+    _: this.query(exportSchemaJson),
     ast: this.query(ast),
     errors: this.query(errors),
     warnings: this.query(warnings),

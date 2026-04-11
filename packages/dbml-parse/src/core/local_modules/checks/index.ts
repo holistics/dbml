@@ -13,8 +13,7 @@ export const checksModule: LocalModule = {
   validateNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
     if (!isElementNode(node, ElementKind.Checks)) return Report.create(PASS_THROUGH);
     const validator = new ChecksValidator(compiler, node);
-    const result = validator.validate();
-    return Report.create(undefined, result.errors, result.warnings);
+    return Report.create(undefined, validator.validate());
   },
 
   nodeFullname (compiler: Compiler, node: SyntaxNode): Report<string[] | undefined> | Report<PassThrough> {

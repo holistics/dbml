@@ -17,8 +17,7 @@ export const customModule: LocalModule = {
   validateNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
     if (!isCustomElement(node)) return Report.create(PASS_THROUGH);
     const validator = new CustomValidator(compiler, node);
-    const result = validator.validate();
-    return Report.create(undefined, result.errors, result.warnings);
+    return Report.create(undefined, validator.validate());
   },
 
   nodeFullname (compiler: Compiler, node: SyntaxNode): Report<string[] | undefined> | Report<PassThrough> {

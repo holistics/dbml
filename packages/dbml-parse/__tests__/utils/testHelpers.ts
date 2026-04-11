@@ -16,16 +16,16 @@ export function scanTestNames (path: string) {
 
 function getNameHint (node: SyntaxNode | SyntaxToken): string {
   if (node instanceof SyntaxToken) {
-    return `:${node.value}`;
+    return `${node.value}`;
   }
   if (node instanceof VariableNode) {
-    return `:${node.variable?.value || ''}`;
+    return `${node.variable?.value || ''}`;
   }
   if (node instanceof LiteralNode) {
-    return `:${node.literal?.value || ''}`;
+    return `${node.literal?.value || ''}`;
   }
   if (node instanceof ElementDeclarationNode) {
-    return `:${getElementNameString(node) || ''}`;
+    return `${getElementNameString(node) || ''}`;
   }
   return '';
 }
@@ -179,18 +179,21 @@ export function errorToSnapshot (
     code,
     diagnostic,
     nodeOrToken,
+    filepath,
   } = error;
   if (simple) {
     return sortObject({
       level: 'error',
       code: CompileErrorCode[code],
       diagnostic,
+      filepath: filepath.toString(),
     });
   }
   return sortObject({
     level: 'error',
     code: CompileErrorCode[code],
     diagnostic,
+    filepath: filepath.toString(),
     ...(nodeOrToken instanceof SyntaxNode
       ? { node: syntaxNodeToSnapshot(compiler, nodeOrToken, { simple: true }) }
       : { token: syntaxTokenToSnapshot(compiler, nodeOrToken as SyntaxToken, { simple: true }) }),
@@ -206,18 +209,21 @@ export function warningToSnapshot (
     code,
     diagnostic,
     nodeOrToken,
+    filepath,
   } = warning;
   if (simple) {
     return sortObject({
       level: 'warning',
       code: CompileErrorCode[code],
       diagnostic,
+      filepath: filepath.toString(),
     });
   }
   return sortObject({
     level: 'warning',
     code: CompileErrorCode[code],
     diagnostic,
+    filepath: filepath.toString(),
     ...(nodeOrToken instanceof SyntaxNode
       ? { node: syntaxNodeToSnapshot(compiler, nodeOrToken, { simple: true }) }
       : { token: syntaxTokenToSnapshot(compiler, nodeOrToken as SyntaxToken, { simple: true }) }),
@@ -233,6 +239,7 @@ export function syntaxTokenToSnapshot (
   const snippet = getCodeSnippet(token, compiler.parse.source());
   const {
     kind, // Filter this out as it's in the readable id
+    filepath,
     value,
     leadingTrivia,
     trailingTrivia,
@@ -250,6 +257,7 @@ export function syntaxTokenToSnapshot (
         id: tokenReadableId,
         snippet,
         isInvalid,
+        filepath: filepath.toString(),
       },
     };
   }
@@ -283,6 +291,9 @@ export function syntaxNodeToSnapshot (
     endPos, // Filter this out
     start, // Filter this out
     end, // Filter this out
+    filepath,
+    fullStart,
+    fullEnd,
     ...props
   } = node;
   const symbol = compiler.nodeSymbol(node).getFiltered(UNHANDLED);
@@ -294,20 +305,21 @@ export function syntaxNodeToSnapshot (
     return {
       context: { // context should always be at the top
         id: nodeReadableId,
-        filepath: node.filepath?.absolute,
         snippet,
+        filepath: filepath.toString(),
       },
     };
   }
   const result = {
-    context: { // context should always be at the top
+    context: { // context should ways be at the top
       id: nodeReadableId,
-      filepath: node.filepath?.absolute,
       snippet,
     },
     ...sortObject({
       symbol: symbol && symbolToSnapshot(compiler, symbol),
       referee: referee && symbolToSnapshot(compiler, referee, { simple: true }),
+      fullStart,
+      fullEnd,
       children: sortObject(Object.fromEntries(
         Object.entries(props)
           .map(
@@ -331,6 +343,7 @@ export function symbolToSnapshot (
   const {
     id, // Filter this out
     declaration,
+    filepath,
   } = symbol;
   const references = compiler.symbolReferences(symbol).getFiltered(UNHANDLED);
   const symbolTable = compiler.symbolMembers(symbol).getFiltered(UNHANDLED);
@@ -340,6 +353,7 @@ export function symbolToSnapshot (
       context: {
         id: symbolReadableId, // context should always be at the top
         snippet,
+        filepath: filepath.toString(),
       },
     };
   }
@@ -349,7 +363,7 @@ export function symbolToSnapshot (
       snippet,
     },
     ...sortObject({
-      members: symbolTable && sortArray([...symbolTable.entries()].map(([, value]) => symbolToSnapshot(compiler, value, { simple: true }))),
+      members: symbolTable && sortArray([...symbolTable.entries()].map(([, value]) => symbolToSnapshot(compiler, value))),
       declaration: declaration && {
         id: getReadableId(declaration),
         snippet: getCodeSnippet(declaration, compiler.parse.source()),

@@ -1,8 +1,8 @@
 import { partition } from 'lodash-es';
 import Compiler from '@/compiler';
-import { CompileError, CompileErrorCode, CompileWarning } from '@/core/types/errors';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import {
-  BlockExpressionNode, CallExpressionNode, CommaExpressionNode, ElementDeclarationNode, EmptyNode, FunctionApplicationNode, FunctionExpressionNode, ListExpressionNode, ProgramNode, SyntaxNode, WildcardNode,
+  BlockExpressionNode, CallExpressionNode, CommaExpressionNode, ElementDeclarationNode, EmptyNode, FunctionApplicationNode, FunctionExpressionNode, ListExpressionNode, ProgramNode, SyntaxNode,
 } from '@/core/types/nodes';
 import { isExpressionASignedNumberExpression, isTupleOfVariables, isValidName } from '@/core/utils/validate';
 import { destructureComplexVariable } from '@/core/utils/expression';
@@ -19,11 +19,8 @@ export default class RecordsValidator {
     this.compiler = compiler;
   }
 
-  validate (): { errors: CompileError[]; warnings: CompileWarning[] } {
-    return {
-      errors: [...this.validateContext(), ...this.validateName(this.declarationNode.name), ...this.validateAlias(this.declarationNode.alias), ...this.validateSettingList(this.declarationNode.attributeList), ...this.validateBody(this.declarationNode.body)],
-      warnings: [],
-    };
+  validate (): CompileError[] {
+    return [...this.validateContext(), ...this.validateName(this.declarationNode.name), ...this.validateAlias(this.declarationNode.alias), ...this.validateSettingList(this.declarationNode.attributeList), ...this.validateBody(this.declarationNode.body)];
   }
 
   // Validate that Records can only appear top-level or inside a Table.
@@ -56,9 +53,6 @@ export default class RecordsValidator {
   }
 
   private validateName (nameNode?: SyntaxNode): CompileError[] {
-    if (nameNode instanceof WildcardNode) {
-      return [new CompileError(CompileErrorCode.INVALID_NAME, 'Wildcard (*) is not allowed as a Records name', nameNode)];
-    }
     const parent = this.declarationNode.parent;
     const isTopLevel = parent instanceof ProgramNode;
 
@@ -252,7 +246,7 @@ export default class RecordsValidator {
       if (!sub.type) {
         return [];
       }
-      return this.compiler.validate(sub).getErrors();
+      return this.compiler.validateNode(sub).getErrors();
     });
   }
 }
