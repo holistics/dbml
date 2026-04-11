@@ -57,6 +57,8 @@ export default class Compiler {
 
   setSource (filepath: Filepath, source: string) {
     this.layout.setSource(filepath, source);
+    // Local queries are keyed per-file: only the changed file's cache is stale.
+    // Global queries depend on all files: always invalidate the entire global cache.
     this.localCache.delete(filepath.intern());
     this.globalCache.clear();
   }
@@ -69,6 +71,7 @@ export default class Compiler {
 
   deleteSource (filepath: Filepath) {
     this.layout.deleteSource(filepath);
+    // Same invalidation logic as setSource: local per-file, global always full clear.
     this.localCache.delete(filepath.intern());
     this.globalCache.clear();
   }

@@ -1,7 +1,8 @@
 import type Compiler from '@/compiler';
 import { DEFAULT_ENTRY, UNHANDLED } from '@/constants';
 import Report from '@/core/types/report';
-import type { AliasKind, Database, ElementRef, MasterDatabase, Table, TablePartial } from '@/core/types';
+import { AliasKind } from '@/core/types';
+import type { Database, ElementRef, MasterDatabase, Table, TablePartial } from '@/core/types';
 import { Filepath, type FilepathId } from '@/core/types/filepath';
 import type { CompileError, CompileWarning } from '@/core/types/errors';
 import { ElementKind } from '@/core/types/keywords';
@@ -107,7 +108,6 @@ export function interpretProject (this: Compiler): Report<MasterDatabase> {
   return new Report({ files, items: merged }, errors, warnings);
 }
 
-// Export a reconciled, stripped Database for a single file
 // Export a reconciled, stripped Database for a single file.
 // 1. Collect all items by canonical name (schemaName.name), using filepath to disambiguate
 // 2. For each external, find the canonical item and add it with the primary local name
@@ -146,11 +146,11 @@ export function exportSchemaJson (this: Compiler, filepath: Filepath): Report<Re
 
   // Reconcile externals: visibleNames[0] is the primary name, the rest become aliases.
   const externalKinds: Array<[ElementRef[], AliasKind]> = [
-    [fileDb.externals.tables, ElementKind.Table as AliasKind],
-    [fileDb.externals.enums, ElementKind.Enum as AliasKind],
-    [fileDb.externals.tableGroups, ElementKind.TableGroup as AliasKind],
-    [fileDb.externals.tablePartials, ElementKind.TablePartial as AliasKind],
-    [fileDb.externals.notes, ElementKind.Note as AliasKind],
+    [fileDb.externals.tables, AliasKind.Table],
+    [fileDb.externals.enums, AliasKind.Enum],
+    [fileDb.externals.tableGroups, AliasKind.TableGroup],
+    [fileDb.externals.tablePartials, AliasKind.TablePartial],
+    [fileDb.externals.notes, AliasKind.Note],
   ];
 
   for (const [refs, kind] of externalKinds) {
@@ -226,20 +226,28 @@ function canonicalElementKey (schema: string | null | undefined, name: string): 
 
 function findItem (items: Database, kind: AliasKind, name: string, schema: string | null): any {
   switch (kind) {
-    case ElementKind.Table: return items.tables.find((t) => t.name === name && (t.schemaName ?? null) === schema);
-    case ElementKind.Enum: return items.enums.find((e) => e.name === name && (e.schemaName ?? null) === schema);
-    case ElementKind.TableGroup: return items.tableGroups.find((g) => g.name === name);
-    case ElementKind.TablePartial: return items.tablePartials.find((p) => p.name === name);
-    case ElementKind.Note: return items.notes.find((n) => (n as any).name === name);
+    case AliasKind.Table: return items.tables.find((t) => t.name === name && (t.schemaName ?? null) === schema);
+    case AliasKind.Enum: return items.enums.find((e) => e.name === name && (e.schemaName ?? null) === schema);
+    case AliasKind.TableGroup: return items.tableGroups.find((g) => g.name === name);
+    case AliasKind.TablePartial: return items.tablePartials.find((p) => p.name === name);
+    case AliasKind.Note: return items.notes.find((n) => (n as any).name === name);
+    default: {
+      const _: never = kind;
+      return _;
+    }
   }
 }
 
 function pushItem (db: Database, kind: AliasKind, item: any): void {
   switch (kind) {
-    case ElementKind.Table: db.tables.push(item); break;
-    case ElementKind.Enum: db.enums.push(item); break;
-    case ElementKind.TableGroup: db.tableGroups.push(item); break;
-    case ElementKind.TablePartial: db.tablePartials.push(item); break;
-    case ElementKind.Note: db.notes.push(item); break;
+    case AliasKind.Table: db.tables.push(item); break;
+    case AliasKind.Enum: db.enums.push(item); break;
+    case AliasKind.TableGroup: db.tableGroups.push(item); break;
+    case AliasKind.TablePartial: db.tablePartials.push(item); break;
+    case AliasKind.Note: db.notes.push(item); break;
+    default: {
+      const _: never = kind;
+      void _;
+    }
   }
 }

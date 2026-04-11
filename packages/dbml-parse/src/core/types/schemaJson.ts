@@ -206,7 +206,13 @@ export interface TableGroupField {
   schemaName: string | null;
 }
 
-export type AliasKind = 'table' | 'enum' | 'tablegroup' | 'tablepartial' | 'note';
+export enum AliasKind {
+  Table = 'table',
+  Enum = 'enum',
+  TableGroup = 'tablegroup',
+  TablePartial = 'tablepartial',
+  Note = 'note',
+}
 
 export interface Alias {
   name: string;
