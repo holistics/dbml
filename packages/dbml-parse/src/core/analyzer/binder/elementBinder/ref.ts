@@ -9,7 +9,6 @@ import { ElementBinder } from '../types';
 import { SyntaxToken } from '../../../types/tokens';
 import { CompileError } from '@/core/types/errors';
 import { lookupAndBindInScope, pickBinder, scanNonListNodeForBinding } from '../utils';
-import { getElementKind } from '../../utils';
 import { ElementKind } from '../../types';
 import { SymbolKind } from '@/core/types/symbol/symbolIndex';
 import SymbolFactory from '@/core/types/symbol/factory';
@@ -26,7 +25,7 @@ export default class RefBinder implements ElementBinder {
   }
 
   bind (): CompileError[] {
-    if (!(this.declarationNode.parent instanceof ProgramNode) && getElementKind(this.declarationNode.parent).unwrap_or(undefined) !== ElementKind.Project) {
+    if (!(this.declarationNode.parent instanceof ProgramNode) && !this.declarationNode.parent?.isKind(ElementKind.Project)) {
       return [];
     }
 

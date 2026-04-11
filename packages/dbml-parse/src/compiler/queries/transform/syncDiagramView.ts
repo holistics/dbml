@@ -37,7 +37,7 @@ export function findDiagramViewBlocks (source: string): DiagramViewBlock[] {
   const program = ast.getValue().ast;
 
   for (const element of program.body) {
-    if (element.type?.value.toLowerCase() === ElementKind.DiagramView) {
+    if (element.isKind(ElementKind.DiagramView)) {
       const fragments = element.name
         ? destructureComplexVariable(element.name).unwrap_or([])
         : [];

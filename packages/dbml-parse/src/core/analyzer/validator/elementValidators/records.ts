@@ -8,7 +8,7 @@ import { SyntaxToken } from '@/core/types/tokens';
 import { ElementValidator } from '@/core/analyzer/validator/types';
 import { isExpressionASignedNumberExpression, isTupleOfVariables, isValidName, pickValidator } from '@/core/analyzer/validator/utils';
 import SymbolTable from '@/core/types/symbol/symbolTable';
-import { destructureComplexVariable, getElementKind } from '@/core/analyzer/utils';
+import { destructureComplexVariable } from '@/core/analyzer/utils';
 import { ElementKind } from '@/core/analyzer/types';
 import { isAccessExpression, isExpressionAQuotedString, isExpressionAVariableNode } from '@/core/parser/utils';
 import { KEYWORDS_OF_DEFAULT_SETTING } from '@/constants';
@@ -48,8 +48,7 @@ export default class RecordsValidator implements ElementValidator {
 
     // Check if parent is a table
     if (parent instanceof ElementDeclarationNode) {
-      const elementKind = getElementKind(parent).unwrap_or(undefined);
-      if (elementKind === ElementKind.Table) {
+      if (parent.isKind(ElementKind.Table)) {
         return [];
       }
     }

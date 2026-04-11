@@ -5,6 +5,7 @@ import { Position } from '@/core/types';
 import { getTokenFullEnd, getTokenFullStart } from '@/core/lexer/utils';
 import { Filepath } from '@/core/types/filepath';
 import { type Internable } from '@/core/types/internable';
+import { ElementKind } from '@/core/analyzer/types';
 
 export type SyntaxNodeId = number;
 export type InternedSyntaxNode = string;
@@ -224,6 +225,10 @@ export class ElementDeclarationNode extends SyntaxNode {
     this.attributeList = attributeList;
     this.bodyColon = bodyColon;
     this.body = body;
+  }
+
+  isKind (kind: ElementKind): boolean {
+    return this.type?.value.toLowerCase() === kind;
   }
 }
 

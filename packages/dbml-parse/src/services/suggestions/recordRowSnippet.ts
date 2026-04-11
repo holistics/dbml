@@ -1,7 +1,6 @@
 import {
   extractReferee,
   extractVariableFromExpression,
-  getElementKind,
 } from '@/core/analyzer/utils';
 import {
   BlockExpressionNode,
@@ -38,9 +37,8 @@ export function suggestRecordRowSnippet (
   // If not in an ElementDeclarationNode, fallthrough
   if (!(element instanceof ElementDeclarationNode)) return null;
 
-  const elementKind = getElementKind(element).unwrap_or(undefined);
   // If not in a Records element, fallthrough
-  if (elementKind !== ElementKind.Records || !(element.body instanceof BlockExpressionNode)) return null;
+  if (!element.isKind(ElementKind.Records) || !(element.body instanceof BlockExpressionNode)) return null;
 
   // If we're not within the body, fallthrough
   if (!element.body || !isOffsetWithinSpan(offset, element.body)) return null;

@@ -9,7 +9,6 @@ import SymbolFactory from '@/core/types/symbol/factory';
 import {
   destructureCallExpression,
   extractVarNameFromPrimaryVariable,
-  getElementKind,
 } from '../../utils';
 import { createColumnSymbolIndex, SymbolKind } from '@/core/types/symbol/symbolIndex';
 import { ElementKind } from '../../types';
@@ -132,8 +131,7 @@ export default class RecordsBinder implements ElementBinder {
       return [];
     }
 
-    const elementKind = getElementKind(parent).unwrap_or(undefined);
-    if (elementKind !== ElementKind.Table) {
+    if (!parent.isKind(ElementKind.Table)) {
       return [];
     }
 

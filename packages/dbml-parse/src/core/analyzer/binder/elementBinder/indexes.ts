@@ -9,7 +9,7 @@ import { ElementBinder } from '../types';
 import { SyntaxToken } from '../../../types/tokens';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import { pickBinder, scanNonListNodeForBinding } from '../utils';
-import { destructureComplexVariable, extractVarNameFromPrimaryVariable, getElementKind } from '../../utils';
+import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '../../utils';
 import { ElementKind } from '../../types';
 import { createColumnSymbolIndex } from '@/core/types/symbol/symbolIndex';
 import SymbolFactory from '@/core/types/symbol/factory';
@@ -26,7 +26,7 @@ export default class IndexesBinder implements ElementBinder {
   }
 
   bind (): CompileError[] {
-    if (!(this.declarationNode.parent instanceof ElementDeclarationNode) || getElementKind(this.declarationNode.parent).unwrap_or(undefined) !== ElementKind.Table) {
+    if (!(this.declarationNode.parent instanceof ElementDeclarationNode) || !this.declarationNode.parent.isKind(ElementKind.Table)) {
       return [];
     }
 

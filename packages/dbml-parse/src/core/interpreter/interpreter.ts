@@ -10,7 +10,6 @@ import { TablePartialInterpreter } from '@/core/interpreter/elementInterpreter/t
 import { DiagramViewInterpreter } from '@/core/interpreter/elementInterpreter/diagramView';
 import { RecordsInterpreter } from '@/core/interpreter/records';
 import Report from '@/core/types/report';
-import { getElementKind } from '@/core/analyzer/utils';
 import { ElementKind } from '@/core/analyzer/types';
 import { CompileWarning } from '@/core/types/errors';
 import { getTokenPosition } from './utils';
@@ -130,7 +129,7 @@ export default class Interpreter {
   interpret (): Report<Database> {
     // First pass: interpret all non-records elements
     const errors = this.ast.body.flatMap((element) => {
-      switch (getElementKind(element).unwrap_or(undefined)) {
+      switch (element.type?.value.toLowerCase() as ElementKind | undefined) {
         case ElementKind.Table:
           return (new TableInterpreter(element, this.env)).interpret();
         case ElementKind.Note:

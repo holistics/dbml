@@ -14,7 +14,6 @@ import TableGroupBinder from './elementBinder/tableGroup';
 import TablePartialBinder from './elementBinder/tablePartial';
 import { destructureComplexVariableTuple, extractVarNameFromPrimaryVariable } from '@/core/analyzer/utils';
 import { SymbolKind, createNodeSymbolIndex } from '@/core/types/symbol';
-import { getSymbolKind } from '@/core/types/symbol/utils';
 import { getElementNameString, isExpressionAVariableNode } from '@/core/parser/utils';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import { DEFAULT_SCHEMA_NAME } from '@/constants';
@@ -100,7 +99,7 @@ export function lookupAndBindInScope (
   }
 
   let curSymbolTable = initialScope.symbol.symbolTable;
-  let curKind = getSymbolKind(initialScope.symbol);
+  let curKind = initialScope.symbol.kind;
   let curName = initialScope instanceof ElementDeclarationNode ? getElementNameString(initialScope).unwrap_or('<invalid name>') : DEFAULT_SCHEMA_NAME;
 
   if (initialScope instanceof ProgramNode && symbolInfos.length) {

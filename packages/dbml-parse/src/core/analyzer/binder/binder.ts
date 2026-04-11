@@ -4,7 +4,6 @@ import { pickBinder } from '@/core/analyzer/binder/utils';
 import Report from '@/core/types/report';
 import { SyntaxToken } from '@/core/types/tokens';
 import SymbolFactory from '@/core/types/symbol/factory';
-import { getElementKind } from '@/core/analyzer/utils';
 import { ElementKind } from '@/core/analyzer/types';
 import TableBinder from './elementBinder/table';
 
@@ -19,7 +18,7 @@ export default class Binder {
   }
 
   private resolvePartialInjections (): CompileError[] {
-    return this.ast.body.filter((e) => getElementKind(e).unwrap_or('') === ElementKind.Table).flatMap((t) => {
+    return this.ast.body.filter((e) => e.isKind(ElementKind.Table)).flatMap((t) => {
       const binder = new TableBinder(t as ElementDeclarationNode & { type: SyntaxToken }, this.ast, this.symbolFactory);
       return binder.resolvePartialInjections();
     });

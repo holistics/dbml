@@ -1,7 +1,6 @@
 import {
   destructureMemberAccessExpression,
   extractVariableFromExpression,
-  getElementKind,
 } from '@/core/analyzer/utils';
 import {
   extractStringFromIdentifierStream,
@@ -267,7 +266,7 @@ function suggestInTuple (compiler: Compiler, offset: number, tupleContainer: Tup
   // Check if we're in a Records element header
   if (
     element instanceof ElementDeclarationNode
-    && getElementKind(element).unwrap_or(undefined) === ElementKind.Records
+    && element.isKind(ElementKind.Records)
     && !(element.name instanceof CallExpressionNode)
     && isOffsetWithinElementHeader(offset, element)
   ) {
@@ -581,7 +580,7 @@ function suggestInSubField (
       if (
         element instanceof ElementDeclarationNode
         && element.parent instanceof ElementDeclarationNode
-        && getElementKind(element.parent).unwrap_or(undefined) === ElementKind.DiagramView
+        && element.parent.isKind(ElementKind.DiagramView)
       ) {
         return suggestInDiagramViewSubBlock(compiler, offset);
       }
@@ -712,8 +711,7 @@ function suggestInElementHeader (
   offset: number,
   container: ElementDeclarationNode,
 ): CompletionList {
-  const elementKind = getElementKind(container).unwrap_or(undefined);
-  if (elementKind === ElementKind.Records) {
+  if (container.isKind(ElementKind.Records)) {
     return suggestNamesInScope(compiler, offset, container.parent, [
       SymbolKind.Schema,
       SymbolKind.Table,
@@ -736,7 +734,7 @@ function suggestInCallExpression (
   // Check if we're in a Records element header (top-level Records)
   if (
     element instanceof ElementDeclarationNode
-    && getElementKind(element).unwrap_or(undefined) === ElementKind.Records
+    && element.isKind(ElementKind.Records)
     && isOffsetWithinElementHeader(offset, element)
   ) {
     if (inCallee) return suggestNamesInScope(compiler, offset, element.parent, [

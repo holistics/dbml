@@ -47,6 +47,10 @@ export class NodeSymbol {
     this.symbolTable = symbolTable;
     this.filepath = filepath ?? declaration?.filepath ?? DEFAULT_ENTRY;
   }
+
+  isKind (kind: SymbolKind): boolean {
+    return this.kind === kind;
+  }
 }
 
 // A symbol for a schema, contains the schema's symbol table
