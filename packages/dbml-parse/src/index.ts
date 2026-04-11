@@ -54,3 +54,10 @@ export type { DbmlProjectLayout } from '@/compiler/projectLayout/layout';
 export { MemoryProjectLayout } from '@/compiler/projectLayout/layout';
 
 export { Compiler };
+
+export {
+  DBMLCompletionItemProvider,
+  DBMLDefinitionProvider,
+  DBMLReferencesProvider,
+  DBMLDiagnosticsProvider,
+} from '@/services/index';
