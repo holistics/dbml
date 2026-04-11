@@ -1,13 +1,12 @@
 import { CompileError, CompileErrorCode, CompileWarning } from '@/core/types/errors';
 import {
-  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, ProgramNode, SyntaxNode, WildcardNode,
+  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode, WildcardNode,
 } from '@/core/types/nodes';
 import SymbolFactory from '@/core/types/symbol/factory';
 import { SyntaxToken } from '@/core/types/tokens';
 import { ElementValidator } from '@/core/analyzer/validator/types';
 import { isExpressionAQuotedString } from '@/core/parser/utils';
 import SymbolTable from '@/core/types/symbol/symbolTable';
-import { getElementKind } from '@/core/analyzer/utils';
 import { ElementKind } from '@/core/analyzer/types';
 
 export default class CustomValidator implements ElementValidator {
@@ -35,7 +34,7 @@ export default class CustomValidator implements ElementValidator {
   }
 
   private validateContext (): CompileError[] {
-    if (this.declarationNode.parent instanceof ProgramNode || getElementKind(this.declarationNode.parent) !== ElementKind.Project) {
+    if (!(this.declarationNode.parent instanceof ElementDeclarationNode && this.declarationNode.parent.isKind(ElementKind.Project))) {
       return [new CompileError(CompileErrorCode.INVALID_CUSTOM_CONTEXT, 'A Custom element can only appear in a Project', this.declarationNode)];
     }
     return [];

@@ -20,7 +20,7 @@ import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import { aggregateSettingList } from '@/core/analyzer/validator/utils';
 import { ColumnSymbol } from '@/core/types/symbol/symbols';
 import { ElementKind, SettingName } from '@/core/analyzer/types';
-import { convertStringToEnum } from '@/core/utils/chars';
+import { convertStringToEnum } from '@/core/utils/enum';
 import { ElementInterpreter, InterpreterDatabase } from '../types';
 
 export class TablePartialInterpreter implements ElementInterpreter {

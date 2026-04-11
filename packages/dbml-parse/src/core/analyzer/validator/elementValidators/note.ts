@@ -10,7 +10,7 @@ import { isExpressionAQuotedString } from '@/core/parser/utils';
 import { pickValidator } from '@/core/analyzer/validator/utils';
 import SymbolTable from '@/core/types/symbol/symbolTable';
 import { ElementKind } from '@/core/analyzer/types';
-import { destructureComplexVariable, getElementKind } from '@/core/analyzer/utils';
+import { destructureComplexVariable } from '@/core/analyzer/utils';
 import { createStickyNoteSymbolIndex } from '@/core/types/symbol/symbolIndex';
 import { StickyNoteSymbol } from '@/core/types/symbol/symbols';
 
@@ -39,17 +39,10 @@ export default class NoteValidator implements ElementValidator {
   }
 
   private validateContext (): CompileError[] {
+    const parent = this.declarationNode.parent;
     if (
-      !(this.declarationNode.parent instanceof ProgramNode)
-      && !(
-        [
-          ElementKind.Table,
-          ElementKind.TableGroup,
-          ElementKind.TablePartial,
-          ElementKind.Project,
-        ] as (ElementKind | undefined)[]
-      )
-        .includes(getElementKind(this.declarationNode.parent))
+      !(parent instanceof ProgramNode)
+      && !(parent instanceof ElementDeclarationNode && parent.isKind(ElementKind.Table, ElementKind.TableGroup, ElementKind.TablePartial, ElementKind.Project))
     ) {
       return [new CompileError(
         CompileErrorCode.INVALID_NOTE_CONTEXT,

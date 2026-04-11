@@ -22,7 +22,7 @@ import { aggregateSettingList, isValidPartialInjection } from '@/core/analyzer/v
 import { ColumnSymbol } from '@/core/types/symbol/symbols';
 import { destructureIndex, SymbolKind } from '@/core/types/symbol';
 import { ElementKind, SettingName } from '@/core/analyzer/types';
-import { convertStringToEnum } from '@/core/utils/chars';
+import { convertStringToEnum } from '@/core/utils/enum';
 import { ElementInterpreter, InterpreterDatabase } from '../types';
 
 export class TableInterpreter implements ElementInterpreter {

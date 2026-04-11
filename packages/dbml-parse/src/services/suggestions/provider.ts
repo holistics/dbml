@@ -9,7 +9,7 @@ import {
 import Compiler, { ScopeKind } from '@/compiler';
 import { SyntaxToken, SyntaxTokenKind } from '@/core/types/tokens';
 import { isOffsetWithinSpan } from '@/core/utils/span';
-import { convertStringToEnum } from '@/core/utils/chars';
+import { convertStringToEnum } from '@/core/utils/enum';
 import {
   type CompletionList,
   type TextModel,

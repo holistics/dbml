@@ -21,27 +21,6 @@ import {
   isExpressionAQuotedString,
   isExpressionAVariableNode,
 } from '@/core/parser/utils';
-import { ElementKind } from '@/core/analyzer/types';
-
-export function getElementKind (node?: ElementDeclarationNode): ElementKind | undefined {
-  const kind = node?.type?.value.toLowerCase();
-  switch (kind as ElementKind | undefined) {
-    case ElementKind.Enum:
-    case ElementKind.Table:
-    case ElementKind.Indexes:
-    case ElementKind.Note:
-    case ElementKind.Project:
-    case ElementKind.Ref:
-    case ElementKind.TableGroup:
-    case ElementKind.TablePartial:
-    case ElementKind.Check:
-    case ElementKind.Records:
-    case ElementKind.DiagramView:
-      return kind as ElementKind;
-    default:
-      return undefined;
-  }
-}
 
 export function destructureMemberAccessExpression (node?: SyntaxNode): SyntaxNode[] | undefined {
   if (!node) return undefined;

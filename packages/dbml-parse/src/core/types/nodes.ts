@@ -227,8 +227,8 @@ export class ElementDeclarationNode extends SyntaxNode {
     this.body = body;
   }
 
-  isKind (kind: ElementKind): boolean {
-    return this.type?.value.toLowerCase() === kind;
+  isKind (...kinds: ElementKind[]): boolean {
+    return kinds.some((kind) => this.type?.value.toLowerCase() === kind);
   }
 }
 

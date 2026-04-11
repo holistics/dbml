@@ -14,11 +14,10 @@ import {
   WildcardNode,
 } from '@/core/types/nodes';
 import { isExpressionAQuotedString, isExpressionAVariableNode } from '@/core/parser/utils';
-import { aggregateSettingList } from '@/core/analyzer/validator/utils';
-import { isVoid, pickValidator } from '@/core/analyzer/validator/utils';
+import { aggregateSettingList, pickValidator } from '@/core/analyzer/validator/utils';
 import { SyntaxToken } from '@/core/types/tokens';
 import { ElementValidator } from '@/core/analyzer/validator/types';
-import { destructureIndexNode, getElementKind } from '@/core/analyzer/utils';
+import { destructureIndexNode } from '@/core/analyzer/utils';
 import SymbolTable from '@/core/types/symbol/symbolTable';
 import { ElementKind } from '@/core/analyzer/types';
 
@@ -54,8 +53,8 @@ export default class IndexesValidator implements ElementValidator {
     );
     if (this.declarationNode.parent instanceof ProgramNode) return [invalidContextError];
 
-    const elementKind = getElementKind(this.declarationNode.parent);
-    return (elementKind && [ElementKind.Table, ElementKind.TablePartial].includes(elementKind))
+    const parent = this.declarationNode.parent;
+    return (parent instanceof ElementDeclarationNode && parent.isKind(ElementKind.Table, ElementKind.TablePartial))
       ? []
       : [invalidContextError];
   }
@@ -156,7 +155,7 @@ export default class IndexesValidator implements ElementValidator {
             attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.DUPLICATE_INDEX_SETTING, `'${name}' can only appear once`, attr)));
           }
           attrs.forEach((attr) => {
-            if (!isVoid(attr.value)) {
+            if (attr.value !== undefined) {
               errors.push(new CompileError(CompileErrorCode.INVALID_INDEX_SETTING_VALUE, `'${name}' must not have a value`, attr));
             }
           });

@@ -15,7 +15,6 @@ import { isExpressionAQuotedString } from '@/core/parser/utils';
 import { aggregateSettingList, pickValidator } from '@/core/analyzer/validator/utils';
 import { SyntaxToken } from '@/core/types/tokens';
 import { ElementValidator } from '@/core/analyzer/validator/types';
-import { getElementKind } from '@/core/analyzer/utils';
 import SymbolTable from '@/core/types/symbol/symbolTable';
 import { ElementKind } from '@/core/analyzer/types';
 
@@ -51,8 +50,8 @@ export default class ChecksValidator implements ElementValidator {
     );
     if (this.declarationNode.parent instanceof ProgramNode) return [invalidContextError];
 
-    const elementKind = getElementKind(this.declarationNode.parent);
-    return (elementKind && [ElementKind.Table, ElementKind.TablePartial].includes(elementKind))
+    const parent = this.declarationNode.parent;
+    return (parent instanceof ElementDeclarationNode && parent.isKind(ElementKind.Table, ElementKind.TablePartial))
       ? []
       : [invalidContextError];
   }

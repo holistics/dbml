@@ -21,7 +21,6 @@ import {
   isValidColor,
   isValidColumnType,
   isValidDefaultValue,
-  isVoid,
   registerSchemaStack,
   pickValidator,
 } from '@/core/analyzer/validator/utils';
@@ -302,7 +301,7 @@ export default class TablePartialValidator implements ElementValidator {
             errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, `'${name}' can only appear once`, attr)));
           }
           attrs.forEach((attr) => {
-            if (!isVoid(attr.value)) {
+            if (attr.value !== undefined) {
               errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, `'${name}' must not have a value`, attr.value || attr.name!));
             }
           });
@@ -313,7 +312,7 @@ export default class TablePartialValidator implements ElementValidator {
             errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, `'${name}' can only appear once`, attr)));
           }
           attrs.forEach((attr) => {
-            if (attr instanceof AttributeNode && !isVoid(attr.value)) {
+            if (attr instanceof AttributeNode && attr.value !== undefined) {
               errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, `'${name}' must not have a value`, attr.value || attr.name!));
             }
           });
@@ -332,7 +331,7 @@ export default class TablePartialValidator implements ElementValidator {
             )));
           }
           attrs.forEach((attr) => {
-            if (!isVoid(attr.value)) {
+            if (attr.value !== undefined) {
               errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, `'${name}' must not have a value`, attr.value || attr.name!));
             }
           });
@@ -344,7 +343,7 @@ export default class TablePartialValidator implements ElementValidator {
             errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, `'${name}' can only appear once`, attr)));
           }
           attrs.forEach((attr) => {
-            if (!isVoid(attr.value)) {
+            if (attr.value !== undefined) {
               errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, `'${name}' must not have a value`, attr.value || attr.name!));
             }
           });
@@ -355,7 +354,7 @@ export default class TablePartialValidator implements ElementValidator {
             errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, `'${name}' can only appear once`, attr)));
           }
           attrs.forEach((attr) => {
-            if (attr instanceof AttributeNode && !isVoid(attr.value)) {
+            if (attr instanceof AttributeNode && attr.value !== undefined) {
               errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, `'${name}' must not have a value`, attr.value || attr.name!));
             }
           });
@@ -366,7 +365,7 @@ export default class TablePartialValidator implements ElementValidator {
             errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, `'${name}' can only appear once`, attr)));
           }
           attrs.forEach((attr) => {
-            if (attr instanceof AttributeNode && !isVoid(attr.value)) {
+            if (attr instanceof AttributeNode && attr.value !== undefined) {
               errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, `'${name}' must not have a value`, attr.value || attr.name!));
             }
           });

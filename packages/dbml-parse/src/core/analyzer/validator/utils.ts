@@ -36,7 +36,7 @@ import { NUMERIC_LITERAL_PREFIX } from '@/constants';
 import Report from '@/core/types/report';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import { ElementKind } from '@/core/analyzer/types';
-import { convertStringToEnum } from '@/core/utils/chars';
+import { convertStringToEnum } from '@/core/utils/enum';
 import TablePartialValidator from './elementValidators/tablePartial';
 import ChecksValidator from './elementValidators/checks';
 import RecordsValidator from './elementValidators/records';
@@ -181,11 +181,6 @@ export function isValidColor (value?: SyntaxNode): boolean {
   }
 
   return true;
-}
-
-// Is the value non-existent
-export function isVoid (value?: SyntaxNode): boolean {
-  return value === undefined;
 }
 
 // Is the `value` a valid value for a column's `default` setting

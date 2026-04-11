@@ -11,7 +11,7 @@ import { DiagramViewInterpreter } from '@/core/interpreter/elementInterpreter/di
 import { RecordsInterpreter } from '@/core/interpreter/records';
 import Report from '@/core/types/report';
 import { ElementKind } from '@/core/analyzer/types';
-import { convertStringToEnum } from '@/core/utils/chars';
+import { convertStringToEnum } from '@/core/utils/enum';
 import { CompileWarning } from '@/core/types/errors';
 import { getTokenPosition } from './utils';
 import { InterpreterDatabase } from './types';
