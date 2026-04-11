@@ -23,7 +23,7 @@ function getNameHint (node: SyntaxNode | SyntaxToken): string {
     return `${node.literal?.value || ''}`;
   }
   if (node instanceof ElementDeclarationNode) {
-    return `${getElementNameString(node).unwrap_or(undefined) || ''}`;
+    return `${getElementNameString(node) || ''}`;
   }
   return '';
 }

@@ -409,9 +409,8 @@ export default class Parser {
 
     // Try interpreting the function application as an element declaration expression
     // if fail, fall back to the generic function application
-    const buildExpression = () => convertFuncAppToElem(args.callee, args.args, this.nodeFactory).unwrap_or(
-      this.nodeFactory.create(FunctionApplicationNode, args),
-    );
+    const buildExpression = () => convertFuncAppToElem(args.callee, args.args, this.nodeFactory)
+      ?? this.nodeFactory.create(FunctionApplicationNode, args);
 
     try {
       args.callee = this.commaExpression();

@@ -47,7 +47,7 @@ export class DiagramViewInterpreter implements ElementInterpreter {
   }
 
   private interpretName (nameNode: SyntaxNode): CompileError[] {
-    const fragments = destructureComplexVariable(nameNode).unwrap_or([]);
+    const fragments = destructureComplexVariable(nameNode) ?? [];
     if (fragments.length > 0) {
       this.diagramView.name = fragments[fragments.length - 1];
       if (fragments.length > 1) {
@@ -150,7 +150,7 @@ export class DiagramViewInterpreter implements ElementInterpreter {
       // resolve the real name from the referee's declaration
       const referee = extractReferee(field.callee);
       if (referee?.declaration instanceof ElementDeclarationNode) {
-        const realFragments = destructureComplexVariable(referee.declaration.name).unwrap_or([]);
+        const realFragments = destructureComplexVariable(referee.declaration.name) ?? [];
         if (realFragments.length > 0) {
           const name = realFragments[realFragments.length - 1];
           const schemaName = realFragments.length > 1 ? realFragments.slice(0, -1).join('.') : DEFAULT_SCHEMA_NAME;
@@ -160,7 +160,7 @@ export class DiagramViewInterpreter implements ElementInterpreter {
       }
 
       // Fallback: use the literal text (for unbound references or non-table blocks)
-      const fragments = destructureComplexVariable(field.callee).unwrap_or([]);
+      const fragments = destructureComplexVariable(field.callee) ?? [];
       if (fragments.length === 0) continue;
 
       const name = fragments[fragments.length - 1];

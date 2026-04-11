@@ -78,8 +78,8 @@ export default class EnumValidator implements ElementValidator {
     const { name } = this.declarationNode;
 
     const maybeNameFragments = destructureComplexVariable(name);
-    if (maybeNameFragments.isOk()) {
-      const nameFragments = maybeNameFragments.unwrap();
+    if (maybeNameFragments !== undefined) {
+      const nameFragments = maybeNameFragments;
       const enumName = nameFragments.pop()!;
       const symbolTable = registerSchemaStack(nameFragments, this.publicSymbolTable, this.symbolFactory);
       const enumId = createEnumSymbolIndex(enumName);
@@ -182,7 +182,7 @@ export default class EnumValidator implements ElementValidator {
 
   registerField (field: FunctionApplicationNode): CompileError[] {
     if (field.callee && isExpressionAVariableNode(field.callee)) {
-      const enumFieldName = extractVarNameFromPrimaryVariable(field.callee).unwrap();
+      const enumFieldName = extractVarNameFromPrimaryVariable(field.callee)!;
       const enumFieldId = createEnumFieldSymbolIndex(enumFieldName);
 
       const enumSymbol = this.symbolFactory.create(EnumFieldSymbol, { declaration: field });

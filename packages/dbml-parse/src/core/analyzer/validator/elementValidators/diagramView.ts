@@ -85,8 +85,8 @@ export default class DiagramViewValidator implements ElementValidator {
     const { name } = this.declarationNode;
     this.declarationNode.symbol = this.symbolFactory.create(DiagramViewSymbol, { declaration: this.declarationNode, symbolTable: new SymbolTable() });
     const maybeNameFragments = destructureComplexVariable(name);
-    if (maybeNameFragments.isOk()) {
-      const nameFragments = maybeNameFragments.unwrap();
+    if (maybeNameFragments !== undefined) {
+      const nameFragments = maybeNameFragments;
       const diagramViewName = nameFragments.pop()!;
       const symbolTable = registerSchemaStack(nameFragments, this.publicSymbolTable, this.symbolFactory);
       const diagramViewId = createDiagramViewSymbolIndex(diagramViewName);
@@ -236,7 +236,7 @@ export default class DiagramViewValidator implements ElementValidator {
         // Wildcards are per-sub-block and don't need uniqueness tracking
         if (isWildcardExpression(field.callee)) continue;
 
-        const fieldName = extractVarNameFromPrimaryVariable(field.callee).unwrap();
+        const fieldName = extractVarNameFromPrimaryVariable(field.callee)!;
         const fieldId = createDiagramViewFieldSymbolIndex(fieldName);
 
         const fieldSymbol = this.symbolFactory.create(DiagramViewFieldSymbol, { declaration: field });

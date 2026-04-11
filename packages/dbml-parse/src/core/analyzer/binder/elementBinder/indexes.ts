@@ -55,11 +55,10 @@ export default class IndexesBinder implements ElementBinder {
       if (!field.callee) {
         return [];
       }
-      const ownerTableName = destructureComplexVariable(
-        (this.declarationNode.parent! as ElementDeclarationNode).name,
-      ).map(
-        (fragments) => fragments.join('.'),
-      ).unwrap_or('<unnamed>');
+      const ownerTableName = (() => {
+        const frags = destructureComplexVariable((this.declarationNode.parent! as ElementDeclarationNode).name);
+        return frags !== undefined ? frags.join('.') : '<unnamed>';
+      })();
       const ownerTableSymbolTable = this.declarationNode.parent!.symbol!.symbolTable!;
 
       const args = [field.callee, ...field.args];
@@ -76,7 +75,7 @@ export default class IndexesBinder implements ElementBinder {
         });
 
       return bindees.flatMap((bindee) => {
-        const columnName = extractVarNameFromPrimaryVariable(bindee).unwrap_or(undefined);
+        const columnName = extractVarNameFromPrimaryVariable(bindee);
         if (columnName === undefined) return [];
         const columnIndex = createColumnSymbolIndex(columnName);
         const column = ownerTableSymbolTable.get(columnIndex);

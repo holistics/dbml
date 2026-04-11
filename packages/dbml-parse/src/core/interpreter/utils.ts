@@ -22,10 +22,10 @@ import { isExpressionASignedNumberExpression, isValidPartialInjection } from '..
 import { InterpreterDatabase } from './types';
 
 export function extractNamesFromRefOperand (operand: SyntaxNode, owner?: Table): { schemaName: string | null; tableName: string; fieldNames: string[] } {
-  const { variables, tupleElements } = destructureComplexVariableTuple(operand).unwrap();
+  const { variables, tupleElements } = destructureComplexVariableTuple(operand)!;
 
-  const tupleNames = tupleElements.map((e) => extractVarNameFromPrimaryVariable(e).unwrap());
-  const variableNames = variables.map((e) => extractVarNameFromPrimaryVariable(e).unwrap());
+  const tupleNames = tupleElements.map((e) => extractVarNameFromPrimaryVariable(e)!);
+  const variableNames = variables.map((e) => extractVarNameFromPrimaryVariable(e)!);
 
   if (tupleElements.length) {
     if (variables.length === 0) {
@@ -92,7 +92,7 @@ export function getTokenPosition (node: SyntaxNode): TokenPosition {
 }
 
 export function getColumnSymbolsOfRefOperand (ref: SyntaxNode): ColumnSymbol[] {
-  const colNode = destructureMemberAccessExpression(ref).unwrap_or(undefined)?.pop();
+  const colNode = destructureMemberAccessExpression(ref)?.pop();
   if (colNode instanceof TupleExpressionNode) {
     return colNode.elementList.map((e) => e.referee as ColumnSymbol);
   }
@@ -100,7 +100,7 @@ export function getColumnSymbolsOfRefOperand (ref: SyntaxNode): ColumnSymbol[] {
 }
 
 export function extractElementName (nameNode: SyntaxNode): { schemaName: string[]; name: string } {
-  const fragments = destructureComplexVariable(nameNode).unwrap();
+  const fragments = destructureComplexVariable(nameNode)!;
   const name = fragments.pop()!;
 
   return {
@@ -165,7 +165,7 @@ export function processDefaultValue (valueNode?: SyntaxNode):
 
   if (isExpressionAQuotedString(valueNode)) {
     return {
-      value: extractQuotedStringToken(valueNode).unwrap(),
+      value: extractQuotedStringToken(valueNode)!,
       type: 'string',
     };
   }
@@ -194,7 +194,7 @@ export function processDefaultValue (valueNode?: SyntaxNode):
 
   if (isDotDelimitedIdentifier(valueNode)) {
     return {
-      value: destructureMemberAccessExpression(valueNode).map(last).and_then(extractVariableFromExpression).unwrap(),
+      value: extractVariableFromExpression(last(destructureMemberAccessExpression(valueNode)))!,
       type: 'string',
     };
   }
@@ -215,10 +215,10 @@ export function processColumnType (typeNode: SyntaxNode, env: InterpreterDatabas
         return getNumberTextFromExpression(e);
       }
       if (isExpressionAQuotedString(e)) {
-        return extractQuotedStringToken(e).unwrap();
+        return extractQuotedStringToken(e)!;
       }
       // e can only be an identifier here
-      return extractVariableFromExpression(e).unwrap();
+      return extractVariableFromExpression(e)!;
     }).join(',');
     typeSuffix = `(${typeArgs})`;
 
@@ -248,10 +248,10 @@ export function processColumnType (typeNode: SyntaxNode, env: InterpreterDatabas
           return getNumberTextFromExpression(e);
         }
         if (isExpressionAQuotedString(e)) {
-          return extractQuotedStringToken(e).unwrap();
+          return extractQuotedStringToken(e)!;
         }
         // e can only be an identifier here
-        return extractVariableFromExpression(e).unwrap();
+        return extractVariableFromExpression(e)!;
       })
         .join(',');
       typeSuffix = `(${args})${typeSuffix}`;
@@ -347,7 +347,7 @@ export function mergeTableAndPartials (table: Table, env: InterpreterDatabase): 
 
     if (isValidPartialInjection(subfield.callee)) {
       // Inject partial fields
-      const partialName = extractVariableFromExpression(subfield.callee.expression).unwrap_or(undefined);
+      const partialName = extractVariableFromExpression(subfield.callee.expression);
       const partial = partialMap.get(partialName!);
       if (!partial) continue;
 
@@ -358,7 +358,7 @@ export function mergeTableAndPartials (table: Table, env: InterpreterDatabase): 
       }
     } else {
       // Add direct field definition
-      const columnName = extractVariableFromExpression(subfield.callee).unwrap();
+      const columnName = extractVariableFromExpression(subfield.callee)!;
       const column = directFieldMap.get(columnName);
       if (!column) continue;
       allFields.push(column);

@@ -145,7 +145,7 @@ export function getColumnsFromTableSymbol (
   const columns: Array<{ name: string; type: string }> = [];
 
   for (const [index, columnSymbol] of tableSymbol.symbolTable.entries()) {
-    const res = destructureIndex(index).unwrap_or(undefined);
+    const res = destructureIndex(index);
     if (res === undefined || res.kind !== SymbolKind.Column) continue;
     if (!(columnSymbol instanceof ColumnSymbol || columnSymbol instanceof TablePartialInjectedColumnSymbol)) continue;
     const columnInfo = extractNameAndTypeOfColumnSymbol(columnSymbol, res.name);
@@ -167,8 +167,8 @@ export function extractNameAndTypeOfColumnSymbol (
     : columnSymbol.declaration;
   if (!(columnDeclaration instanceof FunctionApplicationNode)) return null;
 
-  const name = extractVariableFromExpression(columnDeclaration.callee).unwrap_or(null);
-  const type = extractVariableFromExpression(columnDeclaration.args[0]).unwrap_or(null);
+  const name = extractVariableFromExpression(columnDeclaration.callee) ?? null;
+  const type = extractVariableFromExpression(columnDeclaration.args[0]) ?? null;
 
   if (name === null || type === null) return null;
 

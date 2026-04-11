@@ -72,7 +72,7 @@ function suggestRecordRowInTopLevelRecords (
       if (!symbol || !(symbol instanceof ColumnSymbol || symbol instanceof TablePartialInjectedColumnSymbol)) {
         return null;
       }
-      const columnName = extractVariableFromExpression(element).unwrap_or(undefined);
+      const columnName = extractVariableFromExpression(element);
       if (!columnName) return null;
       const result = extractNameAndTypeOfColumnSymbol(symbol, columnName);
       return result;
@@ -127,7 +127,7 @@ function suggestRecordRowInNestedRecords (
         if (!symbol || !(symbol instanceof ColumnSymbol || symbol instanceof TablePartialInjectedColumnSymbol)) {
           return null;
         }
-        const columnName = extractVariableFromExpression(element).unwrap_or(undefined);
+        const columnName = extractVariableFromExpression(element);
         if (columnName === undefined) return null;
         return extractNameAndTypeOfColumnSymbol(symbol, columnName);
       })

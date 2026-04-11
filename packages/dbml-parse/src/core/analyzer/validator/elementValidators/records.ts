@@ -245,7 +245,7 @@ export default class RecordsValidator implements ElementValidator {
 
     // Member access for enum field references: status.active, myschema.status.pending
     if (isAccessExpression(value)) {
-      const fragments = destructureComplexVariable(value).unwrap_or(undefined);
+      const fragments = destructureComplexVariable(value);
       return fragments !== undefined && fragments.length > 0;
     }
 

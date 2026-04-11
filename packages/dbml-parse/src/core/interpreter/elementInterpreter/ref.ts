@@ -39,7 +39,7 @@ export class RefInterpreter implements ElementInterpreter {
   private interpretName (_nameNode: SyntaxNode): CompileError[] {
     const errors: CompileError[] = [];
 
-    const fragments = destructureComplexVariable(this.declarationNode.name!).unwrap_or([]);
+    const fragments = destructureComplexVariable(this.declarationNode.name!) ?? [];
     this.ref.name = fragments.pop() || null;
     if (fragments.length > 1) {
       errors.push(new CompileError(CompileErrorCode.UNSUPPORTED, 'Nested schema is not supported', this.declarationNode.name!));
@@ -81,13 +81,13 @@ export class RefInterpreter implements ElementInterpreter {
 
       const deleteSetting = settingMap.delete?.at(0)?.value;
       this.ref.onDelete = deleteSetting instanceof IdentiferStreamNode
-        ? extractStringFromIdentifierStream(deleteSetting).unwrap_or(undefined)
-        : extractVariableFromExpression(deleteSetting).unwrap_or(undefined) as string;
+        ? extractStringFromIdentifierStream(deleteSetting)
+        : extractVariableFromExpression(deleteSetting) as string;
 
       const updateSetting = settingMap.update?.at(0)?.value;
       this.ref.onUpdate = updateSetting instanceof IdentiferStreamNode
-        ? extractStringFromIdentifierStream(updateSetting).unwrap_or(undefined)
-        : extractVariableFromExpression(updateSetting).unwrap_or(undefined) as string;
+        ? extractStringFromIdentifierStream(updateSetting)
+        : extractVariableFromExpression(updateSetting) as string;
 
       this.ref.color = settingMap.color?.length ? extractColor(settingMap.color?.at(0)?.value as any) : undefined;
     }

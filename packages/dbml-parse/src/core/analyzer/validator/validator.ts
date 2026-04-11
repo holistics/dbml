@@ -48,7 +48,7 @@ export default class Validator {
       warnings.push(...result.warnings);
     });
 
-    const projects = this.ast.body.filter((e) => getElementKind(e).unwrap_or(undefined) === ElementKind.Project);
+    const projects = this.ast.body.filter((e) => getElementKind(e) === ElementKind.Project);
     if (projects.length > 1) {
       projects.forEach((project) => errors.push(new CompileError(CompileErrorCode.PROJECT_REDEFINED, 'Only one project can exist', project)));
     }

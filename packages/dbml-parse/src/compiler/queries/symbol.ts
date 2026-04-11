@@ -11,7 +11,7 @@ export function symbolMembers (this: Compiler, ownerSymbol: NodeSymbol) {
   }
 
   return [...ownerSymbol.symbolTable.entries()].map(([index, symbol]) => ({
-    ...destructureIndex(index).unwrap(),
+    ...destructureIndex(index)!,
     symbol,
   }));
 }
@@ -42,7 +42,7 @@ export function symbolOfName (this: Compiler, nameStack: string[], owner: Elemen
       currentPossibleSymbols = currentPossibleSymbolTables.flatMap((st) =>
         generatePossibleIndexes(name).flatMap((index) => {
           const symbol = st.get(index);
-          const desRes = destructureIndex(index).unwrap_or(undefined);
+          const desRes = destructureIndex(index);
 
           return !symbol || !desRes ? [] : { ...desRes, symbol };
         }),

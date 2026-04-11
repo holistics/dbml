@@ -46,7 +46,7 @@ export default class TableBinder implements ElementBinder {
       .filter((i) => i instanceof FunctionApplicationNode && isValidPartialInjection(i.callee))
       .reverse() // Warning: `reverse` mutates, but it's safe because we're working on a filtered array
       .flatMap((i) => {
-        const fragments = destructureComplexVariableTuple(((i as FunctionApplicationNode).callee as PrefixExpressionNode).expression).unwrap_or(undefined);
+        const fragments = destructureComplexVariableTuple(((i as FunctionApplicationNode).callee as PrefixExpressionNode).expression);
         if (!fragments) return [];
         const tablePartialBindee = fragments.variables.pop();
         const schemaBindees = fragments.variables;
@@ -61,7 +61,7 @@ export default class TableBinder implements ElementBinder {
         ]);
         if (errors.length) return errors;
         tablePartialBindee.referee?.symbolTable?.forEach((value) => {
-          const columnName = extractVariableFromExpression((value.declaration as FunctionApplicationNode).callee).unwrap_or(undefined);
+          const columnName = extractVariableFromExpression((value.declaration as FunctionApplicationNode).callee);
           if (columnName === undefined) return;
           const injectedColumnSymbol = this.symbolFactory.create(
             TablePartialInjectedColumnSymbol,
@@ -125,7 +125,7 @@ export default class TableBinder implements ElementBinder {
   }
 
   private tryToBindColumnType (typeNode: SyntaxNode) {
-    const fragments = destructureComplexVariableTuple(typeNode).unwrap_or(undefined);
+    const fragments = destructureComplexVariableTuple(typeNode);
     if (!fragments) {
       return;
     }
@@ -158,7 +158,7 @@ export default class TableBinder implements ElementBinder {
       }
     }
 
-    const fragments = destructureComplexVariableTuple(defaultValue).unwrap_or(undefined);
+    const fragments = destructureComplexVariableTuple(defaultValue);
     if (!fragments) {
       return [];
     }

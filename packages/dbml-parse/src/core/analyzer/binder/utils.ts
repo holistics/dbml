@@ -61,7 +61,7 @@ export function scanNonListNodeForBinding (node?: SyntaxNode):
   }
 
   if (node instanceof InfixExpressionNode) {
-    const fragments = destructureComplexVariableTuple(node).unwrap_or(undefined);
+    const fragments = destructureComplexVariableTuple(node);
     if (!fragments) {
       return [...scanNonListNodeForBinding(node.leftExpression), ...scanNonListNodeForBinding(node.rightExpression)];
     }
@@ -78,7 +78,7 @@ export function scanNonListNodeForBinding (node?: SyntaxNode):
   }
 
   if (node instanceof TupleExpressionNode) {
-    const fragments = destructureComplexVariableTuple(node).unwrap_or(undefined);
+    const fragments = destructureComplexVariableTuple(node);
     if (!fragments) {
       // Tuple elements are not simple variables (e.g., member access expressions like table.column)
       // Recurse into each element
@@ -101,11 +101,11 @@ export function lookupAndBindInScope (
 
   let curSymbolTable = initialScope.symbol.symbolTable;
   let curKind = initialScope.symbol.kind;
-  let curName = initialScope instanceof ElementDeclarationNode ? getElementNameString(initialScope).unwrap_or('<invalid name>') : DEFAULT_SCHEMA_NAME;
+  let curName = initialScope instanceof ElementDeclarationNode ? (getElementNameString(initialScope) ?? '<invalid name>') : DEFAULT_SCHEMA_NAME;
 
   if (initialScope instanceof ProgramNode && symbolInfos.length) {
     const { node, kind } = symbolInfos[0];
-    const name = extractVarNameFromPrimaryVariable(node).unwrap_or('<unnamed>');
+    const name = extractVarNameFromPrimaryVariable(node) ?? '<unnamed>';
     if (name === DEFAULT_SCHEMA_NAME && kind === SymbolKind.Schema) {
       symbolInfos.shift();
     }
@@ -113,7 +113,7 @@ export function lookupAndBindInScope (
 
   for (const curSymbolInfo of symbolInfos) {
     const { node, kind } = curSymbolInfo;
-    const name = extractVarNameFromPrimaryVariable(node).unwrap_or('<unnamed>');
+    const name = extractVarNameFromPrimaryVariable(node) ?? '<unnamed>';
     const index = createNodeSymbolIndex(name, kind);
     const symbol = curSymbolTable.get(index);
 
