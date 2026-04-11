@@ -136,6 +136,11 @@ export default class TableBinder {
     const errors: CompileError[] = [];
     const schemaBindees = fragments.variables;
 
+    // Collect errors from schema components — errors are silently dropped by
+    // nodeRefereeOfLeftExpression, so we must bind them explicitly here.
+    for (const schemaBind of schemaBindees) {
+      errors.push(...this.compiler.nodeReferee(schemaBind).getErrors());
+    }
     // Collect errors from enum bindee (reports error if enum doesn't exist)
     errors.push(...this.compiler.nodeReferee(enumBindee).getErrors());
     // Collect errors from enum field bindee

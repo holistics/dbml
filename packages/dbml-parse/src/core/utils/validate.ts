@@ -137,7 +137,7 @@ export function isValidDefaultValue (value?: SyntaxNode): boolean {
   if (!value) return false;
   if (!isDotDelimitedIdentifier(value)) return false;
   const fragments = destructureMemberAccessExpression(value);
-  return fragments?.length === 2 || fragments?.length === 3;
+  return (fragments?.length ?? 0) >= 2;
 }
 
 export type SignedNumberExpression =
