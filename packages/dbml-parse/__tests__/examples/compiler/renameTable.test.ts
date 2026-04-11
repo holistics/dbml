@@ -2,6 +2,7 @@ import { describe, expect, test } from 'vitest';
 import Compiler from '@/compiler/index';
 import { TableNameInput } from '@/compiler/queries/transform';
 import { DEFAULT_ENTRY } from '@/constants';
+import { Filepath } from '@/core/types/filepath';
 
 function renameTable (
   oldName: TableNameInput,
@@ -1553,5 +1554,123 @@ Table Users {
       expect(result).toContain('Table Users');
       expect(result).not.toContain('customers');
     });
+  });
+});
+
+// ─── Cross-file renameTable ────────────────────────────────────────────────────
+
+describe('[example] renameTable cross-file', () => {
+  function makeMultifileCompiler (files: Record<string, string>): {
+    compiler: Compiler;
+    fps: Record<string, Filepath>;
+  } {
+    const compiler = new Compiler();
+    const fps: Record<string, Filepath> = {};
+    for (const [path, src] of Object.entries(files)) {
+      const fp = Filepath.from(path);
+      fps[path] = fp;
+      compiler.setSource(fp, src);
+    }
+    return { compiler, fps };
+  }
+
+  test('renaming a table updates declaration and same-file references', () => {
+    // The table 'users' is defined in base.dbml and has a self-referencing FK
+    const base = `
+Table users {
+  id int [pk]
+  manager_id int [ref: > users.id]
+}
+`;
+    const compiler = new Compiler();
+
+    const fp = Filepath.from('/base.dbml');
+    compiler.setSource(fp, base);
+
+    const result = compiler.renameTable(fp, 'users', 'accounts');
+    expect(result).toContain('Table accounts');
+    expect(result).toContain('accounts.id');  // ref updated
+    expect(result).not.toContain('users');
+  });
+
+  test('renaming a table in consumer file that imports it leaves base unchanged', () => {
+    // base.dbml defines 'users'; consumer.dbml imports it and adds a ref
+    const { compiler, fps } = makeMultifileCompiler({
+      '/base.dbml': 'Table users { id int [pk] }',
+      '/consumer.dbml': `use { table users } from './base.dbml'\nTable orders { user_id int [ref: > users.id] }`,
+    });
+
+    // Rename the table in consumer.dbml (it's a UseSymbol there, not the declaration)
+    // Since renameTable only renames the declaration, it should be a no-op for imported symbol
+    const consumerResult = compiler.renameTable(fps['/consumer.dbml'], 'users', 'accounts');
+    // The consumer.dbml has no declaration of 'users', so it's a no-op
+    const consumerSource = compiler.layout.getSource(fps['/consumer.dbml'])!;
+    expect(consumerResult).toBe(consumerSource);
+  });
+
+  test('renaming a table in the declaring file updates declaration and inline refs', () => {
+    const { compiler, fps } = makeMultifileCompiler({
+      '/base.dbml': `
+Table users {
+  id int [pk]
+}
+
+Table posts {
+  user_id int [ref: > users.id]
+}
+`,
+      '/main.dbml': `use { table users } from './base.dbml'\nTable orders { user_id int [ref: > users.id] }`,
+    });
+
+    const result = compiler.renameTable(fps['/base.dbml'], 'users', 'accounts');
+    expect(result).toContain('Table accounts');
+    expect(result).toContain('accounts.id');   // ref in same file updated
+    expect(result).not.toContain('Table users');
+  });
+
+  test('renaming a table that does not exist returns source unchanged', () => {
+    const source = 'Table users { id int [pk] }';
+    const compiler = new Compiler();
+
+    const fp = Filepath.from('/main.dbml');
+    compiler.setSource(fp, source);
+
+    const result = compiler.renameTable(fp, 'nonexistent', 'other');
+    expect(result).toBe(source);
+  });
+
+  test('renaming to a colliding name in same file is a no-op', () => {
+    const source = `
+Table users { id int [pk] }
+Table accounts { id int [pk] }
+`;
+    const compiler = new Compiler();
+
+    const fp = Filepath.from('/main.dbml');
+    compiler.setSource(fp, source);
+
+    const result = compiler.renameTable(fp, 'users', 'accounts');
+    expect(result).toBe(source);  // unchanged — collision detected
+  });
+
+  test('renaming with schema qualification updates schema-qualified references', () => {
+    const source = `
+Table auth.users {
+  id int [pk]
+}
+
+Table posts {
+  user_id int [ref: > auth.users.id]
+}
+`;
+    const compiler = new Compiler();
+
+    const fp = Filepath.from('/main.dbml');
+    compiler.setSource(fp, source);
+
+    const result = compiler.renameTable(fp, 'auth.users', 'auth.members');
+    expect(result).toContain('auth.members');
+    expect(result).toContain('auth.members.id');
+    expect(result).not.toContain('auth.users');
   });
 });

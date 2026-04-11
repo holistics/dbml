@@ -160,3 +160,110 @@ DiagramView my_view {
     expect(newDbml).toContain('posts');
   });
 });
+
+// ─── syncDiagramView across multifile content ────────────────────────────────
+
+describe('syncDiagramView - multifile scenarios', () => {
+  it('appends a new view to a file that imports tables from another file', () => {
+    const dbml = `use { table users } from './base.dbml'
+
+Table orders {
+  id int [pk]
+}
+`;
+    const { newDbml } = syncDiagramView(dbml, [
+      {
+        operation: 'create',
+        name: 'overview',
+        visibleEntities: {
+          tables: [{ name: 'users', schemaName: null }, { name: 'orders', schemaName: null }],
+          stickyNotes: null,
+          tableGroups: null,
+          schemas: null,
+        },
+      },
+    ]);
+    expect(newDbml).toContain('DiagramView overview');
+    expect(newDbml).toContain('users');
+    expect(newDbml).toContain('orders');
+    expect(newDbml).toContain("use { table users } from './base.dbml'");
+  });
+
+  it('deletes a view without touching import statements', () => {
+    const dbml = `use { table users } from './base.dbml'
+
+DiagramView old_view {
+  Tables { users }
+}
+`;
+    const { newDbml } = syncDiagramView(dbml, [
+      { operation: 'delete', name: 'old_view' },
+    ]);
+    expect(newDbml).not.toContain('DiagramView old_view');
+    expect(newDbml).toContain("use { table users } from './base.dbml'");
+  });
+
+  it('renames a view in a file that has both imports and local tables', () => {
+    const dbml = `use { table users } from './base.dbml'
+
+Table orders { id int [pk] }
+
+DiagramView main {
+  Tables { users }
+}
+`;
+    const { newDbml } = syncDiagramView(dbml, [
+      { operation: 'update', name: 'main', newName: 'dashboard' },
+    ]);
+    expect(newDbml).toContain('DiagramView dashboard');
+    expect(newDbml).not.toContain('DiagramView main');
+    expect(newDbml).toContain("use { table users }");
+    expect(newDbml).toContain('Table orders');
+  });
+
+  it('applies sequential create then delete operations', () => {
+    const dbml = 'Table users { id int [pk] }';
+    const { newDbml } = syncDiagramView(dbml, [
+      {
+        operation: 'create',
+        name: 'temp_view',
+        visibleEntities: { tables: null, stickyNotes: null, tableGroups: null, schemas: null },
+      },
+      { operation: 'delete', name: 'temp_view' },
+    ]);
+    expect(newDbml).not.toContain('DiagramView temp_view');
+    expect(newDbml).toContain('Table users');
+  });
+
+  it('handles create + rename in the same batch', () => {
+    const dbml = 'Table users { id int [pk] }';
+    const { newDbml } = syncDiagramView(dbml, [
+      {
+        operation: 'create',
+        name: 'v1',
+        visibleEntities: { tables: null, stickyNotes: null, tableGroups: null, schemas: null },
+      },
+      { operation: 'update', name: 'v1', newName: 'v2' },
+    ]);
+    expect(newDbml).toContain('DiagramView v2');
+    expect(newDbml).not.toContain('DiagramView v1');
+  });
+
+  it('create with tables subblock serialises table names correctly', () => {
+    const { newDbml } = syncDiagramView('', [
+      {
+        operation: 'create',
+        name: 'overview',
+        visibleEntities: {
+          tables: [{ name: 'users' }, { name: 'orders' }],
+          stickyNotes: null,
+          tableGroups: null,
+          schemas: null,
+        },
+      },
+    ]);
+    expect(newDbml).toContain('Tables {');
+    expect(newDbml).toContain('users');
+    expect(newDbml).toContain('orders');
+  });
+});

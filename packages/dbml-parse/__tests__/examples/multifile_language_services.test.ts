@@ -8,7 +8,7 @@ import { UseStatementMerger } from '@/services/completion/utils/useStatementMerg
 import { MockTextModel, createPosition } from '../utils';
 import { Filepath } from '@/core/types/filepath';
 
-const SAMPLES_DIR = __dirname;
+const SAMPLES_DIR = join(__dirname, '../samples');
 
 /**
  * Helper to load a multifile sample project

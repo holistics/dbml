@@ -207,7 +207,7 @@ export function renameTable (
   oldName: TableNameInput,
   newName: TableNameInput,
 ): string {
-  const source = this.parse.source();
+  const source = this.layout.getSource(filepath) ?? '';
 
   const normalizedOld = normalizeTableName(oldName);
   const normalizedNew = normalizeTableName(newName);
@@ -228,6 +228,14 @@ export function renameTable (
     return source;
   }
 
+  // Only rename when the symbol is declared in the target file.
+  // Imported (UseSymbol) entries point to declarations in another file — callers
+  // must rename the declaring file directly.
+  const declarationNode = tableSymbol.declaration as any;
+  if (!declarationNode || declarationNode.filepath?.absolute !== filepath.absolute) {
+    return source;
+  }
+
   // Determine quoting style
   const originalUsedQuotes = checkIfTableDeclarationUsesQuotes(tableSymbol, source);
   const newFormatted = formatTableName(newSchema, newTable, originalUsedQuotes);
@@ -235,16 +243,16 @@ export function renameTable (
   // Collect nodes to rename
   const nodesToRename: SyntaxNode[] = [];
 
-  if (tableSymbol.declaration) {
-    const declarationNode = tableSymbol.declaration as any;
-    if (declarationNode.name) {
-      nodesToRename.push(declarationNode.name);
-    }
+  if (declarationNode.name) {
+    nodesToRename.push(declarationNode.name);
   }
 
   const referencesReport = this.symbolReferences(tableSymbol);
   const references = referencesReport.getValue();
   for (const ref of references) {
+    // Only rename references that live in the target file — other files have
+    // different source offsets and are not rewritten by this call.
+    if (ref.filepath.absolute !== filepath.absolute) continue;
     const refText = source.substring(ref.start, ref.end);
     const cleanRefText = refText.replace(/"/g, '');
     if (cleanRefText === oldTable) {
