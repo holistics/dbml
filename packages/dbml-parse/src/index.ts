@@ -38,8 +38,13 @@ export {
   addDoubleQuoteIfNeeded,
 } from '@/compiler/index';
 
+export { DEFAULT_ENTRY } from './constants';
 export * from '@/core/global_modules/records/utils/data';
 
-export type { Database } from '@/core/types/schemaJson';
+export type { Database, AliasKind } from '@/core/types/schemaJson';
+
+export { Filepath } from '@/core/types/filepath';
+export type { DbmlProjectLayout } from '@/compiler/projectLayout/layout';
+export { MemoryProjectLayout } from '@/compiler/projectLayout/layout';
 
 export { Compiler };
