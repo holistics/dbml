@@ -5,7 +5,7 @@ import SymbolTable from '@/core/types/symbol/symbolTable';
 import { TableSymbol } from '@/core/types/symbol/symbols';
 import { createSchemaSymbolIndex, createTableSymbolIndex } from '@/core/types/symbol';
 import { applyTextEdits, TextEdit } from './applyTextEdits';
-import { isAlphaOrUnderscore, isDigit } from '@/core/utils';
+import { isAlphaOrUnderscore, isDigit } from '@/core/utils/chars';
 import { normalizeTableName, lookupTableSymbol, stripQuotes, type TableNameInput } from './utils';
 
 interface FormattedTableName {

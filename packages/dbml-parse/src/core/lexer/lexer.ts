@@ -1,6 +1,6 @@
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import Report from '@/core/types/report';
-import { isAlphaOrUnderscore, isAlphaNumeric, isDigit } from '@/core/utils';
+import { isAlphaOrUnderscore, isAlphaNumeric, isDigit } from '@/core/utils/chars';
 import {
   SyntaxToken, SyntaxTokenKind, isOp, isTriviaToken,
 } from '@/core/types/tokens';

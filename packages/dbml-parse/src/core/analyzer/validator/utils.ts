@@ -15,7 +15,7 @@ import {
   CallExpressionNode,
   ArrayNode,
 } from '@/core/types/nodes';
-import { isHexChar } from '@/core/utils';
+import { isHexChar } from '@/core/utils/chars';
 import { destructureComplexVariable, destructureMemberAccessExpression } from '@/core/analyzer/utils';
 import CustomValidator from './elementValidators/custom';
 import EnumValidator from './elementValidators/enum';

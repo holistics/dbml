@@ -24,7 +24,7 @@ import {
   getColumnsFromTableSymbol,
   extractNameAndTypeOfColumnSymbol,
 } from '@/services/suggestions/utils';
-import { isOffsetWithinSpan } from '@/core/utils';
+import { isOffsetWithinSpan } from '@/core/utils/span';
 
 export function suggestRecordRowSnippet (
   compiler: Compiler,

@@ -8,7 +8,7 @@ import {
 } from '@/core/parser/utils';
 import Compiler, { ScopeKind } from '@/compiler';
 import { SyntaxToken, SyntaxTokenKind } from '@/core/types/tokens';
-import { isOffsetWithinSpan } from '@/core/utils';
+import { isOffsetWithinSpan } from '@/core/utils/span';
 import {
   type CompletionList,
   type TextModel,

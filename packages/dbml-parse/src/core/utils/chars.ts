@@ -1,0 +1,46 @@
+export function isAlphaOrUnderscore (char: string): boolean {
+  // Match any letters, accents (some characters are denormalized so the accent and the main character are two separate characters) and underscore
+  // \p{L} is used to match letters
+  // \p{M} is used to match accents
+  // References:
+  //   https://unicode.org/Public/UCD/latest/ucd/PropertyValueAliases.txt
+  //   https://www.compart.com/en/unicode/category/Mn
+  //   https://www.compart.com/en/unicode/category/Me
+  //   https://www.compart.com/en/unicode/category/Mc
+  return !!char.match(/(\p{L}|_|\p{M})/gu);
+}
+
+export function isDigit (char: string): boolean {
+  if (!char) return false;
+  const c = char[0];
+
+  return c >= '0' && c <= '9';
+}
+
+// Check if a character is a valid hexadecimal character
+export function isHexChar (char: string): boolean {
+  const [c] = char;
+
+  return isDigit(c) || (isAlphaOrUnderscore(c) && c.toLowerCase() >= 'a' && c.toLowerCase() <= 'f');
+}
+
+export function isAlphaNumeric (char: string): boolean {
+  return isAlphaOrUnderscore(char) || isDigit(char);
+}
+
+export function alternateLists<T, S> (firstList: T[], secondList: S[]): (T | S)[] {
+  const res: (T | S)[] = [];
+  const minLength = Math.min(firstList.length, secondList.length);
+  for (let i = 0; i < minLength; i += 1) {
+    res.push(firstList[i], secondList[i]);
+  }
+  res.push(...firstList.slice(minLength), ...secondList.slice(minLength));
+
+  return res;
+}
+
+// Look up an enum value by case-insensitive match against the enum's values
+export function lookupEnumValue<T extends Record<string, string>> (enumObj: T, value: string): T[keyof T] | undefined {
+  const lower = value.toLowerCase();
+  return (Object.values(enumObj) as string[]).find((v) => v.toLowerCase() === lower) as T[keyof T] | undefined;
+}
