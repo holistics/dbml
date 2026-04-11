@@ -1,10 +1,13 @@
+import type Compiler from '@/compiler';
 import { Filepath } from '@/core/types/filepath';
+import { UseDeclarationNode, UseSpecifierListNode, WildcardNode, VariableNode, SyntaxNodeKind } from '@/core/types/nodes';
 
 export interface ParsedUseStatement {
   startOffset: number;
   endOffset: number;
   sourceFile: string; // e.g., './common'
   importedSymbols: string[];
+  node: UseDeclarationNode; // Original AST node for precise source tracking
 }
 
 export interface UseStatementMergeResult {
@@ -16,37 +19,108 @@ export interface UseStatementMergeResult {
 
 export class UseStatementMerger {
   /**
-   * Scan existing use statements in file content.
-   * Returns array of parsed use declarations.
+   * Scan existing use statements in file using compiler AST.
+   * This is precise and avoids regex false positives (e.g., in comments).
    */
-  static scanExistingUses (fileContent: string): ParsedUseStatement[] {
+  static scanExistingUses (
+    compiler: Compiler,
+    filepath: Filepath,
+    fileContent: string,
+  ): ParsedUseStatement[] {
     const results: ParsedUseStatement[] = [];
-    // Match: use { symbol1, symbol2 } from './path'
-    // or: use { symbol } from "./path"
-    const pattern = /use\s*\{\s*([^}]*)\}\s*from\s*['"]([^'"]+)['"]/g;
-    let match: RegExpExecArray | null;
 
-    while ((match = pattern.exec(fileContent)) !== null) {
-      const symbolsStr = match[1];
-      const sourceFile = match[2];
-      const startOffset = match.index;
-      const endOffset = match.index + match[0].length;
+    // Parse the file to get the AST
+    const parseResult = compiler.parseFile(filepath);
+    if (parseResult.getErrors().length > 0) {
+      // If parse fails, return empty (no use statements found)
+      return results;
+    }
 
-      // Parse symbols: split by comma, trim whitespace
-      const importedSymbols = symbolsStr
-        .split(',')
-        .map(s => s.trim())
-        .filter(s => s.length > 0);
+    const ast = parseResult.getValue().ast;
+
+    // Extract use statements from the program node
+    for (const useNode of ast.uses) {
+      const sourceFile = useNode.importPath?.value ?? '';
+      const importedSymbols: string[] = [];
+
+      // Extract symbols from specifiers
+      if (useNode.specifiers instanceof UseSpecifierListNode) {
+        // Selective import: use { symbol1, symbol2 } from './path'
+        for (const specifier of useNode.specifiers.specifiers) {
+          let name: string | null = null;
+
+          if (specifier.name) {
+            // Try to get the symbol name from the AST node
+            name = this.extractSymbolName(specifier.name);
+          }
+
+          // Fallback: extract from source text using node positions
+          if (!name && specifier.name && specifier.name.start !== undefined && specifier.name.end !== undefined) {
+            name = fileContent.slice(specifier.name.start, specifier.name.end).trim();
+          }
+
+          if (name) {
+            importedSymbols.push(name);
+          }
+        }
+      } else if (useNode.specifiers instanceof WildcardNode) {
+        // Wildcard import: use * from './path'
+        // For wildcard, we don't enumerate symbols here
+        // Mark as wildcard by using special value
+        importedSymbols.push('*');
+      }
+
+      // Skip use statements that didn't extract any symbols (likely parse errors or incomplete statements)
+      if (importedSymbols.length === 0 && !(useNode.specifiers instanceof WildcardNode)) {
+        continue;
+      }
 
       results.push({
-        startOffset,
-        endOffset,
+        startOffset: useNode.fullStart,
+        endOffset: useNode.fullEnd,
         sourceFile,
         importedSymbols,
+        node: useNode,
       });
     }
 
     return results;
+  }
+
+  /**
+   * Extract symbol name from an expression node.
+   * Handles simple identifiers (VariableNode) and qualified names.
+   */
+  private static extractSymbolName (node: any): string | null {
+    if (!node) return null;
+
+    // Handle VariableNode: has a 'variable' token property
+    if (node instanceof VariableNode && node.variable) {
+      return node.variable.value ?? null;
+    }
+
+    // Handle nodes with direct 'variable' property
+    if (node.variable && typeof node.variable.value === 'string') {
+      return node.variable.value;
+    }
+
+    // Handle nodes with 'value' property (for tokens)
+    if (typeof node.value === 'string') {
+      return node.value;
+    }
+
+    // Handle nodes with 'name' property
+    if (typeof node.name === 'string') {
+      return node.name;
+    }
+
+    // Fallback: try to extract from source text
+    if (node.source && typeof node.start === 'number' && typeof node.end === 'number') {
+      const text = node.source.slice(node.start, node.end);
+      return text.trim() || null;
+    }
+
+    return null;
   }
 
   /**
@@ -55,11 +129,13 @@ export class UseStatementMerger {
    * If not, create a new use statement at the top.
    */
   static mergeSymbolIntoUses (
+    compiler: Compiler,
+    filepath: Filepath,
     fileContent: string,
     symbolName: string,
     sourceFile: Filepath,
   ): UseStatementMergeResult {
-    const existingUses = this.scanExistingUses(fileContent);
+    const existingUses = this.scanExistingUses(compiler, filepath, fileContent);
 
     // Normalize source file path: '/path/to/common' → './common'
     const sourceFileStr = this.normalizeSourcePath(sourceFile);

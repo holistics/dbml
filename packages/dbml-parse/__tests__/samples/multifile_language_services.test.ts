@@ -275,10 +275,18 @@ describe('[samples] multifile language services', () => {
 
   describe('completion with additionalTextEdits', () => {
     it('should calculate additionalTextEdits for new use statement', () => {
-      const mainContent = 'Table jobs { id int }';
       const filepath = new Filepath('/project/models.dbml');
+      const mainContent = 'Table jobs { id int }';
+      const compiler = new Compiler();
+      compiler.setSource(filepath, mainContent);
 
-      const result = UseStatementMerger.mergeSymbolIntoUses(mainContent, 'job_status', filepath);
+      const result = UseStatementMerger.mergeSymbolIntoUses(
+        compiler,
+        filepath,
+        mainContent,
+        'job_status',
+        filepath,
+      );
 
       // Should create use statement at top
       expect(result.newContent).toMatch(/^use { job_status } from '\.\/models'/);
@@ -287,15 +295,23 @@ describe('[samples] multifile language services', () => {
     });
 
     it('should merge symbol into existing use statement from same file', () => {
+      const filepath = new Filepath('/project/models.dbml');
       const mainContent = `use { User } from './models'
 
 Table jobs {
   id int
   user_id int
 }`;
-      const filepath = new Filepath('/project/models.dbml');
+      const compiler = new Compiler();
+      compiler.setSource(filepath, mainContent);
 
-      const result = UseStatementMerger.mergeSymbolIntoUses(mainContent, 'Post', filepath);
+      const result = UseStatementMerger.mergeSymbolIntoUses(
+        compiler,
+        filepath,
+        mainContent,
+        'Post',
+        filepath,
+      );
 
       // Should append to existing use statement
       expect(result.newContent).toContain('User, Post');
@@ -304,12 +320,20 @@ Table jobs {
     });
 
     it('should detect when symbol already imported', () => {
+      const filepath = new Filepath('/project/models.dbml');
       const mainContent = `use { User, Post } from './models'
 
 Table jobs { user_id int }`;
-      const filepath = new Filepath('/project/models.dbml');
+      const compiler = new Compiler();
+      compiler.setSource(filepath, mainContent);
 
-      const result = UseStatementMerger.mergeSymbolIntoUses(mainContent, 'User', filepath);
+      const result = UseStatementMerger.mergeSymbolIntoUses(
+        compiler,
+        filepath,
+        mainContent,
+        'User',
+        filepath,
+      );
 
       // Should not duplicate
       expect(result.newContent).toBe(mainContent);
@@ -317,16 +341,24 @@ Table jobs { user_id int }`;
     });
 
     it('should handle completion in file with multiple use statements', () => {
+      const filepath = new Filepath('/project/models.dbml');
       const mainContent = `use { User } from './auth'
 use { Table } from './schema'
 
 Table jobs {
   id int
 }`;
-      const filepath = new Filepath('/project/models.dbml');
+      const compiler = new Compiler();
+      compiler.setSource(filepath, mainContent);
 
       // Complete from models file - should create new use
-      const result = UseStatementMerger.mergeSymbolIntoUses(mainContent, 'Column', filepath);
+      const result = UseStatementMerger.mergeSymbolIntoUses(
+        compiler,
+        filepath,
+        mainContent,
+        'Column',
+        filepath,
+      );
 
       expect(result.newContent).toMatch(/^use { Column } from '\.\/models'/);
       expect(result.newContent).toContain('use { User } from');
@@ -334,10 +366,18 @@ Table jobs {
     });
 
     it('should preserve relative paths in additionalTextEdits', () => {
-      const mainContent = '';
       const filepath = new Filepath('/home/user/project/src/models.dbml');
+      const mainContent = '';
+      const compiler = new Compiler();
+      compiler.setSource(filepath, mainContent);
 
-      const result = UseStatementMerger.mergeSymbolIntoUses(mainContent, 'Enum', filepath);
+      const result = UseStatementMerger.mergeSymbolIntoUses(
+        compiler,
+        filepath,
+        mainContent,
+        'Enum',
+        filepath,
+      );
 
       // Should normalize to relative path ./models
       expect(result.newContent).toContain("from './models'");

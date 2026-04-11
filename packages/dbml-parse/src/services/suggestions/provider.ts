@@ -104,10 +104,13 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
     symbolKind: SymbolKind,
     fileHint: string,
     sourceFilepath: Filepath,
+    currentFilepath: Filepath,
     currentFileContent: string,
   ): CompletionItem {
     // Calculate the use statement that should be inserted
     const mergeResult = UseStatementMerger.mergeSymbolIntoUses(
+      this.compiler,
+      currentFilepath,
       currentFileContent,
       symbolName,
       sourceFilepath,
@@ -122,7 +125,6 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
       insertText: symbolName,
       insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
       kind: pickCompletionItemKind(symbolKind),
-      sortText: pickCompletionItemKind(symbolKind).toString().padStart(2, '0'),
       detail: fileHint,
       // Use zzz_ prefix to sort cross-file suggestions after local ones
       sortText: `zzz_${pickCompletionItemKind(symbolKind).toString().padStart(2, '0')}_${symbolName}`,
@@ -173,6 +175,7 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
           sym.kind,
           fileHint,
           fileInfo.filepath,
+          currentFilepath,
           currentFileContent,
         );
 

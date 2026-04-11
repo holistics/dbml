@@ -37,7 +37,11 @@ export function loadProject (projectName: string): { compiler: Compiler; files: 
 }
 
 export function loadAllSampleProjects (): { compiler: Compiler; files: Map<string, Filepath>, name: string}[] {
-  const allProjects = readdirSync(__dirname).filter((p) => p !== 'loader.ts');
+  const allProjects = readdirSync(__dirname).filter((p) => {
+    // Only include directories, not files
+    const fullPath = path.join(__dirname, p);
+    return statSync(fullPath).isDirectory();
+  });
   const res = [];
   for (const project of allProjects) {
     res.push({ ...loadProject(project), name: project });

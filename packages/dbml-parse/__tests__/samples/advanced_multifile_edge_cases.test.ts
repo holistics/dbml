@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import Compiler from '@/compiler';
 import DBMLDefinitionProvider from '@/services/definition/provider';
 import DBMLReferencesProvider from '@/services/references/provider';
@@ -73,97 +73,160 @@ describe('[advanced] multifile edge cases', () => {
   });
 
   describe('use statement merging edge cases', () => {
+    let compiler: Compiler;
+
+    beforeEach(() => {
+      compiler = new Compiler();
+    });
+
     it('should handle symbols with special characters', () => {
-      const content = '';
       const filepath = new Filepath('/project/models.dbml');
+      const content = '';
+      compiler.setSource(filepath, content);
 
       // DBML allows identifiers with underscores, but let's test them
-      const result = UseStatementMerger.mergeSymbolIntoUses(content, 'user_table_v2', filepath);
+      const result = UseStatementMerger.mergeSymbolIntoUses(
+        compiler,
+        filepath,
+        content,
+        'user_table_v2',
+        filepath,
+      );
 
       expect(result.newContent).toContain('user_table_v2');
       expect(result.hint).toBe('created new');
     });
 
     it('should handle very long use statement lists', () => {
+      const filepath = new Filepath('/project/models.dbml');
       const symbols = Array.from({ length: 50 }, (_, i) => `Symbol${i}`);
       const content = `use { ${symbols.slice(0, 25).join(', ')} } from './models'`;
+      compiler.setSource(filepath, content);
 
-      const filepath = new Filepath('/project/models.dbml');
-      const result = UseStatementMerger.mergeSymbolIntoUses(content, 'Symbol50', filepath);
+      const result = UseStatementMerger.mergeSymbolIntoUses(
+        compiler,
+        filepath,
+        content,
+        'Symbol50',
+        filepath,
+      );
 
       expect(result.newContent).toContain('Symbol50');
       expect(result.newContent).toContain('Symbol0');
     });
 
     it('should preserve exact formatting of existing use statements', () => {
+      const filepath = new Filepath('/project/models.dbml');
       const content = `use {
   User,
   Post,
   Comment
 } from './models'`;
+      compiler.setSource(filepath, content);
 
-      const filepath = new Filepath('/project/models.dbml');
-      const result = UseStatementMerger.mergeSymbolIntoUses(content, 'Tag', filepath);
+      const result = UseStatementMerger.mergeSymbolIntoUses(
+        compiler,
+        filepath,
+        content,
+        'Tag',
+        filepath,
+      );
 
       // Should preserve multi-line structure (or handle it gracefully)
       expect(result.newContent).toBeTruthy();
     });
 
     it('should handle use statements with no spaces', () => {
-      const content = 'use{User,Post}from\'./models\'';
       const filepath = new Filepath('/project/models.dbml');
+      const content = 'use{User,Post}from\'./models\'';
+      compiler.setSource(filepath, content);
 
-      const existing = UseStatementMerger.scanExistingUses(content);
+      const existing = UseStatementMerger.scanExistingUses(compiler, filepath, content);
       expect(existing.length).toBeGreaterThan(0);
     });
 
     it('should handle mixed quote styles in use statements', () => {
+      const filepath = new Filepath('/project/models.dbml');
       const content = `use { User } from './models'
 use { Table } from "./schema"`;
+      compiler.setSource(filepath, content);
 
-      const filepath = new Filepath('/project/models.dbml');
-      const result = UseStatementMerger.mergeSymbolIntoUses(content, 'Column', filepath);
+      const result = UseStatementMerger.mergeSymbolIntoUses(
+        compiler,
+        filepath,
+        content,
+        'Column',
+        filepath,
+      );
 
       // Should handle both quote styles and create new with consistent quoting
       expect(result.newContent).toBeTruthy();
     });
 
     it('should not corrupt when symbol name contains regex special chars', () => {
-      const content = '';
       const filepath = new Filepath('/project/models.dbml');
+      const content = '';
+      compiler.setSource(filepath, content);
 
       // These wouldn't be valid DBML symbols, but test robustness
-      const result = UseStatementMerger.mergeSymbolIntoUses(content, 'SimpleSymbol', filepath);
+      const result = UseStatementMerger.mergeSymbolIntoUses(
+        compiler,
+        filepath,
+        content,
+        'SimpleSymbol',
+        filepath,
+      );
       expect(result.newContent).toContain('SimpleSymbol');
     });
 
     it('should handle symbol already in list with whitespace variations', () => {
-      const content = `use { User , Post } from './models'`;
       const filepath = new Filepath('/project/models.dbml');
+      const content = `use { User , Post } from './models'`;
+      compiler.setSource(filepath, content);
 
-      const result = UseStatementMerger.mergeSymbolIntoUses(content, 'User', filepath);
+      const result = UseStatementMerger.mergeSymbolIntoUses(
+        compiler,
+        filepath,
+        content,
+        'User',
+        filepath,
+      );
 
       expect(result.hint).toBe('symbol already imported');
       expect(result.newContent).toBe(content);
     });
 
     it('should calculate correct edit ranges for large files', () => {
-      const largeContent = Array(1000).fill('Table test { id int }').join('\n');
       const filepath = new Filepath('/project/models.dbml');
+      const largeContent = Array(1000).fill('Table test { id int }').join('\n');
+      compiler.setSource(filepath, largeContent);
 
-      const result = UseStatementMerger.mergeSymbolIntoUses(largeContent, 'NewSymbol', filepath);
+      const result = UseStatementMerger.mergeSymbolIntoUses(
+        compiler,
+        filepath,
+        largeContent,
+        'NewSymbol',
+        filepath,
+      );
 
       expect(result.editStartOffset).toBe(0);
       expect(result.newContent.length).toBeGreaterThan(largeContent.length);
     });
 
     it('should handle file with ONLY use statements', () => {
+      const filepath = new Filepath('/project/models.dbml');
       const content = `use { A } from './a'
 use { B } from './b'
 use { C } from './c'`;
+      compiler.setSource(filepath, content);
 
-      const filepath = new Filepath('/project/models.dbml');
-      const result = UseStatementMerger.mergeSymbolIntoUses(content, 'D', filepath);
+      const result = UseStatementMerger.mergeSymbolIntoUses(
+        compiler,
+        filepath,
+        content,
+        'D',
+        filepath,
+      );
 
       expect(result.newContent).toMatch(/^use { D } from '\.\/models'/);
     });
@@ -172,8 +235,15 @@ use { C } from './c'`;
       const deepPath = '/a/b/c/d/e/f/g/h/i/j/models.dbml';
       const filepath = new Filepath(deepPath);
       const content = '';
+      compiler.setSource(filepath, content);
 
-      const result = UseStatementMerger.mergeSymbolIntoUses(content, 'Symbol', filepath);
+      const result = UseStatementMerger.mergeSymbolIntoUses(
+        compiler,
+        filepath,
+        content,
+        'Symbol',
+        filepath,
+      );
 
       expect(result.newContent).toContain("from './models'");
       expect(result.newContent).not.toContain('/a/b/c');
@@ -302,26 +372,40 @@ Ref: nodes.parent_id > nodes.id`;
   });
 
   describe('use statement edge cases with real scenarios', () => {
+    let compiler: Compiler;
+
+    beforeEach(() => {
+      compiler = new Compiler();
+    });
+
     it('should handle use statement with comment', () => {
+      const filepath = new Filepath('/project/models.dbml');
       const content = `// Import from models
 use { User } from './models'
 
 Table jobs { user_id int }`;
+      compiler.setSource(filepath, content);
 
-      const filepath = new Filepath('/project/models.dbml');
-      const existing = UseStatementMerger.scanExistingUses(content);
+      const existing = UseStatementMerger.scanExistingUses(compiler, filepath, content);
 
       expect(existing).toHaveLength(1);
       expect(existing[0].sourceFile).toBe('./models');
     });
 
     it('should handle consecutive use statements', () => {
+      const filepath = new Filepath('/project/models.dbml');
       const content = `use { User } from './models'
 use { Table } from './schema'
 use { Enum } from './types'`;
+      compiler.setSource(filepath, content);
 
-      const filepath = new Filepath('/project/models.dbml');
-      const result = UseStatementMerger.mergeSymbolIntoUses(content, 'Post', filepath);
+      const result = UseStatementMerger.mergeSymbolIntoUses(
+        compiler,
+        filepath,
+        content,
+        'Post',
+        filepath,
+      );
 
       // Should merge into existing './models' use statement
       expect(result.newContent).toContain('User, Post');
@@ -331,56 +415,59 @@ use { Enum } from './types'`;
     });
 
     it('should handle use statement at end of file', () => {
+      const filepath = new Filepath('/project/models.dbml');
       const content = `Table jobs { id int }
 
 use { User } from './models'`;
+      compiler.setSource(filepath, content);
 
-      const filepath = new Filepath('/project/models.dbml');
-      const existing = UseStatementMerger.scanExistingUses(content);
+      const existing = UseStatementMerger.scanExistingUses(compiler, filepath, content);
 
       expect(existing).toHaveLength(1);
     });
 
     it('should handle use statement with inline comment', () => {
-      const content = `use { User, Post } from './models' // important imports`;
-
       const filepath = new Filepath('/project/models.dbml');
-      const existing = UseStatementMerger.scanExistingUses(content);
+      const content = `use { User, Post } from './models' // important imports`;
+      compiler.setSource(filepath, content);
 
-      // May or may not match depending on regex strictness
-      // At minimum, should not crash
+      const existing = UseStatementMerger.scanExistingUses(compiler, filepath, content);
+
+      // Should still find the use statement (parser ignores comments)
       expect(Array.isArray(existing)).toBe(true);
+      expect(existing.length).toBeGreaterThan(0);
     });
 
-    it('should not match partial use statement', () => {
+    it('should not match partial use statement in comments', () => {
+      const filepath = new Filepath('/project/models.dbml');
       const content = `// This is a comment about use { User } from './models'
 Table test { id int }`;
+      compiler.setSource(filepath, content);
 
-      const filepath = new Filepath('/project/models.dbml');
-      const existing = UseStatementMerger.scanExistingUses(content);
+      const existing = UseStatementMerger.scanExistingUses(compiler, filepath, content);
 
-      // Known limitation: regex matches use statements in comments
-      // This is acceptable as comments won't affect compilation
-      // Real use statements would never be in comments in valid DBML
-      expect(existing.length).toBeGreaterThanOrEqual(0);
+      // AST-based parsing correctly ignores comments
+      expect(existing).toHaveLength(0);
     });
 
     it('should not match malformed use statement missing braces', () => {
+      const filepath = new Filepath('/project/models.dbml');
       const content = `use User from './models'
 Table test { id int }`;
+      compiler.setSource(filepath, content);
 
-      const filepath = new Filepath('/project/models.dbml');
-      const existing = UseStatementMerger.scanExistingUses(content);
+      const existing = UseStatementMerger.scanExistingUses(compiler, filepath, content);
 
       expect(existing).toHaveLength(0);
     });
 
     it('should not match use statement with unclosed braces', () => {
+      const filepath = new Filepath('/project/models.dbml');
       const content = `use { User from './models'
 Table test { id int }`;
+      compiler.setSource(filepath, content);
 
-      const filepath = new Filepath('/project/models.dbml');
-      const existing = UseStatementMerger.scanExistingUses(content);
+      const existing = UseStatementMerger.scanExistingUses(compiler, filepath, content);
 
       expect(existing).toHaveLength(0);
     });
