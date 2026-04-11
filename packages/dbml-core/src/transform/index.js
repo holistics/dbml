@@ -1,5 +1,7 @@
 import { Compiler } from '@dbml/parse';
 
+export { syncDiagramView, findDiagramViewBlocks } from '@dbml/parse';
+
 /**
  * Renames a table in DBML code using symbol table and token-based replacement.
  *

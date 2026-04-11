@@ -1,39 +1,41 @@
 import path from 'path';
 import fs from 'fs';
-import { CompilerError } from '@dbml/core';
+import { type ExportFormat } from '@dbml/core';
 import { reduce } from 'lodash-es';
 
-function resolvePaths (paths) {
+function resolvePaths (paths: string): string;
+function resolvePaths (paths: string[]): string[];
+function resolvePaths (paths: string | string[]): string | string[] {
   if (!Array.isArray(paths)) {
     return path.resolve(process.cwd(), paths);
   }
   return paths.map((_path) => path.resolve(process.cwd(), _path));
 }
 
-function validateInputFilePaths (paths, validatePlugin) {
-  return paths.every((_path) => validatePlugin(_path));
+function validateInputFilePaths (paths: string[], validatePlugin: (p: string) => void): void {
+  paths.forEach((_path) => validatePlugin(_path));
 }
 
-function getFormatOpt (opts) {
+function getFormatOpt (opts: Record<string, unknown>): ExportFormat {
   const formatOpts = Object.keys(opts).filter((opt) => {
     return ['postgres', 'mysql', 'mssql', 'postgresLegacy', 'mysqlLegacy', 'mssqlLegacy', 'oracle', 'snowflake'].includes(opt);
   });
 
-  let format = 'postgres';
+  let format: ExportFormat = 'postgres';
   let cnt = 0;
 
   formatOpts.forEach((opt) => {
     if (opts[opt]) {
       cnt += 1;
       if (cnt > 1) throw new Error('Too many format options');
-      format = opt;
+      format = opt as ExportFormat;
     }
   });
 
   return format;
 }
 
-function getConnectionOpt (args) {
+function getConnectionOpt (args: string[]): { connection: string; databaseType: string } {
   const supportedDatabases = ['postgres', 'mysql', 'mssql', 'snowflake', 'bigquery', 'oracle'];
   const defaultConnectionOpt = {
     connection: args[0],
@@ -61,15 +63,19 @@ function getConnectionOpt (args) {
   }, defaultConnectionOpt);
 }
 
-function generate (inputPaths, transform, outputPlugin) {
+function generate (
+  inputPaths: string[],
+  transform: (source: string) => string,
+  outputPlugin: { write: (content: string) => void },
+): void {
   inputPaths.forEach((_path) => {
     const source = fs.readFileSync(_path, 'utf-8');
     try {
       const content = transform(source);
       outputPlugin.write(content);
-    } catch (e) {
-      if (e instanceof CompilerError) {
-        throw e.map((diag) => ({
+    } catch (e: any) {
+      if (e && typeof e.map === 'function') {
+        throw e.map((diag: any) => ({
           ...diag, message: diag.message, filepath: path.basename(_path), stack: diag.stack,
         }));
       }

@@ -41,7 +41,14 @@ export {
 export { DEFAULT_ENTRY } from './constants';
 export * from '@/core/global_modules/records/utils/data';
 
-export type { Database, AliasKind } from '@/core/types/schemaJson';
+export type { Database, AliasKind, DiagramView, FilterConfig } from '@/core/types/schemaJson';
+export type {
+  DiagramViewSyncOperation,
+  DiagramViewBlock,
+  TextEdit,
+} from '@/compiler/queries/transform';
+export { syncDiagramView, findDiagramViewBlocks } from '@/compiler/queries/transform';
+
 
 export { Filepath } from '@/core/types/filepath';
 export type { DbmlProjectLayout } from '@/compiler/projectLayout/layout';

@@ -1,4 +1,4 @@
-import { Compiler } from '@dbml/parse';
+import { Compiler, DEFAULT_ENTRY } from '@dbml/parse';
 import Database from '../model_structure/database';
 import { parse } from './ANTLR/ASTGeneration';
 import { CompilerError } from './error';
@@ -7,43 +7,47 @@ import postgresParser from './deprecated/postgresParser.cjs';
 import dbmlParser from './deprecated/dbmlParser.cjs';
 import schemarbParser from './deprecated/schemarbParser.cjs';
 import mssqlParser from './deprecated/mssqlParser.cjs';
+import { RawDatabase } from '../../types';
+import { ParseFormat } from '../../types/parse/Parser';
 
 class Parser {
-  constructor (dbmlCompiler) {
+  DBMLCompiler: Compiler;
+
+  constructor (dbmlCompiler?: Compiler) {
     this.DBMLCompiler = dbmlCompiler || new Compiler();
   }
 
-  static parseJSONToDatabase (rawDatabase) {
+  static parseJSONToDatabase (rawDatabase: RawDatabase) {
     const database = new Database(rawDatabase);
     return database;
   }
 
-  static parseMySQLToJSONv2 (str) {
+  static parseMySQLToJSONv2 (str: string) {
     return parse(str, 'mysql');
   }
 
   /**
    * @deprecated Use the `parseMySQLToJSONv2` method instead
    */
-  static parseMySQLToJSON (str) {
+  static parseMySQLToJSON (str: string) {
     return mysqlParser.parse(str);
   }
 
-  static parsePostgresToJSONv2 (str) {
+  static parsePostgresToJSONv2 (str: string) {
     return parse(str, 'postgres');
   }
 
   /**
    * @deprecated Use the `parsePostgresToJSONv2` method instead
    */
-  static parsePostgresToJSON (str) {
+  static parsePostgresToJSON (str: string) {
     return postgresParser.parse(str);
   }
 
-  static parseDBMLToJSONv2 (str, dbmlCompiler) {
+  static parseDBMLToJSONv2 (str: string, dbmlCompiler?: Compiler) {
     const compiler = dbmlCompiler || new Compiler();
 
-    compiler.setSource(str);
+    compiler.setSource(DEFAULT_ENTRY, str);
 
     const diags = compiler.parse.errors().map((error) => ({
       message: error.diagnostic,
@@ -68,46 +72,48 @@ class Parser {
   /**
    * @deprecated Use the `parseDBMLToJSONv2` method instead
    */
-  static parseDBMLToJSON (str) {
+  static parseDBMLToJSON (str: string) {
     return dbmlParser.parse(str);
   }
 
-  static parseSchemaRbToJSON (str) {
+  static parseSchemaRbToJSON (str: string) {
     return schemarbParser.parse(str);
   }
 
   /**
    * @deprecated Use the `parseMSSQLToJSONv2` method instead
    */
-  static parseMSSQLToJSON (str) {
+  static parseMSSQLToJSON (str: string) {
+    // @ts-expect-error "Deprecated signature is not type-safe"
     return mssqlParser.parseWithPegError(str);
   }
 
-  static parseMSSQLToJSONv2 (str) {
+  static parseMSSQLToJSONv2 (str: string) {
     return parse(str, 'mssql');
   }
 
-  static parseSnowflakeToJSON (str) {
+  static parseSnowflakeToJSON (str: string) {
     return parse(str, 'snowflake');
   }
 
-  static parseOracleToJSON (str) {
+  static parseOracleToJSON (str: string) {
     return parse(str, 'oracle');
   }
 
-  static parse (str, format) {
+  static parse (str: string, format: ParseFormat) {
     return new Parser().parse(str, format);
   }
 
-  parse (str, format) {
+  parse (str: string, format: ParseFormat): Database {
     try {
-      let rawDatabase = {};
+      let rawDatabase: RawDatabase ;
       switch (format) {
         case 'mysql':
           rawDatabase = Parser.parseMySQLToJSONv2(str);
           break;
 
         case 'mysqlLegacy':
+          // @ts-expect-error "Deprecated functions are not type safe"
           rawDatabase = Parser.parseMySQLToJSON(str);
           break;
 
@@ -120,14 +126,17 @@ class Parser {
           break;
 
         case 'postgresLegacy':
+          // @ts-expect-error "Deprecated functions are not type safe"
           rawDatabase = Parser.parsePostgresToJSON(str);
           break;
 
         case 'dbml':
+          // @ts-expect-error "Deprecated functions are not type safe"
           rawDatabase = Parser.parseDBMLToJSON(str);
           break;
 
         case 'dbmlv2':
+          // @ts-expect-error "The type definition of @dbml/core's RawDatabase and @dbml/parse's Database have some mismatches"
           rawDatabase = Parser.parseDBMLToJSONv2(str, this.DBMLCompiler);
           break;
 
@@ -156,7 +165,7 @@ class Parser {
           break;
 
         default:
-          break;
+          throw new Error('Unknown parse format');
       }
 
       const schema = Parser.parseJSONToDatabase(rawDatabase);

@@ -2,24 +2,24 @@ import { isAlphaOrUnderscore, isDigit } from '@/core/utils/chars';
 import type { FilterConfig } from '@/core/types/schemaJson';
 import { applyTextEdits, TextEdit } from './applyTextEdits';
 
-export interface CreateOperation {
+export interface DiagramViewCreateOperation {
   operation: 'create';
   name: string;
   visibleEntities: FilterConfig;
 }
 
-export interface UpdateOperation {
+export interface DiagramViewUpdateOperation {
   operation: 'update';
   name: string;
   newName: string;
 }
 
-export interface DeleteOperation {
+export interface DiagramViewDeleteOperation {
   operation: 'delete';
   name: string;
 }
 
-export type DiagramViewOperation = CreateOperation | UpdateOperation | DeleteOperation;
+export type DiagramViewSyncOperation = DiagramViewCreateOperation | DiagramViewUpdateOperation | DiagramViewDeleteOperation;
 
 /** Returns true when a name can be used unquoted in DBML. */
 function isSimpleIdentifier (name: string): boolean {
@@ -140,7 +140,7 @@ function buildBlock (name: string, ve: FilterConfig): string {
  */
 export function syncDiagramView (
   source: string,
-  operations: DiagramViewOperation[],
+  operations: DiagramViewSyncOperation[],
 ): { newDbml: string } {
   let result = source;
 

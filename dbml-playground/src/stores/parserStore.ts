@@ -101,9 +101,9 @@ export const useParser = defineStore('parser', () => {
       const currentFilepath = new Filepath(project.currentFile);
       const parseResult = compiler.parseFile(currentFilepath);
 
-      if (!parseResult.getErrors().some(e => e)) {
+      if (!parseResult.getErrors().some((e) => e)) {
         const parseIndex = parseResult.getValue();
-        // SyntaxTokenKind.EOF = '<eof>' — filter it out for display
+        // SyntaxTokenKind.EOF = '<eof>' - filter it out for display
         tokens.value = [...parseIndex.tokens].filter((t) => (t.kind as string) !== '<eof>');
         ast.value = parseIndex.ast as ProgramNode;
       } else {
