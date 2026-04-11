@@ -9,6 +9,7 @@ import {
 import Compiler, { ScopeKind } from '@/compiler';
 import { SyntaxToken, SyntaxTokenKind } from '@/core/types/tokens';
 import { isOffsetWithinSpan } from '@/core/utils/span';
+import { convertStringToEnum } from '@/core/utils/chars';
 import {
   type CompletionList,
   type TextModel,
@@ -768,7 +769,7 @@ function suggestInCallExpression (
     if (!inArgs) continue;
     if (!(c instanceof FunctionApplicationNode)) continue;
     if (c.callee !== container) continue;
-    if (extractVariableFromExpression(container.callee).unwrap_or('').toLowerCase() !== ElementKind.Records) continue;
+    if (convertStringToEnum(ElementKind, extractVariableFromExpression(container.callee).unwrap_or('')) !== ElementKind.Records) continue;
     const tableSymbol = compiler.container.element(offset).symbol;
     if (!tableSymbol) return noSuggestions();
     const suggestions = suggestMembersOfSymbol(compiler, tableSymbol, [SymbolKind.Column]);

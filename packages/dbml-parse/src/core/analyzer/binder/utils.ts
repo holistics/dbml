@@ -1,6 +1,7 @@
 import { SyntaxToken } from '@/core/types/tokens';
 import { ElementDeclarationNode, InfixExpressionNode, PostfixExpressionNode, PrefixExpressionNode, PrimaryExpressionNode, ProgramNode, SyntaxNode, TupleExpressionNode, VariableNode } from '@/core/types/nodes';
 import { ElementKind } from '@/core/analyzer/types';
+import { convertStringToEnum } from '@/core/utils/chars';
 import ChecksBinder from './elementBinder/checks';
 import CustomBinder from './elementBinder/custom';
 import DiagramViewBinder from './elementBinder/diagramView';
@@ -20,7 +21,7 @@ import { DEFAULT_SCHEMA_NAME } from '@/constants';
 import RecordsBinder from './elementBinder/records';
 
 export function pickBinder (element: ElementDeclarationNode & { type: SyntaxToken }) {
-  switch (element.type.value.toLowerCase() as ElementKind) {
+  switch (convertStringToEnum(ElementKind, element.type.value)) {
     case ElementKind.Enum:
       return EnumBinder;
     case ElementKind.Table:

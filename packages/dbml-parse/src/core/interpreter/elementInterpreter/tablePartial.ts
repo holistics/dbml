@@ -20,6 +20,7 @@ import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import { aggregateSettingList } from '@/core/analyzer/validator/utils';
 import { ColumnSymbol } from '@/core/types/symbol/symbols';
 import { ElementKind, SettingName } from '@/core/analyzer/types';
+import { convertStringToEnum } from '@/core/utils/chars';
 import { ElementInterpreter, InterpreterDatabase } from '../types';
 
 export class TablePartialInterpreter implements ElementInterpreter {
@@ -227,8 +228,8 @@ export class TablePartialInterpreter implements ElementInterpreter {
       });
     }
 
-    column.pk ||= settings.some((setting) => extractVariableFromExpression(setting).unwrap().toLowerCase() === 'pk');
-    column.unique ||= settings.some((setting) => extractVariableFromExpression(setting).unwrap().toLowerCase() === 'unique');
+    column.pk ||= settings.some((setting) => convertStringToEnum(SettingName, extractVariableFromExpression(setting).unwrap()) === SettingName.PK);
+    column.unique ||= settings.some((setting) => convertStringToEnum(SettingName, extractVariableFromExpression(setting).unwrap()) === SettingName.Unique);
 
     this.tablePartial.fields!.push(column as Column);
     if (column.pk) {

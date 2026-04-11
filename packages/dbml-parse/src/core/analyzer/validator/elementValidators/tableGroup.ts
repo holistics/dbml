@@ -1,4 +1,5 @@
 import { forIn, partition } from 'lodash-es';
+import { ElementKind } from '@/core/analyzer/types';
 import { CompileError, CompileErrorCode, CompileWarning } from '@/core/types/errors';
 import {
   isSimpleName, pickValidator } from '@/core/analyzer/validator/utils';
@@ -203,7 +204,7 @@ export default class TableGroupValidator implements ElementValidator {
       return validator.validate().errors;
     });
 
-    const notes = subs.filter((sub) => sub.type?.value.toLowerCase() === 'note');
+    const notes = subs.filter((sub) => sub.isKind(ElementKind.Note));
     if (notes.length > 1) errors.push(...notes.map((note) => new CompileError(CompileErrorCode.NOTE_REDEFINED, 'Duplicate notes are defined', note)));
     return errors;
   }

@@ -11,6 +11,7 @@ import { DiagramViewInterpreter } from '@/core/interpreter/elementInterpreter/di
 import { RecordsInterpreter } from '@/core/interpreter/records';
 import Report from '@/core/types/report';
 import { ElementKind } from '@/core/analyzer/types';
+import { convertStringToEnum } from '@/core/utils/chars';
 import { CompileWarning } from '@/core/types/errors';
 import { getTokenPosition } from './utils';
 import { InterpreterDatabase } from './types';
@@ -129,7 +130,7 @@ export default class Interpreter {
   interpret (): Report<Database> {
     // First pass: interpret all non-records elements
     const errors = this.ast.body.flatMap((element) => {
-      switch (element.type?.value.toLowerCase() as ElementKind | undefined) {
+      switch (convertStringToEnum(ElementKind, element.type?.value ?? '')) {
         case ElementKind.Table:
           return (new TableInterpreter(element, this.env)).interpret();
         case ElementKind.Note:

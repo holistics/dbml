@@ -41,7 +41,7 @@ import {
 } from '@/core/parser/utils';
 import { SyntaxToken } from '@/core/types/tokens';
 import SymbolTable from '@/core/types/symbol/symbolTable';
-import { SettingName } from '@/core/analyzer/types';
+import { ElementKind, SettingName } from '@/core/analyzer/types';
 
 export default class TableValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
@@ -444,7 +444,7 @@ export default class TableValidator implements ElementValidator {
       return validator.validate().errors;
     });
 
-    const notes = subs.filter((sub) => sub.type?.value.toLowerCase() === 'note');
+    const notes = subs.filter((sub) => sub.isKind(ElementKind.Note));
     if (notes.length > 1) {
       errors.push(...notes.map((note) => new CompileError(CompileErrorCode.NOTE_REDEFINED, 'Duplicate notes are defined', note)));
     }

@@ -413,7 +413,7 @@ export default class TablePartialValidator implements ElementValidator {
       return validator.validate().errors;
     });
 
-    const notes = subs.filter((sub) => sub.type?.value.toLowerCase() === ElementKind.Note);
+    const notes = subs.filter((sub) => sub.isKind(ElementKind.Note));
     if (notes.length > 1) {
       errors.push(...notes.map((note) => new CompileError(CompileErrorCode.NOTE_REDEFINED, 'Duplicate notes are defined', note)));
     }

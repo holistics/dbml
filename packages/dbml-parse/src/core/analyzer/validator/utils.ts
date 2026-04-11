@@ -36,13 +36,14 @@ import { NUMERIC_LITERAL_PREFIX } from '@/constants';
 import Report from '@/core/types/report';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import { ElementKind } from '@/core/analyzer/types';
+import { convertStringToEnum } from '@/core/utils/chars';
 import TablePartialValidator from './elementValidators/tablePartial';
 import ChecksValidator from './elementValidators/checks';
 import RecordsValidator from './elementValidators/records';
 import DiagramViewValidator from './elementValidators/diagramView';
 
 export function pickValidator (element: ElementDeclarationNode & { type: SyntaxToken }) {
-  switch (element.type.value.toLowerCase() as ElementKind) {
+  switch (convertStringToEnum(ElementKind, element.type.value)) {
     case ElementKind.Enum:
       return EnumValidator;
     case ElementKind.Table:
