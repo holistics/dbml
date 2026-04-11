@@ -15,20 +15,6 @@
       }
     },
     {
-      "code": "INVALID_OPERAND",
-      "diagnostic": "Invalid start of operand \"}\"",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "token": {
-        "context": {
-          "id": "token@<rbrace>@}@[L8:C0, L8:C1]",
-          "snippet": "}",
-          "isInvalid": false,
-          "filepath": "/main.dbml"
-        }
-      }
-    },
-    {
       "code": "INVALID_COLUMN_TYPE",
       "diagnostic": "Invalid column type",
       "filepath": "/main.dbml",

@@ -70,7 +70,6 @@ export const programModule: GlobalModule = {
     if (!isProgramNode(node)) return Report.create(PASS_THROUGH);
 
     if (!shouldInterpretNode(compiler, node)) return Report.create(undefined, [
-      ...[...compiler.parseProject().values()].flatMap((r) => r.getErrors()),
       ...compiler.validateNode(node).getErrors(),
       ...compiler.bindNode(node).getErrors()],
     );
