@@ -4,8 +4,7 @@ import type { Filepath } from '@/core/types/filepath';
 import { collectTransitiveDependencies } from '../utils';
 
 export function bindFile (this: Compiler, filepath: Filepath): Report<void> {
-  const ast = this.parseFile(filepath).getValue().ast;
-  return this.bindNode(ast).map(() => undefined);
+  return this.parseFile(filepath).chain(({ ast }) => this.bindNode(ast).map(() => undefined));
 }
 
 export function bindProject (this: Compiler): Map<string, Report<void>> {

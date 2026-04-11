@@ -1,6 +1,6 @@
 import type Compiler from '../index';
-import { SyntaxNode, PrimaryExpressionNode, TupleExpressionNode, InfixExpressionNode } from '@/core/types/nodes';
-import { NodeSymbol, SymbolKind } from '@/core/types/symbol';
+import { SyntaxNode, TupleExpressionNode, InfixExpressionNode } from '@/core/types/nodes';
+import { NodeSymbol } from '@/core/types/symbol';
 import { UNHANDLED } from '@/constants';
 import { isExpressionAVariableNode, isAccessExpression } from '@/core/utils/expression';
 import { getMemberChain } from '@/core/parser/utils';
@@ -20,20 +20,20 @@ function getRightmostVariable (node: SyntaxNode): SyntaxNode | undefined {
 // Collect all AST nodes whose nodeReferee resolves to the given symbol.
 // Walks every variable node checking the memoized nodeReferee result.
 export function symbolReferences (this: Compiler, symbol: NodeSymbol): Report<SyntaxNode[]> {
-  const asts = this.parseProject().values();
+  const astMap = this.parseProject();
   this.bindProject();
 
   const refs: SyntaxNode[] = [];
+  const errors = [];
+  const warnings = [];
 
-  for (const astReport of asts) {
+  for (const astReport of astMap.values()) {
+    errors.push(...astReport.getErrors());
+    warnings.push(...astReport.getWarnings());
     const ast = astReport.getValue().ast;
     const walk = (node: SyntaxNode): void => {
       if (isExpressionAVariableNode(node)) {
-        const refereeResult = nodeReferee.call(this, node);
-        if (refereeResult.hasValue(UNHANDLED)) return;
-        if (refereeResult.getValue() === symbol) {
-          refs.push(node);
-        }
+        if (nodeReferee.call(this, node).getFiltered(UNHANDLED) === symbol) refs.push(node);
         return;
       }
       // Handle tuple access: table.(col1, col2) - tuple counts as a reference to the table
@@ -43,12 +43,9 @@ export function symbolReferences (this: Compiler, symbol: NodeSymbol): Report<Sy
         const leftExpr = (node.parentNode as InfixExpressionNode).leftExpression;
         if (leftExpr) {
           const tableNode = getRightmostVariable(leftExpr);
-          if (tableNode) {
-            const tableResult = nodeReferee.call(this, tableNode);
-            if (!tableResult.hasValue(UNHANDLED) && tableResult.getValue() === symbol) {
+          if (tableNode && nodeReferee.call(this, tableNode).getFiltered(UNHANDLED) === symbol) {
             // Push the table variable node, not the tuple, so sourceText shows the table name
-              refs.push(tableNode);
-            }
+            refs.push(tableNode);
           }
         }
       }
@@ -59,5 +56,5 @@ export function symbolReferences (this: Compiler, symbol: NodeSymbol): Report<Sy
     walk(ast);
   }
 
-  return new Report(refs);
+  return new Report(refs, errors, warnings);
 }

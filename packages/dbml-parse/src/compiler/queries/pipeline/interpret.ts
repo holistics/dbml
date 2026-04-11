@@ -5,7 +5,6 @@ import { AliasKind } from '@/core/types';
 import type { Database, ElementRef, MasterDatabase, Table, TablePartial } from '@/core/types';
 import { Filepath, type FilepathId } from '@/core/types/filepath';
 import type { CompileError, CompileWarning } from '@/core/types/errors';
-import { ElementKind } from '@/core/types/keywords';
 
 // Strip internal-only column type properties for public JSON export.
 function stripColumnInternals<T extends Table | TablePartial> (table: T): T {
@@ -33,8 +32,9 @@ function stripDatabase (db: Database): Database {
 
 // Interpret a single file. Returns raw Database
 export function interpretFile (this: Compiler, filepath: Filepath): Report<Readonly<Database> | undefined> {
-  const ast = this.parseFile(filepath).getValue().ast;
-  return this.interpretNode(ast).map((v) => v === UNHANDLED ? undefined : v as Database);
+  return this.parseFile(filepath).chain(({ ast }) =>
+    this.interpretNode(ast).map((v) => v === UNHANDLED ? undefined : v as Database),
+  );
 }
 
 // Interpret all files. Returns raw MasterDatabase
@@ -57,10 +57,13 @@ export function interpretProject (this: Compiler): Report<MasterDatabase> {
   // Interpret each file
   const perFile = new Map<string, Database>();
   for (const file of allFiles) {
-    const ast = this.parseFile(file).getValue().ast;
-    const result = this.interpretNode(ast);
-    if (result.getFiltered(UNHANDLED)) {
-      perFile.set(file.absolute, result.getValue() as Database);
+    const parseResult = this.parseFile(file);
+    errors.push(...parseResult.getErrors());
+    warnings.push(...parseResult.getWarnings());
+    const result = this.interpretNode(parseResult.getValue().ast);
+    const db = result.getFiltered(UNHANDLED);
+    if (db) {
+      perFile.set(file.absolute, db as Database);
     }
     errors.push(...result.getErrors());
     warnings.push(...result.getWarnings());
@@ -167,7 +170,7 @@ export function exportSchemaJson (this: Compiler, filepath: Filepath): Report<Re
       const isRenamed = primaryName !== ext.name || ext.schemaName !== null;
       pushItem(reconciled, kind, isRenamed ? { ...found, name: primaryName, schemaName: null } : found);
 
-      if (kind === ElementKind.Table) {
+      if (kind === AliasKind.Table) {
         renameMap.set(canonicalElementKey(ext.schemaName, ext.name), primaryName);
       }
 

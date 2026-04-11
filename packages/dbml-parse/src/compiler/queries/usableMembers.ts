@@ -30,7 +30,8 @@ export function usableMembers (this: Compiler, symbolOrFilepath: SchemaSymbol | 
 
   const filepath = symbolOrFilepath instanceof Filepath ? symbolOrFilepath : symbolOrFilepath.filepath;
 
-  const { ast } = this.parseFile(filepath).getValue();
+  const parseResult = this.parseFile(filepath);
+  const { ast } = parseResult.getValue();
 
   for (const element of ast.body) {
     if (!(element instanceof UseDeclarationNode) || !element.specifiers || !element.importPath) continue;
@@ -75,9 +76,9 @@ export function usableMembers (this: Compiler, symbolOrFilepath: SchemaSymbol | 
 
       if (nestedSchemaName === true) {
       // Direct member of this schema
-        const symbol = this.nodeSymbol(element).getFiltered(UNHANDLED);
-        if (!symbol) continue;
-        nonSchemaMembers.push(symbol);
+        const memberSymbol = this.nodeSymbol(element).getFiltered(UNHANDLED);
+        if (!memberSymbol) continue;
+        nonSchemaMembers.push(memberSymbol);
       } else {
       // Element belongs to a child schema - create it if not yet seen
         if (!childSchemas.has(nestedSchemaName)) {
@@ -98,18 +99,22 @@ export function usableMembers (this: Compiler, symbolOrFilepath: SchemaSymbol | 
     schemaMembers.push(...childSchemas.values());
   }
 
-  return Report.create({
-    nonSchemaMembers,
-    schemaMembers,
-    reuses: {
-      selective: selectiveReuses,
-      wildcard: wildcardReuses,
+  return new Report(
+    {
+      nonSchemaMembers,
+      schemaMembers,
+      reuses: {
+        selective: selectiveReuses,
+        wildcard: wildcardReuses,
+      },
+      uses: {
+        selective: selectiveUses,
+        wildcard: wildcardUses,
+      },
     },
-    uses: {
-      selective: selectiveUses,
-      wildcard: wildcardUses,
-    },
-  });
+    parseResult.getErrors(),
+    parseResult.getWarnings(),
+  );
 }
 
 // Return if this node introduces a declaration belong to schemaSymbol

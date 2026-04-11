@@ -3,6 +3,7 @@ import { CallExpressionNode, ElementDeclarationNode, ProgramNode, UseSpecifierLi
 import { ElementKind } from '@/core/types/keywords';
 import { DEFAULT_SCHEMA_NAME, UNHANDLED } from '@/constants';
 import Report from '@/core/types/report';
+import { AliasKind } from '@/core/types/schemaJson';
 import type { Database, DiagramView, ElementRef, Ref, RefEndpoint, Table, TableRecord, SchemaElement, Enum, TableGroup, TablePartial, Note, Project } from '@/core/types/schemaJson';
 import { getTokenPosition, getMultiplicities } from '../utils';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
@@ -126,7 +127,7 @@ export default class ProgramInterpreter {
       if (table.alias) {
         db.aliases.push({
           name: table.alias,
-          kind: 'table' as const,
+          kind: AliasKind.Table,
           value: { elementName: table.name, tableName: table.name, schemaName: table.schemaName },
         });
       }

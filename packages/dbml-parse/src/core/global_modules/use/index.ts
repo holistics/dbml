@@ -64,7 +64,7 @@ export const useModule: GlobalModule = {
     if (!compiler.layout.exists(importPath)) return Report.create(
       undefined,
       [
-        new CompileError(CompileErrorCode.NONEXISTENT_MODULE, `${symbolKind} '${fullname?.join('.') ?? name} does not exist in file ${importPath.toString()}'. Does the file exist?`, node),
+        new CompileError(CompileErrorCode.NONEXISTENT_MODULE, `${symbolKind} '${fullname?.join('.') ?? name}' does not exist in file ${importPath.toString()}. Does the file exist?`, node),
       ],
     );
 
@@ -79,37 +79,8 @@ export const useModule: GlobalModule = {
       });
     }
 
-    const usable = compiler.fileUsableMembers(importPath).getFiltered(UNHANDLED);
-    if (!usable) return Report.create(undefined);
-
-    // 1. Direct non-schema members
-    const directMember = usable.nonSchemaMembers.find((m) => compiler.symbolName(m) === name);
-    if (directMember && (!symbolKind || directMember.isKind(symbolKind))) {
-      return Report.create(directMember);
-    }
-
-    // 2. Direct schema members
-    const directSchema = usable.schemaMembers.find((m) => m.name === name);
-    if (directSchema && (!symbolKind || directSchema.isKind(SymbolKind.Schema))) {
-      return Report.create(directSchema);
-    }
-
-    // 3. Selective reuses
-    for (const specifier of usable.reuses.selective) {
-      if (specifier.alias) {
-        if (destructureComplexVariable(specifier.alias)?.at(-1) === name) {
-          return Report.create(compiler.nodeSymbol(specifier).getFiltered(UNHANDLED));
-        }
-      } else if (destructureComplexVariable(specifier.name)?.at(-1) === name) {
-        return Report.create(compiler.nodeSymbol(specifier).getFiltered(UNHANDLED));
-      }
-    }
-
-    // 4. Wildcard reuses
-    for (const { importPath: wildcardPath } of usable.reuses.wildcard) {
-      const member = lookupMemberInFilepath(compiler, wildcardPath, name, symbolKind);
-      if (member) return Report.create(member);
-    }
+    const found = lookupMemberInFilepath(compiler, importPath, name, symbolKind);
+    if (found) return Report.create(found);
 
     return Report.create(
       undefined,
@@ -176,7 +147,7 @@ export const useModule: GlobalModule = {
     const name = compiler.symbolName(symbol);
 
     if (name && 'name' in value) {
-      return Report.create({ ...value, name });
+      return Report.create({ ...value, name } as typeof value);
     }
 
     return Report.create(value);
@@ -192,23 +163,19 @@ function lookupMemberInFilepath (compiler: Compiler, importPath: Filepath | unde
 
   // 1. Direct non-schema members
   const directMember = usable.nonSchemaMembers.find((m) => compiler.symbolName(m) === name);
-  if (directMember && (!symbolKind || directMember.isKind(symbolKind))) {
+  if (directMember && directMember.isKind(symbolKind)) {
     return directMember;
   }
 
   // 2. Direct schema members
   const directSchema = usable.schemaMembers.find((m) => m.name === name);
-  if (directSchema && (!symbolKind || directSchema.isKind(SymbolKind.Schema))) {
+  if (directSchema && directSchema.isKind(SymbolKind.Schema)) {
     return directSchema;
   }
 
   // 3. Selective reuses
   for (const specifier of usable.reuses.selective) {
-    if (specifier.alias) {
-      if (destructureComplexVariable(specifier.alias)?.at(-1) === name) {
-        return compiler.nodeSymbol(specifier).getFiltered(UNHANDLED);
-      }
-    } else if (destructureComplexVariable(specifier.name)?.at(-1) === name) {
+    if (destructureComplexVariable(specifier.alias ?? specifier.name)?.at(-1) === name) {
       return compiler.nodeSymbol(specifier).getFiltered(UNHANDLED);
     }
   }

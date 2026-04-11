@@ -9,9 +9,10 @@ export function lookupMembers (this: Compiler, symbolOrNode: NodeSymbol | Syntax
   if (symbolOrNode instanceof NodeSymbol) {
     symbol = symbolOrNode;
   } else {
-    const nodeSymbol = this.nodeSymbol(symbolOrNode).getValue();
+    const nodeSymbolReport = this.nodeSymbol(symbolOrNode);
+    const nodeSymbol = nodeSymbolReport.getValue();
     if (!(nodeSymbol instanceof NodeSymbol)) {
-      return Report.create(undefined);
+      return new Report(undefined, nodeSymbolReport.getErrors(), nodeSymbolReport.getWarnings());
     }
     symbol = nodeSymbol;
   }
