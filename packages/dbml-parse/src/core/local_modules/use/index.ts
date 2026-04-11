@@ -60,15 +60,6 @@ export const useModule: LocalModule = {
       );
     }
 
-    if (node.isKind(ImportKind.TableGroup) && name.length > 1) {
-      return Report.create(
-        name,
-        [
-          new CompileError(CompileErrorCode.INVALID_USE_SPECIFIER_NAME, 'A TableGroup name must be a simple name', node),
-        ],
-      );
-    }
-
     return new Report(name);
   },
 

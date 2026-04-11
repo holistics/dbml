@@ -175,13 +175,8 @@ export const useModule: GlobalModule = {
 
     const name = compiler.symbolName(symbol);
 
-    // FIXME: Apply alias if it exists
-    if (name) {
-      const clonedValue = JSON.parse(JSON.stringify(value));
-      if ('name' in clonedValue) {
-        clonedValue.name = name;
-      }
-      return Report.create(clonedValue);
+    if (name && 'name' in value) {
+      return Report.create({ ...value, name });
     }
 
     return Report.create(value);
