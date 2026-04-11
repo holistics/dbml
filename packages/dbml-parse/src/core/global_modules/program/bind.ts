@@ -23,7 +23,7 @@ import {
 } from '@/core/utils/expression';
 import { ElementKind, SettingName } from '@/core/types/keywords';
 import { UNHANDLED } from '@/constants';
-import { SchemaSymbol } from '@/core/types/symbol';
+import { InjectedColumnSymbol, SchemaSymbol } from '@/core/types/symbol';
 
 export default class Binder {
   private ast: ProgramNode;
@@ -219,6 +219,55 @@ export default class Binder {
                 );
               } else {
                 seenRefIds.set(refId, attr);
+              }
+            }
+          }
+        }
+
+        // Injected columns from TablePartials: check same-endpoint and circular refs using
+        // the injected symbol IDs so they interoperate with refs from direct table columns.
+        if (isElementNode(decl, ElementKind.Table)) {
+          const tableSymResult = this.compiler.nodeSymbol(decl);
+          if (!tableSymResult.hasValue(UNHANDLED)) {
+            const tableSym = tableSymResult.getValue();
+            if (tableSym) {
+              const membersResult = this.compiler.symbolMembers(tableSym);
+              if (!membersResult.hasValue(UNHANDLED)) {
+                for (const member of membersResult.getValue()) {
+                  if (!(member instanceof InjectedColumnSymbol) || !member.declaration) continue;
+
+                  const injSettingsResult = this.compiler.nodeSettings(member.declaration);
+                  if (injSettingsResult.hasValue(UNHANDLED)) continue;
+                  const injRefAttrs = injSettingsResult.getValue()[SettingName.Ref];
+                  if (!injRefAttrs || injRefAttrs.length === 0) continue;
+
+                  for (const attr of injRefAttrs) {
+                    const refValue = attr.value;
+                    if (!(refValue instanceof PrefixExpressionNode)) continue;
+                    if (!refValue.op || !isRelationshipOp(refValue.op.value)) continue;
+                    if (!refValue.expression) continue;
+
+                    const rightIds = this.getColumnSymbolIds(refValue.expression);
+                    if (!rightIds) continue;
+                    const leftIds = [member.id];
+
+                    if (this.isSameEndpoint(leftIds, rightIds)) {
+                      errors.push(new CompileError(CompileErrorCode.SAME_ENDPOINT, 'Two endpoints are the same', attr));
+                      continue;
+                    }
+
+                    const refId = this.getRefId(leftIds, rightIds);
+                    const existing = seenRefIds.get(refId);
+                    if (existing) {
+                      errors.push(
+                        new CompileError(CompileErrorCode.CIRCULAR_REF, 'References with same endpoints exist', attr),
+                        new CompileError(CompileErrorCode.CIRCULAR_REF, 'References with same endpoints exist', existing),
+                      );
+                    } else {
+                      seenRefIds.set(refId, attr);
+                    }
+                  }
+                }
               }
             }
           }

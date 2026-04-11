@@ -1,331 +1,41 @@
 {
-  "database": {
-    "aliases": [],
-    "diagramViews": [],
-    "enums": [],
-    "externals": {
-      "enums": [],
-      "notes": [],
-      "tableGroups": [],
-      "tablePartials": [],
-      "tables": []
+  "errors": [
+    {
+      "code": "SAME_ENDPOINT",
+      "diagnostic": "Two endpoints are the same",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<attribute>@@[L1:C13, L1:C26]",
+          "snippet": "ref: > T.col1"
+        }
+      }
     },
-    "notes": [],
-    "records": [],
-    "refs": [
-      {
-        "endpoints": [
-          {
-            "fieldNames": [
-              "col2"
-            ],
-            "relation": "*",
-            "schemaName": null,
-            "tableName": "T",
-            "token": {
-              "end": {
-                "column": 26,
-                "line": 8,
-                "offset": 116
-              },
-              "filepath": {
-                "path": "/main.dbml"
-              },
-              "start": {
-                "column": 3,
-                "line": 8,
-                "offset": 93
-              }
-            }
-          },
-          {
-            "fieldNames": [
-              "col3"
-            ],
-            "relation": "1",
-            "schemaName": null,
-            "tableName": "T",
-            "token": {
-              "end": {
-                "column": 25,
-                "line": 8,
-                "offset": 115
-              },
-              "filepath": {
-                "path": "/main.dbml"
-              },
-              "start": {
-                "column": 14,
-                "line": 8,
-                "offset": 104
-              }
-            }
-          }
-        ],
-        "name": null,
-        "schemaName": null,
-        "token": {
-          "end": {
-            "column": 25,
-            "line": 8,
-            "offset": 115
-          },
-          "filepath": {
-            "path": "/main.dbml"
-          },
-          "start": {
-            "column": 14,
-            "line": 8,
-            "offset": 104
-          }
+    {
+      "code": "CIRCULAR_REF",
+      "diagnostic": "References with same endpoints exist",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<attribute>@@[L2:C13, L2:C26]",
+          "snippet": "ref: > T.col2"
         }
       }
-    ],
-    "schemas": [],
-    "tableGroups": [],
-    "tablePartials": [
-      {
-        "checks": [],
-        "fields": [
-          {
-            "checks": [],
-            "increment": false,
-            "inline_refs": [
-              {
-                "fieldNames": [
-                  "col1"
-                ],
-                "relation": ">",
-                "schemaName": null,
-                "tableName": "T",
-                "token": {
-                  "end": {
-                    "column": 27,
-                    "line": 2,
-                    "offset": 43
-                  },
-                  "filepath": {
-                    "path": "/main.dbml"
-                  },
-                  "start": {
-                    "column": 14,
-                    "line": 2,
-                    "offset": 30
-                  }
-                }
-              }
-            ],
-            "name": "col1",
-            "pk": false,
-            "token": {
-              "end": {
-                "column": 28,
-                "line": 2,
-                "offset": 44
-              },
-              "filepath": {
-                "path": "/main.dbml"
-              },
-              "start": {
-                "column": 3,
-                "line": 2,
-                "offset": 19
-              }
-            },
-            "type": {
-              "args": null,
-              "schemaName": null,
-              "type_name": "type"
-            },
-            "unique": false
-          },
-          {
-            "checks": [],
-            "increment": false,
-            "inline_refs": [
-              {
-                "fieldNames": [
-                  "col2"
-                ],
-                "relation": ">",
-                "schemaName": null,
-                "tableName": "T",
-                "token": {
-                  "end": {
-                    "column": 27,
-                    "line": 3,
-                    "offset": 71
-                  },
-                  "filepath": {
-                    "path": "/main.dbml"
-                  },
-                  "start": {
-                    "column": 14,
-                    "line": 3,
-                    "offset": 58
-                  }
-                }
-              }
-            ],
-            "name": "col3",
-            "pk": false,
-            "token": {
-              "end": {
-                "column": 28,
-                "line": 3,
-                "offset": 72
-              },
-              "filepath": {
-                "path": "/main.dbml"
-              },
-              "start": {
-                "column": 3,
-                "line": 3,
-                "offset": 47
-              }
-            },
-            "type": {
-              "args": null,
-              "schemaName": null,
-              "type_name": "type"
-            },
-            "unique": false
-          }
-        ],
-        "indexes": [],
-        "name": "T",
-        "token": {
-          "end": {
-            "column": 2,
-            "line": 4,
-            "offset": 74
-          },
-          "filepath": {
-            "path": "/main.dbml"
-          },
-          "start": {
-            "column": 1,
-            "line": 1,
-            "offset": 0
-          }
+    },
+    {
+      "code": "CIRCULAR_REF",
+      "diagnostic": "References with same endpoints exist",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<attribute>@@[L7:C13, L7:C24]",
+          "snippet": "ref: > col3"
         }
-      }
-    ],
-    "tables": [
-      {
-        "alias": null,
-        "checks": [],
-        "fields": [
-          {
-            "checks": [],
-            "increment": false,
-            "inline_refs": [
-              {
-                "fieldNames": [
-                  "col3"
-                ],
-                "relation": ">",
-                "schemaName": null,
-                "tableName": "T",
-                "token": {
-                  "end": {
-                    "column": 25,
-                    "line": 8,
-                    "offset": 115
-                  },
-                  "filepath": {
-                    "path": "/main.dbml"
-                  },
-                  "start": {
-                    "column": 14,
-                    "line": 8,
-                    "offset": 104
-                  }
-                }
-              }
-            ],
-            "name": "col2",
-            "pk": false,
-            "token": {
-              "end": {
-                "column": 26,
-                "line": 8,
-                "offset": 116
-              },
-              "filepath": {
-                "path": "/main.dbml"
-              },
-              "start": {
-                "column": 3,
-                "line": 8,
-                "offset": 93
-              }
-            },
-            "type": {
-              "args": null,
-              "schemaName": null,
-              "type_name": "type"
-            },
-            "unique": false
-          }
-        ],
-        "indexes": [],
-        "name": "T",
-        "partials": [
-          {
-            "name": "T",
-            "order": 0,
-            "token": {
-              "end": {
-                "column": 5,
-                "line": 7,
-                "offset": 90
-              },
-              "filepath": {
-                "path": "/main.dbml"
-              },
-              "start": {
-                "column": 3,
-                "line": 7,
-                "offset": 88
-              }
-            }
-          }
-        ],
-        "schemaName": null,
-        "token": {
-          "end": {
-            "column": 2,
-            "line": 9,
-            "offset": 118
-          },
-          "filepath": {
-            "path": "/main.dbml"
-          },
-          "start": {
-            "column": 1,
-            "line": 6,
-            "offset": 76
-          }
-        }
-      }
-    ],
-    "token": {
-      "end": {
-        "column": 1,
-        "line": 10,
-        "offset": 119
-      },
-      "filepath": {
-        "path": "/main.dbml"
-      },
-      "start": {
-        "column": 1,
-        "line": 1,
-        "offset": 0
       }
     }
-  },
-  "errors": [],
+  ],
   "warnings": []
 }
