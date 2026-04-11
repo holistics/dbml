@@ -3,36 +3,42 @@
     {
       "code": "UNKNOWN_TOKEN",
       "diagnostic": "Invalid number",
+      "filepath": "/main.dbml",
       "level": "error",
       "token": {
         "context": {
-          "id": "token@<number>@:1.a@[L5:C0, L5:C3]",
+          "id": "token@<number>@1.a@[L5:C0, L5:C3]",
           "snippet": "1.a",
-          "isInvalid": true
+          "isInvalid": true,
+          "filepath": "/main.dbml"
         }
       }
     },
     {
       "code": "UNKNOWN_TOKEN",
       "diagnostic": "Invalid number",
+      "filepath": "/main.dbml",
       "level": "error",
       "token": {
         "context": {
-          "id": "token@<number>@:1.3.a@[L6:C0, L6:C5]",
+          "id": "token@<number>@1.3.a@[L6:C0, L6:C5]",
           "snippet": "1.3.a",
-          "isInvalid": true
+          "isInvalid": true,
+          "filepath": "/main.dbml"
         }
       }
     },
     {
       "code": "UNKNOWN_TOKEN",
       "diagnostic": "Invalid number",
+      "filepath": "/main.dbml",
       "level": "error",
       "token": {
         "context": {
-          "id": "token@<number>@:1.4.a.b@[L7:C0, L7:C7]",
+          "id": "token@<number>@1.4.a.b@[L7:C0, L7:C7]",
           "snippet": "1.4.a.b",
-          "isInvalid": true
+          "isInvalid": true,
+          "filepath": "/main.dbml"
         }
       }
     }
@@ -40,7 +46,7 @@
   "tokens": [
     {
       "context": {
-        "id": "token@<identifier>@:12_abc@[L0:C0, L0:C6]",
+        "id": "token@<identifier>@12_abc@[L0:C0, L0:C6]",
         "snippet": "12_abc"
       },
       "leadingTrivia": "",
@@ -49,7 +55,7 @@
     },
     {
       "context": {
-        "id": "token@<identifier>@:226_abc@[L1:C0, L1:C7]",
+        "id": "token@<identifier>@226_abc@[L1:C0, L1:C7]",
         "snippet": "226_abc"
       },
       "leadingTrivia": "",
@@ -58,7 +64,7 @@
     },
     {
       "context": {
-        "id": "token@<identifier>@:3a@[L2:C0, L2:C2]",
+        "id": "token@<identifier>@3a@[L2:C0, L2:C2]",
         "snippet": "3a"
       },
       "leadingTrivia": "",
@@ -67,7 +73,7 @@
     },
     {
       "context": {
-        "id": "token@<identifier>@:3a@[L3:C0, L3:C2]",
+        "id": "token@<identifier>@3a@[L3:C0, L3:C2]",
         "snippet": "3a"
       },
       "leadingTrivia": "",
@@ -76,7 +82,7 @@
     },
     {
       "context": {
-        "id": "token@<op>@:.@[L3:C2, L3:C3]",
+        "id": "token@<op>@.@[L3:C2, L3:C3]",
         "snippet": "."
       },
       "leadingTrivia": "",
@@ -85,7 +91,7 @@
     },
     {
       "context": {
-        "id": "token@<identifier>@:4a@[L3:C3, L3:C5]",
+        "id": "token@<identifier>@4a@[L3:C3, L3:C5]",
         "snippet": "4a"
       },
       "leadingTrivia": "",
@@ -94,7 +100,7 @@
     },
     {
       "context": {
-        "id": "token@<identifier>@:3a3@[L4:C0, L4:C3]",
+        "id": "token@<identifier>@3a3@[L4:C0, L4:C3]",
         "snippet": "3a3"
       },
       "leadingTrivia": "",
@@ -103,7 +109,7 @@
     },
     {
       "context": {
-        "id": "token@<eof>@:@[L7:C25, L7:C25]",
+        "id": "token@<eof>@@[L7:C25, L7:C25]",
         "snippet": ""
       },
       "leadingTrivia": "",

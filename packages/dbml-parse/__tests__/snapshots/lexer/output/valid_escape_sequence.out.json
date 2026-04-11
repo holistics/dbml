@@ -3,7 +3,7 @@
   "tokens": [
     {
       "context": {
-        "id": "token@<variable>@:\n@[L0:C0, L0:C4]",
+        "id": "token@<variable>@\n@[L0:C0, L0:C4]",
         "snippet": "\"\\n\""
       },
       "leadingTrivia": "",
@@ -12,7 +12,7 @@
     },
     {
       "context": {
-        "id": "token@<variable>@:\r@[L1:C0, L1:C4]",
+        "id": "token@<variable>@\r@[L1:C0, L1:C4]",
         "snippet": "\"\\r\""
       },
       "leadingTrivia": "",
@@ -21,7 +21,7 @@
     },
     {
       "context": {
-        "id": "token@<variable>@:ꯎ@[L2:C0, L2:C8]",
+        "id": "token@<variable>@ꯎ@[L2:C0, L2:C8]",
         "snippet": "\"\\uabce\""
       },
       "leadingTrivia": "",
@@ -30,7 +30,7 @@
     },
     {
       "context": {
-        "id": "token@<variable>@:ሿ@[L3:C0, L3:C8]",
+        "id": "token@<variable>@ሿ@[L3:C0, L3:C8]",
         "snippet": "\"\\u123F\""
       },
       "leadingTrivia": "",
@@ -39,7 +39,7 @@
     },
     {
       "context": {
-        "id": "token@<variable>@:ꯍ@[L4:C0, L4:C8]",
+        "id": "token@<variable>@ꯍ@[L4:C0, L4:C8]",
         "snippet": "\"\\uABCD\""
       },
       "leadingTrivia": "",
@@ -48,7 +48,7 @@
     },
     {
       "context": {
-        "id": "token@<variable>@:\t@[L5:C0, L5:C4]",
+        "id": "token@<variable>@\t@[L5:C0, L5:C4]",
         "snippet": "\"\\t\""
       },
       "leadingTrivia": "",
@@ -57,7 +57,7 @@
     },
     {
       "context": {
-        "id": "token@<variable>@:\u000b@[L6:C0, L6:C4]",
+        "id": "token@<variable>@\u000b@[L6:C0, L6:C4]",
         "snippet": "\"\\v\""
       },
       "leadingTrivia": "",
@@ -66,7 +66,7 @@
     },
     {
       "context": {
-        "id": "token@<string>@:This is a single line ''' @[L7:C0, L7:C33]",
+        "id": "token@<string>@This is a single line ''' @[L7:C0, L7:C33]",
         "snippet": "'''This is...e \\''' '''"
       },
       "leadingTrivia": "",
@@ -75,7 +75,7 @@
     },
     {
       "context": {
-        "id": "token@<string>@:This is a single line here!@[L8:C0, L9:C8]",
+        "id": "token@<string>@This is a single line here!@[L8:C0, L9:C8]",
         "snippet": "'''This is...\\\nhere!'''"
       },
       "leadingTrivia": "",
@@ -84,7 +84,7 @@
     },
     {
       "context": {
-        "id": "token@<string>@:This is not a single line \\ !@[L11:C0, L11:C35]",
+        "id": "token@<string>@This is not a single line \\ !@[L11:C0, L11:C35]",
         "snippet": "'''This is...ine \\ !'''"
       },
       "leadingTrivia": "\n",
@@ -93,7 +93,7 @@
     },
     {
       "context": {
-        "id": "token@<string>@:This is also not a single line \\    \nas there are spaces after \\@[L12:C0, L13:C31]",
+        "id": "token@<string>@This is also not a single line \\    \nas there are spaces after \\@[L12:C0, L13:C31]",
         "snippet": "'''This is...fter \\\\'''"
       },
       "leadingTrivia": "",
@@ -102,7 +102,7 @@
     },
     {
       "context": {
-        "id": "token@<function-expression>@:This is single line\n\n\n@[L14:C0, L17:C1]",
+        "id": "token@<function-expression>@This is single line\n\n\n@[L14:C0, L17:C1]",
         "snippet": "`This is s...e line\n\n\n`"
       },
       "leadingTrivia": "",
@@ -111,7 +111,7 @@
     },
     {
       "context": {
-        "id": "token@<eof>@:@[L18:C0, L18:C0]",
+        "id": "token@<eof>@@[L18:C0, L18:C0]",
         "snippet": ""
       },
       "leadingTrivia": "",

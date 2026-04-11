@@ -3,28 +3,25 @@
   "program": {
     "context": {
       "id": "node@<program>@@[L0:C0, L7:C1]",
-      "filepath": "/main.dbml",
       "snippet": "Table User...errer_id\n}"
     },
     "children": {
       "body": [
         {
           "context": {
-            "id": "node@<element-declaration>@:Users@[L0:C0, L3:C1]",
-            "filepath": "/main.dbml",
+            "id": "node@<element-declaration>@Users@[L0:C0, L3:C1]",
             "snippet": "Table User...integer \n}"
           },
           "children": {
             "body": {
               "context": {
                 "id": "node@<block-expression>@@[L0:C12, L3:C1]",
-                "filepath": "/main.dbml",
                 "snippet": "{\n    id i...integer \n}"
               },
               "children": {
                 "blockCloseBrace": {
                   "context": {
-                    "id": "token@<rbrace>@:}@[L3:C0, L3:C1]",
+                    "id": "token@<rbrace>@}@[L3:C0, L3:C1]",
                     "snippet": "}"
                   },
                   "leadingTrivia": "",
@@ -33,7 +30,7 @@
                 },
                 "blockOpenBrace": {
                   "context": {
-                    "id": "token@<lbrace>@:{@[L0:C12, L0:C13]",
+                    "id": "token@<lbrace>@{@[L0:C12, L0:C13]",
                     "snippet": "{"
                   },
                   "leadingTrivia": "",
@@ -44,7 +41,6 @@
                   {
                     "context": {
                       "id": "node@<function-application>@@[L1:C4, L1:C14]",
-                      "filepath": "/main.dbml",
                       "snippet": "id integer"
                     },
                     "children": {
@@ -52,69 +48,65 @@
                         {
                           "context": {
                             "id": "node@<primary-expression>@@[L1:C7, L1:C14]",
-                            "filepath": "/main.dbml",
                             "snippet": "integer"
                           },
                           "children": {
                             "expression": {
                               "context": {
-                                "id": "node@<variable>@:integer@[L1:C7, L1:C14]",
-                                "filepath": "/main.dbml",
+                                "id": "node@<variable>@integer@[L1:C7, L1:C14]",
                                 "snippet": "integer"
                               },
                               "children": {
-                                "fullEnd": 29,
-                                "fullStart": 21,
                                 "variable": {
                                   "context": {
-                                    "id": "token@<identifier>@:integer@[L1:C7, L1:C14]",
+                                    "id": "token@<identifier>@integer@[L1:C7, L1:C14]",
                                     "snippet": "integer"
                                   },
                                   "leadingTrivia": "",
                                   "trailingTrivia": "\n",
                                   "value": "integer"
                                 }
-                              }
-                            },
-                            "fullEnd": 29,
-                            "fullStart": 21
-                          }
+                              },
+                              "fullEnd": 29,
+                              "fullStart": 21
+                            }
+                          },
+                          "fullEnd": 29,
+                          "fullStart": 21
                         }
                       ],
                       "callee": {
                         "context": {
                           "id": "node@<primary-expression>@@[L1:C4, L1:C6]",
-                          "filepath": "/main.dbml",
                           "snippet": "id"
                         },
                         "children": {
                           "expression": {
                             "context": {
-                              "id": "node@<variable>@:id@[L1:C4, L1:C6]",
-                              "filepath": "/main.dbml",
+                              "id": "node@<variable>@id@[L1:C4, L1:C6]",
                               "snippet": "id"
                             },
                             "children": {
-                              "fullEnd": 21,
-                              "fullStart": 14,
                               "variable": {
                                 "context": {
-                                  "id": "token@<identifier>@:id@[L1:C4, L1:C6]",
+                                  "id": "token@<identifier>@id@[L1:C4, L1:C6]",
                                   "snippet": "id"
                                 },
                                 "leadingTrivia": "    ",
                                 "trailingTrivia": " ",
                                 "value": "id"
                               }
-                            }
-                          },
-                          "fullEnd": 21,
-                          "fullStart": 14
-                        }
-                      },
-                      "fullEnd": 29,
-                      "fullStart": 14
+                            },
+                            "fullEnd": 21,
+                            "fullStart": 14
+                          }
+                        },
+                        "fullEnd": 21,
+                        "fullStart": 14
+                      }
                     },
+                    "fullEnd": 29,
+                    "fullStart": 14,
                     "symbol": {
                       "context": {
                         "id": "symbol@<function-application>@@[L1:C4, L1:C14]",
@@ -135,7 +127,6 @@
                   {
                     "context": {
                       "id": "node@<function-application>@@[L2:C4, L2:C23]",
-                      "filepath": "/main.dbml",
                       "snippet": "referrer_id integer"
                     },
                     "children": {
@@ -143,69 +134,65 @@
                         {
                           "context": {
                             "id": "node@<primary-expression>@@[L2:C16, L2:C23]",
-                            "filepath": "/main.dbml",
                             "snippet": "integer"
                           },
                           "children": {
                             "expression": {
                               "context": {
-                                "id": "node@<variable>@:integer@[L2:C16, L2:C23]",
-                                "filepath": "/main.dbml",
+                                "id": "node@<variable>@integer@[L2:C16, L2:C23]",
                                 "snippet": "integer"
                               },
                               "children": {
-                                "fullEnd": 54,
-                                "fullStart": 45,
                                 "variable": {
                                   "context": {
-                                    "id": "token@<identifier>@:integer@[L2:C16, L2:C23]",
+                                    "id": "token@<identifier>@integer@[L2:C16, L2:C23]",
                                     "snippet": "integer"
                                   },
                                   "leadingTrivia": "",
                                   "trailingTrivia": " \n",
                                   "value": "integer"
                                 }
-                              }
-                            },
-                            "fullEnd": 54,
-                            "fullStart": 45
-                          }
+                              },
+                              "fullEnd": 54,
+                              "fullStart": 45
+                            }
+                          },
+                          "fullEnd": 54,
+                          "fullStart": 45
                         }
                       ],
                       "callee": {
                         "context": {
                           "id": "node@<primary-expression>@@[L2:C4, L2:C15]",
-                          "filepath": "/main.dbml",
                           "snippet": "referrer_id"
                         },
                         "children": {
                           "expression": {
                             "context": {
-                              "id": "node@<variable>@:referrer_id@[L2:C4, L2:C15]",
-                              "filepath": "/main.dbml",
+                              "id": "node@<variable>@referrer_id@[L2:C4, L2:C15]",
                               "snippet": "referrer_id"
                             },
                             "children": {
-                              "fullEnd": 45,
-                              "fullStart": 29,
                               "variable": {
                                 "context": {
-                                  "id": "token@<identifier>@:referrer_id@[L2:C4, L2:C15]",
+                                  "id": "token@<identifier>@referrer_id@[L2:C4, L2:C15]",
                                   "snippet": "referrer_id"
                                 },
                                 "leadingTrivia": "    ",
                                 "trailingTrivia": " ",
                                 "value": "referrer_id"
                               }
-                            }
-                          },
-                          "fullEnd": 45,
-                          "fullStart": 29
-                        }
-                      },
-                      "fullEnd": 54,
-                      "fullStart": 29
+                            },
+                            "fullEnd": 45,
+                            "fullStart": 29
+                          }
+                        },
+                        "fullEnd": 45,
+                        "fullStart": 29
+                      }
                     },
+                    "fullEnd": 54,
+                    "fullStart": 29,
                     "symbol": {
                       "context": {
                         "id": "symbol@<function-application>@@[L2:C4, L2:C23]",
@@ -223,47 +210,43 @@
                       ]
                     }
                   }
-                ],
-                "fullEnd": 56,
-                "fullStart": 12
-              }
+                ]
+              },
+              "fullEnd": 56,
+              "fullStart": 12
             },
-            "fullEnd": 56,
-            "fullStart": 0,
             "name": {
               "context": {
                 "id": "node@<primary-expression>@@[L0:C6, L0:C11]",
-                "filepath": "/main.dbml",
                 "snippet": "Users"
               },
               "children": {
                 "expression": {
                   "context": {
-                    "id": "node@<variable>@:Users@[L0:C6, L0:C11]",
-                    "filepath": "/main.dbml",
+                    "id": "node@<variable>@Users@[L0:C6, L0:C11]",
                     "snippet": "Users"
                   },
                   "children": {
-                    "fullEnd": 12,
-                    "fullStart": 6,
                     "variable": {
                       "context": {
-                        "id": "token@<identifier>@:Users@[L0:C6, L0:C11]",
+                        "id": "token@<identifier>@Users@[L0:C6, L0:C11]",
                         "snippet": "Users"
                       },
                       "leadingTrivia": "",
                       "trailingTrivia": " ",
                       "value": "Users"
                     }
-                  }
-                },
-                "fullEnd": 12,
-                "fullStart": 6
-              }
+                  },
+                  "fullEnd": 12,
+                  "fullStart": 6
+                }
+              },
+              "fullEnd": 12,
+              "fullStart": 6
             },
             "type": {
               "context": {
-                "id": "token@<identifier>@:Table@[L0:C0, L0:C5]",
+                "id": "token@<identifier>@Table@[L0:C0, L0:C5]",
                 "snippet": "Table"
               },
               "leadingTrivia": "",
@@ -271,13 +254,15 @@
               "value": "Table"
             }
           },
+          "fullEnd": 56,
+          "fullStart": 0,
           "symbol": {
             "context": {
-              "id": "symbol@<element-declaration>@:Users@[L0:C0, L3:C1]",
+              "id": "symbol@<element-declaration>@Users@[L0:C0, L3:C1]",
               "snippet": "Table User...integer \n}"
             },
             "declaration": {
-              "id": "node@<element-declaration>@:Users@[L0:C0, L3:C1]",
+              "id": "node@<element-declaration>@Users@[L0:C0, L3:C1]",
               "snippet": "Table User...integer \n}"
             },
             "members": [
@@ -308,21 +293,19 @@
         },
         {
           "context": {
-            "id": "node@<element-declaration>@:@[L5:C0, L7:C1]",
-            "filepath": "/main.dbml",
+            "id": "node@<element-declaration>@@[L5:C0, L7:C1]",
             "snippet": "Ref {\n    ...errer_id\n}"
           },
           "children": {
             "body": {
               "context": {
                 "id": "node@<block-expression>@@[L5:C4, L7:C1]",
-                "filepath": "/main.dbml",
                 "snippet": "{\n    User...errer_id\n}"
               },
               "children": {
                 "blockCloseBrace": {
                   "context": {
-                    "id": "token@<rbrace>@:}@[L7:C0, L7:C1]",
+                    "id": "token@<rbrace>@}@[L7:C0, L7:C1]",
                     "snippet": "}"
                   },
                   "leadingTrivia": "",
@@ -331,7 +314,7 @@
                 },
                 "blockOpenBrace": {
                   "context": {
-                    "id": "token@<lbrace>@:{@[L5:C4, L5:C5]",
+                    "id": "token@<lbrace>@{@[L5:C4, L5:C5]",
                     "snippet": "{"
                   },
                   "leadingTrivia": "",
@@ -342,7 +325,6 @@
                   {
                     "context": {
                       "id": "node@<function-application>@@[L6:C4, L6:C32]",
-                      "filepath": "/main.dbml",
                       "snippet": "Users.id >...eferrer_id"
                     },
                     "children": {
@@ -350,61 +332,53 @@
                       "callee": {
                         "context": {
                           "id": "node@<infix-expression>@@[L6:C4, L6:C32]",
-                          "filepath": "/main.dbml",
                           "snippet": "Users.id >...eferrer_id"
                         },
                         "children": {
-                          "fullEnd": 96,
-                          "fullStart": 63,
                           "leftExpression": {
                             "context": {
                               "id": "node@<infix-expression>@@[L6:C4, L6:C12]",
-                              "filepath": "/main.dbml",
                               "snippet": "Users.id"
                             },
                             "children": {
-                              "fullEnd": 76,
-                              "fullStart": 63,
                               "leftExpression": {
                                 "context": {
                                   "id": "node@<primary-expression>@@[L6:C4, L6:C9]",
-                                  "filepath": "/main.dbml",
                                   "snippet": "Users"
                                 },
                                 "children": {
                                   "expression": {
                                     "context": {
-                                      "id": "node@<variable>@:Users@[L6:C4, L6:C9]",
-                                      "filepath": "/main.dbml",
+                                      "id": "node@<variable>@Users@[L6:C4, L6:C9]",
                                       "snippet": "Users"
                                     },
                                     "children": {
-                                      "fullEnd": 72,
-                                      "fullStart": 63,
                                       "variable": {
                                         "context": {
-                                          "id": "token@<identifier>@:Users@[L6:C4, L6:C9]",
+                                          "id": "token@<identifier>@Users@[L6:C4, L6:C9]",
                                           "snippet": "Users"
                                         },
                                         "leadingTrivia": "    ",
                                         "trailingTrivia": "",
                                         "value": "Users"
                                       }
-                                    }
-                                  },
-                                  "fullEnd": 72,
-                                  "fullStart": 63
+                                    },
+                                    "fullEnd": 72,
+                                    "fullStart": 63
+                                  }
                                 },
+                                "fullEnd": 72,
+                                "fullStart": 63,
                                 "referee": {
                                   "context": {
-                                    "id": "symbol@<element-declaration>@:Users@[L0:C0, L3:C1]",
+                                    "id": "symbol@<element-declaration>@Users@[L0:C0, L3:C1]",
                                     "snippet": "Table User...integer \n}"
                                   }
                                 }
                               },
                               "op": {
                                 "context": {
-                                  "id": "token@<op>@:.@[L6:C9, L6:C10]",
+                                  "id": "token@<op>@.@[L6:C9, L6:C10]",
                                   "snippet": "."
                                 },
                                 "leadingTrivia": "",
@@ -414,33 +388,31 @@
                               "rightExpression": {
                                 "context": {
                                   "id": "node@<primary-expression>@@[L6:C10, L6:C12]",
-                                  "filepath": "/main.dbml",
                                   "snippet": "id"
                                 },
                                 "children": {
                                   "expression": {
                                     "context": {
-                                      "id": "node@<variable>@:id@[L6:C10, L6:C12]",
-                                      "filepath": "/main.dbml",
+                                      "id": "node@<variable>@id@[L6:C10, L6:C12]",
                                       "snippet": "id"
                                     },
                                     "children": {
-                                      "fullEnd": 76,
-                                      "fullStart": 73,
                                       "variable": {
                                         "context": {
-                                          "id": "token@<identifier>@:id@[L6:C10, L6:C12]",
+                                          "id": "token@<identifier>@id@[L6:C10, L6:C12]",
                                           "snippet": "id"
                                         },
                                         "leadingTrivia": "",
                                         "trailingTrivia": " ",
                                         "value": "id"
                                       }
-                                    }
-                                  },
-                                  "fullEnd": 76,
-                                  "fullStart": 73
+                                    },
+                                    "fullEnd": 76,
+                                    "fullStart": 73
+                                  }
                                 },
+                                "fullEnd": 76,
+                                "fullStart": 73,
                                 "referee": {
                                   "context": {
                                     "id": "symbol@<function-application>@@[L1:C4, L1:C14]",
@@ -448,11 +420,13 @@
                                   }
                                 }
                               }
-                            }
+                            },
+                            "fullEnd": 76,
+                            "fullStart": 63
                           },
                           "op": {
                             "context": {
-                              "id": "token@<op>@:>@[L6:C13, L6:C14]",
+                              "id": "token@<op>@>@[L6:C13, L6:C14]",
                               "snippet": ">"
                             },
                             "leadingTrivia": "",
@@ -462,52 +436,47 @@
                           "rightExpression": {
                             "context": {
                               "id": "node@<infix-expression>@@[L6:C15, L6:C32]",
-                              "filepath": "/main.dbml",
                               "snippet": "Users.referrer_id"
                             },
                             "children": {
-                              "fullEnd": 96,
-                              "fullStart": 78,
                               "leftExpression": {
                                 "context": {
                                   "id": "node@<primary-expression>@@[L6:C15, L6:C20]",
-                                  "filepath": "/main.dbml",
                                   "snippet": "Users"
                                 },
                                 "children": {
                                   "expression": {
                                     "context": {
-                                      "id": "node@<variable>@:Users@[L6:C15, L6:C20]",
-                                      "filepath": "/main.dbml",
+                                      "id": "node@<variable>@Users@[L6:C15, L6:C20]",
                                       "snippet": "Users"
                                     },
                                     "children": {
-                                      "fullEnd": 83,
-                                      "fullStart": 78,
                                       "variable": {
                                         "context": {
-                                          "id": "token@<identifier>@:Users@[L6:C15, L6:C20]",
+                                          "id": "token@<identifier>@Users@[L6:C15, L6:C20]",
                                           "snippet": "Users"
                                         },
                                         "leadingTrivia": "",
                                         "trailingTrivia": "",
                                         "value": "Users"
                                       }
-                                    }
-                                  },
-                                  "fullEnd": 83,
-                                  "fullStart": 78
+                                    },
+                                    "fullEnd": 83,
+                                    "fullStart": 78
+                                  }
                                 },
+                                "fullEnd": 83,
+                                "fullStart": 78,
                                 "referee": {
                                   "context": {
-                                    "id": "symbol@<element-declaration>@:Users@[L0:C0, L3:C1]",
+                                    "id": "symbol@<element-declaration>@Users@[L0:C0, L3:C1]",
                                     "snippet": "Table User...integer \n}"
                                   }
                                 }
                               },
                               "op": {
                                 "context": {
-                                  "id": "token@<op>@:.@[L6:C20, L6:C21]",
+                                  "id": "token@<op>@.@[L6:C20, L6:C21]",
                                   "snippet": "."
                                 },
                                 "leadingTrivia": "",
@@ -517,33 +486,31 @@
                               "rightExpression": {
                                 "context": {
                                   "id": "node@<primary-expression>@@[L6:C21, L6:C32]",
-                                  "filepath": "/main.dbml",
                                   "snippet": "referrer_id"
                                 },
                                 "children": {
                                   "expression": {
                                     "context": {
-                                      "id": "node@<variable>@:referrer_id@[L6:C21, L6:C32]",
-                                      "filepath": "/main.dbml",
+                                      "id": "node@<variable>@referrer_id@[L6:C21, L6:C32]",
                                       "snippet": "referrer_id"
                                     },
                                     "children": {
-                                      "fullEnd": 96,
-                                      "fullStart": 84,
                                       "variable": {
                                         "context": {
-                                          "id": "token@<identifier>@:referrer_id@[L6:C21, L6:C32]",
+                                          "id": "token@<identifier>@referrer_id@[L6:C21, L6:C32]",
                                           "snippet": "referrer_id"
                                         },
                                         "leadingTrivia": "",
                                         "trailingTrivia": "\n",
                                         "value": "referrer_id"
                                       }
-                                    }
-                                  },
-                                  "fullEnd": 96,
-                                  "fullStart": 84
+                                    },
+                                    "fullEnd": 96,
+                                    "fullStart": 84
+                                  }
                                 },
+                                "fullEnd": 96,
+                                "fullStart": 84,
                                 "referee": {
                                   "context": {
                                     "id": "symbol@<function-application>@@[L2:C4, L2:C23]",
@@ -551,45 +518,49 @@
                                   }
                                 }
                               }
-                            }
+                            },
+                            "fullEnd": 96,
+                            "fullStart": 78
                           }
-                        }
-                      },
-                      "fullEnd": 96,
-                      "fullStart": 63
-                    }
+                        },
+                        "fullEnd": 96,
+                        "fullStart": 63
+                      }
+                    },
+                    "fullEnd": 96,
+                    "fullStart": 63
                   }
-                ],
-                "fullEnd": 97,
-                "fullStart": 61
-              }
+                ]
+              },
+              "fullEnd": 97,
+              "fullStart": 61
             },
-            "fullEnd": 97,
-            "fullStart": 56,
             "type": {
               "context": {
-                "id": "token@<identifier>@:Ref@[L5:C0, L5:C3]",
+                "id": "token@<identifier>@Ref@[L5:C0, L5:C3]",
                 "snippet": "Ref"
               },
               "leadingTrivia": "\n",
               "trailingTrivia": " ",
               "value": "Ref"
             }
-          }
+          },
+          "fullEnd": 97,
+          "fullStart": 56
         }
       ],
       "eof": {
         "context": {
-          "id": "token@<eof>@:@[L7:C1, L7:C1]",
+          "id": "token@<eof>@@[L7:C1, L7:C1]",
           "snippet": ""
         },
         "leadingTrivia": "",
         "trailingTrivia": "",
         "value": ""
-      },
-      "fullEnd": 97,
-      "fullStart": 0
+      }
     },
+    "fullEnd": 97,
+    "fullStart": 0,
     "symbol": {
       "context": {
         "id": "symbol@<program>@@[L0:C0, L7:C1]",
@@ -602,7 +573,7 @@
       "members": [
         {
           "context": {
-            "id": "symbol@<element-declaration>@:Users@[L0:C0, L3:C1]",
+            "id": "symbol@<element-declaration>@Users@[L0:C0, L3:C1]",
             "snippet": "Table User...integer \n}"
           }
         }

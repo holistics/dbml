@@ -14,16 +14,16 @@ export function scanTestNames (path: string) {
 
 function getNameHint (node: SyntaxNode | SyntaxToken): string {
   if (node instanceof SyntaxToken) {
-    return `:${node.value}`;
+    return `${node.value}`;
   }
   if (node instanceof VariableNode) {
-    return `:${node.variable?.value || ''}`;
+    return `${node.variable?.value || ''}`;
   }
   if (node instanceof LiteralNode) {
-    return `:${node.literal?.value || ''}`;
+    return `${node.literal?.value || ''}`;
   }
   if (node instanceof ElementDeclarationNode) {
-    return `:${getElementNameString(node).unwrap_or(undefined) || ''}`;
+    return `${getElementNameString(node).unwrap_or(undefined) || ''}`;
   }
   return '';
 }
@@ -36,7 +36,9 @@ function getReadableId (nodeOrSymbol: SyntaxNode | SyntaxToken | NodeSymbol): st
 
   const node = (nodeOrSymbol instanceof SyntaxNode) || (nodeOrSymbol instanceof SyntaxToken) ? nodeOrSymbol : nodeOrSymbol?.declaration;
 
-  const kind = node?.kind ?? '?';
+  const kind = (nodeOrSymbol instanceof SyntaxNode || nodeOrSymbol instanceof SyntaxToken)
+    ? nodeOrSymbol.kind
+    : (nodeOrSymbol.declaration?.kind ?? '?');
 
   const start = `L${node?.startPos.line ?? '?'}:C${node?.startPos.column ?? '?'}`;
   const end = `L${node?.endPos.line ?? '?'}:C${node?.endPos.column ?? '?'}`;
@@ -46,11 +48,12 @@ function getReadableId (nodeOrSymbol: SyntaxNode | SyntaxToken | NodeSymbol): st
 }
 
 // Output the code snippet for a node or a symbol for easy verfication
-function getCodeSnippet (nodeOrSymbol: SyntaxNode | SyntaxToken | NodeSymbol, source: string): string | undefined {
+function getCodeSnippet (nodeOrSymbol: SyntaxNode | SyntaxToken | NodeSymbol, compiler: Compiler): string | undefined {
   const node = (nodeOrSymbol instanceof SyntaxNode) || (nodeOrSymbol instanceof SyntaxToken) ? nodeOrSymbol : nodeOrSymbol?.declaration;
 
   if (!node) return undefined;
 
+  const source = compiler.parse.source();
   const text = source.slice(node.start, node.end);
   if (text.length <= 20) {
     return text;
@@ -173,17 +176,20 @@ export function errorToSnapshot (
     diagnostic,
     nodeOrToken,
   } = error;
+  const filepath = nodeOrToken.filepath.toString();
   if (simple) {
     return sortObject({
       level: 'error',
       code: CompileErrorCode[code],
       diagnostic,
+      filepath,
     });
   }
   return sortObject({
     level: 'error',
     code: CompileErrorCode[code],
     diagnostic,
+    filepath,
     ...(nodeOrToken instanceof SyntaxNode
       ? { node: syntaxNodeToSnapshot(compiler, nodeOrToken, { simple: true }) }
       : { token: syntaxTokenToSnapshot(compiler, nodeOrToken as SyntaxToken, { simple: true }) }),
@@ -200,17 +206,20 @@ export function warningToSnapshot (
     diagnostic,
     nodeOrToken,
   } = warning;
+  const filepath = nodeOrToken.filepath.toString();
   if (simple) {
     return sortObject({
       level: 'warning',
       code: CompileErrorCode[code],
       diagnostic,
+      filepath,
     });
   }
   return sortObject({
     level: 'warning',
     code: CompileErrorCode[code],
     diagnostic,
+    filepath,
     ...(nodeOrToken instanceof SyntaxNode
       ? { node: syntaxNodeToSnapshot(compiler, nodeOrToken, { simple: true }) }
       : { token: syntaxTokenToSnapshot(compiler, nodeOrToken as SyntaxToken, { simple: true }) }),
@@ -223,9 +232,10 @@ export function syntaxTokenToSnapshot (
   { simple = false }: { simple?: boolean } = {},
 ): unknown {
   const tokenReadableId = getReadableId(token);
-  const snippet = getCodeSnippet(token, compiler.parse.source());
+  const snippet = getCodeSnippet(token, compiler);
   const {
     kind, // Filter this out as it's in the readable id
+    filepath,
     value,
     leadingTrivia,
     trailingTrivia,
@@ -243,6 +253,7 @@ export function syntaxTokenToSnapshot (
         id: tokenReadableId,
         snippet,
         isInvalid,
+        filepath: filepath.toString(),
       },
     };
   }
@@ -266,22 +277,25 @@ export function syntaxNodeToSnapshot (
   { simple = false }: { simple?: boolean } = {},
 ): unknown {
   const nodeReadableId = getReadableId(node);
-  const snippet = getCodeSnippet(node, compiler.parse.source());
+  const snippet = getCodeSnippet(node, compiler);
   const {
     id, // Filter this out
+    parent, // Filter this out
+    parentNode, // Filter this out
     kind, // Filter this out as it's in the readable id
-    filepath, // Filter this out, shown in context instead
-    symbol,
-    referee,
     startPos, // Filter this out
     endPos, // Filter this out
     start, // Filter this out
     end, // Filter this out
+    filepath,
+    fullStart,
+    fullEnd,
     ...props
   } = node;
-  if (node instanceof ElementDeclarationNode) {
-    delete (props as any).parent;
-  }
+  const symbol = (props as any).symbol;
+  delete (props as any).symbol;
+  const referee = (props as any).referee;
+  delete (props as any).referee;
   if (node instanceof ProgramNode) {
     delete (props as any).source;
   }
@@ -289,20 +303,20 @@ export function syntaxNodeToSnapshot (
     return {
       context: { // context should always be at the top
         id: nodeReadableId,
-        filepath: filepath.absolute,
         snippet,
       },
     };
   }
   const result = {
-    context: { // context should always be at the top
+    context: { // context should ways be at the top
       id: nodeReadableId,
-      filepath: filepath.absolute,
       snippet,
     },
     ...sortObject({
       symbol: symbol && symbolToSnapshot(compiler, symbol),
       referee: referee && symbolToSnapshot(compiler, referee, { simple: true }),
+      fullStart,
+      fullEnd,
       children: sortObject(Object.fromEntries(
         Object.entries(props)
           .map(
@@ -322,7 +336,7 @@ export function symbolToSnapshot (
 ): unknown {
   if (!symbol) return undefined;
   const symbolReadableId = getReadableId(symbol);
-  const snippet = getCodeSnippet(symbol, compiler.parse.source());
+  const snippet = getCodeSnippet(symbol, compiler);
   const {
     id, // Filter this out
     symbolTable,
@@ -346,11 +360,11 @@ export function symbolToSnapshot (
       members: symbolTable && sortArray([...symbolTable.entries()].map(([, value]) => symbolToSnapshot(compiler, value, { simple: true }))),
       declaration: declaration && {
         id: getReadableId(declaration),
-        snippet: getCodeSnippet(declaration, compiler.parse.source()),
+        snippet: getCodeSnippet(declaration, compiler),
       },
       references: references && sortArray(references.map((r) => ({
         id: getReadableId(r),
-        snippet: getCodeSnippet(r, compiler.parse.source()),
+        snippet: getCodeSnippet(r, compiler),
       }))),
     }),
   };

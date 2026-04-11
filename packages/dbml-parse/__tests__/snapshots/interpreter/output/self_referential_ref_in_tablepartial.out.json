@@ -67,11 +67,11 @@
     {
       "code": "SAME_ENDPOINT",
       "diagnostic": "Two endpoints are the same",
+      "filepath": "/main.dbml",
       "level": "error",
       "node": {
         "context": {
           "id": "node@<attribute>@@[L1:C12, L1:C22]",
-          "filepath": "/main.dbml",
           "snippet": "ref: > col"
         }
       }
