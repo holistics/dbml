@@ -1,0 +1,422 @@
+{
+  "database": {
+    "files": {
+      "/main.dbml": {
+        "aliases": [],
+        "diagramViews": [],
+        "enums": [],
+        "externals": {
+          "enums": [
+            {
+              "name": "job_status",
+              "schemaName": null,
+              "visibleNames": [
+                {
+                  "name": "Status",
+                  "schemaName": null
+                }
+              ]
+            }
+          ],
+          "notes": [],
+          "tableGroups": [],
+          "tablePartials": [],
+          "tables": []
+        },
+        "notes": [],
+        "records": [],
+        "refs": [],
+        "schemas": [],
+        "tableGroups": [],
+        "tablePartials": [],
+        "tables": [
+          {
+            "alias": null,
+            "checks": [],
+            "fields": [
+              {
+                "checks": [],
+                "increment": false,
+                "inline_refs": [],
+                "name": "id",
+                "pk": true,
+                "token": {
+                  "end": {
+                    "column": 14,
+                    "line": 5,
+                    "offset": 152
+                  },
+                  "filepath": {
+                    "path": "/main.dbml"
+                  },
+                  "start": {
+                    "column": 3,
+                    "line": 5,
+                    "offset": 141
+                  }
+                },
+                "type": {
+                  "args": null,
+                  "isEnum": false,
+                  "schemaName": null,
+                  "type_name": "int"
+                },
+                "unique": false
+              },
+              {
+                "inline_refs": [],
+                "name": "status",
+                "pk": false,
+                "token": {
+                  "end": {
+                    "column": 16,
+                    "line": 6,
+                    "offset": 168
+                  },
+                  "filepath": {
+                    "path": "/main.dbml"
+                  },
+                  "start": {
+                    "column": 3,
+                    "line": 6,
+                    "offset": 155
+                  }
+                },
+                "type": {
+                  "args": null,
+                  "isEnum": true,
+                  "schemaName": null,
+                  "type_name": "Status"
+                },
+                "unique": false
+              }
+            ],
+            "indexes": [],
+            "name": "jobs",
+            "partials": [],
+            "schemaName": null,
+            "token": {
+              "end": {
+                "column": 2,
+                "line": 7,
+                "offset": 170
+              },
+              "filepath": {
+                "path": "/main.dbml"
+              },
+              "start": {
+                "column": 1,
+                "line": 4,
+                "offset": 126
+              }
+            }
+          }
+        ],
+        "token": {
+          "end": {
+            "column": 1,
+            "line": 8,
+            "offset": 171
+          },
+          "filepath": {
+            "path": "/main.dbml"
+          },
+          "start": {
+            "column": 1,
+            "line": 2,
+            "offset": 71
+          }
+        }
+      },
+      "/types.dbml": {
+        "aliases": [],
+        "diagramViews": [],
+        "enums": [
+          {
+            "name": "job_status",
+            "schemaName": null,
+            "token": {
+              "end": {
+                "column": 2,
+                "line": 5,
+                "offset": 46
+              },
+              "filepath": {
+                "path": "/types.dbml"
+              },
+              "start": {
+                "column": 1,
+                "line": 1,
+                "offset": 0
+              }
+            },
+            "values": [
+              {
+                "name": "pending",
+                "token": {
+                  "end": {
+                    "column": 10,
+                    "line": 2,
+                    "offset": 27
+                  },
+                  "filepath": {
+                    "path": "/types.dbml"
+                  },
+                  "start": {
+                    "column": 3,
+                    "line": 2,
+                    "offset": 20
+                  }
+                }
+              },
+              {
+                "name": "running",
+                "token": {
+                  "end": {
+                    "column": 10,
+                    "line": 3,
+                    "offset": 37
+                  },
+                  "filepath": {
+                    "path": "/types.dbml"
+                  },
+                  "start": {
+                    "column": 3,
+                    "line": 3,
+                    "offset": 30
+                  }
+                }
+              },
+              {
+                "name": "done",
+                "token": {
+                  "end": {
+                    "column": 7,
+                    "line": 4,
+                    "offset": 44
+                  },
+                  "filepath": {
+                    "path": "/types.dbml"
+                  },
+                  "start": {
+                    "column": 3,
+                    "line": 4,
+                    "offset": 40
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "externals": {
+          "enums": [],
+          "notes": [],
+          "tableGroups": [],
+          "tablePartials": [],
+          "tables": []
+        },
+        "notes": [],
+        "records": [],
+        "refs": [],
+        "schemas": [],
+        "tableGroups": [],
+        "tablePartials": [],
+        "tables": [],
+        "token": {
+          "end": {
+            "column": 1,
+            "line": 6,
+            "offset": 47
+          },
+          "filepath": {
+            "path": "/types.dbml"
+          },
+          "start": {
+            "column": 1,
+            "line": 1,
+            "offset": 0
+          }
+        }
+      }
+    },
+    "items": {
+      "aliases": [],
+      "diagramViews": [],
+      "enums": [
+        {
+          "name": "job_status",
+          "schemaName": null,
+          "token": {
+            "end": {
+              "column": 2,
+              "line": 5,
+              "offset": 46
+            },
+            "filepath": {
+              "path": "/types.dbml"
+            },
+            "start": {
+              "column": 1,
+              "line": 1,
+              "offset": 0
+            }
+          },
+          "values": [
+            {
+              "name": "pending",
+              "token": {
+                "end": {
+                  "column": 10,
+                  "line": 2,
+                  "offset": 27
+                },
+                "filepath": {
+                  "path": "/types.dbml"
+                },
+                "start": {
+                  "column": 3,
+                  "line": 2,
+                  "offset": 20
+                }
+              }
+            },
+            {
+              "name": "running",
+              "token": {
+                "end": {
+                  "column": 10,
+                  "line": 3,
+                  "offset": 37
+                },
+                "filepath": {
+                  "path": "/types.dbml"
+                },
+                "start": {
+                  "column": 3,
+                  "line": 3,
+                  "offset": 30
+                }
+              }
+            },
+            {
+              "name": "done",
+              "token": {
+                "end": {
+                  "column": 7,
+                  "line": 4,
+                  "offset": 44
+                },
+                "filepath": {
+                  "path": "/types.dbml"
+                },
+                "start": {
+                  "column": 3,
+                  "line": 4,
+                  "offset": 40
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "externals": {
+        "enums": [],
+        "notes": [],
+        "tableGroups": [],
+        "tablePartials": [],
+        "tables": []
+      },
+      "notes": [],
+      "records": [],
+      "refs": [],
+      "schemas": [],
+      "tableGroups": [],
+      "tablePartials": [],
+      "tables": [
+        {
+          "alias": null,
+          "checks": [],
+          "fields": [
+            {
+              "checks": [],
+              "increment": false,
+              "inline_refs": [],
+              "name": "id",
+              "pk": true,
+              "token": {
+                "end": {
+                  "column": 14,
+                  "line": 5,
+                  "offset": 152
+                },
+                "filepath": {
+                  "path": "/main.dbml"
+                },
+                "start": {
+                  "column": 3,
+                  "line": 5,
+                  "offset": 141
+                }
+              },
+              "type": {
+                "args": null,
+                "isEnum": false,
+                "schemaName": null,
+                "type_name": "int"
+              },
+              "unique": false
+            },
+            {
+              "inline_refs": [],
+              "name": "status",
+              "pk": false,
+              "token": {
+                "end": {
+                  "column": 16,
+                  "line": 6,
+                  "offset": 168
+                },
+                "filepath": {
+                  "path": "/main.dbml"
+                },
+                "start": {
+                  "column": 3,
+                  "line": 6,
+                  "offset": 155
+                }
+              },
+              "type": {
+                "args": null,
+                "isEnum": true,
+                "schemaName": null,
+                "type_name": "Status"
+              },
+              "unique": false
+            }
+          ],
+          "indexes": [],
+          "name": "jobs",
+          "partials": [],
+          "schemaName": null,
+          "token": {
+            "end": {
+              "column": 2,
+              "line": 7,
+              "offset": 170
+            },
+            "filepath": {
+              "path": "/main.dbml"
+            },
+            "start": {
+              "column": 1,
+              "line": 4,
+              "offset": 126
+            }
+          }
+        }
+      ]
+    }
+  },
+  "errors": [],
+  "warnings": []
+}

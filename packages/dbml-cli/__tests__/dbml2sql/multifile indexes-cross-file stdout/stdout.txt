@@ -1,0 +1,18 @@
+CREATE TABLE "events" (
+  "id" int PRIMARY KEY,
+  "name" varchar
+);
+
+CREATE TABLE "bookings" (
+  "id" int PRIMARY KEY,
+  "user_id" int,
+  "event_id" int,
+  "created_at" timestamp
+);
+
+CREATE UNIQUE INDEX "unique_booking" ON "bookings" ("user_id", "event_id");
+
+CREATE INDEX ON "bookings" ("created_at");
+
+ALTER TABLE "bookings" ADD FOREIGN KEY ("event_id") REFERENCES "events" ("id") DEFERRABLE INITIALLY IMMEDIATE;
+

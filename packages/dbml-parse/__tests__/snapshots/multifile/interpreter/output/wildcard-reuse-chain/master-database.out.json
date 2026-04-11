@@ -1,0 +1,960 @@
+{
+  "database": {
+    "files": {
+      "/a.dbml": {
+        "aliases": [],
+        "diagramViews": [],
+        "enums": [
+          {
+            "name": "order_status",
+            "schemaName": null,
+            "token": {
+              "end": {
+                "column": 2,
+                "line": 6,
+                "offset": 89
+              },
+              "filepath": {
+                "path": "/a.dbml"
+              },
+              "start": {
+                "column": 1,
+                "line": 2,
+                "offset": 36
+              }
+            },
+            "values": [
+              {
+                "name": "pending",
+                "token": {
+                  "end": {
+                    "column": 10,
+                    "line": 3,
+                    "offset": 65
+                  },
+                  "filepath": {
+                    "path": "/a.dbml"
+                  },
+                  "start": {
+                    "column": 3,
+                    "line": 3,
+                    "offset": 58
+                  }
+                }
+              },
+              {
+                "name": "shipped",
+                "token": {
+                  "end": {
+                    "column": 10,
+                    "line": 4,
+                    "offset": 75
+                  },
+                  "filepath": {
+                    "path": "/a.dbml"
+                  },
+                  "start": {
+                    "column": 3,
+                    "line": 4,
+                    "offset": 68
+                  }
+                }
+              },
+              {
+                "name": "delivered",
+                "token": {
+                  "end": {
+                    "column": 12,
+                    "line": 5,
+                    "offset": 87
+                  },
+                  "filepath": {
+                    "path": "/a.dbml"
+                  },
+                  "start": {
+                    "column": 3,
+                    "line": 5,
+                    "offset": 78
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "externals": {
+          "enums": [],
+          "notes": [],
+          "tableGroups": [],
+          "tablePartials": [],
+          "tables": []
+        },
+        "notes": [],
+        "records": [],
+        "refs": [
+          {
+            "endpoints": [
+              {
+                "fieldNames": [
+                  "user_id"
+                ],
+                "relation": "*",
+                "schemaName": null,
+                "tableName": "orders",
+                "token": {
+                  "end": {
+                    "column": 20,
+                    "line": 19,
+                    "offset": 224
+                  },
+                  "filepath": {
+                    "path": "/a.dbml"
+                  },
+                  "start": {
+                    "column": 6,
+                    "line": 19,
+                    "offset": 210
+                  }
+                }
+              },
+              {
+                "fieldNames": [
+                  "id"
+                ],
+                "relation": "1",
+                "schemaName": null,
+                "tableName": "users",
+                "token": {
+                  "end": {
+                    "column": 31,
+                    "line": 19,
+                    "offset": 235
+                  },
+                  "filepath": {
+                    "path": "/a.dbml"
+                  },
+                  "start": {
+                    "column": 23,
+                    "line": 19,
+                    "offset": 227
+                  }
+                }
+              }
+            ],
+            "name": null,
+            "schemaName": null,
+            "token": {
+              "end": {
+                "column": 31,
+                "line": 19,
+                "offset": 235
+              },
+              "filepath": {
+                "path": "/a.dbml"
+              },
+              "start": {
+                "column": 1,
+                "line": 19,
+                "offset": 205
+              }
+            }
+          }
+        ],
+        "schemas": [],
+        "tableGroups": [],
+        "tablePartials": [],
+        "tables": [
+          {
+            "alias": null,
+            "checks": [],
+            "fields": [
+              {
+                "checks": [],
+                "increment": false,
+                "inline_refs": [],
+                "name": "id",
+                "pk": true,
+                "token": {
+                  "end": {
+                    "column": 14,
+                    "line": 9,
+                    "offset": 118
+                  },
+                  "filepath": {
+                    "path": "/a.dbml"
+                  },
+                  "start": {
+                    "column": 3,
+                    "line": 9,
+                    "offset": 107
+                  }
+                },
+                "type": {
+                  "args": null,
+                  "isEnum": false,
+                  "schemaName": null,
+                  "type_name": "int"
+                },
+                "unique": false
+              },
+              {
+                "inline_refs": [],
+                "name": "name",
+                "pk": false,
+                "token": {
+                  "end": {
+                    "column": 15,
+                    "line": 10,
+                    "offset": 133
+                  },
+                  "filepath": {
+                    "path": "/a.dbml"
+                  },
+                  "start": {
+                    "column": 3,
+                    "line": 10,
+                    "offset": 121
+                  }
+                },
+                "type": {
+                  "args": null,
+                  "isEnum": false,
+                  "schemaName": null,
+                  "type_name": "varchar"
+                },
+                "unique": false
+              }
+            ],
+            "indexes": [],
+            "name": "users",
+            "partials": [],
+            "schemaName": null,
+            "token": {
+              "end": {
+                "column": 2,
+                "line": 11,
+                "offset": 135
+              },
+              "filepath": {
+                "path": "/a.dbml"
+              },
+              "start": {
+                "column": 1,
+                "line": 8,
+                "offset": 91
+              }
+            }
+          },
+          {
+            "alias": null,
+            "checks": [],
+            "fields": [
+              {
+                "checks": [],
+                "increment": false,
+                "inline_refs": [],
+                "name": "id",
+                "pk": true,
+                "token": {
+                  "end": {
+                    "column": 14,
+                    "line": 14,
+                    "offset": 165
+                  },
+                  "filepath": {
+                    "path": "/a.dbml"
+                  },
+                  "start": {
+                    "column": 3,
+                    "line": 14,
+                    "offset": 154
+                  }
+                },
+                "type": {
+                  "args": null,
+                  "isEnum": false,
+                  "schemaName": null,
+                  "type_name": "int"
+                },
+                "unique": false
+              },
+              {
+                "inline_refs": [],
+                "name": "user_id",
+                "pk": false,
+                "token": {
+                  "end": {
+                    "column": 14,
+                    "line": 15,
+                    "offset": 179
+                  },
+                  "filepath": {
+                    "path": "/a.dbml"
+                  },
+                  "start": {
+                    "column": 3,
+                    "line": 15,
+                    "offset": 168
+                  }
+                },
+                "type": {
+                  "args": null,
+                  "isEnum": false,
+                  "schemaName": null,
+                  "type_name": "int"
+                },
+                "unique": false
+              },
+              {
+                "inline_refs": [],
+                "name": "status",
+                "pk": false,
+                "token": {
+                  "end": {
+                    "column": 22,
+                    "line": 16,
+                    "offset": 201
+                  },
+                  "filepath": {
+                    "path": "/a.dbml"
+                  },
+                  "start": {
+                    "column": 3,
+                    "line": 16,
+                    "offset": 182
+                  }
+                },
+                "type": {
+                  "args": null,
+                  "isEnum": true,
+                  "schemaName": null,
+                  "type_name": "order_status"
+                },
+                "unique": false
+              }
+            ],
+            "indexes": [],
+            "name": "orders",
+            "partials": [],
+            "schemaName": null,
+            "token": {
+              "end": {
+                "column": 2,
+                "line": 17,
+                "offset": 203
+              },
+              "filepath": {
+                "path": "/a.dbml"
+              },
+              "start": {
+                "column": 1,
+                "line": 13,
+                "offset": 137
+              }
+            }
+          }
+        ],
+        "token": {
+          "end": {
+            "column": 1,
+            "line": 20,
+            "offset": 236
+          },
+          "filepath": {
+            "path": "/a.dbml"
+          },
+          "start": {
+            "column": 1,
+            "line": 2,
+            "offset": 36
+          }
+        }
+      },
+      "/b.dbml": {
+        "aliases": [],
+        "diagramViews": [],
+        "enums": [],
+        "externals": {
+          "enums": [],
+          "notes": [],
+          "tableGroups": [],
+          "tablePartials": [],
+          "tables": []
+        },
+        "notes": [],
+        "records": [],
+        "refs": [],
+        "schemas": [],
+        "tableGroups": [],
+        "tablePartials": [],
+        "tables": [],
+        "token": {
+          "end": {
+            "column": 1,
+            "line": 3,
+            "offset": 98
+          },
+          "filepath": {
+            "path": "/b.dbml"
+          },
+          "start": {
+            "column": 1,
+            "line": 2,
+            "offset": 74
+          }
+        }
+      },
+      "/main.dbml": {
+        "aliases": [],
+        "diagramViews": [],
+        "enums": [],
+        "externals": {
+          "enums": [],
+          "notes": [],
+          "tableGroups": [],
+          "tablePartials": [],
+          "tables": []
+        },
+        "notes": [],
+        "records": [],
+        "refs": [],
+        "schemas": [],
+        "tableGroups": [],
+        "tablePartials": [],
+        "tables": [
+          {
+            "alias": null,
+            "checks": [],
+            "fields": [
+              {
+                "checks": [],
+                "increment": false,
+                "inline_refs": [],
+                "name": "id",
+                "pk": true,
+                "token": {
+                  "end": {
+                    "column": 14,
+                    "line": 6,
+                    "offset": 195
+                  },
+                  "filepath": {
+                    "path": "/main.dbml"
+                  },
+                  "start": {
+                    "column": 3,
+                    "line": 6,
+                    "offset": 184
+                  }
+                },
+                "type": {
+                  "args": null,
+                  "isEnum": false,
+                  "schemaName": null,
+                  "type_name": "int"
+                },
+                "unique": false
+              },
+              {
+                "inline_refs": [],
+                "name": "order_id",
+                "pk": false,
+                "token": {
+                  "end": {
+                    "column": 15,
+                    "line": 7,
+                    "offset": 210
+                  },
+                  "filepath": {
+                    "path": "/main.dbml"
+                  },
+                  "start": {
+                    "column": 3,
+                    "line": 7,
+                    "offset": 198
+                  }
+                },
+                "type": {
+                  "args": null,
+                  "isEnum": false,
+                  "schemaName": null,
+                  "type_name": "int"
+                },
+                "unique": false
+              }
+            ],
+            "indexes": [],
+            "name": "payments",
+            "partials": [],
+            "schemaName": null,
+            "token": {
+              "end": {
+                "column": 2,
+                "line": 8,
+                "offset": 212
+              },
+              "filepath": {
+                "path": "/main.dbml"
+              },
+              "start": {
+                "column": 1,
+                "line": 5,
+                "offset": 165
+              }
+            }
+          }
+        ],
+        "token": {
+          "end": {
+            "column": 1,
+            "line": 9,
+            "offset": 213
+          },
+          "filepath": {
+            "path": "/main.dbml"
+          },
+          "start": {
+            "column": 1,
+            "line": 3,
+            "offset": 142
+          }
+        }
+      }
+    },
+    "items": {
+      "aliases": [],
+      "diagramViews": [],
+      "enums": [
+        {
+          "name": "order_status",
+          "schemaName": null,
+          "token": {
+            "end": {
+              "column": 2,
+              "line": 6,
+              "offset": 89
+            },
+            "filepath": {
+              "path": "/a.dbml"
+            },
+            "start": {
+              "column": 1,
+              "line": 2,
+              "offset": 36
+            }
+          },
+          "values": [
+            {
+              "name": "pending",
+              "token": {
+                "end": {
+                  "column": 10,
+                  "line": 3,
+                  "offset": 65
+                },
+                "filepath": {
+                  "path": "/a.dbml"
+                },
+                "start": {
+                  "column": 3,
+                  "line": 3,
+                  "offset": 58
+                }
+              }
+            },
+            {
+              "name": "shipped",
+              "token": {
+                "end": {
+                  "column": 10,
+                  "line": 4,
+                  "offset": 75
+                },
+                "filepath": {
+                  "path": "/a.dbml"
+                },
+                "start": {
+                  "column": 3,
+                  "line": 4,
+                  "offset": 68
+                }
+              }
+            },
+            {
+              "name": "delivered",
+              "token": {
+                "end": {
+                  "column": 12,
+                  "line": 5,
+                  "offset": 87
+                },
+                "filepath": {
+                  "path": "/a.dbml"
+                },
+                "start": {
+                  "column": 3,
+                  "line": 5,
+                  "offset": 78
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "externals": {
+        "enums": [],
+        "notes": [],
+        "tableGroups": [],
+        "tablePartials": [],
+        "tables": []
+      },
+      "notes": [],
+      "records": [],
+      "refs": [
+        {
+          "endpoints": [
+            {
+              "fieldNames": [
+                "user_id"
+              ],
+              "relation": "*",
+              "schemaName": null,
+              "tableName": "orders",
+              "token": {
+                "end": {
+                  "column": 20,
+                  "line": 19,
+                  "offset": 224
+                },
+                "filepath": {
+                  "path": "/a.dbml"
+                },
+                "start": {
+                  "column": 6,
+                  "line": 19,
+                  "offset": 210
+                }
+              }
+            },
+            {
+              "fieldNames": [
+                "id"
+              ],
+              "relation": "1",
+              "schemaName": null,
+              "tableName": "users",
+              "token": {
+                "end": {
+                  "column": 31,
+                  "line": 19,
+                  "offset": 235
+                },
+                "filepath": {
+                  "path": "/a.dbml"
+                },
+                "start": {
+                  "column": 23,
+                  "line": 19,
+                  "offset": 227
+                }
+              }
+            }
+          ],
+          "name": null,
+          "schemaName": null,
+          "token": {
+            "end": {
+              "column": 31,
+              "line": 19,
+              "offset": 235
+            },
+            "filepath": {
+              "path": "/a.dbml"
+            },
+            "start": {
+              "column": 1,
+              "line": 19,
+              "offset": 205
+            }
+          }
+        }
+      ],
+      "schemas": [],
+      "tableGroups": [],
+      "tablePartials": [],
+      "tables": [
+        {
+          "alias": null,
+          "checks": [],
+          "fields": [
+            {
+              "checks": [],
+              "increment": false,
+              "inline_refs": [],
+              "name": "id",
+              "pk": true,
+              "token": {
+                "end": {
+                  "column": 14,
+                  "line": 9,
+                  "offset": 118
+                },
+                "filepath": {
+                  "path": "/a.dbml"
+                },
+                "start": {
+                  "column": 3,
+                  "line": 9,
+                  "offset": 107
+                }
+              },
+              "type": {
+                "args": null,
+                "isEnum": false,
+                "schemaName": null,
+                "type_name": "int"
+              },
+              "unique": false
+            },
+            {
+              "inline_refs": [],
+              "name": "name",
+              "pk": false,
+              "token": {
+                "end": {
+                  "column": 15,
+                  "line": 10,
+                  "offset": 133
+                },
+                "filepath": {
+                  "path": "/a.dbml"
+                },
+                "start": {
+                  "column": 3,
+                  "line": 10,
+                  "offset": 121
+                }
+              },
+              "type": {
+                "args": null,
+                "isEnum": false,
+                "schemaName": null,
+                "type_name": "varchar"
+              },
+              "unique": false
+            }
+          ],
+          "indexes": [],
+          "name": "users",
+          "partials": [],
+          "schemaName": null,
+          "token": {
+            "end": {
+              "column": 2,
+              "line": 11,
+              "offset": 135
+            },
+            "filepath": {
+              "path": "/a.dbml"
+            },
+            "start": {
+              "column": 1,
+              "line": 8,
+              "offset": 91
+            }
+          }
+        },
+        {
+          "alias": null,
+          "checks": [],
+          "fields": [
+            {
+              "checks": [],
+              "increment": false,
+              "inline_refs": [],
+              "name": "id",
+              "pk": true,
+              "token": {
+                "end": {
+                  "column": 14,
+                  "line": 14,
+                  "offset": 165
+                },
+                "filepath": {
+                  "path": "/a.dbml"
+                },
+                "start": {
+                  "column": 3,
+                  "line": 14,
+                  "offset": 154
+                }
+              },
+              "type": {
+                "args": null,
+                "isEnum": false,
+                "schemaName": null,
+                "type_name": "int"
+              },
+              "unique": false
+            },
+            {
+              "inline_refs": [],
+              "name": "user_id",
+              "pk": false,
+              "token": {
+                "end": {
+                  "column": 14,
+                  "line": 15,
+                  "offset": 179
+                },
+                "filepath": {
+                  "path": "/a.dbml"
+                },
+                "start": {
+                  "column": 3,
+                  "line": 15,
+                  "offset": 168
+                }
+              },
+              "type": {
+                "args": null,
+                "isEnum": false,
+                "schemaName": null,
+                "type_name": "int"
+              },
+              "unique": false
+            },
+            {
+              "inline_refs": [],
+              "name": "status",
+              "pk": false,
+              "token": {
+                "end": {
+                  "column": 22,
+                  "line": 16,
+                  "offset": 201
+                },
+                "filepath": {
+                  "path": "/a.dbml"
+                },
+                "start": {
+                  "column": 3,
+                  "line": 16,
+                  "offset": 182
+                }
+              },
+              "type": {
+                "args": null,
+                "isEnum": true,
+                "schemaName": null,
+                "type_name": "order_status"
+              },
+              "unique": false
+            }
+          ],
+          "indexes": [],
+          "name": "orders",
+          "partials": [],
+          "schemaName": null,
+          "token": {
+            "end": {
+              "column": 2,
+              "line": 17,
+              "offset": 203
+            },
+            "filepath": {
+              "path": "/a.dbml"
+            },
+            "start": {
+              "column": 1,
+              "line": 13,
+              "offset": 137
+            }
+          }
+        },
+        {
+          "alias": null,
+          "checks": [],
+          "fields": [
+            {
+              "checks": [],
+              "increment": false,
+              "inline_refs": [],
+              "name": "id",
+              "pk": true,
+              "token": {
+                "end": {
+                  "column": 14,
+                  "line": 6,
+                  "offset": 195
+                },
+                "filepath": {
+                  "path": "/main.dbml"
+                },
+                "start": {
+                  "column": 3,
+                  "line": 6,
+                  "offset": 184
+                }
+              },
+              "type": {
+                "args": null,
+                "isEnum": false,
+                "schemaName": null,
+                "type_name": "int"
+              },
+              "unique": false
+            },
+            {
+              "inline_refs": [],
+              "name": "order_id",
+              "pk": false,
+              "token": {
+                "end": {
+                  "column": 15,
+                  "line": 7,
+                  "offset": 210
+                },
+                "filepath": {
+                  "path": "/main.dbml"
+                },
+                "start": {
+                  "column": 3,
+                  "line": 7,
+                  "offset": 198
+                }
+              },
+              "type": {
+                "args": null,
+                "isEnum": false,
+                "schemaName": null,
+                "type_name": "int"
+              },
+              "unique": false
+            }
+          ],
+          "indexes": [],
+          "name": "payments",
+          "partials": [],
+          "schemaName": null,
+          "token": {
+            "end": {
+              "column": 2,
+              "line": 8,
+              "offset": 212
+            },
+            "filepath": {
+              "path": "/main.dbml"
+            },
+            "start": {
+              "column": 1,
+              "line": 5,
+              "offset": 165
+            }
+          }
+        }
+      ]
+    }
+  },
+  "errors": [],
+  "warnings": []
+}

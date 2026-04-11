@@ -1,0 +1,11 @@
+CREATE TYPE "Status" AS ENUM (
+  'pending',
+  'running',
+  'done'
+);
+
+CREATE TABLE "jobs" (
+  "id" int PRIMARY KEY,
+  "status" "Status"
+);
+

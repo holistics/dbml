@@ -1,0 +1,2 @@
+// middle: reuses everything from a — re-exports all symbols transitively
+reuse * from './a.dbml'

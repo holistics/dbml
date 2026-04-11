@@ -1,0 +1,5 @@
+CREATE TABLE "payments" (
+  "id" int PRIMARY KEY,
+  "order_id" int
+);
+
