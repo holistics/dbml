@@ -1174,34 +1174,19 @@
                 "context": {
                   "id": "symbol@Column@@[L1:C2, L1:C26]",
                   "snippet": "id int(-1)...fault: -2]"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L1:C2, L1:C26]",
-                  "snippet": "id int(-1)...fault: -2]"
-                },
-                "references": []
+                }
               },
               {
                 "context": {
                   "id": "symbol@Column@@[L2:C2, L2:C29]",
                   "snippet": "id2 int(--...ault: +-2]"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L2:C2, L2:C29]",
-                  "snippet": "id2 int(--...ault: +-2]"
-                },
-                "references": []
+                }
               },
               {
                 "context": {
                   "id": "symbol@Column@@[L3:C2, L3:C44]",
                   "snippet": "id3 int (+...-++7.2225]"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L3:C2, L3:C44]",
-                  "snippet": "id3 int (+...-++7.2225]"
-                },
-                "references": []
+                }
               }
             ],
             "references": []
@@ -2453,37 +2438,19 @@
                 "context": {
                   "id": "symbol@Column@@[L7:C2, L7:C26]",
                   "snippet": "id int(-1)...fault: -2]"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L7:C2, L7:C26]",
-                  "snippet": "id int(-1)...fault: -2]"
-                },
-                "members": [],
-                "references": []
+                }
               },
               {
                 "context": {
                   "id": "symbol@Column@@[L8:C2, L8:C29]",
                   "snippet": "id2 int(--...ault: +-2]"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L8:C2, L8:C29]",
-                  "snippet": "id2 int(--...ault: +-2]"
-                },
-                "members": [],
-                "references": []
+                }
               },
               {
                 "context": {
                   "id": "symbol@Column@@[L9:C2, L9:C48]",
                   "snippet": "id3 int (+...+--7.2225]"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L9:C2, L9:C48]",
-                  "snippet": "id3 int (+...+--7.2225]"
-                },
-                "members": [],
-                "references": []
+                }
               }
             ],
             "references": [
@@ -2742,59 +2709,31 @@
                 "context": {
                   "id": "symbol@Column@@[L13:C2, L13:C8]",
                   "snippet": "id int"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L13:C2, L13:C8]",
-                  "snippet": "id int"
-                },
-                "references": []
-              },
-              {
-                "context": {
-                  "id": "symbol@PartialInjection@@[L14:C2, L14:C5]",
-                  "snippet": "~P1"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L14:C2, L14:C5]",
-                  "snippet": "~P1"
-                },
-                "references": []
+                }
               },
               {
                 "context": {
                   "id": "symbol@Column@@[L7:C2, L7:C26]",
                   "snippet": "id int(-1)...fault: -2]"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L7:C2, L7:C26]",
-                  "snippet": "id int(-1)...fault: -2]"
-                },
-                "members": [],
-                "references": []
+                }
               },
               {
                 "context": {
                   "id": "symbol@Column@@[L8:C2, L8:C29]",
                   "snippet": "id2 int(--...ault: +-2]"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L8:C2, L8:C29]",
-                  "snippet": "id2 int(--...ault: +-2]"
-                },
-                "members": [],
-                "references": []
+                }
               },
               {
                 "context": {
                   "id": "symbol@Column@@[L9:C2, L9:C48]",
                   "snippet": "id3 int (+...+--7.2225]"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L9:C2, L9:C48]",
-                  "snippet": "id3 int (+...+--7.2225]"
-                },
-                "members": [],
-                "references": []
+                }
+              },
+              {
+                "context": {
+                  "id": "symbol@PartialInjection@@[L14:C2, L14:C5]",
+                  "snippet": "~P1"
+                }
               }
             ],
             "references": []
@@ -2826,352 +2765,25 @@
         {
           "context": {
             "id": "symbol@Schema@public@[L?:C?, L?:C?]"
-          },
-          "members": [
-            {
-              "context": {
-                "id": "symbol@TablePartial@P1@[L6:C0, L10:C1]",
-                "snippet": "TableParti...negative\n}"
-              },
-              "declaration": {
-                "id": "node@<element-declaration>@P1@[L6:C0, L10:C1]",
-                "snippet": "TableParti...negative\n}"
-              },
-              "members": [
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L7:C2, L7:C26]",
-                    "snippet": "id int(-1)...fault: -2]"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L7:C2, L7:C26]",
-                    "snippet": "id int(-1)...fault: -2]"
-                  },
-                  "members": [],
-                  "references": []
-                },
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L8:C2, L8:C29]",
-                    "snippet": "id2 int(--...ault: +-2]"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L8:C2, L8:C29]",
-                    "snippet": "id2 int(--...ault: +-2]"
-                  },
-                  "members": [],
-                  "references": []
-                },
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L9:C2, L9:C48]",
-                    "snippet": "id3 int (+...+--7.2225]"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L9:C2, L9:C48]",
-                    "snippet": "id3 int (+...+--7.2225]"
-                  },
-                  "members": [],
-                  "references": []
-                }
-              ],
-              "references": [
-                {
-                  "id": "node@<primary-expression>@@[L14:C3, L14:C5]",
-                  "snippet": "P1"
-                }
-              ]
-            },
-            {
-              "context": {
-                "id": "symbol@Table@a@[L0:C0, L4:C1]",
-                "snippet": "Table a {\n...positive\n}"
-              },
-              "declaration": {
-                "id": "node@<element-declaration>@a@[L0:C0, L4:C1]",
-                "snippet": "Table a {\n...positive\n}"
-              },
-              "members": [
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L1:C2, L1:C26]",
-                    "snippet": "id int(-1)...fault: -2]"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L1:C2, L1:C26]",
-                    "snippet": "id int(-1)...fault: -2]"
-                  },
-                  "references": []
-                },
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L2:C2, L2:C29]",
-                    "snippet": "id2 int(--...ault: +-2]"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L2:C2, L2:C29]",
-                    "snippet": "id2 int(--...ault: +-2]"
-                  },
-                  "references": []
-                },
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L3:C2, L3:C44]",
-                    "snippet": "id3 int (+...-++7.2225]"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L3:C2, L3:C44]",
-                    "snippet": "id3 int (+...-++7.2225]"
-                  },
-                  "references": []
-                }
-              ],
-              "references": []
-            },
-            {
-              "context": {
-                "id": "symbol@Table@b@[L12:C0, L15:C1]",
-                "snippet": "Table b {\n...nt\n  ~P1\n}"
-              },
-              "declaration": {
-                "id": "node@<element-declaration>@b@[L12:C0, L15:C1]",
-                "snippet": "Table b {\n...nt\n  ~P1\n}"
-              },
-              "members": [
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L13:C2, L13:C8]",
-                    "snippet": "id int"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L13:C2, L13:C8]",
-                    "snippet": "id int"
-                  },
-                  "references": []
-                },
-                {
-                  "context": {
-                    "id": "symbol@PartialInjection@@[L14:C2, L14:C5]",
-                    "snippet": "~P1"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L14:C2, L14:C5]",
-                    "snippet": "~P1"
-                  },
-                  "references": []
-                },
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L7:C2, L7:C26]",
-                    "snippet": "id int(-1)...fault: -2]"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L7:C2, L7:C26]",
-                    "snippet": "id int(-1)...fault: -2]"
-                  },
-                  "members": [],
-                  "references": []
-                },
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L8:C2, L8:C29]",
-                    "snippet": "id2 int(--...ault: +-2]"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L8:C2, L8:C29]",
-                    "snippet": "id2 int(--...ault: +-2]"
-                  },
-                  "members": [],
-                  "references": []
-                },
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L9:C2, L9:C48]",
-                    "snippet": "id3 int (+...+--7.2225]"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L9:C2, L9:C48]",
-                    "snippet": "id3 int (+...+--7.2225]"
-                  },
-                  "members": [],
-                  "references": []
-                }
-              ],
-              "references": []
-            }
-          ],
-          "references": []
-        },
-        {
-          "context": {
-            "id": "symbol@TablePartial@P1@[L6:C0, L10:C1]",
-            "snippet": "TableParti...negative\n}"
-          },
-          "declaration": {
-            "id": "node@<element-declaration>@P1@[L6:C0, L10:C1]",
-            "snippet": "TableParti...negative\n}"
-          },
-          "members": [
-            {
-              "context": {
-                "id": "symbol@Column@@[L7:C2, L7:C26]",
-                "snippet": "id int(-1)...fault: -2]"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L7:C2, L7:C26]",
-                "snippet": "id int(-1)...fault: -2]"
-              },
-              "members": [],
-              "references": []
-            },
-            {
-              "context": {
-                "id": "symbol@Column@@[L8:C2, L8:C29]",
-                "snippet": "id2 int(--...ault: +-2]"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L8:C2, L8:C29]",
-                "snippet": "id2 int(--...ault: +-2]"
-              },
-              "members": [],
-              "references": []
-            },
-            {
-              "context": {
-                "id": "symbol@Column@@[L9:C2, L9:C48]",
-                "snippet": "id3 int (+...+--7.2225]"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L9:C2, L9:C48]",
-                "snippet": "id3 int (+...+--7.2225]"
-              },
-              "members": [],
-              "references": []
-            }
-          ],
-          "references": [
-            {
-              "id": "node@<primary-expression>@@[L14:C3, L14:C5]",
-              "snippet": "P1"
-            }
-          ]
+          }
         },
         {
           "context": {
             "id": "symbol@Table@a@[L0:C0, L4:C1]",
             "snippet": "Table a {\n...positive\n}"
-          },
-          "declaration": {
-            "id": "node@<element-declaration>@a@[L0:C0, L4:C1]",
-            "snippet": "Table a {\n...positive\n}"
-          },
-          "members": [
-            {
-              "context": {
-                "id": "symbol@Column@@[L1:C2, L1:C26]",
-                "snippet": "id int(-1)...fault: -2]"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L1:C2, L1:C26]",
-                "snippet": "id int(-1)...fault: -2]"
-              },
-              "references": []
-            },
-            {
-              "context": {
-                "id": "symbol@Column@@[L2:C2, L2:C29]",
-                "snippet": "id2 int(--...ault: +-2]"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L2:C2, L2:C29]",
-                "snippet": "id2 int(--...ault: +-2]"
-              },
-              "references": []
-            },
-            {
-              "context": {
-                "id": "symbol@Column@@[L3:C2, L3:C44]",
-                "snippet": "id3 int (+...-++7.2225]"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L3:C2, L3:C44]",
-                "snippet": "id3 int (+...-++7.2225]"
-              },
-              "references": []
-            }
-          ],
-          "references": []
+          }
+        },
+        {
+          "context": {
+            "id": "symbol@TablePartial@P1@[L6:C0, L10:C1]",
+            "snippet": "TableParti...negative\n}"
+          }
         },
         {
           "context": {
             "id": "symbol@Table@b@[L12:C0, L15:C1]",
             "snippet": "Table b {\n...nt\n  ~P1\n}"
-          },
-          "declaration": {
-            "id": "node@<element-declaration>@b@[L12:C0, L15:C1]",
-            "snippet": "Table b {\n...nt\n  ~P1\n}"
-          },
-          "members": [
-            {
-              "context": {
-                "id": "symbol@Column@@[L13:C2, L13:C8]",
-                "snippet": "id int"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L13:C2, L13:C8]",
-                "snippet": "id int"
-              },
-              "references": []
-            },
-            {
-              "context": {
-                "id": "symbol@PartialInjection@@[L14:C2, L14:C5]",
-                "snippet": "~P1"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L14:C2, L14:C5]",
-                "snippet": "~P1"
-              },
-              "references": []
-            },
-            {
-              "context": {
-                "id": "symbol@Column@@[L7:C2, L7:C26]",
-                "snippet": "id int(-1)...fault: -2]"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L7:C2, L7:C26]",
-                "snippet": "id int(-1)...fault: -2]"
-              },
-              "members": [],
-              "references": []
-            },
-            {
-              "context": {
-                "id": "symbol@Column@@[L8:C2, L8:C29]",
-                "snippet": "id2 int(--...ault: +-2]"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L8:C2, L8:C29]",
-                "snippet": "id2 int(--...ault: +-2]"
-              },
-              "members": [],
-              "references": []
-            },
-            {
-              "context": {
-                "id": "symbol@Column@@[L9:C2, L9:C48]",
-                "snippet": "id3 int (+...+--7.2225]"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L9:C2, L9:C48]",
-                "snippet": "id3 int (+...+--7.2225]"
-              },
-              "members": [],
-              "references": []
-            }
-          ],
-          "references": []
+          }
         }
       ],
       "references": []

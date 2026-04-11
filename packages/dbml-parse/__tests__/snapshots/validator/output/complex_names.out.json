@@ -608,23 +608,13 @@
                           "context": {
                             "id": "symbol@Column@@[L2:C8, L2:C18]",
                             "snippet": "id integer"
-                          },
-                          "declaration": {
-                            "id": "node@<function-application>@@[L2:C8, L2:C18]",
-                            "snippet": "id integer"
-                          },
-                          "references": []
+                          }
                         },
                         {
                           "context": {
                             "id": "symbol@Column@@[L3:C8, L3:C49]",
                             "snippet": "status v2....tatus.new]"
-                          },
-                          "declaration": {
-                            "id": "node@<function-application>@@[L3:C8, L3:C49]",
-                            "snippet": "status v2....tatus.new]"
-                          },
-                          "references": []
+                          }
                         }
                       ],
                       "references": []
@@ -971,47 +961,27 @@
                       "members": [
                         {
                           "context": {
-                            "id": "symbol@Enum field@@[L10:C8, L10:C14]",
-                            "snippet": "tenant"
-                          },
-                          "declaration": {
-                            "id": "node@<function-application>@@[L10:C8, L10:C14]",
-                            "snippet": "tenant"
-                          },
-                          "references": []
-                        },
-                        {
-                          "context": {
                             "id": "symbol@Enum field@@[L7:C8, L7:C11]",
                             "snippet": "new"
-                          },
-                          "declaration": {
-                            "id": "node@<function-application>@@[L7:C8, L7:C11]",
-                            "snippet": "new"
-                          },
-                          "references": []
+                          }
                         },
                         {
                           "context": {
                             "id": "symbol@Enum field@@[L8:C8, L8:C13]",
                             "snippet": "churn"
-                          },
-                          "declaration": {
-                            "id": "node@<function-application>@@[L8:C8, L8:C13]",
-                            "snippet": "churn"
-                          },
-                          "references": []
+                          }
                         },
                         {
                           "context": {
                             "id": "symbol@Enum field@@[L9:C8, L9:C14]",
                             "snippet": "active"
-                          },
-                          "declaration": {
-                            "id": "node@<function-application>@@[L9:C8, L9:C14]",
-                            "snippet": "active"
-                          },
-                          "references": []
+                          }
+                        },
+                        {
+                          "context": {
+                            "id": "symbol@Enum field@@[L10:C8, L10:C14]",
+                            "snippet": "tenant"
+                          }
                         }
                       ],
                       "references": []
@@ -1061,9 +1031,7 @@
         {
           "context": {
             "id": "symbol@Schema@public@[L?:C?, L?:C?]"
-          },
-          "members": [],
-          "references": []
+          }
         }
       ],
       "references": []

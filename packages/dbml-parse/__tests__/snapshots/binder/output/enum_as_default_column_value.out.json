@@ -293,39 +293,19 @@
                 "context": {
                   "id": "symbol@Enum field@@[L1:C2, L1:C8]",
                   "snippet": "active"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L1:C2, L1:C8]",
-                  "snippet": "active"
-                },
-                "references": [
-                  {
-                    "id": "node@<primary-expression>@@[L22:C33, L22:C39]",
-                    "snippet": "active"
-                  }
-                ]
+                }
               },
               {
                 "context": {
                   "id": "symbol@Enum field@@[L2:C2, L2:C9]",
                   "snippet": "churned"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L2:C2, L2:C9]",
-                  "snippet": "churned"
-                },
-                "references": []
+                }
               },
               {
                 "context": {
                   "id": "symbol@Enum field@@[L3:C2, L3:C10]",
                   "snippet": "inactive"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L3:C2, L3:C10]",
-                  "snippet": "inactive"
-                },
-                "references": []
+                }
               }
             ],
             "references": [
@@ -586,28 +566,13 @@
                 "context": {
                   "id": "symbol@Enum field@@[L7:C2, L7:C6]",
                   "snippet": "male"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L7:C2, L7:C6]",
-                  "snippet": "male"
-                },
-                "references": [
-                  {
-                    "id": "node@<primary-expression>@@[L23:C57, L23:C61]",
-                    "snippet": "male"
-                  }
-                ]
+                }
               },
               {
                 "context": {
                   "id": "symbol@Enum field@@[L8:C2, L8:C8]",
                   "snippet": "female"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L8:C2, L8:C8]",
-                  "snippet": "female"
-                },
-                "references": []
+                }
               }
             ],
             "references": [
@@ -1021,61 +986,31 @@
                 "context": {
                   "id": "symbol@Enum field@@[L12:C2, L12:C9]",
                   "snippet": "toddler"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L12:C2, L12:C9]",
-                  "snippet": "toddler"
-                },
-                "references": []
+                }
               },
               {
                 "context": {
                   "id": "symbol@Enum field@@[L13:C2, L13:C10]",
                   "snippet": "children"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L13:C2, L13:C10]",
-                  "snippet": "children"
-                },
-                "references": []
+                }
               },
               {
                 "context": {
                   "id": "symbol@Enum field@@[L14:C2, L14:C10]",
                   "snippet": "teenager"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L14:C2, L14:C10]",
-                  "snippet": "teenager"
-                },
-                "references": []
+                }
               },
               {
                 "context": {
                   "id": "symbol@Enum field@@[L15:C2, L15:C13]",
                   "snippet": "young_adult"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L15:C2, L15:C13]",
-                  "snippet": "young_adult"
-                },
-                "references": [
-                  {
-                    "id": "node@<primary-expression>@@[L24:C73, L24:C84]",
-                    "snippet": "young_adult"
-                  }
-                ]
+                }
               },
               {
                 "context": {
                   "id": "symbol@Enum field@@[L16:C2, L16:C7]",
                   "snippet": "elder"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L16:C2, L16:C7]",
-                  "snippet": "elder"
-                },
-                "references": []
+                }
               }
             ],
             "references": [
@@ -3031,89 +2966,49 @@
                 "context": {
                   "id": "symbol@Column@@[L20:C2, L20:C11]",
                   "snippet": "name text"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L20:C2, L20:C11]",
-                  "snippet": "name text"
-                },
-                "references": []
+                }
               },
               {
                 "context": {
                   "id": "symbol@Column@@[L21:C2, L21:C8]",
                   "snippet": "id int"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L21:C2, L21:C8]",
-                  "snippet": "id int"
-                },
-                "references": []
+                }
               },
               {
                 "context": {
                   "id": "symbol@Column@@[L22:C2, L22:C40]",
                   "snippet": "status sta...us.active]"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L22:C2, L22:C40]",
-                  "snippet": "status sta...us.active]"
-                },
-                "references": []
+                }
               },
               {
                 "context": {
                   "id": "symbol@Column@@[L23:C2, L23:C62]",
                   "snippet": "gender dem...nder.male]"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L23:C2, L23:C62]",
-                  "snippet": "gender dem...nder.male]"
-                },
-                "references": []
+                }
               },
               {
                 "context": {
                   "id": "symbol@Column@@[L24:C2, L24:C85]",
                   "snippet": "age_type d...ung_adult]"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L24:C2, L24:C85]",
-                  "snippet": "age_type d...ung_adult]"
-                },
-                "references": []
+                }
               },
               {
                 "context": {
                   "id": "symbol@Column@@[L26:C2, L26:C60]",
                   "snippet": "invalid_va...lid_value]"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L26:C2, L26:C60]",
-                  "snippet": "invalid_va...lid_value]"
-                },
-                "references": []
+                }
               },
               {
                 "context": {
                   "id": "symbol@Column@@[L27:C2, L27:C75]",
                   "snippet": "invalid_va...d3.field4]"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L27:C2, L27:C75]",
-                  "snippet": "invalid_va...d3.field4]"
-                },
-                "references": []
+                }
               },
               {
                 "context": {
                   "id": "symbol@Column@@[L28:C2, L28:C69]",
                   "snippet": "invalid_bi...lid_field]"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L28:C2, L28:C69]",
-                  "snippet": "invalid_bi...lid_field]"
-                },
-                "references": []
+                }
               }
             ],
             "references": []
@@ -3145,488 +3040,24 @@
         {
           "context": {
             "id": "symbol@Schema@public@[L?:C?, L?:C?]"
-          },
-          "members": [
-            {
-              "context": {
-                "id": "symbol@Enum@status@[L0:C0, L4:C1]",
-                "snippet": "Enum statu...inactive\n}"
-              },
-              "declaration": {
-                "id": "node@<element-declaration>@status@[L0:C0, L4:C1]",
-                "snippet": "Enum statu...inactive\n}"
-              },
-              "members": [
-                {
-                  "context": {
-                    "id": "symbol@Enum field@@[L1:C2, L1:C8]",
-                    "snippet": "active"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L1:C2, L1:C8]",
-                    "snippet": "active"
-                  },
-                  "references": [
-                    {
-                      "id": "node@<primary-expression>@@[L22:C33, L22:C39]",
-                      "snippet": "active"
-                    }
-                  ]
-                },
-                {
-                  "context": {
-                    "id": "symbol@Enum field@@[L2:C2, L2:C9]",
-                    "snippet": "churned"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L2:C2, L2:C9]",
-                    "snippet": "churned"
-                  },
-                  "references": []
-                },
-                {
-                  "context": {
-                    "id": "symbol@Enum field@@[L3:C2, L3:C10]",
-                    "snippet": "inactive"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L3:C2, L3:C10]",
-                    "snippet": "inactive"
-                  },
-                  "references": []
-                }
-              ],
-              "references": [
-                {
-                  "id": "node@<primary-expression>@@[L22:C26, L22:C32]",
-                  "snippet": "status"
-                },
-                {
-                  "id": "node@<primary-expression>@@[L22:C9, L22:C15]",
-                  "snippet": "status"
-                }
-              ]
-            },
-            {
-              "context": {
-                "id": "symbol@Table@user@[L19:C0, L29:C1]",
-                "snippet": "Table user...d_field]\n}"
-              },
-              "declaration": {
-                "id": "node@<element-declaration>@user@[L19:C0, L29:C1]",
-                "snippet": "Table user...d_field]\n}"
-              },
-              "members": [
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L20:C2, L20:C11]",
-                    "snippet": "name text"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L20:C2, L20:C11]",
-                    "snippet": "name text"
-                  },
-                  "references": []
-                },
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L21:C2, L21:C8]",
-                    "snippet": "id int"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L21:C2, L21:C8]",
-                    "snippet": "id int"
-                  },
-                  "references": []
-                },
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L22:C2, L22:C40]",
-                    "snippet": "status sta...us.active]"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L22:C2, L22:C40]",
-                    "snippet": "status sta...us.active]"
-                  },
-                  "references": []
-                },
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L23:C2, L23:C62]",
-                    "snippet": "gender dem...nder.male]"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L23:C2, L23:C62]",
-                    "snippet": "gender dem...nder.male]"
-                  },
-                  "references": []
-                },
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L24:C2, L24:C85]",
-                    "snippet": "age_type d...ung_adult]"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L24:C2, L24:C85]",
-                    "snippet": "age_type d...ung_adult]"
-                  },
-                  "references": []
-                },
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L26:C2, L26:C60]",
-                    "snippet": "invalid_va...lid_value]"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L26:C2, L26:C60]",
-                    "snippet": "invalid_va...lid_value]"
-                  },
-                  "references": []
-                },
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L27:C2, L27:C75]",
-                    "snippet": "invalid_va...d3.field4]"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L27:C2, L27:C75]",
-                    "snippet": "invalid_va...d3.field4]"
-                  },
-                  "references": []
-                },
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L28:C2, L28:C69]",
-                    "snippet": "invalid_bi...lid_field]"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L28:C2, L28:C69]",
-                    "snippet": "invalid_bi...lid_field]"
-                  },
-                  "references": []
-                }
-              ],
-              "references": []
-            }
-          ],
-          "references": []
+          }
         },
         {
           "context": {
             "id": "symbol@Schema@demographic@[L?:C?, L?:C?]"
-          },
-          "members": [
-            {
-              "context": {
-                "id": "symbol@Enum@demographic.age segment@[L11:C0, L17:C1]",
-                "snippet": "Enum demog...\n  elder\n}"
-              },
-              "declaration": {
-                "id": "node@<element-declaration>@demographic.age segment@[L11:C0, L17:C1]",
-                "snippet": "Enum demog...\n  elder\n}"
-              },
-              "members": [
-                {
-                  "context": {
-                    "id": "symbol@Enum field@@[L12:C2, L12:C9]",
-                    "snippet": "toddler"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L12:C2, L12:C9]",
-                    "snippet": "toddler"
-                  },
-                  "references": []
-                },
-                {
-                  "context": {
-                    "id": "symbol@Enum field@@[L13:C2, L13:C10]",
-                    "snippet": "children"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L13:C2, L13:C10]",
-                    "snippet": "children"
-                  },
-                  "references": []
-                },
-                {
-                  "context": {
-                    "id": "symbol@Enum field@@[L14:C2, L14:C10]",
-                    "snippet": "teenager"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L14:C2, L14:C10]",
-                    "snippet": "teenager"
-                  },
-                  "references": []
-                },
-                {
-                  "context": {
-                    "id": "symbol@Enum field@@[L15:C2, L15:C13]",
-                    "snippet": "young_adult"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L15:C2, L15:C13]",
-                    "snippet": "young_adult"
-                  },
-                  "references": [
-                    {
-                      "id": "node@<primary-expression>@@[L24:C73, L24:C84]",
-                      "snippet": "young_adult"
-                    }
-                  ]
-                },
-                {
-                  "context": {
-                    "id": "symbol@Enum field@@[L16:C2, L16:C7]",
-                    "snippet": "elder"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L16:C2, L16:C7]",
-                    "snippet": "elder"
-                  },
-                  "references": []
-                }
-              ],
-              "references": [
-                {
-                  "id": "node@<primary-expression>@@[L24:C23, L24:C36]",
-                  "snippet": "\"age segment\""
-                },
-                {
-                  "id": "node@<primary-expression>@@[L24:C59, L24:C72]",
-                  "snippet": "\"age segment\""
-                }
-              ]
-            },
-            {
-              "context": {
-                "id": "symbol@Enum@demographic.gender@[L6:C0, L9:C1]",
-                "snippet": "Enum demog...  female\n}"
-              },
-              "declaration": {
-                "id": "node@<element-declaration>@demographic.gender@[L6:C0, L9:C1]",
-                "snippet": "Enum demog...  female\n}"
-              },
-              "members": [
-                {
-                  "context": {
-                    "id": "symbol@Enum field@@[L7:C2, L7:C6]",
-                    "snippet": "male"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L7:C2, L7:C6]",
-                    "snippet": "male"
-                  },
-                  "references": [
-                    {
-                      "id": "node@<primary-expression>@@[L23:C57, L23:C61]",
-                      "snippet": "male"
-                    }
-                  ]
-                },
-                {
-                  "context": {
-                    "id": "symbol@Enum field@@[L8:C2, L8:C8]",
-                    "snippet": "female"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L8:C2, L8:C8]",
-                    "snippet": "female"
-                  },
-                  "references": []
-                }
-              ],
-              "references": [
-                {
-                  "id": "node@<primary-expression>@@[L23:C21, L23:C27]",
-                  "snippet": "gender"
-                },
-                {
-                  "id": "node@<primary-expression>@@[L23:C50, L23:C56]",
-                  "snippet": "gender"
-                }
-              ]
-            }
-          ],
-          "references": [
-            {
-              "id": "node@<primary-expression>@@[L23:C38, L23:C49]",
-              "snippet": "demographic"
-            },
-            {
-              "id": "node@<primary-expression>@@[L23:C9, L23:C20]",
-              "snippet": "demographic"
-            },
-            {
-              "id": "node@<primary-expression>@@[L24:C11, L24:C22]",
-              "snippet": "demographic"
-            },
-            {
-              "id": "node@<primary-expression>@@[L24:C47, L24:C58]",
-              "snippet": "demographic"
-            }
-          ]
+          }
         },
         {
           "context": {
             "id": "symbol@Enum@status@[L0:C0, L4:C1]",
             "snippet": "Enum statu...inactive\n}"
-          },
-          "declaration": {
-            "id": "node@<element-declaration>@status@[L0:C0, L4:C1]",
-            "snippet": "Enum statu...inactive\n}"
-          },
-          "members": [
-            {
-              "context": {
-                "id": "symbol@Enum field@@[L1:C2, L1:C8]",
-                "snippet": "active"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L1:C2, L1:C8]",
-                "snippet": "active"
-              },
-              "references": [
-                {
-                  "id": "node@<primary-expression>@@[L22:C33, L22:C39]",
-                  "snippet": "active"
-                }
-              ]
-            },
-            {
-              "context": {
-                "id": "symbol@Enum field@@[L2:C2, L2:C9]",
-                "snippet": "churned"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L2:C2, L2:C9]",
-                "snippet": "churned"
-              },
-              "references": []
-            },
-            {
-              "context": {
-                "id": "symbol@Enum field@@[L3:C2, L3:C10]",
-                "snippet": "inactive"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L3:C2, L3:C10]",
-                "snippet": "inactive"
-              },
-              "references": []
-            }
-          ],
-          "references": [
-            {
-              "id": "node@<primary-expression>@@[L22:C26, L22:C32]",
-              "snippet": "status"
-            },
-            {
-              "id": "node@<primary-expression>@@[L22:C9, L22:C15]",
-              "snippet": "status"
-            }
-          ]
+          }
         },
         {
           "context": {
             "id": "symbol@Table@user@[L19:C0, L29:C1]",
             "snippet": "Table user...d_field]\n}"
-          },
-          "declaration": {
-            "id": "node@<element-declaration>@user@[L19:C0, L29:C1]",
-            "snippet": "Table user...d_field]\n}"
-          },
-          "members": [
-            {
-              "context": {
-                "id": "symbol@Column@@[L20:C2, L20:C11]",
-                "snippet": "name text"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L20:C2, L20:C11]",
-                "snippet": "name text"
-              },
-              "references": []
-            },
-            {
-              "context": {
-                "id": "symbol@Column@@[L21:C2, L21:C8]",
-                "snippet": "id int"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L21:C2, L21:C8]",
-                "snippet": "id int"
-              },
-              "references": []
-            },
-            {
-              "context": {
-                "id": "symbol@Column@@[L22:C2, L22:C40]",
-                "snippet": "status sta...us.active]"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L22:C2, L22:C40]",
-                "snippet": "status sta...us.active]"
-              },
-              "references": []
-            },
-            {
-              "context": {
-                "id": "symbol@Column@@[L23:C2, L23:C62]",
-                "snippet": "gender dem...nder.male]"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L23:C2, L23:C62]",
-                "snippet": "gender dem...nder.male]"
-              },
-              "references": []
-            },
-            {
-              "context": {
-                "id": "symbol@Column@@[L24:C2, L24:C85]",
-                "snippet": "age_type d...ung_adult]"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L24:C2, L24:C85]",
-                "snippet": "age_type d...ung_adult]"
-              },
-              "references": []
-            },
-            {
-              "context": {
-                "id": "symbol@Column@@[L26:C2, L26:C60]",
-                "snippet": "invalid_va...lid_value]"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L26:C2, L26:C60]",
-                "snippet": "invalid_va...lid_value]"
-              },
-              "references": []
-            },
-            {
-              "context": {
-                "id": "symbol@Column@@[L27:C2, L27:C75]",
-                "snippet": "invalid_va...d3.field4]"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L27:C2, L27:C75]",
-                "snippet": "invalid_va...d3.field4]"
-              },
-              "references": []
-            },
-            {
-              "context": {
-                "id": "symbol@Column@@[L28:C2, L28:C69]",
-                "snippet": "invalid_bi...lid_field]"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L28:C2, L28:C69]",
-                "snippet": "invalid_bi...lid_field]"
-              },
-              "references": []
-            }
-          ],
-          "references": []
+          }
         }
       ],
       "references": []

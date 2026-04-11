@@ -561,12 +561,7 @@
                 "context": {
                   "id": "symbol@Column@@[L11:C4, L11:C35]",
                   "snippet": "Indexes wr...element {}"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L11:C4, L11:C35]",
-                  "snippet": "Indexes wr...element {}"
-                },
-                "references": []
+                }
               }
             ],
             "references": []
@@ -598,58 +593,13 @@
         {
           "context": {
             "id": "symbol@Schema@public@[L?:C?, L?:C?]"
-          },
-          "members": [
-            {
-              "context": {
-                "id": "symbol@Table@wrong_nested_element@[L10:C0, L12:C1]",
-                "snippet": "Table wron...ication\r\n}"
-              },
-              "declaration": {
-                "id": "node@<element-declaration>@wrong_nested_element@[L10:C0, L12:C1]",
-                "snippet": "Table wron...ication\r\n}"
-              },
-              "members": [
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L11:C4, L11:C35]",
-                    "snippet": "Indexes wr...element {}"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L11:C4, L11:C35]",
-                    "snippet": "Indexes wr...element {}"
-                  },
-                  "references": []
-                }
-              ],
-              "references": []
-            }
-          ],
-          "references": []
+          }
         },
         {
           "context": {
             "id": "symbol@Table@wrong_nested_element@[L10:C0, L12:C1]",
             "snippet": "Table wron...ication\r\n}"
-          },
-          "declaration": {
-            "id": "node@<element-declaration>@wrong_nested_element@[L10:C0, L12:C1]",
-            "snippet": "Table wron...ication\r\n}"
-          },
-          "members": [
-            {
-              "context": {
-                "id": "symbol@Column@@[L11:C4, L11:C35]",
-                "snippet": "Indexes wr...element {}"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L11:C4, L11:C35]",
-                "snippet": "Indexes wr...element {}"
-              },
-              "references": []
-            }
-          ],
-          "references": []
+          }
         }
       ],
       "references": []

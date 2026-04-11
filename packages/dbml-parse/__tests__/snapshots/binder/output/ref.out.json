@@ -270,33 +270,13 @@
                 "context": {
                   "id": "symbol@Column@@[L1:C4, L1:C14]",
                   "snippet": "id integer"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L1:C4, L1:C14]",
-                  "snippet": "id integer"
-                },
-                "references": [
-                  {
-                    "id": "node@<primary-expression>@@[L6:C10, L6:C12]",
-                    "snippet": "id"
-                  }
-                ]
+                }
               },
               {
                 "context": {
                   "id": "symbol@Column@@[L2:C4, L2:C23]",
                   "snippet": "referrer_id integer"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L2:C4, L2:C23]",
-                  "snippet": "referrer_id integer"
-                },
-                "references": [
-                  {
-                    "id": "node@<primary-expression>@@[L6:C21, L6:C32]",
-                    "snippet": "referrer_id"
-                  }
-                ]
+                }
               }
             ],
             "references": [
@@ -594,118 +574,13 @@
         {
           "context": {
             "id": "symbol@Schema@public@[L?:C?, L?:C?]"
-          },
-          "members": [
-            {
-              "context": {
-                "id": "symbol@Table@Users@[L0:C0, L3:C1]",
-                "snippet": "Table User...integer \n}"
-              },
-              "declaration": {
-                "id": "node@<element-declaration>@Users@[L0:C0, L3:C1]",
-                "snippet": "Table User...integer \n}"
-              },
-              "members": [
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L1:C4, L1:C14]",
-                    "snippet": "id integer"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L1:C4, L1:C14]",
-                    "snippet": "id integer"
-                  },
-                  "references": [
-                    {
-                      "id": "node@<primary-expression>@@[L6:C10, L6:C12]",
-                      "snippet": "id"
-                    }
-                  ]
-                },
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L2:C4, L2:C23]",
-                    "snippet": "referrer_id integer"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L2:C4, L2:C23]",
-                    "snippet": "referrer_id integer"
-                  },
-                  "references": [
-                    {
-                      "id": "node@<primary-expression>@@[L6:C21, L6:C32]",
-                      "snippet": "referrer_id"
-                    }
-                  ]
-                }
-              ],
-              "references": [
-                {
-                  "id": "node@<primary-expression>@@[L6:C15, L6:C20]",
-                  "snippet": "Users"
-                },
-                {
-                  "id": "node@<primary-expression>@@[L6:C4, L6:C9]",
-                  "snippet": "Users"
-                }
-              ]
-            }
-          ],
-          "references": []
+          }
         },
         {
           "context": {
             "id": "symbol@Table@Users@[L0:C0, L3:C1]",
             "snippet": "Table User...integer \n}"
-          },
-          "declaration": {
-            "id": "node@<element-declaration>@Users@[L0:C0, L3:C1]",
-            "snippet": "Table User...integer \n}"
-          },
-          "members": [
-            {
-              "context": {
-                "id": "symbol@Column@@[L1:C4, L1:C14]",
-                "snippet": "id integer"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L1:C4, L1:C14]",
-                "snippet": "id integer"
-              },
-              "references": [
-                {
-                  "id": "node@<primary-expression>@@[L6:C10, L6:C12]",
-                  "snippet": "id"
-                }
-              ]
-            },
-            {
-              "context": {
-                "id": "symbol@Column@@[L2:C4, L2:C23]",
-                "snippet": "referrer_id integer"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L2:C4, L2:C23]",
-                "snippet": "referrer_id integer"
-              },
-              "references": [
-                {
-                  "id": "node@<primary-expression>@@[L6:C21, L6:C32]",
-                  "snippet": "referrer_id"
-                }
-              ]
-            }
-          ],
-          "references": [
-            {
-              "id": "node@<primary-expression>@@[L6:C15, L6:C20]",
-              "snippet": "Users"
-            },
-            {
-              "id": "node@<primary-expression>@@[L6:C4, L6:C9]",
-              "snippet": "Users"
-            }
-          ]
+          }
         }
       ],
       "references": []

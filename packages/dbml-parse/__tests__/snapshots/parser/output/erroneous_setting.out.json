@@ -382,17 +382,7 @@
                 "context": {
                   "id": "symbol@Column@@[L1:C2, L1:C24]",
                   "snippet": "id int [pk...increment]"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L1:C2, L1:C24]",
-                  "snippet": "id int [pk...increment]"
-                },
-                "references": [
-                  {
-                    "id": "node@<primary-expression>@@[L22:C13, L22:C17]",
-                    "snippet": "\"id\""
-                  }
-                ]
+                }
               }
             ],
             "references": [
@@ -888,44 +878,19 @@
                 "context": {
                   "id": "symbol@Column@@[L5:C2, L5:C13]",
                   "snippet": "user_id int"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L5:C2, L5:C13]",
-                  "snippet": "user_id int"
-                },
-                "references": [
-                  {
-                    "id": "node@<primary-expression>@@[L22:C43, L22:C52]",
-                    "snippet": "\"user_id\""
-                  }
-                ]
+                }
               },
               {
                 "context": {
                   "id": "symbol@Column@@[L6:C2, L6:C16]",
                   "snippet": "diagram_id int"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L6:C2, L6:C16]",
-                  "snippet": "diagram_id int"
-                },
-                "references": [
-                  {
-                    "id": "node@<primary-expression>@@[L24:C46, L24:C58]",
-                    "snippet": "\"diagram_id\""
-                  }
-                ]
+                }
               },
               {
                 "context": {
                   "id": "symbol@Column@@[L7:C2, L9:C30]",
                   "snippet": "role int [...m_id) [pk]"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L7:C2, L9:C30]",
-                  "snippet": "role int [...m_id) [pk]"
-                },
-                "references": []
+                }
               }
             ],
             "references": [
@@ -1264,23 +1229,13 @@
                 "context": {
                   "id": "symbol@Column@@[L14:C2, L14:C14]",
                   "snippet": "bit int [pk]"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L14:C2, L14:C14]",
-                  "snippet": "bit int [pk]"
-                },
-                "references": []
+                }
               },
               {
                 "context": {
                   "id": "symbol@Column@@[L15:C2, L15:C14]",
                   "snippet": "name varchar"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L15:C2, L15:C14]",
-                  "snippet": "name varchar"
-                },
-                "references": []
+                }
               }
             ],
             "references": []
@@ -1566,17 +1521,7 @@
                 "context": {
                   "id": "symbol@Column@@[L19:C2, L19:C24]",
                   "snippet": "id int [pk...increment]"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L19:C2, L19:C24]",
-                  "snippet": "id int [pk...increment]"
-                },
-                "references": [
-                  {
-                    "id": "node@<primary-expression>@@[L24:C16, L24:C20]",
-                    "snippet": "\"id\""
-                  }
-                ]
+                }
               }
             ],
             "references": [
@@ -2085,346 +2030,31 @@
         {
           "context": {
             "id": "symbol@Schema@public@[L?:C?, L?:C?]"
-          },
-          "members": [
-            {
-              "context": {
-                "id": "symbol@Table@diagrams@[L18:C0, L20:C1]",
-                "snippet": "Table diag...ncrement\n}"
-              },
-              "declaration": {
-                "id": "node@<element-declaration>@diagrams@[L18:C0, L20:C1]",
-                "snippet": "Table diag...ncrement\n}"
-              },
-              "members": [
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L19:C2, L19:C24]",
-                    "snippet": "id int [pk...increment]"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L19:C2, L19:C24]",
-                    "snippet": "id int [pk...increment]"
-                  },
-                  "references": [
-                    {
-                      "id": "node@<primary-expression>@@[L24:C16, L24:C20]",
-                      "snippet": "\"id\""
-                    }
-                  ]
-                }
-              ],
-              "references": [
-                {
-                  "id": "node@<primary-expression>@@[L24:C5, L24:C15]",
-                  "snippet": "\"diagrams\""
-                }
-              ]
-            },
-            {
-              "context": {
-                "id": "symbol@Table@permissions@[L13:C0, L16:C1]",
-                "snippet": "Table perm... varchar\n}"
-              },
-              "declaration": {
-                "id": "node@<element-declaration>@permissions@[L13:C0, L16:C1]",
-                "snippet": "Table perm... varchar\n}"
-              },
-              "members": [
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L14:C2, L14:C14]",
-                    "snippet": "bit int [pk]"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L14:C2, L14:C14]",
-                    "snippet": "bit int [pk]"
-                  },
-                  "references": []
-                },
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L15:C2, L15:C14]",
-                    "snippet": "name varchar"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L15:C2, L15:C14]",
-                    "snippet": "name varchar"
-                  },
-                  "references": []
-                }
-              ],
-              "references": []
-            },
-            {
-              "context": {
-                "id": "symbol@Table@user_role_in_diagram@[L4:C0, L10:C3]",
-                "snippet": "Table user...) [pk]\n  }"
-              },
-              "declaration": {
-                "id": "node@<element-declaration>@user_role_in_diagram@[L4:C0, L10:C3]",
-                "snippet": "Table user...) [pk]\n  }"
-              },
-              "members": [
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L5:C2, L5:C13]",
-                    "snippet": "user_id int"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L5:C2, L5:C13]",
-                    "snippet": "user_id int"
-                  },
-                  "references": [
-                    {
-                      "id": "node@<primary-expression>@@[L22:C43, L22:C52]",
-                      "snippet": "\"user_id\""
-                    }
-                  ]
-                },
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L6:C2, L6:C16]",
-                    "snippet": "diagram_id int"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L6:C2, L6:C16]",
-                    "snippet": "diagram_id int"
-                  },
-                  "references": [
-                    {
-                      "id": "node@<primary-expression>@@[L24:C46, L24:C58]",
-                      "snippet": "\"diagram_id\""
-                    }
-                  ]
-                },
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L7:C2, L9:C30]",
-                    "snippet": "role int [...m_id) [pk]"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L7:C2, L9:C30]",
-                    "snippet": "role int [...m_id) [pk]"
-                  },
-                  "references": []
-                }
-              ],
-              "references": [
-                {
-                  "id": "node@<primary-expression>@@[L22:C20, L22:C42]",
-                  "snippet": "\"user_role...n_diagram\""
-                },
-                {
-                  "id": "node@<primary-expression>@@[L24:C23, L24:C45]",
-                  "snippet": "\"user_role...n_diagram\""
-                }
-              ]
-            },
-            {
-              "context": {
-                "id": "symbol@Table@users@[L0:C0, L2:C1]",
-                "snippet": "Table user...crement]\n}"
-              },
-              "declaration": {
-                "id": "node@<element-declaration>@users@[L0:C0, L2:C1]",
-                "snippet": "Table user...crement]\n}"
-              },
-              "members": [
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L1:C2, L1:C24]",
-                    "snippet": "id int [pk...increment]"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L1:C2, L1:C24]",
-                    "snippet": "id int [pk...increment]"
-                  },
-                  "references": [
-                    {
-                      "id": "node@<primary-expression>@@[L22:C13, L22:C17]",
-                      "snippet": "\"id\""
-                    }
-                  ]
-                }
-              ],
-              "references": [
-                {
-                  "id": "node@<primary-expression>@@[L22:C5, L22:C12]",
-                  "snippet": "\"users\""
-                }
-              ]
-            }
-          ],
-          "references": []
-        },
-        {
-          "context": {
-            "id": "symbol@Table@diagrams@[L18:C0, L20:C1]",
-            "snippet": "Table diag...ncrement\n}"
-          },
-          "declaration": {
-            "id": "node@<element-declaration>@diagrams@[L18:C0, L20:C1]",
-            "snippet": "Table diag...ncrement\n}"
-          },
-          "members": [
-            {
-              "context": {
-                "id": "symbol@Column@@[L19:C2, L19:C24]",
-                "snippet": "id int [pk...increment]"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L19:C2, L19:C24]",
-                "snippet": "id int [pk...increment]"
-              },
-              "references": [
-                {
-                  "id": "node@<primary-expression>@@[L24:C16, L24:C20]",
-                  "snippet": "\"id\""
-                }
-              ]
-            }
-          ],
-          "references": [
-            {
-              "id": "node@<primary-expression>@@[L24:C5, L24:C15]",
-              "snippet": "\"diagrams\""
-            }
-          ]
-        },
-        {
-          "context": {
-            "id": "symbol@Table@permissions@[L13:C0, L16:C1]",
-            "snippet": "Table perm... varchar\n}"
-          },
-          "declaration": {
-            "id": "node@<element-declaration>@permissions@[L13:C0, L16:C1]",
-            "snippet": "Table perm... varchar\n}"
-          },
-          "members": [
-            {
-              "context": {
-                "id": "symbol@Column@@[L14:C2, L14:C14]",
-                "snippet": "bit int [pk]"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L14:C2, L14:C14]",
-                "snippet": "bit int [pk]"
-              },
-              "references": []
-            },
-            {
-              "context": {
-                "id": "symbol@Column@@[L15:C2, L15:C14]",
-                "snippet": "name varchar"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L15:C2, L15:C14]",
-                "snippet": "name varchar"
-              },
-              "references": []
-            }
-          ],
-          "references": []
-        },
-        {
-          "context": {
-            "id": "symbol@Table@user_role_in_diagram@[L4:C0, L10:C3]",
-            "snippet": "Table user...) [pk]\n  }"
-          },
-          "declaration": {
-            "id": "node@<element-declaration>@user_role_in_diagram@[L4:C0, L10:C3]",
-            "snippet": "Table user...) [pk]\n  }"
-          },
-          "members": [
-            {
-              "context": {
-                "id": "symbol@Column@@[L5:C2, L5:C13]",
-                "snippet": "user_id int"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L5:C2, L5:C13]",
-                "snippet": "user_id int"
-              },
-              "references": [
-                {
-                  "id": "node@<primary-expression>@@[L22:C43, L22:C52]",
-                  "snippet": "\"user_id\""
-                }
-              ]
-            },
-            {
-              "context": {
-                "id": "symbol@Column@@[L6:C2, L6:C16]",
-                "snippet": "diagram_id int"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L6:C2, L6:C16]",
-                "snippet": "diagram_id int"
-              },
-              "references": [
-                {
-                  "id": "node@<primary-expression>@@[L24:C46, L24:C58]",
-                  "snippet": "\"diagram_id\""
-                }
-              ]
-            },
-            {
-              "context": {
-                "id": "symbol@Column@@[L7:C2, L9:C30]",
-                "snippet": "role int [...m_id) [pk]"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L7:C2, L9:C30]",
-                "snippet": "role int [...m_id) [pk]"
-              },
-              "references": []
-            }
-          ],
-          "references": [
-            {
-              "id": "node@<primary-expression>@@[L22:C20, L22:C42]",
-              "snippet": "\"user_role...n_diagram\""
-            },
-            {
-              "id": "node@<primary-expression>@@[L24:C23, L24:C45]",
-              "snippet": "\"user_role...n_diagram\""
-            }
-          ]
+          }
         },
         {
           "context": {
             "id": "symbol@Table@users@[L0:C0, L2:C1]",
             "snippet": "Table user...crement]\n}"
-          },
-          "declaration": {
-            "id": "node@<element-declaration>@users@[L0:C0, L2:C1]",
-            "snippet": "Table user...crement]\n}"
-          },
-          "members": [
-            {
-              "context": {
-                "id": "symbol@Column@@[L1:C2, L1:C24]",
-                "snippet": "id int [pk...increment]"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L1:C2, L1:C24]",
-                "snippet": "id int [pk...increment]"
-              },
-              "references": [
-                {
-                  "id": "node@<primary-expression>@@[L22:C13, L22:C17]",
-                  "snippet": "\"id\""
-                }
-              ]
-            }
-          ],
-          "references": [
-            {
-              "id": "node@<primary-expression>@@[L22:C5, L22:C12]",
-              "snippet": "\"users\""
-            }
-          ]
+          }
+        },
+        {
+          "context": {
+            "id": "symbol@Table@user_role_in_diagram@[L4:C0, L10:C3]",
+            "snippet": "Table user...) [pk]\n  }"
+          }
+        },
+        {
+          "context": {
+            "id": "symbol@Table@permissions@[L13:C0, L16:C1]",
+            "snippet": "Table perm... varchar\n}"
+          }
+        },
+        {
+          "context": {
+            "id": "symbol@Table@diagrams@[L18:C0, L20:C1]",
+            "snippet": "Table diag...ncrement\n}"
+          }
         }
       ],
       "references": []

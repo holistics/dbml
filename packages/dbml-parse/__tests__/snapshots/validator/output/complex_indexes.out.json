@@ -1483,63 +1483,33 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol@Indexes@@[L6:C2, L15:C3]",
-                  "snippet": "indexes {\r...`,id)\r\n  }"
-                },
-                "declaration": {
-                  "id": "node@<element-declaration>@@[L6:C2, L15:C3]",
-                  "snippet": "indexes {\r...`,id)\r\n  }"
-                },
-                "members": [],
-                "references": []
-              },
-              {
-                "context": {
                   "id": "symbol@Column@@[L1:C2, L1:C12]",
                   "snippet": "id integer"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L1:C2, L1:C12]",
-                  "snippet": "id integer"
-                },
-                "members": [],
-                "references": []
+                }
               },
               {
                 "context": {
                   "id": "symbol@Column@@[L2:C2, L2:C17]",
                   "snippet": "country varchar"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L2:C2, L2:C17]",
-                  "snippet": "country varchar"
-                },
-                "members": [],
-                "references": []
+                }
               },
               {
                 "context": {
                   "id": "symbol@Column@@[L3:C2, L3:C19]",
                   "snippet": "booking_date date"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L3:C2, L3:C19]",
-                  "snippet": "booking_date date"
-                },
-                "members": [],
-                "references": []
+                }
               },
               {
                 "context": {
                   "id": "symbol@Column@@[L4:C2, L4:C22]",
                   "snippet": "created_at timestamp"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L4:C2, L4:C22]",
-                  "snippet": "created_at timestamp"
-                },
-                "members": [],
-                "references": []
+                }
+              },
+              {
+                "context": {
+                  "id": "symbol@Indexes@@[L6:C2, L15:C3]",
+                  "snippet": "indexes {\r...`,id)\r\n  }"
+                }
               }
             ],
             "references": []
@@ -3101,95 +3071,33 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol@Indexes@@[L24:C2, L33:C3]",
-                  "snippet": "indexes {\r...`,id)\r\n  }"
-                },
-                "declaration": {
-                  "id": "node@<element-declaration>@@[L24:C2, L33:C3]",
-                  "snippet": "indexes {\r...`,id)\r\n  }"
-                },
-                "members": [],
-                "references": []
-              },
-              {
-                "context": {
                   "id": "symbol@Column@@[L19:C2, L19:C12]",
                   "snippet": "id integer"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L19:C2, L19:C12]",
-                  "snippet": "id integer"
-                },
-                "references": [
-                  {
-                    "id": "node@<primary-expression>@@[L25:C5, L25:C7]",
-                    "snippet": "id"
-                  },
-                  {
-                    "id": "node@<primary-expression>@@[L32:C12, L32:C14]",
-                    "snippet": "id"
-                  }
-                ]
+                }
               },
               {
                 "context": {
                   "id": "symbol@Column@@[L20:C2, L20:C17]",
                   "snippet": "country varchar"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L20:C2, L20:C17]",
-                  "snippet": "country varchar"
-                },
-                "references": [
-                  {
-                    "id": "node@<primary-expression>@@[L25:C9, L25:C16]",
-                    "snippet": "country"
-                  },
-                  {
-                    "id": "node@<primary-expression>@@[L28:C5, L28:C12]",
-                    "snippet": "country"
-                  }
-                ]
+                }
               },
               {
                 "context": {
                   "id": "symbol@Column@@[L21:C2, L21:C19]",
                   "snippet": "booking_date date"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L21:C2, L21:C19]",
-                  "snippet": "booking_date date"
-                },
-                "references": [
-                  {
-                    "id": "node@<primary-expression>@@[L27:C4, L27:C16]",
-                    "snippet": "booking_date"
-                  },
-                  {
-                    "id": "node@<primary-expression>@@[L28:C14, L28:C26]",
-                    "snippet": "booking_date"
-                  },
-                  {
-                    "id": "node@<primary-expression>@@[L29:C4, L29:C16]",
-                    "snippet": "booking_date"
-                  }
-                ]
+                }
               },
               {
                 "context": {
                   "id": "symbol@Column@@[L22:C2, L22:C22]",
                   "snippet": "created_at timestamp"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L22:C2, L22:C22]",
-                  "snippet": "created_at timestamp"
-                },
-                "references": [
-                  {
-                    "id": "node@<primary-expression>@@[L26:C4, L26:C14]",
-                    "snippet": "created_at"
-                  }
-                ]
+                }
+              },
+              {
+                "context": {
+                  "id": "symbol@Indexes@@[L24:C2, L33:C3]",
+                  "snippet": "indexes {\r...`,id)\r\n  }"
+                }
               }
             ],
             "references": []
@@ -3221,366 +3129,19 @@
         {
           "context": {
             "id": "symbol@Schema@public@[L?:C?, L?:C?]"
-          },
-          "members": [
-            {
-              "context": {
-                "id": "symbol@TablePartial@bookingPartial@[L0:C0, L16:C1]",
-                "snippet": "TableParti...d)\r\n  }\r\n}"
-              },
-              "declaration": {
-                "id": "node@<element-declaration>@bookingPartial@[L0:C0, L16:C1]",
-                "snippet": "TableParti...d)\r\n  }\r\n}"
-              },
-              "members": [
-                {
-                  "context": {
-                    "id": "symbol@Indexes@@[L6:C2, L15:C3]",
-                    "snippet": "indexes {\r...`,id)\r\n  }"
-                  },
-                  "declaration": {
-                    "id": "node@<element-declaration>@@[L6:C2, L15:C3]",
-                    "snippet": "indexes {\r...`,id)\r\n  }"
-                  },
-                  "members": [],
-                  "references": []
-                },
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L1:C2, L1:C12]",
-                    "snippet": "id integer"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L1:C2, L1:C12]",
-                    "snippet": "id integer"
-                  },
-                  "members": [],
-                  "references": []
-                },
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L2:C2, L2:C17]",
-                    "snippet": "country varchar"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L2:C2, L2:C17]",
-                    "snippet": "country varchar"
-                  },
-                  "members": [],
-                  "references": []
-                },
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L3:C2, L3:C19]",
-                    "snippet": "booking_date date"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L3:C2, L3:C19]",
-                    "snippet": "booking_date date"
-                  },
-                  "members": [],
-                  "references": []
-                },
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L4:C2, L4:C22]",
-                    "snippet": "created_at timestamp"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L4:C2, L4:C22]",
-                    "snippet": "created_at timestamp"
-                  },
-                  "members": [],
-                  "references": []
-                }
-              ],
-              "references": []
-            },
-            {
-              "context": {
-                "id": "symbol@Table@bookings@[L18:C0, L34:C1]",
-                "snippet": "Table book...d)\r\n  }\r\n}"
-              },
-              "declaration": {
-                "id": "node@<element-declaration>@bookings@[L18:C0, L34:C1]",
-                "snippet": "Table book...d)\r\n  }\r\n}"
-              },
-              "members": [
-                {
-                  "context": {
-                    "id": "symbol@Indexes@@[L24:C2, L33:C3]",
-                    "snippet": "indexes {\r...`,id)\r\n  }"
-                  },
-                  "declaration": {
-                    "id": "node@<element-declaration>@@[L24:C2, L33:C3]",
-                    "snippet": "indexes {\r...`,id)\r\n  }"
-                  },
-                  "members": [],
-                  "references": []
-                },
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L19:C2, L19:C12]",
-                    "snippet": "id integer"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L19:C2, L19:C12]",
-                    "snippet": "id integer"
-                  },
-                  "references": [
-                    {
-                      "id": "node@<primary-expression>@@[L25:C5, L25:C7]",
-                      "snippet": "id"
-                    },
-                    {
-                      "id": "node@<primary-expression>@@[L32:C12, L32:C14]",
-                      "snippet": "id"
-                    }
-                  ]
-                },
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L20:C2, L20:C17]",
-                    "snippet": "country varchar"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L20:C2, L20:C17]",
-                    "snippet": "country varchar"
-                  },
-                  "references": [
-                    {
-                      "id": "node@<primary-expression>@@[L25:C9, L25:C16]",
-                      "snippet": "country"
-                    },
-                    {
-                      "id": "node@<primary-expression>@@[L28:C5, L28:C12]",
-                      "snippet": "country"
-                    }
-                  ]
-                },
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L21:C2, L21:C19]",
-                    "snippet": "booking_date date"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L21:C2, L21:C19]",
-                    "snippet": "booking_date date"
-                  },
-                  "references": [
-                    {
-                      "id": "node@<primary-expression>@@[L27:C4, L27:C16]",
-                      "snippet": "booking_date"
-                    },
-                    {
-                      "id": "node@<primary-expression>@@[L28:C14, L28:C26]",
-                      "snippet": "booking_date"
-                    },
-                    {
-                      "id": "node@<primary-expression>@@[L29:C4, L29:C16]",
-                      "snippet": "booking_date"
-                    }
-                  ]
-                },
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L22:C2, L22:C22]",
-                    "snippet": "created_at timestamp"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L22:C2, L22:C22]",
-                    "snippet": "created_at timestamp"
-                  },
-                  "references": [
-                    {
-                      "id": "node@<primary-expression>@@[L26:C4, L26:C14]",
-                      "snippet": "created_at"
-                    }
-                  ]
-                }
-              ],
-              "references": []
-            }
-          ],
-          "references": []
+          }
         },
         {
           "context": {
             "id": "symbol@TablePartial@bookingPartial@[L0:C0, L16:C1]",
             "snippet": "TableParti...d)\r\n  }\r\n}"
-          },
-          "declaration": {
-            "id": "node@<element-declaration>@bookingPartial@[L0:C0, L16:C1]",
-            "snippet": "TableParti...d)\r\n  }\r\n}"
-          },
-          "members": [
-            {
-              "context": {
-                "id": "symbol@Indexes@@[L6:C2, L15:C3]",
-                "snippet": "indexes {\r...`,id)\r\n  }"
-              },
-              "declaration": {
-                "id": "node@<element-declaration>@@[L6:C2, L15:C3]",
-                "snippet": "indexes {\r...`,id)\r\n  }"
-              },
-              "members": [],
-              "references": []
-            },
-            {
-              "context": {
-                "id": "symbol@Column@@[L1:C2, L1:C12]",
-                "snippet": "id integer"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L1:C2, L1:C12]",
-                "snippet": "id integer"
-              },
-              "members": [],
-              "references": []
-            },
-            {
-              "context": {
-                "id": "symbol@Column@@[L2:C2, L2:C17]",
-                "snippet": "country varchar"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L2:C2, L2:C17]",
-                "snippet": "country varchar"
-              },
-              "members": [],
-              "references": []
-            },
-            {
-              "context": {
-                "id": "symbol@Column@@[L3:C2, L3:C19]",
-                "snippet": "booking_date date"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L3:C2, L3:C19]",
-                "snippet": "booking_date date"
-              },
-              "members": [],
-              "references": []
-            },
-            {
-              "context": {
-                "id": "symbol@Column@@[L4:C2, L4:C22]",
-                "snippet": "created_at timestamp"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L4:C2, L4:C22]",
-                "snippet": "created_at timestamp"
-              },
-              "members": [],
-              "references": []
-            }
-          ],
-          "references": []
+          }
         },
         {
           "context": {
             "id": "symbol@Table@bookings@[L18:C0, L34:C1]",
             "snippet": "Table book...d)\r\n  }\r\n}"
-          },
-          "declaration": {
-            "id": "node@<element-declaration>@bookings@[L18:C0, L34:C1]",
-            "snippet": "Table book...d)\r\n  }\r\n}"
-          },
-          "members": [
-            {
-              "context": {
-                "id": "symbol@Indexes@@[L24:C2, L33:C3]",
-                "snippet": "indexes {\r...`,id)\r\n  }"
-              },
-              "declaration": {
-                "id": "node@<element-declaration>@@[L24:C2, L33:C3]",
-                "snippet": "indexes {\r...`,id)\r\n  }"
-              },
-              "members": [],
-              "references": []
-            },
-            {
-              "context": {
-                "id": "symbol@Column@@[L19:C2, L19:C12]",
-                "snippet": "id integer"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L19:C2, L19:C12]",
-                "snippet": "id integer"
-              },
-              "references": [
-                {
-                  "id": "node@<primary-expression>@@[L25:C5, L25:C7]",
-                  "snippet": "id"
-                },
-                {
-                  "id": "node@<primary-expression>@@[L32:C12, L32:C14]",
-                  "snippet": "id"
-                }
-              ]
-            },
-            {
-              "context": {
-                "id": "symbol@Column@@[L20:C2, L20:C17]",
-                "snippet": "country varchar"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L20:C2, L20:C17]",
-                "snippet": "country varchar"
-              },
-              "references": [
-                {
-                  "id": "node@<primary-expression>@@[L25:C9, L25:C16]",
-                  "snippet": "country"
-                },
-                {
-                  "id": "node@<primary-expression>@@[L28:C5, L28:C12]",
-                  "snippet": "country"
-                }
-              ]
-            },
-            {
-              "context": {
-                "id": "symbol@Column@@[L21:C2, L21:C19]",
-                "snippet": "booking_date date"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L21:C2, L21:C19]",
-                "snippet": "booking_date date"
-              },
-              "references": [
-                {
-                  "id": "node@<primary-expression>@@[L27:C4, L27:C16]",
-                  "snippet": "booking_date"
-                },
-                {
-                  "id": "node@<primary-expression>@@[L28:C14, L28:C26]",
-                  "snippet": "booking_date"
-                },
-                {
-                  "id": "node@<primary-expression>@@[L29:C4, L29:C16]",
-                  "snippet": "booking_date"
-                }
-              ]
-            },
-            {
-              "context": {
-                "id": "symbol@Column@@[L22:C2, L22:C22]",
-                "snippet": "created_at timestamp"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L22:C2, L22:C22]",
-                "snippet": "created_at timestamp"
-              },
-              "references": [
-                {
-                  "id": "node@<primary-expression>@@[L26:C4, L26:C14]",
-                  "snippet": "created_at"
-                }
-              ]
-            }
-          ],
-          "references": []
+          }
         }
       ],
       "references": []

@@ -300,34 +300,19 @@
                 "context": {
                   "id": "symbol@Enum field@@[L1:C4, L1:C9]",
                   "snippet": "churn"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L1:C4, L1:C9]",
-                  "snippet": "churn"
-                },
-                "references": []
+                }
               },
               {
                 "context": {
                   "id": "symbol@Enum field@@[L2:C4, L2:C9]",
                   "snippet": "churn"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L2:C4, L2:C9]",
-                  "snippet": "churn"
-                },
-                "references": []
+                }
               },
               {
                 "context": {
                   "id": "symbol@Enum field@@[L3:C4, L3:C9]",
                   "snippet": "churn"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L3:C4, L3:C9]",
-                  "snippet": "churn"
-                },
-                "references": []
+                }
               }
             ],
             "references": []
@@ -359,102 +344,13 @@
         {
           "context": {
             "id": "symbol@Schema@public@[L?:C?, L?:C?]"
-          },
-          "members": [
-            {
-              "context": {
-                "id": "symbol@Enum@status@[L0:C0, L4:C1]",
-                "snippet": "Enum statu...  churn\r\n}"
-              },
-              "declaration": {
-                "id": "node@<element-declaration>@status@[L0:C0, L4:C1]",
-                "snippet": "Enum statu...  churn\r\n}"
-              },
-              "members": [
-                {
-                  "context": {
-                    "id": "symbol@Enum field@@[L1:C4, L1:C9]",
-                    "snippet": "churn"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L1:C4, L1:C9]",
-                    "snippet": "churn"
-                  },
-                  "references": []
-                },
-                {
-                  "context": {
-                    "id": "symbol@Enum field@@[L2:C4, L2:C9]",
-                    "snippet": "churn"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L2:C4, L2:C9]",
-                    "snippet": "churn"
-                  },
-                  "references": []
-                },
-                {
-                  "context": {
-                    "id": "symbol@Enum field@@[L3:C4, L3:C9]",
-                    "snippet": "churn"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L3:C4, L3:C9]",
-                    "snippet": "churn"
-                  },
-                  "references": []
-                }
-              ],
-              "references": []
-            }
-          ],
-          "references": []
+          }
         },
         {
           "context": {
             "id": "symbol@Enum@status@[L0:C0, L4:C1]",
             "snippet": "Enum statu...  churn\r\n}"
-          },
-          "declaration": {
-            "id": "node@<element-declaration>@status@[L0:C0, L4:C1]",
-            "snippet": "Enum statu...  churn\r\n}"
-          },
-          "members": [
-            {
-              "context": {
-                "id": "symbol@Enum field@@[L1:C4, L1:C9]",
-                "snippet": "churn"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L1:C4, L1:C9]",
-                "snippet": "churn"
-              },
-              "references": []
-            },
-            {
-              "context": {
-                "id": "symbol@Enum field@@[L2:C4, L2:C9]",
-                "snippet": "churn"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L2:C4, L2:C9]",
-                "snippet": "churn"
-              },
-              "references": []
-            },
-            {
-              "context": {
-                "id": "symbol@Enum field@@[L3:C4, L3:C9]",
-                "snippet": "churn"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L3:C4, L3:C9]",
-                "snippet": "churn"
-              },
-              "references": []
-            }
-          ],
-          "references": []
+          }
         }
       ],
       "references": []

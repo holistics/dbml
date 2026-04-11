@@ -743,39 +743,19 @@
                 "context": {
                   "id": "symbol@Column@@[L1:C1, L1:C11]",
                   "snippet": "id integer"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L1:C1, L1:C11]",
-                  "snippet": "id integer"
-                },
-                "references": [
-                  {
-                    "id": "node@<primary-expression>@@[L4:C28, L4:C30]",
-                    "snippet": "id"
-                  }
-                ]
+                }
               },
               {
                 "context": {
                   "id": "symbol@Column@@[L2:C4, L2:C45]",
                   "snippet": "status v2....tatus.new]"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L2:C4, L2:C45]",
-                  "snippet": "status v2....tatus.new]"
-                },
-                "references": []
+                }
               },
               {
                 "context": {
                   "id": "symbol@Column@@[L4:C4, L4:C31]",
                   "snippet": "referrer i...[ref: -id]"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L4:C4, L4:C31]",
-                  "snippet": "referrer i...[ref: -id]"
-                },
-                "references": []
+                }
               }
             ],
             "references": []
@@ -1128,28 +1108,13 @@
                 "context": {
                   "id": "symbol@Enum field@@[L8:C1, L8:C6]",
                   "snippet": "churn"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L8:C1, L8:C6]",
-                  "snippet": "churn"
-                },
-                "references": []
+                }
               },
               {
                 "context": {
                   "id": "symbol@Enum field@@[L9:C4, L9:C40]",
                   "snippet": "new [note:...employee']"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L9:C4, L9:C40]",
-                  "snippet": "new [note:...employee']"
-                },
-                "references": [
-                  {
-                    "id": "node@<primary-expression>@@[L2:C41, L2:C44]",
-                    "snippet": "new"
-                  }
-                ]
+                }
               }
             ],
             "references": [
@@ -1190,178 +1155,18 @@
         {
           "context": {
             "id": "symbol@Schema@public@[L?:C?, L?:C?]"
-          },
-          "members": [
-            {
-              "context": {
-                "id": "symbol@Table@Users@[L0:C0, L5:C1]",
-                "snippet": "Table User...f: -id]\r\n}"
-              },
-              "declaration": {
-                "id": "node@<element-declaration>@Users@[L0:C0, L5:C1]",
-                "snippet": "Table User...f: -id]\r\n}"
-              },
-              "members": [
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L1:C1, L1:C11]",
-                    "snippet": "id integer"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L1:C1, L1:C11]",
-                    "snippet": "id integer"
-                  },
-                  "references": [
-                    {
-                      "id": "node@<primary-expression>@@[L4:C28, L4:C30]",
-                      "snippet": "id"
-                    }
-                  ]
-                },
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L2:C4, L2:C45]",
-                    "snippet": "status v2....tatus.new]"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L2:C4, L2:C45]",
-                    "snippet": "status v2....tatus.new]"
-                  },
-                  "references": []
-                },
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L4:C4, L4:C31]",
-                    "snippet": "referrer i...[ref: -id]"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L4:C4, L4:C31]",
-                    "snippet": "referrer i...[ref: -id]"
-                  },
-                  "references": []
-                }
-              ],
-              "references": []
-            }
-          ],
-          "references": []
+          }
         },
         {
           "context": {
             "id": "symbol@Schema@v2@[L?:C?, L?:C?]"
-          },
-          "members": [
-            {
-              "context": {
-                "id": "symbol@Enum@v2.status@[L7:C0, L10:C1]",
-                "snippet": "enum v2.st...loyee']\r\n}"
-              },
-              "declaration": {
-                "id": "node@<element-declaration>@v2.status@[L7:C0, L10:C1]",
-                "snippet": "enum v2.st...loyee']\r\n}"
-              },
-              "members": [
-                {
-                  "context": {
-                    "id": "symbol@Enum field@@[L8:C1, L8:C6]",
-                    "snippet": "churn"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L8:C1, L8:C6]",
-                    "snippet": "churn"
-                  },
-                  "references": []
-                },
-                {
-                  "context": {
-                    "id": "symbol@Enum field@@[L9:C4, L9:C40]",
-                    "snippet": "new [note:...employee']"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L9:C4, L9:C40]",
-                    "snippet": "new [note:...employee']"
-                  },
-                  "references": [
-                    {
-                      "id": "node@<primary-expression>@@[L2:C41, L2:C44]",
-                      "snippet": "new"
-                    }
-                  ]
-                }
-              ],
-              "references": [
-                {
-                  "id": "node@<primary-expression>@@[L2:C14, L2:C20]",
-                  "snippet": "status"
-                },
-                {
-                  "id": "node@<primary-expression>@@[L2:C34, L2:C40]",
-                  "snippet": "status"
-                }
-              ]
-            }
-          ],
-          "references": [
-            {
-              "id": "node@<primary-expression>@@[L2:C11, L2:C13]",
-              "snippet": "v2"
-            },
-            {
-              "id": "node@<primary-expression>@@[L2:C31, L2:C33]",
-              "snippet": "v2"
-            }
-          ]
+          }
         },
         {
           "context": {
             "id": "symbol@Table@Users@[L0:C0, L5:C1]",
             "snippet": "Table User...f: -id]\r\n}"
-          },
-          "declaration": {
-            "id": "node@<element-declaration>@Users@[L0:C0, L5:C1]",
-            "snippet": "Table User...f: -id]\r\n}"
-          },
-          "members": [
-            {
-              "context": {
-                "id": "symbol@Column@@[L1:C1, L1:C11]",
-                "snippet": "id integer"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L1:C1, L1:C11]",
-                "snippet": "id integer"
-              },
-              "references": [
-                {
-                  "id": "node@<primary-expression>@@[L4:C28, L4:C30]",
-                  "snippet": "id"
-                }
-              ]
-            },
-            {
-              "context": {
-                "id": "symbol@Column@@[L2:C4, L2:C45]",
-                "snippet": "status v2....tatus.new]"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L2:C4, L2:C45]",
-                "snippet": "status v2....tatus.new]"
-              },
-              "references": []
-            },
-            {
-              "context": {
-                "id": "symbol@Column@@[L4:C4, L4:C31]",
-                "snippet": "referrer i...[ref: -id]"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L4:C4, L4:C31]",
-                "snippet": "referrer i...[ref: -id]"
-              },
-              "references": []
-            }
-          ],
-          "references": []
+          }
         }
       ],
       "references": []

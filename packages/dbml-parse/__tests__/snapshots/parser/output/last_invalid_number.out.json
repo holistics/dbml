@@ -222,12 +222,7 @@
                 "context": {
                   "id": "symbol@Column@@[L1:C4, L1:C14]",
                   "snippet": "id integer"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L1:C4, L1:C14]",
-                  "snippet": "id integer"
-                },
-                "references": []
+                }
               }
             ],
             "references": []
@@ -319,58 +314,13 @@
         {
           "context": {
             "id": "symbol@Schema@public@[L?:C?, L?:C?]"
-          },
-          "members": [
-            {
-              "context": {
-                "id": "symbol@Table@E@[L0:C0, L2:C1]",
-                "snippet": "Table E {\n... integer\n}"
-              },
-              "declaration": {
-                "id": "node@<element-declaration>@E@[L0:C0, L2:C1]",
-                "snippet": "Table E {\n... integer\n}"
-              },
-              "members": [
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L1:C4, L1:C14]",
-                    "snippet": "id integer"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L1:C4, L1:C14]",
-                    "snippet": "id integer"
-                  },
-                  "references": []
-                }
-              ],
-              "references": []
-            }
-          ],
-          "references": []
+          }
         },
         {
           "context": {
             "id": "symbol@Table@E@[L0:C0, L2:C1]",
             "snippet": "Table E {\n... integer\n}"
-          },
-          "declaration": {
-            "id": "node@<element-declaration>@E@[L0:C0, L2:C1]",
-            "snippet": "Table E {\n... integer\n}"
-          },
-          "members": [
-            {
-              "context": {
-                "id": "symbol@Column@@[L1:C4, L1:C14]",
-                "snippet": "id integer"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L1:C4, L1:C14]",
-                "snippet": "id integer"
-              },
-              "references": []
-            }
-          ],
-          "references": []
+          }
         }
       ],
       "references": []

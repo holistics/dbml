@@ -852,37 +852,19 @@
                 "context": {
                   "id": "symbol@Column@@[L1:C2, L1:C28]",
                   "snippet": "col1 type ...> un_col1]"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L1:C2, L1:C28]",
-                  "snippet": "col1 type ...> un_col1]"
-                },
-                "members": [],
-                "references": []
+                }
               },
               {
                 "context": {
                   "id": "symbol@Column@@[L2:C2, L2:C31]",
                   "snippet": "col2 type ...1.un_col2]"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L2:C2, L2:C31]",
-                  "snippet": "col2 type ...1.un_col2]"
-                },
-                "members": [],
-                "references": []
+                }
               },
               {
                 "context": {
                   "id": "symbol@Column@@[L3:C2, L3:C33]",
                   "snippet": "col3 type ...T.un_col3]"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L3:C2, L3:C33]",
-                  "snippet": "col3 type ...T.un_col3]"
-                },
-                "members": [],
-                "references": []
+                }
               }
             ],
             "references": []
@@ -1179,12 +1161,7 @@
                 "context": {
                   "id": "symbol@Column@@[L7:C2, L7:C26]",
                   "snippet": "col type [... > un_col]"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L7:C2, L7:C26]",
-                  "snippet": "col type [... > un_col]"
-                },
-                "references": []
+                }
               }
             ],
             "references": [
@@ -1221,166 +1198,19 @@
         {
           "context": {
             "id": "symbol@Schema@public@[L?:C?, L?:C?]"
-          },
-          "members": [
-            {
-              "context": {
-                "id": "symbol@TablePartial@T1@[L0:C0, L4:C1]",
-                "snippet": "TableParti...un_col3]\n}"
-              },
-              "declaration": {
-                "id": "node@<element-declaration>@T1@[L0:C0, L4:C1]",
-                "snippet": "TableParti...un_col3]\n}"
-              },
-              "members": [
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L1:C2, L1:C28]",
-                    "snippet": "col1 type ...> un_col1]"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L1:C2, L1:C28]",
-                    "snippet": "col1 type ...> un_col1]"
-                  },
-                  "members": [],
-                  "references": []
-                },
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L2:C2, L2:C31]",
-                    "snippet": "col2 type ...1.un_col2]"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L2:C2, L2:C31]",
-                    "snippet": "col2 type ...1.un_col2]"
-                  },
-                  "members": [],
-                  "references": []
-                },
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L3:C2, L3:C33]",
-                    "snippet": "col3 type ...T.un_col3]"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L3:C2, L3:C33]",
-                    "snippet": "col3 type ...T.un_col3]"
-                  },
-                  "members": [],
-                  "references": []
-                }
-              ],
-              "references": []
-            },
-            {
-              "context": {
-                "id": "symbol@Table@T1@[L6:C0, L8:C1]",
-                "snippet": "Table T1 {... un_col]\n}"
-              },
-              "declaration": {
-                "id": "node@<element-declaration>@T1@[L6:C0, L8:C1]",
-                "snippet": "Table T1 {... un_col]\n}"
-              },
-              "members": [
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L7:C2, L7:C26]",
-                    "snippet": "col type [... > un_col]"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L7:C2, L7:C26]",
-                    "snippet": "col type [... > un_col]"
-                  },
-                  "references": []
-                }
-              ],
-              "references": [
-                {
-                  "id": "node@<primary-expression>@@[L2:C20, L2:C22]",
-                  "snippet": "T1"
-                }
-              ]
-            }
-          ],
-          "references": []
+          }
         },
         {
           "context": {
             "id": "symbol@TablePartial@T1@[L0:C0, L4:C1]",
             "snippet": "TableParti...un_col3]\n}"
-          },
-          "declaration": {
-            "id": "node@<element-declaration>@T1@[L0:C0, L4:C1]",
-            "snippet": "TableParti...un_col3]\n}"
-          },
-          "members": [
-            {
-              "context": {
-                "id": "symbol@Column@@[L1:C2, L1:C28]",
-                "snippet": "col1 type ...> un_col1]"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L1:C2, L1:C28]",
-                "snippet": "col1 type ...> un_col1]"
-              },
-              "members": [],
-              "references": []
-            },
-            {
-              "context": {
-                "id": "symbol@Column@@[L2:C2, L2:C31]",
-                "snippet": "col2 type ...1.un_col2]"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L2:C2, L2:C31]",
-                "snippet": "col2 type ...1.un_col2]"
-              },
-              "members": [],
-              "references": []
-            },
-            {
-              "context": {
-                "id": "symbol@Column@@[L3:C2, L3:C33]",
-                "snippet": "col3 type ...T.un_col3]"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L3:C2, L3:C33]",
-                "snippet": "col3 type ...T.un_col3]"
-              },
-              "members": [],
-              "references": []
-            }
-          ],
-          "references": []
+          }
         },
         {
           "context": {
             "id": "symbol@Table@T1@[L6:C0, L8:C1]",
             "snippet": "Table T1 {... un_col]\n}"
-          },
-          "declaration": {
-            "id": "node@<element-declaration>@T1@[L6:C0, L8:C1]",
-            "snippet": "Table T1 {... un_col]\n}"
-          },
-          "members": [
-            {
-              "context": {
-                "id": "symbol@Column@@[L7:C2, L7:C26]",
-                "snippet": "col type [... > un_col]"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L7:C2, L7:C26]",
-                "snippet": "col type [... > un_col]"
-              },
-              "references": []
-            }
-          ],
-          "references": [
-            {
-              "id": "node@<primary-expression>@@[L2:C20, L2:C22]",
-              "snippet": "T1"
-            }
-          ]
+          }
         }
       ],
       "references": []

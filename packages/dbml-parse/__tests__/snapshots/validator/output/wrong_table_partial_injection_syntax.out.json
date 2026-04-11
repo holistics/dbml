@@ -542,45 +542,25 @@
                 "context": {
                   "id": "symbol@Column@@[L1:C2, L1:C8]",
                   "snippet": "id int"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L1:C2, L1:C8]",
-                  "snippet": "id int"
-                },
-                "references": []
+                }
               },
               {
                 "context": {
                   "id": "symbol@Column@@[L3:C2, L5:C9]",
                   "snippet": "!common\r\n ...\n  -common"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L3:C2, L5:C9]",
-                  "snippet": "!common\r\n ...\n  -common"
-                },
-                "references": []
+                }
               },
               {
                 "context": {
                   "id": "symbol@Column@@[L7:C2, L7:C4]",
                   "snippet": "~1"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L7:C2, L7:C4]",
-                  "snippet": "~1"
-                },
-                "references": []
+                }
               },
               {
                 "context": {
                   "id": "symbol@Column@@[L8:C2, L9:C1]",
                   "snippet": "~\r\n}"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L8:C2, L9:C1]",
-                  "snippet": "~\r\n}"
-                },
-                "references": []
+                }
               }
             ],
             "references": []
@@ -612,124 +592,13 @@
         {
           "context": {
             "id": "symbol@Schema@public@[L?:C?, L?:C?]"
-          },
-          "members": [
-            {
-              "context": {
-                "id": "symbol@Table@Users@[L0:C0, L9:C1]",
-                "snippet": "Table User...~1\r\n  ~\r\n}"
-              },
-              "declaration": {
-                "id": "node@<element-declaration>@Users@[L0:C0, L9:C1]",
-                "snippet": "Table User...~1\r\n  ~\r\n}"
-              },
-              "members": [
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L1:C2, L1:C8]",
-                    "snippet": "id int"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L1:C2, L1:C8]",
-                    "snippet": "id int"
-                  },
-                  "references": []
-                },
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L3:C2, L5:C9]",
-                    "snippet": "!common\r\n ...\n  -common"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L3:C2, L5:C9]",
-                    "snippet": "!common\r\n ...\n  -common"
-                  },
-                  "references": []
-                },
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L7:C2, L7:C4]",
-                    "snippet": "~1"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L7:C2, L7:C4]",
-                    "snippet": "~1"
-                  },
-                  "references": []
-                },
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L8:C2, L9:C1]",
-                    "snippet": "~\r\n}"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L8:C2, L9:C1]",
-                    "snippet": "~\r\n}"
-                  },
-                  "references": []
-                }
-              ],
-              "references": []
-            }
-          ],
-          "references": []
+          }
         },
         {
           "context": {
             "id": "symbol@Table@Users@[L0:C0, L9:C1]",
             "snippet": "Table User...~1\r\n  ~\r\n}"
-          },
-          "declaration": {
-            "id": "node@<element-declaration>@Users@[L0:C0, L9:C1]",
-            "snippet": "Table User...~1\r\n  ~\r\n}"
-          },
-          "members": [
-            {
-              "context": {
-                "id": "symbol@Column@@[L1:C2, L1:C8]",
-                "snippet": "id int"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L1:C2, L1:C8]",
-                "snippet": "id int"
-              },
-              "references": []
-            },
-            {
-              "context": {
-                "id": "symbol@Column@@[L3:C2, L5:C9]",
-                "snippet": "!common\r\n ...\n  -common"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L3:C2, L5:C9]",
-                "snippet": "!common\r\n ...\n  -common"
-              },
-              "references": []
-            },
-            {
-              "context": {
-                "id": "symbol@Column@@[L7:C2, L7:C4]",
-                "snippet": "~1"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L7:C2, L7:C4]",
-                "snippet": "~1"
-              },
-              "references": []
-            },
-            {
-              "context": {
-                "id": "symbol@Column@@[L8:C2, L9:C1]",
-                "snippet": "~\r\n}"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L8:C2, L9:C1]",
-                "snippet": "~\r\n}"
-              },
-              "references": []
-            }
-          ],
-          "references": []
+          }
         }
       ],
       "references": []

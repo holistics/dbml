@@ -959,129 +959,49 @@
                 "context": {
                   "id": "symbol@Column@@[L1:C2, L1:C8]",
                   "snippet": "id int"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L1:C2, L1:C8]",
-                  "snippet": "id int"
-                },
-                "references": [
-                  {
-                    "id": "node@<primary-expression>@@[L23:C17, L23:C19]",
-                    "snippet": "id"
-                  }
-                ]
+                }
               },
               {
                 "context": {
                   "id": "symbol@Column@@[L2:C2, L2:C10]",
                   "snippet": "c_id int"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L2:C2, L2:C10]",
-                  "snippet": "c_id int"
-                },
-                "references": [
-                  {
-                    "id": "node@<primary-expression>@@[L27:C11, L27:C15]",
-                    "snippet": "c_id"
-                  }
-                ]
+                }
               },
               {
                 "context": {
                   "id": "symbol@Column@@[L3:C2, L3:C9]",
                   "snippet": "id2 int"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L3:C2, L3:C9]",
-                  "snippet": "id2 int"
-                },
-                "references": [
-                  {
-                    "id": "node@<primary-expression>@@[L31:C12, L31:C15]",
-                    "snippet": "id2"
-                  }
-                ]
+                }
               },
               {
                 "context": {
                   "id": "symbol@Column@@[L4:C2, L4:C9]",
                   "snippet": "id3 int"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L4:C2, L4:C9]",
-                  "snippet": "id3 int"
-                },
-                "references": [
-                  {
-                    "id": "node@<primary-expression>@@[L35:C12, L35:C15]",
-                    "snippet": "id3"
-                  }
-                ]
+                }
               },
               {
                 "context": {
                   "id": "symbol@Column@@[L5:C2, L5:C9]",
                   "snippet": "id4 int"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L5:C2, L5:C9]",
-                  "snippet": "id4 int"
-                },
-                "references": [
-                  {
-                    "id": "node@<primary-expression>@@[L39:C12, L39:C15]",
-                    "snippet": "id4"
-                  }
-                ]
+                }
               },
               {
                 "context": {
                   "id": "symbol@Column@@[L6:C2, L6:C9]",
                   "snippet": "id5 int"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L6:C2, L6:C9]",
-                  "snippet": "id5 int"
-                },
-                "references": [
-                  {
-                    "id": "node@<primary-expression>@@[L42:C48, L42:C51]",
-                    "snippet": "id5"
-                  }
-                ]
+                }
               },
               {
                 "context": {
                   "id": "symbol@Column@@[L7:C2, L7:C9]",
                   "snippet": "id6 int"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L7:C2, L7:C9]",
-                  "snippet": "id6 int"
-                },
-                "references": [
-                  {
-                    "id": "node@<primary-expression>@@[L43:C31, L43:C34]",
-                    "snippet": "id6"
-                  }
-                ]
+                }
               },
               {
                 "context": {
                   "id": "symbol@Column@@[L8:C2, L8:C9]",
                   "snippet": "id7 int"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L8:C2, L8:C9]",
-                  "snippet": "id7 int"
-                },
-                "references": [
-                  {
-                    "id": "node@<primary-expression>@@[L44:C31, L44:C34]",
-                    "snippet": "id7"
-                  }
-                ]
+                }
               }
             ],
             "references": [
@@ -1898,128 +1818,49 @@
                 "context": {
                   "id": "symbol@Column@@[L12:C2, L12:C8]",
                   "snippet": "id int"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L12:C2, L12:C8]",
-                  "snippet": "id int"
-                },
-                "references": [
-                  {
-                    "id": "node@<primary-expression>@@[L23:C24, L23:C26]",
-                    "snippet": "id"
-                  },
-                  {
-                    "id": "node@<primary-expression>@@[L27:C4, L27:C6]",
-                    "snippet": "id"
-                  }
-                ]
+                }
               },
               {
                 "context": {
                   "id": "symbol@Column@@[L13:C2, L13:C10]",
                   "snippet": "b_id int"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L13:C2, L13:C10]",
-                  "snippet": "b_id int"
-                },
-                "references": []
+                }
               },
               {
                 "context": {
                   "id": "symbol@Column@@[L14:C2, L14:C9]",
                   "snippet": "id2 int"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L14:C2, L14:C9]",
-                  "snippet": "id2 int"
-                },
-                "references": [
-                  {
-                    "id": "node@<primary-expression>@@[L31:C4, L31:C7]",
-                    "snippet": "id2"
-                  }
-                ]
+                }
               },
               {
                 "context": {
                   "id": "symbol@Column@@[L15:C2, L15:C9]",
                   "snippet": "id3 int"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L15:C2, L15:C9]",
-                  "snippet": "id3 int"
-                },
-                "references": [
-                  {
-                    "id": "node@<primary-expression>@@[L35:C4, L35:C7]",
-                    "snippet": "id3"
-                  }
-                ]
+                }
               },
               {
                 "context": {
                   "id": "symbol@Column@@[L16:C2, L16:C9]",
                   "snippet": "id4 int"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L16:C2, L16:C9]",
-                  "snippet": "id4 int"
-                },
-                "references": [
-                  {
-                    "id": "node@<primary-expression>@@[L39:C4, L39:C7]",
-                    "snippet": "id4"
-                  }
-                ]
+                }
               },
               {
                 "context": {
                   "id": "symbol@Column@@[L17:C2, L17:C9]",
                   "snippet": "id5 int"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L17:C2, L17:C9]",
-                  "snippet": "id5 int"
-                },
-                "references": [
-                  {
-                    "id": "node@<primary-expression>@@[L42:C40, L42:C43]",
-                    "snippet": "id5"
-                  }
-                ]
+                }
               },
               {
                 "context": {
                   "id": "symbol@Column@@[L18:C2, L18:C9]",
                   "snippet": "id6 int"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L18:C2, L18:C9]",
-                  "snippet": "id6 int"
-                },
-                "references": [
-                  {
-                    "id": "node@<primary-expression>@@[L43:C23, L43:C26]",
-                    "snippet": "id6"
-                  }
-                ]
+                }
               },
               {
                 "context": {
                   "id": "symbol@Column@@[L19:C2, L19:C9]",
                   "snippet": "id7 int"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L19:C2, L19:C9]",
-                  "snippet": "id7 int"
-                },
-                "references": [
-                  {
-                    "id": "node@<primary-expression>@@[L44:C23, L44:C26]",
-                    "snippet": "id7"
-                  }
-                ]
+                }
               }
             ],
             "references": [
@@ -5253,704 +5094,19 @@
         {
           "context": {
             "id": "symbol@Schema@public@[L?:C?, L?:C?]"
-          },
-          "members": [
-            {
-              "context": {
-                "id": "symbol@Table@b@[L0:C0, L9:C1]",
-                "snippet": "Table b [h... id7 int\n}"
-              },
-              "declaration": {
-                "id": "node@<element-declaration>@b@[L0:C0, L9:C1]",
-                "snippet": "Table b [h... id7 int\n}"
-              },
-              "members": [
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L1:C2, L1:C8]",
-                    "snippet": "id int"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L1:C2, L1:C8]",
-                    "snippet": "id int"
-                  },
-                  "references": [
-                    {
-                      "id": "node@<primary-expression>@@[L23:C17, L23:C19]",
-                      "snippet": "id"
-                    }
-                  ]
-                },
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L2:C2, L2:C10]",
-                    "snippet": "c_id int"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L2:C2, L2:C10]",
-                    "snippet": "c_id int"
-                  },
-                  "references": [
-                    {
-                      "id": "node@<primary-expression>@@[L27:C11, L27:C15]",
-                      "snippet": "c_id"
-                    }
-                  ]
-                },
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L3:C2, L3:C9]",
-                    "snippet": "id2 int"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L3:C2, L3:C9]",
-                    "snippet": "id2 int"
-                  },
-                  "references": [
-                    {
-                      "id": "node@<primary-expression>@@[L31:C12, L31:C15]",
-                      "snippet": "id2"
-                    }
-                  ]
-                },
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L4:C2, L4:C9]",
-                    "snippet": "id3 int"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L4:C2, L4:C9]",
-                    "snippet": "id3 int"
-                  },
-                  "references": [
-                    {
-                      "id": "node@<primary-expression>@@[L35:C12, L35:C15]",
-                      "snippet": "id3"
-                    }
-                  ]
-                },
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L5:C2, L5:C9]",
-                    "snippet": "id4 int"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L5:C2, L5:C9]",
-                    "snippet": "id4 int"
-                  },
-                  "references": [
-                    {
-                      "id": "node@<primary-expression>@@[L39:C12, L39:C15]",
-                      "snippet": "id4"
-                    }
-                  ]
-                },
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L6:C2, L6:C9]",
-                    "snippet": "id5 int"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L6:C2, L6:C9]",
-                    "snippet": "id5 int"
-                  },
-                  "references": [
-                    {
-                      "id": "node@<primary-expression>@@[L42:C48, L42:C51]",
-                      "snippet": "id5"
-                    }
-                  ]
-                },
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L7:C2, L7:C9]",
-                    "snippet": "id6 int"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L7:C2, L7:C9]",
-                    "snippet": "id6 int"
-                  },
-                  "references": [
-                    {
-                      "id": "node@<primary-expression>@@[L43:C31, L43:C34]",
-                      "snippet": "id6"
-                    }
-                  ]
-                },
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L8:C2, L8:C9]",
-                    "snippet": "id7 int"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L8:C2, L8:C9]",
-                    "snippet": "id7 int"
-                  },
-                  "references": [
-                    {
-                      "id": "node@<primary-expression>@@[L44:C31, L44:C34]",
-                      "snippet": "id7"
-                    }
-                  ]
-                }
-              ],
-              "references": [
-                {
-                  "id": "node@<primary-expression>@@[L23:C15, L23:C16]",
-                  "snippet": "b"
-                },
-                {
-                  "id": "node@<primary-expression>@@[L27:C9, L27:C10]",
-                  "snippet": "b"
-                },
-                {
-                  "id": "node@<primary-expression>@@[L31:C10, L31:C11]",
-                  "snippet": "b"
-                },
-                {
-                  "id": "node@<primary-expression>@@[L35:C10, L35:C11]",
-                  "snippet": "b"
-                },
-                {
-                  "id": "node@<primary-expression>@@[L39:C10, L39:C11]",
-                  "snippet": "b"
-                },
-                {
-                  "id": "node@<primary-expression>@@[L42:C46, L42:C47]",
-                  "snippet": "b"
-                },
-                {
-                  "id": "node@<primary-expression>@@[L43:C29, L43:C30]",
-                  "snippet": "b"
-                },
-                {
-                  "id": "node@<primary-expression>@@[L44:C29, L44:C30]",
-                  "snippet": "b"
-                }
-              ]
-            },
-            {
-              "context": {
-                "id": "symbol@Table@c@[L11:C0, L20:C1]",
-                "snippet": "Table c {\n... id7 int\n}"
-              },
-              "declaration": {
-                "id": "node@<element-declaration>@c@[L11:C0, L20:C1]",
-                "snippet": "Table c {\n... id7 int\n}"
-              },
-              "members": [
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L12:C2, L12:C8]",
-                    "snippet": "id int"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L12:C2, L12:C8]",
-                    "snippet": "id int"
-                  },
-                  "references": [
-                    {
-                      "id": "node@<primary-expression>@@[L23:C24, L23:C26]",
-                      "snippet": "id"
-                    },
-                    {
-                      "id": "node@<primary-expression>@@[L27:C4, L27:C6]",
-                      "snippet": "id"
-                    }
-                  ]
-                },
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L13:C2, L13:C10]",
-                    "snippet": "b_id int"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L13:C2, L13:C10]",
-                    "snippet": "b_id int"
-                  },
-                  "references": []
-                },
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L14:C2, L14:C9]",
-                    "snippet": "id2 int"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L14:C2, L14:C9]",
-                    "snippet": "id2 int"
-                  },
-                  "references": [
-                    {
-                      "id": "node@<primary-expression>@@[L31:C4, L31:C7]",
-                      "snippet": "id2"
-                    }
-                  ]
-                },
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L15:C2, L15:C9]",
-                    "snippet": "id3 int"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L15:C2, L15:C9]",
-                    "snippet": "id3 int"
-                  },
-                  "references": [
-                    {
-                      "id": "node@<primary-expression>@@[L35:C4, L35:C7]",
-                      "snippet": "id3"
-                    }
-                  ]
-                },
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L16:C2, L16:C9]",
-                    "snippet": "id4 int"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L16:C2, L16:C9]",
-                    "snippet": "id4 int"
-                  },
-                  "references": [
-                    {
-                      "id": "node@<primary-expression>@@[L39:C4, L39:C7]",
-                      "snippet": "id4"
-                    }
-                  ]
-                },
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L17:C2, L17:C9]",
-                    "snippet": "id5 int"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L17:C2, L17:C9]",
-                    "snippet": "id5 int"
-                  },
-                  "references": [
-                    {
-                      "id": "node@<primary-expression>@@[L42:C40, L42:C43]",
-                      "snippet": "id5"
-                    }
-                  ]
-                },
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L18:C2, L18:C9]",
-                    "snippet": "id6 int"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L18:C2, L18:C9]",
-                    "snippet": "id6 int"
-                  },
-                  "references": [
-                    {
-                      "id": "node@<primary-expression>@@[L43:C23, L43:C26]",
-                      "snippet": "id6"
-                    }
-                  ]
-                },
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L19:C2, L19:C9]",
-                    "snippet": "id7 int"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L19:C2, L19:C9]",
-                    "snippet": "id7 int"
-                  },
-                  "references": [
-                    {
-                      "id": "node@<primary-expression>@@[L44:C23, L44:C26]",
-                      "snippet": "id7"
-                    }
-                  ]
-                }
-              ],
-              "references": [
-                {
-                  "id": "node@<primary-expression>@@[L23:C22, L23:C23]",
-                  "snippet": "c"
-                },
-                {
-                  "id": "node@<primary-expression>@@[L27:C2, L27:C3]",
-                  "snippet": "c"
-                },
-                {
-                  "id": "node@<primary-expression>@@[L31:C2, L31:C3]",
-                  "snippet": "c"
-                },
-                {
-                  "id": "node@<primary-expression>@@[L35:C2, L35:C3]",
-                  "snippet": "c"
-                },
-                {
-                  "id": "node@<primary-expression>@@[L39:C2, L39:C3]",
-                  "snippet": "c"
-                },
-                {
-                  "id": "node@<primary-expression>@@[L42:C38, L42:C39]",
-                  "snippet": "c"
-                },
-                {
-                  "id": "node@<primary-expression>@@[L43:C21, L43:C22]",
-                  "snippet": "c"
-                },
-                {
-                  "id": "node@<primary-expression>@@[L44:C21, L44:C22]",
-                  "snippet": "c"
-                }
-              ]
-            }
-          ],
-          "references": []
+          }
         },
         {
           "context": {
             "id": "symbol@Table@b@[L0:C0, L9:C1]",
             "snippet": "Table b [h... id7 int\n}"
-          },
-          "declaration": {
-            "id": "node@<element-declaration>@b@[L0:C0, L9:C1]",
-            "snippet": "Table b [h... id7 int\n}"
-          },
-          "members": [
-            {
-              "context": {
-                "id": "symbol@Column@@[L1:C2, L1:C8]",
-                "snippet": "id int"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L1:C2, L1:C8]",
-                "snippet": "id int"
-              },
-              "references": [
-                {
-                  "id": "node@<primary-expression>@@[L23:C17, L23:C19]",
-                  "snippet": "id"
-                }
-              ]
-            },
-            {
-              "context": {
-                "id": "symbol@Column@@[L2:C2, L2:C10]",
-                "snippet": "c_id int"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L2:C2, L2:C10]",
-                "snippet": "c_id int"
-              },
-              "references": [
-                {
-                  "id": "node@<primary-expression>@@[L27:C11, L27:C15]",
-                  "snippet": "c_id"
-                }
-              ]
-            },
-            {
-              "context": {
-                "id": "symbol@Column@@[L3:C2, L3:C9]",
-                "snippet": "id2 int"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L3:C2, L3:C9]",
-                "snippet": "id2 int"
-              },
-              "references": [
-                {
-                  "id": "node@<primary-expression>@@[L31:C12, L31:C15]",
-                  "snippet": "id2"
-                }
-              ]
-            },
-            {
-              "context": {
-                "id": "symbol@Column@@[L4:C2, L4:C9]",
-                "snippet": "id3 int"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L4:C2, L4:C9]",
-                "snippet": "id3 int"
-              },
-              "references": [
-                {
-                  "id": "node@<primary-expression>@@[L35:C12, L35:C15]",
-                  "snippet": "id3"
-                }
-              ]
-            },
-            {
-              "context": {
-                "id": "symbol@Column@@[L5:C2, L5:C9]",
-                "snippet": "id4 int"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L5:C2, L5:C9]",
-                "snippet": "id4 int"
-              },
-              "references": [
-                {
-                  "id": "node@<primary-expression>@@[L39:C12, L39:C15]",
-                  "snippet": "id4"
-                }
-              ]
-            },
-            {
-              "context": {
-                "id": "symbol@Column@@[L6:C2, L6:C9]",
-                "snippet": "id5 int"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L6:C2, L6:C9]",
-                "snippet": "id5 int"
-              },
-              "references": [
-                {
-                  "id": "node@<primary-expression>@@[L42:C48, L42:C51]",
-                  "snippet": "id5"
-                }
-              ]
-            },
-            {
-              "context": {
-                "id": "symbol@Column@@[L7:C2, L7:C9]",
-                "snippet": "id6 int"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L7:C2, L7:C9]",
-                "snippet": "id6 int"
-              },
-              "references": [
-                {
-                  "id": "node@<primary-expression>@@[L43:C31, L43:C34]",
-                  "snippet": "id6"
-                }
-              ]
-            },
-            {
-              "context": {
-                "id": "symbol@Column@@[L8:C2, L8:C9]",
-                "snippet": "id7 int"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L8:C2, L8:C9]",
-                "snippet": "id7 int"
-              },
-              "references": [
-                {
-                  "id": "node@<primary-expression>@@[L44:C31, L44:C34]",
-                  "snippet": "id7"
-                }
-              ]
-            }
-          ],
-          "references": [
-            {
-              "id": "node@<primary-expression>@@[L23:C15, L23:C16]",
-              "snippet": "b"
-            },
-            {
-              "id": "node@<primary-expression>@@[L27:C9, L27:C10]",
-              "snippet": "b"
-            },
-            {
-              "id": "node@<primary-expression>@@[L31:C10, L31:C11]",
-              "snippet": "b"
-            },
-            {
-              "id": "node@<primary-expression>@@[L35:C10, L35:C11]",
-              "snippet": "b"
-            },
-            {
-              "id": "node@<primary-expression>@@[L39:C10, L39:C11]",
-              "snippet": "b"
-            },
-            {
-              "id": "node@<primary-expression>@@[L42:C46, L42:C47]",
-              "snippet": "b"
-            },
-            {
-              "id": "node@<primary-expression>@@[L43:C29, L43:C30]",
-              "snippet": "b"
-            },
-            {
-              "id": "node@<primary-expression>@@[L44:C29, L44:C30]",
-              "snippet": "b"
-            }
-          ]
+          }
         },
         {
           "context": {
             "id": "symbol@Table@c@[L11:C0, L20:C1]",
             "snippet": "Table c {\n... id7 int\n}"
-          },
-          "declaration": {
-            "id": "node@<element-declaration>@c@[L11:C0, L20:C1]",
-            "snippet": "Table c {\n... id7 int\n}"
-          },
-          "members": [
-            {
-              "context": {
-                "id": "symbol@Column@@[L12:C2, L12:C8]",
-                "snippet": "id int"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L12:C2, L12:C8]",
-                "snippet": "id int"
-              },
-              "references": [
-                {
-                  "id": "node@<primary-expression>@@[L23:C24, L23:C26]",
-                  "snippet": "id"
-                },
-                {
-                  "id": "node@<primary-expression>@@[L27:C4, L27:C6]",
-                  "snippet": "id"
-                }
-              ]
-            },
-            {
-              "context": {
-                "id": "symbol@Column@@[L13:C2, L13:C10]",
-                "snippet": "b_id int"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L13:C2, L13:C10]",
-                "snippet": "b_id int"
-              },
-              "references": []
-            },
-            {
-              "context": {
-                "id": "symbol@Column@@[L14:C2, L14:C9]",
-                "snippet": "id2 int"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L14:C2, L14:C9]",
-                "snippet": "id2 int"
-              },
-              "references": [
-                {
-                  "id": "node@<primary-expression>@@[L31:C4, L31:C7]",
-                  "snippet": "id2"
-                }
-              ]
-            },
-            {
-              "context": {
-                "id": "symbol@Column@@[L15:C2, L15:C9]",
-                "snippet": "id3 int"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L15:C2, L15:C9]",
-                "snippet": "id3 int"
-              },
-              "references": [
-                {
-                  "id": "node@<primary-expression>@@[L35:C4, L35:C7]",
-                  "snippet": "id3"
-                }
-              ]
-            },
-            {
-              "context": {
-                "id": "symbol@Column@@[L16:C2, L16:C9]",
-                "snippet": "id4 int"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L16:C2, L16:C9]",
-                "snippet": "id4 int"
-              },
-              "references": [
-                {
-                  "id": "node@<primary-expression>@@[L39:C4, L39:C7]",
-                  "snippet": "id4"
-                }
-              ]
-            },
-            {
-              "context": {
-                "id": "symbol@Column@@[L17:C2, L17:C9]",
-                "snippet": "id5 int"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L17:C2, L17:C9]",
-                "snippet": "id5 int"
-              },
-              "references": [
-                {
-                  "id": "node@<primary-expression>@@[L42:C40, L42:C43]",
-                  "snippet": "id5"
-                }
-              ]
-            },
-            {
-              "context": {
-                "id": "symbol@Column@@[L18:C2, L18:C9]",
-                "snippet": "id6 int"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L18:C2, L18:C9]",
-                "snippet": "id6 int"
-              },
-              "references": [
-                {
-                  "id": "node@<primary-expression>@@[L43:C23, L43:C26]",
-                  "snippet": "id6"
-                }
-              ]
-            },
-            {
-              "context": {
-                "id": "symbol@Column@@[L19:C2, L19:C9]",
-                "snippet": "id7 int"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L19:C2, L19:C9]",
-                "snippet": "id7 int"
-              },
-              "references": [
-                {
-                  "id": "node@<primary-expression>@@[L44:C23, L44:C26]",
-                  "snippet": "id7"
-                }
-              ]
-            }
-          ],
-          "references": [
-            {
-              "id": "node@<primary-expression>@@[L23:C22, L23:C23]",
-              "snippet": "c"
-            },
-            {
-              "id": "node@<primary-expression>@@[L27:C2, L27:C3]",
-              "snippet": "c"
-            },
-            {
-              "id": "node@<primary-expression>@@[L31:C2, L31:C3]",
-              "snippet": "c"
-            },
-            {
-              "id": "node@<primary-expression>@@[L35:C2, L35:C3]",
-              "snippet": "c"
-            },
-            {
-              "id": "node@<primary-expression>@@[L39:C2, L39:C3]",
-              "snippet": "c"
-            },
-            {
-              "id": "node@<primary-expression>@@[L42:C38, L42:C39]",
-              "snippet": "c"
-            },
-            {
-              "id": "node@<primary-expression>@@[L43:C21, L43:C22]",
-              "snippet": "c"
-            },
-            {
-              "id": "node@<primary-expression>@@[L44:C21, L44:C22]",
-              "snippet": "c"
-            }
-          ]
+          }
         }
       ],
       "references": []

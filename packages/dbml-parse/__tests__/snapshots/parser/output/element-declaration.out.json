@@ -517,58 +517,19 @@
         {
           "context": {
             "id": "symbol@Schema@public@[L?:C?, L?:C?]"
-          },
-          "members": [
-            {
-              "context": {
-                "id": "symbol@Table@Users@[L17:C0, L19:C1]",
-                "snippet": "Table User...{\r\n    \r\n}"
-              },
-              "declaration": {
-                "id": "node@<element-declaration>@Users@[L17:C0, L19:C1]",
-                "snippet": "Table User...{\r\n    \r\n}"
-              },
-              "members": [],
-              "references": []
-            },
-            {
-              "context": {
-                "id": "symbol@TableGroup@group@[L4:C0, L6:C1]",
-                "snippet": "TableGroup...oup {\r\n\r\n}"
-              },
-              "declaration": {
-                "id": "node@<element-declaration>@group@[L4:C0, L6:C1]",
-                "snippet": "TableGroup...oup {\r\n\r\n}"
-              },
-              "members": [],
-              "references": []
-            }
-          ],
-          "references": []
-        },
-        {
-          "context": {
-            "id": "symbol@Table@Users@[L17:C0, L19:C1]",
-            "snippet": "Table User...{\r\n    \r\n}"
-          },
-          "declaration": {
-            "id": "node@<element-declaration>@Users@[L17:C0, L19:C1]",
-            "snippet": "Table User...{\r\n    \r\n}"
-          },
-          "members": [],
-          "references": []
+          }
         },
         {
           "context": {
             "id": "symbol@TableGroup@group@[L4:C0, L6:C1]",
             "snippet": "TableGroup...oup {\r\n\r\n}"
-          },
-          "declaration": {
-            "id": "node@<element-declaration>@group@[L4:C0, L6:C1]",
-            "snippet": "TableGroup...oup {\r\n\r\n}"
-          },
-          "members": [],
-          "references": []
+          }
+        },
+        {
+          "context": {
+            "id": "symbol@Table@Users@[L17:C0, L19:C1]",
+            "snippet": "Table User...{\r\n    \r\n}"
+          }
         }
       ],
       "references": []

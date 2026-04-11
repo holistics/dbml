@@ -362,7 +362,7 @@ export function symbolToSnapshot (
       snippet,
     },
     ...sortObject({
-      members: symbolTable && sortArray([...symbolTable.entries()].map(([, value]) => symbolToSnapshot(compiler, value))),
+      members: symbolTable && sortArray([...symbolTable.entries()].map(([, value]) => symbolToSnapshot(compiler, value, { simple: true }))),
       declaration: declaration && {
         id: getReadableId(declaration),
         snippet: getCodeSnippet(declaration, compiler),

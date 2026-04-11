@@ -180,13 +180,7 @@
                 "context": {
                   "id": "symbol@Column@@[L1:C2, L1:C16]",
                   "snippet": "timestamp uuid"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L1:C2, L1:C16]",
-                  "snippet": "timestamp uuid"
-                },
-                "members": [],
-                "references": []
+                }
               }
             ],
             "references": [
@@ -364,24 +358,13 @@
                 "context": {
                   "id": "symbol@Column@@[L1:C2, L1:C16]",
                   "snippet": "timestamp uuid"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L1:C2, L1:C16]",
-                  "snippet": "timestamp uuid"
-                },
-                "members": [],
-                "references": []
+                }
               },
               {
                 "context": {
                   "id": "symbol@PartialInjection@@[L5:C2, L5:C17]",
                   "snippet": "~with_timestamp"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L5:C2, L5:C17]",
-                  "snippet": "~with_timestamp"
-                },
-                "references": []
+                }
               }
             ],
             "references": []
@@ -413,142 +396,19 @@
         {
           "context": {
             "id": "symbol@Schema@public@[L?:C?, L?:C?]"
-          },
-          "members": [
-            {
-              "context": {
-                "id": "symbol@Table@users@[L4:C0, L6:C1]",
-                "snippet": "Table user...imestamp\n}"
-              },
-              "declaration": {
-                "id": "node@<element-declaration>@users@[L4:C0, L6:C1]",
-                "snippet": "Table user...imestamp\n}"
-              },
-              "members": [
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L1:C2, L1:C16]",
-                    "snippet": "timestamp uuid"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L1:C2, L1:C16]",
-                    "snippet": "timestamp uuid"
-                  },
-                  "members": [],
-                  "references": []
-                },
-                {
-                  "context": {
-                    "id": "symbol@PartialInjection@@[L5:C2, L5:C17]",
-                    "snippet": "~with_timestamp"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L5:C2, L5:C17]",
-                    "snippet": "~with_timestamp"
-                  },
-                  "references": []
-                }
-              ],
-              "references": []
-            },
-            {
-              "context": {
-                "id": "symbol@TablePartial@with_timestamp@[L0:C0, L2:C1]",
-                "snippet": "TableParti...amp uuid\n}"
-              },
-              "declaration": {
-                "id": "node@<element-declaration>@with_timestamp@[L0:C0, L2:C1]",
-                "snippet": "TableParti...amp uuid\n}"
-              },
-              "members": [
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L1:C2, L1:C16]",
-                    "snippet": "timestamp uuid"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L1:C2, L1:C16]",
-                    "snippet": "timestamp uuid"
-                  },
-                  "members": [],
-                  "references": []
-                }
-              ],
-              "references": [
-                {
-                  "id": "node@<primary-expression>@@[L5:C3, L5:C17]",
-                  "snippet": "with_timestamp"
-                }
-              ]
-            }
-          ],
-          "references": []
-        },
-        {
-          "context": {
-            "id": "symbol@Table@users@[L4:C0, L6:C1]",
-            "snippet": "Table user...imestamp\n}"
-          },
-          "declaration": {
-            "id": "node@<element-declaration>@users@[L4:C0, L6:C1]",
-            "snippet": "Table user...imestamp\n}"
-          },
-          "members": [
-            {
-              "context": {
-                "id": "symbol@Column@@[L1:C2, L1:C16]",
-                "snippet": "timestamp uuid"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L1:C2, L1:C16]",
-                "snippet": "timestamp uuid"
-              },
-              "members": [],
-              "references": []
-            },
-            {
-              "context": {
-                "id": "symbol@PartialInjection@@[L5:C2, L5:C17]",
-                "snippet": "~with_timestamp"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L5:C2, L5:C17]",
-                "snippet": "~with_timestamp"
-              },
-              "references": []
-            }
-          ],
-          "references": []
+          }
         },
         {
           "context": {
             "id": "symbol@TablePartial@with_timestamp@[L0:C0, L2:C1]",
             "snippet": "TableParti...amp uuid\n}"
-          },
-          "declaration": {
-            "id": "node@<element-declaration>@with_timestamp@[L0:C0, L2:C1]",
-            "snippet": "TableParti...amp uuid\n}"
-          },
-          "members": [
-            {
-              "context": {
-                "id": "symbol@Column@@[L1:C2, L1:C16]",
-                "snippet": "timestamp uuid"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L1:C2, L1:C16]",
-                "snippet": "timestamp uuid"
-              },
-              "members": [],
-              "references": []
-            }
-          ],
-          "references": [
-            {
-              "id": "node@<primary-expression>@@[L5:C3, L5:C17]",
-              "snippet": "with_timestamp"
-            }
-          ]
+          }
+        },
+        {
+          "context": {
+            "id": "symbol@Table@users@[L4:C0, L6:C1]",
+            "snippet": "Table user...imestamp\n}"
+          }
         }
       ],
       "references": []

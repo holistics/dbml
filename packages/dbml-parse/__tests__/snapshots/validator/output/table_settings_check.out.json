@@ -1064,34 +1064,19 @@
                 "context": {
                   "id": "symbol@Column@@[L1:C2, L1:C36]",
                   "snippet": "balance in...ance > 0`]"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L1:C2, L1:C36]",
-                  "snippet": "balance in...ance > 0`]"
-                },
-                "references": []
+                }
               },
               {
                 "context": {
                   "id": "symbol@Column@@[L2:C2, L2:C69]",
                   "snippet": "dependents...nts < 10`]"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L2:C2, L2:C69]",
-                  "snippet": "dependents...nts < 10`]"
-                },
-                "references": []
+                }
               },
               {
                 "context": {
                   "id": "symbol@Column@@[L4:C2, L8:C40]",
                   "snippet": "invalid_co...eck: null]"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L4:C2, L8:C40]",
-                  "snippet": "invalid_co...eck: null]"
-                },
-                "references": []
+                }
               }
             ],
             "references": []
@@ -1123,102 +1108,13 @@
         {
           "context": {
             "id": "symbol@Schema@public@[L?:C?, L?:C?]"
-          },
-          "members": [
-            {
-              "context": {
-                "id": "symbol@Table@Users@[L0:C0, L9:C1]",
-                "snippet": "Table User...k: null]\n}"
-              },
-              "declaration": {
-                "id": "node@<element-declaration>@Users@[L0:C0, L9:C1]",
-                "snippet": "Table User...k: null]\n}"
-              },
-              "members": [
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L1:C2, L1:C36]",
-                    "snippet": "balance in...ance > 0`]"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L1:C2, L1:C36]",
-                    "snippet": "balance in...ance > 0`]"
-                  },
-                  "references": []
-                },
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L2:C2, L2:C69]",
-                    "snippet": "dependents...nts < 10`]"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L2:C2, L2:C69]",
-                    "snippet": "dependents...nts < 10`]"
-                  },
-                  "references": []
-                },
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L4:C2, L8:C40]",
-                    "snippet": "invalid_co...eck: null]"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L4:C2, L8:C40]",
-                    "snippet": "invalid_co...eck: null]"
-                  },
-                  "references": []
-                }
-              ],
-              "references": []
-            }
-          ],
-          "references": []
+          }
         },
         {
           "context": {
             "id": "symbol@Table@Users@[L0:C0, L9:C1]",
             "snippet": "Table User...k: null]\n}"
-          },
-          "declaration": {
-            "id": "node@<element-declaration>@Users@[L0:C0, L9:C1]",
-            "snippet": "Table User...k: null]\n}"
-          },
-          "members": [
-            {
-              "context": {
-                "id": "symbol@Column@@[L1:C2, L1:C36]",
-                "snippet": "balance in...ance > 0`]"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L1:C2, L1:C36]",
-                "snippet": "balance in...ance > 0`]"
-              },
-              "references": []
-            },
-            {
-              "context": {
-                "id": "symbol@Column@@[L2:C2, L2:C69]",
-                "snippet": "dependents...nts < 10`]"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L2:C2, L2:C69]",
-                "snippet": "dependents...nts < 10`]"
-              },
-              "references": []
-            },
-            {
-              "context": {
-                "id": "symbol@Column@@[L4:C2, L8:C40]",
-                "snippet": "invalid_co...eck: null]"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L4:C2, L8:C40]",
-                "snippet": "invalid_co...eck: null]"
-              },
-              "references": []
-            }
-          ],
-          "references": []
+          }
         }
       ],
       "references": []

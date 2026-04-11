@@ -783,56 +783,31 @@
                 "context": {
                   "id": "symbol@Column@@[L1:C4, L1:C10]",
                   "snippet": "id int"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L1:C4, L1:C10]",
-                  "snippet": "id int"
-                },
-                "references": []
+                }
               },
               {
                 "context": {
                   "id": "symbol@Column@@[L2:C4, L2:C26]",
                   "snippet": "secret nva...inary(MAX)"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L2:C4, L2:C26]",
-                  "snippet": "secret nva...inary(MAX)"
-                },
-                "references": []
+                }
               },
               {
                 "context": {
                   "id": "symbol@Column@@[L3:C4, L3:C23]",
                   "snippet": "name varchar(\"MAX\")"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L3:C4, L3:C23]",
-                  "snippet": "name varchar(\"MAX\")"
-                },
-                "references": []
+                }
               },
               {
                 "context": {
                   "id": "symbol@Column@@[L4:C4, L4:C25]",
                   "snippet": "code varbi...ary('MAX')"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L4:C4, L4:C25]",
-                  "snippet": "code varbi...ary('MAX')"
-                },
-                "references": []
+                }
               },
               {
                 "context": {
                   "id": "symbol@Column@@[L5:C4, L5:C16]",
                   "snippet": "ssid int(10)"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L5:C4, L5:C16]",
-                  "snippet": "ssid int(10)"
-                },
-                "references": []
+                }
               }
             ],
             "references": []
@@ -864,146 +839,13 @@
         {
           "context": {
             "id": "symbol@Schema@public@[L?:C?, L?:C?]"
-          },
-          "members": [
-            {
-              "context": {
-                "id": "symbol@Table@User@[L0:C0, L6:C1]",
-                "snippet": "Table User... int(10)\n}"
-              },
-              "declaration": {
-                "id": "node@<element-declaration>@User@[L0:C0, L6:C1]",
-                "snippet": "Table User... int(10)\n}"
-              },
-              "members": [
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L1:C4, L1:C10]",
-                    "snippet": "id int"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L1:C4, L1:C10]",
-                    "snippet": "id int"
-                  },
-                  "references": []
-                },
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L2:C4, L2:C26]",
-                    "snippet": "secret nva...inary(MAX)"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L2:C4, L2:C26]",
-                    "snippet": "secret nva...inary(MAX)"
-                  },
-                  "references": []
-                },
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L3:C4, L3:C23]",
-                    "snippet": "name varchar(\"MAX\")"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L3:C4, L3:C23]",
-                    "snippet": "name varchar(\"MAX\")"
-                  },
-                  "references": []
-                },
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L4:C4, L4:C25]",
-                    "snippet": "code varbi...ary('MAX')"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L4:C4, L4:C25]",
-                    "snippet": "code varbi...ary('MAX')"
-                  },
-                  "references": []
-                },
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L5:C4, L5:C16]",
-                    "snippet": "ssid int(10)"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L5:C4, L5:C16]",
-                    "snippet": "ssid int(10)"
-                  },
-                  "references": []
-                }
-              ],
-              "references": []
-            }
-          ],
-          "references": []
+          }
         },
         {
           "context": {
             "id": "symbol@Table@User@[L0:C0, L6:C1]",
             "snippet": "Table User... int(10)\n}"
-          },
-          "declaration": {
-            "id": "node@<element-declaration>@User@[L0:C0, L6:C1]",
-            "snippet": "Table User... int(10)\n}"
-          },
-          "members": [
-            {
-              "context": {
-                "id": "symbol@Column@@[L1:C4, L1:C10]",
-                "snippet": "id int"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L1:C4, L1:C10]",
-                "snippet": "id int"
-              },
-              "references": []
-            },
-            {
-              "context": {
-                "id": "symbol@Column@@[L2:C4, L2:C26]",
-                "snippet": "secret nva...inary(MAX)"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L2:C4, L2:C26]",
-                "snippet": "secret nva...inary(MAX)"
-              },
-              "references": []
-            },
-            {
-              "context": {
-                "id": "symbol@Column@@[L3:C4, L3:C23]",
-                "snippet": "name varchar(\"MAX\")"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L3:C4, L3:C23]",
-                "snippet": "name varchar(\"MAX\")"
-              },
-              "references": []
-            },
-            {
-              "context": {
-                "id": "symbol@Column@@[L4:C4, L4:C25]",
-                "snippet": "code varbi...ary('MAX')"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L4:C4, L4:C25]",
-                "snippet": "code varbi...ary('MAX')"
-              },
-              "references": []
-            },
-            {
-              "context": {
-                "id": "symbol@Column@@[L5:C4, L5:C16]",
-                "snippet": "ssid int(10)"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L5:C4, L5:C16]",
-                "snippet": "ssid int(10)"
-              },
-              "references": []
-            }
-          ],
-          "references": []
+          }
         }
       ],
       "references": []

@@ -432,34 +432,19 @@
                 "context": {
                   "id": "symbol@Column@@[L3:C2, L3:C8]",
                   "snippet": "id int"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L3:C2, L3:C8]",
-                  "snippet": "id int"
-                },
-                "references": []
+                }
               },
               {
                 "context": {
                   "id": "symbol@PartialInjection@@[L4:C2, L4:C5]",
                   "snippet": "~p1"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L4:C2, L4:C5]",
-                  "snippet": "~p1"
-                },
-                "references": []
+                }
               },
               {
                 "context": {
                   "id": "symbol@PartialInjection@@[L5:C2, L5:C5]",
                   "snippet": "~p2"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L5:C2, L5:C5]",
-                  "snippet": "~p2"
-                },
-                "references": []
+                }
               }
             ],
             "references": []
@@ -491,136 +476,19 @@
         {
           "context": {
             "id": "symbol@Schema@public@[L?:C?, L?:C?]"
-          },
-          "members": [
-            {
-              "context": {
-                "id": "symbol@TablePartial@p1@[L0:C0, L0:C18]",
-                "snippet": "TablePartial p1 {}"
-              },
-              "declaration": {
-                "id": "node@<element-declaration>@p1@[L0:C0, L0:C18]",
-                "snippet": "TablePartial p1 {}"
-              },
-              "members": [],
-              "references": [
-                {
-                  "id": "node@<primary-expression>@@[L4:C3, L4:C5]",
-                  "snippet": "p1"
-                }
-              ]
-            },
-            {
-              "context": {
-                "id": "symbol@Table@t1@[L2:C0, L6:C1]",
-                "snippet": "Table t1 {...p1\n  ~p2\n}"
-              },
-              "declaration": {
-                "id": "node@<element-declaration>@t1@[L2:C0, L6:C1]",
-                "snippet": "Table t1 {...p1\n  ~p2\n}"
-              },
-              "members": [
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L3:C2, L3:C8]",
-                    "snippet": "id int"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L3:C2, L3:C8]",
-                    "snippet": "id int"
-                  },
-                  "references": []
-                },
-                {
-                  "context": {
-                    "id": "symbol@PartialInjection@@[L4:C2, L4:C5]",
-                    "snippet": "~p1"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L4:C2, L4:C5]",
-                    "snippet": "~p1"
-                  },
-                  "references": []
-                },
-                {
-                  "context": {
-                    "id": "symbol@PartialInjection@@[L5:C2, L5:C5]",
-                    "snippet": "~p2"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L5:C2, L5:C5]",
-                    "snippet": "~p2"
-                  },
-                  "references": []
-                }
-              ],
-              "references": []
-            }
-          ],
-          "references": []
+          }
         },
         {
           "context": {
             "id": "symbol@TablePartial@p1@[L0:C0, L0:C18]",
             "snippet": "TablePartial p1 {}"
-          },
-          "declaration": {
-            "id": "node@<element-declaration>@p1@[L0:C0, L0:C18]",
-            "snippet": "TablePartial p1 {}"
-          },
-          "members": [],
-          "references": [
-            {
-              "id": "node@<primary-expression>@@[L4:C3, L4:C5]",
-              "snippet": "p1"
-            }
-          ]
+          }
         },
         {
           "context": {
             "id": "symbol@Table@t1@[L2:C0, L6:C1]",
             "snippet": "Table t1 {...p1\n  ~p2\n}"
-          },
-          "declaration": {
-            "id": "node@<element-declaration>@t1@[L2:C0, L6:C1]",
-            "snippet": "Table t1 {...p1\n  ~p2\n}"
-          },
-          "members": [
-            {
-              "context": {
-                "id": "symbol@Column@@[L3:C2, L3:C8]",
-                "snippet": "id int"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L3:C2, L3:C8]",
-                "snippet": "id int"
-              },
-              "references": []
-            },
-            {
-              "context": {
-                "id": "symbol@PartialInjection@@[L4:C2, L4:C5]",
-                "snippet": "~p1"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L4:C2, L4:C5]",
-                "snippet": "~p1"
-              },
-              "references": []
-            },
-            {
-              "context": {
-                "id": "symbol@PartialInjection@@[L5:C2, L5:C5]",
-                "snippet": "~p2"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L5:C2, L5:C5]",
-                "snippet": "~p2"
-              },
-              "references": []
-            }
-          ],
-          "references": []
+          }
         }
       ],
       "references": []

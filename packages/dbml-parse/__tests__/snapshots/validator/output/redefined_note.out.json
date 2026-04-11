@@ -510,34 +510,13 @@
         {
           "context": {
             "id": "symbol@Schema@public@[L?:C?, L?:C?]"
-          },
-          "members": [
-            {
-              "context": {
-                "id": "symbol@Table@A@[L0:C0, L5:C1]",
-                "snippet": "Table A {\r...\r\n    }\r\n}"
-              },
-              "declaration": {
-                "id": "node@<element-declaration>@A@[L0:C0, L5:C1]",
-                "snippet": "Table A {\r...\r\n    }\r\n}"
-              },
-              "members": [],
-              "references": []
-            }
-          ],
-          "references": []
+          }
         },
         {
           "context": {
             "id": "symbol@Table@A@[L0:C0, L5:C1]",
             "snippet": "Table A {\r...\r\n    }\r\n}"
-          },
-          "declaration": {
-            "id": "node@<element-declaration>@A@[L0:C0, L5:C1]",
-            "snippet": "Table A {\r...\r\n    }\r\n}"
-          },
-          "members": [],
-          "references": []
+          }
         }
       ],
       "references": []

@@ -1963,100 +1963,55 @@
                 "context": {
                   "id": "symbol@Column@@[L1:C2, L1:C50]",
                   "snippet": "\"customer_...increment]"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L1:C2, L1:C50]",
-                  "snippet": "\"customer_...increment]"
-                },
-                "references": []
+                }
               },
               {
                 "context": {
                   "id": "symbol@Column@@[L2:C2, L2:C31]",
                   "snippet": "\"store_id\"...[not null]"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L2:C2, L2:C31]",
-                  "snippet": "\"store_id\"...[not null]"
-                },
-                "references": []
+                }
               },
               {
                 "context": {
                   "id": "symbol@Column@@[L3:C2, L3:C37]",
                   "snippet": "\"first_nam...[not null]"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L3:C2, L3:C37]",
-                  "snippet": "\"first_nam...[not null]"
-                },
-                "references": []
+                }
               },
               {
                 "context": {
                   "id": "symbol@Column@@[L4:C2, L4:C52]",
                   "snippet": "\"last_name...lt: faLse]"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L4:C2, L4:C52]",
-                  "snippet": "\"last_name...lt: faLse]"
-                },
-                "references": []
+                }
               },
               {
                 "context": {
                   "id": "symbol@Column@@[L5:C2, L5:C37]",
                   "snippet": "\"email\" VA...ult: NULL]"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L5:C2, L5:C37]",
-                  "snippet": "\"email\" VA...ult: NULL]"
-                },
-                "references": []
+                }
               },
               {
                 "context": {
                   "id": "symbol@Column@@[L6:C2, L6:C34]",
                   "snippet": "\"address_i...[not NULL]"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L6:C2, L6:C34]",
-                  "snippet": "\"address_i...[not NULL]"
-                },
-                "references": []
+                }
               },
               {
                 "context": {
                   "id": "symbol@Column@@[L7:C2, L7:C44]",
                   "snippet": "\"active\" B...ult: TRUE]"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L7:C2, L7:C44]",
-                  "snippet": "\"active\" B...ult: TRUE]"
-                },
-                "references": []
+                }
               },
               {
                 "context": {
                   "id": "symbol@Column@@[L8:C2, L8:C35]",
                   "snippet": "\"create_da...[not null]"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L8:C2, L8:C35]",
-                  "snippet": "\"create_da...[not null]"
-                },
-                "references": []
+                }
               },
               {
                 "context": {
                   "id": "symbol@Column@@[L9:C2, L9:C56]",
                   "snippet": "\"last_upda...IMESTAMP`]"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L9:C2, L9:C56]",
-                  "snippet": "\"last_upda...IMESTAMP`]"
-                },
-                "references": []
+                }
               }
             ],
             "references": []
@@ -2635,34 +2590,19 @@
                 "context": {
                   "id": "symbol@Column@@[L13:C2, L13:C26]",
                   "snippet": "id integer...imary key]"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L13:C2, L13:C26]",
-                  "snippet": "id integer...imary key]"
-                },
-                "references": []
+                }
               },
               {
                 "context": {
                   "id": "symbol@Column@@[L14:C2, L14:C27]",
                   "snippet": "name e [de...: \"hello\"]"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L14:C2, L14:C27]",
-                  "snippet": "name e [de...: \"hello\"]"
-                },
-                "references": []
+                }
               },
               {
                 "context": {
                   "id": "symbol@Column@@[L15:C2, L15:C20]",
                   "snippet": "country_id integer"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L15:C2, L15:C20]",
-                  "snippet": "country_id integer"
-                },
-                "references": []
+                }
               }
             ],
             "references": []
@@ -2961,23 +2901,13 @@
                 "context": {
                   "id": "symbol@Column@@[L20:C1, L20:C11]",
                   "snippet": "id integer"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L20:C1, L20:C11]",
-                  "snippet": "id integer"
-                },
-                "references": []
+                }
               },
               {
                 "context": {
                   "id": "symbol@Column@@[L21:C1, L21:C16]",
                   "snippet": "cities string[]"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L21:C1, L21:C16]",
-                  "snippet": "cities string[]"
-                },
-                "references": []
+                }
               }
             ],
             "references": []
@@ -3387,47 +3317,21 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol@Indexes@@[L27:C1, L29:C2]",
-                  "snippet": "indexes {\n...id name\n\t}"
-                },
-                "declaration": {
-                  "id": "node@<element-declaration>@@[L27:C1, L29:C2]",
-                  "snippet": "indexes {\n...id name\n\t}"
-                },
-                "members": [],
-                "references": []
-              },
-              {
-                "context": {
                   "id": "symbol@Column@@[L25:C1, L25:C11]",
                   "snippet": "id integer"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L25:C1, L25:C11]",
-                  "snippet": "id integer"
-                },
-                "references": [
-                  {
-                    "id": "node@<primary-expression>@@[L28:C2, L28:C4]",
-                    "snippet": "id"
-                  }
-                ]
+                }
               },
               {
                 "context": {
                   "id": "symbol@Column@@[L26:C1, L26:C12]",
                   "snippet": "name string"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L26:C1, L26:C12]",
-                  "snippet": "name string"
-                },
-                "references": [
-                  {
-                    "id": "node@<primary-expression>@@[L28:C5, L28:C9]",
-                    "snippet": "name"
-                  }
-                ]
+                }
+              },
+              {
+                "context": {
+                  "id": "symbol@Indexes@@[L27:C1, L29:C2]",
+                  "snippet": "indexes {\n...id name\n\t}"
+                }
               }
             ],
             "references": []
@@ -3459,510 +3363,31 @@
         {
           "context": {
             "id": "symbol@Schema@public@[L?:C?, L?:C?]"
-          },
-          "members": [
-            {
-              "context": {
-                "id": "symbol@Table@cities@[L12:C0, L17:C1]",
-                "snippet": "Table citi...\"sasasa\"\n}"
-              },
-              "declaration": {
-                "id": "node@<element-declaration>@cities@[L12:C0, L17:C1]",
-                "snippet": "Table citi...\"sasasa\"\n}"
-              },
-              "members": [
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L13:C2, L13:C26]",
-                    "snippet": "id integer...imary key]"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L13:C2, L13:C26]",
-                    "snippet": "id integer...imary key]"
-                  },
-                  "references": []
-                },
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L14:C2, L14:C27]",
-                    "snippet": "name e [de...: \"hello\"]"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L14:C2, L14:C27]",
-                    "snippet": "name e [de...: \"hello\"]"
-                  },
-                  "references": []
-                },
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L15:C2, L15:C20]",
-                    "snippet": "country_id integer"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L15:C2, L15:C20]",
-                    "snippet": "country_id integer"
-                  },
-                  "references": []
-                }
-              ],
-              "references": []
-            },
-            {
-              "context": {
-                "id": "symbol@Table@citites@[L24:C0, L30:C1]",
-                "snippet": "Table citi... name\n\t}\n}"
-              },
-              "declaration": {
-                "id": "node@<element-declaration>@citites@[L24:C0, L30:C1]",
-                "snippet": "Table citi... name\n\t}\n}"
-              },
-              "members": [
-                {
-                  "context": {
-                    "id": "symbol@Indexes@@[L27:C1, L29:C2]",
-                    "snippet": "indexes {\n...id name\n\t}"
-                  },
-                  "declaration": {
-                    "id": "node@<element-declaration>@@[L27:C1, L29:C2]",
-                    "snippet": "indexes {\n...id name\n\t}"
-                  },
-                  "members": [],
-                  "references": []
-                },
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L25:C1, L25:C11]",
-                    "snippet": "id integer"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L25:C1, L25:C11]",
-                    "snippet": "id integer"
-                  },
-                  "references": [
-                    {
-                      "id": "node@<primary-expression>@@[L28:C2, L28:C4]",
-                      "snippet": "id"
-                    }
-                  ]
-                },
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L26:C1, L26:C12]",
-                    "snippet": "name string"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L26:C1, L26:C12]",
-                    "snippet": "name string"
-                  },
-                  "references": [
-                    {
-                      "id": "node@<primary-expression>@@[L28:C5, L28:C9]",
-                      "snippet": "name"
-                    }
-                  ]
-                }
-              ],
-              "references": []
-            },
-            {
-              "context": {
-                "id": "symbol@Table@country@[L19:C0, L22:C1]",
-                "snippet": "Table coun...string[]\n}"
-              },
-              "declaration": {
-                "id": "node@<element-declaration>@country@[L19:C0, L22:C1]",
-                "snippet": "Table coun...string[]\n}"
-              },
-              "members": [
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L20:C1, L20:C11]",
-                    "snippet": "id integer"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L20:C1, L20:C11]",
-                    "snippet": "id integer"
-                  },
-                  "references": []
-                },
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L21:C1, L21:C16]",
-                    "snippet": "cities string[]"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L21:C1, L21:C16]",
-                    "snippet": "cities string[]"
-                  },
-                  "references": []
-                }
-              ],
-              "references": []
-            },
-            {
-              "context": {
-                "id": "symbol@Table@customer@[L0:C0, L10:C1]",
-                "snippet": "Table \"cus...ESTAMP`]\n}"
-              },
-              "declaration": {
-                "id": "node@<element-declaration>@customer@[L0:C0, L10:C1]",
-                "snippet": "Table \"cus...ESTAMP`]\n}"
-              },
-              "members": [
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L1:C2, L1:C50]",
-                    "snippet": "\"customer_...increment]"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L1:C2, L1:C50]",
-                    "snippet": "\"customer_...increment]"
-                  },
-                  "references": []
-                },
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L2:C2, L2:C31]",
-                    "snippet": "\"store_id\"...[not null]"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L2:C2, L2:C31]",
-                    "snippet": "\"store_id\"...[not null]"
-                  },
-                  "references": []
-                },
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L3:C2, L3:C37]",
-                    "snippet": "\"first_nam...[not null]"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L3:C2, L3:C37]",
-                    "snippet": "\"first_nam...[not null]"
-                  },
-                  "references": []
-                },
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L4:C2, L4:C52]",
-                    "snippet": "\"last_name...lt: faLse]"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L4:C2, L4:C52]",
-                    "snippet": "\"last_name...lt: faLse]"
-                  },
-                  "references": []
-                },
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L5:C2, L5:C37]",
-                    "snippet": "\"email\" VA...ult: NULL]"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L5:C2, L5:C37]",
-                    "snippet": "\"email\" VA...ult: NULL]"
-                  },
-                  "references": []
-                },
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L6:C2, L6:C34]",
-                    "snippet": "\"address_i...[not NULL]"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L6:C2, L6:C34]",
-                    "snippet": "\"address_i...[not NULL]"
-                  },
-                  "references": []
-                },
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L7:C2, L7:C44]",
-                    "snippet": "\"active\" B...ult: TRUE]"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L7:C2, L7:C44]",
-                    "snippet": "\"active\" B...ult: TRUE]"
-                  },
-                  "references": []
-                },
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L8:C2, L8:C35]",
-                    "snippet": "\"create_da...[not null]"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L8:C2, L8:C35]",
-                    "snippet": "\"create_da...[not null]"
-                  },
-                  "references": []
-                },
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L9:C2, L9:C56]",
-                    "snippet": "\"last_upda...IMESTAMP`]"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L9:C2, L9:C56]",
-                    "snippet": "\"last_upda...IMESTAMP`]"
-                  },
-                  "references": []
-                }
-              ],
-              "references": []
-            }
-          ],
-          "references": []
-        },
-        {
-          "context": {
-            "id": "symbol@Table@cities@[L12:C0, L17:C1]",
-            "snippet": "Table citi...\"sasasa\"\n}"
-          },
-          "declaration": {
-            "id": "node@<element-declaration>@cities@[L12:C0, L17:C1]",
-            "snippet": "Table citi...\"sasasa\"\n}"
-          },
-          "members": [
-            {
-              "context": {
-                "id": "symbol@Column@@[L13:C2, L13:C26]",
-                "snippet": "id integer...imary key]"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L13:C2, L13:C26]",
-                "snippet": "id integer...imary key]"
-              },
-              "references": []
-            },
-            {
-              "context": {
-                "id": "symbol@Column@@[L14:C2, L14:C27]",
-                "snippet": "name e [de...: \"hello\"]"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L14:C2, L14:C27]",
-                "snippet": "name e [de...: \"hello\"]"
-              },
-              "references": []
-            },
-            {
-              "context": {
-                "id": "symbol@Column@@[L15:C2, L15:C20]",
-                "snippet": "country_id integer"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L15:C2, L15:C20]",
-                "snippet": "country_id integer"
-              },
-              "references": []
-            }
-          ],
-          "references": []
-        },
-        {
-          "context": {
-            "id": "symbol@Table@citites@[L24:C0, L30:C1]",
-            "snippet": "Table citi... name\n\t}\n}"
-          },
-          "declaration": {
-            "id": "node@<element-declaration>@citites@[L24:C0, L30:C1]",
-            "snippet": "Table citi... name\n\t}\n}"
-          },
-          "members": [
-            {
-              "context": {
-                "id": "symbol@Indexes@@[L27:C1, L29:C2]",
-                "snippet": "indexes {\n...id name\n\t}"
-              },
-              "declaration": {
-                "id": "node@<element-declaration>@@[L27:C1, L29:C2]",
-                "snippet": "indexes {\n...id name\n\t}"
-              },
-              "members": [],
-              "references": []
-            },
-            {
-              "context": {
-                "id": "symbol@Column@@[L25:C1, L25:C11]",
-                "snippet": "id integer"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L25:C1, L25:C11]",
-                "snippet": "id integer"
-              },
-              "references": [
-                {
-                  "id": "node@<primary-expression>@@[L28:C2, L28:C4]",
-                  "snippet": "id"
-                }
-              ]
-            },
-            {
-              "context": {
-                "id": "symbol@Column@@[L26:C1, L26:C12]",
-                "snippet": "name string"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L26:C1, L26:C12]",
-                "snippet": "name string"
-              },
-              "references": [
-                {
-                  "id": "node@<primary-expression>@@[L28:C5, L28:C9]",
-                  "snippet": "name"
-                }
-              ]
-            }
-          ],
-          "references": []
-        },
-        {
-          "context": {
-            "id": "symbol@Table@country@[L19:C0, L22:C1]",
-            "snippet": "Table coun...string[]\n}"
-          },
-          "declaration": {
-            "id": "node@<element-declaration>@country@[L19:C0, L22:C1]",
-            "snippet": "Table coun...string[]\n}"
-          },
-          "members": [
-            {
-              "context": {
-                "id": "symbol@Column@@[L20:C1, L20:C11]",
-                "snippet": "id integer"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L20:C1, L20:C11]",
-                "snippet": "id integer"
-              },
-              "references": []
-            },
-            {
-              "context": {
-                "id": "symbol@Column@@[L21:C1, L21:C16]",
-                "snippet": "cities string[]"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L21:C1, L21:C16]",
-                "snippet": "cities string[]"
-              },
-              "references": []
-            }
-          ],
-          "references": []
+          }
         },
         {
           "context": {
             "id": "symbol@Table@customer@[L0:C0, L10:C1]",
             "snippet": "Table \"cus...ESTAMP`]\n}"
-          },
-          "declaration": {
-            "id": "node@<element-declaration>@customer@[L0:C0, L10:C1]",
-            "snippet": "Table \"cus...ESTAMP`]\n}"
-          },
-          "members": [
-            {
-              "context": {
-                "id": "symbol@Column@@[L1:C2, L1:C50]",
-                "snippet": "\"customer_...increment]"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L1:C2, L1:C50]",
-                "snippet": "\"customer_...increment]"
-              },
-              "references": []
-            },
-            {
-              "context": {
-                "id": "symbol@Column@@[L2:C2, L2:C31]",
-                "snippet": "\"store_id\"...[not null]"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L2:C2, L2:C31]",
-                "snippet": "\"store_id\"...[not null]"
-              },
-              "references": []
-            },
-            {
-              "context": {
-                "id": "symbol@Column@@[L3:C2, L3:C37]",
-                "snippet": "\"first_nam...[not null]"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L3:C2, L3:C37]",
-                "snippet": "\"first_nam...[not null]"
-              },
-              "references": []
-            },
-            {
-              "context": {
-                "id": "symbol@Column@@[L4:C2, L4:C52]",
-                "snippet": "\"last_name...lt: faLse]"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L4:C2, L4:C52]",
-                "snippet": "\"last_name...lt: faLse]"
-              },
-              "references": []
-            },
-            {
-              "context": {
-                "id": "symbol@Column@@[L5:C2, L5:C37]",
-                "snippet": "\"email\" VA...ult: NULL]"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L5:C2, L5:C37]",
-                "snippet": "\"email\" VA...ult: NULL]"
-              },
-              "references": []
-            },
-            {
-              "context": {
-                "id": "symbol@Column@@[L6:C2, L6:C34]",
-                "snippet": "\"address_i...[not NULL]"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L6:C2, L6:C34]",
-                "snippet": "\"address_i...[not NULL]"
-              },
-              "references": []
-            },
-            {
-              "context": {
-                "id": "symbol@Column@@[L7:C2, L7:C44]",
-                "snippet": "\"active\" B...ult: TRUE]"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L7:C2, L7:C44]",
-                "snippet": "\"active\" B...ult: TRUE]"
-              },
-              "references": []
-            },
-            {
-              "context": {
-                "id": "symbol@Column@@[L8:C2, L8:C35]",
-                "snippet": "\"create_da...[not null]"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L8:C2, L8:C35]",
-                "snippet": "\"create_da...[not null]"
-              },
-              "references": []
-            },
-            {
-              "context": {
-                "id": "symbol@Column@@[L9:C2, L9:C56]",
-                "snippet": "\"last_upda...IMESTAMP`]"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L9:C2, L9:C56]",
-                "snippet": "\"last_upda...IMESTAMP`]"
-              },
-              "references": []
-            }
-          ],
-          "references": []
+          }
+        },
+        {
+          "context": {
+            "id": "symbol@Table@cities@[L12:C0, L17:C1]",
+            "snippet": "Table citi...\"sasasa\"\n}"
+          }
+        },
+        {
+          "context": {
+            "id": "symbol@Table@country@[L19:C0, L22:C1]",
+            "snippet": "Table coun...string[]\n}"
+          }
+        },
+        {
+          "context": {
+            "id": "symbol@Table@citites@[L24:C0, L30:C1]",
+            "snippet": "Table citi... name\n\t}\n}"
+          }
         }
       ],
       "references": []

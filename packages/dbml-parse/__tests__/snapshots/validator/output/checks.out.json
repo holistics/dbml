@@ -795,12 +795,7 @@
                 "context": {
                   "id": "symbol@Column@@[L3:C2, L3:C13]",
                   "snippet": "balance int"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L3:C2, L3:C13]",
-                  "snippet": "balance int"
-                },
-                "references": []
+                }
               }
             ],
             "references": []
@@ -1462,13 +1457,7 @@
                 "context": {
                   "id": "symbol@Column@@[L15:C2, L15:C13]",
                   "snippet": "balance int"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L15:C2, L15:C13]",
-                  "snippet": "balance int"
-                },
-                "members": [],
-                "references": []
+                }
               }
             ],
             "references": []
@@ -1500,108 +1489,19 @@
         {
           "context": {
             "id": "symbol@Schema@public@[L?:C?, L?:C?]"
-          },
-          "members": [
-            {
-              "context": {
-                "id": "symbol@TablePartial@Users@[L14:C0, L23:C1]",
-                "snippet": "TableParti...lid]\n  }\n}"
-              },
-              "declaration": {
-                "id": "node@<element-declaration>@Users@[L14:C0, L23:C1]",
-                "snippet": "TableParti...lid]\n  }\n}"
-              },
-              "members": [
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L15:C2, L15:C13]",
-                    "snippet": "balance int"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L15:C2, L15:C13]",
-                    "snippet": "balance int"
-                  },
-                  "members": [],
-                  "references": []
-                }
-              ],
-              "references": []
-            },
-            {
-              "context": {
-                "id": "symbol@Table@Users@[L2:C0, L12:C1]",
-                "snippet": "Table User...lid]\n  }\n}"
-              },
-              "declaration": {
-                "id": "node@<element-declaration>@Users@[L2:C0, L12:C1]",
-                "snippet": "Table User...lid]\n  }\n}"
-              },
-              "members": [
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L3:C2, L3:C13]",
-                    "snippet": "balance int"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L3:C2, L3:C13]",
-                    "snippet": "balance int"
-                  },
-                  "references": []
-                }
-              ],
-              "references": []
-            }
-          ],
-          "references": []
-        },
-        {
-          "context": {
-            "id": "symbol@TablePartial@Users@[L14:C0, L23:C1]",
-            "snippet": "TableParti...lid]\n  }\n}"
-          },
-          "declaration": {
-            "id": "node@<element-declaration>@Users@[L14:C0, L23:C1]",
-            "snippet": "TableParti...lid]\n  }\n}"
-          },
-          "members": [
-            {
-              "context": {
-                "id": "symbol@Column@@[L15:C2, L15:C13]",
-                "snippet": "balance int"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L15:C2, L15:C13]",
-                "snippet": "balance int"
-              },
-              "members": [],
-              "references": []
-            }
-          ],
-          "references": []
+          }
         },
         {
           "context": {
             "id": "symbol@Table@Users@[L2:C0, L12:C1]",
             "snippet": "Table User...lid]\n  }\n}"
-          },
-          "declaration": {
-            "id": "node@<element-declaration>@Users@[L2:C0, L12:C1]",
-            "snippet": "Table User...lid]\n  }\n}"
-          },
-          "members": [
-            {
-              "context": {
-                "id": "symbol@Column@@[L3:C2, L3:C13]",
-                "snippet": "balance int"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L3:C2, L3:C13]",
-                "snippet": "balance int"
-              },
-              "references": []
-            }
-          ],
-          "references": []
+          }
+        },
+        {
+          "context": {
+            "id": "symbol@TablePartial@Users@[L14:C0, L23:C1]",
+            "snippet": "TableParti...lid]\n  }\n}"
+          }
         }
       ],
       "references": []

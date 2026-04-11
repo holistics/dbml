@@ -498,56 +498,31 @@
                 "context": {
                   "id": "symbol@Enum field@@[L5:C4, L5:C7]",
                   "snippet": "\"1\""
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L5:C4, L5:C7]",
-                  "snippet": "\"1\""
-                },
-                "references": []
+                }
               },
               {
                 "context": {
                   "id": "symbol@Enum field@@[L6:C4, L6:C7]",
                   "snippet": "\"1\""
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L6:C4, L6:C7]",
-                  "snippet": "\"1\""
-                },
-                "references": []
+                }
               },
               {
                 "context": {
                   "id": "symbol@Enum field@@[L7:C4, L7:C5]",
                   "snippet": "1"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L7:C4, L7:C5]",
-                  "snippet": "1"
-                },
-                "references": []
+                }
               },
               {
                 "context": {
                   "id": "symbol@Enum field@@[L8:C4, L8:C5]",
                   "snippet": "a"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L8:C4, L8:C5]",
-                  "snippet": "a"
-                },
-                "references": []
+                }
               },
               {
                 "context": {
                   "id": "symbol@Enum field@@[L9:C4, L9:C8]",
                   "snippet": "\"ab\""
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L9:C4, L9:C8]",
-                  "snippet": "\"ab\""
-                },
-                "references": []
+                }
               }
             ],
             "references": []
@@ -579,29 +554,12 @@
         {
           "context": {
             "id": "symbol@Schema@public@[L?:C?, L?:C?]"
-          },
-          "members": [],
-          "references": []
+          }
         },
         {
           "context": {
             "id": "symbol@Schema@v@[L?:C?, L?:C?]"
-          },
-          "members": [
-            {
-              "context": {
-                "id": "symbol@Enum@v.A@[L0:C0, L2:C1]",
-                "snippet": "enum v.\"A\" {\r\n\r\n}"
-              },
-              "declaration": {
-                "id": "node@<element-declaration>@v.A@[L0:C0, L2:C1]",
-                "snippet": "enum v.\"A\" {\r\n\r\n}"
-              },
-              "members": [],
-              "references": []
-            }
-          ],
-          "references": []
+          }
         }
       ],
       "references": []

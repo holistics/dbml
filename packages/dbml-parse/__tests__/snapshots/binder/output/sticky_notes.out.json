@@ -626,23 +626,13 @@
                 "context": {
                   "id": "symbol@Column@@[L1:C2, L1:C26]",
                   "snippet": "id integer...imary key]"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L1:C2, L1:C26]",
-                  "snippet": "id integer...imary key]"
-                },
-                "references": []
+                }
               },
               {
                 "context": {
                   "id": "symbol@Column@@[L2:C2, L2:C42]",
                   "snippet": "username v...l, unique]"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L2:C2, L2:C42]",
-                  "snippet": "username v...l, unique]"
-                },
-                "references": []
+                }
               }
             ],
             "references": []
@@ -904,104 +894,19 @@
         {
           "context": {
             "id": "symbol@Schema@public@[L?:C?, L?:C?]"
-          },
-          "members": [
-            {
-              "context": {
-                "id": "symbol@Note@nodeName@[L5:C0, L9:C1]",
-                "snippet": "Note nodeN...r.\n  '''\n}"
-              },
-              "declaration": {
-                "id": "node@<element-declaration>@nodeName@[L5:C0, L9:C1]",
-                "snippet": "Note nodeN...r.\n  '''\n}"
-              },
-              "members": [],
-              "references": []
-            },
-            {
-              "context": {
-                "id": "symbol@Table@users@[L0:C0, L3:C1]",
-                "snippet": "Table user... unique]\n}"
-              },
-              "declaration": {
-                "id": "node@<element-declaration>@users@[L0:C0, L3:C1]",
-                "snippet": "Table user... unique]\n}"
-              },
-              "members": [
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L1:C2, L1:C26]",
-                    "snippet": "id integer...imary key]"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L1:C2, L1:C26]",
-                    "snippet": "id integer...imary key]"
-                  },
-                  "references": []
-                },
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L2:C2, L2:C42]",
-                    "snippet": "username v...l, unique]"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L2:C2, L2:C42]",
-                    "snippet": "username v...l, unique]"
-                  },
-                  "references": []
-                }
-              ],
-              "references": []
-            }
-          ],
-          "references": []
-        },
-        {
-          "context": {
-            "id": "symbol@Note@nodeName@[L5:C0, L9:C1]",
-            "snippet": "Note nodeN...r.\n  '''\n}"
-          },
-          "declaration": {
-            "id": "node@<element-declaration>@nodeName@[L5:C0, L9:C1]",
-            "snippet": "Note nodeN...r.\n  '''\n}"
-          },
-          "members": [],
-          "references": []
+          }
         },
         {
           "context": {
             "id": "symbol@Table@users@[L0:C0, L3:C1]",
             "snippet": "Table user... unique]\n}"
-          },
-          "declaration": {
-            "id": "node@<element-declaration>@users@[L0:C0, L3:C1]",
-            "snippet": "Table user... unique]\n}"
-          },
-          "members": [
-            {
-              "context": {
-                "id": "symbol@Column@@[L1:C2, L1:C26]",
-                "snippet": "id integer...imary key]"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L1:C2, L1:C26]",
-                "snippet": "id integer...imary key]"
-              },
-              "references": []
-            },
-            {
-              "context": {
-                "id": "symbol@Column@@[L2:C2, L2:C42]",
-                "snippet": "username v...l, unique]"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L2:C2, L2:C42]",
-                "snippet": "username v...l, unique]"
-              },
-              "references": []
-            }
-          ],
-          "references": []
+          }
+        },
+        {
+          "context": {
+            "id": "symbol@Note@nodeName@[L5:C0, L9:C1]",
+            "snippet": "Note nodeN...r.\n  '''\n}"
+          }
         }
       ],
       "references": []

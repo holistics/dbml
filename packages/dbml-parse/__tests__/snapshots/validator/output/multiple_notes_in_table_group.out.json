@@ -278,12 +278,7 @@
                 "context": {
                   "id": "symbol@Column@@[L1:C2, L1:C13]",
                   "snippet": "id int [pk]"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L1:C2, L1:C13]",
-                  "snippet": "id int [pk]"
-                },
-                "references": []
+                }
               }
             ],
             "references": [
@@ -668,13 +663,7 @@
                 "context": {
                   "id": "symbol@TableGroup field@@[L6:C2, L6:C8]",
                   "snippet": "table1"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L6:C2, L6:C8]",
-                  "snippet": "table1"
-                },
-                "members": [],
-                "references": []
+                }
               }
             ],
             "references": []
@@ -706,118 +695,19 @@
         {
           "context": {
             "id": "symbol@Schema@public@[L?:C?, L?:C?]"
-          },
-          "members": [
-            {
-              "context": {
-                "id": "symbol@TableGroup@group1@[L4:C0, L18:C1]",
-                "snippet": "TableGroup...ote'\n  }\n}"
-              },
-              "declaration": {
-                "id": "node@<element-declaration>@group1@[L4:C0, L18:C1]",
-                "snippet": "TableGroup...ote'\n  }\n}"
-              },
-              "members": [
-                {
-                  "context": {
-                    "id": "symbol@TableGroup field@@[L6:C2, L6:C8]",
-                    "snippet": "table1"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L6:C2, L6:C8]",
-                    "snippet": "table1"
-                  },
-                  "members": [],
-                  "references": []
-                }
-              ],
-              "references": []
-            },
-            {
-              "context": {
-                "id": "symbol@Table@table1@[L0:C0, L2:C1]",
-                "snippet": "Table tabl...int [pk]\n}"
-              },
-              "declaration": {
-                "id": "node@<element-declaration>@table1@[L0:C0, L2:C1]",
-                "snippet": "Table tabl...int [pk]\n}"
-              },
-              "members": [
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L1:C2, L1:C13]",
-                    "snippet": "id int [pk]"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L1:C2, L1:C13]",
-                    "snippet": "id int [pk]"
-                  },
-                  "references": []
-                }
-              ],
-              "references": [
-                {
-                  "id": "node@<primary-expression>@@[L6:C2, L6:C8]",
-                  "snippet": "table1"
-                }
-              ]
-            }
-          ],
-          "references": []
-        },
-        {
-          "context": {
-            "id": "symbol@TableGroup@group1@[L4:C0, L18:C1]",
-            "snippet": "TableGroup...ote'\n  }\n}"
-          },
-          "declaration": {
-            "id": "node@<element-declaration>@group1@[L4:C0, L18:C1]",
-            "snippet": "TableGroup...ote'\n  }\n}"
-          },
-          "members": [
-            {
-              "context": {
-                "id": "symbol@TableGroup field@@[L6:C2, L6:C8]",
-                "snippet": "table1"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L6:C2, L6:C8]",
-                "snippet": "table1"
-              },
-              "members": [],
-              "references": []
-            }
-          ],
-          "references": []
+          }
         },
         {
           "context": {
             "id": "symbol@Table@table1@[L0:C0, L2:C1]",
             "snippet": "Table tabl...int [pk]\n}"
-          },
-          "declaration": {
-            "id": "node@<element-declaration>@table1@[L0:C0, L2:C1]",
-            "snippet": "Table tabl...int [pk]\n}"
-          },
-          "members": [
-            {
-              "context": {
-                "id": "symbol@Column@@[L1:C2, L1:C13]",
-                "snippet": "id int [pk]"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L1:C2, L1:C13]",
-                "snippet": "id int [pk]"
-              },
-              "references": []
-            }
-          ],
-          "references": [
-            {
-              "id": "node@<primary-expression>@@[L6:C2, L6:C8]",
-              "snippet": "table1"
-            }
-          ]
+          }
+        },
+        {
+          "context": {
+            "id": "symbol@TableGroup@group1@[L4:C0, L18:C1]",
+            "snippet": "TableGroup...ote'\n  }\n}"
+          }
         }
       ],
       "references": []

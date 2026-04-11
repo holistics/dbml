@@ -135,34 +135,13 @@
         {
           "context": {
             "id": "symbol@Schema@public@[L?:C?, L?:C?]"
-          },
-          "members": [
-            {
-              "context": {
-                "id": "symbol@Table@empty_table@[L0:C0, L1:C1]",
-                "snippet": "Table empt..._table {\n}"
-              },
-              "declaration": {
-                "id": "node@<element-declaration>@empty_table@[L0:C0, L1:C1]",
-                "snippet": "Table empt..._table {\n}"
-              },
-              "members": [],
-              "references": []
-            }
-          ],
-          "references": []
+          }
         },
         {
           "context": {
             "id": "symbol@Table@empty_table@[L0:C0, L1:C1]",
             "snippet": "Table empt..._table {\n}"
-          },
-          "declaration": {
-            "id": "node@<element-declaration>@empty_table@[L0:C0, L1:C1]",
-            "snippet": "Table empt..._table {\n}"
-          },
-          "members": [],
-          "references": []
+          }
         }
       ],
       "references": []

@@ -229,13 +229,7 @@
                 "context": {
                   "id": "symbol@Column@@[L1:C2, L1:C11]",
                   "snippet": "name text"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L1:C2, L1:C11]",
-                  "snippet": "name text"
-                },
-                "members": [],
-                "references": []
+                }
               }
             ],
             "references": [
@@ -652,83 +646,45 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol@Column@@[L1:C2, L1:C11]",
-                  "snippet": "name text"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L1:C2, L1:C11]",
-                  "snippet": "name text"
-                },
-                "members": [],
-                "references": []
-              },
-              {
-                "context": {
-                  "id": "symbol@Column@@[L1:C2, L1:C11]",
-                  "snippet": "name text"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L1:C2, L1:C11]",
-                  "snippet": "name text"
-                },
-                "members": [],
-                "references": []
-              },
-              {
-                "context": {
-                  "id": "symbol@Column@@[L1:C2, L1:C11]",
-                  "snippet": "name text"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L1:C2, L1:C11]",
-                  "snippet": "name text"
-                },
-                "members": [],
-                "references": []
-              },
-              {
-                "context": {
                   "id": "symbol@Column@@[L5:C2, L5:C8]",
                   "snippet": "id int"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L5:C2, L5:C8]",
-                  "snippet": "id int"
-                },
-                "references": []
+                }
+              },
+              {
+                "context": {
+                  "id": "symbol@Column@@[L1:C2, L1:C11]",
+                  "snippet": "name text"
+                }
               },
               {
                 "context": {
                   "id": "symbol@PartialInjection@@[L6:C2, L6:C9]",
                   "snippet": "~common"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L6:C2, L6:C9]",
-                  "snippet": "~common"
-                },
-                "references": []
+                }
+              },
+              {
+                "context": {
+                  "id": "symbol@Column@@[L1:C2, L1:C11]",
+                  "snippet": "name text"
+                }
               },
               {
                 "context": {
                   "id": "symbol@PartialInjection@@[L7:C2, L7:C9]",
                   "snippet": "~common"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L7:C2, L7:C9]",
-                  "snippet": "~common"
-                },
-                "references": []
+                }
+              },
+              {
+                "context": {
+                  "id": "symbol@Column@@[L1:C2, L1:C11]",
+                  "snippet": "name text"
+                }
               },
               {
                 "context": {
                   "id": "symbol@PartialInjection@@[L8:C2, L8:C9]",
                   "snippet": "~common"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L8:C2, L8:C9]",
-                  "snippet": "~common"
-                },
-                "references": []
+                }
               }
             ],
             "references": []
@@ -760,272 +716,19 @@
         {
           "context": {
             "id": "symbol@Schema@public@[L?:C?, L?:C?]"
-          },
-          "members": [
-            {
-              "context": {
-                "id": "symbol@Table@Users@[L4:C0, L9:C1]",
-                "snippet": "Table User...~common\r\n}"
-              },
-              "declaration": {
-                "id": "node@<element-declaration>@Users@[L4:C0, L9:C1]",
-                "snippet": "Table User...~common\r\n}"
-              },
-              "members": [
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L1:C2, L1:C11]",
-                    "snippet": "name text"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L1:C2, L1:C11]",
-                    "snippet": "name text"
-                  },
-                  "members": [],
-                  "references": []
-                },
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L1:C2, L1:C11]",
-                    "snippet": "name text"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L1:C2, L1:C11]",
-                    "snippet": "name text"
-                  },
-                  "members": [],
-                  "references": []
-                },
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L1:C2, L1:C11]",
-                    "snippet": "name text"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L1:C2, L1:C11]",
-                    "snippet": "name text"
-                  },
-                  "members": [],
-                  "references": []
-                },
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L5:C2, L5:C8]",
-                    "snippet": "id int"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L5:C2, L5:C8]",
-                    "snippet": "id int"
-                  },
-                  "references": []
-                },
-                {
-                  "context": {
-                    "id": "symbol@PartialInjection@@[L6:C2, L6:C9]",
-                    "snippet": "~common"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L6:C2, L6:C9]",
-                    "snippet": "~common"
-                  },
-                  "references": []
-                },
-                {
-                  "context": {
-                    "id": "symbol@PartialInjection@@[L7:C2, L7:C9]",
-                    "snippet": "~common"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L7:C2, L7:C9]",
-                    "snippet": "~common"
-                  },
-                  "references": []
-                },
-                {
-                  "context": {
-                    "id": "symbol@PartialInjection@@[L8:C2, L8:C9]",
-                    "snippet": "~common"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L8:C2, L8:C9]",
-                    "snippet": "~common"
-                  },
-                  "references": []
-                }
-              ],
-              "references": []
-            },
-            {
-              "context": {
-                "id": "symbol@TablePartial@common@[L0:C0, L2:C1]",
-                "snippet": "TableParti...me text\r\n}"
-              },
-              "declaration": {
-                "id": "node@<element-declaration>@common@[L0:C0, L2:C1]",
-                "snippet": "TableParti...me text\r\n}"
-              },
-              "members": [
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L1:C2, L1:C11]",
-                    "snippet": "name text"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L1:C2, L1:C11]",
-                    "snippet": "name text"
-                  },
-                  "members": [],
-                  "references": []
-                }
-              ],
-              "references": [
-                {
-                  "id": "node@<primary-expression>@@[L6:C3, L6:C9]",
-                  "snippet": "common"
-                },
-                {
-                  "id": "node@<primary-expression>@@[L7:C3, L7:C9]",
-                  "snippet": "common"
-                },
-                {
-                  "id": "node@<primary-expression>@@[L8:C3, L8:C9]",
-                  "snippet": "common"
-                }
-              ]
-            }
-          ],
-          "references": []
-        },
-        {
-          "context": {
-            "id": "symbol@Table@Users@[L4:C0, L9:C1]",
-            "snippet": "Table User...~common\r\n}"
-          },
-          "declaration": {
-            "id": "node@<element-declaration>@Users@[L4:C0, L9:C1]",
-            "snippet": "Table User...~common\r\n}"
-          },
-          "members": [
-            {
-              "context": {
-                "id": "symbol@Column@@[L1:C2, L1:C11]",
-                "snippet": "name text"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L1:C2, L1:C11]",
-                "snippet": "name text"
-              },
-              "members": [],
-              "references": []
-            },
-            {
-              "context": {
-                "id": "symbol@Column@@[L1:C2, L1:C11]",
-                "snippet": "name text"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L1:C2, L1:C11]",
-                "snippet": "name text"
-              },
-              "members": [],
-              "references": []
-            },
-            {
-              "context": {
-                "id": "symbol@Column@@[L1:C2, L1:C11]",
-                "snippet": "name text"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L1:C2, L1:C11]",
-                "snippet": "name text"
-              },
-              "members": [],
-              "references": []
-            },
-            {
-              "context": {
-                "id": "symbol@Column@@[L5:C2, L5:C8]",
-                "snippet": "id int"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L5:C2, L5:C8]",
-                "snippet": "id int"
-              },
-              "references": []
-            },
-            {
-              "context": {
-                "id": "symbol@PartialInjection@@[L6:C2, L6:C9]",
-                "snippet": "~common"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L6:C2, L6:C9]",
-                "snippet": "~common"
-              },
-              "references": []
-            },
-            {
-              "context": {
-                "id": "symbol@PartialInjection@@[L7:C2, L7:C9]",
-                "snippet": "~common"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L7:C2, L7:C9]",
-                "snippet": "~common"
-              },
-              "references": []
-            },
-            {
-              "context": {
-                "id": "symbol@PartialInjection@@[L8:C2, L8:C9]",
-                "snippet": "~common"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L8:C2, L8:C9]",
-                "snippet": "~common"
-              },
-              "references": []
-            }
-          ],
-          "references": []
+          }
         },
         {
           "context": {
             "id": "symbol@TablePartial@common@[L0:C0, L2:C1]",
             "snippet": "TableParti...me text\r\n}"
-          },
-          "declaration": {
-            "id": "node@<element-declaration>@common@[L0:C0, L2:C1]",
-            "snippet": "TableParti...me text\r\n}"
-          },
-          "members": [
-            {
-              "context": {
-                "id": "symbol@Column@@[L1:C2, L1:C11]",
-                "snippet": "name text"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L1:C2, L1:C11]",
-                "snippet": "name text"
-              },
-              "members": [],
-              "references": []
-            }
-          ],
-          "references": [
-            {
-              "id": "node@<primary-expression>@@[L6:C3, L6:C9]",
-              "snippet": "common"
-            },
-            {
-              "id": "node@<primary-expression>@@[L7:C3, L7:C9]",
-              "snippet": "common"
-            },
-            {
-              "id": "node@<primary-expression>@@[L8:C3, L8:C9]",
-              "snippet": "common"
-            }
-          ]
+          }
+        },
+        {
+          "context": {
+            "id": "symbol@Table@Users@[L4:C0, L9:C1]",
+            "snippet": "Table User...~common\r\n}"
+          }
         }
       ],
       "references": []

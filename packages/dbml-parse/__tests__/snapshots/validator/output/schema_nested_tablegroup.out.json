@@ -311,13 +311,7 @@
                 "context": {
                   "id": "symbol@TableGroup field@@[L4:C2, L4:C3]",
                   "snippet": "A"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L4:C2, L4:C3]",
-                  "snippet": "A"
-                },
-                "members": [],
-                "references": []
+                }
               }
             ],
             "references": []
@@ -349,44 +343,13 @@
         {
           "context": {
             "id": "symbol@Schema@public@[L?:C?, L?:C?]"
-          },
-          "members": [
-            {
-              "context": {
-                "id": "symbol@Table@A@[L0:C0, L1:C1]",
-                "snippet": "Table A {\n}"
-              },
-              "declaration": {
-                "id": "node@<element-declaration>@A@[L0:C0, L1:C1]",
-                "snippet": "Table A {\n}"
-              },
-              "members": [],
-              "references": [
-                {
-                  "id": "node@<primary-expression>@@[L4:C2, L4:C3]",
-                  "snippet": "A"
-                }
-              ]
-            }
-          ],
-          "references": []
+          }
         },
         {
           "context": {
             "id": "symbol@Table@A@[L0:C0, L1:C1]",
             "snippet": "Table A {\n}"
-          },
-          "declaration": {
-            "id": "node@<element-declaration>@A@[L0:C0, L1:C1]",
-            "snippet": "Table A {\n}"
-          },
-          "members": [],
-          "references": [
-            {
-              "id": "node@<primary-expression>@@[L4:C2, L4:C3]",
-              "snippet": "A"
-            }
-          ]
+          }
         }
       ],
       "references": []

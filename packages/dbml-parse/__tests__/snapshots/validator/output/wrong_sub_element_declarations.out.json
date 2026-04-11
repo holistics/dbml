@@ -771,34 +771,19 @@
                 "context": {
                   "id": "symbol@Column@@[L1:C4, L1:C32]",
                   "snippet": "Indexes wr...x alias {}"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L1:C4, L1:C32]",
-                  "snippet": "Indexes wr...x alias {}"
-                },
-                "references": []
+                }
               },
               {
                 "context": {
                   "id": "symbol@Column@@[L2:C4, L2:C21]",
                   "snippet": "Indexes 2 args {}"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L2:C4, L2:C21]",
-                  "snippet": "Indexes 2 args {}"
-                },
-                "references": []
+                }
               },
               {
                 "context": {
                   "id": "symbol@Column@@[L3:C4, L3:C35]",
                   "snippet": "Indexes wr...of args {}"
-                },
-                "declaration": {
-                  "id": "node@<function-application>@@[L3:C4, L3:C35]",
-                  "snippet": "Indexes wr...of args {}"
-                },
-                "references": []
+                }
               }
             ],
             "references": []
@@ -830,102 +815,13 @@
         {
           "context": {
             "id": "symbol@Schema@public@[L?:C?, L?:C?]"
-          },
-          "members": [
-            {
-              "context": {
-                "id": "symbol@Table@A@[L0:C0, L4:C1]",
-                "snippet": "Table A {\n...s column\n}"
-              },
-              "declaration": {
-                "id": "node@<element-declaration>@A@[L0:C0, L4:C1]",
-                "snippet": "Table A {\n...s column\n}"
-              },
-              "members": [
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L1:C4, L1:C32]",
-                    "snippet": "Indexes wr...x alias {}"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L1:C4, L1:C32]",
-                    "snippet": "Indexes wr...x alias {}"
-                  },
-                  "references": []
-                },
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L2:C4, L2:C21]",
-                    "snippet": "Indexes 2 args {}"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L2:C4, L2:C21]",
-                    "snippet": "Indexes 2 args {}"
-                  },
-                  "references": []
-                },
-                {
-                  "context": {
-                    "id": "symbol@Column@@[L3:C4, L3:C35]",
-                    "snippet": "Indexes wr...of args {}"
-                  },
-                  "declaration": {
-                    "id": "node@<function-application>@@[L3:C4, L3:C35]",
-                    "snippet": "Indexes wr...of args {}"
-                  },
-                  "references": []
-                }
-              ],
-              "references": []
-            }
-          ],
-          "references": []
+          }
         },
         {
           "context": {
             "id": "symbol@Table@A@[L0:C0, L4:C1]",
             "snippet": "Table A {\n...s column\n}"
-          },
-          "declaration": {
-            "id": "node@<element-declaration>@A@[L0:C0, L4:C1]",
-            "snippet": "Table A {\n...s column\n}"
-          },
-          "members": [
-            {
-              "context": {
-                "id": "symbol@Column@@[L1:C4, L1:C32]",
-                "snippet": "Indexes wr...x alias {}"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L1:C4, L1:C32]",
-                "snippet": "Indexes wr...x alias {}"
-              },
-              "references": []
-            },
-            {
-              "context": {
-                "id": "symbol@Column@@[L2:C4, L2:C21]",
-                "snippet": "Indexes 2 args {}"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L2:C4, L2:C21]",
-                "snippet": "Indexes 2 args {}"
-              },
-              "references": []
-            },
-            {
-              "context": {
-                "id": "symbol@Column@@[L3:C4, L3:C35]",
-                "snippet": "Indexes wr...of args {}"
-              },
-              "declaration": {
-                "id": "node@<function-application>@@[L3:C4, L3:C35]",
-                "snippet": "Indexes wr...of args {}"
-              },
-              "references": []
-            }
-          ],
-          "references": []
+          }
         }
       ],
       "references": []
