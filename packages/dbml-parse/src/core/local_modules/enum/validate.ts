@@ -2,7 +2,7 @@ import Compiler from '@/compiler';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import { ElementKind, SettingName } from '@/core/types/keywords';
 import { BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode, WildcardNode } from '@/core/types/nodes';
-import { isElementFieldNode, isExpressionAQuotedString, isExpressionAVariableNode } from '@/core/utils/expression';
+import { isElementFieldNode, isExpressionAQuotedString, isExpressionAVariableNode, extractVariableFromExpression } from '@/core/utils/expression';
 import { aggregateSettingList, isValidName } from '@/core/utils/validate';
 import { last, partition } from 'lodash-es';
 
@@ -106,9 +106,10 @@ export default class EnumValidator {
       return [new CompileError(CompileErrorCode.EMPTY_ENUM, 'An Enum must have at least one element', this.declarationNode)];
     }
 
-    return fields.flatMap((field) => {
-      const errors: CompileError[] = [];
+    const errors: CompileError[] = [];
+    const seen = new Map<string, SyntaxNode>();
 
+    for (const field of fields) {
       if (field.callee && !isExpressionAVariableNode(field.callee)) {
         errors.push(new CompileError(CompileErrorCode.INVALID_ENUM_ELEMENT_NAME, 'An enum field must be an identifier or a quoted identifier', field.callee));
       }
@@ -126,8 +127,19 @@ export default class EnumValidator {
         errors.push(...args.map((arg) => new CompileError(CompileErrorCode.INVALID_ENUM_ELEMENT, 'An Enum must have only a field and optionally a setting list', arg)));
       }
 
-      return errors;
-    });
+      const name = field.callee ? extractVariableFromExpression(field.callee) : undefined;
+      if (name !== undefined) {
+        const firstNode = seen.get(name);
+        if (firstNode) {
+          errors.push(new CompileError(CompileErrorCode.DUPLICATE_COLUMN_NAME, `Duplicate enum field ${name}`, firstNode));
+          errors.push(new CompileError(CompileErrorCode.DUPLICATE_COLUMN_NAME, `Duplicate enum field ${name}`, field));
+        } else {
+          seen.set(name, field);
+        }
+      }
+    }
+
+    return errors;
   }
 
   private validateFieldSettings (settings: ListExpressionNode): CompileError[] {

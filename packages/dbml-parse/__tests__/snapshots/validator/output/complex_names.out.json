@@ -23,6 +23,18 @@
           "snippet": "Enum v2.St...ant\r\n    }"
         }
       }
+    },
+    {
+      "code": "BINDING_ERROR",
+      "diagnostic": "Schema 'v2' does not exist in Schema 'public'",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<primary-expression>@@[L3:C35, L3:C37]",
+          "snippet": "v2"
+        }
+      }
     }
   ],
   "program": {

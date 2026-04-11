@@ -58,24 +58,6 @@ export const enumModule: GlobalModule = {
       members.push(res.getValue());
       errors.push(...res.getErrors());
     }
-    const seen = new Map<string, SyntaxNode>();
-
-    // Duplicate checking
-    for (const member of members) {
-      if (!member.isKind(SymbolKind.EnumField) || !member.declaration) continue; // Ignore non-enum fields
-
-      const name = compiler.symbolName(member);
-      if (name !== undefined) {
-        const errorNode = (member.declaration instanceof ElementDeclarationNode && member.declaration.name) ? member.declaration.name : member.declaration;
-        const firstNode = seen.get(name);
-        if (firstNode) {
-          errors.push(enumUtils.getFieldDuplicateError(name, firstNode));
-          errors.push(enumUtils.getFieldDuplicateError(name, errorNode));
-        } else {
-          seen.set(name, errorNode);
-        }
-      }
-    }
 
     return new Report(members, errors);
   },
