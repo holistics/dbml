@@ -1,18 +1,5 @@
 {
-  "errors": [
-    {
-      "code": "EMPTY_TABLE",
-      "diagnostic": "A Table must have at least one column",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<element-declaration>@empty_table@[L0:C0, L1:C1]",
-          "snippet": "Table empt..._table {\n}"
-        }
-      }
-    }
-  ],
+  "errors": [],
   "program": {
     "context": {
       "id": "node@<program>@@[L0:C0, L2:C0]",

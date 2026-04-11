@@ -1,90 +1,6 @@
 {
   "errors": [
     {
-      "code": "UNEXPECTED_TOKEN",
-      "diagnostic": "Expect an identifier",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "token": {
-        "context": {
-          "id": "token@<variable>@\\u@[L0:C0, L0:C4]",
-          "snippet": "\"\\u\"",
-          "isInvalid": true,
-          "filepath": "/main.dbml"
-        }
-      }
-    },
-    {
-      "code": "UNEXPECTED_TOKEN",
-      "diagnostic": "Expect an identifier",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "token": {
-        "context": {
-          "id": "token@<variable>@a@[L1:C0, L1:C4]",
-          "snippet": "\"\\a\"",
-          "isInvalid": true,
-          "filepath": "/main.dbml"
-        }
-      }
-    },
-    {
-      "code": "UNEXPECTED_TOKEN",
-      "diagnostic": "Expect an identifier",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "token": {
-        "context": {
-          "id": "token@<variable>@\\u1@[L2:C0, L2:C5]",
-          "snippet": "\"\\u1\"",
-          "isInvalid": true,
-          "filepath": "/main.dbml"
-        }
-      }
-    },
-    {
-      "code": "UNEXPECTED_TOKEN",
-      "diagnostic": "Expect an identifier",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "token": {
-        "context": {
-          "id": "token@<variable>@\\u12@[L3:C0, L3:C6]",
-          "snippet": "\"\\u12\"",
-          "isInvalid": true,
-          "filepath": "/main.dbml"
-        }
-      }
-    },
-    {
-      "code": "UNEXPECTED_TOKEN",
-      "diagnostic": "Expect an identifier",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "token": {
-        "context": {
-          "id": "token@<variable>@\\uab@[L4:C0, L4:C6]",
-          "snippet": "\"\\uab\"",
-          "isInvalid": true,
-          "filepath": "/main.dbml"
-        }
-      }
-    },
-    {
-      "code": "UNEXPECTED_TOKEN",
-      "diagnostic": "Expect an identifier",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "token": {
-        "context": {
-          "id": "token@<variable>@\\ua1@[L5:C0, L5:C6]",
-          "snippet": "\"\\ua1\"",
-          "isInvalid": true,
-          "filepath": "/main.dbml"
-        }
-      }
-    },
-    {
       "code": "INVALID_ESCAPE_SEQUENCE",
       "diagnostic": "Invalid unicode escape sequence '\\u', only unicode escape sequences of the form '\\uHHHH' where H is a hexadecimal number are allowed",
       "filepath": "/main.dbml",
@@ -156,6 +72,60 @@
     }
   ],
   "tokens": [
+    {
+      "context": {
+        "id": "token@<variable>@\\u@[L0:C0, L0:C4]",
+        "snippet": "\"\\u\""
+      },
+      "leadingTrivia": "",
+      "trailingTrivia": "\n",
+      "value": "\\u"
+    },
+    {
+      "context": {
+        "id": "token@<variable>@a@[L1:C0, L1:C4]",
+        "snippet": "\"\\a\""
+      },
+      "leadingTrivia": "",
+      "trailingTrivia": "\n",
+      "value": "a"
+    },
+    {
+      "context": {
+        "id": "token@<variable>@\\u1@[L2:C0, L2:C5]",
+        "snippet": "\"\\u1\""
+      },
+      "leadingTrivia": "",
+      "trailingTrivia": "\n",
+      "value": "\\u1"
+    },
+    {
+      "context": {
+        "id": "token@<variable>@\\u12@[L3:C0, L3:C6]",
+        "snippet": "\"\\u12\""
+      },
+      "leadingTrivia": "",
+      "trailingTrivia": "\n",
+      "value": "\\u12"
+    },
+    {
+      "context": {
+        "id": "token@<variable>@\\uab@[L4:C0, L4:C6]",
+        "snippet": "\"\\uab\""
+      },
+      "leadingTrivia": "",
+      "trailingTrivia": "\n",
+      "value": "\\uab"
+    },
+    {
+      "context": {
+        "id": "token@<variable>@\\ua1@[L5:C0, L5:C6]",
+        "snippet": "\"\\ua1\""
+      },
+      "leadingTrivia": "",
+      "trailingTrivia": "",
+      "value": "\\ua1"
+    },
     {
       "context": {
         "id": "token@<eof>@@[L5:C6, L5:C6]",

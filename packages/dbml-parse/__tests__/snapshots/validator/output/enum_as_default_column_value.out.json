@@ -23,30 +23,6 @@
           "snippet": "field1.fie...ld3.field4"
         }
       }
-    },
-    {
-      "code": "BINDING_ERROR",
-      "diagnostic": "Schema 'field1' does not exist in Schema 'public'",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<primary-expression>@@[L27:C47, L27:C53]",
-          "snippet": "field1"
-        }
-      }
-    },
-    {
-      "code": "BINDING_ERROR",
-      "diagnostic": "Enum 'invalid_enum' does not exist in Schema 'public'",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<primary-expression>@@[L28:C42, L28:C54]",
-          "snippet": "invalid_enum"
-        }
-      }
     }
   ],
   "program": {

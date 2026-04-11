@@ -79,7 +79,7 @@ export const schemaModule: GlobalModule = {
         ? compiler.nodeAlias(member.declaration).getFiltered(UNHANDLED)
         : undefined;
 
-      const names = [canonicalName, alias].filter(Boolean);
+      const names = [...new Set([canonicalName, alias].filter(Boolean))];
       for (const name of names) {
         const key = `${member.kind}:${name}`;
         const existing = seen.get(key);

@@ -41,79 +41,54 @@
           "filepath": "/main.dbml"
         }
       }
-    },
-    {
-      "code": "UNEXPECTED_TOKEN",
-      "diagnostic": "Expect an identifier",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "token": {
-        "context": {
-          "id": "token@<variable>@This is a quoted string@[L0:C0, L0:C25]",
-          "snippet": "\"This is a...ed string\"",
-          "isInvalid": true,
-          "filepath": "/main.dbml"
-        }
-      }
-    },
-    {
-      "code": "UNEXPECTED_TOKEN",
-      "diagnostic": "Expect an identifier",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "token": {
-        "context": {
-          "id": "token@<variable>@This is a quoted string \nwith a newline\n@[L2:C0, L2:C44]",
-          "snippet": "\"This is a...newline\\n\"",
-          "isInvalid": true,
-          "filepath": "/main.dbml"
-        }
-      }
-    },
-    {
-      "code": "UNEXPECTED_TOKEN",
-      "diagnostic": "Expect an identifier",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "token": {
-        "context": {
-          "id": "token@<string>@This is a string literal@[L4:C0, L4:C26]",
-          "snippet": "'This is a...g literal'",
-          "isInvalid": true,
-          "filepath": "/main.dbml"
-        }
-      }
-    },
-    {
-      "code": "UNEXPECTED_TOKEN",
-      "diagnostic": "Expect an identifier",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "token": {
-        "context": {
-          "id": "token@<string>@This is a string literal \nwith a newline\n@[L6:C0, L6:C45]",
-          "snippet": "'This is a...newline\\n'",
-          "isInvalid": true,
-          "filepath": "/main.dbml"
-        }
-      }
-    },
-    {
-      "code": "UNEXPECTED_TOKEN",
-      "diagnostic": "Expect an identifier",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "token": {
-        "context": {
-          "id": "token@<string>@This is a multiline string\r\n@[L12:C0, L13:C3]",
-          "snippet": "'''This is...tring\r\n'''",
-          "isInvalid": true,
-          "filepath": "/main.dbml"
-        }
-      }
     }
   ],
   "tokens": [
+    {
+      "context": {
+        "id": "token@<variable>@This is a quoted string@[L0:C0, L0:C25]",
+        "snippet": "\"This is a...ed string\""
+      },
+      "leadingTrivia": "",
+      "trailingTrivia": "\n",
+      "value": "This is a quoted string"
+    },
+    {
+      "context": {
+        "id": "token@<variable>@This is a quoted string \nwith a newline\n@[L2:C0, L2:C44]",
+        "snippet": "\"This is a...newline\\n\""
+      },
+      "leadingTrivia": "\n",
+      "trailingTrivia": "\n",
+      "value": "This is a quoted string \nwith a newline\n"
+    },
+    {
+      "context": {
+        "id": "token@<string>@This is a string literal@[L4:C0, L4:C26]",
+        "snippet": "'This is a...g literal'"
+      },
+      "leadingTrivia": "\n",
+      "trailingTrivia": "\n",
+      "value": "This is a string literal"
+    },
+    {
+      "context": {
+        "id": "token@<string>@This is a string literal \nwith a newline\n@[L6:C0, L6:C45]",
+        "snippet": "'This is a...newline\\n'"
+      },
+      "leadingTrivia": "\n",
+      "trailingTrivia": "\n",
+      "value": "This is a string literal \nwith a newline\n"
+    },
+    {
+      "context": {
+        "id": "token@<string>@This is a multiline string\r\n@[L12:C0, L13:C3]",
+        "snippet": "'''This is...tring\r\n'''"
+      },
+      "leadingTrivia": "\n",
+      "trailingTrivia": "\n",
+      "value": "This is a multiline string\r\n"
+    },
     {
       "context": {
         "id": "token@<eof>@@[L16:C0, L16:C0]",

@@ -41,20 +41,6 @@
           "filepath": "/main.dbml"
         }
       }
-    },
-    {
-      "code": "UNEXPECTED_TOKEN",
-      "diagnostic": "Expect an opening brace '{' or a colon ':'",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "token": {
-        "context": {
-          "id": "token@<identifier>@3a@[L2:C0, L2:C2]",
-          "snippet": "3a",
-          "isInvalid": true,
-          "filepath": "/main.dbml"
-        }
-      }
     }
   ],
   "tokens": [
@@ -75,6 +61,51 @@
       "leadingTrivia": "",
       "trailingTrivia": "  Identifier\n",
       "value": "226_abc"
+    },
+    {
+      "context": {
+        "id": "token@<identifier>@3a@[L2:C0, L2:C2]",
+        "snippet": "3a"
+      },
+      "leadingTrivia": "",
+      "trailingTrivia": "  Identifier\n",
+      "value": "3a"
+    },
+    {
+      "context": {
+        "id": "token@<identifier>@3a@[L3:C0, L3:C2]",
+        "snippet": "3a"
+      },
+      "leadingTrivia": "",
+      "trailingTrivia": "",
+      "value": "3a"
+    },
+    {
+      "context": {
+        "id": "token@<op>@.@[L3:C2, L3:C3]",
+        "snippet": "."
+      },
+      "leadingTrivia": "",
+      "trailingTrivia": "",
+      "value": "."
+    },
+    {
+      "context": {
+        "id": "token@<identifier>@4a@[L3:C3, L3:C5]",
+        "snippet": "4a"
+      },
+      "leadingTrivia": "",
+      "trailingTrivia": "  Indentifier<dot>Identifier\n",
+      "value": "4a"
+    },
+    {
+      "context": {
+        "id": "token@<identifier>@3a3@[L4:C0, L4:C3]",
+        "snippet": "3a3"
+      },
+      "leadingTrivia": "",
+      "trailingTrivia": "  Identifier\n",
+      "value": "3a3"
     },
     {
       "context": {

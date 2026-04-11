@@ -1,30 +1,6 @@
 {
   "errors": [
     {
-      "code": "DUPLICATE_NAME",
-      "diagnostic": "Duplicate TableGroupField 'A'",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<function-application>@@[L13:C4, L13:C7]",
-          "snippet": "A a"
-        }
-      }
-    },
-    {
-      "code": "DUPLICATE_NAME",
-      "diagnostic": "Duplicate TableGroupField 'A'",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<function-application>@@[L14:C4, L14:C9]",
-          "snippet": "A a a"
-        }
-      }
-    },
-    {
       "code": "INVALID_TABLEGROUP_FIELD",
       "diagnostic": "A TableGroup field should only have a single Table name",
       "filepath": "/main.dbml",
@@ -189,102 +165,6 @@
         "context": {
           "id": "node@<primary-expression>@@[L30:C18, L30:C19]",
           "snippet": "a"
-        }
-      }
-    },
-    {
-      "code": "BINDING_ERROR",
-      "diagnostic": "Table 'a' does not exist in Schema 'public'",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<primary-expression>@@[L13:C6, L13:C7]",
-          "snippet": "a"
-        }
-      }
-    },
-    {
-      "code": "BINDING_ERROR",
-      "diagnostic": "Table 'a' does not exist in Schema 'public'",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<primary-expression>@@[L14:C6, L14:C7]",
-          "snippet": "a"
-        }
-      }
-    },
-    {
-      "code": "BINDING_ERROR",
-      "diagnostic": "Table 'a' does not exist in Schema 'public'",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<primary-expression>@@[L14:C8, L14:C9]",
-          "snippet": "a"
-        }
-      }
-    },
-    {
-      "code": "SAME_ENDPOINT",
-      "diagnostic": "Two endpoints are the same",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<element-declaration>@@[L17:C0, L19:C1]",
-          "snippet": "Ref {\n    ...scade] a\n}"
-        }
-      }
-    },
-    {
-      "code": "SAME_ENDPOINT",
-      "diagnostic": "Two endpoints are the same",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<element-declaration>@@[L21:C0, L23:C1]",
-          "snippet": "Ref {\n    ...cascade]\n}"
-        }
-      }
-    },
-    {
-      "code": "SAME_ENDPOINT",
-      "diagnostic": "Two endpoints are the same",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<element-declaration>@@[L25:C0, L27:C1]",
-          "snippet": "Ref {\n    ...> A.id a\n}"
-        }
-      }
-    },
-    {
-      "code": "SAME_ENDPOINT",
-      "diagnostic": "Two endpoints are the same",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<element-declaration>@@[L29:C0, L31:C1]",
-          "snippet": "Ref {\n    ...A.id a a\n}"
-        }
-      }
-    },
-    {
-      "code": "TABLE_REAPPEAR_IN_TABLEGROUP",
-      "diagnostic": "Table \"A\" already appears in group \"G\"",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<function-application>@@[L14:C4, L14:C9]",
-          "snippet": "A a a"
         }
       }
     }

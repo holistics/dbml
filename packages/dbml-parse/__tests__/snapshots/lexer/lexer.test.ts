@@ -28,7 +28,7 @@ describe('[snapshot] lexer', () => {
     const compiler = new Compiler();
     compiler.setSource(DEFAULT_ENTRY, program);
 
-    const output = serializeLexerResult(compiler, compiler.parseFile(DEFAULT_ENTRY).map(({ tokens }) => tokens));
+    const output = serializeLexerResult(compiler, new Lexer(program, DEFAULT_ENTRY).lex());
 
     it(testName, () => expect(output).toMatchFileSnapshot(path.resolve(__dirname, `./output/${testName}.out.json`)));
   });

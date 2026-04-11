@@ -5,7 +5,7 @@ import type { SyntaxNode } from '@/core/types/nodes';
 import type { SyntaxToken } from '@/core/types/tokens';
 import { NodeSymbol, SchemaSymbol, SymbolKind } from '@/core/types/symbol';
 import type { GlobalModule } from '../types';
-import { DEFAULT_SCHEMA_NAME, PASS_THROUGH, type PassThrough, UNHANDLED, DEFAULT_ENTRY } from '@/constants';
+import { DEFAULT_SCHEMA_NAME, PASS_THROUGH, type PassThrough, UNHANDLED } from '@/constants';
 import Report from '@/core/types/report';
 import type Compiler from '@/compiler/index';
 import type { SchemaElement } from '@/core/types/schemaJson';
@@ -14,7 +14,6 @@ import { extractVarNameFromPrimaryVariable } from '@/core/utils/expression';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import TableGroupBinder from './bind';
 import { TableGroupInterpreter } from './interpret';
-import { addDoubleQuoteIfNeeded } from '@/compiler/index';
 
 // Public utils that other modules can use
 export const tableGroupUtils = {
@@ -54,23 +53,6 @@ export const tableGroupModule: GlobalModule = {
         members.push(res.getValue());
         errors.push(...res.getErrors());
       }
-      const seen = new Map<string, SyntaxNode>();
-
-      // Duplicate checking
-      for (const member of members) {
-        if (!member.isKind(SymbolKind.TableGroupField) || !member.declaration) continue; // Ignore non-field members
-
-        const name = (compiler.nodeFullname(member.declaration).getFiltered(UNHANDLED) || []).map((m) => addDoubleQuoteIfNeeded(m)).join('.');
-        const errorNode = (member.declaration instanceof ElementDeclarationNode && member.declaration.name) ? member.declaration.name : member.declaration;
-        const firstNode = seen.get(name);
-        if (firstNode) {
-          errors.push(tableGroupUtils.getFieldDuplicateError(name, firstNode));
-          errors.push(tableGroupUtils.getFieldDuplicateError(name, errorNode));
-        } else {
-          seen.set(name, errorNode);
-        }
-      }
-
       return new Report(members, errors);
     }
     if (symbol.isKind(SymbolKind.TableGroupField)) {
