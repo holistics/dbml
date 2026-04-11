@@ -1,10 +1,10 @@
 import { partition } from 'lodash-es';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ProgramNode,
-} from '../../../parser/nodes';
+} from '@/core/types/nodes';
 import { isWildcardExpression } from '../../../parser/utils';
 import { ElementBinder } from '../types';
-import { SyntaxToken } from '../../../lexer/tokens';
+import { SyntaxToken } from '@/core/types/tokens';
 import { CompileError } from '@/core/types/errors';
 import { lookupAndBindInScope, pickBinder, scanNonListNodeForBinding } from '../utils';
 import { SymbolKind } from '@/core/types/symbol/symbolIndex';

@@ -1,5 +1,5 @@
 import SymbolTable from './symbolTable';
-import { SyntaxNode } from '@/core/parser/nodes';
+import { SyntaxNode } from '@/core/types/nodes';
 import { Filepath } from '@/core/types/filepath';
 import { DEFAULT_FILEPATH } from '@/core/types/filepath';
 

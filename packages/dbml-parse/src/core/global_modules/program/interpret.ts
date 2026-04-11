@@ -1,5 +1,5 @@
 import Compiler from '@/compiler/index';
-import { CallExpressionNode, ElementDeclarationNode, ProgramNode } from '@/core/parser/nodes';
+import { CallExpressionNode, ElementDeclarationNode, ProgramNode } from '@/core/types/nodes';
 import { ElementKind } from '@/core/types/keywords';
 import { DEFAULT_SCHEMA_NAME, UNHANDLED } from '@/constants';
 import Report from '@/core/types/report';

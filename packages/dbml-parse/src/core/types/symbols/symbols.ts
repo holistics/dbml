@@ -1,4 +1,4 @@
-import { ElementDeclarationNode, SyntaxNode } from '@/core/parser/nodes';
+import { ElementDeclarationNode, SyntaxNode } from '@/core/types/nodes';
 import type { Internable } from '@/core/types/internable';
 import { Filepath } from '@/core/types/filepath';
 

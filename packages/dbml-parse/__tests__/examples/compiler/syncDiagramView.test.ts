@@ -3,7 +3,7 @@ import { syncDiagramView } from '@/compiler/queries/transform/syncDiagramView';
 import Compiler from '@/compiler/index';
 import Lexer from '@/core/lexer/lexer';
 import Parser from '@/core/parser/parser';
-import { SyntaxNodeIdGenerator } from '@/core/parser/nodes';
+import { SyntaxNodeIdGenerator } from '@/core/types/nodes';
 import { DEFAULT_FILEPATH } from '@/core/types/filepath';
 
 // update operation

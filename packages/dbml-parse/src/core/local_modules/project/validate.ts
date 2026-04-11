@@ -3,7 +3,7 @@ import Compiler from '@/compiler';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode,
-} from '@/core/parser/nodes';
+} from '@/core/types/nodes';
 import { destructureComplexVariable } from '@/core/utils/expression';
 import { isSimpleName, type Settings } from '@/core/utils/validate';
 import Report from '@/core/types/report';

@@ -1,5 +1,5 @@
-import { SyntaxToken } from '@/core/lexer/tokens';
-import { SyntaxNode } from '@/core/parser/nodes';
+import { SyntaxToken } from '@/core/types/tokens';
+import { SyntaxNode } from '@/core/types/nodes';
 
 export enum CompileErrorCode {
   UNKNOWN_SYMBOL = 1000,

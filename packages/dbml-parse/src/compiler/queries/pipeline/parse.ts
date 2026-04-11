@@ -1,6 +1,6 @@
 import type Compiler from '../../index';
-import type { ProgramNode } from '@/core/parser/nodes';
-import type { SyntaxToken } from '@/core/lexer/tokens';
+import type { ProgramNode } from '@/core/types/nodes';
+import type { SyntaxToken } from '@/core/types/tokens';
 import Report from '@/core/types/report';
 import Lexer from '@/core/lexer/lexer';
 import Parser from '@/core/parser/parser';

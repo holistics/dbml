@@ -3,7 +3,7 @@ import Compiler from '@/compiler';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, ProgramNode, SyntaxNode,
-} from '@/core/parser/nodes';
+} from '@/core/types/nodes';
 import { ElementKind } from '@/core/types/keywords';
 import { isExpressionAQuotedString } from '@/core/utils/expression';
 

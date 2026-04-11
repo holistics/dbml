@@ -1,5 +1,5 @@
 import { describe, expect } from 'vitest';
-import { SyntaxNodeKind, ElementDeclarationNode, BlockExpressionNode } from '@/core/parser/nodes';
+import { SyntaxNodeKind, ElementDeclarationNode, BlockExpressionNode } from '@/core/types/nodes';
 import { analyze } from '@tests/utils';
 import { NodeSymbol, SymbolKind } from '@/core/types';
 import { DEFAULT_SCHEMA_NAME } from '@/constants';

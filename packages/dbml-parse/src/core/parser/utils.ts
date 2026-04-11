@@ -1,5 +1,5 @@
 import { last } from 'lodash-es';
-import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
+import { SyntaxToken, SyntaxTokenKind } from '@/core/types/tokens';
 import { alternateLists } from '@/core/utils/chars';
 import NodeFactory from '@/core/parser/factory';
 import {
@@ -26,7 +26,7 @@ import {
   SyntaxNode,
   TupleExpressionNode,
   VariableNode,
-} from '@/core/parser/nodes';
+} from '@/core/types/nodes';
 import { extractVariableNode, isAsKeyword, isExpressionAnIdentifierNode } from '../utils/expression';
 
 // Try to interpret a function application as an element

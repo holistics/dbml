@@ -1,8 +1,8 @@
 import Compiler from '@/compiler';
 import { DEFAULT_SCHEMA_NAME, UNHANDLED } from '@/constants';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
-import { SyntaxTokenKind } from '@/core/lexer/tokens';
-import { ArrayNode, CallExpressionNode, FunctionExpressionNode, InfixExpressionNode, LiteralNode, PostfixExpressionNode, PrefixExpressionNode, PrimaryExpressionNode, SyntaxNode, TupleExpressionNode, VariableNode } from '@/core/parser/nodes';
+import { SyntaxTokenKind } from '@/core/types/tokens';
+import { ArrayNode, CallExpressionNode, FunctionExpressionNode, InfixExpressionNode, LiteralNode, PostfixExpressionNode, PrefixExpressionNode, PrimaryExpressionNode, SyntaxNode, TupleExpressionNode, VariableNode } from '@/core/types/nodes';
 import { getMemberChain } from '@/core/parser/utils';
 import Report from '@/core/types/report';
 import { ColumnType, NodeSymbol, RelationCardinality, SchemaSymbol, SymbolKind, Table, TokenPosition } from '@/core/types';

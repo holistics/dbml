@@ -1,8 +1,8 @@
 import { isElementNode, isElementFieldNode, getBody } from '@/core/utils/expression';
 import { ElementKind } from '@/core/types/keywords';
-import { ElementDeclarationNode } from '@/core/parser/nodes';
-import type { SyntaxNode } from '@/core/parser/nodes';
-import type { SyntaxToken } from '@/core/lexer/tokens';
+import { ElementDeclarationNode } from '@/core/types/nodes';
+import type { SyntaxNode } from '@/core/types/nodes';
+import type { SyntaxToken } from '@/core/types/tokens';
 import { NodeSymbol, SymbolKind } from '@/core/types/symbols';
 import type { GlobalModule } from '../types';
 import { PASS_THROUGH, UNHANDLED, type PassThrough } from '@/constants';

@@ -7,7 +7,7 @@ import {
   isExpressionAVariableNode,
 } from '@/core/utils/expression';
 import Compiler, { ScopeKind } from '@/compiler';
-import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
+import { SyntaxToken, SyntaxTokenKind } from '@/core/types/tokens';
 import { isOffsetWithinSpan } from '@/core/utils/span';
 import {
   type CompletionList,

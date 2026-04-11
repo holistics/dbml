@@ -1,5 +1,5 @@
 import type Compiler from '../index';
-import { ElementDeclarationNode, ProgramNode, SyntaxNode } from '@/core/parser/nodes';
+import { ElementDeclarationNode, ProgramNode, SyntaxNode } from '@/core/types/nodes';
 
 export function scope (
   this: Compiler,

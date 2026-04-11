@@ -13,7 +13,7 @@ import {
   PrefixExpressionNode,
   PrimaryExpressionNode,
   SyntaxNode,
-} from '@/core/parser/nodes';
+} from '@/core/types/nodes';
 import { extractVariableFromExpression } from '@/core/utils/expression';
 import {
   aggregateSettingList,

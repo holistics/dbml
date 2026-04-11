@@ -3,7 +3,7 @@ import { extractQuotedStringToken, destructureComplexVariable } from '@/core/uti
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, SyntaxNode, ListExpressionNode,
-} from '@/core/parser/nodes';
+} from '@/core/types/nodes';
 import type { TableGroup, TableGroupField } from '@/core/types/schemaJson';
 import {
   extractElementName, getTokenPosition, normalizeNoteContent, extractColor,

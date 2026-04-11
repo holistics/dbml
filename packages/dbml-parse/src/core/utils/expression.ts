@@ -15,9 +15,9 @@ import {
   AttributeNode,
   FunctionExpressionNode,
   CallExpressionNode,
-} from '@/core/parser/nodes';
+} from '@/core/types/nodes';
 import type { ElementKind, SettingName } from '@/core/types/keywords';
-import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
+import { SyntaxToken, SyntaxTokenKind } from '@/core/types/tokens';
 import { last } from 'lodash-es';
 import { NUMERIC_LITERAL_PREFIX } from '@/constants';
 

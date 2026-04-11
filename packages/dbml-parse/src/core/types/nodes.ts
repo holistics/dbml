@@ -1,5 +1,5 @@
 import { flatten, zip } from 'lodash-es';
-import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
+import { SyntaxToken, SyntaxTokenKind } from '@/core/types/tokens';
 import { ElementKind, Internable, Position } from '@/core/types';
 import { getTokenFullEnd, getTokenFullStart } from '@/core/lexer/utils';
 import { Filepath } from '@/core/types/filepath';
@@ -42,6 +42,7 @@ export enum SyntaxNodeKind {
   PRIMARY_EXPRESSION = '<primary-expression>',
   GROUP_EXPRESSION = '<group-expression>',
   COMMA_EXPRESSION = '<comma-expression>',
+  WILDCARD = '<wildcard>',
   EMPTY = '<dummy>',
   ARRAY = '<array>',
 }

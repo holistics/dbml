@@ -1,6 +1,6 @@
 import { describe, expect } from 'vitest';
 import { CompileErrorCode } from '@/core/types/errors';
-import { SyntaxToken } from '@/core/lexer/tokens';
+import { SyntaxToken } from '@/core/types/tokens';
 import { analyze } from '@tests/utils';
 
 describe('[example] validator', () => {

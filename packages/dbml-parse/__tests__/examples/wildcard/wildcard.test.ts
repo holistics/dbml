@@ -1,8 +1,8 @@
 import { describe, expect, test } from 'vitest';
-import { SyntaxTokenKind, isTriviaToken } from '@/core/lexer/tokens';
+import { SyntaxTokenKind, isTriviaToken } from '@/core/types/tokens';
 import { CompileErrorCode } from '@/core/types/errors';
-import { SyntaxNodeKind } from '@/core/parser/nodes';
-import { WildcardNode } from '@/core/parser/nodes';
+import { SyntaxNodeKind } from '@/core/types/nodes';
+import { WildcardNode } from '@/core/types/nodes';
 import { isWildcardExpression } from '@/core/parser/utils';
 import { lex, parse, analyze } from '@tests/utils';
 

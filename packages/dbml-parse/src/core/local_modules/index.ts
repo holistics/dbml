@@ -13,7 +13,7 @@ import { tablePartialModule } from './tablePartial';
 import { noteModule } from './note';
 import { programModule } from './program';
 import type Compiler from '@/compiler';
-import type { SyntaxNode } from '@/core/parser/nodes';
+import type { SyntaxNode } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 
 // Each time you add a new element, register its module here.

@@ -5,7 +5,7 @@ import { PASS_THROUGH, type PassThrough } from '@/constants';
 import {
   ArrayNode,
   SyntaxNode,
-} from '@/core/parser/nodes';
+} from '@/core/types/nodes';
 import { ElementKind } from '@/core/types/keywords';
 import { isValidAlias, Settings } from '@/core/utils/validate';
 import Report from '@/core/types/report';

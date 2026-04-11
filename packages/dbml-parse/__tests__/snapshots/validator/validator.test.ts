@@ -2,7 +2,7 @@ import { DEFAULT_FILEPATH } from '@/core/types/filepath';
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
-import type { ProgramNode } from '@/core/parser/nodes';
+import type { ProgramNode } from '@/core/types/nodes';
 import { scanTestNames, toSnapshot } from '@tests/utils';
 import Compiler from '@/compiler';
 import Report from '@/core/types/report';

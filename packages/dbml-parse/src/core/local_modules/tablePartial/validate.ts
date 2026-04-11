@@ -12,7 +12,7 @@ import {
   ListExpressionNode,
   PrimaryExpressionNode,
   SyntaxNode,
-} from '@/core/parser/nodes';
+} from '@/core/types/nodes';
 import { isExpressionAVariableNode, isExpressionAnIdentifierNode, isExpressionAQuotedString, extractVariableFromExpression } from '@/core/utils/expression';
 import {
   aggregateSettingList,

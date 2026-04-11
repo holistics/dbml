@@ -3,7 +3,7 @@ import { destructureComplexVariable } from '@/core/utils/expression';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import {
   ElementDeclarationNode, ProgramNode, SyntaxNode,
-} from '@/core/parser/nodes';
+} from '@/core/types/nodes';
 import { ElementKind } from '@/core/types/keywords';
 import { type LocalModule, type Settings } from '../types';
 import { PASS_THROUGH, type PassThrough } from '@/constants';

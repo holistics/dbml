@@ -7,9 +7,9 @@ import {
   ProgramNode,
   SyntaxNode,
   TupleExpressionNode,
-} from '@/core/parser/nodes';
+} from '@/core/types/nodes';
 import Report from '@/core/types/report';
-import { SyntaxToken } from '@/core/lexer/tokens';
+import { SyntaxToken } from '@/core/types/tokens';
 import Compiler from '@/compiler';
 import {
   isElementNode,

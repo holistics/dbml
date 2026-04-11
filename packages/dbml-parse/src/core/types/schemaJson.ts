@@ -1,6 +1,25 @@
 import type { Position } from './position';
+import { Filepath } from './filepath';
 
-export type { DiagramView, FilterConfig };
+export interface TokenPosition {
+  start: Position;
+  end: Position;
+  filepath: Filepath;
+}
+
+export interface FilterConfig {
+  tables: Array<{ name: string; schemaName: string }> | null;
+  stickyNotes: Array<{ name: string }> | null;
+  tableGroups: Array<{ name: string }> | null;
+  schemas: Array<{ name: string }> | null;
+}
+
+export interface DiagramView {
+  name: string;
+  schemaName: string | null;
+  visibleEntities: FilterConfig;
+  token: TokenPosition;
+}
 
 export interface Database {
   schemas: [];
@@ -13,7 +32,13 @@ export interface Database {
   project?: Project;
   tablePartials: TablePartial[];
   records: TableRecord[];
-  token: TokenPosition;
+  diagramViews: DiagramView[];
+  token?: TokenPosition;
+}
+
+export interface MasterDatabase {
+  files: Record<string, Database>;
+  items: Database;
 }
 
 export interface Table {

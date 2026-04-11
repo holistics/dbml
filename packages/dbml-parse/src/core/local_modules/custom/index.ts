@@ -1,7 +1,7 @@
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import {
   ElementDeclarationNode, SyntaxNode,
-} from '@/core/parser/nodes';
+} from '@/core/types/nodes';
 import type { LocalModule } from '../types';
 import { PASS_THROUGH, type PassThrough } from '@/constants';
 import Report from '@/core/types/report';

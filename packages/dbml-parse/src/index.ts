@@ -13,7 +13,7 @@ export {
   ElementDeclarationNode,
   ProgramNode,
   SyntaxNodeKind,
-} from '@/core/parser/nodes';
+} from '@/core/types/nodes';
 
 export {
   // Token types

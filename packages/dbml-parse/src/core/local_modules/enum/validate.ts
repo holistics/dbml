@@ -1,7 +1,7 @@
 import Compiler from '@/compiler';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import { ElementKind, SettingName } from '@/core/types/keywords';
-import { BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode } from '@/core/parser/nodes';
+import { BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode } from '@/core/types/nodes';
 import { isElementFieldNode, isExpressionAQuotedString, isExpressionAVariableNode } from '@/core/utils/expression';
 import { aggregateSettingList, isValidName } from '@/core/utils/validate';
 import { last, partition } from 'lodash-es';

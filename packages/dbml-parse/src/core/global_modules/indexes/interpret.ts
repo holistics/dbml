@@ -1,7 +1,7 @@
 import Compiler from '@/compiler/index';
 import { ElementKind, SettingName } from '@/core/types/keywords';
-import { BlockExpressionNode, CallExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode } from '@/core/parser/nodes';
-import type { SyntaxNode } from '@/core/parser/nodes';
+import { BlockExpressionNode, CallExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode } from '@/core/types/nodes';
+import type { SyntaxNode } from '@/core/types/nodes';
 import { PASS_THROUGH, UNHANDLED } from '@/constants';
 import Report from '@/core/types/report';
 import type { Index, TokenPosition, SchemaElement } from '@/core/types/schemaJson';

@@ -1,8 +1,8 @@
 import { isElementNode, isExpressionAVariableNode, isAccessExpression, isElementFieldNode, isInsideElementBody, isInsideSettingList, getBody } from '@/core/utils/expression';
 import { ElementKind } from '@/core/types/keywords';
-import { PrimaryExpressionNode, VariableNode, ElementDeclarationNode } from '@/core/parser/nodes';
-import type { SyntaxNode } from '@/core/parser/nodes';
-import type { SyntaxToken } from '@/core/lexer/tokens';
+import { PrimaryExpressionNode, VariableNode, ElementDeclarationNode } from '@/core/types/nodes';
+import type { SyntaxNode } from '@/core/types/nodes';
+import type { SyntaxToken } from '@/core/types/tokens';
 import { NodeSymbol, SchemaSymbol, SymbolKind } from '@/core/types/symbols';
 import type { GlobalModule } from '../types';
 import { DEFAULT_SCHEMA_NAME, PASS_THROUGH, type PassThrough, UNHANDLED } from '@/constants';

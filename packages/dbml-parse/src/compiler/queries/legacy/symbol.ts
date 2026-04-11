@@ -1,5 +1,5 @@
 import type Compiler from '../../index';
-import { ElementDeclarationNode, ProgramNode } from '@/core/parser/nodes';
+import { ElementDeclarationNode, ProgramNode } from '@/core/types/nodes';
 import { NodeSymbol, SchemaSymbol, SymbolKind } from '@/core/types/symbols';
 import { DEFAULT_SCHEMA_NAME, UNHANDLED } from '@/constants';
 

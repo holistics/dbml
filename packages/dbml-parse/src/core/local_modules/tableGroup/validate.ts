@@ -6,7 +6,7 @@ import {
 import Report from '@/core/types/report';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode,
-} from '@/core/parser/nodes';
+} from '@/core/types/nodes';
 import { destructureComplexVariable, isExpressionAQuotedString } from '@/core/utils/expression';
 
 export default class TableGroupValidator {

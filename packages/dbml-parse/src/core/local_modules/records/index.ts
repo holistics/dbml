@@ -4,7 +4,7 @@ import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import { PASS_THROUGH, UNHANDLED, type PassThrough } from '@/constants';
 import {
   CallExpressionNode, ElementDeclarationNode, ProgramNode, SyntaxNode, TupleExpressionNode,
-} from '@/core/parser/nodes';
+} from '@/core/types/nodes';
 import { ElementKind } from '@/core/types/keywords';
 import { type LocalModule, type Settings } from '../types';
 import { isValidName } from '@/core/utils/validate';
