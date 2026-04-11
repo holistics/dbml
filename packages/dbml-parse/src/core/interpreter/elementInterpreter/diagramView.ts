@@ -1,6 +1,5 @@
 import { partition } from 'lodash-es';
 import { destructureComplexVariable } from '@/core/utils/expression';
-import { extractReferee } from '@/services/utils';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import { BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, SyntaxNode } from '@/core/types/nodes';
 import { isWildcardExpression } from '@/core/parser/utils';
@@ -30,10 +29,6 @@ export class DiagramViewInterpreter implements ElementInterpreter {
     const errors: CompileError[] = [];
     this.diagramView.token = getTokenPosition(this.declarationNode);
 
-    this.env.diagramViews.set(this.declarationNode, this.diagramView as DiagramView);
-    this.env.diagramViewWildcards.set(this.diagramView as DiagramView, new Set());
-    this.env.diagramViewExplicitlySet.set(this.diagramView as DiagramView, new Set());
-
     // Interpret name
     if (this.declarationNode.name) {
       errors.push(...this.interpretName(this.declarationNode.name));
@@ -48,8 +43,8 @@ export class DiagramViewInterpreter implements ElementInterpreter {
   }
 
   private interpretName (nameNode: SyntaxNode): CompileError[] {
-    const fragments = destructureComplexVariable(nameNode).unwrap_or([]);
-    if (fragments.length > 0) {
+    const fragments = destructureComplexVariable(nameNode);
+    if (fragments && fragments.length > 0) {
       this.diagramView.name = fragments[fragments.length - 1];
       if (fragments.length > 1) {
         this.diagramView.schemaName = fragments.slice(0, -1).join('.');
@@ -59,130 +54,71 @@ export class DiagramViewInterpreter implements ElementInterpreter {
   }
 
   private interpretBody (body: BlockExpressionNode): CompileError[] {
-    // Body-level {*} shorthand: show all entities including Notes
-    if (body.body.length === 1) {
-      const first = body.body[0];
-      if (first instanceof FunctionApplicationNode && isWildcardExpression(first.callee)) {
-        this.diagramView.visibleEntities = { tables: [], stickyNotes: [], tableGroups: [], schemas: [] };
-        this.env.diagramViewWildcards.set(this.diagramView as DiagramView, new Set(['tables', 'stickyNotes', 'tableGroups', 'schemas']));
-        this.env.diagramViewExplicitlySet.set(this.diagramView as DiagramView, new Set(['tables', 'stickyNotes', 'tableGroups', 'schemas']));
-        return [];
-      }
-    }
-
     const [subs] = partition(body.body, (e) => e instanceof ElementDeclarationNode);
-    const explicitlySet = new Set<string>();
 
     for (const sub of subs as ElementDeclarationNode[]) {
       const blockType = sub.type?.value.toLowerCase();
-      if (blockType) explicitlySet.add(blockType);
-      if (sub.body instanceof BlockExpressionNode) {
+      if (blockType && sub.body instanceof BlockExpressionNode) {
         this.interpretSubBlock(sub.body, blockType);
       }
     }
 
-    // Trinity omit rule: if any Trinity dim was explicitly set with a non-null value,
-    // promote omitted Trinity dims from null → [] (show all)
-    const ve = this.diagramView.visibleEntities!;
-    const trinityHasNonNull =
-      (explicitlySet.has('tables') && ve.tables !== null)
-      || (explicitlySet.has('tablegroups') && ve.tableGroups !== null)
-      || (explicitlySet.has('schemas') && ve.schemas !== null);
-
-    if (trinityHasNonNull) {
-      if (!explicitlySet.has('tables')) ve.tables = [];
-      if (!explicitlySet.has('tablegroups')) ve.tableGroups = [];
-      if (!explicitlySet.has('schemas')) ve.schemas = [];
-    }
-
-    // Store which dims were explicitly declared (normalize block type names to FilterConfig keys)
-    const envExplicitlySet = this.env.diagramViewExplicitlySet.get(this.diagramView as DiagramView)!;
-    if (explicitlySet.has('tables')) envExplicitlySet.add('tables');
-    if (explicitlySet.has('tablegroups')) envExplicitlySet.add('tableGroups');
-    if (explicitlySet.has('schemas')) envExplicitlySet.add('schemas');
-    if (explicitlySet.has('notes')) envExplicitlySet.add('stickyNotes');
-
     return [];
   }
 
-  private interpretSubBlock (body: BlockExpressionNode, blockType: string | undefined): void {
-    if (!blockType) return;
+  private interpretSubBlock (body: BlockExpressionNode, blockType?: string): void {
+    const [fields] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
 
-    // Check for wildcard
-    const hasWildcard = body.body.some(
-      (e) => e instanceof FunctionApplicationNode && isWildcardExpression(e.callee),
-    );
+    const entities: Array<{ name: string; schemaName: string }> = [];
 
-    if (hasWildcard) {
-      // Show all for this entity type
-      const envWildcards = this.env.diagramViewWildcards.get(this.diagramView as DiagramView)!;
-      switch (blockType) {
-        case 'tables':
-          this.diagramView.visibleEntities!.tables = [];
-          envWildcards.add('tables');
-          break;
-        case 'notes':
-          this.diagramView.visibleEntities!.stickyNotes = [];
-          envWildcards.add('stickyNotes');
-          break;
-        case 'tablegroups':
-          this.diagramView.visibleEntities!.tableGroups = [];
-          envWildcards.add('tableGroups');
-          break;
-        case 'schemas':
-          this.diagramView.visibleEntities!.schemas = [];
-          envWildcards.add('schemas');
-          break;
-      }
-      return;
-    }
+    for (const field of fields as FunctionApplicationNode[]) {
+      if (!field.callee) continue;
 
-    // Empty block = hide all (null is already default)
-    if (body.body.length === 0) {
-      return;
-    }
-
-    // Specific items
-    const items: Array<{ name: string; schemaName: string }> = [];
-    for (const field of body.body) {
-      if (!(field instanceof FunctionApplicationNode)) continue;
-
-      // If the field was bound to a symbol (e.g., alias "U" → Table "users"),
-      // resolve the real name from the referee's declaration
-      const referee = extractReferee(field.callee);
-      if (referee?.declaration instanceof ElementDeclarationNode) {
-        const realFragments = destructureComplexVariable(referee.declaration.name).unwrap_or([]);
-        if (realFragments.length > 0) {
-          const name = realFragments[realFragments.length - 1];
-          const schemaName = realFragments.length > 1 ? realFragments.slice(0, -1).join('.') : DEFAULT_SCHEMA_NAME;
-          items.push({ name, schemaName });
-          continue;
-        }
+      // Skip wildcard
+      if (isWildcardExpression(field.callee)) {
+        // Wildcard means show all - leave as null
+        continue;
       }
 
-      // Fallback: use the literal text (for unbound references or non-table blocks)
-      const fragments = destructureComplexVariable(field.callee).unwrap_or([]);
-      if (fragments.length === 0) continue;
-
-      const name = fragments[fragments.length - 1];
-      const schemaName = fragments.length > 1 ? fragments[0] : DEFAULT_SCHEMA_NAME;
-
-      items.push({ name, schemaName });
+      // Try to extract name from the field
+      const name = this.extractNameFromExpression(field.callee);
+      if (name) {
+        entities.push({ name, schemaName: DEFAULT_SCHEMA_NAME });
+      }
     }
 
+    // Update visible entities based on blockType
+    const ve = this.diagramView.visibleEntities!;
     switch (blockType) {
       case 'tables':
-        this.diagramView.visibleEntities!.tables = items.length > 0 ? items : null;
+        ve.tables = entities;
         break;
       case 'notes':
-        this.diagramView.visibleEntities!.stickyNotes = items.length > 0 ? items.map((i) => ({ name: i.name })) : null;
+        ve.stickyNotes = entities;
         break;
       case 'tablegroups':
-        this.diagramView.visibleEntities!.tableGroups = items.length > 0 ? items.map((i) => ({ name: i.name })) : null;
+        ve.tableGroups = entities;
         break;
       case 'schemas':
-        this.diagramView.visibleEntities!.schemas = items.length > 0 ? items.map((i) => ({ name: i.name })) : null;
+        ve.schemas = entities;
         break;
     }
+  }
+
+  private extractNameFromExpression (expr: any): string | null {
+    try {
+      if (expr && expr.variable && expr.variable.name) {
+        return expr.variable.name;
+      }
+      if (expr && expr.name) {
+        return expr.name;
+      }
+      if (expr && typeof expr.value === 'string') {
+        return expr.value;
+      }
+    } catch (e) {
+      // Ignore errors during name extraction
+    }
+    return null;
   }
 }

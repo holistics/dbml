@@ -14,7 +14,8 @@ import NoteValidator from './validate';
 export const noteModule: LocalModule = {
   validate (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
     if (!isElementNode(node, ElementKind.Note)) return Report.create(PASS_THROUGH);
-    return Report.create(undefined, new NoteValidator(compiler, node).validate());
+    const result = new NoteValidator(compiler, node).validate();
+    return Report.create(undefined, result.errors, result.warnings);
   },
 
   fullname (compiler: Compiler, node: SyntaxNode): Report<string[] | undefined> | Report<PassThrough> {

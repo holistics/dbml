@@ -2,7 +2,7 @@ import { partition } from 'lodash-es';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ProgramNode,
 } from '@/core/types/nodes';
-import { isWildcardExpression } from '../../../parser/utils';
+import { isWildcardExpression } from '@/core/parser/utils';
 import { ElementBinder } from '../types';
 import { SyntaxToken } from '@/core/types/tokens';
 import { CompileError } from '@/core/types/errors';
@@ -89,7 +89,7 @@ export default class DiagramViewBinder implements ElementBinder {
       const args = [field.callee, ...field.args];
       const bindees = args.flatMap(scanNonListNodeForBinding);
 
-      return bindees.flatMap((bindee) => {
+      return bindees.flatMap((bindee: any) => {
         const tableBindee = bindee.variables.pop();
         if (!tableBindee) {
           return [];
@@ -97,7 +97,7 @@ export default class DiagramViewBinder implements ElementBinder {
         const schemaBindees = bindee.variables;
 
         return lookupAndBindInScope(this.ast, [
-          ...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })),
+          ...schemaBindees.map((b: any) => ({ node: b, kind: SymbolKind.Schema })),
           { node: tableBindee, kind: SymbolKind.Table },
         ]);
       });
@@ -119,7 +119,7 @@ export default class DiagramViewBinder implements ElementBinder {
 
       const bindees = scanNonListNodeForBinding(field.callee);
 
-      return bindees.flatMap((bindee) => {
+      return bindees.flatMap((bindee: any) => {
         const noteBindee = bindee.variables.pop();
         if (!noteBindee) {
           return [];
@@ -147,7 +147,7 @@ export default class DiagramViewBinder implements ElementBinder {
 
       const bindees = scanNonListNodeForBinding(field.callee);
 
-      return bindees.flatMap((bindee) => {
+      return bindees.flatMap((bindee: any) => {
         const tableGroupBindee = bindee.variables.pop();
         if (!tableGroupBindee) {
           return [];
@@ -155,7 +155,7 @@ export default class DiagramViewBinder implements ElementBinder {
         const schemaBindees = bindee.variables;
 
         return lookupAndBindInScope(this.ast, [
-          ...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })),
+          ...schemaBindees.map((b: any) => ({ node: b, kind: SymbolKind.Schema })),
           { node: tableGroupBindee, kind: SymbolKind.TableGroup },
         ]);
       });
@@ -177,8 +177,8 @@ export default class DiagramViewBinder implements ElementBinder {
 
       const bindees = scanNonListNodeForBinding(field.callee);
 
-      return bindees.flatMap((bindee) => {
-        return lookupAndBindInScope(this.ast, bindee.variables.map((b) => ({ node: b, kind: SymbolKind.Schema })));
+      return bindees.flatMap((bindee: any) => {
+        return lookupAndBindInScope(this.ast, bindee.variables.map((b: any) => ({ node: b, kind: SymbolKind.Schema })));
       });
     });
   }

@@ -100,8 +100,6 @@ export class SyntaxToken {
 
   isInvalid: boolean;
 
-  filepath: Filepath;
-
   protected constructor (
     kind: SyntaxTokenKind,
     filepath: Filepath,

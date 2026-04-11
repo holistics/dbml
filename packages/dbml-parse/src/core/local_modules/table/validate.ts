@@ -13,6 +13,7 @@ import {
   PrefixExpressionNode,
   PrimaryExpressionNode,
   SyntaxNode,
+  WildcardNode,
 } from '@/core/types/nodes';
 import { extractVariableFromExpression } from '@/core/utils/expression';
 import {

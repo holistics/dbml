@@ -294,7 +294,7 @@ export function syntaxNodeToSnapshot (
     return {
       context: { // context should always be at the top
         id: nodeReadableId,
-        filepath: filepath.absolute,
+        filepath: node.filepath?.absolute,
         snippet,
       },
     };
@@ -302,7 +302,7 @@ export function syntaxNodeToSnapshot (
   const result = {
     context: { // context should always be at the top
       id: nodeReadableId,
-      filepath: filepath.absolute,
+      filepath: node.filepath?.absolute,
       snippet,
     },
     ...sortObject({

@@ -75,6 +75,7 @@ export function getTokenPosition (node: SyntaxNode): TokenPosition {
       line: node.endPos.line + 1,
       column: node.endPos.column + 1,
     },
+    filepath: node.filepath,
   };
 }
 

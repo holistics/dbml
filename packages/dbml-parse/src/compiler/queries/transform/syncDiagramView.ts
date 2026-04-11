@@ -39,10 +39,8 @@ export function findDiagramViewBlocks (source: string): DiagramViewBlock[] {
 
   for (const element of program.body) {
     if (element.type?.value.toLowerCase() === ElementKind.DiagramView) {
-      const fragments = element.name
-        ? destructureComplexVariable(element.name).unwrap_or([])
-        : [];
-      const name = fragments.length > 0 ? fragments[fragments.length - 1] : '';
+      const fragments = element.name ? destructureComplexVariable(element.name) : undefined;
+      const name = fragments && fragments.length > 0 ? fragments[fragments.length - 1] : '';
       blocks.push({
         name,
         startIndex: element.start,

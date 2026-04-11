@@ -16,7 +16,8 @@ import RecordsValidator from './validate';
 export const recordsModule: LocalModule = {
   validate (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
     if (isElementNode(node, ElementKind.Records)) {
-      return Report.create(undefined, new RecordsValidator(compiler, node).validate());
+      const result = new RecordsValidator(compiler, node).validate();
+      return Report.create(undefined, result.errors, result.warnings);
     }
     if (isElementFieldNode(node, ElementKind.Records)) {
       return Report.create(undefined);

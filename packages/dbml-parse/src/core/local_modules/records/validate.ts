@@ -1,8 +1,8 @@
 import { partition } from 'lodash-es';
 import Compiler from '@/compiler';
-import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import { CompileError, CompileErrorCode, CompileWarning } from '@/core/types/errors';
 import {
-  BlockExpressionNode, CallExpressionNode, CommaExpressionNode, ElementDeclarationNode, EmptyNode, FunctionApplicationNode, FunctionExpressionNode, ListExpressionNode, ProgramNode, SyntaxNode,
+  BlockExpressionNode, CallExpressionNode, CommaExpressionNode, ElementDeclarationNode, EmptyNode, FunctionApplicationNode, FunctionExpressionNode, ListExpressionNode, ProgramNode, SyntaxNode, WildcardNode,
 } from '@/core/types/nodes';
 import { isExpressionASignedNumberExpression, isTupleOfVariables, isValidName } from '@/core/utils/validate';
 import { destructureComplexVariable } from '@/core/utils/expression';

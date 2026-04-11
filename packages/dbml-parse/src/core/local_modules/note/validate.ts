@@ -1,6 +1,6 @@
 import { partition } from 'lodash-es';
 import Compiler from '@/compiler';
-import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import { CompileError, CompileErrorCode, CompileWarning } from '@/core/types/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, ProgramNode, SyntaxNode,
 } from '@/core/types/nodes';

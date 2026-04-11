@@ -32,6 +32,7 @@ import {
   SyntaxNode,
   TupleExpressionNode,
   VariableNode,
+  WildcardNode,
   SyntaxNodeIdGenerator,
 } from '@/core/types/nodes';
 import NodeFactory from '@/core/parser/factory';

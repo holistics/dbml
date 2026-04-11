@@ -5,7 +5,7 @@ import {
   isSimpleName, isValidColor, aggregateSettingList, Settings } from '@/core/utils/validate';
 import Report from '@/core/types/report';
 import {
-  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode,
+  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode, WildcardNode,
 } from '@/core/types/nodes';
 import { destructureComplexVariable, isExpressionAQuotedString } from '@/core/utils/expression';
 

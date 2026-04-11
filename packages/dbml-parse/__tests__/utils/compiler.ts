@@ -22,6 +22,7 @@ import {
   VariableNode,
   PrimaryExpressionNode,
   ArrayNode,
+  WildcardNode,
   SyntaxNodeIdGenerator,
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';

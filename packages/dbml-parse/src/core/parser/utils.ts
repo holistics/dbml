@@ -26,8 +26,9 @@ import {
   SyntaxNode,
   TupleExpressionNode,
   VariableNode,
+  WildcardNode,
 } from '@/core/types/nodes';
-import { extractVariableNode, isAsKeyword, isExpressionAnIdentifierNode } from '../utils/expression';
+import { extractVariableNode, isAsKeyword, isExpressionAnIdentifierNode, isExpressionAVariableNode } from '../utils/expression';
 
 // Try to interpret a function application as an element
 export function convertFuncAppToElem (
@@ -301,3 +302,9 @@ export function getMemberChain (node: SyntaxNode): Readonly<(SyntaxNode | Syntax
 
   throw new Error('Unreachable - no other possible cases');
 }
+
+export function isWildcardExpression (node?: ExpressionNode): node is WildcardNode {
+  return node instanceof WildcardNode;
+}
+
+export { isExpressionAVariableNode };

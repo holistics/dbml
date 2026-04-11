@@ -52,6 +52,7 @@ export default class ProgramInterpreter {
       aliases: [],
       tablePartials: [],
       records: [],
+      diagramViews: [],
       token,
     };
 

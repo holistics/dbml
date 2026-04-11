@@ -1,7 +1,7 @@
 import Compiler from '@/compiler';
-import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import { CompileError, CompileErrorCode, CompileWarning } from '@/core/types/errors';
 import { SyntaxTokenKind } from '@/core/types/tokens';
-import { BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, IdentiferStreamNode, ListExpressionNode, ProgramNode, SyntaxNode } from '@/core/types/nodes';
+import { BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, IdentiferStreamNode, ListExpressionNode, ProgramNode, SyntaxNode, WildcardNode } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import { SettingName } from '@/core/types';
 import { destructureComplexVariableTuple, extractStringFromIdentifierStream, isBinaryRelationship, isEqualTupleOperands, isExpressionAVariableNode } from '@/core/utils/expression';

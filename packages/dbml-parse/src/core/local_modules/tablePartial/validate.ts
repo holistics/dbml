@@ -12,6 +12,7 @@ import {
   ListExpressionNode,
   PrimaryExpressionNode,
   SyntaxNode,
+  WildcardNode,
 } from '@/core/types/nodes';
 import { isExpressionAVariableNode, isExpressionAnIdentifierNode, isExpressionAQuotedString, extractVariableFromExpression } from '@/core/utils/expression';
 import {
