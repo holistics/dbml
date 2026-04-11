@@ -39,14 +39,8 @@ export function alternateLists<T, S> (firstList: T[], secondList: S[]): (T | S)[
   return res;
 }
 
-const enumLookupCache = new WeakMap<object, Map<string, string>>();
-
 // Convert a string to an enum value by case-insensitive match against the enum's values
 export function convertStringToEnum<T extends Record<string, string>> (enumObj: T, value: string): T[keyof T] | undefined {
-  let map = enumLookupCache.get(enumObj);
-  if (!map) {
-    map = new Map(Object.values(enumObj).map((v) => [v.toLowerCase(), v]));
-    enumLookupCache.set(enumObj, map);
-  }
-  return map.get(value.toLowerCase()) as T[keyof T] | undefined;
+  const lower = value.toLowerCase();
+  return (Object.values(enumObj) as string[]).find((v) => v.toLowerCase() === lower) as T[keyof T] | undefined;
 }
