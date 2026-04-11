@@ -109,7 +109,7 @@
                     "fullStart": 14,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L1:C4, L1:C14]",
+                        "id": "symbol@Column@@[L1:C4, L1:C14]",
                         "snippet": "id integer"
                       },
                       "declaration": {
@@ -195,7 +195,7 @@
                     "fullStart": 29,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L2:C4, L2:C23]",
+                        "id": "symbol@Column@@[L2:C4, L2:C23]",
                         "snippet": "referrer_id integer"
                       },
                       "declaration": {
@@ -258,7 +258,7 @@
           "fullStart": 0,
           "symbol": {
             "context": {
-              "id": "symbol@<element-declaration>@Users@[L0:C0, L3:C1]",
+              "id": "symbol@Table@Users@[L0:C0, L3:C1]",
               "snippet": "Table User...integer \n}"
             },
             "declaration": {
@@ -268,13 +268,13 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L1:C4, L1:C14]",
+                  "id": "symbol@Column@@[L1:C4, L1:C14]",
                   "snippet": "id integer"
                 }
               },
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L2:C4, L2:C23]",
+                  "id": "symbol@Column@@[L2:C4, L2:C23]",
                   "snippet": "referrer_id integer"
                 }
               }
@@ -371,7 +371,7 @@
                                 "fullStart": 63,
                                 "referee": {
                                   "context": {
-                                    "id": "symbol@<element-declaration>@Users@[L0:C0, L3:C1]",
+                                    "id": "symbol@Table@Users@[L0:C0, L3:C1]",
                                     "snippet": "Table User...integer \n}"
                                   }
                                 }
@@ -415,7 +415,7 @@
                                 "fullStart": 73,
                                 "referee": {
                                   "context": {
-                                    "id": "symbol@<function-application>@@[L1:C4, L1:C14]",
+                                    "id": "symbol@Column@@[L1:C4, L1:C14]",
                                     "snippet": "id integer"
                                   }
                                 }
@@ -469,7 +469,7 @@
                                 "fullStart": 78,
                                 "referee": {
                                   "context": {
-                                    "id": "symbol@<element-declaration>@Users@[L0:C0, L3:C1]",
+                                    "id": "symbol@Table@Users@[L0:C0, L3:C1]",
                                     "snippet": "Table User...integer \n}"
                                   }
                                 }
@@ -513,7 +513,7 @@
                                 "fullStart": 84,
                                 "referee": {
                                   "context": {
-                                    "id": "symbol@<function-application>@@[L2:C4, L2:C23]",
+                                    "id": "symbol@Column@@[L2:C4, L2:C23]",
                                     "snippet": "referrer_id integer"
                                   }
                                 }
@@ -563,7 +563,7 @@
     "fullStart": 0,
     "symbol": {
       "context": {
-        "id": "symbol@<program>@@[L0:C0, L7:C1]",
+        "id": "symbol@Schema@@[L0:C0, L7:C1]",
         "snippet": "Table User...errer_id\n}"
       },
       "declaration": {
@@ -573,7 +573,7 @@
       "members": [
         {
           "context": {
-            "id": "symbol@<element-declaration>@Users@[L0:C0, L3:C1]",
+            "id": "symbol@Table@Users@[L0:C0, L3:C1]",
             "snippet": "Table User...integer \n}"
           }
         }

@@ -148,7 +148,7 @@
           "fullStart": 0,
           "symbol": {
             "context": {
-              "id": "symbol@<element-declaration>@Users@[L0:C0, L2:C1]",
+              "id": "symbol@Table@Users@[L0:C0, L2:C1]",
               "snippet": "Table User... U1 {\r\n\r\n}"
             },
             "declaration": {
@@ -275,7 +275,7 @@
           "fullStart": 27,
           "symbol": {
             "context": {
-              "id": "symbol@<element-declaration>@Users@[L4:C0, L6:C1]",
+              "id": "symbol@Table@Users@[L4:C0, L6:C1]",
               "snippet": "Table User... U2 {\r\n\r\n}"
             },
             "declaration": {
@@ -402,7 +402,7 @@
           "fullStart": 55,
           "symbol": {
             "context": {
-              "id": "symbol@<element-declaration>@Products@[L8:C0, L10:C1]",
+              "id": "symbol@Table@Products@[L8:C0, L10:C1]",
               "snippet": "Table Prod...{\r\n    \r\n}"
             },
             "declaration": {
@@ -428,7 +428,7 @@
     "fullStart": 0,
     "symbol": {
       "context": {
-        "id": "symbol@<program>@@[L0:C0, L10:C1]",
+        "id": "symbol@Schema@@[L0:C0, L10:C1]",
         "snippet": "Table User...{\r\n    \r\n}"
       },
       "declaration": {
@@ -438,25 +438,25 @@
       "members": [
         {
           "context": {
-            "id": "symbol@<element-declaration>@Users@[L4:C0, L6:C1]",
+            "id": "symbol@Table@Users@[L4:C0, L6:C1]",
             "snippet": "Table User... U2 {\r\n\r\n}"
           }
         },
         {
           "context": {
-            "id": "symbol@<element-declaration>@Products@[L8:C0, L10:C1]",
+            "id": "symbol@Table@Products@[L8:C0, L10:C1]",
             "snippet": "Table Prod...{\r\n    \r\n}"
           }
         },
         {
           "context": {
-            "id": "symbol@<element-declaration>@Users@[L4:C0, L6:C1]",
+            "id": "symbol@Table@Users@[L4:C0, L6:C1]",
             "snippet": "Table User... U2 {\r\n\r\n}"
           }
         },
         {
           "context": {
-            "id": "symbol@<element-declaration>@Products@[L8:C0, L10:C1]",
+            "id": "symbol@Table@Products@[L8:C0, L10:C1]",
             "snippet": "Table Prod...{\r\n    \r\n}"
           }
         }

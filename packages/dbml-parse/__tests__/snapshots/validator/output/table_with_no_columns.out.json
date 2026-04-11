@@ -85,7 +85,7 @@
           "fullStart": 0,
           "symbol": {
             "context": {
-              "id": "symbol@<element-declaration>@empty_table@[L0:C0, L1:C1]",
+              "id": "symbol@Table@empty_table@[L0:C0, L1:C1]",
               "snippet": "Table empt..._table {\n}"
             },
             "declaration": {
@@ -111,7 +111,7 @@
     "fullStart": 0,
     "symbol": {
       "context": {
-        "id": "symbol@<program>@@[L0:C0, L2:C0]",
+        "id": "symbol@Schema@@[L0:C0, L2:C0]",
         "snippet": "Table empt...table {\n}\n"
       },
       "declaration": {
@@ -121,7 +121,7 @@
       "members": [
         {
           "context": {
-            "id": "symbol@<element-declaration>@empty_table@[L0:C0, L1:C1]",
+            "id": "symbol@Table@empty_table@[L0:C0, L1:C1]",
             "snippet": "Table empt..._table {\n}"
           }
         }

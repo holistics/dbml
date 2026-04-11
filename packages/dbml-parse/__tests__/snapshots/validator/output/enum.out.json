@@ -194,7 +194,7 @@
           "fullStart": 0,
           "symbol": {
             "context": {
-              "id": "symbol@<element-declaration>@v.A@[L0:C0, L2:C1]",
+              "id": "symbol@Enum@v.A@[L0:C0, L2:C1]",
               "snippet": "enum v.\"A\" {\r\n\r\n}"
             },
             "declaration": {
@@ -277,7 +277,7 @@
                     "fullStart": 29,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L5:C4, L5:C7]",
+                        "id": "symbol@Enum field@@[L5:C4, L5:C7]",
                         "snippet": "\"1\""
                       },
                       "declaration": {
@@ -328,7 +328,7 @@
                     "fullStart": 38,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L6:C4, L6:C7]",
+                        "id": "symbol@Enum field@@[L6:C4, L6:C7]",
                         "snippet": "\"1\""
                       },
                       "declaration": {
@@ -419,7 +419,7 @@
                     "fullStart": 54,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L8:C4, L8:C5]",
+                        "id": "symbol@Enum field@@[L8:C4, L8:C5]",
                         "snippet": "a"
                       },
                       "declaration": {
@@ -470,7 +470,7 @@
                     "fullStart": 61,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L9:C4, L9:C8]",
+                        "id": "symbol@Enum field@@[L9:C4, L9:C8]",
                         "snippet": "\"ab\""
                       },
                       "declaration": {
@@ -499,7 +499,7 @@
           "fullStart": 20,
           "symbol": {
             "context": {
-              "id": "symbol@<element-declaration>@@[L4:C0, L10:C1]",
+              "id": "symbol@Enum@@[L4:C0, L10:C1]",
               "snippet": "enum {\r\n  ...   \"ab\"\r\n}"
             },
             "declaration": {
@@ -509,19 +509,19 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L5:C4, L5:C7]",
+                  "id": "symbol@Enum field@@[L5:C4, L5:C7]",
                   "snippet": "\"1\""
                 }
               },
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L8:C4, L8:C5]",
+                  "id": "symbol@Enum field@@[L8:C4, L8:C5]",
                   "snippet": "a"
                 }
               },
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L9:C4, L9:C8]",
+                  "id": "symbol@Enum field@@[L9:C4, L9:C8]",
                   "snippet": "\"ab\""
                 }
               }
@@ -544,7 +544,7 @@
     "fullStart": 0,
     "symbol": {
       "context": {
-        "id": "symbol@<program>@@[L0:C0, L10:C1]",
+        "id": "symbol@Schema@@[L0:C0, L10:C1]",
         "snippet": "enum v.\"A\"...   \"ab\"\r\n}"
       },
       "declaration": {
@@ -554,7 +554,7 @@
       "members": [
         {
           "context": {
-            "id": "symbol@?@@[L?:C?, L?:C?]"
+            "id": "symbol@Schema@@[L?:C?, L?:C?]"
           }
         }
       ],

@@ -109,7 +109,7 @@
                     "fullStart": 13,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L1:C4, L1:C10]",
+                        "id": "symbol@Column@@[L1:C4, L1:C10]",
                         "snippet": "id int"
                       },
                       "declaration": {
@@ -260,7 +260,7 @@
                     "fullStart": 24,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L2:C4, L2:C26]",
+                        "id": "symbol@Column@@[L2:C4, L2:C26]",
                         "snippet": "secret nva...inary(MAX)"
                       },
                       "declaration": {
@@ -411,7 +411,7 @@
                     "fullStart": 51,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L3:C4, L3:C23]",
+                        "id": "symbol@Column@@[L3:C4, L3:C23]",
                         "snippet": "name varchar(\"MAX\")"
                       },
                       "declaration": {
@@ -562,7 +562,7 @@
                     "fullStart": 75,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L4:C4, L4:C25]",
+                        "id": "symbol@Column@@[L4:C4, L4:C25]",
                         "snippet": "code varbi...ary('MAX')"
                       },
                       "declaration": {
@@ -713,7 +713,7 @@
                     "fullStart": 101,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L5:C4, L5:C16]",
+                        "id": "symbol@Column@@[L5:C4, L5:C16]",
                         "snippet": "ssid int(10)"
                       },
                       "declaration": {
@@ -771,7 +771,7 @@
           "fullStart": 0,
           "symbol": {
             "context": {
-              "id": "symbol@<element-declaration>@User@[L0:C0, L6:C1]",
+              "id": "symbol@Table@User@[L0:C0, L6:C1]",
               "snippet": "Table User... int(10)\n}"
             },
             "declaration": {
@@ -781,31 +781,31 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L1:C4, L1:C10]",
+                  "id": "symbol@Column@@[L1:C4, L1:C10]",
                   "snippet": "id int"
                 }
               },
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L2:C4, L2:C26]",
+                  "id": "symbol@Column@@[L2:C4, L2:C26]",
                   "snippet": "secret nva...inary(MAX)"
                 }
               },
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L3:C4, L3:C23]",
+                  "id": "symbol@Column@@[L3:C4, L3:C23]",
                   "snippet": "name varchar(\"MAX\")"
                 }
               },
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L4:C4, L4:C25]",
+                  "id": "symbol@Column@@[L4:C4, L4:C25]",
                   "snippet": "code varbi...ary('MAX')"
                 }
               },
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L5:C4, L5:C16]",
+                  "id": "symbol@Column@@[L5:C4, L5:C16]",
                   "snippet": "ssid int(10)"
                 }
               }
@@ -828,7 +828,7 @@
     "fullStart": 0,
     "symbol": {
       "context": {
-        "id": "symbol@<program>@@[L0:C0, L6:C1]",
+        "id": "symbol@Schema@@[L0:C0, L6:C1]",
         "snippet": "Table User... int(10)\n}"
       },
       "declaration": {
@@ -838,7 +838,7 @@
       "members": [
         {
           "context": {
-            "id": "symbol@<element-declaration>@User@[L0:C0, L6:C1]",
+            "id": "symbol@Table@User@[L0:C0, L6:C1]",
             "snippet": "Table User... int(10)\n}"
           }
         }

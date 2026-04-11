@@ -292,7 +292,7 @@
           "fullStart": 0,
           "symbol": {
             "context": {
-              "id": "symbol@<element-declaration>@A@[L0:C0, L5:C1]",
+              "id": "symbol@Table@A@[L0:C0, L5:C1]",
               "snippet": "Table A {\r...\r\n    }\r\n}"
             },
             "declaration": {
@@ -475,7 +475,7 @@
     "fullStart": 0,
     "symbol": {
       "context": {
-        "id": "symbol@<program>@@[L0:C0, L13:C3]",
+        "id": "symbol@Schema@@[L0:C0, L13:C3]",
         "snippet": "Table A {\r... note\r\n'''"
       },
       "declaration": {
@@ -485,7 +485,7 @@
       "members": [
         {
           "context": {
-            "id": "symbol@<element-declaration>@A@[L0:C0, L5:C1]",
+            "id": "symbol@Table@A@[L0:C0, L5:C1]",
             "snippet": "Table A {\r...\r\n    }\r\n}"
           }
         }

@@ -98,7 +98,7 @@
           "fullStart": 0,
           "symbol": {
             "context": {
-              "id": "symbol@<element-declaration>@A@[L0:C0, L1:C1]",
+              "id": "symbol@Table@A@[L0:C0, L1:C1]",
               "snippet": "Table A {\n}"
             },
             "declaration": {
@@ -181,7 +181,7 @@
                     "fullStart": 42,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L4:C2, L4:C3]",
+                        "id": "symbol@TableGroup field@@[L4:C2, L4:C3]",
                         "snippet": "A"
                       },
                       "declaration": {
@@ -287,7 +287,7 @@
           "fullStart": 12,
           "symbol": {
             "context": {
-              "id": "symbol@<element-declaration>@schema.alphabet@[L3:C0, L5:C1]",
+              "id": "symbol@TableGroup@schema.alphabet@[L3:C0, L5:C1]",
               "snippet": "TableGroup...et {\n  A\n}"
             },
             "declaration": {
@@ -297,7 +297,7 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L4:C2, L4:C3]",
+                  "id": "symbol@TableGroup field@@[L4:C2, L4:C3]",
                   "snippet": "A"
                 }
               }
@@ -320,7 +320,7 @@
     "fullStart": 0,
     "symbol": {
       "context": {
-        "id": "symbol@<program>@@[L0:C0, L6:C0]",
+        "id": "symbol@Schema@@[L0:C0, L6:C0]",
         "snippet": "Table A {\n...t {\n  A\n}\n"
       },
       "declaration": {
@@ -330,13 +330,13 @@
       "members": [
         {
           "context": {
-            "id": "symbol@<element-declaration>@A@[L0:C0, L1:C1]",
+            "id": "symbol@Table@A@[L0:C0, L1:C1]",
             "snippet": "Table A {\n}"
           }
         },
         {
           "context": {
-            "id": "symbol@?@@[L?:C?, L?:C?]"
+            "id": "symbol@Schema@@[L?:C?, L?:C?]"
           }
         }
       ],

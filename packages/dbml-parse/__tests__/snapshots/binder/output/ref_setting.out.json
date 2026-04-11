@@ -109,7 +109,7 @@
                     "fullStart": 15,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L1:C1, L1:C11]",
+                        "id": "symbol@Column@@[L1:C1, L1:C11]",
                         "snippet": "id integer"
                       },
                       "declaration": {
@@ -167,7 +167,7 @@
                               "fullStart": 39,
                               "referee": {
                                 "context": {
-                                  "id": "symbol@?@@[L?:C?, L?:C?]"
+                                  "id": "symbol@Schema@@[L?:C?, L?:C?]"
                                 }
                               }
                             },
@@ -210,7 +210,7 @@
                               "fullStart": 42,
                               "referee": {
                                 "context": {
-                                  "id": "symbol@<element-declaration>@v2.status@[L7:C0, L10:C1]",
+                                  "id": "symbol@Enum@v2.status@[L7:C0, L10:C1]",
                                   "snippet": "enum v2.st...loyee']\r\n}"
                                 }
                               }
@@ -354,7 +354,7 @@
                     "fullStart": 28,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L2:C4, L2:C39]",
+                        "id": "symbol@Column@@[L2:C4, L2:C39]",
                         "snippet": "status v2....: \"churn\"]"
                       },
                       "declaration": {
@@ -480,7 +480,7 @@
                                         "fullStart": 103,
                                         "referee": {
                                           "context": {
-                                            "id": "symbol@<function-application>@@[L1:C1, L1:C11]",
+                                            "id": "symbol@Column@@[L1:C1, L1:C11]",
                                             "snippet": "id integer"
                                           }
                                         }
@@ -560,7 +560,7 @@
                     "fullStart": 69,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L4:C4, L4:C31]",
+                        "id": "symbol@Column@@[L4:C4, L4:C31]",
                         "snippet": "referrer i...[ref: -id]"
                       },
                       "declaration": {
@@ -618,7 +618,7 @@
           "fullStart": 0,
           "symbol": {
             "context": {
-              "id": "symbol@<element-declaration>@Users@[L0:C0, L5:C1]",
+              "id": "symbol@Table@Users@[L0:C0, L5:C1]",
               "snippet": "Table User...f: -id]\r\n}"
             },
             "declaration": {
@@ -628,19 +628,19 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L1:C1, L1:C11]",
+                  "id": "symbol@Column@@[L1:C1, L1:C11]",
                   "snippet": "id integer"
                 }
               },
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L2:C4, L2:C39]",
+                  "id": "symbol@Column@@[L2:C4, L2:C39]",
                   "snippet": "status v2....: \"churn\"]"
                 }
               },
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L4:C4, L4:C31]",
+                  "id": "symbol@Column@@[L4:C4, L4:C31]",
                   "snippet": "referrer i...[ref: -id]"
                 }
               }
@@ -720,7 +720,7 @@
                     "fullStart": 131,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L8:C1, L8:C6]",
+                        "id": "symbol@Enum field@@[L8:C1, L8:C6]",
                         "snippet": "churn"
                       },
                       "declaration": {
@@ -872,7 +872,7 @@
                     "fullStart": 139,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L9:C4, L9:C40]",
+                        "id": "symbol@Enum field@@[L9:C4, L9:C40]",
                         "snippet": "new [note:...employee']"
                       },
                       "declaration": {
@@ -978,7 +978,7 @@
           "fullStart": 112,
           "symbol": {
             "context": {
-              "id": "symbol@<element-declaration>@v2.status@[L7:C0, L10:C1]",
+              "id": "symbol@Enum@v2.status@[L7:C0, L10:C1]",
               "snippet": "enum v2.st...loyee']\r\n}"
             },
             "declaration": {
@@ -988,13 +988,13 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L8:C1, L8:C6]",
+                  "id": "symbol@Enum field@@[L8:C1, L8:C6]",
                   "snippet": "churn"
                 }
               },
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L9:C4, L9:C40]",
+                  "id": "symbol@Enum field@@[L9:C4, L9:C40]",
                   "snippet": "new [note:...employee']"
                 }
               }
@@ -1022,7 +1022,7 @@
     "fullStart": 0,
     "symbol": {
       "context": {
-        "id": "symbol@<program>@@[L0:C0, L10:C1]",
+        "id": "symbol@Schema@@[L0:C0, L10:C1]",
         "snippet": "Table User...loyee']\r\n}"
       },
       "declaration": {
@@ -1032,13 +1032,13 @@
       "members": [
         {
           "context": {
-            "id": "symbol@<element-declaration>@Users@[L0:C0, L5:C1]",
+            "id": "symbol@Table@Users@[L0:C0, L5:C1]",
             "snippet": "Table User...f: -id]\r\n}"
           }
         },
         {
           "context": {
-            "id": "symbol@?@@[L?:C?, L?:C?]"
+            "id": "symbol@Schema@@[L?:C?, L?:C?]"
           }
         }
       ],

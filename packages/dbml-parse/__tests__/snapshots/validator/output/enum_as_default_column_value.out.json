@@ -104,7 +104,7 @@
                     "fullStart": 14,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L1:C2, L1:C8]",
+                        "id": "symbol@Enum field@@[L1:C2, L1:C8]",
                         "snippet": "active"
                       },
                       "declaration": {
@@ -155,7 +155,7 @@
                     "fullStart": 23,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L2:C2, L2:C9]",
+                        "id": "symbol@Enum field@@[L2:C2, L2:C9]",
                         "snippet": "churned"
                       },
                       "declaration": {
@@ -206,7 +206,7 @@
                     "fullStart": 33,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L3:C2, L3:C10]",
+                        "id": "symbol@Enum field@@[L3:C2, L3:C10]",
                         "snippet": "inactive"
                       },
                       "declaration": {
@@ -264,7 +264,7 @@
           "fullStart": 0,
           "symbol": {
             "context": {
-              "id": "symbol@<element-declaration>@status@[L0:C0, L4:C1]",
+              "id": "symbol@Enum@status@[L0:C0, L4:C1]",
               "snippet": "Enum statu...inactive\n}"
             },
             "declaration": {
@@ -274,19 +274,19 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L1:C2, L1:C8]",
+                  "id": "symbol@Enum field@@[L1:C2, L1:C8]",
                   "snippet": "active"
                 }
               },
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L2:C2, L2:C9]",
+                  "id": "symbol@Enum field@@[L2:C2, L2:C9]",
                   "snippet": "churned"
                 }
               },
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L3:C2, L3:C10]",
+                  "id": "symbol@Enum field@@[L3:C2, L3:C10]",
                   "snippet": "inactive"
                 }
               }
@@ -366,7 +366,7 @@
                     "fullStart": 73,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L7:C2, L7:C6]",
+                        "id": "symbol@Enum field@@[L7:C2, L7:C6]",
                         "snippet": "male"
                       },
                       "declaration": {
@@ -417,7 +417,7 @@
                     "fullStart": 80,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L8:C2, L8:C8]",
+                        "id": "symbol@Enum field@@[L8:C2, L8:C8]",
                         "snippet": "female"
                       },
                       "declaration": {
@@ -523,7 +523,7 @@
           "fullStart": 46,
           "symbol": {
             "context": {
-              "id": "symbol@<element-declaration>@demographic.gender@[L6:C0, L9:C1]",
+              "id": "symbol@Enum@demographic.gender@[L6:C0, L9:C1]",
               "snippet": "Enum demog...  female\n}"
             },
             "declaration": {
@@ -533,13 +533,13 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L7:C2, L7:C6]",
+                  "id": "symbol@Enum field@@[L7:C2, L7:C6]",
                   "snippet": "male"
                 }
               },
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L8:C2, L8:C8]",
+                  "id": "symbol@Enum field@@[L8:C2, L8:C8]",
                   "snippet": "female"
                 }
               }
@@ -619,7 +619,7 @@
                     "fullStart": 125,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L12:C2, L12:C9]",
+                        "id": "symbol@Enum field@@[L12:C2, L12:C9]",
                         "snippet": "toddler"
                       },
                       "declaration": {
@@ -670,7 +670,7 @@
                     "fullStart": 135,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L13:C2, L13:C10]",
+                        "id": "symbol@Enum field@@[L13:C2, L13:C10]",
                         "snippet": "children"
                       },
                       "declaration": {
@@ -721,7 +721,7 @@
                     "fullStart": 146,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L14:C2, L14:C10]",
+                        "id": "symbol@Enum field@@[L14:C2, L14:C10]",
                         "snippet": "teenager"
                       },
                       "declaration": {
@@ -772,7 +772,7 @@
                     "fullStart": 157,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L15:C2, L15:C13]",
+                        "id": "symbol@Enum field@@[L15:C2, L15:C13]",
                         "snippet": "young_adult"
                       },
                       "declaration": {
@@ -823,7 +823,7 @@
                     "fullStart": 171,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L16:C2, L16:C7]",
+                        "id": "symbol@Enum field@@[L16:C2, L16:C7]",
                         "snippet": "elder"
                       },
                       "declaration": {
@@ -929,7 +929,7 @@
           "fullStart": 91,
           "symbol": {
             "context": {
-              "id": "symbol@<element-declaration>@demographic.age segment@[L11:C0, L17:C1]",
+              "id": "symbol@Enum@demographic.age segment@[L11:C0, L17:C1]",
               "snippet": "Enum demog...\n  elder\n}"
             },
             "declaration": {
@@ -939,31 +939,31 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L12:C2, L12:C9]",
+                  "id": "symbol@Enum field@@[L12:C2, L12:C9]",
                   "snippet": "toddler"
                 }
               },
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L13:C2, L13:C10]",
+                  "id": "symbol@Enum field@@[L13:C2, L13:C10]",
                   "snippet": "children"
                 }
               },
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L14:C2, L14:C10]",
+                  "id": "symbol@Enum field@@[L14:C2, L14:C10]",
                   "snippet": "teenager"
                 }
               },
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L15:C2, L15:C13]",
+                  "id": "symbol@Enum field@@[L15:C2, L15:C13]",
                   "snippet": "young_adult"
                 }
               },
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L16:C2, L16:C7]",
+                  "id": "symbol@Enum field@@[L16:C2, L16:C7]",
                   "snippet": "elder"
                 }
               }
@@ -1073,7 +1073,7 @@
                     "fullStart": 195,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L20:C2, L20:C11]",
+                        "id": "symbol@Column@@[L20:C2, L20:C11]",
                         "snippet": "name text"
                       },
                       "declaration": {
@@ -1154,7 +1154,7 @@
                     "fullStart": 207,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L21:C2, L21:C8]",
+                        "id": "symbol@Column@@[L21:C2, L21:C8]",
                         "snippet": "id int"
                       },
                       "declaration": {
@@ -1383,7 +1383,7 @@
                     "fullStart": 216,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L22:C2, L22:C40]",
+                        "id": "symbol@Column@@[L22:C2, L22:C40]",
                         "snippet": "status sta...us.active]"
                       },
                       "declaration": {
@@ -1708,7 +1708,7 @@
                     "fullStart": 257,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L23:C2, L23:C62]",
+                        "id": "symbol@Column@@[L23:C2, L23:C62]",
                         "snippet": "gender dem...nder.male]"
                       },
                       "declaration": {
@@ -2033,7 +2033,7 @@
                     "fullStart": 320,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L24:C2, L24:C85]",
+                        "id": "symbol@Column@@[L24:C2, L24:C85]",
                         "snippet": "age_type d...ung_adult]"
                       },
                       "declaration": {
@@ -2214,7 +2214,7 @@
                     "fullStart": 406,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L26:C2, L26:C60]",
+                        "id": "symbol@Column@@[L26:C2, L26:C60]",
                         "snippet": "invalid_va...lid_value]"
                       },
                       "declaration": {
@@ -2539,7 +2539,7 @@
                     "fullStart": 468,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L27:C2, L27:C75]",
+                        "id": "symbol@Column@@[L27:C2, L27:C75]",
                         "snippet": "invalid_va...d3.field4]"
                       },
                       "declaration": {
@@ -2768,7 +2768,7 @@
                     "fullStart": 544,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L28:C2, L28:C69]",
+                        "id": "symbol@Column@@[L28:C2, L28:C69]",
                         "snippet": "invalid_bi...lid_field]"
                       },
                       "declaration": {
@@ -2826,7 +2826,7 @@
           "fullStart": 181,
           "symbol": {
             "context": {
-              "id": "symbol@<element-declaration>@user@[L19:C0, L29:C1]",
+              "id": "symbol@Table@user@[L19:C0, L29:C1]",
               "snippet": "Table user...d_field]\n}"
             },
             "declaration": {
@@ -2836,49 +2836,49 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L20:C2, L20:C11]",
+                  "id": "symbol@Column@@[L20:C2, L20:C11]",
                   "snippet": "name text"
                 }
               },
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L21:C2, L21:C8]",
+                  "id": "symbol@Column@@[L21:C2, L21:C8]",
                   "snippet": "id int"
                 }
               },
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L22:C2, L22:C40]",
+                  "id": "symbol@Column@@[L22:C2, L22:C40]",
                   "snippet": "status sta...us.active]"
                 }
               },
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L23:C2, L23:C62]",
+                  "id": "symbol@Column@@[L23:C2, L23:C62]",
                   "snippet": "gender dem...nder.male]"
                 }
               },
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L24:C2, L24:C85]",
+                  "id": "symbol@Column@@[L24:C2, L24:C85]",
                   "snippet": "age_type d...ung_adult]"
                 }
               },
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L26:C2, L26:C60]",
+                  "id": "symbol@Column@@[L26:C2, L26:C60]",
                   "snippet": "invalid_va...lid_value]"
                 }
               },
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L27:C2, L27:C75]",
+                  "id": "symbol@Column@@[L27:C2, L27:C75]",
                   "snippet": "invalid_va...d3.field4]"
                 }
               },
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L28:C2, L28:C69]",
+                  "id": "symbol@Column@@[L28:C2, L28:C69]",
                   "snippet": "invalid_bi...lid_field]"
                 }
               }
@@ -2901,7 +2901,7 @@
     "fullStart": 0,
     "symbol": {
       "context": {
-        "id": "symbol@<program>@@[L0:C0, L30:C0]",
+        "id": "symbol@Schema@@[L0:C0, L30:C0]",
         "snippet": "Enum statu..._field]\n}\n"
       },
       "declaration": {
@@ -2911,18 +2911,18 @@
       "members": [
         {
           "context": {
-            "id": "symbol@<element-declaration>@status@[L0:C0, L4:C1]",
+            "id": "symbol@Enum@status@[L0:C0, L4:C1]",
             "snippet": "Enum statu...inactive\n}"
           }
         },
         {
           "context": {
-            "id": "symbol@?@@[L?:C?, L?:C?]"
+            "id": "symbol@Schema@@[L?:C?, L?:C?]"
           }
         },
         {
           "context": {
-            "id": "symbol@<element-declaration>@user@[L19:C0, L29:C1]",
+            "id": "symbol@Table@user@[L19:C0, L29:C1]",
             "snippet": "Table user...d_field]\n}"
           }
         }

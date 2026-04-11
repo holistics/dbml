@@ -38,7 +38,7 @@ function getReadableId (nodeOrSymbol: SyntaxNode | SyntaxToken | NodeSymbol): st
 
   const kind = (nodeOrSymbol instanceof SyntaxNode || nodeOrSymbol instanceof SyntaxToken)
     ? nodeOrSymbol.kind
-    : (nodeOrSymbol.declaration?.kind ?? '?');
+    : nodeOrSymbol.kind;
 
   const start = `L${node?.startPos.line ?? '?'}:C${node?.startPos.column ?? '?'}`;
   const end = `L${node?.endPos.line ?? '?'}:C${node?.endPos.column ?? '?'}`;

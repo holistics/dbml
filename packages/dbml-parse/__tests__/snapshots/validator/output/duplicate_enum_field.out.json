@@ -128,7 +128,7 @@
                     "fullStart": 15,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L1:C4, L1:C9]",
+                        "id": "symbol@Enum field@@[L1:C4, L1:C9]",
                         "snippet": "churn"
                       },
                       "declaration": {
@@ -179,7 +179,7 @@
                     "fullStart": 26,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L2:C4, L2:C9]",
+                        "id": "symbol@Enum field@@[L2:C4, L2:C9]",
                         "snippet": "churn"
                       },
                       "declaration": {
@@ -230,7 +230,7 @@
                     "fullStart": 37,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L3:C4, L3:C9]",
+                        "id": "symbol@Enum field@@[L3:C4, L3:C9]",
                         "snippet": "churn"
                       },
                       "declaration": {
@@ -288,7 +288,7 @@
           "fullStart": 0,
           "symbol": {
             "context": {
-              "id": "symbol@<element-declaration>@status@[L0:C0, L4:C1]",
+              "id": "symbol@Enum@status@[L0:C0, L4:C1]",
               "snippet": "Enum statu...  churn\r\n}"
             },
             "declaration": {
@@ -298,7 +298,7 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L1:C4, L1:C9]",
+                  "id": "symbol@Enum field@@[L1:C4, L1:C9]",
                   "snippet": "churn"
                 }
               }
@@ -321,7 +321,7 @@
     "fullStart": 0,
     "symbol": {
       "context": {
-        "id": "symbol@<program>@@[L0:C0, L4:C1]",
+        "id": "symbol@Schema@@[L0:C0, L4:C1]",
         "snippet": "Enum statu...  churn\r\n}"
       },
       "declaration": {
@@ -331,7 +331,7 @@
       "members": [
         {
           "context": {
-            "id": "symbol@<element-declaration>@status@[L0:C0, L4:C1]",
+            "id": "symbol@Enum@status@[L0:C0, L4:C1]",
             "snippet": "Enum statu...  churn\r\n}"
           }
         }

@@ -365,7 +365,7 @@
                     "fullStart": 10,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L1:C4, L1:C32]",
+                        "id": "symbol@Column@@[L1:C4, L1:C32]",
                         "snippet": "Indexes wr...x alias {}"
                       },
                       "declaration": {
@@ -504,7 +504,7 @@
                     "fullStart": 86,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L2:C4, L2:C21]",
+                        "id": "symbol@Column@@[L2:C4, L2:C21]",
                         "snippet": "Indexes 2 args {}"
                       },
                       "declaration": {
@@ -701,7 +701,7 @@
                     "fullStart": 142,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L3:C4, L3:C35]",
+                        "id": "symbol@Column@@[L3:C4, L3:C35]",
                         "snippet": "Indexes wr...of args {}"
                       },
                       "declaration": {
@@ -759,7 +759,7 @@
           "fullStart": 0,
           "symbol": {
             "context": {
-              "id": "symbol@<element-declaration>@A@[L0:C0, L4:C1]",
+              "id": "symbol@Table@A@[L0:C0, L4:C1]",
               "snippet": "Table A {\n...s column\n}"
             },
             "declaration": {
@@ -769,7 +769,7 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L1:C4, L1:C32]",
+                  "id": "symbol@Column@@[L1:C4, L1:C32]",
                   "snippet": "Indexes wr...x alias {}"
                 }
               }
@@ -792,7 +792,7 @@
     "fullStart": 0,
     "symbol": {
       "context": {
-        "id": "symbol@<program>@@[L0:C0, L5:C0]",
+        "id": "symbol@Schema@@[L0:C0, L5:C0]",
         "snippet": "Table A {\n... column\n}\n"
       },
       "declaration": {
@@ -802,7 +802,7 @@
       "members": [
         {
           "context": {
-            "id": "symbol@<element-declaration>@A@[L0:C0, L4:C1]",
+            "id": "symbol@Table@A@[L0:C0, L4:C1]",
             "snippet": "Table A {\n...s column\n}"
           }
         }

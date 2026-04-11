@@ -172,7 +172,7 @@
                     "fullStart": 15,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L1:C2, L1:C8]",
+                        "id": "symbol@Column@@[L1:C2, L1:C8]",
                         "snippet": "id int"
                       },
                       "declaration": {
@@ -483,7 +483,7 @@
           "fullStart": 0,
           "symbol": {
             "context": {
-              "id": "symbol@<element-declaration>@Users@[L0:C0, L9:C1]",
+              "id": "symbol@Table@Users@[L0:C0, L9:C1]",
               "snippet": "Table User...~1\r\n  ~\r\n}"
             },
             "declaration": {
@@ -493,7 +493,7 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L1:C2, L1:C8]",
+                  "id": "symbol@Column@@[L1:C2, L1:C8]",
                   "snippet": "id int"
                 }
               }
@@ -516,7 +516,7 @@
     "fullStart": 0,
     "symbol": {
       "context": {
-        "id": "symbol@<program>@@[L0:C0, L10:C0]",
+        "id": "symbol@Schema@@[L0:C0, L10:C0]",
         "snippet": "Table User...\r\n  ~\r\n}\r\n"
       },
       "declaration": {
@@ -526,7 +526,7 @@
       "members": [
         {
           "context": {
-            "id": "symbol@<element-declaration>@Users@[L0:C0, L9:C1]",
+            "id": "symbol@Table@Users@[L0:C0, L9:C1]",
             "snippet": "Table User...~1\r\n  ~\r\n}"
           }
         }

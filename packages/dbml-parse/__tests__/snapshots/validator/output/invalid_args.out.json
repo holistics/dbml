@@ -278,7 +278,7 @@
                     "fullStart": 10,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L1:C4, L1:C10]",
+                        "id": "symbol@Column@@[L1:C4, L1:C10]",
                         "snippet": "id int"
                       },
                       "declaration": {
@@ -329,7 +329,7 @@
                     "fullStart": 21,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L2:C4, L2:C8]",
+                        "id": "symbol@Column@@[L2:C4, L2:C8]",
                         "snippet": "ssid"
                       },
                       "declaration": {
@@ -387,7 +387,7 @@
           "fullStart": 0,
           "symbol": {
             "context": {
-              "id": "symbol@<element-declaration>@A@[L0:C0, L3:C1]",
+              "id": "symbol@Table@A@[L0:C0, L3:C1]",
               "snippet": "Table A {\n...    ssid\n}"
             },
             "declaration": {
@@ -397,13 +397,13 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L1:C4, L1:C10]",
+                  "id": "symbol@Column@@[L1:C4, L1:C10]",
                   "snippet": "id int"
                 }
               },
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L2:C4, L2:C8]",
+                  "id": "symbol@Column@@[L2:C4, L2:C8]",
                   "snippet": "ssid"
                 }
               }
@@ -613,7 +613,7 @@
                     "fullStart": 42,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L6:C4, L6:C22]",
+                        "id": "symbol@Enum field@@[L6:C4, L6:C22]",
                         "snippet": "a1 e [note: 'abc']"
                       },
                       "declaration": {
@@ -794,7 +794,7 @@
                     "fullStart": 65,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L7:C4, L7:C22]",
+                        "id": "symbol@Enum field@@[L7:C4, L7:C22]",
                         "snippet": "a2 [note: 'abc'] e"
                       },
                       "declaration": {
@@ -904,7 +904,7 @@
                     "fullStart": 88,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L8:C4, L8:C10]",
+                        "id": "symbol@Enum field@@[L8:C4, L8:C10]",
                         "snippet": "a3 e f"
                       },
                       "declaration": {
@@ -985,7 +985,7 @@
                     "fullStart": 99,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L9:C4, L9:C8]",
+                        "id": "symbol@Enum field@@[L9:C4, L9:C8]",
                         "snippet": "a4 e"
                       },
                       "declaration": {
@@ -1043,7 +1043,7 @@
           "fullStart": 32,
           "symbol": {
             "context": {
-              "id": "symbol@<element-declaration>@E@[L5:C0, L10:C1]",
+              "id": "symbol@Enum@E@[L5:C0, L10:C1]",
               "snippet": "Enum E {\n ...    a4 e\n}"
             },
             "declaration": {
@@ -1053,25 +1053,25 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L6:C4, L6:C22]",
+                  "id": "symbol@Enum field@@[L6:C4, L6:C22]",
                   "snippet": "a1 e [note: 'abc']"
                 }
               },
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L7:C4, L7:C22]",
+                  "id": "symbol@Enum field@@[L7:C4, L7:C22]",
                   "snippet": "a2 [note: 'abc'] e"
                 }
               },
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L8:C4, L8:C10]",
+                  "id": "symbol@Enum field@@[L8:C4, L8:C10]",
                   "snippet": "a3 e f"
                 }
               },
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L9:C4, L9:C8]",
+                  "id": "symbol@Enum field@@[L9:C4, L9:C8]",
                   "snippet": "a4 e"
                 }
               }
@@ -1181,7 +1181,7 @@
                     "fullStart": 126,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L13:C4, L13:C7]",
+                        "id": "symbol@TableGroup field@@[L13:C4, L13:C7]",
                         "snippet": "A a"
                       },
                       "declaration": {
@@ -1291,7 +1291,7 @@
                     "fullStart": 134,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L14:C4, L14:C9]",
+                        "id": "symbol@TableGroup field@@[L14:C4, L14:C9]",
                         "snippet": "A a a"
                       },
                       "declaration": {
@@ -1349,7 +1349,7 @@
           "fullStart": 110,
           "symbol": {
             "context": {
-              "id": "symbol@<element-declaration>@G@[L12:C0, L15:C1]",
+              "id": "symbol@TableGroup@G@[L12:C0, L15:C1]",
               "snippet": "TableGroup...   A a a\n}"
             },
             "declaration": {
@@ -1359,7 +1359,7 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L13:C4, L13:C7]",
+                  "id": "symbol@TableGroup field@@[L13:C4, L13:C7]",
                   "snippet": "A a"
                 }
               }
@@ -2663,7 +2663,7 @@
     "fullStart": 0,
     "symbol": {
       "context": {
-        "id": "symbol@<program>@@[L0:C0, L31:C1]",
+        "id": "symbol@Schema@@[L0:C0, L31:C1]",
         "snippet": "Table A {\n...A.id a a\n}"
       },
       "declaration": {
@@ -2673,19 +2673,19 @@
       "members": [
         {
           "context": {
-            "id": "symbol@<element-declaration>@A@[L0:C0, L3:C1]",
+            "id": "symbol@Table@A@[L0:C0, L3:C1]",
             "snippet": "Table A {\n...    ssid\n}"
           }
         },
         {
           "context": {
-            "id": "symbol@<element-declaration>@E@[L5:C0, L10:C1]",
+            "id": "symbol@Enum@E@[L5:C0, L10:C1]",
             "snippet": "Enum E {\n ...    a4 e\n}"
           }
         },
         {
           "context": {
-            "id": "symbol@<element-declaration>@G@[L12:C0, L15:C1]",
+            "id": "symbol@TableGroup@G@[L12:C0, L15:C1]",
             "snippet": "TableGroup...   A a a\n}"
           }
         }

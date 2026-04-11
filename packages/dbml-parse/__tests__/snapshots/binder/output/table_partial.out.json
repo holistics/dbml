@@ -98,7 +98,7 @@
           "fullStart": 0,
           "symbol": {
             "context": {
-              "id": "symbol@<element-declaration>@p1@[L0:C0, L0:C18]",
+              "id": "symbol@TablePartial@p1@[L0:C0, L0:C18]",
               "snippet": "TablePartial p1 {}"
             },
             "declaration": {
@@ -216,7 +216,7 @@
                     "fullStart": 31,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L3:C2, L3:C8]",
+                        "id": "symbol@Column@@[L3:C2, L3:C8]",
                         "snippet": "id int"
                       },
                       "declaration": {
@@ -269,7 +269,7 @@
                             "fullStart": 43,
                             "referee": {
                               "context": {
-                                "id": "symbol@<element-declaration>@p1@[L0:C0, L0:C18]",
+                                "id": "symbol@TablePartial@p1@[L0:C0, L0:C18]",
                                 "snippet": "TablePartial p1 {}"
                               }
                             }
@@ -398,7 +398,7 @@
           "fullStart": 19,
           "symbol": {
             "context": {
-              "id": "symbol@<element-declaration>@t1@[L2:C0, L6:C1]",
+              "id": "symbol@Table@t1@[L2:C0, L6:C1]",
               "snippet": "Table t1 {...p1\n  ~p2\n}"
             },
             "declaration": {
@@ -408,19 +408,19 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L3:C2, L3:C8]",
+                  "id": "symbol@Column@@[L3:C2, L3:C8]",
                   "snippet": "id int"
                 }
               },
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L4:C2, L4:C5]",
+                  "id": "symbol@PartialInjection@@[L4:C2, L4:C5]",
                   "snippet": "~p1"
                 }
               },
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L5:C2, L5:C5]",
+                  "id": "symbol@PartialInjection@@[L5:C2, L5:C5]",
                   "snippet": "~p2"
                 }
               }
@@ -443,7 +443,7 @@
     "fullStart": 0,
     "symbol": {
       "context": {
-        "id": "symbol@<program>@@[L0:C0, L7:C0]",
+        "id": "symbol@Schema@@[L0:C0, L7:C0]",
         "snippet": "TableParti...1\n  ~p2\n}\n"
       },
       "declaration": {
@@ -453,13 +453,13 @@
       "members": [
         {
           "context": {
-            "id": "symbol@<element-declaration>@p1@[L0:C0, L0:C18]",
+            "id": "symbol@TablePartial@p1@[L0:C0, L0:C18]",
             "snippet": "TablePartial p1 {}"
           }
         },
         {
           "context": {
-            "id": "symbol@<element-declaration>@t1@[L2:C0, L6:C1]",
+            "id": "symbol@Table@t1@[L2:C0, L6:C1]",
             "snippet": "Table t1 {...p1\n  ~p2\n}"
           }
         }

@@ -261,7 +261,7 @@
                     "fullStart": 19,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L1:C2, L1:C50]",
+                        "id": "symbol@Column@@[L1:C2, L1:C50]",
                         "snippet": "\"customer_...increment]"
                       },
                       "declaration": {
@@ -413,7 +413,7 @@
                     "fullStart": 70,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L2:C2, L2:C31]",
+                        "id": "symbol@Column@@[L2:C2, L2:C31]",
                         "snippet": "\"store_id\"...[not null]"
                       },
                       "declaration": {
@@ -635,7 +635,7 @@
                     "fullStart": 102,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L3:C2, L3:C37]",
+                        "id": "symbol@Column@@[L3:C2, L3:C37]",
                         "snippet": "\"first_nam...[not null]"
                       },
                       "declaration": {
@@ -936,7 +936,7 @@
                     "fullStart": 140,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L4:C2, L4:C52]",
+                        "id": "symbol@Column@@[L4:C2, L4:C52]",
                         "snippet": "\"last_name...lt: faLse]"
                       },
                       "declaration": {
@@ -1187,7 +1187,7 @@
                     "fullStart": 193,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L5:C2, L5:C37]",
+                        "id": "symbol@Column@@[L5:C2, L5:C37]",
                         "snippet": "\"email\" VA...ult: NULL]"
                       },
                       "declaration": {
@@ -1339,7 +1339,7 @@
                     "fullStart": 231,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L6:C2, L6:C34]",
+                        "id": "symbol@Column@@[L6:C2, L6:C34]",
                         "snippet": "\"address_i...[not NULL]"
                       },
                       "declaration": {
@@ -1570,7 +1570,7 @@
                     "fullStart": 266,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L7:C2, L7:C44]",
+                        "id": "symbol@Column@@[L7:C2, L7:C44]",
                         "snippet": "\"active\" B...ult: TRUE]"
                       },
                       "declaration": {
@@ -1722,7 +1722,7 @@
                     "fullStart": 311,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L8:C2, L8:C35]",
+                        "id": "symbol@Column@@[L8:C2, L8:C35]",
                         "snippet": "\"create_da...[not null]"
                       },
                       "declaration": {
@@ -1893,7 +1893,7 @@
                     "fullStart": 347,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L9:C2, L9:C56]",
+                        "id": "symbol@Column@@[L9:C2, L9:C56]",
                         "snippet": "\"last_upda...IMESTAMP`]"
                       },
                       "declaration": {
@@ -1951,7 +1951,7 @@
           "fullStart": 0,
           "symbol": {
             "context": {
-              "id": "symbol@<element-declaration>@customer@[L0:C0, L10:C1]",
+              "id": "symbol@Table@customer@[L0:C0, L10:C1]",
               "snippet": "Table \"cus...ESTAMP`]\n}"
             },
             "declaration": {
@@ -1961,55 +1961,55 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L1:C2, L1:C50]",
+                  "id": "symbol@Column@@[L1:C2, L1:C50]",
                   "snippet": "\"customer_...increment]"
                 }
               },
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L2:C2, L2:C31]",
+                  "id": "symbol@Column@@[L2:C2, L2:C31]",
                   "snippet": "\"store_id\"...[not null]"
                 }
               },
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L3:C2, L3:C37]",
+                  "id": "symbol@Column@@[L3:C2, L3:C37]",
                   "snippet": "\"first_nam...[not null]"
                 }
               },
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L4:C2, L4:C52]",
+                  "id": "symbol@Column@@[L4:C2, L4:C52]",
                   "snippet": "\"last_name...lt: faLse]"
                 }
               },
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L5:C2, L5:C37]",
+                  "id": "symbol@Column@@[L5:C2, L5:C37]",
                   "snippet": "\"email\" VA...ult: NULL]"
                 }
               },
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L6:C2, L6:C34]",
+                  "id": "symbol@Column@@[L6:C2, L6:C34]",
                   "snippet": "\"address_i...[not NULL]"
                 }
               },
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L7:C2, L7:C44]",
+                  "id": "symbol@Column@@[L7:C2, L7:C44]",
                   "snippet": "\"active\" B...ult: TRUE]"
                 }
               },
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L8:C2, L8:C35]",
+                  "id": "symbol@Column@@[L8:C2, L8:C35]",
                   "snippet": "\"create_da...[not null]"
                 }
               },
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L9:C2, L9:C56]",
+                  "id": "symbol@Column@@[L9:C2, L9:C56]",
                   "snippet": "\"last_upda...IMESTAMP`]"
                 }
               }
@@ -2190,7 +2190,7 @@
                     "fullStart": 422,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L13:C2, L13:C26]",
+                        "id": "symbol@Column@@[L13:C2, L13:C26]",
                         "snippet": "id integer...imary key]"
                       },
                       "declaration": {
@@ -2371,7 +2371,7 @@
                     "fullStart": 449,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L14:C2, L14:C27]",
+                        "id": "symbol@Column@@[L14:C2, L14:C27]",
                         "snippet": "name e [de...: \"hello\"]"
                       },
                       "declaration": {
@@ -2452,7 +2452,7 @@
                     "fullStart": 477,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L15:C2, L15:C20]",
+                        "id": "symbol@Column@@[L15:C2, L15:C20]",
                         "snippet": "country_id integer"
                       },
                       "declaration": {
@@ -2578,7 +2578,7 @@
           "fullStart": 406,
           "symbol": {
             "context": {
-              "id": "symbol@<element-declaration>@cities@[L12:C0, L17:C1]",
+              "id": "symbol@Table@cities@[L12:C0, L17:C1]",
               "snippet": "Table citi...\"sasasa\"\n}"
             },
             "declaration": {
@@ -2588,19 +2588,19 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L13:C2, L13:C26]",
+                  "id": "symbol@Column@@[L13:C2, L13:C26]",
                   "snippet": "id integer...imary key]"
                 }
               },
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L14:C2, L14:C27]",
+                  "id": "symbol@Column@@[L14:C2, L14:C27]",
                   "snippet": "name e [de...: \"hello\"]"
                 }
               },
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L15:C2, L15:C20]",
+                  "id": "symbol@Column@@[L15:C2, L15:C20]",
                   "snippet": "country_id integer"
                 }
               }
@@ -2710,7 +2710,7 @@
                     "fullStart": 534,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L20:C1, L20:C11]",
+                        "id": "symbol@Column@@[L20:C1, L20:C11]",
                         "snippet": "id integer"
                       },
                       "declaration": {
@@ -2831,7 +2831,7 @@
                     "fullStart": 546,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L21:C1, L21:C16]",
+                        "id": "symbol@Column@@[L21:C1, L21:C16]",
                         "snippet": "cities string[]"
                       },
                       "declaration": {
@@ -2889,7 +2889,7 @@
           "fullStart": 517,
           "symbol": {
             "context": {
-              "id": "symbol@<element-declaration>@country@[L19:C0, L22:C1]",
+              "id": "symbol@Table@country@[L19:C0, L22:C1]",
               "snippet": "Table coun...string[]\n}"
             },
             "declaration": {
@@ -2899,13 +2899,13 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L20:C1, L20:C11]",
+                  "id": "symbol@Column@@[L20:C1, L20:C11]",
                   "snippet": "id integer"
                 }
               },
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L21:C1, L21:C16]",
+                  "id": "symbol@Column@@[L21:C1, L21:C16]",
                   "snippet": "cities string[]"
                 }
               }
@@ -3015,7 +3015,7 @@
                     "fullStart": 582,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L25:C1, L25:C11]",
+                        "id": "symbol@Column@@[L25:C1, L25:C11]",
                         "snippet": "id integer"
                       },
                       "declaration": {
@@ -3096,7 +3096,7 @@
                     "fullStart": 594,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L26:C1, L26:C12]",
+                        "id": "symbol@Column@@[L26:C1, L26:C12]",
                         "snippet": "name string"
                       },
                       "declaration": {
@@ -3273,7 +3273,7 @@
           "fullStart": 565,
           "symbol": {
             "context": {
-              "id": "symbol@<element-declaration>@citites@[L24:C0, L30:C1]",
+              "id": "symbol@Table@citites@[L24:C0, L30:C1]",
               "snippet": "Table citi... name\n\t}\n}"
             },
             "declaration": {
@@ -3283,13 +3283,13 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L25:C1, L25:C11]",
+                  "id": "symbol@Column@@[L25:C1, L25:C11]",
                   "snippet": "id integer"
                 }
               },
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L26:C1, L26:C12]",
+                  "id": "symbol@Column@@[L26:C1, L26:C12]",
                   "snippet": "name string"
                 }
               }
@@ -3312,7 +3312,7 @@
     "fullStart": 0,
     "symbol": {
       "context": {
-        "id": "symbol@<program>@@[L0:C0, L30:C1]",
+        "id": "symbol@Schema@@[L0:C0, L30:C1]",
         "snippet": "Table \"cus... name\n\t}\n}"
       },
       "declaration": {
@@ -3322,25 +3322,25 @@
       "members": [
         {
           "context": {
-            "id": "symbol@<element-declaration>@customer@[L0:C0, L10:C1]",
+            "id": "symbol@Table@customer@[L0:C0, L10:C1]",
             "snippet": "Table \"cus...ESTAMP`]\n}"
           }
         },
         {
           "context": {
-            "id": "symbol@<element-declaration>@cities@[L12:C0, L17:C1]",
+            "id": "symbol@Table@cities@[L12:C0, L17:C1]",
             "snippet": "Table citi...\"sasasa\"\n}"
           }
         },
         {
           "context": {
-            "id": "symbol@<element-declaration>@country@[L19:C0, L22:C1]",
+            "id": "symbol@Table@country@[L19:C0, L22:C1]",
             "snippet": "Table coun...string[]\n}"
           }
         },
         {
           "context": {
-            "id": "symbol@<element-declaration>@citites@[L24:C0, L30:C1]",
+            "id": "symbol@Table@citites@[L24:C0, L30:C1]",
             "snippet": "Table citi... name\n\t}\n}"
           }
         }

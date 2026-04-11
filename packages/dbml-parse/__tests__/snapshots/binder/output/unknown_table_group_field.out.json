@@ -98,7 +98,7 @@
           "fullStart": 0,
           "symbol": {
             "context": {
-              "id": "symbol@<element-declaration>@Users@[L0:C0, L2:C1]",
+              "id": "symbol@Table@Users@[L0:C0, L2:C1]",
               "snippet": "Table Users {\r\n\r\n}"
             },
             "declaration": {
@@ -182,7 +182,7 @@
                         "fullStart": 42,
                         "referee": {
                           "context": {
-                            "id": "symbol@<element-declaration>@Users@[L0:C0, L2:C1]",
+                            "id": "symbol@Table@Users@[L0:C0, L2:C1]",
                             "snippet": "Table Users {\r\n\r\n}"
                           }
                         }
@@ -192,7 +192,7 @@
                     "fullStart": 42,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L5:C4, L5:C9]",
+                        "id": "symbol@TableGroup field@@[L5:C4, L5:C9]",
                         "snippet": "Users"
                       },
                       "declaration": {
@@ -243,7 +243,7 @@
                     "fullStart": 53,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L6:C4, L6:C12]",
+                        "id": "symbol@TableGroup field@@[L6:C4, L6:C12]",
                         "snippet": "Products"
                       },
                       "declaration": {
@@ -301,7 +301,7 @@
           "fullStart": 21,
           "symbol": {
             "context": {
-              "id": "symbol@<element-declaration>@Group@[L4:C0, L7:C1]",
+              "id": "symbol@TableGroup@Group@[L4:C0, L7:C1]",
               "snippet": "Tablegroup...roducts\r\n}"
             },
             "declaration": {
@@ -311,13 +311,13 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L5:C4, L5:C9]",
+                  "id": "symbol@TableGroup field@@[L5:C4, L5:C9]",
                   "snippet": "Users"
                 }
               },
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L6:C4, L6:C12]",
+                  "id": "symbol@TableGroup field@@[L6:C4, L6:C12]",
                   "snippet": "Products"
                 }
               }
@@ -340,7 +340,7 @@
     "fullStart": 0,
     "symbol": {
       "context": {
-        "id": "symbol@<program>@@[L0:C0, L7:C1]",
+        "id": "symbol@Schema@@[L0:C0, L7:C1]",
         "snippet": "Table User...roducts\r\n}"
       },
       "declaration": {
@@ -350,13 +350,13 @@
       "members": [
         {
           "context": {
-            "id": "symbol@<element-declaration>@Users@[L0:C0, L2:C1]",
+            "id": "symbol@Table@Users@[L0:C0, L2:C1]",
             "snippet": "Table Users {\r\n\r\n}"
           }
         },
         {
           "context": {
-            "id": "symbol@<element-declaration>@Group@[L4:C0, L7:C1]",
+            "id": "symbol@TableGroup@Group@[L4:C0, L7:C1]",
             "snippet": "Tablegroup...roducts\r\n}"
           }
         }

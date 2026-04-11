@@ -109,7 +109,7 @@
                     "fullStart": 31,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L1:C2, L1:C12]",
+                        "id": "symbol@Column@@[L1:C2, L1:C12]",
                         "snippet": "id integer"
                       },
                       "declaration": {
@@ -190,7 +190,7 @@
                     "fullStart": 45,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L2:C2, L2:C17]",
+                        "id": "symbol@Column@@[L2:C2, L2:C17]",
                         "snippet": "country varchar"
                       },
                       "declaration": {
@@ -271,7 +271,7 @@
                     "fullStart": 64,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L3:C2, L3:C19]",
+                        "id": "symbol@Column@@[L3:C2, L3:C19]",
                         "snippet": "booking_date date"
                       },
                       "declaration": {
@@ -352,7 +352,7 @@
                     "fullStart": 85,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L4:C2, L4:C22]",
+                        "id": "symbol@Column@@[L4:C2, L4:C22]",
                         "snippet": "created_at timestamp"
                       },
                       "declaration": {
@@ -1457,7 +1457,7 @@
           "fullStart": 0,
           "symbol": {
             "context": {
-              "id": "symbol@<element-declaration>@bookingPartial@[L0:C0, L16:C1]",
+              "id": "symbol@TablePartial@bookingPartial@[L0:C0, L16:C1]",
               "snippet": "TableParti...d)\r\n  }\r\n}"
             },
             "declaration": {
@@ -1467,25 +1467,25 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L1:C2, L1:C12]",
+                  "id": "symbol@Column@@[L1:C2, L1:C12]",
                   "snippet": "id integer"
                 }
               },
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L2:C2, L2:C17]",
+                  "id": "symbol@Column@@[L2:C2, L2:C17]",
                   "snippet": "country varchar"
                 }
               },
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L3:C2, L3:C19]",
+                  "id": "symbol@Column@@[L3:C2, L3:C19]",
                   "snippet": "booking_date date"
                 }
               },
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L4:C2, L4:C22]",
+                  "id": "symbol@Column@@[L4:C2, L4:C22]",
                   "snippet": "created_at timestamp"
                 }
               }
@@ -1595,7 +1595,7 @@
                     "fullStart": 402,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L19:C2, L19:C12]",
+                        "id": "symbol@Column@@[L19:C2, L19:C12]",
                         "snippet": "id integer"
                       },
                       "declaration": {
@@ -1676,7 +1676,7 @@
                     "fullStart": 416,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L20:C2, L20:C17]",
+                        "id": "symbol@Column@@[L20:C2, L20:C17]",
                         "snippet": "country varchar"
                       },
                       "declaration": {
@@ -1757,7 +1757,7 @@
                     "fullStart": 435,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L21:C2, L21:C19]",
+                        "id": "symbol@Column@@[L21:C2, L21:C19]",
                         "snippet": "booking_date date"
                       },
                       "declaration": {
@@ -1838,7 +1838,7 @@
                     "fullStart": 456,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L22:C2, L22:C22]",
+                        "id": "symbol@Column@@[L22:C2, L22:C22]",
                         "snippet": "created_at timestamp"
                       },
                       "declaration": {
@@ -2943,7 +2943,7 @@
           "fullStart": 383,
           "symbol": {
             "context": {
-              "id": "symbol@<element-declaration>@bookings@[L18:C0, L34:C1]",
+              "id": "symbol@Table@bookings@[L18:C0, L34:C1]",
               "snippet": "Table book...d)\r\n  }\r\n}"
             },
             "declaration": {
@@ -2953,25 +2953,25 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L19:C2, L19:C12]",
+                  "id": "symbol@Column@@[L19:C2, L19:C12]",
                   "snippet": "id integer"
                 }
               },
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L20:C2, L20:C17]",
+                  "id": "symbol@Column@@[L20:C2, L20:C17]",
                   "snippet": "country varchar"
                 }
               },
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L21:C2, L21:C19]",
+                  "id": "symbol@Column@@[L21:C2, L21:C19]",
                   "snippet": "booking_date date"
                 }
               },
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L22:C2, L22:C22]",
+                  "id": "symbol@Column@@[L22:C2, L22:C22]",
                   "snippet": "created_at timestamp"
                 }
               }
@@ -2994,7 +2994,7 @@
     "fullStart": 0,
     "symbol": {
       "context": {
-        "id": "symbol@<program>@@[L0:C0, L36:C0]",
+        "id": "symbol@Schema@@[L0:C0, L36:C0]",
         "snippet": "TableParti... program\r\n"
       },
       "declaration": {
@@ -3004,13 +3004,13 @@
       "members": [
         {
           "context": {
-            "id": "symbol@<element-declaration>@bookingPartial@[L0:C0, L16:C1]",
+            "id": "symbol@TablePartial@bookingPartial@[L0:C0, L16:C1]",
             "snippet": "TableParti...d)\r\n  }\r\n}"
           }
         },
         {
           "context": {
-            "id": "symbol@<element-declaration>@bookings@[L18:C0, L34:C1]",
+            "id": "symbol@Table@bookings@[L18:C0, L34:C1]",
             "snippet": "Table book...d)\r\n  }\r\n}"
           }
         }

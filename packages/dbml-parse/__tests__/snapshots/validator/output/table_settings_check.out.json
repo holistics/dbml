@@ -260,7 +260,7 @@
                     "fullStart": 14,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L1:C2, L1:C36]",
+                        "id": "symbol@Column@@[L1:C2, L1:C36]",
                         "snippet": "balance in...ance > 0`]"
                       },
                       "declaration": {
@@ -500,7 +500,7 @@
                     "fullStart": 51,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L2:C2, L2:C69]",
+                        "id": "symbol@Column@@[L2:C2, L2:C69]",
                         "snippet": "dependents...nts < 10`]"
                       },
                       "declaration": {
@@ -994,7 +994,7 @@
                     "fullStart": 121,
                     "symbol": {
                       "context": {
-                        "id": "symbol@<function-application>@@[L4:C2, L8:C40]",
+                        "id": "symbol@Column@@[L4:C2, L8:C40]",
                         "snippet": "invalid_co...eck: null]"
                       },
                       "declaration": {
@@ -1052,7 +1052,7 @@
           "fullStart": 0,
           "symbol": {
             "context": {
-              "id": "symbol@<element-declaration>@Users@[L0:C0, L9:C1]",
+              "id": "symbol@Table@Users@[L0:C0, L9:C1]",
               "snippet": "Table User...k: null]\n}"
             },
             "declaration": {
@@ -1062,19 +1062,19 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L1:C2, L1:C36]",
+                  "id": "symbol@Column@@[L1:C2, L1:C36]",
                   "snippet": "balance in...ance > 0`]"
                 }
               },
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L2:C2, L2:C69]",
+                  "id": "symbol@Column@@[L2:C2, L2:C69]",
                   "snippet": "dependents...nts < 10`]"
                 }
               },
               {
                 "context": {
-                  "id": "symbol@<function-application>@@[L4:C2, L8:C40]",
+                  "id": "symbol@Column@@[L4:C2, L8:C40]",
                   "snippet": "invalid_co...eck: null]"
                 }
               }
@@ -1097,7 +1097,7 @@
     "fullStart": 0,
     "symbol": {
       "context": {
-        "id": "symbol@<program>@@[L0:C0, L10:C0]",
+        "id": "symbol@Schema@@[L0:C0, L10:C0]",
         "snippet": "Table User...: null]\n}\n"
       },
       "declaration": {
@@ -1107,7 +1107,7 @@
       "members": [
         {
           "context": {
-            "id": "symbol@<element-declaration>@Users@[L0:C0, L9:C1]",
+            "id": "symbol@Table@Users@[L0:C0, L9:C1]",
             "snippet": "Table User...k: null]\n}"
           }
         }
