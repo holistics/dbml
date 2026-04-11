@@ -1,16 +1,22 @@
 import { partition } from 'lodash-es';
 import SymbolFactory from '@/core/types/symbol/factory';
-import { CompileError, CompileErrorCode, CompileWarning } from '@/core/types/errors';
+import {
+  CompileError, CompileErrorCode, CompileWarning,
+} from '@/core/types/errors';
 import {
   BlockExpressionNode, CallExpressionNode, CommaExpressionNode, ElementDeclarationNode, EmptyNode, FunctionApplicationNode, FunctionExpressionNode, ListExpressionNode, ProgramNode, SyntaxNode, WildcardNode,
 } from '@/core/types/nodes';
 import { SyntaxToken } from '@/core/types/tokens';
 import { ElementValidator } from '@/core/analyzer/validator/types';
-import { isExpressionASignedNumberExpression, isTupleOfVariables, isValidName, pickValidator } from '@/core/analyzer/validator/utils';
+import {
+  isExpressionASignedNumberExpression, isTupleOfVariables, isValidName, pickValidator,
+} from '@/core/analyzer/validator/utils';
 import SymbolTable from '@/core/types/symbol/symbolTable';
 import { destructureComplexVariable } from '@/core/analyzer/utils';
 import { ElementKind } from '@/core/analyzer/types';
-import { isAccessExpression, isExpressionAQuotedString, isExpressionAVariableNode } from '@/core/parser/utils';
+import {
+  isAccessExpression, isExpressionAQuotedString, isExpressionAVariableNode,
+} from '@/core/parser/utils';
 import { KEYWORDS_OF_DEFAULT_SETTING } from '@/constants';
 
 export default class RecordsValidator implements ElementValidator {
@@ -26,7 +32,13 @@ export default class RecordsValidator implements ElementValidator {
 
   validate (): { errors: CompileError[]; warnings: CompileWarning[] } {
     return {
-      errors: [...this.validateContext(), ...this.validateName(this.declarationNode.name), ...this.validateAlias(this.declarationNode.alias), ...this.validateSettingList(this.declarationNode.attributeList), ...this.validateBody(this.declarationNode.body)],
+      errors: [
+        ...this.validateContext(),
+        ...this.validateName(this.declarationNode.name),
+        ...this.validateAlias(this.declarationNode.alias),
+        ...this.validateSettingList(this.declarationNode.attributeList),
+        ...this.validateBody(this.declarationNode.body),
+      ],
       warnings: [],
     };
   }
@@ -53,11 +65,13 @@ export default class RecordsValidator implements ElementValidator {
       }
     }
 
-    return [new CompileError(
-      CompileErrorCode.INVALID_RECORDS_CONTEXT,
-      'Records can only appear at top-level or inside a Table',
-      this.declarationNode,
-    )];
+    return [
+      new CompileError(
+        CompileErrorCode.INVALID_RECORDS_CONTEXT,
+        'Records can only appear at top-level or inside a Table',
+        this.declarationNode,
+      ),
+    ];
   }
 
   private validateName (nameNode?: SyntaxNode): CompileError[] {
@@ -79,11 +93,13 @@ export default class RecordsValidator implements ElementValidator {
   //   Invalid: records { }                    // missing table reference
   private validateTopLevelName (nameNode?: SyntaxNode): CompileError[] {
     if (!(nameNode instanceof CallExpressionNode)) {
-      return [new CompileError(
-        CompileErrorCode.INVALID_RECORDS_NAME,
-        'Records at top-level must have a name in the form of table(col1, col2, ...) or schema.table(col1, col2, ...)',
-        nameNode || this.declarationNode.type,
-      )];
+      return [
+        new CompileError(
+          CompileErrorCode.INVALID_RECORDS_NAME,
+          'Records at top-level must have a name in the form of table(col1, col2, ...) or schema.table(col1, col2, ...)',
+          nameNode || this.declarationNode.type,
+        ),
+      ];
     }
 
     const errors: CompileError[] = [];
@@ -115,11 +131,13 @@ export default class RecordsValidator implements ElementValidator {
   //   Invalid: records other_table(id) { }   // can't reference another table
   private validateInsideTableName (nameNode?: SyntaxNode): CompileError[] {
     if (nameNode && !isTupleOfVariables(nameNode)) {
-      return [new CompileError(
-        CompileErrorCode.INVALID_RECORDS_NAME,
-        'Records inside a Table can only have a column list like (col1, col2, ...)',
-        nameNode,
-      )];
+      return [
+        new CompileError(
+          CompileErrorCode.INVALID_RECORDS_NAME,
+          'Records inside a Table can only have a column list like (col1, col2, ...)',
+          nameNode,
+        ),
+      ];
     }
 
     return [];
@@ -163,10 +181,7 @@ export default class RecordsValidator implements ElementValidator {
     }
 
     const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
-    return [
-      ...this.validateDataRows(fields as FunctionApplicationNode[]),
-      ...this.validateSubElements(subs as ElementDeclarationNode[]),
-    ];
+    return [...this.validateDataRows(fields as FunctionApplicationNode[]), ...this.validateSubElements(subs as ElementDeclarationNode[])];
   }
 
   private validateDataRows (rows: FunctionApplicationNode[]): CompileError[] {

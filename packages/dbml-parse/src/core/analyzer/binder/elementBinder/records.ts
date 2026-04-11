@@ -4,7 +4,9 @@ import {
   BlockExpressionNode, CommaExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ProgramNode, SyntaxNode,
 } from '../../../types/nodes';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
-import { lookupAndBindInScope, pickBinder, scanNonListNodeForBinding } from '../utils';
+import {
+  lookupAndBindInScope, pickBinder, scanNonListNodeForBinding,
+} from '../utils';
 import SymbolFactory from '@/core/types/symbol/factory';
 import {
   destructureCallExpression,
@@ -70,10 +72,7 @@ export default class RecordsBinder implements ElementBinder {
       return [];
     }
 
-    const tableErrors = lookupAndBindInScope(this.ast, [
-      ...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })),
-      { node: tableBindee, kind: SymbolKind.Table },
-    ]);
+    const tableErrors = lookupAndBindInScope(this.ast, [...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })), { node: tableBindee, kind: SymbolKind.Table }]);
 
     if (tableErrors.length > 0) {
       return tableErrors;
@@ -183,10 +182,7 @@ export default class RecordsBinder implements ElementBinder {
     const functions = body.body.filter((e) => e instanceof FunctionApplicationNode);
     const subs = body.body.filter((e) => e instanceof ElementDeclarationNode);
 
-    return [
-      ...this.bindDataRows(functions as FunctionApplicationNode[]),
-      ...this.bindSubElements(subs as ElementDeclarationNode[]),
-    ];
+    return [...this.bindDataRows(functions as FunctionApplicationNode[]), ...this.bindSubElements(subs as ElementDeclarationNode[])];
   }
 
   private bindDataRows (rows: FunctionApplicationNode[]): CompileError[] {
@@ -217,11 +213,7 @@ export default class RecordsBinder implements ElementBinder {
 
       const schemaBindees = bindee.variables;
 
-      return lookupAndBindInScope(this.ast, [
-        ...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })),
-        { node: enumBindee, kind: SymbolKind.Enum },
-        { node: enumFieldBindee, kind: SymbolKind.EnumField },
-      ]);
+      return lookupAndBindInScope(this.ast, [...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })), { node: enumBindee, kind: SymbolKind.Enum }, { node: enumFieldBindee, kind: SymbolKind.EnumField }]);
     });
   }
 

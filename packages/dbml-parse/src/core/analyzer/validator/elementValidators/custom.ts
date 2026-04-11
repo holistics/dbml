@@ -1,4 +1,6 @@
-import { CompileError, CompileErrorCode, CompileWarning } from '@/core/types/errors';
+import {
+  CompileError, CompileErrorCode, CompileWarning,
+} from '@/core/types/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode, WildcardNode,
 } from '@/core/types/nodes';

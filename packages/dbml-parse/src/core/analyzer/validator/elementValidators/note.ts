@@ -1,6 +1,8 @@
 import { partition } from 'lodash-es';
 import SymbolFactory from '@/core/types/symbol/factory';
-import { CompileError, CompileErrorCode, CompileWarning } from '@/core/types/errors';
+import {
+  CompileError, CompileErrorCode, CompileWarning,
+} from '@/core/types/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, ProgramNode, SyntaxNode, WildcardNode,
 } from '@/core/types/nodes';
@@ -44,11 +46,13 @@ export default class NoteValidator implements ElementValidator {
       !(parent instanceof ProgramNode)
       && !(parent instanceof ElementDeclarationNode && parent.isKind(ElementKind.Table, ElementKind.TableGroup, ElementKind.TablePartial, ElementKind.Project))
     ) {
-      return [new CompileError(
-        CompileErrorCode.INVALID_NOTE_CONTEXT,
-        'A Note can only appear inside a Table, a TableGroup, a TablePartial or a Project. Sticky note can only appear at the global scope.',
-        this.declarationNode,
-      )];
+      return [
+        new CompileError(
+          CompileErrorCode.INVALID_NOTE_CONTEXT,
+          'A Note can only appear inside a Table, a TableGroup, a TablePartial or a Project. Sticky note can only appear at the global scope.',
+          this.declarationNode,
+        ),
+      ];
     }
 
     return [];

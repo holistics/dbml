@@ -175,11 +175,13 @@ function computeCreateEdit (
 
   const newBlock = generateDiagramViewBlock(operation.name, operation.visibleEntities);
   const appendText = '\n\n' + newBlock + '\n';
-  return [{
-    start: dbml.length,
-    end: dbml.length,
-    newText: appendText,
-  }];
+  return [
+    {
+      start: dbml.length,
+      end: dbml.length,
+      newText: appendText,
+    },
+  ];
 }
 
 function computeUpdateEdit (
@@ -246,5 +248,9 @@ function computeDeleteEdit (
   if (end < dbml.length && dbml[end] === '\r') end++;
   if (end < dbml.length && dbml[end] === '\n') end++;
 
-  return [{ start, end, newText: '' }];
+  return [
+    {
+      start, end, newText: '',
+    },
+  ];
 }

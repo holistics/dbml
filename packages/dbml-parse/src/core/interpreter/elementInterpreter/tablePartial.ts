@@ -1,4 +1,6 @@
-import { last, head, partition } from 'lodash-es';
+import {
+  last, head, partition,
+} from 'lodash-es';
 import {
   Column, Check, Index, InlineRef,
   TablePartial,
@@ -42,21 +44,23 @@ export class TablePartialInterpreter implements ElementInterpreter {
     this.tablePartial.token = getTokenPosition(this.declarationNode);
     this.env.tablePartials.set(this.declarationNode, this.tablePartial as TablePartial);
 
-    const errors = [
-      ...this.interpretName(this.declarationNode.name!),
-      ...this.interpretSettingList(this.declarationNode.attributeList),
-      ...this.interpretBody(this.declarationNode.body as BlockExpressionNode),
-    ];
+    const errors = [...this.interpretName(this.declarationNode.name!), ...this.interpretSettingList(this.declarationNode.attributeList), ...this.interpretBody(this.declarationNode.body as BlockExpressionNode)];
 
     // Handle cases where there are multiple primary columns
     // all the pk field of the columns are reset to false
     // and a new pk composite index is added
     if (this.pkColumns.length >= 2) {
       this.tablePartial.indexes!.push({
-        columns: this.pkColumns.map(({ name, token }) => ({ value: name, type: 'column', token })),
+        columns: this.pkColumns.map(({ name, token }) => ({
+          value: name, type: 'column', token,
+        })),
         token: {
-          start: { offset: -1, line: -1, column: -1 }, // do not make sense to have a meaningful start (?)
-          end: { offset: -1, line: -1, column: -1 }, // do not make sense to have a meaningful end (?)
+          start: {
+            offset: -1, line: -1, column: -1,
+          }, // do not make sense to have a meaningful start (?)
+          end: {
+            offset: -1, line: -1, column: -1,
+          }, // do not make sense to have a meaningful end (?)
           filepath: this.declarationNode.filepath,
         },
         pk: true,
@@ -96,10 +100,7 @@ export class TablePartialInterpreter implements ElementInterpreter {
 
   private interpretBody (body: BlockExpressionNode): CompileError[] {
     const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
-    return [
-      ...this.interpretFields(fields as FunctionApplicationNode[]),
-      ...this.interpretSubElements(subs as ElementDeclarationNode[]),
-    ];
+    return [...this.interpretFields(fields as FunctionApplicationNode[]), ...this.interpretSubElements(subs as ElementDeclarationNode[])];
   }
 
   private interpretSubElements (subs: ElementDeclarationNode[]): CompileError[] {

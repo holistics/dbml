@@ -24,10 +24,7 @@ export default class DBMLDefinitionProvider implements DefinitionProvider {
       let declaration: SyntaxNode | undefined;
       if (
         node.referee?.declaration
-        && [
-          SyntaxNodeKind.PRIMARY_EXPRESSION,
-          SyntaxNodeKind.VARIABLE,
-        ].includes(node?.kind)
+        && [SyntaxNodeKind.PRIMARY_EXPRESSION, SyntaxNodeKind.VARIABLE].includes(node?.kind)
       ) {
         ({ declaration } = node.referee);
       }

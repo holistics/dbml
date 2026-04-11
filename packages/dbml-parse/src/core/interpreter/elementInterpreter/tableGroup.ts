@@ -1,5 +1,7 @@
 import { partition } from 'lodash-es';
-import { destructureComplexVariable, destructureMemberAccessExpression, extractQuotedStringToken } from '@/core/analyzer/utils';
+import {
+  destructureComplexVariable, destructureMemberAccessExpression, extractQuotedStringToken,
+} from '@/core/analyzer/utils';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, SyntaxNode, ListExpressionNode,
@@ -53,10 +55,7 @@ export class TableGroupInterpreter implements ElementInterpreter {
 
   private interpretBody (body: BlockExpressionNode): CompileError[] {
     const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
-    return [
-      ...this.interpretFields(fields as FunctionApplicationNode[]),
-      ...this.interpretSubElements(subs as ElementDeclarationNode[]),
-    ];
+    return [...this.interpretFields(fields as FunctionApplicationNode[]), ...this.interpretSubElements(subs as ElementDeclarationNode[])];
   }
 
   private interpretSubElements (subs: ElementDeclarationNode[]): CompileError[] {

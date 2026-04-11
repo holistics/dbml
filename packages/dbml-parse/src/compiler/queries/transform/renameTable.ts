@@ -6,7 +6,9 @@ import { TableSymbol } from '@/core/types/symbol/symbols';
 import { createSchemaSymbolIndex, createTableSymbolIndex } from '@/core/types/symbol';
 import { applyTextEdits, TextEdit } from './applyTextEdits';
 import { isAlphaOrUnderscore, isDigit } from '@/core/utils/chars';
-import { normalizeTableName, lookupTableSymbol, stripQuotes, type TableNameInput } from './utils';
+import {
+  normalizeTableName, lookupTableSymbol, stripQuotes, type TableNameInput,
+} from './utils';
 
 interface FormattedTableName {
   schema: string;
@@ -198,7 +200,9 @@ function findReplacements (
       ? `${newFormatted.formattedSchema}.${newFormatted.formattedTable}`
       : newFormatted.formattedTable;
 
-    replacements.push({ start: range.start, end: range.end, newText });
+    replacements.push({
+      start: range.start, end: range.end, newText,
+    });
   }
 
   return replacements;

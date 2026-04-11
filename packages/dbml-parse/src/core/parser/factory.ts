@@ -1,4 +1,6 @@
-import { SyntaxNode, SyntaxNodeId, SyntaxNodeIdGenerator } from '@/core/types/nodes';
+import {
+  SyntaxNode, SyntaxNodeId, SyntaxNodeIdGenerator,
+} from '@/core/types/nodes';
 import { Filepath } from '@/core/types/filepath';
 
 export default class NodeFactory {

@@ -1,7 +1,11 @@
 import { DEFAULT_SCHEMA_NAME } from '@/constants';
-import { last, forIn, partition } from 'lodash-es';
+import {
+  last, forIn, partition,
+} from 'lodash-es';
 import SymbolFactory from '@/core/types/symbol/factory';
-import { CompileError, CompileErrorCode, CompileWarning } from '@/core/types/errors';
+import {
+  CompileError, CompileErrorCode, CompileWarning,
+} from '@/core/types/errors';
 import {
   ArrayNode,
   AttributeNode,
@@ -16,7 +20,9 @@ import {
   SyntaxNode,
   WildcardNode,
 } from '@/core/types/nodes';
-import { destructureComplexVariable, extractVariableFromExpression, extractVarNameFromPrimaryVariable } from '@/core/analyzer/utils';
+import {
+  destructureComplexVariable, extractVariableFromExpression, extractVarNameFromPrimaryVariable,
+} from '@/core/analyzer/utils';
 import {
   aggregateSettingList,
   isSimpleName,
@@ -31,8 +37,12 @@ import {
   registerSchemaStack,
 } from '@/core/analyzer/validator/utils';
 import { ElementValidator } from '@/core/analyzer/validator/types';
-import { ColumnSymbol, PartialInjectionSymbol, TableSymbol } from '@/core/types/symbol/symbols';
-import { createColumnSymbolIndex, createPartialInjectionSymbolIndex, createTableSymbolIndex } from '@/core/types/symbol/symbolIndex';
+import {
+  ColumnSymbol, PartialInjectionSymbol, TableSymbol,
+} from '@/core/types/symbol/symbols';
+import {
+  createColumnSymbolIndex, createPartialInjectionSymbolIndex, createTableSymbolIndex,
+} from '@/core/types/symbol/symbolIndex';
 import {
   isExpressionAQuotedString,
   isExpressionAVariableNode,
@@ -184,10 +194,7 @@ export default class TableValidator implements ElementValidator {
     }
 
     const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
-    return [
-      ...this.validateFields(fields as FunctionApplicationNode[]),
-      ...this.validateSubElements(subs as ElementDeclarationNode[]),
-    ];
+    return [...this.validateFields(fields as FunctionApplicationNode[]), ...this.validateSubElements(subs as ElementDeclarationNode[])];
   }
 
   validateFields (fields: FunctionApplicationNode[]): CompileError[] {
@@ -229,10 +236,7 @@ export default class TableValidator implements ElementValidator {
         const symbolTable = this.declarationNode.symbol!.symbolTable!;
         if (symbolTable.has(partialInjectionSymbolId)) {
           const symbol = symbolTable.get(partialInjectionSymbolId);
-          return [
-            new CompileError(CompileErrorCode.DUPLICATE_TABLE_PARTIAL_INJECTION_NAME, `Duplicate table partial injection '${injectedTablePartialName}'`, field),
-            new CompileError(CompileErrorCode.DUPLICATE_TABLE_PARTIAL_INJECTION_NAME, `Duplicate table partial injection '${injectedTablePartialName}'`, symbol!.declaration!),
-          ];
+          return [new CompileError(CompileErrorCode.DUPLICATE_TABLE_PARTIAL_INJECTION_NAME, `Duplicate table partial injection '${injectedTablePartialName}'`, field), new CompileError(CompileErrorCode.DUPLICATE_TABLE_PARTIAL_INJECTION_NAME, `Duplicate table partial injection '${injectedTablePartialName}'`, symbol!.declaration!)];
         }
         symbolTable.set(partialInjectionSymbolId, partialInjectionSymbol);
       }
@@ -260,10 +264,7 @@ export default class TableValidator implements ElementValidator {
       const symbolTable = this.declarationNode.symbol!.symbolTable!;
       if (symbolTable.has(columnId)) {
         const symbol = symbolTable.get(columnId);
-        return [
-          new CompileError(CompileErrorCode.DUPLICATE_COLUMN_NAME, `Duplicate column ${columnName}`, field),
-          new CompileError(CompileErrorCode.DUPLICATE_COLUMN_NAME, `Duplicate column ${columnName}`, symbol!.declaration!),
-        ];
+        return [new CompileError(CompileErrorCode.DUPLICATE_COLUMN_NAME, `Duplicate column ${columnName}`, field), new CompileError(CompileErrorCode.DUPLICATE_COLUMN_NAME, `Duplicate column ${columnName}`, symbol!.declaration!)];
       }
       symbolTable.set(columnId, columnSymbol);
     }

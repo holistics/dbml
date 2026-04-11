@@ -1,7 +1,9 @@
 import { partition, last } from 'lodash-es';
 import { SyntaxToken, SyntaxTokenKind } from '@/core/types/tokens';
 import SymbolFactory from '@/core/types/symbol/factory';
-import { CompileError, CompileErrorCode, CompileWarning } from '@/core/types/errors';
+import {
+  CompileError, CompileErrorCode, CompileWarning,
+} from '@/core/types/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, IdentiferStreamNode, ListExpressionNode, ProgramNode, SyntaxNode, WildcardNode,
 } from '@/core/types/nodes';
@@ -10,8 +12,12 @@ import {
   isExpressionAVariableNode,
 } from '@/core/parser/utils';
 import { ElementValidator } from '@/core/analyzer/validator/types';
-import { isSimpleName, isValidColor, pickValidator, aggregateSettingList } from '@/core/analyzer/validator/utils';
-import { destructureComplexVariable, destructureComplexVariableTuple, isBinaryRelationship, isEqualTupleOperands } from '@/core/analyzer/utils';
+import {
+  isSimpleName, isValidColor, pickValidator, aggregateSettingList,
+} from '@/core/analyzer/validator/utils';
+import {
+  destructureComplexVariable, destructureComplexVariableTuple, isBinaryRelationship, isEqualTupleOperands,
+} from '@/core/analyzer/utils';
 import SymbolTable from '@/core/types/symbol/symbolTable';
 
 export default class RefValidator implements ElementValidator {

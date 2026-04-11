@@ -7,7 +7,9 @@ import { ElementBinder } from '../types';
 import { CompileError } from '@/core/types/errors';
 import { aggregateSettingList } from '../../validator/utils';
 import { destructureComplexVariableTuple } from '../../utils';
-import { lookupAndBindInScope, pickBinder, scanNonListNodeForBinding } from '../utils';
+import {
+  lookupAndBindInScope, pickBinder, scanNonListNodeForBinding,
+} from '../utils';
 import { SymbolKind } from '@/core/types/symbol/symbolIndex';
 import SymbolFactory from '@/core/types/symbol/factory';
 
@@ -82,10 +84,7 @@ export default class TablePartialBinder implements ElementBinder {
       return;
     }
 
-    lookupAndBindInScope(this.ast, [
-      ...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })),
-      { node: enumBindee, kind: SymbolKind.Enum },
-    ]);
+    lookupAndBindInScope(this.ast, [...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })), { node: enumBindee, kind: SymbolKind.Enum }]);
   }
 
   private bindInlineRef (ref: SyntaxNode): CompileError[] {
@@ -100,14 +99,8 @@ export default class TablePartialBinder implements ElementBinder {
       const schemaBindees = bindee.variables;
 
       return tableBindee
-        ? lookupAndBindInScope(this.ast, [
-            ...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })),
-            { node: tableBindee, kind: SymbolKind.Table },
-            { node: columnBindee, kind: SymbolKind.Column },
-          ])
-        : lookupAndBindInScope(this.declarationNode, [
-            { node: columnBindee, kind: SymbolKind.Column },
-          ]);
+        ? lookupAndBindInScope(this.ast, [...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })), { node: tableBindee, kind: SymbolKind.Table }, { node: columnBindee, kind: SymbolKind.Column }])
+        : lookupAndBindInScope(this.declarationNode, [{ node: columnBindee, kind: SymbolKind.Column }]);
     });
   }
 

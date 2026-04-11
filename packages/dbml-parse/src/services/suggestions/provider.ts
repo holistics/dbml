@@ -77,11 +77,7 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
 
     // Check if we're inside a comment
     if (
-      [
-        ...(bOcToken?.trailingTrivia || []),
-        ...(bOcToken?.leadingTrivia || []),
-        ...(abOcToken?.leadingTrivia || []),
-      ].find((token) => isComment(token) && isOffsetWithinSpan(offset, token))
+      [...(bOcToken?.trailingTrivia || []), ...(bOcToken?.leadingTrivia || []), ...(abOcToken?.leadingTrivia || [])].find((token) => isComment(token) && isOffsetWithinSpan(offset, token))
     ) {
       return noSuggestions();
     }
@@ -190,16 +186,8 @@ function suggestOnRelOp (
 ): CompletionList {
   const scopeKind = compiler.container.scopeKind(offset);
 
-  if ([
-    ScopeKind.REF,
-    ScopeKind.TABLE,
-    ScopeKind.TABLEPARTIAL,
-  ].includes(scopeKind)) {
-    const res = suggestNamesInScope(compiler, offset, compiler.container.element(offset), [
-      SymbolKind.Table,
-      SymbolKind.Schema,
-      SymbolKind.Column,
-    ]);
+  if ([ScopeKind.REF, ScopeKind.TABLE, ScopeKind.TABLEPARTIAL].includes(scopeKind)) {
+    const res = suggestNamesInScope(compiler, offset, compiler.container.element(offset), [SymbolKind.Table, SymbolKind.Schema, SymbolKind.Column]);
 
     return !shouldPrependSpace(container.op, offset) ? res : prependSpace(res);
   }
@@ -311,11 +299,7 @@ function suggestInCommaExpression (compiler: Compiler, offset: number): Completi
   // CommaExpressionNode is used in records data rows
   if (scopeKind === ScopeKind.RECORDS) {
     // In records, suggest enum values if applicable
-    return suggestNamesInScope(compiler, offset, compiler.container.element(offset), [
-      SymbolKind.Schema,
-      SymbolKind.Enum,
-      SymbolKind.EnumField,
-    ]);
+    return suggestNamesInScope(compiler, offset, compiler.container.element(offset), [SymbolKind.Schema, SymbolKind.Enum, SymbolKind.EnumField]);
   }
 
   return noSuggestions();
@@ -406,7 +390,12 @@ function suggestAttributeName (compiler: Compiler, offset: number): CompletionLi
             insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
             range: undefined as any,
           })),
-          ...[SettingName.Ref, SettingName.Default, SettingName.Note, SettingName.Check].map((name) => ({
+          ...[
+            SettingName.Ref,
+            SettingName.Default,
+            SettingName.Note,
+            SettingName.Check,
+          ].map((name) => ({
             label: name,
             insertText: `${name}: `,
             kind: CompletionItemKind.Property,
@@ -448,11 +437,7 @@ function suggestAttributeName (compiler: Compiler, offset: number): CompletionLi
       };
     case ScopeKind.REF:
       return {
-        suggestions: [
-          SettingName.Update,
-          SettingName.Delete,
-          SettingName.Color,
-        ].map((name) => ({
+        suggestions: [SettingName.Update, SettingName.Delete, SettingName.Color].map((name) => ({
           label: name,
           insertText: `${name}: `,
           kind: CompletionItemKind.Property,
@@ -462,9 +447,7 @@ function suggestAttributeName (compiler: Compiler, offset: number): CompletionLi
       };
     case ScopeKind.CHECKS:
       return {
-        suggestions: [
-          SettingName.Name,
-        ].map((name) => ({
+        suggestions: [SettingName.Name].map((name) => ({
           label: name,
           insertText: `${name}: `,
           kind: CompletionItemKind.Property,
@@ -488,7 +471,12 @@ function suggestAttributeValue (
     case 'update':
     case 'delete':
       return {
-        suggestions: ['cascade', 'set default', 'set null', 'restrict'].map((name) => ({
+        suggestions: [
+          'cascade',
+          'set default',
+          'set null',
+          'restrict',
+        ].map((name) => ({
           label: name,
           insertText: name,
           kind: CompletionItemKind.Value,
@@ -507,10 +495,7 @@ function suggestAttributeValue (
         })),
       };
     case 'default':
-      return suggestNamesInScope(compiler, offset, compiler.container.element(offset), [
-        SymbolKind.Schema,
-        SymbolKind.Enum,
-      ]);
+      return suggestNamesInScope(compiler, offset, compiler.container.element(offset), [SymbolKind.Schema, SymbolKind.Enum]);
     default:
       break;
   }
@@ -594,7 +579,16 @@ function suggestInSubField (
 
 function suggestTopLevelElementType (): CompletionList {
   return {
-    suggestions: ['Table', 'TableGroup', 'Enum', 'Project', 'Ref', 'TablePartial', 'Records', 'DiagramView'].map((name) => ({
+    suggestions: [
+      'Table',
+      'TableGroup',
+      'Enum',
+      'Project',
+      'Ref',
+      'TablePartial',
+      'Records',
+      'DiagramView',
+    ].map((name) => ({
       label: name,
       insertText: name,
       insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
@@ -615,11 +609,7 @@ function suggestInEnumField (
   const containerArgId = findContainerArg(offset, container);
 
   if (containerArgId === 1) {
-    return suggestNamesInScope(compiler, offset, compiler.container.element(offset), [
-      SymbolKind.Schema,
-      SymbolKind.Table,
-      SymbolKind.Column,
-    ]);
+    return suggestNamesInScope(compiler, offset, compiler.container.element(offset), [SymbolKind.Schema, SymbolKind.Table, SymbolKind.Column]);
   }
 
   return noSuggestions();
@@ -630,7 +620,12 @@ function suggestInColumn (
   offset: number,
   container?: FunctionApplicationNode,
 ): CompletionList {
-  const elements = ['Note', 'indexes', 'checks', 'Records'];
+  const elements = [
+    'Note',
+    'indexes',
+    'checks',
+    'Records',
+  ];
 
   if (!container?.callee) {
     return {
@@ -669,7 +664,14 @@ function suggestInProjectField (
   offset: number,
   container?: FunctionApplicationNode,
 ): CompletionList {
-  const elements = ['Table', 'TableGroup', 'Enum', 'Note', 'Ref', 'TablePartial'];
+  const elements = [
+    'Table',
+    'TableGroup',
+    'Enum',
+    'Note',
+    'Ref',
+    'TablePartial',
+  ];
   if (!container?.callee) {
     return {
       suggestions: elements.map((name) => ({
@@ -700,11 +702,7 @@ function suggestInProjectField (
 }
 
 function suggestInRefField (compiler: Compiler, offset: number): CompletionList {
-  return suggestNamesInScope(compiler, offset, compiler.container.element(offset), [
-    SymbolKind.Schema,
-    SymbolKind.Table,
-    SymbolKind.Column,
-  ]);
+  return suggestNamesInScope(compiler, offset, compiler.container.element(offset), [SymbolKind.Schema, SymbolKind.Table, SymbolKind.Column]);
 }
 
 function suggestInElementHeader (
@@ -713,10 +711,7 @@ function suggestInElementHeader (
   container: ElementDeclarationNode,
 ): CompletionList {
   if (container.isKind(ElementKind.Records)) {
-    return suggestNamesInScope(compiler, offset, container.parent, [
-      SymbolKind.Schema,
-      SymbolKind.Table,
-    ]);
+    return suggestNamesInScope(compiler, offset, container.parent, [SymbolKind.Schema, SymbolKind.Table]);
   }
   return noSuggestions();
 }
@@ -738,10 +733,7 @@ function suggestInCallExpression (
     && element.isKind(ElementKind.Records)
     && isOffsetWithinElementHeader(offset, element)
   ) {
-    if (inCallee) return suggestNamesInScope(compiler, offset, element.parent, [
-      SymbolKind.Schema,
-      SymbolKind.Table,
-    ]);
+    if (inCallee) return suggestNamesInScope(compiler, offset, element.parent, [SymbolKind.Schema, SymbolKind.Table]);
     if (!inArgs) return noSuggestions();
 
     const callee = container.callee;
@@ -815,7 +807,12 @@ function suggestInTableGroupField (compiler: Compiler): CompletionList {
 function suggestInDiagramViewField (): CompletionList {
   return {
     suggestions: [
-      ...['Tables', 'TableGroups', 'Notes', 'Schemas'].map((name) => ({
+      ...[
+        'Tables',
+        'TableGroups',
+        'Notes',
+        'Schemas',
+      ].map((name) => ({
         label: name,
         insertText: name,
         insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
@@ -947,10 +944,7 @@ function suggestColumnType (compiler: Compiler, offset: number): CompletionList 
         sortText: CompletionItemKind.TypeParameter.toString().padStart(2, '0'),
         range: undefined as any,
       })),
-      ...suggestNamesInScope(compiler, offset, compiler.container.element(offset), [
-        SymbolKind.Enum,
-        SymbolKind.Schema,
-      ]).suggestions,
+      ...suggestNamesInScope(compiler, offset, compiler.container.element(offset), [SymbolKind.Enum, SymbolKind.Schema]).suggestions,
     ],
   };
 }

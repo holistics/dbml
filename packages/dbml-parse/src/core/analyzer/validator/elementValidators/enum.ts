@@ -1,15 +1,16 @@
 import { DEFAULT_SCHEMA_NAME } from '@/constants';
 import { last, partition } from 'lodash-es';
 import SymbolFactory from '@/core/types/symbol/factory';
-import { CompileError, CompileErrorCode, CompileWarning } from '@/core/types/errors';
+import {
+  CompileError, CompileErrorCode, CompileWarning,
+} from '@/core/types/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode, WildcardNode,
 } from '@/core/types/nodes';
 import { isExpressionAQuotedString, isExpressionAVariableNode } from '@/core/parser/utils';
 import { SyntaxToken } from '@/core/types/tokens';
 import { ElementValidator } from '@/core/analyzer/validator/types';
-import {
-  aggregateSettingList } from '@/core/analyzer/validator/utils';
+import { aggregateSettingList } from '@/core/analyzer/validator/utils';
 import { isValidName, pickValidator } from '@/core/analyzer/validator/utils';
 import { registerSchemaStack } from '@/core/analyzer/validator/utils';
 import { createEnumFieldSymbolIndex, createEnumSymbolIndex } from '@/core/types/symbol/symbolIndex';
@@ -191,10 +192,7 @@ export default class EnumValidator implements ElementValidator {
       const symbolTable = this.declarationNode.symbol!.symbolTable!;
       if (symbolTable.has(enumFieldId)) {
         const symbol = symbolTable.get(enumFieldId);
-        return [
-          new CompileError(CompileErrorCode.DUPLICATE_COLUMN_NAME, `Duplicate enum field ${enumFieldName}`, field),
-          new CompileError(CompileErrorCode.DUPLICATE_COLUMN_NAME, `Duplicate enum field ${enumFieldName}`, symbol!.declaration!),
-        ];
+        return [new CompileError(CompileErrorCode.DUPLICATE_COLUMN_NAME, `Duplicate enum field ${enumFieldName}`, field), new CompileError(CompileErrorCode.DUPLICATE_COLUMN_NAME, `Duplicate enum field ${enumFieldName}`, symbol!.declaration!)];
       }
       symbolTable.set(enumFieldId, enumSymbol);
     }

@@ -1,4 +1,6 @@
-import { last, zip, uniqBy } from 'lodash-es';
+import {
+  last, zip, uniqBy,
+} from 'lodash-es';
 import { ColumnSymbol } from '@/core/types/symbol/symbols';
 import {
   destructureComplexVariableTuple, destructureComplexVariable, destructureMemberAccessExpression, extractQuotedStringToken,
@@ -14,7 +16,9 @@ import {
   Column,
 } from '@/core/types/schemaJson';
 import { SyntaxTokenKind } from '@/core/types/tokens';
-import { isDotDelimitedIdentifier, isExpressionAnIdentifierNode, isExpressionAQuotedString } from '@/core/parser/utils';
+import {
+  isDotDelimitedIdentifier, isExpressionAnIdentifierNode, isExpressionAQuotedString,
+} from '@/core/parser/utils';
 import Report from '@/core/types/report';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import { getNumberTextFromExpression, parseNumber } from '@/core/utils/numbers';

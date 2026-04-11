@@ -2,9 +2,7 @@ import Compiler from '@/compiler/index';
 import * as services from '@/services/index';
 
 // Export the types that playground and other consumers need
-export {
-  ElementKind,
-} from '@/core/analyzer/types';
+export { ElementKind } from '@/core/analyzer/types';
 
 export * from '@/core/interpreter/records/utils';
 

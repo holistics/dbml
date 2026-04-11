@@ -106,9 +106,11 @@ export function createConstraintErrors (
     ));
   }
 
-  return [new CompileError(
-    CompileErrorCode.INVALID_RECORDS_FIELD,
-    message,
-    row.node,
-  )];
+  return [
+    new CompileError(
+      CompileErrorCode.INVALID_RECORDS_FIELD,
+      message,
+      row.node,
+    ),
+  ];
 }

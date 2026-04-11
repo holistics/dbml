@@ -4,7 +4,9 @@ import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, SyntaxNode,
 } from '@/core/types/nodes';
 import { Project } from '@/core/types/schemaJson';
-import { extractElementName, getTokenPosition, normalizeNoteContent } from '@/core/interpreter/utils';
+import {
+  extractElementName, getTokenPosition, normalizeNoteContent,
+} from '@/core/interpreter/utils';
 import { EnumInterpreter } from './enum';
 import { RefInterpreter } from './ref';
 import { TableInterpreter } from './table';

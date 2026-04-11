@@ -1,6 +1,10 @@
-import { partition, forIn, last } from 'lodash-es';
+import {
+  partition, forIn, last,
+} from 'lodash-es';
 import SymbolFactory from '@/core/types/symbol/factory';
-import { CompileError, CompileErrorCode, CompileWarning } from '@/core/types/errors';
+import {
+  CompileError, CompileErrorCode, CompileWarning,
+} from '@/core/types/errors';
 import {
   AttributeNode,
   BlockExpressionNode,
@@ -69,32 +73,38 @@ export default class TablePartialValidator implements ElementValidator {
 
   private validateContext (): CompileError[] {
     if (this.declarationNode.parent instanceof ElementDeclarationNode) {
-      return [new CompileError(
-        CompileErrorCode.INVALID_TABLE_PARTIAL_CONTEXT,
-        'TablePartial must appear top-level',
-        this.declarationNode,
-      )];
+      return [
+        new CompileError(
+          CompileErrorCode.INVALID_TABLE_PARTIAL_CONTEXT,
+          'TablePartial must appear top-level',
+          this.declarationNode,
+        ),
+      ];
     }
     return [];
   }
 
   private validateName (nameNode?: SyntaxNode): CompileError[] {
     if (!nameNode) {
-      return [new CompileError(
-        CompileErrorCode.NAME_NOT_FOUND,
-        'A TablePartial must have a name',
-        this.declarationNode,
-      )];
+      return [
+        new CompileError(
+          CompileErrorCode.NAME_NOT_FOUND,
+          'A TablePartial must have a name',
+          this.declarationNode,
+        ),
+      ];
     }
     if (nameNode instanceof WildcardNode) {
       return [new CompileError(CompileErrorCode.INVALID_NAME, 'Wildcard (*) is not allowed as a TablePartial name', nameNode)];
     }
     if (!isSimpleName(nameNode)) {
-      return [new CompileError(
-        CompileErrorCode.INVALID_NAME,
-        'A TablePartial name must be an identifier or a quoted identifer',
-        nameNode,
-      )];
+      return [
+        new CompileError(
+          CompileErrorCode.INVALID_NAME,
+          'A TablePartial name must be an identifier or a quoted identifer',
+          nameNode,
+        ),
+      ];
     }
 
     return [];
@@ -102,11 +112,13 @@ export default class TablePartialValidator implements ElementValidator {
 
   private validateAlias (aliasNode?: SyntaxNode): CompileError[] {
     if (aliasNode) {
-      return [new CompileError(
-        CompileErrorCode.UNEXPECTED_ALIAS,
-        'A TablePartial shouldn\'t have an alias',
-        aliasNode,
-      )];
+      return [
+        new CompileError(
+          CompileErrorCode.UNEXPECTED_ALIAS,
+          'A TablePartial shouldn\'t have an alias',
+          aliasNode,
+        ),
+      ];
     }
 
     return [];
@@ -172,10 +184,7 @@ export default class TablePartialValidator implements ElementValidator {
     }
 
     const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
-    return [
-      ...this.validateFields(fields as FunctionApplicationNode[]),
-      ...this.validateSubElements(subs as ElementDeclarationNode[]),
-    ];
+    return [...this.validateFields(fields as FunctionApplicationNode[]), ...this.validateSubElements(subs as ElementDeclarationNode[])];
   }
 
   validateFields (fields: FunctionApplicationNode[]): CompileError[] {
@@ -217,10 +226,7 @@ export default class TablePartialValidator implements ElementValidator {
     const symbolTable = this.declarationNode.symbol!.symbolTable!;
     if (symbolTable.has(columnId)) {
       const symbol = symbolTable.get(columnId);
-      return [
-        new CompileError(CompileErrorCode.DUPLICATE_COLUMN_NAME, `Duplicate column ${columnName}`, field),
-        new CompileError(CompileErrorCode.DUPLICATE_COLUMN_NAME, `Duplicate column ${columnName}`, symbol!.declaration!),
-      ];
+      return [new CompileError(CompileErrorCode.DUPLICATE_COLUMN_NAME, `Duplicate column ${columnName}`, field), new CompileError(CompileErrorCode.DUPLICATE_COLUMN_NAME, `Duplicate column ${columnName}`, symbol!.declaration!)];
     }
     symbolTable.set(columnId, columnSymbol);
     return [];

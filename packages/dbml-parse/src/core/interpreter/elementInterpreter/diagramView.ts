@@ -1,9 +1,13 @@
 import { partition } from 'lodash-es';
 import { destructureComplexVariable, extractReferee } from '@/core/analyzer/utils';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
-import { BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, SyntaxNode } from '@/core/types/nodes';
+import {
+  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, SyntaxNode,
+} from '@/core/types/nodes';
 import { isWildcardExpression } from '@/core/parser/utils';
-import { ElementInterpreter, InterpreterDatabase, DiagramView } from '@/core/interpreter/types';
+import {
+  ElementInterpreter, InterpreterDatabase, DiagramView,
+} from '@/core/interpreter/types';
 import { getTokenPosition } from '@/core/interpreter/utils';
 import { DEFAULT_SCHEMA_NAME } from '@/constants';
 
@@ -62,9 +66,21 @@ export class DiagramViewInterpreter implements ElementInterpreter {
     if (body.body.length === 1) {
       const first = body.body[0];
       if (first instanceof FunctionApplicationNode && isWildcardExpression(first.callee)) {
-        this.diagramView.visibleEntities = { tables: [], stickyNotes: [], tableGroups: [], schemas: [] };
-        this.env.diagramViewWildcards.set(this.diagramView as DiagramView, new Set(['tables', 'stickyNotes', 'tableGroups', 'schemas']));
-        this.env.diagramViewExplicitlySet.set(this.diagramView as DiagramView, new Set(['tables', 'stickyNotes', 'tableGroups', 'schemas']));
+        this.diagramView.visibleEntities = {
+          tables: [], stickyNotes: [], tableGroups: [], schemas: [],
+        };
+        this.env.diagramViewWildcards.set(this.diagramView as DiagramView, new Set([
+          'tables',
+          'stickyNotes',
+          'tableGroups',
+          'schemas',
+        ]));
+        this.env.diagramViewExplicitlySet.set(this.diagramView as DiagramView, new Set([
+          'tables',
+          'stickyNotes',
+          'tableGroups',
+          'schemas',
+        ]));
         return [];
       }
     }

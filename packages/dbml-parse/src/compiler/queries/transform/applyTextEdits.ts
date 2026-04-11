@@ -15,7 +15,9 @@ export function applyTextEdits (source: string, edits: TextEdit[], sorted = fals
   const sortedEdits = sorted ? edits : [...edits].sort((a, b) => b.start - a.start);
 
   let result = source;
-  for (const { start, end, newText } of sortedEdits) {
+  for (const {
+    start, end, newText,
+  } of sortedEdits) {
     result = result.substring(0, start) + newText + result.substring(end);
   }
 

@@ -5,7 +5,9 @@ import {
 import { ElementBinder } from '../types';
 import { SyntaxToken } from '../../../types/tokens';
 import { CompileError } from '@/core/types/errors';
-import { lookupAndBindInScope, pickBinder, scanNonListNodeForBinding } from '../utils';
+import {
+  lookupAndBindInScope, pickBinder, scanNonListNodeForBinding,
+} from '../utils';
 import { aggregateSettingList, isValidPartialInjection } from '../../validator/utils';
 import { SymbolKind, createColumnSymbolIndex } from '@/core/types/symbol/symbolIndex';
 import { destructureComplexVariableTuple, extractVariableFromExpression } from '../../utils';
@@ -55,10 +57,7 @@ export default class TableBinder implements ElementBinder {
           return [];
         }
 
-        const errors = lookupAndBindInScope(this.ast, [
-          ...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })),
-          { node: tablePartialBindee, kind: SymbolKind.TablePartial },
-        ]);
+        const errors = lookupAndBindInScope(this.ast, [...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })), { node: tablePartialBindee, kind: SymbolKind.TablePartial }]);
         if (errors.length) return errors;
         tablePartialBindee.referee?.symbolTable?.forEach((value) => {
           const columnName = extractVariableFromExpression((value.declaration as FunctionApplicationNode).callee);
@@ -86,10 +85,7 @@ export default class TableBinder implements ElementBinder {
 
     const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
 
-    return [
-      ...this.bindFields(fields as FunctionApplicationNode[]),
-      ...this.bindSubElements(subs as ElementDeclarationNode[]),
-    ];
+    return [...this.bindFields(fields as FunctionApplicationNode[]), ...this.bindSubElements(subs as ElementDeclarationNode[])];
   }
 
   private bindFields (fields: FunctionApplicationNode[]): CompileError[] {
@@ -137,10 +133,7 @@ export default class TableBinder implements ElementBinder {
       return;
     }
 
-    lookupAndBindInScope(this.ast, [
-      ...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })),
-      { node: enumBindee, kind: SymbolKind.Enum },
-    ]);
+    lookupAndBindInScope(this.ast, [...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })), { node: enumBindee, kind: SymbolKind.Enum }]);
   }
 
   // Bind enum field references in default values (e.g., order_status.pending)
@@ -172,11 +165,7 @@ export default class TableBinder implements ElementBinder {
 
     const schemaBindees = fragments.variables;
 
-    return lookupAndBindInScope(this.ast, [
-      ...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })),
-      { node: enumBindee, kind: SymbolKind.Enum },
-      { node: enumFieldBindee, kind: SymbolKind.EnumField },
-    ]);
+    return lookupAndBindInScope(this.ast, [...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })), { node: enumBindee, kind: SymbolKind.Enum }, { node: enumFieldBindee, kind: SymbolKind.EnumField }]);
   }
 
   private bindInlineRef (ref: SyntaxNode): CompileError[] {
@@ -191,14 +180,8 @@ export default class TableBinder implements ElementBinder {
       const schemaBindees = bindee.variables;
 
       return tableBindee
-        ? lookupAndBindInScope(this.ast, [
-            ...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })),
-            { node: tableBindee, kind: SymbolKind.Table },
-            { node: columnBindee, kind: SymbolKind.Column },
-          ])
-        : lookupAndBindInScope(this.declarationNode, [
-            { node: columnBindee, kind: SymbolKind.Column },
-          ]);
+        ? lookupAndBindInScope(this.ast, [...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })), { node: tableBindee, kind: SymbolKind.Table }, { node: columnBindee, kind: SymbolKind.Column }])
+        : lookupAndBindInScope(this.declarationNode, [{ node: columnBindee, kind: SymbolKind.Column }]);
     });
   }
 

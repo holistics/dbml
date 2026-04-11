@@ -148,7 +148,9 @@ export class ProgramNode extends SyntaxNode {
   source: string;
 
   constructor (
-    { body = [], eof, source }: { body?: ElementDeclarationNode[]; eof?: SyntaxToken; source: string },
+    {
+      body = [], eof, source,
+    }: { body?: ElementDeclarationNode[]; eof?: SyntaxToken; source: string },
     id: SyntaxNodeId,
     filepath: Filepath,
   ) {
@@ -463,11 +465,7 @@ export class ListExpressionNode extends SyntaxNode {
     id: SyntaxNodeId,
     filepath: Filepath,
   ) {
-    super(id, SyntaxNodeKind.LIST_EXPRESSION, filepath, [
-      listOpenBracket,
-      ...interleave(elementList, commaList),
-      listCloseBracket,
-    ]);
+    super(id, SyntaxNodeKind.LIST_EXPRESSION, filepath, [listOpenBracket, ...interleave(elementList, commaList), listCloseBracket]);
     this.listOpenBracket = listOpenBracket;
     this.elementList = elementList;
     this.commaList = commaList;
@@ -503,11 +501,7 @@ export class TupleExpressionNode extends SyntaxNode {
     id: SyntaxNodeId,
     filepath: Filepath,
   ) {
-    super(id, SyntaxNodeKind.TUPLE_EXPRESSION, filepath, [
-      tupleOpenParen,
-      ...interleave(elementList, commaList),
-      tupleCloseParen,
-    ]);
+    super(id, SyntaxNodeKind.TUPLE_EXPRESSION, filepath, [tupleOpenParen, ...interleave(elementList, commaList), tupleCloseParen]);
     this.tupleOpenParen = tupleOpenParen;
     this.elementList = elementList;
     this.commaList = commaList;
@@ -539,9 +533,7 @@ export class CommaExpressionNode extends SyntaxNode {
     id: SyntaxNodeId,
     filepath: Filepath,
   ) {
-    super(id, SyntaxNodeKind.COMMA_EXPRESSION, filepath, [
-      ...interleave(elementList, commaList),
-    ]);
+    super(id, SyntaxNodeKind.COMMA_EXPRESSION, filepath, [...interleave(elementList, commaList)]);
     this.elementList = elementList;
     this.commaList = commaList;
   }

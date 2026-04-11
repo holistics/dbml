@@ -1,8 +1,8 @@
 import { partition } from 'lodash-es';
-import { CompileError, CompileErrorCode, CompileWarning } from '@/core/types/errors';
 import {
-  isSimpleName, pickValidator,
-} from '@/core/analyzer/validator/utils';
+  CompileError, CompileErrorCode, CompileWarning,
+} from '@/core/types/errors';
+import { isSimpleName, pickValidator } from '@/core/analyzer/validator/utils';
 import { registerSchemaStack, aggregateSettingList } from '@/core/analyzer/validator/utils';
 import { ElementValidator } from '@/core/analyzer/validator/types';
 import SymbolTable from '@/core/types/symbol/symbolTable';
@@ -42,40 +42,48 @@ export default class DiagramViewValidator implements ElementValidator {
 
   private validateContext (): CompileError[] {
     if (this.declarationNode.parent instanceof ElementDeclarationNode) {
-      return [new CompileError(
-        CompileErrorCode.INVALID_DIAGRAMVIEW_CONTEXT,
-        'DiagramView must appear top-level',
-        this.declarationNode,
-      )];
+      return [
+        new CompileError(
+          CompileErrorCode.INVALID_DIAGRAMVIEW_CONTEXT,
+          'DiagramView must appear top-level',
+          this.declarationNode,
+        ),
+      ];
     }
     return [];
   }
 
   private validateName (nameNode?: SyntaxNode): CompileError[] {
     if (!nameNode) {
-      return [new CompileError(
-        CompileErrorCode.NAME_NOT_FOUND,
-        'A DiagramView must have a name',
-        this.declarationNode,
-      )];
+      return [
+        new CompileError(
+          CompileErrorCode.NAME_NOT_FOUND,
+          'A DiagramView must have a name',
+          this.declarationNode,
+        ),
+      ];
     }
     if (!isSimpleName(nameNode)) {
-      return [new CompileError(
-        CompileErrorCode.INVALID_NAME,
-        'A DiagramView name must be a single identifier',
-        nameNode,
-      )];
+      return [
+        new CompileError(
+          CompileErrorCode.INVALID_NAME,
+          'A DiagramView name must be a single identifier',
+          nameNode,
+        ),
+      ];
     }
     return [];
   }
 
   private validateAlias (aliasNode?: SyntaxNode): CompileError[] {
     if (aliasNode) {
-      return [new CompileError(
-        CompileErrorCode.UNEXPECTED_ALIAS,
-        'A DiagramView shouldn\'t have an alias',
-        aliasNode,
-      )];
+      return [
+        new CompileError(
+          CompileErrorCode.UNEXPECTED_ALIAS,
+          'A DiagramView shouldn\'t have an alias',
+          aliasNode,
+        ),
+      ];
     }
 
     return [];
@@ -120,11 +128,13 @@ export default class DiagramViewValidator implements ElementValidator {
 
     if (body instanceof FunctionApplicationNode) {
       return {
-        errors: [new CompileError(
-          CompileErrorCode.UNEXPECTED_SIMPLE_BODY,
-          'A DiagramView\'s body must be a block',
-          body,
-        )],
+        errors: [
+          new CompileError(
+            CompileErrorCode.UNEXPECTED_SIMPLE_BODY,
+            'A DiagramView\'s body must be a block',
+            body,
+          ),
+        ],
         warnings: [],
       };
     }
@@ -165,7 +175,12 @@ export default class DiagramViewValidator implements ElementValidator {
     const errors: CompileError[] = [];
     const warnings: CompileWarning[] = [];
 
-    const allowedBlocks = ['tables', 'notes', 'tablegroups', 'schemas'];
+    const allowedBlocks = [
+      'tables',
+      'notes',
+      'tablegroups',
+      'schemas',
+    ];
 
     for (const sub of subs) {
       sub.parent = this.declarationNode;

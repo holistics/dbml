@@ -7,7 +7,9 @@ import {
   SyntaxNode,
   TupleExpressionNode,
 } from '@/core/types/nodes';
-import { CompileError, CompileErrorCode, CompileWarning } from '@/core/types/errors';
+import {
+  CompileError, CompileErrorCode, CompileWarning,
+} from '@/core/types/errors';
 import Report from '@/core/types/report';
 import {
   RecordValue,
@@ -33,7 +35,9 @@ import {
   validateForeignKeys,
   isSerialType,
 } from './utils';
-import { destructureCallExpression, destructureComplexVariable, extractQuotedStringToken, extractVariableFromExpression } from '@/core/analyzer/utils';
+import {
+  destructureCallExpression, destructureComplexVariable, extractQuotedStringToken, extractVariableFromExpression,
+} from '@/core/analyzer/utils';
 import { last } from 'lodash-es';
 import { mergeTableAndPartials } from '../utils';
 import { InterpreterDatabase } from '../types';
@@ -199,7 +203,9 @@ function extractValue (
 ): Report<RecordValue | null> {
   // FIXME: Make this more precise
   const type = column.type.type_name.split('(')[0];
-  const { increment, not_null: notNull, dbdefault } = column;
+  const {
+    increment, not_null: notNull, dbdefault,
+  } = column;
   const isEnum = column.type.isEnum || false;
   const valueType = getRecordValueType(type, isEnum);
   const rawString = tryExtractString(node);
@@ -218,11 +224,13 @@ function extractValue (
     const hasDefaultValue = dbdefault && dbdefault.value.toString().toLowerCase() !== 'null';
     const isSerial = isSerialType(type);
     if (notNull && !hasDefaultValue && !increment && !isSerial) {
-      return new Report({ value: null, type: valueType }, [], [new CompileWarning(
-        CompileErrorCode.INVALID_RECORDS_FIELD,
-        `NULL not allowed for non-nullable column '${column.name}' without default and increment`,
-        node,
-      )]);
+      return new Report({ value: null, type: valueType }, [], [
+        new CompileWarning(
+          CompileErrorCode.INVALID_RECORDS_FIELD,
+          `NULL not allowed for non-nullable column '${column.name}' without default and increment`,
+          node,
+        ),
+      ]);
     }
     return new Report({ value: null, type: valueType }, [], []);
   }
@@ -235,11 +243,13 @@ function extractValue (
       enumValue = (destructureComplexVariable(node) ?? []).pop();
     }
     if (!(enumMembers as (string | undefined)[]).includes(enumValue)) {
-      return new Report({ value: enumValue, type: valueType }, [], [new CompileWarning(
-        CompileErrorCode.INVALID_RECORDS_FIELD,
-        `Invalid enum value for column '${column.name}'`,
-        node,
-      )]);
+      return new Report({ value: enumValue, type: valueType }, [], [
+        new CompileWarning(
+          CompileErrorCode.INVALID_RECORDS_FIELD,
+          `Invalid enum value for column '${column.name}'`,
+          node,
+        ),
+      ]);
     }
 
     return new Report({ value: enumValue, type: valueType }, [], []);
@@ -252,21 +262,25 @@ function extractValue (
       return new Report(
         { value: fallbackValue, type: fallbackType },
         [],
-        [new CompileWarning(
-          CompileErrorCode.INVALID_RECORDS_FIELD,
-          `Invalid numeric value for column '${column.name}'`,
-          node,
-        )],
+        [
+          new CompileWarning(
+            CompileErrorCode.INVALID_RECORDS_FIELD,
+            `Invalid numeric value for column '${column.name}'`,
+            node,
+          ),
+        ],
       );
     }
 
     // Integer type: validate no decimal point
     if (isIntegerType(type) && !Number.isInteger(numValue)) {
-      return new Report({ value: Math.floor(numValue), type: valueType }, [], [new CompileWarning(
-        CompileErrorCode.INVALID_RECORDS_FIELD,
-        `Invalid integer value ${numValue} for column '${column.name}': expected integer, got decimal`,
-        node,
-      )]);
+      return new Report({ value: Math.floor(numValue), type: valueType }, [], [
+        new CompileWarning(
+          CompileErrorCode.INVALID_RECORDS_FIELD,
+          `Invalid integer value ${numValue} for column '${column.name}': expected integer, got decimal`,
+          node,
+        ),
+      ]);
     }
 
     // Decimal/numeric type: validate precision and scale
@@ -281,19 +295,23 @@ function extractValue (
       const decimalDigits = decimalPart.length;
 
       if (totalDigits > precision) {
-        return new Report({ value: numValue, type: valueType }, [], [new CompileWarning(
-          CompileErrorCode.INVALID_RECORDS_FIELD,
-          `Numeric value ${numValue} for column '${column.name}' exceeds precision: expected at most ${precision} total digits, got ${totalDigits}`,
-          node,
-        )]);
+        return new Report({ value: numValue, type: valueType }, [], [
+          new CompileWarning(
+            CompileErrorCode.INVALID_RECORDS_FIELD,
+            `Numeric value ${numValue} for column '${column.name}' exceeds precision: expected at most ${precision} total digits, got ${totalDigits}`,
+            node,
+          ),
+        ]);
       }
 
       if (decimalDigits > scale) {
-        return new Report({ value: numValue, type: valueType }, [], [new CompileWarning(
-          CompileErrorCode.INVALID_RECORDS_FIELD,
-          `Numeric value ${numValue} for column '${column.name}' exceeds scale: expected at most ${scale} decimal digits, got ${decimalDigits}`,
-          node,
-        )]);
+        return new Report({ value: numValue, type: valueType }, [], [
+          new CompileWarning(
+            CompileErrorCode.INVALID_RECORDS_FIELD,
+            `Numeric value ${numValue} for column '${column.name}' exceeds scale: expected at most ${scale} decimal digits, got ${decimalDigits}`,
+            node,
+          ),
+        ]);
       }
     }
 
@@ -307,11 +325,13 @@ function extractValue (
       return new Report(
         { value: fallbackValue, type: fallbackType },
         [],
-        [new CompileWarning(
-          CompileErrorCode.INVALID_RECORDS_FIELD,
-          `Invalid boolean value for column '${column.name}'`,
-          node,
-        )],
+        [
+          new CompileWarning(
+            CompileErrorCode.INVALID_RECORDS_FIELD,
+            `Invalid boolean value for column '${column.name}'`,
+            node,
+          ),
+        ],
       );
     }
     return new Report({ value: boolValue, type: valueType }, [], []);
@@ -324,11 +344,13 @@ function extractValue (
       return new Report(
         { value: fallbackValue, type: fallbackType },
         [],
-        [new CompileWarning(
-          CompileErrorCode.INVALID_RECORDS_FIELD,
-          `Invalid datetime value for column '${column.name}', expected valid datetime format (e.g., 'YYYY-MM-DD', 'HH:MM:SS', 'YYYY-MM-DD HH:MM:SS', 'MM/DD/YYYY', 'D MMM YYYY', or 'MMM D, YYYY')`,
-          node,
-        )],
+        [
+          new CompileWarning(
+            CompileErrorCode.INVALID_RECORDS_FIELD,
+            `Invalid datetime value for column '${column.name}', expected valid datetime format (e.g., 'YYYY-MM-DD', 'HH:MM:SS', 'YYYY-MM-DD HH:MM:SS', 'MM/DD/YYYY', 'D MMM YYYY', or 'MMM D, YYYY')`,
+            node,
+          ),
+        ],
       );
     }
     return new Report({ value: dtValue, type: valueType }, [], []);
@@ -341,11 +363,13 @@ function extractValue (
       return new Report(
         { value: fallbackValue, type: fallbackType },
         [],
-        [new CompileWarning(
-          CompileErrorCode.INVALID_RECORDS_FIELD,
-          `Invalid string value for column '${column.name}'`,
-          node,
-        )],
+        [
+          new CompileWarning(
+            CompileErrorCode.INVALID_RECORDS_FIELD,
+            `Invalid string value for column '${column.name}'`,
+            node,
+          ),
+        ],
       );
     }
 
@@ -356,11 +380,13 @@ function extractValue (
       const actualByteLength = new TextEncoder().encode(strValue).length;
 
       if (actualByteLength > length) {
-        return new Report({ value: strValue, type: valueType }, [], [new CompileWarning(
-          CompileErrorCode.INVALID_RECORDS_FIELD,
-          `String value for column '${column.name}' exceeds maximum length: expected at most ${length} bytes (UTF-8), got ${actualByteLength} bytes`,
-          node,
-        )]);
+        return new Report({ value: strValue, type: valueType }, [], [
+          new CompileWarning(
+            CompileErrorCode.INVALID_RECORDS_FIELD,
+            `String value for column '${column.name}' exceeds maximum length: expected at most ${length} bytes (UTF-8), got ${actualByteLength} bytes`,
+            node,
+          ),
+        ]);
       }
     }
 

@@ -4,9 +4,7 @@ import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, IdentiferStreamNode, InfixExpressionNode, ListExpressionNode, SyntaxNode,
 } from '@/core/types/nodes';
-import {
-  Ref, Table,
-} from '@/core/types/schemaJson';
+import { Ref, Table } from '@/core/types/schemaJson';
 import {
   extractColor, extractNamesFromRefOperand, getColumnSymbolsOfRefOperand, getMultiplicities, getRefId, getTokenPosition, isSameEndpoint,
 } from '@/core/interpreter/utils';
@@ -29,10 +27,7 @@ export class RefInterpreter implements ElementInterpreter {
   interpret (): CompileError[] {
     this.ref.token = getTokenPosition(this.declarationNode);
     this.env.ref.set(this.declarationNode, this.ref as Ref);
-    const errors = [
-      ...this.interpretName(this.declarationNode.name!),
-      ...this.interpretBody(this.declarationNode.body!),
-    ];
+    const errors = [...this.interpretName(this.declarationNode.name!), ...this.interpretBody(this.declarationNode.body!)];
     return errors;
   }
 
@@ -70,10 +65,7 @@ export class RefInterpreter implements ElementInterpreter {
 
     const refId = getRefId(leftSymbols, rightSymbols);
     if (this.env.refIds[refId]) {
-      return [
-        new CompileError(CompileErrorCode.CIRCULAR_REF, 'References with same endpoints exist', this.declarationNode),
-        new CompileError(CompileErrorCode.CIRCULAR_REF, 'References with same endpoints exist', this.env.refIds[refId]),
-      ];
+      return [new CompileError(CompileErrorCode.CIRCULAR_REF, 'References with same endpoints exist', this.declarationNode), new CompileError(CompileErrorCode.CIRCULAR_REF, 'References with same endpoints exist', this.env.refIds[refId])];
     }
 
     if (field.args[0]) {

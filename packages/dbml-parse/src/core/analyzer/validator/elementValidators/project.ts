@@ -1,6 +1,8 @@
 import { partition } from 'lodash-es';
 import SymbolFactory from '@/core/types/symbol/factory';
-import { CompileError, CompileErrorCode, CompileWarning } from '@/core/types/errors';
+import {
+  CompileError, CompileErrorCode, CompileWarning,
+} from '@/core/types/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode, WildcardNode,
 } from '@/core/types/nodes';
@@ -22,7 +24,13 @@ export default class ProjectValidator implements ElementValidator {
 
   validate (): { errors: CompileError[]; warnings: CompileWarning[] } {
     return {
-      errors: [...this.validateContext(), ...this.validateName(this.declarationNode.name), ...this.validateAlias(this.declarationNode.alias), ...this.validateSettingList(this.declarationNode.attributeList), ...this.validateBody(this.declarationNode.body)],
+      errors: [
+        ...this.validateContext(),
+        ...this.validateName(this.declarationNode.name),
+        ...this.validateAlias(this.declarationNode.alias),
+        ...this.validateSettingList(this.declarationNode.attributeList),
+        ...this.validateBody(this.declarationNode.body),
+      ],
       warnings: [],
     };
   }
@@ -75,10 +83,7 @@ export default class ProjectValidator implements ElementValidator {
     }
 
     const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
-    return [
-      ...fields.map((field) => new CompileError(CompileErrorCode.INVALID_PROJECT_FIELD, 'A Project can not have inline fields', field)),
-      ...this.validateSubElements(subs as ElementDeclarationNode[]),
-    ];
+    return [...fields.map((field) => new CompileError(CompileErrorCode.INVALID_PROJECT_FIELD, 'A Project can not have inline fields', field)), ...this.validateSubElements(subs as ElementDeclarationNode[])];
   }
 
   private validateSubElements (subs: ElementDeclarationNode[]): CompileError[] {

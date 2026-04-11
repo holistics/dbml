@@ -8,7 +8,9 @@ import {
 import { ElementBinder } from '../types';
 import { SyntaxToken } from '../../../types/tokens';
 import { CompileError } from '@/core/types/errors';
-import { lookupAndBindInScope, pickBinder, scanNonListNodeForBinding } from '../utils';
+import {
+  lookupAndBindInScope, pickBinder, scanNonListNodeForBinding,
+} from '../utils';
 import { ElementKind } from '../../types';
 import { SymbolKind } from '@/core/types/symbol/symbolIndex';
 import SymbolFactory from '@/core/types/symbol/factory';
@@ -66,11 +68,7 @@ export default class RefBinder implements ElementBinder {
 
         const schemaBindees = bindee.variables;
 
-        return columnBindees.flatMap((columnBindee) => lookupAndBindInScope(this.ast, [
-          ...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })),
-          { node: tableBindee, kind: SymbolKind.Table },
-          { node: columnBindee, kind: SymbolKind.Column },
-        ]));
+        return columnBindees.flatMap((columnBindee) => lookupAndBindInScope(this.ast, [...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })), { node: tableBindee, kind: SymbolKind.Table }, { node: columnBindee, kind: SymbolKind.Column }]));
       });
     });
   }

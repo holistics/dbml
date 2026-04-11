@@ -10,7 +10,9 @@ import {
 } from './helper';
 import { mergeTableAndPartials } from '@/core/interpreter/utils';
 import { isSerialType } from '../data';
-import { keyBy, groupBy, partition, compact, isEmpty, difference, filter, flatMap } from 'lodash-es';
+import {
+  keyBy, groupBy, partition, compact, isEmpty, difference, filter, flatMap,
+} from 'lodash-es';
 import { InterpreterDatabase, TableRecordRow } from '@/core/interpreter/types';
 
 const getConstraintType = (columnCount: number) =>
@@ -132,10 +134,7 @@ function findDuplicateErrors (
 }
 
 function collectPkConstraints (mergedTable: Table): string[][] {
-  return [
-    ...mergedTable.fields.filter((field) => field.pk).map((field) => [field.name]),
-    ...mergedTable.indexes.filter((index) => index.pk).map((index) => index.columns.map((c) => c.value)),
-  ];
+  return [...mergedTable.fields.filter((field) => field.pk).map((field) => [field.name]), ...mergedTable.indexes.filter((index) => index.pk).map((index) => index.columns.map((c) => c.value))];
 }
 
 function collectAvailableColumns (rows: TableRecordRow[]): Set<string> {

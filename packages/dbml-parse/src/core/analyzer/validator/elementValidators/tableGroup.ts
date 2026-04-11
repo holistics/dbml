@@ -1,9 +1,12 @@
 import { forIn, partition } from 'lodash-es';
 import { ElementKind } from '@/core/analyzer/types';
-import { CompileError, CompileErrorCode, CompileWarning } from '@/core/types/errors';
 import {
-  isSimpleName, pickValidator } from '@/core/analyzer/validator/utils';
-import { isValidColor, registerSchemaStack, aggregateSettingList } from '@/core/analyzer/validator/utils';
+  CompileError, CompileErrorCode, CompileWarning,
+} from '@/core/types/errors';
+import { isSimpleName, pickValidator } from '@/core/analyzer/validator/utils';
+import {
+  isValidColor, registerSchemaStack, aggregateSettingList,
+} from '@/core/analyzer/validator/utils';
 import { ElementValidator } from '@/core/analyzer/validator/types';
 import SymbolTable from '@/core/types/symbol/symbolTable';
 import { SyntaxToken } from '@/core/types/tokens';
@@ -43,43 +46,51 @@ export default class TableGroupValidator implements ElementValidator {
 
   private validateContext (): CompileError[] {
     if (this.declarationNode.parent instanceof ElementDeclarationNode) {
-      return [new CompileError(
-        CompileErrorCode.INVALID_TABLEGROUP_CONTEXT,
-        'TableGroup must appear top-level',
-        this.declarationNode,
-      )];
+      return [
+        new CompileError(
+          CompileErrorCode.INVALID_TABLEGROUP_CONTEXT,
+          'TableGroup must appear top-level',
+          this.declarationNode,
+        ),
+      ];
     }
     return [];
   }
 
   private validateName (nameNode?: SyntaxNode): CompileError[] {
     if (!nameNode) {
-      return [new CompileError(
-        CompileErrorCode.NAME_NOT_FOUND,
-        'A TableGroup must have a name',
-        this.declarationNode,
-      )];
+      return [
+        new CompileError(
+          CompileErrorCode.NAME_NOT_FOUND,
+          'A TableGroup must have a name',
+          this.declarationNode,
+        ),
+      ];
     }
     if (nameNode instanceof WildcardNode) {
       return [new CompileError(CompileErrorCode.INVALID_NAME, 'Wildcard (*) is not allowed as a TableGroup name', nameNode)];
     }
     if (!isSimpleName(nameNode)) {
-      return [new CompileError(
-        CompileErrorCode.INVALID_NAME,
-        'A TableGroup name must be a single identifier',
-        nameNode,
-      )];
+      return [
+        new CompileError(
+          CompileErrorCode.INVALID_NAME,
+          'A TableGroup name must be a single identifier',
+          nameNode,
+        ),
+      ];
     }
     return [];
   }
 
   private validateAlias (aliasNode?: SyntaxNode): CompileError[] {
     if (aliasNode) {
-      return [new CompileError(
-        CompileErrorCode.UNEXPECTED_ALIAS,
-        'A TableGroup shouldn\'t have an alias',
-        aliasNode,
-      )];
+      return [
+        new CompileError(
+          CompileErrorCode.UNEXPECTED_ALIAS,
+          'A TableGroup shouldn\'t have an alias',
+          aliasNode,
+        ),
+      ];
     }
 
     return [];
@@ -162,18 +173,17 @@ export default class TableGroupValidator implements ElementValidator {
     if (!body) return [];
 
     if (body instanceof FunctionApplicationNode) {
-      return [new CompileError(
-        CompileErrorCode.UNEXPECTED_SIMPLE_BODY,
-        'A TableGroup\'s body must be a block',
-        body,
-      )];
+      return [
+        new CompileError(
+          CompileErrorCode.UNEXPECTED_SIMPLE_BODY,
+          'A TableGroup\'s body must be a block',
+          body,
+        ),
+      ];
     }
 
     const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
-    return [
-      ...this.validateFields(fields as FunctionApplicationNode[]),
-      ...this.validateSubElements(subs as ElementDeclarationNode[]),
-    ];
+    return [...this.validateFields(fields as FunctionApplicationNode[]), ...this.validateSubElements(subs as ElementDeclarationNode[])];
   }
 
   validateFields (fields: FunctionApplicationNode[]): CompileError[] {
@@ -220,10 +230,7 @@ export default class TableGroupValidator implements ElementValidator {
       const symbolTable = this.declarationNode.symbol!.symbolTable!;
       if (symbolTable.has(tableGroupFieldId)) {
         const symbol = symbolTable.get(tableGroupFieldId);
-        return [
-          new CompileError(CompileErrorCode.DUPLICATE_TABLEGROUP_FIELD_NAME, `${tableGroupField} already exists in the group`, field),
-          new CompileError(CompileErrorCode.DUPLICATE_TABLEGROUP_FIELD_NAME, `${tableGroupField} already exists in the group`, symbol!.declaration!),
-        ];
+        return [new CompileError(CompileErrorCode.DUPLICATE_TABLEGROUP_FIELD_NAME, `${tableGroupField} already exists in the group`, field), new CompileError(CompileErrorCode.DUPLICATE_TABLEGROUP_FIELD_NAME, `${tableGroupField} already exists in the group`, symbol!.declaration!)];
       }
       symbolTable.set(tableGroupFieldId, tableGroupSymbol);
     }

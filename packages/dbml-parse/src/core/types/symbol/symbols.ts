@@ -72,7 +72,9 @@ export class EnumSymbol extends NodeSymbol {
     { symbolTable, declaration }: { symbolTable: SymbolTable; declaration: SyntaxNode },
     id: NodeSymbolId,
   ) {
-    super({ kind: SymbolKind.Enum, symbolTable, declaration }, id);
+    super({
+      kind: SymbolKind.Enum, symbolTable, declaration,
+    }, id);
   }
 }
 
@@ -95,7 +97,9 @@ export class TableSymbol extends NodeSymbol {
     { symbolTable, declaration }: { symbolTable: SymbolTable; declaration: SyntaxNode },
     id: NodeSymbolId,
   ) {
-    super({ kind: SymbolKind.Table, symbolTable, declaration }, id);
+    super({
+      kind: SymbolKind.Table, symbolTable, declaration,
+    }, id);
   }
 }
 
@@ -118,7 +122,9 @@ export class TableGroupSymbol extends NodeSymbol {
     { symbolTable, declaration }: { symbolTable: SymbolTable; declaration: SyntaxNode },
     id: NodeSymbolId,
   ) {
-    super({ kind: SymbolKind.TableGroup, symbolTable, declaration }, id);
+    super({
+      kind: SymbolKind.TableGroup, symbolTable, declaration,
+    }, id);
   }
 }
 
@@ -141,7 +147,9 @@ export class TablePartialSymbol extends NodeSymbol {
     { symbolTable, declaration }: { symbolTable: SymbolTable; declaration: SyntaxNode },
     id: NodeSymbolId,
   ) {
-    super({ kind: SymbolKind.TablePartial, symbolTable, declaration }, id);
+    super({
+      kind: SymbolKind.TablePartial, symbolTable, declaration,
+    }, id);
   }
 }
 
@@ -154,7 +162,9 @@ export class PartialInjectionSymbol extends NodeSymbol {
     { symbolTable, declaration }: { symbolTable: SymbolTable; declaration: SyntaxNode },
     id: NodeSymbolId,
   ) {
-    super({ kind: SymbolKind.PartialInjection, symbolTable, declaration }, id);
+    super({
+      kind: SymbolKind.PartialInjection, symbolTable, declaration,
+    }, id);
   }
 }
 
@@ -182,7 +192,9 @@ export class DiagramViewSymbol extends NodeSymbol {
     { symbolTable, declaration }: { symbolTable: SymbolTable; declaration: SyntaxNode },
     id: NodeSymbolId,
   ) {
-    super({ kind: SymbolKind.DiagramView, symbolTable, declaration }, id);
+    super({
+      kind: SymbolKind.DiagramView, symbolTable, declaration,
+    }, id);
   }
 }
 

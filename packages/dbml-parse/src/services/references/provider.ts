@@ -21,11 +21,7 @@ export default class DBMLReferencesProvider implements ReferenceProvider {
       const node = containers.pop();
       if (
         node
-        && [
-          SyntaxNodeKind.ELEMENT_DECLARATION,
-          SyntaxNodeKind.FUNCTION_APPLICATION,
-          SyntaxNodeKind.PRIMARY_EXPRESSION,
-        ].includes(node?.kind)
+        && [SyntaxNodeKind.ELEMENT_DECLARATION, SyntaxNodeKind.FUNCTION_APPLICATION, SyntaxNodeKind.PRIMARY_EXPRESSION].includes(node?.kind)
       ) {
         const { symbol } = node;
         if (symbol?.references.length) {

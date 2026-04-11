@@ -1,5 +1,7 @@
 import Report from '@/core/types/report';
-import { CompileError, CompileErrorCode, CompileWarning } from '@/core/types/errors';
+import {
+  CompileError, CompileErrorCode, CompileWarning,
+} from '@/core/types/errors';
 import { ElementDeclarationNode, ProgramNode } from '@/core/types/nodes';
 import { SchemaSymbol } from '@/core/types/symbol/symbols';
 import SymbolFactory from '@/core/types/symbol/factory';
@@ -18,9 +20,7 @@ export default class Validator {
   constructor (ast: ProgramNode, symbolFactory: SymbolFactory) {
     this.ast = ast;
     this.symbolFactory = symbolFactory;
-    this.publicSchemaSymbol = this.symbolFactory.create(SchemaSymbol, {
-      symbolTable: new SymbolTable(),
-    });
+    this.publicSchemaSymbol = this.symbolFactory.create(SchemaSymbol, { symbolTable: new SymbolTable() });
 
     this.ast.symbol = this.publicSchemaSymbol;
     this.ast.symbol.declaration = this.ast;

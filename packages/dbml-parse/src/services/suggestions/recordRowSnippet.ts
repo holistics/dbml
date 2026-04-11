@@ -16,7 +16,9 @@ import {
   CompletionItemKind,
   CompletionItemInsertTextRule,
 } from '@/services/types';
-import { ColumnSymbol, TablePartialInjectedColumnSymbol, TableSymbol } from '@/core/types/symbol/symbols';
+import {
+  ColumnSymbol, TablePartialInjectedColumnSymbol, TableSymbol,
+} from '@/core/types/symbol/symbols';
 import { ElementKind } from '@/core/analyzer/types';
 import Compiler from '@/compiler';
 import {

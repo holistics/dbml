@@ -9,11 +9,19 @@ import Lexer from '@/core/lexer/lexer';
 import Parser from '@/core/parser/parser';
 import Analyzer from '@/core/analyzer/analyzer';
 import Interpreter from '@/core/interpreter/interpreter';
-import { DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLReferencesProvider, DBMLDiagnosticsProvider } from '@/services/index';
-import { ast, errors, warnings, tokens, rawDb, publicSymbolTable } from './queries/parse';
+import {
+  DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLReferencesProvider, DBMLDiagnosticsProvider,
+} from '@/services/index';
+import {
+  ast, errors, warnings, tokens, rawDb, publicSymbolTable,
+} from './queries/parse';
 import { invalidStream, flatStream } from './queries/token';
-import { symbolOfName, symbolOfNameToKey, symbolMembers } from './queries/symbol';
-import { containerStack, containerToken, containerElement, containerScope, containerScopeKind } from './queries/container';
+import {
+  symbolOfName, symbolOfNameToKey, symbolMembers,
+} from './queries/symbol';
+import {
+  containerStack, containerToken, containerElement, containerScope, containerScopeKind,
+} from './queries/container';
 import {
   renameTable,
   applyTextEdits,
@@ -24,14 +32,20 @@ import {
   type DiagramViewSyncOperation,
   type DiagramViewBlock,
 } from './queries/transform';
-import { splitQualifiedIdentifier, unescapeString, escapeString, formatRecordValue, isValidIdentifier, addDoubleQuoteIfNeeded } from './queries/utils';
+import {
+  splitQualifiedIdentifier, unescapeString, escapeString, formatRecordValue, isValidIdentifier, addDoubleQuoteIfNeeded,
+} from './queries/utils';
 
 // Re-export types
 export { ScopeKind } from './types';
-export type { TextEdit, TableNameInput, DiagramViewSyncOperation, DiagramViewBlock };
+export type {
+  TextEdit, TableNameInput, DiagramViewSyncOperation, DiagramViewBlock,
+};
 
 // Re-export utilities
-export { splitQualifiedIdentifier, unescapeString, escapeString, formatRecordValue, isValidIdentifier, addDoubleQuoteIfNeeded };
+export {
+  splitQualifiedIdentifier, unescapeString, escapeString, formatRecordValue, isValidIdentifier, addDoubleQuoteIfNeeded,
+};
 
 export default class Compiler {
   private source = '';
@@ -85,7 +99,9 @@ export default class Compiler {
     }
 
     return parseRes.chain(({ ast, tokens }) =>
-      new Interpreter(ast).interpret().map((rawDb) => ({ ast, tokens, rawDb })),
+      new Interpreter(ast).interpret().map((rawDb) => ({
+        ast, tokens, rawDb,
+      })),
     );
   }
 

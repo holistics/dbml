@@ -8,7 +8,9 @@ import {
   createConstraintErrors,
 } from './helper';
 import { mergeTableAndPartials } from '@/core/interpreter/utils';
-import { keyBy, groupBy, compact, isEmpty, filter, flatMap } from 'lodash-es';
+import {
+  keyBy, groupBy, compact, isEmpty, filter, flatMap,
+} from 'lodash-es';
 import { InterpreterDatabase, TableRecordRow } from '@/core/interpreter/types';
 
 const getConstraintType = (columnCount: number) =>
@@ -34,10 +36,7 @@ export function validateUnique (env: InterpreterDatabase): CompileError[] {
 }
 
 function collectUniqueConstraints (mergedTable: Table): string[][] {
-  return [
-    ...mergedTable.fields.filter((field) => field.unique).map((field) => [field.name]),
-    ...mergedTable.indexes.filter((index) => index.unique).map((index) => index.columns.map((c) => c.value)),
-  ];
+  return [...mergedTable.fields.filter((field) => field.unique).map((field) => [field.name]), ...mergedTable.indexes.filter((index) => index.unique).map((index) => index.columns.map((c) => c.value))];
 }
 
 function checkUniqueDuplicates (

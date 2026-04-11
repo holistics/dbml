@@ -18,18 +18,16 @@ export class StickyNoteInterpreter implements ElementInterpreter {
   constructor (declarationNode: ElementDeclarationNode, env: InterpreterDatabase) {
     this.declarationNode = declarationNode;
     this.env = env;
-    this.note = { name: undefined, content: undefined, token: undefined };
+    this.note = {
+      name: undefined, content: undefined, token: undefined,
+    };
   }
 
   interpret (): CompileError[] {
     this.note.token = getTokenPosition(this.declarationNode);
     this.env.notes.set(this.declarationNode, this.note as Note);
 
-    const errors = [
-      ...this.interpretName(this.declarationNode.name!),
-      ...this.interpretSettingList(this.declarationNode.attributeList),
-      ...this.interpretBody(this.declarationNode.body as BlockExpressionNode),
-    ];
+    const errors = [...this.interpretName(this.declarationNode.name!), ...this.interpretSettingList(this.declarationNode.attributeList), ...this.interpretBody(this.declarationNode.body as BlockExpressionNode)];
 
     return errors;
   }
@@ -54,9 +52,7 @@ export class StickyNoteInterpreter implements ElementInterpreter {
     const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
 
     if (fields.length !== 1 || subs.length > 0) {
-      return [
-        new CompileError(CompileErrorCode.INVALID_NOTE, 'Invalid note syntax', body),
-      ];
+      return [new CompileError(CompileErrorCode.INVALID_NOTE, 'Invalid note syntax', body)];
     }
 
     return [...this.interpretNote(fields[0] as FunctionApplicationNode)];

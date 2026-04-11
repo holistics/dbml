@@ -1,4 +1,6 @@
-import { NodeSymbol, NodeSymbolId, NodeSymbolIdGenerator } from '@/core/types/symbol';
+import {
+  NodeSymbol, NodeSymbolId, NodeSymbolIdGenerator,
+} from '@/core/types/symbol';
 
 export default class SymbolFactory {
   private generator: NodeSymbolIdGenerator;

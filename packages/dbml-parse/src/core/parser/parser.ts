@@ -5,7 +5,9 @@ import {
   markInvalid,
 } from '@/core/parser/utils';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
-import { SyntaxToken, SyntaxTokenKind, isOpToken } from '@/core/types/tokens';
+import {
+  SyntaxToken, SyntaxTokenKind, isOpToken,
+} from '@/core/types/tokens';
 import Report from '@/core/types/report';
 import { ParsingContext, ParsingContextStack } from '@/core/parser/contextStack';
 import {
@@ -36,7 +38,9 @@ import {
   WildcardNode,
 } from '@/core/types/nodes';
 import NodeFactory from '@/core/parser/factory';
-import { hasTrailingNewLines, hasTrailingSpaces, isAtStartOfLine } from '@/core/lexer/utils';
+import {
+  hasTrailingNewLines, hasTrailingSpaces, isAtStartOfLine,
+} from '@/core/lexer/utils';
 import { Filepath } from '@/core/types/filepath';
 
 // A class of errors that represent a parsing failure and contain the node that was partially parsed
@@ -178,7 +182,9 @@ export default class Parser {
   parse (): Report<{ ast: ProgramNode; tokens: SyntaxToken[] }> {
     const body = this.program();
     const eof = this.advance();
-    const program = this.nodeFactory.create(ProgramNode, { body, eof, source: this.source });
+    const program = this.nodeFactory.create(ProgramNode, {
+      body, eof, source: this.source,
+    });
     this.gatherInvalid();
 
     return new Report({ ast: program, tokens: this.tokens }, this.errors);
@@ -537,11 +543,14 @@ export default class Parser {
 
     return [
       // We do not support {} in CSV line
-      SyntaxTokenKind.RBRACE, SyntaxTokenKind.LBRACE,
+      SyntaxTokenKind.RBRACE,
+      SyntaxTokenKind.LBRACE,
       // We do not support [] in CSV line
-      SyntaxTokenKind.RBRACKET, SyntaxTokenKind.LBRACKET,
+      SyntaxTokenKind.RBRACKET,
+      SyntaxTokenKind.LBRACKET,
       // We do not support () in CSV line
-      SyntaxTokenKind.RPAREN, SyntaxTokenKind.LPAREN,
+      SyntaxTokenKind.RPAREN,
+      SyntaxTokenKind.LPAREN,
       SyntaxTokenKind.COLON,
     ].includes(nextTokenKind);
   }
@@ -724,9 +733,7 @@ export default class Parser {
     | WildcardNode {
     if (this.check(SyntaxTokenKind.WILDCARD)) {
       this.advance();
-      return this.nodeFactory.create(WildcardNode, {
-        token: this.previous(),
-      });
+      return this.nodeFactory.create(WildcardNode, { token: this.previous() });
     }
 
     if (
@@ -889,16 +896,12 @@ export default class Parser {
         SyntaxTokenKind.NUMERIC_LITERAL,
       )
     ) {
-      return this.nodeFactory.create(PrimaryExpressionNode, {
-        expression: this.nodeFactory.create(LiteralNode, { literal: this.previous() }),
-      });
+      return this.nodeFactory.create(PrimaryExpressionNode, { expression: this.nodeFactory.create(LiteralNode, { literal: this.previous() }) });
     }
 
     // Primary expression containing a nested VariableNode
     if (this.match(SyntaxTokenKind.QUOTED_STRING, SyntaxTokenKind.IDENTIFIER)) {
-      return this.nodeFactory.create(PrimaryExpressionNode, {
-        expression: this.nodeFactory.create(VariableNode, { variable: this.previous() }),
-      });
+      return this.nodeFactory.create(PrimaryExpressionNode, { expression: this.nodeFactory.create(VariableNode, { variable: this.previous() }) });
     }
 
     this.logError(this.peek(), CompileErrorCode.UNEXPECTED_TOKEN, 'Expect a variable or literal');
@@ -1247,9 +1250,7 @@ function prefixBindingPower (token: SyntaxToken): { left: null; right: null | nu
 
 const postfixBindingPowerMap: {
   [index: string]: { left: number; right: null } | undefined;
-} = {
-  '(': { left: 14, right: null },
-};
+} = { '(': { left: 14, right: null } };
 
 function postfixBindingPower (token: SyntaxToken): { left: null | number; right: null } {
   const power = postfixBindingPowerMap[token.value];

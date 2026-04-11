@@ -1,6 +1,8 @@
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import Report from '@/core/types/report';
-import { isAlphaOrUnderscore, isAlphaNumeric, isDigit } from '@/core/utils/chars';
+import {
+  isAlphaOrUnderscore, isAlphaNumeric, isDigit,
+} from '@/core/utils/chars';
 import {
   SyntaxToken, SyntaxTokenKind, isOp, isTriviaToken,
 } from '@/core/types/tokens';
@@ -491,7 +493,9 @@ export default class Lexer {
   }
 
   escapedString (): string {
-    const prevPos: Position = { column: this.current.column - 1, offset: this.current.offset - 1, line: this.current.line };
+    const prevPos: Position = {
+      column: this.current.column - 1, offset: this.current.offset - 1, line: this.current.line,
+    };
     if (this.isAtEnd()) {
       return '\\';
     }

@@ -1,5 +1,7 @@
 import { ProgramNode } from '@/core/types/nodes';
-import { Database, Table, TablePartial, TableRecord } from '@/core/types/schemaJson';
+import {
+  Database, Table, TablePartial, TableRecord,
+} from '@/core/types/schemaJson';
 import { TableInterpreter } from '@/core/interpreter/elementInterpreter/table';
 import { StickyNoteInterpreter } from '@/core/interpreter/elementInterpreter/sticky_note';
 import { RefInterpreter } from '@/core/interpreter/elementInterpreter/ref';
@@ -51,9 +53,7 @@ function expandDiagramViewWildcards (env: InterpreterDatabase): void {
     if (wildcards.has('tableGroups') && ve.tableGroups && ve.tableGroups.length === 0) {
       const otherTrinitySet = explicitlySet.has('tables') || explicitlySet.has('schemas');
       if (!otherTrinitySet) {
-        ve.tableGroups = Array.from(env.tableGroups.values()).map((tg) => ({
-          name: tg.name!,
-        }));
+        ve.tableGroups = Array.from(env.tableGroups.values()).map((tg) => ({ name: tg.name! }));
       }
     }
   }

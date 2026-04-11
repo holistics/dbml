@@ -4,10 +4,10 @@ import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode,
 } from '@/core/types/nodes';
+import { Enum, EnumField } from '@/core/types/schemaJson';
 import {
-  Enum, EnumField,
-} from '@/core/types/schemaJson';
-import { extractElementName, getTokenPosition, normalizeNoteContent } from '@/core/interpreter/utils';
+  extractElementName, getTokenPosition, normalizeNoteContent,
+} from '@/core/interpreter/utils';
 import { ElementInterpreter, InterpreterDatabase } from '../types';
 
 export class EnumInterpreter implements ElementInterpreter {

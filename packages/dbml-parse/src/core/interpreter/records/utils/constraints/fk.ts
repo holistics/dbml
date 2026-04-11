@@ -1,5 +1,7 @@
 import { CompileError } from '@/core/types/errors';
-import { Ref, RefEndpoint, Table } from '@/core/types/schemaJson';
+import {
+  Ref, RefEndpoint, Table,
+} from '@/core/types/schemaJson';
 import {
   extractKeyValueWithDefault,
   hasNullWithoutDefaultInKey,
@@ -19,10 +21,7 @@ type TableInfo = {
 
 export function validateForeignKeys (env: InterpreterDatabase): CompileError[] {
   // Collect all refs: explicit refs + inline refs from table partials
-  const refs = [
-    ...env.ref.values(),
-    ...flatMap(Array.from(env.tables.values()), (t) => extractInlineRefsFromTablePartials(t, env)),
-  ];
+  const refs = [...env.ref.values(), ...flatMap(Array.from(env.tables.values()), (t) => extractInlineRefsFromTablePartials(t, env))];
 
   // Build table info map
   const tableInfoMap = buildTableInfoMap(env);
@@ -120,10 +119,7 @@ function validateRelationship (
   // Bidirectional relationships: both 1-1 and many-to-many
   const isBidirectional = (rel1 === '1' && rel2 === '1') || (rel1 === '*' && rel2 === '*');
   if (isBidirectional) {
-    return [
-      ...validateFkSourceToTarget(table1, table2, endpoint1, endpoint2),
-      ...validateFkSourceToTarget(table2, table1, endpoint2, endpoint1),
-    ];
+    return [...validateFkSourceToTarget(table1, table2, endpoint1, endpoint2), ...validateFkSourceToTarget(table2, table1, endpoint2, endpoint1)];
   }
 
   // Many-to-one: validate FK from "many" side to "one" side

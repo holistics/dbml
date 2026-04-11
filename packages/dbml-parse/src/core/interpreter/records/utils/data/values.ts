@@ -6,7 +6,9 @@ import {
 } from '@/core/types/nodes';
 import { isExpressionAnIdentifierNode } from '@/core/parser/utils';
 import { isExpressionASignedNumberExpression } from '@/core/analyzer/validator/utils';
-import { destructureComplexVariable, extractQuotedStringToken, extractNumericLiteral } from '@/core/analyzer/utils';
+import {
+  destructureComplexVariable, extractQuotedStringToken, extractNumericLiteral,
+} from '@/core/analyzer/utils';
 import { last } from 'lodash-es';
 import { DateTime } from 'luxon';
 
@@ -122,8 +124,20 @@ export function tryExtractInteger (value: SyntaxNode | number | string | boolean
   return null;
 }
 
-export const TRUTHY_VALUES = ['true', 'yes', 'y', 't', '1'];
-export const FALSY_VALUES = ['false', 'no', 'n', 'f', '0'];
+export const TRUTHY_VALUES = [
+  'true',
+  'yes',
+  'y',
+  't',
+  '1',
+];
+export const FALSY_VALUES = [
+  'false',
+  'no',
+  'n',
+  'f',
+  '0',
+];
 
 // Try to extract a boolean value from a syntax node or primitive
 // Example: 't', 'f', 'y', 'n', 'true', 'false', true, false, 'yes', 'no', 1, 0, '1', '0'
