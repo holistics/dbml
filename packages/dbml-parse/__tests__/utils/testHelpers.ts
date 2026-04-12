@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import { NodeSymbol, SchemaSymbol } from '@/core/types/symbol';
 import { SyntaxToken } from '@/core/types/tokens';
-import { ElementDeclarationNode, LiteralNode, ProgramNode, SyntaxNode, VariableNode } from '@/core/types/nodes';
+import { ElementDeclarationNode, FunctionApplicationNode, FunctionExpressionNode, LiteralNode, PrimaryExpressionNode, ProgramNode, SyntaxNode, VariableNode } from '@/core/types/nodes';
 import { getElementNameString } from '@/core/utils/expression';
 import { CompileError, CompileErrorCode, CompileWarning } from '@/core/types/errors';
 import type Compiler from '@/compiler';
@@ -24,6 +24,15 @@ function getNameHint (node: SyntaxNode | SyntaxToken): string {
   }
   if (node instanceof LiteralNode) {
     return `${node.literal?.value || ''}`;
+  }
+  if (node instanceof FunctionExpressionNode) {
+    return `${node.value?.value || ''}`;
+  }
+  if (node instanceof FunctionApplicationNode && node.callee) {
+    return getNameHint(node.callee);
+  }
+  if (node instanceof PrimaryExpressionNode && node.expression) {
+    return getNameHint(node.expression);
   }
   if (node instanceof ElementDeclarationNode) {
     return `${getElementNameString(node) || ''}`;
@@ -75,7 +84,7 @@ export type Snappable =
 // Accept an object
 // Output a stable key-value object
 function sortObject (object: Record<string, unknown>): Record<string, unknown> {
-  const entries = Object.entries(object).filter(([, value]) => !isEmpty(value));
+  const entries = Object.entries(object).filter(([, value]) => !isEmpty(value) || typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean');
   entries.sort(
     ([key1], [key2]) => (key1 as string) < (key2 as string) ? -1 : 1,
   );
@@ -115,6 +124,9 @@ function sortArray (array: unknown[]): unknown[] {
     if ((s as any)?.declaration) return getIntraKindRank((s as any).declaration);
     if ((s as any)?.token) return ((s as any).token as TokenPosition)?.start?.offset || 0; // possibly a schema element
     if ((s as any)?.id) return getIntraKindRank((s as any).id);
+    if (typeof s === 'object') {
+      return getIntraKindRank(Object.values(sortObject(s as Record<string, unknown>))[0]);
+    }
     return 0;
   }
 
@@ -262,7 +274,7 @@ export function syntaxTokenToSnapshot (
         id: tokenReadableId,
         snippet,
         isInvalid,
-        filepath: filepath.toString(),
+        filepath: filepath.absolute,
       },
     };
   }
@@ -333,6 +345,29 @@ export function syntaxNodeToSnapshot (
       )),
     }),
   };
+  return result;
+}
+
+export function collectNodesWithReferee (compiler: Compiler, node: SyntaxNode): SyntaxNode[] {
+  const result: SyntaxNode[] = [];
+  if (compiler.nodeReferee(node).getFiltered(UNHANDLED)) result.push(node);
+
+  const {
+    id, parent, parentNode, kind, startPos, endPos, start, end, filepath, fullStart, fullEnd, symbol, referee, source, ...props
+  } = node as SyntaxNode & Record<string, unknown>;
+
+  for (const value of Object.values(props)) {
+    if (value instanceof SyntaxNode) {
+      result.push(...collectNodesWithReferee(compiler, value));
+    } else if (Array.isArray(value)) {
+      for (const item of value) {
+        if (item instanceof SyntaxNode) {
+          result.push(...collectNodesWithReferee(compiler, item));
+        }
+      }
+    }
+  }
+
   return result;
 }
 

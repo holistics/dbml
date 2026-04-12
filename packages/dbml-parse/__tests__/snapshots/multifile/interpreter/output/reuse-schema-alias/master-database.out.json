@@ -6,33 +6,80 @@
           {
             "fields": [
               {
+                "increment": false,
                 "name": "id",
+                "pk": true,
                 "token": {
-                  "filepath": "/auth-tables.dbml"
+                  "end": {
+                    "column": 14,
+                    "line": 3,
+                    "offset": 66
+                  },
+                  "filepath": "/auth-tables.dbml",
+                  "start": {
+                    "column": 3,
+                    "line": 3,
+                    "offset": 55
+                  }
                 },
                 "type": {
+                  "isEnum": false,
                   "type_name": "int"
-                }
+                },
+                "unique": false
               },
               {
                 "name": "email",
+                "pk": false,
                 "token": {
-                  "filepath": "/auth-tables.dbml"
+                  "end": {
+                    "column": 16,
+                    "line": 4,
+                    "offset": 82
+                  },
+                  "filepath": "/auth-tables.dbml",
+                  "start": {
+                    "column": 3,
+                    "line": 4,
+                    "offset": 69
+                  }
                 },
                 "type": {
+                  "isEnum": false,
                   "type_name": "varchar"
-                }
+                },
+                "unique": false
               }
             ],
             "name": "users",
             "schemaName": "auth",
             "token": {
-              "filepath": "/auth-tables.dbml"
+              "end": {
+                "column": 2,
+                "line": 5,
+                "offset": 84
+              },
+              "filepath": "/auth-tables.dbml",
+              "start": {
+                "column": 1,
+                "line": 2,
+                "offset": 34
+              }
             }
           }
         ],
         "token": {
-          "filepath": "/auth-tables.dbml"
+          "end": {
+            "column": 1,
+            "line": 6,
+            "offset": 85
+          },
+          "filepath": "/auth-tables.dbml",
+          "start": {
+            "column": 1,
+            "line": 2,
+            "offset": 34
+          }
         }
       },
       "/main.dbml": {
@@ -59,7 +106,17 @@
                 "relation": "*",
                 "tableName": "orders",
                 "token": {
-                  "filepath": "/main.dbml"
+                  "end": {
+                    "column": 28,
+                    "line": 7,
+                    "offset": 222
+                  },
+                  "filepath": "/main.dbml",
+                  "start": {
+                    "column": 3,
+                    "line": 7,
+                    "offset": 197
+                  }
                 }
               },
               {
@@ -69,12 +126,32 @@
                 "relation": "1",
                 "tableName": "u",
                 "token": {
-                  "filepath": "/main.dbml"
+                  "end": {
+                    "column": 27,
+                    "line": 7,
+                    "offset": 221
+                  },
+                  "filepath": "/main.dbml",
+                  "start": {
+                    "column": 16,
+                    "line": 7,
+                    "offset": 210
+                  }
                 }
               }
             ],
             "token": {
-              "filepath": "/main.dbml"
+              "end": {
+                "column": 27,
+                "line": 7,
+                "offset": 221
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 16,
+                "line": 7,
+                "offset": 210
+              }
             }
           }
         ],
@@ -82,15 +159,30 @@
           {
             "fields": [
               {
+                "increment": false,
                 "name": "id",
+                "pk": true,
                 "token": {
-                  "filepath": "/main.dbml"
+                  "end": {
+                    "column": 14,
+                    "line": 6,
+                    "offset": 194
+                  },
+                  "filepath": "/main.dbml",
+                  "start": {
+                    "column": 3,
+                    "line": 6,
+                    "offset": 183
+                  }
                 },
                 "type": {
+                  "isEnum": false,
                   "type_name": "int"
-                }
+                },
+                "unique": false
               },
               {
+                "increment": false,
                 "inline_refs": [
                   {
                     "fieldNames": [
@@ -99,27 +191,70 @@
                     "relation": ">",
                     "tableName": "u",
                     "token": {
-                      "filepath": "/main.dbml"
+                      "end": {
+                        "column": 27,
+                        "line": 7,
+                        "offset": 221
+                      },
+                      "filepath": "/main.dbml",
+                      "start": {
+                        "column": 16,
+                        "line": 7,
+                        "offset": 210
+                      }
                     }
                   }
                 ],
                 "name": "user_id",
+                "pk": false,
                 "token": {
-                  "filepath": "/main.dbml"
+                  "end": {
+                    "column": 28,
+                    "line": 7,
+                    "offset": 222
+                  },
+                  "filepath": "/main.dbml",
+                  "start": {
+                    "column": 3,
+                    "line": 7,
+                    "offset": 197
+                  }
                 },
                 "type": {
+                  "isEnum": false,
                   "type_name": "int"
-                }
+                },
+                "unique": false
               }
             ],
             "name": "orders",
             "token": {
-              "filepath": "/main.dbml"
+              "end": {
+                "column": 2,
+                "line": 8,
+                "offset": 224
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 1,
+                "line": 5,
+                "offset": 166
+              }
             }
           }
         ],
         "token": {
-          "filepath": "/main.dbml"
+          "end": {
+            "column": 1,
+            "line": 9,
+            "offset": 225
+          },
+          "filepath": "/main.dbml",
+          "start": {
+            "column": 1,
+            "line": 3,
+            "offset": 107
+          }
         }
       }
     },
@@ -134,7 +269,17 @@
               "relation": "*",
               "tableName": "orders",
               "token": {
-                "filepath": "/main.dbml"
+                "end": {
+                  "column": 28,
+                  "line": 7,
+                  "offset": 222
+                },
+                "filepath": "/main.dbml",
+                "start": {
+                  "column": 3,
+                  "line": 7,
+                  "offset": 197
+                }
               }
             },
             {
@@ -144,12 +289,32 @@
               "relation": "1",
               "tableName": "u",
               "token": {
-                "filepath": "/main.dbml"
+                "end": {
+                  "column": 27,
+                  "line": 7,
+                  "offset": 221
+                },
+                "filepath": "/main.dbml",
+                "start": {
+                  "column": 16,
+                  "line": 7,
+                  "offset": 210
+                }
               }
             }
           ],
           "token": {
-            "filepath": "/main.dbml"
+            "end": {
+              "column": 27,
+              "line": 7,
+              "offset": 221
+            },
+            "filepath": "/main.dbml",
+            "start": {
+              "column": 16,
+              "line": 7,
+              "offset": 210
+            }
           }
         }
       ],
@@ -157,42 +322,94 @@
         {
           "fields": [
             {
+              "increment": false,
               "name": "id",
+              "pk": true,
               "token": {
-                "filepath": "/auth-tables.dbml"
+                "end": {
+                  "column": 14,
+                  "line": 3,
+                  "offset": 66
+                },
+                "filepath": "/auth-tables.dbml",
+                "start": {
+                  "column": 3,
+                  "line": 3,
+                  "offset": 55
+                }
               },
               "type": {
+                "isEnum": false,
                 "type_name": "int"
-              }
+              },
+              "unique": false
             },
             {
               "name": "email",
+              "pk": false,
               "token": {
-                "filepath": "/auth-tables.dbml"
+                "end": {
+                  "column": 16,
+                  "line": 4,
+                  "offset": 82
+                },
+                "filepath": "/auth-tables.dbml",
+                "start": {
+                  "column": 3,
+                  "line": 4,
+                  "offset": 69
+                }
               },
               "type": {
+                "isEnum": false,
                 "type_name": "varchar"
-              }
+              },
+              "unique": false
             }
           ],
           "name": "users",
           "schemaName": "auth",
           "token": {
-            "filepath": "/auth-tables.dbml"
+            "end": {
+              "column": 2,
+              "line": 5,
+              "offset": 84
+            },
+            "filepath": "/auth-tables.dbml",
+            "start": {
+              "column": 1,
+              "line": 2,
+              "offset": 34
+            }
           }
         },
         {
           "fields": [
             {
+              "increment": false,
               "name": "id",
+              "pk": true,
               "token": {
-                "filepath": "/main.dbml"
+                "end": {
+                  "column": 14,
+                  "line": 6,
+                  "offset": 194
+                },
+                "filepath": "/main.dbml",
+                "start": {
+                  "column": 3,
+                  "line": 6,
+                  "offset": 183
+                }
               },
               "type": {
+                "isEnum": false,
                 "type_name": "int"
-              }
+              },
+              "unique": false
             },
             {
+              "increment": false,
               "inline_refs": [
                 {
                   "fieldNames": [
@@ -201,22 +418,55 @@
                   "relation": ">",
                   "tableName": "u",
                   "token": {
-                    "filepath": "/main.dbml"
+                    "end": {
+                      "column": 27,
+                      "line": 7,
+                      "offset": 221
+                    },
+                    "filepath": "/main.dbml",
+                    "start": {
+                      "column": 16,
+                      "line": 7,
+                      "offset": 210
+                    }
                   }
                 }
               ],
               "name": "user_id",
+              "pk": false,
               "token": {
-                "filepath": "/main.dbml"
+                "end": {
+                  "column": 28,
+                  "line": 7,
+                  "offset": 222
+                },
+                "filepath": "/main.dbml",
+                "start": {
+                  "column": 3,
+                  "line": 7,
+                  "offset": 197
+                }
               },
               "type": {
+                "isEnum": false,
                 "type_name": "int"
-              }
+              },
+              "unique": false
             }
           ],
           "name": "orders",
           "token": {
-            "filepath": "/main.dbml"
+            "end": {
+              "column": 2,
+              "line": 8,
+              "offset": 224
+            },
+            "filepath": "/main.dbml",
+            "start": {
+              "column": 1,
+              "line": 5,
+              "offset": 166
+            }
           }
         }
       ]

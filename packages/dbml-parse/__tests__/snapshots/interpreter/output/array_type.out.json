@@ -5,57 +5,139 @@
         "fields": [
           {
             "name": "name",
+            "pk": false,
             "token": {
-              "filepath": "/main.dbml"
+              "end": {
+                "column": 12,
+                "line": 2,
+                "offset": 27
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 3,
+                "line": 2,
+                "offset": 18
+              }
             },
             "type": {
               "type_name": "text"
-            }
+            },
+            "unique": false
           },
           {
+            "increment": false,
             "name": "pay_by_quarter",
+            "not_null": true,
+            "pk": false,
             "token": {
-              "filepath": "/main.dbml"
+              "end": {
+                "column": 34,
+                "line": 3,
+                "offset": 61
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 3,
+                "line": 3,
+                "offset": 30
+              }
             },
             "type": {
               "type_name": "int[]"
-            }
+            },
+            "unique": false
           },
           {
+            "increment": false,
             "name": "schedule",
+            "not_null": false,
+            "pk": false,
             "token": {
-              "filepath": "/main.dbml"
+              "end": {
+                "column": 27,
+                "line": 4,
+                "offset": 88
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 3,
+                "line": 4,
+                "offset": 64
+              }
             },
             "type": {
               "type_name": "text[][]"
-            }
+            },
+            "unique": false
           }
         ],
         "name": "sal_emp",
         "token": {
-          "filepath": "/main.dbml"
+          "end": {
+            "column": 2,
+            "line": 5,
+            "offset": 90
+          },
+          "filepath": "/main.dbml",
+          "start": {
+            "column": 1,
+            "line": 1,
+            "offset": 0
+          }
         }
       },
       {
         "fields": [
           {
             "name": "squares",
+            "pk": false,
             "token": {
-              "filepath": "/main.dbml"
+              "end": {
+                "column": 24,
+                "line": 8,
+                "offset": 133
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 3,
+                "line": 8,
+                "offset": 112
+              }
             },
             "type": {
               "type_name": "integer[3][3]"
-            }
+            },
+            "unique": false
           }
         ],
         "name": "tictactoe",
         "token": {
-          "filepath": "/main.dbml"
+          "end": {
+            "column": 2,
+            "line": 9,
+            "offset": 135
+          },
+          "filepath": "/main.dbml",
+          "start": {
+            "column": 1,
+            "line": 7,
+            "offset": 92
+          }
         }
       }
     ],
     "token": {
-      "filepath": "/main.dbml"
+      "end": {
+        "column": 2,
+        "line": 9,
+        "offset": 135
+      },
+      "filepath": "/main.dbml",
+      "start": {
+        "column": 1,
+        "line": 1,
+        "offset": 0
+      }
     }
   }
 }

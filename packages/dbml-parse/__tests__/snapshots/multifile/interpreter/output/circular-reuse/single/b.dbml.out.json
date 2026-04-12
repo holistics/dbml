@@ -16,40 +16,96 @@
       {
         "fields": [
           {
+            "increment": false,
             "name": "id",
+            "pk": true,
             "token": {
-              "filepath": "/b.dbml"
+              "end": {
+                "column": 14,
+                "line": 4,
+                "offset": 73
+              },
+              "filepath": "/b.dbml",
+              "start": {
+                "column": 3,
+                "line": 4,
+                "offset": 62
+              }
             },
             "type": {
               "type_name": "int"
-            }
+            },
+            "unique": false
           }
         ],
         "name": "shared_types",
         "token": {
-          "filepath": "/b.dbml"
+          "end": {
+            "column": 2,
+            "line": 5,
+            "offset": 75
+          },
+          "filepath": "/b.dbml",
+          "start": {
+            "column": 1,
+            "line": 3,
+            "offset": 39
+          }
         }
       },
       {
         "fields": [
           {
+            "increment": false,
             "name": "id",
+            "pk": true,
             "token": {
-              "filepath": "/a.dbml"
+              "end": {
+                "column": 14,
+                "line": 4,
+                "offset": 73
+              },
+              "filepath": "/a.dbml",
+              "start": {
+                "column": 3,
+                "line": 4,
+                "offset": 62
+              }
             },
             "type": {
               "type_name": "int"
-            }
+            },
+            "unique": false
           }
         ],
         "name": "users",
         "token": {
-          "filepath": "/a.dbml"
+          "end": {
+            "column": 2,
+            "line": 5,
+            "offset": 75
+          },
+          "filepath": "/a.dbml",
+          "start": {
+            "column": 1,
+            "line": 3,
+            "offset": 46
+          }
         }
       }
     ],
     "token": {
-      "filepath": "/b.dbml"
+      "end": {
+        "column": 1,
+        "line": 6,
+        "offset": 76
+      },
+      "filepath": "/b.dbml",
+      "start": {
+        "column": 1,
+        "line": 1,
+        "offset": 0
+      }
     }
   }
 }

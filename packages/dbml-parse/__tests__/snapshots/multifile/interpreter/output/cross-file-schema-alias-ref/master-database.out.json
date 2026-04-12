@@ -25,7 +25,17 @@
                 "relation": "*",
                 "tableName": "orders",
                 "token": {
-                  "filepath": "/main.dbml"
+                  "end": {
+                    "column": 29,
+                    "line": 5,
+                    "offset": 115
+                  },
+                  "filepath": "/main.dbml",
+                  "start": {
+                    "column": 3,
+                    "line": 5,
+                    "offset": 89
+                  }
                 }
               },
               {
@@ -35,12 +45,32 @@
                 "relation": "1",
                 "tableName": "EU",
                 "token": {
-                  "filepath": "/main.dbml"
+                  "end": {
+                    "column": 28,
+                    "line": 5,
+                    "offset": 114
+                  },
+                  "filepath": "/main.dbml",
+                  "start": {
+                    "column": 16,
+                    "line": 5,
+                    "offset": 102
+                  }
                 }
               }
             ],
             "token": {
-              "filepath": "/main.dbml"
+              "end": {
+                "column": 28,
+                "line": 5,
+                "offset": 114
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 16,
+                "line": 5,
+                "offset": 102
+              }
             }
           }
         ],
@@ -48,15 +78,30 @@
           {
             "fields": [
               {
+                "increment": false,
                 "name": "id",
+                "pk": true,
                 "token": {
-                  "filepath": "/main.dbml"
+                  "end": {
+                    "column": 14,
+                    "line": 4,
+                    "offset": 86
+                  },
+                  "filepath": "/main.dbml",
+                  "start": {
+                    "column": 3,
+                    "line": 4,
+                    "offset": 75
+                  }
                 },
                 "type": {
+                  "isEnum": false,
                   "type_name": "int"
-                }
+                },
+                "unique": false
               },
               {
+                "increment": false,
                 "inline_refs": [
                   {
                     "fieldNames": [
@@ -65,27 +110,70 @@
                     "relation": ">",
                     "tableName": "EU",
                     "token": {
-                      "filepath": "/main.dbml"
+                      "end": {
+                        "column": 28,
+                        "line": 5,
+                        "offset": 114
+                      },
+                      "filepath": "/main.dbml",
+                      "start": {
+                        "column": 16,
+                        "line": 5,
+                        "offset": 102
+                      }
                     }
                   }
                 ],
                 "name": "user_id",
+                "pk": false,
                 "token": {
-                  "filepath": "/main.dbml"
+                  "end": {
+                    "column": 29,
+                    "line": 5,
+                    "offset": 115
+                  },
+                  "filepath": "/main.dbml",
+                  "start": {
+                    "column": 3,
+                    "line": 5,
+                    "offset": 89
+                  }
                 },
                 "type": {
+                  "isEnum": false,
                   "type_name": "int"
-                }
+                },
+                "unique": false
               }
             ],
             "name": "orders",
             "token": {
-              "filepath": "/main.dbml"
+              "end": {
+                "column": 2,
+                "line": 6,
+                "offset": 117
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 1,
+                "line": 3,
+                "offset": 58
+              }
             }
           }
         ],
         "token": {
-          "filepath": "/main.dbml"
+          "end": {
+            "column": 1,
+            "line": 7,
+            "offset": 118
+          },
+          "filepath": "/main.dbml",
+          "start": {
+            "column": 1,
+            "line": 1,
+            "offset": 0
+          }
         }
       },
       "/tables.dbml": {
@@ -105,33 +193,80 @@
             "alias": "EU",
             "fields": [
               {
+                "increment": false,
                 "name": "id",
+                "pk": true,
                 "token": {
-                  "filepath": "/tables.dbml"
+                  "end": {
+                    "column": 14,
+                    "line": 2,
+                    "offset": 43
+                  },
+                  "filepath": "/tables.dbml",
+                  "start": {
+                    "column": 3,
+                    "line": 2,
+                    "offset": 32
+                  }
                 },
                 "type": {
+                  "isEnum": false,
                   "type_name": "int"
-                }
+                },
+                "unique": false
               },
               {
                 "name": "name",
+                "pk": false,
                 "token": {
-                  "filepath": "/tables.dbml"
+                  "end": {
+                    "column": 15,
+                    "line": 3,
+                    "offset": 58
+                  },
+                  "filepath": "/tables.dbml",
+                  "start": {
+                    "column": 3,
+                    "line": 3,
+                    "offset": 46
+                  }
                 },
                 "type": {
+                  "isEnum": false,
                   "type_name": "varchar"
-                }
+                },
+                "unique": false
               }
             ],
             "name": "users",
             "schemaName": "ecommerce",
             "token": {
-              "filepath": "/tables.dbml"
+              "end": {
+                "column": 2,
+                "line": 4,
+                "offset": 60
+              },
+              "filepath": "/tables.dbml",
+              "start": {
+                "column": 1,
+                "line": 1,
+                "offset": 0
+              }
             }
           }
         ],
         "token": {
-          "filepath": "/tables.dbml"
+          "end": {
+            "column": 1,
+            "line": 5,
+            "offset": 61
+          },
+          "filepath": "/tables.dbml",
+          "start": {
+            "column": 1,
+            "line": 1,
+            "offset": 0
+          }
         }
       }
     },
@@ -157,7 +292,17 @@
               "relation": "*",
               "tableName": "orders",
               "token": {
-                "filepath": "/main.dbml"
+                "end": {
+                  "column": 29,
+                  "line": 5,
+                  "offset": 115
+                },
+                "filepath": "/main.dbml",
+                "start": {
+                  "column": 3,
+                  "line": 5,
+                  "offset": 89
+                }
               }
             },
             {
@@ -167,12 +312,32 @@
               "relation": "1",
               "tableName": "EU",
               "token": {
-                "filepath": "/main.dbml"
+                "end": {
+                  "column": 28,
+                  "line": 5,
+                  "offset": 114
+                },
+                "filepath": "/main.dbml",
+                "start": {
+                  "column": 16,
+                  "line": 5,
+                  "offset": 102
+                }
               }
             }
           ],
           "token": {
-            "filepath": "/main.dbml"
+            "end": {
+              "column": 28,
+              "line": 5,
+              "offset": 114
+            },
+            "filepath": "/main.dbml",
+            "start": {
+              "column": 16,
+              "line": 5,
+              "offset": 102
+            }
           }
         }
       ],
@@ -181,42 +346,94 @@
           "alias": "EU",
           "fields": [
             {
+              "increment": false,
               "name": "id",
+              "pk": true,
               "token": {
-                "filepath": "/tables.dbml"
+                "end": {
+                  "column": 14,
+                  "line": 2,
+                  "offset": 43
+                },
+                "filepath": "/tables.dbml",
+                "start": {
+                  "column": 3,
+                  "line": 2,
+                  "offset": 32
+                }
               },
               "type": {
+                "isEnum": false,
                 "type_name": "int"
-              }
+              },
+              "unique": false
             },
             {
               "name": "name",
+              "pk": false,
               "token": {
-                "filepath": "/tables.dbml"
+                "end": {
+                  "column": 15,
+                  "line": 3,
+                  "offset": 58
+                },
+                "filepath": "/tables.dbml",
+                "start": {
+                  "column": 3,
+                  "line": 3,
+                  "offset": 46
+                }
               },
               "type": {
+                "isEnum": false,
                 "type_name": "varchar"
-              }
+              },
+              "unique": false
             }
           ],
           "name": "users",
           "schemaName": "ecommerce",
           "token": {
-            "filepath": "/tables.dbml"
+            "end": {
+              "column": 2,
+              "line": 4,
+              "offset": 60
+            },
+            "filepath": "/tables.dbml",
+            "start": {
+              "column": 1,
+              "line": 1,
+              "offset": 0
+            }
           }
         },
         {
           "fields": [
             {
+              "increment": false,
               "name": "id",
+              "pk": true,
               "token": {
-                "filepath": "/main.dbml"
+                "end": {
+                  "column": 14,
+                  "line": 4,
+                  "offset": 86
+                },
+                "filepath": "/main.dbml",
+                "start": {
+                  "column": 3,
+                  "line": 4,
+                  "offset": 75
+                }
               },
               "type": {
+                "isEnum": false,
                 "type_name": "int"
-              }
+              },
+              "unique": false
             },
             {
+              "increment": false,
               "inline_refs": [
                 {
                   "fieldNames": [
@@ -225,22 +442,55 @@
                   "relation": ">",
                   "tableName": "EU",
                   "token": {
-                    "filepath": "/main.dbml"
+                    "end": {
+                      "column": 28,
+                      "line": 5,
+                      "offset": 114
+                    },
+                    "filepath": "/main.dbml",
+                    "start": {
+                      "column": 16,
+                      "line": 5,
+                      "offset": 102
+                    }
                   }
                 }
               ],
               "name": "user_id",
+              "pk": false,
               "token": {
-                "filepath": "/main.dbml"
+                "end": {
+                  "column": 29,
+                  "line": 5,
+                  "offset": 115
+                },
+                "filepath": "/main.dbml",
+                "start": {
+                  "column": 3,
+                  "line": 5,
+                  "offset": 89
+                }
               },
               "type": {
+                "isEnum": false,
                 "type_name": "int"
-              }
+              },
+              "unique": false
             }
           ],
           "name": "orders",
           "token": {
-            "filepath": "/main.dbml"
+            "end": {
+              "column": 2,
+              "line": 6,
+              "offset": 117
+            },
+            "filepath": "/main.dbml",
+            "start": {
+              "column": 1,
+              "line": 3,
+              "offset": 58
+            }
           }
         }
       ]

@@ -27,22 +27,35 @@
         ],
         "tableName": "c",
         "token": {
-          "filepath": "/records-and-tables.dbml"
+          "end": {
+            "column": 4,
+            "line": 9,
+            "offset": 72
+          },
+          "filepath": "/records-and-tables.dbml",
+          "start": {
+            "column": 3,
+            "line": 5,
+            "offset": 36
+          }
         },
         "values": [
           [
             {
-              "type": "integer"
+              "type": "integer",
+              "value": 1
             }
           ],
           [
             {
-              "type": "integer"
+              "type": "integer",
+              "value": 2
             }
           ],
           [
             {
-              "type": "integer"
+              "type": "integer",
+              "value": 3
             }
           ]
         ]
@@ -53,22 +66,35 @@
         ],
         "tableName": "b",
         "token": {
-          "filepath": "/records-and-tables.dbml"
+          "end": {
+            "column": 2,
+            "line": 20,
+            "offset": 127
+          },
+          "filepath": "/records-and-tables.dbml",
+          "start": {
+            "column": 1,
+            "line": 16,
+            "offset": 98
+          }
         },
         "values": [
           [
             {
-              "type": "integer"
+              "type": "integer",
+              "value": 5
             }
           ],
           [
             {
-              "type": "integer"
+              "type": "integer",
+              "value": 6
             }
           ],
           [
             {
-              "type": "integer"
+              "type": "integer",
+              "value": 7
             }
           ]
         ]
@@ -79,48 +105,114 @@
         "fields": [
           {
             "name": "id",
+            "pk": false,
             "token": {
-              "filepath": "/records-and-tables.dbml"
+              "end": {
+                "column": 9,
+                "line": 2,
+                "offset": 18
+              },
+              "filepath": "/records-and-tables.dbml",
+              "start": {
+                "column": 3,
+                "line": 2,
+                "offset": 12
+              }
             },
             "type": {
               "type_name": "int"
-            }
+            },
+            "unique": false
           },
           {
             "name": "name",
+            "pk": false,
             "token": {
-              "filepath": "/records-and-tables.dbml"
+              "end": {
+                "column": 14,
+                "line": 3,
+                "offset": 32
+              },
+              "filepath": "/records-and-tables.dbml",
+              "start": {
+                "column": 3,
+                "line": 3,
+                "offset": 21
+              }
             },
             "type": {
               "type_name": "string"
-            }
+            },
+            "unique": false
           }
         ],
         "name": "c",
         "token": {
-          "filepath": "/records-and-tables.dbml"
+          "end": {
+            "column": 2,
+            "line": 10,
+            "offset": 74
+          },
+          "filepath": "/records-and-tables.dbml",
+          "start": {
+            "column": 1,
+            "line": 1,
+            "offset": 0
+          }
         }
       },
       {
         "fields": [
           {
             "name": "id",
+            "pk": false,
             "token": {
-              "filepath": "/records-and-tables.dbml"
+              "end": {
+                "column": 9,
+                "line": 13,
+                "offset": 94
+              },
+              "filepath": "/records-and-tables.dbml",
+              "start": {
+                "column": 3,
+                "line": 13,
+                "offset": 88
+              }
             },
             "type": {
               "type_name": "int"
-            }
+            },
+            "unique": false
           }
         ],
         "name": "b",
         "token": {
-          "filepath": "/records-and-tables.dbml"
+          "end": {
+            "column": 2,
+            "line": 14,
+            "offset": 96
+          },
+          "filepath": "/records-and-tables.dbml",
+          "start": {
+            "column": 1,
+            "line": 12,
+            "offset": 76
+          }
         }
       }
     ],
     "token": {
-      "filepath": "/main-selective-reuse.dbml"
+      "end": {
+        "column": 1,
+        "line": 7,
+        "offset": 111
+      },
+      "filepath": "/main-selective-reuse.dbml",
+      "start": {
+        "column": 1,
+        "line": 3,
+        "offset": 43
+      }
     }
   }
 }

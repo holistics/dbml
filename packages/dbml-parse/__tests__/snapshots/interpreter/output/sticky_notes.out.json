@@ -5,14 +5,34 @@
         "content": "One line note",
         "name": "note",
         "token": {
-          "filepath": "/main.dbml"
+          "end": {
+            "column": 2,
+            "line": 8,
+            "offset": 141
+          },
+          "filepath": "/main.dbml",
+          "start": {
+            "column": 1,
+            "line": 6,
+            "offset": 110
+          }
         }
       },
       {
         "content": "# Title\nbody\n",
         "name": "note2",
         "token": {
-          "filepath": "/main.dbml"
+          "end": {
+            "column": 2,
+            "line": 15,
+            "offset": 190
+          },
+          "filepath": "/main.dbml",
+          "start": {
+            "column": 1,
+            "line": 10,
+            "offset": 143
+          }
         }
       }
     ],
@@ -20,34 +40,81 @@
       {
         "fields": [
           {
+            "increment": false,
             "name": "id",
+            "pk": true,
             "token": {
-              "filepath": "/main.dbml"
+              "end": {
+                "column": 27,
+                "line": 2,
+                "offset": 63
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 3,
+                "line": 2,
+                "offset": 39
+              }
             },
             "type": {
               "type_name": "integer"
-            }
+            },
+            "unique": false
           },
           {
+            "increment": false,
             "name": "username",
+            "not_null": true,
+            "pk": false,
             "token": {
-              "filepath": "/main.dbml"
+              "end": {
+                "column": 43,
+                "line": 3,
+                "offset": 106
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 3,
+                "line": 3,
+                "offset": 66
+              }
             },
             "type": {
               "args": "255",
               "type_name": "varchar(255)"
-            }
+            },
+            "unique": true
           }
         ],
         "headerColor": "#3498DB",
         "name": "users",
         "token": {
-          "filepath": "/main.dbml"
+          "end": {
+            "column": 2,
+            "line": 4,
+            "offset": 108
+          },
+          "filepath": "/main.dbml",
+          "start": {
+            "column": 1,
+            "line": 1,
+            "offset": 0
+          }
         }
       }
     ],
     "token": {
-      "filepath": "/main.dbml"
+      "end": {
+        "column": 1,
+        "line": 16,
+        "offset": 191
+      },
+      "filepath": "/main.dbml",
+      "start": {
+        "column": 1,
+        "line": 1,
+        "offset": 0
+      }
     }
   }
 }

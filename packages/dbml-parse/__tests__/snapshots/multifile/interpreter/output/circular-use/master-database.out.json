@@ -24,7 +24,17 @@
                 "relation": "*",
                 "tableName": "a_table",
                 "token": {
-                  "filepath": "/a.dbml"
+                  "end": {
+                    "column": 31,
+                    "line": 4,
+                    "offset": 98
+                  },
+                  "filepath": "/a.dbml",
+                  "start": {
+                    "column": 3,
+                    "line": 4,
+                    "offset": 70
+                  }
                 }
               },
               {
@@ -34,12 +44,32 @@
                 "relation": "1",
                 "tableName": "b_table",
                 "token": {
-                  "filepath": "/a.dbml"
+                  "end": {
+                    "column": 30,
+                    "line": 4,
+                    "offset": 97
+                  },
+                  "filepath": "/a.dbml",
+                  "start": {
+                    "column": 13,
+                    "line": 4,
+                    "offset": 80
+                  }
                 }
               }
             ],
             "token": {
-              "filepath": "/a.dbml"
+              "end": {
+                "column": 30,
+                "line": 4,
+                "offset": 97
+              },
+              "filepath": "/a.dbml",
+              "start": {
+                "column": 13,
+                "line": 4,
+                "offset": 80
+              }
             }
           }
         ],
@@ -47,15 +77,30 @@
           {
             "fields": [
               {
+                "increment": false,
                 "name": "id",
+                "pk": true,
                 "token": {
-                  "filepath": "/a.dbml"
+                  "end": {
+                    "column": 14,
+                    "line": 3,
+                    "offset": 67
+                  },
+                  "filepath": "/a.dbml",
+                  "start": {
+                    "column": 3,
+                    "line": 3,
+                    "offset": 56
+                  }
                 },
                 "type": {
+                  "isEnum": false,
                   "type_name": "int"
-                }
+                },
+                "unique": false
               },
               {
+                "increment": false,
                 "inline_refs": [
                   {
                     "fieldNames": [
@@ -64,27 +109,70 @@
                     "relation": ">",
                     "tableName": "b_table",
                     "token": {
-                      "filepath": "/a.dbml"
+                      "end": {
+                        "column": 30,
+                        "line": 4,
+                        "offset": 97
+                      },
+                      "filepath": "/a.dbml",
+                      "start": {
+                        "column": 13,
+                        "line": 4,
+                        "offset": 80
+                      }
                     }
                   }
                 ],
                 "name": "b_id",
+                "pk": false,
                 "token": {
-                  "filepath": "/a.dbml"
+                  "end": {
+                    "column": 31,
+                    "line": 4,
+                    "offset": 98
+                  },
+                  "filepath": "/a.dbml",
+                  "start": {
+                    "column": 3,
+                    "line": 4,
+                    "offset": 70
+                  }
                 },
                 "type": {
+                  "isEnum": false,
                   "type_name": "int"
-                }
+                },
+                "unique": false
               }
             ],
             "name": "a_table",
             "token": {
-              "filepath": "/a.dbml"
+              "end": {
+                "column": 2,
+                "line": 5,
+                "offset": 100
+              },
+              "filepath": "/a.dbml",
+              "start": {
+                "column": 1,
+                "line": 2,
+                "offset": 38
+              }
             }
           }
         ],
         "token": {
-          "filepath": "/a.dbml"
+          "end": {
+            "column": 1,
+            "line": 6,
+            "offset": 101
+          },
+          "filepath": "/a.dbml",
+          "start": {
+            "column": 1,
+            "line": 1,
+            "offset": 0
+          }
         }
       },
       "/b.dbml": {
@@ -110,7 +198,17 @@
                 "relation": "*",
                 "tableName": "b_table",
                 "token": {
-                  "filepath": "/b.dbml"
+                  "end": {
+                    "column": 31,
+                    "line": 4,
+                    "offset": 98
+                  },
+                  "filepath": "/b.dbml",
+                  "start": {
+                    "column": 3,
+                    "line": 4,
+                    "offset": 70
+                  }
                 }
               },
               {
@@ -120,12 +218,32 @@
                 "relation": "1",
                 "tableName": "c_table",
                 "token": {
-                  "filepath": "/b.dbml"
+                  "end": {
+                    "column": 30,
+                    "line": 4,
+                    "offset": 97
+                  },
+                  "filepath": "/b.dbml",
+                  "start": {
+                    "column": 13,
+                    "line": 4,
+                    "offset": 80
+                  }
                 }
               }
             ],
             "token": {
-              "filepath": "/b.dbml"
+              "end": {
+                "column": 30,
+                "line": 4,
+                "offset": 97
+              },
+              "filepath": "/b.dbml",
+              "start": {
+                "column": 13,
+                "line": 4,
+                "offset": 80
+              }
             }
           }
         ],
@@ -133,15 +251,30 @@
           {
             "fields": [
               {
+                "increment": false,
                 "name": "id",
+                "pk": true,
                 "token": {
-                  "filepath": "/b.dbml"
+                  "end": {
+                    "column": 14,
+                    "line": 3,
+                    "offset": 67
+                  },
+                  "filepath": "/b.dbml",
+                  "start": {
+                    "column": 3,
+                    "line": 3,
+                    "offset": 56
+                  }
                 },
                 "type": {
+                  "isEnum": false,
                   "type_name": "int"
-                }
+                },
+                "unique": false
               },
               {
+                "increment": false,
                 "inline_refs": [
                   {
                     "fieldNames": [
@@ -150,27 +283,70 @@
                     "relation": ">",
                     "tableName": "c_table",
                     "token": {
-                      "filepath": "/b.dbml"
+                      "end": {
+                        "column": 30,
+                        "line": 4,
+                        "offset": 97
+                      },
+                      "filepath": "/b.dbml",
+                      "start": {
+                        "column": 13,
+                        "line": 4,
+                        "offset": 80
+                      }
                     }
                   }
                 ],
                 "name": "c_id",
+                "pk": false,
                 "token": {
-                  "filepath": "/b.dbml"
+                  "end": {
+                    "column": 31,
+                    "line": 4,
+                    "offset": 98
+                  },
+                  "filepath": "/b.dbml",
+                  "start": {
+                    "column": 3,
+                    "line": 4,
+                    "offset": 70
+                  }
                 },
                 "type": {
+                  "isEnum": false,
                   "type_name": "int"
-                }
+                },
+                "unique": false
               }
             ],
             "name": "b_table",
             "token": {
-              "filepath": "/b.dbml"
+              "end": {
+                "column": 2,
+                "line": 5,
+                "offset": 100
+              },
+              "filepath": "/b.dbml",
+              "start": {
+                "column": 1,
+                "line": 2,
+                "offset": 38
+              }
             }
           }
         ],
         "token": {
-          "filepath": "/b.dbml"
+          "end": {
+            "column": 1,
+            "line": 6,
+            "offset": 101
+          },
+          "filepath": "/b.dbml",
+          "start": {
+            "column": 1,
+            "line": 1,
+            "offset": 0
+          }
         }
       },
       "/c.dbml": {
@@ -196,7 +372,17 @@
                 "relation": "*",
                 "tableName": "c_table",
                 "token": {
-                  "filepath": "/c.dbml"
+                  "end": {
+                    "column": 31,
+                    "line": 4,
+                    "offset": 98
+                  },
+                  "filepath": "/c.dbml",
+                  "start": {
+                    "column": 3,
+                    "line": 4,
+                    "offset": 70
+                  }
                 }
               },
               {
@@ -206,12 +392,32 @@
                 "relation": "1",
                 "tableName": "a_table",
                 "token": {
-                  "filepath": "/c.dbml"
+                  "end": {
+                    "column": 30,
+                    "line": 4,
+                    "offset": 97
+                  },
+                  "filepath": "/c.dbml",
+                  "start": {
+                    "column": 13,
+                    "line": 4,
+                    "offset": 80
+                  }
                 }
               }
             ],
             "token": {
-              "filepath": "/c.dbml"
+              "end": {
+                "column": 30,
+                "line": 4,
+                "offset": 97
+              },
+              "filepath": "/c.dbml",
+              "start": {
+                "column": 13,
+                "line": 4,
+                "offset": 80
+              }
             }
           }
         ],
@@ -219,15 +425,30 @@
           {
             "fields": [
               {
+                "increment": false,
                 "name": "id",
+                "pk": true,
                 "token": {
-                  "filepath": "/c.dbml"
+                  "end": {
+                    "column": 14,
+                    "line": 3,
+                    "offset": 67
+                  },
+                  "filepath": "/c.dbml",
+                  "start": {
+                    "column": 3,
+                    "line": 3,
+                    "offset": 56
+                  }
                 },
                 "type": {
+                  "isEnum": false,
                   "type_name": "int"
-                }
+                },
+                "unique": false
               },
               {
+                "increment": false,
                 "inline_refs": [
                   {
                     "fieldNames": [
@@ -236,27 +457,70 @@
                     "relation": ">",
                     "tableName": "a_table",
                     "token": {
-                      "filepath": "/c.dbml"
+                      "end": {
+                        "column": 30,
+                        "line": 4,
+                        "offset": 97
+                      },
+                      "filepath": "/c.dbml",
+                      "start": {
+                        "column": 13,
+                        "line": 4,
+                        "offset": 80
+                      }
                     }
                   }
                 ],
                 "name": "a_id",
+                "pk": false,
                 "token": {
-                  "filepath": "/c.dbml"
+                  "end": {
+                    "column": 31,
+                    "line": 4,
+                    "offset": 98
+                  },
+                  "filepath": "/c.dbml",
+                  "start": {
+                    "column": 3,
+                    "line": 4,
+                    "offset": 70
+                  }
                 },
                 "type": {
+                  "isEnum": false,
                   "type_name": "int"
-                }
+                },
+                "unique": false
               }
             ],
             "name": "c_table",
             "token": {
-              "filepath": "/c.dbml"
+              "end": {
+                "column": 2,
+                "line": 5,
+                "offset": 100
+              },
+              "filepath": "/c.dbml",
+              "start": {
+                "column": 1,
+                "line": 2,
+                "offset": 38
+              }
             }
           }
         ],
         "token": {
-          "filepath": "/c.dbml"
+          "end": {
+            "column": 1,
+            "line": 6,
+            "offset": 101
+          },
+          "filepath": "/c.dbml",
+          "start": {
+            "column": 1,
+            "line": 1,
+            "offset": 0
+          }
         }
       }
     },
@@ -271,7 +535,17 @@
               "relation": "*",
               "tableName": "a_table",
               "token": {
-                "filepath": "/a.dbml"
+                "end": {
+                  "column": 31,
+                  "line": 4,
+                  "offset": 98
+                },
+                "filepath": "/a.dbml",
+                "start": {
+                  "column": 3,
+                  "line": 4,
+                  "offset": 70
+                }
               }
             },
             {
@@ -281,12 +555,32 @@
               "relation": "1",
               "tableName": "b_table",
               "token": {
-                "filepath": "/a.dbml"
+                "end": {
+                  "column": 30,
+                  "line": 4,
+                  "offset": 97
+                },
+                "filepath": "/a.dbml",
+                "start": {
+                  "column": 13,
+                  "line": 4,
+                  "offset": 80
+                }
               }
             }
           ],
           "token": {
-            "filepath": "/a.dbml"
+            "end": {
+              "column": 30,
+              "line": 4,
+              "offset": 97
+            },
+            "filepath": "/a.dbml",
+            "start": {
+              "column": 13,
+              "line": 4,
+              "offset": 80
+            }
           }
         },
         {
@@ -298,7 +592,17 @@
               "relation": "*",
               "tableName": "b_table",
               "token": {
-                "filepath": "/b.dbml"
+                "end": {
+                  "column": 31,
+                  "line": 4,
+                  "offset": 98
+                },
+                "filepath": "/b.dbml",
+                "start": {
+                  "column": 3,
+                  "line": 4,
+                  "offset": 70
+                }
               }
             },
             {
@@ -308,12 +612,32 @@
               "relation": "1",
               "tableName": "c_table",
               "token": {
-                "filepath": "/b.dbml"
+                "end": {
+                  "column": 30,
+                  "line": 4,
+                  "offset": 97
+                },
+                "filepath": "/b.dbml",
+                "start": {
+                  "column": 13,
+                  "line": 4,
+                  "offset": 80
+                }
               }
             }
           ],
           "token": {
-            "filepath": "/b.dbml"
+            "end": {
+              "column": 30,
+              "line": 4,
+              "offset": 97
+            },
+            "filepath": "/b.dbml",
+            "start": {
+              "column": 13,
+              "line": 4,
+              "offset": 80
+            }
           }
         },
         {
@@ -325,7 +649,17 @@
               "relation": "*",
               "tableName": "c_table",
               "token": {
-                "filepath": "/c.dbml"
+                "end": {
+                  "column": 31,
+                  "line": 4,
+                  "offset": 98
+                },
+                "filepath": "/c.dbml",
+                "start": {
+                  "column": 3,
+                  "line": 4,
+                  "offset": 70
+                }
               }
             },
             {
@@ -335,12 +669,32 @@
               "relation": "1",
               "tableName": "a_table",
               "token": {
-                "filepath": "/c.dbml"
+                "end": {
+                  "column": 30,
+                  "line": 4,
+                  "offset": 97
+                },
+                "filepath": "/c.dbml",
+                "start": {
+                  "column": 13,
+                  "line": 4,
+                  "offset": 80
+                }
               }
             }
           ],
           "token": {
-            "filepath": "/c.dbml"
+            "end": {
+              "column": 30,
+              "line": 4,
+              "offset": 97
+            },
+            "filepath": "/c.dbml",
+            "start": {
+              "column": 13,
+              "line": 4,
+              "offset": 80
+            }
           }
         }
       ],
@@ -348,15 +702,30 @@
         {
           "fields": [
             {
+              "increment": false,
               "name": "id",
+              "pk": true,
               "token": {
-                "filepath": "/a.dbml"
+                "end": {
+                  "column": 14,
+                  "line": 3,
+                  "offset": 67
+                },
+                "filepath": "/a.dbml",
+                "start": {
+                  "column": 3,
+                  "line": 3,
+                  "offset": 56
+                }
               },
               "type": {
+                "isEnum": false,
                 "type_name": "int"
-              }
+              },
+              "unique": false
             },
             {
+              "increment": false,
               "inline_refs": [
                 {
                   "fieldNames": [
@@ -365,36 +734,84 @@
                   "relation": ">",
                   "tableName": "b_table",
                   "token": {
-                    "filepath": "/a.dbml"
+                    "end": {
+                      "column": 30,
+                      "line": 4,
+                      "offset": 97
+                    },
+                    "filepath": "/a.dbml",
+                    "start": {
+                      "column": 13,
+                      "line": 4,
+                      "offset": 80
+                    }
                   }
                 }
               ],
               "name": "b_id",
+              "pk": false,
               "token": {
-                "filepath": "/a.dbml"
+                "end": {
+                  "column": 31,
+                  "line": 4,
+                  "offset": 98
+                },
+                "filepath": "/a.dbml",
+                "start": {
+                  "column": 3,
+                  "line": 4,
+                  "offset": 70
+                }
               },
               "type": {
+                "isEnum": false,
                 "type_name": "int"
-              }
+              },
+              "unique": false
             }
           ],
           "name": "a_table",
           "token": {
-            "filepath": "/a.dbml"
+            "end": {
+              "column": 2,
+              "line": 5,
+              "offset": 100
+            },
+            "filepath": "/a.dbml",
+            "start": {
+              "column": 1,
+              "line": 2,
+              "offset": 38
+            }
           }
         },
         {
           "fields": [
             {
+              "increment": false,
               "name": "id",
+              "pk": true,
               "token": {
-                "filepath": "/b.dbml"
+                "end": {
+                  "column": 14,
+                  "line": 3,
+                  "offset": 67
+                },
+                "filepath": "/b.dbml",
+                "start": {
+                  "column": 3,
+                  "line": 3,
+                  "offset": 56
+                }
               },
               "type": {
+                "isEnum": false,
                 "type_name": "int"
-              }
+              },
+              "unique": false
             },
             {
+              "increment": false,
               "inline_refs": [
                 {
                   "fieldNames": [
@@ -403,36 +820,84 @@
                   "relation": ">",
                   "tableName": "c_table",
                   "token": {
-                    "filepath": "/b.dbml"
+                    "end": {
+                      "column": 30,
+                      "line": 4,
+                      "offset": 97
+                    },
+                    "filepath": "/b.dbml",
+                    "start": {
+                      "column": 13,
+                      "line": 4,
+                      "offset": 80
+                    }
                   }
                 }
               ],
               "name": "c_id",
+              "pk": false,
               "token": {
-                "filepath": "/b.dbml"
+                "end": {
+                  "column": 31,
+                  "line": 4,
+                  "offset": 98
+                },
+                "filepath": "/b.dbml",
+                "start": {
+                  "column": 3,
+                  "line": 4,
+                  "offset": 70
+                }
               },
               "type": {
+                "isEnum": false,
                 "type_name": "int"
-              }
+              },
+              "unique": false
             }
           ],
           "name": "b_table",
           "token": {
-            "filepath": "/b.dbml"
+            "end": {
+              "column": 2,
+              "line": 5,
+              "offset": 100
+            },
+            "filepath": "/b.dbml",
+            "start": {
+              "column": 1,
+              "line": 2,
+              "offset": 38
+            }
           }
         },
         {
           "fields": [
             {
+              "increment": false,
               "name": "id",
+              "pk": true,
               "token": {
-                "filepath": "/c.dbml"
+                "end": {
+                  "column": 14,
+                  "line": 3,
+                  "offset": 67
+                },
+                "filepath": "/c.dbml",
+                "start": {
+                  "column": 3,
+                  "line": 3,
+                  "offset": 56
+                }
               },
               "type": {
+                "isEnum": false,
                 "type_name": "int"
-              }
+              },
+              "unique": false
             },
             {
+              "increment": false,
               "inline_refs": [
                 {
                   "fieldNames": [
@@ -441,22 +906,55 @@
                   "relation": ">",
                   "tableName": "a_table",
                   "token": {
-                    "filepath": "/c.dbml"
+                    "end": {
+                      "column": 30,
+                      "line": 4,
+                      "offset": 97
+                    },
+                    "filepath": "/c.dbml",
+                    "start": {
+                      "column": 13,
+                      "line": 4,
+                      "offset": 80
+                    }
                   }
                 }
               ],
               "name": "a_id",
+              "pk": false,
               "token": {
-                "filepath": "/c.dbml"
+                "end": {
+                  "column": 31,
+                  "line": 4,
+                  "offset": 98
+                },
+                "filepath": "/c.dbml",
+                "start": {
+                  "column": 3,
+                  "line": 4,
+                  "offset": 70
+                }
               },
               "type": {
+                "isEnum": false,
                 "type_name": "int"
-              }
+              },
+              "unique": false
             }
           ],
           "name": "c_table",
           "token": {
-            "filepath": "/c.dbml"
+            "end": {
+              "column": 2,
+              "line": 5,
+              "offset": 100
+            },
+            "filepath": "/c.dbml",
+            "start": {
+              "column": 1,
+              "line": 2,
+              "offset": 38
+            }
           }
         }
       ]

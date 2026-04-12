@@ -49,6 +49,7 @@
         "id": "token@<variable>@This is a quoted string@[L0:C0, L0:C25]",
         "snippet": "\"This is a...ed string\""
       },
+      "leadingTrivia": "",
       "trailingTrivia": "\n",
       "value": "This is a quoted string"
     },
@@ -92,7 +93,10 @@
       "context": {
         "id": "token@<eof>@@[L16:C0, L16:C0]",
         "snippet": ""
-      }
+      },
+      "leadingTrivia": "",
+      "trailingTrivia": "",
+      "value": ""
     }
   ]
 }

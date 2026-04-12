@@ -4,32 +4,77 @@
       {
         "fields": [
           {
+            "increment": false,
             "name": "id",
+            "pk": true,
             "token": {
-              "filepath": "/c.dbml"
+              "end": {
+                "column": 14,
+                "line": 3,
+                "offset": 63
+              },
+              "filepath": "/c.dbml",
+              "start": {
+                "column": 3,
+                "line": 3,
+                "offset": 52
+              }
             },
             "type": {
               "type_name": "int"
-            }
+            },
+            "unique": false
           },
           {
             "name": "amount",
+            "pk": false,
             "token": {
-              "filepath": "/c.dbml"
+              "end": {
+                "column": 13,
+                "line": 4,
+                "offset": 76
+              },
+              "filepath": "/c.dbml",
+              "start": {
+                "column": 3,
+                "line": 4,
+                "offset": 66
+              }
             },
             "type": {
               "type_name": "int"
-            }
+            },
+            "unique": false
           }
         ],
         "name": "payments",
         "token": {
-          "filepath": "/c.dbml"
+          "end": {
+            "column": 2,
+            "line": 5,
+            "offset": 78
+          },
+          "filepath": "/c.dbml",
+          "start": {
+            "column": 1,
+            "line": 2,
+            "offset": 33
+          }
         }
       }
     ],
     "token": {
-      "filepath": "/c.dbml"
+      "end": {
+        "column": 1,
+        "line": 6,
+        "offset": 79
+      },
+      "filepath": "/c.dbml",
+      "start": {
+        "column": 1,
+        "line": 2,
+        "offset": 33
+      }
     }
   }
 }

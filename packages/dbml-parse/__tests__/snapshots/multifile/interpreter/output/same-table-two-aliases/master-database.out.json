@@ -6,32 +6,79 @@
           {
             "fields": [
               {
+                "increment": false,
                 "name": "id",
+                "pk": true,
                 "token": {
-                  "filepath": "/base.dbml"
+                  "end": {
+                    "column": 14,
+                    "line": 3,
+                    "offset": 103
+                  },
+                  "filepath": "/base.dbml",
+                  "start": {
+                    "column": 3,
+                    "line": 3,
+                    "offset": 92
+                  }
                 },
                 "type": {
+                  "isEnum": false,
                   "type_name": "int"
-                }
+                },
+                "unique": false
               },
               {
                 "name": "email",
+                "pk": false,
                 "token": {
-                  "filepath": "/base.dbml"
+                  "end": {
+                    "column": 16,
+                    "line": 4,
+                    "offset": 119
+                  },
+                  "filepath": "/base.dbml",
+                  "start": {
+                    "column": 3,
+                    "line": 4,
+                    "offset": 106
+                  }
                 },
                 "type": {
+                  "isEnum": false,
                   "type_name": "varchar"
-                }
+                },
+                "unique": false
               }
             ],
             "name": "users",
             "token": {
-              "filepath": "/base.dbml"
+              "end": {
+                "column": 2,
+                "line": 5,
+                "offset": 121
+              },
+              "filepath": "/base.dbml",
+              "start": {
+                "column": 1,
+                "line": 2,
+                "offset": 76
+              }
             }
           }
         ],
         "token": {
-          "filepath": "/base.dbml"
+          "end": {
+            "column": 1,
+            "line": 6,
+            "offset": 122
+          },
+          "filepath": "/base.dbml",
+          "start": {
+            "column": 1,
+            "line": 2,
+            "offset": 76
+          }
         }
       },
       "/consumer-a.dbml": {
@@ -56,12 +103,32 @@
               }
             ],
             "token": {
-              "filepath": "/consumer-a.dbml"
+              "end": {
+                "column": 2,
+                "line": 6,
+                "offset": 108
+              },
+              "filepath": "/consumer-a.dbml",
+              "start": {
+                "column": 1,
+                "line": 4,
+                "offset": 82
+              }
             }
           }
         ],
         "token": {
-          "filepath": "/consumer-a.dbml"
+          "end": {
+            "column": 1,
+            "line": 7,
+            "offset": 109
+          },
+          "filepath": "/consumer-a.dbml",
+          "start": {
+            "column": 1,
+            "line": 2,
+            "offset": 37
+          }
         }
       },
       "/consumer-b.dbml": {
@@ -86,12 +153,32 @@
               }
             ],
             "token": {
-              "filepath": "/consumer-b.dbml"
+              "end": {
+                "column": 2,
+                "line": 6,
+                "offset": 111
+              },
+              "filepath": "/consumer-b.dbml",
+              "start": {
+                "column": 1,
+                "line": 4,
+                "offset": 81
+              }
             }
           }
         ],
         "token": {
-          "filepath": "/consumer-b.dbml"
+          "end": {
+            "column": 1,
+            "line": 7,
+            "offset": 112
+          },
+          "filepath": "/consumer-b.dbml",
+          "start": {
+            "column": 1,
+            "line": 2,
+            "offset": 41
+          }
         }
       }
     },
@@ -105,7 +192,17 @@
             }
           ],
           "token": {
-            "filepath": "/consumer-b.dbml"
+            "end": {
+              "column": 2,
+              "line": 6,
+              "offset": 111
+            },
+            "filepath": "/consumer-b.dbml",
+            "start": {
+              "column": 1,
+              "line": 4,
+              "offset": 81
+            }
           }
         },
         {
@@ -116,7 +213,17 @@
             }
           ],
           "token": {
-            "filepath": "/consumer-a.dbml"
+            "end": {
+              "column": 2,
+              "line": 6,
+              "offset": 108
+            },
+            "filepath": "/consumer-a.dbml",
+            "start": {
+              "column": 1,
+              "line": 4,
+              "offset": 82
+            }
           }
         }
       ],
@@ -124,27 +231,64 @@
         {
           "fields": [
             {
+              "increment": false,
               "name": "id",
+              "pk": true,
               "token": {
-                "filepath": "/base.dbml"
+                "end": {
+                  "column": 14,
+                  "line": 3,
+                  "offset": 103
+                },
+                "filepath": "/base.dbml",
+                "start": {
+                  "column": 3,
+                  "line": 3,
+                  "offset": 92
+                }
               },
               "type": {
+                "isEnum": false,
                 "type_name": "int"
-              }
+              },
+              "unique": false
             },
             {
               "name": "email",
+              "pk": false,
               "token": {
-                "filepath": "/base.dbml"
+                "end": {
+                  "column": 16,
+                  "line": 4,
+                  "offset": 119
+                },
+                "filepath": "/base.dbml",
+                "start": {
+                  "column": 3,
+                  "line": 4,
+                  "offset": 106
+                }
               },
               "type": {
+                "isEnum": false,
                 "type_name": "varchar"
-              }
+              },
+              "unique": false
             }
           ],
           "name": "users",
           "token": {
-            "filepath": "/base.dbml"
+            "end": {
+              "column": 2,
+              "line": 5,
+              "offset": 121
+            },
+            "filepath": "/base.dbml",
+            "start": {
+              "column": 1,
+              "line": 2,
+              "offset": 76
+            }
           }
         }
       ]

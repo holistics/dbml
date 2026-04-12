@@ -7,318 +7,112 @@
       "level": "error",
       "node": {
         "context": {
-          "id": "node@<primary-expression>@@[L6:C4, L6:C12]",
+          "id": "node@<primary-expression>@Products@[L6:C4, L6:C12]",
           "snippet": "Products"
         }
       }
     }
   ],
-  "program": {
-    "context": {
-      "id": "node@<program>@@[L0:C0, L7:C1]",
-      "snippet": "Table User...roducts\r\n}"
-    },
-    "children": {
-      "body": [
-        {
+  "nodeReferees": [
+    {
+      "context": {
+        "id": "node@<primary-expression>@Users@[L5:C4, L5:C9]",
+        "snippet": "Users"
+      },
+      "children": {
+        "expression": {
           "context": {
-            "id": "node@<element-declaration>@Users@[L0:C0, L2:C1]",
-            "snippet": "Table Users {\r\n\r\n}"
+            "id": "node@<variable>@Users@[L5:C4, L5:C9]",
+            "snippet": "Users"
           },
           "children": {
-            "body": {
+            "variable": {
               "context": {
-                "id": "node@<block-expression>@@[L0:C12, L2:C1]",
-                "snippet": "{\r\n\r\n}"
-              },
-              "children": {
-                "blockCloseBrace": {
-                  "context": {
-                    "id": "token@<rbrace>@}@[L2:C0, L2:C1]",
-                    "snippet": "}"
-                  },
-                  "leadingTrivia": "\n",
-                  "trailingTrivia": "\n",
-                  "value": "}"
-                },
-                "blockOpenBrace": {
-                  "context": {
-                    "id": "token@<lbrace>@{@[L0:C12, L0:C13]",
-                    "snippet": "{"
-                  },
-                  "trailingTrivia": "\n",
-                  "value": "{"
-                }
-              }
-            },
-            "name": {
-              "context": {
-                "id": "node@<primary-expression>@@[L0:C6, L0:C11]",
+                "id": "token@<identifier>@Users@[L5:C4, L5:C9]",
                 "snippet": "Users"
               },
-              "children": {
-                "expression": {
-                  "context": {
-                    "id": "node@<variable>@Users@[L0:C6, L0:C11]",
-                    "snippet": "Users"
-                  },
-                  "children": {
-                    "variable": {
-                      "context": {
-                        "id": "token@<identifier>@Users@[L0:C6, L0:C11]",
-                        "snippet": "Users"
-                      },
-                      "trailingTrivia": " ",
-                      "value": "Users"
-                    }
-                  }
-                }
-              }
-            },
-            "type": {
-              "context": {
-                "id": "token@<identifier>@Table@[L0:C0, L0:C5]",
-                "snippet": "Table"
-              },
-              "trailingTrivia": " ",
-              "value": "Table"
+              "leadingTrivia": "    ",
+              "trailingTrivia": "\n",
+              "value": "Users"
             }
           },
-          "symbol": {
+          "fullEnd": 53,
+          "fullStart": 42
+        }
+      },
+      "fullEnd": 53,
+      "fullStart": 42,
+      "referee": {
+        "context": {
+          "id": "symbol@Table@Users@[L0:C0, L2:C1]",
+          "snippet": "Table Users {\r\n\r\n}"
+        }
+      }
+    }
+  ],
+  "program": {
+    "publicSchema": [
+      {
+        "context": {
+          "id": "symbol@Table@Users@[L0:C0, L2:C1]",
+          "snippet": "Table Users {\r\n\r\n}"
+        },
+        "declaration": {
+          "id": "node@<element-declaration>@Users@[L0:C0, L2:C1]",
+          "snippet": "Table Users {\r\n\r\n}"
+        },
+        "references": [
+          {
+            "id": "node@<primary-expression>@Users@[L5:C4, L5:C9]",
+            "snippet": "Users"
+          }
+        ]
+      },
+      {
+        "context": {
+          "id": "symbol@TableGroup@Group@[L4:C0, L7:C1]",
+          "snippet": "Tablegroup...roducts\r\n}"
+        },
+        "declaration": {
+          "id": "node@<element-declaration>@Group@[L4:C0, L7:C1]",
+          "snippet": "Tablegroup...roducts\r\n}"
+        },
+        "members": [
+          {
+            "context": {
+              "id": "symbol@TableGroup field@Products@[L6:C4, L6:C12]",
+              "snippet": "Products"
+            }
+          },
+          {
+            "context": {
+              "id": "symbol@TableGroup field@Users@[L5:C4, L5:C9]",
+              "snippet": "Users"
+            }
+          }
+        ]
+      }
+    ],
+    "schemas": [
+      {
+        "context": {
+          "id": "symbol@Schema@public@[L?:C?, L?:C?]"
+        },
+        "members": [
+          {
             "context": {
               "id": "symbol@Table@Users@[L0:C0, L2:C1]",
               "snippet": "Table Users {\r\n\r\n}"
-            },
-            "declaration": {
-              "id": "node@<element-declaration>@Users@[L0:C0, L2:C1]",
-              "snippet": "Table Users {\r\n\r\n}"
-            },
-            "references": [
-              {
-                "id": "node@<primary-expression>@@[L5:C4, L5:C9]",
-                "snippet": "Users"
-              }
-            ]
-          }
-        },
-        {
-          "context": {
-            "id": "node@<element-declaration>@Group@[L4:C0, L7:C1]",
-            "snippet": "Tablegroup...roducts\r\n}"
-          },
-          "children": {
-            "body": {
-              "context": {
-                "id": "node@<block-expression>@@[L4:C17, L7:C1]",
-                "snippet": "{\r\n    Use...roducts\r\n}"
-              },
-              "children": {
-                "blockCloseBrace": {
-                  "context": {
-                    "id": "token@<rbrace>@}@[L7:C0, L7:C1]",
-                    "snippet": "}"
-                  },
-                  "value": "}"
-                },
-                "blockOpenBrace": {
-                  "context": {
-                    "id": "token@<lbrace>@{@[L4:C17, L4:C18]",
-                    "snippet": "{"
-                  },
-                  "trailingTrivia": "\n",
-                  "value": "{"
-                },
-                "body": [
-                  {
-                    "context": {
-                      "id": "node@<function-application>@@[L5:C4, L5:C9]",
-                      "snippet": "Users"
-                    },
-                    "children": {
-                      "callee": {
-                        "context": {
-                          "id": "node@<primary-expression>@@[L5:C4, L5:C9]",
-                          "snippet": "Users"
-                        },
-                        "children": {
-                          "expression": {
-                            "context": {
-                              "id": "node@<variable>@Users@[L5:C4, L5:C9]",
-                              "snippet": "Users"
-                            },
-                            "children": {
-                              "variable": {
-                                "context": {
-                                  "id": "token@<identifier>@Users@[L5:C4, L5:C9]",
-                                  "snippet": "Users"
-                                },
-                                "leadingTrivia": "    ",
-                                "trailingTrivia": "\n",
-                                "value": "Users"
-                              }
-                            }
-                          }
-                        },
-                        "referee": {
-                          "context": {
-                            "id": "symbol@Table@Users@[L0:C0, L2:C1]",
-                            "snippet": "Table Users {\r\n\r\n}"
-                          }
-                        }
-                      }
-                    },
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@TableGroup field@@[L5:C4, L5:C9]",
-                        "snippet": "Users"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@@[L5:C4, L5:C9]",
-                        "snippet": "Users"
-                      }
-                    }
-                  },
-                  {
-                    "context": {
-                      "id": "node@<function-application>@@[L6:C4, L6:C12]",
-                      "snippet": "Products"
-                    },
-                    "children": {
-                      "callee": {
-                        "context": {
-                          "id": "node@<primary-expression>@@[L6:C4, L6:C12]",
-                          "snippet": "Products"
-                        },
-                        "children": {
-                          "expression": {
-                            "context": {
-                              "id": "node@<variable>@Products@[L6:C4, L6:C12]",
-                              "snippet": "Products"
-                            },
-                            "children": {
-                              "variable": {
-                                "context": {
-                                  "id": "token@<identifier>@Products@[L6:C4, L6:C12]",
-                                  "snippet": "Products"
-                                },
-                                "leadingTrivia": "    ",
-                                "trailingTrivia": "\n",
-                                "value": "Products"
-                              }
-                            }
-                          }
-                        }
-                      }
-                    },
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@TableGroup field@@[L6:C4, L6:C12]",
-                        "snippet": "Products"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@@[L6:C4, L6:C12]",
-                        "snippet": "Products"
-                      }
-                    }
-                  }
-                ]
-              }
-            },
-            "name": {
-              "context": {
-                "id": "node@<primary-expression>@@[L4:C11, L4:C16]",
-                "snippet": "Group"
-              },
-              "children": {
-                "expression": {
-                  "context": {
-                    "id": "node@<variable>@Group@[L4:C11, L4:C16]",
-                    "snippet": "Group"
-                  },
-                  "children": {
-                    "variable": {
-                      "context": {
-                        "id": "token@<identifier>@Group@[L4:C11, L4:C16]",
-                        "snippet": "Group"
-                      },
-                      "trailingTrivia": " ",
-                      "value": "Group"
-                    }
-                  }
-                }
-              }
-            },
-            "type": {
-              "context": {
-                "id": "token@<identifier>@Tablegroup@[L4:C0, L4:C10]",
-                "snippet": "Tablegroup"
-              },
-              "leadingTrivia": "\n",
-              "trailingTrivia": " ",
-              "value": "Tablegroup"
             }
           },
-          "symbol": {
+          {
             "context": {
               "id": "symbol@TableGroup@Group@[L4:C0, L7:C1]",
               "snippet": "Tablegroup...roducts\r\n}"
-            },
-            "declaration": {
-              "id": "node@<element-declaration>@Group@[L4:C0, L7:C1]",
-              "snippet": "Tablegroup...roducts\r\n}"
-            },
-            "members": [
-              {
-                "context": {
-                  "id": "symbol@TableGroup field@@[L5:C4, L5:C9]",
-                  "snippet": "Users"
-                }
-              },
-              {
-                "context": {
-                  "id": "symbol@TableGroup field@@[L6:C4, L6:C12]",
-                  "snippet": "Products"
-                }
-              }
-            ]
+            }
           }
-        }
-      ],
-      "eof": {
-        "context": {
-          "id": "token@<eof>@@[L7:C1, L7:C1]",
-          "snippet": ""
-        }
+        ]
       }
-    },
-    "symbol": {
-      "context": {
-        "id": "symbol@Program@@[L0:C0, L7:C1]",
-        "snippet": "Table User...roducts\r\n}"
-      },
-      "declaration": {
-        "id": "node@<program>@@[L0:C0, L7:C1]",
-        "snippet": "Table User...roducts\r\n}"
-      },
-      "members": [
-        {
-          "context": {
-            "id": "symbol@Schema@public@[L?:C?, L?:C?]"
-          }
-        },
-        {
-          "context": {
-            "id": "symbol@Table@Users@[L0:C0, L2:C1]",
-            "snippet": "Table Users {\r\n\r\n}"
-          }
-        },
-        {
-          "context": {
-            "id": "symbol@TableGroup@Group@[L4:C0, L7:C1]",
-            "snippet": "Tablegroup...roducts\r\n}"
-          }
-        }
-      ]
-    }
+    ]
   }
 }

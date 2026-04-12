@@ -2,15 +2,42 @@ import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import type { ProgramNode } from '@/core/types/nodes';
-import { scanTestNames, toSnapshot } from '@tests/utils';
+import { scanTestNames, toSnapshot, collectNodesWithReferee } from '@tests/utils';
 import Compiler from '@/compiler';
-import { DEFAULT_ENTRY } from '@/constants';
+import { DEFAULT_ENTRY, UNHANDLED } from '@/constants';
+import { SymbolKind } from '@/core/types/symbol';
+import type { NodeSymbol } from '@/core/types/symbol';
 
 function serializeBinderResult (compiler: Compiler, ast: ProgramNode): string {
   const errors = compiler.parse.errors();
   const warnings = compiler.parse.warnings();
+  const nodeReferees = collectNodesWithReferee(compiler, ast);
+
+  // Simulate module-system-3 structure:
+  // - Named schemas live at "program" level
+  // - Public schema only contains non-schema members
+  const programSymbol = compiler.nodeSymbol(ast).getFiltered(UNHANDLED);
+  const schemas: NodeSymbol[] = [];
+  const publicSchemaMembers: NodeSymbol[] = [];
+  if (programSymbol) {
+    const symbolTable = compiler.symbolMembers(programSymbol).getFiltered(UNHANDLED);
+    if (symbolTable) {
+      for (const [, sym] of symbolTable.entries()) {
+        if (sym.isKind(SymbolKind.Schema)) {
+          schemas.push(sym);
+        } else {
+          publicSchemaMembers.push(sym);
+        }
+      }
+    }
+  }
+
   return JSON.stringify(toSnapshot(compiler, {
-    program: ast,
+    program: {
+      schemas,
+      publicSchema: publicSchemaMembers,
+    },
+    nodeReferees,
     errors,
     warnings,
   }), null, 2);

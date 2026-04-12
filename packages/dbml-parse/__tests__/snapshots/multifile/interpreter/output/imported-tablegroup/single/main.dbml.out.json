@@ -17,19 +17,39 @@
         "name": "content",
         "tables": [
           {
-            "name": "users"
+            "name": "posts"
           },
           {
-            "name": "posts"
+            "name": "users"
           }
         ],
         "token": {
-          "filepath": "/base.dbml"
+          "end": {
+            "column": 2,
+            "line": 15,
+            "offset": 174
+          },
+          "filepath": "/base.dbml",
+          "start": {
+            "column": 1,
+            "line": 12,
+            "offset": 136
+          }
         }
       }
     ],
     "token": {
-      "filepath": "/main.dbml"
+      "end": {
+        "column": 1,
+        "line": 3,
+        "offset": 114
+      },
+      "filepath": "/main.dbml",
+      "start": {
+        "column": 1,
+        "line": 2,
+        "offset": 68
+      }
     }
   }
 }

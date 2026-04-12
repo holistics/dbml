@@ -10,7 +10,17 @@
             "relation": "*",
             "tableName": "A",
             "token": {
-              "filepath": "/main.dbml"
+              "end": {
+                "column": 10,
+                "line": 11,
+                "offset": 97
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 6,
+                "line": 11,
+                "offset": 93
+              }
             }
           },
           {
@@ -20,14 +30,34 @@
             "relation": "1",
             "tableName": "B",
             "token": {
-              "filepath": "/main.dbml"
+              "end": {
+                "column": 17,
+                "line": 11,
+                "offset": 104
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 13,
+                "line": 11,
+                "offset": 100
+              }
             }
           }
         ],
         "onDelete": "no action",
         "onUpdate": "cascade",
         "token": {
-          "filepath": "/main.dbml"
+          "end": {
+            "column": 54,
+            "line": 11,
+            "offset": 141
+          },
+          "filepath": "/main.dbml",
+          "start": {
+            "column": 1,
+            "line": 11,
+            "offset": 88
+          }
         }
       },
       {
@@ -39,7 +69,17 @@
             "relation": "*",
             "tableName": "A",
             "token": {
-              "filepath": "/main.dbml"
+              "end": {
+                "column": 12,
+                "line": 12,
+                "offset": 153
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 6,
+                "line": 12,
+                "offset": 147
+              }
             }
           },
           {
@@ -49,14 +89,34 @@
             "relation": "1",
             "tableName": "B",
             "token": {
-              "filepath": "/main.dbml"
+              "end": {
+                "column": 21,
+                "line": 12,
+                "offset": 162
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 15,
+                "line": 12,
+                "offset": 156
+              }
             }
           }
         ],
         "onDelete": "set default",
         "onUpdate": "set null",
         "token": {
-          "filepath": "/main.dbml"
+          "end": {
+            "column": 61,
+            "line": 12,
+            "offset": 202
+          },
+          "filepath": "/main.dbml",
+          "start": {
+            "column": 1,
+            "line": 12,
+            "offset": 142
+          }
         }
       }
     ],
@@ -65,57 +125,135 @@
         "fields": [
           {
             "name": "id",
+            "pk": false,
             "token": {
-              "filepath": "/main.dbml"
+              "end": {
+                "column": 15,
+                "line": 2,
+                "offset": 24
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 5,
+                "line": 2,
+                "offset": 14
+              }
             },
             "type": {
               "type_name": "integer"
-            }
+            },
+            "unique": false
           },
           {
             "name": "code",
+            "pk": false,
             "token": {
-              "filepath": "/main.dbml"
+              "end": {
+                "column": 16,
+                "line": 3,
+                "offset": 40
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 5,
+                "line": 3,
+                "offset": 29
+              }
             },
             "type": {
               "type_name": "number"
-            }
+            },
+            "unique": false
           }
         ],
         "name": "A",
         "token": {
-          "filepath": "/main.dbml"
+          "end": {
+            "column": 2,
+            "line": 4,
+            "offset": 42
+          },
+          "filepath": "/main.dbml",
+          "start": {
+            "column": 1,
+            "line": 1,
+            "offset": 0
+          }
         }
       },
       {
         "fields": [
           {
             "name": "id",
+            "pk": false,
             "token": {
-              "filepath": "/main.dbml"
+              "end": {
+                "column": 15,
+                "line": 7,
+                "offset": 68
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 5,
+                "line": 7,
+                "offset": 58
+              }
             },
             "type": {
               "type_name": "integer"
-            }
+            },
+            "unique": false
           },
           {
             "name": "code",
+            "pk": false,
             "token": {
-              "filepath": "/main.dbml"
+              "end": {
+                "column": 16,
+                "line": 8,
+                "offset": 84
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 5,
+                "line": 8,
+                "offset": 73
+              }
             },
             "type": {
               "type_name": "number"
-            }
+            },
+            "unique": false
           }
         ],
         "name": "B",
         "token": {
-          "filepath": "/main.dbml"
+          "end": {
+            "column": 2,
+            "line": 9,
+            "offset": 86
+          },
+          "filepath": "/main.dbml",
+          "start": {
+            "column": 1,
+            "line": 6,
+            "offset": 44
+          }
         }
       }
     ],
     "token": {
-      "filepath": "/main.dbml"
+      "end": {
+        "column": 61,
+        "line": 12,
+        "offset": 202
+      },
+      "filepath": "/main.dbml",
+      "start": {
+        "column": 1,
+        "line": 1,
+        "offset": 0
+      }
     }
   }
 }

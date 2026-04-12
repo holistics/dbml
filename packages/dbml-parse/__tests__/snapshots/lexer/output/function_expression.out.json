@@ -21,6 +21,7 @@
         "id": "token@<function-expression>@id * 2@[L0:C0, L0:C8]",
         "snippet": "`id * 2`"
       },
+      "leadingTrivia": "",
       "trailingTrivia": " ",
       "value": "id * 2"
     },
@@ -29,6 +30,7 @@
         "id": "token@<function-expression>@id@[L0:C9, L0:C13]",
         "snippet": "`id`"
       },
+      "leadingTrivia": "",
       "trailingTrivia": " \n",
       "value": "id"
     },
@@ -47,13 +49,17 @@
         "snippet": "`no escape... error! \\`"
       },
       "leadingTrivia": "\n",
+      "trailingTrivia": "",
       "value": "no escaped supported! this is an error! \\"
     },
     {
       "context": {
         "id": "token@<eof>@@[L7:C0, L7:C0]",
         "snippet": ""
-      }
+      },
+      "leadingTrivia": "",
+      "trailingTrivia": "",
+      "value": ""
     }
   ]
 }

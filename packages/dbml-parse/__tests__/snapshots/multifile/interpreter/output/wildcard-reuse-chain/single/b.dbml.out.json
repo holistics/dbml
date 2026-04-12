@@ -1,7 +1,17 @@
 {
   "database": {
     "token": {
-      "filepath": "/b.dbml"
+      "end": {
+        "column": 1,
+        "line": 3,
+        "offset": 98
+      },
+      "filepath": "/b.dbml",
+      "start": {
+        "column": 1,
+        "line": 2,
+        "offset": 74
+      }
     }
   }
 }

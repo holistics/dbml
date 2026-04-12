@@ -1,7 +1,17 @@
 {
   "database": {
     "token": {
-      "filepath": "/main-wildcard-use.dbml"
+      "end": {
+        "column": 1,
+        "line": 4,
+        "offset": 77
+      },
+      "filepath": "/main-wildcard-use.dbml",
+      "start": {
+        "column": 1,
+        "line": 3,
+        "offset": 43
+      }
     }
   }
 }

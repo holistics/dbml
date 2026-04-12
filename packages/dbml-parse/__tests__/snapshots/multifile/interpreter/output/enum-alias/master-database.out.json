@@ -18,32 +18,79 @@
           {
             "fields": [
               {
+                "increment": false,
                 "name": "id",
+                "pk": true,
                 "token": {
-                  "filepath": "/main.dbml"
+                  "end": {
+                    "column": 14,
+                    "line": 5,
+                    "offset": 152
+                  },
+                  "filepath": "/main.dbml",
+                  "start": {
+                    "column": 3,
+                    "line": 5,
+                    "offset": 141
+                  }
                 },
                 "type": {
+                  "isEnum": false,
                   "type_name": "int"
-                }
+                },
+                "unique": false
               },
               {
                 "name": "status",
+                "pk": false,
                 "token": {
-                  "filepath": "/main.dbml"
+                  "end": {
+                    "column": 16,
+                    "line": 6,
+                    "offset": 168
+                  },
+                  "filepath": "/main.dbml",
+                  "start": {
+                    "column": 3,
+                    "line": 6,
+                    "offset": 155
+                  }
                 },
                 "type": {
+                  "isEnum": true,
                   "type_name": "Status"
-                }
+                },
+                "unique": false
               }
             ],
             "name": "jobs",
             "token": {
-              "filepath": "/main.dbml"
+              "end": {
+                "column": 2,
+                "line": 7,
+                "offset": 170
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 1,
+                "line": 4,
+                "offset": 126
+              }
             }
           }
         ],
         "token": {
-          "filepath": "/main.dbml"
+          "end": {
+            "column": 1,
+            "line": 8,
+            "offset": 171
+          },
+          "filepath": "/main.dbml",
+          "start": {
+            "column": 1,
+            "line": 2,
+            "offset": 71
+          }
         }
       },
       "/types.dbml": {
@@ -51,32 +98,82 @@
           {
             "name": "job_status",
             "token": {
-              "filepath": "/types.dbml"
+              "end": {
+                "column": 2,
+                "line": 5,
+                "offset": 46
+              },
+              "filepath": "/types.dbml",
+              "start": {
+                "column": 1,
+                "line": 1,
+                "offset": 0
+              }
             },
             "values": [
               {
                 "name": "pending",
                 "token": {
-                  "filepath": "/types.dbml"
+                  "end": {
+                    "column": 10,
+                    "line": 2,
+                    "offset": 27
+                  },
+                  "filepath": "/types.dbml",
+                  "start": {
+                    "column": 3,
+                    "line": 2,
+                    "offset": 20
+                  }
                 }
               },
               {
                 "name": "running",
                 "token": {
-                  "filepath": "/types.dbml"
+                  "end": {
+                    "column": 10,
+                    "line": 3,
+                    "offset": 37
+                  },
+                  "filepath": "/types.dbml",
+                  "start": {
+                    "column": 3,
+                    "line": 3,
+                    "offset": 30
+                  }
                 }
               },
               {
                 "name": "done",
                 "token": {
-                  "filepath": "/types.dbml"
+                  "end": {
+                    "column": 7,
+                    "line": 4,
+                    "offset": 44
+                  },
+                  "filepath": "/types.dbml",
+                  "start": {
+                    "column": 3,
+                    "line": 4,
+                    "offset": 40
+                  }
                 }
               }
             ]
           }
         ],
         "token": {
-          "filepath": "/types.dbml"
+          "end": {
+            "column": 1,
+            "line": 6,
+            "offset": 47
+          },
+          "filepath": "/types.dbml",
+          "start": {
+            "column": 1,
+            "line": 1,
+            "offset": 0
+          }
         }
       }
     },
@@ -85,25 +182,65 @@
         {
           "name": "job_status",
           "token": {
-            "filepath": "/types.dbml"
+            "end": {
+              "column": 2,
+              "line": 5,
+              "offset": 46
+            },
+            "filepath": "/types.dbml",
+            "start": {
+              "column": 1,
+              "line": 1,
+              "offset": 0
+            }
           },
           "values": [
             {
               "name": "pending",
               "token": {
-                "filepath": "/types.dbml"
+                "end": {
+                  "column": 10,
+                  "line": 2,
+                  "offset": 27
+                },
+                "filepath": "/types.dbml",
+                "start": {
+                  "column": 3,
+                  "line": 2,
+                  "offset": 20
+                }
               }
             },
             {
               "name": "running",
               "token": {
-                "filepath": "/types.dbml"
+                "end": {
+                  "column": 10,
+                  "line": 3,
+                  "offset": 37
+                },
+                "filepath": "/types.dbml",
+                "start": {
+                  "column": 3,
+                  "line": 3,
+                  "offset": 30
+                }
               }
             },
             {
               "name": "done",
               "token": {
-                "filepath": "/types.dbml"
+                "end": {
+                  "column": 7,
+                  "line": 4,
+                  "offset": 44
+                },
+                "filepath": "/types.dbml",
+                "start": {
+                  "column": 3,
+                  "line": 4,
+                  "offset": 40
+                }
               }
             }
           ]
@@ -113,27 +250,64 @@
         {
           "fields": [
             {
+              "increment": false,
               "name": "id",
+              "pk": true,
               "token": {
-                "filepath": "/main.dbml"
+                "end": {
+                  "column": 14,
+                  "line": 5,
+                  "offset": 152
+                },
+                "filepath": "/main.dbml",
+                "start": {
+                  "column": 3,
+                  "line": 5,
+                  "offset": 141
+                }
               },
               "type": {
+                "isEnum": false,
                 "type_name": "int"
-              }
+              },
+              "unique": false
             },
             {
               "name": "status",
+              "pk": false,
               "token": {
-                "filepath": "/main.dbml"
+                "end": {
+                  "column": 16,
+                  "line": 6,
+                  "offset": 168
+                },
+                "filepath": "/main.dbml",
+                "start": {
+                  "column": 3,
+                  "line": 6,
+                  "offset": 155
+                }
               },
               "type": {
+                "isEnum": true,
                 "type_name": "Status"
-              }
+              },
+              "unique": false
             }
           ],
           "name": "jobs",
           "token": {
-            "filepath": "/main.dbml"
+            "end": {
+              "column": 2,
+              "line": 7,
+              "offset": 170
+            },
+            "filepath": "/main.dbml",
+            "start": {
+              "column": 1,
+              "line": 4,
+              "offset": 126
+            }
           }
         }
       ]
