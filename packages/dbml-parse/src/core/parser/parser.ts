@@ -4,10 +4,16 @@ import {
   getMemberChain,
   markInvalid,
 } from '@/core/parser/utils';
-import { CompileError, CompileErrorCode } from '@/core/types/errors';
-import { type SyntaxToken, SyntaxTokenKind, isOpToken } from '@/core/types/tokens';
+import {
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
+import {
+  SyntaxToken, SyntaxTokenKind, isOpToken,
+} from '@/core/types/tokens';
 import Report from '@/core/types/report';
-import { ParsingContext, ParsingContextStack } from '@/core/parser/contextStack';
+import {
+  ParsingContext, ParsingContextStack,
+} from '@/core/parser/contextStack';
 import {
   ArrayNode,
   AttributeNode,
@@ -39,7 +45,9 @@ import {
   UseSpecifierNode,
 } from '@/core/types/nodes';
 import NodeFactory from '@/core/parser/factory';
-import { hasTrailingNewLines, hasTrailingSpaces, isAtStartOfLine } from '@/core/lexer/utils';
+import {
+  hasTrailingNewLines, hasTrailingSpaces, isAtStartOfLine,
+} from '@/core/lexer/utils';
 import { isAsKeyword, isFromKeyword, isReuseKeyword, isUseKeyword } from '@/core/utils/expression';
 import { Filepath } from '@/core/types/filepath';
 
@@ -182,14 +190,22 @@ export default class Parser {
     this.tokens = tokens;
   }
 
-  parse (): Report<{ ast: ProgramNode; tokens: SyntaxToken[] }> {
+  parse (): Report<{ ast: ProgramNode;
+    tokens: SyntaxToken[]; }> {
     const body = this.program();
     const eof = this.advance();
-    const program = this.nodeFactory.create(ProgramNode, { body, eof, source: this.source });
+    const program = this.nodeFactory.create(ProgramNode, {
+      body,
+      eof,
+      source: this.source,
+    });
     this.gatherInvalid();
     this.assignParents(program);
 
-    return new Report({ ast: program, tokens: this.tokens }, this.errors);
+    return new Report({
+      ast: program,
+      tokens: this.tokens,
+    }, this.errors);
   }
 
   // Visit all nodes in the program and assign their parent
@@ -733,11 +749,14 @@ export default class Parser {
 
     return [
       // We do not support {} in CSV line
-      SyntaxTokenKind.RBRACE, SyntaxTokenKind.LBRACE,
+      SyntaxTokenKind.RBRACE,
+      SyntaxTokenKind.LBRACE,
       // We do not support [] in CSV line
-      SyntaxTokenKind.RBRACKET, SyntaxTokenKind.LBRACKET,
+      SyntaxTokenKind.RBRACKET,
+      SyntaxTokenKind.LBRACKET,
       // We do not support () in CSV line
-      SyntaxTokenKind.RPAREN, SyntaxTokenKind.LPAREN,
+      SyntaxTokenKind.RPAREN,
+      SyntaxTokenKind.LPAREN,
       SyntaxTokenKind.COLON,
     ].includes(nextTokenKind);
   }
@@ -920,9 +939,7 @@ export default class Parser {
     | WildcardNode {
     if (this.check(SyntaxTokenKind.WILDCARD)) {
       this.advance();
-      return this.nodeFactory.create(WildcardNode, {
-        token: this.previous(),
-      });
+      return this.nodeFactory.create(WildcardNode, { token: this.previous() });
     }
 
 
@@ -1096,16 +1113,12 @@ export default class Parser {
         SyntaxTokenKind.NUMERIC_LITERAL,
       )
     ) {
-      return this.nodeFactory.create(PrimaryExpressionNode, {
-        expression: this.nodeFactory.create(LiteralNode, { literal: this.previous() }),
-      });
+      return this.nodeFactory.create(PrimaryExpressionNode, { expression: this.nodeFactory.create(LiteralNode, { literal: this.previous() }) });
     }
 
     // Primary expression containing a nested VariableNode
     if (this.match(SyntaxTokenKind.QUOTED_STRING, SyntaxTokenKind.IDENTIFIER)) {
-      return this.nodeFactory.create(PrimaryExpressionNode, {
-        expression: this.nodeFactory.create(VariableNode, { variable: this.previous() }),
-      });
+      return this.nodeFactory.create(PrimaryExpressionNode, { expression: this.nodeFactory.create(VariableNode, { variable: this.previous() }) });
     }
 
     this.logError(this.peek(), CompileErrorCode.UNEXPECTED_TOKEN, 'Expect a variable or literal');
@@ -1125,7 +1138,10 @@ export default class Parser {
       elementList: NormalExpressionNode[];
       commaList: SyntaxToken[];
       tupleCloseParen?: SyntaxToken;
-    } = { elementList: [], commaList: [] };
+    } = {
+      elementList: [],
+      commaList: [],
+    };
     const buildGroup = () => this.nodeFactory.create(GroupExpressionNode, {
       groupOpenParen: args.tupleOpenParen,
       groupCloseParen: args.tupleCloseParen,
@@ -1215,7 +1231,10 @@ export default class Parser {
       elementList: AttributeNode[];
       commaList: SyntaxToken[];
       listCloseBracket?: SyntaxToken;
-    } = { elementList: [], commaList: [] };
+    } = {
+      elementList: [],
+      commaList: [],
+    };
     const buildList = () => this.nodeFactory.create(ListExpressionNode, args);
 
     try {
@@ -1409,58 +1428,136 @@ export default class Parser {
 }
 
 const infixBindingPowerMap: {
-  [index: string]: { left: number; right: number } | undefined;
+  [index: string]: { left: number;
+    right: number; } | undefined;
 } = {
-  '+': { left: 9, right: 10 },
-  // '*': { left: 11, right: 12 },
-  '-': { left: 9, right: 10 },
-  '/': { left: 11, right: 12 },
-  '%': { left: 11, right: 12 },
-  '<': { left: 7, right: 8 },
-  '<=': { left: 7, right: 8 },
-  '>': { left: 7, right: 8 },
-  '>=': { left: 7, right: 8 },
-  '<>': { left: 7, right: 8 },
-  '=': { left: 2, right: 3 },
-  '==': { left: 4, right: 5 },
-  '!=': { left: 4, right: 5 },
-  '.': { left: 16, right: 17 },
+  '+': {
+    left: 9,
+    right: 10,
+  },
+  '-': {
+    left: 9,
+    right: 10,
+  },
+  '/': {
+    left: 11,
+    right: 12,
+  },
+  '%': {
+    left: 11,
+    right: 12,
+  },
+  '<': {
+    left: 7,
+    right: 8,
+  },
+  '<=': {
+    left: 7,
+    right: 8,
+  },
+  '>': {
+    left: 7,
+    right: 8,
+  },
+  '>=': {
+    left: 7,
+    right: 8,
+  },
+  '<>': {
+    left: 7,
+    right: 8,
+  },
+  '=': {
+    left: 2,
+    right: 3,
+  },
+  '==': {
+    left: 4,
+    right: 5,
+  },
+  '!=': {
+    left: 4,
+    right: 5,
+  },
+  '.': {
+    left: 16,
+    right: 17,
+  },
 };
 
 function infixBindingPower (
   token: SyntaxToken,
-): { left: null; right: null } | { left: number; right: number } {
+): { left: null;
+  right: null; } | { left: number;
+    right: number; } {
   const power = infixBindingPowerMap[token.value];
 
-  return power || { left: null, right: null };
+  return power || {
+    left: null,
+    right: null,
+  };
 }
 
 const prefixBindingPowerMap: {
-  [index: string]: { left: null; right: number } | undefined;
+  [index: string]: { left: null;
+    right: number; } | undefined;
 } = {
-  '+': { left: null, right: 15 },
-  '-': { left: null, right: 15 },
-  '<': { left: null, right: 15 },
-  '>': { left: null, right: 15 },
-  '<>': { left: null, right: 15 },
-  '!': { left: null, right: 15 },
-  '~': { left: null, right: 15 },
+  '+': {
+    left: null,
+    right: 15,
+  },
+  '-': {
+    left: null,
+    right: 15,
+  },
+  '<': {
+    left: null,
+    right: 15,
+  },
+  '>': {
+    left: null,
+    right: 15,
+  },
+  '<>': {
+    left: null,
+    right: 15,
+  },
+  '!': {
+    left: null,
+    right: 15,
+  },
+  '~': {
+    left: null,
+    right: 15,
+  },
 };
 
-function prefixBindingPower (token: SyntaxToken): { left: null; right: null | number } {
+function prefixBindingPower (token: SyntaxToken): { left: null;
+  right: null | number; } {
   const power = prefixBindingPowerMap[token.value];
 
-  return power || { left: null, right: null };
+  return power || {
+    left: null,
+    right: null,
+  };
 }
 
 const postfixBindingPowerMap: {
-  [index: string]: { left: number; right: null } | undefined;
+  [index: string]: { left: number;
+    right: null; } | undefined;
 } = {
-  '(': { left: 14, right: null },
+  '(': {
+    left: 14,
+    right: null,
+  },
 };
 
-function postfixBindingPower (token: SyntaxToken): { left: null | number; right: null } {
+function postfixBindingPower (token: SyntaxToken): { left: null | number;
+  right: null; } {
   const power = postfixBindingPowerMap[token.value];
 
-  return power || { left: null, right: null };
+  return power || {
+    left: null,
+    right: null,
+  };
 }

@@ -16,7 +16,8 @@ export interface TokenPosition {
 export interface ElementRef {
   name: string;
   schemaName: string | null;
-  visibleNames: { schemaName: string | null; name: string }[];
+  visibleNames: { schemaName: string | null;
+    name: string; }[];
 }
 
 export interface DatabaseExternals {
@@ -34,7 +35,8 @@ export interface DatabaseExternals {
  * - null = hide all
  */
 export interface FilterConfig {
-  tables: Array<{ name: string; schemaName: string }> | null;
+  tables: Array<{ name: string;
+    schemaName: string; }> | null;
   stickyNotes: Array<{ name: string }> | null;
   tableGroups: Array<{ name: string }> | null;
   schemas: Array<{ name: string }> | null;
@@ -95,7 +97,8 @@ export interface ColumnType {
   schemaName: string | null;
   type_name: string;
   args: string | null;
-  numericParams?: { precision: number; scale: number };
+  numericParams?: { precision: number;
+    scale: number; };
   lengthParam?: { length: number };
   isEnum?: boolean;
 }

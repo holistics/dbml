@@ -1,6 +1,10 @@
-import { describe, expect, it } from 'vitest';
+import {
+  describe, expect, it,
+} from 'vitest';
 import { getOffsetFromMonacoPosition } from '@/services/utils';
-import { createPosition, MockTextModel } from '../../utils';
+import {
+  createPosition, MockTextModel,
+} from '../../utils';
 
 describe('[example] Services Utils', () => {
   // Useful for detecting breaking changes of monaco-editor-core

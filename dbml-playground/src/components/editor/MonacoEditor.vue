@@ -37,7 +37,9 @@
  * - Information Hiding: Language setup complexity is hidden in services
  * - Shallow Module: Simple interface that delegates to deep modules
  */
-import { ref, onMounted, onBeforeUnmount, watch, nextTick } from 'vue';
+import {
+  ref, onMounted, onBeforeUnmount, watch, nextTick,
+} from 'vue';
 import * as monaco from 'monaco-editor';
 import { registerDbmlLanguage, DBML_THEME_NAME } from '@/components/editor/dbml-language';
 import logger from '@/utils/logger';
@@ -75,7 +77,10 @@ let editor: monaco.editor.IStandaloneCodeEditor | null = null;
 /**
  * Reactive cursor position tracking
  */
-const cursorPosition = ref({ line: 1, column: 1 });
+const cursorPosition = ref({
+  line: 1,
+  column: 1,
+});
 
 /**
  * Reactive selection info tracking
@@ -119,7 +124,10 @@ const createEditorConfig = (): monaco.editor.IStandaloneEditorConstructionOption
   lineNumbersMinChars: 2,
   lineDecorationsWidth: 4,
   columnSelection: false,
-  padding: { top: 10, bottom: 10 },
+  padding: {
+    top: 10,
+    bottom: 10,
+  },
   renderWhitespace: 'boundary',
   renderControlCharacters: true,
   smoothScrolling: true,
@@ -326,9 +334,7 @@ watch(() => props.language, (newLanguage) => {
     const model = editor.getModel();
     if (model) {
       monaco.editor.setModelLanguage(model, newLanguage);
-      editor.updateOptions({
-        theme: getThemeForLanguage(newLanguage),
-      });
+      editor.updateOptions({ theme: getThemeForLanguage(newLanguage) });
     }
   }
 });

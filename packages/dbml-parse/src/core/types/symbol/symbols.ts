@@ -3,6 +3,7 @@ import type { Internable } from '@/core/types/internable';
 import { DEFAULT_SCHEMA_NAME } from '@/constants';
 import type { Filepath } from '@/core/types/filepath';
 import { ImportKind } from '@/core/types/keywords';
+import SymbolTable from './symbolTable';
 
 export enum SymbolKind {
   Schema = 'Schema',
@@ -25,6 +26,9 @@ export enum SymbolKind {
   IndexesField = 'Indexes field',
 
   DiagramView = 'DiagramView',
+  DiagramViewField = 'DiagramView field',
+
+  StickyNote = 'StickyNote',
 
   Program = 'Program',
 }
@@ -67,18 +71,22 @@ export class NodeSymbol implements Internable<InternedNodeSymbol> {
   kind: SymbolKind;
   declaration?: SyntaxNode;
   filepath: Filepath;
+  symbolTable?: SymbolTable;
 
   constructor ({
     kind,
     declaration,
+    symbolTable,
   }: {
     kind: SymbolKind;
     declaration?: SyntaxNode;
+    symbolTable?: SymbolTable;
   }, id: NodeSymbolId, filepath: Filepath) {
     this.id = id;
     this.kind = kind;
     this.declaration = declaration;
     this.filepath = filepath;
+    this.symbolTable = symbolTable;
   }
 
   // Whether this symbol can be imported from other files
@@ -173,6 +181,7 @@ export class InjectedColumnSymbol extends NodeSymbol {
 
 export class SchemaSymbol extends NodeSymbol {
   declare kind: SymbolKind.Schema;
+  declare symbolTable: SymbolTable;
   name: string;
   parent?: SchemaSymbol;
 
@@ -180,15 +189,17 @@ export class SchemaSymbol extends NodeSymbol {
     {
       name,
       parent,
+      symbolTable,
     }: {
-      name: string;
+      name?: string;
       parent?: SchemaSymbol;
+      symbolTable?: SymbolTable;
     },
     id: NodeSymbolId,
     filepath: Filepath,
   ) {
-    super({ kind: SymbolKind.Schema }, id, filepath);
-    this.name = name;
+    super({ kind: SymbolKind.Schema, symbolTable }, id, filepath);
+    this.name = name ?? '';
     this.parent = parent;
   }
 
@@ -199,5 +210,216 @@ export class SchemaSymbol extends NodeSymbol {
 
   override isPublicSchema (): this is SchemaSymbol {
     return this.qualifiedName.join('.') === DEFAULT_SCHEMA_NAME;
+  }
+}
+
+// A symbol for an enum, contains the enum's symbol table
+// which is used to hold all the enum field symbols of the enum
+export class EnumSymbol extends NodeSymbol {
+  declare symbolTable: SymbolTable;
+  declare declaration: SyntaxNode;
+
+  constructor (
+    {
+      symbolTable, declaration,
+    }: { symbolTable: SymbolTable;
+      declaration: SyntaxNode; },
+    id: NodeSymbolId,
+    filepath: Filepath,
+  ) {
+    super({
+      kind: SymbolKind.Enum,
+      symbolTable,
+      declaration,
+    }, id, filepath);
+  }
+}
+
+// A symbol for an enum field
+export class EnumFieldSymbol extends NodeSymbol {
+  declare declaration: SyntaxNode;
+
+  constructor ({ declaration }: { declaration: SyntaxNode }, id: NodeSymbolId, filepath: Filepath) {
+    super({
+      kind: SymbolKind.EnumField,
+      declaration,
+    }, id, filepath);
+  }
+}
+
+// A symbol for a table, contains the table's symbol table
+// which is used to hold all the column and table partial symbols of the table
+export class TableSymbol extends NodeSymbol {
+  declare symbolTable: SymbolTable;
+  declare declaration: SyntaxNode;
+
+  constructor (
+    {
+      symbolTable, declaration,
+    }: { symbolTable: SymbolTable;
+      declaration: SyntaxNode; },
+    id: NodeSymbolId,
+    filepath: Filepath,
+  ) {
+    super({
+      kind: SymbolKind.Table,
+      symbolTable,
+      declaration,
+    }, id, filepath);
+  }
+}
+
+// A symbol for a column field
+export class ColumnSymbol extends NodeSymbol {
+  declare declaration: SyntaxNode;
+
+  constructor ({ declaration }: { declaration: SyntaxNode }, id: NodeSymbolId, filepath: Filepath) {
+    super({
+      kind: SymbolKind.Column,
+      declaration,
+    }, id, filepath);
+  }
+}
+
+// A symbol for a tablegroup, contains the symbol table for the tablegroup
+// which is used to hold all the symbols of the table group fields
+export class TableGroupSymbol extends NodeSymbol {
+  declare symbolTable: SymbolTable;
+  declare declaration: SyntaxNode;
+
+  constructor (
+    {
+      symbolTable, declaration,
+    }: { symbolTable: SymbolTable;
+      declaration: SyntaxNode; },
+    id: NodeSymbolId,
+    filepath: Filepath,
+  ) {
+    super({
+      kind: SymbolKind.TableGroup,
+      symbolTable,
+      declaration,
+    }, id, filepath);
+  }
+}
+
+// A symbol for a tablegroup field
+export class TableGroupFieldSymbol extends NodeSymbol {
+  declare declaration: SyntaxNode;
+
+  constructor ({ declaration }: { declaration: SyntaxNode }, id: NodeSymbolId, filepath: Filepath) {
+    super({
+      kind: SymbolKind.TableGroupField,
+      declaration,
+    }, id, filepath);
+  }
+}
+
+// A symbol for a table partial, contains the table partial's symbol table
+// which is used to hold all the column symbols of the table partial
+export class TablePartialSymbol extends NodeSymbol {
+  declare symbolTable: SymbolTable;
+  declare declaration: SyntaxNode;
+
+  constructor (
+    {
+      symbolTable, declaration,
+    }: { symbolTable: SymbolTable;
+      declaration: SyntaxNode; },
+    id: NodeSymbolId,
+    filepath: Filepath,
+  ) {
+    super({
+      kind: SymbolKind.TablePartial,
+      symbolTable,
+      declaration,
+    }, id, filepath);
+  }
+}
+
+// A member symbol for a Table injecting a TablePartial
+export class PartialInjectionSymbol extends NodeSymbol {
+  declare symbolTable: SymbolTable;
+  declare declaration: SyntaxNode;
+
+  constructor (
+    {
+      symbolTable, declaration,
+    }: { symbolTable: SymbolTable;
+      declaration: SyntaxNode; },
+    id: NodeSymbolId,
+    filepath: Filepath,
+  ) {
+    super({
+      kind: SymbolKind.PartialInjection,
+      symbolTable,
+      declaration,
+    }, id, filepath);
+  }
+}
+
+// A symbol for a column injected from a TablePartial
+export class TablePartialInjectedColumnSymbol extends NodeSymbol {
+  declare declaration: SyntaxNode;
+  tablePartialSymbol: TablePartialSymbol;
+
+  constructor (
+    {
+      declaration, tablePartialSymbol,
+    }: { declaration: SyntaxNode;
+      tablePartialSymbol: TablePartialSymbol; },
+    id: NodeSymbolId,
+    filepath: Filepath,
+  ) {
+    super({
+      kind: SymbolKind.Column,
+      declaration,
+    }, id, filepath);
+    this.tablePartialSymbol = tablePartialSymbol;
+  }
+}
+
+// A symbol for a DiagramView block
+export class DiagramViewSymbol extends NodeSymbol {
+  declare symbolTable: SymbolTable;
+  declare declaration: SyntaxNode;
+
+  constructor (
+    {
+      symbolTable, declaration,
+    }: { symbolTable: SymbolTable;
+      declaration: SyntaxNode; },
+    id: NodeSymbolId,
+    filepath: Filepath,
+  ) {
+    super({
+      kind: SymbolKind.DiagramView,
+      symbolTable,
+      declaration,
+    }, id, filepath);
+  }
+}
+
+// A symbol for a DiagramView field (table/note/group/schema reference)
+export class DiagramViewFieldSymbol extends NodeSymbol {
+  declare declaration: SyntaxNode;
+
+  constructor ({ declaration }: { declaration: SyntaxNode }, id: NodeSymbolId, filepath: Filepath) {
+    super({
+      kind: SymbolKind.DiagramViewField,
+      declaration,
+    }, id, filepath);
+  }
+}
+
+// A symbol for a sticky note
+export class StickyNoteSymbol extends NodeSymbol {
+  declare declaration: SyntaxNode;
+
+  constructor ({ declaration }: { declaration: SyntaxNode }, id: NodeSymbolId, filepath: Filepath) {
+    super({
+      kind: SymbolKind.StickyNote,
+      declaration,
+    }, id, filepath);
   }
 }

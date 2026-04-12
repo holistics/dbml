@@ -70,14 +70,10 @@
                     "id": "token@<lbrace>@{@[L0:C12, L0:C13]",
                     "snippet": "{"
                   },
-                  "leadingTrivia": "",
                   "trailingTrivia": "\n",
                   "value": "{"
-                },
-                "body": []
-              },
-              "fullEnd": 20,
-              "fullStart": 12
+                }
+              }
             },
             "name": {
               "context": {
@@ -96,30 +92,22 @@
                         "id": "token@<identifier>@status@[L0:C5, L0:C11]",
                         "snippet": "status"
                       },
-                      "leadingTrivia": "",
                       "trailingTrivia": " ",
                       "value": "status"
                     }
-                  },
-                  "fullEnd": 12,
-                  "fullStart": 5
+                  }
                 }
-              },
-              "fullEnd": 12,
-              "fullStart": 5
+              }
             },
             "type": {
               "context": {
                 "id": "token@<identifier>@Enum@[L0:C0, L0:C4]",
                 "snippet": "Enum"
               },
-              "leadingTrivia": "",
               "trailingTrivia": " ",
               "value": "Enum"
             }
           },
-          "fullEnd": 20,
-          "fullStart": 0,
           "symbol": {
             "context": {
               "id": "symbol@Enum@status@[L0:C0, L2:C1]",
@@ -128,9 +116,7 @@
             "declaration": {
               "id": "node@<element-declaration>@status@[L0:C0, L2:C1]",
               "snippet": "Enum status {\r\n\r\n}"
-            },
-            "members": [],
-            "references": []
+            }
           }
         },
         {
@@ -151,7 +137,6 @@
                     "snippet": "}"
                   },
                   "leadingTrivia": "    \n",
-                  "trailingTrivia": "",
                   "value": "}"
                 },
                 "blockOpenBrace": {
@@ -159,14 +144,10 @@
                     "id": "token@<lbrace>@{@[L4:C19, L4:C20]",
                     "snippet": "{"
                   },
-                  "leadingTrivia": "",
                   "trailingTrivia": "\n",
                   "value": "{"
-                },
-                "body": []
-              },
-              "fullEnd": 51,
-              "fullStart": 41
+                }
+              }
             },
             "name": {
               "context": {
@@ -191,25 +172,17 @@
                             "id": "token@<identifier>@public@[L4:C5, L4:C11]",
                             "snippet": "public"
                           },
-                          "leadingTrivia": "",
-                          "trailingTrivia": "",
                           "value": "public"
                         }
-                      },
-                      "fullEnd": 33,
-                      "fullStart": 27
+                      }
                     }
-                  },
-                  "fullEnd": 33,
-                  "fullStart": 27
+                  }
                 },
                 "op": {
                   "context": {
                     "id": "token@<op>@.@[L4:C11, L4:C12]",
                     "snippet": "."
                   },
-                  "leadingTrivia": "",
-                  "trailingTrivia": "",
                   "value": "."
                 },
                 "rightExpression": {
@@ -229,21 +202,14 @@
                             "id": "token@<identifier>@status@[L4:C12, L4:C18]",
                             "snippet": "status"
                           },
-                          "leadingTrivia": "",
                           "trailingTrivia": " ",
                           "value": "status"
                         }
-                      },
-                      "fullEnd": 41,
-                      "fullStart": 34
+                      }
                     }
-                  },
-                  "fullEnd": 41,
-                  "fullStart": 34
+                  }
                 }
-              },
-              "fullEnd": 41,
-              "fullStart": 27
+              }
             },
             "type": {
               "context": {
@@ -255,8 +221,6 @@
               "value": "Enum"
             }
           },
-          "fullEnd": 51,
-          "fullStart": 21,
           "symbol": {
             "context": {
               "id": "symbol@Enum@public.status@[L4:C0, L6:C1]",
@@ -265,9 +229,7 @@
             "declaration": {
               "id": "node@<element-declaration>@public.status@[L4:C0, L6:C1]",
               "snippet": "Enum publi...{\r\n    \r\n}"
-            },
-            "members": [],
-            "references": []
+            }
           }
         }
       ],
@@ -275,14 +237,9 @@
         "context": {
           "id": "token@<eof>@@[L6:C1, L6:C1]",
           "snippet": ""
-        },
-        "leadingTrivia": "",
-        "trailingTrivia": "",
-        "value": ""
+        }
       }
     },
-    "fullEnd": 51,
-    "fullStart": 0,
     "symbol": {
       "context": {
         "id": "symbol@Program@@[L0:C0, L6:C1]",
@@ -310,9 +267,7 @@
             "snippet": "Enum publi...{\r\n    \r\n}"
           }
         }
-      ],
-      "references": []
+      ]
     }
-  },
-  "warnings": []
+  }
 }

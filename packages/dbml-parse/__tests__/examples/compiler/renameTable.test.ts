@@ -1,4 +1,6 @@
-import { describe, expect, test } from 'vitest';
+import {
+  describe, expect, test,
+} from 'vitest';
 import Compiler from '@/compiler/index';
 import { TableNameInput } from '@/compiler/queries/transform';
 import { DEFAULT_ENTRY } from '@/constants';
@@ -408,8 +410,14 @@ Table public.posts {
 Ref: public.posts.user_id > public.users.id
 `;
       const result = renameTable(
-        { schema: 'public', table: 'users' },
-        { schema: 'public', table: 'customers' },
+        {
+          schema: 'public',
+          table: 'users',
+        },
+        {
+          schema: 'public',
+          table: 'customers',
+        },
         input,
       );
       expect(result).toContain('customers');
@@ -438,8 +446,14 @@ Ref: public.posts.author_id > auth.users.id
 Ref: public.comments.author_id > auth.users.id
 `;
       const result = renameTable(
-        { schema: 'auth', table: 'users' },
-        { schema: 'auth', table: 'customers' },
+        {
+          schema: 'auth',
+          table: 'users',
+        },
+        {
+          schema: 'auth',
+          table: 'customers',
+        },
         input,
       );
       expect(result).toContain('auth.customers');
@@ -470,8 +484,14 @@ Ref: public.posts.auth_user_id > auth.users.id
 Ref: public.posts.public_user_id > public.users.id
 `;
       const result = renameTable(
-        { schema: 'auth', table: 'users' },
-        { schema: 'auth', table: 'customers' },
+        {
+          schema: 'auth',
+          table: 'users',
+        },
+        {
+          schema: 'auth',
+          table: 'customers',
+        },
         input,
       );
       expect(result).toContain('auth.customers');
@@ -496,8 +516,14 @@ Table public.posts {
 Ref: public.posts.user_id > public.users.id
 `;
       const result = renameTable(
-        { schema: 'public', table: 'users' },
-        { schema: 'auth', table: 'customers' },
+        {
+          schema: 'public',
+          table: 'users',
+        },
+        {
+          schema: 'auth',
+          table: 'customers',
+        },
         input,
       );
       expect(result).toContain('auth.customers');
@@ -518,7 +544,10 @@ Table posts {
 }
 `;
       const result = renameTable(
-        { schema: 'ecommerce', table: 'users' },
+        {
+          schema: 'ecommerce',
+          table: 'users',
+        },
         { table: 'users' },
         input,
       );
@@ -603,8 +632,14 @@ Table public.posts {
 Ref: public.posts.author_id > AuthUser.id
 `;
       const result = renameTable(
-        { schema: 'auth', table: 'users' },
-        { schema: 'auth', table: 'customers' },
+        {
+          schema: 'auth',
+          table: 'users',
+        },
+        {
+          schema: 'auth',
+          table: 'customers',
+        },
         input,
       );
       expect(result).toContain('auth.customers');
@@ -681,7 +716,10 @@ Table posts {
 }
 `;
       const result = renameTable(
-        { schema: 'ecommerce', table: 'users' },
+        {
+          schema: 'ecommerce',
+          table: 'users',
+        },
         { table: 'users' },
         input,
       );
@@ -702,7 +740,10 @@ Table posts {
 }
 `;
       const result = renameTable(
-        { schema: 'ecommerce', table: 'users' },
+        {
+          schema: 'ecommerce',
+          table: 'users',
+        },
         { table: 'users' },
         input,
       );
@@ -724,8 +765,14 @@ Table auth.customers {
 }
 `;
       const result = renameTable(
-        { schema: 'auth', table: 'customers' },
-        { schema: 'public', table: 'users' },
+        {
+          schema: 'auth',
+          table: 'customers',
+        },
+        {
+          schema: 'public',
+          table: 'users',
+        },
         input,
       );
       expect(result.trim()).toBe(input.trim());
@@ -743,8 +790,14 @@ Table posts {
 }
 `;
       const result = renameTable(
-        { schema: 'auth', table: 'users' },
-        { schema: 'public', table: 'customers' },
+        {
+          schema: 'auth',
+          table: 'users',
+        },
+        {
+          schema: 'public',
+          table: 'customers',
+        },
         input,
       );
       expect(result).toContain('Table customers');
@@ -780,8 +833,14 @@ Table auth.customers {
 }
 `;
       const result = renameTable(
-        { schema: 'ecommerce', table: 'users' },
-        { schema: 'auth', table: 'users' },
+        {
+          schema: 'ecommerce',
+          table: 'users',
+        },
+        {
+          schema: 'auth',
+          table: 'users',
+        },
         input,
       );
       expect(result).toContain('auth.users');
@@ -799,7 +858,10 @@ Table auth.admins {
 }
 `;
       const result = renameTable(
-        { schema: 'auth', table: 'admins' },
+        {
+          schema: 'auth',
+          table: 'admins',
+        },
         { table: 'users' },
         input,
       );
@@ -860,8 +922,14 @@ Table posts { user_id int [ref: > users.id] }
     test('should preserve quotes when schema-qualified table uses quotes', () => {
       const input = 'Table "schema1"."users" { id int }';
       const result = renameTable(
-        { schema: 'schema1', table: 'users' },
-        { schema: 'schema1', table: 'customers' },
+        {
+          schema: 'schema1',
+          table: 'users',
+        },
+        {
+          schema: 'schema1',
+          table: 'customers',
+        },
         input,
       );
       expect(result).toContain('"customers"');
@@ -940,8 +1008,14 @@ Table public.posts {
 }
 `;
       const result = renameTable(
-        { schema: 'auth', table: 'users' },
-        { schema: 'auth', table: 'customers' },
+        {
+          schema: 'auth',
+          table: 'users',
+        },
+        {
+          schema: 'auth',
+          table: 'customers',
+        },
         input,
       );
       expect(result).toContain('auth.customers');
@@ -1059,8 +1133,14 @@ TableGroup social {
 }
 `;
       const result = renameTable(
-        { schema: 'auth', table: 'users' },
-        { schema: 'auth', table: 'customers' },
+        {
+          schema: 'auth',
+          table: 'users',
+        },
+        {
+          schema: 'auth',
+          table: 'customers',
+        },
         input,
       );
       expect(result).toContain('auth.customers');
@@ -1377,8 +1457,14 @@ Table posts {
 }
 `;
       const result = renameTable(
-        { schema: 'my.schema', table: 'my.users' },
-        { schema: 'my.schema', table: 'my.customers' },
+        {
+          schema: 'my.schema',
+          table: 'my.users',
+        },
+        {
+          schema: 'my.schema',
+          table: 'my.customers',
+        },
         input,
       );
       expect(result).toContain('"my.customers"');
@@ -1432,8 +1518,14 @@ Table "my-schema".users {
 }
 `;
       const result = renameTable(
-        { schema: 'my-schema', table: 'users' },
-        { schema: 'my-schema', table: 'customers' },
+        {
+          schema: 'my-schema',
+          table: 'users',
+        },
+        {
+          schema: 'my-schema',
+          table: 'customers',
+        },
         input,
       );
       expect(result).toContain('customers');
@@ -1451,8 +1543,14 @@ Table posts {
 }
 `;
       const result = renameTable(
-        { schema: 'public', table: 'users' },
-        { schema: 'public', table: 'customers' },
+        {
+          schema: 'public',
+          table: 'users',
+        },
+        {
+          schema: 'public',
+          table: 'customers',
+        },
         input,
       );
       expect(result).toContain('customers');

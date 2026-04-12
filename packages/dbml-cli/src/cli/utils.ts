@@ -3,6 +3,15 @@ import fs from 'fs';
 import { type ExportFormat } from '@dbml/core';
 import { reduce } from 'lodash-es';
 
+interface OutputPlugin {
+  write(content: string): void;
+}
+
+interface ConnectionOpt {
+  connection: string;
+  databaseType: string;
+}
+
 function resolvePaths (paths: string): string;
 function resolvePaths (paths: string[]): string[];
 function resolvePaths (paths: string | string[]): string | string[] {
@@ -37,7 +46,7 @@ function getFormatOpt (opts: Record<string, unknown>): ExportFormat {
 
 function getConnectionOpt (args: string[]): { connection: string; databaseType: string } {
   const supportedDatabases = ['postgres', 'mysql', 'mssql', 'snowflake', 'bigquery', 'oracle'];
-  const defaultConnectionOpt = {
+  const defaultConnectionOpt: ConnectionOpt = {
     connection: args[0],
     databaseType: 'unknown',
   };
@@ -66,7 +75,7 @@ function getConnectionOpt (args: string[]): { connection: string; databaseType: 
 function generate (
   inputPaths: string[],
   transform: (source: string) => string,
-  outputPlugin: { write: (content: string) => void },
+  outputPlugin: OutputPlugin,
 ): void {
   inputPaths.forEach((_path) => {
     const source = fs.readFileSync(_path, 'utf-8');

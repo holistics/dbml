@@ -1,4 +1,6 @@
-import { describe, expect, it } from 'vitest';
+import {
+  describe, expect, it,
+} from 'vitest';
 import { syncDiagramView } from '@/compiler/queries/transform/syncDiagramView';
 import Compiler from '@/compiler/index';
 import Lexer from '@/core/lexer/lexer';
@@ -15,7 +17,11 @@ DiagramView my_view {
   Tables { users }
 }`;
     const { newDbml } = syncDiagramView(dbml, [
-      { operation: 'update', name: 'my_view', newName: 'renamed_view' },
+      {
+        operation: 'update',
+        name: 'my_view',
+        newName: 'renamed_view',
+      },
     ]);
     expect(newDbml).toContain('DiagramView renamed_view');
     expect(newDbml).not.toContain('DiagramView my_view');
@@ -36,7 +42,10 @@ DiagramView my_view {
 }
 `;
     const { newDbml } = syncDiagramView(dbml, [
-      { operation: 'delete', name: 'my_view' },
+      {
+        operation: 'delete',
+        name: 'my_view',
+      },
     ]);
     expect(newDbml).not.toContain('DiagramView my_view');
     expect(newDbml).toContain('Table users');
@@ -89,7 +98,12 @@ describe('syncDiagramView - name quoting', () => {
       {
         operation: 'create',
         name: 'My View',
-        visibleEntities: { tables: null, stickyNotes: null, tableGroups: null, schemas: null },
+        visibleEntities: {
+          tables: null,
+          stickyNotes: null,
+          tableGroups: null,
+          schemas: null,
+        },
       },
     ]);
     expect(newDbml).toContain('DiagramView "My View"');
@@ -100,7 +114,12 @@ describe('syncDiagramView - name quoting', () => {
       {
         operation: 'create',
         name: 'my_view',
-        visibleEntities: { tables: null, stickyNotes: null, tableGroups: null, schemas: null },
+        visibleEntities: {
+          tables: null,
+          stickyNotes: null,
+          tableGroups: null,
+          schemas: null,
+        },
       },
     ]);
     expect(newDbml).toContain('DiagramView my_view');
@@ -112,7 +131,12 @@ describe('syncDiagramView - name quoting', () => {
       {
         operation: 'create',
         name: 'My "Special" View',
-        visibleEntities: { tables: null, stickyNotes: null, tableGroups: null, schemas: null },
+        visibleEntities: {
+          tables: null,
+          stickyNotes: null,
+          tableGroups: null,
+          schemas: null,
+        },
       },
     ]);
     expect(newDbml).toContain('DiagramView "My \\"Special\\" View"');
@@ -125,7 +149,11 @@ DiagramView "My View" {
 }
 `;
     const { newDbml } = syncDiagramView(dbml, [
-      { operation: 'update', name: 'My View', newName: 'New Name' },
+      {
+        operation: 'update',
+        name: 'My View',
+        newName: 'New Name',
+      },
     ]);
     expect(newDbml).toContain('DiagramView "New Name"');
     expect(newDbml).not.toContain('"My View"');
@@ -146,7 +174,12 @@ DiagramView my_view {
         operation: 'create',
         name: 'my_view',
         visibleEntities: {
-          tables: [{ name: 'posts', schemaName: 'public' }],
+          tables: [
+            {
+              name: 'posts',
+              schemaName: 'public',
+            },
+          ],
           stickyNotes: null,
           tableGroups: null,
           schemas: null,

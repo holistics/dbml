@@ -1,6 +1,9 @@
 import { last } from 'lodash-es';
-import { SyntaxToken, SyntaxTokenKind } from '@/core/types/tokens';
-import { alternateLists } from '@/core/utils/chars';
+import {
+  SyntaxToken, SyntaxTokenKind,
+} from '@/core/types/tokens';
+
+import { alternateLists } from '@/core/utils/array';
 import NodeFactory from '@/core/parser/factory';
 import {
   ArrayNode,
@@ -54,7 +57,7 @@ export function convertFuncAppToElem (
   }
   const cpArgs = [...args];
 
-  const type = extractVariableNode(callee);
+  const type = extractVariableNode(callee)!;
 
   const body = cpArgs.pop();
   if (!(body instanceof BlockExpressionNode)) {
@@ -201,6 +204,8 @@ function markInvalidNode (node: SyntaxNode) {
     markInvalid(node.token);
   } else if (node instanceof EmptyNode) {
     // DummyNode has no children to mark invalid
+  } else if (node instanceof WildcardNode) {
+    markInvalid(node.token);
   } else {
     throw new Error('Unreachable case in markInvalidNode');
   }

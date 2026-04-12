@@ -1,5 +1,7 @@
 import { last } from 'lodash-es';
-import { SyntaxToken, SyntaxTokenKind } from '@/core/types/tokens';
+import {
+  SyntaxToken, SyntaxTokenKind,
+} from '@/core/types/tokens';
 
 export const enum ParsingContext {
   ListExpression,

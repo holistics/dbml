@@ -2,9 +2,15 @@ import { DEFAULT_SCHEMA_NAME } from '@/constants';
 import type Compiler from '../../index';
 import { SyntaxNode } from '@/core/types/nodes';
 import { NodeSymbol } from '@/core/types/symbol';
-import { applyTextEdits, TextEdit } from './applyTextEdits';
-import { isAlphaOrUnderscore, isDigit } from '@/core/utils/chars';
-import { normalizeTableName, lookupTableSymbol, stripQuotes, type TableNameInput } from './utils';
+import {
+  applyTextEdits, TextEdit,
+} from './applyTextEdits';
+import {
+  isAlphaOrUnderscore, isDigit,
+} from '@/core/utils/chars';
+import {
+  normalizeTableName, lookupTableSymbol, stripQuotes, type TableNameInput,
+} from './utils';
 import { Filepath } from '@/core/types/filepath';
 
 interface FormattedTableName {
@@ -97,7 +103,8 @@ function checkIfPartOfQualifiedReference (
   node: SyntaxNode,
   oldSchema: string,
   source: string,
-): { start: number; end: number } | null {
+): { start: number;
+  end: number; } | null {
   let i = node.start - 1;
 
   // Skip whitespace
@@ -144,7 +151,10 @@ function checkIfPartOfQualifiedReference (
   const cleanSchemaText = stripQuotes(schemaText);
 
   if (cleanSchemaText === oldSchema) {
-    return { start: schemaStart, end: node.end };
+    return {
+      start: schemaStart,
+      end: node.end,
+    };
   }
 
   return null;
@@ -165,7 +175,10 @@ function findReplacements (
   for (const node of nodes) {
     const qualifiedRange = checkIfPartOfQualifiedReference(node, oldSchema, source);
 
-    const range = qualifiedRange ?? { start: node.start, end: node.end };
+    const range = qualifiedRange ?? {
+      start: node.start,
+      end: node.end,
+    };
     const rangeKey = `${range.start}-${range.end}`;
 
     if (processedRanges.has(rangeKey)) continue;
@@ -175,7 +188,11 @@ function findReplacements (
       ? `${newFormatted.formattedSchema}.${newFormatted.formattedTable}`
       : newFormatted.formattedTable;
 
-    replacements.push({ start: range.start, end: range.end, newText });
+    replacements.push({
+      start: range.start,
+      end: range.end,
+      newText,
+    });
   }
 
   return replacements;

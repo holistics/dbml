@@ -57,6 +57,16 @@ export default defineConfig(
         '@stylistic/quotes': ['error', 'single', { 'avoidEscape': true }],
         '@stylistic/max-statements-per-line': 'off',
         '@stylistic/operator-linebreak': ['error', 'before', { overrides: { '=': 'after' } }],
+        '@stylistic/object-curly-newline': ['error', {
+          ObjectExpression: { multiline: true, minProperties: 2 },
+          ObjectPattern: { multiline: true, minProperties: 2 },
+          ImportDeclaration: { multiline: true, minProperties: 2 },
+          ExportDeclaration: { multiline: true, minProperties: 2 },
+        }],
+        '@stylistic/object-property-newline': ['error', { allowAllPropertiesOnSameLine: false }],
+        '@stylistic/array-bracket-newline': ['error', { multiline: true, minItems: 4 }],
+        '@stylistic/array-element-newline': ['error', { multiline: true, minItems: 4 }],
+        '@stylistic/function-call-argument-newline': ['error', 'consistent'],
       },
       settings: {
         'import/resolver': {

@@ -18,9 +18,8 @@ export type { ExportFormat, ExportOptions } from './export/index';
 export type { DbmlExporterOptions } from './export/DbmlExporter';
 export type { JsonExporterOptions } from './export/JsonExporter';
 export type { ImportFormat, ImportOptions } from './import/index';
-export { CompilerDiagnostic, CompilerError as CompilerDiagnostics, EditorPosition, ErrorCode, WarningLevel } from './parse/error';
+export { CompilerDiagnostic, CompilerError, CompilerError as CompilerDiagnostics, EditorPosition, ErrorCode, WarningLevel } from './parse/error';
 
-export * from './model_structure';
 export {
   isIntegerType,
   isFloatType,
@@ -39,4 +38,38 @@ export {
   addDoubleQuoteIfNeeded,
   formatRecordValue,
 } from '@dbml/parse';
-export type { DiagramView, DiagramViewSyncOperation, FilterConfig, TextEdit } from '@dbml/parse';
+export type {
+  Database,
+  MasterDatabase,
+  Table,
+  Note,
+  Column,
+  ColumnType,
+  Index,
+  Check,
+  InlineRef,
+  Ref,
+  RefEndpointPair,
+  RefEndpoint,
+  RelationCardinality,
+  Enum,
+  EnumField,
+  TableGroup,
+  TableGroupField,
+  Alias,
+  AliasKind,
+  TablePartial,
+  TablePartialInjection,
+  RecordValue,
+  RecordValueType,
+  TableRecord,
+  Project,
+  SchemaElement,
+  TokenPosition,
+  ElementRef,
+  DiagramView,
+  FilterConfig,
+  DiagramViewSyncOperation,
+  DiagramViewBlock,
+  TextEdit,
+} from '@dbml/parse';

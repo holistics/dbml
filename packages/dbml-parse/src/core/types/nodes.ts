@@ -1,11 +1,18 @@
-import { flatten, zip } from 'lodash-es';
-import { SyntaxToken, SyntaxTokenKind } from '@/core/types/tokens';
+import {
+  flatten, zip,
+} from 'lodash-es';
+import {
+  SyntaxToken, SyntaxTokenKind,
+} from '@/core/types/tokens';
 import { ElementKind, ImportKind } from '@/core/types/keywords';
-import { Internable } from '@/core/types/internable';
+import { NodeSymbol } from '@/core/types/symbol/symbols';
 import { Position } from '@/core/types/position';
 import type { SymbolKind } from '@/core/types/symbol';
-import { getTokenFullEnd, getTokenFullStart } from '@/core/lexer/utils';
+import {
+  getTokenFullEnd, getTokenFullStart,
+} from '@/core/lexer/utils';
 import { Filepath } from '@/core/types/filepath';
+import { type Internable } from '@/core/types/internable';
 import { isReuseKeyword } from '@/core/utils/expression';
 
 export type SyntaxNodeId = number;
@@ -425,7 +432,7 @@ export class ElementDeclarationNode extends SyntaxNode {
   }
 
   isKind (...kinds: ElementKind[]): boolean {
-    return this.type?.value !== undefined && kinds.map((k) => k.toLowerCase()).includes(this.type.value.toLowerCase());
+    return kinds.some((kind) => this.type?.value.toLowerCase() === kind);
   }
 }
 
@@ -520,7 +527,10 @@ export class PrefixExpressionNode extends SyntaxNode {
   expression?: NormalExpressionNode;
 
   constructor (
-    { op, expression }: { op?: SyntaxToken; expression?: NormalExpressionNode },
+    {
+      op, expression,
+    }: { op?: SyntaxToken;
+      expression?: NormalExpressionNode; },
     id: SyntaxNodeId,
     filepath: Filepath,
   ) {
@@ -581,7 +591,10 @@ export class PostfixExpressionNode extends SyntaxNode {
   expression?: NormalExpressionNode;
 
   constructor (
-    { op, expression }: { op?: SyntaxToken; expression?: NormalExpressionNode },
+    {
+      op, expression,
+    }: { op?: SyntaxToken;
+      expression?: NormalExpressionNode; },
     id: SyntaxNodeId,
     filepath: Filepath,
   ) {
@@ -624,7 +637,10 @@ export class FunctionApplicationNode extends SyntaxNode {
   args: ExpressionNode[];
 
   constructor (
-    { callee, args = [] }: { callee?: ExpressionNode; args?: ExpressionNode[] },
+    {
+      callee, args = [],
+    }: { callee?: ExpressionNode;
+      args?: ExpressionNode[]; },
     id: SyntaxNodeId,
     filepath: Filepath,
   ) {
@@ -703,15 +719,7 @@ export class ListExpressionNode extends SyntaxNode {
     id: SyntaxNodeId,
     filepath: Filepath,
   ) {
-    super(
-      id,
-      SyntaxNodeKind.LIST_EXPRESSION,
-      filepath,
-      [
-        listOpenBracket,
-        ...interleave(elementList, commaList),
-        listCloseBracket,
-      ]);
+    super(id, SyntaxNodeKind.LIST_EXPRESSION, filepath, [listOpenBracket, ...interleave(elementList, commaList), listCloseBracket]);
     this.listOpenBracket = listOpenBracket;
     this.elementList = elementList;
     this.commaList = commaList;
@@ -747,15 +755,7 @@ export class TupleExpressionNode extends SyntaxNode {
     id: SyntaxNodeId,
     filepath: Filepath,
   ) {
-    super(
-      id,
-      SyntaxNodeKind.TUPLE_EXPRESSION,
-      filepath,
-      [
-        tupleOpenParen,
-        ...interleave(elementList, commaList),
-        tupleCloseParen,
-      ]);
+    super(id, SyntaxNodeKind.TUPLE_EXPRESSION, filepath, [tupleOpenParen, ...interleave(elementList, commaList), tupleCloseParen]);
     this.tupleOpenParen = tupleOpenParen;
     this.elementList = elementList;
     this.commaList = commaList;
@@ -787,14 +787,7 @@ export class CommaExpressionNode extends SyntaxNode {
     id: SyntaxNodeId,
     filepath: Filepath,
   ) {
-    super(
-      id,
-      SyntaxNodeKind.COMMA_EXPRESSION,
-      filepath,
-      [
-        ...interleave(elementList, commaList),
-      ],
-    );
+    super(id, SyntaxNodeKind.COMMA_EXPRESSION, filepath, [...interleave(elementList, commaList)]);
     this.elementList = elementList;
     this.commaList = commaList;
   }
@@ -979,17 +972,11 @@ export class ArrayNode extends SyntaxNode {
   array?: NormalExpressionNode;
   indexer?: ListExpressionNode;
 
-  constructor (
-    { expression, indexer }: { expression?: NormalExpressionNode; indexer: ListExpressionNode },
-    id: SyntaxNodeId,
-    filepath: Filepath,
-  ) {
-    super(
-      id,
-      SyntaxNodeKind.ARRAY,
-      filepath,
-      [expression, indexer],
-    );
+  constructor ({
+    expression, indexer,
+  }: { expression?: NormalExpressionNode;
+    indexer: ListExpressionNode; }, id: SyntaxNodeId, filepath: Filepath) {
+    super(id, SyntaxNodeKind.ARRAY, filepath, [expression, indexer]);
     this.array = expression;
     this.indexer = indexer;
   }

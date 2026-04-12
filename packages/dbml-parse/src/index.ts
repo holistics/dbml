@@ -6,6 +6,8 @@ export {
   ElementKind,
 } from '@/core/types/keywords';
 
+export * from '@/core/interpreter/records/utils';
+
 export {
   // Core AST node types
   SyntaxNode,

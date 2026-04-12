@@ -25,7 +25,8 @@ import { SettingName } from '../types/keywords';
 
 // Is the name valid (either simple or complex)
 export function isValidName (nameNode: SyntaxNode): boolean {
-  return !!destructureComplexVariable(nameNode);
+  const res = destructureComplexVariable(nameNode);
+  return res !== undefined && res.length > 0;
 }
 
 // Is the alias valid (only simple name is allowed)
@@ -102,11 +103,6 @@ export function isValidColor (value?: SyntaxNode): boolean {
   return true;
 }
 
-// Is the value non-existent
-export function isVoid (value?: SyntaxNode): boolean {
-  return value === undefined;
-}
-
 // Is the `value` a valid value for a column's `default` setting
 // It's a valid only if it's a literal or a complex variable (potentially an enum member)
 export function isValidDefaultValue (value?: SyntaxNode): boolean {
@@ -136,8 +132,8 @@ export function isValidDefaultValue (value?: SyntaxNode): boolean {
 
   if (!value) return false;
   if (!isDotDelimitedIdentifier(value)) return false;
-  const fragments = destructureMemberAccessExpression(value);
-  return fragments?.length === 2 || fragments?.length === 3;
+  const fragments = destructureMemberAccessExpression(value)!;
+  return fragments.length === 2 || fragments.length === 3;
 }
 
 export type SignedNumberExpression =

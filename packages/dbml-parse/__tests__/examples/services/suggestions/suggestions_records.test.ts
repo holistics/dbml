@@ -1,7 +1,11 @@
-import { describe, expect, it } from 'vitest';
+import {
+  describe, expect, it,
+} from 'vitest';
 import Compiler from '@/compiler';
 import DBMLCompletionItemProvider from '@/services/suggestions/provider';
-import { createMockTextModel, createPosition } from '@tests/utils';
+import {
+  createMockTextModel, createPosition,
+} from '@tests/utils';
 import { getColumnsFromTableSymbol } from '@/services/suggestions/utils';
 import { NodeSymbol, SymbolKind } from '@/core/types/symbol';
 import { DEFAULT_ENTRY, UNHANDLED } from '@/constants';

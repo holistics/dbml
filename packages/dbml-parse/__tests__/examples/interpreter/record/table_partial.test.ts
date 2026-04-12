@@ -1,4 +1,6 @@
-import { describe, expect, test } from 'vitest';
+import {
+  describe, expect, test,
+} from 'vitest';
 import { interpret } from '@tests/utils';
 
 describe('[example - record] table partial with records', () => {
@@ -30,15 +32,30 @@ describe('[example - record] table partial with records', () => {
     expect(db.records.length).toBe(1);
 
     // Explicit columns should match merged field order: created_at, updated_at, id, name, email
-    expect(db.records[0].columns).toEqual(['created_at', 'updated_at', 'id', 'name', 'email']);
+    expect(db.records[0].columns).toEqual([
+      'created_at',
+      'updated_at',
+      'id',
+      'name',
+      'email',
+    ]);
     expect(db.records[0].values).toHaveLength(2);
 
     // Check first row values
     expect(db.records[0].values[0][0].value).toBe('2024-01-01T00:00:00');
     expect(db.records[0].values[0][1].value).toBe('2024-01-01T00:00:00');
-    expect(db.records[0].values[0][2]).toEqual({ type: 'integer', value: 1 });
-    expect(db.records[0].values[0][3]).toEqual({ type: 'string', value: 'Alice' });
-    expect(db.records[0].values[0][4]).toEqual({ type: 'string', value: 'alice@example.com' });
+    expect(db.records[0].values[0][2]).toEqual({
+      type: 'integer',
+      value: 1,
+    });
+    expect(db.records[0].values[0][3]).toEqual({
+      type: 'string',
+      value: 'Alice',
+    });
+    expect(db.records[0].values[0][4]).toEqual({
+      type: 'string',
+      value: 'alice@example.com',
+    });
     expect(db.records[0].values[1][0].value).toBe('2024-01-02T00:00:00+08:00');
     expect(db.records[0].values[1][1].value).toBe('2024-01-02T00:00:00.100+07:00');
   });
@@ -135,7 +152,12 @@ describe('[example - record] table partial with records', () => {
 
     const db = result.getValue()!;
     expect(db.records.length).toBe(1);
-    expect(db.records[0].columns).toEqual(['id', 'title', 'content', 'author_id']);
+    expect(db.records[0].columns).toEqual([
+      'id',
+      'title',
+      'content',
+      'author_id',
+    ]);
     expect(db.records[0].values).toHaveLength(2);
   });
 
@@ -179,7 +201,18 @@ describe('[example - record] table partial with records', () => {
     expect(db.records.length).toBe(1);
 
     // Columns should match merged order: s1, s2, a, b, m1, m2, c, d, e1, e2
-    expect(db.records[0].columns).toEqual(['s1', 's2', 'a', 'b', 'm1', 'm2', 'c', 'd', 'e1', 'e2']);
+    expect(db.records[0].columns).toEqual([
+      's1',
+      's2',
+      'a',
+      'b',
+      'm1',
+      'm2',
+      'c',
+      'd',
+      'e1',
+      'e2',
+    ]);
     expect(db.records[0].values).toHaveLength(1);
     expect(db.records[0].values[0]).toHaveLength(10);
   });
@@ -211,7 +244,12 @@ describe('[example - record] table partial with records', () => {
     expect(db.records.length).toBe(1);
 
     // Columns should respect merged field order: created_at, updated_at, id, name
-    expect(db.records[0].columns).toEqual(['created_at', 'updated_at', 'id', 'name']);
+    expect(db.records[0].columns).toEqual([
+      'created_at',
+      'updated_at',
+      'id',
+      'name',
+    ]);
     expect(db.records[0].values).toHaveLength(2);
   });
 
@@ -248,11 +286,21 @@ describe('[example - record] table partial with records', () => {
     expect(db.records.length).toBe(1);
 
     // 'shared' should be at P2's position: a, b, x, shared, c, y
-    expect(db.records[0].columns).toEqual(['a', 'b', 'x', 'shared', 'c', 'y']);
+    expect(db.records[0].columns).toEqual([
+      'a',
+      'b',
+      'x',
+      'shared',
+      'c',
+      'y',
+    ]);
     expect(db.records[0].values).toHaveLength(1);
 
     // 'shared' value should be at index 3
-    expect(db.records[0].values[0][3]).toEqual({ type: 'string', value: 'shared_value' });
+    expect(db.records[0].values[0][3]).toEqual({
+      type: 'string',
+      value: 'shared_value',
+    });
   });
 
   test('should handle empty partial with explicit columns', () => {
@@ -314,8 +362,17 @@ describe('[example - record] table partial with records', () => {
     expect(db.records[0].values).toHaveLength(1);
 
     // Values should match the types from direct definitions
-    expect(db.records[0].values[0][0]).toEqual({ type: 'string', value: 'value_a' });
-    expect(db.records[0].values[0][1]).toEqual({ type: 'string', value: 'value_b' });
-    expect(db.records[0].values[0][2]).toEqual({ type: 'integer', value: 3 });
+    expect(db.records[0].values[0][0]).toEqual({
+      type: 'string',
+      value: 'value_a',
+    });
+    expect(db.records[0].values[0][1]).toEqual({
+      type: 'string',
+      value: 'value_b',
+    });
+    expect(db.records[0].values[0][2]).toEqual({
+      type: 'integer',
+      value: 3,
+    });
   });
 });

@@ -1,9 +1,20 @@
-import { SymbolKind, NodeSymbol } from '@/core/types/symbol';
-import { CompletionItemKind, CompletionItemInsertTextRule, type CompletionList } from '@/services/types';
-import { SyntaxToken, SyntaxTokenKind } from '@/core/types/tokens';
+import {
+  SymbolKind, NodeSymbol, destructureIndex, createColumnSymbolIndex,
+} from '@/core/types/symbol';
+import {
+  CompletionItemKind, CompletionItemInsertTextRule, type CompletionList,
+} from '@/services/types';
+import {
+  SyntaxToken, SyntaxTokenKind,
+} from '@/core/types/tokens';
 import { hasTrailingSpaces } from '@/core/lexer/utils';
-import { SyntaxNode, TupleExpressionNode, FunctionApplicationNode } from '@/core/types/nodes';
+import {
+  SyntaxNode, TupleExpressionNode, FunctionApplicationNode,
+} from '@/core/types/nodes';
 import Compiler from '@/compiler';
+import {
+  ColumnSymbol, TablePartialInjectedColumnSymbol, TablePartialSymbol, TableSymbol,
+} from '@/core/types/symbol/symbols';
 import { extractVariableFromExpression } from '@/core/utils/expression';
 import { isValidPartialInjection } from '@/core/utils/validate';
 import { addDoubleQuoteIfNeeded } from '@/compiler/queries/utils';
@@ -54,9 +65,7 @@ export function shouldPrependSpace (token: SyntaxToken | undefined, offset: numb
 }
 
 export function noSuggestions (): CompletionList {
-  return {
-    suggestions: [],
-  };
+  return { suggestions: [] };
 }
 
 export function prependSpace (completionList: CompletionList): CompletionList {
@@ -174,5 +183,8 @@ export function extractNameAndTypeOfColumnSymbol (
 
   if (name === null || type === null) return null;
 
-  return { name, type };
+  return {
+    name,
+    type,
+  };
 }

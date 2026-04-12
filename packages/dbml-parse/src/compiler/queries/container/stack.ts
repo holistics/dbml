@@ -1,5 +1,7 @@
 import type Compiler from '../../index';
-import { findLastIndex, last } from 'lodash-es';
+import {
+  findLastIndex, last,
+} from 'lodash-es';
 import {
   SyntaxNode,
   ElementDeclarationNode,
@@ -12,13 +14,17 @@ import {
   BlockExpressionNode,
   IdentiferStreamNode,
 } from '@/core/types/nodes';
-import { SyntaxToken, SyntaxTokenKind } from '@/core/types/tokens';
+import {
+  SyntaxToken, SyntaxTokenKind,
+} from '@/core/types/tokens';
 import { isOffsetWithinSpan } from '@/core/utils/span';
 import { getMemberChain } from '@/core/parser/utils';
 
 export function containerStack (this: Compiler, offset: number): readonly Readonly<SyntaxNode>[] {
   const tokens = this.token.flatStream();
-  const { index: startIndex, token } = this.container.token(offset);
+  const {
+    index: startIndex, token,
+  } = this.container.token(offset);
   const validIndex = startIndex === undefined
     ? -1
     : findLastIndex(tokens, (t) => !t.isInvalid, startIndex);

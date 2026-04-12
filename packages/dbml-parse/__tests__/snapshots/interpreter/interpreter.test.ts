@@ -1,7 +1,11 @@
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
-import { describe, expect, it } from 'vitest';
-import { scanTestNames, Snappable, toSnapshot } from '@tests/utils';
+import {
+  describe, expect, it,
+} from 'vitest';
+import {
+  scanTestNames, Snappable, toSnapshot,
+} from '@tests/utils';
 import Compiler from '@/compiler';
 import type { Database } from '@/core/types/schemaJson';
 import type Report from '@/core/types/report';

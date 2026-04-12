@@ -1,9 +1,15 @@
-import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import {
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
 import Report from '@/core/types/report';
+import {
+  isAlphaOrUnderscore, isAlphaNumeric, isDigit,
+} from '@/core/utils/chars';
+import {
+  SyntaxToken, SyntaxTokenKind, isOp, isTriviaToken,
+} from '@/core/types/tokens';
 import { Position } from '@/core/types/position';
 import { isInvalidToken } from '@/core/parser/utils';
-import { isOp, isTriviaToken, SyntaxToken, SyntaxTokenKind } from '@/core/types/tokens';
-import { isAlphaNumeric, isAlphaOrUnderscore, isDigit } from '@/core/utils/chars';
 import { Filepath } from '@/core/types/filepath';
 
 export default class Lexer {
@@ -275,7 +281,10 @@ export default class Lexer {
       allowEof, // Whether EOF is allowed
       raw, // Whether to interpret '\' as a backlash
       consumeStopSequence = true,
-    }: { allowNewline: boolean; allowEof: boolean; raw: boolean; consumeStopSequence?: boolean },
+    }: { allowNewline: boolean;
+      allowEof: boolean;
+      raw: boolean;
+      consumeStopSequence?: boolean; },
   ) {
     let string = '';
 
@@ -492,7 +501,11 @@ export default class Lexer {
   }
 
   escapedString (): string {
-    const prevPos: Position = { column: this.current.column - 1, offset: this.current.offset - 1, line: this.current.line };
+    const prevPos: Position = {
+      column: this.current.column - 1,
+      offset: this.current.offset - 1,
+      line: this.current.line,
+    };
     if (this.isAtEnd()) {
       return '\\';
     }
