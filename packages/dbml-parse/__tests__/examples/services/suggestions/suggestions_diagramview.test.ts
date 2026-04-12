@@ -1,4 +1,6 @@
-import { describe, expect, it } from 'vitest';
+import {
+  describe, expect, it,
+} from 'vitest';
 import Compiler from '@/compiler';
 import DBMLCompletionItemProvider from '@/services/suggestions/provider';
 import { createMockTextModel, createPosition } from '@tests/utils';

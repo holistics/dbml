@@ -1,14 +1,5 @@
 {
   "database": {
-    "aliases": [],
-    "diagramViews": [],
-    "enums": [],
-    "notes": [],
-    "project": {},
-    "records": [],
-    "refs": [],
-    "schemas": [],
-    "tableGroups": [],
     "tablePartials": [
       {
         "checks": [
@@ -16,19 +7,7 @@
             "expression": "balance < 10000000",
             "name": "not_too_much_money",
             "token": {
-              "end": {
-                "column": 54,
-                "line": 5,
-                "offset": 127
-              },
-              "filepath": {
-                "path": "/main.dbml"
-              },
-              "start": {
-                "column": 5,
-                "line": 5,
-                "offset": 78
-              }
+              "filepath": "/main.dbml"
             }
           }
         ],
@@ -38,107 +17,39 @@
               {
                 "expression": "balance > 0",
                 "token": {
-                  "end": {
-                    "column": 36,
-                    "line": 2,
-                    "offset": 60
-                  },
-                  "filepath": {
-                    "path": "/main.dbml"
-                  },
-                  "start": {
-                    "column": 16,
-                    "line": 2,
-                    "offset": 40
-                  }
+                  "filepath": "/main.dbml"
                 }
               }
             ],
-            "increment": false,
-            "inline_refs": [],
             "name": "balance",
-            "pk": false,
             "token": {
-              "end": {
-                "column": 37,
-                "line": 2,
-                "offset": 61
-              },
-              "filepath": {
-                "path": "/main.dbml"
-              },
-              "start": {
-                "column": 3,
-                "line": 2,
-                "offset": 27
-              }
+              "filepath": "/main.dbml"
             },
             "type": {
-              "args": null,
-              "schemaName": null,
               "type_name": "int"
-            },
-            "unique": false
+            }
           }
         ],
-        "indexes": [],
         "name": "WithMoney",
         "token": {
-          "end": {
-            "column": 2,
-            "line": 7,
-            "offset": 133
-          },
-          "filepath": {
-            "path": "/main.dbml"
-          },
-          "start": {
-            "column": 1,
-            "line": 1,
-            "offset": 0
-          }
+          "filepath": "/main.dbml"
         }
       }
     ],
     "tables": [
       {
-        "alias": null,
         "checks": [
           {
             "expression": "LEN(name) < 256",
             "name": "name_not_too_long",
             "token": {
-              "end": {
-                "column": 50,
-                "line": 16,
-                "offset": 273
-              },
-              "filepath": {
-                "path": "/main.dbml"
-              },
-              "start": {
-                "column": 5,
-                "line": 16,
-                "offset": 228
-              }
+              "filepath": "/main.dbml"
             }
           },
           {
             "expression": "REGEXP_LIKE(email, '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\\\.[A-Za-z]{2,}$')",
             "token": {
-              "end": {
-                "column": 78,
-                "line": 17,
-                "offset": 351
-              },
-              "filepath": {
-                "path": "/main.dbml"
-              },
-              "start": {
-                "column": 5,
-                "line": 17,
-                "offset": 278
-              }
+              "filepath": "/main.dbml"
             }
           }
         ],
@@ -148,278 +59,100 @@
               {
                 "expression": "LEN(name) > 0",
                 "token": {
-                  "end": {
-                    "column": 36,
-                    "line": 12,
-                    "offset": 197
-                  },
-                  "filepath": {
-                    "path": "/main.dbml"
-                  },
-                  "start": {
-                    "column": 14,
-                    "line": 12,
-                    "offset": 175
-                  }
+                  "filepath": "/main.dbml"
                 }
               }
             ],
-            "increment": false,
-            "inline_refs": [],
             "name": "name",
-            "pk": false,
             "token": {
-              "end": {
-                "column": 37,
-                "line": 12,
-                "offset": 198
-              },
-              "filepath": {
-                "path": "/main.dbml"
-              },
-              "start": {
-                "column": 3,
-                "line": 12,
-                "offset": 164
-              }
+              "filepath": "/main.dbml"
             },
             "type": {
-              "args": null,
-              "schemaName": null,
               "type_name": "TEXT"
-            },
-            "unique": false
+            }
           },
           {
-            "inline_refs": [],
             "name": "email",
-            "pk": false,
             "token": {
-              "end": {
-                "column": 13,
-                "line": 13,
-                "offset": 211
-              },
-              "filepath": {
-                "path": "/main.dbml"
-              },
-              "start": {
-                "column": 3,
-                "line": 13,
-                "offset": 201
-              }
+              "filepath": "/main.dbml"
             },
             "type": {
-              "args": null,
-              "schemaName": null,
               "type_name": "TEXT"
-            },
-            "unique": false
+            }
           }
         ],
-        "indexes": [],
         "name": "User",
         "partials": [
           {
             "name": "WithMoney",
-            "order": 0,
             "token": {
-              "end": {
-                "column": 13,
-                "line": 10,
-                "offset": 160
-              },
-              "filepath": {
-                "path": "/main.dbml"
-              },
-              "start": {
-                "column": 3,
-                "line": 10,
-                "offset": 150
-              }
+              "filepath": "/main.dbml"
             }
           }
         ],
-        "schemaName": null,
         "token": {
-          "end": {
-            "column": 2,
-            "line": 19,
-            "offset": 357
-          },
-          "filepath": {
-            "path": "/main.dbml"
-          },
-          "start": {
-            "column": 1,
-            "line": 9,
-            "offset": 135
-          }
+          "filepath": "/main.dbml"
         }
       },
       {
-        "alias": null,
-        "checks": [],
         "fields": [
           {
-            "inline_refs": [],
             "name": "balance",
-            "pk": false,
             "token": {
-              "end": {
-                "column": 14,
-                "line": 24,
-                "offset": 402
-              },
-              "filepath": {
-                "path": "/main.dbml"
-              },
-              "start": {
-                "column": 3,
-                "line": 24,
-                "offset": 391
-              }
+              "filepath": "/main.dbml"
             },
             "type": {
-              "args": null,
-              "schemaName": null,
               "type_name": "int"
-            },
-            "unique": false
+            }
           }
         ],
-        "indexes": [],
         "name": "User2",
         "partials": [
           {
             "name": "WithMoney",
-            "order": 0,
             "token": {
-              "end": {
-                "column": 13,
-                "line": 22,
-                "offset": 385
-              },
-              "filepath": {
-                "path": "/main.dbml"
-              },
-              "start": {
-                "column": 3,
-                "line": 22,
-                "offset": 375
-              }
+              "filepath": "/main.dbml"
             }
           }
         ],
-        "schemaName": null,
         "token": {
-          "end": {
-            "column": 2,
-            "line": 25,
-            "offset": 404
-          },
-          "filepath": {
-            "path": "/main.dbml"
-          },
-          "start": {
-            "column": 1,
-            "line": 21,
-            "offset": 359
-          }
+          "filepath": "/main.dbml"
         }
       },
       {
-        "alias": null,
-        "checks": [],
         "fields": [
           {
             "checks": [
               {
                 "expression": "balance > 0",
                 "token": {
-                  "end": {
-                    "column": 36,
-                    "line": 28,
-                    "offset": 455
-                  },
-                  "filepath": {
-                    "path": "/main.dbml"
-                  },
-                  "start": {
-                    "column": 16,
-                    "line": 28,
-                    "offset": 435
-                  }
+                  "filepath": "/main.dbml"
                 }
               },
               {
                 "expression": "balance < 10000000",
                 "token": {
-                  "end": {
-                    "column": 65,
-                    "line": 28,
-                    "offset": 484
-                  },
-                  "filepath": {
-                    "path": "/main.dbml"
-                  },
-                  "start": {
-                    "column": 38,
-                    "line": 28,
-                    "offset": 457
-                  }
+                  "filepath": "/main.dbml"
                 }
               }
             ],
-            "increment": false,
-            "inline_refs": [],
             "name": "balance",
-            "pk": false,
             "token": {
-              "end": {
-                "column": 66,
-                "line": 28,
-                "offset": 485
-              },
-              "filepath": {
-                "path": "/main.dbml"
-              },
-              "start": {
-                "column": 3,
-                "line": 28,
-                "offset": 422
-              }
+              "filepath": "/main.dbml"
             },
             "type": {
-              "args": null,
-              "schemaName": null,
               "type_name": "int"
-            },
-            "unique": false
+            }
           }
         ],
-        "indexes": [],
         "name": "User3",
-        "partials": [],
-        "schemaName": null,
         "token": {
-          "end": {
-            "column": 2,
-            "line": 29,
-            "offset": 487
-          },
-          "filepath": {
-            "path": "/main.dbml"
-          },
-          "start": {
-            "column": 1,
-            "line": 27,
-            "offset": 406
-          }
+          "filepath": "/main.dbml"
         }
       }
-    ]
-  },
-  "errors": [],
-  "warnings": []
+    ],
+    "token": {
+      "filepath": "/main.dbml"
+    }
+  }
 }

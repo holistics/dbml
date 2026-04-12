@@ -1,8 +1,14 @@
-import { describe, expect, it } from 'vitest';
+import {
+  describe, expect, it,
+} from 'vitest';
 import * as fc from 'fast-check';
-import { dbmlSchemaArbitrary, tableArbitrary, enumArbitrary, tablePartialArbitrary, partialInjectionArbitrary } from '../utils/arbitraries';
+import {
+  dbmlSchemaArbitrary, tableArbitrary, enumArbitrary, tablePartialArbitrary, partialInjectionArbitrary,
+} from '../utils/arbitraries';
 import { isEqual } from 'lodash-es';
-import { parse, print, lex } from '../utils';
+import {
+  parse, print, lex,
+} from '../utils';
 import { SyntaxNodeKind, BlockExpressionNode } from '@/core/types/nodes';
 
 const PROPERTY_TEST_CONFIG = { numRuns: 50 };

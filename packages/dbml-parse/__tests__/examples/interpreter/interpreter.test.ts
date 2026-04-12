@@ -1,5 +1,6 @@
-import { describe, expect, test } from 'vitest';
-import { CompileErrorCode } from '@/index';
+import {
+  describe, expect, test,
+} from 'vitest';
 import { interpret, analyze } from '@tests/utils';
 
 describe('[example] interpreter', () => {
@@ -444,14 +445,54 @@ describe('[example] interpreter', () => {
   describe('detailed field type verification', () => {
     test('should interpret simple types with exact matching', () => {
       const testCases = [
-        { type: 'int', expected: { type_name: 'int', args: null, schemaName: null } },
-        { type: 'integer', expected: { type_name: 'integer', args: null, schemaName: null } },
-        { type: 'bigint', expected: { type_name: 'bigint', args: null, schemaName: null } },
-        { type: 'varchar', expected: { type_name: 'varchar', args: null, schemaName: null } },
-        { type: 'text', expected: { type_name: 'text', args: null, schemaName: null } },
-        { type: 'boolean', expected: { type_name: 'boolean', args: null, schemaName: null } },
-        { type: 'timestamp', expected: { type_name: 'timestamp', args: null, schemaName: null } },
-        { type: 'uuid', expected: { type_name: 'uuid', args: null, schemaName: null } },
+        {
+          type: 'int',
+          expected: {
+            type_name: 'int', args: null, schemaName: null,
+          },
+        },
+        {
+          type: 'integer',
+          expected: {
+            type_name: 'integer', args: null, schemaName: null,
+          },
+        },
+        {
+          type: 'bigint',
+          expected: {
+            type_name: 'bigint', args: null, schemaName: null,
+          },
+        },
+        {
+          type: 'varchar',
+          expected: {
+            type_name: 'varchar', args: null, schemaName: null,
+          },
+        },
+        {
+          type: 'text',
+          expected: {
+            type_name: 'text', args: null, schemaName: null,
+          },
+        },
+        {
+          type: 'boolean',
+          expected: {
+            type_name: 'boolean', args: null, schemaName: null,
+          },
+        },
+        {
+          type: 'timestamp',
+          expected: {
+            type_name: 'timestamp', args: null, schemaName: null,
+          },
+        },
+        {
+          type: 'uuid',
+          expected: {
+            type_name: 'uuid', args: null, schemaName: null,
+          },
+        },
       ];
 
       testCases.forEach(({ type, expected }) => {
@@ -466,10 +507,30 @@ describe('[example] interpreter', () => {
     test('should interpret parameterized types with exact matching', () => {
       // For parameterized types, type_name includes the full type string with args
       const testCases = [
-        { type: 'varchar(255)', expected: { type_name: 'varchar(255)', args: '255', schemaName: null } },
-        { type: 'char(10)', expected: { type_name: 'char(10)', args: '10', schemaName: null } },
-        { type: 'decimal(10,2)', expected: { type_name: 'decimal(10,2)', args: '10,2', schemaName: null } },
-        { type: 'numeric(5)', expected: { type_name: 'numeric(5)', args: '5', schemaName: null } },
+        {
+          type: 'varchar(255)',
+          expected: {
+            type_name: 'varchar(255)', args: '255', schemaName: null,
+          },
+        },
+        {
+          type: 'char(10)',
+          expected: {
+            type_name: 'char(10)', args: '10', schemaName: null,
+          },
+        },
+        {
+          type: 'decimal(10,2)',
+          expected: {
+            type_name: 'decimal(10,2)', args: '10,2', schemaName: null,
+          },
+        },
+        {
+          type: 'numeric(5)',
+          expected: {
+            type_name: 'numeric(5)', args: '5', schemaName: null,
+          },
+        },
       ];
 
       testCases.forEach(({ type, expected }) => {
@@ -1107,10 +1168,7 @@ describe('[example] interpreter', () => {
       const db = interpret(source).getValue()!;
 
       const ve = db.diagramViews[0].visibleEntities;
-      expect(ve.tableGroups).toEqual([
-        { name: 'auth_tables' },
-        { name: 'content_tables' },
-      ]);
+      expect(ve.tableGroups).toEqual([{ name: 'auth_tables' }, { name: 'content_tables' }]);
       // Trinity rule still applies for tables/schemas (promoted to [])
       expect(ve.tables).toEqual([]);
       expect(ve.schemas).toEqual([]);
@@ -1232,10 +1290,7 @@ describe('[example] interpreter', () => {
       `;
       const db = interpret(source).getValue()!;
       const ve = db.diagramViews[0].visibleEntities;
-      expect(ve.tables).toEqual([
-        { name: 'users', schemaName: 'public' },
-        { name: 'posts', schemaName: 'public' },
-      ]);
+      expect(ve.tables).toEqual([{ name: 'users', schemaName: 'public' }, { name: 'posts', schemaName: 'public' }]);
     });
 
     test('should resolve mixed aliases and real names', () => {
@@ -1251,10 +1306,7 @@ describe('[example] interpreter', () => {
       `;
       const db = interpret(source).getValue()!;
       const ve = db.diagramViews[0].visibleEntities;
-      expect(ve.tables).toEqual([
-        { name: 'users', schemaName: 'public' },
-        { name: 'posts', schemaName: 'public' },
-      ]);
+      expect(ve.tables).toEqual([{ name: 'users', schemaName: 'public' }, { name: 'posts', schemaName: 'public' }]);
     });
   });
 

@@ -1,4 +1,6 @@
-import { describe, expect, it } from 'vitest';
+import {
+  describe, expect, it,
+} from 'vitest';
 import * as fc from 'fast-check';
 import { SyntaxTokenKind } from '../../src';
 import { tokenStreamArbitrary, identifierArbitrary } from '../utils/arbitraries';
@@ -76,10 +78,7 @@ describe('[property] lexer', () => {
         const tokens = lex(source).getValue().flatMap((token) => [...token.leadingTrivia, token, ...token.trailingTrivia]);
         tokens.reduce(([isNewlinePrevious, previousLine], token) => {
           if (isNewlinePrevious) expect(token.startPos.line).toBe(previousLine + 1);
-          return [
-            token.kind === SyntaxTokenKind.NEWLINE,
-            token.startPos.line,
-          ] as [boolean, number];
+          return [token.kind === SyntaxTokenKind.NEWLINE, token.startPos.line] as [boolean, number];
         }, [true, -1] as [boolean, number]);
       }),
       PROPERTY_TEST_CONFIG,

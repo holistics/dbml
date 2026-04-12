@@ -1,10 +1,16 @@
 import fs from 'node:fs';
 import { NodeSymbol } from '@/core/types/symbol/symbols';
 import { SyntaxToken } from '@/core/types/tokens';
-import { ElementDeclarationNode, LiteralNode, ProgramNode, SyntaxNode, VariableNode } from '@/core/types/nodes';
+import {
+  ElementDeclarationNode, LiteralNode, ProgramNode, SyntaxNode, VariableNode,
+} from '@/core/types/nodes';
 import { getElementNameString } from '@/core/parser/utils';
-import { CompileError, CompileErrorCode, CompileWarning } from '@/core/types/errors';
+import {
+  CompileError, CompileErrorCode, CompileWarning,
+} from '@/core/types/errors';
 import type Compiler from '@/compiler';
+import { Filepath } from '@/core/types';
+import { isEmpty } from 'lodash-es';
 
 export function scanTestNames (path: string) {
   const files = fs.readdirSync(path);
@@ -72,8 +78,9 @@ export type Snappable =
 
 // Accept an object
 // Output a stable key-value object
+// Remove empty fields
 function sortObject (object: Record<string, unknown>): Record<string, unknown> {
-  const entries = Object.entries(object);
+  const entries = Object.entries(object).filter(([, value]) => !isEmpty(value));
   entries.sort(
     ([key1], [key2]) => (key1 as string) < (key2 as string) ? -1 : 1,
   );
@@ -96,6 +103,7 @@ function sortArray (array: unknown[]): unknown[] {
     if (s instanceof CompileError) return 6;
     if (s instanceof SyntaxNode) return 7;
     if (s instanceof SyntaxToken) return 8;
+    if (s instanceof NodeSymbol) return 9;
     return 1000;
   }
 
@@ -109,7 +117,7 @@ function sortArray (array: unknown[]): unknown[] {
     if (s instanceof CompileWarning || s instanceof CompileError) return s.code * 1000000 + s.start;
     if (s instanceof SyntaxNode) return s.start;
     if (s instanceof SyntaxToken) return s.start;
-    if ((s as any)?.declaration) return getIntraKindRank((s as any).declaration);
+    if (s instanceof NodeSymbol) return getIntraKindRank(s.declaration);
     if ((s as any)?.id) return getIntraKindRank((s as any).id);
     return 0;
   }
@@ -148,6 +156,9 @@ export function toSnapshot (
   }
   if (value instanceof SyntaxNode) {
     return syntaxNodeToSnapshot(compiler, value, { simple });
+  }
+  if (value instanceof Filepath) {
+    return value.absolute;
   }
   if (value === null) {
     return null;

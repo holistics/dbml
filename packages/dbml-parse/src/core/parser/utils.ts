@@ -191,6 +191,8 @@ function markInvalidNode (node: SyntaxNode) {
     markInvalid(node.eof);
   } else if (node instanceof EmptyNode) {
     // DummyNode has no children to mark invalid
+  } else if (node instanceof WildcardNode) {
+    markInvalid(node.token);
   } else {
     throw new Error('Unreachable case in markInvalidNode');
   }

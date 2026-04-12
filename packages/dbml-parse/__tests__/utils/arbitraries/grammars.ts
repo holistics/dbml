@@ -12,7 +12,9 @@ import {
   commentArbitrary,
   singleLineCommentArbitrary,
 } from './tokens';
-import { caseVariant, settingKeyValue, joinWithRandomSpaces, joinWithRandomInlineSpaces, caseVariantOneOf } from './utils';
+import {
+  caseVariant, settingKeyValue, joinWithRandomSpaces, joinWithRandomInlineSpaces, caseVariantOneOf,
+} from './utils';
 
 // Helper to optionally inject a comment before content
 const maybeWithComment = (contentArb: fc.Arbitrary<string>): fc.Arbitrary<string> =>
@@ -376,8 +378,20 @@ export const standaloneRefArbitrary = fc.tuple(
   relationshipTypeArbitrary,
   anyRefEndpointArbitrary,
   fc.option(refSettingsListArbitrary, { nil: undefined }),
-).chain(([keyword, endpoint1, rel, endpoint2, settings]) => {
-  const parts = [keyword, ':', endpoint1, rel, endpoint2];
+).chain(([
+  keyword,
+  endpoint1,
+  rel,
+  endpoint2,
+  settings,
+]) => {
+  const parts = [
+    keyword,
+    ':',
+    endpoint1,
+    rel,
+    endpoint2,
+  ];
   return settings
     ? joinWithRandomSpaces(...parts).map((s) => s.trimEnd()).chain((base) => joinWithRandomInlineSpaces(base, settings))
     : joinWithRandomSpaces(...parts);
@@ -391,8 +405,22 @@ export const namedRefArbitrary = fc.tuple(
   relationshipTypeArbitrary,
   anyRefEndpointArbitrary,
   fc.option(refSettingsListArbitrary, { nil: undefined }),
-).chain(([keyword, name, endpoint1, rel, endpoint2, settings]) => {
-  const parts = [keyword, name, ':', endpoint1, rel, endpoint2];
+).chain(([
+  keyword,
+  name,
+  endpoint1,
+  rel,
+  endpoint2,
+  settings,
+]) => {
+  const parts = [
+    keyword,
+    name,
+    ':',
+    endpoint1,
+    rel,
+    endpoint2,
+  ];
   return settings
     ? joinWithRandomSpaces(...parts).map((s) => s.trimEnd()).chain((base) => joinWithRandomInlineSpaces(base, settings))
     : joinWithRandomSpaces(...parts);
@@ -407,8 +435,22 @@ export const multiColumnRefArbitrary = fc.integer({ min: 2, max: 10 }).chain((ne
   anyElementNameArbitrary,
   fc.array(anyIdentifierArbitrary, { minLength: nendpoints, maxLength: nendpoints }),
   fc.option(refSettingsListArbitrary, { nil: undefined }),
-).chain(([keyword, table1, cols1, rel, table2, cols2, settings]) => {
-  const parts = [keyword, ':', `${table1}.(${cols1.join(', ')})`, rel, `${table2}.(${cols2.join(', ')})`];
+).chain(([
+  keyword,
+  table1,
+  cols1,
+  rel,
+  table2,
+  cols2,
+  settings,
+]) => {
+  const parts = [
+    keyword,
+    ':',
+    `${table1}.(${cols1.join(', ')})`,
+    rel,
+    `${table2}.(${cols2.join(', ')})`,
+  ];
   return settings
     ? joinWithRandomSpaces(...parts).map((s) => s.trimEnd()).chain((base) => joinWithRandomInlineSpaces(base, settings))
     : joinWithRandomSpaces(...parts);
@@ -444,7 +486,12 @@ export const tableWithAliasArbitrary = fc.tuple(
   anyElementNameArbitrary,
   tableAliasArbitrary,
   columnListArbitrary,
-).chain(([keyword, name, alias, cols]) =>
+).chain(([
+  keyword,
+  name,
+  alias,
+  cols,
+]) =>
   joinWithRandomSpaces(keyword, name, alias, '{').map((header) =>
     `${header}\n${cols}\n}`,
   ),
@@ -456,7 +503,12 @@ export const tableWithSettingsArbitrary = fc.tuple(
   anyElementNameArbitrary,
   tableSettingsListArbitrary,
   columnListArbitrary,
-).chain(([keyword, name, settings, cols]) =>
+).chain(([
+  keyword,
+  name,
+  settings,
+  cols,
+]) =>
   joinWithRandomSpaces(keyword, name, settings, '{').map((header) =>
     `${header}\n${cols}\n}`,
   ),
@@ -468,7 +520,12 @@ export const tableWithIndexesArbitrary = fc.tuple(
   anyElementNameArbitrary,
   columnListArbitrary,
   indexesBlockArbitrary,
-).chain(([keyword, name, cols, indexes]) =>
+).chain(([
+  keyword,
+  name,
+  cols,
+  indexes,
+]) =>
   joinWithRandomSpaces(keyword, name, '{').map((header) =>
     `${header}\n${cols}\n\n${indexes}\n}`,
   ),
@@ -480,7 +537,12 @@ export const tableWithNoteArbitrary = fc.tuple(
   anyElementNameArbitrary,
   columnListArbitrary,
   fc.oneof(inlineNoteArbitrary, blockNoteArbitrary),
-).chain(([keyword, name, cols, note]) =>
+).chain(([
+  keyword,
+  name,
+  cols,
+  note,
+]) =>
   joinWithRandomSpaces(keyword, name, '{').map((header) =>
     `${header}\n${cols}\n\n${note}\n}`,
   ),
@@ -496,7 +558,16 @@ export const complexTableArbitrary = fc.tuple(
   fc.option(indexesBlockArbitrary, { nil: undefined }),
   fc.option(checksBlockArbitrary, { nil: undefined }),
   fc.option(fc.oneof(inlineNoteArbitrary, blockNoteArbitrary), { nil: undefined }),
-).chain(([keyword, name, alias, settings, cols, indexes, checks, note]) => {
+).chain(([
+  keyword,
+  name,
+  alias,
+  settings,
+  cols,
+  indexes,
+  checks,
+  note,
+]) => {
   const headerParts = [keyword, name];
   if (alias) headerParts.push(alias);
   if (settings) headerParts.push(settings);
@@ -536,7 +607,12 @@ export const tableGroupArbitrary = fc.tuple(
   fc.option(anyIdentifierArbitrary, { nil: undefined }), // TableGroup name must be simple identifier
   fc.array(maybeWithComment(anyElementNameArbitrary), { minLength: 1, maxLength: 20 }), // Table refs can be schema-qualified
   fc.option(tableGroupSettingsListArbitrary, { nil: undefined }),
-).chain(([keyword, name, tables, settings]) => {
+).chain(([
+  keyword,
+  name,
+  tables,
+  settings,
+]) => {
   const headerParts = [keyword];
   if (name) headerParts.push(name);
   if (settings) headerParts.push(settings);
@@ -554,7 +630,13 @@ export const tablePartialArbitrary = fc.tuple(
   columnListArbitrary,
   fc.option(indexesBlockArbitrary, { nil: undefined }),
   fc.option(checksBlockArbitrary, { nil: undefined }),
-).chain(([keyword, name, cols, indexes, checks]) =>
+).chain(([
+  keyword,
+  name,
+  cols,
+  indexes,
+  checks,
+]) =>
   joinWithRandomSpaces(keyword, name, '{').map((header) => {
     const parts = [cols];
     if (indexes) parts.push(indexes);
@@ -594,7 +676,12 @@ export const projectArbitrary = fc.tuple(
   fc.option(anyIdentifierArbitrary, { nil: undefined }),
   fc.array(projectSettingArbitrary, { minLength: 0, maxLength: 5 }),
   fc.option(blockNoteArbitrary, { nil: undefined }),
-).chain(([keyword, name, settings, note]) => {
+).chain(([
+  keyword,
+  name,
+  settings,
+  note,
+]) => {
   const headerParts = [keyword];
   if (name) headerParts.push(name);
   headerParts.push('{');
@@ -623,7 +710,13 @@ export const smallSchemaArbitrary = fc.tuple(
   fc.array(tableArbitrary, { minLength: 1, maxLength: 5 }),
   fc.array(anyRefArbitrary, { minLength: 0, maxLength: 5 }),
   fc.option(singleLineCommentArbitrary, { nil: undefined }), // Optional leading comment
-).map(([project, enums, tables, refs, comment]) => {
+).map(([
+  project,
+  enums,
+  tables,
+  refs,
+  comment,
+]) => {
   const parts = [];
   if (comment) parts.push(comment);
   if (project) parts.push(project);
@@ -641,7 +734,14 @@ export const mediumSchemaArbitrary = fc.tuple(
   fc.array(anyRefArbitrary, { minLength: 2, maxLength: 10 }),
   fc.array(tableGroupArbitrary, { minLength: 0, maxLength: 4 }),
   fc.array(tablePartialArbitrary, { minLength: 0, maxLength: 2 }), // Add TablePartials
-).map(([project, enums, tables, refs, groups, partials]) => {
+).map(([
+  project,
+  enums,
+  tables,
+  refs,
+  groups,
+  partials,
+]) => {
   const parts = [];
   if (project) parts.push(project);
   parts.push(...partials);
@@ -661,7 +761,15 @@ export const largeSchemaArbitrary = fc.tuple(
   fc.array(tableGroupArbitrary, { minLength: 1, maxLength: 5 }),
   fc.array(standaloneNoteArbitrary, { minLength: 0, maxLength: 5 }),
   fc.array(tablePartialArbitrary, { minLength: 0, maxLength: 3 }),
-).map(([project, enums, tables, refs, groups, notes, partials]) => {
+).map(([
+  project,
+  enums,
+  tables,
+  refs,
+  groups,
+  notes,
+  partials,
+]) => {
   const parts = [];
   if (project) parts.push(project);
   parts.push(...partials);
@@ -697,7 +805,9 @@ export const mismatchedBracketsArbitrary = fc.tuple(
   fc.constantFrom('[', '{', '('),
   fc.nat({ max: 10 }),
 ).map(([open, n]) => {
-  const mismatchedClose: Record<string, string> = { '[': '}', '{': ']', '(': ']' };
+  const mismatchedClose: Record<string, string> = {
+    '[': '}', '{': ']', '(': ']',
+  };
   const count = n + 1;
   return open.repeat(count) + mismatchedClose[open].repeat(count);
 });
@@ -748,10 +858,21 @@ export const malformedTableArbitrary = fc.oneof(
     .map(([kw, name]) => `${kw} ${name} {`),
   // Unclosed settings bracket
   fc.tuple(caseVariant('Table'), anyIdentifierArbitrary, anyIdentifierArbitrary, columnTypeArbitrary)
-    .map(([kw, name, col, type]) => `${kw} ${name} { ${col} ${type} [`),
+    .map(([
+      kw,
+      name,
+      col,
+      type,
+    ]) => `${kw} ${name} { ${col} ${type} [`),
   // Trailing garbage after valid table
   fc.tuple(caseVariant('Table'), anyIdentifierArbitrary, anyIdentifierArbitrary, columnTypeArbitrary, identifierArbitrary)
-    .map(([kw, name, col, type, garbage]) => `${kw} ${name} { ${col} ${type} } ${garbage}`),
+    .map(([
+      kw,
+      name,
+      col,
+      type,
+      garbage,
+    ]) => `${kw} ${name} { ${col} ${type} } ${garbage}`),
   // Table keyword with brace but no name
   caseVariant('Table').map((kw) => `${kw} {`),
 );
@@ -779,33 +900,64 @@ export const malformedRefArbitrary = fc.oneof(
   caseVariant('Ref').map((kw) => `${kw}:`),
   // Incomplete - missing second endpoint after operator
   fc.tuple(caseVariant('Ref'), schemaQualifiedNameArbitrary, anyIdentifierArbitrary, relationshipTypeArbitrary)
-    .map(([kw, table, col, rel]) => `${kw}: ${table}.${col} ${rel}`),
+    .map(([
+      kw,
+      table,
+      col,
+      rel,
+    ]) => `${kw}: ${table}.${col} ${rel}`),
   // Missing first endpoint (operator with only second endpoint)
   fc.tuple(caseVariant('Ref'), relationshipTypeArbitrary, schemaQualifiedNameArbitrary, anyIdentifierArbitrary)
-    .map(([kw, rel, table, col]) => `${kw}: ${rel} ${table}.${col}`),
+    .map(([
+      kw,
+      rel,
+      table,
+      col,
+    ]) => `${kw}: ${rel} ${table}.${col}`),
   // Unclosed settings bracket
   fc.tuple(
     caseVariant('Ref'),
-    schemaQualifiedNameArbitrary, anyIdentifierArbitrary,
+    schemaQualifiedNameArbitrary,
+    anyIdentifierArbitrary,
     relationshipTypeArbitrary,
-    schemaQualifiedNameArbitrary, anyIdentifierArbitrary,
-  ).map(([kw, t1, c1, rel, t2, c2]) => `${kw}: ${t1}.${c1} ${rel} ${t2}.${c2} [`),
+    schemaQualifiedNameArbitrary,
+    anyIdentifierArbitrary,
+  ).map(([
+    kw,
+    t1,
+    c1,
+    rel,
+    t2,
+    c2,
+  ]) => `${kw}: ${t1}.${c1} ${rel} ${t2}.${c2} [`),
   // Trailing garbage after valid ref
   fc.tuple(
     caseVariant('Ref'),
-    schemaQualifiedNameArbitrary, anyIdentifierArbitrary,
+    schemaQualifiedNameArbitrary,
+    anyIdentifierArbitrary,
     relationshipTypeArbitrary,
-    schemaQualifiedNameArbitrary, anyIdentifierArbitrary,
+    schemaQualifiedNameArbitrary,
+    anyIdentifierArbitrary,
     identifierArbitrary,
-  ).map(([kw, t1, c1, rel, t2, c2, garbage]) => `${kw}: ${t1}.${c1} ${rel} ${t2}.${c2} ${garbage}`),
+  ).map(([
+    kw,
+    t1,
+    c1,
+    rel,
+    t2,
+    c2,
+    garbage,
+  ]) => `${kw}: ${t1}.${c1} ${rel} ${t2}.${c2} ${garbage}`),
 );
 
 // Columns with conflicting settings - generates dynamic conflicting setting combinations
-const conflictingPairs = [
-  ['pk', 'null'],
-  ['not null', 'null'],
+const conflictingPairs = [['pk', 'null'], ['not null', 'null']] as const;
+const duplicatableSettings = [
+  'pk',
+  'unique',
+  'increment',
+  'not null',
 ] as const;
-const duplicatableSettings = ['pk', 'unique', 'increment', 'not null'] as const;
 
 export const conflictingSettingsArbitrary = fc.tuple(
   caseVariant('Table'),
@@ -827,7 +979,13 @@ export const conflictingSettingsArbitrary = fc.tuple(
         .map(([v1, v2, v3]) => `[${v1}, ${v2}, ${v3}]`),
     ),
   ),
-).map(([kw, table, col, type, settings]) => `${kw} ${table} { ${col} ${type} ${settings} }`);
+).map(([
+  kw,
+  table,
+  col,
+  type,
+  settings,
+]) => `${kw} ${table} { ${col} ${type} ${settings} }`);
 
 // Zero-column tables - generates tables with arbitrary names and varied whitespace
 export const emptyTableArbitrary = fc.tuple(
@@ -895,7 +1053,13 @@ export const danglingRefArbitrary = fc.tuple(
   anyIdentifierArbitrary,
   anyIdentifierArbitrary,
   fc.constantFrom('nonexistent_table', 'nonexistent_col', 'both'),
-).map(([table, col, fakeTable, fakeCol, mode]) => {
+).map(([
+  table,
+  col,
+  fakeTable,
+  fakeCol,
+  mode,
+]) => {
   const tableDecl = `Table ${table} { ${col} int [pk] }`;
   switch (mode) {
     case 'nonexistent_table':
@@ -915,7 +1079,14 @@ export const mismatchedCompositeRefArbitrary = fc.tuple(
   fc.integer({ min: 1, max: 5 }),
   fc.integer({ min: 1, max: 5 }),
   relationshipTypeArbitrary,
-).chain(([kw, t1, t2, count1, count2, rel]) => {
+).chain(([
+  kw,
+  t1,
+  t2,
+  count1,
+  count2,
+  rel,
+]) => {
   // Ensure counts are different for mismatch
   const actualCount2 = count1 === count2 ? count2 + 1 : count2;
   return fc.tuple(

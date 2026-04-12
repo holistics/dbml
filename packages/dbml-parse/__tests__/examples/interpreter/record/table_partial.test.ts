@@ -1,4 +1,6 @@
-import { describe, expect, test } from 'vitest';
+import {
+  describe, expect, test,
+} from 'vitest';
 import { interpret } from '@tests/utils';
 
 describe('[example - record] table partial with records', () => {
@@ -30,7 +32,13 @@ describe('[example - record] table partial with records', () => {
     expect(db.records.length).toBe(1);
 
     // Explicit columns should match merged field order: created_at, updated_at, id, name, email
-    expect(db.records[0].columns).toEqual(['created_at', 'updated_at', 'id', 'name', 'email']);
+    expect(db.records[0].columns).toEqual([
+      'created_at',
+      'updated_at',
+      'id',
+      'name',
+      'email',
+    ]);
     expect(db.records[0].values).toHaveLength(2);
 
     // Check first row values
@@ -135,7 +143,12 @@ describe('[example - record] table partial with records', () => {
 
     const db = result.getValue()!;
     expect(db.records.length).toBe(1);
-    expect(db.records[0].columns).toEqual(['id', 'title', 'content', 'author_id']);
+    expect(db.records[0].columns).toEqual([
+      'id',
+      'title',
+      'content',
+      'author_id',
+    ]);
     expect(db.records[0].values).toHaveLength(2);
   });
 
@@ -179,7 +192,18 @@ describe('[example - record] table partial with records', () => {
     expect(db.records.length).toBe(1);
 
     // Columns should match merged order: s1, s2, a, b, m1, m2, c, d, e1, e2
-    expect(db.records[0].columns).toEqual(['s1', 's2', 'a', 'b', 'm1', 'm2', 'c', 'd', 'e1', 'e2']);
+    expect(db.records[0].columns).toEqual([
+      's1',
+      's2',
+      'a',
+      'b',
+      'm1',
+      'm2',
+      'c',
+      'd',
+      'e1',
+      'e2',
+    ]);
     expect(db.records[0].values).toHaveLength(1);
     expect(db.records[0].values[0]).toHaveLength(10);
   });
@@ -211,7 +235,12 @@ describe('[example - record] table partial with records', () => {
     expect(db.records.length).toBe(1);
 
     // Columns should respect merged field order: created_at, updated_at, id, name
-    expect(db.records[0].columns).toEqual(['created_at', 'updated_at', 'id', 'name']);
+    expect(db.records[0].columns).toEqual([
+      'created_at',
+      'updated_at',
+      'id',
+      'name',
+    ]);
     expect(db.records[0].values).toHaveLength(2);
   });
 
@@ -248,7 +277,14 @@ describe('[example - record] table partial with records', () => {
     expect(db.records.length).toBe(1);
 
     // 'shared' should be at P2's position: a, b, x, shared, c, y
-    expect(db.records[0].columns).toEqual(['a', 'b', 'x', 'shared', 'c', 'y']);
+    expect(db.records[0].columns).toEqual([
+      'a',
+      'b',
+      'x',
+      'shared',
+      'c',
+      'y',
+    ]);
     expect(db.records[0].values).toHaveLength(1);
 
     // 'shared' value should be at index 3

@@ -1,4 +1,6 @@
-import { describe, expect, test } from 'vitest';
+import {
+  describe, expect, test,
+} from 'vitest';
 import { analyze } from '@tests/utils';
 
 describe('[example] records validator', () => {

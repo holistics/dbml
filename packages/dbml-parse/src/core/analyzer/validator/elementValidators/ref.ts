@@ -16,7 +16,7 @@ import {
   isSimpleName, isValidColor, pickValidator, aggregateSettingList,
 } from '@/core/analyzer/validator/utils';
 import {
-  destructureComplexVariable, destructureComplexVariableTuple, isBinaryRelationship, isEqualTupleOperands,
+  destructureComplexVariableTuple, isBinaryRelationship, isEqualTupleOperands,
 } from '@/core/analyzer/utils';
 import SymbolTable from '@/core/types/symbol/symbolTable';
 

@@ -2,13 +2,13 @@ import { partition } from 'lodash-es';
 import {
   CompileError, CompileErrorCode, CompileWarning,
 } from '@/core/types/errors';
-import { isSimpleName, pickValidator } from '@/core/analyzer/validator/utils';
+import { isSimpleName } from '@/core/analyzer/validator/utils';
 import { registerSchemaStack, aggregateSettingList } from '@/core/analyzer/validator/utils';
 import { ElementValidator } from '@/core/analyzer/validator/types';
 import SymbolTable from '@/core/types/symbol/symbolTable';
 import { SyntaxToken } from '@/core/types/tokens';
 import {
-  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, PrimaryExpressionNode, SyntaxNode, VariableNode,
+  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode,
 } from '@/core/types/nodes';
 import SymbolFactory from '@/core/types/symbol/factory';
 import { createDiagramViewFieldSymbolIndex, createDiagramViewSymbolIndex } from '@/core/types/symbol/symbolIndex';

@@ -1,116 +1,46 @@
 {
   "database": {
-    "aliases": [],
-    "diagramViews": [],
-    "enums": [],
-    "notes": [],
-    "project": {},
-    "records": [],
-    "refs": [],
-    "schemas": [],
     "tableGroups": [
       {
         "color": "#06c",
         "name": "group1",
         "note": {
           "token": {
-            "end": {
-              "column": 6,
-              "line": 8,
-              "offset": 113
-            },
-            "filepath": {
-              "path": "/main.dbml"
-            },
-            "start": {
-              "column": 3,
-              "line": 6,
-              "offset": 54
-            }
+            "filepath": "/main.dbml"
           },
           "value": "note inside setting list of a table group\n"
         },
-        "schemaName": null,
         "tables": [
           {
-            "name": "table1",
-            "schemaName": ""
+            "name": "table1"
           }
         ],
         "token": {
-          "end": {
-            "column": 2,
-            "line": 12,
-            "offset": 143
-          },
-          "filepath": {
-            "path": "/main.dbml"
-          },
-          "start": {
-            "column": 1,
-            "line": 5,
-            "offset": 32
-          }
+          "filepath": "/main.dbml"
         }
       }
     ],
-    "tablePartials": [],
     "tables": [
       {
-        "alias": null,
-        "checks": [],
         "fields": [
           {
-            "checks": [],
-            "increment": false,
-            "inline_refs": [],
             "name": "id",
-            "pk": true,
             "token": {
-              "end": {
-                "column": 14,
-                "line": 2,
-                "offset": 28
-              },
-              "filepath": {
-                "path": "/main.dbml"
-              },
-              "start": {
-                "column": 3,
-                "line": 2,
-                "offset": 17
-              }
+              "filepath": "/main.dbml"
             },
             "type": {
-              "args": null,
-              "schemaName": null,
               "type_name": "int"
-            },
-            "unique": false
+            }
           }
         ],
-        "indexes": [],
         "name": "table1",
-        "partials": [],
-        "schemaName": null,
         "token": {
-          "end": {
-            "column": 2,
-            "line": 3,
-            "offset": 30
-          },
-          "filepath": {
-            "path": "/main.dbml"
-          },
-          "start": {
-            "column": 1,
-            "line": 1,
-            "offset": 0
-          }
+          "filepath": "/main.dbml"
         }
       }
-    ]
-  },
-  "errors": [],
-  "warnings": []
+    ],
+    "token": {
+      "filepath": "/main.dbml"
+    }
+  }
 }

@@ -1,4 +1,6 @@
-import { describe, expect, test } from 'vitest';
+import {
+  describe, expect, test,
+} from 'vitest';
 import { interpret } from '@tests/utils';
 import { CompileErrorCode } from '@/index';
 import { DateTime } from 'luxon';

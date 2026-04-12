@@ -1,6 +1,10 @@
 import { describe, expect } from 'vitest';
-import { SyntaxNodeKind, ElementDeclarationNode, BlockExpressionNode } from '@/core/types/nodes';
-import { TableSymbol, EnumSymbol, TableGroupSymbol, TablePartialSymbol, ColumnSymbol, EnumFieldSymbol, SchemaSymbol } from '@/core/types/symbol/symbols';
+import {
+  SyntaxNodeKind, ElementDeclarationNode, BlockExpressionNode,
+} from '@/core/types/nodes';
+import {
+  TableSymbol, EnumSymbol, TableGroupSymbol, TablePartialSymbol, ColumnSymbol, EnumFieldSymbol, SchemaSymbol,
+} from '@/core/types/symbol/symbols';
 import { analyze } from '@tests/utils';
 
 describe('[example] binder', () => {
@@ -836,7 +840,12 @@ describe('[example] binder', () => {
       expect(countryColumn.references.length).toBe(1);
 
       // Verify all references have correct referee
-      [idColumn, countryCodeColumn, merchantIdColumn, countryColumn].forEach((col) => {
+      [
+        idColumn,
+        countryCodeColumn,
+        merchantIdColumn,
+        countryColumn,
+      ].forEach((col) => {
         expect(col.references[0].referee).toBe(col);
       });
     });

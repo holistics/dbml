@@ -1,4 +1,6 @@
-import { describe, expect, test } from 'vitest';
+import {
+  describe, expect, test,
+} from 'vitest';
 import { interpret } from '@tests/utils';
 
 describe('[example - record] auto-increment and serial type constraints', () => {

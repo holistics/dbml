@@ -1,15 +1,11 @@
 {
-  "errors": [],
   "tokens": [
     {
       "context": {
         "id": "token@<eof>@@[L17:C11, L17:C11]",
         "snippet": ""
       },
-      "leadingTrivia": " This is a single-line comment\r\n\n This \r\nis\r\na\r\nmulti\r\n-\r\nline\r\ncomment\r\n\n\n This is\r\n a\r\n bunch\r\n of\r\n single\r\n line\r\n comments",
-      "trailingTrivia": "",
-      "value": ""
+      "leadingTrivia": " This is a single-line comment\r\n\n This \r\nis\r\na\r\nmulti\r\n-\r\nline\r\ncomment\r\n\n\n This is\r\n a\r\n bunch\r\n of\r\n single\r\n line\r\n comments"
     }
-  ],
-  "warnings": []
+  ]
 }

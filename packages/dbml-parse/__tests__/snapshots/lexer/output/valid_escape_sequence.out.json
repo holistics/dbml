@@ -1,12 +1,10 @@
 {
-  "errors": [],
   "tokens": [
     {
       "context": {
         "id": "token@<variable>@\n@[L0:C0, L0:C4]",
         "snippet": "\"\\n\""
       },
-      "leadingTrivia": "",
       "trailingTrivia": "\n",
       "value": "\n"
     },
@@ -15,7 +13,6 @@
         "id": "token@<variable>@\r@[L1:C0, L1:C4]",
         "snippet": "\"\\r\""
       },
-      "leadingTrivia": "",
       "trailingTrivia": "\n",
       "value": "\r"
     },
@@ -24,7 +21,6 @@
         "id": "token@<variable>@ꯎ@[L2:C0, L2:C8]",
         "snippet": "\"\\uabce\""
       },
-      "leadingTrivia": "",
       "trailingTrivia": "\n",
       "value": "ꯎ"
     },
@@ -33,7 +29,6 @@
         "id": "token@<variable>@ሿ@[L3:C0, L3:C8]",
         "snippet": "\"\\u123F\""
       },
-      "leadingTrivia": "",
       "trailingTrivia": "\n",
       "value": "ሿ"
     },
@@ -42,7 +37,6 @@
         "id": "token@<variable>@ꯍ@[L4:C0, L4:C8]",
         "snippet": "\"\\uABCD\""
       },
-      "leadingTrivia": "",
       "trailingTrivia": "\n",
       "value": "ꯍ"
     },
@@ -51,7 +45,6 @@
         "id": "token@<variable>@\t@[L5:C0, L5:C4]",
         "snippet": "\"\\t\""
       },
-      "leadingTrivia": "",
       "trailingTrivia": "\n",
       "value": "\t"
     },
@@ -60,7 +53,6 @@
         "id": "token@<variable>@\u000b@[L6:C0, L6:C4]",
         "snippet": "\"\\v\""
       },
-      "leadingTrivia": "",
       "trailingTrivia": "\n",
       "value": "\u000b"
     },
@@ -69,7 +61,6 @@
         "id": "token@<string>@This is a single line ''' @[L7:C0, L7:C33]",
         "snippet": "'''This is...e \\''' '''"
       },
-      "leadingTrivia": "",
       "trailingTrivia": "\n",
       "value": "This is a single line ''' "
     },
@@ -78,7 +69,6 @@
         "id": "token@<string>@This is a single line here!@[L8:C0, L9:C8]",
         "snippet": "'''This is...\\\nhere!'''"
       },
-      "leadingTrivia": "",
       "trailingTrivia": "\n",
       "value": "This is a single line here!"
     },
@@ -96,7 +86,6 @@
         "id": "token@<string>@This is also not a single line \\    \nas there are spaces after \\@[L12:C0, L13:C31]",
         "snippet": "'''This is...fter \\\\'''"
       },
-      "leadingTrivia": "",
       "trailingTrivia": "\n",
       "value": "This is also not a single line \\    \nas there are spaces after \\"
     },
@@ -105,7 +94,6 @@
         "id": "token@<function-expression>@This is single line\n\n\n@[L14:C0, L17:C1]",
         "snippet": "`This is s...e line\n\n\n`"
       },
-      "leadingTrivia": "",
       "trailingTrivia": "\n",
       "value": "This is single line\n\n\n"
     },
@@ -113,11 +101,7 @@
       "context": {
         "id": "token@<eof>@@[L18:C0, L18:C0]",
         "snippet": ""
-      },
-      "leadingTrivia": "",
-      "trailingTrivia": "",
-      "value": ""
+      }
     }
-  ],
-  "warnings": []
+  ]
 }

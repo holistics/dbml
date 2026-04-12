@@ -59,7 +59,7 @@ function expandDiagramViewWildcards (env: InterpreterDatabase): void {
   }
 }
 
-function convertEnvToDb (env: InterpreterDatabase): Database {
+function convertEnvToDb (env: InterpreterDatabase, ast: ProgramNode): Database {
   // Convert records Map to array of TableRecord
   const records: TableRecord[] = [];
   for (const [table, { element, rows }] of env.records) {
@@ -95,6 +95,7 @@ function convertEnvToDb (env: InterpreterDatabase): Database {
     tablePartials: Array.from(env.tablePartials.values()).map(processColumnInDb),
     records,
     diagramViews: Array.from(env.diagramViews.values()),
+    token: getTokenPosition(ast),
   };
 }
 
@@ -169,6 +170,6 @@ export default class Interpreter {
     // At this point all tables, tableGroups, notes are fully interpreted
     expandDiagramViewWildcards(this.env);
 
-    return new Report(convertEnvToDb(this.env), errors, warnings);
+    return new Report(convertEnvToDb(this.env, this.ast), errors, warnings);
   }
 }

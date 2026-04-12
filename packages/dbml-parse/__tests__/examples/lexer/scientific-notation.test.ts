@@ -1,4 +1,6 @@
-import { describe, expect, test } from 'vitest';
+import {
+  describe, expect, test,
+} from 'vitest';
 import { SyntaxTokenKind, isTriviaToken } from '@/core/types/tokens';
 import { CompileErrorCode } from '@/core/types/errors';
 import { lex } from '@tests/utils';

@@ -1,4 +1,6 @@
-import { describe, expect, it } from 'vitest';
+import {
+  describe, expect, it,
+} from 'vitest';
 import * as fc from 'fast-check';
 import Compiler from '@/compiler';
 import DBMLDefinitionProvider from '@/services/definition/provider';
@@ -418,7 +420,12 @@ describe('[fuzz] services - edge cases', () => {
     const completionProvider = new DBMLCompletionItemProvider(compiler);
 
     // Test at various positions
-    [1, 100, 500, 1000].forEach((col) => {
+    [
+      1,
+      100,
+      500,
+      1000,
+    ].forEach((col) => {
       expect(() => {
         definitionProvider.provideDefinition(model, createPosition(1, col));
         completionProvider.provideCompletionItems(model, createPosition(1, col));
@@ -435,7 +442,12 @@ describe('[fuzz] services - edge cases', () => {
     const definitionProvider = new DBMLDefinitionProvider(compiler);
 
     // Test at various line positions
-    [1, 100, 250, 500].forEach((line) => {
+    [
+      1,
+      100,
+      250,
+      500,
+    ].forEach((line) => {
       expect(() => {
         definitionProvider.provideDefinition(model, createPosition(line, 1));
       }).not.toThrow();

@@ -1,4 +1,6 @@
-import { describe, expect, it } from 'vitest';
+import {
+  describe, expect, it,
+} from 'vitest';
 import { getOffsetFromMonacoPosition } from '@/services/utils';
 import { createPosition, MockTextModel } from '../../utils';
 

@@ -1,67 +1,27 @@
 {
   "database": {
-    "aliases": [],
-    "diagramViews": [],
-    "enums": [],
-    "notes": [],
-    "project": {},
-    "records": [],
-    "refs": [],
-    "schemas": [],
-    "tableGroups": [],
     "tablePartials": [
       {
-        "checks": [],
         "fields": [
           {
-            "checks": [],
-            "increment": false,
-            "inline_refs": [],
             "name": "col",
-            "pk": false,
             "token": {
-              "end": {
-                "column": 24,
-                "line": 2,
-                "offset": 40
-              },
-              "filepath": {
-                "path": "/main.dbml"
-              },
-              "start": {
-                "column": 3,
-                "line": 2,
-                "offset": 19
-              }
+              "filepath": "/main.dbml"
             },
             "type": {
-              "args": null,
-              "schemaName": null,
               "type_name": "type"
-            },
-            "unique": false
+            }
           }
         ],
-        "indexes": [],
         "name": "T",
         "token": {
-          "end": {
-            "column": 2,
-            "line": 3,
-            "offset": 42
-          },
-          "filepath": {
-            "path": "/main.dbml"
-          },
-          "start": {
-            "column": 1,
-            "line": 1,
-            "offset": 0
-          }
+          "filepath": "/main.dbml"
         }
       }
     ],
-    "tables": []
+    "token": {
+      "filepath": "/main.dbml"
+    }
   },
   "errors": [
     {
@@ -76,6 +36,5 @@
         }
       }
     }
-  ],
-  "warnings": []
+  ]
 }

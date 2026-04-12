@@ -1,6 +1,6 @@
 import { partition } from 'lodash-es';
 import { destructureComplexVariable, extractReferee } from '@/core/analyzer/utils';
-import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import { CompileError } from '@/core/types/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, SyntaxNode,
 } from '@/core/types/nodes';

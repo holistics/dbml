@@ -3,7 +3,6 @@ import {
 } from '@/core/types/nodes';
 import { CompileError } from '@/core/types/errors';
 import type {
-  TokenPosition,
   Table,
   Note,
   Ref,

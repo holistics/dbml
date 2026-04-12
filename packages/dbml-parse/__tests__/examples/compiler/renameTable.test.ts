@@ -1,4 +1,6 @@
-import { describe, expect, test } from 'vitest';
+import {
+  describe, expect, test,
+} from 'vitest';
 import Compiler from '@/compiler/index';
 import { TableNameInput } from '@/compiler/queries/transform';
 
