@@ -71,21 +71,21 @@
                                 "identifiers": [
                                   {
                                     "context": {
-                                      "id": "token@<identifier>@action@[L0:C43, L0:C49]",
-                                      "snippet": "action"
-                                    },
-                                    "leadingTrivia": "",
-                                    "trailingTrivia": "",
-                                    "value": "action"
-                                  },
-                                  {
-                                    "context": {
                                       "id": "token@<identifier>@no@[L0:C40, L0:C42]",
                                       "snippet": "no"
                                     },
                                     "leadingTrivia": "",
                                     "trailingTrivia": " ",
                                     "value": "no"
+                                  },
+                                  {
+                                    "context": {
+                                      "id": "token@<identifier>@action@[L0:C43, L0:C49]",
+                                      "snippet": "action"
+                                    },
+                                    "leadingTrivia": "",
+                                    "trailingTrivia": "",
+                                    "value": "action"
                                   }
                                 ]
                               },

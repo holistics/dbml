@@ -1,30 +1,6 @@
 {
   "errors": [
     {
-      "code": "INVALID_NAME",
-      "diagnostic": "Sticky note must have a name",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<element-declaration>@@[L7:C0, L9:C1]",
-          "snippet": "Note {\r\n  ...l note'\r\n}"
-        }
-      }
-    },
-    {
-      "code": "INVALID_NAME",
-      "diagnostic": "Sticky note must have a name",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<element-declaration>@@[L11:C0, L13:C3]",
-          "snippet": "Note: '''\r... note\r\n'''"
-        }
-      }
-    },
-    {
       "code": "NOTE_REDEFINED",
       "diagnostic": "Duplicate notes are defined",
       "filepath": "/main.dbml",
@@ -45,6 +21,30 @@
         "context": {
           "id": "node@<element-declaration>@@[L2:C4, L4:C5]",
           "snippet": "Note {\r\n  ...te'\r\n    }"
+        }
+      }
+    },
+    {
+      "code": "INVALID_NAME",
+      "diagnostic": "Sticky note must have a name",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<element-declaration>@@[L7:C0, L9:C1]",
+          "snippet": "Note {\r\n  ...l note'\r\n}"
+        }
+      }
+    },
+    {
+      "code": "INVALID_NAME",
+      "diagnostic": "Sticky note must have a name",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<element-declaration>@@[L11:C0, L13:C3]",
+          "snippet": "Note: '''\r... note\r\n'''"
         }
       }
     }
@@ -87,6 +87,73 @@
                   "value": "{"
                 },
                 "body": [
+                  {
+                    "context": {
+                      "id": "node@<element-declaration>@@[L1:C4, L1:C38]",
+                      "snippet": "Note: ''' ...l note '''"
+                    },
+                    "children": {
+                      "body": {
+                        "context": {
+                          "id": "node@<function-application>@ This is a local note @[L1:C10, L1:C38]",
+                          "snippet": "''' This i...l note '''"
+                        },
+                        "children": {
+                          "callee": {
+                            "context": {
+                              "id": "node@<primary-expression>@ This is a local note @[L1:C10, L1:C38]",
+                              "snippet": "''' This i...l note '''"
+                            },
+                            "children": {
+                              "expression": {
+                                "context": {
+                                  "id": "node@<literal>@ This is a local note @[L1:C10, L1:C38]",
+                                  "snippet": "''' This i...l note '''"
+                                },
+                                "children": {
+                                  "literal": {
+                                    "context": {
+                                      "id": "token@<string>@ This is a local note @[L1:C10, L1:C38]",
+                                      "snippet": "''' This i...l note '''"
+                                    },
+                                    "leadingTrivia": "",
+                                    "trailingTrivia": "\n",
+                                    "value": " This is a local note "
+                                  }
+                                },
+                                "fullEnd": 51,
+                                "fullStart": 21
+                              }
+                            },
+                            "fullEnd": 51,
+                            "fullStart": 21
+                          }
+                        },
+                        "fullEnd": 51,
+                        "fullStart": 21
+                      },
+                      "bodyColon": {
+                        "context": {
+                          "id": "token@<colon>@:@[L1:C8, L1:C9]",
+                          "snippet": ":"
+                        },
+                        "leadingTrivia": "",
+                        "trailingTrivia": " ",
+                        "value": ":"
+                      },
+                      "type": {
+                        "context": {
+                          "id": "token@<identifier>@Note@[L1:C4, L1:C8]",
+                          "snippet": "Note"
+                        },
+                        "leadingTrivia": "    ",
+                        "trailingTrivia": "",
+                        "value": "Note"
+                      }
+                    },
+                    "fullEnd": 51,
+                    "fullStart": 11
+                  },
                   {
                     "context": {
                       "id": "node@<element-declaration>@@[L2:C4, L4:C5]",
@@ -174,73 +241,6 @@
                     },
                     "fullEnd": 108,
                     "fullStart": 51
-                  },
-                  {
-                    "context": {
-                      "id": "node@<element-declaration>@@[L1:C4, L1:C38]",
-                      "snippet": "Note: ''' ...l note '''"
-                    },
-                    "children": {
-                      "body": {
-                        "context": {
-                          "id": "node@<function-application>@ This is a local note @[L1:C10, L1:C38]",
-                          "snippet": "''' This i...l note '''"
-                        },
-                        "children": {
-                          "callee": {
-                            "context": {
-                              "id": "node@<primary-expression>@ This is a local note @[L1:C10, L1:C38]",
-                              "snippet": "''' This i...l note '''"
-                            },
-                            "children": {
-                              "expression": {
-                                "context": {
-                                  "id": "node@<literal>@ This is a local note @[L1:C10, L1:C38]",
-                                  "snippet": "''' This i...l note '''"
-                                },
-                                "children": {
-                                  "literal": {
-                                    "context": {
-                                      "id": "token@<string>@ This is a local note @[L1:C10, L1:C38]",
-                                      "snippet": "''' This i...l note '''"
-                                    },
-                                    "leadingTrivia": "",
-                                    "trailingTrivia": "\n",
-                                    "value": " This is a local note "
-                                  }
-                                },
-                                "fullEnd": 51,
-                                "fullStart": 21
-                              }
-                            },
-                            "fullEnd": 51,
-                            "fullStart": 21
-                          }
-                        },
-                        "fullEnd": 51,
-                        "fullStart": 21
-                      },
-                      "bodyColon": {
-                        "context": {
-                          "id": "token@<colon>@:@[L1:C8, L1:C9]",
-                          "snippet": ":"
-                        },
-                        "leadingTrivia": "",
-                        "trailingTrivia": " ",
-                        "value": ":"
-                      },
-                      "type": {
-                        "context": {
-                          "id": "token@<identifier>@Note@[L1:C4, L1:C8]",
-                          "snippet": "Note"
-                        },
-                        "leadingTrivia": "    ",
-                        "trailingTrivia": "",
-                        "value": "Note"
-                      }
-                    },
-                    "fullEnd": 51,
-                    "fullStart": 11
                   }
                 ]
               },

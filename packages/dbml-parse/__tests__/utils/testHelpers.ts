@@ -87,13 +87,19 @@ export type Snappable =
 
 // Accept an object
 // Output a stable key-value object
-// Remove empty fields
 function sortObject (object: Record<string, unknown>): Record<string, unknown> {
   const entries = Object.entries(object).filter(([, value]) => !isEmpty(value) || typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean');
   entries.sort(
-    ([key1], [key2]) => (key1 as string) < (key2 as string) ? -1 : 1,
+    ([key1], [key2]) => key1 < key2 ? -1 : key1 > key2 ? 1 : 0,
   );
   return Object.fromEntries(entries);
+}
+
+function compareRank (a: number | string, b: number | string): number {
+  if (Number.isNaN(a) && Number.isNaN(b)) return 0;
+  if (Number.isNaN(a)) return -1;
+  if (Number.isNaN(b)) return 1;
+  return a < b ? -1 : a > b ? 1 : 0;
 }
 
 // Accept an array
@@ -116,14 +122,14 @@ function sortArray (array: unknown[]): unknown[] {
     return 1000;
   }
 
-  // A stable ranking for values within a given kind
+  // Primary rank for values within a given kind
   function getIntraKindRank (s: unknown): number | string {
     if (s === null || s === undefined) return 0;
     if (typeof s === 'string' || typeof s === 'number') return s;
     if (typeof s === 'boolean') return Number(s);
     if (typeof s === 'bigint') return Number(s);
     if (typeof s === 'symbol') return s.toString();
-    if (s instanceof CompileWarning || s instanceof CompileError) return s.code * 1000000 + s.start;
+    if (s instanceof CompileWarning || s instanceof CompileError) return (s as any).nodeOrToken?.start ?? 0;
     if (s instanceof SyntaxNode) return s.start;
     if (s instanceof SyntaxToken) return s.start;
     if (s instanceof NodeSymbol) return getIntraKindRank(s.declaration);
@@ -133,17 +139,23 @@ function sortArray (array: unknown[]): unknown[] {
     return 0;
   }
 
+  // Secondary tiebreaker when primary rank is equal
+  function getTiebreakerRank (s: unknown): number | string {
+    if (s instanceof CompileWarning || s instanceof CompileError) return s.diagnostic;
+    if (s instanceof SyntaxNode) return s.id;
+    if (s instanceof SyntaxToken) return s.start;
+    if ((s as any)?.id !== undefined) return (s as any).id;
+    return 0;
+  }
+
   return array.sort((s1, s2) => {
-    const s1InterRank = getInterKindRank(s1);
-    const s2InterRank = getInterKindRank(s2);
-    if (s1InterRank !== s2InterRank) {
-      return s1InterRank - s2InterRank;
-    }
+    const interDiff = getInterKindRank(s1) - getInterKindRank(s2);
+    if (interDiff !== 0) return interDiff;
 
-    const s1IntraRank = getIntraKindRank(s1);
-    const s2IntraRank = getIntraKindRank(s2);
+    const intraDiff = compareRank(getIntraKindRank(s1), getIntraKindRank(s2));
+    if (intraDiff !== 0) return intraDiff;
 
-    return s1IntraRank < s2IntraRank ? -1 : 1;
+    return compareRank(getTiebreakerRank(s1), getTiebreakerRank(s2));
   });
 }
 
@@ -154,7 +166,7 @@ export function toSnapshot (
   { simple = false }: { simple?: boolean } = {},
 ): unknown {
   if (Array.isArray(value)) {
-    return sortArray(value.map((v) => toSnapshot(compiler, v, { simple })));
+    return sortArray([...value]).map((v) => toSnapshot(compiler, v as Snappable, { simple }));
   }
   if (value instanceof CompileWarning) {
     return warningToSnapshot(compiler, value, { simple });

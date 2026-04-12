@@ -90,30 +90,6 @@
     "publicSchema": [
       {
         "context": {
-          "id": "symbol@Table@T1@[L6:C0, L8:C1]",
-          "snippet": "Table T1 {... un_col]\n}"
-        },
-        "declaration": {
-          "id": "node@<element-declaration>@T1@[L6:C0, L8:C1]",
-          "snippet": "Table T1 {... un_col]\n}"
-        },
-        "members": [
-          {
-            "context": {
-              "id": "symbol@Column@col@[L7:C2, L7:C26]",
-              "snippet": "col type [... > un_col]"
-            }
-          }
-        ],
-        "references": [
-          {
-            "id": "node@<primary-expression>@T1@[L2:C20, L2:C22]",
-            "snippet": "T1"
-          }
-        ]
-      },
-      {
-        "context": {
           "id": "symbol@TablePartial@T1@[L0:C0, L4:C1]",
           "snippet": "TableParti...un_col3]\n}"
         },
@@ -139,6 +115,30 @@
               "id": "symbol@Column@col3@[L3:C2, L3:C33]",
               "snippet": "col3 type ...T.un_col3]"
             }
+          }
+        ]
+      },
+      {
+        "context": {
+          "id": "symbol@Table@T1@[L6:C0, L8:C1]",
+          "snippet": "Table T1 {... un_col]\n}"
+        },
+        "declaration": {
+          "id": "node@<element-declaration>@T1@[L6:C0, L8:C1]",
+          "snippet": "Table T1 {... un_col]\n}"
+        },
+        "members": [
+          {
+            "context": {
+              "id": "symbol@Column@col@[L7:C2, L7:C26]",
+              "snippet": "col type [... > un_col]"
+            }
+          }
+        ],
+        "references": [
+          {
+            "id": "node@<primary-expression>@T1@[L2:C20, L2:C22]",
+            "snippet": "T1"
           }
         ]
       }

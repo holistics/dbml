@@ -1,6 +1,18 @@
 {
   "errors": [
     {
+      "code": "INVALID_CHECKS_CONTEXT",
+      "diagnostic": "A Checks can only appear inside a Table or a TablePartial",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<element-declaration>@@[L0:C0, L0:C9]",
+          "snippet": "checks {}"
+        }
+      }
+    },
+    {
       "code": "DUPLICATE_CHECK_SETTING",
       "diagnostic": "'name' can only appear once",
       "filepath": "/main.dbml",
@@ -25,6 +37,18 @@
       }
     },
     {
+      "code": "UNKNOWN_CHECK_SETTING",
+      "diagnostic": "Unknown check setting 'invalid'",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<attribute>@@[L10:C23, L10:C30]",
+          "snippet": "invalid"
+        }
+      }
+    },
+    {
       "code": "DUPLICATE_CHECK_SETTING",
       "diagnostic": "'name' can only appear once",
       "filepath": "/main.dbml",
@@ -45,30 +69,6 @@
         "context": {
           "id": "node@<attribute>@@[L20:C35, L20:C46]",
           "snippet": "name: 'dup'"
-        }
-      }
-    },
-    {
-      "code": "INVALID_CHECKS_CONTEXT",
-      "diagnostic": "A Checks can only appear inside a Table or a TablePartial",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<element-declaration>@@[L0:C0, L0:C9]",
-          "snippet": "checks {}"
-        }
-      }
-    },
-    {
-      "code": "UNKNOWN_CHECK_SETTING",
-      "diagnostic": "Unknown check setting 'invalid'",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<attribute>@@[L10:C23, L10:C30]",
-          "snippet": "invalid"
         }
       }
     },

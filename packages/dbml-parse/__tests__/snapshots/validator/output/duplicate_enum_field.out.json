@@ -7,6 +7,30 @@
       "level": "error",
       "node": {
         "context": {
+          "id": "node@<function-application>@churn@[L1:C4, L1:C9]",
+          "snippet": "churn"
+        }
+      }
+    },
+    {
+      "code": "DUPLICATE_COLUMN_NAME",
+      "diagnostic": "Duplicate enum field churn",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<function-application>@churn@[L1:C4, L1:C9]",
+          "snippet": "churn"
+        }
+      }
+    },
+    {
+      "code": "DUPLICATE_COLUMN_NAME",
+      "diagnostic": "Duplicate enum field churn",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
           "id": "node@<function-application>@churn@[L2:C4, L2:C9]",
           "snippet": "churn"
         }
@@ -19,31 +43,7 @@
       "level": "error",
       "node": {
         "context": {
-          "id": "node@<function-application>@churn@[L1:C4, L1:C9]",
-          "snippet": "churn"
-        }
-      }
-    },
-    {
-      "code": "DUPLICATE_COLUMN_NAME",
-      "diagnostic": "Duplicate enum field churn",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
           "id": "node@<function-application>@churn@[L3:C4, L3:C9]",
-          "snippet": "churn"
-        }
-      }
-    },
-    {
-      "code": "DUPLICATE_COLUMN_NAME",
-      "diagnostic": "Duplicate enum field churn",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<function-application>@churn@[L1:C4, L1:C9]",
           "snippet": "churn"
         }
       }

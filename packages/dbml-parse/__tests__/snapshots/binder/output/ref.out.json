@@ -2,41 +2,6 @@
   "nodeReferees": [
     {
       "context": {
-        "id": "node@<primary-expression>@Users@[L6:C15, L6:C20]",
-        "snippet": "Users"
-      },
-      "children": {
-        "expression": {
-          "context": {
-            "id": "node@<variable>@Users@[L6:C15, L6:C20]",
-            "snippet": "Users"
-          },
-          "children": {
-            "variable": {
-              "context": {
-                "id": "token@<identifier>@Users@[L6:C15, L6:C20]",
-                "snippet": "Users"
-              },
-              "leadingTrivia": "",
-              "trailingTrivia": "",
-              "value": "Users"
-            }
-          },
-          "fullEnd": 83,
-          "fullStart": 78
-        }
-      },
-      "fullEnd": 83,
-      "fullStart": 78,
-      "referee": {
-        "context": {
-          "id": "symbol@Table@Users@[L0:C0, L3:C1]",
-          "snippet": "Table User...integer \n}"
-        }
-      }
-    },
-    {
-      "context": {
         "id": "node@<primary-expression>@Users@[L6:C4, L6:C9]",
         "snippet": "Users"
       },
@@ -102,6 +67,41 @@
         "context": {
           "id": "symbol@Column@id@[L1:C4, L1:C14]",
           "snippet": "id integer"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@Users@[L6:C15, L6:C20]",
+        "snippet": "Users"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@Users@[L6:C15, L6:C20]",
+            "snippet": "Users"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@Users@[L6:C15, L6:C20]",
+                "snippet": "Users"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": "",
+              "value": "Users"
+            }
+          },
+          "fullEnd": 83,
+          "fullStart": 78
+        }
+      },
+      "fullEnd": 83,
+      "fullStart": 78,
+      "referee": {
+        "context": {
+          "id": "symbol@Table@Users@[L0:C0, L3:C1]",
+          "snippet": "Table User...integer \n}"
         }
       }
     },

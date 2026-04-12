@@ -133,21 +133,21 @@
                                       "identifiers": [
                                         {
                                           "context": {
-                                            "id": "token@<identifier>@key@[L1:C20, L1:C23]",
-                                            "snippet": "key"
-                                          },
-                                          "leadingTrivia": "",
-                                          "trailingTrivia": "",
-                                          "value": "key"
-                                        },
-                                        {
-                                          "context": {
                                             "id": "token@<identifier>@primary@[L1:C12, L1:C19]",
                                             "snippet": "primary"
                                           },
                                           "leadingTrivia": "",
                                           "trailingTrivia": " ",
                                           "value": "primary"
+                                        },
+                                        {
+                                          "context": {
+                                            "id": "token@<identifier>@key@[L1:C20, L1:C23]",
+                                            "snippet": "key"
+                                          },
+                                          "leadingTrivia": "",
+                                          "trailingTrivia": "",
+                                          "value": "key"
                                         }
                                       ]
                                     },
@@ -417,21 +417,21 @@
                                       "identifiers": [
                                         {
                                           "context": {
-                                            "id": "token@<identifier>@key@[L5:C20, L5:C23]",
-                                            "snippet": "key"
-                                          },
-                                          "leadingTrivia": "",
-                                          "trailingTrivia": "",
-                                          "value": "key"
-                                        },
-                                        {
-                                          "context": {
                                             "id": "token@<identifier>@primary@[L5:C12, L5:C19]",
                                             "snippet": "primary"
                                           },
                                           "leadingTrivia": "",
                                           "trailingTrivia": " ",
                                           "value": "primary"
+                                        },
+                                        {
+                                          "context": {
+                                            "id": "token@<identifier>@key@[L5:C20, L5:C23]",
+                                            "snippet": "key"
+                                          },
+                                          "leadingTrivia": "",
+                                          "trailingTrivia": "",
+                                          "value": "key"
                                         }
                                       ]
                                     },
@@ -701,21 +701,21 @@
                                       "identifiers": [
                                         {
                                           "context": {
-                                            "id": "token@<identifier>@key@[L9:C20, L9:C23]",
-                                            "snippet": "key"
-                                          },
-                                          "leadingTrivia": "",
-                                          "trailingTrivia": "",
-                                          "value": "key"
-                                        },
-                                        {
-                                          "context": {
                                             "id": "token@<identifier>@primary@[L9:C12, L9:C19]",
                                             "snippet": "primary"
                                           },
                                           "leadingTrivia": "",
                                           "trailingTrivia": " ",
                                           "value": "primary"
+                                        },
+                                        {
+                                          "context": {
+                                            "id": "token@<identifier>@key@[L9:C20, L9:C23]",
+                                            "snippet": "key"
+                                          },
+                                          "leadingTrivia": "",
+                                          "trailingTrivia": "",
+                                          "value": "key"
                                         }
                                       ]
                                     },
@@ -985,21 +985,21 @@
                                       "identifiers": [
                                         {
                                           "context": {
-                                            "id": "token@<identifier>@key@[L13:C20, L13:C23]",
-                                            "snippet": "key"
-                                          },
-                                          "leadingTrivia": "",
-                                          "trailingTrivia": "",
-                                          "value": "key"
-                                        },
-                                        {
-                                          "context": {
                                             "id": "token@<identifier>@primary@[L13:C12, L13:C19]",
                                             "snippet": "primary"
                                           },
                                           "leadingTrivia": "",
                                           "trailingTrivia": " ",
                                           "value": "primary"
+                                        },
+                                        {
+                                          "context": {
+                                            "id": "token@<identifier>@key@[L13:C20, L13:C23]",
+                                            "snippet": "key"
+                                          },
+                                          "leadingTrivia": "",
+                                          "trailingTrivia": "",
+                                          "value": "key"
                                         }
                                       ]
                                     },

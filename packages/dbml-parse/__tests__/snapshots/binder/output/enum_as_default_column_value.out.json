@@ -1,30 +1,6 @@
 {
   "errors": [
     {
-      "code": "BINDING_ERROR",
-      "diagnostic": "Schema 'field1' does not exist in Schema 'public'",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<primary-expression>@field1@[L27:C47, L27:C53]",
-          "snippet": "field1"
-        }
-      }
-    },
-    {
-      "code": "BINDING_ERROR",
-      "diagnostic": "Enum 'invalid_enum' does not exist in Schema 'public'",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<primary-expression>@invalid_enum@[L28:C42, L28:C54]",
-          "snippet": "invalid_enum"
-        }
-      }
-    },
-    {
       "code": "INVALID_COLUMN_SETTING_VALUE",
       "diagnostic": "'default' must be an enum value, a string literal, number literal, function expression, true, false or null",
       "filepath": "/main.dbml",
@@ -47,9 +23,103 @@
           "snippet": "field1.fie...ld3.field4"
         }
       }
+    },
+    {
+      "code": "BINDING_ERROR",
+      "diagnostic": "Schema 'field1' does not exist in Schema 'public'",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<primary-expression>@field1@[L27:C47, L27:C53]",
+          "snippet": "field1"
+        }
+      }
+    },
+    {
+      "code": "BINDING_ERROR",
+      "diagnostic": "Enum 'invalid_enum' does not exist in Schema 'public'",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<primary-expression>@invalid_enum@[L28:C42, L28:C54]",
+          "snippet": "invalid_enum"
+        }
+      }
     }
   ],
   "nodeReferees": [
+    {
+      "context": {
+        "id": "node@<primary-expression>@status@[L22:C9, L22:C15]",
+        "snippet": "status"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@status@[L22:C9, L22:C15]",
+            "snippet": "status"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@status@[L22:C9, L22:C15]",
+                "snippet": "status"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": " ",
+              "value": "status"
+            }
+          },
+          "fullEnd": 232,
+          "fullStart": 225
+        }
+      },
+      "fullEnd": 232,
+      "fullStart": 225,
+      "referee": {
+        "context": {
+          "id": "symbol@Enum@status@[L0:C0, L4:C1]",
+          "snippet": "Enum statu...inactive\n}"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@status@[L22:C26, L22:C32]",
+        "snippet": "status"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@status@[L22:C26, L22:C32]",
+            "snippet": "status"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@status@[L22:C26, L22:C32]",
+                "snippet": "status"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": "",
+              "value": "status"
+            }
+          },
+          "fullEnd": 248,
+          "fullStart": 242
+        }
+      },
+      "fullEnd": 248,
+      "fullStart": 242,
+      "referee": {
+        "context": {
+          "id": "symbol@Enum@status@[L0:C0, L4:C1]",
+          "snippet": "Enum statu...inactive\n}"
+        }
+      }
+    },
     {
       "context": {
         "id": "node@<primary-expression>@active@[L22:C33, L22:C39]",
@@ -82,40 +152,6 @@
         "context": {
           "id": "symbol@Enum field@active@[L1:C2, L1:C8]",
           "snippet": "active"
-        }
-      }
-    },
-    {
-      "context": {
-        "id": "node@<primary-expression>@demographic@[L23:C38, L23:C49]",
-        "snippet": "demographic"
-      },
-      "children": {
-        "expression": {
-          "context": {
-            "id": "node@<variable>@demographic@[L23:C38, L23:C49]",
-            "snippet": "demographic"
-          },
-          "children": {
-            "variable": {
-              "context": {
-                "id": "token@<identifier>@demographic@[L23:C38, L23:C49]",
-                "snippet": "demographic"
-              },
-              "leadingTrivia": "",
-              "trailingTrivia": "",
-              "value": "demographic"
-            }
-          },
-          "fullEnd": 306,
-          "fullStart": 295
-        }
-      },
-      "fullEnd": 306,
-      "fullStart": 295,
-      "referee": {
-        "context": {
-          "id": "symbol@Schema@@[L?:C?, L?:C?]"
         }
       }
     },
@@ -155,74 +191,6 @@
     },
     {
       "context": {
-        "id": "node@<primary-expression>@demographic@[L24:C11, L24:C22]",
-        "snippet": "demographic"
-      },
-      "children": {
-        "expression": {
-          "context": {
-            "id": "node@<variable>@demographic@[L24:C11, L24:C22]",
-            "snippet": "demographic"
-          },
-          "children": {
-            "variable": {
-              "context": {
-                "id": "token@<identifier>@demographic@[L24:C11, L24:C22]",
-                "snippet": "demographic"
-              },
-              "leadingTrivia": "",
-              "trailingTrivia": "",
-              "value": "demographic"
-            }
-          },
-          "fullEnd": 342,
-          "fullStart": 331
-        }
-      },
-      "fullEnd": 342,
-      "fullStart": 331,
-      "referee": {
-        "context": {
-          "id": "symbol@Schema@@[L?:C?, L?:C?]"
-        }
-      }
-    },
-    {
-      "context": {
-        "id": "node@<primary-expression>@demographic@[L24:C47, L24:C58]",
-        "snippet": "demographic"
-      },
-      "children": {
-        "expression": {
-          "context": {
-            "id": "node@<variable>@demographic@[L24:C47, L24:C58]",
-            "snippet": "demographic"
-          },
-          "children": {
-            "variable": {
-              "context": {
-                "id": "token@<identifier>@demographic@[L24:C47, L24:C58]",
-                "snippet": "demographic"
-              },
-              "leadingTrivia": "",
-              "trailingTrivia": "",
-              "value": "demographic"
-            }
-          },
-          "fullEnd": 378,
-          "fullStart": 367
-        }
-      },
-      "fullEnd": 378,
-      "fullStart": 367,
-      "referee": {
-        "context": {
-          "id": "symbol@Schema@@[L?:C?, L?:C?]"
-        }
-      }
-    },
-    {
-      "context": {
         "id": "node@<primary-expression>@gender@[L23:C21, L23:C27]",
         "snippet": "gender"
       },
@@ -253,6 +221,40 @@
         "context": {
           "id": "symbol@Enum@demographic.gender@[L6:C0, L9:C1]",
           "snippet": "Enum demog...  female\n}"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@demographic@[L23:C38, L23:C49]",
+        "snippet": "demographic"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@demographic@[L23:C38, L23:C49]",
+            "snippet": "demographic"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@demographic@[L23:C38, L23:C49]",
+                "snippet": "demographic"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": "",
+              "value": "demographic"
+            }
+          },
+          "fullEnd": 306,
+          "fullStart": 295
+        }
+      },
+      "fullEnd": 306,
+      "fullStart": 295,
+      "referee": {
+        "context": {
+          "id": "symbol@Schema@@[L?:C?, L?:C?]"
         }
       }
     },
@@ -328,106 +330,35 @@
     },
     {
       "context": {
-        "id": "node@<primary-expression>@status@[L22:C26, L22:C32]",
-        "snippet": "status"
+        "id": "node@<primary-expression>@demographic@[L24:C11, L24:C22]",
+        "snippet": "demographic"
       },
       "children": {
         "expression": {
           "context": {
-            "id": "node@<variable>@status@[L22:C26, L22:C32]",
-            "snippet": "status"
+            "id": "node@<variable>@demographic@[L24:C11, L24:C22]",
+            "snippet": "demographic"
           },
           "children": {
             "variable": {
               "context": {
-                "id": "token@<identifier>@status@[L22:C26, L22:C32]",
-                "snippet": "status"
+                "id": "token@<identifier>@demographic@[L24:C11, L24:C22]",
+                "snippet": "demographic"
               },
               "leadingTrivia": "",
               "trailingTrivia": "",
-              "value": "status"
+              "value": "demographic"
             }
           },
-          "fullEnd": 248,
-          "fullStart": 242
+          "fullEnd": 342,
+          "fullStart": 331
         }
       },
-      "fullEnd": 248,
-      "fullStart": 242,
+      "fullEnd": 342,
+      "fullStart": 331,
       "referee": {
         "context": {
-          "id": "symbol@Enum@status@[L0:C0, L4:C1]",
-          "snippet": "Enum statu...inactive\n}"
-        }
-      }
-    },
-    {
-      "context": {
-        "id": "node@<primary-expression>@status@[L22:C9, L22:C15]",
-        "snippet": "status"
-      },
-      "children": {
-        "expression": {
-          "context": {
-            "id": "node@<variable>@status@[L22:C9, L22:C15]",
-            "snippet": "status"
-          },
-          "children": {
-            "variable": {
-              "context": {
-                "id": "token@<identifier>@status@[L22:C9, L22:C15]",
-                "snippet": "status"
-              },
-              "leadingTrivia": "",
-              "trailingTrivia": " ",
-              "value": "status"
-            }
-          },
-          "fullEnd": 232,
-          "fullStart": 225
-        }
-      },
-      "fullEnd": 232,
-      "fullStart": 225,
-      "referee": {
-        "context": {
-          "id": "symbol@Enum@status@[L0:C0, L4:C1]",
-          "snippet": "Enum statu...inactive\n}"
-        }
-      }
-    },
-    {
-      "context": {
-        "id": "node@<primary-expression>@young_adult@[L24:C73, L24:C84]",
-        "snippet": "young_adult"
-      },
-      "children": {
-        "expression": {
-          "context": {
-            "id": "node@<variable>@young_adult@[L24:C73, L24:C84]",
-            "snippet": "young_adult"
-          },
-          "children": {
-            "variable": {
-              "context": {
-                "id": "token@<identifier>@young_adult@[L24:C73, L24:C84]",
-                "snippet": "young_adult"
-              },
-              "leadingTrivia": "",
-              "trailingTrivia": "",
-              "value": "young_adult"
-            }
-          },
-          "fullEnd": 404,
-          "fullStart": 393
-        }
-      },
-      "fullEnd": 404,
-      "fullStart": 393,
-      "referee": {
-        "context": {
-          "id": "symbol@Enum field@young_adult@[L15:C2, L15:C13]",
-          "snippet": "young_adult"
+          "id": "symbol@Schema@@[L?:C?, L?:C?]"
         }
       }
     },
@@ -468,6 +399,40 @@
     },
     {
       "context": {
+        "id": "node@<primary-expression>@demographic@[L24:C47, L24:C58]",
+        "snippet": "demographic"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@demographic@[L24:C47, L24:C58]",
+            "snippet": "demographic"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@demographic@[L24:C47, L24:C58]",
+                "snippet": "demographic"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": "",
+              "value": "demographic"
+            }
+          },
+          "fullEnd": 378,
+          "fullStart": 367
+        }
+      },
+      "fullEnd": 378,
+      "fullStart": 367,
+      "referee": {
+        "context": {
+          "id": "symbol@Schema@@[L?:C?, L?:C?]"
+        }
+      }
+    },
+    {
+      "context": {
         "id": "node@<primary-expression>@age segment@[L24:C59, L24:C72]",
         "snippet": "\"age segment\""
       },
@@ -498,6 +463,41 @@
         "context": {
           "id": "symbol@Enum@demographic.age segment@[L11:C0, L17:C1]",
           "snippet": "Enum demog...\n  elder\n}"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@young_adult@[L24:C73, L24:C84]",
+        "snippet": "young_adult"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@young_adult@[L24:C73, L24:C84]",
+            "snippet": "young_adult"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@young_adult@[L24:C73, L24:C84]",
+                "snippet": "young_adult"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": "",
+              "value": "young_adult"
+            }
+          },
+          "fullEnd": 404,
+          "fullStart": 393
+        }
+      },
+      "fullEnd": 404,
+      "fullStart": 393,
+      "referee": {
+        "context": {
+          "id": "symbol@Enum field@young_adult@[L15:C2, L15:C13]",
+          "snippet": "young_adult"
         }
       }
     }

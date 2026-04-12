@@ -5,63 +5,6 @@
         "endpoints": [
           {
             "fieldNames": [
-              "followed_user_id"
-            ],
-            "relation": "*",
-            "tableName": "follows",
-            "token": {
-              "end": {
-                "column": 41,
-                "line": 39,
-                "offset": 675
-              },
-              "filepath": "/main.dbml",
-              "start": {
-                "column": 17,
-                "line": 39,
-                "offset": 651
-              }
-            }
-          },
-          {
-            "fieldNames": [
-              "id"
-            ],
-            "relation": "1",
-            "tableName": "users",
-            "token": {
-              "end": {
-                "column": 14,
-                "line": 39,
-                "offset": 648
-              },
-              "filepath": "/main.dbml",
-              "start": {
-                "column": 6,
-                "line": 39,
-                "offset": 640
-              }
-            }
-          }
-        ],
-        "token": {
-          "end": {
-            "column": 41,
-            "line": 39,
-            "offset": 675
-          },
-          "filepath": "/main.dbml",
-          "start": {
-            "column": 1,
-            "line": 39,
-            "offset": 635
-          }
-        }
-      },
-      {
-        "endpoints": [
-          {
-            "fieldNames": [
               "id"
             ],
             "relation": "1",
@@ -313,6 +256,63 @@
             "column": 1,
             "line": 37,
             "offset": 592
+          }
+        }
+      },
+      {
+        "endpoints": [
+          {
+            "fieldNames": [
+              "followed_user_id"
+            ],
+            "relation": "*",
+            "tableName": "follows",
+            "token": {
+              "end": {
+                "column": 41,
+                "line": 39,
+                "offset": 675
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 17,
+                "line": 39,
+                "offset": 651
+              }
+            }
+          },
+          {
+            "fieldNames": [
+              "id"
+            ],
+            "relation": "1",
+            "tableName": "users",
+            "token": {
+              "end": {
+                "column": 14,
+                "line": 39,
+                "offset": 648
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 6,
+                "line": 39,
+                "offset": 640
+              }
+            }
+          }
+        ],
+        "token": {
+          "end": {
+            "column": 41,
+            "line": 39,
+            "offset": 675
+          },
+          "filepath": "/main.dbml",
+          "start": {
+            "column": 1,
+            "line": 39,
+            "offset": 635
           }
         }
       }
@@ -876,18 +876,6 @@
       "level": "error",
       "node": {
         "context": {
-          "id": "node@<element-declaration>@@[L10:C0, L10:C16]",
-          "snippet": "Ref: B.id > A.id"
-        }
-      }
-    },
-    {
-      "code": "CIRCULAR_REF",
-      "diagnostic": "References with same endpoints exist",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
           "id": "node@<attribute>@@[L1:C12, L1:C23]",
           "snippet": "ref: > B.id"
         }
@@ -900,8 +888,8 @@
       "level": "error",
       "node": {
         "context": {
-          "id": "node@<element-declaration>@@[L34:C0, L34:C29]",
-          "snippet": "Ref: posts...> users.id"
+          "id": "node@<element-declaration>@@[L10:C0, L10:C16]",
+          "snippet": "Ref: B.id > A.id"
         }
       }
     },
@@ -914,6 +902,18 @@
         "context": {
           "id": "node@<attribute>@@[L29:C19, L29:C34]",
           "snippet": "ref: > users.id"
+        }
+      }
+    },
+    {
+      "code": "CIRCULAR_REF",
+      "diagnostic": "References with same endpoints exist",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<element-declaration>@@[L34:C0, L34:C29]",
+          "snippet": "Ref: posts...> users.id"
         }
       }
     }

@@ -5,63 +5,6 @@
         "endpoints": [
           {
             "fieldNames": [
-              "followed_user_id"
-            ],
-            "relation": "*",
-            "tableName": "follows",
-            "token": {
-              "end": {
-                "column": 41,
-                "line": 65,
-                "offset": 984
-              },
-              "filepath": "/main.dbml",
-              "start": {
-                "column": 17,
-                "line": 65,
-                "offset": 960
-              }
-            }
-          },
-          {
-            "fieldNames": [
-              "id"
-            ],
-            "relation": "1",
-            "tableName": "users",
-            "token": {
-              "end": {
-                "column": 14,
-                "line": 65,
-                "offset": 957
-              },
-              "filepath": "/main.dbml",
-              "start": {
-                "column": 6,
-                "line": 65,
-                "offset": 949
-              }
-            }
-          }
-        ],
-        "token": {
-          "end": {
-            "column": 41,
-            "line": 65,
-            "offset": 984
-          },
-          "filepath": "/main.dbml",
-          "start": {
-            "column": 1,
-            "line": 65,
-            "offset": 944
-          }
-        }
-      },
-      {
-        "endpoints": [
-          {
-            "fieldNames": [
               "following_user_id"
             ],
             "relation": "*",
@@ -112,6 +55,63 @@
             "column": 1,
             "line": 63,
             "offset": 901
+          }
+        }
+      },
+      {
+        "endpoints": [
+          {
+            "fieldNames": [
+              "followed_user_id"
+            ],
+            "relation": "*",
+            "tableName": "follows",
+            "token": {
+              "end": {
+                "column": 41,
+                "line": 65,
+                "offset": 984
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 17,
+                "line": 65,
+                "offset": 960
+              }
+            }
+          },
+          {
+            "fieldNames": [
+              "id"
+            ],
+            "relation": "1",
+            "tableName": "users",
+            "token": {
+              "end": {
+                "column": 14,
+                "line": 65,
+                "offset": 957
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 6,
+                "line": 65,
+                "offset": 949
+              }
+            }
+          }
+        ],
+        "token": {
+          "end": {
+            "column": 41,
+            "line": 65,
+            "offset": 984
+          },
+          "filepath": "/main.dbml",
+          "start": {
+            "column": 1,
+            "line": 65,
+            "offset": 944
           }
         }
       },

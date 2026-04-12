@@ -5,6 +5,109 @@
         "fields": [
           {
             "increment": false,
+            "name": "id",
+            "pk": true,
+            "token": {
+              "end": {
+                "column": 27,
+                "line": 14,
+                "offset": 448
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 3,
+                "line": 14,
+                "offset": 424
+              }
+            },
+            "type": {
+              "type_name": "integer"
+            },
+            "unique": false
+          },
+          {
+            "name": "country_id",
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 21,
+                "line": 16,
+                "offset": 497
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 3,
+                "line": 16,
+                "offset": 479
+              }
+            },
+            "type": {
+              "type_name": "integer"
+            },
+            "unique": false
+          },
+          {
+            "dbdefault": {
+              "type": "string",
+              "value": "hello"
+            },
+            "increment": false,
+            "name": "name",
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 28,
+                "line": 15,
+                "offset": 476
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 3,
+                "line": 15,
+                "offset": 451
+              }
+            },
+            "type": {
+              "type_name": "e"
+            },
+            "unique": false
+          }
+        ],
+        "name": "cities",
+        "note": {
+          "token": {
+            "end": {
+              "column": 17,
+              "line": 17,
+              "offset": 514
+            },
+            "filepath": "/main.dbml",
+            "start": {
+              "column": 3,
+              "line": 17,
+              "offset": 500
+            }
+          },
+          "value": "sasasa"
+        },
+        "token": {
+          "end": {
+            "column": 2,
+            "line": 18,
+            "offset": 516
+          },
+          "filepath": "/main.dbml",
+          "start": {
+            "column": 1,
+            "line": 13,
+            "offset": 407
+          }
+        }
+      },
+      {
+        "fields": [
+          {
+            "increment": false,
             "name": "store_id",
             "not_null": true,
             "pk": false,
@@ -240,109 +343,6 @@
             "column": 1,
             "line": 1,
             "offset": 0
-          }
-        }
-      },
-      {
-        "fields": [
-          {
-            "increment": false,
-            "name": "id",
-            "pk": true,
-            "token": {
-              "end": {
-                "column": 27,
-                "line": 14,
-                "offset": 448
-              },
-              "filepath": "/main.dbml",
-              "start": {
-                "column": 3,
-                "line": 14,
-                "offset": 424
-              }
-            },
-            "type": {
-              "type_name": "integer"
-            },
-            "unique": false
-          },
-          {
-            "name": "country_id",
-            "pk": false,
-            "token": {
-              "end": {
-                "column": 21,
-                "line": 16,
-                "offset": 497
-              },
-              "filepath": "/main.dbml",
-              "start": {
-                "column": 3,
-                "line": 16,
-                "offset": 479
-              }
-            },
-            "type": {
-              "type_name": "integer"
-            },
-            "unique": false
-          },
-          {
-            "dbdefault": {
-              "type": "string",
-              "value": "hello"
-            },
-            "increment": false,
-            "name": "name",
-            "pk": false,
-            "token": {
-              "end": {
-                "column": 28,
-                "line": 15,
-                "offset": 476
-              },
-              "filepath": "/main.dbml",
-              "start": {
-                "column": 3,
-                "line": 15,
-                "offset": 451
-              }
-            },
-            "type": {
-              "type_name": "e"
-            },
-            "unique": false
-          }
-        ],
-        "name": "cities",
-        "note": {
-          "token": {
-            "end": {
-              "column": 17,
-              "line": 17,
-              "offset": 514
-            },
-            "filepath": "/main.dbml",
-            "start": {
-              "column": 3,
-              "line": 17,
-              "offset": 500
-            }
-          },
-          "value": "sasasa"
-        },
-        "token": {
-          "end": {
-            "column": 2,
-            "line": 18,
-            "offset": 516
-          },
-          "filepath": "/main.dbml",
-          "start": {
-            "column": 1,
-            "line": 13,
-            "offset": 407
           }
         }
       },

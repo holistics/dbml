@@ -7,32 +7,8 @@
       "level": "error",
       "node": {
         "context": {
-          "id": "node@<function-application>@Indexes@[L2:C4, L2:C21]",
-          "snippet": "Indexes 2 args {}"
-        }
-      }
-    },
-    {
-      "code": "DUPLICATE_COLUMN_NAME",
-      "diagnostic": "Duplicate column Indexes",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
           "id": "node@<function-application>@Indexes@[L1:C4, L1:C32]",
           "snippet": "Indexes wr...x alias {}"
-        }
-      }
-    },
-    {
-      "code": "DUPLICATE_COLUMN_NAME",
-      "diagnostic": "Duplicate column Indexes",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<function-application>@Indexes@[L3:C4, L3:C35]",
-          "snippet": "Indexes wr...of args {}"
         }
       }
     },
@@ -85,6 +61,30 @@
       }
     },
     {
+      "code": "DUPLICATE_COLUMN_NAME",
+      "diagnostic": "Duplicate column Indexes",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<function-application>@Indexes@[L2:C4, L2:C21]",
+          "snippet": "Indexes 2 args {}"
+        }
+      }
+    },
+    {
+      "code": "INVALID_COLUMN_TYPE",
+      "diagnostic": "Invalid column type",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<primary-expression>@2@[L2:C12, L2:C13]",
+          "snippet": "2"
+        }
+      }
+    },
+    {
       "code": "INVALID_COLUMN",
       "diagnostic": "These fields must be some inline settings optionally ended with a setting list",
       "filepath": "/main.dbml",
@@ -105,6 +105,18 @@
         "context": {
           "id": "node@<block-expression>@@[L2:C19, L2:C21]",
           "snippet": "{}"
+        }
+      }
+    },
+    {
+      "code": "DUPLICATE_COLUMN_NAME",
+      "diagnostic": "Duplicate column Indexes",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<function-application>@Indexes@[L3:C4, L3:C35]",
+          "snippet": "Indexes wr...of args {}"
         }
       }
     },
@@ -153,18 +165,6 @@
         "context": {
           "id": "node@<block-expression>@@[L3:C33, L3:C35]",
           "snippet": "{}"
-        }
-      }
-    },
-    {
-      "code": "INVALID_COLUMN_TYPE",
-      "diagnostic": "Invalid column type",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<primary-expression>@2@[L2:C12, L2:C13]",
-          "snippet": "2"
         }
       }
     }
@@ -216,32 +216,32 @@
                       "args": [
                         {
                           "context": {
-                            "id": "node@<primary-expression>@alias@[L1:C24, L1:C29]",
-                            "snippet": "alias"
+                            "id": "node@<primary-expression>@wrong@[L1:C12, L1:C17]",
+                            "snippet": "wrong"
                           },
                           "children": {
                             "expression": {
                               "context": {
-                                "id": "node@<variable>@alias@[L1:C24, L1:C29]",
-                                "snippet": "alias"
+                                "id": "node@<variable>@wrong@[L1:C12, L1:C17]",
+                                "snippet": "wrong"
                               },
                               "children": {
                                 "variable": {
                                   "context": {
-                                    "id": "token@<identifier>@alias@[L1:C24, L1:C29]",
-                                    "snippet": "alias"
+                                    "id": "token@<identifier>@wrong@[L1:C12, L1:C17]",
+                                    "snippet": "wrong"
                                   },
                                   "leadingTrivia": "",
                                   "trailingTrivia": " ",
-                                  "value": "alias"
+                                  "value": "wrong"
                                 }
                               },
-                              "fullEnd": 40,
-                              "fullStart": 34
+                              "fullEnd": 28,
+                              "fullStart": 22
                             }
                           },
-                          "fullEnd": 40,
-                          "fullStart": 34
+                          "fullEnd": 28,
+                          "fullStart": 22
                         },
                         {
                           "context": {
@@ -274,32 +274,32 @@
                         },
                         {
                           "context": {
-                            "id": "node@<primary-expression>@wrong@[L1:C12, L1:C17]",
-                            "snippet": "wrong"
+                            "id": "node@<primary-expression>@alias@[L1:C24, L1:C29]",
+                            "snippet": "alias"
                           },
                           "children": {
                             "expression": {
                               "context": {
-                                "id": "node@<variable>@wrong@[L1:C12, L1:C17]",
-                                "snippet": "wrong"
+                                "id": "node@<variable>@alias@[L1:C24, L1:C29]",
+                                "snippet": "alias"
                               },
                               "children": {
                                 "variable": {
                                   "context": {
-                                    "id": "token@<identifier>@wrong@[L1:C12, L1:C17]",
-                                    "snippet": "wrong"
+                                    "id": "token@<identifier>@alias@[L1:C24, L1:C29]",
+                                    "snippet": "alias"
                                   },
                                   "leadingTrivia": "",
                                   "trailingTrivia": " ",
-                                  "value": "wrong"
+                                  "value": "alias"
                                 }
                               },
-                              "fullEnd": 28,
-                              "fullStart": 22
+                              "fullEnd": 40,
+                              "fullStart": 34
                             }
                           },
-                          "fullEnd": 28,
-                          "fullStart": 22
+                          "fullEnd": 40,
+                          "fullStart": 34
                         },
                         {
                           "context": {
@@ -382,35 +382,6 @@
                       "args": [
                         {
                           "context": {
-                            "id": "node@<primary-expression>@args@[L2:C14, L2:C18]",
-                            "snippet": "args"
-                          },
-                          "children": {
-                            "expression": {
-                              "context": {
-                                "id": "node@<variable>@args@[L2:C14, L2:C18]",
-                                "snippet": "args"
-                              },
-                              "children": {
-                                "variable": {
-                                  "context": {
-                                    "id": "token@<identifier>@args@[L2:C14, L2:C18]",
-                                    "snippet": "args"
-                                  },
-                                  "leadingTrivia": "",
-                                  "trailingTrivia": " ",
-                                  "value": "args"
-                                }
-                              },
-                              "fullEnd": 105,
-                              "fullStart": 100
-                            }
-                          },
-                          "fullEnd": 105,
-                          "fullStart": 100
-                        },
-                        {
-                          "context": {
                             "id": "node@<primary-expression>@2@[L2:C12, L2:C13]",
                             "snippet": "2"
                           },
@@ -437,6 +408,35 @@
                           },
                           "fullEnd": 100,
                           "fullStart": 98
+                        },
+                        {
+                          "context": {
+                            "id": "node@<primary-expression>@args@[L2:C14, L2:C18]",
+                            "snippet": "args"
+                          },
+                          "children": {
+                            "expression": {
+                              "context": {
+                                "id": "node@<variable>@args@[L2:C14, L2:C18]",
+                                "snippet": "args"
+                              },
+                              "children": {
+                                "variable": {
+                                  "context": {
+                                    "id": "token@<identifier>@args@[L2:C14, L2:C18]",
+                                    "snippet": "args"
+                                  },
+                                  "leadingTrivia": "",
+                                  "trailingTrivia": " ",
+                                  "value": "args"
+                                }
+                              },
+                              "fullEnd": 105,
+                              "fullStart": 100
+                            }
+                          },
+                          "fullEnd": 105,
+                          "fullStart": 100
                         },
                         {
                           "context": {
@@ -519,32 +519,32 @@
                       "args": [
                         {
                           "context": {
-                            "id": "node@<primary-expression>@args@[L3:C28, L3:C32]",
-                            "snippet": "args"
+                            "id": "node@<primary-expression>@wrong@[L3:C12, L3:C17]",
+                            "snippet": "wrong"
                           },
                           "children": {
                             "expression": {
                               "context": {
-                                "id": "node@<variable>@args@[L3:C28, L3:C32]",
-                                "snippet": "args"
+                                "id": "node@<variable>@wrong@[L3:C12, L3:C17]",
+                                "snippet": "wrong"
                               },
                               "children": {
                                 "variable": {
                                   "context": {
-                                    "id": "token@<identifier>@args@[L3:C28, L3:C32]",
-                                    "snippet": "args"
+                                    "id": "token@<identifier>@wrong@[L3:C12, L3:C17]",
+                                    "snippet": "wrong"
                                   },
                                   "leadingTrivia": "",
                                   "trailingTrivia": " ",
-                                  "value": "args"
+                                  "value": "wrong"
                                 }
                               },
-                              "fullEnd": 175,
-                              "fullStart": 170
+                              "fullEnd": 160,
+                              "fullStart": 154
                             }
                           },
-                          "fullEnd": 175,
-                          "fullStart": 170
+                          "fullEnd": 160,
+                          "fullStart": 154
                         },
                         {
                           "context": {
@@ -606,32 +606,32 @@
                         },
                         {
                           "context": {
-                            "id": "node@<primary-expression>@wrong@[L3:C12, L3:C17]",
-                            "snippet": "wrong"
+                            "id": "node@<primary-expression>@args@[L3:C28, L3:C32]",
+                            "snippet": "args"
                           },
                           "children": {
                             "expression": {
                               "context": {
-                                "id": "node@<variable>@wrong@[L3:C12, L3:C17]",
-                                "snippet": "wrong"
+                                "id": "node@<variable>@args@[L3:C28, L3:C32]",
+                                "snippet": "args"
                               },
                               "children": {
                                 "variable": {
                                   "context": {
-                                    "id": "token@<identifier>@wrong@[L3:C12, L3:C17]",
-                                    "snippet": "wrong"
+                                    "id": "token@<identifier>@args@[L3:C28, L3:C32]",
+                                    "snippet": "args"
                                   },
                                   "leadingTrivia": "",
                                   "trailingTrivia": " ",
-                                  "value": "wrong"
+                                  "value": "args"
                                 }
                               },
-                              "fullEnd": 160,
-                              "fullStart": 154
+                              "fullEnd": 175,
+                              "fullStart": 170
                             }
                           },
-                          "fullEnd": 160,
-                          "fullStart": 154
+                          "fullEnd": 175,
+                          "fullStart": 170
                         },
                         {
                           "context": {

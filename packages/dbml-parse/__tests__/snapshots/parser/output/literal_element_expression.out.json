@@ -196,21 +196,21 @@
                                                 "identifiers": [
                                                   {
                                                     "context": {
-                                                      "id": "token@<identifier>@key@[L2:C32, L2:C35]",
-                                                      "snippet": "key"
-                                                    },
-                                                    "leadingTrivia": "",
-                                                    "trailingTrivia": "",
-                                                    "value": "key"
-                                                  },
-                                                  {
-                                                    "context": {
                                                       "id": "token@<identifier>@primary@[L2:C24, L2:C31]",
                                                       "snippet": "primary"
                                                     },
                                                     "leadingTrivia": "",
                                                     "trailingTrivia": " ",
                                                     "value": "primary"
+                                                  },
+                                                  {
+                                                    "context": {
+                                                      "id": "token@<identifier>@key@[L2:C32, L2:C35]",
+                                                      "snippet": "key"
+                                                    },
+                                                    "leadingTrivia": "",
+                                                    "trailingTrivia": "",
+                                                    "value": "key"
                                                   }
                                                 ]
                                               },

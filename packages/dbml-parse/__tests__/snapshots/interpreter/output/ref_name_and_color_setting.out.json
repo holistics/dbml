@@ -124,66 +124,6 @@
       {
         "fields": [
           {
-            "name": "b_id",
-            "pk": false,
-            "token": {
-              "end": {
-                "column": 11,
-                "line": 8,
-                "offset": 85
-              },
-              "filepath": "/main.dbml",
-              "start": {
-                "column": 3,
-                "line": 8,
-                "offset": 77
-              }
-            },
-            "type": {
-              "type_name": "int"
-            },
-            "unique": false
-          },
-          {
-            "name": "id",
-            "pk": false,
-            "token": {
-              "end": {
-                "column": 9,
-                "line": 7,
-                "offset": 74
-              },
-              "filepath": "/main.dbml",
-              "start": {
-                "column": 3,
-                "line": 7,
-                "offset": 68
-              }
-            },
-            "type": {
-              "type_name": "int"
-            },
-            "unique": false
-          }
-        ],
-        "name": "c",
-        "token": {
-          "end": {
-            "column": 2,
-            "line": 9,
-            "offset": 87
-          },
-          "filepath": "/main.dbml",
-          "start": {
-            "column": 1,
-            "line": 6,
-            "offset": 56
-          }
-        }
-      },
-      {
-        "fields": [
-          {
             "name": "c_id",
             "pk": false,
             "token": {
@@ -239,6 +179,66 @@
             "column": 1,
             "line": 1,
             "offset": 0
+          }
+        }
+      },
+      {
+        "fields": [
+          {
+            "name": "b_id",
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 11,
+                "line": 8,
+                "offset": 85
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 3,
+                "line": 8,
+                "offset": 77
+              }
+            },
+            "type": {
+              "type_name": "int"
+            },
+            "unique": false
+          },
+          {
+            "name": "id",
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 9,
+                "line": 7,
+                "offset": 74
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 3,
+                "line": 7,
+                "offset": 68
+              }
+            },
+            "type": {
+              "type_name": "int"
+            },
+            "unique": false
+          }
+        ],
+        "name": "c",
+        "token": {
+          "end": {
+            "column": 2,
+            "line": 9,
+            "offset": 87
+          },
+          "filepath": "/main.dbml",
+          "start": {
+            "column": 1,
+            "line": 6,
+            "offset": 56
           }
         }
       }

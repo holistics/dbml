@@ -139,63 +139,6 @@
         "endpoints": [
           {
             "fieldNames": [
-              "admin_id"
-            ],
-            "relation": "*",
-            "tableName": "merchants",
-            "token": {
-              "end": {
-                "column": 42,
-                "line": 85,
-                "offset": 1396
-              },
-              "filepath": "/main.dbml",
-              "start": {
-                "column": 20,
-                "line": 85,
-                "offset": 1374
-              }
-            }
-          },
-          {
-            "fieldNames": [
-              "id"
-            ],
-            "relation": "1",
-            "tableName": "users",
-            "token": {
-              "end": {
-                "column": 17,
-                "line": 85,
-                "offset": 1371
-              },
-              "filepath": "/main.dbml",
-              "start": {
-                "column": 5,
-                "line": 85,
-                "offset": 1359
-              }
-            }
-          }
-        ],
-        "token": {
-          "end": {
-            "column": 42,
-            "line": 85,
-            "offset": 1396
-          },
-          "filepath": "/main.dbml",
-          "start": {
-            "column": 1,
-            "line": 85,
-            "offset": 1355
-          }
-        }
-      },
-      {
-        "endpoints": [
-          {
-            "fieldNames": [
               "code"
             ],
             "relation": "1",
@@ -474,6 +417,63 @@
             "column": 1,
             "line": 83,
             "offset": 1306
+          }
+        }
+      },
+      {
+        "endpoints": [
+          {
+            "fieldNames": [
+              "admin_id"
+            ],
+            "relation": "*",
+            "tableName": "merchants",
+            "token": {
+              "end": {
+                "column": 42,
+                "line": 85,
+                "offset": 1396
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 20,
+                "line": 85,
+                "offset": 1374
+              }
+            }
+          },
+          {
+            "fieldNames": [
+              "id"
+            ],
+            "relation": "1",
+            "tableName": "users",
+            "token": {
+              "end": {
+                "column": 17,
+                "line": 85,
+                "offset": 1371
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 5,
+                "line": 85,
+                "offset": 1359
+              }
+            }
+          }
+        ],
+        "token": {
+          "end": {
+            "column": 42,
+            "line": 85,
+            "offset": 1396
+          },
+          "filepath": "/main.dbml",
+          "start": {
+            "column": 1,
+            "line": 85,
+            "offset": 1355
           }
         }
       }

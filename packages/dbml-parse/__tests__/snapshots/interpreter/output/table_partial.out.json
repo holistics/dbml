@@ -645,6 +645,121 @@
       {
         "fields": [
           {
+            "name": "name",
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 16,
+                "line": 39,
+                "offset": 732
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 3,
+                "line": 39,
+                "offset": 719
+              }
+            },
+            "type": {
+              "type_name": "string"
+            },
+            "unique": false
+          },
+          {
+            "increment": false,
+            "name": "price",
+            "not_null": true,
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 29,
+                "line": 40,
+                "offset": 761
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 3,
+                "line": 40,
+                "offset": 735
+              }
+            },
+            "type": {
+              "type_name": "decimal"
+            },
+            "unique": false
+          }
+        ],
+        "headerColor": "#17DACC",
+        "name": "product",
+        "note": {
+          "token": {
+            "end": {
+              "column": 71,
+              "line": 37,
+              "offset": 707
+            },
+            "filepath": "/main.dbml",
+            "start": {
+              "column": 40,
+              "line": 37,
+              "offset": 676
+            }
+          },
+          "value": "product must have price"
+        },
+        "partials": [
+          {
+            "name": "id",
+            "order": 0,
+            "token": {
+              "end": {
+                "column": 6,
+                "line": 38,
+                "offset": 716
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 3,
+                "line": 38,
+                "offset": 713
+              }
+            }
+          },
+          {
+            "name": "sameHeaderColor",
+            "order": 3,
+            "token": {
+              "end": {
+                "column": 19,
+                "line": 41,
+                "offset": 780
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 3,
+                "line": 41,
+                "offset": 764
+              }
+            }
+          }
+        ],
+        "token": {
+          "end": {
+            "column": 2,
+            "line": 42,
+            "offset": 782
+          },
+          "filepath": "/main.dbml",
+          "start": {
+            "column": 1,
+            "line": 37,
+            "offset": 637
+          }
+        }
+      },
+      {
+        "fields": [
+          {
             "name": "address",
             "pk": false,
             "token": {
@@ -773,121 +888,6 @@
             "column": 1,
             "line": 44,
             "offset": 784
-          }
-        }
-      },
-      {
-        "fields": [
-          {
-            "name": "name",
-            "pk": false,
-            "token": {
-              "end": {
-                "column": 16,
-                "line": 39,
-                "offset": 732
-              },
-              "filepath": "/main.dbml",
-              "start": {
-                "column": 3,
-                "line": 39,
-                "offset": 719
-              }
-            },
-            "type": {
-              "type_name": "string"
-            },
-            "unique": false
-          },
-          {
-            "increment": false,
-            "name": "price",
-            "not_null": true,
-            "pk": false,
-            "token": {
-              "end": {
-                "column": 29,
-                "line": 40,
-                "offset": 761
-              },
-              "filepath": "/main.dbml",
-              "start": {
-                "column": 3,
-                "line": 40,
-                "offset": 735
-              }
-            },
-            "type": {
-              "type_name": "decimal"
-            },
-            "unique": false
-          }
-        ],
-        "headerColor": "#17DACC",
-        "name": "product",
-        "note": {
-          "token": {
-            "end": {
-              "column": 71,
-              "line": 37,
-              "offset": 707
-            },
-            "filepath": "/main.dbml",
-            "start": {
-              "column": 40,
-              "line": 37,
-              "offset": 676
-            }
-          },
-          "value": "product must have price"
-        },
-        "partials": [
-          {
-            "name": "id",
-            "order": 0,
-            "token": {
-              "end": {
-                "column": 6,
-                "line": 38,
-                "offset": 716
-              },
-              "filepath": "/main.dbml",
-              "start": {
-                "column": 3,
-                "line": 38,
-                "offset": 713
-              }
-            }
-          },
-          {
-            "name": "sameHeaderColor",
-            "order": 3,
-            "token": {
-              "end": {
-                "column": 19,
-                "line": 41,
-                "offset": 780
-              },
-              "filepath": "/main.dbml",
-              "start": {
-                "column": 3,
-                "line": 41,
-                "offset": 764
-              }
-            }
-          }
-        ],
-        "token": {
-          "end": {
-            "column": 2,
-            "line": 42,
-            "offset": 782
-          },
-          "filepath": "/main.dbml",
-          "start": {
-            "column": 1,
-            "line": 37,
-            "offset": 637
           }
         }
       },

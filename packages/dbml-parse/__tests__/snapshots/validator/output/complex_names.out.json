@@ -1,18 +1,6 @@
 {
   "errors": [
     {
-      "code": "INVALID_PROJECT_CONTEXT",
-      "diagnostic": "An Enum can only appear top-level",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<element-declaration>@v2.Status@[L6:C4, L11:C5]",
-          "snippet": "Enum v2.St...ant\r\n    }"
-        }
-      }
-    },
-    {
       "code": "INVALID_TABLE_CONTEXT",
       "diagnostic": "Table must appear top-level",
       "filepath": "/main.dbml",
@@ -21,6 +9,18 @@
         "context": {
           "id": "node@<element-declaration>@v1.Users@[L1:C4, L4:C5]",
           "snippet": "Table v1.U...ew]\r\n    }"
+        }
+      }
+    },
+    {
+      "code": "INVALID_PROJECT_CONTEXT",
+      "diagnostic": "An Enum can only appear top-level",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<element-declaration>@v2.Status@[L6:C4, L11:C5]",
+          "snippet": "Enum v2.St...ant\r\n    }"
         }
       }
     }
@@ -65,364 +65,6 @@
                 "body": [
                   {
                     "context": {
-                      "id": "node@<element-declaration>@v2.Status@[L6:C4, L11:C5]",
-                      "snippet": "Enum v2.St...ant\r\n    }"
-                    },
-                    "children": {
-                      "body": {
-                        "context": {
-                          "id": "node@<block-expression>@@[L6:C19, L11:C5]",
-                          "snippet": "{\r\n       ...ant\r\n    }"
-                        },
-                        "children": {
-                          "blockCloseBrace": {
-                            "context": {
-                              "id": "token@<rbrace>@}@[L11:C4, L11:C5]",
-                              "snippet": "}"
-                            },
-                            "leadingTrivia": "    ",
-                            "trailingTrivia": "\n",
-                            "value": "}"
-                          },
-                          "blockOpenBrace": {
-                            "context": {
-                              "id": "token@<lbrace>@{@[L6:C19, L6:C20]",
-                              "snippet": "{"
-                            },
-                            "leadingTrivia": "",
-                            "trailingTrivia": "\n",
-                            "value": "{"
-                          },
-                          "body": [
-                            {
-                              "context": {
-                                "id": "node@<function-application>@active@[L9:C8, L9:C14]",
-                                "snippet": "active"
-                              },
-                              "children": {
-                                "callee": {
-                                  "context": {
-                                    "id": "node@<primary-expression>@active@[L9:C8, L9:C14]",
-                                    "snippet": "active"
-                                  },
-                                  "children": {
-                                    "expression": {
-                                      "context": {
-                                        "id": "node@<variable>@active@[L9:C8, L9:C14]",
-                                        "snippet": "active"
-                                      },
-                                      "children": {
-                                        "variable": {
-                                          "context": {
-                                            "id": "token@<identifier>@active@[L9:C8, L9:C14]",
-                                            "snippet": "active"
-                                          },
-                                          "leadingTrivia": "        ",
-                                          "trailingTrivia": "\n",
-                                          "value": "active"
-                                        }
-                                      },
-                                      "fullEnd": 179,
-                                      "fullStart": 163
-                                    }
-                                  },
-                                  "fullEnd": 179,
-                                  "fullStart": 163
-                                }
-                              },
-                              "fullEnd": 179,
-                              "fullStart": 163,
-                              "symbol": {
-                                "context": {
-                                  "id": "symbol@Enum field@active@[L9:C8, L9:C14]",
-                                  "snippet": "active"
-                                },
-                                "declaration": {
-                                  "id": "node@<function-application>@active@[L9:C8, L9:C14]",
-                                  "snippet": "active"
-                                }
-                              }
-                            },
-                            {
-                              "context": {
-                                "id": "node@<function-application>@churn@[L8:C8, L8:C13]",
-                                "snippet": "churn"
-                              },
-                              "children": {
-                                "callee": {
-                                  "context": {
-                                    "id": "node@<primary-expression>@churn@[L8:C8, L8:C13]",
-                                    "snippet": "churn"
-                                  },
-                                  "children": {
-                                    "expression": {
-                                      "context": {
-                                        "id": "node@<variable>@churn@[L8:C8, L8:C13]",
-                                        "snippet": "churn"
-                                      },
-                                      "children": {
-                                        "variable": {
-                                          "context": {
-                                            "id": "token@<identifier>@churn@[L8:C8, L8:C13]",
-                                            "snippet": "churn"
-                                          },
-                                          "leadingTrivia": "        ",
-                                          "trailingTrivia": "\n",
-                                          "value": "churn"
-                                        }
-                                      },
-                                      "fullEnd": 163,
-                                      "fullStart": 148
-                                    }
-                                  },
-                                  "fullEnd": 163,
-                                  "fullStart": 148
-                                }
-                              },
-                              "fullEnd": 163,
-                              "fullStart": 148,
-                              "symbol": {
-                                "context": {
-                                  "id": "symbol@Enum field@churn@[L8:C8, L8:C13]",
-                                  "snippet": "churn"
-                                },
-                                "declaration": {
-                                  "id": "node@<function-application>@churn@[L8:C8, L8:C13]",
-                                  "snippet": "churn"
-                                }
-                              }
-                            },
-                            {
-                              "context": {
-                                "id": "node@<function-application>@new@[L7:C8, L7:C11]",
-                                "snippet": "new"
-                              },
-                              "children": {
-                                "callee": {
-                                  "context": {
-                                    "id": "node@<primary-expression>@new@[L7:C8, L7:C11]",
-                                    "snippet": "new"
-                                  },
-                                  "children": {
-                                    "expression": {
-                                      "context": {
-                                        "id": "node@<variable>@new@[L7:C8, L7:C11]",
-                                        "snippet": "new"
-                                      },
-                                      "children": {
-                                        "variable": {
-                                          "context": {
-                                            "id": "token@<identifier>@new@[L7:C8, L7:C11]",
-                                            "snippet": "new"
-                                          },
-                                          "leadingTrivia": "        ",
-                                          "trailingTrivia": "\n",
-                                          "value": "new"
-                                        }
-                                      },
-                                      "fullEnd": 148,
-                                      "fullStart": 135
-                                    }
-                                  },
-                                  "fullEnd": 148,
-                                  "fullStart": 135
-                                }
-                              },
-                              "fullEnd": 148,
-                              "fullStart": 135,
-                              "symbol": {
-                                "context": {
-                                  "id": "symbol@Enum field@new@[L7:C8, L7:C11]",
-                                  "snippet": "new"
-                                },
-                                "declaration": {
-                                  "id": "node@<function-application>@new@[L7:C8, L7:C11]",
-                                  "snippet": "new"
-                                }
-                              }
-                            },
-                            {
-                              "context": {
-                                "id": "node@<function-application>@tenant@[L10:C8, L10:C14]",
-                                "snippet": "tenant"
-                              },
-                              "children": {
-                                "callee": {
-                                  "context": {
-                                    "id": "node@<primary-expression>@tenant@[L10:C8, L10:C14]",
-                                    "snippet": "tenant"
-                                  },
-                                  "children": {
-                                    "expression": {
-                                      "context": {
-                                        "id": "node@<variable>@tenant@[L10:C8, L10:C14]",
-                                        "snippet": "tenant"
-                                      },
-                                      "children": {
-                                        "variable": {
-                                          "context": {
-                                            "id": "token@<identifier>@tenant@[L10:C8, L10:C14]",
-                                            "snippet": "tenant"
-                                          },
-                                          "leadingTrivia": "        ",
-                                          "trailingTrivia": "\n",
-                                          "value": "tenant"
-                                        }
-                                      },
-                                      "fullEnd": 195,
-                                      "fullStart": 179
-                                    }
-                                  },
-                                  "fullEnd": 195,
-                                  "fullStart": 179
-                                }
-                              },
-                              "fullEnd": 195,
-                              "fullStart": 179,
-                              "symbol": {
-                                "context": {
-                                  "id": "symbol@Enum field@tenant@[L10:C8, L10:C14]",
-                                  "snippet": "tenant"
-                                },
-                                "declaration": {
-                                  "id": "node@<function-application>@tenant@[L10:C8, L10:C14]",
-                                  "snippet": "tenant"
-                                }
-                              }
-                            }
-                          ]
-                        },
-                        "fullEnd": 202,
-                        "fullStart": 132
-                      },
-                      "name": {
-                        "context": {
-                          "id": "node@<infix-expression>@@[L6:C9, L6:C18]",
-                          "snippet": "v2.Status"
-                        },
-                        "children": {
-                          "leftExpression": {
-                            "context": {
-                              "id": "node@<primary-expression>@v2@[L6:C9, L6:C11]",
-                              "snippet": "v2"
-                            },
-                            "children": {
-                              "expression": {
-                                "context": {
-                                  "id": "node@<variable>@v2@[L6:C9, L6:C11]",
-                                  "snippet": "v2"
-                                },
-                                "children": {
-                                  "variable": {
-                                    "context": {
-                                      "id": "token@<identifier>@v2@[L6:C9, L6:C11]",
-                                      "snippet": "v2"
-                                    },
-                                    "leadingTrivia": "",
-                                    "trailingTrivia": "",
-                                    "value": "v2"
-                                  }
-                                },
-                                "fullEnd": 124,
-                                "fullStart": 122
-                              }
-                            },
-                            "fullEnd": 124,
-                            "fullStart": 122
-                          },
-                          "op": {
-                            "context": {
-                              "id": "token@<op>@.@[L6:C11, L6:C12]",
-                              "snippet": "."
-                            },
-                            "leadingTrivia": "",
-                            "trailingTrivia": "",
-                            "value": "."
-                          },
-                          "rightExpression": {
-                            "context": {
-                              "id": "node@<primary-expression>@Status@[L6:C12, L6:C18]",
-                              "snippet": "Status"
-                            },
-                            "children": {
-                              "expression": {
-                                "context": {
-                                  "id": "node@<variable>@Status@[L6:C12, L6:C18]",
-                                  "snippet": "Status"
-                                },
-                                "children": {
-                                  "variable": {
-                                    "context": {
-                                      "id": "token@<identifier>@Status@[L6:C12, L6:C18]",
-                                      "snippet": "Status"
-                                    },
-                                    "leadingTrivia": "",
-                                    "trailingTrivia": " ",
-                                    "value": "Status"
-                                  }
-                                },
-                                "fullEnd": 132,
-                                "fullStart": 125
-                              }
-                            },
-                            "fullEnd": 132,
-                            "fullStart": 125
-                          }
-                        },
-                        "fullEnd": 132,
-                        "fullStart": 122
-                      },
-                      "type": {
-                        "context": {
-                          "id": "token@<identifier>@Enum@[L6:C4, L6:C8]",
-                          "snippet": "Enum"
-                        },
-                        "leadingTrivia": "\n    ",
-                        "trailingTrivia": " ",
-                        "value": "Enum"
-                      }
-                    },
-                    "fullEnd": 202,
-                    "fullStart": 112,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Enum@v2.Status@[L6:C4, L11:C5]",
-                        "snippet": "Enum v2.St...ant\r\n    }"
-                      },
-                      "declaration": {
-                        "id": "node@<element-declaration>@v2.Status@[L6:C4, L11:C5]",
-                        "snippet": "Enum v2.St...ant\r\n    }"
-                      },
-                      "members": [
-                        {
-                          "context": {
-                            "id": "symbol@Enum field@active@[L9:C8, L9:C14]",
-                            "snippet": "active"
-                          }
-                        },
-                        {
-                          "context": {
-                            "id": "symbol@Enum field@churn@[L8:C8, L8:C13]",
-                            "snippet": "churn"
-                          }
-                        },
-                        {
-                          "context": {
-                            "id": "symbol@Enum field@new@[L7:C8, L7:C11]",
-                            "snippet": "new"
-                          }
-                        },
-                        {
-                          "context": {
-                            "id": "symbol@Enum field@tenant@[L10:C8, L10:C14]",
-                            "snippet": "tenant"
-                          }
-                        }
-                      ]
-                    }
-                  },
-                  {
-                    "context": {
                       "id": "node@<element-declaration>@v1.Users@[L1:C4, L4:C5]",
                       "snippet": "Table v1.U...ew]\r\n    }"
                     },
@@ -454,11 +96,168 @@
                           "body": [
                             {
                               "context": {
+                                "id": "node@<function-application>@id@[L2:C8, L2:C18]",
+                                "snippet": "id integer"
+                              },
+                              "children": {
+                                "args": [
+                                  {
+                                    "context": {
+                                      "id": "node@<primary-expression>@integer@[L2:C11, L2:C18]",
+                                      "snippet": "integer"
+                                    },
+                                    "children": {
+                                      "expression": {
+                                        "context": {
+                                          "id": "node@<variable>@integer@[L2:C11, L2:C18]",
+                                          "snippet": "integer"
+                                        },
+                                        "children": {
+                                          "variable": {
+                                            "context": {
+                                              "id": "token@<identifier>@integer@[L2:C11, L2:C18]",
+                                              "snippet": "integer"
+                                            },
+                                            "leadingTrivia": "",
+                                            "trailingTrivia": "\n",
+                                            "value": "integer"
+                                          }
+                                        },
+                                        "fullEnd": 53,
+                                        "fullStart": 44
+                                      }
+                                    },
+                                    "fullEnd": 53,
+                                    "fullStart": 44
+                                  }
+                                ],
+                                "callee": {
+                                  "context": {
+                                    "id": "node@<primary-expression>@id@[L2:C8, L2:C10]",
+                                    "snippet": "id"
+                                  },
+                                  "children": {
+                                    "expression": {
+                                      "context": {
+                                        "id": "node@<variable>@id@[L2:C8, L2:C10]",
+                                        "snippet": "id"
+                                      },
+                                      "children": {
+                                        "variable": {
+                                          "context": {
+                                            "id": "token@<identifier>@id@[L2:C8, L2:C10]",
+                                            "snippet": "id"
+                                          },
+                                          "leadingTrivia": "        ",
+                                          "trailingTrivia": " ",
+                                          "value": "id"
+                                        }
+                                      },
+                                      "fullEnd": 44,
+                                      "fullStart": 33
+                                    }
+                                  },
+                                  "fullEnd": 44,
+                                  "fullStart": 33
+                                }
+                              },
+                              "fullEnd": 53,
+                              "fullStart": 33,
+                              "symbol": {
+                                "context": {
+                                  "id": "symbol@Column@id@[L2:C8, L2:C18]",
+                                  "snippet": "id integer"
+                                },
+                                "declaration": {
+                                  "id": "node@<function-application>@id@[L2:C8, L2:C18]",
+                                  "snippet": "id integer"
+                                }
+                              }
+                            },
+                            {
+                              "context": {
                                 "id": "node@<function-application>@status@[L3:C8, L3:C49]",
                                 "snippet": "status v2....tatus.new]"
                               },
                               "children": {
                                 "args": [
+                                  {
+                                    "context": {
+                                      "id": "node@<infix-expression>@@[L3:C15, L3:C24]",
+                                      "snippet": "v2.Status"
+                                    },
+                                    "children": {
+                                      "leftExpression": {
+                                        "context": {
+                                          "id": "node@<primary-expression>@v2@[L3:C15, L3:C17]",
+                                          "snippet": "v2"
+                                        },
+                                        "children": {
+                                          "expression": {
+                                            "context": {
+                                              "id": "node@<variable>@v2@[L3:C15, L3:C17]",
+                                              "snippet": "v2"
+                                            },
+                                            "children": {
+                                              "variable": {
+                                                "context": {
+                                                  "id": "token@<identifier>@v2@[L3:C15, L3:C17]",
+                                                  "snippet": "v2"
+                                                },
+                                                "leadingTrivia": "",
+                                                "trailingTrivia": "",
+                                                "value": "v2"
+                                              }
+                                            },
+                                            "fullEnd": 70,
+                                            "fullStart": 68
+                                          }
+                                        },
+                                        "fullEnd": 70,
+                                        "fullStart": 68
+                                      },
+                                      "op": {
+                                        "context": {
+                                          "id": "token@<op>@.@[L3:C17, L3:C18]",
+                                          "snippet": "."
+                                        },
+                                        "leadingTrivia": "",
+                                        "trailingTrivia": "",
+                                        "value": "."
+                                      },
+                                      "rightExpression": {
+                                        "context": {
+                                          "id": "node@<primary-expression>@Status@[L3:C18, L3:C24]",
+                                          "snippet": "Status"
+                                        },
+                                        "children": {
+                                          "expression": {
+                                            "context": {
+                                              "id": "node@<variable>@Status@[L3:C18, L3:C24]",
+                                              "snippet": "Status"
+                                            },
+                                            "children": {
+                                              "variable": {
+                                                "context": {
+                                                  "id": "token@<identifier>@Status@[L3:C18, L3:C24]",
+                                                  "snippet": "Status"
+                                                },
+                                                "leadingTrivia": "",
+                                                "trailingTrivia": " ",
+                                                "value": "Status"
+                                              }
+                                            },
+                                            "fullEnd": 78,
+                                            "fullStart": 71
+                                          }
+                                        },
+                                        "fullEnd": 78,
+                                        "fullStart": 71
+                                      }
+                                    },
+                                    "fullEnd": 78,
+                                    "fullStart": 68
+                                  },
                                   {
                                     "context": {
                                       "id": "node@<list-expression>@@[L3:C25, L3:C49]",
@@ -653,83 +452,6 @@
                                     },
                                     "fullEnd": 104,
                                     "fullStart": 78
-                                  },
-                                  {
-                                    "context": {
-                                      "id": "node@<infix-expression>@@[L3:C15, L3:C24]",
-                                      "snippet": "v2.Status"
-                                    },
-                                    "children": {
-                                      "leftExpression": {
-                                        "context": {
-                                          "id": "node@<primary-expression>@v2@[L3:C15, L3:C17]",
-                                          "snippet": "v2"
-                                        },
-                                        "children": {
-                                          "expression": {
-                                            "context": {
-                                              "id": "node@<variable>@v2@[L3:C15, L3:C17]",
-                                              "snippet": "v2"
-                                            },
-                                            "children": {
-                                              "variable": {
-                                                "context": {
-                                                  "id": "token@<identifier>@v2@[L3:C15, L3:C17]",
-                                                  "snippet": "v2"
-                                                },
-                                                "leadingTrivia": "",
-                                                "trailingTrivia": "",
-                                                "value": "v2"
-                                              }
-                                            },
-                                            "fullEnd": 70,
-                                            "fullStart": 68
-                                          }
-                                        },
-                                        "fullEnd": 70,
-                                        "fullStart": 68
-                                      },
-                                      "op": {
-                                        "context": {
-                                          "id": "token@<op>@.@[L3:C17, L3:C18]",
-                                          "snippet": "."
-                                        },
-                                        "leadingTrivia": "",
-                                        "trailingTrivia": "",
-                                        "value": "."
-                                      },
-                                      "rightExpression": {
-                                        "context": {
-                                          "id": "node@<primary-expression>@Status@[L3:C18, L3:C24]",
-                                          "snippet": "Status"
-                                        },
-                                        "children": {
-                                          "expression": {
-                                            "context": {
-                                              "id": "node@<variable>@Status@[L3:C18, L3:C24]",
-                                              "snippet": "Status"
-                                            },
-                                            "children": {
-                                              "variable": {
-                                                "context": {
-                                                  "id": "token@<identifier>@Status@[L3:C18, L3:C24]",
-                                                  "snippet": "Status"
-                                                },
-                                                "leadingTrivia": "",
-                                                "trailingTrivia": " ",
-                                                "value": "Status"
-                                              }
-                                            },
-                                            "fullEnd": 78,
-                                            "fullStart": 71
-                                          }
-                                        },
-                                        "fullEnd": 78,
-                                        "fullStart": 71
-                                      }
-                                    },
-                                    "fullEnd": 78,
-                                    "fullStart": 68
                                   }
                                 ],
                                 "callee": {
@@ -772,86 +494,6 @@
                                 "declaration": {
                                   "id": "node@<function-application>@status@[L3:C8, L3:C49]",
                                   "snippet": "status v2....tatus.new]"
-                                }
-                              }
-                            },
-                            {
-                              "context": {
-                                "id": "node@<function-application>@id@[L2:C8, L2:C18]",
-                                "snippet": "id integer"
-                              },
-                              "children": {
-                                "args": [
-                                  {
-                                    "context": {
-                                      "id": "node@<primary-expression>@integer@[L2:C11, L2:C18]",
-                                      "snippet": "integer"
-                                    },
-                                    "children": {
-                                      "expression": {
-                                        "context": {
-                                          "id": "node@<variable>@integer@[L2:C11, L2:C18]",
-                                          "snippet": "integer"
-                                        },
-                                        "children": {
-                                          "variable": {
-                                            "context": {
-                                              "id": "token@<identifier>@integer@[L2:C11, L2:C18]",
-                                              "snippet": "integer"
-                                            },
-                                            "leadingTrivia": "",
-                                            "trailingTrivia": "\n",
-                                            "value": "integer"
-                                          }
-                                        },
-                                        "fullEnd": 53,
-                                        "fullStart": 44
-                                      }
-                                    },
-                                    "fullEnd": 53,
-                                    "fullStart": 44
-                                  }
-                                ],
-                                "callee": {
-                                  "context": {
-                                    "id": "node@<primary-expression>@id@[L2:C8, L2:C10]",
-                                    "snippet": "id"
-                                  },
-                                  "children": {
-                                    "expression": {
-                                      "context": {
-                                        "id": "node@<variable>@id@[L2:C8, L2:C10]",
-                                        "snippet": "id"
-                                      },
-                                      "children": {
-                                        "variable": {
-                                          "context": {
-                                            "id": "token@<identifier>@id@[L2:C8, L2:C10]",
-                                            "snippet": "id"
-                                          },
-                                          "leadingTrivia": "        ",
-                                          "trailingTrivia": " ",
-                                          "value": "id"
-                                        }
-                                      },
-                                      "fullEnd": 44,
-                                      "fullStart": 33
-                                    }
-                                  },
-                                  "fullEnd": 44,
-                                  "fullStart": 33
-                                }
-                              },
-                              "fullEnd": 53,
-                              "fullStart": 33,
-                              "symbol": {
-                                "context": {
-                                  "id": "symbol@Column@id@[L2:C8, L2:C18]",
-                                  "snippet": "id integer"
-                                },
-                                "declaration": {
-                                  "id": "node@<function-application>@id@[L2:C8, L2:C18]",
-                                  "snippet": "id integer"
                                 }
                               }
                             }
@@ -969,6 +611,364 @@
                           "context": {
                             "id": "symbol@Column@status@[L3:C8, L3:C49]",
                             "snippet": "status v2....tatus.new]"
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "context": {
+                      "id": "node@<element-declaration>@v2.Status@[L6:C4, L11:C5]",
+                      "snippet": "Enum v2.St...ant\r\n    }"
+                    },
+                    "children": {
+                      "body": {
+                        "context": {
+                          "id": "node@<block-expression>@@[L6:C19, L11:C5]",
+                          "snippet": "{\r\n       ...ant\r\n    }"
+                        },
+                        "children": {
+                          "blockCloseBrace": {
+                            "context": {
+                              "id": "token@<rbrace>@}@[L11:C4, L11:C5]",
+                              "snippet": "}"
+                            },
+                            "leadingTrivia": "    ",
+                            "trailingTrivia": "\n",
+                            "value": "}"
+                          },
+                          "blockOpenBrace": {
+                            "context": {
+                              "id": "token@<lbrace>@{@[L6:C19, L6:C20]",
+                              "snippet": "{"
+                            },
+                            "leadingTrivia": "",
+                            "trailingTrivia": "\n",
+                            "value": "{"
+                          },
+                          "body": [
+                            {
+                              "context": {
+                                "id": "node@<function-application>@new@[L7:C8, L7:C11]",
+                                "snippet": "new"
+                              },
+                              "children": {
+                                "callee": {
+                                  "context": {
+                                    "id": "node@<primary-expression>@new@[L7:C8, L7:C11]",
+                                    "snippet": "new"
+                                  },
+                                  "children": {
+                                    "expression": {
+                                      "context": {
+                                        "id": "node@<variable>@new@[L7:C8, L7:C11]",
+                                        "snippet": "new"
+                                      },
+                                      "children": {
+                                        "variable": {
+                                          "context": {
+                                            "id": "token@<identifier>@new@[L7:C8, L7:C11]",
+                                            "snippet": "new"
+                                          },
+                                          "leadingTrivia": "        ",
+                                          "trailingTrivia": "\n",
+                                          "value": "new"
+                                        }
+                                      },
+                                      "fullEnd": 148,
+                                      "fullStart": 135
+                                    }
+                                  },
+                                  "fullEnd": 148,
+                                  "fullStart": 135
+                                }
+                              },
+                              "fullEnd": 148,
+                              "fullStart": 135,
+                              "symbol": {
+                                "context": {
+                                  "id": "symbol@Enum field@new@[L7:C8, L7:C11]",
+                                  "snippet": "new"
+                                },
+                                "declaration": {
+                                  "id": "node@<function-application>@new@[L7:C8, L7:C11]",
+                                  "snippet": "new"
+                                }
+                              }
+                            },
+                            {
+                              "context": {
+                                "id": "node@<function-application>@churn@[L8:C8, L8:C13]",
+                                "snippet": "churn"
+                              },
+                              "children": {
+                                "callee": {
+                                  "context": {
+                                    "id": "node@<primary-expression>@churn@[L8:C8, L8:C13]",
+                                    "snippet": "churn"
+                                  },
+                                  "children": {
+                                    "expression": {
+                                      "context": {
+                                        "id": "node@<variable>@churn@[L8:C8, L8:C13]",
+                                        "snippet": "churn"
+                                      },
+                                      "children": {
+                                        "variable": {
+                                          "context": {
+                                            "id": "token@<identifier>@churn@[L8:C8, L8:C13]",
+                                            "snippet": "churn"
+                                          },
+                                          "leadingTrivia": "        ",
+                                          "trailingTrivia": "\n",
+                                          "value": "churn"
+                                        }
+                                      },
+                                      "fullEnd": 163,
+                                      "fullStart": 148
+                                    }
+                                  },
+                                  "fullEnd": 163,
+                                  "fullStart": 148
+                                }
+                              },
+                              "fullEnd": 163,
+                              "fullStart": 148,
+                              "symbol": {
+                                "context": {
+                                  "id": "symbol@Enum field@churn@[L8:C8, L8:C13]",
+                                  "snippet": "churn"
+                                },
+                                "declaration": {
+                                  "id": "node@<function-application>@churn@[L8:C8, L8:C13]",
+                                  "snippet": "churn"
+                                }
+                              }
+                            },
+                            {
+                              "context": {
+                                "id": "node@<function-application>@active@[L9:C8, L9:C14]",
+                                "snippet": "active"
+                              },
+                              "children": {
+                                "callee": {
+                                  "context": {
+                                    "id": "node@<primary-expression>@active@[L9:C8, L9:C14]",
+                                    "snippet": "active"
+                                  },
+                                  "children": {
+                                    "expression": {
+                                      "context": {
+                                        "id": "node@<variable>@active@[L9:C8, L9:C14]",
+                                        "snippet": "active"
+                                      },
+                                      "children": {
+                                        "variable": {
+                                          "context": {
+                                            "id": "token@<identifier>@active@[L9:C8, L9:C14]",
+                                            "snippet": "active"
+                                          },
+                                          "leadingTrivia": "        ",
+                                          "trailingTrivia": "\n",
+                                          "value": "active"
+                                        }
+                                      },
+                                      "fullEnd": 179,
+                                      "fullStart": 163
+                                    }
+                                  },
+                                  "fullEnd": 179,
+                                  "fullStart": 163
+                                }
+                              },
+                              "fullEnd": 179,
+                              "fullStart": 163,
+                              "symbol": {
+                                "context": {
+                                  "id": "symbol@Enum field@active@[L9:C8, L9:C14]",
+                                  "snippet": "active"
+                                },
+                                "declaration": {
+                                  "id": "node@<function-application>@active@[L9:C8, L9:C14]",
+                                  "snippet": "active"
+                                }
+                              }
+                            },
+                            {
+                              "context": {
+                                "id": "node@<function-application>@tenant@[L10:C8, L10:C14]",
+                                "snippet": "tenant"
+                              },
+                              "children": {
+                                "callee": {
+                                  "context": {
+                                    "id": "node@<primary-expression>@tenant@[L10:C8, L10:C14]",
+                                    "snippet": "tenant"
+                                  },
+                                  "children": {
+                                    "expression": {
+                                      "context": {
+                                        "id": "node@<variable>@tenant@[L10:C8, L10:C14]",
+                                        "snippet": "tenant"
+                                      },
+                                      "children": {
+                                        "variable": {
+                                          "context": {
+                                            "id": "token@<identifier>@tenant@[L10:C8, L10:C14]",
+                                            "snippet": "tenant"
+                                          },
+                                          "leadingTrivia": "        ",
+                                          "trailingTrivia": "\n",
+                                          "value": "tenant"
+                                        }
+                                      },
+                                      "fullEnd": 195,
+                                      "fullStart": 179
+                                    }
+                                  },
+                                  "fullEnd": 195,
+                                  "fullStart": 179
+                                }
+                              },
+                              "fullEnd": 195,
+                              "fullStart": 179,
+                              "symbol": {
+                                "context": {
+                                  "id": "symbol@Enum field@tenant@[L10:C8, L10:C14]",
+                                  "snippet": "tenant"
+                                },
+                                "declaration": {
+                                  "id": "node@<function-application>@tenant@[L10:C8, L10:C14]",
+                                  "snippet": "tenant"
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        "fullEnd": 202,
+                        "fullStart": 132
+                      },
+                      "name": {
+                        "context": {
+                          "id": "node@<infix-expression>@@[L6:C9, L6:C18]",
+                          "snippet": "v2.Status"
+                        },
+                        "children": {
+                          "leftExpression": {
+                            "context": {
+                              "id": "node@<primary-expression>@v2@[L6:C9, L6:C11]",
+                              "snippet": "v2"
+                            },
+                            "children": {
+                              "expression": {
+                                "context": {
+                                  "id": "node@<variable>@v2@[L6:C9, L6:C11]",
+                                  "snippet": "v2"
+                                },
+                                "children": {
+                                  "variable": {
+                                    "context": {
+                                      "id": "token@<identifier>@v2@[L6:C9, L6:C11]",
+                                      "snippet": "v2"
+                                    },
+                                    "leadingTrivia": "",
+                                    "trailingTrivia": "",
+                                    "value": "v2"
+                                  }
+                                },
+                                "fullEnd": 124,
+                                "fullStart": 122
+                              }
+                            },
+                            "fullEnd": 124,
+                            "fullStart": 122
+                          },
+                          "op": {
+                            "context": {
+                              "id": "token@<op>@.@[L6:C11, L6:C12]",
+                              "snippet": "."
+                            },
+                            "leadingTrivia": "",
+                            "trailingTrivia": "",
+                            "value": "."
+                          },
+                          "rightExpression": {
+                            "context": {
+                              "id": "node@<primary-expression>@Status@[L6:C12, L6:C18]",
+                              "snippet": "Status"
+                            },
+                            "children": {
+                              "expression": {
+                                "context": {
+                                  "id": "node@<variable>@Status@[L6:C12, L6:C18]",
+                                  "snippet": "Status"
+                                },
+                                "children": {
+                                  "variable": {
+                                    "context": {
+                                      "id": "token@<identifier>@Status@[L6:C12, L6:C18]",
+                                      "snippet": "Status"
+                                    },
+                                    "leadingTrivia": "",
+                                    "trailingTrivia": " ",
+                                    "value": "Status"
+                                  }
+                                },
+                                "fullEnd": 132,
+                                "fullStart": 125
+                              }
+                            },
+                            "fullEnd": 132,
+                            "fullStart": 125
+                          }
+                        },
+                        "fullEnd": 132,
+                        "fullStart": 122
+                      },
+                      "type": {
+                        "context": {
+                          "id": "token@<identifier>@Enum@[L6:C4, L6:C8]",
+                          "snippet": "Enum"
+                        },
+                        "leadingTrivia": "\n    ",
+                        "trailingTrivia": " ",
+                        "value": "Enum"
+                      }
+                    },
+                    "fullEnd": 202,
+                    "fullStart": 112,
+                    "symbol": {
+                      "context": {
+                        "id": "symbol@Enum@v2.Status@[L6:C4, L11:C5]",
+                        "snippet": "Enum v2.St...ant\r\n    }"
+                      },
+                      "declaration": {
+                        "id": "node@<element-declaration>@v2.Status@[L6:C4, L11:C5]",
+                        "snippet": "Enum v2.St...ant\r\n    }"
+                      },
+                      "members": [
+                        {
+                          "context": {
+                            "id": "symbol@Enum field@active@[L9:C8, L9:C14]",
+                            "snippet": "active"
+                          }
+                        },
+                        {
+                          "context": {
+                            "id": "symbol@Enum field@churn@[L8:C8, L8:C13]",
+                            "snippet": "churn"
+                          }
+                        },
+                        {
+                          "context": {
+                            "id": "symbol@Enum field@new@[L7:C8, L7:C11]",
+                            "snippet": "new"
+                          }
+                        },
+                        {
+                          "context": {
+                            "id": "symbol@Enum field@tenant@[L10:C8, L10:C14]",
+                            "snippet": "tenant"
                           }
                         }
                       ]

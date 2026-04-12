@@ -1,6 +1,20 @@
 {
   "errors": [
     {
+      "code": "UNEXPECTED_TOKEN",
+      "diagnostic": "Expect a comma ','",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "token": {
+        "context": {
+          "id": "token@<identifier>@s@[L7:C35, L7:C36]",
+          "snippet": "s",
+          "isInvalid": true,
+          "filepath": "/main.dbml"
+        }
+      }
+    },
+    {
       "code": "UNEXPECTED_NEWLINE",
       "diagnostic": "Invalid newline encountered while parsing",
       "filepath": "/main.dbml",
@@ -15,16 +29,14 @@
       }
     },
     {
-      "code": "UNEXPECTED_TOKEN",
-      "diagnostic": "Expect a comma ','",
+      "code": "UNKNOWN_COLUMN_SETTING",
+      "diagnostic": "Unknown column setting 'diagram_id'",
       "filepath": "/main.dbml",
       "level": "error",
-      "token": {
+      "node": {
         "context": {
-          "id": "token@<identifier>@s@[L7:C35, L7:C36]",
-          "snippet": "s",
-          "isInvalid": true,
-          "filepath": "/main.dbml"
+          "id": "node@<attribute>@@[L9:C14, L9:C24]",
+          "snippet": "diagram_id"
         }
       }
     },
@@ -55,88 +67,41 @@
           "filepath": "/main.dbml"
         }
       }
-    },
-    {
-      "code": "UNKNOWN_COLUMN_SETTING",
-      "diagnostic": "Unknown column setting 'diagram_id'",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<attribute>@@[L9:C14, L9:C24]",
-          "snippet": "diagram_id"
-        }
-      }
     }
   ],
   "nodeReferees": [
     {
       "context": {
-        "id": "node@<primary-expression>@diagram_id@[L24:C46, L24:C58]",
-        "snippet": "\"diagram_id\""
+        "id": "node@<primary-expression>@users@[L22:C5, L22:C12]",
+        "snippet": "\"users\""
       },
       "children": {
         "expression": {
           "context": {
-            "id": "node@<variable>@diagram_id@[L24:C46, L24:C58]",
-            "snippet": "\"diagram_id\""
+            "id": "node@<variable>@users@[L22:C5, L22:C12]",
+            "snippet": "\"users\""
           },
           "children": {
             "variable": {
               "context": {
-                "id": "token@<variable>@diagram_id@[L24:C46, L24:C58]",
-                "snippet": "\"diagram_id\""
+                "id": "token@<variable>@users@[L22:C5, L22:C12]",
+                "snippet": "\"users\""
               },
               "leadingTrivia": "",
               "trailingTrivia": "",
-              "value": "diagram_id"
+              "value": "users"
             }
           },
-          "fullEnd": 458,
-          "fullStart": 446
+          "fullEnd": 358,
+          "fullStart": 351
         }
       },
-      "fullEnd": 458,
-      "fullStart": 446,
+      "fullEnd": 358,
+      "fullStart": 351,
       "referee": {
         "context": {
-          "id": "symbol@Column@diagram_id@[L6:C2, L6:C16]",
-          "snippet": "diagram_id int"
-        }
-      }
-    },
-    {
-      "context": {
-        "id": "node@<primary-expression>@diagrams@[L24:C5, L24:C15]",
-        "snippet": "\"diagrams\""
-      },
-      "children": {
-        "expression": {
-          "context": {
-            "id": "node@<variable>@diagrams@[L24:C5, L24:C15]",
-            "snippet": "\"diagrams\""
-          },
-          "children": {
-            "variable": {
-              "context": {
-                "id": "token@<variable>@diagrams@[L24:C5, L24:C15]",
-                "snippet": "\"diagrams\""
-              },
-              "leadingTrivia": "",
-              "trailingTrivia": "",
-              "value": "diagrams"
-            }
-          },
-          "fullEnd": 415,
-          "fullStart": 405
-        }
-      },
-      "fullEnd": 415,
-      "fullStart": 405,
-      "referee": {
-        "context": {
-          "id": "symbol@Table@diagrams@[L18:C0, L20:C1]",
-          "snippet": "Table diag...ncrement\n}"
+          "id": "symbol@Table@users@[L0:C0, L2:C1]",
+          "snippet": "Table user...crement]\n}"
         }
       }
     },
@@ -177,36 +142,36 @@
     },
     {
       "context": {
-        "id": "node@<primary-expression>@id@[L24:C16, L24:C20]",
-        "snippet": "\"id\""
+        "id": "node@<primary-expression>@user_role_in_diagram@[L22:C20, L22:C42]",
+        "snippet": "\"user_role...n_diagram\""
       },
       "children": {
         "expression": {
           "context": {
-            "id": "node@<variable>@id@[L24:C16, L24:C20]",
-            "snippet": "\"id\""
+            "id": "node@<variable>@user_role_in_diagram@[L22:C20, L22:C42]",
+            "snippet": "\"user_role...n_diagram\""
           },
           "children": {
             "variable": {
               "context": {
-                "id": "token@<variable>@id@[L24:C16, L24:C20]",
-                "snippet": "\"id\""
+                "id": "token@<variable>@user_role_in_diagram@[L22:C20, L22:C42]",
+                "snippet": "\"user_role...n_diagram\""
               },
               "leadingTrivia": "",
-              "trailingTrivia": " ",
-              "value": "id"
+              "trailingTrivia": "",
+              "value": "user_role_in_diagram"
             }
           },
-          "fullEnd": 421,
-          "fullStart": 416
+          "fullEnd": 388,
+          "fullStart": 366
         }
       },
-      "fullEnd": 421,
-      "fullStart": 416,
+      "fullEnd": 388,
+      "fullStart": 366,
       "referee": {
         "context": {
-          "id": "symbol@Column@id@[L19:C2, L19:C24]",
-          "snippet": "id int [pk...increment]"
+          "id": "symbol@Table@user_role_in_diagram@[L4:C0, L10:C3]",
+          "snippet": "Table user...) [pk]\n  }"
         }
       }
     },
@@ -247,36 +212,71 @@
     },
     {
       "context": {
-        "id": "node@<primary-expression>@user_role_in_diagram@[L22:C20, L22:C42]",
-        "snippet": "\"user_role...n_diagram\""
+        "id": "node@<primary-expression>@diagrams@[L24:C5, L24:C15]",
+        "snippet": "\"diagrams\""
       },
       "children": {
         "expression": {
           "context": {
-            "id": "node@<variable>@user_role_in_diagram@[L22:C20, L22:C42]",
-            "snippet": "\"user_role...n_diagram\""
+            "id": "node@<variable>@diagrams@[L24:C5, L24:C15]",
+            "snippet": "\"diagrams\""
           },
           "children": {
             "variable": {
               "context": {
-                "id": "token@<variable>@user_role_in_diagram@[L22:C20, L22:C42]",
-                "snippet": "\"user_role...n_diagram\""
+                "id": "token@<variable>@diagrams@[L24:C5, L24:C15]",
+                "snippet": "\"diagrams\""
               },
               "leadingTrivia": "",
               "trailingTrivia": "",
-              "value": "user_role_in_diagram"
+              "value": "diagrams"
             }
           },
-          "fullEnd": 388,
-          "fullStart": 366
+          "fullEnd": 415,
+          "fullStart": 405
         }
       },
-      "fullEnd": 388,
-      "fullStart": 366,
+      "fullEnd": 415,
+      "fullStart": 405,
       "referee": {
         "context": {
-          "id": "symbol@Table@user_role_in_diagram@[L4:C0, L10:C3]",
-          "snippet": "Table user...) [pk]\n  }"
+          "id": "symbol@Table@diagrams@[L18:C0, L20:C1]",
+          "snippet": "Table diag...ncrement\n}"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@id@[L24:C16, L24:C20]",
+        "snippet": "\"id\""
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@id@[L24:C16, L24:C20]",
+            "snippet": "\"id\""
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<variable>@id@[L24:C16, L24:C20]",
+                "snippet": "\"id\""
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": " ",
+              "value": "id"
+            }
+          },
+          "fullEnd": 421,
+          "fullStart": 416
+        }
+      },
+      "fullEnd": 421,
+      "fullStart": 416,
+      "referee": {
+        "context": {
+          "id": "symbol@Column@id@[L19:C2, L19:C24]",
+          "snippet": "id int [pk...increment]"
         }
       }
     },
@@ -317,36 +317,36 @@
     },
     {
       "context": {
-        "id": "node@<primary-expression>@users@[L22:C5, L22:C12]",
-        "snippet": "\"users\""
+        "id": "node@<primary-expression>@diagram_id@[L24:C46, L24:C58]",
+        "snippet": "\"diagram_id\""
       },
       "children": {
         "expression": {
           "context": {
-            "id": "node@<variable>@users@[L22:C5, L22:C12]",
-            "snippet": "\"users\""
+            "id": "node@<variable>@diagram_id@[L24:C46, L24:C58]",
+            "snippet": "\"diagram_id\""
           },
           "children": {
             "variable": {
               "context": {
-                "id": "token@<variable>@users@[L22:C5, L22:C12]",
-                "snippet": "\"users\""
+                "id": "token@<variable>@diagram_id@[L24:C46, L24:C58]",
+                "snippet": "\"diagram_id\""
               },
               "leadingTrivia": "",
               "trailingTrivia": "",
-              "value": "users"
+              "value": "diagram_id"
             }
           },
-          "fullEnd": 358,
-          "fullStart": 351
+          "fullEnd": 458,
+          "fullStart": 446
         }
       },
-      "fullEnd": 358,
-      "fullStart": 351,
+      "fullEnd": 458,
+      "fullStart": 446,
       "referee": {
         "context": {
-          "id": "symbol@Table@users@[L0:C0, L2:C1]",
-          "snippet": "Table user...crement]\n}"
+          "id": "symbol@Column@diagram_id@[L6:C2, L6:C16]",
+          "snippet": "diagram_id int"
         }
       }
     }
@@ -355,49 +355,49 @@
     "publicSchema": [
       {
         "context": {
-          "id": "symbol@Table@diagrams@[L18:C0, L20:C1]",
-          "snippet": "Table diag...ncrement\n}"
+          "id": "symbol@Table@users@[L0:C0, L2:C1]",
+          "snippet": "Table user...crement]\n}"
         },
         "declaration": {
-          "id": "node@<element-declaration>@diagrams@[L18:C0, L20:C1]",
-          "snippet": "Table diag...ncrement\n}"
+          "id": "node@<element-declaration>@users@[L0:C0, L2:C1]",
+          "snippet": "Table user...crement]\n}"
         },
         "members": [
           {
             "context": {
-              "id": "symbol@Column@id@[L19:C2, L19:C24]",
+              "id": "symbol@Column@id@[L1:C2, L1:C24]",
               "snippet": "id int [pk...increment]"
             }
           }
         ],
         "references": [
           {
-            "id": "node@<primary-expression>@diagrams@[L24:C5, L24:C15]",
-            "snippet": "\"diagrams\""
+            "id": "node@<primary-expression>@users@[L22:C5, L22:C12]",
+            "snippet": "\"users\""
           }
         ]
       },
       {
         "context": {
-          "id": "symbol@Table@permissions@[L13:C0, L16:C1]",
-          "snippet": "Table perm... varchar\n}"
+          "id": "symbol@Table@users@[L0:C0, L2:C1]",
+          "snippet": "Table user...crement]\n}"
         },
         "declaration": {
-          "id": "node@<element-declaration>@permissions@[L13:C0, L16:C1]",
-          "snippet": "Table perm... varchar\n}"
+          "id": "node@<element-declaration>@users@[L0:C0, L2:C1]",
+          "snippet": "Table user...crement]\n}"
         },
         "members": [
           {
             "context": {
-              "id": "symbol@Column@bit@[L14:C2, L14:C14]",
-              "snippet": "bit int [pk]"
+              "id": "symbol@Column@id@[L1:C2, L1:C24]",
+              "snippet": "id int [pk...increment]"
             }
-          },
+          }
+        ],
+        "references": [
           {
-            "context": {
-              "id": "symbol@Column@name@[L15:C2, L15:C14]",
-              "snippet": "name varchar"
-            }
+            "id": "node@<primary-expression>@users@[L22:C5, L22:C12]",
+            "snippet": "\"users\""
           }
         ]
       },
@@ -443,49 +443,49 @@
       },
       {
         "context": {
-          "id": "symbol@Table@users@[L0:C0, L2:C1]",
-          "snippet": "Table user...crement]\n}"
+          "id": "symbol@Table@permissions@[L13:C0, L16:C1]",
+          "snippet": "Table perm... varchar\n}"
         },
         "declaration": {
-          "id": "node@<element-declaration>@users@[L0:C0, L2:C1]",
-          "snippet": "Table user...crement]\n}"
+          "id": "node@<element-declaration>@permissions@[L13:C0, L16:C1]",
+          "snippet": "Table perm... varchar\n}"
         },
         "members": [
           {
             "context": {
-              "id": "symbol@Column@id@[L1:C2, L1:C24]",
-              "snippet": "id int [pk...increment]"
+              "id": "symbol@Column@bit@[L14:C2, L14:C14]",
+              "snippet": "bit int [pk]"
             }
-          }
-        ],
-        "references": [
+          },
           {
-            "id": "node@<primary-expression>@users@[L22:C5, L22:C12]",
-            "snippet": "\"users\""
+            "context": {
+              "id": "symbol@Column@name@[L15:C2, L15:C14]",
+              "snippet": "name varchar"
+            }
           }
         ]
       },
       {
         "context": {
-          "id": "symbol@Table@users@[L0:C0, L2:C1]",
-          "snippet": "Table user...crement]\n}"
+          "id": "symbol@Table@diagrams@[L18:C0, L20:C1]",
+          "snippet": "Table diag...ncrement\n}"
         },
         "declaration": {
-          "id": "node@<element-declaration>@users@[L0:C0, L2:C1]",
-          "snippet": "Table user...crement]\n}"
+          "id": "node@<element-declaration>@diagrams@[L18:C0, L20:C1]",
+          "snippet": "Table diag...ncrement\n}"
         },
         "members": [
           {
             "context": {
-              "id": "symbol@Column@id@[L1:C2, L1:C24]",
+              "id": "symbol@Column@id@[L19:C2, L19:C24]",
               "snippet": "id int [pk...increment]"
             }
           }
         ],
         "references": [
           {
-            "id": "node@<primary-expression>@users@[L22:C5, L22:C12]",
-            "snippet": "\"users\""
+            "id": "node@<primary-expression>@diagrams@[L24:C5, L24:C15]",
+            "snippet": "\"diagrams\""
           }
         ]
       }

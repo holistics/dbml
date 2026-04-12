@@ -2,24 +2,6 @@
   "tokens": [
     {
       "context": {
-        "id": "token@<eof>@@[L3:C3, L3:C3]",
-        "snippet": ""
-      },
-      "leadingTrivia": "",
-      "trailingTrivia": "",
-      "value": ""
-    },
-    {
-      "context": {
-        "id": "token@<identifier>@Note@[L2:C8, L2:C12]",
-        "snippet": "Note"
-      },
-      "leadingTrivia": "",
-      "trailingTrivia": "\n",
-      "value": "Note"
-    },
-    {
-      "context": {
         "id": "token@<identifier>@Table@[L0:C0, L0:C5]",
         "snippet": "Table"
       },
@@ -38,15 +20,6 @@
     },
     {
       "context": {
-        "id": "token@<identifier>@_ab@[L3:C0, L3:C3]",
-        "snippet": "_ab"
-      },
-      "leadingTrivia": "",
-      "trailingTrivia": "",
-      "value": "_ab"
-    },
-    {
-      "context": {
         "id": "token@<identifier>@as@[L1:C0, L1:C2]",
         "snippet": "as"
       },
@@ -62,6 +35,33 @@
       "leadingTrivia": "",
       "trailingTrivia": " ",
       "value": "indexes"
+    },
+    {
+      "context": {
+        "id": "token@<identifier>@Note@[L2:C8, L2:C12]",
+        "snippet": "Note"
+      },
+      "leadingTrivia": "",
+      "trailingTrivia": "\n",
+      "value": "Note"
+    },
+    {
+      "context": {
+        "id": "token@<identifier>@_ab@[L3:C0, L3:C3]",
+        "snippet": "_ab"
+      },
+      "leadingTrivia": "",
+      "trailingTrivia": "",
+      "value": "_ab"
+    },
+    {
+      "context": {
+        "id": "token@<eof>@@[L3:C3, L3:C3]",
+        "snippet": ""
+      },
+      "leadingTrivia": "",
+      "trailingTrivia": "",
+      "value": ""
     }
   ]
 }

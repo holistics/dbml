@@ -322,57 +322,6 @@
               {
                 "token": {
                   "end": {
-                    "column": 12,
-                    "line": 16,
-                    "offset": 338
-                  },
-                  "filepath": "/main.dbml",
-                  "start": {
-                    "column": 6,
-                    "line": 16,
-                    "offset": 332
-                  }
-                },
-                "type": "column",
-                "value": "active"
-              },
-              {
-                "token": {
-                  "end": {
-                    "column": 32,
-                    "line": 16,
-                    "offset": 358
-                  },
-                  "filepath": "/main.dbml",
-                  "start": {
-                    "column": 14,
-                    "line": 16,
-                    "offset": 340
-                  }
-                },
-                "type": "expression",
-                "value": "lower(full_name)"
-              }
-            ],
-            "token": {
-              "end": {
-                "column": 33,
-                "line": 16,
-                "offset": 359
-              },
-              "filepath": "/main.dbml",
-              "start": {
-                "column": 5,
-                "line": 16,
-                "offset": 331
-              }
-            }
-          },
-          {
-            "columns": [
-              {
-                "token": {
-                  "end": {
                     "column": 14,
                     "line": 13,
                     "offset": 258
@@ -487,6 +436,57 @@
                 "column": 5,
                 "line": 18,
                 "offset": 399
+              }
+            }
+          },
+          {
+            "columns": [
+              {
+                "token": {
+                  "end": {
+                    "column": 12,
+                    "line": 16,
+                    "offset": 338
+                  },
+                  "filepath": "/main.dbml",
+                  "start": {
+                    "column": 6,
+                    "line": 16,
+                    "offset": 332
+                  }
+                },
+                "type": "column",
+                "value": "active"
+              },
+              {
+                "token": {
+                  "end": {
+                    "column": 32,
+                    "line": 16,
+                    "offset": 358
+                  },
+                  "filepath": "/main.dbml",
+                  "start": {
+                    "column": 14,
+                    "line": 16,
+                    "offset": 340
+                  }
+                },
+                "type": "expression",
+                "value": "lower(full_name)"
+              }
+            ],
+            "token": {
+              "end": {
+                "column": 33,
+                "line": 16,
+                "offset": 359
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 5,
+                "line": 16,
+                "offset": 331
               }
             }
           }

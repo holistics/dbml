@@ -60,6 +60,44 @@
                       "args": [
                         {
                           "context": {
+                            "id": "node@<wildcard>@@[L1:C6, L1:C7]",
+                            "snippet": "*"
+                          },
+                          "children": {
+                            "token": {
+                              "context": {
+                                "id": "token@<wildcard>@*@[L1:C6, L1:C7]",
+                                "snippet": "*"
+                              },
+                              "leadingTrivia": "",
+                              "trailingTrivia": "",
+                              "value": "*"
+                            }
+                          },
+                          "fullEnd": 30,
+                          "fullStart": 29
+                        },
+                        {
+                          "context": {
+                            "id": "node@<wildcard>@@[L1:C7, L1:C8]",
+                            "snippet": "*"
+                          },
+                          "children": {
+                            "token": {
+                              "context": {
+                                "id": "token@<wildcard>@*@[L1:C7, L1:C8]",
+                                "snippet": "*"
+                              },
+                              "leadingTrivia": "",
+                              "trailingTrivia": " ",
+                              "value": "*"
+                            }
+                          },
+                          "fullEnd": 32,
+                          "fullStart": 30
+                        },
+                        {
+                          "context": {
                             "id": "node@<infix-expression>@@[L1:C9, L2:C8]",
                             "snippet": "2 + 3 () (...\r\n    -2()"
                           },
@@ -296,44 +334,6 @@
                           },
                           "fullEnd": 55,
                           "fullStart": 32
-                        },
-                        {
-                          "context": {
-                            "id": "node@<wildcard>@@[L1:C6, L1:C7]",
-                            "snippet": "*"
-                          },
-                          "children": {
-                            "token": {
-                              "context": {
-                                "id": "token@<wildcard>@*@[L1:C6, L1:C7]",
-                                "snippet": "*"
-                              },
-                              "leadingTrivia": "",
-                              "trailingTrivia": "",
-                              "value": "*"
-                            }
-                          },
-                          "fullEnd": 30,
-                          "fullStart": 29
-                        },
-                        {
-                          "context": {
-                            "id": "node@<wildcard>@@[L1:C7, L1:C8]",
-                            "snippet": "*"
-                          },
-                          "children": {
-                            "token": {
-                              "context": {
-                                "id": "token@<wildcard>@*@[L1:C7, L1:C8]",
-                                "snippet": "*"
-                              },
-                              "leadingTrivia": "",
-                              "trailingTrivia": " ",
-                              "value": "*"
-                            }
-                          },
-                          "fullEnd": 32,
-                          "fullStart": 30
                         }
                       ],
                       "callee": {

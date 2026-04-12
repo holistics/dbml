@@ -1,6 +1,20 @@
 {
   "errors": [
     {
+      "code": "UNEXPECTED_TOKEN",
+      "diagnostic": "Expect a comma ','",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "token": {
+        "context": {
+          "id": "token@<identifier>@s@[L7:C35, L7:C36]",
+          "snippet": "s",
+          "isInvalid": true,
+          "filepath": "/main.dbml"
+        }
+      }
+    },
+    {
       "code": "UNEXPECTED_NEWLINE",
       "diagnostic": "Invalid newline encountered while parsing",
       "filepath": "/main.dbml",
@@ -15,16 +29,14 @@
       }
     },
     {
-      "code": "UNEXPECTED_TOKEN",
-      "diagnostic": "Expect a comma ','",
+      "code": "UNKNOWN_COLUMN_SETTING",
+      "diagnostic": "Unknown column setting 'diagram_id'",
       "filepath": "/main.dbml",
       "level": "error",
-      "token": {
+      "node": {
         "context": {
-          "id": "token@<identifier>@s@[L7:C35, L7:C36]",
-          "snippet": "s",
-          "isInvalid": true,
-          "filepath": "/main.dbml"
+          "id": "node@<attribute>@@[L9:C14, L9:C24]",
+          "snippet": "diagram_id"
         }
       }
     },
@@ -53,18 +65,6 @@
           "snippet": "}",
           "isInvalid": true,
           "filepath": "/main.dbml"
-        }
-      }
-    },
-    {
-      "code": "UNKNOWN_COLUMN_SETTING",
-      "diagnostic": "Unknown column setting 'diagram_id'",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<attribute>@@[L9:C14, L9:C24]",
-          "snippet": "diagram_id"
         }
       }
     }

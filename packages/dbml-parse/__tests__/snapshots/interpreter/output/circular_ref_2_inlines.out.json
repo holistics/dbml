@@ -185,8 +185,8 @@
       "level": "error",
       "node": {
         "context": {
-          "id": "node@<attribute>@@[L5:C12, L5:C23]",
-          "snippet": "ref: > A.id"
+          "id": "node@<attribute>@@[L1:C12, L1:C23]",
+          "snippet": "ref: > B.id"
         }
       }
     },
@@ -197,8 +197,8 @@
       "level": "error",
       "node": {
         "context": {
-          "id": "node@<attribute>@@[L1:C12, L1:C23]",
-          "snippet": "ref: > B.id"
+          "id": "node@<attribute>@@[L5:C12, L5:C23]",
+          "snippet": "ref: > A.id"
         }
       }
     }

@@ -46,21 +46,21 @@
   "tokens": [
     {
       "context": {
-        "id": "token@<eof>@@[L3:C39, L3:C39]",
-        "snippet": ""
-      },
-      "leadingTrivia": "",
-      "trailingTrivia": "",
-      "value": ""
-    },
-    {
-      "context": {
         "id": "token@<number>@1@[L0:C0, L0:C1]",
         "snippet": "1"
       },
       "leadingTrivia": "",
       "trailingTrivia": " ",
       "value": "1"
+    },
+    {
+      "context": {
+        "id": "token@<number>@2@[L0:C2, L0:C3]",
+        "snippet": "2"
+      },
+      "leadingTrivia": "",
+      "trailingTrivia": "  whole number\r\n",
+      "value": "2"
     },
     {
       "context": {
@@ -82,12 +82,12 @@
     },
     {
       "context": {
-        "id": "token@<number>@2@[L0:C2, L0:C3]",
-        "snippet": "2"
+        "id": "token@<eof>@@[L3:C39, L3:C39]",
+        "snippet": ""
       },
       "leadingTrivia": "",
-      "trailingTrivia": "  whole number\r\n",
-      "value": "2"
+      "trailingTrivia": "",
+      "value": ""
     }
   ]
 }

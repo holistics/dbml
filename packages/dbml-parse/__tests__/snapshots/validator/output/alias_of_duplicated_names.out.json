@@ -158,130 +158,6 @@
         },
         {
           "context": {
-            "id": "node@<element-declaration>@Products@[L8:C0, L10:C1]",
-            "snippet": "Table Prod...{\r\n    \r\n}"
-          },
-          "children": {
-            "alias": {
-              "context": {
-                "id": "node@<primary-expression>@U1@[L8:C18, L8:C20]",
-                "snippet": "U1"
-              },
-              "children": {
-                "expression": {
-                  "context": {
-                    "id": "node@<variable>@U1@[L8:C18, L8:C20]",
-                    "snippet": "U1"
-                  },
-                  "children": {
-                    "variable": {
-                      "context": {
-                        "id": "token@<identifier>@U1@[L8:C18, L8:C20]",
-                        "snippet": "U1"
-                      },
-                      "leadingTrivia": "",
-                      "trailingTrivia": " ",
-                      "value": "U1"
-                    }
-                  },
-                  "fullEnd": 77,
-                  "fullStart": 74
-                }
-              },
-              "fullEnd": 77,
-              "fullStart": 74
-            },
-            "as": {
-              "context": {
-                "id": "token@<identifier>@as@[L8:C15, L8:C17]",
-                "snippet": "as"
-              },
-              "leadingTrivia": "",
-              "trailingTrivia": " ",
-              "value": "as"
-            },
-            "body": {
-              "context": {
-                "id": "node@<block-expression>@@[L8:C21, L10:C1]",
-                "snippet": "{\r\n    \r\n}"
-              },
-              "children": {
-                "blockCloseBrace": {
-                  "context": {
-                    "id": "token@<rbrace>@}@[L10:C0, L10:C1]",
-                    "snippet": "}"
-                  },
-                  "leadingTrivia": "    \n",
-                  "trailingTrivia": "",
-                  "value": "}"
-                },
-                "blockOpenBrace": {
-                  "context": {
-                    "id": "token@<lbrace>@{@[L8:C21, L8:C22]",
-                    "snippet": "{"
-                  },
-                  "leadingTrivia": "",
-                  "trailingTrivia": "\n",
-                  "value": "{"
-                }
-              },
-              "fullEnd": 87,
-              "fullStart": 77
-            },
-            "name": {
-              "context": {
-                "id": "node@<primary-expression>@Products@[L8:C6, L8:C14]",
-                "snippet": "Products"
-              },
-              "children": {
-                "expression": {
-                  "context": {
-                    "id": "node@<variable>@Products@[L8:C6, L8:C14]",
-                    "snippet": "Products"
-                  },
-                  "children": {
-                    "variable": {
-                      "context": {
-                        "id": "token@<identifier>@Products@[L8:C6, L8:C14]",
-                        "snippet": "Products"
-                      },
-                      "leadingTrivia": "",
-                      "trailingTrivia": " ",
-                      "value": "Products"
-                    }
-                  },
-                  "fullEnd": 71,
-                  "fullStart": 62
-                }
-              },
-              "fullEnd": 71,
-              "fullStart": 62
-            },
-            "type": {
-              "context": {
-                "id": "token@<identifier>@Table@[L8:C0, L8:C5]",
-                "snippet": "Table"
-              },
-              "leadingTrivia": "\n",
-              "trailingTrivia": " ",
-              "value": "Table"
-            }
-          },
-          "fullEnd": 87,
-          "fullStart": 55,
-          "symbol": {
-            "context": {
-              "id": "symbol@Table@Products@[L8:C0, L10:C1]",
-              "snippet": "Table Prod...{\r\n    \r\n}"
-            },
-            "declaration": {
-              "id": "node@<element-declaration>@Products@[L8:C0, L10:C1]",
-              "snippet": "Table Prod...{\r\n    \r\n}"
-            }
-          }
-        },
-        {
-          "context": {
             "id": "node@<element-declaration>@Users@[L4:C0, L6:C1]",
             "snippet": "Table User... U2 {\r\n\r\n}"
           },
@@ -401,6 +277,130 @@
             "declaration": {
               "id": "node@<element-declaration>@Users@[L4:C0, L6:C1]",
               "snippet": "Table User... U2 {\r\n\r\n}"
+            }
+          }
+        },
+        {
+          "context": {
+            "id": "node@<element-declaration>@Products@[L8:C0, L10:C1]",
+            "snippet": "Table Prod...{\r\n    \r\n}"
+          },
+          "children": {
+            "alias": {
+              "context": {
+                "id": "node@<primary-expression>@U1@[L8:C18, L8:C20]",
+                "snippet": "U1"
+              },
+              "children": {
+                "expression": {
+                  "context": {
+                    "id": "node@<variable>@U1@[L8:C18, L8:C20]",
+                    "snippet": "U1"
+                  },
+                  "children": {
+                    "variable": {
+                      "context": {
+                        "id": "token@<identifier>@U1@[L8:C18, L8:C20]",
+                        "snippet": "U1"
+                      },
+                      "leadingTrivia": "",
+                      "trailingTrivia": " ",
+                      "value": "U1"
+                    }
+                  },
+                  "fullEnd": 77,
+                  "fullStart": 74
+                }
+              },
+              "fullEnd": 77,
+              "fullStart": 74
+            },
+            "as": {
+              "context": {
+                "id": "token@<identifier>@as@[L8:C15, L8:C17]",
+                "snippet": "as"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": " ",
+              "value": "as"
+            },
+            "body": {
+              "context": {
+                "id": "node@<block-expression>@@[L8:C21, L10:C1]",
+                "snippet": "{\r\n    \r\n}"
+              },
+              "children": {
+                "blockCloseBrace": {
+                  "context": {
+                    "id": "token@<rbrace>@}@[L10:C0, L10:C1]",
+                    "snippet": "}"
+                  },
+                  "leadingTrivia": "    \n",
+                  "trailingTrivia": "",
+                  "value": "}"
+                },
+                "blockOpenBrace": {
+                  "context": {
+                    "id": "token@<lbrace>@{@[L8:C21, L8:C22]",
+                    "snippet": "{"
+                  },
+                  "leadingTrivia": "",
+                  "trailingTrivia": "\n",
+                  "value": "{"
+                }
+              },
+              "fullEnd": 87,
+              "fullStart": 77
+            },
+            "name": {
+              "context": {
+                "id": "node@<primary-expression>@Products@[L8:C6, L8:C14]",
+                "snippet": "Products"
+              },
+              "children": {
+                "expression": {
+                  "context": {
+                    "id": "node@<variable>@Products@[L8:C6, L8:C14]",
+                    "snippet": "Products"
+                  },
+                  "children": {
+                    "variable": {
+                      "context": {
+                        "id": "token@<identifier>@Products@[L8:C6, L8:C14]",
+                        "snippet": "Products"
+                      },
+                      "leadingTrivia": "",
+                      "trailingTrivia": " ",
+                      "value": "Products"
+                    }
+                  },
+                  "fullEnd": 71,
+                  "fullStart": 62
+                }
+              },
+              "fullEnd": 71,
+              "fullStart": 62
+            },
+            "type": {
+              "context": {
+                "id": "token@<identifier>@Table@[L8:C0, L8:C5]",
+                "snippet": "Table"
+              },
+              "leadingTrivia": "\n",
+              "trailingTrivia": " ",
+              "value": "Table"
+            }
+          },
+          "fullEnd": 87,
+          "fullStart": 55,
+          "symbol": {
+            "context": {
+              "id": "symbol@Table@Products@[L8:C0, L10:C1]",
+              "snippet": "Table Prod...{\r\n    \r\n}"
+            },
+            "declaration": {
+              "id": "node@<element-declaration>@Products@[L8:C0, L10:C1]",
+              "snippet": "Table Prod...{\r\n    \r\n}"
             }
           }
         }

@@ -95,21 +95,21 @@
                                       "identifiers": [
                                         {
                                           "context": {
-                                            "id": "token@<identifier>@key@[L1:C24, L1:C27]",
-                                            "snippet": "key"
-                                          },
-                                          "leadingTrivia": "",
-                                          "trailingTrivia": "",
-                                          "value": "key"
-                                        },
-                                        {
-                                          "context": {
                                             "id": "token@<identifier>@primary@[L1:C16, L1:C23]",
                                             "snippet": "primary"
                                           },
                                           "leadingTrivia": "",
                                           "trailingTrivia": " ",
                                           "value": "primary"
+                                        },
+                                        {
+                                          "context": {
+                                            "id": "token@<identifier>@key@[L1:C24, L1:C27]",
+                                            "snippet": "key"
+                                          },
+                                          "leadingTrivia": "",
+                                          "trailingTrivia": "",
+                                          "value": "key"
                                         }
                                       ]
                                     },
@@ -184,67 +184,6 @@
                     },
                     "children": {
                       "args": [
-                        {
-                          "context": {
-                            "id": "node@<list-expression>@@[L2:C20, L2:C28]",
-                            "snippet": "[unique]"
-                          },
-                          "children": {
-                            "elementList": [
-                              {
-                                "context": {
-                                  "id": "node@<attribute>@@[L2:C21, L2:C27]",
-                                  "snippet": "unique"
-                                },
-                                "children": {
-                                  "name": {
-                                    "context": {
-                                      "id": "node@<identifer-stream>@@[L2:C21, L2:C27]",
-                                      "snippet": "unique"
-                                    },
-                                    "children": {
-                                      "identifiers": [
-                                        {
-                                          "context": {
-                                            "id": "token@<identifier>@unique@[L2:C21, L2:C27]",
-                                            "snippet": "unique"
-                                          },
-                                          "leadingTrivia": "",
-                                          "trailingTrivia": "",
-                                          "value": "unique"
-                                        }
-                                      ]
-                                    },
-                                    "fullEnd": 85,
-                                    "fullStart": 79
-                                  }
-                                },
-                                "fullEnd": 85,
-                                "fullStart": 79
-                              }
-                            ],
-                            "listCloseBracket": {
-                              "context": {
-                                "id": "token@<rbracket>@]@[L2:C27, L2:C28]",
-                                "snippet": "]"
-                              },
-                              "leadingTrivia": "",
-                              "trailingTrivia": "\n",
-                              "value": "]"
-                            },
-                            "listOpenBracket": {
-                              "context": {
-                                "id": "token@<lbracket>@[@[L2:C20, L2:C21]",
-                                "snippet": "["
-                              },
-                              "leadingTrivia": "",
-                              "trailingTrivia": "",
-                              "value": "["
-                            }
-                          },
-                          "fullEnd": 88,
-                          "fullStart": 78
-                        },
                         {
                           "context": {
                             "id": "node@<call-expression>@@[L2:C9, L2:C19]",
@@ -342,6 +281,67 @@
                           },
                           "fullEnd": 78,
                           "fullStart": 67
+                        },
+                        {
+                          "context": {
+                            "id": "node@<list-expression>@@[L2:C20, L2:C28]",
+                            "snippet": "[unique]"
+                          },
+                          "children": {
+                            "elementList": [
+                              {
+                                "context": {
+                                  "id": "node@<attribute>@@[L2:C21, L2:C27]",
+                                  "snippet": "unique"
+                                },
+                                "children": {
+                                  "name": {
+                                    "context": {
+                                      "id": "node@<identifer-stream>@@[L2:C21, L2:C27]",
+                                      "snippet": "unique"
+                                    },
+                                    "children": {
+                                      "identifiers": [
+                                        {
+                                          "context": {
+                                            "id": "token@<identifier>@unique@[L2:C21, L2:C27]",
+                                            "snippet": "unique"
+                                          },
+                                          "leadingTrivia": "",
+                                          "trailingTrivia": "",
+                                          "value": "unique"
+                                        }
+                                      ]
+                                    },
+                                    "fullEnd": 85,
+                                    "fullStart": 79
+                                  }
+                                },
+                                "fullEnd": 85,
+                                "fullStart": 79
+                              }
+                            ],
+                            "listCloseBracket": {
+                              "context": {
+                                "id": "token@<rbracket>@]@[L2:C27, L2:C28]",
+                                "snippet": "]"
+                              },
+                              "leadingTrivia": "",
+                              "trailingTrivia": "\n",
+                              "value": "]"
+                            },
+                            "listOpenBracket": {
+                              "context": {
+                                "id": "token@<lbracket>@[@[L2:C20, L2:C21]",
+                                "snippet": "["
+                              },
+                              "leadingTrivia": "",
+                              "trailingTrivia": "",
+                              "value": "["
+                            }
+                          },
+                          "fullEnd": 88,
+                          "fullStart": 78
                         }
                       ],
                       "callee": {

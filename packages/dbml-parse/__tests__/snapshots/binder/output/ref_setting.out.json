@@ -2,36 +2,35 @@
   "nodeReferees": [
     {
       "context": {
-        "id": "node@<primary-expression>@id@[L4:C28, L4:C30]",
-        "snippet": "id"
+        "id": "node@<primary-expression>@v2@[L2:C11, L2:C13]",
+        "snippet": "v2"
       },
       "children": {
         "expression": {
           "context": {
-            "id": "node@<variable>@id@[L4:C28, L4:C30]",
-            "snippet": "id"
+            "id": "node@<variable>@v2@[L2:C11, L2:C13]",
+            "snippet": "v2"
           },
           "children": {
             "variable": {
               "context": {
-                "id": "token@<identifier>@id@[L4:C28, L4:C30]",
-                "snippet": "id"
+                "id": "token@<identifier>@v2@[L2:C11, L2:C13]",
+                "snippet": "v2"
               },
               "leadingTrivia": "",
               "trailingTrivia": "",
-              "value": "id"
+              "value": "v2"
             }
           },
-          "fullEnd": 105,
-          "fullStart": 103
+          "fullEnd": 41,
+          "fullStart": 39
         }
       },
-      "fullEnd": 105,
-      "fullStart": 103,
+      "fullEnd": 41,
+      "fullStart": 39,
       "referee": {
         "context": {
-          "id": "symbol@Column@id@[L1:C1, L1:C11]",
-          "snippet": "id integer"
+          "id": "symbol@Schema@@[L?:C?, L?:C?]"
         }
       }
     },
@@ -72,35 +71,36 @@
     },
     {
       "context": {
-        "id": "node@<primary-expression>@v2@[L2:C11, L2:C13]",
-        "snippet": "v2"
+        "id": "node@<primary-expression>@id@[L4:C28, L4:C30]",
+        "snippet": "id"
       },
       "children": {
         "expression": {
           "context": {
-            "id": "node@<variable>@v2@[L2:C11, L2:C13]",
-            "snippet": "v2"
+            "id": "node@<variable>@id@[L4:C28, L4:C30]",
+            "snippet": "id"
           },
           "children": {
             "variable": {
               "context": {
-                "id": "token@<identifier>@v2@[L2:C11, L2:C13]",
-                "snippet": "v2"
+                "id": "token@<identifier>@id@[L4:C28, L4:C30]",
+                "snippet": "id"
               },
               "leadingTrivia": "",
               "trailingTrivia": "",
-              "value": "v2"
+              "value": "id"
             }
           },
-          "fullEnd": 41,
-          "fullStart": 39
+          "fullEnd": 105,
+          "fullStart": 103
         }
       },
-      "fullEnd": 41,
-      "fullStart": 39,
+      "fullEnd": 105,
+      "fullStart": 103,
       "referee": {
         "context": {
-          "id": "symbol@Schema@@[L?:C?, L?:C?]"
+          "id": "symbol@Column@id@[L1:C1, L1:C11]",
+          "snippet": "id integer"
         }
       }
     }
