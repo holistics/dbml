@@ -2,156 +2,6 @@
   "database": {
     "enums": [
       {
-        "name": "age segment",
-        "schemaName": "demographic",
-        "token": {
-          "end": {
-            "column": 2,
-            "line": 18,
-            "offset": 180
-          },
-          "filepath": "/main.dbml",
-          "start": {
-            "column": 1,
-            "line": 12,
-            "offset": 92
-          }
-        },
-        "values": [
-          {
-            "name": "children",
-            "token": {
-              "end": {
-                "column": 11,
-                "line": 14,
-                "offset": 145
-              },
-              "filepath": "/main.dbml",
-              "start": {
-                "column": 3,
-                "line": 14,
-                "offset": 137
-              }
-            }
-          },
-          {
-            "name": "elder",
-            "token": {
-              "end": {
-                "column": 8,
-                "line": 17,
-                "offset": 178
-              },
-              "filepath": "/main.dbml",
-              "start": {
-                "column": 3,
-                "line": 17,
-                "offset": 173
-              }
-            }
-          },
-          {
-            "name": "teenager",
-            "token": {
-              "end": {
-                "column": 11,
-                "line": 15,
-                "offset": 156
-              },
-              "filepath": "/main.dbml",
-              "start": {
-                "column": 3,
-                "line": 15,
-                "offset": 148
-              }
-            }
-          },
-          {
-            "name": "toddler",
-            "token": {
-              "end": {
-                "column": 10,
-                "line": 13,
-                "offset": 134
-              },
-              "filepath": "/main.dbml",
-              "start": {
-                "column": 3,
-                "line": 13,
-                "offset": 127
-              }
-            }
-          },
-          {
-            "name": "young_adult",
-            "token": {
-              "end": {
-                "column": 14,
-                "line": 16,
-                "offset": 170
-              },
-              "filepath": "/main.dbml",
-              "start": {
-                "column": 3,
-                "line": 16,
-                "offset": 159
-              }
-            }
-          }
-        ]
-      },
-      {
-        "name": "gender",
-        "schemaName": "demographic",
-        "token": {
-          "end": {
-            "column": 2,
-            "line": 10,
-            "offset": 90
-          },
-          "filepath": "/main.dbml",
-          "start": {
-            "column": 1,
-            "line": 7,
-            "offset": 47
-          }
-        },
-        "values": [
-          {
-            "name": "female",
-            "token": {
-              "end": {
-                "column": 9,
-                "line": 9,
-                "offset": 88
-              },
-              "filepath": "/main.dbml",
-              "start": {
-                "column": 3,
-                "line": 9,
-                "offset": 82
-              }
-            }
-          },
-          {
-            "name": "male",
-            "token": {
-              "end": {
-                "column": 7,
-                "line": 8,
-                "offset": 79
-              },
-              "filepath": "/main.dbml",
-              "start": {
-                "column": 3,
-                "line": 8,
-                "offset": 75
-              }
-            }
-          }
-        ]
-      },
-      {
         "name": "status",
         "token": {
           "end": {
@@ -216,32 +66,161 @@
             }
           }
         ]
+      },
+      {
+        "name": "gender",
+        "schemaName": "demographic",
+        "token": {
+          "end": {
+            "column": 2,
+            "line": 10,
+            "offset": 90
+          },
+          "filepath": "/main.dbml",
+          "start": {
+            "column": 1,
+            "line": 7,
+            "offset": 47
+          }
+        },
+        "values": [
+          {
+            "name": "male",
+            "token": {
+              "end": {
+                "column": 7,
+                "line": 8,
+                "offset": 79
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 3,
+                "line": 8,
+                "offset": 75
+              }
+            }
+          },
+          {
+            "name": "female",
+            "token": {
+              "end": {
+                "column": 9,
+                "line": 9,
+                "offset": 88
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 3,
+                "line": 9,
+                "offset": 82
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "age segment",
+        "schemaName": "demographic",
+        "token": {
+          "end": {
+            "column": 2,
+            "line": 18,
+            "offset": 180
+          },
+          "filepath": "/main.dbml",
+          "start": {
+            "column": 1,
+            "line": 12,
+            "offset": 92
+          }
+        },
+        "values": [
+          {
+            "name": "toddler",
+            "token": {
+              "end": {
+                "column": 10,
+                "line": 13,
+                "offset": 134
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 3,
+                "line": 13,
+                "offset": 127
+              }
+            }
+          },
+          {
+            "name": "children",
+            "token": {
+              "end": {
+                "column": 11,
+                "line": 14,
+                "offset": 145
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 3,
+                "line": 14,
+                "offset": 137
+              }
+            }
+          },
+          {
+            "name": "teenager",
+            "token": {
+              "end": {
+                "column": 11,
+                "line": 15,
+                "offset": 156
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 3,
+                "line": 15,
+                "offset": 148
+              }
+            }
+          },
+          {
+            "name": "young_adult",
+            "token": {
+              "end": {
+                "column": 14,
+                "line": 16,
+                "offset": 170
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 3,
+                "line": 16,
+                "offset": 159
+              }
+            }
+          },
+          {
+            "name": "elder",
+            "token": {
+              "end": {
+                "column": 8,
+                "line": 17,
+                "offset": 178
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 3,
+                "line": 17,
+                "offset": 173
+              }
+            }
+          }
+        ]
       }
     ],
     "tables": [
       {
         "fields": [
-          {
-            "name": "id",
-            "pk": false,
-            "token": {
-              "end": {
-                "column": 9,
-                "line": 22,
-                "offset": 215
-              },
-              "filepath": "/main.dbml",
-              "start": {
-                "column": 3,
-                "line": 22,
-                "offset": 209
-              }
-            },
-            "type": {
-              "type_name": "int"
-            },
-            "unique": false
-          },
           {
             "name": "name",
             "pk": false,
@@ -260,6 +239,27 @@
             },
             "type": {
               "type_name": "text"
+            },
+            "unique": false
+          },
+          {
+            "name": "id",
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 9,
+                "line": 22,
+                "offset": 215
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 3,
+                "line": 22,
+                "offset": 209
+              }
+            },
+            "type": {
+              "type_name": "int"
             },
             "unique": false
           },

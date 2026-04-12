@@ -5,64 +5,6 @@
         "endpoints": [
           {
             "fieldNames": [
-              "code"
-            ],
-            "relation": "1",
-            "tableName": "countries",
-            "token": {
-              "end": {
-                "column": 23,
-                "line": 55,
-                "offset": 997
-              },
-              "filepath": "/main.dbml",
-              "start": {
-                "column": 5,
-                "line": 55,
-                "offset": 979
-              }
-            }
-          },
-          {
-            "fieldNames": [
-              "country_code"
-            ],
-            "relation": "*",
-            "tableName": "users",
-            "token": {
-              "end": {
-                "column": 48,
-                "line": 55,
-                "offset": 1022
-              },
-              "filepath": "/main.dbml",
-              "start": {
-                "column": 26,
-                "line": 55,
-                "offset": 1000
-              }
-            }
-          }
-        ],
-        "onDelete": "no action",
-        "token": {
-          "end": {
-            "column": 68,
-            "line": 55,
-            "offset": 1042
-          },
-          "filepath": "/main.dbml",
-          "start": {
-            "column": 1,
-            "line": 55,
-            "offset": 975
-          }
-        }
-      },
-      {
-        "endpoints": [
-          {
-            "fieldNames": [
               "id"
             ],
             "relation": "1",
@@ -234,6 +176,64 @@
             "offset": 878
           }
         }
+      },
+      {
+        "endpoints": [
+          {
+            "fieldNames": [
+              "code"
+            ],
+            "relation": "1",
+            "tableName": "countries",
+            "token": {
+              "end": {
+                "column": 23,
+                "line": 55,
+                "offset": 997
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 5,
+                "line": 55,
+                "offset": 979
+              }
+            }
+          },
+          {
+            "fieldNames": [
+              "country_code"
+            ],
+            "relation": "*",
+            "tableName": "users",
+            "token": {
+              "end": {
+                "column": 48,
+                "line": 55,
+                "offset": 1022
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 26,
+                "line": 55,
+                "offset": 1000
+              }
+            }
+          }
+        ],
+        "onDelete": "no action",
+        "token": {
+          "end": {
+            "column": 68,
+            "line": 55,
+            "offset": 1042
+          },
+          "filepath": "/main.dbml",
+          "start": {
+            "column": 1,
+            "line": 55,
+            "offset": 975
+          }
+        }
       }
     ],
     "tablePartials": [
@@ -345,6 +345,27 @@
             "unique": true
           },
           {
+            "name": "status",
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 30,
+                "line": 12,
+                "offset": 200
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 3,
+                "line": 12,
+                "offset": 173
+              }
+            },
+            "type": {
+              "type_name": "orders_status_enum"
+            },
+            "unique": false
+          },
+          {
             "name": "created_at",
             "pk": false,
             "token": {
@@ -363,27 +384,6 @@
             "type": {
               "args": "255",
               "type_name": "varchar(255)"
-            },
-            "unique": false
-          },
-          {
-            "name": "status",
-            "pk": false,
-            "token": {
-              "end": {
-                "column": 30,
-                "line": 12,
-                "offset": 200
-              },
-              "filepath": "/main.dbml",
-              "start": {
-                "column": 3,
-                "line": 12,
-                "offset": 173
-              }
-            },
-            "type": {
-              "type_name": "orders_status_enum"
             },
             "unique": false
           }
@@ -425,31 +425,113 @@
       {
         "fields": [
           {
-            "dbdefault": {
-              "type": "expression",
-              "value": "now()"
-            },
-            "increment": false,
-            "name": "created_at",
+            "name": "order_id",
             "pk": false,
             "token": {
               "end": {
-                "column": 43,
-                "line": 27,
-                "offset": 457
+                "column": 17,
+                "line": 17,
+                "offset": 270
               },
               "filepath": "/main.dbml",
               "start": {
                 "column": 3,
-                "line": 27,
-                "offset": 417
+                "line": 17,
+                "offset": 256
               }
             },
             "type": {
-              "type_name": "datetime"
+              "type_name": "int"
             },
             "unique": false
           },
+          {
+            "name": "product_id",
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 19,
+                "line": 18,
+                "offset": 289
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 3,
+                "line": 18,
+                "offset": 273
+              }
+            },
+            "type": {
+              "type_name": "int"
+            },
+            "unique": false
+          },
+          {
+            "name": "product_name",
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 30,
+                "line": 19,
+                "offset": 319
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 3,
+                "line": 19,
+                "offset": 292
+              }
+            },
+            "type": {
+              "args": "255",
+              "type_name": "varchar(255)"
+            },
+            "unique": false
+          },
+          {
+            "dbdefault": {
+              "type": "number",
+              "value": 1
+            },
+            "increment": false,
+            "name": "quantity",
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 30,
+                "line": 20,
+                "offset": 349
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 3,
+                "line": 20,
+                "offset": 322
+              }
+            },
+            "type": {
+              "type_name": "int"
+            },
+            "unique": false
+          }
+        ],
+        "name": "order_items",
+        "token": {
+          "end": {
+            "column": 2,
+            "line": 21,
+            "offset": 351
+          },
+          "filepath": "/main.dbml",
+          "start": {
+            "column": 1,
+            "line": 16,
+            "offset": 232
+          }
+        }
+      },
+      {
+        "fields": [
           {
             "name": "id",
             "pk": false,
@@ -490,6 +572,32 @@
             "type": {
               "args": "10,4",
               "type_name": "decimal(10,4)"
+            },
+            "unique": false
+          },
+          {
+            "dbdefault": {
+              "type": "expression",
+              "value": "now()"
+            },
+            "increment": false,
+            "name": "created_at",
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 43,
+                "line": 27,
+                "offset": 457
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 3,
+                "line": 27,
+                "offset": 417
+              }
+            },
+            "type": {
+              "type_name": "datetime"
             },
             "unique": false
           }
@@ -580,114 +688,6 @@
             "column": 1,
             "line": 23,
             "offset": 353
-          }
-        }
-      },
-      {
-        "fields": [
-          {
-            "dbdefault": {
-              "type": "number",
-              "value": 1
-            },
-            "increment": false,
-            "name": "quantity",
-            "pk": false,
-            "token": {
-              "end": {
-                "column": 30,
-                "line": 20,
-                "offset": 349
-              },
-              "filepath": "/main.dbml",
-              "start": {
-                "column": 3,
-                "line": 20,
-                "offset": 322
-              }
-            },
-            "type": {
-              "type_name": "int"
-            },
-            "unique": false
-          },
-          {
-            "name": "order_id",
-            "pk": false,
-            "token": {
-              "end": {
-                "column": 17,
-                "line": 17,
-                "offset": 270
-              },
-              "filepath": "/main.dbml",
-              "start": {
-                "column": 3,
-                "line": 17,
-                "offset": 256
-              }
-            },
-            "type": {
-              "type_name": "int"
-            },
-            "unique": false
-          },
-          {
-            "name": "product_id",
-            "pk": false,
-            "token": {
-              "end": {
-                "column": 19,
-                "line": 18,
-                "offset": 289
-              },
-              "filepath": "/main.dbml",
-              "start": {
-                "column": 3,
-                "line": 18,
-                "offset": 273
-              }
-            },
-            "type": {
-              "type_name": "int"
-            },
-            "unique": false
-          },
-          {
-            "name": "product_name",
-            "pk": false,
-            "token": {
-              "end": {
-                "column": 30,
-                "line": 19,
-                "offset": 319
-              },
-              "filepath": "/main.dbml",
-              "start": {
-                "column": 3,
-                "line": 19,
-                "offset": 292
-              }
-            },
-            "type": {
-              "args": "255",
-              "type_name": "varchar(255)"
-            },
-            "unique": false
-          }
-        ],
-        "name": "order_items",
-        "token": {
-          "end": {
-            "column": 2,
-            "line": 21,
-            "offset": 351
-          },
-          "filepath": "/main.dbml",
-          "start": {
-            "column": 1,
-            "line": 16,
-            "offset": 232
           }
         }
       },

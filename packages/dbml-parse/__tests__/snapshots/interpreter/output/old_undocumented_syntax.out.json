@@ -4,108 +4,28 @@
       {
         "fields": [
           {
-            "increment": false,
-            "name": "id",
+            "increment": true,
+            "name": "customer_id",
+            "not_null": true,
             "pk": true,
             "token": {
               "end": {
-                "column": 27,
-                "line": 14,
-                "offset": 448
+                "column": 51,
+                "line": 2,
+                "offset": 69
               },
               "filepath": "/main.dbml",
               "start": {
                 "column": 3,
-                "line": 14,
-                "offset": 424
+                "line": 2,
+                "offset": 21
               }
             },
             "type": {
-              "type_name": "integer"
+              "type_name": "SMALLINT"
             },
             "unique": false
           },
-          {
-            "name": "country_id",
-            "pk": false,
-            "token": {
-              "end": {
-                "column": 21,
-                "line": 16,
-                "offset": 497
-              },
-              "filepath": "/main.dbml",
-              "start": {
-                "column": 3,
-                "line": 16,
-                "offset": 479
-              }
-            },
-            "type": {
-              "type_name": "integer"
-            },
-            "unique": false
-          },
-          {
-            "dbdefault": {
-              "type": "string",
-              "value": "hello"
-            },
-            "increment": false,
-            "name": "name",
-            "pk": false,
-            "token": {
-              "end": {
-                "column": 28,
-                "line": 15,
-                "offset": 476
-              },
-              "filepath": "/main.dbml",
-              "start": {
-                "column": 3,
-                "line": 15,
-                "offset": 451
-              }
-            },
-            "type": {
-              "type_name": "e"
-            },
-            "unique": false
-          }
-        ],
-        "name": "cities",
-        "note": {
-          "token": {
-            "end": {
-              "column": 17,
-              "line": 17,
-              "offset": 514
-            },
-            "filepath": "/main.dbml",
-            "start": {
-              "column": 3,
-              "line": 17,
-              "offset": 500
-            }
-          },
-          "value": "sasasa"
-        },
-        "token": {
-          "end": {
-            "column": 2,
-            "line": 18,
-            "offset": 516
-          },
-          "filepath": "/main.dbml",
-          "start": {
-            "column": 1,
-            "line": 13,
-            "offset": 407
-          }
-        }
-      },
-      {
-        "fields": [
           {
             "increment": false,
             "name": "store_id",
@@ -150,75 +70,6 @@
             "type": {
               "args": "45",
               "type_name": "VARCHAR(45)"
-            },
-            "unique": false
-          },
-          {
-            "increment": false,
-            "name": "address_id",
-            "not_null": true,
-            "pk": false,
-            "token": {
-              "end": {
-                "column": 35,
-                "line": 7,
-                "offset": 265
-              },
-              "filepath": "/main.dbml",
-              "start": {
-                "column": 3,
-                "line": 7,
-                "offset": 233
-              }
-            },
-            "type": {
-              "type_name": "SMALLINT"
-            },
-            "unique": false
-          },
-          {
-            "increment": false,
-            "name": "create_date",
-            "not_null": true,
-            "pk": false,
-            "token": {
-              "end": {
-                "column": 36,
-                "line": 9,
-                "offset": 346
-              },
-              "filepath": "/main.dbml",
-              "start": {
-                "column": 3,
-                "line": 9,
-                "offset": 313
-              }
-            },
-            "type": {
-              "type_name": "DATETIME"
-            },
-            "unique": false
-          },
-          {
-            "increment": true,
-            "name": "customer_id",
-            "not_null": true,
-            "pk": true,
-            "token": {
-              "end": {
-                "column": 51,
-                "line": 2,
-                "offset": 69
-              },
-              "filepath": "/main.dbml",
-              "start": {
-                "column": 3,
-                "line": 2,
-                "offset": 21
-              }
-            },
-            "type": {
-              "type_name": "SMALLINT"
             },
             "unique": false
           },
@@ -278,6 +129,29 @@
             "unique": false
           },
           {
+            "increment": false,
+            "name": "address_id",
+            "not_null": true,
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 35,
+                "line": 7,
+                "offset": 265
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 3,
+                "line": 7,
+                "offset": 233
+              }
+            },
+            "type": {
+              "type_name": "SMALLINT"
+            },
+            "unique": false
+          },
+          {
             "dbdefault": {
               "type": "boolean",
               "value": "true"
@@ -301,6 +175,29 @@
             },
             "type": {
               "type_name": "BOOLEAN"
+            },
+            "unique": false
+          },
+          {
+            "increment": false,
+            "name": "create_date",
+            "not_null": true,
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 36,
+                "line": 9,
+                "offset": 346
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 3,
+                "line": 9,
+                "offset": 313
+              }
+            },
+            "type": {
+              "type_name": "DATETIME"
             },
             "unique": false
           },
@@ -349,26 +246,108 @@
       {
         "fields": [
           {
-            "name": "cities",
-            "pk": false,
+            "increment": false,
+            "name": "id",
+            "pk": true,
             "token": {
               "end": {
-                "column": 17,
-                "line": 22,
-                "offset": 562
+                "column": 27,
+                "line": 14,
+                "offset": 448
               },
               "filepath": "/main.dbml",
               "start": {
-                "column": 2,
-                "line": 22,
-                "offset": 547
+                "column": 3,
+                "line": 14,
+                "offset": 424
               }
             },
             "type": {
-              "type_name": "string[]"
+              "type_name": "integer"
             },
             "unique": false
           },
+          {
+            "dbdefault": {
+              "type": "string",
+              "value": "hello"
+            },
+            "increment": false,
+            "name": "name",
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 28,
+                "line": 15,
+                "offset": 476
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 3,
+                "line": 15,
+                "offset": 451
+              }
+            },
+            "type": {
+              "type_name": "e"
+            },
+            "unique": false
+          },
+          {
+            "name": "country_id",
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 21,
+                "line": 16,
+                "offset": 497
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 3,
+                "line": 16,
+                "offset": 479
+              }
+            },
+            "type": {
+              "type_name": "integer"
+            },
+            "unique": false
+          }
+        ],
+        "name": "cities",
+        "note": {
+          "token": {
+            "end": {
+              "column": 17,
+              "line": 17,
+              "offset": 514
+            },
+            "filepath": "/main.dbml",
+            "start": {
+              "column": 3,
+              "line": 17,
+              "offset": 500
+            }
+          },
+          "value": "sasasa"
+        },
+        "token": {
+          "end": {
+            "column": 2,
+            "line": 18,
+            "offset": 516
+          },
+          "filepath": "/main.dbml",
+          "start": {
+            "column": 1,
+            "line": 13,
+            "offset": 407
+          }
+        }
+      },
+      {
+        "fields": [
           {
             "name": "id",
             "pk": false,
@@ -387,6 +366,27 @@
             },
             "type": {
               "type_name": "integer"
+            },
+            "unique": false
+          },
+          {
+            "name": "cities",
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 17,
+                "line": 22,
+                "offset": 562
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 2,
+                "line": 22,
+                "offset": 547
+              }
+            },
+            "type": {
+              "type_name": "string[]"
             },
             "unique": false
           }

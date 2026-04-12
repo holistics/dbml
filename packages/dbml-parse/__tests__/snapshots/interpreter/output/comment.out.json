@@ -18,6 +18,22 @@
         },
         "values": [
           {
+            "name": "out_of_stock",
+            "token": {
+              "end": {
+                "column": 15,
+                "line": 34,
+                "offset": 499
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 3,
+                "line": 34,
+                "offset": 487
+              }
+            }
+          },
+          {
             "name": "in_stock",
             "note": {
               "token": {
@@ -46,22 +62,6 @@
                 "column": 3,
                 "line": 35,
                 "offset": 513
-              }
-            }
-          },
-          {
-            "name": "out_of_stock",
-            "token": {
-              "end": {
-                "column": 15,
-                "line": 34,
-                "offset": 499
-              },
-              "filepath": "/main.dbml",
-              "start": {
-                "column": 3,
-                "line": 34,
-                "offset": 487
               }
             }
           },
@@ -116,22 +116,6 @@
         },
         "values": [
           {
-            "name": "in_stock",
-            "token": {
-              "end": {
-                "column": 11,
-                "line": 47,
-                "offset": 733
-              },
-              "filepath": "/main.dbml",
-              "start": {
-                "column": 3,
-                "line": 47,
-                "offset": 725
-              }
-            }
-          },
-          {
             "name": "out_of_stock",
             "token": {
               "end": {
@@ -144,6 +128,22 @@
                 "column": 3,
                 "line": 46,
                 "offset": 699
+              }
+            }
+          },
+          {
+            "name": "in_stock",
+            "token": {
+              "end": {
+                "column": 11,
+                "line": 47,
+                "offset": 733
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 3,
+                "line": 47,
+                "offset": 725
               }
             }
           },

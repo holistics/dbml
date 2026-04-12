@@ -5,24 +5,61 @@
         "endpoints": [
           {
             "fieldNames": [
-              "following_user_id"
+              "user_id"
             ],
             "relation": "*",
-            "tableName": "follows",
+            "tableName": "posts",
             "token": {
               "end": {
-                "column": 42,
-                "line": 68,
-                "offset": 1006
+                "column": 19,
+                "line": 66,
+                "offset": 937
               },
               "filepath": "/main.dbml",
               "start": {
-                "column": 17,
-                "line": 68,
-                "offset": 981
+                "column": 6,
+                "line": 66,
+                "offset": 924
               }
             }
           },
+          {
+            "fieldNames": [
+              "id"
+            ],
+            "relation": "1",
+            "tableName": "users",
+            "token": {
+              "end": {
+                "column": 30,
+                "line": 66,
+                "offset": 948
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 22,
+                "line": 66,
+                "offset": 940
+              }
+            }
+          }
+        ],
+        "token": {
+          "end": {
+            "column": 30,
+            "line": 66,
+            "offset": 948
+          },
+          "filepath": "/main.dbml",
+          "start": {
+            "column": 1,
+            "line": 66,
+            "offset": 919
+          }
+        }
+      },
+      {
+        "endpoints": [
           {
             "fieldNames": [
               "id"
@@ -40,6 +77,26 @@
                 "column": 6,
                 "line": 68,
                 "offset": 970
+              }
+            }
+          },
+          {
+            "fieldNames": [
+              "following_user_id"
+            ],
+            "relation": "*",
+            "tableName": "follows",
+            "token": {
+              "end": {
+                "column": 42,
+                "line": 68,
+                "offset": 1006
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 17,
+                "line": 68,
+                "offset": 981
               }
             }
           }
@@ -62,26 +119,6 @@
         "endpoints": [
           {
             "fieldNames": [
-              "followed_user_id"
-            ],
-            "relation": "*",
-            "tableName": "follows",
-            "token": {
-              "end": {
-                "column": 41,
-                "line": 70,
-                "offset": 1048
-              },
-              "filepath": "/main.dbml",
-              "start": {
-                "column": 17,
-                "line": 70,
-                "offset": 1024
-              }
-            }
-          },
-          {
-            "fieldNames": [
               "id"
             ],
             "relation": "1",
@@ -99,6 +136,26 @@
                 "offset": 1013
               }
             }
+          },
+          {
+            "fieldNames": [
+              "followed_user_id"
+            ],
+            "relation": "*",
+            "tableName": "follows",
+            "token": {
+              "end": {
+                "column": 41,
+                "line": 70,
+                "offset": 1048
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 17,
+                "line": 70,
+                "offset": 1024
+              }
+            }
           }
         ],
         "token": {
@@ -114,86 +171,29 @@
             "offset": 1008
           }
         }
-      },
-      {
-        "endpoints": [
-          {
-            "fieldNames": [
-              "id"
-            ],
-            "relation": "1",
-            "tableName": "users",
-            "token": {
-              "end": {
-                "column": 30,
-                "line": 66,
-                "offset": 948
-              },
-              "filepath": "/main.dbml",
-              "start": {
-                "column": 22,
-                "line": 66,
-                "offset": 940
-              }
-            }
-          },
-          {
-            "fieldNames": [
-              "user_id"
-            ],
-            "relation": "*",
-            "tableName": "posts",
-            "token": {
-              "end": {
-                "column": 19,
-                "line": 66,
-                "offset": 937
-              },
-              "filepath": "/main.dbml",
-              "start": {
-                "column": 6,
-                "line": 66,
-                "offset": 924
-              }
-            }
-          }
-        ],
-        "token": {
-          "end": {
-            "column": 30,
-            "line": 66,
-            "offset": 948
-          },
-          "filepath": "/main.dbml",
-          "start": {
-            "column": 1,
-            "line": 66,
-            "offset": 919
-          }
-        }
       }
     ],
     "tables": [
       {
         "fields": [
           {
-            "name": "created_at",
+            "name": "following_user_id",
             "pk": false,
             "token": {
               "end": {
-                "column": 23,
-                "line": 7,
-                "offset": 180
+                "column": 28,
+                "line": 5,
+                "offset": 130
               },
               "filepath": "/main.dbml",
               "start": {
                 "column": 3,
-                "line": 7,
-                "offset": 160
+                "line": 5,
+                "offset": 105
               }
             },
             "type": {
-              "type_name": "timestamp"
+              "type_name": "integer"
             },
             "unique": false
           },
@@ -219,23 +219,23 @@
             "unique": false
           },
           {
-            "name": "following_user_id",
+            "name": "created_at",
             "pk": false,
             "token": {
               "end": {
-                "column": 28,
-                "line": 5,
-                "offset": 130
+                "column": 23,
+                "line": 7,
+                "offset": 180
               },
               "filepath": "/main.dbml",
               "start": {
                 "column": 3,
-                "line": 5,
-                "offset": 105
+                "line": 7,
+                "offset": 160
               }
             },
             "type": {
-              "type_name": "integer"
+              "type_name": "timestamp"
             },
             "unique": false
           }
@@ -296,23 +296,23 @@
             "unique": false
           },
           {
-            "name": "created_at",
+            "name": "username",
             "pk": false,
             "token": {
               "end": {
-                "column": 23,
-                "line": 26,
-                "offset": 427
+                "column": 19,
+                "line": 24,
+                "offset": 389
               },
               "filepath": "/main.dbml",
               "start": {
                 "column": 3,
-                "line": 26,
-                "offset": 407
+                "line": 24,
+                "offset": 373
               }
             },
             "type": {
-              "type_name": "timestamp"
+              "type_name": "varchar"
             },
             "unique": false
           },
@@ -338,23 +338,23 @@
             "unique": false
           },
           {
-            "name": "username",
+            "name": "created_at",
             "pk": false,
             "token": {
               "end": {
-                "column": 19,
-                "line": 24,
-                "offset": 389
+                "column": 23,
+                "line": 26,
+                "offset": 427
               },
               "filepath": "/main.dbml",
               "start": {
                 "column": 3,
-                "line": 24,
-                "offset": 373
+                "line": 26,
+                "offset": 407
               }
             },
             "type": {
-              "type_name": "varchar"
+              "type_name": "timestamp"
             },
             "unique": false
           }
@@ -474,23 +474,23 @@
             "unique": false
           },
           {
-            "name": "created_at",
+            "name": "user_id",
             "pk": false,
             "token": {
               "end": {
-                "column": 23,
-                "line": 53,
-                "offset": 751
+                "column": 18,
+                "line": 51,
+                "offset": 711
               },
               "filepath": "/main.dbml",
               "start": {
                 "column": 3,
-                "line": 53,
-                "offset": 731
+                "line": 51,
+                "offset": 696
               }
             },
             "type": {
-              "type_name": "timestamp"
+              "type_name": "integer"
             },
             "unique": false
           },
@@ -516,23 +516,23 @@
             "unique": false
           },
           {
-            "name": "user_id",
+            "name": "created_at",
             "pk": false,
             "token": {
               "end": {
-                "column": 18,
-                "line": 51,
-                "offset": 711
+                "column": 23,
+                "line": 53,
+                "offset": 751
               },
               "filepath": "/main.dbml",
               "start": {
                 "column": 3,
-                "line": 51,
-                "offset": 696
+                "line": 53,
+                "offset": 731
               }
             },
             "type": {
-              "type_name": "integer"
+              "type_name": "timestamp"
             },
             "unique": false
           }

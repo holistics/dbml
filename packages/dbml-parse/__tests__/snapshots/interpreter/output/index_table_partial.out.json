@@ -47,40 +47,19 @@
             "unique": true
           },
           {
-            "name": "country_code",
+            "name": "gender",
             "pk": false,
             "token": {
               "end": {
-                "column": 19,
-                "line": 7,
-                "offset": 153
+                "column": 17,
+                "line": 4,
+                "offset": 89
               },
               "filepath": "/main.dbml",
               "start": {
                 "column": 3,
-                "line": 7,
-                "offset": 137
-              }
-            },
-            "type": {
-              "type_name": "int"
-            },
-            "unique": false
-          },
-          {
-            "name": "created_at",
-            "pk": false,
-            "token": {
-              "end": {
-                "column": 21,
-                "line": 6,
-                "offset": 134
-              },
-              "filepath": "/main.dbml",
-              "start": {
-                "column": 3,
-                "line": 6,
-                "offset": 116
+                "line": 4,
+                "offset": 75
               }
             },
             "type": {
@@ -110,23 +89,44 @@
             "unique": false
           },
           {
-            "name": "gender",
+            "name": "created_at",
             "pk": false,
             "token": {
               "end": {
-                "column": 17,
-                "line": 4,
-                "offset": 89
+                "column": 21,
+                "line": 6,
+                "offset": 134
               },
               "filepath": "/main.dbml",
               "start": {
                 "column": 3,
-                "line": 4,
-                "offset": 75
+                "line": 6,
+                "offset": 116
               }
             },
             "type": {
               "type_name": "varchar"
+            },
+            "unique": false
+          },
+          {
+            "name": "country_code",
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 19,
+                "line": 7,
+                "offset": 153
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 3,
+                "line": 7,
+                "offset": 137
+              }
+            },
+            "type": {
+              "type_name": "int"
             },
             "unique": false
           },
@@ -206,6 +206,43 @@
               }
             },
             "unique": true
+          },
+          {
+            "columns": [
+              {
+                "token": {
+                  "end": {
+                    "column": 14,
+                    "line": 12,
+                    "offset": 247
+                  },
+                  "filepath": "/main.dbml",
+                  "start": {
+                    "column": 5,
+                    "line": 12,
+                    "offset": 238
+                  }
+                },
+                "type": "column",
+                "value": "full_name"
+              }
+            ],
+            "name": "User Name",
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 34,
+                "line": 12,
+                "offset": 267
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 5,
+                "line": 12,
+                "offset": 238
+              }
+            },
+            "unique": false
           },
           {
             "columns": [
@@ -300,37 +337,51 @@
               {
                 "token": {
                   "end": {
-                    "column": 14,
-                    "line": 12,
-                    "offset": 247
+                    "column": 12,
+                    "line": 15,
+                    "offset": 327
                   },
                   "filepath": "/main.dbml",
                   "start": {
-                    "column": 5,
-                    "line": 12,
-                    "offset": 238
+                    "column": 6,
+                    "line": 15,
+                    "offset": 321
                   }
                 },
                 "type": "column",
-                "value": "full_name"
+                "value": "active"
+              },
+              {
+                "token": {
+                  "end": {
+                    "column": 32,
+                    "line": 15,
+                    "offset": 347
+                  },
+                  "filepath": "/main.dbml",
+                  "start": {
+                    "column": 14,
+                    "line": 15,
+                    "offset": 329
+                  }
+                },
+                "type": "expression",
+                "value": "lower(full_name)"
               }
             ],
-            "name": "User Name",
-            "pk": false,
             "token": {
               "end": {
-                "column": 34,
-                "line": 12,
-                "offset": 267
+                "column": 33,
+                "line": 15,
+                "offset": 348
               },
               "filepath": "/main.dbml",
               "start": {
                 "column": 5,
-                "line": 12,
-                "offset": 238
+                "line": 15,
+                "offset": 320
               }
-            },
-            "unique": false
+            }
           },
           {
             "columns": [
@@ -414,57 +465,6 @@
                 "column": 5,
                 "line": 17,
                 "offset": 388
-              }
-            }
-          },
-          {
-            "columns": [
-              {
-                "token": {
-                  "end": {
-                    "column": 12,
-                    "line": 15,
-                    "offset": 327
-                  },
-                  "filepath": "/main.dbml",
-                  "start": {
-                    "column": 6,
-                    "line": 15,
-                    "offset": 321
-                  }
-                },
-                "type": "column",
-                "value": "active"
-              },
-              {
-                "token": {
-                  "end": {
-                    "column": 32,
-                    "line": 15,
-                    "offset": 347
-                  },
-                  "filepath": "/main.dbml",
-                  "start": {
-                    "column": 14,
-                    "line": 15,
-                    "offset": 329
-                  }
-                },
-                "type": "expression",
-                "value": "lower(full_name)"
-              }
-            ],
-            "token": {
-              "end": {
-                "column": 33,
-                "line": 15,
-                "offset": 348
-              },
-              "filepath": "/main.dbml",
-              "start": {
-                "column": 5,
-                "line": 15,
-                "offset": 320
               }
             }
           }

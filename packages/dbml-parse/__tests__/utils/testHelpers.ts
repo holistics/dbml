@@ -134,7 +134,10 @@ function sortArray (array: unknown[]): unknown[] {
     if (s instanceof SyntaxToken) return s.start;
     if (s instanceof NodeSymbol) return getIntraKindRank(s.declaration);
     if (typeof s === 'object') {
-      return getIntraKindRank(Object.values(sortObject(s as Record<string, unknown>))[0]);
+      const obj = s as Record<string, unknown>;
+      const tokenOffset = (obj.token as any)?.start?.offset;
+      if (typeof tokenOffset === 'number') return tokenOffset;
+      return getIntraKindRank(Object.values(sortObject(obj))[0]);
     }
     return 0;
   }

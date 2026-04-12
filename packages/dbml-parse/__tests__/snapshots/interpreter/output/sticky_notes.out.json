@@ -2,23 +2,6 @@
   "database": {
     "notes": [
       {
-        "content": "# Title\nbody\n",
-        "name": "note2",
-        "token": {
-          "end": {
-            "column": 2,
-            "line": 15,
-            "offset": 190
-          },
-          "filepath": "/main.dbml",
-          "start": {
-            "column": 1,
-            "line": 10,
-            "offset": 143
-          }
-        }
-      },
-      {
         "content": "One line note",
         "name": "note",
         "token": {
@@ -32,6 +15,23 @@
             "column": 1,
             "line": 6,
             "offset": 110
+          }
+        }
+      },
+      {
+        "content": "# Title\nbody\n",
+        "name": "note2",
+        "token": {
+          "end": {
+            "column": 2,
+            "line": 15,
+            "offset": 190
+          },
+          "filepath": "/main.dbml",
+          "start": {
+            "column": 1,
+            "line": 10,
+            "offset": 143
           }
         }
       }

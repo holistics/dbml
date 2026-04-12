@@ -18,22 +18,6 @@
         },
         "values": [
           {
-            "name": "completed",
-            "token": {
-              "end": {
-                "column": 12,
-                "line": 10,
-                "offset": 180
-              },
-              "filepath": "/main.dbml",
-              "start": {
-                "column": 3,
-                "line": 10,
-                "offset": 171
-              }
-            }
-          },
-          {
             "name": "created",
             "note": {
               "token": {
@@ -94,6 +78,22 @@
                 "column": 3,
                 "line": 9,
                 "offset": 158
+              }
+            }
+          },
+          {
+            "name": "completed",
+            "token": {
+              "end": {
+                "column": 12,
+                "line": 10,
+                "offset": 180
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 3,
+                "line": 10,
+                "offset": 171
               }
             }
           }
@@ -175,27 +175,6 @@
             "unique": false
           },
           {
-            "name": "created_at",
-            "pk": false,
-            "token": {
-              "end": {
-                "column": 21,
-                "line": 16,
-                "offset": 284
-              },
-              "filepath": "/main.dbml",
-              "start": {
-                "column": 3,
-                "line": 16,
-                "offset": 266
-              }
-            },
-            "type": {
-              "type_name": "varchar"
-            },
-            "unique": false
-          },
-          {
             "name": "status",
             "pk": false,
             "token": {
@@ -213,6 +192,27 @@
             },
             "type": {
               "type_name": "order status"
+            },
+            "unique": false
+          },
+          {
+            "name": "created_at",
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 21,
+                "line": 16,
+                "offset": 284
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 3,
+                "line": 16,
+                "offset": 266
+              }
+            },
+            "type": {
+              "type_name": "varchar"
             },
             "unique": false
           }
@@ -251,23 +251,23 @@
       {
         "fields": [
           {
-            "name": "booking_date",
+            "name": "id",
             "pk": false,
             "token": {
               "end": {
-                "column": 20,
-                "line": 25,
-                "offset": 395
+                "column": 13,
+                "line": 23,
+                "offset": 357
               },
               "filepath": "/main.dbml",
               "start": {
                 "column": 3,
-                "line": 25,
-                "offset": 378
+                "line": 23,
+                "offset": 347
               }
             },
             "type": {
-              "type_name": "date"
+              "type_name": "integer"
             },
             "unique": false
           },
@@ -293,6 +293,27 @@
             "unique": false
           },
           {
+            "name": "booking_date",
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 20,
+                "line": 25,
+                "offset": 395
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 3,
+                "line": 25,
+                "offset": 378
+              }
+            },
+            "type": {
+              "type_name": "date"
+            },
+            "unique": false
+          },
+          {
             "name": "created_at",
             "pk": false,
             "token": {
@@ -310,27 +331,6 @@
             },
             "type": {
               "type_name": "timestamp"
-            },
-            "unique": false
-          },
-          {
-            "name": "id",
-            "pk": false,
-            "token": {
-              "end": {
-                "column": 13,
-                "line": 23,
-                "offset": 357
-              },
-              "filepath": "/main.dbml",
-              "start": {
-                "column": 3,
-                "line": 23,
-                "offset": 347
-              }
-            },
-            "type": {
-              "type_name": "integer"
             },
             "unique": false
           }
@@ -387,6 +387,183 @@
                 "offset": 438
               }
             },
+            "unique": false
+          },
+          {
+            "columns": [
+              {
+                "token": {
+                  "end": {
+                    "column": 17,
+                    "line": 30,
+                    "offset": 498
+                  },
+                  "filepath": "/main.dbml",
+                  "start": {
+                    "column": 7,
+                    "line": 30,
+                    "offset": 488
+                  }
+                },
+                "type": "column",
+                "value": "created_at"
+              }
+            ],
+            "name": "created_at_index",
+            "note": {
+              "token": {
+                "end": {
+                  "column": 57,
+                  "line": 30,
+                  "offset": 538
+                },
+                "filepath": "/main.dbml",
+                "start": {
+                  "column": 45,
+                  "line": 30,
+                  "offset": 526
+                }
+              },
+              "value": "Date"
+            },
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 58,
+                "line": 30,
+                "offset": 539
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 7,
+                "line": 30,
+                "offset": 488
+              }
+            },
+            "unique": false
+          },
+          {
+            "columns": [
+              {
+                "token": {
+                  "end": {
+                    "column": 19,
+                    "line": 31,
+                    "offset": 558
+                  },
+                  "filepath": "/main.dbml",
+                  "start": {
+                    "column": 7,
+                    "line": 31,
+                    "offset": 546
+                  }
+                },
+                "type": "column",
+                "value": "booking_date"
+              }
+            ],
+            "token": {
+              "end": {
+                "column": 19,
+                "line": 31,
+                "offset": 558
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 7,
+                "line": 31,
+                "offset": 546
+              }
+            }
+          },
+          {
+            "columns": [
+              {
+                "token": {
+                  "end": {
+                    "column": 15,
+                    "line": 32,
+                    "offset": 573
+                  },
+                  "filepath": "/main.dbml",
+                  "start": {
+                    "column": 8,
+                    "line": 32,
+                    "offset": 566
+                  }
+                },
+                "type": "column",
+                "value": "country"
+              },
+              {
+                "token": {
+                  "end": {
+                    "column": 29,
+                    "line": 32,
+                    "offset": 587
+                  },
+                  "filepath": "/main.dbml",
+                  "start": {
+                    "column": 17,
+                    "line": 32,
+                    "offset": 575
+                  }
+                },
+                "type": "column",
+                "value": "booking_date"
+              }
+            ],
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 39,
+                "line": 32,
+                "offset": 597
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 7,
+                "line": 32,
+                "offset": 565
+              }
+            },
+            "unique": true
+          },
+          {
+            "columns": [
+              {
+                "token": {
+                  "end": {
+                    "column": 19,
+                    "line": 33,
+                    "offset": 616
+                  },
+                  "filepath": "/main.dbml",
+                  "start": {
+                    "column": 7,
+                    "line": 33,
+                    "offset": 604
+                  }
+                },
+                "type": "column",
+                "value": "booking_date"
+              }
+            ],
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 32,
+                "line": 33,
+                "offset": 629
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 7,
+                "line": 33,
+                "offset": 604
+              }
+            },
+            "type": "hash",
             "unique": false
           },
           {
@@ -524,183 +701,6 @@
                 "offset": 678
               }
             }
-          },
-          {
-            "columns": [
-              {
-                "token": {
-                  "end": {
-                    "column": 15,
-                    "line": 32,
-                    "offset": 573
-                  },
-                  "filepath": "/main.dbml",
-                  "start": {
-                    "column": 8,
-                    "line": 32,
-                    "offset": 566
-                  }
-                },
-                "type": "column",
-                "value": "country"
-              },
-              {
-                "token": {
-                  "end": {
-                    "column": 29,
-                    "line": 32,
-                    "offset": 587
-                  },
-                  "filepath": "/main.dbml",
-                  "start": {
-                    "column": 17,
-                    "line": 32,
-                    "offset": 575
-                  }
-                },
-                "type": "column",
-                "value": "booking_date"
-              }
-            ],
-            "pk": false,
-            "token": {
-              "end": {
-                "column": 39,
-                "line": 32,
-                "offset": 597
-              },
-              "filepath": "/main.dbml",
-              "start": {
-                "column": 7,
-                "line": 32,
-                "offset": 565
-              }
-            },
-            "unique": true
-          },
-          {
-            "columns": [
-              {
-                "token": {
-                  "end": {
-                    "column": 17,
-                    "line": 30,
-                    "offset": 498
-                  },
-                  "filepath": "/main.dbml",
-                  "start": {
-                    "column": 7,
-                    "line": 30,
-                    "offset": 488
-                  }
-                },
-                "type": "column",
-                "value": "created_at"
-              }
-            ],
-            "name": "created_at_index",
-            "note": {
-              "token": {
-                "end": {
-                  "column": 57,
-                  "line": 30,
-                  "offset": 538
-                },
-                "filepath": "/main.dbml",
-                "start": {
-                  "column": 45,
-                  "line": 30,
-                  "offset": 526
-                }
-              },
-              "value": "Date"
-            },
-            "pk": false,
-            "token": {
-              "end": {
-                "column": 58,
-                "line": 30,
-                "offset": 539
-              },
-              "filepath": "/main.dbml",
-              "start": {
-                "column": 7,
-                "line": 30,
-                "offset": 488
-              }
-            },
-            "unique": false
-          },
-          {
-            "columns": [
-              {
-                "token": {
-                  "end": {
-                    "column": 19,
-                    "line": 31,
-                    "offset": 558
-                  },
-                  "filepath": "/main.dbml",
-                  "start": {
-                    "column": 7,
-                    "line": 31,
-                    "offset": 546
-                  }
-                },
-                "type": "column",
-                "value": "booking_date"
-              }
-            ],
-            "token": {
-              "end": {
-                "column": 19,
-                "line": 31,
-                "offset": 558
-              },
-              "filepath": "/main.dbml",
-              "start": {
-                "column": 7,
-                "line": 31,
-                "offset": 546
-              }
-            }
-          },
-          {
-            "columns": [
-              {
-                "token": {
-                  "end": {
-                    "column": 19,
-                    "line": 33,
-                    "offset": 616
-                  },
-                  "filepath": "/main.dbml",
-                  "start": {
-                    "column": 7,
-                    "line": 33,
-                    "offset": 604
-                  }
-                },
-                "type": "column",
-                "value": "booking_date"
-              }
-            ],
-            "pk": false,
-            "token": {
-              "end": {
-                "column": 32,
-                "line": 33,
-                "offset": 629
-              },
-              "filepath": "/main.dbml",
-              "start": {
-                "column": 7,
-                "line": 33,
-                "offset": 604
-              }
-            },
-            "type": "hash",
-            "unique": false
           }
         ],
         "name": "bookings",

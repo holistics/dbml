@@ -101,44 +101,23 @@
         "alias": "U",
         "fields": [
           {
-            "name": "country_code",
+            "name": "id",
             "pk": false,
             "token": {
               "end": {
-                "column": 19,
-                "line": 5,
-                "offset": 88
+                "column": 9,
+                "line": 2,
+                "offset": 27
               },
               "filepath": "/main.dbml",
               "start": {
                 "column": 3,
-                "line": 5,
-                "offset": 72
+                "line": 2,
+                "offset": 21
               }
             },
             "type": {
               "type_name": "int"
-            },
-            "unique": false
-          },
-          {
-            "name": "created_at",
-            "pk": false,
-            "token": {
-              "end": {
-                "column": 23,
-                "line": 4,
-                "offset": 69
-              },
-              "filepath": "/main.dbml",
-              "start": {
-                "column": 3,
-                "line": 4,
-                "offset": 49
-              }
-            },
-            "type": {
-              "type_name": "timestamp"
             },
             "unique": false
           },
@@ -164,19 +143,40 @@
             "unique": false
           },
           {
-            "name": "id",
+            "name": "created_at",
             "pk": false,
             "token": {
               "end": {
-                "column": 9,
-                "line": 2,
-                "offset": 27
+                "column": 23,
+                "line": 4,
+                "offset": 69
               },
               "filepath": "/main.dbml",
               "start": {
                 "column": 3,
-                "line": 2,
-                "offset": 21
+                "line": 4,
+                "offset": 49
+              }
+            },
+            "type": {
+              "type_name": "timestamp"
+            },
+            "unique": false
+          },
+          {
+            "name": "country_code",
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 19,
+                "line": 5,
+                "offset": 88
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 3,
+                "line": 5,
+                "offset": 72
               }
             },
             "type": {
@@ -202,48 +202,6 @@
       },
       {
         "fields": [
-          {
-            "name": "country_code",
-            "pk": false,
-            "token": {
-              "end": {
-                "column": 18,
-                "line": 11,
-                "offset": 161
-              },
-              "filepath": "/main.dbml",
-              "start": {
-                "column": 2,
-                "line": 11,
-                "offset": 145
-              }
-            },
-            "type": {
-              "type_name": "int"
-            },
-            "unique": false
-          },
-          {
-            "name": "created at",
-            "pk": false,
-            "token": {
-              "end": {
-                "column": 23,
-                "line": 12,
-                "offset": 184
-              },
-              "filepath": "/main.dbml",
-              "start": {
-                "column": 3,
-                "line": 12,
-                "offset": 164
-              }
-            },
-            "type": {
-              "type_name": "varchar"
-            },
-            "unique": false
-          },
           {
             "name": "id",
             "pk": false,
@@ -279,6 +237,48 @@
                 "column": 3,
                 "line": 10,
                 "offset": 122
+              }
+            },
+            "type": {
+              "type_name": "varchar"
+            },
+            "unique": false
+          },
+          {
+            "name": "country_code",
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 18,
+                "line": 11,
+                "offset": 161
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 2,
+                "line": 11,
+                "offset": 145
+              }
+            },
+            "type": {
+              "type_name": "int"
+            },
+            "unique": false
+          },
+          {
+            "name": "created at",
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 23,
+                "line": 12,
+                "offset": 184
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 3,
+                "line": 12,
+                "offset": 164
               }
             },
             "type": {

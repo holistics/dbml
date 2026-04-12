@@ -384,23 +384,23 @@
             "unique": false
           },
           {
-            "name": "address",
+            "name": "user_id",
             "pk": false,
             "token": {
               "end": {
-                "column": 19,
-                "line": 21,
-                "offset": 440
+                "column": 16,
+                "line": 19,
+                "offset": 402
               },
               "filepath": "/main.dbml",
               "start": {
                 "column": 3,
-                "line": 21,
-                "offset": 424
+                "line": 19,
+                "offset": 389
               }
             },
             "type": {
-              "type_name": "string"
+              "type_name": "int"
             },
             "unique": false
           },
@@ -426,23 +426,23 @@
             "unique": false
           },
           {
-            "name": "user_id",
+            "name": "address",
             "pk": false,
             "token": {
               "end": {
-                "column": 16,
-                "line": 19,
-                "offset": 402
+                "column": 19,
+                "line": 21,
+                "offset": 440
               },
               "filepath": "/main.dbml",
               "start": {
                 "column": 3,
-                "line": 19,
-                "offset": 389
+                "line": 21,
+                "offset": 424
               }
             },
             "type": {
-              "type_name": "int"
+              "type_name": "string"
             },
             "unique": false
           }

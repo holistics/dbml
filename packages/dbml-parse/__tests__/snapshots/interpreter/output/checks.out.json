@@ -276,22 +276,6 @@
           {
             "checks": [
               {
-                "expression": "balance < 10000000",
-                "token": {
-                  "end": {
-                    "column": 65,
-                    "line": 28,
-                    "offset": 484
-                  },
-                  "filepath": "/main.dbml",
-                  "start": {
-                    "column": 38,
-                    "line": 28,
-                    "offset": 457
-                  }
-                }
-              },
-              {
                 "expression": "balance > 0",
                 "token": {
                   "end": {
@@ -304,6 +288,22 @@
                     "column": 16,
                     "line": 28,
                     "offset": 435
+                  }
+                }
+              },
+              {
+                "expression": "balance < 10000000",
+                "token": {
+                  "end": {
+                    "column": 65,
+                    "line": 28,
+                    "offset": 484
+                  },
+                  "filepath": "/main.dbml",
+                  "start": {
+                    "column": 38,
+                    "line": 28,
+                    "offset": 457
                   }
                 }
               }

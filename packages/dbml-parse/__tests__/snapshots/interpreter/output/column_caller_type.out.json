@@ -4,28 +4,6 @@
       {
         "fields": [
           {
-            "name": "code",
-            "pk": false,
-            "token": {
-              "end": {
-                "column": 26,
-                "line": 5,
-                "offset": 100
-              },
-              "filepath": "/main.dbml",
-              "start": {
-                "column": 5,
-                "line": 5,
-                "offset": 79
-              }
-            },
-            "type": {
-              "args": "MAX",
-              "type_name": "varbinary(MAX)"
-            },
-            "unique": false
-          },
-          {
             "name": "id",
             "pk": false,
             "token": {
@@ -43,6 +21,28 @@
             },
             "type": {
               "type_name": "int"
+            },
+            "unique": false
+          },
+          {
+            "name": "secret",
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 27,
+                "line": 3,
+                "offset": 50
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 5,
+                "line": 3,
+                "offset": 28
+              }
+            },
+            "type": {
+              "args": "MAX",
+              "type_name": "nvarbinary(MAX)"
             },
             "unique": false
           },
@@ -69,24 +69,24 @@
             "unique": false
           },
           {
-            "name": "secret",
+            "name": "code",
             "pk": false,
             "token": {
               "end": {
-                "column": 27,
-                "line": 3,
-                "offset": 50
+                "column": 26,
+                "line": 5,
+                "offset": 100
               },
               "filepath": "/main.dbml",
               "start": {
                 "column": 5,
-                "line": 3,
-                "offset": 28
+                "line": 5,
+                "offset": 79
               }
             },
             "type": {
               "args": "MAX",
-              "type_name": "nvarbinary(MAX)"
+              "type_name": "varbinary(MAX)"
             },
             "unique": false
           },

@@ -50,38 +50,6 @@
             }
           },
           {
-            "name": "done",
-            "token": {
-              "end": {
-                "column": 7,
-                "line": 4,
-                "offset": 121
-              },
-              "filepath": "/main.dbml",
-              "start": {
-                "column": 3,
-                "line": 4,
-                "offset": 117
-              }
-            }
-          },
-          {
-            "name": "failed",
-            "token": {
-              "end": {
-                "column": 9,
-                "line": 5,
-                "offset": 130
-              },
-              "filepath": "/main.dbml",
-              "start": {
-                "column": 3,
-                "line": 5,
-                "offset": 124
-              }
-            }
-          },
-          {
             "name": "running",
             "note": {
               "token": {
@@ -110,6 +78,38 @@
                 "column": 3,
                 "line": 3,
                 "offset": 64
+              }
+            }
+          },
+          {
+            "name": "done",
+            "token": {
+              "end": {
+                "column": 7,
+                "line": 4,
+                "offset": 121
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 3,
+                "line": 4,
+                "offset": 117
+              }
+            }
+          },
+          {
+            "name": "failed",
+            "token": {
+              "end": {
+                "column": 9,
+                "line": 5,
+                "offset": 130
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 3,
+                "line": 5,
+                "offset": 124
               }
             }
           },
@@ -163,22 +163,6 @@
           }
         },
         "values": [
-          {
-            "name": "completed",
-            "token": {
-              "end": {
-                "column": 12,
-                "line": 18,
-                "offset": 376
-              },
-              "filepath": "/main.dbml",
-              "start": {
-                "column": 3,
-                "line": 18,
-                "offset": 367
-              }
-            }
-          },
           {
             "name": "created",
             "note": {
@@ -240,6 +224,22 @@
                 "column": 3,
                 "line": 17,
                 "offset": 354
+              }
+            }
+          },
+          {
+            "name": "completed",
+            "token": {
+              "end": {
+                "column": 12,
+                "line": 18,
+                "offset": 376
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 3,
+                "line": 18,
+                "offset": 367
               }
             }
           }
@@ -328,27 +328,6 @@
       {
         "fields": [
           {
-            "name": "created_at",
-            "pk": false,
-            "token": {
-              "end": {
-                "column": 21,
-                "line": 24,
-                "offset": 458
-              },
-              "filepath": "/main.dbml",
-              "start": {
-                "column": 3,
-                "line": 24,
-                "offset": 440
-              }
-            },
-            "type": {
-              "type_name": "varchar"
-            },
-            "unique": false
-          },
-          {
             "name": "id",
             "pk": true,
             "token": {
@@ -387,6 +366,27 @@
             },
             "type": {
               "type_name": "order status"
+            },
+            "unique": false
+          },
+          {
+            "name": "created_at",
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 21,
+                "line": 24,
+                "offset": 458
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 3,
+                "line": 24,
+                "offset": 440
+              }
+            },
+            "type": {
+              "type_name": "varchar"
             },
             "unique": false
           }
