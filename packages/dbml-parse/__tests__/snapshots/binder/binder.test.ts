@@ -9,17 +9,41 @@ import Parser from '@/core/parser/parser';
 import type { ProgramNode } from '@/core/types/nodes';
 import Analyzer from '@/core/analyzer/analyzer';
 import {
-  scanTestNames, toSnapshot,
+  scanTestNames, toSnapshot, collectNodesWithReferee,
 } from '@tests/utils';
 import type Report from '@/core/types/report';
 import Compiler from '@/compiler';
+import { SymbolKind } from '@/core/types/symbol';
+import type { NodeSymbol } from '@/core/types/symbol';
 
 function serializeBinderResult (compiler: Compiler, report: Report<ProgramNode>): string {
   const value = report.getValue();
   const errors = report.getErrors();
   const warnings = report.getWarnings();
+  const nodeReferees = collectNodesWithReferee(value);
+
+  // Simulate module-system-3 structure:
+  // - Named schemas live at "program" level
+  // - Public schema only contains non-schema members
+  const programSymbol = value.symbol;
+  const schemas: NodeSymbol[] = [];
+  const publicSchemaMembers: NodeSymbol[] = [];
+  if (programSymbol?.symbolTable) {
+    for (const [, sym] of programSymbol.symbolTable.entries()) {
+      if (sym.isKind(SymbolKind.Schema)) {
+        schemas.push(sym);
+      } else {
+        publicSchemaMembers.push(sym);
+      }
+    }
+  }
+
   return JSON.stringify(toSnapshot(compiler, {
-    program: value,
+    program: {
+      schemas,
+      publicSchema: publicSchemaMembers,
+    },
+    nodeReferees,
     errors,
     warnings,
   }), null, 2);
@@ -34,8 +58,8 @@ describe('[snapshot] binder', () => {
     const compiler = new Compiler();
     compiler.setSource(program);
 
-    // @ts-expect-error "Current workaround to use compiler but only trigger analyzer"
     const {
+      // @ts-expect-error "Current workaround to use compiler but only trigger analyzer"
       nodeIdGenerator, symbolIdGenerator,
     } = compiler;
 

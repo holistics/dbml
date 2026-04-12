@@ -351,6 +351,29 @@ export function syntaxNodeToSnapshot (
   return result;
 }
 
+export function collectNodesWithReferee (node: SyntaxNode): SyntaxNode[] {
+  const result: SyntaxNode[] = [];
+  if (node.referee) result.push(node);
+
+  const {
+    id, parent, parentNode, kind, startPos, endPos, start, end, filepath, fullStart, fullEnd, symbol, referee, source, ...props
+  } = node as SyntaxNode & Record<string, unknown>;
+
+  for (const value of Object.values(props)) {
+    if (value instanceof SyntaxNode) {
+      result.push(...collectNodesWithReferee(value));
+    } else if (Array.isArray(value)) {
+      for (const item of value) {
+        if (item instanceof SyntaxNode) {
+          result.push(...collectNodesWithReferee(item));
+        }
+      }
+    }
+  }
+
+  return result;
+}
+
 export function symbolToSnapshot (
   compiler: Compiler,
   symbol?: NodeSymbol,
