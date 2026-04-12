@@ -11,7 +11,6 @@ import {
 import type Compiler from '@/compiler';
 import { Filepath } from '@/core/types';
 import { isEmpty } from 'lodash-es';
-import { get } from 'node:http';
 
 export function scanTestNames (path: string) {
   const files = fs.readdirSync(path);
