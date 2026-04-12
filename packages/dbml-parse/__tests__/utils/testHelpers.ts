@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import { NodeSymbol } from '@/core/types/symbol/symbols';
 import { SyntaxToken } from '@/core/types/tokens';
 import {
-  ElementDeclarationNode, LiteralNode, ProgramNode, SyntaxNode, VariableNode,
+  ElementDeclarationNode, FunctionApplicationNode, FunctionExpressionNode, LiteralNode, PrimaryExpressionNode, ProgramNode, SyntaxNode, VariableNode,
 } from '@/core/types/nodes';
 import { getElementNameString } from '@/core/parser/utils';
 import {
@@ -11,6 +11,7 @@ import {
 import type Compiler from '@/compiler';
 import { Filepath } from '@/core/types';
 import { isEmpty } from 'lodash-es';
+import { get } from 'node:http';
 
 export function scanTestNames (path: string) {
   const files = fs.readdirSync(path);
@@ -27,6 +28,15 @@ function getNameHint (node: SyntaxNode | SyntaxToken): string {
   }
   if (node instanceof LiteralNode) {
     return `${node.literal?.value || ''}`;
+  }
+  if (node instanceof FunctionExpressionNode) {
+    return `${node.value?.value || ''}`;
+  }
+  if (node instanceof FunctionApplicationNode && node.callee) {
+    return getNameHint(node.callee);
+  }
+  if (node instanceof PrimaryExpressionNode && node.expression) {
+    return getNameHint(node.expression);
   }
   if (node instanceof ElementDeclarationNode) {
     return `${getElementNameString(node) || ''}`;
@@ -189,7 +199,7 @@ export function errorToSnapshot (
     diagnostic,
     nodeOrToken,
   } = error;
-  const filepath = nodeOrToken.filepath.toString();
+  const filepath = nodeOrToken.filepath.absolute;
   if (simple) {
     return sortObject({
       level: 'error',
@@ -219,7 +229,7 @@ export function warningToSnapshot (
     diagnostic,
     nodeOrToken,
   } = warning;
-  const filepath = nodeOrToken.filepath.toString();
+  const filepath = nodeOrToken.filepath.absolute;
   if (simple) {
     return sortObject({
       level: 'warning',
@@ -266,7 +276,7 @@ export function syntaxTokenToSnapshot (
         id: tokenReadableId,
         snippet,
         isInvalid,
-        filepath: filepath.toString(),
+        filepath: filepath.absolute,
       },
     };
   }

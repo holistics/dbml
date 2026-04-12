@@ -69,7 +69,7 @@
                 "body": [
                   {
                     "context": {
-                      "id": "node@<function-application>@@[L4:C4, L4:C41]",
+                      "id": "node@<function-application>@abc@[L4:C4, L4:C41]",
                       "snippet": "abc \" gibb...: empty. ]"
                     },
                     "children": {
@@ -123,7 +123,7 @@
                                     "children": {
                                       "leftExpression": {
                                         "context": {
-                                          "id": "node@<primary-expression>@@[L4:C33, L4:C38]",
+                                          "id": "node@<primary-expression>@empty@[L4:C33, L4:C38]",
                                           "snippet": "empty"
                                         },
                                         "children": {
@@ -188,7 +188,7 @@
                         },
                         {
                           "context": {
-                            "id": "node@<primary-expression>@@[L4:C8, L4:C26]",
+                            "id": "node@<primary-expression>@ gibberish type @[L4:C8, L4:C26]",
                             "snippet": "\" gibberish type \""
                           },
                           "children": {
@@ -214,7 +214,7 @@
                       ],
                       "callee": {
                         "context": {
-                          "id": "node@<primary-expression>@@[L4:C4, L4:C7]",
+                          "id": "node@<primary-expression>@abc@[L4:C4, L4:C7]",
                           "snippet": "abc"
                         },
                         "children": {
@@ -241,7 +241,7 @@
                   },
                   {
                     "context": {
-                      "id": "node@<function-application>@@[L1:C4, L3:C44]",
+                      "id": "node@<function-application>@id@[L1:C4, L3:C44]",
                       "snippet": "id integer...tribute' ]"
                     },
                     "children": {
@@ -327,7 +327,7 @@
                                   },
                                   "value": {
                                     "context": {
-                                      "id": "node@<primary-expression>@@[L1:C26, L1:C31]",
+                                      "id": "node@<primary-expression>@two@[L1:C26, L1:C31]",
                                       "snippet": "'two'"
                                     },
                                     "children": {
@@ -388,7 +388,7 @@
                                   },
                                   "value": {
                                     "context": {
-                                      "id": "node@<primary-expression>@@[L2:C23, L2:C30]",
+                                      "id": "node@<primary-expression>@three@[L2:C23, L2:C30]",
                                       "snippet": "'three'"
                                     },
                                     "children": {
@@ -436,7 +436,7 @@
                                   },
                                   "value": {
                                     "context": {
-                                      "id": "node@<primary-expression>@@[L3:C23, L3:C42]",
+                                      "id": "node@<primary-expression>@invalid-attribute@[L3:C23, L3:C42]",
                                       "snippet": "'invalid-attribute'"
                                     },
                                     "children": {
@@ -547,7 +547,7 @@
                         },
                         {
                           "context": {
-                            "id": "node@<primary-expression>@@[L1:C7, L1:C14]",
+                            "id": "node@<primary-expression>@integer@[L1:C7, L1:C14]",
                             "snippet": "integer"
                           },
                           "children": {
@@ -573,7 +573,7 @@
                       ],
                       "callee": {
                         "context": {
-                          "id": "node@<primary-expression>@@[L1:C4, L1:C6]",
+                          "id": "node@<primary-expression>@id@[L1:C4, L1:C6]",
                           "snippet": "id"
                         },
                         "children": {
@@ -603,7 +603,7 @@
             },
             "name": {
               "context": {
-                "id": "node@<primary-expression>@@[L0:C5, L0:C19]",
+                "id": "node@<primary-expression>@ListExpression@[L0:C5, L0:C19]",
                 "snippet": "ListExpression"
               },
               "children": {

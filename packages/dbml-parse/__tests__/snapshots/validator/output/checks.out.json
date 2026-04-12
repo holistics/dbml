@@ -169,14 +169,14 @@
                 "body": [
                   {
                     "context": {
-                      "id": "node@<function-application>@@[L3:C2, L3:C13]",
+                      "id": "node@<function-application>@balance@[L3:C2, L3:C13]",
                       "snippet": "balance int"
                     },
                     "children": {
                       "args": [
                         {
                           "context": {
-                            "id": "node@<primary-expression>@@[L3:C10, L3:C13]",
+                            "id": "node@<primary-expression>@int@[L3:C10, L3:C13]",
                             "snippet": "int"
                           },
                           "children": {
@@ -202,7 +202,7 @@
                       ],
                       "callee": {
                         "context": {
-                          "id": "node@<primary-expression>@@[L3:C2, L3:C9]",
+                          "id": "node@<primary-expression>@balance@[L3:C2, L3:C9]",
                           "snippet": "balance"
                         },
                         "children": {
@@ -228,11 +228,11 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol@Column@@[L3:C2, L3:C13]",
+                        "id": "symbol@Column@balance@[L3:C2, L3:C13]",
                         "snippet": "balance int"
                       },
                       "declaration": {
-                        "id": "node@<function-application>@@[L3:C2, L3:C13]",
+                        "id": "node@<function-application>@balance@[L3:C2, L3:C13]",
                         "snippet": "balance int"
                       }
                     }
@@ -270,7 +270,7 @@
                           "body": [
                             {
                               "context": {
-                                "id": "node@<function-application>@@[L7:C4, L7:C44]",
+                                "id": "node@<function-application>@balance > 0@[L7:C4, L7:C44]",
                                 "snippet": "`balance >..._balance']"
                               },
                               "children": {
@@ -318,7 +318,7 @@
                                             },
                                             "value": {
                                               "context": {
-                                                "id": "node@<primary-expression>@@[L7:C25, L7:C43]",
+                                                "id": "node@<primary-expression>@positive_balance@[L7:C25, L7:C43]",
                                                 "snippet": "'positive_balance'"
                                               },
                                               "children": {
@@ -367,7 +367,7 @@
                                 ],
                                 "callee": {
                                   "context": {
-                                    "id": "node@<function-expression>@@[L7:C4, L7:C17]",
+                                    "id": "node@<function-expression>@balance > 0@[L7:C4, L7:C17]",
                                     "snippet": "`balance > 0`"
                                   },
                                   "children": {
@@ -386,7 +386,7 @@
                             },
                             {
                               "context": {
-                                "id": "node@<function-application>@@[L9:C4, L9:C47]",
+                                "id": "node@<function-application>@duplicate name@[L9:C4, L9:C47]",
                                 "snippet": "`duplicate...me: 'dup']"
                               },
                               "children": {
@@ -445,7 +445,7 @@
                                             },
                                             "value": {
                                               "context": {
-                                                "id": "node@<primary-expression>@@[L9:C28, L9:C33]",
+                                                "id": "node@<primary-expression>@dup@[L9:C28, L9:C33]",
                                                 "snippet": "'dup'"
                                               },
                                               "children": {
@@ -506,7 +506,7 @@
                                             },
                                             "value": {
                                               "context": {
-                                                "id": "node@<primary-expression>@@[L9:C41, L9:C46]",
+                                                "id": "node@<primary-expression>@dup@[L9:C41, L9:C46]",
                                                 "snippet": "'dup'"
                                               },
                                               "children": {
@@ -555,7 +555,7 @@
                                 ],
                                 "callee": {
                                   "context": {
-                                    "id": "node@<function-expression>@@[L9:C4, L9:C20]",
+                                    "id": "node@<function-expression>@duplicate name@[L9:C4, L9:C20]",
                                     "snippet": "`duplicate name`"
                                   },
                                   "children": {
@@ -574,7 +574,7 @@
                             },
                             {
                               "context": {
-                                "id": "node@<function-application>@@[L10:C4, L10:C31]",
+                                "id": "node@<function-application>@invalid setting@[L10:C4, L10:C31]",
                                 "snippet": "`invalid s... [invalid]"
                               },
                               "children": {
@@ -637,7 +637,7 @@
                                 ],
                                 "callee": {
                                   "context": {
-                                    "id": "node@<function-expression>@@[L10:C4, L10:C21]",
+                                    "id": "node@<function-expression>@invalid setting@[L10:C4, L10:C21]",
                                     "snippet": "`invalid setting`"
                                   },
                                   "children": {
@@ -673,7 +673,7 @@
             },
             "name": {
               "context": {
-                "id": "node@<primary-expression>@@[L2:C6, L2:C11]",
+                "id": "node@<primary-expression>@Users@[L2:C6, L2:C11]",
                 "snippet": "Users"
               },
               "children": {
@@ -718,7 +718,7 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol@Column@@[L3:C2, L3:C13]",
+                  "id": "symbol@Column@balance@[L3:C2, L3:C13]",
                   "snippet": "balance int"
                 }
               }
@@ -758,14 +758,14 @@
                 "body": [
                   {
                     "context": {
-                      "id": "node@<function-application>@@[L15:C2, L15:C13]",
+                      "id": "node@<function-application>@balance@[L15:C2, L15:C13]",
                       "snippet": "balance int"
                     },
                     "children": {
                       "args": [
                         {
                           "context": {
-                            "id": "node@<primary-expression>@@[L15:C10, L15:C13]",
+                            "id": "node@<primary-expression>@int@[L15:C10, L15:C13]",
                             "snippet": "int"
                           },
                           "children": {
@@ -791,7 +791,7 @@
                       ],
                       "callee": {
                         "context": {
-                          "id": "node@<primary-expression>@@[L15:C2, L15:C9]",
+                          "id": "node@<primary-expression>@balance@[L15:C2, L15:C9]",
                           "snippet": "balance"
                         },
                         "children": {
@@ -817,11 +817,11 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol@Column@@[L15:C2, L15:C13]",
+                        "id": "symbol@Column@balance@[L15:C2, L15:C13]",
                         "snippet": "balance int"
                       },
                       "declaration": {
-                        "id": "node@<function-application>@@[L15:C2, L15:C13]",
+                        "id": "node@<function-application>@balance@[L15:C2, L15:C13]",
                         "snippet": "balance int"
                       }
                     }
@@ -859,7 +859,7 @@
                           "body": [
                             {
                               "context": {
-                                "id": "node@<function-application>@@[L18:C4, L18:C44]",
+                                "id": "node@<function-application>@balance > 0@[L18:C4, L18:C44]",
                                 "snippet": "`balance >..._balance']"
                               },
                               "children": {
@@ -907,7 +907,7 @@
                                             },
                                             "value": {
                                               "context": {
-                                                "id": "node@<primary-expression>@@[L18:C25, L18:C43]",
+                                                "id": "node@<primary-expression>@positive_balance@[L18:C25, L18:C43]",
                                                 "snippet": "'positive_balance'"
                                               },
                                               "children": {
@@ -956,7 +956,7 @@
                                 ],
                                 "callee": {
                                   "context": {
-                                    "id": "node@<function-expression>@@[L18:C4, L18:C17]",
+                                    "id": "node@<function-expression>@balance > 0@[L18:C4, L18:C17]",
                                     "snippet": "`balance > 0`"
                                   },
                                   "children": {
@@ -975,7 +975,7 @@
                             },
                             {
                               "context": {
-                                "id": "node@<function-application>@@[L20:C4, L20:C47]",
+                                "id": "node@<function-application>@duplicate name@[L20:C4, L20:C47]",
                                 "snippet": "`duplicate...me: 'dup']"
                               },
                               "children": {
@@ -1034,7 +1034,7 @@
                                             },
                                             "value": {
                                               "context": {
-                                                "id": "node@<primary-expression>@@[L20:C28, L20:C33]",
+                                                "id": "node@<primary-expression>@dup@[L20:C28, L20:C33]",
                                                 "snippet": "'dup'"
                                               },
                                               "children": {
@@ -1095,7 +1095,7 @@
                                             },
                                             "value": {
                                               "context": {
-                                                "id": "node@<primary-expression>@@[L20:C41, L20:C46]",
+                                                "id": "node@<primary-expression>@dup@[L20:C41, L20:C46]",
                                                 "snippet": "'dup'"
                                               },
                                               "children": {
@@ -1144,7 +1144,7 @@
                                 ],
                                 "callee": {
                                   "context": {
-                                    "id": "node@<function-expression>@@[L20:C4, L20:C20]",
+                                    "id": "node@<function-expression>@duplicate name@[L20:C4, L20:C20]",
                                     "snippet": "`duplicate name`"
                                   },
                                   "children": {
@@ -1163,7 +1163,7 @@
                             },
                             {
                               "context": {
-                                "id": "node@<function-application>@@[L21:C4, L21:C31]",
+                                "id": "node@<function-application>@invalid setting@[L21:C4, L21:C31]",
                                 "snippet": "`invalid s... [invalid]"
                               },
                               "children": {
@@ -1226,7 +1226,7 @@
                                 ],
                                 "callee": {
                                   "context": {
-                                    "id": "node@<function-expression>@@[L21:C4, L21:C21]",
+                                    "id": "node@<function-expression>@invalid setting@[L21:C4, L21:C21]",
                                     "snippet": "`invalid setting`"
                                   },
                                   "children": {
@@ -1262,7 +1262,7 @@
             },
             "name": {
               "context": {
-                "id": "node@<primary-expression>@@[L14:C13, L14:C18]",
+                "id": "node@<primary-expression>@Users@[L14:C13, L14:C18]",
                 "snippet": "Users"
               },
               "children": {
@@ -1307,7 +1307,7 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol@Column@@[L15:C2, L15:C13]",
+                  "id": "symbol@Column@balance@[L15:C2, L15:C13]",
                   "snippet": "balance int"
                 }
               }

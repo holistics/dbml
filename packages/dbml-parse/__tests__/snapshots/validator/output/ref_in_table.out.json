@@ -31,7 +31,7 @@
       "level": "error",
       "node": {
         "context": {
-          "id": "node@<primary-expression>@@[L13:C9, L13:C11]",
+          "id": "node@<primary-expression>@id@[L13:C9, L13:C11]",
           "snippet": "id"
         }
       }
@@ -43,7 +43,7 @@
       "level": "error",
       "node": {
         "context": {
-          "id": "node@<primary-expression>@@[L14:C9, L14:C13]",
+          "id": "node@<primary-expression>@code@[L14:C9, L14:C13]",
           "snippet": "code"
         }
       }
@@ -107,7 +107,7 @@
                             "children": {
                               "leftExpression": {
                                 "context": {
-                                  "id": "node@<primary-expression>@@[L14:C9, L14:C13]",
+                                  "id": "node@<primary-expression>@code@[L14:C9, L14:C13]",
                                   "snippet": "code"
                                 },
                                 "children": {
@@ -147,7 +147,7 @@
                                 "children": {
                                   "leftExpression": {
                                     "context": {
-                                      "id": "node@<primary-expression>@@[L14:C16, L14:C17]",
+                                      "id": "node@<primary-expression>@B@[L14:C16, L14:C17]",
                                       "snippet": "B"
                                     },
                                     "children": {
@@ -181,7 +181,7 @@
                                   },
                                   "rightExpression": {
                                     "context": {
-                                      "id": "node@<primary-expression>@@[L14:C18, L14:C22]",
+                                      "id": "node@<primary-expression>@code@[L14:C18, L14:C22]",
                                       "snippet": "code"
                                     },
                                     "children": {
@@ -250,7 +250,7 @@
                             "children": {
                               "leftExpression": {
                                 "context": {
-                                  "id": "node@<primary-expression>@@[L13:C9, L13:C11]",
+                                  "id": "node@<primary-expression>@id@[L13:C9, L13:C11]",
                                   "snippet": "id"
                                 },
                                 "children": {
@@ -290,7 +290,7 @@
                                 "children": {
                                   "leftExpression": {
                                     "context": {
-                                      "id": "node@<primary-expression>@@[L13:C14, L13:C15]",
+                                      "id": "node@<primary-expression>@A@[L13:C14, L13:C15]",
                                       "snippet": "A"
                                     },
                                     "children": {
@@ -324,7 +324,7 @@
                                   },
                                   "rightExpression": {
                                     "context": {
-                                      "id": "node@<primary-expression>@@[L13:C16, L13:C18]",
+                                      "id": "node@<primary-expression>@id@[L13:C16, L13:C18]",
                                       "snippet": "id"
                                     },
                                     "children": {
@@ -375,14 +375,14 @@
                   },
                   {
                     "context": {
-                      "id": "node@<function-application>@@[L11:C4, L11:C14]",
+                      "id": "node@<function-application>@id@[L11:C4, L11:C14]",
                       "snippet": "id integer"
                     },
                     "children": {
                       "args": [
                         {
                           "context": {
-                            "id": "node@<primary-expression>@@[L11:C7, L11:C14]",
+                            "id": "node@<primary-expression>@integer@[L11:C7, L11:C14]",
                             "snippet": "integer"
                           },
                           "children": {
@@ -408,7 +408,7 @@
                       ],
                       "callee": {
                         "context": {
-                          "id": "node@<primary-expression>@@[L11:C4, L11:C6]",
+                          "id": "node@<primary-expression>@id@[L11:C4, L11:C6]",
                           "snippet": "id"
                         },
                         "children": {
@@ -434,25 +434,25 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol@Column@@[L11:C4, L11:C14]",
+                        "id": "symbol@Column@id@[L11:C4, L11:C14]",
                         "snippet": "id integer"
                       },
                       "declaration": {
-                        "id": "node@<function-application>@@[L11:C4, L11:C14]",
+                        "id": "node@<function-application>@id@[L11:C4, L11:C14]",
                         "snippet": "id integer"
                       }
                     }
                   },
                   {
                     "context": {
-                      "id": "node@<function-application>@@[L12:C4, L12:C15]",
+                      "id": "node@<function-application>@code@[L12:C4, L12:C15]",
                       "snippet": "code number"
                     },
                     "children": {
                       "args": [
                         {
                           "context": {
-                            "id": "node@<primary-expression>@@[L12:C9, L12:C15]",
+                            "id": "node@<primary-expression>@number@[L12:C9, L12:C15]",
                             "snippet": "number"
                           },
                           "children": {
@@ -478,7 +478,7 @@
                       ],
                       "callee": {
                         "context": {
-                          "id": "node@<primary-expression>@@[L12:C4, L12:C8]",
+                          "id": "node@<primary-expression>@code@[L12:C4, L12:C8]",
                           "snippet": "code"
                         },
                         "children": {
@@ -504,11 +504,11 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol@Column@@[L12:C4, L12:C15]",
+                        "id": "symbol@Column@code@[L12:C4, L12:C15]",
                         "snippet": "code number"
                       },
                       "declaration": {
-                        "id": "node@<function-application>@@[L12:C4, L12:C15]",
+                        "id": "node@<function-application>@code@[L12:C4, L12:C15]",
                         "snippet": "code number"
                       }
                     }
@@ -518,7 +518,7 @@
             },
             "name": {
               "context": {
-                "id": "node@<primary-expression>@@[L10:C6, L10:C7]",
+                "id": "node@<primary-expression>@C@[L10:C6, L10:C7]",
                 "snippet": "C"
               },
               "children": {
@@ -563,14 +563,14 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol@Column@@[L11:C4, L11:C14]",
-                  "snippet": "id integer"
+                  "id": "symbol@Column@code@[L12:C4, L12:C15]",
+                  "snippet": "code number"
                 }
               },
               {
                 "context": {
-                  "id": "symbol@Column@@[L12:C4, L12:C15]",
-                  "snippet": "code number"
+                  "id": "symbol@Column@id@[L11:C4, L11:C14]",
+                  "snippet": "id integer"
                 }
               }
             ]
@@ -609,14 +609,14 @@
                 "body": [
                   {
                     "context": {
-                      "id": "node@<function-application>@@[L1:C4, L1:C14]",
+                      "id": "node@<function-application>@id@[L1:C4, L1:C14]",
                       "snippet": "id integer"
                     },
                     "children": {
                       "args": [
                         {
                           "context": {
-                            "id": "node@<primary-expression>@@[L1:C7, L1:C14]",
+                            "id": "node@<primary-expression>@integer@[L1:C7, L1:C14]",
                             "snippet": "integer"
                           },
                           "children": {
@@ -642,7 +642,7 @@
                       ],
                       "callee": {
                         "context": {
-                          "id": "node@<primary-expression>@@[L1:C4, L1:C6]",
+                          "id": "node@<primary-expression>@id@[L1:C4, L1:C6]",
                           "snippet": "id"
                         },
                         "children": {
@@ -668,25 +668,25 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol@Column@@[L1:C4, L1:C14]",
+                        "id": "symbol@Column@id@[L1:C4, L1:C14]",
                         "snippet": "id integer"
                       },
                       "declaration": {
-                        "id": "node@<function-application>@@[L1:C4, L1:C14]",
+                        "id": "node@<function-application>@id@[L1:C4, L1:C14]",
                         "snippet": "id integer"
                       }
                     }
                   },
                   {
                     "context": {
-                      "id": "node@<function-application>@@[L2:C4, L2:C15]",
+                      "id": "node@<function-application>@code@[L2:C4, L2:C15]",
                       "snippet": "code number"
                     },
                     "children": {
                       "args": [
                         {
                           "context": {
-                            "id": "node@<primary-expression>@@[L2:C9, L2:C15]",
+                            "id": "node@<primary-expression>@number@[L2:C9, L2:C15]",
                             "snippet": "number"
                           },
                           "children": {
@@ -712,7 +712,7 @@
                       ],
                       "callee": {
                         "context": {
-                          "id": "node@<primary-expression>@@[L2:C4, L2:C8]",
+                          "id": "node@<primary-expression>@code@[L2:C4, L2:C8]",
                           "snippet": "code"
                         },
                         "children": {
@@ -738,11 +738,11 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol@Column@@[L2:C4, L2:C15]",
+                        "id": "symbol@Column@code@[L2:C4, L2:C15]",
                         "snippet": "code number"
                       },
                       "declaration": {
-                        "id": "node@<function-application>@@[L2:C4, L2:C15]",
+                        "id": "node@<function-application>@code@[L2:C4, L2:C15]",
                         "snippet": "code number"
                       }
                     }
@@ -752,7 +752,7 @@
             },
             "name": {
               "context": {
-                "id": "node@<primary-expression>@@[L0:C6, L0:C7]",
+                "id": "node@<primary-expression>@A@[L0:C6, L0:C7]",
                 "snippet": "A"
               },
               "children": {
@@ -798,14 +798,14 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol@Column@@[L1:C4, L1:C14]",
-                  "snippet": "id integer"
+                  "id": "symbol@Column@code@[L2:C4, L2:C15]",
+                  "snippet": "code number"
                 }
               },
               {
                 "context": {
-                  "id": "symbol@Column@@[L2:C4, L2:C15]",
-                  "snippet": "code number"
+                  "id": "symbol@Column@id@[L1:C4, L1:C14]",
+                  "snippet": "id integer"
                 }
               }
             ]
@@ -844,14 +844,14 @@
                 "body": [
                   {
                     "context": {
-                      "id": "node@<function-application>@@[L6:C4, L6:C14]",
+                      "id": "node@<function-application>@id@[L6:C4, L6:C14]",
                       "snippet": "id integer"
                     },
                     "children": {
                       "args": [
                         {
                           "context": {
-                            "id": "node@<primary-expression>@@[L6:C7, L6:C14]",
+                            "id": "node@<primary-expression>@integer@[L6:C7, L6:C14]",
                             "snippet": "integer"
                           },
                           "children": {
@@ -877,7 +877,7 @@
                       ],
                       "callee": {
                         "context": {
-                          "id": "node@<primary-expression>@@[L6:C4, L6:C6]",
+                          "id": "node@<primary-expression>@id@[L6:C4, L6:C6]",
                           "snippet": "id"
                         },
                         "children": {
@@ -903,25 +903,25 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol@Column@@[L6:C4, L6:C14]",
+                        "id": "symbol@Column@id@[L6:C4, L6:C14]",
                         "snippet": "id integer"
                       },
                       "declaration": {
-                        "id": "node@<function-application>@@[L6:C4, L6:C14]",
+                        "id": "node@<function-application>@id@[L6:C4, L6:C14]",
                         "snippet": "id integer"
                       }
                     }
                   },
                   {
                     "context": {
-                      "id": "node@<function-application>@@[L7:C4, L7:C15]",
+                      "id": "node@<function-application>@code@[L7:C4, L7:C15]",
                       "snippet": "code number"
                     },
                     "children": {
                       "args": [
                         {
                           "context": {
-                            "id": "node@<primary-expression>@@[L7:C9, L7:C15]",
+                            "id": "node@<primary-expression>@number@[L7:C9, L7:C15]",
                             "snippet": "number"
                           },
                           "children": {
@@ -947,7 +947,7 @@
                       ],
                       "callee": {
                         "context": {
-                          "id": "node@<primary-expression>@@[L7:C4, L7:C8]",
+                          "id": "node@<primary-expression>@code@[L7:C4, L7:C8]",
                           "snippet": "code"
                         },
                         "children": {
@@ -973,11 +973,11 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol@Column@@[L7:C4, L7:C15]",
+                        "id": "symbol@Column@code@[L7:C4, L7:C15]",
                         "snippet": "code number"
                       },
                       "declaration": {
-                        "id": "node@<function-application>@@[L7:C4, L7:C15]",
+                        "id": "node@<function-application>@code@[L7:C4, L7:C15]",
                         "snippet": "code number"
                       }
                     }
@@ -987,7 +987,7 @@
             },
             "name": {
               "context": {
-                "id": "node@<primary-expression>@@[L5:C6, L5:C7]",
+                "id": "node@<primary-expression>@B@[L5:C6, L5:C7]",
                 "snippet": "B"
               },
               "children": {
@@ -1032,14 +1032,14 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol@Column@@[L6:C4, L6:C14]",
-                  "snippet": "id integer"
+                  "id": "symbol@Column@code@[L7:C4, L7:C15]",
+                  "snippet": "code number"
                 }
               },
               {
                 "context": {
-                  "id": "symbol@Column@@[L7:C4, L7:C15]",
-                  "snippet": "code number"
+                  "id": "symbol@Column@id@[L6:C4, L6:C14]",
+                  "snippet": "id integer"
                 }
               }
             ]

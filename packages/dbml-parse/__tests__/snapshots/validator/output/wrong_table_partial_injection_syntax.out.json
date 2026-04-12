@@ -158,7 +158,7 @@
                                 "children": {
                                   "expression": {
                                     "context": {
-                                      "id": "node@<primary-expression>@@[L3:C3, L3:C9]",
+                                      "id": "node@<primary-expression>@common@[L3:C3, L3:C9]",
                                       "snippet": "common"
                                     },
                                     "children": {
@@ -203,7 +203,7 @@
                               },
                               "rightExpression": {
                                 "context": {
-                                  "id": "node@<primary-expression>@@[L4:C3, L4:C9]",
+                                  "id": "node@<primary-expression>@common@[L4:C3, L4:C9]",
                                   "snippet": "common"
                                 },
                                 "children": {
@@ -239,7 +239,7 @@
                           },
                           "rightExpression": {
                             "context": {
-                              "id": "node@<primary-expression>@@[L5:C3, L5:C9]",
+                              "id": "node@<primary-expression>@common@[L5:C3, L5:C9]",
                               "snippet": "common"
                             },
                             "children": {
@@ -268,14 +268,14 @@
                   },
                   {
                     "context": {
-                      "id": "node@<function-application>@@[L1:C2, L1:C8]",
+                      "id": "node@<function-application>@id@[L1:C2, L1:C8]",
                       "snippet": "id int"
                     },
                     "children": {
                       "args": [
                         {
                           "context": {
-                            "id": "node@<primary-expression>@@[L1:C5, L1:C8]",
+                            "id": "node@<primary-expression>@int@[L1:C5, L1:C8]",
                             "snippet": "int"
                           },
                           "children": {
@@ -301,7 +301,7 @@
                       ],
                       "callee": {
                         "context": {
-                          "id": "node@<primary-expression>@@[L1:C2, L1:C4]",
+                          "id": "node@<primary-expression>@id@[L1:C2, L1:C4]",
                           "snippet": "id"
                         },
                         "children": {
@@ -327,11 +327,11 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol@Column@@[L1:C2, L1:C8]",
+                        "id": "symbol@Column@id@[L1:C2, L1:C8]",
                         "snippet": "id int"
                       },
                       "declaration": {
-                        "id": "node@<function-application>@@[L1:C2, L1:C8]",
+                        "id": "node@<function-application>@id@[L1:C2, L1:C8]",
                         "snippet": "id int"
                       }
                     }
@@ -350,7 +350,7 @@
                         "children": {
                           "expression": {
                             "context": {
-                              "id": "node@<primary-expression>@@[L7:C3, L7:C4]",
+                              "id": "node@<primary-expression>@1@[L7:C3, L7:C4]",
                               "snippet": "1"
                             },
                             "children": {
@@ -391,7 +391,7 @@
             },
             "name": {
               "context": {
-                "id": "node@<primary-expression>@@[L0:C6, L0:C11]",
+                "id": "node@<primary-expression>@Users@[L0:C6, L0:C11]",
                 "snippet": "Users"
               },
               "children": {
@@ -437,7 +437,7 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol@Column@@[L1:C2, L1:C8]",
+                  "id": "symbol@Column@id@[L1:C2, L1:C8]",
                   "snippet": "id int"
                 }
               }

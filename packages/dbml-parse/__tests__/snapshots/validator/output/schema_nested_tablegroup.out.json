@@ -54,7 +54,7 @@
             },
             "name": {
               "context": {
-                "id": "node@<primary-expression>@@[L0:C6, L0:C7]",
+                "id": "node@<primary-expression>@A@[L0:C6, L0:C7]",
                 "snippet": "A"
               },
               "children": {
@@ -132,13 +132,13 @@
                 "body": [
                   {
                     "context": {
-                      "id": "node@<function-application>@@[L4:C2, L4:C3]",
+                      "id": "node@<function-application>@A@[L4:C2, L4:C3]",
                       "snippet": "A"
                     },
                     "children": {
                       "callee": {
                         "context": {
-                          "id": "node@<primary-expression>@@[L4:C2, L4:C3]",
+                          "id": "node@<primary-expression>@A@[L4:C2, L4:C3]",
                           "snippet": "A"
                         },
                         "children": {
@@ -164,11 +164,11 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol@TableGroup field@@[L4:C2, L4:C3]",
+                        "id": "symbol@TableGroup field@A@[L4:C2, L4:C3]",
                         "snippet": "A"
                       },
                       "declaration": {
-                        "id": "node@<function-application>@@[L4:C2, L4:C3]",
+                        "id": "node@<function-application>@A@[L4:C2, L4:C3]",
                         "snippet": "A"
                       }
                     }
@@ -184,7 +184,7 @@
               "children": {
                 "leftExpression": {
                   "context": {
-                    "id": "node@<primary-expression>@@[L3:C11, L3:C17]",
+                    "id": "node@<primary-expression>@schema@[L3:C11, L3:C17]",
                     "snippet": "schema"
                   },
                   "children": {
@@ -218,7 +218,7 @@
                 },
                 "rightExpression": {
                   "context": {
-                    "id": "node@<primary-expression>@@[L3:C18, L3:C26]",
+                    "id": "node@<primary-expression>@alphabet@[L3:C18, L3:C26]",
                     "snippet": "alphabet"
                   },
                   "children": {
@@ -265,7 +265,7 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol@TableGroup field@@[L4:C2, L4:C3]",
+                  "id": "symbol@TableGroup field@A@[L4:C2, L4:C3]",
                   "snippet": "A"
                 }
               }

@@ -39,7 +39,7 @@
                 "body": [
                   {
                     "context": {
-                      "id": "node@<function-application>@@[L9:C4, L9:C40]",
+                      "id": "node@<function-application>@new@[L9:C4, L9:C40]",
                       "snippet": "new [note:...employee']"
                     },
                     "children": {
@@ -87,7 +87,7 @@
                                   },
                                   "value": {
                                     "context": {
-                                      "id": "node@<primary-expression>@@[L9:C15, L9:C39]",
+                                      "id": "node@<primary-expression>@This is a new employee@[L9:C15, L9:C39]",
                                       "snippet": "'This is a... employee'"
                                     },
                                     "children": {
@@ -136,7 +136,7 @@
                       ],
                       "callee": {
                         "context": {
-                          "id": "node@<primary-expression>@@[L9:C4, L9:C7]",
+                          "id": "node@<primary-expression>@new@[L9:C4, L9:C7]",
                           "snippet": "new"
                         },
                         "children": {
@@ -163,13 +163,13 @@
                   },
                   {
                     "context": {
-                      "id": "node@<function-application>@@[L8:C1, L8:C6]",
+                      "id": "node@<function-application>@churn@[L8:C1, L8:C6]",
                       "snippet": "churn"
                     },
                     "children": {
                       "callee": {
                         "context": {
-                          "id": "node@<primary-expression>@@[L8:C1, L8:C6]",
+                          "id": "node@<primary-expression>@churn@[L8:C1, L8:C6]",
                           "snippet": "churn"
                         },
                         "children": {
@@ -205,7 +205,7 @@
               "children": {
                 "leftExpression": {
                   "context": {
-                    "id": "node@<primary-expression>@@[L7:C5, L7:C7]",
+                    "id": "node@<primary-expression>@v2@[L7:C5, L7:C7]",
                     "snippet": "v2"
                   },
                   "children": {
@@ -239,7 +239,7 @@
                 },
                 "rightExpression": {
                   "context": {
-                    "id": "node@<primary-expression>@@[L7:C8, L7:C14]",
+                    "id": "node@<primary-expression>@status@[L7:C8, L7:C14]",
                     "snippet": "status"
                   },
                   "children": {
@@ -308,7 +308,7 @@
                 "body": [
                   {
                     "context": {
-                      "id": "node@<function-application>@@[L2:C4, L2:C45]",
+                      "id": "node@<function-application>@status@[L2:C4, L2:C45]",
                       "snippet": "status v2....tatus.new]"
                     },
                     "children": {
@@ -368,7 +368,7 @@
                                         "children": {
                                           "leftExpression": {
                                             "context": {
-                                              "id": "node@<primary-expression>@@[L2:C31, L2:C33]",
+                                              "id": "node@<primary-expression>@v2@[L2:C31, L2:C33]",
                                               "snippet": "v2"
                                             },
                                             "children": {
@@ -402,7 +402,7 @@
                                           },
                                           "rightExpression": {
                                             "context": {
-                                              "id": "node@<primary-expression>@@[L2:C34, L2:C40]",
+                                              "id": "node@<primary-expression>@status@[L2:C34, L2:C40]",
                                               "snippet": "status"
                                             },
                                             "children": {
@@ -438,7 +438,7 @@
                                       },
                                       "rightExpression": {
                                         "context": {
-                                          "id": "node@<primary-expression>@@[L2:C41, L2:C44]",
+                                          "id": "node@<primary-expression>@new@[L2:C41, L2:C44]",
                                           "snippet": "new"
                                         },
                                         "children": {
@@ -494,7 +494,7 @@
                           "children": {
                             "leftExpression": {
                               "context": {
-                                "id": "node@<primary-expression>@@[L2:C11, L2:C13]",
+                                "id": "node@<primary-expression>@v2@[L2:C11, L2:C13]",
                                 "snippet": "v2"
                               },
                               "children": {
@@ -528,7 +528,7 @@
                             },
                             "rightExpression": {
                               "context": {
-                                "id": "node@<primary-expression>@@[L2:C14, L2:C20]",
+                                "id": "node@<primary-expression>@status@[L2:C14, L2:C20]",
                                 "snippet": "status"
                               },
                               "children": {
@@ -556,7 +556,7 @@
                       ],
                       "callee": {
                         "context": {
-                          "id": "node@<primary-expression>@@[L2:C4, L2:C10]",
+                          "id": "node@<primary-expression>@status@[L2:C4, L2:C10]",
                           "snippet": "status"
                         },
                         "children": {
@@ -583,7 +583,7 @@
                   },
                   {
                     "context": {
-                      "id": "node@<function-application>@@[L4:C4, L4:C31]",
+                      "id": "node@<function-application>@referrer@[L4:C4, L4:C31]",
                       "snippet": "referrer i...[ref: -id]"
                     },
                     "children": {
@@ -637,7 +637,7 @@
                                     "children": {
                                       "expression": {
                                         "context": {
-                                          "id": "node@<primary-expression>@@[L4:C28, L4:C30]",
+                                          "id": "node@<primary-expression>@id@[L4:C28, L4:C30]",
                                           "snippet": "id"
                                         },
                                         "children": {
@@ -696,7 +696,7 @@
                         },
                         {
                           "context": {
-                            "id": "node@<primary-expression>@@[L4:C13, L4:C20]",
+                            "id": "node@<primary-expression>@integer@[L4:C13, L4:C20]",
                             "snippet": "integer"
                           },
                           "children": {
@@ -722,7 +722,7 @@
                       ],
                       "callee": {
                         "context": {
-                          "id": "node@<primary-expression>@@[L4:C4, L4:C12]",
+                          "id": "node@<primary-expression>@referrer@[L4:C4, L4:C12]",
                           "snippet": "referrer"
                         },
                         "children": {
@@ -749,14 +749,14 @@
                   },
                   {
                     "context": {
-                      "id": "node@<function-application>@@[L1:C1, L1:C11]",
+                      "id": "node@<function-application>@id@[L1:C1, L1:C11]",
                       "snippet": "id integer"
                     },
                     "children": {
                       "args": [
                         {
                           "context": {
-                            "id": "node@<primary-expression>@@[L1:C4, L1:C11]",
+                            "id": "node@<primary-expression>@integer@[L1:C4, L1:C11]",
                             "snippet": "integer"
                           },
                           "children": {
@@ -782,7 +782,7 @@
                       ],
                       "callee": {
                         "context": {
-                          "id": "node@<primary-expression>@@[L1:C1, L1:C3]",
+                          "id": "node@<primary-expression>@id@[L1:C1, L1:C3]",
                           "snippet": "id"
                         },
                         "children": {
@@ -812,7 +812,7 @@
             },
             "name": {
               "context": {
-                "id": "node@<primary-expression>@@[L0:C6, L0:C11]",
+                "id": "node@<primary-expression>@Users@[L0:C6, L0:C11]",
                 "snippet": "Users"
               },
               "children": {

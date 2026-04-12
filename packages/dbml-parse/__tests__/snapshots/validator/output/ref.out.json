@@ -126,7 +126,7 @@
                       "children": {
                         "leftExpression": {
                           "context": {
-                            "id": "node@<primary-expression>@@[L0:C7, L0:C12]",
+                            "id": "node@<primary-expression>@Users@[L0:C7, L0:C12]",
                             "snippet": "Users"
                           },
                           "children": {
@@ -160,7 +160,7 @@
                         },
                         "rightExpression": {
                           "context": {
-                            "id": "node@<primary-expression>@@[L0:C13, L0:C15]",
+                            "id": "node@<primary-expression>@id@[L0:C13, L0:C15]",
                             "snippet": "id"
                           },
                           "children": {
@@ -202,7 +202,7 @@
                       "children": {
                         "leftExpression": {
                           "context": {
-                            "id": "node@<primary-expression>@@[L0:C18, L0:C26]",
+                            "id": "node@<primary-expression>@Products@[L0:C18, L0:C26]",
                             "snippet": "Products"
                           },
                           "children": {
@@ -236,7 +236,7 @@
                         },
                         "rightExpression": {
                           "context": {
-                            "id": "node@<primary-expression>@@[L0:C27, L0:C30]",
+                            "id": "node@<primary-expression>@uid@[L0:C27, L0:C30]",
                             "snippet": "uid"
                           },
                           "children": {
@@ -276,7 +276,7 @@
             },
             "name": {
               "context": {
-                "id": "node@<primary-expression>@@[L0:C4, L0:C5]",
+                "id": "node@<primary-expression>@a@[L0:C4, L0:C5]",
                 "snippet": "a"
               },
               "children": {

@@ -39,14 +39,14 @@
                 "body": [
                   {
                     "context": {
-                      "id": "node@<function-application>@@[L1:C2, L1:C16]",
+                      "id": "node@<function-application>@timestamp@[L1:C2, L1:C16]",
                       "snippet": "timestamp uuid"
                     },
                     "children": {
                       "args": [
                         {
                           "context": {
-                            "id": "node@<primary-expression>@@[L1:C12, L1:C16]",
+                            "id": "node@<primary-expression>@uuid@[L1:C12, L1:C16]",
                             "snippet": "uuid"
                           },
                           "children": {
@@ -72,7 +72,7 @@
                       ],
                       "callee": {
                         "context": {
-                          "id": "node@<primary-expression>@@[L1:C2, L1:C11]",
+                          "id": "node@<primary-expression>@timestamp@[L1:C2, L1:C11]",
                           "snippet": "timestamp"
                         },
                         "children": {
@@ -102,7 +102,7 @@
             },
             "name": {
               "context": {
-                "id": "node@<primary-expression>@@[L0:C13, L0:C27]",
+                "id": "node@<primary-expression>@with_timestamp@[L0:C13, L0:C27]",
                 "snippet": "with_timestamp"
               },
               "children": {
@@ -182,7 +182,7 @@
                         "children": {
                           "expression": {
                             "context": {
-                              "id": "node@<primary-expression>@@[L5:C3, L5:C17]",
+                              "id": "node@<primary-expression>@with_timestamp@[L5:C3, L5:C17]",
                               "snippet": "with_timestamp"
                             },
                             "children": {
@@ -223,7 +223,7 @@
             },
             "name": {
               "context": {
-                "id": "node@<primary-expression>@@[L4:C6, L4:C11]",
+                "id": "node@<primary-expression>@users@[L4:C6, L4:C11]",
                 "snippet": "users"
               },
               "children": {

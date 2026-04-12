@@ -14,7 +14,7 @@
           "children": {
             "alias": {
               "context": {
-                "id": "node@<primary-expression>@@[L17:C15, L17:C16]",
+                "id": "node@<primary-expression>@U@[L17:C15, L17:C16]",
                 "snippet": "U"
               },
               "children": {
@@ -74,7 +74,7 @@
             },
             "name": {
               "context": {
-                "id": "node@<primary-expression>@@[L17:C6, L17:C11]",
+                "id": "node@<primary-expression>@Users@[L17:C6, L17:C11]",
                 "snippet": "Users"
               },
               "children": {
@@ -229,7 +229,7 @@
             },
             "name": {
               "context": {
-                "id": "node@<primary-expression>@@[L4:C11, L4:C16]",
+                "id": "node@<primary-expression>@group@[L4:C11, L4:C16]",
                 "snippet": "group"
               },
               "children": {
@@ -271,13 +271,13 @@
           "children": {
             "body": {
               "context": {
-                "id": "node@<function-application>@@[L14:C6, L15:C15]",
+                "id": "node@<function-application>@This is \r\nanother note@[L14:C6, L15:C15]",
                 "snippet": "'''This is...er note'''"
               },
               "children": {
                 "callee": {
                   "context": {
-                    "id": "node@<primary-expression>@@[L14:C6, L15:C15]",
+                    "id": "node@<primary-expression>@This is \r\nanother note@[L14:C6, L15:C15]",
                     "snippet": "'''This is...er note'''"
                   },
                   "children": {
@@ -330,13 +330,13 @@
           "children": {
             "body": {
               "context": {
-                "id": "node@<function-application>@@[L12:C6, L12:C22]",
+                "id": "node@<function-application>@This is a note@[L12:C6, L12:C22]",
                 "snippet": "'This is a note'"
               },
               "children": {
                 "callee": {
                   "context": {
-                    "id": "node@<primary-expression>@@[L12:C6, L12:C22]",
+                    "id": "node@<primary-expression>@This is a note@[L12:C6, L12:C22]",
                     "snippet": "'This is a note'"
                   },
                   "children": {

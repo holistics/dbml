@@ -7,7 +7,7 @@
       "level": "error",
       "node": {
         "context": {
-          "id": "node@<primary-expression>@@[L4:C6, L4:C11]",
+          "id": "node@<primary-expression>@Users@[L4:C6, L4:C11]",
           "snippet": "Users"
         }
       }
@@ -19,7 +19,7 @@
       "level": "error",
       "node": {
         "context": {
-          "id": "node@<primary-expression>@@[L12:C11, L12:C16]",
+          "id": "node@<primary-expression>@Users@[L12:C11, L12:C16]",
           "snippet": "Users"
         }
       }
@@ -31,7 +31,7 @@
       "level": "error",
       "node": {
         "context": {
-          "id": "node@<primary-expression>@@[L20:C5, L20:C10]",
+          "id": "node@<primary-expression>@Users@[L20:C5, L20:C10]",
           "snippet": "Users"
         }
       }
@@ -43,7 +43,7 @@
       "level": "error",
       "node": {
         "context": {
-          "id": "node@<primary-expression>@@[L28:C13, L28:C18]",
+          "id": "node@<primary-expression>@Users@[L28:C13, L28:C18]",
           "snippet": "Users"
         }
       }
@@ -114,7 +114,7 @@
             },
             "name": {
               "context": {
-                "id": "node@<primary-expression>@@[L8:C11, L8:C16]",
+                "id": "node@<primary-expression>@Users@[L8:C11, L8:C16]",
                 "snippet": "Users"
               },
               "children": {
@@ -192,7 +192,7 @@
             },
             "name": {
               "context": {
-                "id": "node@<primary-expression>@@[L12:C11, L12:C16]",
+                "id": "node@<primary-expression>@Users@[L12:C11, L12:C16]",
                 "snippet": "Users"
               },
               "children": {
@@ -270,7 +270,7 @@
             },
             "name": {
               "context": {
-                "id": "node@<primary-expression>@@[L16:C5, L16:C10]",
+                "id": "node@<primary-expression>@Users@[L16:C5, L16:C10]",
                 "snippet": "Users"
               },
               "children": {
@@ -348,7 +348,7 @@
             },
             "name": {
               "context": {
-                "id": "node@<primary-expression>@@[L20:C5, L20:C10]",
+                "id": "node@<primary-expression>@Users@[L20:C5, L20:C10]",
                 "snippet": "Users"
               },
               "children": {
@@ -426,7 +426,7 @@
             },
             "name": {
               "context": {
-                "id": "node@<primary-expression>@@[L24:C13, L24:C18]",
+                "id": "node@<primary-expression>@Users@[L24:C13, L24:C18]",
                 "snippet": "Users"
               },
               "children": {
@@ -503,14 +503,14 @@
                 "body": [
                   {
                     "context": {
-                      "id": "node@<function-application>@@[L1:C2, L1:C12]",
+                      "id": "node@<function-application>@id@[L1:C2, L1:C12]",
                       "snippet": "id integer"
                     },
                     "children": {
                       "args": [
                         {
                           "context": {
-                            "id": "node@<primary-expression>@@[L1:C5, L1:C12]",
+                            "id": "node@<primary-expression>@integer@[L1:C5, L1:C12]",
                             "snippet": "integer"
                           },
                           "children": {
@@ -536,7 +536,7 @@
                       ],
                       "callee": {
                         "context": {
-                          "id": "node@<primary-expression>@@[L1:C2, L1:C4]",
+                          "id": "node@<primary-expression>@id@[L1:C2, L1:C4]",
                           "snippet": "id"
                         },
                         "children": {
@@ -562,11 +562,11 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol@Column@@[L1:C2, L1:C12]",
+                        "id": "symbol@Column@id@[L1:C2, L1:C12]",
                         "snippet": "id integer"
                       },
                       "declaration": {
-                        "id": "node@<function-application>@@[L1:C2, L1:C12]",
+                        "id": "node@<function-application>@id@[L1:C2, L1:C12]",
                         "snippet": "id integer"
                       }
                     }
@@ -576,7 +576,7 @@
             },
             "name": {
               "context": {
-                "id": "node@<primary-expression>@@[L0:C6, L0:C11]",
+                "id": "node@<primary-expression>@Users@[L0:C6, L0:C11]",
                 "snippet": "Users"
               },
               "children": {
@@ -622,7 +622,7 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol@Column@@[L1:C2, L1:C12]",
+                  "id": "symbol@Column@id@[L1:C2, L1:C12]",
                   "snippet": "id integer"
                 }
               }
@@ -663,7 +663,7 @@
             },
             "name": {
               "context": {
-                "id": "node@<primary-expression>@@[L28:C13, L28:C18]",
+                "id": "node@<primary-expression>@Users@[L28:C13, L28:C18]",
                 "snippet": "Users"
               },
               "children": {
@@ -740,7 +740,7 @@
                 "body": [
                   {
                     "context": {
-                      "id": "node@<function-application>@@[L5:C2, L5:C16]",
+                      "id": "node@<function-application>@name@[L5:C2, L5:C16]",
                       "snippet": "name char(255)"
                     },
                     "children": {
@@ -760,7 +760,7 @@
                                 "elementList": [
                                   {
                                     "context": {
-                                      "id": "node@<primary-expression>@@[L5:C12, L5:C15]",
+                                      "id": "node@<primary-expression>@255@[L5:C12, L5:C15]",
                                       "snippet": "255"
                                     },
                                     "children": {
@@ -806,7 +806,7 @@
                             },
                             "callee": {
                               "context": {
-                                "id": "node@<primary-expression>@@[L5:C7, L5:C11]",
+                                "id": "node@<primary-expression>@char@[L5:C7, L5:C11]",
                                 "snippet": "char"
                               },
                               "children": {
@@ -834,7 +834,7 @@
                       ],
                       "callee": {
                         "context": {
-                          "id": "node@<primary-expression>@@[L5:C2, L5:C6]",
+                          "id": "node@<primary-expression>@name@[L5:C2, L5:C6]",
                           "snippet": "name"
                         },
                         "children": {
@@ -860,11 +860,11 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol@Column@@[L5:C2, L5:C16]",
+                        "id": "symbol@Column@name@[L5:C2, L5:C16]",
                         "snippet": "name char(255)"
                       },
                       "declaration": {
-                        "id": "node@<function-application>@@[L5:C2, L5:C16]",
+                        "id": "node@<function-application>@name@[L5:C2, L5:C16]",
                         "snippet": "name char(255)"
                       }
                     }
@@ -874,7 +874,7 @@
             },
             "name": {
               "context": {
-                "id": "node@<primary-expression>@@[L4:C6, L4:C11]",
+                "id": "node@<primary-expression>@Users@[L4:C6, L4:C11]",
                 "snippet": "Users"
               },
               "children": {
@@ -919,7 +919,7 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol@Column@@[L5:C2, L5:C16]",
+                  "id": "symbol@Column@name@[L5:C2, L5:C16]",
                   "snippet": "name char(255)"
                 }
               }

@@ -39,14 +39,14 @@
                 "body": [
                   {
                     "context": {
-                      "id": "node@<function-application>@@[L3:C2, L3:C19]",
+                      "id": "node@<function-application>@booking_date@[L3:C2, L3:C19]",
                       "snippet": "booking_date date"
                     },
                     "children": {
                       "args": [
                         {
                           "context": {
-                            "id": "node@<primary-expression>@@[L3:C15, L3:C19]",
+                            "id": "node@<primary-expression>@date@[L3:C15, L3:C19]",
                             "snippet": "date"
                           },
                           "children": {
@@ -72,7 +72,7 @@
                       ],
                       "callee": {
                         "context": {
-                          "id": "node@<primary-expression>@@[L3:C2, L3:C14]",
+                          "id": "node@<primary-expression>@booking_date@[L3:C2, L3:C14]",
                           "snippet": "booking_date"
                         },
                         "children": {
@@ -98,25 +98,25 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol@Column@@[L3:C2, L3:C19]",
+                        "id": "symbol@Column@booking_date@[L3:C2, L3:C19]",
                         "snippet": "booking_date date"
                       },
                       "declaration": {
-                        "id": "node@<function-application>@@[L3:C2, L3:C19]",
+                        "id": "node@<function-application>@booking_date@[L3:C2, L3:C19]",
                         "snippet": "booking_date date"
                       }
                     }
                   },
                   {
                     "context": {
-                      "id": "node@<function-application>@@[L1:C2, L1:C12]",
+                      "id": "node@<function-application>@id@[L1:C2, L1:C12]",
                       "snippet": "id integer"
                     },
                     "children": {
                       "args": [
                         {
                           "context": {
-                            "id": "node@<primary-expression>@@[L1:C5, L1:C12]",
+                            "id": "node@<primary-expression>@integer@[L1:C5, L1:C12]",
                             "snippet": "integer"
                           },
                           "children": {
@@ -142,7 +142,7 @@
                       ],
                       "callee": {
                         "context": {
-                          "id": "node@<primary-expression>@@[L1:C2, L1:C4]",
+                          "id": "node@<primary-expression>@id@[L1:C2, L1:C4]",
                           "snippet": "id"
                         },
                         "children": {
@@ -168,25 +168,25 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol@Column@@[L1:C2, L1:C12]",
+                        "id": "symbol@Column@id@[L1:C2, L1:C12]",
                         "snippet": "id integer"
                       },
                       "declaration": {
-                        "id": "node@<function-application>@@[L1:C2, L1:C12]",
+                        "id": "node@<function-application>@id@[L1:C2, L1:C12]",
                         "snippet": "id integer"
                       }
                     }
                   },
                   {
                     "context": {
-                      "id": "node@<function-application>@@[L4:C2, L4:C22]",
+                      "id": "node@<function-application>@created_at@[L4:C2, L4:C22]",
                       "snippet": "created_at timestamp"
                     },
                     "children": {
                       "args": [
                         {
                           "context": {
-                            "id": "node@<primary-expression>@@[L4:C13, L4:C22]",
+                            "id": "node@<primary-expression>@timestamp@[L4:C13, L4:C22]",
                             "snippet": "timestamp"
                           },
                           "children": {
@@ -212,7 +212,7 @@
                       ],
                       "callee": {
                         "context": {
-                          "id": "node@<primary-expression>@@[L4:C2, L4:C12]",
+                          "id": "node@<primary-expression>@created_at@[L4:C2, L4:C12]",
                           "snippet": "created_at"
                         },
                         "children": {
@@ -238,25 +238,25 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol@Column@@[L4:C2, L4:C22]",
+                        "id": "symbol@Column@created_at@[L4:C2, L4:C22]",
                         "snippet": "created_at timestamp"
                       },
                       "declaration": {
-                        "id": "node@<function-application>@@[L4:C2, L4:C22]",
+                        "id": "node@<function-application>@created_at@[L4:C2, L4:C22]",
                         "snippet": "created_at timestamp"
                       }
                     }
                   },
                   {
                     "context": {
-                      "id": "node@<function-application>@@[L2:C2, L2:C17]",
+                      "id": "node@<function-application>@country@[L2:C2, L2:C17]",
                       "snippet": "country varchar"
                     },
                     "children": {
                       "args": [
                         {
                           "context": {
-                            "id": "node@<primary-expression>@@[L2:C10, L2:C17]",
+                            "id": "node@<primary-expression>@varchar@[L2:C10, L2:C17]",
                             "snippet": "varchar"
                           },
                           "children": {
@@ -282,7 +282,7 @@
                       ],
                       "callee": {
                         "context": {
-                          "id": "node@<primary-expression>@@[L2:C2, L2:C9]",
+                          "id": "node@<primary-expression>@country@[L2:C2, L2:C9]",
                           "snippet": "country"
                         },
                         "children": {
@@ -308,11 +308,11 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol@Column@@[L2:C2, L2:C17]",
+                        "id": "symbol@Column@country@[L2:C2, L2:C17]",
                         "snippet": "country varchar"
                       },
                       "declaration": {
-                        "id": "node@<function-application>@@[L2:C2, L2:C17]",
+                        "id": "node@<function-application>@country@[L2:C2, L2:C17]",
                         "snippet": "country varchar"
                       }
                     }
@@ -350,7 +350,7 @@
                           "body": [
                             {
                               "context": {
-                                "id": "node@<function-application>@@[L11:C4, L11:C29]",
+                                "id": "node@<function-application>@booking_date@[L11:C4, L11:C29]",
                                 "snippet": "booking_da...ype: hash]"
                               },
                               "children": {
@@ -398,7 +398,7 @@
                                             },
                                             "value": {
                                               "context": {
-                                                "id": "node@<primary-expression>@@[L11:C24, L11:C28]",
+                                                "id": "node@<primary-expression>@hash@[L11:C24, L11:C28]",
                                                 "snippet": "hash"
                                               },
                                               "children": {
@@ -447,7 +447,7 @@
                                 ],
                                 "callee": {
                                   "context": {
-                                    "id": "node@<primary-expression>@@[L11:C4, L11:C16]",
+                                    "id": "node@<primary-expression>@booking_date@[L11:C4, L11:C16]",
                                     "snippet": "booking_date"
                                   },
                                   "children": {
@@ -498,7 +498,7 @@
                                     "elementList": [
                                       {
                                         "context": {
-                                          "id": "node@<function-expression>@@[L13:C12, L13:C23]",
+                                          "id": "node@<function-expression>@getdate()@[L13:C12, L13:C23]",
                                           "snippet": "`getdate()`"
                                         },
                                         "children": {
@@ -515,7 +515,7 @@
                                       },
                                       {
                                         "context": {
-                                          "id": "node@<function-expression>@@[L13:C5, L13:C11]",
+                                          "id": "node@<function-expression>@id*3@[L13:C5, L13:C11]",
                                           "snippet": "`id*3`"
                                         },
                                         "children": {
@@ -579,7 +579,7 @@
                                     "elementList": [
                                       {
                                         "context": {
-                                          "id": "node@<function-expression>@@[L14:C5, L14:C11]",
+                                          "id": "node@<function-expression>@id*3@[L14:C5, L14:C11]",
                                           "snippet": "`id*3`"
                                         },
                                         "children": {
@@ -596,7 +596,7 @@
                                       },
                                       {
                                         "context": {
-                                          "id": "node@<primary-expression>@@[L14:C12, L14:C14]",
+                                          "id": "node@<primary-expression>@id@[L14:C12, L14:C14]",
                                           "snippet": "id"
                                         },
                                         "children": {
@@ -644,7 +644,7 @@
                             },
                             {
                               "context": {
-                                "id": "node@<function-application>@@[L8:C4, L8:C55]",
+                                "id": "node@<function-application>@created_at@[L8:C4, L8:C55]",
                                 "snippet": "created_at...e: 'Date']"
                               },
                               "children": {
@@ -703,7 +703,7 @@
                                             },
                                             "value": {
                                               "context": {
-                                                "id": "node@<primary-expression>@@[L8:C22, L8:C40]",
+                                                "id": "node@<primary-expression>@created_at_index@[L8:C22, L8:C40]",
                                                 "snippet": "'created_at_index'"
                                               },
                                               "children": {
@@ -764,7 +764,7 @@
                                             },
                                             "value": {
                                               "context": {
-                                                "id": "node@<primary-expression>@@[L8:C48, L8:C54]",
+                                                "id": "node@<primary-expression>@Date@[L8:C48, L8:C54]",
                                                 "snippet": "'Date'"
                                               },
                                               "children": {
@@ -813,7 +813,7 @@
                                 ],
                                 "callee": {
                                   "context": {
-                                    "id": "node@<primary-expression>@@[L8:C4, L8:C14]",
+                                    "id": "node@<primary-expression>@created_at@[L8:C4, L8:C14]",
                                     "snippet": "created_at"
                                   },
                                   "children": {
@@ -853,7 +853,7 @@
                                     "elementList": [
                                       {
                                         "context": {
-                                          "id": "node@<function-expression>@@[L12:C5, L12:C11]",
+                                          "id": "node@<function-expression>@id*2@[L12:C5, L12:C11]",
                                           "snippet": "`id*2`"
                                         },
                                         "children": {
@@ -893,13 +893,13 @@
                             },
                             {
                               "context": {
-                                "id": "node@<function-application>@@[L9:C4, L9:C16]",
+                                "id": "node@<function-application>@booking_date@[L9:C4, L9:C16]",
                                 "snippet": "booking_date"
                               },
                               "children": {
                                 "callee": {
                                   "context": {
-                                    "id": "node@<primary-expression>@@[L9:C4, L9:C16]",
+                                    "id": "node@<primary-expression>@booking_date@[L9:C4, L9:C16]",
                                     "snippet": "booking_date"
                                   },
                                   "children": {
@@ -1007,7 +1007,7 @@
                                     "elementList": [
                                       {
                                         "context": {
-                                          "id": "node@<primary-expression>@@[L7:C9, L7:C16]",
+                                          "id": "node@<primary-expression>@country@[L7:C9, L7:C16]",
                                           "snippet": "country"
                                         },
                                         "children": {
@@ -1032,7 +1032,7 @@
                                       },
                                       {
                                         "context": {
-                                          "id": "node@<primary-expression>@@[L7:C5, L7:C7]",
+                                          "id": "node@<primary-expression>@id@[L7:C5, L7:C7]",
                                           "snippet": "id"
                                         },
                                         "children": {
@@ -1161,7 +1161,7 @@
                                     "elementList": [
                                       {
                                         "context": {
-                                          "id": "node@<primary-expression>@@[L10:C14, L10:C26]",
+                                          "id": "node@<primary-expression>@booking_date@[L10:C14, L10:C26]",
                                           "snippet": "booking_date"
                                         },
                                         "children": {
@@ -1186,7 +1186,7 @@
                                       },
                                       {
                                         "context": {
-                                          "id": "node@<primary-expression>@@[L10:C5, L10:C12]",
+                                          "id": "node@<primary-expression>@country@[L10:C5, L10:C12]",
                                           "snippet": "country"
                                         },
                                         "children": {
@@ -1251,7 +1251,7 @@
             },
             "name": {
               "context": {
-                "id": "node@<primary-expression>@@[L0:C13, L0:C27]",
+                "id": "node@<primary-expression>@bookingPartial@[L0:C13, L0:C27]",
                 "snippet": "bookingPartial"
               },
               "children": {
@@ -1297,26 +1297,26 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol@Column@@[L1:C2, L1:C12]",
-                  "snippet": "id integer"
-                }
-              },
-              {
-                "context": {
-                  "id": "symbol@Column@@[L2:C2, L2:C17]",
-                  "snippet": "country varchar"
-                }
-              },
-              {
-                "context": {
-                  "id": "symbol@Column@@[L3:C2, L3:C19]",
+                  "id": "symbol@Column@booking_date@[L3:C2, L3:C19]",
                   "snippet": "booking_date date"
                 }
               },
               {
                 "context": {
-                  "id": "symbol@Column@@[L4:C2, L4:C22]",
+                  "id": "symbol@Column@country@[L2:C2, L2:C17]",
+                  "snippet": "country varchar"
+                }
+              },
+              {
+                "context": {
+                  "id": "symbol@Column@created_at@[L4:C2, L4:C22]",
                   "snippet": "created_at timestamp"
+                }
+              },
+              {
+                "context": {
+                  "id": "symbol@Column@id@[L1:C2, L1:C12]",
+                  "snippet": "id integer"
                 }
               }
             ]
@@ -1355,14 +1355,14 @@
                 "body": [
                   {
                     "context": {
-                      "id": "node@<function-application>@@[L21:C2, L21:C19]",
+                      "id": "node@<function-application>@booking_date@[L21:C2, L21:C19]",
                       "snippet": "booking_date date"
                     },
                     "children": {
                       "args": [
                         {
                           "context": {
-                            "id": "node@<primary-expression>@@[L21:C15, L21:C19]",
+                            "id": "node@<primary-expression>@date@[L21:C15, L21:C19]",
                             "snippet": "date"
                           },
                           "children": {
@@ -1388,7 +1388,7 @@
                       ],
                       "callee": {
                         "context": {
-                          "id": "node@<primary-expression>@@[L21:C2, L21:C14]",
+                          "id": "node@<primary-expression>@booking_date@[L21:C2, L21:C14]",
                           "snippet": "booking_date"
                         },
                         "children": {
@@ -1414,25 +1414,25 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol@Column@@[L21:C2, L21:C19]",
+                        "id": "symbol@Column@booking_date@[L21:C2, L21:C19]",
                         "snippet": "booking_date date"
                       },
                       "declaration": {
-                        "id": "node@<function-application>@@[L21:C2, L21:C19]",
+                        "id": "node@<function-application>@booking_date@[L21:C2, L21:C19]",
                         "snippet": "booking_date date"
                       }
                     }
                   },
                   {
                     "context": {
-                      "id": "node@<function-application>@@[L19:C2, L19:C12]",
+                      "id": "node@<function-application>@id@[L19:C2, L19:C12]",
                       "snippet": "id integer"
                     },
                     "children": {
                       "args": [
                         {
                           "context": {
-                            "id": "node@<primary-expression>@@[L19:C5, L19:C12]",
+                            "id": "node@<primary-expression>@integer@[L19:C5, L19:C12]",
                             "snippet": "integer"
                           },
                           "children": {
@@ -1458,7 +1458,7 @@
                       ],
                       "callee": {
                         "context": {
-                          "id": "node@<primary-expression>@@[L19:C2, L19:C4]",
+                          "id": "node@<primary-expression>@id@[L19:C2, L19:C4]",
                           "snippet": "id"
                         },
                         "children": {
@@ -1484,25 +1484,25 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol@Column@@[L19:C2, L19:C12]",
+                        "id": "symbol@Column@id@[L19:C2, L19:C12]",
                         "snippet": "id integer"
                       },
                       "declaration": {
-                        "id": "node@<function-application>@@[L19:C2, L19:C12]",
+                        "id": "node@<function-application>@id@[L19:C2, L19:C12]",
                         "snippet": "id integer"
                       }
                     }
                   },
                   {
                     "context": {
-                      "id": "node@<function-application>@@[L22:C2, L22:C22]",
+                      "id": "node@<function-application>@created_at@[L22:C2, L22:C22]",
                       "snippet": "created_at timestamp"
                     },
                     "children": {
                       "args": [
                         {
                           "context": {
-                            "id": "node@<primary-expression>@@[L22:C13, L22:C22]",
+                            "id": "node@<primary-expression>@timestamp@[L22:C13, L22:C22]",
                             "snippet": "timestamp"
                           },
                           "children": {
@@ -1528,7 +1528,7 @@
                       ],
                       "callee": {
                         "context": {
-                          "id": "node@<primary-expression>@@[L22:C2, L22:C12]",
+                          "id": "node@<primary-expression>@created_at@[L22:C2, L22:C12]",
                           "snippet": "created_at"
                         },
                         "children": {
@@ -1554,25 +1554,25 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol@Column@@[L22:C2, L22:C22]",
+                        "id": "symbol@Column@created_at@[L22:C2, L22:C22]",
                         "snippet": "created_at timestamp"
                       },
                       "declaration": {
-                        "id": "node@<function-application>@@[L22:C2, L22:C22]",
+                        "id": "node@<function-application>@created_at@[L22:C2, L22:C22]",
                         "snippet": "created_at timestamp"
                       }
                     }
                   },
                   {
                     "context": {
-                      "id": "node@<function-application>@@[L20:C2, L20:C17]",
+                      "id": "node@<function-application>@country@[L20:C2, L20:C17]",
                       "snippet": "country varchar"
                     },
                     "children": {
                       "args": [
                         {
                           "context": {
-                            "id": "node@<primary-expression>@@[L20:C10, L20:C17]",
+                            "id": "node@<primary-expression>@varchar@[L20:C10, L20:C17]",
                             "snippet": "varchar"
                           },
                           "children": {
@@ -1598,7 +1598,7 @@
                       ],
                       "callee": {
                         "context": {
-                          "id": "node@<primary-expression>@@[L20:C2, L20:C9]",
+                          "id": "node@<primary-expression>@country@[L20:C2, L20:C9]",
                           "snippet": "country"
                         },
                         "children": {
@@ -1624,11 +1624,11 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol@Column@@[L20:C2, L20:C17]",
+                        "id": "symbol@Column@country@[L20:C2, L20:C17]",
                         "snippet": "country varchar"
                       },
                       "declaration": {
-                        "id": "node@<function-application>@@[L20:C2, L20:C17]",
+                        "id": "node@<function-application>@country@[L20:C2, L20:C17]",
                         "snippet": "country varchar"
                       }
                     }
@@ -1666,7 +1666,7 @@
                           "body": [
                             {
                               "context": {
-                                "id": "node@<function-application>@@[L29:C4, L29:C29]",
+                                "id": "node@<function-application>@booking_date@[L29:C4, L29:C29]",
                                 "snippet": "booking_da...ype: hash]"
                               },
                               "children": {
@@ -1714,7 +1714,7 @@
                                             },
                                             "value": {
                                               "context": {
-                                                "id": "node@<primary-expression>@@[L29:C24, L29:C28]",
+                                                "id": "node@<primary-expression>@hash@[L29:C24, L29:C28]",
                                                 "snippet": "hash"
                                               },
                                               "children": {
@@ -1763,7 +1763,7 @@
                                 ],
                                 "callee": {
                                   "context": {
-                                    "id": "node@<primary-expression>@@[L29:C4, L29:C16]",
+                                    "id": "node@<primary-expression>@booking_date@[L29:C4, L29:C16]",
                                     "snippet": "booking_date"
                                   },
                                   "children": {
@@ -1790,7 +1790,7 @@
                             },
                             {
                               "context": {
-                                "id": "node@<function-application>@@[L26:C4, L26:C55]",
+                                "id": "node@<function-application>@created_at@[L26:C4, L26:C55]",
                                 "snippet": "created_at...e: 'Date']"
                               },
                               "children": {
@@ -1849,7 +1849,7 @@
                                             },
                                             "value": {
                                               "context": {
-                                                "id": "node@<primary-expression>@@[L26:C22, L26:C40]",
+                                                "id": "node@<primary-expression>@created_at_index@[L26:C22, L26:C40]",
                                                 "snippet": "'created_at_index'"
                                               },
                                               "children": {
@@ -1910,7 +1910,7 @@
                                             },
                                             "value": {
                                               "context": {
-                                                "id": "node@<primary-expression>@@[L26:C48, L26:C54]",
+                                                "id": "node@<primary-expression>@Date@[L26:C48, L26:C54]",
                                                 "snippet": "'Date'"
                                               },
                                               "children": {
@@ -1959,7 +1959,7 @@
                                 ],
                                 "callee": {
                                   "context": {
-                                    "id": "node@<primary-expression>@@[L26:C4, L26:C14]",
+                                    "id": "node@<primary-expression>@created_at@[L26:C4, L26:C14]",
                                     "snippet": "created_at"
                                   },
                                   "children": {
@@ -2010,7 +2010,7 @@
                                     "elementList": [
                                       {
                                         "context": {
-                                          "id": "node@<function-expression>@@[L31:C12, L31:C23]",
+                                          "id": "node@<function-expression>@getdate()@[L31:C12, L31:C23]",
                                           "snippet": "`getdate()`"
                                         },
                                         "children": {
@@ -2027,7 +2027,7 @@
                                       },
                                       {
                                         "context": {
-                                          "id": "node@<function-expression>@@[L31:C5, L31:C11]",
+                                          "id": "node@<function-expression>@id*3@[L31:C5, L31:C11]",
                                           "snippet": "`id*3`"
                                         },
                                         "children": {
@@ -2091,7 +2091,7 @@
                                     "elementList": [
                                       {
                                         "context": {
-                                          "id": "node@<function-expression>@@[L32:C5, L32:C11]",
+                                          "id": "node@<function-expression>@id*3@[L32:C5, L32:C11]",
                                           "snippet": "`id*3`"
                                         },
                                         "children": {
@@ -2108,7 +2108,7 @@
                                       },
                                       {
                                         "context": {
-                                          "id": "node@<primary-expression>@@[L32:C12, L32:C14]",
+                                          "id": "node@<primary-expression>@id@[L32:C12, L32:C14]",
                                           "snippet": "id"
                                         },
                                         "children": {
@@ -2169,7 +2169,7 @@
                                     "elementList": [
                                       {
                                         "context": {
-                                          "id": "node@<function-expression>@@[L30:C5, L30:C11]",
+                                          "id": "node@<function-expression>@id*2@[L30:C5, L30:C11]",
                                           "snippet": "`id*2`"
                                         },
                                         "children": {
@@ -2209,13 +2209,13 @@
                             },
                             {
                               "context": {
-                                "id": "node@<function-application>@@[L27:C4, L27:C16]",
+                                "id": "node@<function-application>@booking_date@[L27:C4, L27:C16]",
                                 "snippet": "booking_date"
                               },
                               "children": {
                                 "callee": {
                                   "context": {
-                                    "id": "node@<primary-expression>@@[L27:C4, L27:C16]",
+                                    "id": "node@<primary-expression>@booking_date@[L27:C4, L27:C16]",
                                     "snippet": "booking_date"
                                   },
                                   "children": {
@@ -2323,7 +2323,7 @@
                                     "elementList": [
                                       {
                                         "context": {
-                                          "id": "node@<primary-expression>@@[L25:C9, L25:C16]",
+                                          "id": "node@<primary-expression>@country@[L25:C9, L25:C16]",
                                           "snippet": "country"
                                         },
                                         "children": {
@@ -2348,7 +2348,7 @@
                                       },
                                       {
                                         "context": {
-                                          "id": "node@<primary-expression>@@[L25:C5, L25:C7]",
+                                          "id": "node@<primary-expression>@id@[L25:C5, L25:C7]",
                                           "snippet": "id"
                                         },
                                         "children": {
@@ -2477,7 +2477,7 @@
                                     "elementList": [
                                       {
                                         "context": {
-                                          "id": "node@<primary-expression>@@[L28:C14, L28:C26]",
+                                          "id": "node@<primary-expression>@booking_date@[L28:C14, L28:C26]",
                                           "snippet": "booking_date"
                                         },
                                         "children": {
@@ -2502,7 +2502,7 @@
                                       },
                                       {
                                         "context": {
-                                          "id": "node@<primary-expression>@@[L28:C5, L28:C12]",
+                                          "id": "node@<primary-expression>@country@[L28:C5, L28:C12]",
                                           "snippet": "country"
                                         },
                                         "children": {
@@ -2567,7 +2567,7 @@
             },
             "name": {
               "context": {
-                "id": "node@<primary-expression>@@[L18:C6, L18:C14]",
+                "id": "node@<primary-expression>@bookings@[L18:C6, L18:C14]",
                 "snippet": "bookings"
               },
               "children": {
@@ -2612,26 +2612,26 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol@Column@@[L19:C2, L19:C12]",
-                  "snippet": "id integer"
-                }
-              },
-              {
-                "context": {
-                  "id": "symbol@Column@@[L20:C2, L20:C17]",
-                  "snippet": "country varchar"
-                }
-              },
-              {
-                "context": {
-                  "id": "symbol@Column@@[L21:C2, L21:C19]",
+                  "id": "symbol@Column@booking_date@[L21:C2, L21:C19]",
                   "snippet": "booking_date date"
                 }
               },
               {
                 "context": {
-                  "id": "symbol@Column@@[L22:C2, L22:C22]",
+                  "id": "symbol@Column@country@[L20:C2, L20:C17]",
+                  "snippet": "country varchar"
+                }
+              },
+              {
+                "context": {
+                  "id": "symbol@Column@created_at@[L22:C2, L22:C22]",
                   "snippet": "created_at timestamp"
+                }
+              },
+              {
+                "context": {
+                  "id": "symbol@Column@id@[L19:C2, L19:C12]",
+                  "snippet": "id integer"
                 }
               }
             ]

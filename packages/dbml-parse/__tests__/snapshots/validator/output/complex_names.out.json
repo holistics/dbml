@@ -96,13 +96,13 @@
                           "body": [
                             {
                               "context": {
-                                "id": "node@<function-application>@@[L9:C8, L9:C14]",
+                                "id": "node@<function-application>@active@[L9:C8, L9:C14]",
                                 "snippet": "active"
                               },
                               "children": {
                                 "callee": {
                                   "context": {
-                                    "id": "node@<primary-expression>@@[L9:C8, L9:C14]",
+                                    "id": "node@<primary-expression>@active@[L9:C8, L9:C14]",
                                     "snippet": "active"
                                   },
                                   "children": {
@@ -128,24 +128,24 @@
                               },
                               "symbol": {
                                 "context": {
-                                  "id": "symbol@Enum field@@[L9:C8, L9:C14]",
+                                  "id": "symbol@Enum field@active@[L9:C8, L9:C14]",
                                   "snippet": "active"
                                 },
                                 "declaration": {
-                                  "id": "node@<function-application>@@[L9:C8, L9:C14]",
+                                  "id": "node@<function-application>@active@[L9:C8, L9:C14]",
                                   "snippet": "active"
                                 }
                               }
                             },
                             {
                               "context": {
-                                "id": "node@<function-application>@@[L8:C8, L8:C13]",
+                                "id": "node@<function-application>@churn@[L8:C8, L8:C13]",
                                 "snippet": "churn"
                               },
                               "children": {
                                 "callee": {
                                   "context": {
-                                    "id": "node@<primary-expression>@@[L8:C8, L8:C13]",
+                                    "id": "node@<primary-expression>@churn@[L8:C8, L8:C13]",
                                     "snippet": "churn"
                                   },
                                   "children": {
@@ -171,24 +171,24 @@
                               },
                               "symbol": {
                                 "context": {
-                                  "id": "symbol@Enum field@@[L8:C8, L8:C13]",
+                                  "id": "symbol@Enum field@churn@[L8:C8, L8:C13]",
                                   "snippet": "churn"
                                 },
                                 "declaration": {
-                                  "id": "node@<function-application>@@[L8:C8, L8:C13]",
+                                  "id": "node@<function-application>@churn@[L8:C8, L8:C13]",
                                   "snippet": "churn"
                                 }
                               }
                             },
                             {
                               "context": {
-                                "id": "node@<function-application>@@[L7:C8, L7:C11]",
+                                "id": "node@<function-application>@new@[L7:C8, L7:C11]",
                                 "snippet": "new"
                               },
                               "children": {
                                 "callee": {
                                   "context": {
-                                    "id": "node@<primary-expression>@@[L7:C8, L7:C11]",
+                                    "id": "node@<primary-expression>@new@[L7:C8, L7:C11]",
                                     "snippet": "new"
                                   },
                                   "children": {
@@ -214,24 +214,24 @@
                               },
                               "symbol": {
                                 "context": {
-                                  "id": "symbol@Enum field@@[L7:C8, L7:C11]",
+                                  "id": "symbol@Enum field@new@[L7:C8, L7:C11]",
                                   "snippet": "new"
                                 },
                                 "declaration": {
-                                  "id": "node@<function-application>@@[L7:C8, L7:C11]",
+                                  "id": "node@<function-application>@new@[L7:C8, L7:C11]",
                                   "snippet": "new"
                                 }
                               }
                             },
                             {
                               "context": {
-                                "id": "node@<function-application>@@[L10:C8, L10:C14]",
+                                "id": "node@<function-application>@tenant@[L10:C8, L10:C14]",
                                 "snippet": "tenant"
                               },
                               "children": {
                                 "callee": {
                                   "context": {
-                                    "id": "node@<primary-expression>@@[L10:C8, L10:C14]",
+                                    "id": "node@<primary-expression>@tenant@[L10:C8, L10:C14]",
                                     "snippet": "tenant"
                                   },
                                   "children": {
@@ -257,11 +257,11 @@
                               },
                               "symbol": {
                                 "context": {
-                                  "id": "symbol@Enum field@@[L10:C8, L10:C14]",
+                                  "id": "symbol@Enum field@tenant@[L10:C8, L10:C14]",
                                   "snippet": "tenant"
                                 },
                                 "declaration": {
-                                  "id": "node@<function-application>@@[L10:C8, L10:C14]",
+                                  "id": "node@<function-application>@tenant@[L10:C8, L10:C14]",
                                   "snippet": "tenant"
                                 }
                               }
@@ -277,7 +277,7 @@
                         "children": {
                           "leftExpression": {
                             "context": {
-                              "id": "node@<primary-expression>@@[L6:C9, L6:C11]",
+                              "id": "node@<primary-expression>@v2@[L6:C9, L6:C11]",
                               "snippet": "v2"
                             },
                             "children": {
@@ -311,7 +311,7 @@
                           },
                           "rightExpression": {
                             "context": {
-                              "id": "node@<primary-expression>@@[L6:C12, L6:C18]",
+                              "id": "node@<primary-expression>@Status@[L6:C12, L6:C18]",
                               "snippet": "Status"
                             },
                             "children": {
@@ -358,26 +358,26 @@
                       "members": [
                         {
                           "context": {
-                            "id": "symbol@Enum field@@[L10:C8, L10:C14]",
-                            "snippet": "tenant"
+                            "id": "symbol@Enum field@active@[L9:C8, L9:C14]",
+                            "snippet": "active"
                           }
                         },
                         {
                           "context": {
-                            "id": "symbol@Enum field@@[L7:C8, L7:C11]",
-                            "snippet": "new"
-                          }
-                        },
-                        {
-                          "context": {
-                            "id": "symbol@Enum field@@[L8:C8, L8:C13]",
+                            "id": "symbol@Enum field@churn@[L8:C8, L8:C13]",
                             "snippet": "churn"
                           }
                         },
                         {
                           "context": {
-                            "id": "symbol@Enum field@@[L9:C8, L9:C14]",
-                            "snippet": "active"
+                            "id": "symbol@Enum field@new@[L7:C8, L7:C11]",
+                            "snippet": "new"
+                          }
+                        },
+                        {
+                          "context": {
+                            "id": "symbol@Enum field@tenant@[L10:C8, L10:C14]",
+                            "snippet": "tenant"
                           }
                         }
                       ]
@@ -416,7 +416,7 @@
                           "body": [
                             {
                               "context": {
-                                "id": "node@<function-application>@@[L3:C8, L3:C49]",
+                                "id": "node@<function-application>@status@[L3:C8, L3:C49]",
                                 "snippet": "status v2....tatus.new]"
                               },
                               "children": {
@@ -476,7 +476,7 @@
                                                   "children": {
                                                     "leftExpression": {
                                                       "context": {
-                                                        "id": "node@<primary-expression>@@[L3:C35, L3:C37]",
+                                                        "id": "node@<primary-expression>@v2@[L3:C35, L3:C37]",
                                                         "snippet": "v2"
                                                       },
                                                       "children": {
@@ -510,7 +510,7 @@
                                                     },
                                                     "rightExpression": {
                                                       "context": {
-                                                        "id": "node@<primary-expression>@@[L3:C38, L3:C44]",
+                                                        "id": "node@<primary-expression>@Status@[L3:C38, L3:C44]",
                                                         "snippet": "Status"
                                                       },
                                                       "children": {
@@ -546,7 +546,7 @@
                                                 },
                                                 "rightExpression": {
                                                   "context": {
-                                                    "id": "node@<primary-expression>@@[L3:C45, L3:C48]",
+                                                    "id": "node@<primary-expression>@new@[L3:C45, L3:C48]",
                                                     "snippet": "new"
                                                   },
                                                   "children": {
@@ -602,7 +602,7 @@
                                     "children": {
                                       "leftExpression": {
                                         "context": {
-                                          "id": "node@<primary-expression>@@[L3:C15, L3:C17]",
+                                          "id": "node@<primary-expression>@v2@[L3:C15, L3:C17]",
                                           "snippet": "v2"
                                         },
                                         "children": {
@@ -636,7 +636,7 @@
                                       },
                                       "rightExpression": {
                                         "context": {
-                                          "id": "node@<primary-expression>@@[L3:C18, L3:C24]",
+                                          "id": "node@<primary-expression>@Status@[L3:C18, L3:C24]",
                                           "snippet": "Status"
                                         },
                                         "children": {
@@ -664,7 +664,7 @@
                                 ],
                                 "callee": {
                                   "context": {
-                                    "id": "node@<primary-expression>@@[L3:C8, L3:C14]",
+                                    "id": "node@<primary-expression>@status@[L3:C8, L3:C14]",
                                     "snippet": "status"
                                   },
                                   "children": {
@@ -690,25 +690,25 @@
                               },
                               "symbol": {
                                 "context": {
-                                  "id": "symbol@Column@@[L3:C8, L3:C49]",
+                                  "id": "symbol@Column@status@[L3:C8, L3:C49]",
                                   "snippet": "status v2....tatus.new]"
                                 },
                                 "declaration": {
-                                  "id": "node@<function-application>@@[L3:C8, L3:C49]",
+                                  "id": "node@<function-application>@status@[L3:C8, L3:C49]",
                                   "snippet": "status v2....tatus.new]"
                                 }
                               }
                             },
                             {
                               "context": {
-                                "id": "node@<function-application>@@[L2:C8, L2:C18]",
+                                "id": "node@<function-application>@id@[L2:C8, L2:C18]",
                                 "snippet": "id integer"
                               },
                               "children": {
                                 "args": [
                                   {
                                     "context": {
-                                      "id": "node@<primary-expression>@@[L2:C11, L2:C18]",
+                                      "id": "node@<primary-expression>@integer@[L2:C11, L2:C18]",
                                       "snippet": "integer"
                                     },
                                     "children": {
@@ -734,7 +734,7 @@
                                 ],
                                 "callee": {
                                   "context": {
-                                    "id": "node@<primary-expression>@@[L2:C8, L2:C10]",
+                                    "id": "node@<primary-expression>@id@[L2:C8, L2:C10]",
                                     "snippet": "id"
                                   },
                                   "children": {
@@ -760,11 +760,11 @@
                               },
                               "symbol": {
                                 "context": {
-                                  "id": "symbol@Column@@[L2:C8, L2:C18]",
+                                  "id": "symbol@Column@id@[L2:C8, L2:C18]",
                                   "snippet": "id integer"
                                 },
                                 "declaration": {
-                                  "id": "node@<function-application>@@[L2:C8, L2:C18]",
+                                  "id": "node@<function-application>@id@[L2:C8, L2:C18]",
                                   "snippet": "id integer"
                                 }
                               }
@@ -780,7 +780,7 @@
                         "children": {
                           "leftExpression": {
                             "context": {
-                              "id": "node@<primary-expression>@@[L1:C10, L1:C12]",
+                              "id": "node@<primary-expression>@v1@[L1:C10, L1:C12]",
                               "snippet": "v1"
                             },
                             "children": {
@@ -814,7 +814,7 @@
                           },
                           "rightExpression": {
                             "context": {
-                              "id": "node@<primary-expression>@@[L1:C13, L1:C18]",
+                              "id": "node@<primary-expression>@Users@[L1:C13, L1:C18]",
                               "snippet": "Users"
                             },
                             "children": {
@@ -861,13 +861,13 @@
                       "members": [
                         {
                           "context": {
-                            "id": "symbol@Column@@[L2:C8, L2:C18]",
+                            "id": "symbol@Column@id@[L2:C8, L2:C18]",
                             "snippet": "id integer"
                           }
                         },
                         {
                           "context": {
-                            "id": "symbol@Column@@[L3:C8, L3:C49]",
+                            "id": "symbol@Column@status@[L3:C8, L3:C49]",
                             "snippet": "status v2....tatus.new]"
                           }
                         }

@@ -7,7 +7,7 @@
       "level": "error",
       "node": {
         "context": {
-          "id": "node@<primary-expression>@@[L4:C35, L4:C52]",
+          "id": "node@<primary-expression>@invalid check 1@[L4:C35, L4:C52]",
           "snippet": "\"invalid check 1\""
         }
       }
@@ -19,7 +19,7 @@
       "level": "error",
       "node": {
         "context": {
-          "id": "node@<primary-expression>@@[L5:C35, L5:C52]",
+          "id": "node@<primary-expression>@invalid check 2@[L5:C35, L5:C52]",
           "snippet": "'invalid check 2'"
         }
       }
@@ -31,7 +31,7 @@
       "level": "error",
       "node": {
         "context": {
-          "id": "node@<primary-expression>@@[L6:C35, L6:C36]",
+          "id": "node@<primary-expression>@3@[L6:C35, L6:C36]",
           "snippet": "3"
         }
       }
@@ -43,7 +43,7 @@
       "level": "error",
       "node": {
         "context": {
-          "id": "node@<primary-expression>@@[L7:C35, L7:C40]",
+          "id": "node@<primary-expression>@false@[L7:C35, L7:C40]",
           "snippet": "false"
         }
       }
@@ -55,7 +55,7 @@
       "level": "error",
       "node": {
         "context": {
-          "id": "node@<primary-expression>@@[L8:C35, L8:C39]",
+          "id": "node@<primary-expression>@null@[L8:C35, L8:C39]",
           "snippet": "null"
         }
       }
@@ -101,7 +101,7 @@
                 "body": [
                   {
                     "context": {
-                      "id": "node@<function-application>@@[L1:C2, L1:C36]",
+                      "id": "node@<function-application>@balance@[L1:C2, L1:C36]",
                       "snippet": "balance in...ance > 0`]"
                     },
                     "children": {
@@ -149,7 +149,7 @@
                                   },
                                   "value": {
                                     "context": {
-                                      "id": "node@<function-expression>@@[L1:C22, L1:C35]",
+                                      "id": "node@<function-expression>@balance > 0@[L1:C22, L1:C35]",
                                       "snippet": "`balance > 0`"
                                     },
                                     "children": {
@@ -189,7 +189,7 @@
                         },
                         {
                           "context": {
-                            "id": "node@<primary-expression>@@[L1:C10, L1:C13]",
+                            "id": "node@<primary-expression>@int@[L1:C10, L1:C13]",
                             "snippet": "int"
                           },
                           "children": {
@@ -215,7 +215,7 @@
                       ],
                       "callee": {
                         "context": {
-                          "id": "node@<primary-expression>@@[L1:C2, L1:C9]",
+                          "id": "node@<primary-expression>@balance@[L1:C2, L1:C9]",
                           "snippet": "balance"
                         },
                         "children": {
@@ -241,18 +241,18 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol@Column@@[L1:C2, L1:C36]",
+                        "id": "symbol@Column@balance@[L1:C2, L1:C36]",
                         "snippet": "balance in...ance > 0`]"
                       },
                       "declaration": {
-                        "id": "node@<function-application>@@[L1:C2, L1:C36]",
+                        "id": "node@<function-application>@balance@[L1:C2, L1:C36]",
                         "snippet": "balance in...ance > 0`]"
                       }
                     }
                   },
                   {
                     "context": {
-                      "id": "node@<function-application>@@[L2:C2, L2:C69]",
+                      "id": "node@<function-application>@dependents@[L2:C2, L2:C69]",
                       "snippet": "dependents...nts < 10`]"
                     },
                     "children": {
@@ -311,7 +311,7 @@
                                   },
                                   "value": {
                                     "context": {
-                                      "id": "node@<function-expression>@@[L2:C25, L2:C42]",
+                                      "id": "node@<function-expression>@dependents >= 0@[L2:C25, L2:C42]",
                                       "snippet": "`dependents >= 0`"
                                     },
                                     "children": {
@@ -364,7 +364,7 @@
                                   },
                                   "value": {
                                     "context": {
-                                      "id": "node@<function-expression>@@[L2:C51, L2:C68]",
+                                      "id": "node@<function-expression>@dependents < 10@[L2:C51, L2:C68]",
                                       "snippet": "`dependents < 10`"
                                     },
                                     "children": {
@@ -404,7 +404,7 @@
                         },
                         {
                           "context": {
-                            "id": "node@<primary-expression>@@[L2:C13, L2:C16]",
+                            "id": "node@<primary-expression>@int@[L2:C13, L2:C16]",
                             "snippet": "int"
                           },
                           "children": {
@@ -430,7 +430,7 @@
                       ],
                       "callee": {
                         "context": {
-                          "id": "node@<primary-expression>@@[L2:C2, L2:C12]",
+                          "id": "node@<primary-expression>@dependents@[L2:C2, L2:C12]",
                           "snippet": "dependents"
                         },
                         "children": {
@@ -456,18 +456,18 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol@Column@@[L2:C2, L2:C69]",
+                        "id": "symbol@Column@dependents@[L2:C2, L2:C69]",
                         "snippet": "dependents...nts < 10`]"
                       },
                       "declaration": {
-                        "id": "node@<function-application>@@[L2:C2, L2:C69]",
+                        "id": "node@<function-application>@dependents@[L2:C2, L2:C69]",
                         "snippet": "dependents...nts < 10`]"
                       }
                     }
                   },
                   {
                     "context": {
-                      "id": "node@<function-application>@@[L4:C2, L8:C40]",
+                      "id": "node@<function-application>@invalid_col@[L4:C2, L8:C40]",
                       "snippet": "invalid_co...eck: null]"
                     },
                     "children": {
@@ -553,7 +553,7 @@
                                   },
                                   "value": {
                                     "context": {
-                                      "id": "node@<primary-expression>@@[L4:C35, L4:C52]",
+                                      "id": "node@<primary-expression>@invalid check 1@[L4:C35, L4:C52]",
                                       "snippet": "\"invalid check 1\""
                                     },
                                     "children": {
@@ -614,7 +614,7 @@
                                   },
                                   "value": {
                                     "context": {
-                                      "id": "node@<primary-expression>@@[L5:C35, L5:C52]",
+                                      "id": "node@<primary-expression>@invalid check 2@[L5:C35, L5:C52]",
                                       "snippet": "'invalid check 2'"
                                     },
                                     "children": {
@@ -675,7 +675,7 @@
                                   },
                                   "value": {
                                     "context": {
-                                      "id": "node@<primary-expression>@@[L6:C35, L6:C36]",
+                                      "id": "node@<primary-expression>@3@[L6:C35, L6:C36]",
                                       "snippet": "3"
                                     },
                                     "children": {
@@ -736,7 +736,7 @@
                                   },
                                   "value": {
                                     "context": {
-                                      "id": "node@<primary-expression>@@[L7:C35, L7:C40]",
+                                      "id": "node@<primary-expression>@false@[L7:C35, L7:C40]",
                                       "snippet": "false"
                                     },
                                     "children": {
@@ -797,7 +797,7 @@
                                   },
                                   "value": {
                                     "context": {
-                                      "id": "node@<primary-expression>@@[L8:C35, L8:C39]",
+                                      "id": "node@<primary-expression>@null@[L8:C35, L8:C39]",
                                       "snippet": "null"
                                     },
                                     "children": {
@@ -845,7 +845,7 @@
                         },
                         {
                           "context": {
-                            "id": "node@<primary-expression>@@[L4:C14, L4:C26]",
+                            "id": "node@<primary-expression>@invalid_type@[L4:C14, L4:C26]",
                             "snippet": "invalid_type"
                           },
                           "children": {
@@ -871,7 +871,7 @@
                       ],
                       "callee": {
                         "context": {
-                          "id": "node@<primary-expression>@@[L4:C2, L4:C13]",
+                          "id": "node@<primary-expression>@invalid_col@[L4:C2, L4:C13]",
                           "snippet": "invalid_col"
                         },
                         "children": {
@@ -897,11 +897,11 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol@Column@@[L4:C2, L8:C40]",
+                        "id": "symbol@Column@invalid_col@[L4:C2, L8:C40]",
                         "snippet": "invalid_co...eck: null]"
                       },
                       "declaration": {
-                        "id": "node@<function-application>@@[L4:C2, L8:C40]",
+                        "id": "node@<function-application>@invalid_col@[L4:C2, L8:C40]",
                         "snippet": "invalid_co...eck: null]"
                       }
                     }
@@ -911,7 +911,7 @@
             },
             "name": {
               "context": {
-                "id": "node@<primary-expression>@@[L0:C13, L0:C18]",
+                "id": "node@<primary-expression>@Users@[L0:C13, L0:C18]",
                 "snippet": "Users"
               },
               "children": {
@@ -957,19 +957,19 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol@Column@@[L1:C2, L1:C36]",
+                  "id": "symbol@Column@balance@[L1:C2, L1:C36]",
                   "snippet": "balance in...ance > 0`]"
                 }
               },
               {
                 "context": {
-                  "id": "symbol@Column@@[L2:C2, L2:C69]",
+                  "id": "symbol@Column@dependents@[L2:C2, L2:C69]",
                   "snippet": "dependents...nts < 10`]"
                 }
               },
               {
                 "context": {
-                  "id": "symbol@Column@@[L4:C2, L8:C40]",
+                  "id": "symbol@Column@invalid_col@[L4:C2, L8:C40]",
                   "snippet": "invalid_co...eck: null]"
                 }
               }

@@ -7,7 +7,7 @@
       "level": "error",
       "node": {
         "context": {
-          "id": "node@<function-application>@@[L2:C4, L2:C9]",
+          "id": "node@<function-application>@churn@[L2:C4, L2:C9]",
           "snippet": "churn"
         }
       }
@@ -19,7 +19,7 @@
       "level": "error",
       "node": {
         "context": {
-          "id": "node@<function-application>@@[L1:C4, L1:C9]",
+          "id": "node@<function-application>@churn@[L1:C4, L1:C9]",
           "snippet": "churn"
         }
       }
@@ -31,7 +31,7 @@
       "level": "error",
       "node": {
         "context": {
-          "id": "node@<function-application>@@[L3:C4, L3:C9]",
+          "id": "node@<function-application>@churn@[L3:C4, L3:C9]",
           "snippet": "churn"
         }
       }
@@ -43,7 +43,7 @@
       "level": "error",
       "node": {
         "context": {
-          "id": "node@<function-application>@@[L1:C4, L1:C9]",
+          "id": "node@<function-application>@churn@[L1:C4, L1:C9]",
           "snippet": "churn"
         }
       }
@@ -89,13 +89,13 @@
                 "body": [
                   {
                     "context": {
-                      "id": "node@<function-application>@@[L1:C4, L1:C9]",
+                      "id": "node@<function-application>@churn@[L1:C4, L1:C9]",
                       "snippet": "churn"
                     },
                     "children": {
                       "callee": {
                         "context": {
-                          "id": "node@<primary-expression>@@[L1:C4, L1:C9]",
+                          "id": "node@<primary-expression>@churn@[L1:C4, L1:C9]",
                           "snippet": "churn"
                         },
                         "children": {
@@ -121,24 +121,24 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol@Enum field@@[L1:C4, L1:C9]",
+                        "id": "symbol@Enum field@churn@[L1:C4, L1:C9]",
                         "snippet": "churn"
                       },
                       "declaration": {
-                        "id": "node@<function-application>@@[L1:C4, L1:C9]",
+                        "id": "node@<function-application>@churn@[L1:C4, L1:C9]",
                         "snippet": "churn"
                       }
                     }
                   },
                   {
                     "context": {
-                      "id": "node@<function-application>@@[L2:C4, L2:C9]",
+                      "id": "node@<function-application>@churn@[L2:C4, L2:C9]",
                       "snippet": "churn"
                     },
                     "children": {
                       "callee": {
                         "context": {
-                          "id": "node@<primary-expression>@@[L2:C4, L2:C9]",
+                          "id": "node@<primary-expression>@churn@[L2:C4, L2:C9]",
                           "snippet": "churn"
                         },
                         "children": {
@@ -164,24 +164,24 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol@Enum field@@[L2:C4, L2:C9]",
+                        "id": "symbol@Enum field@churn@[L2:C4, L2:C9]",
                         "snippet": "churn"
                       },
                       "declaration": {
-                        "id": "node@<function-application>@@[L2:C4, L2:C9]",
+                        "id": "node@<function-application>@churn@[L2:C4, L2:C9]",
                         "snippet": "churn"
                       }
                     }
                   },
                   {
                     "context": {
-                      "id": "node@<function-application>@@[L3:C4, L3:C9]",
+                      "id": "node@<function-application>@churn@[L3:C4, L3:C9]",
                       "snippet": "churn"
                     },
                     "children": {
                       "callee": {
                         "context": {
-                          "id": "node@<primary-expression>@@[L3:C4, L3:C9]",
+                          "id": "node@<primary-expression>@churn@[L3:C4, L3:C9]",
                           "snippet": "churn"
                         },
                         "children": {
@@ -207,11 +207,11 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol@Enum field@@[L3:C4, L3:C9]",
+                        "id": "symbol@Enum field@churn@[L3:C4, L3:C9]",
                         "snippet": "churn"
                       },
                       "declaration": {
-                        "id": "node@<function-application>@@[L3:C4, L3:C9]",
+                        "id": "node@<function-application>@churn@[L3:C4, L3:C9]",
                         "snippet": "churn"
                       }
                     }
@@ -221,7 +221,7 @@
             },
             "name": {
               "context": {
-                "id": "node@<primary-expression>@@[L0:C5, L0:C11]",
+                "id": "node@<primary-expression>@status@[L0:C5, L0:C11]",
                 "snippet": "status"
               },
               "children": {
@@ -267,7 +267,7 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol@Enum field@@[L1:C4, L1:C9]",
+                  "id": "symbol@Enum field@churn@[L1:C4, L1:C9]",
                   "snippet": "churn"
                 }
               }

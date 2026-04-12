@@ -69,7 +69,7 @@
                       },
                       "value": {
                         "context": {
-                          "id": "node@<primary-expression>@@[L0:C26, L0:C33]",
+                          "id": "node@<primary-expression>@#3498DB@[L0:C26, L0:C33]",
                           "snippet": "#3498DB"
                         },
                         "children": {
@@ -142,7 +142,7 @@
                 "body": [
                   {
                     "context": {
-                      "id": "node@<function-application>@@[L2:C2, L2:C42]",
+                      "id": "node@<function-application>@username@[L2:C2, L2:C42]",
                       "snippet": "username v...l, unique]"
                     },
                     "children": {
@@ -264,7 +264,7 @@
                                 "elementList": [
                                   {
                                     "context": {
-                                      "id": "node@<primary-expression>@@[L2:C19, L2:C22]",
+                                      "id": "node@<primary-expression>@255@[L2:C19, L2:C22]",
                                       "snippet": "255"
                                     },
                                     "children": {
@@ -310,7 +310,7 @@
                             },
                             "callee": {
                               "context": {
-                                "id": "node@<primary-expression>@@[L2:C11, L2:C18]",
+                                "id": "node@<primary-expression>@varchar@[L2:C11, L2:C18]",
                                 "snippet": "varchar"
                               },
                               "children": {
@@ -338,7 +338,7 @@
                       ],
                       "callee": {
                         "context": {
-                          "id": "node@<primary-expression>@@[L2:C2, L2:C10]",
+                          "id": "node@<primary-expression>@username@[L2:C2, L2:C10]",
                           "snippet": "username"
                         },
                         "children": {
@@ -364,25 +364,25 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol@Column@@[L2:C2, L2:C42]",
+                        "id": "symbol@Column@username@[L2:C2, L2:C42]",
                         "snippet": "username v...l, unique]"
                       },
                       "declaration": {
-                        "id": "node@<function-application>@@[L2:C2, L2:C42]",
+                        "id": "node@<function-application>@username@[L2:C2, L2:C42]",
                         "snippet": "username v...l, unique]"
                       }
                     }
                   },
                   {
                     "context": {
-                      "id": "node@<function-application>@@[L1:C2, L1:C26]",
+                      "id": "node@<function-application>@id@[L1:C2, L1:C26]",
                       "snippet": "id integer...imary key]"
                     },
                     "children": {
                       "args": [
                         {
                           "context": {
-                            "id": "node@<primary-expression>@@[L1:C5, L1:C12]",
+                            "id": "node@<primary-expression>@integer@[L1:C5, L1:C12]",
                             "snippet": "integer"
                           },
                           "children": {
@@ -472,7 +472,7 @@
                       ],
                       "callee": {
                         "context": {
-                          "id": "node@<primary-expression>@@[L1:C2, L1:C4]",
+                          "id": "node@<primary-expression>@id@[L1:C2, L1:C4]",
                           "snippet": "id"
                         },
                         "children": {
@@ -498,11 +498,11 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol@Column@@[L1:C2, L1:C26]",
+                        "id": "symbol@Column@id@[L1:C2, L1:C26]",
                         "snippet": "id integer...imary key]"
                       },
                       "declaration": {
-                        "id": "node@<function-application>@@[L1:C2, L1:C26]",
+                        "id": "node@<function-application>@id@[L1:C2, L1:C26]",
                         "snippet": "id integer...imary key]"
                       }
                     }
@@ -512,7 +512,7 @@
             },
             "name": {
               "context": {
-                "id": "node@<primary-expression>@@[L0:C6, L0:C11]",
+                "id": "node@<primary-expression>@users@[L0:C6, L0:C11]",
                 "snippet": "users"
               },
               "children": {
@@ -558,13 +558,13 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol@Column@@[L1:C2, L1:C26]",
+                  "id": "symbol@Column@id@[L1:C2, L1:C26]",
                   "snippet": "id integer...imary key]"
                 }
               },
               {
                 "context": {
-                  "id": "symbol@Column@@[L2:C2, L2:C42]",
+                  "id": "symbol@Column@username@[L2:C2, L2:C42]",
                   "snippet": "username v...l, unique]"
                 }
               }
@@ -620,7 +620,7 @@
                       },
                       "value": {
                         "context": {
-                          "id": "node@<primary-expression>@@[L5:C28, L5:C35]",
+                          "id": "node@<primary-expression>@#3457DB@[L5:C28, L5:C35]",
                           "snippet": "#3457DB"
                         },
                         "children": {
@@ -693,13 +693,13 @@
                 "body": [
                   {
                     "context": {
-                      "id": "node@<function-application>@@[L6:C2, L8:C5]",
+                      "id": "node@<function-application>@\n    Hello is that me you are looking for.\n  @[L6:C2, L8:C5]",
                       "snippet": "'''\n    He...for.\n  '''"
                     },
                     "children": {
                       "callee": {
                         "context": {
-                          "id": "node@<primary-expression>@@[L6:C2, L8:C5]",
+                          "id": "node@<primary-expression>@\n    Hello is that me you are looking for.\n  @[L6:C2, L8:C5]",
                           "snippet": "'''\n    He...for.\n  '''"
                         },
                         "children": {
@@ -729,7 +729,7 @@
             },
             "name": {
               "context": {
-                "id": "node@<primary-expression>@@[L5:C5, L5:C13]",
+                "id": "node@<primary-expression>@nodeName@[L5:C5, L5:C13]",
                 "snippet": "nodeName"
               },
               "children": {

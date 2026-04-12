@@ -39,14 +39,14 @@
                 "body": [
                   {
                     "context": {
-                      "id": "node@<function-application>@@[L1:C4, L1:C14]",
+                      "id": "node@<function-application>@id@[L1:C4, L1:C14]",
                       "snippet": "id integer"
                     },
                     "children": {
                       "args": [
                         {
                           "context": {
-                            "id": "node@<primary-expression>@@[L1:C7, L1:C14]",
+                            "id": "node@<primary-expression>@integer@[L1:C7, L1:C14]",
                             "snippet": "integer"
                           },
                           "children": {
@@ -72,7 +72,7 @@
                       ],
                       "callee": {
                         "context": {
-                          "id": "node@<primary-expression>@@[L1:C4, L1:C6]",
+                          "id": "node@<primary-expression>@id@[L1:C4, L1:C6]",
                           "snippet": "id"
                         },
                         "children": {
@@ -98,16 +98,16 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol@Column@@[L1:C4, L1:C14]",
+                        "id": "symbol@Column@id@[L1:C4, L1:C14]",
                         "snippet": "id integer"
                       },
                       "declaration": {
-                        "id": "node@<function-application>@@[L1:C4, L1:C14]",
+                        "id": "node@<function-application>@id@[L1:C4, L1:C14]",
                         "snippet": "id integer"
                       },
                       "references": [
                         {
-                          "id": "node@<primary-expression>@@[L6:C10, L6:C12]",
+                          "id": "node@<primary-expression>@id@[L6:C10, L6:C12]",
                           "snippet": "id"
                         }
                       ]
@@ -115,14 +115,14 @@
                   },
                   {
                     "context": {
-                      "id": "node@<function-application>@@[L2:C4, L2:C23]",
+                      "id": "node@<function-application>@referrer_id@[L2:C4, L2:C23]",
                       "snippet": "referrer_id integer"
                     },
                     "children": {
                       "args": [
                         {
                           "context": {
-                            "id": "node@<primary-expression>@@[L2:C16, L2:C23]",
+                            "id": "node@<primary-expression>@integer@[L2:C16, L2:C23]",
                             "snippet": "integer"
                           },
                           "children": {
@@ -148,7 +148,7 @@
                       ],
                       "callee": {
                         "context": {
-                          "id": "node@<primary-expression>@@[L2:C4, L2:C15]",
+                          "id": "node@<primary-expression>@referrer_id@[L2:C4, L2:C15]",
                           "snippet": "referrer_id"
                         },
                         "children": {
@@ -174,16 +174,16 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol@Column@@[L2:C4, L2:C23]",
+                        "id": "symbol@Column@referrer_id@[L2:C4, L2:C23]",
                         "snippet": "referrer_id integer"
                       },
                       "declaration": {
-                        "id": "node@<function-application>@@[L2:C4, L2:C23]",
+                        "id": "node@<function-application>@referrer_id@[L2:C4, L2:C23]",
                         "snippet": "referrer_id integer"
                       },
                       "references": [
                         {
-                          "id": "node@<primary-expression>@@[L6:C21, L6:C32]",
+                          "id": "node@<primary-expression>@referrer_id@[L6:C21, L6:C32]",
                           "snippet": "referrer_id"
                         }
                       ]
@@ -194,7 +194,7 @@
             },
             "name": {
               "context": {
-                "id": "node@<primary-expression>@@[L0:C6, L0:C11]",
+                "id": "node@<primary-expression>@Users@[L0:C6, L0:C11]",
                 "snippet": "Users"
               },
               "children": {
@@ -240,24 +240,24 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol@Column@@[L1:C4, L1:C14]",
+                  "id": "symbol@Column@id@[L1:C4, L1:C14]",
                   "snippet": "id integer"
                 }
               },
               {
                 "context": {
-                  "id": "symbol@Column@@[L2:C4, L2:C23]",
+                  "id": "symbol@Column@referrer_id@[L2:C4, L2:C23]",
                   "snippet": "referrer_id integer"
                 }
               }
             ],
             "references": [
               {
-                "id": "node@<primary-expression>@@[L6:C15, L6:C20]",
+                "id": "node@<primary-expression>@Users@[L6:C15, L6:C20]",
                 "snippet": "Users"
               },
               {
-                "id": "node@<primary-expression>@@[L6:C4, L6:C9]",
+                "id": "node@<primary-expression>@Users@[L6:C4, L6:C9]",
                 "snippet": "Users"
               }
             ]
@@ -314,7 +314,7 @@
                             "children": {
                               "leftExpression": {
                                 "context": {
-                                  "id": "node@<primary-expression>@@[L6:C4, L6:C9]",
+                                  "id": "node@<primary-expression>@Users@[L6:C4, L6:C9]",
                                   "snippet": "Users"
                                 },
                                 "children": {
@@ -354,7 +354,7 @@
                               },
                               "rightExpression": {
                                 "context": {
-                                  "id": "node@<primary-expression>@@[L6:C10, L6:C12]",
+                                  "id": "node@<primary-expression>@id@[L6:C10, L6:C12]",
                                   "snippet": "id"
                                 },
                                 "children": {
@@ -378,7 +378,7 @@
                                 },
                                 "referee": {
                                   "context": {
-                                    "id": "symbol@Column@@[L1:C4, L1:C14]",
+                                    "id": "symbol@Column@id@[L1:C4, L1:C14]",
                                     "snippet": "id integer"
                                   }
                                 }
@@ -402,7 +402,7 @@
                             "children": {
                               "leftExpression": {
                                 "context": {
-                                  "id": "node@<primary-expression>@@[L6:C15, L6:C20]",
+                                  "id": "node@<primary-expression>@Users@[L6:C15, L6:C20]",
                                   "snippet": "Users"
                                 },
                                 "children": {
@@ -442,7 +442,7 @@
                               },
                               "rightExpression": {
                                 "context": {
-                                  "id": "node@<primary-expression>@@[L6:C21, L6:C32]",
+                                  "id": "node@<primary-expression>@referrer_id@[L6:C21, L6:C32]",
                                   "snippet": "referrer_id"
                                 },
                                 "children": {
@@ -466,7 +466,7 @@
                                 },
                                 "referee": {
                                   "context": {
-                                    "id": "symbol@Column@@[L2:C4, L2:C23]",
+                                    "id": "symbol@Column@referrer_id@[L2:C4, L2:C23]",
                                     "snippet": "referrer_id integer"
                                   }
                                 }

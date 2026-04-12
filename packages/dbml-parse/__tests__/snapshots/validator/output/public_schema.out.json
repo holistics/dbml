@@ -78,7 +78,7 @@
             },
             "name": {
               "context": {
-                "id": "node@<primary-expression>@@[L0:C5, L0:C11]",
+                "id": "node@<primary-expression>@status@[L0:C5, L0:C11]",
                 "snippet": "status"
               },
               "children": {
@@ -163,7 +163,7 @@
               "children": {
                 "leftExpression": {
                   "context": {
-                    "id": "node@<primary-expression>@@[L4:C5, L4:C11]",
+                    "id": "node@<primary-expression>@public@[L4:C5, L4:C11]",
                     "snippet": "public"
                   },
                   "children": {
@@ -197,7 +197,7 @@
                 },
                 "rightExpression": {
                   "context": {
-                    "id": "node@<primary-expression>@@[L4:C12, L4:C18]",
+                    "id": "node@<primary-expression>@status@[L4:C12, L4:C18]",
                     "snippet": "status"
                   },
                   "children": {

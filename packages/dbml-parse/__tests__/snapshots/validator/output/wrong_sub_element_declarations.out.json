@@ -7,7 +7,7 @@
       "level": "error",
       "node": {
         "context": {
-          "id": "node@<function-application>@@[L2:C4, L2:C21]",
+          "id": "node@<function-application>@Indexes@[L2:C4, L2:C21]",
           "snippet": "Indexes 2 args {}"
         }
       }
@@ -19,7 +19,7 @@
       "level": "error",
       "node": {
         "context": {
-          "id": "node@<function-application>@@[L1:C4, L1:C32]",
+          "id": "node@<function-application>@Indexes@[L1:C4, L1:C32]",
           "snippet": "Indexes wr...x alias {}"
         }
       }
@@ -31,7 +31,7 @@
       "level": "error",
       "node": {
         "context": {
-          "id": "node@<function-application>@@[L3:C4, L3:C35]",
+          "id": "node@<function-application>@Indexes@[L3:C4, L3:C35]",
           "snippet": "Indexes wr...of args {}"
         }
       }
@@ -43,7 +43,7 @@
       "level": "error",
       "node": {
         "context": {
-          "id": "node@<function-application>@@[L1:C4, L1:C32]",
+          "id": "node@<function-application>@Indexes@[L1:C4, L1:C32]",
           "snippet": "Indexes wr...x alias {}"
         }
       }
@@ -55,7 +55,7 @@
       "level": "error",
       "node": {
         "context": {
-          "id": "node@<primary-expression>@@[L1:C18, L1:C23]",
+          "id": "node@<primary-expression>@index@[L1:C18, L1:C23]",
           "snippet": "index"
         }
       }
@@ -67,7 +67,7 @@
       "level": "error",
       "node": {
         "context": {
-          "id": "node@<primary-expression>@@[L1:C24, L1:C29]",
+          "id": "node@<primary-expression>@alias@[L1:C24, L1:C29]",
           "snippet": "alias"
         }
       }
@@ -91,7 +91,7 @@
       "level": "error",
       "node": {
         "context": {
-          "id": "node@<primary-expression>@@[L2:C14, L2:C18]",
+          "id": "node@<primary-expression>@args@[L2:C14, L2:C18]",
           "snippet": "args"
         }
       }
@@ -115,7 +115,7 @@
       "level": "error",
       "node": {
         "context": {
-          "id": "node@<primary-expression>@@[L3:C18, L3:C24]",
+          "id": "node@<primary-expression>@number@[L3:C18, L3:C24]",
           "snippet": "number"
         }
       }
@@ -127,7 +127,7 @@
       "level": "error",
       "node": {
         "context": {
-          "id": "node@<primary-expression>@@[L3:C25, L3:C27]",
+          "id": "node@<primary-expression>@of@[L3:C25, L3:C27]",
           "snippet": "of"
         }
       }
@@ -139,7 +139,7 @@
       "level": "error",
       "node": {
         "context": {
-          "id": "node@<primary-expression>@@[L3:C28, L3:C32]",
+          "id": "node@<primary-expression>@args@[L3:C28, L3:C32]",
           "snippet": "args"
         }
       }
@@ -163,7 +163,7 @@
       "level": "error",
       "node": {
         "context": {
-          "id": "node@<primary-expression>@@[L2:C12, L2:C13]",
+          "id": "node@<primary-expression>@2@[L2:C12, L2:C13]",
           "snippet": "2"
         }
       }
@@ -209,14 +209,14 @@
                 "body": [
                   {
                     "context": {
-                      "id": "node@<function-application>@@[L1:C4, L1:C32]",
+                      "id": "node@<function-application>@Indexes@[L1:C4, L1:C32]",
                       "snippet": "Indexes wr...x alias {}"
                     },
                     "children": {
                       "args": [
                         {
                           "context": {
-                            "id": "node@<primary-expression>@@[L1:C24, L1:C29]",
+                            "id": "node@<primary-expression>@alias@[L1:C24, L1:C29]",
                             "snippet": "alias"
                           },
                           "children": {
@@ -241,7 +241,7 @@
                         },
                         {
                           "context": {
-                            "id": "node@<primary-expression>@@[L1:C18, L1:C23]",
+                            "id": "node@<primary-expression>@index@[L1:C18, L1:C23]",
                             "snippet": "index"
                           },
                           "children": {
@@ -266,7 +266,7 @@
                         },
                         {
                           "context": {
-                            "id": "node@<primary-expression>@@[L1:C12, L1:C17]",
+                            "id": "node@<primary-expression>@wrong@[L1:C12, L1:C17]",
                             "snippet": "wrong"
                           },
                           "children": {
@@ -318,7 +318,7 @@
                       ],
                       "callee": {
                         "context": {
-                          "id": "node@<primary-expression>@@[L1:C4, L1:C11]",
+                          "id": "node@<primary-expression>@Indexes@[L1:C4, L1:C11]",
                           "snippet": "Indexes"
                         },
                         "children": {
@@ -344,25 +344,25 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol@Column@@[L1:C4, L1:C32]",
+                        "id": "symbol@Column@Indexes@[L1:C4, L1:C32]",
                         "snippet": "Indexes wr...x alias {}"
                       },
                       "declaration": {
-                        "id": "node@<function-application>@@[L1:C4, L1:C32]",
+                        "id": "node@<function-application>@Indexes@[L1:C4, L1:C32]",
                         "snippet": "Indexes wr...x alias {}"
                       }
                     }
                   },
                   {
                     "context": {
-                      "id": "node@<function-application>@@[L2:C4, L2:C21]",
+                      "id": "node@<function-application>@Indexes@[L2:C4, L2:C21]",
                       "snippet": "Indexes 2 args {}"
                     },
                     "children": {
                       "args": [
                         {
                           "context": {
-                            "id": "node@<primary-expression>@@[L2:C14, L2:C18]",
+                            "id": "node@<primary-expression>@args@[L2:C14, L2:C18]",
                             "snippet": "args"
                           },
                           "children": {
@@ -387,7 +387,7 @@
                         },
                         {
                           "context": {
-                            "id": "node@<primary-expression>@@[L2:C12, L2:C13]",
+                            "id": "node@<primary-expression>@2@[L2:C12, L2:C13]",
                             "snippet": "2"
                           },
                           "children": {
@@ -439,7 +439,7 @@
                       ],
                       "callee": {
                         "context": {
-                          "id": "node@<primary-expression>@@[L2:C4, L2:C11]",
+                          "id": "node@<primary-expression>@Indexes@[L2:C4, L2:C11]",
                           "snippet": "Indexes"
                         },
                         "children": {
@@ -465,25 +465,25 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol@Column@@[L2:C4, L2:C21]",
+                        "id": "symbol@Column@Indexes@[L2:C4, L2:C21]",
                         "snippet": "Indexes 2 args {}"
                       },
                       "declaration": {
-                        "id": "node@<function-application>@@[L2:C4, L2:C21]",
+                        "id": "node@<function-application>@Indexes@[L2:C4, L2:C21]",
                         "snippet": "Indexes 2 args {}"
                       }
                     }
                   },
                   {
                     "context": {
-                      "id": "node@<function-application>@@[L3:C4, L3:C35]",
+                      "id": "node@<function-application>@Indexes@[L3:C4, L3:C35]",
                       "snippet": "Indexes wr...of args {}"
                     },
                     "children": {
                       "args": [
                         {
                           "context": {
-                            "id": "node@<primary-expression>@@[L3:C28, L3:C32]",
+                            "id": "node@<primary-expression>@args@[L3:C28, L3:C32]",
                             "snippet": "args"
                           },
                           "children": {
@@ -508,7 +508,7 @@
                         },
                         {
                           "context": {
-                            "id": "node@<primary-expression>@@[L3:C18, L3:C24]",
+                            "id": "node@<primary-expression>@number@[L3:C18, L3:C24]",
                             "snippet": "number"
                           },
                           "children": {
@@ -533,7 +533,7 @@
                         },
                         {
                           "context": {
-                            "id": "node@<primary-expression>@@[L3:C25, L3:C27]",
+                            "id": "node@<primary-expression>@of@[L3:C25, L3:C27]",
                             "snippet": "of"
                           },
                           "children": {
@@ -558,7 +558,7 @@
                         },
                         {
                           "context": {
-                            "id": "node@<primary-expression>@@[L3:C12, L3:C17]",
+                            "id": "node@<primary-expression>@wrong@[L3:C12, L3:C17]",
                             "snippet": "wrong"
                           },
                           "children": {
@@ -610,7 +610,7 @@
                       ],
                       "callee": {
                         "context": {
-                          "id": "node@<primary-expression>@@[L3:C4, L3:C11]",
+                          "id": "node@<primary-expression>@Indexes@[L3:C4, L3:C11]",
                           "snippet": "Indexes"
                         },
                         "children": {
@@ -636,11 +636,11 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol@Column@@[L3:C4, L3:C35]",
+                        "id": "symbol@Column@Indexes@[L3:C4, L3:C35]",
                         "snippet": "Indexes wr...of args {}"
                       },
                       "declaration": {
-                        "id": "node@<function-application>@@[L3:C4, L3:C35]",
+                        "id": "node@<function-application>@Indexes@[L3:C4, L3:C35]",
                         "snippet": "Indexes wr...of args {}"
                       }
                     }
@@ -650,7 +650,7 @@
             },
             "name": {
               "context": {
-                "id": "node@<primary-expression>@@[L0:C6, L0:C7]",
+                "id": "node@<primary-expression>@A@[L0:C6, L0:C7]",
                 "snippet": "A"
               },
               "children": {
@@ -696,7 +696,7 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol@Column@@[L1:C4, L1:C32]",
+                  "id": "symbol@Column@Indexes@[L1:C4, L1:C32]",
                   "snippet": "Indexes wr...x alias {}"
                 }
               }

@@ -7,7 +7,7 @@
       "level": "error",
       "node": {
         "context": {
-          "id": "node@<primary-expression>@@[L1:C20, L1:C27]",
+          "id": "node@<primary-expression>@un_col1@[L1:C20, L1:C27]",
           "snippet": "un_col1"
         }
       }
@@ -19,7 +19,7 @@
       "level": "error",
       "node": {
         "context": {
-          "id": "node@<primary-expression>@@[L2:C23, L2:C30]",
+          "id": "node@<primary-expression>@un_col2@[L2:C23, L2:C30]",
           "snippet": "un_col2"
         }
       }
@@ -31,7 +31,7 @@
       "level": "error",
       "node": {
         "context": {
-          "id": "node@<primary-expression>@@[L3:C20, L3:C24]",
+          "id": "node@<primary-expression>@un_T@[L3:C20, L3:C24]",
           "snippet": "un_T"
         }
       }
@@ -43,7 +43,7 @@
       "level": "error",
       "node": {
         "context": {
-          "id": "node@<primary-expression>@@[L7:C19, L7:C25]",
+          "id": "node@<primary-expression>@un_col@[L7:C19, L7:C25]",
           "snippet": "un_col"
         }
       }
@@ -89,7 +89,7 @@
                 "body": [
                   {
                     "context": {
-                      "id": "node@<function-application>@@[L1:C2, L1:C28]",
+                      "id": "node@<function-application>@col1@[L1:C2, L1:C28]",
                       "snippet": "col1 type ...> un_col1]"
                     },
                     "children": {
@@ -143,7 +143,7 @@
                                     "children": {
                                       "expression": {
                                         "context": {
-                                          "id": "node@<primary-expression>@@[L1:C20, L1:C27]",
+                                          "id": "node@<primary-expression>@un_col1@[L1:C20, L1:C27]",
                                           "snippet": "un_col1"
                                         },
                                         "children": {
@@ -202,7 +202,7 @@
                         },
                         {
                           "context": {
-                            "id": "node@<primary-expression>@@[L1:C7, L1:C11]",
+                            "id": "node@<primary-expression>@type@[L1:C7, L1:C11]",
                             "snippet": "type"
                           },
                           "children": {
@@ -228,7 +228,7 @@
                       ],
                       "callee": {
                         "context": {
-                          "id": "node@<primary-expression>@@[L1:C2, L1:C6]",
+                          "id": "node@<primary-expression>@col1@[L1:C2, L1:C6]",
                           "snippet": "col1"
                         },
                         "children": {
@@ -254,18 +254,18 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol@Column@@[L1:C2, L1:C28]",
+                        "id": "symbol@Column@col1@[L1:C2, L1:C28]",
                         "snippet": "col1 type ...> un_col1]"
                       },
                       "declaration": {
-                        "id": "node@<function-application>@@[L1:C2, L1:C28]",
+                        "id": "node@<function-application>@col1@[L1:C2, L1:C28]",
                         "snippet": "col1 type ...> un_col1]"
                       }
                     }
                   },
                   {
                     "context": {
-                      "id": "node@<function-application>@@[L2:C2, L2:C31]",
+                      "id": "node@<function-application>@col2@[L2:C2, L2:C31]",
                       "snippet": "col2 type ...2.un_col2]"
                     },
                     "children": {
@@ -325,7 +325,7 @@
                                         "children": {
                                           "leftExpression": {
                                             "context": {
-                                              "id": "node@<primary-expression>@@[L2:C20, L2:C22]",
+                                              "id": "node@<primary-expression>@T2@[L2:C20, L2:C22]",
                                               "snippet": "T2"
                                             },
                                             "children": {
@@ -365,7 +365,7 @@
                                           },
                                           "rightExpression": {
                                             "context": {
-                                              "id": "node@<primary-expression>@@[L2:C23, L2:C30]",
+                                              "id": "node@<primary-expression>@un_col2@[L2:C23, L2:C30]",
                                               "snippet": "un_col2"
                                             },
                                             "children": {
@@ -426,7 +426,7 @@
                         },
                         {
                           "context": {
-                            "id": "node@<primary-expression>@@[L2:C7, L2:C11]",
+                            "id": "node@<primary-expression>@type@[L2:C7, L2:C11]",
                             "snippet": "type"
                           },
                           "children": {
@@ -452,7 +452,7 @@
                       ],
                       "callee": {
                         "context": {
-                          "id": "node@<primary-expression>@@[L2:C2, L2:C6]",
+                          "id": "node@<primary-expression>@col2@[L2:C2, L2:C6]",
                           "snippet": "col2"
                         },
                         "children": {
@@ -478,18 +478,18 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol@Column@@[L2:C2, L2:C31]",
+                        "id": "symbol@Column@col2@[L2:C2, L2:C31]",
                         "snippet": "col2 type ...2.un_col2]"
                       },
                       "declaration": {
-                        "id": "node@<function-application>@@[L2:C2, L2:C31]",
+                        "id": "node@<function-application>@col2@[L2:C2, L2:C31]",
                         "snippet": "col2 type ...2.un_col2]"
                       }
                     }
                   },
                   {
                     "context": {
-                      "id": "node@<function-application>@@[L3:C2, L3:C33]",
+                      "id": "node@<function-application>@col3@[L3:C2, L3:C33]",
                       "snippet": "col3 type ...T.un_col3]"
                     },
                     "children": {
@@ -549,7 +549,7 @@
                                         "children": {
                                           "leftExpression": {
                                             "context": {
-                                              "id": "node@<primary-expression>@@[L3:C20, L3:C24]",
+                                              "id": "node@<primary-expression>@un_T@[L3:C20, L3:C24]",
                                               "snippet": "un_T"
                                             },
                                             "children": {
@@ -583,7 +583,7 @@
                                           },
                                           "rightExpression": {
                                             "context": {
-                                              "id": "node@<primary-expression>@@[L3:C25, L3:C32]",
+                                              "id": "node@<primary-expression>@un_col3@[L3:C25, L3:C32]",
                                               "snippet": "un_col3"
                                             },
                                             "children": {
@@ -644,7 +644,7 @@
                         },
                         {
                           "context": {
-                            "id": "node@<primary-expression>@@[L3:C7, L3:C11]",
+                            "id": "node@<primary-expression>@type@[L3:C7, L3:C11]",
                             "snippet": "type"
                           },
                           "children": {
@@ -670,7 +670,7 @@
                       ],
                       "callee": {
                         "context": {
-                          "id": "node@<primary-expression>@@[L3:C2, L3:C6]",
+                          "id": "node@<primary-expression>@col3@[L3:C2, L3:C6]",
                           "snippet": "col3"
                         },
                         "children": {
@@ -696,11 +696,11 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol@Column@@[L3:C2, L3:C33]",
+                        "id": "symbol@Column@col3@[L3:C2, L3:C33]",
                         "snippet": "col3 type ...T.un_col3]"
                       },
                       "declaration": {
-                        "id": "node@<function-application>@@[L3:C2, L3:C33]",
+                        "id": "node@<function-application>@col3@[L3:C2, L3:C33]",
                         "snippet": "col3 type ...T.un_col3]"
                       }
                     }
@@ -710,7 +710,7 @@
             },
             "name": {
               "context": {
-                "id": "node@<primary-expression>@@[L0:C6, L0:C8]",
+                "id": "node@<primary-expression>@T1@[L0:C6, L0:C8]",
                 "snippet": "T1"
               },
               "children": {
@@ -756,19 +756,19 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol@Column@@[L1:C2, L1:C28]",
+                  "id": "symbol@Column@col1@[L1:C2, L1:C28]",
                   "snippet": "col1 type ...> un_col1]"
                 }
               },
               {
                 "context": {
-                  "id": "symbol@Column@@[L2:C2, L2:C31]",
+                  "id": "symbol@Column@col2@[L2:C2, L2:C31]",
                   "snippet": "col2 type ...2.un_col2]"
                 }
               },
               {
                 "context": {
-                  "id": "symbol@Column@@[L3:C2, L3:C33]",
+                  "id": "symbol@Column@col3@[L3:C2, L3:C33]",
                   "snippet": "col3 type ...T.un_col3]"
                 }
               }
@@ -808,7 +808,7 @@
                 "body": [
                   {
                     "context": {
-                      "id": "node@<function-application>@@[L7:C2, L7:C26]",
+                      "id": "node@<function-application>@col@[L7:C2, L7:C26]",
                       "snippet": "col type [... > un_col]"
                     },
                     "children": {
@@ -862,7 +862,7 @@
                                     "children": {
                                       "expression": {
                                         "context": {
-                                          "id": "node@<primary-expression>@@[L7:C19, L7:C25]",
+                                          "id": "node@<primary-expression>@un_col@[L7:C19, L7:C25]",
                                           "snippet": "un_col"
                                         },
                                         "children": {
@@ -921,7 +921,7 @@
                         },
                         {
                           "context": {
-                            "id": "node@<primary-expression>@@[L7:C6, L7:C10]",
+                            "id": "node@<primary-expression>@type@[L7:C6, L7:C10]",
                             "snippet": "type"
                           },
                           "children": {
@@ -947,7 +947,7 @@
                       ],
                       "callee": {
                         "context": {
-                          "id": "node@<primary-expression>@@[L7:C2, L7:C5]",
+                          "id": "node@<primary-expression>@col@[L7:C2, L7:C5]",
                           "snippet": "col"
                         },
                         "children": {
@@ -973,11 +973,11 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol@Column@@[L7:C2, L7:C26]",
+                        "id": "symbol@Column@col@[L7:C2, L7:C26]",
                         "snippet": "col type [... > un_col]"
                       },
                       "declaration": {
-                        "id": "node@<function-application>@@[L7:C2, L7:C26]",
+                        "id": "node@<function-application>@col@[L7:C2, L7:C26]",
                         "snippet": "col type [... > un_col]"
                       }
                     }
@@ -987,7 +987,7 @@
             },
             "name": {
               "context": {
-                "id": "node@<primary-expression>@@[L6:C6, L6:C8]",
+                "id": "node@<primary-expression>@T2@[L6:C6, L6:C8]",
                 "snippet": "T2"
               },
               "children": {
@@ -1032,14 +1032,14 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol@Column@@[L7:C2, L7:C26]",
+                  "id": "symbol@Column@col@[L7:C2, L7:C26]",
                   "snippet": "col type [... > un_col]"
                 }
               }
             ],
             "references": [
               {
-                "id": "node@<primary-expression>@@[L2:C20, L2:C22]",
+                "id": "node@<primary-expression>@T2@[L2:C20, L2:C22]",
                 "snippet": "T2"
               }
             ]

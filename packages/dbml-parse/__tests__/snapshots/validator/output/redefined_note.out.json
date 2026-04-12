@@ -120,13 +120,13 @@
                           "body": [
                             {
                               "context": {
-                                "id": "node@<function-application>@@[L3:C8, L3:C36]",
+                                "id": "node@<function-application>@This is another local note@[L3:C8, L3:C36]",
                                 "snippet": "'This is a...ocal note'"
                               },
                               "children": {
                                 "callee": {
                                   "context": {
-                                    "id": "node@<primary-expression>@@[L3:C8, L3:C36]",
+                                    "id": "node@<primary-expression>@This is another local note@[L3:C8, L3:C36]",
                                     "snippet": "'This is a...ocal note'"
                                   },
                                   "children": {
@@ -173,13 +173,13 @@
                     "children": {
                       "body": {
                         "context": {
-                          "id": "node@<function-application>@@[L1:C10, L1:C38]",
+                          "id": "node@<function-application>@ This is a local note @[L1:C10, L1:C38]",
                           "snippet": "''' This i...l note '''"
                         },
                         "children": {
                           "callee": {
                             "context": {
-                              "id": "node@<primary-expression>@@[L1:C10, L1:C38]",
+                              "id": "node@<primary-expression>@ This is a local note @[L1:C10, L1:C38]",
                               "snippet": "''' This i...l note '''"
                             },
                             "children": {
@@ -229,7 +229,7 @@
             },
             "name": {
               "context": {
-                "id": "node@<primary-expression>@@[L0:C6, L0:C7]",
+                "id": "node@<primary-expression>@A@[L0:C6, L0:C7]",
                 "snippet": "A"
               },
               "children": {
@@ -307,13 +307,13 @@
                 "body": [
                   {
                     "context": {
-                      "id": "node@<function-application>@@[L8:C4, L8:C27]",
+                      "id": "node@<function-application>@This is a global note@[L8:C4, L8:C27]",
                       "snippet": "'This is a...obal note'"
                     },
                     "children": {
                       "callee": {
                         "context": {
-                          "id": "node@<primary-expression>@@[L8:C4, L8:C27]",
+                          "id": "node@<primary-expression>@This is a global note@[L8:C4, L8:C27]",
                           "snippet": "'This is a...obal note'"
                         },
                         "children": {
@@ -360,13 +360,13 @@
           "children": {
             "body": {
               "context": {
-                "id": "node@<function-application>@@[L11:C6, L13:C3]",
+                "id": "node@<function-application>@\r\n    This is another global note\r\n@[L11:C6, L13:C3]",
                 "snippet": "'''\r\n    T... note\r\n'''"
               },
               "children": {
                 "callee": {
                   "context": {
-                    "id": "node@<primary-expression>@@[L11:C6, L13:C3]",
+                    "id": "node@<primary-expression>@\r\n    This is another global note\r\n@[L11:C6, L13:C3]",
                     "snippet": "'''\r\n    T... note\r\n'''"
                   },
                   "children": {

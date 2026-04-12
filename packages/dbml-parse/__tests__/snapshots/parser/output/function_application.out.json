@@ -39,14 +39,14 @@
                 "body": [
                   {
                     "context": {
-                      "id": "node@<function-application>@@[L1:C4, L1:C28]",
+                      "id": "node@<function-application>@id@[L1:C4, L1:C28]",
                       "snippet": "id\tinteger...imary key]"
                     },
                     "children": {
                       "args": [
                         {
                           "context": {
-                            "id": "node@<primary-expression>@@[L1:C7, L1:C14]",
+                            "id": "node@<primary-expression>@integer@[L1:C7, L1:C14]",
                             "snippet": "integer"
                           },
                           "children": {
@@ -136,7 +136,7 @@
                       ],
                       "callee": {
                         "context": {
-                          "id": "node@<primary-expression>@@[L1:C4, L1:C6]",
+                          "id": "node@<primary-expression>@id@[L1:C4, L1:C6]",
                           "snippet": "id"
                         },
                         "children": {
@@ -163,7 +163,7 @@
                   },
                   {
                     "context": {
-                      "id": "node@<function-application>@@[L2:C4, L2:C28]",
+                      "id": "node@<function-application>@name@[L2:C4, L2:C28]",
                       "snippet": "name char ...) [unique]"
                     },
                     "children": {
@@ -238,7 +238,7 @@
                                 "elementList": [
                                   {
                                     "context": {
-                                      "id": "node@<primary-expression>@@[L2:C15, L2:C18]",
+                                      "id": "node@<primary-expression>@255@[L2:C15, L2:C18]",
                                       "snippet": "255"
                                     },
                                     "children": {
@@ -284,7 +284,7 @@
                             },
                             "callee": {
                               "context": {
-                                "id": "node@<primary-expression>@@[L2:C9, L2:C13]",
+                                "id": "node@<primary-expression>@char@[L2:C9, L2:C13]",
                                 "snippet": "char"
                               },
                               "children": {
@@ -312,7 +312,7 @@
                       ],
                       "callee": {
                         "context": {
-                          "id": "node@<primary-expression>@@[L2:C4, L2:C8]",
+                          "id": "node@<primary-expression>@name@[L2:C4, L2:C8]",
                           "snippet": "name"
                         },
                         "children": {
@@ -342,7 +342,7 @@
             },
             "name": {
               "context": {
-                "id": "node@<primary-expression>@@[L0:C5, L0:C24]",
+                "id": "node@<primary-expression>@FunctionApplication@[L0:C5, L0:C24]",
                 "snippet": "FunctionApplication"
               },
               "children": {

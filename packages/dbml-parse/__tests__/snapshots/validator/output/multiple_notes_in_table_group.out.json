@@ -77,13 +77,13 @@
                 "body": [
                   {
                     "context": {
-                      "id": "node@<function-application>@@[L6:C2, L6:C8]",
+                      "id": "node@<function-application>@table1@[L6:C2, L6:C8]",
                       "snippet": "table1"
                     },
                     "children": {
                       "callee": {
                         "context": {
-                          "id": "node@<primary-expression>@@[L6:C2, L6:C8]",
+                          "id": "node@<primary-expression>@table1@[L6:C2, L6:C8]",
                           "snippet": "table1"
                         },
                         "children": {
@@ -109,11 +109,11 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol@TableGroup field@@[L6:C2, L6:C8]",
+                        "id": "symbol@TableGroup field@table1@[L6:C2, L6:C8]",
                         "snippet": "table1"
                       },
                       "declaration": {
-                        "id": "node@<function-application>@@[L6:C2, L6:C8]",
+                        "id": "node@<function-application>@table1@[L6:C2, L6:C8]",
                         "snippet": "table1"
                       }
                     }
@@ -151,13 +151,13 @@
                           "body": [
                             {
                               "context": {
-                                "id": "node@<function-application>@@[L16:C4, L16:C17]",
+                                "id": "node@<function-application>@simple note@[L16:C4, L16:C17]",
                                 "snippet": "'simple note'"
                               },
                               "children": {
                                 "callee": {
                                   "context": {
-                                    "id": "node@<primary-expression>@@[L16:C4, L16:C17]",
+                                    "id": "node@<primary-expression>@simple note@[L16:C4, L16:C17]",
                                     "snippet": "'simple note'"
                                   },
                                   "children": {
@@ -204,13 +204,13 @@
                     "children": {
                       "body": {
                         "context": {
-                          "id": "node@<function-application>@@[L7:C8, L13:C3]",
+                          "id": "node@<function-application>@\n# Note\n\n## Objective\n  * Support define element's note inside element body\n  * Make writing long note easier with the new syntax\n@[L7:C8, L13:C3]",
                           "snippet": "'''\n# Note...syntax\n'''"
                         },
                         "children": {
                           "callee": {
                             "context": {
-                              "id": "node@<primary-expression>@@[L7:C8, L13:C3]",
+                              "id": "node@<primary-expression>@\n# Note\n\n## Objective\n  * Support define element's note inside element body\n  * Make writing long note easier with the new syntax\n@[L7:C8, L13:C3]",
                               "snippet": "'''\n# Note...syntax\n'''"
                             },
                             "children": {
@@ -263,13 +263,13 @@
                     "children": {
                       "body": {
                         "context": {
-                          "id": "node@<function-application>@@[L5:C8, L5:C21]",
+                          "id": "node@<function-application>@inline note@[L5:C8, L5:C21]",
                           "snippet": "'inline note'"
                         },
                         "children": {
                           "callee": {
                             "context": {
-                              "id": "node@<primary-expression>@@[L5:C8, L5:C21]",
+                              "id": "node@<primary-expression>@inline note@[L5:C8, L5:C21]",
                               "snippet": "'inline note'"
                             },
                             "children": {
@@ -319,7 +319,7 @@
             },
             "name": {
               "context": {
-                "id": "node@<primary-expression>@@[L4:C11, L4:C17]",
+                "id": "node@<primary-expression>@group1@[L4:C11, L4:C17]",
                 "snippet": "group1"
               },
               "children": {
@@ -364,7 +364,7 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol@TableGroup field@@[L6:C2, L6:C8]",
+                  "id": "symbol@TableGroup field@table1@[L6:C2, L6:C8]",
                   "snippet": "table1"
                 }
               }
@@ -404,14 +404,14 @@
                 "body": [
                   {
                     "context": {
-                      "id": "node@<function-application>@@[L1:C2, L1:C13]",
+                      "id": "node@<function-application>@id@[L1:C2, L1:C13]",
                       "snippet": "id int [pk]"
                     },
                     "children": {
                       "args": [
                         {
                           "context": {
-                            "id": "node@<primary-expression>@@[L1:C5, L1:C8]",
+                            "id": "node@<primary-expression>@int@[L1:C5, L1:C8]",
                             "snippet": "int"
                           },
                           "children": {
@@ -492,7 +492,7 @@
                       ],
                       "callee": {
                         "context": {
-                          "id": "node@<primary-expression>@@[L1:C2, L1:C4]",
+                          "id": "node@<primary-expression>@id@[L1:C2, L1:C4]",
                           "snippet": "id"
                         },
                         "children": {
@@ -518,11 +518,11 @@
                     },
                     "symbol": {
                       "context": {
-                        "id": "symbol@Column@@[L1:C2, L1:C13]",
+                        "id": "symbol@Column@id@[L1:C2, L1:C13]",
                         "snippet": "id int [pk]"
                       },
                       "declaration": {
-                        "id": "node@<function-application>@@[L1:C2, L1:C13]",
+                        "id": "node@<function-application>@id@[L1:C2, L1:C13]",
                         "snippet": "id int [pk]"
                       }
                     }
@@ -532,7 +532,7 @@
             },
             "name": {
               "context": {
-                "id": "node@<primary-expression>@@[L0:C6, L0:C12]",
+                "id": "node@<primary-expression>@table1@[L0:C6, L0:C12]",
                 "snippet": "table1"
               },
               "children": {
@@ -578,7 +578,7 @@
             "members": [
               {
                 "context": {
-                  "id": "symbol@Column@@[L1:C2, L1:C13]",
+                  "id": "symbol@Column@id@[L1:C2, L1:C13]",
                   "snippet": "id int [pk]"
                 }
               }
