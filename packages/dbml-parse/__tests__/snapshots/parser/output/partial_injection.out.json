@@ -23,6 +23,7 @@
                     "id": "token@<rbrace>@}@[L2:C0, L2:C1]",
                     "snippet": "}"
                   },
+                  "leadingTrivia": "",
                   "trailingTrivia": "\n",
                   "value": "}"
                 },
@@ -31,6 +32,7 @@
                     "id": "token@<lbrace>@{@[L0:C28, L0:C29]",
                     "snippet": "{"
                   },
+                  "leadingTrivia": "",
                   "trailingTrivia": "\n",
                   "value": "{"
                 },
@@ -59,6 +61,7 @@
                                     "id": "token@<identifier>@uuid@[L1:C12, L1:C16]",
                                     "snippet": "uuid"
                                   },
+                                  "leadingTrivia": "",
                                   "trailingTrivia": "\n",
                                   "value": "uuid"
                                 }
@@ -114,6 +117,7 @@
                         "id": "token@<identifier>@with_timestamp@[L0:C13, L0:C27]",
                         "snippet": "with_timestamp"
                       },
+                      "leadingTrivia": "",
                       "trailingTrivia": " ",
                       "value": "with_timestamp"
                     }
@@ -126,10 +130,12 @@
                 "id": "token@<identifier>@TablePartial@[L0:C0, L0:C12]",
                 "snippet": "TablePartial"
               },
+              "leadingTrivia": "",
               "trailingTrivia": " ",
               "value": "TablePartial"
             }
-          }
+          },
+          "fullStart": 0
         },
         {
           "context": {
@@ -148,6 +154,7 @@
                     "id": "token@<rbrace>@}@[L6:C0, L6:C1]",
                     "snippet": "}"
                   },
+                  "leadingTrivia": "",
                   "trailingTrivia": "\n",
                   "value": "}"
                 },
@@ -156,6 +163,7 @@
                     "id": "token@<lbrace>@{@[L4:C12, L4:C13]",
                     "snippet": "{"
                   },
+                  "leadingTrivia": "",
                   "trailingTrivia": "\n",
                   "value": "{"
                 },
@@ -189,6 +197,7 @@
                                       "id": "token@<identifier>@with_timestamp@[L5:C3, L5:C17]",
                                       "snippet": "with_timestamp"
                                     },
+                                    "leadingTrivia": "",
                                     "trailingTrivia": "\n",
                                     "value": "with_timestamp"
                                   }
@@ -202,6 +211,7 @@
                               "snippet": "~"
                             },
                             "leadingTrivia": "  ",
+                            "trailingTrivia": "",
                             "value": "~"
                           }
                         }
@@ -228,6 +238,7 @@
                         "id": "token@<identifier>@users@[L4:C6, L4:C11]",
                         "snippet": "users"
                       },
+                      "leadingTrivia": "",
                       "trailingTrivia": " ",
                       "value": "users"
                     }
@@ -251,8 +262,12 @@
         "context": {
           "id": "token@<eof>@@[L7:C0, L7:C0]",
           "snippet": ""
-        }
+        },
+        "leadingTrivia": "",
+        "trailingTrivia": "",
+        "value": ""
       }
-    }
+    },
+    "fullStart": 0
   }
 }

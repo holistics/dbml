@@ -1,18 +1,6 @@
 {
   "errors": [
     {
-      "code": "INVALID_CHECKS_CONTEXT",
-      "diagnostic": "A Checks can only appear inside a Table or a TablePartial",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<element-declaration>@@[L0:C0, L0:C9]",
-          "snippet": "checks {}"
-        }
-      }
-    },
-    {
       "code": "DUPLICATE_CHECK_SETTING",
       "diagnostic": "'name' can only appear once",
       "filepath": "/main.dbml",
@@ -37,18 +25,6 @@
       }
     },
     {
-      "code": "UNKNOWN_CHECK_SETTING",
-      "diagnostic": "Unknown check setting 'invalid'",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<attribute>@@[L10:C23, L10:C30]",
-          "snippet": "invalid"
-        }
-      }
-    },
-    {
       "code": "DUPLICATE_CHECK_SETTING",
       "diagnostic": "'name' can only appear once",
       "filepath": "/main.dbml",
@@ -69,6 +45,30 @@
         "context": {
           "id": "node@<attribute>@@[L20:C35, L20:C46]",
           "snippet": "name: 'dup'"
+        }
+      }
+    },
+    {
+      "code": "INVALID_CHECKS_CONTEXT",
+      "diagnostic": "A Checks can only appear inside a Table or a TablePartial",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<element-declaration>@@[L0:C0, L0:C9]",
+          "snippet": "checks {}"
+        }
+      }
+    },
+    {
+      "code": "UNKNOWN_CHECK_SETTING",
+      "diagnostic": "Unknown check setting 'invalid'",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<attribute>@@[L10:C23, L10:C30]",
+          "snippet": "invalid"
         }
       }
     },
@@ -109,6 +109,7 @@
                     "id": "token@<rbrace>@}@[L0:C8, L0:C9]",
                     "snippet": "}"
                   },
+                  "leadingTrivia": "",
                   "trailingTrivia": "\n",
                   "value": "}"
                 },
@@ -117,6 +118,8 @@
                     "id": "token@<lbrace>@{@[L0:C7, L0:C8]",
                     "snippet": "{"
                   },
+                  "leadingTrivia": "",
+                  "trailingTrivia": "",
                   "value": "{"
                 }
               }
@@ -126,10 +129,12 @@
                 "id": "token@<identifier>@checks@[L0:C0, L0:C6]",
                 "snippet": "checks"
               },
+              "leadingTrivia": "",
               "trailingTrivia": " ",
               "value": "checks"
             }
-          }
+          },
+          "fullStart": 0
         },
         {
           "context": {
@@ -148,6 +153,7 @@
                     "id": "token@<rbrace>@}@[L12:C0, L12:C1]",
                     "snippet": "}"
                   },
+                  "leadingTrivia": "",
                   "trailingTrivia": "\n",
                   "value": "}"
                 },
@@ -156,6 +162,7 @@
                     "id": "token@<lbrace>@{@[L2:C12, L2:C13]",
                     "snippet": "{"
                   },
+                  "leadingTrivia": "",
                   "trailingTrivia": "\n",
                   "value": "{"
                 },
@@ -184,6 +191,7 @@
                                     "id": "token@<identifier>@int@[L3:C10, L3:C13]",
                                     "snippet": "int"
                                   },
+                                  "leadingTrivia": "",
                                   "trailingTrivia": "\n",
                                   "value": "int"
                                 }
@@ -255,6 +263,7 @@
                               "id": "token@<lbrace>@{@[L6:C9, L6:C10]",
                               "snippet": "{"
                             },
+                            "leadingTrivia": "",
                             "trailingTrivia": "\n",
                             "value": "{"
                           },
@@ -284,6 +293,7 @@
                                                 "id": "token@<colon>@:@[L7:C23, L7:C24]",
                                                 "snippet": ":"
                                               },
+                                              "leadingTrivia": "",
                                               "trailingTrivia": " ",
                                               "value": ":"
                                             },
@@ -299,6 +309,8 @@
                                                       "id": "token@<identifier>@name@[L7:C19, L7:C23]",
                                                       "snippet": "name"
                                                     },
+                                                    "leadingTrivia": "",
+                                                    "trailingTrivia": "",
                                                     "value": "name"
                                                   }
                                                 ]
@@ -321,6 +333,8 @@
                                                         "id": "token@<string>@positive_balance@[L7:C25, L7:C43]",
                                                         "snippet": "'positive_balance'"
                                                       },
+                                                      "leadingTrivia": "",
+                                                      "trailingTrivia": "",
                                                       "value": "positive_balance"
                                                     }
                                                   }
@@ -335,6 +349,7 @@
                                           "id": "token@<rbracket>@]@[L7:C43, L7:C44]",
                                           "snippet": "]"
                                         },
+                                        "leadingTrivia": "",
                                         "trailingTrivia": "\n",
                                         "value": "]"
                                       },
@@ -343,6 +358,8 @@
                                           "id": "token@<lbracket>@[@[L7:C18, L7:C19]",
                                           "snippet": "["
                                         },
+                                        "leadingTrivia": "",
+                                        "trailingTrivia": "",
                                         "value": "["
                                       }
                                     }
@@ -386,6 +403,7 @@
                                             "id": "token@<comma>@,@[L9:C33, L9:C34]",
                                             "snippet": ","
                                           },
+                                          "leadingTrivia": "",
                                           "trailingTrivia": " ",
                                           "value": ","
                                         }
@@ -402,6 +420,7 @@
                                                 "id": "token@<colon>@:@[L9:C26, L9:C27]",
                                                 "snippet": ":"
                                               },
+                                              "leadingTrivia": "",
                                               "trailingTrivia": " ",
                                               "value": ":"
                                             },
@@ -417,6 +436,8 @@
                                                       "id": "token@<identifier>@name@[L9:C22, L9:C26]",
                                                       "snippet": "name"
                                                     },
+                                                    "leadingTrivia": "",
+                                                    "trailingTrivia": "",
                                                     "value": "name"
                                                   }
                                                 ]
@@ -439,6 +460,8 @@
                                                         "id": "token@<string>@dup@[L9:C28, L9:C33]",
                                                         "snippet": "'dup'"
                                                       },
+                                                      "leadingTrivia": "",
+                                                      "trailingTrivia": "",
                                                       "value": "dup"
                                                     }
                                                   }
@@ -458,6 +481,7 @@
                                                 "id": "token@<colon>@:@[L9:C39, L9:C40]",
                                                 "snippet": ":"
                                               },
+                                              "leadingTrivia": "",
                                               "trailingTrivia": " ",
                                               "value": ":"
                                             },
@@ -473,6 +497,8 @@
                                                       "id": "token@<identifier>@name@[L9:C35, L9:C39]",
                                                       "snippet": "name"
                                                     },
+                                                    "leadingTrivia": "",
+                                                    "trailingTrivia": "",
                                                     "value": "name"
                                                   }
                                                 ]
@@ -495,6 +521,8 @@
                                                         "id": "token@<string>@dup@[L9:C41, L9:C46]",
                                                         "snippet": "'dup'"
                                                       },
+                                                      "leadingTrivia": "",
+                                                      "trailingTrivia": "",
                                                       "value": "dup"
                                                     }
                                                   }
@@ -509,6 +537,7 @@
                                           "id": "token@<rbracket>@]@[L9:C46, L9:C47]",
                                           "snippet": "]"
                                         },
+                                        "leadingTrivia": "",
                                         "trailingTrivia": "\n",
                                         "value": "]"
                                       },
@@ -517,6 +546,8 @@
                                           "id": "token@<lbracket>@[@[L9:C21, L9:C22]",
                                           "snippet": "["
                                         },
+                                        "leadingTrivia": "",
+                                        "trailingTrivia": "",
                                         "value": "["
                                       }
                                     }
@@ -573,6 +604,8 @@
                                                       "id": "token@<identifier>@invalid@[L10:C23, L10:C30]",
                                                       "snippet": "invalid"
                                                     },
+                                                    "leadingTrivia": "",
+                                                    "trailingTrivia": "",
                                                     "value": "invalid"
                                                   }
                                                 ]
@@ -586,6 +619,7 @@
                                           "id": "token@<rbracket>@]@[L10:C30, L10:C31]",
                                           "snippet": "]"
                                         },
+                                        "leadingTrivia": "",
                                         "trailingTrivia": "\n",
                                         "value": "]"
                                       },
@@ -594,6 +628,8 @@
                                           "id": "token@<lbracket>@[@[L10:C22, L10:C23]",
                                           "snippet": "["
                                         },
+                                        "leadingTrivia": "",
+                                        "trailingTrivia": "",
                                         "value": "["
                                       }
                                     }
@@ -652,6 +688,7 @@
                         "id": "token@<identifier>@Users@[L2:C6, L2:C11]",
                         "snippet": "Users"
                       },
+                      "leadingTrivia": "",
                       "trailingTrivia": " ",
                       "value": "Users"
                     }
@@ -705,6 +742,7 @@
                     "id": "token@<rbrace>@}@[L23:C0, L23:C1]",
                     "snippet": "}"
                   },
+                  "leadingTrivia": "",
                   "trailingTrivia": "\n",
                   "value": "}"
                 },
@@ -713,6 +751,7 @@
                     "id": "token@<lbrace>@{@[L14:C19, L14:C20]",
                     "snippet": "{"
                   },
+                  "leadingTrivia": "",
                   "trailingTrivia": "\n",
                   "value": "{"
                 },
@@ -741,6 +780,7 @@
                                     "id": "token@<identifier>@int@[L15:C10, L15:C13]",
                                     "snippet": "int"
                                   },
+                                  "leadingTrivia": "",
                                   "trailingTrivia": "\n",
                                   "value": "int"
                                 }
@@ -812,6 +852,7 @@
                               "id": "token@<lbrace>@{@[L17:C9, L17:C10]",
                               "snippet": "{"
                             },
+                            "leadingTrivia": "",
                             "trailingTrivia": "\n",
                             "value": "{"
                           },
@@ -841,6 +882,7 @@
                                                 "id": "token@<colon>@:@[L18:C23, L18:C24]",
                                                 "snippet": ":"
                                               },
+                                              "leadingTrivia": "",
                                               "trailingTrivia": " ",
                                               "value": ":"
                                             },
@@ -856,6 +898,8 @@
                                                       "id": "token@<identifier>@name@[L18:C19, L18:C23]",
                                                       "snippet": "name"
                                                     },
+                                                    "leadingTrivia": "",
+                                                    "trailingTrivia": "",
                                                     "value": "name"
                                                   }
                                                 ]
@@ -878,6 +922,8 @@
                                                         "id": "token@<string>@positive_balance@[L18:C25, L18:C43]",
                                                         "snippet": "'positive_balance'"
                                                       },
+                                                      "leadingTrivia": "",
+                                                      "trailingTrivia": "",
                                                       "value": "positive_balance"
                                                     }
                                                   }
@@ -892,6 +938,7 @@
                                           "id": "token@<rbracket>@]@[L18:C43, L18:C44]",
                                           "snippet": "]"
                                         },
+                                        "leadingTrivia": "",
                                         "trailingTrivia": "\n",
                                         "value": "]"
                                       },
@@ -900,6 +947,8 @@
                                           "id": "token@<lbracket>@[@[L18:C18, L18:C19]",
                                           "snippet": "["
                                         },
+                                        "leadingTrivia": "",
+                                        "trailingTrivia": "",
                                         "value": "["
                                       }
                                     }
@@ -943,6 +992,7 @@
                                             "id": "token@<comma>@,@[L20:C33, L20:C34]",
                                             "snippet": ","
                                           },
+                                          "leadingTrivia": "",
                                           "trailingTrivia": " ",
                                           "value": ","
                                         }
@@ -959,6 +1009,7 @@
                                                 "id": "token@<colon>@:@[L20:C26, L20:C27]",
                                                 "snippet": ":"
                                               },
+                                              "leadingTrivia": "",
                                               "trailingTrivia": " ",
                                               "value": ":"
                                             },
@@ -974,6 +1025,8 @@
                                                       "id": "token@<identifier>@name@[L20:C22, L20:C26]",
                                                       "snippet": "name"
                                                     },
+                                                    "leadingTrivia": "",
+                                                    "trailingTrivia": "",
                                                     "value": "name"
                                                   }
                                                 ]
@@ -996,6 +1049,8 @@
                                                         "id": "token@<string>@dup@[L20:C28, L20:C33]",
                                                         "snippet": "'dup'"
                                                       },
+                                                      "leadingTrivia": "",
+                                                      "trailingTrivia": "",
                                                       "value": "dup"
                                                     }
                                                   }
@@ -1015,6 +1070,7 @@
                                                 "id": "token@<colon>@:@[L20:C39, L20:C40]",
                                                 "snippet": ":"
                                               },
+                                              "leadingTrivia": "",
                                               "trailingTrivia": " ",
                                               "value": ":"
                                             },
@@ -1030,6 +1086,8 @@
                                                       "id": "token@<identifier>@name@[L20:C35, L20:C39]",
                                                       "snippet": "name"
                                                     },
+                                                    "leadingTrivia": "",
+                                                    "trailingTrivia": "",
                                                     "value": "name"
                                                   }
                                                 ]
@@ -1052,6 +1110,8 @@
                                                         "id": "token@<string>@dup@[L20:C41, L20:C46]",
                                                         "snippet": "'dup'"
                                                       },
+                                                      "leadingTrivia": "",
+                                                      "trailingTrivia": "",
                                                       "value": "dup"
                                                     }
                                                   }
@@ -1066,6 +1126,7 @@
                                           "id": "token@<rbracket>@]@[L20:C46, L20:C47]",
                                           "snippet": "]"
                                         },
+                                        "leadingTrivia": "",
                                         "trailingTrivia": "\n",
                                         "value": "]"
                                       },
@@ -1074,6 +1135,8 @@
                                           "id": "token@<lbracket>@[@[L20:C21, L20:C22]",
                                           "snippet": "["
                                         },
+                                        "leadingTrivia": "",
+                                        "trailingTrivia": "",
                                         "value": "["
                                       }
                                     }
@@ -1130,6 +1193,8 @@
                                                       "id": "token@<identifier>@invalid@[L21:C23, L21:C30]",
                                                       "snippet": "invalid"
                                                     },
+                                                    "leadingTrivia": "",
+                                                    "trailingTrivia": "",
                                                     "value": "invalid"
                                                   }
                                                 ]
@@ -1143,6 +1208,7 @@
                                           "id": "token@<rbracket>@]@[L21:C30, L21:C31]",
                                           "snippet": "]"
                                         },
+                                        "leadingTrivia": "",
                                         "trailingTrivia": "\n",
                                         "value": "]"
                                       },
@@ -1151,6 +1217,8 @@
                                           "id": "token@<lbracket>@[@[L21:C22, L21:C23]",
                                           "snippet": "["
                                         },
+                                        "leadingTrivia": "",
+                                        "trailingTrivia": "",
                                         "value": "["
                                       }
                                     }
@@ -1209,6 +1277,7 @@
                         "id": "token@<identifier>@Users@[L14:C13, L14:C18]",
                         "snippet": "Users"
                       },
+                      "leadingTrivia": "",
                       "trailingTrivia": " ",
                       "value": "Users"
                     }
@@ -1250,9 +1319,13 @@
         "context": {
           "id": "token@<eof>@@[L24:C0, L24:C0]",
           "snippet": ""
-        }
+        },
+        "leadingTrivia": "",
+        "trailingTrivia": "",
+        "value": ""
       }
     },
+    "fullStart": 0,
     "symbol": {
       "context": {
         "id": "symbol@Schema@@[L0:C0, L24:C0]",

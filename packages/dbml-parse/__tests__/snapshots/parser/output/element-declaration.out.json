@@ -8,71 +8,65 @@
       "body": [
         {
           "context": {
-            "id": "node@<element-declaration>@@[L0:C0, L2:C1]",
-            "snippet": "Table {\r\n\r\n}"
+            "id": "node@<element-declaration>@Users@[L17:C0, L19:C1]",
+            "snippet": "Table User...{\r\n    \r\n}"
           },
           "children": {
-            "body": {
+            "alias": {
               "context": {
-                "id": "node@<block-expression>@@[L0:C6, L2:C1]",
-                "snippet": "{\r\n\r\n}"
+                "id": "node@<primary-expression>@@[L17:C15, L17:C16]",
+                "snippet": "U"
               },
               "children": {
-                "blockCloseBrace": {
+                "expression": {
                   "context": {
-                    "id": "token@<rbrace>@}@[L2:C0, L2:C1]",
-                    "snippet": "}"
+                    "id": "node@<variable>@U@[L17:C15, L17:C16]",
+                    "snippet": "U"
                   },
-                  "leadingTrivia": "\n",
-                  "trailingTrivia": "\n",
-                  "value": "}"
-                },
-                "blockOpenBrace": {
-                  "context": {
-                    "id": "token@<lbrace>@{@[L0:C6, L0:C7]",
-                    "snippet": "{"
-                  },
-                  "trailingTrivia": "\n",
-                  "value": "{"
+                  "children": {
+                    "variable": {
+                      "context": {
+                        "id": "token@<identifier>@U@[L17:C15, L17:C16]",
+                        "snippet": "U"
+                      },
+                      "leadingTrivia": "",
+                      "trailingTrivia": " ",
+                      "value": "U"
+                    }
+                  }
                 }
               }
             },
-            "type": {
+            "as": {
               "context": {
-                "id": "token@<identifier>@Table@[L0:C0, L0:C5]",
-                "snippet": "Table"
+                "id": "token@<identifier>@as@[L17:C12, L17:C14]",
+                "snippet": "as"
               },
+              "leadingTrivia": "",
               "trailingTrivia": " ",
-              "value": "Table"
-            }
-          }
-        },
-        {
-          "context": {
-            "id": "node@<element-declaration>@group@[L4:C0, L6:C1]",
-            "snippet": "TableGroup...oup {\r\n\r\n}"
-          },
-          "children": {
+              "value": "as"
+            },
             "body": {
               "context": {
-                "id": "node@<block-expression>@@[L4:C17, L6:C1]",
-                "snippet": "{\r\n\r\n}"
+                "id": "node@<block-expression>@@[L17:C17, L19:C1]",
+                "snippet": "{\r\n    \r\n}"
               },
               "children": {
                 "blockCloseBrace": {
                   "context": {
-                    "id": "token@<rbrace>@}@[L6:C0, L6:C1]",
+                    "id": "token@<rbrace>@}@[L19:C0, L19:C1]",
                     "snippet": "}"
                   },
-                  "leadingTrivia": "\n",
-                  "trailingTrivia": "\n",
+                  "leadingTrivia": "    \n",
+                  "trailingTrivia": "",
                   "value": "}"
                 },
                 "blockOpenBrace": {
                   "context": {
-                    "id": "token@<lbrace>@{@[L4:C17, L4:C18]",
+                    "id": "token@<lbrace>@{@[L17:C17, L17:C18]",
                     "snippet": "{"
                   },
+                  "leadingTrivia": "",
                   "trailingTrivia": "\n",
                   "value": "{"
                 }
@@ -80,23 +74,24 @@
             },
             "name": {
               "context": {
-                "id": "node@<primary-expression>@@[L4:C11, L4:C16]",
-                "snippet": "group"
+                "id": "node@<primary-expression>@@[L17:C6, L17:C11]",
+                "snippet": "Users"
               },
               "children": {
                 "expression": {
                   "context": {
-                    "id": "node@<variable>@group@[L4:C11, L4:C16]",
-                    "snippet": "group"
+                    "id": "node@<variable>@Users@[L17:C6, L17:C11]",
+                    "snippet": "Users"
                   },
                   "children": {
                     "variable": {
                       "context": {
-                        "id": "token@<identifier>@group@[L4:C11, L4:C16]",
-                        "snippet": "group"
+                        "id": "token@<identifier>@Users@[L17:C6, L17:C11]",
+                        "snippet": "Users"
                       },
+                      "leadingTrivia": "",
                       "trailingTrivia": " ",
-                      "value": "group"
+                      "value": "Users"
                     }
                   }
                 }
@@ -104,12 +99,12 @@
             },
             "type": {
               "context": {
-                "id": "token@<identifier>@TableGroup@[L4:C0, L4:C10]",
-                "snippet": "TableGroup"
+                "id": "token@<identifier>@Table@[L17:C0, L17:C5]",
+                "snippet": "Table"
               },
               "leadingTrivia": "\n",
               "trailingTrivia": " ",
-              "value": "TableGroup"
+              "value": "Table"
             }
           }
         },
@@ -139,6 +134,7 @@
                     "id": "token@<lbrace>@{@[L8:C4, L8:C5]",
                     "snippet": "{"
                   },
+                  "leadingTrivia": "",
                   "trailingTrivia": "\n",
                   "value": "{"
                 }
@@ -157,57 +153,113 @@
         },
         {
           "context": {
-            "id": "node@<element-declaration>@@[L12:C0, L12:C22]",
-            "snippet": "Note: 'Thi...is a note'"
+            "id": "node@<element-declaration>@@[L0:C0, L2:C1]",
+            "snippet": "Table {\r\n\r\n}"
           },
           "children": {
             "body": {
               "context": {
-                "id": "node@<function-application>@@[L12:C6, L12:C22]",
-                "snippet": "'This is a note'"
+                "id": "node@<block-expression>@@[L0:C6, L2:C1]",
+                "snippet": "{\r\n\r\n}"
               },
               "children": {
-                "callee": {
+                "blockCloseBrace": {
                   "context": {
-                    "id": "node@<primary-expression>@@[L12:C6, L12:C22]",
-                    "snippet": "'This is a note'"
+                    "id": "token@<rbrace>@}@[L2:C0, L2:C1]",
+                    "snippet": "}"
+                  },
+                  "leadingTrivia": "\n",
+                  "trailingTrivia": "\n",
+                  "value": "}"
+                },
+                "blockOpenBrace": {
+                  "context": {
+                    "id": "token@<lbrace>@{@[L0:C6, L0:C7]",
+                    "snippet": "{"
+                  },
+                  "leadingTrivia": "",
+                  "trailingTrivia": "\n",
+                  "value": "{"
+                }
+              }
+            },
+            "type": {
+              "context": {
+                "id": "token@<identifier>@Table@[L0:C0, L0:C5]",
+                "snippet": "Table"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": " ",
+              "value": "Table"
+            }
+          },
+          "fullStart": 0
+        },
+        {
+          "context": {
+            "id": "node@<element-declaration>@group@[L4:C0, L6:C1]",
+            "snippet": "TableGroup...oup {\r\n\r\n}"
+          },
+          "children": {
+            "body": {
+              "context": {
+                "id": "node@<block-expression>@@[L4:C17, L6:C1]",
+                "snippet": "{\r\n\r\n}"
+              },
+              "children": {
+                "blockCloseBrace": {
+                  "context": {
+                    "id": "token@<rbrace>@}@[L6:C0, L6:C1]",
+                    "snippet": "}"
+                  },
+                  "leadingTrivia": "\n",
+                  "trailingTrivia": "\n",
+                  "value": "}"
+                },
+                "blockOpenBrace": {
+                  "context": {
+                    "id": "token@<lbrace>@{@[L4:C17, L4:C18]",
+                    "snippet": "{"
+                  },
+                  "leadingTrivia": "",
+                  "trailingTrivia": "\n",
+                  "value": "{"
+                }
+              }
+            },
+            "name": {
+              "context": {
+                "id": "node@<primary-expression>@@[L4:C11, L4:C16]",
+                "snippet": "group"
+              },
+              "children": {
+                "expression": {
+                  "context": {
+                    "id": "node@<variable>@group@[L4:C11, L4:C16]",
+                    "snippet": "group"
                   },
                   "children": {
-                    "expression": {
+                    "variable": {
                       "context": {
-                        "id": "node@<literal>@This is a note@[L12:C6, L12:C22]",
-                        "snippet": "'This is a note'"
+                        "id": "token@<identifier>@group@[L4:C11, L4:C16]",
+                        "snippet": "group"
                       },
-                      "children": {
-                        "literal": {
-                          "context": {
-                            "id": "token@<string>@This is a note@[L12:C6, L12:C22]",
-                            "snippet": "'This is a note'"
-                          },
-                          "trailingTrivia": "\n",
-                          "value": "This is a note"
-                        }
-                      }
+                      "leadingTrivia": "",
+                      "trailingTrivia": " ",
+                      "value": "group"
                     }
                   }
                 }
               }
             },
-            "bodyColon": {
-              "context": {
-                "id": "token@<colon>@:@[L12:C4, L12:C5]",
-                "snippet": ":"
-              },
-              "trailingTrivia": " ",
-              "value": ":"
-            },
             "type": {
               "context": {
-                "id": "token@<identifier>@Note@[L12:C0, L12:C4]",
-                "snippet": "Note"
+                "id": "token@<identifier>@TableGroup@[L4:C0, L4:C10]",
+                "snippet": "TableGroup"
               },
               "leadingTrivia": "\n",
-              "value": "Note"
+              "trailingTrivia": " ",
+              "value": "TableGroup"
             }
           }
         },
@@ -240,6 +292,7 @@
                             "id": "token@<string>@This is \r\nanother note@[L14:C6, L15:C15]",
                             "snippet": "'''This is...er note'''"
                           },
+                          "leadingTrivia": "",
                           "trailingTrivia": "\n",
                           "value": "This is \r\nanother note"
                         }
@@ -254,6 +307,7 @@
                 "id": "token@<colon>@:@[L14:C4, L14:C5]",
                 "snippet": ":"
               },
+              "leadingTrivia": "",
               "trailingTrivia": " ",
               "value": ":"
             },
@@ -263,104 +317,67 @@
                 "snippet": "Note"
               },
               "leadingTrivia": "\n",
+              "trailingTrivia": "",
               "value": "Note"
             }
           }
         },
         {
           "context": {
-            "id": "node@<element-declaration>@Users@[L17:C0, L19:C1]",
-            "snippet": "Table User...{\r\n    \r\n}"
+            "id": "node@<element-declaration>@@[L12:C0, L12:C22]",
+            "snippet": "Note: 'Thi...is a note'"
           },
           "children": {
-            "alias": {
-              "context": {
-                "id": "node@<primary-expression>@@[L17:C15, L17:C16]",
-                "snippet": "U"
-              },
-              "children": {
-                "expression": {
-                  "context": {
-                    "id": "node@<variable>@U@[L17:C15, L17:C16]",
-                    "snippet": "U"
-                  },
-                  "children": {
-                    "variable": {
-                      "context": {
-                        "id": "token@<identifier>@U@[L17:C15, L17:C16]",
-                        "snippet": "U"
-                      },
-                      "trailingTrivia": " ",
-                      "value": "U"
-                    }
-                  }
-                }
-              }
-            },
-            "as": {
-              "context": {
-                "id": "token@<identifier>@as@[L17:C12, L17:C14]",
-                "snippet": "as"
-              },
-              "trailingTrivia": " ",
-              "value": "as"
-            },
             "body": {
               "context": {
-                "id": "node@<block-expression>@@[L17:C17, L19:C1]",
-                "snippet": "{\r\n    \r\n}"
+                "id": "node@<function-application>@@[L12:C6, L12:C22]",
+                "snippet": "'This is a note'"
               },
               "children": {
-                "blockCloseBrace": {
+                "callee": {
                   "context": {
-                    "id": "token@<rbrace>@}@[L19:C0, L19:C1]",
-                    "snippet": "}"
-                  },
-                  "leadingTrivia": "    \n",
-                  "value": "}"
-                },
-                "blockOpenBrace": {
-                  "context": {
-                    "id": "token@<lbrace>@{@[L17:C17, L17:C18]",
-                    "snippet": "{"
-                  },
-                  "trailingTrivia": "\n",
-                  "value": "{"
-                }
-              }
-            },
-            "name": {
-              "context": {
-                "id": "node@<primary-expression>@@[L17:C6, L17:C11]",
-                "snippet": "Users"
-              },
-              "children": {
-                "expression": {
-                  "context": {
-                    "id": "node@<variable>@Users@[L17:C6, L17:C11]",
-                    "snippet": "Users"
+                    "id": "node@<primary-expression>@@[L12:C6, L12:C22]",
+                    "snippet": "'This is a note'"
                   },
                   "children": {
-                    "variable": {
+                    "expression": {
                       "context": {
-                        "id": "token@<identifier>@Users@[L17:C6, L17:C11]",
-                        "snippet": "Users"
+                        "id": "node@<literal>@This is a note@[L12:C6, L12:C22]",
+                        "snippet": "'This is a note'"
                       },
-                      "trailingTrivia": " ",
-                      "value": "Users"
+                      "children": {
+                        "literal": {
+                          "context": {
+                            "id": "token@<string>@This is a note@[L12:C6, L12:C22]",
+                            "snippet": "'This is a note'"
+                          },
+                          "leadingTrivia": "",
+                          "trailingTrivia": "\n",
+                          "value": "This is a note"
+                        }
+                      }
                     }
                   }
                 }
               }
+            },
+            "bodyColon": {
+              "context": {
+                "id": "token@<colon>@:@[L12:C4, L12:C5]",
+                "snippet": ":"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": " ",
+              "value": ":"
             },
             "type": {
               "context": {
-                "id": "token@<identifier>@Table@[L17:C0, L17:C5]",
-                "snippet": "Table"
+                "id": "token@<identifier>@Note@[L12:C0, L12:C4]",
+                "snippet": "Note"
               },
               "leadingTrivia": "\n",
-              "trailingTrivia": " ",
-              "value": "Table"
+              "trailingTrivia": "",
+              "value": "Note"
             }
           }
         }
@@ -369,8 +386,12 @@
         "context": {
           "id": "token@<eof>@@[L19:C1, L19:C1]",
           "snippet": ""
-        }
+        },
+        "leadingTrivia": "",
+        "trailingTrivia": "",
+        "value": ""
       }
-    }
+    },
+    "fullStart": 0
   }
 }

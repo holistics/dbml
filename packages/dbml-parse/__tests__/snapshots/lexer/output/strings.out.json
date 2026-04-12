@@ -1,6 +1,20 @@
 {
   "errors": [
     {
+      "code": "UNEXPECTED_EOF",
+      "diagnostic": "EOF reached while parsing",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "token": {
+        "context": {
+          "id": "token@<string>@'''This is an unclosed multiline string\r\n@[L15:C0, L16:C0]",
+          "snippet": "'''This is...e string\r\n",
+          "isInvalid": true,
+          "filepath": "/main.dbml"
+        }
+      }
+    },
+    {
       "code": "UNEXPECTED_NEWLINE",
       "diagnostic": "Invalid newline encountered while parsing",
       "filepath": "/main.dbml",
@@ -27,57 +41,17 @@
           "filepath": "/main.dbml"
         }
       }
-    },
-    {
-      "code": "UNEXPECTED_EOF",
-      "diagnostic": "EOF reached while parsing",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "token": {
-        "context": {
-          "id": "token@<string>@'''This is an unclosed multiline string\r\n@[L15:C0, L16:C0]",
-          "snippet": "'''This is...e string\r\n",
-          "isInvalid": true,
-          "filepath": "/main.dbml"
-        }
-      }
     }
   ],
   "tokens": [
     {
       "context": {
-        "id": "token@<variable>@This is a quoted string@[L0:C0, L0:C25]",
-        "snippet": "\"This is a...ed string\""
+        "id": "token@<eof>@@[L16:C0, L16:C0]",
+        "snippet": ""
       },
-      "trailingTrivia": "\n",
-      "value": "This is a quoted string"
-    },
-    {
-      "context": {
-        "id": "token@<variable>@This is a quoted string \nwith a newline\n@[L2:C0, L2:C44]",
-        "snippet": "\"This is a...newline\\n\""
-      },
-      "leadingTrivia": "\n",
-      "trailingTrivia": "\n",
-      "value": "This is a quoted string \nwith a newline\n"
-    },
-    {
-      "context": {
-        "id": "token@<string>@This is a string literal@[L4:C0, L4:C26]",
-        "snippet": "'This is a...g literal'"
-      },
-      "leadingTrivia": "\n",
-      "trailingTrivia": "\n",
-      "value": "This is a string literal"
-    },
-    {
-      "context": {
-        "id": "token@<string>@This is a string literal \nwith a newline\n@[L6:C0, L6:C45]",
-        "snippet": "'This is a...newline\\n'"
-      },
-      "leadingTrivia": "\n",
-      "trailingTrivia": "\n",
-      "value": "This is a string literal \nwith a newline\n"
+      "leadingTrivia": "",
+      "trailingTrivia": "",
+      "value": ""
     },
     {
       "context": {
@@ -90,9 +64,39 @@
     },
     {
       "context": {
-        "id": "token@<eof>@@[L16:C0, L16:C0]",
-        "snippet": ""
-      }
+        "id": "token@<string>@This is a string literal \nwith a newline\n@[L6:C0, L6:C45]",
+        "snippet": "'This is a...newline\\n'"
+      },
+      "leadingTrivia": "\n",
+      "trailingTrivia": "\n",
+      "value": "This is a string literal \nwith a newline\n"
+    },
+    {
+      "context": {
+        "id": "token@<string>@This is a string literal@[L4:C0, L4:C26]",
+        "snippet": "'This is a...g literal'"
+      },
+      "leadingTrivia": "\n",
+      "trailingTrivia": "\n",
+      "value": "This is a string literal"
+    },
+    {
+      "context": {
+        "id": "token@<variable>@This is a quoted string \nwith a newline\n@[L2:C0, L2:C44]",
+        "snippet": "\"This is a...newline\\n\""
+      },
+      "leadingTrivia": "\n",
+      "trailingTrivia": "\n",
+      "value": "This is a quoted string \nwith a newline\n"
+    },
+    {
+      "context": {
+        "id": "token@<variable>@This is a quoted string@[L0:C0, L0:C25]",
+        "snippet": "\"This is a...ed string\""
+      },
+      "leadingTrivia": "",
+      "trailingTrivia": "\n",
+      "value": "This is a quoted string"
     }
   ]
 }

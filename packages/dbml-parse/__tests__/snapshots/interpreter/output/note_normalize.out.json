@@ -5,10 +5,10 @@
         "endpoints": [
           {
             "fieldNames": [
-              "user_id"
+              "followed_user_id"
             ],
             "relation": "*",
-            "tableName": "posts",
+            "tableName": "follows",
             "token": {
               "filepath": "/main.dbml"
             }
@@ -30,16 +30,6 @@
       },
       {
         "endpoints": [
-          {
-            "fieldNames": [
-              "id"
-            ],
-            "relation": "1",
-            "tableName": "users",
-            "token": {
-              "filepath": "/main.dbml"
-            }
-          },
           {
             "fieldNames": [
               "following_user_id"
@@ -49,6 +39,16 @@
             "token": {
               "filepath": "/main.dbml"
             }
+          },
+          {
+            "fieldNames": [
+              "id"
+            ],
+            "relation": "1",
+            "tableName": "users",
+            "token": {
+              "filepath": "/main.dbml"
+            }
           }
         ],
         "token": {
@@ -69,10 +69,10 @@
           },
           {
             "fieldNames": [
-              "followed_user_id"
+              "user_id"
             ],
             "relation": "*",
-            "tableName": "follows",
+            "tableName": "posts",
             "token": {
               "filepath": "/main.dbml"
             }
@@ -87,31 +87,37 @@
       {
         "fields": [
           {
-            "name": "following_user_id",
-            "token": {
-              "filepath": "/main.dbml"
-            },
-            "type": {
-              "type_name": "integer"
-            }
-          },
-          {
-            "name": "followed_user_id",
-            "token": {
-              "filepath": "/main.dbml"
-            },
-            "type": {
-              "type_name": "integer"
-            }
-          },
-          {
             "name": "created_at",
+            "pk": false,
             "token": {
               "filepath": "/main.dbml"
             },
             "type": {
               "type_name": "timestamp"
-            }
+            },
+            "unique": false
+          },
+          {
+            "name": "followed_user_id",
+            "pk": false,
+            "token": {
+              "filepath": "/main.dbml"
+            },
+            "type": {
+              "type_name": "integer"
+            },
+            "unique": false
+          },
+          {
+            "name": "following_user_id",
+            "pk": false,
+            "token": {
+              "filepath": "/main.dbml"
+            },
+            "type": {
+              "type_name": "integer"
+            },
+            "unique": false
           }
         ],
         "name": "follows",
@@ -128,40 +134,48 @@
       {
         "fields": [
           {
+            "increment": false,
             "name": "id",
             "token": {
               "filepath": "/main.dbml"
             },
             "type": {
               "type_name": "integer"
-            }
-          },
-          {
-            "name": "username",
-            "token": {
-              "filepath": "/main.dbml"
             },
-            "type": {
-              "type_name": "varchar"
-            }
-          },
-          {
-            "name": "role",
-            "token": {
-              "filepath": "/main.dbml"
-            },
-            "type": {
-              "type_name": "varchar"
-            }
+            "unique": false
           },
           {
             "name": "created_at",
+            "pk": false,
             "token": {
               "filepath": "/main.dbml"
             },
             "type": {
               "type_name": "timestamp"
-            }
+            },
+            "unique": false
+          },
+          {
+            "name": "role",
+            "pk": false,
+            "token": {
+              "filepath": "/main.dbml"
+            },
+            "type": {
+              "type_name": "varchar"
+            },
+            "unique": false
+          },
+          {
+            "name": "username",
+            "pk": false,
+            "token": {
+              "filepath": "/main.dbml"
+            },
+            "type": {
+              "type_name": "varchar"
+            },
+            "unique": false
           }
         ],
         "name": "users",
@@ -178,24 +192,29 @@
       {
         "fields": [
           {
+            "increment": false,
             "name": "id",
             "token": {
               "filepath": "/main.dbml"
             },
             "type": {
               "type_name": "integer"
-            }
+            },
+            "unique": false
           },
           {
             "name": "title",
+            "pk": false,
             "token": {
               "filepath": "/main.dbml"
             },
             "type": {
               "type_name": "varchar"
-            }
+            },
+            "unique": false
           },
           {
+            "increment": false,
             "name": "body",
             "note": {
               "token": {
@@ -203,39 +222,47 @@
               },
               "value": "# Heading 1\n    code block\n# Heading 2\n  * 1\n  * 2\n  "
             },
+            "pk": false,
             "token": {
               "filepath": "/main.dbml"
             },
             "type": {
               "type_name": "text"
-            }
-          },
-          {
-            "name": "user_id",
-            "token": {
-              "filepath": "/main.dbml"
             },
-            "type": {
-              "type_name": "integer"
-            }
-          },
-          {
-            "name": "status",
-            "token": {
-              "filepath": "/main.dbml"
-            },
-            "type": {
-              "type_name": "varchar"
-            }
+            "unique": false
           },
           {
             "name": "created_at",
+            "pk": false,
             "token": {
               "filepath": "/main.dbml"
             },
             "type": {
               "type_name": "timestamp"
-            }
+            },
+            "unique": false
+          },
+          {
+            "name": "status",
+            "pk": false,
+            "token": {
+              "filepath": "/main.dbml"
+            },
+            "type": {
+              "type_name": "varchar"
+            },
+            "unique": false
+          },
+          {
+            "name": "user_id",
+            "pk": false,
+            "token": {
+              "filepath": "/main.dbml"
+            },
+            "type": {
+              "type_name": "integer"
+            },
+            "unique": false
           }
         ],
         "name": "posts",

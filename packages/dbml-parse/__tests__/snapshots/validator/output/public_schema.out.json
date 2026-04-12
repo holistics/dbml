@@ -1,18 +1,6 @@
 {
   "errors": [
     {
-      "code": "EMPTY_ENUM",
-      "diagnostic": "An Enum must have at least one element",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<element-declaration>@status@[L0:C0, L2:C1]",
-          "snippet": "Enum status {\r\n\r\n}"
-        }
-      }
-    },
-    {
       "code": "DUPLICATE_NAME",
       "diagnostic": "Enum name status already exists in schema 'public'",
       "filepath": "/main.dbml",
@@ -21,6 +9,18 @@
         "context": {
           "id": "node@<infix-expression>@@[L4:C5, L4:C18]",
           "snippet": "public.status"
+        }
+      }
+    },
+    {
+      "code": "EMPTY_ENUM",
+      "diagnostic": "An Enum must have at least one element",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<element-declaration>@status@[L0:C0, L2:C1]",
+          "snippet": "Enum status {\r\n\r\n}"
         }
       }
     },
@@ -70,6 +70,7 @@
                     "id": "token@<lbrace>@{@[L0:C12, L0:C13]",
                     "snippet": "{"
                   },
+                  "leadingTrivia": "",
                   "trailingTrivia": "\n",
                   "value": "{"
                 }
@@ -92,6 +93,7 @@
                         "id": "token@<identifier>@status@[L0:C5, L0:C11]",
                         "snippet": "status"
                       },
+                      "leadingTrivia": "",
                       "trailingTrivia": " ",
                       "value": "status"
                     }
@@ -104,10 +106,12 @@
                 "id": "token@<identifier>@Enum@[L0:C0, L0:C4]",
                 "snippet": "Enum"
               },
+              "leadingTrivia": "",
               "trailingTrivia": " ",
               "value": "Enum"
             }
           },
+          "fullStart": 0,
           "symbol": {
             "context": {
               "id": "symbol@Enum@status@[L0:C0, L2:C1]",
@@ -137,6 +141,7 @@
                     "snippet": "}"
                   },
                   "leadingTrivia": "    \n",
+                  "trailingTrivia": "",
                   "value": "}"
                 },
                 "blockOpenBrace": {
@@ -144,6 +149,7 @@
                     "id": "token@<lbrace>@{@[L4:C19, L4:C20]",
                     "snippet": "{"
                   },
+                  "leadingTrivia": "",
                   "trailingTrivia": "\n",
                   "value": "{"
                 }
@@ -172,6 +178,8 @@
                             "id": "token@<identifier>@public@[L4:C5, L4:C11]",
                             "snippet": "public"
                           },
+                          "leadingTrivia": "",
+                          "trailingTrivia": "",
                           "value": "public"
                         }
                       }
@@ -183,6 +191,8 @@
                     "id": "token@<op>@.@[L4:C11, L4:C12]",
                     "snippet": "."
                   },
+                  "leadingTrivia": "",
+                  "trailingTrivia": "",
                   "value": "."
                 },
                 "rightExpression": {
@@ -202,6 +212,7 @@
                             "id": "token@<identifier>@status@[L4:C12, L4:C18]",
                             "snippet": "status"
                           },
+                          "leadingTrivia": "",
                           "trailingTrivia": " ",
                           "value": "status"
                         }
@@ -237,9 +248,13 @@
         "context": {
           "id": "token@<eof>@@[L6:C1, L6:C1]",
           "snippet": ""
-        }
+        },
+        "leadingTrivia": "",
+        "trailingTrivia": "",
+        "value": ""
       }
     },
+    "fullStart": 0,
     "symbol": {
       "context": {
         "id": "symbol@Schema@@[L0:C0, L6:C1]",

@@ -46,6 +46,333 @@
       "body": [
         {
           "context": {
+            "id": "node@<element-declaration>@group1@[L4:C0, L18:C1]",
+            "snippet": "TableGroup...ote'\n  }\n}"
+          },
+          "children": {
+            "body": {
+              "context": {
+                "id": "node@<block-expression>@@[L4:C18, L18:C1]",
+                "snippet": "{\n  note: ...ote'\n  }\n}"
+              },
+              "children": {
+                "blockCloseBrace": {
+                  "context": {
+                    "id": "token@<rbrace>@}@[L18:C0, L18:C1]",
+                    "snippet": "}"
+                  },
+                  "leadingTrivia": "",
+                  "trailingTrivia": "\n",
+                  "value": "}"
+                },
+                "blockOpenBrace": {
+                  "context": {
+                    "id": "token@<lbrace>@{@[L4:C18, L4:C19]",
+                    "snippet": "{"
+                  },
+                  "leadingTrivia": "",
+                  "trailingTrivia": "\n",
+                  "value": "{"
+                },
+                "body": [
+                  {
+                    "context": {
+                      "id": "node@<function-application>@@[L6:C2, L6:C8]",
+                      "snippet": "table1"
+                    },
+                    "children": {
+                      "callee": {
+                        "context": {
+                          "id": "node@<primary-expression>@@[L6:C2, L6:C8]",
+                          "snippet": "table1"
+                        },
+                        "children": {
+                          "expression": {
+                            "context": {
+                              "id": "node@<variable>@table1@[L6:C2, L6:C8]",
+                              "snippet": "table1"
+                            },
+                            "children": {
+                              "variable": {
+                                "context": {
+                                  "id": "token@<identifier>@table1@[L6:C2, L6:C8]",
+                                  "snippet": "table1"
+                                },
+                                "leadingTrivia": "  ",
+                                "trailingTrivia": "\n",
+                                "value": "table1"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "symbol": {
+                      "context": {
+                        "id": "symbol@TableGroup field@@[L6:C2, L6:C8]",
+                        "snippet": "table1"
+                      },
+                      "declaration": {
+                        "id": "node@<function-application>@@[L6:C2, L6:C8]",
+                        "snippet": "table1"
+                      }
+                    }
+                  },
+                  {
+                    "context": {
+                      "id": "node@<element-declaration>@@[L15:C2, L17:C3]",
+                      "snippet": "note {\n   ... note'\n  }"
+                    },
+                    "children": {
+                      "body": {
+                        "context": {
+                          "id": "node@<block-expression>@@[L15:C7, L17:C3]",
+                          "snippet": "{\n    'sim... note'\n  }"
+                        },
+                        "children": {
+                          "blockCloseBrace": {
+                            "context": {
+                              "id": "token@<rbrace>@}@[L17:C2, L17:C3]",
+                              "snippet": "}"
+                            },
+                            "leadingTrivia": "  ",
+                            "trailingTrivia": "\n",
+                            "value": "}"
+                          },
+                          "blockOpenBrace": {
+                            "context": {
+                              "id": "token@<lbrace>@{@[L15:C7, L15:C8]",
+                              "snippet": "{"
+                            },
+                            "leadingTrivia": "",
+                            "trailingTrivia": "\n",
+                            "value": "{"
+                          },
+                          "body": [
+                            {
+                              "context": {
+                                "id": "node@<function-application>@@[L16:C4, L16:C17]",
+                                "snippet": "'simple note'"
+                              },
+                              "children": {
+                                "callee": {
+                                  "context": {
+                                    "id": "node@<primary-expression>@@[L16:C4, L16:C17]",
+                                    "snippet": "'simple note'"
+                                  },
+                                  "children": {
+                                    "expression": {
+                                      "context": {
+                                        "id": "node@<literal>@simple note@[L16:C4, L16:C17]",
+                                        "snippet": "'simple note'"
+                                      },
+                                      "children": {
+                                        "literal": {
+                                          "context": {
+                                            "id": "token@<string>@simple note@[L16:C4, L16:C17]",
+                                            "snippet": "'simple note'"
+                                          },
+                                          "leadingTrivia": "    ",
+                                          "trailingTrivia": "\n",
+                                          "value": "simple note"
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      },
+                      "type": {
+                        "context": {
+                          "id": "token@<identifier>@note@[L15:C2, L15:C6]",
+                          "snippet": "note"
+                        },
+                        "leadingTrivia": "\n  ",
+                        "trailingTrivia": " ",
+                        "value": "note"
+                      }
+                    }
+                  },
+                  {
+                    "context": {
+                      "id": "node@<element-declaration>@@[L7:C2, L13:C3]",
+                      "snippet": "note: '''\n...syntax\n'''"
+                    },
+                    "children": {
+                      "body": {
+                        "context": {
+                          "id": "node@<function-application>@@[L7:C8, L13:C3]",
+                          "snippet": "'''\n# Note...syntax\n'''"
+                        },
+                        "children": {
+                          "callee": {
+                            "context": {
+                              "id": "node@<primary-expression>@@[L7:C8, L13:C3]",
+                              "snippet": "'''\n# Note...syntax\n'''"
+                            },
+                            "children": {
+                              "expression": {
+                                "context": {
+                                  "id": "node@<literal>@\n# Note\n\n## Objective\n  * Support define element's note inside element body\n  * Make writing long note easier with the new syntax\n@[L7:C8, L13:C3]",
+                                  "snippet": "'''\n# Note...syntax\n'''"
+                                },
+                                "children": {
+                                  "literal": {
+                                    "context": {
+                                      "id": "token@<string>@\n# Note\n\n## Objective\n  * Support define element's note inside element body\n  * Make writing long note easier with the new syntax\n@[L7:C8, L13:C3]",
+                                      "snippet": "'''\n# Note...syntax\n'''"
+                                    },
+                                    "leadingTrivia": "",
+                                    "trailingTrivia": "\n",
+                                    "value": "\n# Note\n\n## Objective\n  * Support define element's note inside element body\n  * Make writing long note easier with the new syntax\n"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "bodyColon": {
+                        "context": {
+                          "id": "token@<colon>@:@[L7:C6, L7:C7]",
+                          "snippet": ":"
+                        },
+                        "leadingTrivia": "",
+                        "trailingTrivia": " ",
+                        "value": ":"
+                      },
+                      "type": {
+                        "context": {
+                          "id": "token@<identifier>@note@[L7:C2, L7:C6]",
+                          "snippet": "note"
+                        },
+                        "leadingTrivia": "  ",
+                        "trailingTrivia": "",
+                        "value": "note"
+                      }
+                    }
+                  },
+                  {
+                    "context": {
+                      "id": "node@<element-declaration>@@[L5:C2, L5:C21]",
+                      "snippet": "note: 'inline note'"
+                    },
+                    "children": {
+                      "body": {
+                        "context": {
+                          "id": "node@<function-application>@@[L5:C8, L5:C21]",
+                          "snippet": "'inline note'"
+                        },
+                        "children": {
+                          "callee": {
+                            "context": {
+                              "id": "node@<primary-expression>@@[L5:C8, L5:C21]",
+                              "snippet": "'inline note'"
+                            },
+                            "children": {
+                              "expression": {
+                                "context": {
+                                  "id": "node@<literal>@inline note@[L5:C8, L5:C21]",
+                                  "snippet": "'inline note'"
+                                },
+                                "children": {
+                                  "literal": {
+                                    "context": {
+                                      "id": "token@<string>@inline note@[L5:C8, L5:C21]",
+                                      "snippet": "'inline note'"
+                                    },
+                                    "leadingTrivia": "",
+                                    "trailingTrivia": "\n",
+                                    "value": "inline note"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "bodyColon": {
+                        "context": {
+                          "id": "token@<colon>@:@[L5:C6, L5:C7]",
+                          "snippet": ":"
+                        },
+                        "leadingTrivia": "",
+                        "trailingTrivia": " ",
+                        "value": ":"
+                      },
+                      "type": {
+                        "context": {
+                          "id": "token@<identifier>@note@[L5:C2, L5:C6]",
+                          "snippet": "note"
+                        },
+                        "leadingTrivia": "  ",
+                        "trailingTrivia": "",
+                        "value": "note"
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            "name": {
+              "context": {
+                "id": "node@<primary-expression>@@[L4:C11, L4:C17]",
+                "snippet": "group1"
+              },
+              "children": {
+                "expression": {
+                  "context": {
+                    "id": "node@<variable>@group1@[L4:C11, L4:C17]",
+                    "snippet": "group1"
+                  },
+                  "children": {
+                    "variable": {
+                      "context": {
+                        "id": "token@<identifier>@group1@[L4:C11, L4:C17]",
+                        "snippet": "group1"
+                      },
+                      "leadingTrivia": "",
+                      "trailingTrivia": " ",
+                      "value": "group1"
+                    }
+                  }
+                }
+              }
+            },
+            "type": {
+              "context": {
+                "id": "token@<identifier>@TableGroup@[L4:C0, L4:C10]",
+                "snippet": "TableGroup"
+              },
+              "leadingTrivia": "\n",
+              "trailingTrivia": " ",
+              "value": "TableGroup"
+            }
+          },
+          "symbol": {
+            "context": {
+              "id": "symbol@TableGroup@group1@[L4:C0, L18:C1]",
+              "snippet": "TableGroup...ote'\n  }\n}"
+            },
+            "declaration": {
+              "id": "node@<element-declaration>@group1@[L4:C0, L18:C1]",
+              "snippet": "TableGroup...ote'\n  }\n}"
+            },
+            "members": [
+              {
+                "context": {
+                  "id": "symbol@TableGroup field@@[L6:C2, L6:C8]",
+                  "snippet": "table1"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "context": {
             "id": "node@<element-declaration>@table1@[L0:C0, L2:C1]",
             "snippet": "Table tabl...int [pk]\n}"
           },
@@ -61,6 +388,7 @@
                     "id": "token@<rbrace>@}@[L2:C0, L2:C1]",
                     "snippet": "}"
                   },
+                  "leadingTrivia": "",
                   "trailingTrivia": "\n",
                   "value": "}"
                 },
@@ -69,6 +397,7 @@
                     "id": "token@<lbrace>@{@[L0:C13, L0:C14]",
                     "snippet": "{"
                   },
+                  "leadingTrivia": "",
                   "trailingTrivia": "\n",
                   "value": "{"
                 },
@@ -97,6 +426,7 @@
                                     "id": "token@<identifier>@int@[L1:C5, L1:C8]",
                                     "snippet": "int"
                                   },
+                                  "leadingTrivia": "",
                                   "trailingTrivia": " ",
                                   "value": "int"
                                 }
@@ -129,6 +459,8 @@
                                             "id": "token@<identifier>@pk@[L1:C10, L1:C12]",
                                             "snippet": "pk"
                                           },
+                                          "leadingTrivia": "",
+                                          "trailingTrivia": "",
                                           "value": "pk"
                                         }
                                       ]
@@ -142,6 +474,7 @@
                                 "id": "token@<rbracket>@]@[L1:C12, L1:C13]",
                                 "snippet": "]"
                               },
+                              "leadingTrivia": "",
                               "trailingTrivia": "\n",
                               "value": "]"
                             },
@@ -150,6 +483,8 @@
                                 "id": "token@<lbracket>@[@[L1:C9, L1:C10]",
                                 "snippet": "["
                               },
+                              "leadingTrivia": "",
+                              "trailingTrivia": "",
                               "value": "["
                             }
                           }
@@ -212,6 +547,7 @@
                         "id": "token@<identifier>@table1@[L0:C6, L0:C12]",
                         "snippet": "table1"
                       },
+                      "leadingTrivia": "",
                       "trailingTrivia": " ",
                       "value": "table1"
                     }
@@ -224,10 +560,12 @@
                 "id": "token@<identifier>@Table@[L0:C0, L0:C5]",
                 "snippet": "Table"
               },
+              "leadingTrivia": "",
               "trailingTrivia": " ",
               "value": "Table"
             }
           },
+          "fullStart": 0,
           "symbol": {
             "context": {
               "id": "symbol@Table@table1@[L0:C0, L2:C1]",
@@ -246,332 +584,19 @@
               }
             ]
           }
-        },
-        {
-          "context": {
-            "id": "node@<element-declaration>@group1@[L4:C0, L18:C1]",
-            "snippet": "TableGroup...ote'\n  }\n}"
-          },
-          "children": {
-            "body": {
-              "context": {
-                "id": "node@<block-expression>@@[L4:C18, L18:C1]",
-                "snippet": "{\n  note: ...ote'\n  }\n}"
-              },
-              "children": {
-                "blockCloseBrace": {
-                  "context": {
-                    "id": "token@<rbrace>@}@[L18:C0, L18:C1]",
-                    "snippet": "}"
-                  },
-                  "trailingTrivia": "\n",
-                  "value": "}"
-                },
-                "blockOpenBrace": {
-                  "context": {
-                    "id": "token@<lbrace>@{@[L4:C18, L4:C19]",
-                    "snippet": "{"
-                  },
-                  "trailingTrivia": "\n",
-                  "value": "{"
-                },
-                "body": [
-                  {
-                    "context": {
-                      "id": "node@<element-declaration>@@[L5:C2, L5:C21]",
-                      "snippet": "note: 'inline note'"
-                    },
-                    "children": {
-                      "body": {
-                        "context": {
-                          "id": "node@<function-application>@@[L5:C8, L5:C21]",
-                          "snippet": "'inline note'"
-                        },
-                        "children": {
-                          "callee": {
-                            "context": {
-                              "id": "node@<primary-expression>@@[L5:C8, L5:C21]",
-                              "snippet": "'inline note'"
-                            },
-                            "children": {
-                              "expression": {
-                                "context": {
-                                  "id": "node@<literal>@inline note@[L5:C8, L5:C21]",
-                                  "snippet": "'inline note'"
-                                },
-                                "children": {
-                                  "literal": {
-                                    "context": {
-                                      "id": "token@<string>@inline note@[L5:C8, L5:C21]",
-                                      "snippet": "'inline note'"
-                                    },
-                                    "trailingTrivia": "\n",
-                                    "value": "inline note"
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        }
-                      },
-                      "bodyColon": {
-                        "context": {
-                          "id": "token@<colon>@:@[L5:C6, L5:C7]",
-                          "snippet": ":"
-                        },
-                        "trailingTrivia": " ",
-                        "value": ":"
-                      },
-                      "type": {
-                        "context": {
-                          "id": "token@<identifier>@note@[L5:C2, L5:C6]",
-                          "snippet": "note"
-                        },
-                        "leadingTrivia": "  ",
-                        "value": "note"
-                      }
-                    }
-                  },
-                  {
-                    "context": {
-                      "id": "node@<function-application>@@[L6:C2, L6:C8]",
-                      "snippet": "table1"
-                    },
-                    "children": {
-                      "callee": {
-                        "context": {
-                          "id": "node@<primary-expression>@@[L6:C2, L6:C8]",
-                          "snippet": "table1"
-                        },
-                        "children": {
-                          "expression": {
-                            "context": {
-                              "id": "node@<variable>@table1@[L6:C2, L6:C8]",
-                              "snippet": "table1"
-                            },
-                            "children": {
-                              "variable": {
-                                "context": {
-                                  "id": "token@<identifier>@table1@[L6:C2, L6:C8]",
-                                  "snippet": "table1"
-                                },
-                                "leadingTrivia": "  ",
-                                "trailingTrivia": "\n",
-                                "value": "table1"
-                              }
-                            }
-                          }
-                        }
-                      }
-                    },
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@TableGroup field@@[L6:C2, L6:C8]",
-                        "snippet": "table1"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@@[L6:C2, L6:C8]",
-                        "snippet": "table1"
-                      }
-                    }
-                  },
-                  {
-                    "context": {
-                      "id": "node@<element-declaration>@@[L7:C2, L13:C3]",
-                      "snippet": "note: '''\n...syntax\n'''"
-                    },
-                    "children": {
-                      "body": {
-                        "context": {
-                          "id": "node@<function-application>@@[L7:C8, L13:C3]",
-                          "snippet": "'''\n# Note...syntax\n'''"
-                        },
-                        "children": {
-                          "callee": {
-                            "context": {
-                              "id": "node@<primary-expression>@@[L7:C8, L13:C3]",
-                              "snippet": "'''\n# Note...syntax\n'''"
-                            },
-                            "children": {
-                              "expression": {
-                                "context": {
-                                  "id": "node@<literal>@\n# Note\n\n## Objective\n  * Support define element's note inside element body\n  * Make writing long note easier with the new syntax\n@[L7:C8, L13:C3]",
-                                  "snippet": "'''\n# Note...syntax\n'''"
-                                },
-                                "children": {
-                                  "literal": {
-                                    "context": {
-                                      "id": "token@<string>@\n# Note\n\n## Objective\n  * Support define element's note inside element body\n  * Make writing long note easier with the new syntax\n@[L7:C8, L13:C3]",
-                                      "snippet": "'''\n# Note...syntax\n'''"
-                                    },
-                                    "trailingTrivia": "\n",
-                                    "value": "\n# Note\n\n## Objective\n  * Support define element's note inside element body\n  * Make writing long note easier with the new syntax\n"
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        }
-                      },
-                      "bodyColon": {
-                        "context": {
-                          "id": "token@<colon>@:@[L7:C6, L7:C7]",
-                          "snippet": ":"
-                        },
-                        "trailingTrivia": " ",
-                        "value": ":"
-                      },
-                      "type": {
-                        "context": {
-                          "id": "token@<identifier>@note@[L7:C2, L7:C6]",
-                          "snippet": "note"
-                        },
-                        "leadingTrivia": "  ",
-                        "value": "note"
-                      }
-                    }
-                  },
-                  {
-                    "context": {
-                      "id": "node@<element-declaration>@@[L15:C2, L17:C3]",
-                      "snippet": "note {\n   ... note'\n  }"
-                    },
-                    "children": {
-                      "body": {
-                        "context": {
-                          "id": "node@<block-expression>@@[L15:C7, L17:C3]",
-                          "snippet": "{\n    'sim... note'\n  }"
-                        },
-                        "children": {
-                          "blockCloseBrace": {
-                            "context": {
-                              "id": "token@<rbrace>@}@[L17:C2, L17:C3]",
-                              "snippet": "}"
-                            },
-                            "leadingTrivia": "  ",
-                            "trailingTrivia": "\n",
-                            "value": "}"
-                          },
-                          "blockOpenBrace": {
-                            "context": {
-                              "id": "token@<lbrace>@{@[L15:C7, L15:C8]",
-                              "snippet": "{"
-                            },
-                            "trailingTrivia": "\n",
-                            "value": "{"
-                          },
-                          "body": [
-                            {
-                              "context": {
-                                "id": "node@<function-application>@@[L16:C4, L16:C17]",
-                                "snippet": "'simple note'"
-                              },
-                              "children": {
-                                "callee": {
-                                  "context": {
-                                    "id": "node@<primary-expression>@@[L16:C4, L16:C17]",
-                                    "snippet": "'simple note'"
-                                  },
-                                  "children": {
-                                    "expression": {
-                                      "context": {
-                                        "id": "node@<literal>@simple note@[L16:C4, L16:C17]",
-                                        "snippet": "'simple note'"
-                                      },
-                                      "children": {
-                                        "literal": {
-                                          "context": {
-                                            "id": "token@<string>@simple note@[L16:C4, L16:C17]",
-                                            "snippet": "'simple note'"
-                                          },
-                                          "leadingTrivia": "    ",
-                                          "trailingTrivia": "\n",
-                                          "value": "simple note"
-                                        }
-                                      }
-                                    }
-                                  }
-                                }
-                              }
-                            }
-                          ]
-                        }
-                      },
-                      "type": {
-                        "context": {
-                          "id": "token@<identifier>@note@[L15:C2, L15:C6]",
-                          "snippet": "note"
-                        },
-                        "leadingTrivia": "\n  ",
-                        "trailingTrivia": " ",
-                        "value": "note"
-                      }
-                    }
-                  }
-                ]
-              }
-            },
-            "name": {
-              "context": {
-                "id": "node@<primary-expression>@@[L4:C11, L4:C17]",
-                "snippet": "group1"
-              },
-              "children": {
-                "expression": {
-                  "context": {
-                    "id": "node@<variable>@group1@[L4:C11, L4:C17]",
-                    "snippet": "group1"
-                  },
-                  "children": {
-                    "variable": {
-                      "context": {
-                        "id": "token@<identifier>@group1@[L4:C11, L4:C17]",
-                        "snippet": "group1"
-                      },
-                      "trailingTrivia": " ",
-                      "value": "group1"
-                    }
-                  }
-                }
-              }
-            },
-            "type": {
-              "context": {
-                "id": "token@<identifier>@TableGroup@[L4:C0, L4:C10]",
-                "snippet": "TableGroup"
-              },
-              "leadingTrivia": "\n",
-              "trailingTrivia": " ",
-              "value": "TableGroup"
-            }
-          },
-          "symbol": {
-            "context": {
-              "id": "symbol@TableGroup@group1@[L4:C0, L18:C1]",
-              "snippet": "TableGroup...ote'\n  }\n}"
-            },
-            "declaration": {
-              "id": "node@<element-declaration>@group1@[L4:C0, L18:C1]",
-              "snippet": "TableGroup...ote'\n  }\n}"
-            },
-            "members": [
-              {
-                "context": {
-                  "id": "symbol@TableGroup field@@[L6:C2, L6:C8]",
-                  "snippet": "table1"
-                }
-              }
-            ]
-          }
         }
       ],
       "eof": {
         "context": {
           "id": "token@<eof>@@[L19:C0, L19:C0]",
           "snippet": ""
-        }
+        },
+        "leadingTrivia": "",
+        "trailingTrivia": "",
+        "value": ""
       }
     },
+    "fullStart": 0,
     "symbol": {
       "context": {
         "id": "symbol@Schema@@[L0:C0, L19:C0]",

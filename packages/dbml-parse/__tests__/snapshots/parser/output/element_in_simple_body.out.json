@@ -31,6 +31,7 @@
                 "id": "token@<colon>@:@[L0:C4, L0:C5]",
                 "snippet": ":"
               },
+              "leadingTrivia": "",
               "trailingTrivia": " ",
               "value": ":"
             },
@@ -39,17 +40,24 @@
                 "id": "token@<identifier>@Note@[L0:C0, L0:C4]",
                 "snippet": "Note"
               },
+              "leadingTrivia": "",
+              "trailingTrivia": "",
               "value": "Note"
             }
-          }
+          },
+          "fullStart": 0
         }
       ],
       "eof": {
         "context": {
           "id": "token@<eof>@@[L0:C15, L0:C15]",
           "snippet": ""
-        }
+        },
+        "leadingTrivia": "",
+        "trailingTrivia": "",
+        "value": ""
       }
-    }
+    },
+    "fullStart": 0
   }
 }

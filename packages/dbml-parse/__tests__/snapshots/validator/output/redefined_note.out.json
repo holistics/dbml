@@ -1,30 +1,6 @@
 {
   "errors": [
     {
-      "code": "NOTE_REDEFINED",
-      "diagnostic": "Duplicate notes are defined",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<element-declaration>@@[L1:C4, L1:C38]",
-          "snippet": "Note: ''' ...l note '''"
-        }
-      }
-    },
-    {
-      "code": "NOTE_REDEFINED",
-      "diagnostic": "Duplicate notes are defined",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<element-declaration>@@[L2:C4, L4:C5]",
-          "snippet": "Note {\r\n  ...te'\r\n    }"
-        }
-      }
-    },
-    {
       "code": "INVALID_NAME",
       "diagnostic": "Sticky note must have a name",
       "filepath": "/main.dbml",
@@ -45,6 +21,30 @@
         "context": {
           "id": "node@<element-declaration>@@[L11:C0, L13:C3]",
           "snippet": "Note: '''\r... note\r\n'''"
+        }
+      }
+    },
+    {
+      "code": "NOTE_REDEFINED",
+      "diagnostic": "Duplicate notes are defined",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<element-declaration>@@[L1:C4, L1:C38]",
+          "snippet": "Note: ''' ...l note '''"
+        }
+      }
+    },
+    {
+      "code": "NOTE_REDEFINED",
+      "diagnostic": "Duplicate notes are defined",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<element-declaration>@@[L2:C4, L4:C5]",
+          "snippet": "Note {\r\n  ...te'\r\n    }"
         }
       }
     }
@@ -73,6 +73,7 @@
                     "id": "token@<rbrace>@}@[L5:C0, L5:C1]",
                     "snippet": "}"
                   },
+                  "leadingTrivia": "",
                   "trailingTrivia": "\n",
                   "value": "}"
                 },
@@ -81,66 +82,11 @@
                     "id": "token@<lbrace>@{@[L0:C8, L0:C9]",
                     "snippet": "{"
                   },
+                  "leadingTrivia": "",
                   "trailingTrivia": "\n",
                   "value": "{"
                 },
                 "body": [
-                  {
-                    "context": {
-                      "id": "node@<element-declaration>@@[L1:C4, L1:C38]",
-                      "snippet": "Note: ''' ...l note '''"
-                    },
-                    "children": {
-                      "body": {
-                        "context": {
-                          "id": "node@<function-application>@@[L1:C10, L1:C38]",
-                          "snippet": "''' This i...l note '''"
-                        },
-                        "children": {
-                          "callee": {
-                            "context": {
-                              "id": "node@<primary-expression>@@[L1:C10, L1:C38]",
-                              "snippet": "''' This i...l note '''"
-                            },
-                            "children": {
-                              "expression": {
-                                "context": {
-                                  "id": "node@<literal>@ This is a local note @[L1:C10, L1:C38]",
-                                  "snippet": "''' This i...l note '''"
-                                },
-                                "children": {
-                                  "literal": {
-                                    "context": {
-                                      "id": "token@<string>@ This is a local note @[L1:C10, L1:C38]",
-                                      "snippet": "''' This i...l note '''"
-                                    },
-                                    "trailingTrivia": "\n",
-                                    "value": " This is a local note "
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        }
-                      },
-                      "bodyColon": {
-                        "context": {
-                          "id": "token@<colon>@:@[L1:C8, L1:C9]",
-                          "snippet": ":"
-                        },
-                        "trailingTrivia": " ",
-                        "value": ":"
-                      },
-                      "type": {
-                        "context": {
-                          "id": "token@<identifier>@Note@[L1:C4, L1:C8]",
-                          "snippet": "Note"
-                        },
-                        "leadingTrivia": "    ",
-                        "value": "Note"
-                      }
-                    }
-                  },
                   {
                     "context": {
                       "id": "node@<element-declaration>@@[L2:C4, L4:C5]",
@@ -167,6 +113,7 @@
                               "id": "token@<lbrace>@{@[L2:C9, L2:C10]",
                               "snippet": "{"
                             },
+                            "leadingTrivia": "",
                             "trailingTrivia": "\n",
                             "value": "{"
                           },
@@ -217,6 +164,65 @@
                         "value": "Note"
                       }
                     }
+                  },
+                  {
+                    "context": {
+                      "id": "node@<element-declaration>@@[L1:C4, L1:C38]",
+                      "snippet": "Note: ''' ...l note '''"
+                    },
+                    "children": {
+                      "body": {
+                        "context": {
+                          "id": "node@<function-application>@@[L1:C10, L1:C38]",
+                          "snippet": "''' This i...l note '''"
+                        },
+                        "children": {
+                          "callee": {
+                            "context": {
+                              "id": "node@<primary-expression>@@[L1:C10, L1:C38]",
+                              "snippet": "''' This i...l note '''"
+                            },
+                            "children": {
+                              "expression": {
+                                "context": {
+                                  "id": "node@<literal>@ This is a local note @[L1:C10, L1:C38]",
+                                  "snippet": "''' This i...l note '''"
+                                },
+                                "children": {
+                                  "literal": {
+                                    "context": {
+                                      "id": "token@<string>@ This is a local note @[L1:C10, L1:C38]",
+                                      "snippet": "''' This i...l note '''"
+                                    },
+                                    "leadingTrivia": "",
+                                    "trailingTrivia": "\n",
+                                    "value": " This is a local note "
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "bodyColon": {
+                        "context": {
+                          "id": "token@<colon>@:@[L1:C8, L1:C9]",
+                          "snippet": ":"
+                        },
+                        "leadingTrivia": "",
+                        "trailingTrivia": " ",
+                        "value": ":"
+                      },
+                      "type": {
+                        "context": {
+                          "id": "token@<identifier>@Note@[L1:C4, L1:C8]",
+                          "snippet": "Note"
+                        },
+                        "leadingTrivia": "    ",
+                        "trailingTrivia": "",
+                        "value": "Note"
+                      }
+                    }
                   }
                 ]
               }
@@ -238,6 +244,7 @@
                         "id": "token@<identifier>@A@[L0:C6, L0:C7]",
                         "snippet": "A"
                       },
+                      "leadingTrivia": "",
                       "trailingTrivia": " ",
                       "value": "A"
                     }
@@ -250,10 +257,12 @@
                 "id": "token@<identifier>@Table@[L0:C0, L0:C5]",
                 "snippet": "Table"
               },
+              "leadingTrivia": "",
               "trailingTrivia": " ",
               "value": "Table"
             }
           },
+          "fullStart": 0,
           "symbol": {
             "context": {
               "id": "symbol@Table@A@[L0:C0, L5:C1]",
@@ -282,6 +291,7 @@
                     "id": "token@<rbrace>@}@[L9:C0, L9:C1]",
                     "snippet": "}"
                   },
+                  "leadingTrivia": "",
                   "trailingTrivia": "\n",
                   "value": "}"
                 },
@@ -290,6 +300,7 @@
                     "id": "token@<lbrace>@{@[L7:C5, L7:C6]",
                     "snippet": "{"
                   },
+                  "leadingTrivia": "",
                   "trailingTrivia": "\n",
                   "value": "{"
                 },
@@ -370,6 +381,8 @@
                             "id": "token@<string>@\r\n    This is another global note\r\n@[L11:C6, L13:C3]",
                             "snippet": "'''\r\n    T... note\r\n'''"
                           },
+                          "leadingTrivia": "",
+                          "trailingTrivia": "",
                           "value": "\r\n    This is another global note\r\n"
                         }
                       }
@@ -383,6 +396,7 @@
                 "id": "token@<colon>@:@[L11:C4, L11:C5]",
                 "snippet": ":"
               },
+              "leadingTrivia": "",
               "trailingTrivia": " ",
               "value": ":"
             },
@@ -392,6 +406,7 @@
                 "snippet": "Note"
               },
               "leadingTrivia": "\n",
+              "trailingTrivia": "",
               "value": "Note"
             }
           }
@@ -401,9 +416,13 @@
         "context": {
           "id": "token@<eof>@@[L13:C3, L13:C3]",
           "snippet": ""
-        }
+        },
+        "leadingTrivia": "",
+        "trailingTrivia": "",
+        "value": ""
       }
     },
+    "fullStart": 0,
     "symbol": {
       "context": {
         "id": "symbol@Schema@@[L0:C0, L13:C3]",

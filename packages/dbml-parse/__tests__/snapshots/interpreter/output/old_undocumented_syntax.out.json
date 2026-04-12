@@ -10,137 +10,172 @@
             },
             "type": {
               "type_name": "SMALLINT"
-            }
+            },
+            "unique": false
           },
           {
+            "increment": false,
             "name": "store_id",
+            "pk": false,
             "token": {
               "filepath": "/main.dbml"
             },
             "type": {
               "type_name": "TINYINT"
-            }
+            },
+            "unique": false
           },
           {
+            "increment": false,
             "name": "first_name",
+            "pk": false,
             "token": {
               "filepath": "/main.dbml"
             },
             "type": {
               "args": "45",
               "type_name": "VARCHAR(45)"
-            }
+            },
+            "unique": false
           },
           {
             "dbdefault": {
               "type": "boolean",
               "value": "false"
             },
+            "increment": false,
             "name": "last_name",
+            "pk": false,
             "token": {
               "filepath": "/main.dbml"
             },
             "type": {
               "args": "45",
               "type_name": "VARCHAR(45)"
-            }
+            },
+            "unique": false
           },
           {
             "dbdefault": {
               "type": "boolean",
               "value": "null"
             },
+            "increment": false,
             "name": "email",
+            "pk": false,
             "token": {
               "filepath": "/main.dbml"
             },
             "type": {
               "args": "50",
               "type_name": "VARCHAR(50)"
-            }
+            },
+            "unique": false
           },
           {
+            "increment": false,
             "name": "address_id",
+            "pk": false,
             "token": {
               "filepath": "/main.dbml"
             },
             "type": {
               "type_name": "SMALLINT"
-            }
+            },
+            "unique": false
           },
           {
             "dbdefault": {
               "type": "boolean",
               "value": "true"
             },
+            "increment": false,
             "name": "active",
+            "pk": false,
             "token": {
               "filepath": "/main.dbml"
             },
             "type": {
               "type_name": "BOOLEAN"
-            }
+            },
+            "unique": false
           },
           {
+            "increment": false,
             "name": "create_date",
+            "pk": false,
             "token": {
               "filepath": "/main.dbml"
             },
             "type": {
               "type_name": "DATETIME"
-            }
+            },
+            "unique": false
           },
           {
             "dbdefault": {
               "type": "expression",
               "value": "CURRENT_TIMESTAMP"
             },
+            "increment": false,
             "name": "last_update",
+            "pk": false,
             "token": {
               "filepath": "/main.dbml"
             },
             "type": {
               "type_name": "TIMESTAMP"
-            }
+            },
+            "unique": false
           }
         ],
         "name": "customer",
         "token": {
-          "filepath": "/main.dbml"
+          "filepath": "/main.dbml",
+          "start": {
+            "offset": 0
+          }
         }
       },
       {
         "fields": [
           {
+            "increment": false,
             "name": "id",
             "token": {
               "filepath": "/main.dbml"
             },
             "type": {
               "type_name": "integer"
-            }
+            },
+            "unique": false
+          },
+          {
+            "name": "country_id",
+            "pk": false,
+            "token": {
+              "filepath": "/main.dbml"
+            },
+            "type": {
+              "type_name": "integer"
+            },
+            "unique": false
           },
           {
             "dbdefault": {
               "type": "string",
               "value": "hello"
             },
+            "increment": false,
             "name": "name",
+            "pk": false,
             "token": {
               "filepath": "/main.dbml"
             },
             "type": {
               "type_name": "e"
-            }
-          },
-          {
-            "name": "country_id",
-            "token": {
-              "filepath": "/main.dbml"
             },
-            "type": {
-              "type_name": "integer"
-            }
+            "unique": false
           }
         ],
         "name": "cities",
@@ -157,22 +192,26 @@
       {
         "fields": [
           {
-            "name": "id",
-            "token": {
-              "filepath": "/main.dbml"
-            },
-            "type": {
-              "type_name": "integer"
-            }
-          },
-          {
             "name": "cities",
+            "pk": false,
             "token": {
               "filepath": "/main.dbml"
             },
             "type": {
               "type_name": "string[]"
-            }
+            },
+            "unique": false
+          },
+          {
+            "name": "id",
+            "pk": false,
+            "token": {
+              "filepath": "/main.dbml"
+            },
+            "type": {
+              "type_name": "integer"
+            },
+            "unique": false
           }
         ],
         "name": "country",
@@ -184,21 +223,25 @@
         "fields": [
           {
             "name": "id",
+            "pk": false,
             "token": {
               "filepath": "/main.dbml"
             },
             "type": {
               "type_name": "integer"
-            }
+            },
+            "unique": false
           },
           {
             "name": "name",
+            "pk": false,
             "token": {
               "filepath": "/main.dbml"
             },
             "type": {
               "type_name": "string"
-            }
+            },
+            "unique": false
           }
         ],
         "indexes": [
@@ -231,7 +274,10 @@
       }
     ],
     "token": {
-      "filepath": "/main.dbml"
+      "filepath": "/main.dbml",
+      "start": {
+        "offset": 0
+      }
     }
   }
 }

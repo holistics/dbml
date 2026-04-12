@@ -73,6 +73,8 @@
                     "id": "token@<rbrace>@}@[L4:C0, L4:C1]",
                     "snippet": "}"
                   },
+                  "leadingTrivia": "",
+                  "trailingTrivia": "",
                   "value": "}"
                 },
                 "blockOpenBrace": {
@@ -80,6 +82,7 @@
                     "id": "token@<lbrace>@{@[L0:C12, L0:C13]",
                     "snippet": "{"
                   },
+                  "leadingTrivia": "",
                   "trailingTrivia": "\n",
                   "value": "{"
                 },
@@ -233,6 +236,7 @@
                         "id": "token@<identifier>@status@[L0:C5, L0:C11]",
                         "snippet": "status"
                       },
+                      "leadingTrivia": "",
                       "trailingTrivia": " ",
                       "value": "status"
                     }
@@ -245,10 +249,12 @@
                 "id": "token@<identifier>@Enum@[L0:C0, L0:C4]",
                 "snippet": "Enum"
               },
+              "leadingTrivia": "",
               "trailingTrivia": " ",
               "value": "Enum"
             }
           },
+          "fullStart": 0,
           "symbol": {
             "context": {
               "id": "symbol@Enum@status@[L0:C0, L4:C1]",
@@ -273,9 +279,13 @@
         "context": {
           "id": "token@<eof>@@[L4:C1, L4:C1]",
           "snippet": ""
-        }
+        },
+        "leadingTrivia": "",
+        "trailingTrivia": "",
+        "value": ""
       }
     },
+    "fullStart": 0,
     "symbol": {
       "context": {
         "id": "symbol@Schema@@[L0:C0, L4:C1]",

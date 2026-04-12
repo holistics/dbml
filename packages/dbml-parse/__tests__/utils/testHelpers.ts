@@ -80,7 +80,7 @@ export type Snappable =
 // Output a stable key-value object
 // Remove empty fields
 function sortObject (object: Record<string, unknown>): Record<string, unknown> {
-  const entries = Object.entries(object).filter(([, value]) => !isEmpty(value));
+  const entries = Object.entries(object).filter(([, value]) => !isEmpty(value) || value === '' || value === 0 || value === false);
   entries.sort(
     ([key1], [key2]) => (key1 as string) < (key2 as string) ? -1 : 1,
   );
@@ -118,7 +118,9 @@ function sortArray (array: unknown[]): unknown[] {
     if (s instanceof SyntaxNode) return s.start;
     if (s instanceof SyntaxToken) return s.start;
     if (s instanceof NodeSymbol) return getIntraKindRank(s.declaration);
-    if ((s as any)?.id) return getIntraKindRank((s as any).id);
+    if (typeof s === 'object') {
+      return getIntraKindRank(Object.values(sortObject(s as Record<string, unknown>))[0]);
+    }
     return 0;
   }
 

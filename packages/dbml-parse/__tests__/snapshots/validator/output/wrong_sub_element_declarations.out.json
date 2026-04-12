@@ -1,6 +1,54 @@
 {
   "errors": [
     {
+      "code": "DUPLICATE_COLUMN_NAME",
+      "diagnostic": "Duplicate column Indexes",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<function-application>@@[L2:C4, L2:C21]",
+          "snippet": "Indexes 2 args {}"
+        }
+      }
+    },
+    {
+      "code": "DUPLICATE_COLUMN_NAME",
+      "diagnostic": "Duplicate column Indexes",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<function-application>@@[L1:C4, L1:C32]",
+          "snippet": "Indexes wr...x alias {}"
+        }
+      }
+    },
+    {
+      "code": "DUPLICATE_COLUMN_NAME",
+      "diagnostic": "Duplicate column Indexes",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<function-application>@@[L3:C4, L3:C35]",
+          "snippet": "Indexes wr...of args {}"
+        }
+      }
+    },
+    {
+      "code": "DUPLICATE_COLUMN_NAME",
+      "diagnostic": "Duplicate column Indexes",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<function-application>@@[L1:C4, L1:C32]",
+          "snippet": "Indexes wr...x alias {}"
+        }
+      }
+    },
+    {
       "code": "INVALID_COLUMN",
       "diagnostic": "These fields must be some inline settings optionally ended with a setting list",
       "filepath": "/main.dbml",
@@ -37,18 +85,6 @@
       }
     },
     {
-      "code": "INVALID_COLUMN_TYPE",
-      "diagnostic": "Invalid column type",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<primary-expression>@@[L2:C12, L2:C13]",
-          "snippet": "2"
-        }
-      }
-    },
-    {
       "code": "INVALID_COLUMN",
       "diagnostic": "These fields must be some inline settings optionally ended with a setting list",
       "filepath": "/main.dbml",
@@ -69,30 +105,6 @@
         "context": {
           "id": "node@<block-expression>@@[L2:C19, L2:C21]",
           "snippet": "{}"
-        }
-      }
-    },
-    {
-      "code": "DUPLICATE_COLUMN_NAME",
-      "diagnostic": "Duplicate column Indexes",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<function-application>@@[L2:C4, L2:C21]",
-          "snippet": "Indexes 2 args {}"
-        }
-      }
-    },
-    {
-      "code": "DUPLICATE_COLUMN_NAME",
-      "diagnostic": "Duplicate column Indexes",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<function-application>@@[L1:C4, L1:C32]",
-          "snippet": "Indexes wr...x alias {}"
         }
       }
     },
@@ -145,26 +157,14 @@
       }
     },
     {
-      "code": "DUPLICATE_COLUMN_NAME",
-      "diagnostic": "Duplicate column Indexes",
+      "code": "INVALID_COLUMN_TYPE",
+      "diagnostic": "Invalid column type",
       "filepath": "/main.dbml",
       "level": "error",
       "node": {
         "context": {
-          "id": "node@<function-application>@@[L3:C4, L3:C35]",
-          "snippet": "Indexes wr...of args {}"
-        }
-      }
-    },
-    {
-      "code": "DUPLICATE_COLUMN_NAME",
-      "diagnostic": "Duplicate column Indexes",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<function-application>@@[L1:C4, L1:C32]",
-          "snippet": "Indexes wr...x alias {}"
+          "id": "node@<primary-expression>@@[L2:C12, L2:C13]",
+          "snippet": "2"
         }
       }
     }
@@ -193,6 +193,7 @@
                     "id": "token@<rbrace>@}@[L4:C0, L4:C1]",
                     "snippet": "}"
                   },
+                  "leadingTrivia": "",
                   "trailingTrivia": "\n",
                   "value": "}"
                 },
@@ -201,6 +202,7 @@
                     "id": "token@<lbrace>@{@[L0:C8, L0:C9]",
                     "snippet": "{"
                   },
+                  "leadingTrivia": "",
                   "trailingTrivia": "\n",
                   "value": "{"
                 },
@@ -214,23 +216,24 @@
                       "args": [
                         {
                           "context": {
-                            "id": "node@<primary-expression>@@[L1:C12, L1:C17]",
-                            "snippet": "wrong"
+                            "id": "node@<primary-expression>@@[L1:C24, L1:C29]",
+                            "snippet": "alias"
                           },
                           "children": {
                             "expression": {
                               "context": {
-                                "id": "node@<variable>@wrong@[L1:C12, L1:C17]",
-                                "snippet": "wrong"
+                                "id": "node@<variable>@alias@[L1:C24, L1:C29]",
+                                "snippet": "alias"
                               },
                               "children": {
                                 "variable": {
                                   "context": {
-                                    "id": "token@<identifier>@wrong@[L1:C12, L1:C17]",
-                                    "snippet": "wrong"
+                                    "id": "token@<identifier>@alias@[L1:C24, L1:C29]",
+                                    "snippet": "alias"
                                   },
+                                  "leadingTrivia": "",
                                   "trailingTrivia": " ",
-                                  "value": "wrong"
+                                  "value": "alias"
                                 }
                               }
                             }
@@ -253,6 +256,7 @@
                                     "id": "token@<identifier>@index@[L1:C18, L1:C23]",
                                     "snippet": "index"
                                   },
+                                  "leadingTrivia": "",
                                   "trailingTrivia": " ",
                                   "value": "index"
                                 }
@@ -262,23 +266,24 @@
                         },
                         {
                           "context": {
-                            "id": "node@<primary-expression>@@[L1:C24, L1:C29]",
-                            "snippet": "alias"
+                            "id": "node@<primary-expression>@@[L1:C12, L1:C17]",
+                            "snippet": "wrong"
                           },
                           "children": {
                             "expression": {
                               "context": {
-                                "id": "node@<variable>@alias@[L1:C24, L1:C29]",
-                                "snippet": "alias"
+                                "id": "node@<variable>@wrong@[L1:C12, L1:C17]",
+                                "snippet": "wrong"
                               },
                               "children": {
                                 "variable": {
                                   "context": {
-                                    "id": "token@<identifier>@alias@[L1:C24, L1:C29]",
-                                    "snippet": "alias"
+                                    "id": "token@<identifier>@wrong@[L1:C12, L1:C17]",
+                                    "snippet": "wrong"
                                   },
+                                  "leadingTrivia": "",
                                   "trailingTrivia": " ",
-                                  "value": "alias"
+                                  "value": "wrong"
                                 }
                               }
                             }
@@ -295,6 +300,7 @@
                                 "id": "token@<rbrace>@}@[L1:C31, L1:C32]",
                                 "snippet": "}"
                               },
+                              "leadingTrivia": "",
                               "trailingTrivia": "  this indexes is treated as Table column\n",
                               "value": "}"
                             },
@@ -303,6 +309,8 @@
                                 "id": "token@<lbrace>@{@[L1:C30, L1:C31]",
                                 "snippet": "{"
                               },
+                              "leadingTrivia": "",
+                              "trailingTrivia": "",
                               "value": "{"
                             }
                           }
@@ -354,30 +362,6 @@
                       "args": [
                         {
                           "context": {
-                            "id": "node@<primary-expression>@@[L2:C12, L2:C13]",
-                            "snippet": "2"
-                          },
-                          "children": {
-                            "expression": {
-                              "context": {
-                                "id": "node@<literal>@2@[L2:C12, L2:C13]",
-                                "snippet": "2"
-                              },
-                              "children": {
-                                "literal": {
-                                  "context": {
-                                    "id": "token@<number>@2@[L2:C12, L2:C13]",
-                                    "snippet": "2"
-                                  },
-                                  "trailingTrivia": " ",
-                                  "value": "2"
-                                }
-                              }
-                            }
-                          }
-                        },
-                        {
-                          "context": {
                             "id": "node@<primary-expression>@@[L2:C14, L2:C18]",
                             "snippet": "args"
                           },
@@ -393,8 +377,34 @@
                                     "id": "token@<identifier>@args@[L2:C14, L2:C18]",
                                     "snippet": "args"
                                   },
+                                  "leadingTrivia": "",
                                   "trailingTrivia": " ",
                                   "value": "args"
+                                }
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "context": {
+                            "id": "node@<primary-expression>@@[L2:C12, L2:C13]",
+                            "snippet": "2"
+                          },
+                          "children": {
+                            "expression": {
+                              "context": {
+                                "id": "node@<literal>@2@[L2:C12, L2:C13]",
+                                "snippet": "2"
+                              },
+                              "children": {
+                                "literal": {
+                                  "context": {
+                                    "id": "token@<number>@2@[L2:C12, L2:C13]",
+                                    "snippet": "2"
+                                  },
+                                  "leadingTrivia": "",
+                                  "trailingTrivia": " ",
+                                  "value": "2"
                                 }
                               }
                             }
@@ -411,6 +421,7 @@
                                 "id": "token@<rbrace>@}@[L2:C20, L2:C21]",
                                 "snippet": "}"
                               },
+                              "leadingTrivia": "",
                               "trailingTrivia": "  this is also treated as column\n",
                               "value": "}"
                             },
@@ -419,6 +430,8 @@
                                 "id": "token@<lbrace>@{@[L2:C19, L2:C20]",
                                 "snippet": "{"
                               },
+                              "leadingTrivia": "",
+                              "trailingTrivia": "",
                               "value": "{"
                             }
                           }
@@ -470,23 +483,24 @@
                       "args": [
                         {
                           "context": {
-                            "id": "node@<primary-expression>@@[L3:C12, L3:C17]",
-                            "snippet": "wrong"
+                            "id": "node@<primary-expression>@@[L3:C28, L3:C32]",
+                            "snippet": "args"
                           },
                           "children": {
                             "expression": {
                               "context": {
-                                "id": "node@<variable>@wrong@[L3:C12, L3:C17]",
-                                "snippet": "wrong"
+                                "id": "node@<variable>@args@[L3:C28, L3:C32]",
+                                "snippet": "args"
                               },
                               "children": {
                                 "variable": {
                                   "context": {
-                                    "id": "token@<identifier>@wrong@[L3:C12, L3:C17]",
-                                    "snippet": "wrong"
+                                    "id": "token@<identifier>@args@[L3:C28, L3:C32]",
+                                    "snippet": "args"
                                   },
+                                  "leadingTrivia": "",
                                   "trailingTrivia": " ",
-                                  "value": "wrong"
+                                  "value": "args"
                                 }
                               }
                             }
@@ -509,6 +523,7 @@
                                     "id": "token@<identifier>@number@[L3:C18, L3:C24]",
                                     "snippet": "number"
                                   },
+                                  "leadingTrivia": "",
                                   "trailingTrivia": " ",
                                   "value": "number"
                                 }
@@ -533,6 +548,7 @@
                                     "id": "token@<identifier>@of@[L3:C25, L3:C27]",
                                     "snippet": "of"
                                   },
+                                  "leadingTrivia": "",
                                   "trailingTrivia": " ",
                                   "value": "of"
                                 }
@@ -542,23 +558,24 @@
                         },
                         {
                           "context": {
-                            "id": "node@<primary-expression>@@[L3:C28, L3:C32]",
-                            "snippet": "args"
+                            "id": "node@<primary-expression>@@[L3:C12, L3:C17]",
+                            "snippet": "wrong"
                           },
                           "children": {
                             "expression": {
                               "context": {
-                                "id": "node@<variable>@args@[L3:C28, L3:C32]",
-                                "snippet": "args"
+                                "id": "node@<variable>@wrong@[L3:C12, L3:C17]",
+                                "snippet": "wrong"
                               },
                               "children": {
                                 "variable": {
                                   "context": {
-                                    "id": "token@<identifier>@args@[L3:C28, L3:C32]",
-                                    "snippet": "args"
+                                    "id": "token@<identifier>@wrong@[L3:C12, L3:C17]",
+                                    "snippet": "wrong"
                                   },
+                                  "leadingTrivia": "",
                                   "trailingTrivia": " ",
-                                  "value": "args"
+                                  "value": "wrong"
                                 }
                               }
                             }
@@ -575,6 +592,7 @@
                                 "id": "token@<rbrace>@}@[L3:C34, L3:C35]",
                                 "snippet": "}"
                               },
+                              "leadingTrivia": "",
                               "trailingTrivia": "  this is also treated as column\n",
                               "value": "}"
                             },
@@ -583,6 +601,8 @@
                                 "id": "token@<lbrace>@{@[L3:C33, L3:C34]",
                                 "snippet": "{"
                               },
+                              "leadingTrivia": "",
+                              "trailingTrivia": "",
                               "value": "{"
                             }
                           }
@@ -645,6 +665,7 @@
                         "id": "token@<identifier>@A@[L0:C6, L0:C7]",
                         "snippet": "A"
                       },
+                      "leadingTrivia": "",
                       "trailingTrivia": " ",
                       "value": "A"
                     }
@@ -657,10 +678,12 @@
                 "id": "token@<identifier>@Table@[L0:C0, L0:C5]",
                 "snippet": "Table"
               },
+              "leadingTrivia": "",
               "trailingTrivia": " ",
               "value": "Table"
             }
           },
+          "fullStart": 0,
           "symbol": {
             "context": {
               "id": "symbol@Table@A@[L0:C0, L4:C1]",
@@ -685,9 +708,13 @@
         "context": {
           "id": "token@<eof>@@[L5:C0, L5:C0]",
           "snippet": ""
-        }
+        },
+        "leadingTrivia": "",
+        "trailingTrivia": "",
+        "value": ""
       }
     },
+    "fullStart": 0,
     "symbol": {
       "context": {
         "id": "symbol@Schema@@[L0:C0, L5:C0]",

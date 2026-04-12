@@ -2,15 +2,15 @@
   "database": {
     "notes": [
       {
-        "content": "One line note",
-        "name": "note",
+        "content": "# Title\nbody\n",
+        "name": "note2",
         "token": {
           "filepath": "/main.dbml"
         }
       },
       {
-        "content": "# Title\nbody\n",
-        "name": "note2",
+        "content": "One line note",
+        "name": "note",
         "token": {
           "filepath": "/main.dbml"
         }
@@ -20,16 +20,20 @@
       {
         "fields": [
           {
+            "increment": false,
             "name": "id",
             "token": {
               "filepath": "/main.dbml"
             },
             "type": {
               "type_name": "integer"
-            }
+            },
+            "unique": false
           },
           {
+            "increment": false,
             "name": "username",
+            "pk": false,
             "token": {
               "filepath": "/main.dbml"
             },
@@ -42,12 +46,18 @@
         "headerColor": "#3498DB",
         "name": "users",
         "token": {
-          "filepath": "/main.dbml"
+          "filepath": "/main.dbml",
+          "start": {
+            "offset": 0
+          }
         }
       }
     ],
     "token": {
-      "filepath": "/main.dbml"
+      "filepath": "/main.dbml",
+      "start": {
+        "offset": 0
+      }
     }
   }
 }

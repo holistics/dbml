@@ -7,34 +7,25 @@
             "dbdefault": {
               "type": "number"
             },
+            "increment": false,
             "name": "id",
             "token": {
               "filepath": "/main.dbml"
             },
             "type": {
               "type_name": "int"
-            }
+            },
+            "unique": false
           },
           {
+            "increment": false,
             "name": "user_id",
+            "pk": false,
             "token": {
               "filepath": "/main.dbml"
             },
             "type": {
               "type_name": "int"
-            }
-          },
-          {
-            "dbdefault": {
-              "type": "string",
-              "value": "Completed"
-            },
-            "name": "status",
-            "token": {
-              "filepath": "/main.dbml"
-            },
-            "type": {
-              "type_name": "varchar"
             }
           },
           {
@@ -42,48 +33,76 @@
               "type": "expression",
               "value": "now()"
             },
+            "increment": false,
             "name": "created_at",
+            "pk": false,
             "token": {
               "filepath": "/main.dbml"
             },
             "type": {
               "type_name": "varchar"
-            }
+            },
+            "unique": false
+          },
+          {
+            "dbdefault": {
+              "type": "string",
+              "value": "Completed"
+            },
+            "increment": false,
+            "name": "status",
+            "pk": false,
+            "token": {
+              "filepath": "/main.dbml"
+            },
+            "type": {
+              "type_name": "varchar"
+            },
+            "unique": false
           }
         ],
         "name": "orders",
         "token": {
-          "filepath": "/main.dbml"
+          "filepath": "/main.dbml",
+          "start": {
+            "offset": 0
+          }
         }
       },
       {
         "fields": [
           {
             "name": "order_id",
+            "pk": false,
             "token": {
               "filepath": "/main.dbml"
             },
             "type": {
               "type_name": "int"
-            }
+            },
+            "unique": false
           },
           {
             "name": "product_id",
+            "pk": false,
             "token": {
               "filepath": "/main.dbml"
             },
             "type": {
               "type_name": "int"
-            }
+            },
+            "unique": false
           },
           {
             "name": "quantity",
+            "pk": false,
             "token": {
               "filepath": "/main.dbml"
             },
             "type": {
               "type_name": "int"
-            }
+            },
+            "unique": false
           }
         ],
         "name": "order_items",
@@ -94,76 +113,93 @@
       {
         "fields": [
           {
+            "increment": false,
             "name": "id",
             "token": {
               "filepath": "/main.dbml"
             },
             "type": {
               "type_name": "int"
-            }
+            },
+            "unique": false
           },
           {
             "dbdefault": {
               "type": "boolean",
               "value": "null"
             },
+            "increment": false,
             "name": "name",
+            "pk": false,
             "token": {
               "filepath": "/main.dbml"
             },
             "type": {
               "type_name": "varchar"
-            }
-          },
-          {
-            "dbdefault": {
-              "type": "number"
             },
-            "name": "merchant_id",
-            "token": {
-              "filepath": "/main.dbml"
-            },
-            "type": {
-              "type_name": "int"
-            }
-          },
-          {
-            "dbdefault": {
-              "type": "number"
-            },
-            "name": "price",
-            "token": {
-              "filepath": "/main.dbml"
-            },
-            "type": {
-              "type_name": "float"
-            }
+            "unique": false
           },
           {
             "dbdefault": {
               "type": "boolean",
               "value": "true"
             },
+            "increment": false,
             "name": "stock",
+            "pk": false,
             "token": {
               "filepath": "/main.dbml"
             },
             "type": {
               "type_name": "boolean"
-            }
+            },
+            "unique": false
           },
           {
             "dbdefault": {
               "type": "expression",
               "value": "current_date + interval 1 year"
             },
+            "increment": false,
             "name": "expiration",
+            "pk": false,
             "token": {
               "filepath": "/main.dbml"
             },
             "type": {
               "type_name": "date"
-            }
+            },
+            "unique": false
+          },
+          {
+            "dbdefault": {
+              "type": "number"
+            },
+            "increment": false,
+            "name": "merchant_id",
+            "pk": false,
+            "token": {
+              "filepath": "/main.dbml"
+            },
+            "type": {
+              "type_name": "int"
+            },
+            "unique": false
+          },
+          {
+            "dbdefault": {
+              "type": "number"
+            },
+            "increment": false,
+            "name": "price",
+            "pk": false,
+            "token": {
+              "filepath": "/main.dbml"
+            },
+            "type": {
+              "type_name": "float"
+            },
+            "unique": false
           }
         ],
         "name": "products",
@@ -173,7 +209,10 @@
       }
     ],
     "token": {
-      "filepath": "/main.dbml"
+      "filepath": "/main.dbml",
+      "start": {
+        "offset": 0
+      }
     }
   }
 }

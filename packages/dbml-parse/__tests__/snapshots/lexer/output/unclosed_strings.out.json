@@ -1,6 +1,20 @@
 {
   "errors": [
     {
+      "code": "UNEXPECTED_EOF",
+      "diagnostic": "EOF reached while parsing",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "token": {
+        "context": {
+          "id": "token@<string>@'''This is also an unclosed string\n\n\\'''\n@[L4:C0, L7:C0]",
+          "snippet": "'''This is...ing\n\n\\'''\n",
+          "isInvalid": true,
+          "filepath": "/main.dbml"
+        }
+      }
+    },
+    {
       "code": "UNEXPECTED_NEWLINE",
       "diagnostic": "Invalid newline encountered while parsing",
       "filepath": "/main.dbml",
@@ -27,20 +41,6 @@
           "filepath": "/main.dbml"
         }
       }
-    },
-    {
-      "code": "UNEXPECTED_EOF",
-      "diagnostic": "EOF reached while parsing",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "token": {
-        "context": {
-          "id": "token@<string>@'''This is also an unclosed string\n\n\\'''\n@[L4:C0, L7:C0]",
-          "snippet": "'''This is...ing\n\n\\'''\n",
-          "isInvalid": true,
-          "filepath": "/main.dbml"
-        }
-      }
     }
   ],
   "tokens": [
@@ -48,7 +48,10 @@
       "context": {
         "id": "token@<eof>@@[L7:C0, L7:C0]",
         "snippet": ""
-      }
+      },
+      "leadingTrivia": "",
+      "trailingTrivia": "",
+      "value": ""
     }
   ]
 }

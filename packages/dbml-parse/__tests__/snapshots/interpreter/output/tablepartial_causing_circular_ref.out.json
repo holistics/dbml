@@ -5,9 +5,9 @@
         "endpoints": [
           {
             "fieldNames": [
-              "col3"
+              "col2"
             ],
-            "relation": "1",
+            "relation": "*",
             "tableName": "T",
             "token": {
               "filepath": "/main.dbml"
@@ -15,9 +15,9 @@
           },
           {
             "fieldNames": [
-              "col2"
+              "col3"
             ],
-            "relation": "*",
+            "relation": "1",
             "tableName": "T",
             "token": {
               "filepath": "/main.dbml"
@@ -33,6 +33,7 @@
       {
         "fields": [
           {
+            "increment": false,
             "inline_refs": [
               {
                 "fieldNames": [
@@ -46,14 +47,17 @@
               }
             ],
             "name": "col1",
+            "pk": false,
             "token": {
               "filepath": "/main.dbml"
             },
             "type": {
               "type_name": "type"
-            }
+            },
+            "unique": false
           },
           {
+            "increment": false,
             "inline_refs": [
               {
                 "fieldNames": [
@@ -67,17 +71,22 @@
               }
             ],
             "name": "col3",
+            "pk": false,
             "token": {
               "filepath": "/main.dbml"
             },
             "type": {
               "type_name": "type"
-            }
+            },
+            "unique": false
           }
         ],
         "name": "T",
         "token": {
-          "filepath": "/main.dbml"
+          "filepath": "/main.dbml",
+          "start": {
+            "offset": 0
+          }
         }
       }
     ],
@@ -85,6 +94,7 @@
       {
         "fields": [
           {
+            "increment": false,
             "inline_refs": [
               {
                 "fieldNames": [
@@ -98,18 +108,21 @@
               }
             ],
             "name": "col2",
+            "pk": false,
             "token": {
               "filepath": "/main.dbml"
             },
             "type": {
               "type_name": "type"
-            }
+            },
+            "unique": false
           }
         ],
         "name": "T",
         "partials": [
           {
             "name": "T",
+            "order": 0,
             "token": {
               "filepath": "/main.dbml"
             }
@@ -121,7 +134,10 @@
       }
     ],
     "token": {
-      "filepath": "/main.dbml"
+      "filepath": "/main.dbml",
+      "start": {
+        "offset": 0
+      }
     }
   }
 }

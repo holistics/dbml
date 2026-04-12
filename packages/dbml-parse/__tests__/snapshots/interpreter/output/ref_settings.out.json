@@ -5,35 +5,6 @@
         "endpoints": [
           {
             "fieldNames": [
-              "id"
-            ],
-            "relation": "*",
-            "tableName": "A",
-            "token": {
-              "filepath": "/main.dbml"
-            }
-          },
-          {
-            "fieldNames": [
-              "id"
-            ],
-            "relation": "1",
-            "tableName": "B",
-            "token": {
-              "filepath": "/main.dbml"
-            }
-          }
-        ],
-        "onDelete": "no action",
-        "onUpdate": "cascade",
-        "token": {
-          "filepath": "/main.dbml"
-        }
-      },
-      {
-        "endpoints": [
-          {
-            "fieldNames": [
               "code"
             ],
             "relation": "*",
@@ -58,54 +29,94 @@
         "token": {
           "filepath": "/main.dbml"
         }
+      },
+      {
+        "endpoints": [
+          {
+            "fieldNames": [
+              "id"
+            ],
+            "relation": "*",
+            "tableName": "A",
+            "token": {
+              "filepath": "/main.dbml"
+            }
+          },
+          {
+            "fieldNames": [
+              "id"
+            ],
+            "relation": "1",
+            "tableName": "B",
+            "token": {
+              "filepath": "/main.dbml"
+            }
+          }
+        ],
+        "onDelete": "no action",
+        "onUpdate": "cascade",
+        "token": {
+          "filepath": "/main.dbml"
+        }
       }
     ],
     "tables": [
       {
         "fields": [
           {
-            "name": "id",
-            "token": {
-              "filepath": "/main.dbml"
-            },
-            "type": {
-              "type_name": "integer"
-            }
-          },
-          {
             "name": "code",
+            "pk": false,
             "token": {
               "filepath": "/main.dbml"
             },
             "type": {
               "type_name": "number"
-            }
+            },
+            "unique": false
+          },
+          {
+            "name": "id",
+            "pk": false,
+            "token": {
+              "filepath": "/main.dbml"
+            },
+            "type": {
+              "type_name": "integer"
+            },
+            "unique": false
           }
         ],
         "name": "A",
         "token": {
-          "filepath": "/main.dbml"
+          "filepath": "/main.dbml",
+          "start": {
+            "offset": 0
+          }
         }
       },
       {
         "fields": [
           {
-            "name": "id",
-            "token": {
-              "filepath": "/main.dbml"
-            },
-            "type": {
-              "type_name": "integer"
-            }
-          },
-          {
             "name": "code",
+            "pk": false,
             "token": {
               "filepath": "/main.dbml"
             },
             "type": {
               "type_name": "number"
-            }
+            },
+            "unique": false
+          },
+          {
+            "name": "id",
+            "pk": false,
+            "token": {
+              "filepath": "/main.dbml"
+            },
+            "type": {
+              "type_name": "integer"
+            },
+            "unique": false
           }
         ],
         "name": "B",
@@ -115,7 +126,10 @@
       }
     ],
     "token": {
-      "filepath": "/main.dbml"
+      "filepath": "/main.dbml",
+      "start": {
+        "offset": 0
+      }
     }
   }
 }

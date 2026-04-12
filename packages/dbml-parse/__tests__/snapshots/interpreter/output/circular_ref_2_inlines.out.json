@@ -33,6 +33,7 @@
       {
         "fields": [
           {
+            "increment": false,
             "inline_refs": [
               {
                 "fieldNames": [
@@ -46,29 +47,37 @@
               }
             ],
             "name": "id",
+            "pk": false,
             "token": {
               "filepath": "/main.dbml"
             },
             "type": {
               "type_name": "int"
-            }
+            },
+            "unique": false
           }
         ],
         "name": "A",
         "token": {
-          "filepath": "/main.dbml"
+          "filepath": "/main.dbml",
+          "start": {
+            "offset": 0
+          }
         }
       },
       {
         "fields": [
           {
+            "increment": false,
             "name": "id",
+            "pk": false,
             "token": {
               "filepath": "/main.dbml"
             },
             "type": {
               "type_name": "int"
-            }
+            },
+            "unique": false
           }
         ],
         "name": "B",
@@ -78,7 +87,10 @@
       }
     ],
     "token": {
-      "filepath": "/main.dbml"
+      "filepath": "/main.dbml",
+      "start": {
+        "offset": 0
+      }
     }
   },
   "errors": [
