@@ -83,7 +83,9 @@
                                           "value": "note"
                                         }
                                       ]
-                                    }
+                                    },
+                                    "fullEnd": 158,
+                                    "fullStart": 154
                                   },
                                   "value": {
                                     "context": {
@@ -106,11 +108,17 @@
                                             "trailingTrivia": "",
                                             "value": "This is a new employee"
                                           }
-                                        }
+                                        },
+                                        "fullEnd": 184,
+                                        "fullStart": 160
                                       }
-                                    }
+                                    },
+                                    "fullEnd": 184,
+                                    "fullStart": 160
                                   }
-                                }
+                                },
+                                "fullEnd": 184,
+                                "fullStart": 154
                               }
                             ],
                             "listCloseBracket": {
@@ -131,7 +139,9 @@
                               "trailingTrivia": "",
                               "value": "["
                             }
-                          }
+                          },
+                          "fullEnd": 187,
+                          "fullStart": 153
                         }
                       ],
                       "callee": {
@@ -155,11 +165,17 @@
                                 "trailingTrivia": " ",
                                 "value": "new"
                               }
-                            }
+                            },
+                            "fullEnd": 153,
+                            "fullStart": 145
                           }
-                        }
+                        },
+                        "fullEnd": 153,
+                        "fullStart": 145
                       }
-                    }
+                    },
+                    "fullEnd": 187,
+                    "fullStart": 145
                   },
                   {
                     "context": {
@@ -188,14 +204,22 @@
                                 "trailingTrivia": "\n",
                                 "value": "churn"
                               }
-                            }
+                            },
+                            "fullEnd": 145,
+                            "fullStart": 137
                           }
-                        }
+                        },
+                        "fullEnd": 145,
+                        "fullStart": 137
                       }
-                    }
+                    },
+                    "fullEnd": 145,
+                    "fullStart": 137
                   }
                 ]
-              }
+              },
+              "fullEnd": 188,
+              "fullStart": 134
             },
             "name": {
               "context": {
@@ -224,9 +248,13 @@
                           "trailingTrivia": "",
                           "value": "v2"
                         }
-                      }
+                      },
+                      "fullEnd": 126,
+                      "fullStart": 124
                     }
-                  }
+                  },
+                  "fullEnd": 126,
+                  "fullStart": 124
                 },
                 "op": {
                   "context": {
@@ -258,11 +286,17 @@
                           "trailingTrivia": " ",
                           "value": "status"
                         }
-                      }
+                      },
+                      "fullEnd": 134,
+                      "fullStart": 127
                     }
-                  }
+                  },
+                  "fullEnd": 134,
+                  "fullStart": 127
                 }
-              }
+              },
+              "fullEnd": 134,
+              "fullStart": 124
             },
             "type": {
               "context": {
@@ -273,7 +307,9 @@
               "trailingTrivia": " ",
               "value": "enum"
             }
-          }
+          },
+          "fullEnd": 188,
+          "fullStart": 118
         },
         {
           "context": {
@@ -352,7 +388,9 @@
                                           "value": "default"
                                         }
                                       ]
-                                    }
+                                    },
+                                    "fullEnd": 57,
+                                    "fullStart": 50
                                   },
                                   "value": {
                                     "context": {
@@ -387,9 +425,13 @@
                                                     "trailingTrivia": "",
                                                     "value": "v2"
                                                   }
-                                                }
+                                                },
+                                                "fullEnd": 61,
+                                                "fullStart": 59
                                               }
-                                            }
+                                            },
+                                            "fullEnd": 61,
+                                            "fullStart": 59
                                           },
                                           "op": {
                                             "context": {
@@ -421,11 +463,17 @@
                                                     "trailingTrivia": "",
                                                     "value": "status"
                                                   }
-                                                }
+                                                },
+                                                "fullEnd": 68,
+                                                "fullStart": 62
                                               }
-                                            }
+                                            },
+                                            "fullEnd": 68,
+                                            "fullStart": 62
                                           }
-                                        }
+                                        },
+                                        "fullEnd": 68,
+                                        "fullStart": 59
                                       },
                                       "op": {
                                         "context": {
@@ -457,13 +505,21 @@
                                                 "trailingTrivia": "",
                                                 "value": "new"
                                               }
-                                            }
+                                            },
+                                            "fullEnd": 72,
+                                            "fullStart": 69
                                           }
-                                        }
+                                        },
+                                        "fullEnd": 72,
+                                        "fullStart": 69
                                       }
-                                    }
+                                    },
+                                    "fullEnd": 72,
+                                    "fullStart": 59
                                   }
-                                }
+                                },
+                                "fullEnd": 72,
+                                "fullStart": 50
                               }
                             ],
                             "listCloseBracket": {
@@ -484,7 +540,9 @@
                               "trailingTrivia": "",
                               "value": "["
                             }
-                          }
+                          },
+                          "fullEnd": 75,
+                          "fullStart": 49
                         },
                         {
                           "context": {
@@ -513,9 +571,13 @@
                                       "trailingTrivia": "",
                                       "value": "v2"
                                     }
-                                  }
+                                  },
+                                  "fullEnd": 41,
+                                  "fullStart": 39
                                 }
-                              }
+                              },
+                              "fullEnd": 41,
+                              "fullStart": 39
                             },
                             "op": {
                               "context": {
@@ -547,11 +609,17 @@
                                       "trailingTrivia": " ",
                                       "value": "status"
                                     }
-                                  }
+                                  },
+                                  "fullEnd": 49,
+                                  "fullStart": 42
                                 }
-                              }
+                              },
+                              "fullEnd": 49,
+                              "fullStart": 42
                             }
-                          }
+                          },
+                          "fullEnd": 49,
+                          "fullStart": 39
                         }
                       ],
                       "callee": {
@@ -575,11 +643,17 @@
                                 "trailingTrivia": " ",
                                 "value": "status"
                               }
-                            }
+                            },
+                            "fullEnd": 39,
+                            "fullStart": 28
                           }
-                        }
+                        },
+                        "fullEnd": 39,
+                        "fullStart": 28
                       }
-                    }
+                    },
+                    "fullEnd": 75,
+                    "fullStart": 28
                   },
                   {
                     "context": {
@@ -627,7 +701,9 @@
                                           "value": "ref"
                                         }
                                       ]
-                                    }
+                                    },
+                                    "fullEnd": 106,
+                                    "fullStart": 103
                                   },
                                   "value": {
                                     "context": {
@@ -656,9 +732,13 @@
                                                 "trailingTrivia": "",
                                                 "value": "id"
                                               }
-                                            }
+                                            },
+                                            "fullEnd": 111,
+                                            "fullStart": 109
                                           }
-                                        }
+                                        },
+                                        "fullEnd": 111,
+                                        "fullStart": 109
                                       },
                                       "op": {
                                         "context": {
@@ -669,9 +749,13 @@
                                         "trailingTrivia": "",
                                         "value": "-"
                                       }
-                                    }
+                                    },
+                                    "fullEnd": 111,
+                                    "fullStart": 108
                                   }
-                                }
+                                },
+                                "fullEnd": 111,
+                                "fullStart": 103
                               }
                             ],
                             "listCloseBracket": {
@@ -692,7 +776,9 @@
                               "trailingTrivia": "",
                               "value": "["
                             }
-                          }
+                          },
+                          "fullEnd": 114,
+                          "fullStart": 102
                         },
                         {
                           "context": {
@@ -715,9 +801,13 @@
                                   "trailingTrivia": " ",
                                   "value": "integer"
                                 }
-                              }
+                              },
+                              "fullEnd": 102,
+                              "fullStart": 94
                             }
-                          }
+                          },
+                          "fullEnd": 102,
+                          "fullStart": 94
                         }
                       ],
                       "callee": {
@@ -741,11 +831,17 @@
                                 "trailingTrivia": " ",
                                 "value": "referrer"
                               }
-                            }
+                            },
+                            "fullEnd": 94,
+                            "fullStart": 75
                           }
-                        }
+                        },
+                        "fullEnd": 94,
+                        "fullStart": 75
                       }
-                    }
+                    },
+                    "fullEnd": 114,
+                    "fullStart": 75
                   },
                   {
                     "context": {
@@ -775,9 +871,13 @@
                                   "trailingTrivia": "\n",
                                   "value": "integer"
                                 }
-                              }
+                              },
+                              "fullEnd": 28,
+                              "fullStart": 19
                             }
-                          }
+                          },
+                          "fullEnd": 28,
+                          "fullStart": 19
                         }
                       ],
                       "callee": {
@@ -801,14 +901,22 @@
                                 "trailingTrivia": " ",
                                 "value": "id"
                               }
-                            }
+                            },
+                            "fullEnd": 19,
+                            "fullStart": 15
                           }
-                        }
+                        },
+                        "fullEnd": 19,
+                        "fullStart": 15
                       }
-                    }
+                    },
+                    "fullEnd": 28,
+                    "fullStart": 15
                   }
                 ]
-              }
+              },
+              "fullEnd": 117,
+              "fullStart": 12
             },
             "name": {
               "context": {
@@ -831,9 +939,13 @@
                       "trailingTrivia": " ",
                       "value": "Users"
                     }
-                  }
+                  },
+                  "fullEnd": 12,
+                  "fullStart": 6
                 }
-              }
+              },
+              "fullEnd": 12,
+              "fullStart": 6
             },
             "type": {
               "context": {
@@ -845,6 +957,7 @@
               "value": "Table"
             }
           },
+          "fullEnd": 117,
           "fullStart": 0
         }
       ],
@@ -858,6 +971,7 @@
         "value": ""
       }
     },
+    "fullEnd": 188,
     "fullStart": 0
   }
 }

@@ -36,7 +36,9 @@
                   "trailingTrivia": "\n",
                   "value": "{"
                 }
-              }
+              },
+              "fullEnd": 22,
+              "fullStart": 18
             },
             "name": {
               "context": {
@@ -59,9 +61,13 @@
                       "trailingTrivia": " ",
                       "value": "empty_table"
                     }
-                  }
+                  },
+                  "fullEnd": 18,
+                  "fullStart": 6
                 }
-              }
+              },
+              "fullEnd": 18,
+              "fullStart": 6
             },
             "type": {
               "context": {
@@ -73,6 +79,7 @@
               "value": "Table"
             }
           },
+          "fullEnd": 22,
           "fullStart": 0,
           "symbol": {
             "context": {
@@ -96,6 +103,7 @@
         "value": ""
       }
     },
+    "fullEnd": 22,
     "fullStart": 0,
     "symbol": {
       "context": {

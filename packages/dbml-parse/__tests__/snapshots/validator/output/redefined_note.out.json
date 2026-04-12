@@ -145,14 +145,22 @@
                                           "trailingTrivia": "\n",
                                           "value": "This is another local note"
                                         }
-                                      }
+                                      },
+                                      "fullEnd": 101,
+                                      "fullStart": 63
                                     }
-                                  }
+                                  },
+                                  "fullEnd": 101,
+                                  "fullStart": 63
                                 }
-                              }
+                              },
+                              "fullEnd": 101,
+                              "fullStart": 63
                             }
                           ]
-                        }
+                        },
+                        "fullEnd": 108,
+                        "fullStart": 60
                       },
                       "type": {
                         "context": {
@@ -163,7 +171,9 @@
                         "trailingTrivia": " ",
                         "value": "Note"
                       }
-                    }
+                    },
+                    "fullEnd": 108,
+                    "fullStart": 51
                   },
                   {
                     "context": {
@@ -198,11 +208,17 @@
                                     "trailingTrivia": "\n",
                                     "value": " This is a local note "
                                   }
-                                }
+                                },
+                                "fullEnd": 51,
+                                "fullStart": 21
                               }
-                            }
+                            },
+                            "fullEnd": 51,
+                            "fullStart": 21
                           }
-                        }
+                        },
+                        "fullEnd": 51,
+                        "fullStart": 21
                       },
                       "bodyColon": {
                         "context": {
@@ -222,10 +238,14 @@
                         "trailingTrivia": "",
                         "value": "Note"
                       }
-                    }
+                    },
+                    "fullEnd": 51,
+                    "fullStart": 11
                   }
                 ]
-              }
+              },
+              "fullEnd": 111,
+              "fullStart": 8
             },
             "name": {
               "context": {
@@ -248,9 +268,13 @@
                       "trailingTrivia": " ",
                       "value": "A"
                     }
-                  }
+                  },
+                  "fullEnd": 8,
+                  "fullStart": 6
                 }
-              }
+              },
+              "fullEnd": 8,
+              "fullStart": 6
             },
             "type": {
               "context": {
@@ -262,6 +286,7 @@
               "value": "Table"
             }
           },
+          "fullEnd": 111,
           "fullStart": 0,
           "symbol": {
             "context": {
@@ -332,14 +357,22 @@
                                 "trailingTrivia": "\n",
                                 "value": "This is a global note"
                               }
-                            }
+                            },
+                            "fullEnd": 150,
+                            "fullStart": 121
                           }
-                        }
+                        },
+                        "fullEnd": 150,
+                        "fullStart": 121
                       }
-                    }
+                    },
+                    "fullEnd": 150,
+                    "fullStart": 121
                   }
                 ]
-              }
+              },
+              "fullEnd": 153,
+              "fullStart": 118
             },
             "type": {
               "context": {
@@ -350,7 +383,9 @@
               "trailingTrivia": " ",
               "value": "Note"
             }
-          }
+          },
+          "fullEnd": 153,
+          "fullStart": 112
         },
         {
           "context": {
@@ -385,11 +420,17 @@
                           "trailingTrivia": "",
                           "value": "\r\n    This is another global note\r\n"
                         }
-                      }
+                      },
+                      "fullEnd": 202,
+                      "fullStart": 161
                     }
-                  }
+                  },
+                  "fullEnd": 202,
+                  "fullStart": 161
                 }
-              }
+              },
+              "fullEnd": 202,
+              "fullStart": 161
             },
             "bodyColon": {
               "context": {
@@ -409,7 +450,9 @@
               "trailingTrivia": "",
               "value": "Note"
             }
-          }
+          },
+          "fullEnd": 202,
+          "fullStart": 154
         }
       ],
       "eof": {
@@ -422,6 +465,7 @@
         "value": ""
       }
     },
+    "fullEnd": 202,
     "fullStart": 0,
     "symbol": {
       "context": {

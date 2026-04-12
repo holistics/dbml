@@ -126,11 +126,17 @@
                                 "trailingTrivia": "\n",
                                 "value": "a"
                               }
-                            }
+                            },
+                            "fullEnd": 61,
+                            "fullStart": 54
                           }
-                        }
+                        },
+                        "fullEnd": 61,
+                        "fullStart": 54
                       }
                     },
+                    "fullEnd": 61,
+                    "fullStart": 54,
                     "symbol": {
                       "context": {
                         "id": "symbol@Enum field@a@[L8:C4, L8:C5]",
@@ -169,11 +175,17 @@
                                 "trailingTrivia": "\n",
                                 "value": "1"
                               }
-                            }
+                            },
+                            "fullEnd": 54,
+                            "fullStart": 47
                           }
-                        }
+                        },
+                        "fullEnd": 54,
+                        "fullStart": 47
                       }
-                    }
+                    },
+                    "fullEnd": 54,
+                    "fullStart": 47
                   },
                   {
                     "context": {
@@ -202,11 +214,17 @@
                                 "trailingTrivia": "\n",
                                 "value": "1"
                               }
-                            }
+                            },
+                            "fullEnd": 38,
+                            "fullStart": 29
                           }
-                        }
+                        },
+                        "fullEnd": 38,
+                        "fullStart": 29
                       }
                     },
+                    "fullEnd": 38,
+                    "fullStart": 29,
                     "symbol": {
                       "context": {
                         "id": "symbol@Enum field@1@[L5:C4, L5:C7]",
@@ -245,11 +263,17 @@
                                 "trailingTrivia": "\n",
                                 "value": "1"
                               }
-                            }
+                            },
+                            "fullEnd": 47,
+                            "fullStart": 38
                           }
-                        }
+                        },
+                        "fullEnd": 47,
+                        "fullStart": 38
                       }
                     },
+                    "fullEnd": 47,
+                    "fullStart": 38,
                     "symbol": {
                       "context": {
                         "id": "symbol@Enum field@1@[L6:C4, L6:C7]",
@@ -288,11 +312,17 @@
                                 "trailingTrivia": "\n",
                                 "value": "ab"
                               }
-                            }
+                            },
+                            "fullEnd": 71,
+                            "fullStart": 61
                           }
-                        }
+                        },
+                        "fullEnd": 71,
+                        "fullStart": 61
                       }
                     },
+                    "fullEnd": 71,
+                    "fullStart": 61,
                     "symbol": {
                       "context": {
                         "id": "symbol@Enum field@ab@[L9:C4, L9:C8]",
@@ -305,7 +335,9 @@
                     }
                   }
                 ]
-              }
+              },
+              "fullEnd": 72,
+              "fullStart": 26
             },
             "type": {
               "context": {
@@ -317,6 +349,8 @@
               "value": "enum"
             }
           },
+          "fullEnd": 72,
+          "fullStart": 20,
           "symbol": {
             "context": {
               "id": "symbol@Enum@@[L4:C0, L10:C1]",
@@ -378,7 +412,9 @@
                   "trailingTrivia": "\n",
                   "value": "{"
                 }
-              }
+              },
+              "fullEnd": 19,
+              "fullStart": 11
             },
             "name": {
               "context": {
@@ -407,9 +443,13 @@
                           "trailingTrivia": "",
                           "value": "v"
                         }
-                      }
+                      },
+                      "fullEnd": 6,
+                      "fullStart": 5
                     }
-                  }
+                  },
+                  "fullEnd": 6,
+                  "fullStart": 5
                 },
                 "op": {
                   "context": {
@@ -441,11 +481,17 @@
                           "trailingTrivia": " ",
                           "value": "A"
                         }
-                      }
+                      },
+                      "fullEnd": 11,
+                      "fullStart": 7
                     }
-                  }
+                  },
+                  "fullEnd": 11,
+                  "fullStart": 7
                 }
-              }
+              },
+              "fullEnd": 11,
+              "fullStart": 5
             },
             "type": {
               "context": {
@@ -457,6 +503,7 @@
               "value": "enum"
             }
           },
+          "fullEnd": 19,
           "fullStart": 0,
           "symbol": {
             "context": {
@@ -480,6 +527,7 @@
         "value": ""
       }
     },
+    "fullEnd": 72,
     "fullStart": 0,
     "symbol": {
       "context": {

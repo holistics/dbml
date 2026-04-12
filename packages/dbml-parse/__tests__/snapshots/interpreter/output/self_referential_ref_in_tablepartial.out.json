@@ -8,7 +8,17 @@
             "name": "col",
             "pk": false,
             "token": {
-              "filepath": "/main.dbml"
+              "end": {
+                "column": 24,
+                "line": 2,
+                "offset": 40
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 3,
+                "line": 2,
+                "offset": 19
+              }
             },
             "type": {
               "type_name": "type"
@@ -18,16 +28,30 @@
         ],
         "name": "T",
         "token": {
+          "end": {
+            "column": 2,
+            "line": 3,
+            "offset": 42
+          },
           "filepath": "/main.dbml",
           "start": {
+            "column": 1,
+            "line": 1,
             "offset": 0
           }
         }
       }
     ],
     "token": {
+      "end": {
+        "column": 1,
+        "line": 4,
+        "offset": 43
+      },
       "filepath": "/main.dbml",
       "start": {
+        "column": 1,
+        "line": 1,
         "offset": 0
       }
     }

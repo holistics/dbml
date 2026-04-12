@@ -6,8 +6,19 @@
           {
             "increment": false,
             "name": "id",
+            "pk": true,
             "token": {
-              "filepath": "/main.dbml"
+              "end": {
+                "column": 25,
+                "line": 2,
+                "offset": 34
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 5,
+                "line": 2,
+                "offset": 14
+              }
             },
             "type": {
               "type_name": "int"
@@ -17,16 +28,30 @@
         ],
         "name": "A",
         "token": {
+          "end": {
+            "column": 2,
+            "line": 3,
+            "offset": 36
+          },
           "filepath": "/main.dbml",
           "start": {
+            "column": 1,
+            "line": 1,
             "offset": 0
           }
         }
       }
     ],
     "token": {
+      "end": {
+        "column": 2,
+        "line": 3,
+        "offset": 36
+      },
       "filepath": "/main.dbml",
       "start": {
+        "column": 1,
+        "line": 1,
         "offset": 0
       }
     }

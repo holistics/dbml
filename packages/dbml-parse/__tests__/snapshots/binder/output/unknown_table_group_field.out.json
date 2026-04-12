@@ -50,7 +50,9 @@
                   "trailingTrivia": "\n",
                   "value": "{"
                 }
-              }
+              },
+              "fullEnd": 20,
+              "fullStart": 12
             },
             "name": {
               "context": {
@@ -73,9 +75,13 @@
                       "trailingTrivia": " ",
                       "value": "Users"
                     }
-                  }
+                  },
+                  "fullEnd": 12,
+                  "fullStart": 6
                 }
-              }
+              },
+              "fullEnd": 12,
+              "fullStart": 6
             },
             "type": {
               "context": {
@@ -87,6 +93,7 @@
               "value": "Table"
             }
           },
+          "fullEnd": 20,
           "fullStart": 0,
           "symbol": {
             "context": {
@@ -163,11 +170,17 @@
                                 "trailingTrivia": "\n",
                                 "value": "Products"
                               }
-                            }
+                            },
+                            "fullEnd": 67,
+                            "fullStart": 53
                           }
-                        }
+                        },
+                        "fullEnd": 67,
+                        "fullStart": 53
                       }
                     },
+                    "fullEnd": 67,
+                    "fullStart": 53,
                     "symbol": {
                       "context": {
                         "id": "symbol@TableGroup field@Products@[L6:C4, L6:C12]",
@@ -206,9 +219,13 @@
                                 "trailingTrivia": "\n",
                                 "value": "Users"
                               }
-                            }
+                            },
+                            "fullEnd": 53,
+                            "fullStart": 42
                           }
                         },
+                        "fullEnd": 53,
+                        "fullStart": 42,
                         "referee": {
                           "context": {
                             "id": "symbol@Table@Users@[L0:C0, L2:C1]",
@@ -217,6 +234,8 @@
                         }
                       }
                     },
+                    "fullEnd": 53,
+                    "fullStart": 42,
                     "symbol": {
                       "context": {
                         "id": "symbol@TableGroup field@Users@[L5:C4, L5:C9]",
@@ -229,7 +248,9 @@
                     }
                   }
                 ]
-              }
+              },
+              "fullEnd": 68,
+              "fullStart": 39
             },
             "name": {
               "context": {
@@ -252,9 +273,13 @@
                       "trailingTrivia": " ",
                       "value": "Group"
                     }
-                  }
+                  },
+                  "fullEnd": 39,
+                  "fullStart": 33
                 }
-              }
+              },
+              "fullEnd": 39,
+              "fullStart": 33
             },
             "type": {
               "context": {
@@ -266,6 +291,8 @@
               "value": "Tablegroup"
             }
           },
+          "fullEnd": 68,
+          "fullStart": 21,
           "symbol": {
             "context": {
               "id": "symbol@TableGroup@Group@[L4:C0, L7:C1]",
@@ -302,6 +329,7 @@
         "value": ""
       }
     },
+    "fullEnd": 68,
     "fullStart": 0,
     "symbol": {
       "context": {

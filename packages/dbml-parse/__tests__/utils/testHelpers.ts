@@ -90,7 +90,7 @@ export type Snappable =
 // Output a stable key-value object
 // Remove empty fields
 function sortObject (object: Record<string, unknown>): Record<string, unknown> {
-  const entries = Object.entries(object).filter(([, value]) => !isEmpty(value) || value === '' || value === 0 || value === false);
+  const entries = Object.entries(object).filter(([, value]) => !isEmpty(value) || typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean');
   entries.sort(
     ([key1], [key2]) => (key1 as string) < (key2 as string) ? -1 : 1,
   );

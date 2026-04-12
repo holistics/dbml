@@ -74,7 +74,9 @@
                   "trailingTrivia": "\n",
                   "value": "{"
                 }
-              }
+              },
+              "fullEnd": 20,
+              "fullStart": 12
             },
             "name": {
               "context": {
@@ -97,9 +99,13 @@
                       "trailingTrivia": " ",
                       "value": "status"
                     }
-                  }
+                  },
+                  "fullEnd": 12,
+                  "fullStart": 5
                 }
-              }
+              },
+              "fullEnd": 12,
+              "fullStart": 5
             },
             "type": {
               "context": {
@@ -111,6 +117,7 @@
               "value": "Enum"
             }
           },
+          "fullEnd": 20,
           "fullStart": 0,
           "symbol": {
             "context": {
@@ -153,7 +160,9 @@
                   "trailingTrivia": "\n",
                   "value": "{"
                 }
-              }
+              },
+              "fullEnd": 51,
+              "fullStart": 41
             },
             "name": {
               "context": {
@@ -182,9 +191,13 @@
                           "trailingTrivia": "",
                           "value": "public"
                         }
-                      }
+                      },
+                      "fullEnd": 33,
+                      "fullStart": 27
                     }
-                  }
+                  },
+                  "fullEnd": 33,
+                  "fullStart": 27
                 },
                 "op": {
                   "context": {
@@ -216,11 +229,17 @@
                           "trailingTrivia": " ",
                           "value": "status"
                         }
-                      }
+                      },
+                      "fullEnd": 41,
+                      "fullStart": 34
                     }
-                  }
+                  },
+                  "fullEnd": 41,
+                  "fullStart": 34
                 }
-              }
+              },
+              "fullEnd": 41,
+              "fullStart": 27
             },
             "type": {
               "context": {
@@ -232,6 +251,8 @@
               "value": "Enum"
             }
           },
+          "fullEnd": 51,
+          "fullStart": 21,
           "symbol": {
             "context": {
               "id": "symbol@Enum@public.status@[L4:C0, L6:C1]",
@@ -254,6 +275,7 @@
         "value": ""
       }
     },
+    "fullEnd": 51,
     "fullStart": 0,
     "symbol": {
       "context": {

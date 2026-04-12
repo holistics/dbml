@@ -7,7 +7,17 @@
             "name": "create_at",
             "pk": false,
             "token": {
-              "filepath": "/main.dbml"
+              "end": {
+                "column": 21,
+                "line": 5,
+                "offset": 141
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 2,
+                "line": 5,
+                "offset": 122
+              }
             },
             "type": {
               "type_name": "date_time"
@@ -18,7 +28,17 @@
             "name": "id",
             "pk": false,
             "token": {
-              "filepath": "/main.dbml"
+              "end": {
+                "column": 8,
+                "line": 2,
+                "offset": 81
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 2,
+                "line": 2,
+                "offset": 75
+              }
             },
             "type": {
               "type_name": "int"
@@ -29,7 +49,17 @@
             "name": "status",
             "pk": false,
             "token": {
-              "filepath": "/main.dbml"
+              "end": {
+                "column": 16,
+                "line": 4,
+                "offset": 120
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 2,
+                "line": 4,
+                "offset": 106
+              }
             },
             "type": {
               "type_name": "varchar"
@@ -40,7 +70,17 @@
             "name": "user_id",
             "pk": false,
             "token": {
-              "filepath": "/main.dbml"
+              "end": {
+                "column": 13,
+                "line": 3,
+                "offset": 104
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 2,
+                "line": 3,
+                "offset": 93
+              }
             },
             "type": {
               "type_name": "int"
@@ -51,16 +91,30 @@
         "headerColor": "#0065ab",
         "name": "orders",
         "token": {
+          "end": {
+            "column": 2,
+            "line": 6,
+            "offset": 143
+          },
           "filepath": "/main.dbml",
           "start": {
+            "column": 1,
+            "line": 1,
             "offset": 0
           }
         }
       }
     ],
     "token": {
+      "end": {
+        "column": 2,
+        "line": 6,
+        "offset": 143
+      },
       "filepath": "/main.dbml",
       "start": {
+        "column": 1,
+        "line": 1,
         "offset": 0
       }
     }

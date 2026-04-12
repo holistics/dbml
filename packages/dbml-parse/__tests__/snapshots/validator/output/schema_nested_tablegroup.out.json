@@ -50,7 +50,9 @@
                   "trailingTrivia": "\n",
                   "value": "{"
                 }
-              }
+              },
+              "fullEnd": 12,
+              "fullStart": 8
             },
             "name": {
               "context": {
@@ -73,9 +75,13 @@
                       "trailingTrivia": " ",
                       "value": "A"
                     }
-                  }
+                  },
+                  "fullEnd": 8,
+                  "fullStart": 6
                 }
-              }
+              },
+              "fullEnd": 8,
+              "fullStart": 6
             },
             "type": {
               "context": {
@@ -87,6 +93,7 @@
               "value": "Table"
             }
           },
+          "fullEnd": 12,
           "fullStart": 0,
           "symbol": {
             "context": {
@@ -157,11 +164,17 @@
                                 "trailingTrivia": "\n",
                                 "value": "A"
                               }
-                            }
+                            },
+                            "fullEnd": 46,
+                            "fullStart": 42
                           }
-                        }
+                        },
+                        "fullEnd": 46,
+                        "fullStart": 42
                       }
                     },
+                    "fullEnd": 46,
+                    "fullStart": 42,
                     "symbol": {
                       "context": {
                         "id": "symbol@TableGroup field@A@[L4:C2, L4:C3]",
@@ -174,7 +187,9 @@
                     }
                   }
                 ]
-              }
+              },
+              "fullEnd": 48,
+              "fullStart": 40
             },
             "name": {
               "context": {
@@ -203,9 +218,13 @@
                           "trailingTrivia": "",
                           "value": "schema"
                         }
-                      }
+                      },
+                      "fullEnd": 30,
+                      "fullStart": 24
                     }
-                  }
+                  },
+                  "fullEnd": 30,
+                  "fullStart": 24
                 },
                 "op": {
                   "context": {
@@ -237,11 +256,17 @@
                           "trailingTrivia": " ",
                           "value": "alphabet"
                         }
-                      }
+                      },
+                      "fullEnd": 40,
+                      "fullStart": 31
                     }
-                  }
+                  },
+                  "fullEnd": 40,
+                  "fullStart": 31
                 }
-              }
+              },
+              "fullEnd": 40,
+              "fullStart": 24
             },
             "type": {
               "context": {
@@ -253,6 +278,8 @@
               "value": "TableGroup"
             }
           },
+          "fullEnd": 48,
+          "fullStart": 12,
           "symbol": {
             "context": {
               "id": "symbol@TableGroup@schema.alphabet@[L3:C0, L5:C1]",
@@ -283,6 +310,7 @@
         "value": ""
       }
     },
+    "fullEnd": 48,
     "fullStart": 0,
     "symbol": {
       "context": {

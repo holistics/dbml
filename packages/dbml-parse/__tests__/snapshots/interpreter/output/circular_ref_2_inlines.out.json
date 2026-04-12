@@ -10,7 +10,17 @@
             "relation": "1",
             "tableName": "B",
             "token": {
-              "filepath": "/main.dbml"
+              "end": {
+                "column": 24,
+                "line": 2,
+                "offset": 33
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 13,
+                "line": 2,
+                "offset": 22
+              }
             }
           },
           {
@@ -20,12 +30,32 @@
             "relation": "*",
             "tableName": "A",
             "token": {
-              "filepath": "/main.dbml"
+              "end": {
+                "column": 25,
+                "line": 2,
+                "offset": 34
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 5,
+                "line": 2,
+                "offset": 14
+              }
             }
           }
         ],
         "token": {
-          "filepath": "/main.dbml"
+          "end": {
+            "column": 24,
+            "line": 2,
+            "offset": 33
+          },
+          "filepath": "/main.dbml",
+          "start": {
+            "column": 13,
+            "line": 2,
+            "offset": 22
+          }
         }
       }
     ],
@@ -42,14 +72,34 @@
                 "relation": ">",
                 "tableName": "B",
                 "token": {
-                  "filepath": "/main.dbml"
+                  "end": {
+                    "column": 24,
+                    "line": 2,
+                    "offset": 33
+                  },
+                  "filepath": "/main.dbml",
+                  "start": {
+                    "column": 13,
+                    "line": 2,
+                    "offset": 22
+                  }
                 }
               }
             ],
             "name": "id",
             "pk": false,
             "token": {
-              "filepath": "/main.dbml"
+              "end": {
+                "column": 25,
+                "line": 2,
+                "offset": 34
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 5,
+                "line": 2,
+                "offset": 14
+              }
             },
             "type": {
               "type_name": "int"
@@ -59,8 +109,15 @@
         ],
         "name": "A",
         "token": {
+          "end": {
+            "column": 2,
+            "line": 3,
+            "offset": 36
+          },
           "filepath": "/main.dbml",
           "start": {
+            "column": 1,
+            "line": 1,
             "offset": 0
           }
         }
@@ -72,7 +129,17 @@
             "name": "id",
             "pk": false,
             "token": {
-              "filepath": "/main.dbml"
+              "end": {
+                "column": 25,
+                "line": 6,
+                "offset": 72
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 5,
+                "line": 6,
+                "offset": 52
+              }
             },
             "type": {
               "type_name": "int"
@@ -82,13 +149,30 @@
         ],
         "name": "B",
         "token": {
-          "filepath": "/main.dbml"
+          "end": {
+            "column": 2,
+            "line": 7,
+            "offset": 74
+          },
+          "filepath": "/main.dbml",
+          "start": {
+            "column": 1,
+            "line": 5,
+            "offset": 38
+          }
         }
       }
     ],
     "token": {
+      "end": {
+        "column": 2,
+        "line": 7,
+        "offset": 74
+      },
       "filepath": "/main.dbml",
       "start": {
+        "column": 1,
+        "line": 1,
         "offset": 0
       }
     }

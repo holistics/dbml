@@ -59,9 +59,13 @@
                       "trailingTrivia": " ",
                       "value": "U1"
                     }
-                  }
+                  },
+                  "fullEnd": 18,
+                  "fullStart": 15
                 }
-              }
+              },
+              "fullEnd": 18,
+              "fullStart": 15
             },
             "as": {
               "context": {
@@ -96,7 +100,9 @@
                   "trailingTrivia": "\n",
                   "value": "{"
                 }
-              }
+              },
+              "fullEnd": 26,
+              "fullStart": 18
             },
             "name": {
               "context": {
@@ -119,9 +125,13 @@
                       "trailingTrivia": " ",
                       "value": "Users"
                     }
-                  }
+                  },
+                  "fullEnd": 12,
+                  "fullStart": 6
                 }
-              }
+              },
+              "fullEnd": 12,
+              "fullStart": 6
             },
             "type": {
               "context": {
@@ -133,6 +143,7 @@
               "value": "Table"
             }
           },
+          "fullEnd": 26,
           "fullStart": 0,
           "symbol": {
             "context": {
@@ -172,9 +183,13 @@
                       "trailingTrivia": " ",
                       "value": "U1"
                     }
-                  }
+                  },
+                  "fullEnd": 77,
+                  "fullStart": 74
                 }
-              }
+              },
+              "fullEnd": 77,
+              "fullStart": 74
             },
             "as": {
               "context": {
@@ -209,7 +224,9 @@
                   "trailingTrivia": "\n",
                   "value": "{"
                 }
-              }
+              },
+              "fullEnd": 87,
+              "fullStart": 77
             },
             "name": {
               "context": {
@@ -232,9 +249,13 @@
                       "trailingTrivia": " ",
                       "value": "Products"
                     }
-                  }
+                  },
+                  "fullEnd": 71,
+                  "fullStart": 62
                 }
-              }
+              },
+              "fullEnd": 71,
+              "fullStart": 62
             },
             "type": {
               "context": {
@@ -246,6 +267,8 @@
               "value": "Table"
             }
           },
+          "fullEnd": 87,
+          "fullStart": 55,
           "symbol": {
             "context": {
               "id": "symbol@Table@Products@[L8:C0, L10:C1]",
@@ -284,9 +307,13 @@
                       "trailingTrivia": " ",
                       "value": "U2"
                     }
-                  }
+                  },
+                  "fullEnd": 46,
+                  "fullStart": 43
                 }
-              }
+              },
+              "fullEnd": 46,
+              "fullStart": 43
             },
             "as": {
               "context": {
@@ -321,7 +348,9 @@
                   "trailingTrivia": "\n",
                   "value": "{"
                 }
-              }
+              },
+              "fullEnd": 54,
+              "fullStart": 46
             },
             "name": {
               "context": {
@@ -344,9 +373,13 @@
                       "trailingTrivia": " ",
                       "value": "Users"
                     }
-                  }
+                  },
+                  "fullEnd": 40,
+                  "fullStart": 34
                 }
-              }
+              },
+              "fullEnd": 40,
+              "fullStart": 34
             },
             "type": {
               "context": {
@@ -358,6 +391,8 @@
               "value": "Table"
             }
           },
+          "fullEnd": 54,
+          "fullStart": 27,
           "symbol": {
             "context": {
               "id": "symbol@Table@Users@[L4:C0, L6:C1]",
@@ -380,6 +415,7 @@
         "value": ""
       }
     },
+    "fullEnd": 87,
     "fullStart": 0,
     "symbol": {
       "context": {

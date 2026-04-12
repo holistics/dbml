@@ -104,11 +104,17 @@
                                 "trailingTrivia": "\n",
                                 "value": "active"
                               }
-                            }
+                            },
+                            "fullEnd": 225,
+                            "fullStart": 213
                           }
-                        }
+                        },
+                        "fullEnd": 225,
+                        "fullStart": 213
                       }
                     },
+                    "fullEnd": 225,
+                    "fullStart": 213,
                     "symbol": {
                       "context": {
                         "id": "symbol@Enum field@active@[L13:C4, L13:C10]",
@@ -147,11 +153,17 @@
                                 "trailingTrivia": "\n",
                                 "value": "churn"
                               }
-                            }
+                            },
+                            "fullEnd": 204,
+                            "fullStart": 193
                           }
-                        }
+                        },
+                        "fullEnd": 204,
+                        "fullStart": 193
                       }
                     },
+                    "fullEnd": 204,
+                    "fullStart": 193,
                     "symbol": {
                       "context": {
                         "id": "symbol@Enum field@churn@[L11:C4, L11:C9]",
@@ -190,11 +202,17 @@
                                 "trailingTrivia": "\n",
                                 "value": "new"
                               }
-                            }
+                            },
+                            "fullEnd": 213,
+                            "fullStart": 204
                           }
-                        }
+                        },
+                        "fullEnd": 213,
+                        "fullStart": 204
                       }
                     },
+                    "fullEnd": 213,
+                    "fullStart": 204,
                     "symbol": {
                       "context": {
                         "id": "symbol@Enum field@new@[L12:C4, L12:C7]",
@@ -233,11 +251,17 @@
                                 "trailingTrivia": "\n",
                                 "value": "tenant"
                               }
-                            }
+                            },
+                            "fullEnd": 237,
+                            "fullStart": 225
                           }
-                        }
+                        },
+                        "fullEnd": 237,
+                        "fullStart": 225
                       }
                     },
+                    "fullEnd": 237,
+                    "fullStart": 225,
                     "symbol": {
                       "context": {
                         "id": "symbol@Enum field@tenant@[L14:C4, L14:C10]",
@@ -250,7 +274,9 @@
                     }
                   }
                 ]
-              }
+              },
+              "fullEnd": 240,
+              "fullStart": 190
             },
             "name": {
               "context": {
@@ -279,9 +305,13 @@
                           "trailingTrivia": "",
                           "value": "v2"
                         }
-                      }
+                      },
+                      "fullEnd": 182,
+                      "fullStart": 180
                     }
-                  }
+                  },
+                  "fullEnd": 182,
+                  "fullStart": 180
                 },
                 "op": {
                   "context": {
@@ -313,11 +343,17 @@
                           "trailingTrivia": " ",
                           "value": "status"
                         }
-                      }
+                      },
+                      "fullEnd": 190,
+                      "fullStart": 183
                     }
-                  }
+                  },
+                  "fullEnd": 190,
+                  "fullStart": 183
                 }
-              }
+              },
+              "fullEnd": 190,
+              "fullStart": 180
             },
             "type": {
               "context": {
@@ -329,6 +365,8 @@
               "value": "Enum"
             }
           },
+          "fullEnd": 240,
+          "fullStart": 174,
           "symbol": {
             "context": {
               "id": "symbol@Enum@v2.status@[L10:C0, L15:C1]",
@@ -430,11 +468,17 @@
                                 "trailingTrivia": "\n",
                                 "value": "active"
                               }
-                            }
+                            },
+                            "fullEnd": 289,
+                            "fullStart": 277
                           }
-                        }
+                        },
+                        "fullEnd": 289,
+                        "fullStart": 277
                       }
                     },
+                    "fullEnd": 289,
+                    "fullStart": 277,
                     "symbol": {
                       "context": {
                         "id": "symbol@Enum field@active@[L20:C4, L20:C10]",
@@ -473,11 +517,17 @@
                                 "trailingTrivia": "\n",
                                 "value": "churn"
                               }
-                            }
+                            },
+                            "fullEnd": 268,
+                            "fullStart": 257
                           }
-                        }
+                        },
+                        "fullEnd": 268,
+                        "fullStart": 257
                       }
                     },
+                    "fullEnd": 268,
+                    "fullStart": 257,
                     "symbol": {
                       "context": {
                         "id": "symbol@Enum field@churn@[L18:C4, L18:C9]",
@@ -516,11 +566,17 @@
                                 "trailingTrivia": "\n",
                                 "value": "new"
                               }
-                            }
+                            },
+                            "fullEnd": 277,
+                            "fullStart": 268
                           }
-                        }
+                        },
+                        "fullEnd": 277,
+                        "fullStart": 268
                       }
                     },
+                    "fullEnd": 277,
+                    "fullStart": 268,
                     "symbol": {
                       "context": {
                         "id": "symbol@Enum field@new@[L19:C4, L19:C7]",
@@ -559,11 +615,17 @@
                                 "trailingTrivia": "\n",
                                 "value": "tenant"
                               }
-                            }
+                            },
+                            "fullEnd": 301,
+                            "fullStart": 289
                           }
-                        }
+                        },
+                        "fullEnd": 301,
+                        "fullStart": 289
                       }
                     },
+                    "fullEnd": 301,
+                    "fullStart": 289,
                     "symbol": {
                       "context": {
                         "id": "symbol@Enum field@tenant@[L21:C4, L21:C10]",
@@ -576,7 +638,9 @@
                     }
                   }
                 ]
-              }
+              },
+              "fullEnd": 302,
+              "fullStart": 254
             },
             "name": {
               "context": {
@@ -599,9 +663,13 @@
                       "trailingTrivia": " ",
                       "value": "status"
                     }
-                  }
+                  },
+                  "fullEnd": 254,
+                  "fullStart": 247
                 }
-              }
+              },
+              "fullEnd": 254,
+              "fullStart": 247
             },
             "type": {
               "context": {
@@ -613,6 +681,8 @@
               "value": "Enum"
             }
           },
+          "fullEnd": 302,
+          "fullStart": 241,
           "symbol": {
             "context": {
               "id": "symbol@Enum@status@[L17:C0, L22:C1]",
@@ -715,9 +785,13 @@
                                   "trailingTrivia": "\n",
                                   "value": "integer"
                                 }
-                              }
+                              },
+                              "fullEnd": 31,
+                              "fullStart": 22
                             }
-                          }
+                          },
+                          "fullEnd": 31,
+                          "fullStart": 22
                         }
                       ],
                       "callee": {
@@ -741,11 +815,17 @@
                                 "trailingTrivia": " ",
                                 "value": "id"
                               }
-                            }
+                            },
+                            "fullEnd": 22,
+                            "fullStart": 15
                           }
-                        }
+                        },
+                        "fullEnd": 22,
+                        "fullStart": 15
                       }
                     },
+                    "fullEnd": 31,
+                    "fullStart": 15,
                     "symbol": {
                       "context": {
                         "id": "symbol@Column@id@[L1:C4, L1:C14]",
@@ -791,9 +871,13 @@
                                       "trailingTrivia": "",
                                       "value": "public"
                                     }
-                                  }
+                                  },
+                                  "fullEnd": 72,
+                                  "fullStart": 66
                                 }
-                              }
+                              },
+                              "fullEnd": 72,
+                              "fullStart": 66
                             },
                             "op": {
                               "context": {
@@ -825,9 +909,13 @@
                                       "trailingTrivia": "\n",
                                       "value": "status"
                                     }
-                                  }
+                                  },
+                                  "fullEnd": 81,
+                                  "fullStart": 73
                                 }
                               },
+                              "fullEnd": 81,
+                              "fullStart": 73,
                               "referee": {
                                 "context": {
                                   "id": "symbol@Enum@status@[L17:C0, L22:C1]",
@@ -835,7 +923,9 @@
                                 }
                               }
                             }
-                          }
+                          },
+                          "fullEnd": 81,
+                          "fullStart": 66
                         }
                       ],
                       "callee": {
@@ -859,11 +949,17 @@
                                 "trailingTrivia": " ",
                                 "value": "status2"
                               }
-                            }
+                            },
+                            "fullEnd": 66,
+                            "fullStart": 54
                           }
-                        }
+                        },
+                        "fullEnd": 66,
+                        "fullStart": 54
                       }
                     },
+                    "fullEnd": 81,
+                    "fullStart": 54,
                     "symbol": {
                       "context": {
                         "id": "symbol@Column@status2@[L3:C4, L3:C25]",
@@ -909,9 +1005,13 @@
                                       "trailingTrivia": "",
                                       "value": "public"
                                     }
-                                  }
+                                  },
+                                  "fullEnd": 99,
+                                  "fullStart": 93
                                 }
-                              }
+                              },
+                              "fullEnd": 99,
+                              "fullStart": 93
                             },
                             "op": {
                               "context": {
@@ -943,11 +1043,17 @@
                                       "trailingTrivia": "\n",
                                       "value": "statuss"
                                     }
-                                  }
+                                  },
+                                  "fullEnd": 109,
+                                  "fullStart": 100
                                 }
-                              }
+                              },
+                              "fullEnd": 109,
+                              "fullStart": 100
                             }
-                          }
+                          },
+                          "fullEnd": 109,
+                          "fullStart": 93
                         }
                       ],
                       "callee": {
@@ -971,11 +1077,17 @@
                                 "trailingTrivia": " ",
                                 "value": "status3"
                               }
-                            }
+                            },
+                            "fullEnd": 93,
+                            "fullStart": 81
                           }
-                        }
+                        },
+                        "fullEnd": 93,
+                        "fullStart": 81
                       }
                     },
+                    "fullEnd": 109,
+                    "fullStart": 81,
                     "symbol": {
                       "context": {
                         "id": "symbol@Column@status3@[L4:C4, L4:C26]",
@@ -1021,9 +1133,13 @@
                                       "trailingTrivia": "",
                                       "value": "v2"
                                     }
-                                  }
+                                  },
+                                  "fullEnd": 45,
+                                  "fullStart": 43
                                 }
                               },
+                              "fullEnd": 45,
+                              "fullStart": 43,
                               "referee": {
                                 "context": {
                                   "id": "symbol@Schema@@[L?:C?, L?:C?]"
@@ -1060,9 +1176,13 @@
                                       "trailingTrivia": "\n",
                                       "value": "status"
                                     }
-                                  }
+                                  },
+                                  "fullEnd": 54,
+                                  "fullStart": 46
                                 }
                               },
+                              "fullEnd": 54,
+                              "fullStart": 46,
                               "referee": {
                                 "context": {
                                   "id": "symbol@Enum@v2.status@[L10:C0, L15:C1]",
@@ -1070,7 +1190,9 @@
                                 }
                               }
                             }
-                          }
+                          },
+                          "fullEnd": 54,
+                          "fullStart": 43
                         }
                       ],
                       "callee": {
@@ -1094,11 +1216,17 @@
                                 "trailingTrivia": " ",
                                 "value": "status1"
                               }
-                            }
+                            },
+                            "fullEnd": 43,
+                            "fullStart": 31
                           }
-                        }
+                        },
+                        "fullEnd": 43,
+                        "fullStart": 31
                       }
                     },
+                    "fullEnd": 54,
+                    "fullStart": 31,
                     "symbol": {
                       "context": {
                         "id": "symbol@Column@status1@[L2:C4, L2:C21]",
@@ -1144,9 +1272,13 @@
                                       "trailingTrivia": "",
                                       "value": "v2"
                                     }
-                                  }
+                                  },
+                                  "fullEnd": 123,
+                                  "fullStart": 121
                                 }
                               },
+                              "fullEnd": 123,
+                              "fullStart": 121,
                               "referee": {
                                 "context": {
                                   "id": "symbol@Schema@@[L?:C?, L?:C?]"
@@ -1183,11 +1315,17 @@
                                       "trailingTrivia": "\n",
                                       "value": "statuss"
                                     }
-                                  }
+                                  },
+                                  "fullEnd": 133,
+                                  "fullStart": 124
                                 }
-                              }
+                              },
+                              "fullEnd": 133,
+                              "fullStart": 124
                             }
-                          }
+                          },
+                          "fullEnd": 133,
+                          "fullStart": 121
                         }
                       ],
                       "callee": {
@@ -1211,11 +1349,17 @@
                                 "trailingTrivia": " ",
                                 "value": "status4"
                               }
-                            }
+                            },
+                            "fullEnd": 121,
+                            "fullStart": 109
                           }
-                        }
+                        },
+                        "fullEnd": 121,
+                        "fullStart": 109
                       }
                     },
+                    "fullEnd": 133,
+                    "fullStart": 109,
                     "symbol": {
                       "context": {
                         "id": "symbol@Column@status4@[L5:C4, L5:C22]",
@@ -1261,9 +1405,13 @@
                                       "trailingTrivia": "",
                                       "value": "v2"
                                     }
-                                  }
+                                  },
+                                  "fullEnd": 147,
+                                  "fullStart": 145
                                 }
-                              }
+                              },
+                              "fullEnd": 147,
+                              "fullStart": 145
                             },
                             "op": {
                               "context": {
@@ -1298,9 +1446,13 @@
                                   "trailingTrivia": "",
                                   "value": "["
                                 }
-                              }
+                              },
+                              "fullEnd": 153,
+                              "fullStart": 149
                             }
-                          }
+                          },
+                          "fullEnd": 153,
+                          "fullStart": 145
                         }
                       ],
                       "callee": {
@@ -1324,11 +1476,17 @@
                                 "trailingTrivia": " ",
                                 "value": "status5"
                               }
-                            }
+                            },
+                            "fullEnd": 145,
+                            "fullStart": 133
                           }
-                        }
+                        },
+                        "fullEnd": 145,
+                        "fullStart": 133
                       }
                     },
+                    "fullEnd": 153,
+                    "fullStart": 133,
                     "symbol": {
                       "context": {
                         "id": "symbol@Column@status5@[L6:C4, L6:C18]",
@@ -1374,9 +1532,13 @@
                                       "trailingTrivia": "",
                                       "value": "v2"
                                     }
-                                  }
+                                  },
+                                  "fullEnd": 167,
+                                  "fullStart": 165
                                 }
-                              }
+                              },
+                              "fullEnd": 167,
+                              "fullStart": 165
                             },
                             "op": {
                               "context": {
@@ -1391,9 +1553,13 @@
                               "context": {
                                 "id": "node@<dummy>@@[L7:C15, L7:C15]",
                                 "snippet": ""
-                              }
+                              },
+                              "fullEnd": 168,
+                              "fullStart": 168
                             }
-                          }
+                          },
+                          "fullEnd": 168,
+                          "fullStart": 165
                         }
                       ],
                       "callee": {
@@ -1417,11 +1583,17 @@
                                 "trailingTrivia": " ",
                                 "value": "status6"
                               }
-                            }
+                            },
+                            "fullEnd": 165,
+                            "fullStart": 153
                           }
-                        }
+                        },
+                        "fullEnd": 165,
+                        "fullStart": 153
                       }
                     },
+                    "fullEnd": 168,
+                    "fullStart": 153,
                     "symbol": {
                       "context": {
                         "id": "symbol@Column@status6@[L7:C4, L7:C15]",
@@ -1434,7 +1606,9 @@
                     }
                   }
                 ]
-              }
+              },
+              "fullEnd": 173,
+              "fullStart": 12
             },
             "name": {
               "context": {
@@ -1457,9 +1631,13 @@
                       "trailingTrivia": " ",
                       "value": "Users"
                     }
-                  }
+                  },
+                  "fullEnd": 12,
+                  "fullStart": 6
                 }
-              }
+              },
+              "fullEnd": 12,
+              "fullStart": 6
             },
             "type": {
               "context": {
@@ -1471,6 +1649,7 @@
               "value": "Table"
             }
           },
+          "fullEnd": 173,
           "fullStart": 0,
           "symbol": {
             "context": {
@@ -1538,6 +1717,7 @@
         "value": ""
       }
     },
+    "fullEnd": 302,
     "fullStart": 0,
     "symbol": {
       "context": {
