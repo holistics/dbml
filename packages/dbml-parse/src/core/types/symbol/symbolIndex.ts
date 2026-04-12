@@ -96,7 +96,8 @@ export function createNodeSymbolIndex (key: string, symbolKind: SymbolKind): Nod
   }
 }
 
-export function destructureIndex (id: NodeSymbolIndex): { name: string; kind: SymbolKind } | undefined {
+export function destructureIndex (id: NodeSymbolIndex): { name: string;
+  kind: SymbolKind; } | undefined {
   const [kind, name] = id.split(':');
 
   return Object.values(SymbolKind).includes(kind as SymbolKind)
@@ -112,7 +113,9 @@ export function isPublicSchemaIndex (id: NodeSymbolIndex): boolean {
   if (!res) {
     return false;
   }
-  const { kind, name } = res;
+  const {
+    kind, name,
+  } = res;
 
   return kind === 'Schema' && name === DEFAULT_SCHEMA_NAME;
 }

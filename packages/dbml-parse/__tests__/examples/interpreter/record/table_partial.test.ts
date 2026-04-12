@@ -44,9 +44,18 @@ describe('[example - record] table partial with records', () => {
     // Check first row values
     expect(db.records[0].values[0][0].value).toBe('2024-01-01T00:00:00');
     expect(db.records[0].values[0][1].value).toBe('2024-01-01T00:00:00');
-    expect(db.records[0].values[0][2]).toEqual({ type: 'integer', value: 1 });
-    expect(db.records[0].values[0][3]).toEqual({ type: 'string', value: 'Alice' });
-    expect(db.records[0].values[0][4]).toEqual({ type: 'string', value: 'alice@example.com' });
+    expect(db.records[0].values[0][2]).toEqual({
+      type: 'integer',
+      value: 1,
+    });
+    expect(db.records[0].values[0][3]).toEqual({
+      type: 'string',
+      value: 'Alice',
+    });
+    expect(db.records[0].values[0][4]).toEqual({
+      type: 'string',
+      value: 'alice@example.com',
+    });
     expect(db.records[0].values[1][0].value).toBe('2024-01-02T00:00:00+08:00');
     expect(db.records[0].values[1][1].value).toBe('2024-01-02T00:00:00.100+07:00');
   });
@@ -288,7 +297,10 @@ describe('[example - record] table partial with records', () => {
     expect(db.records[0].values).toHaveLength(1);
 
     // 'shared' value should be at index 3
-    expect(db.records[0].values[0][3]).toEqual({ type: 'string', value: 'shared_value' });
+    expect(db.records[0].values[0][3]).toEqual({
+      type: 'string',
+      value: 'shared_value',
+    });
   });
 
   test('should handle empty partial with explicit columns', () => {
@@ -350,8 +362,17 @@ describe('[example - record] table partial with records', () => {
     expect(db.records[0].values).toHaveLength(1);
 
     // Values should match the types from direct definitions
-    expect(db.records[0].values[0][0]).toEqual({ type: 'string', value: 'value_a' });
-    expect(db.records[0].values[0][1]).toEqual({ type: 'string', value: 'value_b' });
-    expect(db.records[0].values[0][2]).toEqual({ type: 'integer', value: 3 });
+    expect(db.records[0].values[0][0]).toEqual({
+      type: 'string',
+      value: 'value_a',
+    });
+    expect(db.records[0].values[0][1]).toEqual({
+      type: 'string',
+      value: 'value_b',
+    });
+    expect(db.records[0].values[0][2]).toEqual({
+      type: 'integer',
+      value: 3,
+    });
   });
 });

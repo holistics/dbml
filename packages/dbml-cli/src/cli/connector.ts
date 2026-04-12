@@ -18,7 +18,9 @@ interface Program {
 
 export default async function connectionHandler (program: Program) {
   try {
-    const { connection, databaseType } = getConnectionOpt(program.args);
+    const {
+      connection, databaseType,
+    } = getConnectionOpt(program.args);
     const opts = program.opts();
     const schemaJson = await connector.fetchSchemaJson(connection, databaseType);
 

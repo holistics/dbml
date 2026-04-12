@@ -1,4 +1,6 @@
-import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import {
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
 import Report from '@/core/types/report';
 import {
   isAlphaOrUnderscore, isAlphaNumeric, isDigit,
@@ -276,7 +278,10 @@ export default class Lexer {
       allowEof, // Whether EOF is allowed
       raw, // Whether to interpret '\' as a backlash
       consumeStopSequence = true,
-    }: { allowNewline: boolean; allowEof: boolean; raw: boolean; consumeStopSequence?: boolean },
+    }: { allowNewline: boolean;
+      allowEof: boolean;
+      raw: boolean;
+      consumeStopSequence?: boolean; },
   ) {
     let string = '';
 
@@ -494,7 +499,9 @@ export default class Lexer {
 
   escapedString (): string {
     const prevPos: Position = {
-      column: this.current.column - 1, offset: this.current.offset - 1, line: this.current.line,
+      column: this.current.column - 1,
+      offset: this.current.offset - 1,
+      line: this.current.line,
     };
     if (this.isAtEnd()) {
       return '\\';

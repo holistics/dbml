@@ -1,4 +1,6 @@
-import { CompileError, CompileWarning } from './errors';
+import {
+  CompileError, CompileWarning,
+} from './errors';
 
 // Used to hold the result of a computation and any errors/warnings along the way
 export default class Report<T> {

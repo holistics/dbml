@@ -1,4 +1,6 @@
-import { SyntaxNodeIdGenerator, ProgramNode } from '@/core/types/nodes';
+import {
+  SyntaxNodeIdGenerator, ProgramNode,
+} from '@/core/types/nodes';
 import { Filepath } from '@/core/types/filepath';
 import { DEFAULT_ENTRY } from '@/constants';
 import { NodeSymbolIdGenerator } from '@/core/types/symbol/symbols';
@@ -15,7 +17,9 @@ import {
 import {
   ast, errors, warnings, tokens, rawDb, publicSymbolTable,
 } from './queries/parse';
-import { invalidStream, flatStream } from './queries/token';
+import {
+  invalidStream, flatStream,
+} from './queries/token';
 import {
   symbolOfName, symbolOfNameToKey, symbolMembers,
 } from './queries/symbol';
@@ -87,20 +91,34 @@ export default class Compiler {
     }) as (...args: Args) => Return;
   }
 
-  private interpret (): Report<{ ast: ProgramNode; tokens: SyntaxToken[]; rawDb?: Database }> {
+  private interpret (): Report<{ ast: ProgramNode;
+    tokens: SyntaxToken[];
+    rawDb?: Database; }> {
     const filepath = DEFAULT_ENTRY;
-    const parseRes: Report<{ ast: ProgramNode; tokens: SyntaxToken[] }> = new Lexer(this.source, filepath)
+    const parseRes: Report<{ ast: ProgramNode;
+      tokens: SyntaxToken[]; }> = new Lexer(this.source, filepath)
       .lex()
       .chain((lexedTokens) => new Parser(this.source, lexedTokens as SyntaxToken[], this.nodeIdGenerator, filepath).parse())
-      .chain(({ ast, tokens }) => new Analyzer(ast, this.symbolIdGenerator).analyze().map(() => ({ ast, tokens })));
+      .chain(({
+        ast, tokens,
+      }) => new Analyzer(ast, this.symbolIdGenerator).analyze().map(() => ({
+        ast,
+        tokens,
+      })));
 
     if (parseRes.getErrors().length > 0) {
-      return parseRes as Report<{ ast: ProgramNode; tokens: SyntaxToken[]; rawDb?: Database }>;
+      return parseRes as Report<{ ast: ProgramNode;
+        tokens: SyntaxToken[];
+        rawDb?: Database; }>;
     }
 
-    return parseRes.chain(({ ast, tokens }) =>
+    return parseRes.chain(({
+      ast, tokens,
+    }) =>
       new Interpreter(ast).interpret().map((rawDb) => ({
-        ast, tokens, rawDb,
+        ast,
+        tokens,
+        rawDb,
       })),
     );
   }
@@ -115,7 +133,8 @@ export default class Compiler {
   syncDiagramView (
     operations: DiagramViewSyncOperation[],
     blocks?: DiagramViewBlock[],
-  ): { newDbml: string; edits: TextEdit[] } {
+  ): { newDbml: string;
+    edits: TextEdit[]; } {
     return syncDiagramView(this.parse.source(), operations, blocks);
   }
 

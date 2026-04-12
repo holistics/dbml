@@ -1,4 +1,6 @@
-import { describe, expect } from 'vitest';
+import {
+  describe, expect,
+} from 'vitest';
 import {
   SyntaxNodeKind, ElementDeclarationNode, BlockExpressionNode,
 } from '@/core/types/nodes';

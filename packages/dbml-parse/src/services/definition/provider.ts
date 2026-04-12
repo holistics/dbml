@@ -3,7 +3,9 @@ import {
 } from '@/services/types';
 import { getOffsetFromMonacoPosition } from '@/services/utils';
 import Compiler from '@/compiler';
-import { SyntaxNode, SyntaxNodeKind } from '@/core/types/nodes';
+import {
+  SyntaxNode, SyntaxNodeKind,
+} from '@/core/types/nodes';
 
 export default class DBMLDefinitionProvider implements DefinitionProvider {
   private compiler: Compiler;
@@ -30,7 +32,9 @@ export default class DBMLDefinitionProvider implements DefinitionProvider {
       }
 
       if (declaration) {
-        const { startPos, endPos } = declaration;
+        const {
+          startPos, endPos,
+        } = declaration;
         return [
           {
             range: {

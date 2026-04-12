@@ -1,9 +1,13 @@
-import { forIn, partition } from 'lodash-es';
+import {
+  forIn, partition,
+} from 'lodash-es';
 import { ElementKind } from '@/core/analyzer/types';
 import {
   CompileError, CompileErrorCode, CompileWarning,
 } from '@/core/types/errors';
-import { isSimpleName, pickValidator } from '@/core/analyzer/validator/utils';
+import {
+  isSimpleName, pickValidator,
+} from '@/core/analyzer/validator/utils';
 import {
   isValidColor, registerSchemaStack, aggregateSettingList,
 } from '@/core/analyzer/validator/utils';
@@ -14,10 +18,18 @@ import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode, WildcardNode,
 } from '@/core/types/nodes';
 import SymbolFactory from '@/core/types/symbol/factory';
-import { createTableGroupFieldSymbolIndex, createTableGroupSymbolIndex } from '@/core/types/symbol/symbolIndex';
-import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '@/core/analyzer/utils';
-import { TableGroupFieldSymbol, TableGroupSymbol } from '@/core/types/symbol/symbols';
-import { isExpressionAVariableNode, isExpressionAQuotedString } from '@/core/parser/utils';
+import {
+  createTableGroupFieldSymbolIndex, createTableGroupSymbolIndex,
+} from '@/core/types/symbol/symbolIndex';
+import {
+  destructureComplexVariable, extractVarNameFromPrimaryVariable,
+} from '@/core/analyzer/utils';
+import {
+  TableGroupFieldSymbol, TableGroupSymbol,
+} from '@/core/types/symbol/symbols';
+import {
+  isExpressionAVariableNode, isExpressionAQuotedString,
+} from '@/core/parser/utils';
 
 export default class TableGroupValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
@@ -30,7 +42,8 @@ export default class TableGroupValidator implements ElementValidator {
     this.symbolFactory = symbolFactory;
   }
 
-  validate (): { errors: CompileError[]; warnings: CompileWarning[] } {
+  validate (): { errors: CompileError[];
+    warnings: CompileWarning[]; } {
     return {
       errors: [
         ...this.validateContext(),
@@ -98,7 +111,10 @@ export default class TableGroupValidator implements ElementValidator {
 
   registerElement (): CompileError[] {
     const { name } = this.declarationNode;
-    this.declarationNode.symbol = this.symbolFactory.create(TableGroupSymbol, { declaration: this.declarationNode, symbolTable: new SymbolTable() });
+    this.declarationNode.symbol = this.symbolFactory.create(TableGroupSymbol, {
+      declaration: this.declarationNode,
+      symbolTable: new SymbolTable(),
+    });
     const maybeNameFragments = destructureComplexVariable(name);
     if (maybeNameFragments !== undefined) {
       const nameFragments = maybeNameFragments;

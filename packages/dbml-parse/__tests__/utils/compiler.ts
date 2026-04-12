@@ -28,14 +28,17 @@ import {
 } from '@/core/types/nodes';
 import { NodeSymbolIdGenerator } from '@/core/types/symbol/symbols';
 import Report from '@/core/types/report';
-import { Compiler, SyntaxToken } from '@/index';
+import {
+  Compiler, SyntaxToken,
+} from '@/index';
 import { Database } from '@/core/types/schemaJson';
 
 export function lex (source: string): Report<SyntaxToken[]> {
   return new Lexer(source, DEFAULT_ENTRY).lex();
 }
 
-export function parse (source: string): Report<{ ast: ProgramNode; tokens: SyntaxToken[] }> {
+export function parse (source: string): Report<{ ast: ProgramNode;
+  tokens: SyntaxToken[]; }> {
   return new Lexer(source, DEFAULT_ENTRY).lex().chain((tokens) => new Parser(source, tokens, new SyntaxNodeIdGenerator(), DEFAULT_ENTRY).parse());
 }
 

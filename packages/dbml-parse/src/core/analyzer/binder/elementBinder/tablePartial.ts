@@ -1,4 +1,6 @@
-import { last, partition } from 'lodash-es';
+import {
+  last, partition,
+} from 'lodash-es';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, ProgramNode, SyntaxNode,
 } from '../../../types/nodes';
@@ -84,7 +86,16 @@ export default class TablePartialBinder implements ElementBinder {
       return;
     }
 
-    lookupAndBindInScope(this.ast, [...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })), { node: enumBindee, kind: SymbolKind.Enum }]);
+    lookupAndBindInScope(this.ast, [
+      ...schemaBindees.map((b) => ({
+        node: b,
+        kind: SymbolKind.Schema,
+      })),
+      {
+        node: enumBindee,
+        kind: SymbolKind.Enum,
+      },
+    ]);
   }
 
   private bindInlineRef (ref: SyntaxNode): CompileError[] {
@@ -99,8 +110,26 @@ export default class TablePartialBinder implements ElementBinder {
       const schemaBindees = bindee.variables;
 
       return tableBindee
-        ? lookupAndBindInScope(this.ast, [...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })), { node: tableBindee, kind: SymbolKind.Table }, { node: columnBindee, kind: SymbolKind.Column }])
-        : lookupAndBindInScope(this.declarationNode, [{ node: columnBindee, kind: SymbolKind.Column }]);
+        ? lookupAndBindInScope(this.ast, [
+            ...schemaBindees.map((b) => ({
+              node: b,
+              kind: SymbolKind.Schema,
+            })),
+            {
+              node: tableBindee,
+              kind: SymbolKind.Table,
+            },
+            {
+              node: columnBindee,
+              kind: SymbolKind.Column,
+            },
+          ])
+        : lookupAndBindInScope(this.declarationNode, [
+            {
+              node: columnBindee,
+              kind: SymbolKind.Column,
+            },
+          ]);
     });
   }
 

@@ -259,7 +259,10 @@ export function tryExtractDateTime (value: SyntaxNode | string | undefined | nul
     const dt = DateTime.fromFormat(extractedValue, format, { setZone: true });
     if (dt.isValid) {
       // https://moment.github.io/luxon/api-docs/index.html#datetimetoisotime
-      return dt.toISOTime({ suppressMilliseconds: true, includeOffset: hasExplicitTimeZone(dt) });
+      return dt.toISOTime({
+        suppressMilliseconds: true,
+        includeOffset: hasExplicitTimeZone(dt),
+      });
     }
   }
 
@@ -275,14 +278,20 @@ export function tryExtractDateTime (value: SyntaxNode | string | undefined | nul
     const dt = DateTime.fromFormat(extractedValue, format, { setZone: true });
     if (dt.isValid) {
       // https://moment.github.io/luxon/api-docs/index.html#datetimetoiso
-      return dt.toISO({ suppressMilliseconds: true, includeOffset: hasExplicitTimeZone(dt) });
+      return dt.toISO({
+        suppressMilliseconds: true,
+        includeOffset: hasExplicitTimeZone(dt),
+      });
     }
   }
 
   const isoDate = DateTime.fromISO(extractedValue, { setZone: true });
   if (isoDate.isValid) {
     // https://moment.github.io/luxon/api-docs/index.html#datetimetoiso
-    return isoDate.toISO({ suppressMilliseconds: true, includeOffset: hasExplicitTimeZone(isoDate) });
+    return isoDate.toISO({
+      suppressMilliseconds: true,
+      includeOffset: hasExplicitTimeZone(isoDate),
+    });
   }
 
   return null;

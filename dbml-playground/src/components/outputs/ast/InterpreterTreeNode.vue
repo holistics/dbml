@@ -98,18 +98,24 @@
  * Displays individual nodes in the interpreter tree structure.
  * Shows database objects like tables, fields, enums, etc. with proper icons and formatting.
  */
-import { computed, inject } from 'vue';
+import {
+  computed, inject,
+} from 'vue';
 import ASTIcon from './ASTIcon.vue';
 import type { TokenNavigationEventBus } from '@/core/token-navigation';
-import type { InterpreterTreeNode, InterpreterTreeNodeProps } from '@/types';
+import type {
+  InterpreterTreeNode, InterpreterTreeNodeProps,
+} from '@/types';
 import consoleLogger from '@/utils/logger';
 
 const props = defineProps<InterpreterTreeNodeProps>();
 
 const emit = defineEmits<{
   'node-click': [node: InterpreterTreeNode];
-  'node-expand': [{ id: string; expanded: boolean }];
-  'position-click': [{ node: InterpreterTreeNode; position: any }];
+  'node-expand': [{ id: string;
+    expanded: boolean; }];
+  'position-click': [{ node: InterpreterTreeNode;
+    position: any; }];
 }>();
 
 // Inject navigation services (same as ParserASTView)
@@ -239,11 +245,17 @@ const navigateToSourcePosition = (position: any) => {
       }, 2000);
     } catch (error) {
       // Fallback to emit
-      emit('position-click', { node: props.node, position });
+      emit('position-click', {
+        node: props.node,
+        position,
+      });
     }
   } else {
     // Fallback to old method if coordinator not available
-    emit('position-click', { node: props.node, position });
+    emit('position-click', {
+      node: props.node,
+      position,
+    });
   }
 };
 

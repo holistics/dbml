@@ -14,7 +14,9 @@ import {
   tableWithZeroSettingsArbitrary,
   charSubstitutionArbitrary,
 } from '../utils/arbitraries';
-import { interpret, analyze } from '../utils';
+import {
+  interpret, analyze,
+} from '../utils';
 
 const FUZZ_CONFIG = { numRuns: 50 };
 const ROBUSTNESS_CONFIG = { numRuns: 25 };
@@ -155,7 +157,10 @@ describe('[fuzz] interpreter - robustness (arbitrary input)', () => {
   it('should handle very long inputs (5-20KB) with valid structure', () => {
     fc.assert(
       fc.property(
-        fc.string({ minLength: 5000, maxLength: 20000 }).filter((s) => !s.includes('\0')),
+        fc.string({
+          minLength: 5000,
+          maxLength: 20000,
+        }).filter((s) => !s.includes('\0')),
         (source: string) => {
           const result = interpret(source);
 
@@ -378,7 +383,10 @@ describe('[fuzz] interpreter - mutation resilience', () => {
       fc.property(
         tableArbitrary,
         fc.nat(),
-        fc.string({ minLength: 1, maxLength: 1 }),
+        fc.string({
+          minLength: 1,
+          maxLength: 1,
+        }),
         (source: string, position: number, char: string) => {
           fc.pre(char !== '\0');
 
@@ -432,7 +440,13 @@ describe('[fuzz] interpreter - edge cases', () => {
   it('should handle comments-only input', () => {
     fc.assert(
       fc.property(
-        fc.array(fc.string({ minLength: 0, maxLength: 100 }), { minLength: 1, maxLength: 10 }),
+        fc.array(fc.string({
+          minLength: 0,
+          maxLength: 100,
+        }), {
+          minLength: 1,
+          maxLength: 10,
+        }),
         (comments: string[]) => {
           const source = comments.map((c) => `// ${c.replace(/\n/g, ' ')}`).join('\n');
 

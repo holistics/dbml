@@ -9,7 +9,9 @@ import { isEqual } from 'lodash-es';
 import {
   parse, print, lex,
 } from '../utils';
-import { SyntaxNodeKind, BlockExpressionNode } from '@/core/types/nodes';
+import {
+  SyntaxNodeKind, BlockExpressionNode,
+} from '@/core/types/nodes';
 
 const PROPERTY_TEST_CONFIG = { numRuns: 50 };
 const EXTENDED_CONFIG = { numRuns: 25 };
@@ -367,7 +369,10 @@ describe('[property] parser - negative tests', () => {
   it('should report errors for unclosed braces', () => {
     fc.assert(
       fc.property(
-        fc.integer({ min: 1, max: 10 }),
+        fc.integer({
+          min: 1,
+          max: 10,
+        }),
         (count: number) => {
           const source = 'Table t '.repeat(count) + '{'.repeat(count);
           const result = parse(source);

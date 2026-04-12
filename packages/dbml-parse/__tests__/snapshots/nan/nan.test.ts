@@ -3,7 +3,9 @@ import path from 'node:path';
 import {
   describe, expect, it,
 } from 'vitest';
-import { scanTestNames, toSnapshot } from '@tests/utils';
+import {
+  scanTestNames, toSnapshot,
+} from '@tests/utils';
 import Compiler from '@/compiler';
 import type { Database } from '@/index';
 import type Report from '@/core/types/report';

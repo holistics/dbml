@@ -62,7 +62,12 @@ function expandDiagramViewWildcards (env: InterpreterDatabase): void {
 function convertEnvToDb (env: InterpreterDatabase, ast: ProgramNode): Database {
   // Convert records Map to array of TableRecord
   const records: TableRecord[] = [];
-  for (const [table, { element, rows }] of env.records) {
+  for (const [
+    table,
+    {
+      element, rows,
+    },
+  ] of env.records) {
     if (!rows.length) continue;
     const columns = Object.keys(rows[0].columnNodes);
     records.push({
@@ -75,9 +80,15 @@ function convertEnvToDb (env: InterpreterDatabase, ast: ProgramNode): Database {
         return columns.map((col) => {
           const val = r.values[col];
           if (val) {
-            return { value: val.value, type: val.type };
+            return {
+              value: val.value,
+              type: val.type,
+            };
           }
-          return { value: null, type: 'expression' };
+          return {
+            value: null,
+            type: 'expression',
+          };
         });
       }),
     });

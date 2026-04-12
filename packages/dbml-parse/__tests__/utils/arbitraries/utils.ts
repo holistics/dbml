@@ -54,11 +54,23 @@ export const settingKeyValue = (key: string, valueArb: fc.Arbitrary<string>) =>
  */
 export const randomSpaceArbitrary = fc.array(
   fc.oneof(
-    { weight: 10, arbitrary: fc.constant(' ') },
-    { weight: 3, arbitrary: fc.constant('\t') },
-    { weight: 1, arbitrary: fc.constant('\n') },
+    {
+      weight: 10,
+      arbitrary: fc.constant(' '),
+    },
+    {
+      weight: 3,
+      arbitrary: fc.constant('\t'),
+    },
+    {
+      weight: 1,
+      arbitrary: fc.constant('\n'),
+    },
   ),
-  { minLength: 1, maxLength: 3 },
+  {
+    minLength: 1,
+    maxLength: 3,
+  },
 ).map((arr) => arr.join(''));
 
 /**
@@ -68,10 +80,19 @@ export const randomSpaceArbitrary = fc.array(
  */
 export const randomInlineSpaceArbitrary = fc.array(
   fc.oneof(
-    { weight: 10, arbitrary: fc.constant(' ') },
-    { weight: 3, arbitrary: fc.constant('\t') },
+    {
+      weight: 10,
+      arbitrary: fc.constant(' '),
+    },
+    {
+      weight: 3,
+      arbitrary: fc.constant('\t'),
+    },
   ),
-  { minLength: 1, maxLength: 3 },
+  {
+    minLength: 1,
+    maxLength: 3,
+  },
 ).map((arr) => arr.join(''));
 
 /**

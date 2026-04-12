@@ -8,7 +8,9 @@ import Lexer from '@/core/lexer/lexer';
 import Parser from '@/core/parser/parser';
 import type { ProgramNode } from '@/core/types/nodes';
 import Analyzer from '@/core/analyzer/analyzer';
-import { scanTestNames, toSnapshot } from '@tests/utils';
+import {
+  scanTestNames, toSnapshot,
+} from '@tests/utils';
 import type Report from '@/core/types/report';
 import Compiler from '@/compiler';
 
@@ -33,7 +35,9 @@ describe('[snapshot] binder', () => {
     compiler.setSource(program);
 
     // @ts-expect-error "Current workaround to use compiler but only trigger analyzer"
-    const { nodeIdGenerator, symbolIdGenerator } = compiler;
+    const {
+      nodeIdGenerator, symbolIdGenerator,
+    } = compiler;
 
     const report = new Lexer(program, DEFAULT_ENTRY)
       .lex()

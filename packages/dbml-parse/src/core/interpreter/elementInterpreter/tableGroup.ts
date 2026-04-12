@@ -2,7 +2,9 @@ import { partition } from 'lodash-es';
 import {
   destructureComplexVariable, destructureMemberAccessExpression, extractQuotedStringToken,
 } from '@/core/analyzer/utils';
-import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import {
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, SyntaxNode, ListExpressionNode,
 } from '@/core/types/nodes';
@@ -11,7 +13,9 @@ import {
   extractElementName, getTokenPosition, normalizeNoteContent, extractColor,
 } from '@/core/interpreter/utils';
 import { aggregateSettingList } from '@/core/analyzer/validator/utils';
-import { ElementInterpreter, InterpreterDatabase } from '../types';
+import {
+  ElementInterpreter, InterpreterDatabase,
+} from '../types';
 
 export class TableGroupInterpreter implements ElementInterpreter {
   private declarationNode: ElementDeclarationNode;
@@ -41,7 +45,9 @@ export class TableGroupInterpreter implements ElementInterpreter {
   private interpretName (nameNode: SyntaxNode): CompileError[] {
     const errors: CompileError[] = [];
 
-    const { name, schemaName } = extractElementName(nameNode);
+    const {
+      name, schemaName,
+    } = extractElementName(nameNode);
     if (schemaName.length >= 2) {
       this.tableGroup.name = name;
       this.tableGroup.schemaName = schemaName.join('.');
@@ -92,7 +98,9 @@ export class TableGroupInterpreter implements ElementInterpreter {
       const tableid = destructureMemberAccessExpression((field as FunctionApplicationNode).callee!)!.pop()!.referee!.id;
       if (this.env.tableOwnerGroup[tableid]) {
         const tableGroup = this.env.tableOwnerGroup[tableid];
-        const { schemaName, name } = this.env.tableGroups.get(tableGroup)!;
+        const {
+          schemaName, name,
+        } = this.env.tableGroups.get(tableGroup)!;
         const groupName = schemaName ? `${schemaName}.${name}` : name;
         errors.push(new CompileError(CompileErrorCode.TABLE_REAPPEAR_IN_TABLEGROUP, `Table "${fragments.join('.')}" already appears in group "${groupName}"`, field));
       } else {

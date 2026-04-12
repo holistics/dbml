@@ -79,7 +79,8 @@ function suggestRecordRowInTopLevelRecords (
       const result = extractNameAndTypeOfColumnSymbol(symbol, columnName);
       return result;
     })
-    .filter((col) => col !== null) as Array<{ name: string; type: string }>;
+    .filter((col) => col !== null) as Array<{ name: string;
+    type: string; }>;
 
   if (columns.length === 0) return noSuggestions();
 
@@ -114,7 +115,8 @@ function suggestRecordRowInNestedRecords (
     return noSuggestions();
   }
 
-  let columns: Array<{ name: string; type: string }>;
+  let columns: Array<{ name: string;
+    type: string; }>;
 
   if (recordsElement.name instanceof TupleExpressionNode) {
     // Explicit columns from tuple: records (col1, col2)
@@ -133,7 +135,8 @@ function suggestRecordRowInNestedRecords (
         if (columnName === undefined) return null;
         return extractNameAndTypeOfColumnSymbol(symbol, columnName);
       })
-      .filter((col) => col !== null) as Array<{ name: string; type: string }>;
+      .filter((col) => col !== null) as Array<{ name: string;
+      type: string; }>;
   } else {
     // Implicit columns - use all columns from parent table
     const result = getColumnsFromTableSymbol(tableSymbol);

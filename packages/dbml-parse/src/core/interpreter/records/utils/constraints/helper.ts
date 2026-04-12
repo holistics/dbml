@@ -1,6 +1,10 @@
-import { RecordValue, Column } from '@/core/types/schemaJson';
+import {
+  RecordValue, Column,
+} from '@/core/types/schemaJson';
 import { isSerialType } from '../data';
-import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import {
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
 import { TableRecordRow } from '@/core/interpreter/types';
 
 export function extractKeyValueWithDefault (

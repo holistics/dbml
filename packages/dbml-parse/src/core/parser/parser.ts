@@ -4,12 +4,16 @@ import {
   isAsKeyword,
   markInvalid,
 } from '@/core/parser/utils';
-import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import {
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
 import {
   SyntaxToken, SyntaxTokenKind, isOpToken,
 } from '@/core/types/tokens';
 import Report from '@/core/types/report';
-import { ParsingContext, ParsingContextStack } from '@/core/parser/contextStack';
+import {
+  ParsingContext, ParsingContextStack,
+} from '@/core/parser/contextStack';
 import {
   ArrayNode,
   AttributeNode,
@@ -179,15 +183,21 @@ export default class Parser {
     this.tokens = tokens;
   }
 
-  parse (): Report<{ ast: ProgramNode; tokens: SyntaxToken[] }> {
+  parse (): Report<{ ast: ProgramNode;
+    tokens: SyntaxToken[]; }> {
     const body = this.program();
     const eof = this.advance();
     const program = this.nodeFactory.create(ProgramNode, {
-      body, eof, source: this.source,
+      body,
+      eof,
+      source: this.source,
     });
     this.gatherInvalid();
 
-    return new Report({ ast: program, tokens: this.tokens }, this.errors);
+    return new Report({
+      ast: program,
+      tokens: this.tokens,
+    }, this.errors);
   }
 
   /* Parsing and synchronizing ProgramNode */
@@ -921,7 +931,10 @@ export default class Parser {
       elementList: NormalExpressionNode[];
       commaList: SyntaxToken[];
       tupleCloseParen?: SyntaxToken;
-    } = { elementList: [], commaList: [] };
+    } = {
+      elementList: [],
+      commaList: [],
+    };
     const buildGroup = () => this.nodeFactory.create(GroupExpressionNode, {
       groupOpenParen: args.tupleOpenParen,
       groupCloseParen: args.tupleCloseParen,
@@ -1011,7 +1024,10 @@ export default class Parser {
       elementList: AttributeNode[];
       commaList: SyntaxToken[];
       listCloseBracket?: SyntaxToken;
-    } = { elementList: [], commaList: [] };
+    } = {
+      elementList: [],
+      commaList: [],
+    };
     const buildList = () => this.nodeFactory.create(ListExpressionNode, args);
 
     try {
@@ -1205,55 +1221,136 @@ export default class Parser {
 }
 
 const infixBindingPowerMap: {
-  [index: string]: { left: number; right: number } | undefined;
+  [index: string]: { left: number;
+    right: number; } | undefined;
 } = {
-  '+': { left: 9, right: 10 },
-  '-': { left: 9, right: 10 },
-  '/': { left: 11, right: 12 },
-  '%': { left: 11, right: 12 },
-  '<': { left: 7, right: 8 },
-  '<=': { left: 7, right: 8 },
-  '>': { left: 7, right: 8 },
-  '>=': { left: 7, right: 8 },
-  '<>': { left: 7, right: 8 },
-  '=': { left: 2, right: 3 },
-  '==': { left: 4, right: 5 },
-  '!=': { left: 4, right: 5 },
-  '.': { left: 16, right: 17 },
+  '+': {
+    left: 9,
+    right: 10,
+  },
+  '-': {
+    left: 9,
+    right: 10,
+  },
+  '/': {
+    left: 11,
+    right: 12,
+  },
+  '%': {
+    left: 11,
+    right: 12,
+  },
+  '<': {
+    left: 7,
+    right: 8,
+  },
+  '<=': {
+    left: 7,
+    right: 8,
+  },
+  '>': {
+    left: 7,
+    right: 8,
+  },
+  '>=': {
+    left: 7,
+    right: 8,
+  },
+  '<>': {
+    left: 7,
+    right: 8,
+  },
+  '=': {
+    left: 2,
+    right: 3,
+  },
+  '==': {
+    left: 4,
+    right: 5,
+  },
+  '!=': {
+    left: 4,
+    right: 5,
+  },
+  '.': {
+    left: 16,
+    right: 17,
+  },
 };
 
 function infixBindingPower (
   token: SyntaxToken,
-): { left: null; right: null } | { left: number; right: number } {
+): { left: null;
+  right: null; } | { left: number;
+    right: number; } {
   const power = infixBindingPowerMap[token.value];
 
-  return power || { left: null, right: null };
+  return power || {
+    left: null,
+    right: null,
+  };
 }
 
 const prefixBindingPowerMap: {
-  [index: string]: { left: null; right: number } | undefined;
+  [index: string]: { left: null;
+    right: number; } | undefined;
 } = {
-  '+': { left: null, right: 15 },
-  '-': { left: null, right: 15 },
-  '<': { left: null, right: 15 },
-  '>': { left: null, right: 15 },
-  '<>': { left: null, right: 15 },
-  '!': { left: null, right: 15 },
-  '~': { left: null, right: 15 },
+  '+': {
+    left: null,
+    right: 15,
+  },
+  '-': {
+    left: null,
+    right: 15,
+  },
+  '<': {
+    left: null,
+    right: 15,
+  },
+  '>': {
+    left: null,
+    right: 15,
+  },
+  '<>': {
+    left: null,
+    right: 15,
+  },
+  '!': {
+    left: null,
+    right: 15,
+  },
+  '~': {
+    left: null,
+    right: 15,
+  },
 };
 
-function prefixBindingPower (token: SyntaxToken): { left: null; right: null | number } {
+function prefixBindingPower (token: SyntaxToken): { left: null;
+  right: null | number; } {
   const power = prefixBindingPowerMap[token.value];
 
-  return power || { left: null, right: null };
+  return power || {
+    left: null,
+    right: null,
+  };
 }
 
 const postfixBindingPowerMap: {
-  [index: string]: { left: number; right: null } | undefined;
-} = { '(': { left: 14, right: null } };
+  [index: string]: { left: number;
+    right: null; } | undefined;
+} = {
+  '(': {
+    left: 14,
+    right: null,
+  },
+};
 
-function postfixBindingPower (token: SyntaxToken): { left: null | number; right: null } {
+function postfixBindingPower (token: SyntaxToken): { left: null | number;
+  right: null; } {
   const power = postfixBindingPowerMap[token.value];
 
-  return power || { left: null, right: null };
+  return power || {
+    left: null,
+    right: null,
+  };
 }

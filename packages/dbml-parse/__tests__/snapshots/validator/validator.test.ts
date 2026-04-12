@@ -9,7 +9,9 @@ import Lexer from '@/core/lexer/lexer';
 import Parser from '@/core/parser/parser';
 import Validator from '@/core/analyzer/validator/validator';
 import SymbolFactory from '@/core/types/symbol/factory';
-import { scanTestNames, toSnapshot } from '@tests/utils';
+import {
+  scanTestNames, toSnapshot,
+} from '@tests/utils';
 import Compiler from '@/compiler';
 import type Report from '@/core/types/report';
 
@@ -34,7 +36,9 @@ describe('[snapshot] validator', () => {
     compiler.setSource(program);
 
     // @ts-expect-error "Current workaround to use compiler but only trigger analyzer"
-    const { nodeIdGenerator, symbolIdGenerator } = compiler;
+    const {
+      nodeIdGenerator, symbolIdGenerator,
+    } = compiler;
 
     const report = new Lexer(program, DEFAULT_ENTRY)
       .lex()

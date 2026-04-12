@@ -8,7 +8,9 @@ import {
 } from '@/core/types/nodes';
 import { SyntaxToken } from '@/core/types/tokens';
 import { ElementValidator } from '@/core/analyzer/validator/types';
-import { isSimpleName, pickValidator } from '@/core/analyzer/validator/utils';
+import {
+  isSimpleName, pickValidator,
+} from '@/core/analyzer/validator/utils';
 import SymbolTable from '@/core/types/symbol/symbolTable';
 
 export default class ProjectValidator implements ElementValidator {
@@ -22,7 +24,8 @@ export default class ProjectValidator implements ElementValidator {
     this.symbolFactory = symbolFactory;
   }
 
-  validate (): { errors: CompileError[]; warnings: CompileWarning[] } {
+  validate (): { errors: CompileError[];
+    warnings: CompileWarning[]; } {
     return {
       errors: [
         ...this.validateContext(),

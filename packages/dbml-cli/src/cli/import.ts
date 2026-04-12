@@ -1,4 +1,6 @@
-import { importer, CompilerError } from '@dbml/core';
+import {
+  importer, CompilerError,
+} from '@dbml/core';
 import type { ImportFormat } from '@dbml/core';
 import figures from 'figures';
 import chalk from 'chalk';

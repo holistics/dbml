@@ -10,9 +10,15 @@ import {
   createConstraintErrors,
 } from './helper';
 import { DEFAULT_SCHEMA_NAME } from '@/constants';
-import { mergeTableAndPartials, extractInlineRefsFromTablePartials } from '@/core/interpreter/utils';
-import { isEmpty, flatMap } from 'lodash-es';
-import { InterpreterDatabase, TableRecordRow } from '@/core/interpreter/types';
+import {
+  mergeTableAndPartials, extractInlineRefsFromTablePartials,
+} from '@/core/interpreter/utils';
+import {
+  isEmpty, flatMap,
+} from 'lodash-es';
+import {
+  InterpreterDatabase, TableRecordRow,
+} from '@/core/interpreter/types';
 
 type TableInfo = {
   rows: TableRecordRow[];
@@ -41,7 +47,10 @@ function buildTableInfoMap (env: InterpreterDatabase): Map<string, TableInfo> {
     }
     const mergedTable = env.cachedMergedTables.get(table)!;
 
-    tableInfoMap.set(key, { mergedTable, rows });
+    tableInfoMap.set(key, {
+      mergedTable,
+      rows,
+    });
   }
 
   return tableInfoMap;

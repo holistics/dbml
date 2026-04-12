@@ -1,7 +1,9 @@
 import figures from 'figures';
 import chalk from 'chalk';
 import path from 'path';
-import { exporter, CompilerError } from '@dbml/core';
+import {
+  exporter, CompilerError,
+} from '@dbml/core';
 import type { ExportFormat } from '@dbml/core';
 import {
   validateInputFilePaths,

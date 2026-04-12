@@ -98,7 +98,16 @@ export default class DiagramViewBinder implements ElementBinder {
         }
         const schemaBindees = bindee.variables;
 
-        return lookupAndBindInScope(this.ast, [...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })), { node: tableBindee, kind: SymbolKind.Table }]);
+        return lookupAndBindInScope(this.ast, [
+          ...schemaBindees.map((b) => ({
+            node: b,
+            kind: SymbolKind.Schema,
+          })),
+          {
+            node: tableBindee,
+            kind: SymbolKind.Table,
+          },
+        ]);
       });
     });
   }
@@ -124,7 +133,12 @@ export default class DiagramViewBinder implements ElementBinder {
           return [];
         }
 
-        return lookupAndBindInScope(this.ast, [{ node: noteBindee, kind: SymbolKind.StickyNote }]);
+        return lookupAndBindInScope(this.ast, [
+          {
+            node: noteBindee,
+            kind: SymbolKind.StickyNote,
+          },
+        ]);
       });
     });
   }
@@ -151,7 +165,16 @@ export default class DiagramViewBinder implements ElementBinder {
         }
         const schemaBindees = bindee.variables;
 
-        return lookupAndBindInScope(this.ast, [...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })), { node: tableGroupBindee, kind: SymbolKind.TableGroup }]);
+        return lookupAndBindInScope(this.ast, [
+          ...schemaBindees.map((b) => ({
+            node: b,
+            kind: SymbolKind.Schema,
+          })),
+          {
+            node: tableGroupBindee,
+            kind: SymbolKind.TableGroup,
+          },
+        ]);
       });
     });
   }
@@ -172,7 +195,10 @@ export default class DiagramViewBinder implements ElementBinder {
       const bindees = scanNonListNodeForBinding(field.callee);
 
       return bindees.flatMap((bindee) => {
-        return lookupAndBindInScope(this.ast, bindee.variables.map((b) => ({ node: b, kind: SymbolKind.Schema })));
+        return lookupAndBindInScope(this.ast, bindee.variables.map((b) => ({
+          node: b,
+          kind: SymbolKind.Schema,
+        })));
       });
     });
   }

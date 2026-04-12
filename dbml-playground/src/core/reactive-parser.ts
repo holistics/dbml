@@ -9,9 +9,13 @@
  * - Information Hiding: Hides debouncing and state management complexity
  * - General Purpose: Can be used with any reactive framework
  */
-import { ref, computed, watch, type Ref } from 'vue';
+import {
+  ref, computed, watch, type Ref,
+} from 'vue';
 import { ParserService } from './parser-service';
-import type { ReactiveParserOptions, ParserResult } from '@/types';
+import type {
+  ReactiveParserOptions, ParserResult,
+} from '@/types';
 import consoleLogger from '@/utils/logger';
 
 /**
@@ -142,7 +146,10 @@ export class ReactiveParser {
       errors: [{
         code: -1,
         message,
-        location: { line: 1, column: 1 },
+        location: {
+          line: 1,
+          column: 1,
+        },
       }],
     };
   }

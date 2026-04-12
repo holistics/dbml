@@ -20,15 +20,20 @@
  * for debugging purposes. Shows the actual interpreter output hierarchy
  * with all properties like tables, fields, refs, etc.
  */
-import { computed, ref } from 'vue';
+import {
+  computed, ref,
+} from 'vue';
 import InterpreterTreeNode from './InterpreterTreeNode.vue';
-import type { Database, InterpreterTreeNode as InterpreterNode, InterpreterTreeViewProps } from '@/types';
+import type {
+  Database, InterpreterTreeNode as InterpreterNode, InterpreterTreeViewProps,
+} from '@/types';
 
 const props = defineProps<InterpreterTreeViewProps>();
 
 const emit = defineEmits<{
   'node-click': [node: InterpreterNode];
-  'position-click': [{ node: InterpreterNode; position: any }];
+  'position-click': [{ node: InterpreterNode;
+    position: any; }];
 }>();
 
 const selectedNode = ref<InterpreterNode | null>(null);
@@ -40,7 +45,8 @@ const rootNode = computed(() => {
 });
 
 // Handle node expansion
-const handleNodeExpand = (event: { id: string; expanded: boolean }) => {
+const handleNodeExpand = (event: { id: string;
+  expanded: boolean; }) => {
   if (event.expanded) {
     expandedNodes.value.add(event.id);
   } else {
@@ -55,7 +61,8 @@ const handleNodeClick = (node: InterpreterNode) => {
 };
 
 // Handle position click (for future navigation features)
-const handlePositionClick = (event: { node: InterpreterNode; position: any }) => {
+const handlePositionClick = (event: { node: InterpreterNode;
+  position: any; }) => {
   emit('position-click', event);
 };
 

@@ -267,7 +267,9 @@
  * - Information Hiding: Business logic hidden in composables and services
  * - Shallow Module: Simple interface that coordinates deeper modules
  */
-import { ref, provide, watch, onMounted } from 'vue';
+import {
+  ref, provide, watch, onMounted,
+} from 'vue';
 import { useParser } from '@/composables/useParser';
 import { useUserData } from '@/composables/useUserData';
 import MonacoEditor from '@/components/editors/MonacoEditor.vue';
@@ -284,7 +286,9 @@ import consoleLogger from './utils/logger';
 const parser = useParser();
 
 // Initialize user data management
-const { userData, updateUserData, saveDbml } = useUserData();
+const {
+  userData, updateUserData, saveDbml,
+} = useUserData();
 
 // Reactive state derived from user data
 const vimModeEnabled = ref(userData.value.isVim);
@@ -421,11 +425,31 @@ const isMainResizing = ref(false);
  * Available pipeline stages for visualization
  */
 const PIPELINE_STAGES = [
-  { id: 'lexer' as const, name: 'Lexer', description: 'Tokenization stage' },
-  { id: 'parser' as const, name: 'Parser', description: 'Syntax analysis stage' },
-  { id: 'analyzer' as const, name: 'Analyzer', description: 'Semantic analysis stage' },
-  { id: 'interpreter' as const, name: 'Interpreter', description: 'Code generation stage' },
-  { id: 'errors' as const, name: 'Errors', description: 'Error reports' },
+  {
+    id: 'lexer' as const,
+    name: 'Lexer',
+    description: 'Tokenization stage',
+  },
+  {
+    id: 'parser' as const,
+    name: 'Parser',
+    description: 'Syntax analysis stage',
+  },
+  {
+    id: 'analyzer' as const,
+    name: 'Analyzer',
+    description: 'Semantic analysis stage',
+  },
+  {
+    id: 'interpreter' as const,
+    name: 'Interpreter',
+    description: 'Code generation stage',
+  },
+  {
+    id: 'errors' as const,
+    name: 'Errors',
+    description: 'Error reports',
+  },
 ] as const;
 
 /**
@@ -491,7 +515,12 @@ const startMainResize = (event: MouseEvent) => {
  * Handle navigate to source event from AST viewer
  * Highlights the corresponding DBML source code
  */
-const handleNavigateToSource = (position: { start: { line: number; column: number; offset: number }; end: { line: number; column: number; offset: number } }) => {
+const handleNavigateToSource = (position: { start: { line: number;
+  column: number;
+  offset: number; };
+end: { line: number;
+  column: number;
+  offset: number; }; }) => {
   // Get reference to the DBML editor (MonacoEditor)
   const dbmlEditor = document.querySelector('.dbml-editor');
   if (dbmlEditor) {

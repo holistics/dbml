@@ -1,7 +1,11 @@
 import type Compiler from '../index';
-import { ElementDeclarationNode, ProgramNode } from '@/core/types/nodes';
+import {
+  ElementDeclarationNode, ProgramNode,
+} from '@/core/types/nodes';
 import { NodeSymbol } from '@/core/types/symbol/symbols';
-import { SymbolKind, destructureIndex } from '@/core/types/symbol';
+import {
+  SymbolKind, destructureIndex,
+} from '@/core/types/symbol';
 import { generatePossibleIndexes } from '@/core/types/symbol/utils';
 import SymbolTable from '@/core/types/symbol/symbolTable';
 
@@ -21,7 +25,9 @@ export function symbolOfName (this: Compiler, nameStack: string[], owner: Elemen
     return [];
   }
 
-  const res: { symbol: NodeSymbol; kind: SymbolKind; name: string }[] = [];
+  const res: { symbol: NodeSymbol;
+    kind: SymbolKind;
+    name: string; }[] = [];
 
   for (
     let currentOwner: ElementDeclarationNode | ProgramNode | undefined = owner;
@@ -36,7 +42,9 @@ export function symbolOfName (this: Compiler, nameStack: string[], owner: Elemen
 
     const { symbolTable } = currentOwner.symbol;
     let currentPossibleSymbolTables: SymbolTable[] = [symbolTable];
-    let currentPossibleSymbols: { symbol: NodeSymbol; kind: SymbolKind; name: string }[] = [];
+    let currentPossibleSymbols: { symbol: NodeSymbol;
+      kind: SymbolKind;
+      name: string; }[] = [];
 
     for (const name of nameStack) {
       currentPossibleSymbols = currentPossibleSymbolTables.flatMap((st) =>
@@ -44,7 +52,12 @@ export function symbolOfName (this: Compiler, nameStack: string[], owner: Elemen
           const symbol = st.get(index);
           const desRes = destructureIndex(index);
 
-          return !symbol || !desRes ? [] : { ...desRes, symbol };
+          return !symbol || !desRes
+            ? []
+            : {
+                ...desRes,
+                symbol,
+              };
         }),
       );
       currentPossibleSymbolTables = currentPossibleSymbols.flatMap((e) =>

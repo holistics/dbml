@@ -7,9 +7,15 @@ import {
 } from '../../../types/nodes';
 import { ElementBinder } from '../types';
 import { SyntaxToken } from '../../../types/tokens';
-import { CompileError, CompileErrorCode } from '@/core/types/errors';
-import { pickBinder, scanNonListNodeForBinding } from '../utils';
-import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '../../utils';
+import {
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
+import {
+  pickBinder, scanNonListNodeForBinding,
+} from '../utils';
+import {
+  destructureComplexVariable, extractVarNameFromPrimaryVariable,
+} from '../../utils';
 import { ElementKind } from '../../types';
 import { createColumnSymbolIndex } from '@/core/types/symbol/symbolIndex';
 import SymbolFactory from '@/core/types/symbol/factory';

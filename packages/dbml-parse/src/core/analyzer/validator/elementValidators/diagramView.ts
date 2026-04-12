@@ -3,7 +3,9 @@ import {
   CompileError, CompileErrorCode, CompileWarning,
 } from '@/core/types/errors';
 import { isSimpleName } from '@/core/analyzer/validator/utils';
-import { registerSchemaStack, aggregateSettingList } from '@/core/analyzer/validator/utils';
+import {
+  registerSchemaStack, aggregateSettingList,
+} from '@/core/analyzer/validator/utils';
 import { ElementValidator } from '@/core/analyzer/validator/types';
 import SymbolTable from '@/core/types/symbol/symbolTable';
 import { SyntaxToken } from '@/core/types/tokens';
@@ -11,10 +13,18 @@ import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode,
 } from '@/core/types/nodes';
 import SymbolFactory from '@/core/types/symbol/factory';
-import { createDiagramViewFieldSymbolIndex, createDiagramViewSymbolIndex } from '@/core/types/symbol/symbolIndex';
-import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '@/core/analyzer/utils';
-import { DiagramViewFieldSymbol, DiagramViewSymbol } from '@/core/types/symbol/symbols';
-import { isExpressionAVariableNode, isWildcardExpression } from '@/core/parser/utils';
+import {
+  createDiagramViewFieldSymbolIndex, createDiagramViewSymbolIndex,
+} from '@/core/types/symbol/symbolIndex';
+import {
+  destructureComplexVariable, extractVarNameFromPrimaryVariable,
+} from '@/core/analyzer/utils';
+import {
+  DiagramViewFieldSymbol, DiagramViewSymbol,
+} from '@/core/types/symbol/symbols';
+import {
+  isExpressionAVariableNode, isWildcardExpression,
+} from '@/core/parser/utils';
 
 export default class DiagramViewValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
@@ -27,7 +37,8 @@ export default class DiagramViewValidator implements ElementValidator {
     this.symbolFactory = symbolFactory;
   }
 
-  validate (): { errors: CompileError[]; warnings: CompileWarning[] } {
+  validate (): { errors: CompileError[];
+    warnings: CompileWarning[]; } {
     const errors: CompileError[] = [
       ...this.validateContext(),
       ...this.validateName(this.declarationNode.name),
@@ -37,7 +48,10 @@ export default class DiagramViewValidator implements ElementValidator {
     ];
     const bodyResult = this.validateBody(this.declarationNode.body);
     errors.push(...bodyResult.errors);
-    return { errors, warnings: bodyResult.warnings };
+    return {
+      errors,
+      warnings: bodyResult.warnings,
+    };
   }
 
   private validateContext (): CompileError[] {
@@ -91,7 +105,10 @@ export default class DiagramViewValidator implements ElementValidator {
 
   registerElement (): CompileError[] {
     const { name } = this.declarationNode;
-    this.declarationNode.symbol = this.symbolFactory.create(DiagramViewSymbol, { declaration: this.declarationNode, symbolTable: new SymbolTable() });
+    this.declarationNode.symbol = this.symbolFactory.create(DiagramViewSymbol, {
+      declaration: this.declarationNode,
+      symbolTable: new SymbolTable(),
+    });
     const maybeNameFragments = destructureComplexVariable(name);
     if (maybeNameFragments !== undefined) {
       const nameFragments = maybeNameFragments;
@@ -123,8 +140,12 @@ export default class DiagramViewValidator implements ElementValidator {
     return errors;
   }
 
-  validateBody (body?: FunctionApplicationNode | BlockExpressionNode): { errors: CompileError[]; warnings: CompileWarning[] } {
-    if (!body) return { errors: [], warnings: [] };
+  validateBody (body?: FunctionApplicationNode | BlockExpressionNode): { errors: CompileError[];
+    warnings: CompileWarning[]; } {
+    if (!body) return {
+      errors: [],
+      warnings: [],
+    };
 
     if (body instanceof FunctionApplicationNode) {
       return {
@@ -171,7 +192,8 @@ export default class DiagramViewValidator implements ElementValidator {
     });
   }
 
-  private validateSubElements (subs: ElementDeclarationNode[]): { errors: CompileError[]; warnings: CompileWarning[] } {
+  private validateSubElements (subs: ElementDeclarationNode[]): { errors: CompileError[];
+    warnings: CompileWarning[]; } {
     const errors: CompileError[] = [];
     const warnings: CompileWarning[] = [];
 
@@ -203,15 +225,22 @@ export default class DiagramViewValidator implements ElementValidator {
       warnings.push(...subBlockResult.warnings);
     }
 
-    return { errors, warnings };
+    return {
+      errors,
+      warnings,
+    };
   }
 
-  private validateSubBlock (sub: ElementDeclarationNode): { errors: CompileError[]; warnings: CompileWarning[] } {
+  private validateSubBlock (sub: ElementDeclarationNode): { errors: CompileError[];
+    warnings: CompileWarning[]; } {
     const errors: CompileError[] = [];
     const warnings: CompileWarning[] = [];
 
     if (!sub.body || !(sub.body instanceof BlockExpressionNode)) {
-      return { errors, warnings };
+      return {
+        errors,
+        warnings,
+      };
     }
 
     const body = sub.body as BlockExpressionNode;
@@ -233,7 +262,10 @@ export default class DiagramViewValidator implements ElementValidator {
 
     errors.push(...this.registerSubBlockFields(sub));
 
-    return { errors, warnings };
+    return {
+      errors,
+      warnings,
+    };
   }
 
   registerSubBlockFields (sub: ElementDeclarationNode): CompileError[] {

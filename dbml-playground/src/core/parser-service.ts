@@ -11,7 +11,9 @@
  * - Pull Complexity Downwards: Complex logic handled internally
  */
 import { Compiler } from '@dbml/parse';
-import type { ParserError, ParserResult } from '@/types';
+import type {
+  ParserError, ParserResult,
+} from '@/types';
 import consoleLogger from '@/utils/logger';
 
 /**
@@ -142,7 +144,10 @@ export class ParserService {
       errors: [{
         code: -1,
         message,
-        location: { line: 1, column: 1 },
+        location: {
+          line: 1,
+          column: 1,
+        },
       }],
     };
   }

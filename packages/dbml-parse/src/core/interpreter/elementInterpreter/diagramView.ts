@@ -1,5 +1,7 @@
 import { partition } from 'lodash-es';
-import { destructureComplexVariable, extractReferee } from '@/core/analyzer/utils';
+import {
+  destructureComplexVariable, extractReferee,
+} from '@/core/analyzer/utils';
 import { CompileError } from '@/core/types/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, SyntaxNode,
@@ -67,7 +69,10 @@ export class DiagramViewInterpreter implements ElementInterpreter {
       const first = body.body[0];
       if (first instanceof FunctionApplicationNode && isWildcardExpression(first.callee)) {
         this.diagramView.visibleEntities = {
-          tables: [], stickyNotes: [], tableGroups: [], schemas: [],
+          tables: [],
+          stickyNotes: [],
+          tableGroups: [],
+          schemas: [],
         };
         this.env.diagramViewWildcards.set(this.diagramView as DiagramView, new Set([
           'tables',
@@ -158,7 +163,8 @@ export class DiagramViewInterpreter implements ElementInterpreter {
     }
 
     // Specific items
-    const items: Array<{ name: string; schemaName: string }> = [];
+    const items: Array<{ name: string;
+      schemaName: string; }> = [];
     for (const field of body.body) {
       if (!(field instanceof FunctionApplicationNode)) continue;
 
@@ -170,7 +176,10 @@ export class DiagramViewInterpreter implements ElementInterpreter {
         if (realFragments.length > 0) {
           const name = realFragments[realFragments.length - 1];
           const schemaName = realFragments.length > 1 ? realFragments.slice(0, -1).join('.') : DEFAULT_SCHEMA_NAME;
-          items.push({ name, schemaName });
+          items.push({
+            name,
+            schemaName,
+          });
           continue;
         }
       }
@@ -182,7 +191,10 @@ export class DiagramViewInterpreter implements ElementInterpreter {
       const name = fragments[fragments.length - 1];
       const schemaName = fragments.length > 1 ? fragments[0] : DEFAULT_SCHEMA_NAME;
 
-      items.push({ name, schemaName });
+      items.push({
+        name,
+        schemaName,
+      });
     }
 
     switch (blockType) {

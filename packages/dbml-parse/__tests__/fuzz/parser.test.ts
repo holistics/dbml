@@ -32,7 +32,9 @@ import {
   // Line ending utilities
   crlfSchemaArbitrary,
 } from '../utils/arbitraries';
-import { parse, lex } from '../utils';
+import {
+  parse, lex,
+} from '../utils';
 import { SyntaxNodeKind } from '@/core/types/nodes';
 
 const FUZZ_CONFIG = { numRuns: 50 };
@@ -203,7 +205,10 @@ describe('[fuzz] parser - robustness (arbitrary input)', () => {
   it('should handle very long inputs (10-50KB) without stack overflow', () => {
     fc.assert(
       fc.property(
-        fc.string({ minLength: 10000, maxLength: 50000 }).filter((s) => !s.includes('\0')),
+        fc.string({
+          minLength: 10000,
+          maxLength: 50000,
+        }).filter((s) => !s.includes('\0')),
         (source: string) => {
           const result = parse(source);
           const ast = result.getValue().ast;
@@ -220,7 +225,10 @@ describe('[fuzz] parser - robustness (arbitrary input)', () => {
   it('should handle deeply nested brackets (1-200 levels)', () => {
     fc.assert(
       fc.property(
-        fc.integer({ min: 1, max: 200 }),
+        fc.integer({
+          min: 1,
+          max: 200,
+        }),
         (depth: number) => {
           const source = '['.repeat(depth) + ']'.repeat(depth);
           const result = parse(source);
@@ -235,7 +243,10 @@ describe('[fuzz] parser - robustness (arbitrary input)', () => {
   it('should handle deeply nested braces (1-100 levels)', () => {
     fc.assert(
       fc.property(
-        fc.integer({ min: 1, max: 100 }),
+        fc.integer({
+          min: 1,
+          max: 100,
+        }),
         (depth: number) => {
           const source = 'Table t '.repeat(depth) + '{'.repeat(depth) + '}'.repeat(depth);
           const result = parse(source);
@@ -346,7 +357,10 @@ describe('[fuzz] parser - mutation resilience', () => {
       fc.property(
         tableArbitrary,
         fc.nat(),
-        fc.string({ minLength: 1, maxLength: 1 }).filter((c) => c !== '\0'),
+        fc.string({
+          minLength: 1,
+          maxLength: 1,
+        }).filter((c) => c !== '\0'),
         (source: string, position: number, char: string) => {
           const pos = position % (source.length + 1);
           const mutated = source.slice(0, pos) + char + source.slice(pos);
@@ -434,7 +448,10 @@ describe('[fuzz] parser - true binary fuzzing (unconstrained)', () => {
   it('should handle arbitrary byte sequences without crashing', () => {
     fc.assert(
       fc.property(
-        fc.uint8Array({ minLength: 0, maxLength: 1000 }),
+        fc.uint8Array({
+          minLength: 0,
+          maxLength: 1000,
+        }),
         (bytes: Uint8Array) => {
           // Convert bytes to string - may contain null bytes, control chars, etc.
           const source = String.fromCharCode(...bytes);
@@ -485,7 +502,13 @@ describe('[fuzz] parser - true binary fuzzing (unconstrained)', () => {
   it('should handle high unicode codepoints', () => {
     fc.assert(
       fc.property(
-        fc.array(fc.integer({ min: 0, max: 0x10FFFF }), { minLength: 1, maxLength: 100 }),
+        fc.array(fc.integer({
+          min: 0,
+          max: 0x10FFFF,
+        }), {
+          minLength: 1,
+          maxLength: 100,
+        }),
         (codePoints: number[]) => {
           // Convert codepoints to string, filtering out invalid surrogate pairs
           const validCodePoints = codePoints.filter((cp) =>
@@ -515,7 +538,10 @@ describe('[fuzz] parser - true binary fuzzing (unconstrained)', () => {
     fc.assert(
       fc.property(
         tableArbitrary,
-        fc.array(fc.tuple(fc.nat(), controlChars), { minLength: 1, maxLength: 5 }),
+        fc.array(fc.tuple(fc.nat(), controlChars), {
+          minLength: 1,
+          maxLength: 5,
+        }),
         (source: string, insertions: Array<[number, string]>) => {
           // Insert control characters at various positions
           let modified = source;
@@ -707,7 +733,10 @@ describe('[fuzz] parser - semantic correctness', () => {
   it('should count elements correctly', () => {
     fc.assert(
       fc.property(
-        fc.array(tableArbitrary, { minLength: 1, maxLength: 5 }),
+        fc.array(tableArbitrary, {
+          minLength: 1,
+          maxLength: 5,
+        }),
         (tables: string[]) => {
           const source = tables.join('\n\n');
           const result = parse(source);

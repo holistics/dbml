@@ -15,10 +15,18 @@ import RefBinder from './elementBinder/ref';
 import TableBinder from './elementBinder/table';
 import TableGroupBinder from './elementBinder/tableGroup';
 import TablePartialBinder from './elementBinder/tablePartial';
-import { destructureComplexVariableTuple, extractVarNameFromPrimaryVariable } from '@/core/analyzer/utils';
-import { SymbolKind, createNodeSymbolIndex } from '@/core/types/symbol';
-import { getElementNameString, isExpressionAVariableNode } from '@/core/parser/utils';
-import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import {
+  destructureComplexVariableTuple, extractVarNameFromPrimaryVariable,
+} from '@/core/analyzer/utils';
+import {
+  SymbolKind, createNodeSymbolIndex,
+} from '@/core/types/symbol';
+import {
+  getElementNameString, isExpressionAVariableNode,
+} from '@/core/parser/utils';
+import {
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
 import { DEFAULT_SCHEMA_NAME } from '@/constants';
 import RecordsBinder from './elementBinder/records';
 
@@ -53,13 +61,19 @@ export function pickBinder (element: ElementDeclarationNode & { type: SyntaxToke
 
 // Scan for variable node and member access expression in the node except ListExpressionNode
 export function scanNonListNodeForBinding (node?: SyntaxNode):
-{ variables: (PrimaryExpressionNode & { expression: VariableNode })[]; tupleElements: (PrimaryExpressionNode & { expression: VariableNode })[] }[] {
+{ variables: (PrimaryExpressionNode & { expression: VariableNode })[];
+  tupleElements: (PrimaryExpressionNode & { expression: VariableNode })[]; }[] {
   if (!node) {
     return [];
   }
 
   if (isExpressionAVariableNode(node)) {
-    return [{ variables: [node], tupleElements: [] }];
+    return [
+      {
+        variables: [node],
+        tupleElements: [],
+      },
+    ];
   }
 
   if (node instanceof InfixExpressionNode) {
@@ -95,7 +109,8 @@ export function scanNonListNodeForBinding (node?: SyntaxNode):
 
 export function lookupAndBindInScope (
   initialScope: ElementDeclarationNode | ProgramNode,
-  symbolInfos: { node: PrimaryExpressionNode & { expression: VariableNode }; kind: SymbolKind }[],
+  symbolInfos: { node: PrimaryExpressionNode & { expression: VariableNode };
+    kind: SymbolKind; }[],
 ): CompileError[] {
   if (!initialScope.symbol?.symbolTable) {
     throw new Error('lookupAndBindInScope should only be called with initial scope having a symbol table');
@@ -106,7 +121,9 @@ export function lookupAndBindInScope (
   let curName = initialScope instanceof ElementDeclarationNode ? (getElementNameString(initialScope) ?? '<invalid name>') : DEFAULT_SCHEMA_NAME;
 
   if (initialScope instanceof ProgramNode && symbolInfos.length) {
-    const { node, kind } = symbolInfos[0];
+    const {
+      node, kind,
+    } = symbolInfos[0];
     const name = extractVarNameFromPrimaryVariable(node) ?? '<unnamed>';
     if (name === DEFAULT_SCHEMA_NAME && kind === SymbolKind.Schema) {
       symbolInfos.shift();
@@ -114,7 +131,9 @@ export function lookupAndBindInScope (
   }
 
   for (const curSymbolInfo of symbolInfos) {
-    const { node, kind } = curSymbolInfo;
+    const {
+      node, kind,
+    } = curSymbolInfo;
     const name = extractVarNameFromPrimaryVariable(node) ?? '<unnamed>';
     const index = createNodeSymbolIndex(name, kind);
     const symbol = curSymbolTable.get(index);

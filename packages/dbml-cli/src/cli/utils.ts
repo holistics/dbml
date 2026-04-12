@@ -79,7 +79,10 @@ function generate (inputPaths: string[], transform: (source: string) => string, 
     } catch (e) {
       if (e instanceof CompilerError) {
         throw e.map((diag) => ({
-          ...diag, message: diag.message, filepath: path.basename(_path), stack: diag.stack,
+          ...diag,
+          message: diag.message,
+          filepath: path.basename(_path),
+          stack: diag.stack,
         }));
       }
       throw e;

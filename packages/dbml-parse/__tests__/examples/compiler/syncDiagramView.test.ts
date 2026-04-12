@@ -18,7 +18,9 @@ DiagramView my_view {
 }`;
     const { newDbml } = syncDiagramView(dbml, [
       {
-        operation: 'update', name: 'my_view', newName: 'renamed_view',
+        operation: 'update',
+        name: 'my_view',
+        newName: 'renamed_view',
       },
     ]);
     expect(newDbml).toContain('DiagramView renamed_view');
@@ -39,7 +41,12 @@ DiagramView my_view {
   Tables { users }
 }
 `;
-    const { newDbml } = syncDiagramView(dbml, [{ operation: 'delete', name: 'my_view' }]);
+    const { newDbml } = syncDiagramView(dbml, [
+      {
+        operation: 'delete',
+        name: 'my_view',
+      },
+    ]);
     expect(newDbml).not.toContain('DiagramView my_view');
     expect(newDbml).toContain('Table users');
   });
@@ -92,7 +99,10 @@ describe('syncDiagramView - name quoting', () => {
         operation: 'create',
         name: 'My View',
         visibleEntities: {
-          tables: null, stickyNotes: null, tableGroups: null, schemas: null,
+          tables: null,
+          stickyNotes: null,
+          tableGroups: null,
+          schemas: null,
         },
       },
     ]);
@@ -105,7 +115,10 @@ describe('syncDiagramView - name quoting', () => {
         operation: 'create',
         name: 'my_view',
         visibleEntities: {
-          tables: null, stickyNotes: null, tableGroups: null, schemas: null,
+          tables: null,
+          stickyNotes: null,
+          tableGroups: null,
+          schemas: null,
         },
       },
     ]);
@@ -119,7 +132,10 @@ describe('syncDiagramView - name quoting', () => {
         operation: 'create',
         name: 'My "Special" View',
         visibleEntities: {
-          tables: null, stickyNotes: null, tableGroups: null, schemas: null,
+          tables: null,
+          stickyNotes: null,
+          tableGroups: null,
+          schemas: null,
         },
       },
     ]);
@@ -134,7 +150,9 @@ DiagramView "My View" {
 `;
     const { newDbml } = syncDiagramView(dbml, [
       {
-        operation: 'update', name: 'My View', newName: 'New Name',
+        operation: 'update',
+        name: 'My View',
+        newName: 'New Name',
       },
     ]);
     expect(newDbml).toContain('DiagramView "New Name"');
@@ -156,7 +174,12 @@ DiagramView my_view {
         operation: 'create',
         name: 'my_view',
         visibleEntities: {
-          tables: [{ name: 'posts', schemaName: 'public' }],
+          tables: [
+            {
+              name: 'posts',
+              schemaName: 'public',
+            },
+          ],
           stickyNotes: null,
           tableGroups: null,
           schemas: null,

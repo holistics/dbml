@@ -12,9 +12,15 @@ import {
   VariableNode,
   CallExpressionNode,
 } from '@/core/types/nodes';
-import { SyntaxToken, SyntaxTokenKind } from '@/core/types/tokens';
-import { isRelationshipOp, isTupleOfVariables } from '@/core/analyzer/validator/utils';
-import { NodeSymbolIndex, isPublicSchemaIndex } from '@/core/types/symbol';
+import {
+  SyntaxToken, SyntaxTokenKind,
+} from '@/core/types/tokens';
+import {
+  isRelationshipOp, isTupleOfVariables,
+} from '@/core/analyzer/validator/utils';
+import {
+  NodeSymbolIndex, isPublicSchemaIndex,
+} from '@/core/types/symbol';
 import { NodeSymbol } from '@/core/types/symbol/symbols';
 import {
   isAccessExpression,
@@ -67,7 +73,8 @@ export function destructureComplexVariable (node?: SyntaxNode): string[] | undef
 
 export function destructureComplexVariableTuple (
   node?: SyntaxNode,
-): { variables: (PrimaryExpressionNode & { expression: VariableNode })[]; tupleElements: (PrimaryExpressionNode & { expression: VariableNode })[] } | undefined {
+): { variables: (PrimaryExpressionNode & { expression: VariableNode })[];
+  tupleElements: (PrimaryExpressionNode & { expression: VariableNode })[]; } | undefined {
   if (node === undefined) {
     return undefined;
   }
@@ -114,8 +121,14 @@ export function destructureIndexNode (node?: SyntaxNode): {
 } | undefined {
   if (isValidIndexName(node)) {
     return node instanceof FunctionExpressionNode
-      ? { functional: [node], nonFunctional: [] }
-      : { functional: [], nonFunctional: [node] };
+      ? {
+          functional: [node],
+          nonFunctional: [],
+        }
+      : {
+          functional: [],
+          nonFunctional: [node],
+        };
   }
 
   if (node instanceof TupleExpressionNode && node.elementList.every(isValidIndexName)) {
@@ -124,7 +137,10 @@ export function destructureIndexNode (node?: SyntaxNode): {
     ) as FunctionExpressionNode[];
     const nonfunctionalIndexName = node.elementList.filter(isExpressionAVariableNode);
 
-    return { functional: functionalIndexName, nonFunctional: nonfunctionalIndexName };
+    return {
+      functional: functionalIndexName,
+      nonFunctional: nonfunctionalIndexName,
+    };
   }
 
   return undefined;
@@ -238,7 +254,8 @@ export function extractIndexName (
 //   table()                  => { variables: [table], args: [] }
 export function destructureCallExpression (
   node?: SyntaxNode,
-): { variables: (PrimaryExpressionNode & { expression: VariableNode })[]; args: (PrimaryExpressionNode & { expression: VariableNode })[] } | undefined {
+): { variables: (PrimaryExpressionNode & { expression: VariableNode })[];
+  args: (PrimaryExpressionNode & { expression: VariableNode })[]; } | undefined {
   if (!(node instanceof CallExpressionNode) || !node.callee) {
     return undefined;
   }

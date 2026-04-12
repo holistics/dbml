@@ -56,7 +56,9 @@ export class RecordsInterpreter {
     const warnings: CompileWarning[] = [];
 
     for (const element of elements) {
-      const { table, mergedColumns } = getTableAndColumnsOfRecords(element, this.env);
+      const {
+        table, mergedColumns,
+      } = getTableAndColumnsOfRecords(element, this.env);
       const prevRecord = this.tableToRecordMap.get(table);
       if (prevRecord) {
         errors.push(new CompileError(
@@ -73,7 +75,10 @@ export class RecordsInterpreter {
       }
       this.tableToRecordMap.set(table, element);
       if (!this.env.records.has(table)) {
-        this.env.records.set(table, { element, rows: [] });
+        this.env.records.set(table, {
+          element,
+          rows: [],
+        });
       }
       const tableRecords = this.env.records.get(table)!;
       for (const row of (element.body as BlockExpressionNode).body) {
@@ -117,7 +122,9 @@ export class RecordsInterpreter {
 //   - `table`: The original interpreted table object that `records` refer to
 //   - `mergedTable`: The interpreted table object merged with its table partials
 //   - `mergedColumns`: The columns of the `mergedTable``
-function getTableAndColumnsOfRecords (records: ElementDeclarationNode, env: InterpreterDatabase): { table: Table; mergedTable: Table; mergedColumns: Column[] } {
+function getTableAndColumnsOfRecords (records: ElementDeclarationNode, env: InterpreterDatabase): { table: Table;
+  mergedTable: Table;
+  mergedColumns: Column[]; } {
   const nameNode = records.name;
   const parent = records.parent;
   if (parent instanceof ElementDeclarationNode) {
@@ -147,7 +154,8 @@ function getTableAndColumnsOfRecords (records: ElementDeclarationNode, env: Inte
   };
 }
 
-type RowData = { row: Record<string, RecordValue> | null; columnNodes: Record<string, SyntaxNode> };
+type RowData = { row: Record<string, RecordValue> | null;
+  columnNodes: Record<string, SyntaxNode>; };
 
 function extractDataFromRow (
   row: FunctionApplicationNode,
@@ -166,7 +174,10 @@ function extractDataFromRow (
       `Expected ${mergedColumns.length} values but got ${args.length}`,
       row,
     ));
-    return new Report({ row: null, columnNodes: {} }, errors, warnings);
+    return new Report({
+      row: null,
+      columnNodes: {},
+    }, errors, warnings);
   }
 
   for (let i = 0; i < mergedColumns.length; i++) {
@@ -182,7 +193,10 @@ function extractDataFromRow (
     }
   }
 
-  return new Report({ row: rowObj, columnNodes }, errors, warnings);
+  return new Report({
+    row: rowObj,
+    columnNodes,
+  }, errors, warnings);
 }
 
 function getNodeSourceText (node: SyntaxNode, source: string): string {
@@ -224,7 +238,10 @@ function extractValue (
     const hasDefaultValue = dbdefault && dbdefault.value.toString().toLowerCase() !== 'null';
     const isSerial = isSerialType(type);
     if (notNull && !hasDefaultValue && !increment && !isSerial) {
-      return new Report({ value: null, type: valueType }, [], [
+      return new Report({
+        value: null,
+        type: valueType,
+      }, [], [
         new CompileWarning(
           CompileErrorCode.INVALID_RECORDS_FIELD,
           `NULL not allowed for non-nullable column '${column.name}' without default and increment`,
@@ -232,7 +249,10 @@ function extractValue (
         ),
       ]);
     }
-    return new Report({ value: null, type: valueType }, [], []);
+    return new Report({
+      value: null,
+      type: valueType,
+    }, [], []);
   }
 
   // Enum type
@@ -243,7 +263,10 @@ function extractValue (
       enumValue = (destructureComplexVariable(node) ?? []).pop();
     }
     if (!(enumMembers as (string | undefined)[]).includes(enumValue)) {
-      return new Report({ value: enumValue, type: valueType }, [], [
+      return new Report({
+        value: enumValue,
+        type: valueType,
+      }, [], [
         new CompileWarning(
           CompileErrorCode.INVALID_RECORDS_FIELD,
           `Invalid enum value for column '${column.name}'`,
@@ -252,7 +275,10 @@ function extractValue (
       ]);
     }
 
-    return new Report({ value: enumValue, type: valueType }, [], []);
+    return new Report({
+      value: enumValue,
+      type: valueType,
+    }, [], []);
   }
 
   // Numeric type
@@ -260,7 +286,10 @@ function extractValue (
     const numValue = tryExtractNumeric(node);
     if (numValue === null) {
       return new Report(
-        { value: fallbackValue, type: fallbackType },
+        {
+          value: fallbackValue,
+          type: fallbackType,
+        },
         [],
         [
           new CompileWarning(
@@ -274,7 +303,10 @@ function extractValue (
 
     // Integer type: validate no decimal point
     if (isIntegerType(type) && !Number.isInteger(numValue)) {
-      return new Report({ value: Math.floor(numValue), type: valueType }, [], [
+      return new Report({
+        value: Math.floor(numValue),
+        type: valueType,
+      }, [], [
         new CompileWarning(
           CompileErrorCode.INVALID_RECORDS_FIELD,
           `Invalid integer value ${numValue} for column '${column.name}': expected integer, got decimal`,
@@ -285,7 +317,9 @@ function extractValue (
 
     // Decimal/numeric type: validate precision and scale
     if (isFloatType(type) && column.type.numericParams) {
-      const { precision, scale } = column.type.numericParams;
+      const {
+        precision, scale,
+      } = column.type.numericParams;
       const numStr = numValue.toString();
       const parts = numStr.split('.');
       const integerPart = parts[0].replace(/^-/, ''); // Remove sign
@@ -295,7 +329,10 @@ function extractValue (
       const decimalDigits = decimalPart.length;
 
       if (totalDigits > precision) {
-        return new Report({ value: numValue, type: valueType }, [], [
+        return new Report({
+          value: numValue,
+          type: valueType,
+        }, [], [
           new CompileWarning(
             CompileErrorCode.INVALID_RECORDS_FIELD,
             `Numeric value ${numValue} for column '${column.name}' exceeds precision: expected at most ${precision} total digits, got ${totalDigits}`,
@@ -305,7 +342,10 @@ function extractValue (
       }
 
       if (decimalDigits > scale) {
-        return new Report({ value: numValue, type: valueType }, [], [
+        return new Report({
+          value: numValue,
+          type: valueType,
+        }, [], [
           new CompileWarning(
             CompileErrorCode.INVALID_RECORDS_FIELD,
             `Numeric value ${numValue} for column '${column.name}' exceeds scale: expected at most ${scale} decimal digits, got ${decimalDigits}`,
@@ -315,7 +355,10 @@ function extractValue (
       }
     }
 
-    return new Report({ value: numValue, type: valueType }, [], []);
+    return new Report({
+      value: numValue,
+      type: valueType,
+    }, [], []);
   }
 
   // Boolean type
@@ -323,7 +366,10 @@ function extractValue (
     const boolValue = tryExtractBoolean(node);
     if (boolValue === null) {
       return new Report(
-        { value: fallbackValue, type: fallbackType },
+        {
+          value: fallbackValue,
+          type: fallbackType,
+        },
         [],
         [
           new CompileWarning(
@@ -334,7 +380,10 @@ function extractValue (
         ],
       );
     }
-    return new Report({ value: boolValue, type: valueType }, [], []);
+    return new Report({
+      value: boolValue,
+      type: valueType,
+    }, [], []);
   }
 
   // Datetime type
@@ -342,7 +391,10 @@ function extractValue (
     const dtValue = tryExtractDateTime(node);
     if (dtValue === null) {
       return new Report(
-        { value: fallbackValue, type: fallbackType },
+        {
+          value: fallbackValue,
+          type: fallbackType,
+        },
         [],
         [
           new CompileWarning(
@@ -353,7 +405,10 @@ function extractValue (
         ],
       );
     }
-    return new Report({ value: dtValue, type: valueType }, [], []);
+    return new Report({
+      value: dtValue,
+      type: valueType,
+    }, [], []);
   }
 
   // String type
@@ -361,7 +416,10 @@ function extractValue (
     const strValue = tryExtractString(node);
     if (strValue === null) {
       return new Report(
-        { value: fallbackValue, type: fallbackType },
+        {
+          value: fallbackValue,
+          type: fallbackType,
+        },
         [],
         [
           new CompileWarning(
@@ -380,7 +438,10 @@ function extractValue (
       const actualByteLength = new TextEncoder().encode(strValue).length;
 
       if (actualByteLength > length) {
-        return new Report({ value: strValue, type: valueType }, [], [
+        return new Report({
+          value: strValue,
+          type: valueType,
+        }, [], [
           new CompileWarning(
             CompileErrorCode.INVALID_RECORDS_FIELD,
             `String value for column '${column.name}' exceeds maximum length: expected at most ${length} bytes (UTF-8), got ${actualByteLength} bytes`,
@@ -390,9 +451,15 @@ function extractValue (
       }
     }
 
-    return new Report({ value: strValue, type: 'string' }, [], []);
+    return new Report({
+      value: strValue,
+      type: 'string',
+    }, [], []);
   }
 
   // Fallback - try to extract as string
-  return new Report({ value: fallbackValue, type: fallbackType }, [], []);
+  return new Report({
+    value: fallbackValue,
+    type: fallbackType,
+  }, [], []);
 }

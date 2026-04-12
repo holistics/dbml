@@ -16,7 +16,9 @@ import type {
   FilterConfig,
 } from '@/core/types/schemaJson';
 
-export type { DiagramView, FilterConfig };
+export type {
+  DiagramView, FilterConfig,
+};
 
 export interface ElementInterpreter {
   interpret(): CompileError[];
@@ -35,7 +37,8 @@ export interface InterpreterDatabase {
   tablePartials: Map<ElementDeclarationNode, TablePartial>;
   aliases: Alias[];
   project: Map<ElementDeclarationNode, Project>;
-  records: Map<Table, { element: ElementDeclarationNode; rows: TableRecordRow[] }>;
+  records: Map<Table, { element: ElementDeclarationNode;
+    rows: TableRecordRow[]; }>;
   recordsElements: ElementDeclarationNode[];
   cachedMergedTables: Map<Table, Table>; // map Table to Table that has been merged with table partials
   source: string;

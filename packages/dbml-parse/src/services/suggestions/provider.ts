@@ -7,7 +7,9 @@ import {
   isExpressionAVariableNode,
 } from '@/core/parser/utils';
 import Compiler, { ScopeKind } from '@/compiler';
-import { SyntaxToken, SyntaxTokenKind } from '@/core/types/tokens';
+import {
+  SyntaxToken, SyntaxTokenKind,
+} from '@/core/types/tokens';
 import { isOffsetWithinSpan } from '@/core/utils/span';
 import { convertStringToEnum } from '@/core/utils/enum';
 import {
@@ -18,8 +20,12 @@ import {
   CompletionItemKind,
   CompletionItemInsertTextRule,
 } from '@/services/types';
-import { TableSymbol, type NodeSymbol } from '@/core/types/symbol/symbols';
-import { SymbolKind, destructureIndex } from '@/core/types/symbol';
+import {
+  TableSymbol, type NodeSymbol,
+} from '@/core/types/symbol/symbols';
+import {
+  SymbolKind, destructureIndex,
+} from '@/core/types/symbol';
 import {
   pickCompletionItemKind,
   shouldPrependSpace,
@@ -47,7 +53,9 @@ import {
 } from '@/core/types/nodes';
 import { getOffsetFromMonacoPosition } from '@/services/utils';
 import { isComment } from '@/core/lexer/utils';
-import { ElementKind, SettingName } from '@/core/analyzer/types';
+import {
+  ElementKind, SettingName,
+} from '@/core/analyzer/types';
 import { DEFAULT_SCHEMA_NAME } from '@/constants';
 
 export default class DBMLCompletionItemProvider implements CompletionItemProvider {
@@ -71,7 +79,9 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
 
     const flatStream = this.compiler.token.flatStream();
     // bOc: before-or-contain
-    const { token: bOcToken, index: bOcTokenId } = this.compiler.container.token(offset);
+    const {
+      token: bOcToken, index: bOcTokenId,
+    } = this.compiler.container.token(offset);
     // abOc: after before-or-contain
     const abOcToken = bOcTokenId === undefined ? flatStream[0] : flatStream[bOcTokenId + 1];
 
@@ -204,7 +214,9 @@ function suggestMembersOfSymbol (
     suggestions: compiler.symbol
       .members(symbol)
       .filter(({ kind }) => acceptedKinds.includes(kind))
-      .map(({ name, kind }) => ({
+      .map(({
+        name, kind,
+      }) => ({
         label: name,
         insertText: name,
         insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
@@ -520,7 +532,9 @@ function suggestMembers (
     suggestions: compiler.symbol
       .ofName(nameStack, compiler.container.element(offset))
       .flatMap(({ symbol }) => compiler.symbol.members(symbol))
-      .map(({ kind, name }) => ({
+      .map(({
+        kind, name,
+      }) => ({
         label: name,
         insertText: name,
         kind: pickCompletionItemKind(kind),
@@ -781,7 +795,9 @@ function suggestInTableGroupField (compiler: Compiler): CompletionList {
         suggestions: [...compiler.parse.publicSymbolTable().entries()].flatMap(([index]) => {
           const res = destructureIndex(index);
           if (res === undefined) return [];
-          const { kind, name } = res;
+          const {
+            kind, name,
+          } = res;
           if (kind !== SymbolKind.Table && kind !== SymbolKind.Schema) return [];
 
           return {

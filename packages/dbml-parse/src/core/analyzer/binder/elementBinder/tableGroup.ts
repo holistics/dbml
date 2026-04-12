@@ -59,7 +59,16 @@ export default class TableGroupBinder implements ElementBinder {
         }
         const schemaBindees = bindee.variables;
 
-        return lookupAndBindInScope(this.ast, [...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })), { node: tableBindee, kind: SymbolKind.Table }]);
+        return lookupAndBindInScope(this.ast, [
+          ...schemaBindees.map((b) => ({
+            node: b,
+            kind: SymbolKind.Schema,
+          })),
+          {
+            node: tableBindee,
+            kind: SymbolKind.Table,
+          },
+        ]);
       });
     });
   }

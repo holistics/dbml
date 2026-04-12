@@ -1,5 +1,7 @@
 import { DEFAULT_SCHEMA_NAME } from '@/constants';
-import { last, partition } from 'lodash-es';
+import {
+  last, partition,
+} from 'lodash-es';
 import SymbolFactory from '@/core/types/symbol/factory';
 import {
   CompileError, CompileErrorCode, CompileWarning,
@@ -7,16 +9,26 @@ import {
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode, WildcardNode,
 } from '@/core/types/nodes';
-import { isExpressionAQuotedString, isExpressionAVariableNode } from '@/core/parser/utils';
+import {
+  isExpressionAQuotedString, isExpressionAVariableNode,
+} from '@/core/parser/utils';
 import { SyntaxToken } from '@/core/types/tokens';
 import { ElementValidator } from '@/core/analyzer/validator/types';
 import { aggregateSettingList } from '@/core/analyzer/validator/utils';
-import { isValidName, pickValidator } from '@/core/analyzer/validator/utils';
+import {
+  isValidName, pickValidator,
+} from '@/core/analyzer/validator/utils';
 import { registerSchemaStack } from '@/core/analyzer/validator/utils';
-import { createEnumFieldSymbolIndex, createEnumSymbolIndex } from '@/core/types/symbol/symbolIndex';
-import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '@/core/analyzer/utils';
+import {
+  createEnumFieldSymbolIndex, createEnumSymbolIndex,
+} from '@/core/types/symbol/symbolIndex';
+import {
+  destructureComplexVariable, extractVarNameFromPrimaryVariable,
+} from '@/core/analyzer/utils';
 import SymbolTable from '@/core/types/symbol/symbolTable';
-import { EnumFieldSymbol, EnumSymbol } from '@/core/types/symbol/symbols';
+import {
+  EnumFieldSymbol, EnumSymbol,
+} from '@/core/types/symbol/symbols';
 
 export default class EnumValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
@@ -29,7 +41,8 @@ export default class EnumValidator implements ElementValidator {
     this.symbolFactory = symbolFactory;
   }
 
-  validate (): { errors: CompileError[]; warnings: CompileWarning[] } {
+  validate (): { errors: CompileError[];
+    warnings: CompileWarning[]; } {
     return {
       errors: [
         ...this.validateContext(),
@@ -75,7 +88,10 @@ export default class EnumValidator implements ElementValidator {
 
   registerElement (): CompileError[] {
     const errors: CompileError[] = [];
-    this.declarationNode.symbol = this.symbolFactory.create(EnumSymbol, { declaration: this.declarationNode, symbolTable: new SymbolTable() });
+    this.declarationNode.symbol = this.symbolFactory.create(EnumSymbol, {
+      declaration: this.declarationNode,
+      symbolTable: new SymbolTable(),
+    });
     const { name } = this.declarationNode;
 
     const maybeNameFragments = destructureComplexVariable(name);

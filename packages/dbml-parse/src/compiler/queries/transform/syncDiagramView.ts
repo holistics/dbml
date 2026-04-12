@@ -1,10 +1,14 @@
 import Lexer from '@/core/lexer/lexer';
 import Parser from '@/core/parser/parser';
 import { ElementKind } from '@/core/analyzer/types';
-import { DEFAULT_SCHEMA_NAME, DEFAULT_ENTRY } from '@/constants';
+import {
+  DEFAULT_SCHEMA_NAME, DEFAULT_ENTRY,
+} from '@/constants';
 import { SyntaxNodeIdGenerator } from '@/core/types/nodes';
 import { destructureComplexVariable } from '@/core/analyzer/utils';
-import { applyTextEdits, TextEdit } from './applyTextEdits';
+import {
+  applyTextEdits, TextEdit,
+} from './applyTextEdits';
 import { addDoubleQuoteIfNeeded } from '../utils';
 
 export interface DiagramViewSyncOperation {
@@ -12,7 +16,8 @@ export interface DiagramViewSyncOperation {
   name: string;
   newName?: string;
   visibleEntities?: {
-    tables?: Array<{ name: string; schemaName: string }> | null;
+    tables?: Array<{ name: string;
+      schemaName: string; }> | null;
     stickyNotes?: Array<{ name: string }> | null;
     tableGroups?: Array<{ name: string }> | null;
     schemas?: Array<{ name: string }> | null;
@@ -130,7 +135,8 @@ export function syncDiagramView (
   dbml: string,
   operations: DiagramViewSyncOperation[],
   blocks?: DiagramViewBlock[],
-): { newDbml: string; edits: TextEdit[] } {
+): { newDbml: string;
+  edits: TextEdit[]; } {
   const originalBlocks = blocks ?? findDiagramViewBlocks(dbml);
   const allEdits: TextEdit[] = [];
 
@@ -142,7 +148,10 @@ export function syncDiagramView (
   // Sort edits descending by start position for tail-first application
   allEdits.sort((a, b) => b.start - a.start);
   const newDbml = applyTextEdits(dbml, allEdits, true);
-  return { newDbml, edits: allEdits };
+  return {
+    newDbml,
+    edits: allEdits,
+  };
 }
 
 function applyOperation (
@@ -250,7 +259,9 @@ function computeDeleteEdit (
 
   return [
     {
-      start, end, newText: '',
+      start,
+      end,
+      newText: '',
     },
   ];
 }

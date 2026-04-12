@@ -3,7 +3,9 @@ import {
 } from 'vitest';
 import Compiler from '@/compiler';
 import DBMLCompletionItemProvider from '@/services/suggestions/provider';
-import { createMockTextModel, createPosition } from '@tests/utils';
+import {
+  createMockTextModel, createPosition,
+} from '@tests/utils';
 
 describe('[example] CompletionItemProvider', () => {
   describe('should suggest element types when at top level', () => {

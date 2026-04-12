@@ -4,13 +4,19 @@ const dbmlMonarchTokensProvider: languages.IMonarchLanguage = {
   tokenPostfix: '.dbml',
   brackets: [
     {
-      open: '[', close: ']', token: 'delimiter.square',
+      open: '[',
+      close: ']',
+      token: 'delimiter.square',
     },
     {
-      open: '(', close: ')', token: 'delimiter.parenthesis',
+      open: '(',
+      close: ')',
+      token: 'delimiter.parenthesis',
     },
     {
-      open: '{', close: '}', token: 'delimiter.curly',
+      open: '{',
+      close: '}',
+      token: 'delimiter.curly',
     },
   ],
 

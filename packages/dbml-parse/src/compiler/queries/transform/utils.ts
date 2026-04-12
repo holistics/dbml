@@ -1,16 +1,20 @@
 import { DEFAULT_SCHEMA_NAME } from '@/constants';
 import { splitQualifiedIdentifier } from '../utils';
-import { createTableSymbolIndex, createSchemaSymbolIndex } from '@/core/types/symbol';
+import {
+  createTableSymbolIndex, createSchemaSymbolIndex,
+} from '@/core/types/symbol';
 import type SymbolTable from '@/core/types/symbol/symbolTable';
 import { TableSymbol } from '@/core/types/symbol/symbols';
 
-export type TableNameInput = string | { schema?: string; table: string };
+export type TableNameInput = string | { schema?: string;
+  table: string; };
 
 /**
  * Normalizes a table name input to { schema, table } format.
  * Properly handles quoted identifiers with dots inside.
  */
-export function normalizeTableName (input: TableNameInput): { schema: string; table: string } {
+export function normalizeTableName (input: TableNameInput): { schema: string;
+  table: string; } {
   if (typeof input !== 'string') {
     return {
       schema: input.schema ?? DEFAULT_SCHEMA_NAME,

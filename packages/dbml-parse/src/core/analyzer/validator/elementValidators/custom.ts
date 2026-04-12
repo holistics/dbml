@@ -22,7 +22,8 @@ export default class CustomValidator implements ElementValidator {
     this.symbolFactory = symbolFactory;
   }
 
-  validate (): { errors: CompileError[]; warnings: CompileWarning[] } {
+  validate (): { errors: CompileError[];
+    warnings: CompileWarning[]; } {
     return {
       errors: [
         ...this.validateContext(),

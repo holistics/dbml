@@ -337,7 +337,5 @@ interface Props {
   iconClass?: string;
 }
 
-withDefaults(defineProps<Props>(), {
-  iconClass: 'text-gray-600',
-});
+withDefaults(defineProps<Props>(), { iconClass: 'text-gray-600' });
 </script>

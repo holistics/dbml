@@ -20,7 +20,9 @@
  * that preserves the actual parser hierarchy and shows all properties
  * like body, callee, args, etc. for debugging purposes.
  */
-import { computed, ref } from 'vue';
+import {
+  computed, ref,
+} from 'vue';
 import RawASTTreeNode, { type RawASTNode } from './RawASTTreeNode.vue';
 
 interface Props {
@@ -31,7 +33,8 @@ const props = defineProps<Props>();
 
 const emit = defineEmits<{
   'node-click': [node: RawASTNode];
-  'position-click': [{ node: RawASTNode; position: any }];
+  'position-click': [{ node: RawASTNode;
+    position: any; }];
 }>();
 
 const selectedNode = ref<RawASTNode | null>(null);
@@ -43,7 +46,8 @@ const rootNode = computed(() => {
 });
 
 // Handle node expansion
-const handleNodeExpand = (event: { id: string; expanded: boolean }) => {
+const handleNodeExpand = (event: { id: string;
+  expanded: boolean; }) => {
   if (event.expanded) {
     expandedNodes.value.add(event.id);
   } else {

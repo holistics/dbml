@@ -1,7 +1,9 @@
 import {
   describe, expect, test,
 } from 'vitest';
-import { SyntaxTokenKind, isTriviaToken } from '@/core/types/tokens';
+import {
+  SyntaxTokenKind, isTriviaToken,
+} from '@/core/types/tokens';
 import { CompileErrorCode } from '@/core/types/errors';
 import { SyntaxNodeKind } from '@/core/types/nodes';
 import { WildcardNode } from '@/core/types/nodes';

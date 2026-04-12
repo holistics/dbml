@@ -1,5 +1,9 @@
-import { partition, last } from 'lodash-es';
-import { SyntaxToken, SyntaxTokenKind } from '@/core/types/tokens';
+import {
+  partition, last,
+} from 'lodash-es';
+import {
+  SyntaxToken, SyntaxTokenKind,
+} from '@/core/types/tokens';
 import SymbolFactory from '@/core/types/symbol/factory';
 import {
   CompileError, CompileErrorCode, CompileWarning,
@@ -31,7 +35,8 @@ export default class RefValidator implements ElementValidator {
     this.symbolFactory = symbolFactory;
   }
 
-  validate (): { errors: CompileError[]; warnings: CompileWarning[] } {
+  validate (): { errors: CompileError[];
+    warnings: CompileWarning[]; } {
     return {
       errors: [
         ...this.validateContext(),
@@ -110,9 +115,15 @@ export default class RefValidator implements ElementValidator {
       }
 
       if (field.callee && isBinaryRelationship(field.callee)) {
-        const leftFragment = destructureComplexVariableTuple(field.callee.leftExpression) ?? { variables: [], tupleElements: [] };
+        const leftFragment = destructureComplexVariableTuple(field.callee.leftExpression) ?? {
+          variables: [],
+          tupleElements: [],
+        };
         const leftFragmentCount = leftFragment.variables.length + Math.min(leftFragment.tupleElements.length, 1);
-        const rightFragment = destructureComplexVariableTuple(field.callee.rightExpression) ?? { variables: [], tupleElements: [] };
+        const rightFragment = destructureComplexVariableTuple(field.callee.rightExpression) ?? {
+          variables: [],
+          tupleElements: [],
+        };
         const rightFragmentCount = rightFragment.variables.length + Math.min(rightFragment.tupleElements.length, 1);
         if (leftFragmentCount < 2) {
           errors.push(new CompileError(CompileErrorCode.INVALID_REF_FIELD, 'Invalid column reference', field.callee.leftExpression || field.callee));

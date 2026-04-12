@@ -7,7 +7,9 @@ import {
 import Lexer from '@/core/lexer/lexer';
 import Parser from '@/core/parser/parser';
 import type { ProgramNode } from '@/core/types/nodes';
-import { scanTestNames, toSnapshot } from '@tests/utils';
+import {
+  scanTestNames, toSnapshot,
+} from '@tests/utils';
 import Compiler from '@/compiler';
 import type Report from '@/core/types/report';
 

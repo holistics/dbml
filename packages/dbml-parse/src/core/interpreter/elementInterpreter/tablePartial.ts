@@ -18,12 +18,18 @@ import {
   destructureComplexVariable, destructureIndexNode, extractQuotedStringToken, extractVarNameFromPrimaryVariable,
   extractVariableFromExpression,
 } from '@/core/analyzer/utils';
-import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import {
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
 import { aggregateSettingList } from '@/core/analyzer/validator/utils';
 import { ColumnSymbol } from '@/core/types/symbol/symbols';
-import { ElementKind, SettingName } from '@/core/analyzer/types';
+import {
+  ElementKind, SettingName,
+} from '@/core/analyzer/types';
 import { convertStringToEnum } from '@/core/utils/enum';
-import { ElementInterpreter, InterpreterDatabase } from '../types';
+import {
+  ElementInterpreter, InterpreterDatabase,
+} from '../types';
 
 export class TablePartialInterpreter implements ElementInterpreter {
   private declarationNode: ElementDeclarationNode;
@@ -35,7 +41,11 @@ export class TablePartialInterpreter implements ElementInterpreter {
     this.declarationNode = declarationNode;
     this.env = env;
     this.tablePartial = {
-      name: undefined, fields: [], token: undefined, indexes: [], checks: [],
+      name: undefined,
+      fields: [],
+      token: undefined,
+      indexes: [],
+      checks: [],
     };
     this.pkColumns = [];
   }
@@ -51,15 +61,23 @@ export class TablePartialInterpreter implements ElementInterpreter {
     // and a new pk composite index is added
     if (this.pkColumns.length >= 2) {
       this.tablePartial.indexes!.push({
-        columns: this.pkColumns.map(({ name, token }) => ({
-          value: name, type: 'column', token,
+        columns: this.pkColumns.map(({
+          name, token,
+        }) => ({
+          value: name,
+          type: 'column',
+          token,
         })),
         token: {
           start: {
-            offset: -1, line: -1, column: -1,
+            offset: -1,
+            line: -1,
+            column: -1,
           }, // do not make sense to have a meaningful start (?)
           end: {
-            offset: -1, line: -1, column: -1,
+            offset: -1,
+            line: -1,
+            column: -1,
           }, // do not make sense to have a meaningful end (?)
           filepath: this.declarationNode.filepath,
         },
@@ -275,7 +293,9 @@ export class TablePartialInterpreter implements ElementInterpreter {
         fragments.push(argPtr);
         return fragments;
       }).forEach((arg) => {
-        const { functional, nonFunctional } = destructureIndexNode(arg)!;
+        const {
+          functional, nonFunctional,
+        } = destructureIndexNode(arg)!;
         index.columns!.push(
           ...functional.map((s) => ({
             value: s.value!.value,

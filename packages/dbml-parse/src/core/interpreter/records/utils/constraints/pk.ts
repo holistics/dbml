@@ -1,5 +1,9 @@
-import { CompileError, CompileErrorCode } from '@/core/types/errors';
-import { Table, Column } from '@/core/types/schemaJson';
+import {
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
+import {
+  Table, Column,
+} from '@/core/types/schemaJson';
 import {
   extractKeyValueWithDefault,
   hasNullWithoutDefaultInKey,
@@ -13,7 +17,9 @@ import { isSerialType } from '../data';
 import {
   keyBy, groupBy, partition, compact, isEmpty, difference, filter, flatMap,
 } from 'lodash-es';
-import { InterpreterDatabase, TableRecordRow } from '@/core/interpreter/types';
+import {
+  InterpreterDatabase, TableRecordRow,
+} from '@/core/interpreter/types';
 
 const getConstraintType = (columnCount: number) =>
   columnCount > 1 ? 'Composite PK' : 'PK';

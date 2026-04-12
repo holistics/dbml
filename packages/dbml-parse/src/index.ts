@@ -79,9 +79,13 @@ export {
 } from '@/core/types/schemaJson';
 
 // DiagramView types (methods exposed via Compiler)
-export type { DiagramViewSyncOperation, DiagramViewBlock } from '@/compiler/queries/transform/syncDiagramView';
+export type {
+  DiagramViewSyncOperation, DiagramViewBlock,
+} from '@/compiler/queries/transform/syncDiagramView';
 export type { TextEdit } from '@/compiler/queries/transform/applyTextEdits';
 
 export { dbmlMonarchTokensProvider } from '@/services/monarch';
 
-export { Compiler, services };
+export {
+  Compiler, services,
+};

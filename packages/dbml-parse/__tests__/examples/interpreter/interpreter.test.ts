@@ -1,7 +1,9 @@
 import {
   describe, expect, test,
 } from 'vitest';
-import { interpret, analyze } from '@tests/utils';
+import {
+  interpret, analyze,
+} from '@tests/utils';
 
 describe('[example] interpreter', () => {
   describe('table interpretation', () => {
@@ -448,54 +450,72 @@ describe('[example] interpreter', () => {
         {
           type: 'int',
           expected: {
-            type_name: 'int', args: null, schemaName: null,
+            type_name: 'int',
+            args: null,
+            schemaName: null,
           },
         },
         {
           type: 'integer',
           expected: {
-            type_name: 'integer', args: null, schemaName: null,
+            type_name: 'integer',
+            args: null,
+            schemaName: null,
           },
         },
         {
           type: 'bigint',
           expected: {
-            type_name: 'bigint', args: null, schemaName: null,
+            type_name: 'bigint',
+            args: null,
+            schemaName: null,
           },
         },
         {
           type: 'varchar',
           expected: {
-            type_name: 'varchar', args: null, schemaName: null,
+            type_name: 'varchar',
+            args: null,
+            schemaName: null,
           },
         },
         {
           type: 'text',
           expected: {
-            type_name: 'text', args: null, schemaName: null,
+            type_name: 'text',
+            args: null,
+            schemaName: null,
           },
         },
         {
           type: 'boolean',
           expected: {
-            type_name: 'boolean', args: null, schemaName: null,
+            type_name: 'boolean',
+            args: null,
+            schemaName: null,
           },
         },
         {
           type: 'timestamp',
           expected: {
-            type_name: 'timestamp', args: null, schemaName: null,
+            type_name: 'timestamp',
+            args: null,
+            schemaName: null,
           },
         },
         {
           type: 'uuid',
           expected: {
-            type_name: 'uuid', args: null, schemaName: null,
+            type_name: 'uuid',
+            args: null,
+            schemaName: null,
           },
         },
       ];
 
-      testCases.forEach(({ type, expected }) => {
+      testCases.forEach(({
+        type, expected,
+      }) => {
         const db = interpret(`Table t { col ${type} }`).getValue()!;
         const field = db.tables[0].fields[0];
         expect(field.type.type_name).toBe(expected.type_name);
@@ -510,30 +530,40 @@ describe('[example] interpreter', () => {
         {
           type: 'varchar(255)',
           expected: {
-            type_name: 'varchar(255)', args: '255', schemaName: null,
+            type_name: 'varchar(255)',
+            args: '255',
+            schemaName: null,
           },
         },
         {
           type: 'char(10)',
           expected: {
-            type_name: 'char(10)', args: '10', schemaName: null,
+            type_name: 'char(10)',
+            args: '10',
+            schemaName: null,
           },
         },
         {
           type: 'decimal(10,2)',
           expected: {
-            type_name: 'decimal(10,2)', args: '10,2', schemaName: null,
+            type_name: 'decimal(10,2)',
+            args: '10,2',
+            schemaName: null,
           },
         },
         {
           type: 'numeric(5)',
           expected: {
-            type_name: 'numeric(5)', args: '5', schemaName: null,
+            type_name: 'numeric(5)',
+            args: '5',
+            schemaName: null,
           },
         },
       ];
 
-      testCases.forEach(({ type, expected }) => {
+      testCases.forEach(({
+        type, expected,
+      }) => {
         const db = interpret(`Table t { col ${type} }`).getValue()!;
         const field = db.tables[0].fields[0];
         expect(field.type.type_name).toBe(expected.type_name);
@@ -690,14 +720,31 @@ describe('[example] interpreter', () => {
 
     test('should interpret ref delete actions', () => {
       const testCases = [
-        { action: 'cascade', expected: 'cascade' },
-        { action: 'no action', expected: 'no action' },
-        { action: 'set null', expected: 'set null' },
-        { action: 'set default', expected: 'set default' },
-        { action: 'restrict', expected: 'restrict' },
+        {
+          action: 'cascade',
+          expected: 'cascade',
+        },
+        {
+          action: 'no action',
+          expected: 'no action',
+        },
+        {
+          action: 'set null',
+          expected: 'set null',
+        },
+        {
+          action: 'set default',
+          expected: 'set default',
+        },
+        {
+          action: 'restrict',
+          expected: 'restrict',
+        },
       ];
 
-      testCases.forEach(({ action, expected }) => {
+      testCases.forEach(({
+        action, expected,
+      }) => {
         const source = `
           Table a { id int }
           Table b { a_id int }
@@ -710,14 +757,31 @@ describe('[example] interpreter', () => {
 
     test('should interpret ref update actions', () => {
       const testCases = [
-        { action: 'cascade', expected: 'cascade' },
-        { action: 'no action', expected: 'no action' },
-        { action: 'set null', expected: 'set null' },
-        { action: 'set default', expected: 'set default' },
-        { action: 'restrict', expected: 'restrict' },
+        {
+          action: 'cascade',
+          expected: 'cascade',
+        },
+        {
+          action: 'no action',
+          expected: 'no action',
+        },
+        {
+          action: 'set null',
+          expected: 'set null',
+        },
+        {
+          action: 'set default',
+          expected: 'set default',
+        },
+        {
+          action: 'restrict',
+          expected: 'restrict',
+        },
       ];
 
-      testCases.forEach(({ action, expected }) => {
+      testCases.forEach(({
+        action, expected,
+      }) => {
         const source = `
           Table a { id int }
           Table b { a_id int }
@@ -1058,7 +1122,12 @@ describe('[example] interpreter', () => {
 
       expect(db.diagramViews).toHaveLength(1);
       const ve = db.diagramViews[0].visibleEntities;
-      expect(ve.tables).toEqual([{ name: 'users', schemaName: 'public' }]);
+      expect(ve.tables).toEqual([
+        {
+          name: 'users',
+          schemaName: 'public',
+        },
+      ]);
       expect(ve.tableGroups).toEqual([]);
       expect(ve.schemas).toEqual([]);
       expect(ve.stickyNotes).toBeNull();
@@ -1090,7 +1159,12 @@ describe('[example] interpreter', () => {
       const db = interpret(source).getValue()!;
 
       const ve = db.diagramViews[0].visibleEntities;
-      expect(ve.tables).toEqual([{ name: 'users', schemaName: 'public' }]);
+      expect(ve.tables).toEqual([
+        {
+          name: 'users',
+          schemaName: 'public',
+        },
+      ]);
       expect(ve.tableGroups).toEqual([]);
       expect(ve.schemas).toEqual([]);
       expect(ve.stickyNotes).toEqual([]);
@@ -1204,7 +1278,12 @@ describe('[example] interpreter', () => {
       const ve = db.diagramViews[0].visibleEntities;
       // tableGroups [] comes from Trinity promotion, not explicit wildcard — should stay []
       expect(ve.tableGroups).toEqual([]);
-      expect(ve.tables).toEqual([{ name: 'users', schemaName: 'public' }]);
+      expect(ve.tables).toEqual([
+        {
+          name: 'users',
+          schemaName: 'public',
+        },
+      ]);
       expect(ve.schemas).toEqual([]);
     });
 
@@ -1222,7 +1301,12 @@ describe('[example] interpreter', () => {
       const ve = db.diagramViews[0].visibleEntities;
       // Tables is explicitly set, so TableGroups wildcard stays as []
       expect(ve.tableGroups).toEqual([]);
-      expect(ve.tables).toEqual([{ name: 'users', schemaName: 'public' }]);
+      expect(ve.tables).toEqual([
+        {
+          name: 'users',
+          schemaName: 'public',
+        },
+      ]);
       expect(ve.schemas).toEqual([]);
     });
 
@@ -1250,7 +1334,12 @@ describe('[example] interpreter', () => {
       `;
       const db = interpret(source).getValue()!;
       const ve = db.diagramViews[0].visibleEntities;
-      expect(ve.tables).toEqual([{ name: 'users', schemaName: 'public' }]);
+      expect(ve.tables).toEqual([
+        {
+          name: 'users',
+          schemaName: 'public',
+        },
+      ]);
     });
 
     test('should resolve schema-qualified table alias', () => {
@@ -1262,7 +1351,12 @@ describe('[example] interpreter', () => {
       `;
       const db = interpret(source).getValue()!;
       const ve = db.diagramViews[0].visibleEntities;
-      expect(ve.tables).toEqual([{ name: 'articles', schemaName: 'public' }]);
+      expect(ve.tables).toEqual([
+        {
+          name: 'articles',
+          schemaName: 'public',
+        },
+      ]);
     });
 
     test('should keep real name when no alias is used', () => {
@@ -1274,7 +1368,12 @@ describe('[example] interpreter', () => {
       `;
       const db = interpret(source).getValue()!;
       const ve = db.diagramViews[0].visibleEntities;
-      expect(ve.tables).toEqual([{ name: 'users', schemaName: 'public' }]);
+      expect(ve.tables).toEqual([
+        {
+          name: 'users',
+          schemaName: 'public',
+        },
+      ]);
     });
 
     test('should resolve multiple aliases in same block', () => {
@@ -1290,7 +1389,16 @@ describe('[example] interpreter', () => {
       `;
       const db = interpret(source).getValue()!;
       const ve = db.diagramViews[0].visibleEntities;
-      expect(ve.tables).toEqual([{ name: 'users', schemaName: 'public' }, { name: 'posts', schemaName: 'public' }]);
+      expect(ve.tables).toEqual([
+        {
+          name: 'users',
+          schemaName: 'public',
+        },
+        {
+          name: 'posts',
+          schemaName: 'public',
+        },
+      ]);
     });
 
     test('should resolve mixed aliases and real names', () => {
@@ -1306,7 +1414,16 @@ describe('[example] interpreter', () => {
       `;
       const db = interpret(source).getValue()!;
       const ve = db.diagramViews[0].visibleEntities;
-      expect(ve.tables).toEqual([{ name: 'users', schemaName: 'public' }, { name: 'posts', schemaName: 'public' }]);
+      expect(ve.tables).toEqual([
+        {
+          name: 'users',
+          schemaName: 'public',
+        },
+        {
+          name: 'posts',
+          schemaName: 'public',
+        },
+      ]);
     });
   });
 

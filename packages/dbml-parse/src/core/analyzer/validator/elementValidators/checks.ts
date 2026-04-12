@@ -1,4 +1,6 @@
-import { last, partition } from 'lodash-es';
+import {
+  last, partition,
+} from 'lodash-es';
 import SymbolFactory from '@/core/types/symbol/factory';
 import {
   CompileError, CompileErrorCode, CompileWarning,
@@ -14,7 +16,9 @@ import {
   WildcardNode,
 } from '@/core/types/nodes';
 import { isExpressionAQuotedString } from '@/core/parser/utils';
-import { aggregateSettingList, pickValidator } from '@/core/analyzer/validator/utils';
+import {
+  aggregateSettingList, pickValidator,
+} from '@/core/analyzer/validator/utils';
 import { SyntaxToken } from '@/core/types/tokens';
 import { ElementValidator } from '@/core/analyzer/validator/types';
 import SymbolTable from '@/core/types/symbol/symbolTable';
@@ -31,7 +35,8 @@ export default class ChecksValidator implements ElementValidator {
     this.symbolFactory = symbolFactory;
   }
 
-  validate (): { errors: CompileError[]; warnings: CompileWarning[] } {
+  validate (): { errors: CompileError[];
+    warnings: CompileWarning[]; } {
     return {
       errors: [
         ...this.validateContext(),

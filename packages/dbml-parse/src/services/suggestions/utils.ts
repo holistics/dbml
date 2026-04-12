@@ -4,7 +4,9 @@ import {
 import {
   CompletionItemKind, CompletionItemInsertTextRule, type CompletionList,
 } from '@/services/types';
-import { SyntaxToken, SyntaxTokenKind } from '@/core/types/tokens';
+import {
+  SyntaxToken, SyntaxTokenKind,
+} from '@/core/types/tokens';
 import { hasTrailingSpaces } from '@/core/lexer/utils';
 import {
   SyntaxNode, TupleExpressionNode, FunctionApplicationNode,
@@ -147,8 +149,10 @@ export function isTupleEmpty (tuple: TupleExpressionNode): boolean {
  */
 export function getColumnsFromTableSymbol (
   tableSymbol: TableSymbol | TablePartialSymbol,
-): Array<{ name: string; type: string }> | null {
-  const columns: Array<{ name: string; type: string }> = [];
+): Array<{ name: string;
+  type: string; }> | null {
+  const columns: Array<{ name: string;
+    type: string; }> = [];
 
   for (const [index, columnSymbol] of tableSymbol.symbolTable.entries()) {
     const res = destructureIndex(index);
@@ -166,7 +170,8 @@ export function getColumnsFromTableSymbol (
 export function extractNameAndTypeOfColumnSymbol (
   columnSymbol: ColumnSymbol | TablePartialInjectedColumnSymbol,
   columnName: string,
-): { name: string; type: string } | null {
+): { name: string;
+  type: string; } | null {
   const columnIndex = createColumnSymbolIndex(columnName);
   const columnDeclaration = columnSymbol instanceof TablePartialInjectedColumnSymbol
     ? columnSymbol.tablePartialSymbol.symbolTable.get(columnIndex)?.declaration
@@ -178,5 +183,8 @@ export function extractNameAndTypeOfColumnSymbol (
 
   if (name === null || type === null) return null;
 
-  return { name, type };
+  return {
+    name,
+    type,
+  };
 }

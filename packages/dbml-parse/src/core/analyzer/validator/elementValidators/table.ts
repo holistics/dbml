@@ -50,7 +50,9 @@ import {
 } from '@/core/parser/utils';
 import { SyntaxToken } from '@/core/types/tokens';
 import SymbolTable from '@/core/types/symbol/symbolTable';
-import { ElementKind, SettingName } from '@/core/analyzer/types';
+import {
+  ElementKind, SettingName,
+} from '@/core/analyzer/types';
 
 export default class TableValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
@@ -67,7 +69,8 @@ export default class TableValidator implements ElementValidator {
     this.publicSymbolTable = publicSymbolTable;
   }
 
-  validate (): { errors: CompileError[]; warnings: CompileWarning[] } {
+  validate (): { errors: CompileError[];
+    warnings: CompileWarning[]; } {
     return {
       errors: [
         ...this.validateContext(),
@@ -153,9 +156,14 @@ export default class TableValidator implements ElementValidator {
 
   registerElement (): CompileError[] {
     const errors: CompileError[] = [];
-    this.declarationNode.symbol = this.symbolFactory.create(TableSymbol, { declaration: this.declarationNode, symbolTable: new SymbolTable() });
+    this.declarationNode.symbol = this.symbolFactory.create(TableSymbol, {
+      declaration: this.declarationNode,
+      symbolTable: new SymbolTable(),
+    });
 
-    const { name, alias } = this.declarationNode;
+    const {
+      name, alias,
+    } = this.declarationNode;
 
     const maybeNameFragments = destructureComplexVariable(name);
     if (maybeNameFragments !== undefined) {
@@ -231,7 +239,10 @@ export default class TableValidator implements ElementValidator {
         errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_PARTIAL_INJECTION, 'A partial injection should be of the form ~<table-partial>', field.callee));
       } else {
         const injectedTablePartialName = extractVariableFromExpression(field.callee.expression) ?? '';
-        const partialInjectionSymbol = this.symbolFactory.create(PartialInjectionSymbol, { symbolTable: new SymbolTable(), declaration: field });
+        const partialInjectionSymbol = this.symbolFactory.create(PartialInjectionSymbol, {
+          symbolTable: new SymbolTable(),
+          declaration: field,
+        });
         const partialInjectionSymbolId = createPartialInjectionSymbolIndex(injectedTablePartialName);
         const symbolTable = this.declarationNode.symbol!.symbolTable!;
         if (symbolTable.has(partialInjectionSymbolId)) {

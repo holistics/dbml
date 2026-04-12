@@ -9,7 +9,9 @@
  * - Information Hiding: Internal storage format is hidden
  * - Deep Module: Complex persistence logic with simple interface
  */
-import { ref, watch, type Ref } from 'vue';
+import {
+  ref, watch, type Ref,
+} from 'vue';
 import type { UserData } from '@/types';
 import consoleLogger from '@/utils/logger';
 
@@ -50,7 +52,10 @@ const loadUserData = (): UserData => {
     if (stored) {
       const parsed = JSON.parse(stored);
       // Merge with defaults to handle missing properties
-      return { ...defaultUserData, ...parsed };
+      return {
+        ...defaultUserData,
+        ...parsed,
+      };
     }
   } catch (error) {
     consoleLogger.warn('Failed to load user data from localStorage:', error);

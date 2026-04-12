@@ -1,4 +1,6 @@
-import { last, partition } from 'lodash-es';
+import {
+  last, partition,
+} from 'lodash-es';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, PrefixExpressionNode, ProgramNode, SyntaxNode,
 } from '../../../types/nodes';
@@ -8,12 +10,22 @@ import { CompileError } from '@/core/types/errors';
 import {
   lookupAndBindInScope, pickBinder, scanNonListNodeForBinding,
 } from '../utils';
-import { aggregateSettingList, isValidPartialInjection } from '../../validator/utils';
-import { SymbolKind, createColumnSymbolIndex } from '@/core/types/symbol/symbolIndex';
-import { destructureComplexVariableTuple, extractVariableFromExpression } from '../../utils';
-import { TablePartialInjectedColumnSymbol, TablePartialSymbol } from '@/core/types/symbol/symbols';
+import {
+  aggregateSettingList, isValidPartialInjection,
+} from '../../validator/utils';
+import {
+  SymbolKind, createColumnSymbolIndex,
+} from '@/core/types/symbol/symbolIndex';
+import {
+  destructureComplexVariableTuple, extractVariableFromExpression,
+} from '../../utils';
+import {
+  TablePartialInjectedColumnSymbol, TablePartialSymbol,
+} from '@/core/types/symbol/symbols';
 import SymbolFactory from '@/core/types/symbol/factory';
-import { isExpressionAQuotedString, isExpressionAVariableNode } from '../../../parser/utils';
+import {
+  isExpressionAQuotedString, isExpressionAVariableNode,
+} from '../../../parser/utils';
 import { KEYWORDS_OF_DEFAULT_SETTING } from '@/constants';
 
 export default class TableBinder implements ElementBinder {
@@ -57,14 +69,26 @@ export default class TableBinder implements ElementBinder {
           return [];
         }
 
-        const errors = lookupAndBindInScope(this.ast, [...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })), { node: tablePartialBindee, kind: SymbolKind.TablePartial }]);
+        const errors = lookupAndBindInScope(this.ast, [
+          ...schemaBindees.map((b) => ({
+            node: b,
+            kind: SymbolKind.Schema,
+          })),
+          {
+            node: tablePartialBindee,
+            kind: SymbolKind.TablePartial,
+          },
+        ]);
         if (errors.length) return errors;
         tablePartialBindee.referee?.symbolTable?.forEach((value) => {
           const columnName = extractVariableFromExpression((value.declaration as FunctionApplicationNode).callee);
           if (columnName === undefined) return;
           const injectedColumnSymbol = this.symbolFactory.create(
             TablePartialInjectedColumnSymbol,
-            { declaration: i, tablePartialSymbol: tablePartialBindee.referee as TablePartialSymbol },
+            {
+              declaration: i,
+              tablePartialSymbol: tablePartialBindee.referee as TablePartialSymbol,
+            },
           );
           const columnSymbolId = createColumnSymbolIndex(columnName);
           const symbolTable = this.declarationNode.symbol?.symbolTable;
@@ -133,7 +157,16 @@ export default class TableBinder implements ElementBinder {
       return;
     }
 
-    lookupAndBindInScope(this.ast, [...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })), { node: enumBindee, kind: SymbolKind.Enum }]);
+    lookupAndBindInScope(this.ast, [
+      ...schemaBindees.map((b) => ({
+        node: b,
+        kind: SymbolKind.Schema,
+      })),
+      {
+        node: enumBindee,
+        kind: SymbolKind.Enum,
+      },
+    ]);
   }
 
   // Bind enum field references in default values (e.g., order_status.pending)
@@ -165,7 +198,20 @@ export default class TableBinder implements ElementBinder {
 
     const schemaBindees = fragments.variables;
 
-    return lookupAndBindInScope(this.ast, [...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })), { node: enumBindee, kind: SymbolKind.Enum }, { node: enumFieldBindee, kind: SymbolKind.EnumField }]);
+    return lookupAndBindInScope(this.ast, [
+      ...schemaBindees.map((b) => ({
+        node: b,
+        kind: SymbolKind.Schema,
+      })),
+      {
+        node: enumBindee,
+        kind: SymbolKind.Enum,
+      },
+      {
+        node: enumFieldBindee,
+        kind: SymbolKind.EnumField,
+      },
+    ]);
   }
 
   private bindInlineRef (ref: SyntaxNode): CompileError[] {
@@ -180,8 +226,26 @@ export default class TableBinder implements ElementBinder {
       const schemaBindees = bindee.variables;
 
       return tableBindee
-        ? lookupAndBindInScope(this.ast, [...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })), { node: tableBindee, kind: SymbolKind.Table }, { node: columnBindee, kind: SymbolKind.Column }])
-        : lookupAndBindInScope(this.declarationNode, [{ node: columnBindee, kind: SymbolKind.Column }]);
+        ? lookupAndBindInScope(this.ast, [
+            ...schemaBindees.map((b) => ({
+              node: b,
+              kind: SymbolKind.Schema,
+            })),
+            {
+              node: tableBindee,
+              kind: SymbolKind.Table,
+            },
+            {
+              node: columnBindee,
+              kind: SymbolKind.Column,
+            },
+          ])
+        : lookupAndBindInScope(this.declarationNode, [
+            {
+              node: columnBindee,
+              kind: SymbolKind.Column,
+            },
+          ]);
     });
   }
 

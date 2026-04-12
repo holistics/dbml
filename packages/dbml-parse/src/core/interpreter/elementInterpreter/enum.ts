@@ -1,14 +1,22 @@
-import { extractQuotedStringToken, extractVariableFromExpression } from '@/core/analyzer/utils';
+import {
+  extractQuotedStringToken, extractVariableFromExpression,
+} from '@/core/analyzer/utils';
 import { aggregateSettingList } from '@/core/analyzer/validator/utils';
-import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import {
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode,
 } from '@/core/types/nodes';
-import { Enum, EnumField } from '@/core/types/schemaJson';
+import {
+  Enum, EnumField,
+} from '@/core/types/schemaJson';
 import {
   extractElementName, getTokenPosition, normalizeNoteContent,
 } from '@/core/interpreter/utils';
-import { ElementInterpreter, InterpreterDatabase } from '../types';
+import {
+  ElementInterpreter, InterpreterDatabase,
+} from '../types';
 
 export class EnumInterpreter implements ElementInterpreter {
   private declarationNode: ElementDeclarationNode;
@@ -30,7 +38,9 @@ export class EnumInterpreter implements ElementInterpreter {
   }
 
   private interpretName (nameNode: SyntaxNode): CompileError[] {
-    const { name, schemaName } = extractElementName(nameNode);
+    const {
+      name, schemaName,
+    } = extractElementName(nameNode);
 
     if (schemaName.length > 1) {
       this.enum.name = name;

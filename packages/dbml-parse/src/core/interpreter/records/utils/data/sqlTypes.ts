@@ -276,7 +276,8 @@ function getTypeNode (columnSymbol: ColumnSymbol) {
 }
 
 // Get numeric type parameters (precision, scale) from a column (e.g., decimal(10, 2))
-export function getNumericTypeParams (columnSymbol: ColumnSymbol): { precision?: number; scale?: number } {
+export function getNumericTypeParams (columnSymbol: ColumnSymbol): { precision?: number;
+  scale?: number; } {
   const typeNode = getTypeNode(columnSymbol);
   if (!(typeNode instanceof CallExpressionNode)) return {};
   if (!typeNode.argumentList || typeNode.argumentList.elementList.length !== 2) return {};
@@ -285,7 +286,10 @@ export function getNumericTypeParams (columnSymbol: ColumnSymbol): { precision?:
   const scale = extractNumericLiteral(typeNode.argumentList.elementList[1]);
   if (precision === null || scale === null) return {};
 
-  return { precision: Math.trunc(precision), scale: Math.trunc(scale) };
+  return {
+    precision: Math.trunc(precision),
+    scale: Math.trunc(scale),
+  };
 }
 
 // Get length type parameter from a column (e.g., varchar(255))

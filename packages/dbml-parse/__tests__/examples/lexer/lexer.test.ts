@@ -124,31 +124,58 @@ describe('[example] lexer', () => {
       expect(tokens).toHaveLength(9);
 
       expect(tokens[0]).toMatchObject({
-        kind: SyntaxTokenKind.LBRACE, value: '{', start: 0, end: 1,
+        kind: SyntaxTokenKind.LBRACE,
+        value: '{',
+        start: 0,
+        end: 1,
       });
       expect(tokens[1]).toMatchObject({
-        kind: SyntaxTokenKind.RBRACE, value: '}', start: 1, end: 2,
+        kind: SyntaxTokenKind.RBRACE,
+        value: '}',
+        start: 1,
+        end: 2,
       });
       expect(tokens[2]).toMatchObject({
-        kind: SyntaxTokenKind.LBRACKET, value: '[', start: 2, end: 3,
+        kind: SyntaxTokenKind.LBRACKET,
+        value: '[',
+        start: 2,
+        end: 3,
       });
       expect(tokens[3]).toMatchObject({
-        kind: SyntaxTokenKind.RBRACKET, value: ']', start: 3, end: 4,
+        kind: SyntaxTokenKind.RBRACKET,
+        value: ']',
+        start: 3,
+        end: 4,
       });
       expect(tokens[4]).toMatchObject({
-        kind: SyntaxTokenKind.LPAREN, value: '(', start: 4, end: 5,
+        kind: SyntaxTokenKind.LPAREN,
+        value: '(',
+        start: 4,
+        end: 5,
       });
       expect(tokens[5]).toMatchObject({
-        kind: SyntaxTokenKind.RPAREN, value: ')', start: 5, end: 6,
+        kind: SyntaxTokenKind.RPAREN,
+        value: ')',
+        start: 5,
+        end: 6,
       });
       expect(tokens[6]).toMatchObject({
-        kind: SyntaxTokenKind.COLON, value: ':', start: 6, end: 7,
+        kind: SyntaxTokenKind.COLON,
+        value: ':',
+        start: 6,
+        end: 7,
       });
       expect(tokens[7]).toMatchObject({
-        kind: SyntaxTokenKind.COMMA, value: ',', start: 7, end: 8,
+        kind: SyntaxTokenKind.COMMA,
+        value: ',',
+        start: 7,
+        end: 8,
       });
       expect(tokens[8]).toMatchObject({
-        kind: SyntaxTokenKind.SEMICOLON, value: ';', start: 8, end: 9,
+        kind: SyntaxTokenKind.SEMICOLON,
+        value: ';',
+        start: 8,
+        end: 9,
       });
     });
 
@@ -158,15 +185,42 @@ describe('[example] lexer', () => {
       const tokens = getTokens(source);
 
       expect(tokens).toHaveLength(8);
-      expect(tokens.map((t) => ({ kind: t.kind, value: t.value }))).toEqual([
-        { kind: SyntaxTokenKind.OP, value: '+' },
-        { kind: SyntaxTokenKind.OP, value: '-' },
-        { kind: SyntaxTokenKind.WILDCARD, value: '*' },
-        { kind: SyntaxTokenKind.OP, value: '/' },
-        { kind: SyntaxTokenKind.OP, value: '<' },
-        { kind: SyntaxTokenKind.OP, value: '>' },
-        { kind: SyntaxTokenKind.OP, value: '=' },
-        { kind: SyntaxTokenKind.OP, value: '.' },
+      expect(tokens.map((t) => ({
+        kind: t.kind,
+        value: t.value,
+      }))).toEqual([
+        {
+          kind: SyntaxTokenKind.OP,
+          value: '+',
+        },
+        {
+          kind: SyntaxTokenKind.OP,
+          value: '-',
+        },
+        {
+          kind: SyntaxTokenKind.WILDCARD,
+          value: '*',
+        },
+        {
+          kind: SyntaxTokenKind.OP,
+          value: '/',
+        },
+        {
+          kind: SyntaxTokenKind.OP,
+          value: '<',
+        },
+        {
+          kind: SyntaxTokenKind.OP,
+          value: '>',
+        },
+        {
+          kind: SyntaxTokenKind.OP,
+          value: '=',
+        },
+        {
+          kind: SyntaxTokenKind.OP,
+          value: '.',
+        },
       ]);
     });
 
@@ -210,24 +264,42 @@ describe('[example] lexer', () => {
         value: 'a',
         start: 0,
         end: 1,
-        startPos: { line: 0, column: 0 },
-        endPos: { line: 0, column: 1 },
+        startPos: {
+          line: 0,
+          column: 0,
+        },
+        endPos: {
+          line: 0,
+          column: 1,
+        },
       });
 
       expect(tokens[1]).toMatchObject({
         value: 'b',
         start: 2,
         end: 3,
-        startPos: { line: 1, column: 0 },
-        endPos: { line: 1, column: 1 },
+        startPos: {
+          line: 1,
+          column: 0,
+        },
+        endPos: {
+          line: 1,
+          column: 1,
+        },
       });
 
       expect(tokens[2]).toMatchObject({
         value: 'c',
         start: 4,
         end: 5,
-        startPos: { line: 2, column: 0 },
-        endPos: { line: 2, column: 1 },
+        startPos: {
+          line: 2,
+          column: 0,
+        },
+        endPos: {
+          line: 2,
+          column: 1,
+        },
       });
     });
 
@@ -357,13 +429,22 @@ describe('[example] lexer', () => {
 
       expect(tokens).toHaveLength(3);
       expect(tokens[0]).toMatchObject({
-        kind: SyntaxTokenKind.IDENTIFIER, value: 'public', start: 0, end: 6,
+        kind: SyntaxTokenKind.IDENTIFIER,
+        value: 'public',
+        start: 0,
+        end: 6,
       });
       expect(tokens[1]).toMatchObject({
-        kind: SyntaxTokenKind.OP, value: '.', start: 6, end: 7,
+        kind: SyntaxTokenKind.OP,
+        value: '.',
+        start: 6,
+        end: 7,
       });
       expect(tokens[2]).toMatchObject({
-        kind: SyntaxTokenKind.IDENTIFIER, value: 'users', start: 7, end: 12,
+        kind: SyntaxTokenKind.IDENTIFIER,
+        value: 'users',
+        start: 7,
+        end: 12,
       });
     });
 
@@ -425,16 +506,24 @@ describe('[example] lexer', () => {
 
       expect(tokens).toHaveLength(4);
       expect(tokens[0]).toMatchObject({
-        value: 'id', start: 0, end: 2,
+        value: 'id',
+        start: 0,
+        end: 2,
       });
       expect(tokens[1]).toMatchObject({
-        value: '[', start: 2, end: 3,
+        value: '[',
+        start: 2,
+        end: 3,
       });
       expect(tokens[2]).toMatchObject({
-        value: 'pk', start: 3, end: 5,
+        value: 'pk',
+        start: 3,
+        end: 5,
       });
       expect(tokens[3]).toMatchObject({
-        value: ']', start: 5, end: 6,
+        value: ']',
+        start: 5,
+        end: 6,
       });
     });
 
@@ -444,10 +533,16 @@ describe('[example] lexer', () => {
 
       expect(tokens).toHaveLength(2);
       expect(tokens[0]).toMatchObject({
-        kind: SyntaxTokenKind.OP, value: '-', start: 0, end: 1,
+        kind: SyntaxTokenKind.OP,
+        value: '-',
+        start: 0,
+        end: 1,
       });
       expect(tokens[1]).toMatchObject({
-        kind: SyntaxTokenKind.NUMERIC_LITERAL, value: '42', start: 1, end: 3,
+        kind: SyntaxTokenKind.NUMERIC_LITERAL,
+        value: '42',
+        start: 1,
+        end: 3,
       });
     });
 

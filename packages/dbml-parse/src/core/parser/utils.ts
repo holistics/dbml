@@ -1,5 +1,7 @@
 import { last } from 'lodash-es';
-import { SyntaxToken, SyntaxTokenKind } from '@/core/types/tokens';
+import {
+  SyntaxToken, SyntaxTokenKind,
+} from '@/core/types/tokens';
 
 import { alternateLists } from '@/core/utils/array';
 import NodeFactory from '@/core/parser/factory';
@@ -101,7 +103,8 @@ export function convertFuncAppToElem (
 // Check if a token is an `as` keyword
 export function isAsKeyword (
   token?: SyntaxToken,
-): token is SyntaxToken & { kind: SyntaxTokenKind.IDENTIFIER; value: 'as' } {
+): token is SyntaxToken & { kind: SyntaxTokenKind.IDENTIFIER;
+  value: 'as'; } {
   return token?.kind === SyntaxTokenKind.IDENTIFIER && token.value.toLowerCase() === 'as';
 }
 

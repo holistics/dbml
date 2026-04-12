@@ -12,7 +12,9 @@
  */
 import { ReactiveParser } from '@/core/reactive-parser';
 import { DEFAULT_SAMPLE_CONTENT } from '@/core/sample-content';
-import type { ParserError, PipelineStage } from '@/types';
+import type {
+  ParserError, PipelineStage,
+} from '@/types';
 
 /**
  * DBML Parser Composable
@@ -48,7 +50,8 @@ export function useParser () {
   const formatErrors = (errors: readonly ParserError[]): Array<{
     code: number;
     message: string;
-    location: { line: number; column: number };
+    location: { line: number;
+      column: number; };
   }> => {
     return errors.map((error) => ({
       code: error.code,

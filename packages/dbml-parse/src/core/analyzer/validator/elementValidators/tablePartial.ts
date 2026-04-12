@@ -17,7 +17,9 @@ import {
   SyntaxNode,
   WildcardNode,
 } from '@/core/types/nodes';
-import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '@/core/analyzer/utils';
+import {
+  destructureComplexVariable, extractVarNameFromPrimaryVariable,
+} from '@/core/analyzer/utils';
 import {
   aggregateSettingList,
   isSimpleName,
@@ -29,8 +31,12 @@ import {
   pickValidator,
 } from '@/core/analyzer/validator/utils';
 import { ElementValidator } from '@/core/analyzer/validator/types';
-import { ColumnSymbol, TablePartialSymbol } from '@/core/types/symbol/symbols';
-import { createColumnSymbolIndex, createTablePartialSymbolIndex } from '@/core/types/symbol/symbolIndex';
+import {
+  ColumnSymbol, TablePartialSymbol,
+} from '@/core/types/symbol/symbols';
+import {
+  createColumnSymbolIndex, createTablePartialSymbolIndex,
+} from '@/core/types/symbol/symbolIndex';
 import {
   isExpressionAQuotedString,
   isExpressionAVariableNode,
@@ -38,7 +44,9 @@ import {
 } from '@/core/parser/utils';
 import { SyntaxToken } from '@/core/types/tokens';
 import SymbolTable from '@/core/types/symbol/symbolTable';
-import { ElementKind, SettingName } from '@/core/analyzer/types';
+import {
+  ElementKind, SettingName,
+} from '@/core/analyzer/types';
 
 export default class TablePartialValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
@@ -57,7 +65,8 @@ export default class TablePartialValidator implements ElementValidator {
     this.publicSymbolTable = publicSymbolTable;
   }
 
-  validate (): { errors: CompileError[]; warnings: CompileWarning[] } {
+  validate (): { errors: CompileError[];
+    warnings: CompileWarning[]; } {
     return {
       errors: [
         ...this.validateContext(),
@@ -160,7 +169,10 @@ export default class TablePartialValidator implements ElementValidator {
 
   registerElement (): CompileError[] {
     const { name } = this.declarationNode;
-    this.declarationNode.symbol = this.symbolFactory.create(TablePartialSymbol, { declaration: this.declarationNode, symbolTable: new SymbolTable() });
+    this.declarationNode.symbol = this.symbolFactory.create(TablePartialSymbol, {
+      declaration: this.declarationNode,
+      symbolTable: new SymbolTable(),
+    });
     const maybeNamePartials = destructureComplexVariable(name);
     if (maybeNamePartials === undefined) return [];
 

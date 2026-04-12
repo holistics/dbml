@@ -1,4 +1,6 @@
-import { last, partition } from 'lodash-es';
+import {
+  last, partition,
+} from 'lodash-es';
 import SymbolFactory from '@/core/types/symbol/factory';
 import {
   CompileError, CompileErrorCode, CompileWarning,
@@ -15,8 +17,12 @@ import {
   VariableNode,
   WildcardNode,
 } from '@/core/types/nodes';
-import { isExpressionAQuotedString, isExpressionAVariableNode } from '@/core/parser/utils';
-import { aggregateSettingList, pickValidator } from '@/core/analyzer/validator/utils';
+import {
+  isExpressionAQuotedString, isExpressionAVariableNode,
+} from '@/core/parser/utils';
+import {
+  aggregateSettingList, pickValidator,
+} from '@/core/analyzer/validator/utils';
 import { SyntaxToken } from '@/core/types/tokens';
 import { ElementValidator } from '@/core/analyzer/validator/types';
 import { destructureIndexNode } from '@/core/analyzer/utils';
@@ -34,7 +40,8 @@ export default class IndexesValidator implements ElementValidator {
     this.symbolFactory = symbolFactory;
   }
 
-  validate (): { errors: CompileError[]; warnings: CompileWarning[] } {
+  validate (): { errors: CompileError[];
+    warnings: CompileWarning[]; } {
     return {
       errors: [
         ...this.validateContext(),

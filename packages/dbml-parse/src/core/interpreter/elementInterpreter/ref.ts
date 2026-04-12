@@ -1,15 +1,23 @@
-import { destructureComplexVariable, extractVariableFromExpression } from '@/core/analyzer/utils';
+import {
+  destructureComplexVariable, extractVariableFromExpression,
+} from '@/core/analyzer/utils';
 import { aggregateSettingList } from '@/core/analyzer/validator/utils';
-import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import {
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, IdentiferStreamNode, InfixExpressionNode, ListExpressionNode, SyntaxNode,
 } from '@/core/types/nodes';
-import { Ref, Table } from '@/core/types/schemaJson';
+import {
+  Ref, Table,
+} from '@/core/types/schemaJson';
 import {
   extractColor, extractNamesFromRefOperand, getColumnSymbolsOfRefOperand, getMultiplicities, getRefId, getTokenPosition, isSameEndpoint,
 } from '@/core/interpreter/utils';
 import { extractStringFromIdentifierStream } from '@/core/parser/utils';
-import { ElementInterpreter, InterpreterDatabase } from '../types';
+import {
+  ElementInterpreter, InterpreterDatabase,
+} from '../types';
 
 export class RefInterpreter implements ElementInterpreter {
   private declarationNode: ElementDeclarationNode;
@@ -54,7 +62,9 @@ export class RefInterpreter implements ElementInterpreter {
 
   private interpretField (field: FunctionApplicationNode): CompileError[] {
     const op = (field.callee as InfixExpressionNode).op!.value;
-    const { leftExpression, rightExpression } = field.callee as InfixExpressionNode;
+    const {
+      leftExpression, rightExpression,
+    } = field.callee as InfixExpressionNode;
 
     const leftSymbols = getColumnSymbolsOfRefOperand(leftExpression!);
     const rightSymbols = getColumnSymbolsOfRefOperand(rightExpression!);

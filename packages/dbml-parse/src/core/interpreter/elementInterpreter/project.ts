@@ -12,7 +12,9 @@ import { RefInterpreter } from './ref';
 import { TableInterpreter } from './table';
 import { TableGroupInterpreter } from './tableGroup';
 import { TablePartialInterpreter } from './tablePartial';
-import { ElementInterpreter, InterpreterDatabase } from '../types';
+import {
+  ElementInterpreter, InterpreterDatabase,
+} from '../types';
 
 export class ProjectInterpreter implements ElementInterpreter {
   private declarationNode: ElementDeclarationNode;
@@ -23,7 +25,11 @@ export class ProjectInterpreter implements ElementInterpreter {
     this.declarationNode = declarationNode;
     this.env = env;
     this.project = {
-      enums: [], refs: [], tableGroups: [], tables: [], tablePartials: [],
+      enums: [],
+      refs: [],
+      tableGroups: [],
+      tables: [],
+      tablePartials: [],
     };
   }
 

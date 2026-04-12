@@ -3,7 +3,9 @@ import { ElementBinder } from '../types';
 import {
   BlockExpressionNode, CommaExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ProgramNode, SyntaxNode,
 } from '../../../types/nodes';
-import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import {
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
 import {
   lookupAndBindInScope, pickBinder, scanNonListNodeForBinding,
 } from '../utils';
@@ -12,7 +14,9 @@ import {
   destructureCallExpression,
   extractVarNameFromPrimaryVariable,
 } from '../../utils';
-import { createColumnSymbolIndex, SymbolKind } from '@/core/types/symbol/symbolIndex';
+import {
+  createColumnSymbolIndex, SymbolKind,
+} from '@/core/types/symbol/symbolIndex';
 import { ElementKind } from '../../types';
 import { isTupleOfVariables } from '../../validator/utils';
 import { NodeSymbol } from '@/core/types/symbol/symbols';
@@ -72,7 +76,16 @@ export default class RecordsBinder implements ElementBinder {
       return [];
     }
 
-    const tableErrors = lookupAndBindInScope(this.ast, [...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })), { node: tableBindee, kind: SymbolKind.Table }]);
+    const tableErrors = lookupAndBindInScope(this.ast, [
+      ...schemaBindees.map((b) => ({
+        node: b,
+        kind: SymbolKind.Schema,
+      })),
+      {
+        node: tableBindee,
+        kind: SymbolKind.Table,
+      },
+    ]);
 
     if (tableErrors.length > 0) {
       return tableErrors;
@@ -213,7 +226,20 @@ export default class RecordsBinder implements ElementBinder {
 
       const schemaBindees = bindee.variables;
 
-      return lookupAndBindInScope(this.ast, [...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })), { node: enumBindee, kind: SymbolKind.Enum }, { node: enumFieldBindee, kind: SymbolKind.EnumField }]);
+      return lookupAndBindInScope(this.ast, [
+        ...schemaBindees.map((b) => ({
+          node: b,
+          kind: SymbolKind.Schema,
+        })),
+        {
+          node: enumBindee,
+          kind: SymbolKind.Enum,
+        },
+        {
+          node: enumFieldBindee,
+          kind: SymbolKind.EnumField,
+        },
+      ]);
     });
   }
 

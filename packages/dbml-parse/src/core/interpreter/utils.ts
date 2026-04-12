@@ -20,13 +20,23 @@ import {
   isDotDelimitedIdentifier, isExpressionAnIdentifierNode, isExpressionAQuotedString,
 } from '@/core/parser/utils';
 import Report from '@/core/types/report';
-import { CompileError, CompileErrorCode } from '@/core/types/errors';
-import { getNumberTextFromExpression, parseNumber } from '@/core/utils/numbers';
-import { isExpressionASignedNumberExpression, isValidPartialInjection } from '../analyzer/validator/utils';
+import {
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
+import {
+  getNumberTextFromExpression, parseNumber,
+} from '@/core/utils/numbers';
+import {
+  isExpressionASignedNumberExpression, isValidPartialInjection,
+} from '../analyzer/validator/utils';
 import { InterpreterDatabase } from './types';
 
-export function extractNamesFromRefOperand (operand: SyntaxNode, owner?: Table): { schemaName: string | null; tableName: string; fieldNames: string[] } {
-  const { variables, tupleElements } = destructureComplexVariableTuple(operand)!;
+export function extractNamesFromRefOperand (operand: SyntaxNode, owner?: Table): { schemaName: string | null;
+  tableName: string;
+  fieldNames: string[]; } {
+  const {
+    variables, tupleElements,
+  } = destructureComplexVariableTuple(operand)!;
 
   const tupleNames = tupleElements.map((e) => extractVarNameFromPrimaryVariable(e)!);
   const variableNames = variables.map((e) => extractVarNameFromPrimaryVariable(e)!);
@@ -103,7 +113,8 @@ export function getColumnSymbolsOfRefOperand (ref: SyntaxNode): ColumnSymbol[] {
   return [colNode!.referee as ColumnSymbol];
 }
 
-export function extractElementName (nameNode: SyntaxNode): { schemaName: string[]; name: string } {
+export function extractElementName (nameNode: SyntaxNode): { schemaName: string[];
+  name: string; } {
   const fragments = destructureComplexVariable(nameNode)!;
   const name = fragments.pop()!;
 
@@ -209,7 +220,8 @@ export function processDefaultValue (valueNode?: SyntaxNode):
 export function processColumnType (typeNode: SyntaxNode, env: InterpreterDatabase): Report<ColumnType> {
   let typeSuffix: string = '';
   let typeArgs: string | null = null;
-  let numericParams: { precision: number; scale: number } | undefined;
+  let numericParams: { precision: number;
+    scale: number; } | undefined;
   let lengthParam: { length: number } | undefined;
 
   if (typeNode instanceof CallExpressionNode) {
@@ -233,7 +245,10 @@ export function processColumnType (typeNode: SyntaxNode, env: InterpreterDatabas
       const precision = parseNumber(argElements[0]);
       const scale = parseNumber(argElements[1]);
       if (!isNaN(precision) && !isNaN(scale)) {
-        numericParams = { precision: Math.trunc(precision), scale: Math.trunc(scale) };
+        numericParams = {
+          precision: Math.trunc(precision),
+          scale: Math.trunc(scale),
+        };
       }
     } else if (argElements.length === 1 && isExpressionASignedNumberExpression(argElements[0])) {
       const length = parseNumber(argElements[0]);
@@ -271,7 +286,9 @@ export function processColumnType (typeNode: SyntaxNode, env: InterpreterDatabas
     }
   }
 
-  const { name: typeName, schemaName: typeSchemaName } = extractElementName(typeNode);
+  const {
+    name: typeName, schemaName: typeSchemaName,
+  } = extractElementName(typeNode);
 
   // Check if this type references an enum
   const schema = typeSchemaName.length === 0 ? null : typeSchemaName[0];

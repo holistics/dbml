@@ -1,4 +1,6 @@
-import { partition, get } from 'lodash-es';
+import {
+  partition, get,
+} from 'lodash-es';
 import { Note } from '@/core/types/schemaJson';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode,
@@ -6,9 +8,13 @@ import {
 import {
   extractColor, extractElementName, getTokenPosition, normalizeNoteContent,
 } from '@/core/interpreter/utils';
-import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import {
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
 import { aggregateSettingList } from '@/core/analyzer/validator/utils';
-import { ElementInterpreter, InterpreterDatabase } from '../types';
+import {
+  ElementInterpreter, InterpreterDatabase,
+} from '../types';
 
 export class StickyNoteInterpreter implements ElementInterpreter {
   private declarationNode: ElementDeclarationNode;
@@ -19,7 +25,9 @@ export class StickyNoteInterpreter implements ElementInterpreter {
     this.declarationNode = declarationNode;
     this.env = env;
     this.note = {
-      name: undefined, content: undefined, token: undefined,
+      name: undefined,
+      content: undefined,
+      token: undefined,
     };
   }
 

@@ -1,18 +1,29 @@
-import { createLogger, format, transports } from 'winston';
+import {
+  createLogger, format, transports,
+} from 'winston';
 import chalk from 'chalk';
 import path from 'path';
 
-const { combine, timestamp, printf } = format;
+const {
+  combine, timestamp, printf,
+} = format;
 
 const consoleFormat = printf((info) => {
-  const { level, message } = info;
+  const {
+    level, message,
+  } = info;
   return `  ${chalk.red(level.toUpperCase())}: ${message}\n
   A complete log can be found in:
      ${path.resolve(process.cwd(), 'dbml-error.log')}`;
 });
 
 const fileFormat = printf((info) => {
-  const { timestamp: ts, stack, rootError } = info as unknown as { timestamp: string; stack?: string; rootError?: { stack?: string; location?: unknown } };
+  const {
+    timestamp: ts, stack, rootError,
+  } = info as unknown as { timestamp: string;
+    stack?: string;
+    rootError?: { stack?: string;
+      location?: unknown; }; };
   let logContent = `${ts}\n${stack}\n`;
   if (rootError) {
     logContent += '\nROOT_ERROR:';
@@ -40,7 +51,10 @@ const fileLogger = createLogger({
     fileFormat,
   ),
   transports: [
-    new transports.File({ filename: 'dbml-error.log', level: 'error' }),
+    new transports.File({
+      filename: 'dbml-error.log',
+      level: 'error',
+    }),
   ],
 });
 
@@ -54,7 +68,7 @@ const logger = {
   warn (msg: string) {
     consoleLogger.warn(msg);
   },
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   error (msg: any) {
     consoleLogger.error(msg);
     fileLogger.error(msg);

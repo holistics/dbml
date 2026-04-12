@@ -3,7 +3,9 @@ import {
 } from 'vitest';
 import * as fc from 'fast-check';
 import { SyntaxTokenKind } from '../../src';
-import { tokenStreamArbitrary, identifierArbitrary } from '../utils/arbitraries';
+import {
+  tokenStreamArbitrary, identifierArbitrary,
+} from '../utils/arbitraries';
 import { lex } from '../utils';
 
 const PROPERTY_TEST_CONFIG = { numRuns: 50 };
@@ -48,7 +50,9 @@ describe('[property] lexer', () => {
       fc.property(tokenStreamArbitrary, (source: string) => {
         const tokens = lex(source).getValue().flatMap((token) => [...token.leadingTrivia, token, ...token.trailingTrivia]);
         tokens.forEach((token) => {
-          const { startPos, endPos } = token;
+          const {
+            startPos, endPos,
+          } = token;
           expect(startPos.offset).toEqual(convertLineAndColumnToOffset(source, startPos.line, startPos.column));
           expect(endPos.offset).toEqual(convertLineAndColumnToOffset(source, endPos.line, endPos.column));
         });
@@ -305,7 +309,10 @@ describe('[property] lexer - negative tests', () => {
   it('should report error for unclosed single-quote strings', () => {
     fc.assert(
       fc.property(
-        fc.string({ minLength: 0, maxLength: 100 }).filter((s) => !s.includes("'")),
+        fc.string({
+          minLength: 0,
+          maxLength: 100,
+        }).filter((s) => !s.includes("'")),
         (content: string) => {
           // String with opening quote but no closing
           const source = `'${content}`;
@@ -322,7 +329,10 @@ describe('[property] lexer - negative tests', () => {
   it('should report error for unclosed double-quote strings', () => {
     fc.assert(
       fc.property(
-        fc.string({ minLength: 0, maxLength: 100 }).filter((s) => !s.includes('"')),
+        fc.string({
+          minLength: 0,
+          maxLength: 100,
+        }).filter((s) => !s.includes('"')),
         (content: string) => {
           const source = `"${content}`;
           const result = lex(source);
@@ -338,7 +348,10 @@ describe('[property] lexer - negative tests', () => {
   it('should report error for unclosed backtick expressions', () => {
     fc.assert(
       fc.property(
-        fc.string({ minLength: 0, maxLength: 100 }).filter((s) => !s.includes('`')),
+        fc.string({
+          minLength: 0,
+          maxLength: 100,
+        }).filter((s) => !s.includes('`')),
         (content: string) => {
           const source = `\`${content}`;
           const result = lex(source);
@@ -355,9 +368,18 @@ describe('[property] lexer - negative tests', () => {
     // Multiple decimal points should error
     fc.assert(
       fc.property(
-        fc.integer({ min: 0, max: 999 }),
-        fc.integer({ min: 0, max: 999 }),
-        fc.integer({ min: 0, max: 999 }),
+        fc.integer({
+          min: 0,
+          max: 999,
+        }),
+        fc.integer({
+          min: 0,
+          max: 999,
+        }),
+        fc.integer({
+          min: 0,
+          max: 999,
+        }),
         (a: number, b: number, c: number) => {
           const source = `${a}.${b}.${c}`;
           const result = lex(source);
@@ -373,7 +395,10 @@ describe('[property] lexer - negative tests', () => {
   it('should handle at-sign as unknown symbol', () => {
     fc.assert(
       fc.property(
-        fc.string({ minLength: 0, maxLength: 20 }),
+        fc.string({
+          minLength: 0,
+          maxLength: 20,
+        }),
         (suffix: string) => {
           const source = `@${suffix.replace(/@/g, '')}`;
           const result = lex(source);
