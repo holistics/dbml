@@ -1,4 +1,6 @@
-import { SyntaxToken, SyntaxTokenKind } from '@/core/types/tokens';
+import {
+  SyntaxToken, SyntaxTokenKind,
+} from '@/core/types/tokens';
 import {
   AttributeNode,
   BlockExpressionNode,
@@ -15,12 +17,15 @@ import {
   ArrayNode,
 } from '@/core/types/nodes';
 import { isHexChar } from './chars';
-import { destructureComplexVariable, destructureMemberAccessExpression,
+import {
+  destructureComplexVariable, destructureMemberAccessExpression,
   extractStringFromIdentifierStream, isAccessExpression, isDotDelimitedIdentifier, isExpressionAQuotedString, isExpressionAVariableNode, isExpressionAnIdentifierNode,
 } from './expression';
 import { NUMERIC_LITERAL_PREFIX } from '@/constants';
 import Report from '@/core/types/report';
-import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import {
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
 import { SettingName } from '../types/keywords';
 
 // Is the name valid (either simple or complex)
@@ -53,7 +58,8 @@ export function isValidSettingList (
 // Does the element has complex body
 export function hasComplexBody (
   node: ElementDeclarationNode,
-): node is ElementDeclarationNode & { body: BlockExpressionNode; bodyColon: undefined } {
+): node is ElementDeclarationNode & { body: BlockExpressionNode;
+  bodyColon: undefined; } {
   return node.body instanceof BlockExpressionNode && !node.bodyColon;
 }
 
@@ -138,7 +144,8 @@ export function isValidDefaultValue (value?: SyntaxNode): boolean {
 
 export type SignedNumberExpression =
   (PrimaryExpressionNode & { expression: LiteralNode & { literal: { kind: SyntaxTokenKind.NUMERIC_LITERAL } } })
-  | (PrefixExpressionNode & { op: '-' | '+'; expression: SignedNumberExpression });
+  | (PrefixExpressionNode & { op: '-' | '+';
+    expression: SignedNumberExpression; });
 export function isExpressionASignedNumberExpression (value?: SyntaxNode): value is SignedNumberExpression {
   if (value instanceof PrefixExpressionNode) {
     if (!NUMERIC_LITERAL_PREFIX.includes(value.op!.value)) return false;

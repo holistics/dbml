@@ -1,10 +1,16 @@
 import { partition } from 'lodash-es';
-import { extractQuotedStringToken, destructureComplexVariable } from '@/core/utils/expression';
-import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import {
+  extractQuotedStringToken, destructureComplexVariable,
+} from '@/core/utils/expression';
+import {
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, SyntaxNode, ListExpressionNode,
 } from '@/core/types/nodes';
-import type { TableGroup, TableGroupField } from '@/core/types/schemaJson';
+import type {
+  TableGroup, TableGroupField,
+} from '@/core/types/schemaJson';
 import {
   extractElementName, getTokenPosition, normalizeNoteContent, extractColor, getSymbolSchemaAndName,
 } from '../utils';
@@ -41,7 +47,9 @@ export class TableGroupInterpreter {
   private interpretName (nameNode: SyntaxNode): CompileError[] {
     const errors: CompileError[] = [];
 
-    const { name, schemaName } = extractElementName(nameNode);
+    const {
+      name, schemaName,
+    } = extractElementName(nameNode);
     if (schemaName.length >= 2) {
       this.tableGroup.name = name;
       this.tableGroup.schemaName = schemaName.join('.');
@@ -55,10 +63,7 @@ export class TableGroupInterpreter {
 
   private interpretBody (body: BlockExpressionNode): CompileError[] {
     const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
-    return [
-      ...this.interpretFields(fields as FunctionApplicationNode[]),
-      ...this.interpretSubElements(subs as ElementDeclarationNode[]),
-    ];
+    return [...this.interpretFields(fields as FunctionApplicationNode[]), ...this.interpretSubElements(subs as ElementDeclarationNode[])];
   }
 
   private interpretSubElements (subs: ElementDeclarationNode[]): CompileError[] {
@@ -91,9 +96,16 @@ export class TableGroupInterpreter {
       const tableSymbol = result.getValue();
       if (!tableSymbol || !tableSymbol.isKind(SymbolKind.Table)) return [];
 
-      const { schemaName, name } = getSymbolSchemaAndName(this.compiler, tableSymbol);
+      const {
+        schemaName, name,
+      } = getSymbolSchemaAndName(this.compiler, tableSymbol);
 
-      return [{ name, schemaName }];
+      return [
+        {
+          name,
+          schemaName,
+        },
+      ];
     });
 
     return errors;

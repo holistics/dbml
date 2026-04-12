@@ -1,12 +1,22 @@
 import Compiler from '@/compiler';
-import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import {
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
 import { SyntaxTokenKind } from '@/core/types/tokens';
-import { BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, IdentiferStreamNode, ListExpressionNode, ProgramNode, SyntaxNode, WildcardNode } from '@/core/types/nodes';
+import {
+  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, IdentiferStreamNode, ListExpressionNode, ProgramNode, SyntaxNode, WildcardNode,
+} from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import { SettingName } from '@/core/types';
-import { destructureComplexVariableTuple, extractStringFromIdentifierStream, isBinaryRelationship, isEqualTupleOperands, isExpressionAVariableNode } from '@/core/utils/expression';
-import { aggregateSettingList, isSimpleName, isValidColor, Settings } from '@/core/utils/validate';
-import { last, partition } from 'lodash-es';
+import {
+  destructureComplexVariableTuple, extractStringFromIdentifierStream, isBinaryRelationship, isEqualTupleOperands, isExpressionAVariableNode,
+} from '@/core/utils/expression';
+import {
+  aggregateSettingList, isSimpleName, isValidColor, Settings,
+} from '@/core/utils/validate';
+import {
+  last, partition,
+} from 'lodash-es';
 
 export default class RefValidator {
   private declarationNode: ElementDeclarationNode;
@@ -93,9 +103,15 @@ export default class RefValidator {
       }
 
       if (field.callee && isBinaryRelationship(field.callee)) {
-        const leftFragment = destructureComplexVariableTuple(field.callee.leftExpression) || { variables: [], tupleElements: [] };
+        const leftFragment = destructureComplexVariableTuple(field.callee.leftExpression) || {
+          variables: [],
+          tupleElements: [],
+        };
         const leftFragmentCount = leftFragment.variables.length + Math.min(leftFragment.tupleElements.length, 1);
-        const rightFragment = destructureComplexVariableTuple(field.callee.rightExpression) || { variables: [], tupleElements: [] };
+        const rightFragment = destructureComplexVariableTuple(field.callee.rightExpression) || {
+          variables: [],
+          tupleElements: [],
+        };
         const rightFragmentCount = rightFragment.variables.length + Math.min(rightFragment.tupleElements.length, 1);
         if (leftFragmentCount < 2) {
           errors.push(new CompileError(CompileErrorCode.INVALID_REF_FIELD, 'Invalid column reference', field.callee.leftExpression || field.callee));

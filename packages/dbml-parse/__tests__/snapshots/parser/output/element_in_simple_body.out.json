@@ -31,7 +31,6 @@
                 "id": "token@<colon>@:@[L0:C4, L0:C5]",
                 "snippet": ":"
               },
-              "leadingTrivia": "",
               "trailingTrivia": " ",
               "value": ":"
             },
@@ -40,13 +39,9 @@
                 "id": "token@<identifier>@Note@[L0:C0, L0:C4]",
                 "snippet": "Note"
               },
-              "leadingTrivia": "",
-              "trailingTrivia": "",
               "value": "Note"
             }
           },
-          "fullEnd": 6,
-          "fullStart": 0,
           "symbol": {
             "context": {
               "id": "symbol@Note@@[L0:C0, L0:C5]",
@@ -55,9 +50,7 @@
             "declaration": {
               "id": "node@<element-declaration>@@[L0:C0, L0:C5]",
               "snippet": "Note:"
-            },
-            "members": [],
-            "references": []
+            }
           }
         }
       ],
@@ -65,14 +58,9 @@
         "context": {
           "id": "token@<eof>@@[L0:C15, L0:C15]",
           "snippet": ""
-        },
-        "leadingTrivia": "",
-        "trailingTrivia": "",
-        "value": ""
+        }
       }
     },
-    "fullEnd": 15,
-    "fullStart": 0,
     "symbol": {
       "context": {
         "id": "symbol@Program@@[L0:C0, L0:C15]",
@@ -88,9 +76,7 @@
             "id": "symbol@Schema@public@[L?:C?, L?:C?]"
           }
         }
-      ],
-      "references": []
+      ]
     }
-  },
-  "warnings": []
+  }
 }

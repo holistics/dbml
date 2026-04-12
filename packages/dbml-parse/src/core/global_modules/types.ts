@@ -1,7 +1,9 @@
 import type { PassThrough } from '@/constants';
 import type Compiler from '@/compiler/index';
 import type { SyntaxNode } from '@/core/types/nodes';
-import type { NodeSymbol, SymbolKind } from '../types/symbol';
+import type {
+  NodeSymbol, SymbolKind,
+} from '../types/symbol';
 import type Report from '@/core/types/report';
 import type { SchemaElement } from '../types/schemaJson';
 import type { Module } from '../types/module';

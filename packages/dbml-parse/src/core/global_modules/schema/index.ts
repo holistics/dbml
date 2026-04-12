@@ -1,12 +1,22 @@
 import { uniqBy } from 'lodash-es';
-import { ElementDeclarationNode, UseDeclarationNode, UseSpecifierListNode, WildcardNode } from '@/core/types/nodes';
-import { SyntaxNode, UseSpecifierNode } from '@/core/types/nodes';
-import { NodeSymbol, SchemaSymbol, SymbolKind, UseSymbol } from '@/core/types/symbol';
+import {
+  ElementDeclarationNode, UseDeclarationNode, UseSpecifierListNode, WildcardNode,
+} from '@/core/types/nodes';
+import {
+  SyntaxNode, UseSpecifierNode,
+} from '@/core/types/nodes';
+import {
+  NodeSymbol, SchemaSymbol, SymbolKind, UseSymbol,
+} from '@/core/types/symbol';
 import type { GlobalModule } from '../types';
-import { PASS_THROUGH, type PassThrough, UNHANDLED, DEFAULT_SCHEMA_NAME } from '@/constants';
+import {
+  PASS_THROUGH, type PassThrough, UNHANDLED, DEFAULT_SCHEMA_NAME,
+} from '@/constants';
 import Report from '@/core/types/report';
 import type Compiler from '@/compiler/index';
-import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import {
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
 import { tableUtils } from '../table';
 import { enumUtils } from '../enum';
 import { tablePartialUtils } from '../tablePartial';
@@ -30,7 +40,9 @@ export const schemaModule: GlobalModule = {
       const useSymbol = handleMemberSelectiveUses(compiler, symbol, specifier, childSchemas);
       if (useSymbol) members.push(useSymbol);
     }
-    for (const { importPath, node } of usableMembers.reuses.wildcard) {
+    for (const {
+      importPath, node,
+    } of usableMembers.reuses.wildcard) {
       members.push(...handleMemberWildcardUses(compiler, symbol, importPath, node, childSchemas));
     }
 
@@ -39,7 +51,9 @@ export const schemaModule: GlobalModule = {
       const useSymbol = handleMemberSelectiveUses(compiler, symbol, specifier, childSchemas);
       if (useSymbol) members.push(useSymbol);
     }
-    for (const { importPath, node } of usableMembers.uses.wildcard) {
+    for (const {
+      importPath, node,
+    } of usableMembers.uses.wildcard) {
       members.push(...handleMemberWildcardUses(compiler, symbol, importPath, node, childSchemas));
     }
 
@@ -198,9 +212,7 @@ function findSchemaSymbolInFilepath (compiler: Compiler, filepath: Filepath, sch
   const usableSymbols = compiler.fileUsableMembers(filepath).getFiltered(UNHANDLED);
   if (!usableSymbols) return undefined;
 
-  let {
-    schemaMembers,
-  } = usableSymbols;
+  let { schemaMembers } = usableSymbols;
   let currentSchema: SchemaSymbol | undefined;
 
   const fullname = [...schemaFullname];

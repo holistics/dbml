@@ -48,7 +48,9 @@ import NodeFactory from '@/core/parser/factory';
 import {
   hasTrailingNewLines, hasTrailingSpaces, isAtStartOfLine,
 } from '@/core/lexer/utils';
-import { isAsKeyword, isFromKeyword, isReuseKeyword, isUseKeyword } from '@/core/utils/expression';
+import {
+  isAsKeyword, isFromKeyword, isReuseKeyword, isUseKeyword,
+} from '@/core/utils/expression';
 import { Filepath } from '@/core/types/filepath';
 
 // A class of errors that represent a parsing failure and contain the node that was partially parsed
@@ -268,9 +270,7 @@ export default class Parser {
     // Entire-file use: use * from './path.dbml'
     if (this.peek().kind === SyntaxTokenKind.WILDCARD) {
       this.advance();
-      args.specifiers = this.nodeFactory.create(WildcardNode, {
-        token: this.previous(),
-      });
+      args.specifiers = this.nodeFactory.create(WildcardNode, { token: this.previous() });
     } else {
       // Selective use: use { ... } from './path.dbml'
       try {
@@ -310,7 +310,10 @@ export default class Parser {
       specifiers: UseSpecifierNode[];
       commaList: SyntaxToken[];
       closeBrace?: SyntaxToken;
-    } = { specifiers: [], commaList: [] };
+    } = {
+      specifiers: [],
+      commaList: [],
+    };
     const buildNode = () => this.nodeFactory.create(UseSpecifierListNode, args);
 
     try {
@@ -942,7 +945,6 @@ export default class Parser {
       return this.nodeFactory.create(WildcardNode, { token: this.previous() });
     }
 
-
     if (
       this.check(
         SyntaxTokenKind.NUMERIC_LITERAL,
@@ -1017,7 +1019,6 @@ export default class Parser {
     this.advance();
     return this.nodeFactory.create(WildcardNode, { token: this.previous() });
   }
-
 
   /* Parsing and synchronizing BlockExpression */
 

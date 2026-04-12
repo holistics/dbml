@@ -8,5 +8,7 @@ export {
   type DiagramViewDeleteOperation,
   type DiagramViewBlock,
 } from './syncDiagramView';
-export { applyTextEdits, type TextEdit } from './applyTextEdits';
+export {
+  applyTextEdits, type TextEdit,
+} from './applyTextEdits';
 export { type TableNameInput } from './utils';

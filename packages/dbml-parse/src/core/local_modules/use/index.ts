@@ -1,11 +1,19 @@
-import { destructureComplexVariable, extractVariableFromExpression, isUseSpecifier } from '@/core/utils/expression';
-import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import {
+  destructureComplexVariable, extractVariableFromExpression, isUseSpecifier,
+} from '@/core/utils/expression';
+import {
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
 import {
   SyntaxNode,
   UseDeclarationNode,
 } from '@/core/types/nodes';
-import type { LocalModule, Settings } from '../types';
-import { PASS_THROUGH, type PassThrough } from '@/constants';
+import type {
+  LocalModule, Settings,
+} from '../types';
+import {
+  PASS_THROUGH, type PassThrough,
+} from '@/constants';
 import Report from '@/core/types/report';
 import type Compiler from '@/compiler';
 import UseDeclarationValidator from './validate';
@@ -45,18 +53,14 @@ export const useModule: LocalModule = {
     if (node.isKind(ImportKind.TableGroup) && name.length > 1) {
       return Report.create(
         name,
-        [
-          new CompileError(CompileErrorCode.INVALID_USE_SPECIFIER_NAME, 'A TableGroup name must be a simple name', node),
-        ],
+        [new CompileError(CompileErrorCode.INVALID_USE_SPECIFIER_NAME, 'A TableGroup name must be a simple name', node)],
       );
     }
 
     if (node.isKind(ImportKind.Note) && name.length > 1) {
       return Report.create(
         name,
-        [
-          new CompileError(CompileErrorCode.INVALID_USE_SPECIFIER_NAME, 'A Sticky note name must be a simple name', node),
-        ],
+        [new CompileError(CompileErrorCode.INVALID_USE_SPECIFIER_NAME, 'A Sticky note name must be a simple name', node)],
       );
     }
 

@@ -1,6 +1,10 @@
-import { last, forIn, partition } from 'lodash-es';
+import {
+  last, forIn, partition,
+} from 'lodash-es';
 import Compiler from '@/compiler';
-import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import {
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
 import {
   ArrayNode,
   AttributeNode,
@@ -25,7 +29,7 @@ import {
   isValidDefaultValue,
   isValidName,
   isValidPartialInjection,
-  isVoid,
+
   Settings,
 } from '@/core/utils/validate';
 import {
@@ -137,10 +141,7 @@ export default class TableValidator {
     }
 
     const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
-    return [
-      ...this.validateFields(fields as FunctionApplicationNode[]),
-      ...this.validateSubElements(subs as ElementDeclarationNode[]),
-    ];
+    return [...this.validateFields(fields as FunctionApplicationNode[]), ...this.validateSubElements(subs as ElementDeclarationNode[])];
   }
 
   validateFields (fields: FunctionApplicationNode[]): CompileError[] {
@@ -269,7 +270,7 @@ export default class TableValidator {
             errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, 'primary key can only appear once', attr)));
           }
           attrs.forEach((attr) => {
-            if (!isVoid(attr.value)) {
+            if (attr.value !== undefined) {
               errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, '\'primary key\' must not have a value', attr.value || attr.name!));
             }
           });
@@ -279,7 +280,7 @@ export default class TableValidator {
             errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, '\'pk\' can only appear once', attr)));
           }
           attrs.forEach((attr) => {
-            if (attr instanceof AttributeNode && !isVoid(attr.value)) {
+            if (attr instanceof AttributeNode && attr.value !== undefined) {
               errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, '\'pk\' must not have a value', attr.value || attr.name!));
             }
           });
@@ -296,7 +297,7 @@ export default class TableValidator {
             );
           }
           attrs.forEach((attr) => {
-            if (!isVoid(attr.value)) {
+            if (attr.value !== undefined) {
               errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, '\'not null\' must not have a value', attr.value || attr.name!));
             }
           });
@@ -307,7 +308,7 @@ export default class TableValidator {
             errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, '\'null\' can only appear once', attr)));
           }
           attrs.forEach((attr) => {
-            if (!isVoid(attr.value)) {
+            if (attr.value !== undefined) {
               errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, '\'null\' must not have a value', attr.value || attr.name!));
             }
           });
@@ -317,7 +318,7 @@ export default class TableValidator {
             errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, '\'unique\' can only appear once', attr)));
           }
           attrs.forEach((attr) => {
-            if (attr instanceof AttributeNode && !isVoid(attr.value)) {
+            if (attr instanceof AttributeNode && attr.value !== undefined) {
               errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, '\'unique\' must not have a value', attr.value || attr.name!));
             }
           });
@@ -327,7 +328,7 @@ export default class TableValidator {
             errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, '\'increment\' can only appear once', attr)));
           }
           attrs.forEach((attr) => {
-            if (attr instanceof AttributeNode && !isVoid(attr.value)) {
+            if (attr instanceof AttributeNode && attr.value !== undefined) {
               errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, '\'increment\' must not have a value', attr.value || attr.name!));
             }
           });
@@ -476,7 +477,7 @@ export function validateFieldSetting (parts: ExpressionNode[]): Report<Settings>
           errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, 'primary key can only appear once', attr)));
         }
         attrs.forEach((attr) => {
-          if (!isVoid(attr.value)) {
+          if (attr.value !== undefined) {
             errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, '\'primary key\' must not have a value', attr.value || attr.name!));
           }
         });
@@ -486,7 +487,7 @@ export function validateFieldSetting (parts: ExpressionNode[]): Report<Settings>
           errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, '\'pk\' can only appear once', attr)));
         }
         attrs.forEach((attr) => {
-          if (attr instanceof AttributeNode && !isVoid(attr.value)) {
+          if (attr instanceof AttributeNode && attr.value !== undefined) {
             errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, '\'pk\' must not have a value', attr.value || attr.name!));
           }
         });
@@ -503,7 +504,7 @@ export function validateFieldSetting (parts: ExpressionNode[]): Report<Settings>
           );
         }
         attrs.forEach((attr) => {
-          if (!isVoid(attr.value)) {
+          if (attr.value !== undefined) {
             errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, '\'not null\' must not have a value', attr.value || attr.name!));
           }
         });
@@ -514,7 +515,7 @@ export function validateFieldSetting (parts: ExpressionNode[]): Report<Settings>
           errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, '\'null\' can only appear once', attr)));
         }
         attrs.forEach((attr) => {
-          if (!isVoid(attr.value)) {
+          if (attr.value !== undefined) {
             errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, '\'null\' must not have a value', attr.value || attr.name!));
           }
         });
@@ -524,7 +525,7 @@ export function validateFieldSetting (parts: ExpressionNode[]): Report<Settings>
           errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, '\'unique\' can only appear once', attr)));
         }
         attrs.forEach((attr) => {
-          if (attr instanceof AttributeNode && !isVoid(attr.value)) {
+          if (attr instanceof AttributeNode && attr.value !== undefined) {
             errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, '\'unique\' must not have a value', attr.value || attr.name!));
           }
         });
@@ -534,7 +535,7 @@ export function validateFieldSetting (parts: ExpressionNode[]): Report<Settings>
           errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, '\'increment\' can only appear once', attr)));
         }
         attrs.forEach((attr) => {
-          if (attr instanceof AttributeNode && !isVoid(attr.value)) {
+          if (attr instanceof AttributeNode && attr.value !== undefined) {
             errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, '\'increment\' must not have a value', attr.value || attr.name!));
           }
         });

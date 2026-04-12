@@ -2,17 +2,6 @@
   "database": {
     "files": {
       "/base.dbml": {
-        "aliases": [],
-        "diagramViews": [],
-        "enums": [],
-        "externals": {
-          "enums": [],
-          "notes": [],
-          "tableGroups": [],
-          "tablePartials": [],
-          "tables": []
-        },
-        "notes": [],
         "records": [
           {
             "columns": [
@@ -21,25 +10,12 @@
             ],
             "tableName": "users",
             "token": {
-              "end": {
-                "column": 2,
-                "line": 10,
-                "offset": 141
-              },
-              "filepath": {
-                "path": "/base.dbml"
-              },
-              "start": {
-                "column": 1,
-                "line": 7,
-                "offset": 90
-              }
+              "filepath": "/base.dbml"
             },
             "values": [
               [
                 {
-                  "type": "integer",
-                  "value": 1
+                  "type": "integer"
                 },
                 {
                   "type": "string",
@@ -48,8 +24,7 @@
               ],
               [
                 {
-                  "type": "integer",
-                  "value": 2
+                  "type": "integer"
                 },
                 {
                   "type": "string",
@@ -59,132 +34,51 @@
             ]
           }
         ],
-        "refs": [],
-        "schemas": [],
-        "tableGroups": [],
-        "tablePartials": [],
         "tables": [
           {
-            "alias": null,
-            "checks": [],
             "fields": [
               {
-                "checks": [],
-                "increment": false,
-                "inline_refs": [],
                 "name": "id",
-                "pk": true,
                 "token": {
-                  "end": {
-                    "column": 14,
-                    "line": 3,
-                    "offset": 71
-                  },
-                  "filepath": {
-                    "path": "/base.dbml"
-                  },
-                  "start": {
-                    "column": 3,
-                    "line": 3,
-                    "offset": 60
-                  }
+                  "filepath": "/base.dbml"
                 },
                 "type": {
-                  "args": null,
-                  "isEnum": false,
-                  "schemaName": null,
                   "type_name": "int"
-                },
-                "unique": false
+                }
               },
               {
-                "inline_refs": [],
                 "name": "name",
-                "pk": false,
                 "token": {
-                  "end": {
-                    "column": 15,
-                    "line": 4,
-                    "offset": 86
-                  },
-                  "filepath": {
-                    "path": "/base.dbml"
-                  },
-                  "start": {
-                    "column": 3,
-                    "line": 4,
-                    "offset": 74
-                  }
+                  "filepath": "/base.dbml"
                 },
                 "type": {
-                  "args": null,
-                  "isEnum": false,
-                  "schemaName": null,
                   "type_name": "varchar"
-                },
-                "unique": false
+                }
               }
             ],
-            "indexes": [],
             "name": "users",
-            "partials": [],
-            "schemaName": null,
             "token": {
-              "end": {
-                "column": 2,
-                "line": 5,
-                "offset": 88
-              },
-              "filepath": {
-                "path": "/base.dbml"
-              },
-              "start": {
-                "column": 1,
-                "line": 2,
-                "offset": 44
-              }
+              "filepath": "/base.dbml"
             }
           }
         ],
         "token": {
-          "end": {
-            "column": 1,
-            "line": 11,
-            "offset": 142
-          },
-          "filepath": {
-            "path": "/base.dbml"
-          },
-          "start": {
-            "column": 1,
-            "line": 2,
-            "offset": 44
-          }
+          "filepath": "/base.dbml"
         }
       },
       "/consumer.dbml": {
-        "aliases": [],
-        "diagramViews": [],
-        "enums": [],
         "externals": {
-          "enums": [],
-          "notes": [],
-          "tableGroups": [],
-          "tablePartials": [],
           "tables": [
             {
               "name": "users",
-              "schemaName": null,
               "visibleNames": [
                 {
-                  "name": "users",
-                  "schemaName": null
+                  "name": "users"
                 }
               ]
             }
           ]
         },
-        "notes": [],
         "records": [
           {
             "columns": [
@@ -193,25 +87,12 @@
             ],
             "tableName": "users",
             "token": {
-              "end": {
-                "column": 2,
-                "line": 7,
-                "offset": 182
-              },
-              "filepath": {
-                "path": "/consumer.dbml"
-              },
-              "start": {
-                "column": 1,
-                "line": 4,
-                "offset": 130
-              }
+              "filepath": "/consumer.dbml"
             },
             "values": [
               [
                 {
-                  "type": "integer",
-                  "value": 3
+                  "type": "integer"
                 },
                 {
                   "type": "string",
@@ -220,8 +101,7 @@
               ],
               [
                 {
-                  "type": "integer",
-                  "value": 4
+                  "type": "integer"
                 },
                 {
                   "type": "string",
@@ -231,40 +111,12 @@
             ]
           }
         ],
-        "refs": [],
-        "schemas": [],
-        "tableGroups": [],
-        "tablePartials": [],
-        "tables": [],
         "token": {
-          "end": {
-            "column": 1,
-            "line": 8,
-            "offset": 183
-          },
-          "filepath": {
-            "path": "/consumer.dbml"
-          },
-          "start": {
-            "column": 1,
-            "line": 2,
-            "offset": 88
-          }
+          "filepath": "/consumer.dbml"
         }
       }
     },
     "items": {
-      "aliases": [],
-      "diagramViews": [],
-      "enums": [],
-      "externals": {
-        "enums": [],
-        "notes": [],
-        "tableGroups": [],
-        "tablePartials": [],
-        "tables": []
-      },
-      "notes": [],
       "records": [
         {
           "columns": [
@@ -273,25 +125,12 @@
           ],
           "tableName": "users",
           "token": {
-            "end": {
-              "column": 2,
-              "line": 10,
-              "offset": 141
-            },
-            "filepath": {
-              "path": "/base.dbml"
-            },
-            "start": {
-              "column": 1,
-              "line": 7,
-              "offset": 90
-            }
+            "filepath": "/base.dbml"
           },
           "values": [
             [
               {
-                "type": "integer",
-                "value": 1
+                "type": "integer"
               },
               {
                 "type": "string",
@@ -300,8 +139,7 @@
             ],
             [
               {
-                "type": "integer",
-                "value": 2
+                "type": "integer"
               },
               {
                 "type": "string",
@@ -317,25 +155,12 @@
           ],
           "tableName": "users",
           "token": {
-            "end": {
-              "column": 2,
-              "line": 7,
-              "offset": 182
-            },
-            "filepath": {
-              "path": "/consumer.dbml"
-            },
-            "start": {
-              "column": 1,
-              "line": 4,
-              "offset": 130
-            }
+            "filepath": "/consumer.dbml"
           },
           "values": [
             [
               {
-                "type": "integer",
-                "value": 3
+                "type": "integer"
               },
               {
                 "type": "string",
@@ -344,8 +169,7 @@
             ],
             [
               {
-                "type": "integer",
-                "value": 4
+                "type": "integer"
               },
               {
                 "type": "string",
@@ -355,95 +179,34 @@
           ]
         }
       ],
-      "refs": [],
-      "schemas": [],
-      "tableGroups": [],
-      "tablePartials": [],
       "tables": [
         {
-          "alias": null,
-          "checks": [],
           "fields": [
             {
-              "checks": [],
-              "increment": false,
-              "inline_refs": [],
               "name": "id",
-              "pk": true,
               "token": {
-                "end": {
-                  "column": 14,
-                  "line": 3,
-                  "offset": 71
-                },
-                "filepath": {
-                  "path": "/base.dbml"
-                },
-                "start": {
-                  "column": 3,
-                  "line": 3,
-                  "offset": 60
-                }
+                "filepath": "/base.dbml"
               },
               "type": {
-                "args": null,
-                "isEnum": false,
-                "schemaName": null,
                 "type_name": "int"
-              },
-              "unique": false
+              }
             },
             {
-              "inline_refs": [],
               "name": "name",
-              "pk": false,
               "token": {
-                "end": {
-                  "column": 15,
-                  "line": 4,
-                  "offset": 86
-                },
-                "filepath": {
-                  "path": "/base.dbml"
-                },
-                "start": {
-                  "column": 3,
-                  "line": 4,
-                  "offset": 74
-                }
+                "filepath": "/base.dbml"
               },
               "type": {
-                "args": null,
-                "isEnum": false,
-                "schemaName": null,
                 "type_name": "varchar"
-              },
-              "unique": false
+              }
             }
           ],
-          "indexes": [],
           "name": "users",
-          "partials": [],
-          "schemaName": null,
           "token": {
-            "end": {
-              "column": 2,
-              "line": 5,
-              "offset": 88
-            },
-            "filepath": {
-              "path": "/base.dbml"
-            },
-            "start": {
-              "column": 1,
-              "line": 2,
-              "offset": 44
-            }
+            "filepath": "/base.dbml"
           }
         }
       ]
     }
-  },
-  "errors": [],
-  "warnings": []
+  }
 }

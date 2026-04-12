@@ -1,17 +1,29 @@
-import { isElementNode, isExpressionAVariableNode, isAccessExpression, isElementFieldNode, isInsideElementBody, isInsideSettingList, getBody } from '@/core/utils/expression';
+import {
+  isElementNode, isExpressionAVariableNode, isAccessExpression, isElementFieldNode, isInsideElementBody, isInsideSettingList, getBody,
+} from '@/core/utils/expression';
 import { ElementKind } from '@/core/types/keywords';
-import { PrimaryExpressionNode, VariableNode, ElementDeclarationNode } from '@/core/types/nodes';
+import {
+  PrimaryExpressionNode, VariableNode, ElementDeclarationNode,
+} from '@/core/types/nodes';
 import type { SyntaxNode } from '@/core/types/nodes';
 import type { SyntaxToken } from '@/core/types/tokens';
-import { NodeSymbol, SchemaSymbol, SymbolKind } from '@/core/types/symbol';
+import {
+  NodeSymbol, SchemaSymbol, SymbolKind,
+} from '@/core/types/symbol';
 import type { GlobalModule } from '../types';
-import { DEFAULT_SCHEMA_NAME, PASS_THROUGH, type PassThrough, UNHANDLED } from '@/constants';
+import {
+  DEFAULT_SCHEMA_NAME, PASS_THROUGH, type PassThrough, UNHANDLED,
+} from '@/constants';
 import Report from '@/core/types/report';
 import type Compiler from '@/compiler/index';
 import type { SchemaElement } from '@/core/types/schemaJson';
-import { getNodeMemberSymbols, lookupMember, nodeRefereeOfLeftExpression, shouldInterpretNode } from '../utils';
+import {
+  getNodeMemberSymbols, lookupMember, nodeRefereeOfLeftExpression, shouldInterpretNode,
+} from '../utils';
 import { extractVarNameFromPrimaryVariable } from '@/core/utils/expression';
-import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import {
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
 import TableGroupBinder from './bind';
 import { TableGroupInterpreter } from './interpret';
 
@@ -34,7 +46,10 @@ export const tableGroupModule: GlobalModule = {
       }, node.filepath));
     }
     if (isElementFieldNode(node, ElementKind.TableGroup)) {
-      return new Report(compiler.symbolFactory.create(NodeSymbol, { kind: SymbolKind.TableGroupField, declaration: node }, node.filepath));
+      return new Report(compiler.symbolFactory.create(NodeSymbol, {
+        kind: SymbolKind.TableGroupField,
+        declaration: node,
+      }, node.filepath));
     }
     return Report.create(PASS_THROUGH);
   },
@@ -102,7 +117,11 @@ function nodeRefereeOfTableGroupField (compiler: Compiler, globalSymbol: NodeSym
       for (const schema of schemas.getValue()) {
         if (!(schema instanceof SchemaSymbol)) continue;
         // lookupMember checks aliases only for public schemas; for non-public, also check aliases explicitly
-        const result = lookupMember(compiler, schema, name, { kinds: [SymbolKind.Table], ignoreNotFound: true, errorNode: node });
+        const result = lookupMember(compiler, schema, name, {
+          kinds: [SymbolKind.Table],
+          ignoreNotFound: true,
+          errorNode: node,
+        });
         if (result.getValue()) return result;
         if (!schema.isPublicSchema()) {
           const members = compiler.symbolMembers(schema);
@@ -116,7 +135,11 @@ function nodeRefereeOfTableGroupField (compiler: Compiler, globalSymbol: NodeSym
         }
       }
     }
-    return lookupMember(compiler, globalSymbol, name, { kinds: [SymbolKind.Table], ignoreNotFound: false, errorNode: node });
+    return lookupMember(compiler, globalSymbol, name, {
+      kinds: [SymbolKind.Table],
+      ignoreNotFound: false,
+      errorNode: node,
+    });
   }
 
   // Right side of access: resolve via left sibling

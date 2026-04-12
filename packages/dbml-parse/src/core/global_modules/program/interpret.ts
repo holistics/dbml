@@ -1,17 +1,31 @@
 import Compiler from '@/compiler/index';
-import { CallExpressionNode, ElementDeclarationNode, ProgramNode, UseSpecifierListNode } from '@/core/types/nodes';
+import {
+  CallExpressionNode, ElementDeclarationNode, ProgramNode, UseSpecifierListNode,
+} from '@/core/types/nodes';
 import { ElementKind } from '@/core/types/keywords';
-import { DEFAULT_SCHEMA_NAME, UNHANDLED } from '@/constants';
+import {
+  DEFAULT_SCHEMA_NAME, UNHANDLED,
+} from '@/constants';
 import Report from '@/core/types/report';
 import { AliasKind } from '@/core/types/schemaJson';
-import type { Database, DiagramView, ElementRef, Ref, RefEndpoint, Table, TableRecord, SchemaElement, Enum, TableGroup, TablePartial, Note, Project } from '@/core/types/schemaJson';
-import { getTokenPosition, getMultiplicities } from '../utils';
-import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import type {
+  Database, DiagramView, ElementRef, Ref, RefEndpoint, Table, TableRecord, SchemaElement, Enum, TableGroup, TablePartial, Note, Project,
+} from '@/core/types/schemaJson';
+import {
+  getTokenPosition, getMultiplicities,
+} from '../utils';
+import {
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
 import type { CompileWarning } from '@/core/types/errors';
 import { validateForeignKeys } from '../records/utils/constraints';
-import { buildMergedTableFromElement, extractInlineRefsFromTablePartials } from '../records/utils/interpret';
+import {
+  buildMergedTableFromElement, extractInlineRefsFromTablePartials,
+} from '../records/utils/interpret';
 import { getBody } from '@/core/utils/expression';
-import { UseSymbol, SymbolKind } from '@/core/types/symbol';
+import {
+  UseSymbol, SymbolKind,
+} from '@/core/types/symbol';
 
 export default class ProgramInterpreter {
   private compiler: Compiler;
@@ -107,14 +121,24 @@ export default class ProgramInterpreter {
           // Explicit aliases replace schema with null.
           const isDirect = localName === name;
           const visibleName = isDirect
-            ? { schemaName, name: localName }
-            : { schemaName: null, name: localName };
+            ? {
+                schemaName,
+                name: localName,
+              }
+            : {
+                schemaName: null,
+                name: localName,
+              };
 
           const canonicalKey = `${kindKey(member)}:${schemaName ?? ''}.${name}`;
           if (extMap.has(canonicalKey)) {
             extMap.get(canonicalKey)!.visibleNames.push(visibleName);
           } else {
-            const ref: ElementRef = { name, schemaName, visibleNames: [visibleName] };
+            const ref: ElementRef = {
+              name,
+              schemaName,
+              visibleNames: [visibleName],
+            };
             extMap.set(canonicalKey, ref);
             list.push(ref);
           }
@@ -128,7 +152,11 @@ export default class ProgramInterpreter {
         db.aliases.push({
           name: table.alias,
           kind: AliasKind.Table,
-          value: { elementName: table.name, tableName: table.name, schemaName: table.schemaName },
+          value: {
+            elementName: table.name,
+            tableName: table.name,
+            schemaName: table.schemaName,
+          },
         });
       }
     }
@@ -200,14 +228,21 @@ export default class ProgramInterpreter {
     }
 
     // Run FK validation
-    const recordTableMap = new Map<string, { rows: TableRecord; mergedTable: Table }>();
+    const recordTableMap = new Map<string, { rows: TableRecord;
+      mergedTable: Table; }>();
     const allRefs: Ref[] = [...db.refs]; // Collect both table partial refs and table refs
     for (const table of db.tables) {
       const key = `${table.schemaName ?? DEFAULT_SCHEMA_NAME}.${table.name}`;
       const merged = mergedTables.get(table) ?? table;
       const record = db.records.find((r) => r.tableName === table.name && (r.schemaName ?? DEFAULT_SCHEMA_NAME) === (table.schemaName ?? DEFAULT_SCHEMA_NAME));
       recordTableMap.set(key, {
-        rows: record ?? { schemaName: table.schemaName ?? undefined, tableName: table.name, columns: [], values: [], token: table.token },
+        rows: record ?? {
+          schemaName: table.schemaName ?? undefined,
+          tableName: table.name,
+          columns: [],
+          values: [],
+          token: table.token,
+        },
         mergedTable: merged,
       });
       allRefs.push(...extractInlineRefsFromTablePartials(table, db.tablePartials));

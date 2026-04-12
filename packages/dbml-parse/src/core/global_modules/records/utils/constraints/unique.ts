@@ -1,5 +1,7 @@
 import type { CompileWarning } from '@/core/types/errors';
-import type { Table, Column, TableRecord } from '@/core/types/schemaJson';
+import type {
+  Table, Column, TableRecord,
+} from '@/core/types/schemaJson';
 import {
   buildColumnIndex,
   extractKeyValueWithDefault,
@@ -8,7 +10,9 @@ import {
   formatValues,
   createConstraintErrors,
 } from './helper';
-import { keyBy, groupBy, compact, isEmpty, filter, flatMap } from 'lodash-es';
+import {
+  keyBy, groupBy, compact, isEmpty, filter, flatMap,
+} from 'lodash-es';
 
 type CompileError = CompileWarning;
 
@@ -29,10 +33,7 @@ export function validateUnique (record: TableRecord, mergedTable: Table): Compil
 }
 
 function collectUniqueConstraints (mergedTable: Table): string[][] {
-  return [
-    ...mergedTable.fields.filter((field) => field.unique).map((field) => [field.name]),
-    ...mergedTable.indexes.filter((index) => index.unique).map((index) => index.columns.map((c) => c.value)),
-  ];
+  return [...mergedTable.fields.filter((field) => field.unique).map((field) => [field.name]), ...mergedTable.indexes.filter((index) => index.unique).map((index) => index.columns.map((c) => c.value))];
 }
 
 function checkUniqueDuplicates (

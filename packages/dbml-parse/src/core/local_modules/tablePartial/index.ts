@@ -1,15 +1,23 @@
-import { isElementNode, isElementFieldNode, destructureComplexVariable, extractVariableFromExpression } from '@/core/utils/expression';
-import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import {
-  SyntaxNode,
-} from '@/core/types/nodes';
+  isElementNode, isElementFieldNode, destructureComplexVariable, extractVariableFromExpression,
+} from '@/core/utils/expression';
+import {
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
+import { SyntaxNode } from '@/core/types/nodes';
 import { ElementKind } from '@/core/types/keywords';
 import type { LocalModule } from '../types';
-import { PASS_THROUGH, type PassThrough } from '@/constants';
-import { isSimpleName, Settings } from '@/core/utils/validate';
+import {
+  PASS_THROUGH, type PassThrough,
+} from '@/constants';
+import {
+  isSimpleName, Settings,
+} from '@/core/utils/validate';
 import Report from '@/core/types/report';
 import type Compiler from '@/compiler';
-import TablePartialValidator, { validateTablePartialSettings, validateFieldSetting } from './validate';
+import TablePartialValidator, {
+  validateTablePartialSettings, validateFieldSetting,
+} from './validate';
 
 export const tablePartialModule: LocalModule = {
   validateNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
@@ -22,18 +30,22 @@ export const tablePartialModule: LocalModule = {
   nodeFullname (compiler: Compiler, node: SyntaxNode): Report<string[] | undefined> | Report<PassThrough> {
     if (isElementNode(node, ElementKind.TablePartial)) {
       if (!node.name) {
-        return new Report(undefined, [new CompileError(
-          CompileErrorCode.NAME_NOT_FOUND,
-          'A TablePartial must have a name',
-          node,
-        )]);
+        return new Report(undefined, [
+          new CompileError(
+            CompileErrorCode.NAME_NOT_FOUND,
+            'A TablePartial must have a name',
+            node,
+          ),
+        ]);
       }
       if (!isSimpleName(node.name)) {
-        return new Report(undefined, [new CompileError(
-          CompileErrorCode.INVALID_NAME,
-          'A TablePartial name must be an identifier or a quoted identifer',
-          node.name,
-        )]);
+        return new Report(undefined, [
+          new CompileError(
+            CompileErrorCode.INVALID_NAME,
+            'A TablePartial name must be an identifier or a quoted identifer',
+            node.name,
+          ),
+        ]);
       }
       return new Report(destructureComplexVariable(node.name));
     }
@@ -47,11 +59,13 @@ export const tablePartialModule: LocalModule = {
   nodeAlias (compiler: Compiler, node: SyntaxNode): Report<string | undefined> | Report<PassThrough> {
     if (isElementNode(node, ElementKind.TablePartial)) {
       if (node.alias) {
-        return new Report(undefined, [new CompileError(
-          CompileErrorCode.UNEXPECTED_ALIAS,
-          'A TablePartial shouldn\'t have an alias',
-          node.alias,
-        )]);
+        return new Report(undefined, [
+          new CompileError(
+            CompileErrorCode.UNEXPECTED_ALIAS,
+            'A TablePartial shouldn\'t have an alias',
+            node.alias,
+          ),
+        ]);
       }
       return new Report(extractVariableFromExpression(node.alias));
     }

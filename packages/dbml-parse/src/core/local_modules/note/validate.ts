@@ -1,6 +1,8 @@
 import { partition } from 'lodash-es';
 import Compiler from '@/compiler';
-import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import {
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, ProgramNode, SyntaxNode,
 } from '@/core/types/nodes';
@@ -37,11 +39,13 @@ export default class NoteValidator {
         ElementKind.Project,
       ))
     ) {
-      return [new CompileError(
-        CompileErrorCode.INVALID_NOTE_CONTEXT,
-        'A Note can only appear inside a Table, a TableGroup, a TablePartial or a Project. Sticky note can only appear at the global scope.',
-        this.declarationNode,
-      )];
+      return [
+        new CompileError(
+          CompileErrorCode.INVALID_NOTE_CONTEXT,
+          'A Note can only appear inside a Table, a TableGroup, a TablePartial or a Project. Sticky note can only appear at the global scope.',
+          this.declarationNode,
+        ),
+      ];
     }
 
     return [];

@@ -1,5 +1,7 @@
 import type { GlobalModule } from './types';
-import { PASS_THROUGH, UNHANDLED, type PassThrough } from '@/constants';
+import {
+  PASS_THROUGH, UNHANDLED, type PassThrough,
+} from '@/constants';
 import { tableModule } from './table';
 import { refModule } from './ref';
 import { projectModule } from './project';

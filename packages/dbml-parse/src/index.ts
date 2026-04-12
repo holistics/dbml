@@ -2,11 +2,9 @@ import Compiler from '@/compiler/index';
 export { dbmlMonarchTokensProvider } from '@/services/monarch';
 
 // Export the types that playground and other consumers need
-export {
-  ElementKind,
-} from '@/core/types/keywords';
+export { ElementKind } from '@/core/types/keywords';
 
-export * from '@/core/interpreter/records/utils';
+export * from '@/core/global_modules/records/utils';
 
 export {
   // Core AST node types
@@ -43,13 +41,14 @@ export {
 export { DEFAULT_ENTRY } from './constants';
 export * from '@/core/global_modules/records/utils/data';
 
-export type { Database, AliasKind, DiagramView, FilterConfig } from '@/core/types/schemaJson';
+export type {
+  Database, AliasKind, DiagramView, FilterConfig,
+} from '@/core/types/schemaJson';
 export type {
   DiagramViewSyncOperation,
   TextEdit,
 } from '@/compiler/queries/transform';
 export { syncDiagramView } from '@/compiler/queries/transform';
-
 
 export { Filepath } from '@/core/types/filepath';
 export type { DbmlProjectLayout } from '@/compiler/projectLayout/layout';

@@ -1,38 +1,7 @@
 {
   "database": {
-    "aliases": [],
-    "diagramViews": [],
-    "enums": [],
-    "externals": {
-      "enums": [],
-      "notes": [],
-      "tableGroups": [],
-      "tablePartials": [],
-      "tables": []
-    },
-    "notes": [],
-    "records": [],
-    "refs": [],
-    "schemas": [],
-    "tableGroups": [],
-    "tablePartials": [],
-    "tables": [],
     "token": {
-      "end": {
-        "column": 1,
-        "line": 3,
-        "offset": 98
-      },
-      "filepath": {
-        "path": "/b.dbml"
-      },
-      "start": {
-        "column": 1,
-        "line": 2,
-        "offset": 74
-      }
+      "filepath": "/b.dbml"
     }
-  },
-  "errors": [],
-  "warnings": []
+  }
 }

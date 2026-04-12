@@ -3,8 +3,12 @@ import { CompileError } from '@/core/types/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, SyntaxNode,
 } from '@/core/types/nodes';
-import type { Enum, Project, Ref, Table, TableGroup, TablePartial } from '@/core/types/schemaJson';
-import { extractElementName, getTokenPosition, normalizeNoteContent } from '../utils';
+import type {
+  Enum, Project, Ref, Table, TableGroup, TablePartial,
+} from '@/core/types/schemaJson';
+import {
+  extractElementName, getTokenPosition, normalizeNoteContent,
+} from '../utils';
 import Compiler from '@/compiler';
 import Report from '@/core/types/report';
 
@@ -17,7 +21,11 @@ export class ProjectInterpreter {
     this.declarationNode = declarationNode;
     this.compiler = compiler;
     this.project = {
-      enums: [], refs: [], tableGroups: [], tables: [], tablePartials: [],
+      enums: [],
+      refs: [],
+      tableGroups: [],
+      tables: [],
+      tablePartials: [],
     };
   }
 

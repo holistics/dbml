@@ -1,5 +1,9 @@
-import type { RecordValue, Column, TableRecord } from '@/core/types/schemaJson';
-import { CompileWarning, CompileErrorCode } from '@/core/types/errors';
+import type {
+  RecordValue, Column, TableRecord,
+} from '@/core/types/schemaJson';
+import {
+  CompileWarning, CompileErrorCode,
+} from '@/core/types/errors';
 import { isSerialType } from '../data';
 
 export function buildColumnIndex (record: TableRecord): Map<string, number> {
@@ -113,9 +117,11 @@ export function createConstraintWarnings (
   record: TableRecord,
   message: string,
 ): CompileWarning[] {
-  return [new CompileWarning(
-    CompileErrorCode.INVALID_RECORDS_FIELD,
-    message,
-    record as any,
-  )];
+  return [
+    new CompileWarning(
+      CompileErrorCode.INVALID_RECORDS_FIELD,
+      message,
+      record as any,
+    ),
+  ];
 }

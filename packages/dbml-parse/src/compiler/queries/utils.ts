@@ -11,7 +11,9 @@ import {
   isAlphaOrUnderscore, isDigit,
 } from '@/core/utils/chars';
 import Compiler from '..';
-import { Filepath, FilepathId } from '@/core/types/filepath';
+import {
+  Filepath, FilepathId,
+} from '@/core/types/filepath';
 
 /**
  * Checks if an identifier is valid (can be used without quotes in DBML).

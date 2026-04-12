@@ -2,19 +2,76 @@ export type SqlDialect = 'mysql' | 'postgres' | 'mssql' | 'oracle' | 'snowflake'
 
 // Dialect-specific type mappings
 const DIALECT_INTEGER_TYPES: Record<SqlDialect, Set<string>> = {
-  mysql: new Set(['int', 'integer', 'smallint', 'bigint', 'tinyint', 'mediumint']),
-  postgres: new Set(['int', 'integer', 'smallint', 'bigint', 'serial', 'bigserial', 'smallserial']),
-  mssql: new Set(['int', 'integer', 'smallint', 'bigint', 'tinyint']),
+  mysql: new Set([
+    'int',
+    'integer',
+    'smallint',
+    'bigint',
+    'tinyint',
+    'mediumint',
+  ]),
+  postgres: new Set([
+    'int',
+    'integer',
+    'smallint',
+    'bigint',
+    'serial',
+    'bigserial',
+    'smallserial',
+  ]),
+  mssql: new Set([
+    'int',
+    'integer',
+    'smallint',
+    'bigint',
+    'tinyint',
+  ]),
   oracle: new Set(['int', 'integer', 'smallint']),
-  snowflake: new Set(['int', 'integer', 'smallint', 'bigint', 'tinyint']),
+  snowflake: new Set([
+    'int',
+    'integer',
+    'smallint',
+    'bigint',
+    'tinyint',
+  ]),
 };
 
 const DIALECT_FLOAT_TYPES: Record<SqlDialect, Set<string>> = {
-  mysql: new Set(['decimal', 'numeric', 'float', 'double', 'real']),
-  postgres: new Set(['decimal', 'numeric', 'real', 'float', 'double precision']),
-  mssql: new Set(['decimal', 'numeric', 'real', 'float']),
-  oracle: new Set(['number', 'decimal', 'numeric', 'float', 'real']),
-  snowflake: new Set(['number', 'decimal', 'numeric', 'float', 'double', 'real']),
+  mysql: new Set([
+    'decimal',
+    'numeric',
+    'float',
+    'double',
+    'real',
+  ]),
+  postgres: new Set([
+    'decimal',
+    'numeric',
+    'real',
+    'float',
+    'double precision',
+  ]),
+  mssql: new Set([
+    'decimal',
+    'numeric',
+    'real',
+    'float',
+  ]),
+  oracle: new Set([
+    'number',
+    'decimal',
+    'numeric',
+    'float',
+    'real',
+  ]),
+  snowflake: new Set([
+    'number',
+    'decimal',
+    'numeric',
+    'float',
+    'double',
+    'real',
+  ]),
 };
 
 const DIALECT_BOOL_TYPES: Record<SqlDialect, Set<string>> = {
@@ -26,15 +83,57 @@ const DIALECT_BOOL_TYPES: Record<SqlDialect, Set<string>> = {
 };
 
 const DIALECT_STRING_TYPES: Record<SqlDialect, Set<string>> = {
-  mysql: new Set(['varchar', 'char', 'text', 'tinytext', 'mediumtext', 'longtext', 'string']),
-  postgres: new Set(['varchar', 'char', 'character', 'character varying', 'text', 'string']),
-  mssql: new Set(['varchar', 'char', 'nvarchar', 'nchar', 'text', 'ntext', 'string']),
-  oracle: new Set(['varchar', 'varchar2', 'char', 'nvarchar2', 'nchar', 'string']),
-  snowflake: new Set(['varchar', 'char', 'text', 'string']),
+  mysql: new Set([
+    'varchar',
+    'char',
+    'text',
+    'tinytext',
+    'mediumtext',
+    'longtext',
+    'string',
+  ]),
+  postgres: new Set([
+    'varchar',
+    'char',
+    'character',
+    'character varying',
+    'text',
+    'string',
+  ]),
+  mssql: new Set([
+    'varchar',
+    'char',
+    'nvarchar',
+    'nchar',
+    'text',
+    'ntext',
+    'string',
+  ]),
+  oracle: new Set([
+    'varchar',
+    'varchar2',
+    'char',
+    'nvarchar2',
+    'nchar',
+    'string',
+  ]),
+  snowflake: new Set([
+    'varchar',
+    'char',
+    'text',
+    'string',
+  ]),
 };
 
 const DIALECT_BINARY_TYPES: Record<SqlDialect, Set<string>> = {
-  mysql: new Set(['binary', 'varbinary', 'blob', 'tinyblob', 'mediumblob', 'longblob']),
+  mysql: new Set([
+    'binary',
+    'varbinary',
+    'blob',
+    'tinyblob',
+    'mediumblob',
+    'longblob',
+  ]),
   postgres: new Set(['bytea']),
   mssql: new Set(['binary', 'varbinary']),
   oracle: new Set(['blob', 'raw']),
@@ -42,11 +141,42 @@ const DIALECT_BINARY_TYPES: Record<SqlDialect, Set<string>> = {
 };
 
 const DIALECT_DATETIME_TYPES: Record<SqlDialect, Set<string>> = {
-  mysql: new Set(['date', 'datetime', 'timestamp', 'time']),
-  postgres: new Set(['date', 'timestamp', 'timestamptz', 'timestamp with time zone', 'timestamp without time zone', 'time', 'timetz', 'time with time zone', 'time without time zone']),
-  mssql: new Set(['date', 'datetime', 'datetime2', 'smalldatetime', 'time']),
-  oracle: new Set(['date', 'timestamp', 'timestamp with time zone', 'timestamp with local time zone']),
-  snowflake: new Set(['date', 'datetime', 'timestamp', 'time']),
+  mysql: new Set([
+    'date',
+    'datetime',
+    'timestamp',
+    'time',
+  ]),
+  postgres: new Set([
+    'date',
+    'timestamp',
+    'timestamptz',
+    'timestamp with time zone',
+    'timestamp without time zone',
+    'time',
+    'timetz',
+    'time with time zone',
+    'time without time zone',
+  ]),
+  mssql: new Set([
+    'date',
+    'datetime',
+    'datetime2',
+    'smalldatetime',
+    'time',
+  ]),
+  oracle: new Set([
+    'date',
+    'timestamp',
+    'timestamp with time zone',
+    'timestamp with local time zone',
+  ]),
+  snowflake: new Set([
+    'date',
+    'datetime',
+    'timestamp',
+    'time',
+  ]),
 };
 
 const DIALECT_SERIAL_TYPES: Record<SqlDialect, Set<string>> = {

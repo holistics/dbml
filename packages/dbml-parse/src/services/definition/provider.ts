@@ -32,16 +32,15 @@ export default class DBMLDefinitionProvider implements DefinitionProvider {
       let declaration: SyntaxNode | undefined;
       if (
         referee.declaration
-        && [
-          SyntaxNodeKind.PRIMARY_EXPRESSION,
-          SyntaxNodeKind.VARIABLE,
-        ].includes(node.kind)
+        && [SyntaxNodeKind.PRIMARY_EXPRESSION, SyntaxNodeKind.VARIABLE].includes(node.kind)
       ) {
         ({ declaration } = referee);
       }
 
       if (declaration) {
-        const { startPos, endPos } = declaration;
+        const {
+          startPos, endPos,
+        } = declaration;
         // Use filepath from declaration if available and in multi-file mode (uri is set)
         let definitionUri = uri;
         if (uri && declaration.filepath) {

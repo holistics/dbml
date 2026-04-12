@@ -1,13 +1,23 @@
-import { ElementDeclarationNode, FunctionApplicationNode } from '@/core/types/nodes';
+import {
+  ElementDeclarationNode, FunctionApplicationNode,
+} from '@/core/types/nodes';
 import type Compiler from '@/compiler/index';
-import { NodeSymbol, SymbolKind } from '@/core/types/symbol';
+import {
+  NodeSymbol, SymbolKind,
+} from '@/core/types/symbol';
 import { UNHANDLED } from '@/constants';
-import type { Table, Column, TablePartial, Ref } from '@/core/types/schemaJson';
+import type {
+  Table, Column, TablePartial, Ref,
+} from '@/core/types/schemaJson';
 import { isValidPartialInjection } from '@/core/utils/validate';
-import { extractVariableFromExpression, getBody, isElementNode } from '@/core/utils/expression';
+import {
+  extractVariableFromExpression, getBody, isElementNode,
+} from '@/core/utils/expression';
 import { ElementKind } from '@/core/types';
 import { uniqBy } from 'lodash-es';
-import { getMultiplicities, lookupInDefaultSchema, lookupMember } from '../../utils';
+import {
+  getMultiplicities, lookupInDefaultSchema, lookupMember,
+} from '../../utils';
 
 // Build a Table object from an element node using interpret (includes indexes, checks, etc.)
 // and symbolMembers (includes partial-injected columns).
@@ -109,14 +119,23 @@ export function getEnumMembers (column: Column, compiler: Compiler): string[] {
 
   let enumSymbol: NodeSymbol | undefined;
   if (column.type.schemaName) {
-    const schemaResult = lookupMember(compiler, programSymbol, column.type.schemaName, { kinds: [SymbolKind.Schema], ignoreNotFound: true });
+    const schemaResult = lookupMember(compiler, programSymbol, column.type.schemaName, {
+      kinds: [SymbolKind.Schema],
+      ignoreNotFound: true,
+    });
     if (schemaResult.getValue()) {
-      enumSymbol = lookupMember(compiler, schemaResult.getValue()!, column.type.type_name, { kinds: [SymbolKind.Enum], ignoreNotFound: true }).getValue();
+      enumSymbol = lookupMember(compiler, schemaResult.getValue()!, column.type.type_name, {
+        kinds: [SymbolKind.Enum],
+        ignoreNotFound: true,
+      }).getValue();
     }
   }
 
   if (!enumSymbol) {
-    enumSymbol = lookupInDefaultSchema(compiler, programSymbol, column.type.type_name, { kinds: [SymbolKind.Enum], ignoreNotFound: true }).getValue();
+    enumSymbol = lookupInDefaultSchema(compiler, programSymbol, column.type.type_name, {
+      kinds: [SymbolKind.Enum],
+      ignoreNotFound: true,
+    }).getValue();
   }
 
   if (!enumSymbol) return [];
@@ -131,18 +150,25 @@ export function getEnumMembers (column: Column, compiler: Compiler): string[] {
     .filter(Boolean) as string[];
 }
 
-export function parseNumericParams (column: Column): { precision: number; scale: number } | undefined {
+export function parseNumericParams (column: Column): { precision: number;
+  scale: number; } | undefined {
   const args = column.type.args;
   if (!args) return undefined;
   const parts = args.split(',').map((s) => s.trim());
   if (parts.length === 2) {
     const precision = parseInt(parts[0], 10);
     const scale = parseInt(parts[1], 10);
-    if (!Number.isNaN(precision) && !Number.isNaN(scale)) return { precision, scale };
+    if (!Number.isNaN(precision) && !Number.isNaN(scale)) return {
+      precision,
+      scale,
+    };
   }
   if (parts.length === 1) {
     const precision = parseInt(parts[0], 10);
-    if (!Number.isNaN(precision)) return { precision, scale: 0 };
+    if (!Number.isNaN(precision)) return {
+      precision,
+      scale: 0,
+    };
   }
   return undefined;
 }

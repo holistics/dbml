@@ -6,7 +6,8 @@ import { getElementNameString } from '@/core/utils/expression';
 import { CompileError, CompileErrorCode, CompileWarning } from '@/core/types/errors';
 import type Compiler from '@/compiler';
 import { UNHANDLED } from '@/constants';
-import { SchemaElement, TokenPosition } from '@/core/types';
+import { Filepath, SchemaElement, TokenPosition } from '@/core/types';
+import { isEmpty } from 'lodash-es';
 
 export function scanTestNames (path: string) {
   const files = fs.readdirSync(path);
@@ -74,7 +75,7 @@ export type Snappable =
 // Accept an object
 // Output a stable key-value object
 function sortObject (object: Record<string, unknown>): Record<string, unknown> {
-  const entries = Object.entries(object);
+  const entries = Object.entries(object).filter(([, value]) => !isEmpty(value));
   entries.sort(
     ([key1], [key2]) => (key1 as string) < (key2 as string) ? -1 : 1,
   );
@@ -159,6 +160,9 @@ export function toSnapshot (
   // because it's just an interface
   if (value instanceof NodeSymbol) {
     return symbolToSnapshot(compiler, value as NodeSymbol);
+  }
+  if (value instanceof Filepath) {
+    return value.absolute;
   }
   if (typeof value === 'object') {
     return sortObject(Object.fromEntries(

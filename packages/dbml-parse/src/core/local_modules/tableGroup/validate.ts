@@ -1,13 +1,18 @@
 import { partition } from 'lodash-es';
 import Compiler from '@/compiler';
-import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import {
-  isSimpleName, isValidColor, aggregateSettingList, Settings } from '@/core/utils/validate';
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
+import {
+  isSimpleName, isValidColor, aggregateSettingList, Settings,
+} from '@/core/utils/validate';
 import Report from '@/core/types/report';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode, WildcardNode,
 } from '@/core/types/nodes';
-import { destructureComplexVariable, isExpressionAQuotedString } from '@/core/utils/expression';
+import {
+  destructureComplexVariable, isExpressionAQuotedString,
+} from '@/core/utils/expression';
 
 export default class TableGroupValidator {
   private declarationNode: ElementDeclarationNode;
@@ -30,43 +35,51 @@ export default class TableGroupValidator {
 
   private validateContext (): CompileError[] {
     if (this.declarationNode.parent instanceof ElementDeclarationNode) {
-      return [new CompileError(
-        CompileErrorCode.INVALID_TABLEGROUP_CONTEXT,
-        'TableGroup must appear top-level',
-        this.declarationNode,
-      )];
+      return [
+        new CompileError(
+          CompileErrorCode.INVALID_TABLEGROUP_CONTEXT,
+          'TableGroup must appear top-level',
+          this.declarationNode,
+        ),
+      ];
     }
     return [];
   }
 
   private validateName (nameNode?: SyntaxNode): CompileError[] {
     if (!nameNode) {
-      return [new CompileError(
-        CompileErrorCode.NAME_NOT_FOUND,
-        'A TableGroup must have a name',
-        this.declarationNode,
-      )];
+      return [
+        new CompileError(
+          CompileErrorCode.NAME_NOT_FOUND,
+          'A TableGroup must have a name',
+          this.declarationNode,
+        ),
+      ];
     }
     if (nameNode instanceof WildcardNode) {
       return [new CompileError(CompileErrorCode.INVALID_NAME, 'Wildcard (*) is not allowed as a TableGroup name', nameNode)];
     }
     if (!isSimpleName(nameNode)) {
-      return [new CompileError(
-        CompileErrorCode.INVALID_NAME,
-        'A TableGroup name must be a single identifier',
-        nameNode,
-      )];
+      return [
+        new CompileError(
+          CompileErrorCode.INVALID_NAME,
+          'A TableGroup name must be a single identifier',
+          nameNode,
+        ),
+      ];
     }
     return [];
   }
 
   private validateAlias (aliasNode?: SyntaxNode): CompileError[] {
     if (aliasNode) {
-      return [new CompileError(
-        CompileErrorCode.UNEXPECTED_ALIAS,
-        'A TableGroup shouldn\'t have an alias',
-        aliasNode,
-      )];
+      return [
+        new CompileError(
+          CompileErrorCode.UNEXPECTED_ALIAS,
+          'A TableGroup shouldn\'t have an alias',
+          aliasNode,
+        ),
+      ];
     }
 
     return [];
@@ -131,18 +144,17 @@ export default class TableGroupValidator {
     if (!body) return [];
 
     if (body instanceof FunctionApplicationNode) {
-      return [new CompileError(
-        CompileErrorCode.UNEXPECTED_SIMPLE_BODY,
-        'A TableGroup\'s body must be a block',
-        body,
-      )];
+      return [
+        new CompileError(
+          CompileErrorCode.UNEXPECTED_SIMPLE_BODY,
+          'A TableGroup\'s body must be a block',
+          body,
+        ),
+      ];
     }
 
     const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
-    return [
-      ...this.validateFields(fields as FunctionApplicationNode[]),
-      ...this.validateSubElements(subs as ElementDeclarationNode[]),
-    ];
+    return [...this.validateFields(fields as FunctionApplicationNode[]), ...this.validateSubElements(subs as ElementDeclarationNode[])];
   }
 
   validateFields (fields: FunctionApplicationNode[]): CompileError[] {

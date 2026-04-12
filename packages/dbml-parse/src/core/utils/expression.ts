@@ -20,8 +20,12 @@ import {
   WildcardNode,
   UseSpecifierListNode,
 } from '@/core/types/nodes';
-import type { ElementKind, ImportKind, SettingName } from '@/core/types/keywords';
-import { SyntaxToken, SyntaxTokenKind } from '@/core/types/tokens';
+import type {
+  ElementKind, ImportKind, SettingName,
+} from '@/core/types/keywords';
+import {
+  SyntaxToken, SyntaxTokenKind,
+} from '@/core/types/tokens';
 import { last } from 'lodash-es';
 import { NUMERIC_LITERAL_PREFIX } from '@/constants';
 
@@ -43,7 +47,8 @@ export function parseNumber (node: PrefixExpressionNode | PrimaryExpressionNode)
 
 export type SignedNumberExpression =
   (PrimaryExpressionNode & { expression: LiteralNode & { literal: { kind: SyntaxTokenKind.NUMERIC_LITERAL } } })
-  | (PrefixExpressionNode & { op: '-' | '+'; expression: SignedNumberExpression });
+  | (PrefixExpressionNode & { op: '-' | '+';
+    expression: SignedNumberExpression; });
 
 export function isExpressionASignedNumberExpression (value?: SyntaxNode): value is SignedNumberExpression {
   if (value instanceof PrefixExpressionNode) {
@@ -149,7 +154,8 @@ export function getElementNameString (element?: SyntaxNode): string | undefined 
 
 export function isAsKeyword (
   token?: SyntaxToken,
-): token is SyntaxToken & { kind: SyntaxTokenKind.IDENTIFIER; value: 'as' } {
+): token is SyntaxToken & { kind: SyntaxTokenKind.IDENTIFIER;
+  value: 'as'; } {
   return token?.kind === SyntaxTokenKind.IDENTIFIER && token.value.toLowerCase() === 'as';
 }
 
@@ -330,7 +336,10 @@ export function destructureComplexVariableTuple (
   const variables = fragments;
   if (!variables.every(isExpressionAVariableNode)) return undefined;
 
-  return { variables, tupleElements };
+  return {
+    variables,
+    tupleElements,
+  };
 }
 
 export function destructureIndexNode (node?: SyntaxNode): {
@@ -339,8 +348,14 @@ export function destructureIndexNode (node?: SyntaxNode): {
 } | undefined {
   if (isValidIndexName(node)) {
     return node instanceof FunctionExpressionNode
-      ? { functional: [node], nonFunctional: [] }
-      : { functional: [], nonFunctional: [node] };
+      ? {
+          functional: [node],
+          nonFunctional: [],
+        }
+      : {
+          functional: [],
+          nonFunctional: [node],
+        };
   }
 
   if (node instanceof TupleExpressionNode && node.elementList.every(isValidIndexName)) {
@@ -348,7 +363,10 @@ export function destructureIndexNode (node?: SyntaxNode): {
       (e) => e instanceof FunctionExpressionNode,
     ) as FunctionExpressionNode[];
     const nonfunctionalIndexName = node.elementList.filter(isExpressionAVariableNode);
-    return { functional: functionalIndexName, nonFunctional: nonfunctionalIndexName };
+    return {
+      functional: functionalIndexName,
+      nonFunctional: nonfunctionalIndexName,
+    };
   }
 
   return undefined;

@@ -1,9 +1,17 @@
 import type Compiler from '@/compiler';
-import { DEFAULT_SCHEMA_NAME, UNHANDLED } from '@/constants';
-import { ElementDeclarationNode, UseDeclarationNode, type UseSpecifierNode, WildcardNode } from '@/core/types/nodes';
+import {
+  DEFAULT_SCHEMA_NAME, UNHANDLED,
+} from '@/constants';
+import {
+  ElementDeclarationNode, UseDeclarationNode, type UseSpecifierNode, WildcardNode,
+} from '@/core/types/nodes';
 import Report from '@/core/types/report';
-import { type NodeSymbol, SchemaSymbol } from '@/core/types/symbol';
-import { Filepath, resolveImportFilepath } from '@/core/types/filepath';
+import {
+  type NodeSymbol, SchemaSymbol,
+} from '@/core/types/symbol';
+import {
+  Filepath, resolveImportFilepath,
+} from '@/core/types/filepath';
 
 // This does not perform duplicate checks
 export function usableMembers (this: Compiler, symbolOrFilepath: SchemaSymbol | Filepath): Report<{
@@ -12,20 +20,24 @@ export function usableMembers (this: Compiler, symbolOrFilepath: SchemaSymbol | 
   // reuses are transitive (re-exported to importers)
   reuses: {
     selective: UseSpecifierNode[];
-    wildcard: { importPath: Filepath; node: WildcardNode }[];
+    wildcard: { importPath: Filepath;
+      node: WildcardNode; }[];
   };
   // uses are local only (not re-exported)
   uses: {
     selective: UseSpecifierNode[];
-    wildcard: { importPath: Filepath; node: WildcardNode }[];
+    wildcard: { importPath: Filepath;
+      node: WildcardNode; }[];
   };
 }> {
   const nonSchemaMembers: NodeSymbol[] = [];
   const childSchemas = new Map<string, SchemaSymbol>();
 
-  const wildcardReuses: { importPath: Filepath; node: WildcardNode }[] = [];
+  const wildcardReuses: { importPath: Filepath;
+    node: WildcardNode; }[] = [];
   const selectiveReuses: UseSpecifierNode[] = [];
-  const wildcardUses: { importPath: Filepath; node: WildcardNode }[] = [];
+  const wildcardUses: { importPath: Filepath;
+    node: WildcardNode; }[] = [];
   const selectiveUses: UseSpecifierNode[] = [];
 
   const filepath = symbolOrFilepath instanceof Filepath ? symbolOrFilepath : symbolOrFilepath.filepath;
@@ -40,13 +52,19 @@ export function usableMembers (this: Compiler, symbolOrFilepath: SchemaSymbol | 
 
     if (element.isReuse) {
       if (element.specifiers instanceof WildcardNode) {
-        wildcardReuses.push({ importPath, node: element.specifiers });
+        wildcardReuses.push({
+          importPath,
+          node: element.specifiers,
+        });
       } else {
         selectiveReuses.push(...element.specifiers.specifiers);
       }
     } else {
       if (element.specifiers instanceof WildcardNode) {
-        wildcardUses.push({ importPath, node: element.specifiers });
+        wildcardUses.push({
+          importPath,
+          node: element.specifiers,
+        });
       } else {
         selectiveUses.push(...element.specifiers.specifiers);
       }

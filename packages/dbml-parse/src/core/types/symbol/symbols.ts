@@ -1,4 +1,6 @@
-import { type SyntaxNode, UseDeclarationNode, type UseSpecifierNode, type WildcardNode } from '@/core/types/nodes';
+import {
+  type SyntaxNode, UseDeclarationNode, type UseSpecifierNode, type WildcardNode,
+} from '@/core/types/nodes';
 import type { Internable } from '@/core/types/internable';
 import { DEFAULT_SCHEMA_NAME } from '@/constants';
 import type { Filepath } from '@/core/types/filepath';
@@ -135,7 +137,10 @@ export class UseSymbol extends NodeSymbol {
     useSpecifierDeclaration?: UseSpecifierNode | WildcardNode;
     usedSymbol?: NodeSymbol;
   }, id: NodeSymbolId, filepath: Filepath) {
-    super({ kind, declaration }, id, filepath);
+    super({
+      kind,
+      declaration,
+    }, id, filepath);
     this.useSpecifierDeclaration = useSpecifierDeclaration;
     this.usedSymbol = usedSymbol;
   }
@@ -173,7 +178,10 @@ export class InjectedColumnSymbol extends NodeSymbol {
     id: NodeSymbolId,
     filepath: Filepath,
   ) {
-    super({ kind, declaration }, id, filepath);
+    super({
+      kind,
+      declaration,
+    }, id, filepath);
     this.injectionDeclaration = injectionDeclaration;
     this.name = name;
   }
@@ -198,7 +206,10 @@ export class SchemaSymbol extends NodeSymbol {
     id: NodeSymbolId,
     filepath: Filepath,
   ) {
-    super({ kind: SymbolKind.Schema, symbolTable }, id, filepath);
+    super({
+      kind: SymbolKind.Schema,
+      symbolTable,
+    }, id, filepath);
     this.name = name ?? '';
     this.parent = parent;
   }

@@ -1,11 +1,15 @@
 import { partition } from 'lodash-es';
 import Compiler from '@/compiler';
-import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import {
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode,
 } from '@/core/types/nodes';
 import { destructureComplexVariable } from '@/core/utils/expression';
-import { isSimpleName, type Settings } from '@/core/utils/validate';
+import {
+  isSimpleName, type Settings,
+} from '@/core/utils/validate';
 import Report from '@/core/types/report';
 
 export default class ProjectValidator {
@@ -72,10 +76,7 @@ export default class ProjectValidator {
     }
 
     const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
-    return [
-      ...fields.map((field) => new CompileError(CompileErrorCode.INVALID_PROJECT_FIELD, 'A Project can not have inline fields', field)),
-      ...this.validateSubElements(subs as ElementDeclarationNode[]),
-    ];
+    return [...fields.map((field) => new CompileError(CompileErrorCode.INVALID_PROJECT_FIELD, 'A Project can not have inline fields', field)), ...this.validateSubElements(subs as ElementDeclarationNode[])];
   }
 
   private validateSubElements (subs: ElementDeclarationNode[]): CompileError[] {

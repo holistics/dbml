@@ -4,8 +4,12 @@ import {
   PrefixExpressionNode,
   EmptyNode,
 } from '@/core/types/nodes';
-import { isExpressionAnIdentifierNode, isExpressionASignedNumberExpression } from '@/core/utils/expression';
-import { destructureComplexVariable, extractQuotedStringToken, extractNumericLiteral } from '@/core/utils/expression';
+import {
+  isExpressionAnIdentifierNode, isExpressionASignedNumberExpression,
+} from '@/core/utils/expression';
+import {
+  destructureComplexVariable, extractQuotedStringToken, extractNumericLiteral,
+} from '@/core/utils/expression';
 import { last } from 'lodash-es';
 import { DateTime } from 'luxon';
 
@@ -108,8 +112,20 @@ export function tryExtractInteger (value: SyntaxNode | number | string | boolean
   return null;
 }
 
-export const TRUTHY_VALUES = ['true', 'yes', 'y', 't', '1'];
-export const FALSY_VALUES = ['false', 'no', 'n', 'f', '0'];
+export const TRUTHY_VALUES = [
+  'true',
+  'yes',
+  'y',
+  't',
+  '1',
+];
+export const FALSY_VALUES = [
+  'false',
+  'no',
+  'n',
+  'f',
+  '0',
+];
 
 // Try to extract a boolean value from a syntax node or primitive
 export function tryExtractBoolean (value: SyntaxNode | number | string | boolean | undefined | null): boolean | null {
@@ -214,7 +230,10 @@ export function tryExtractDateTime (value: SyntaxNode | string | undefined | nul
   for (const format of SUPPORTED_TIME_FORMATS) {
     const dt = DateTime.fromFormat(extractedValue, format, { setZone: true });
     if (dt.isValid) {
-      return dt.toISOTime({ suppressMilliseconds: true, includeOffset: hasExplicitTimeZone(dt) });
+      return dt.toISOTime({
+        suppressMilliseconds: true,
+        includeOffset: hasExplicitTimeZone(dt),
+      });
     }
   }
 
@@ -228,13 +247,19 @@ export function tryExtractDateTime (value: SyntaxNode | string | undefined | nul
   for (const format of SUPPORTED_DATETIME_FORMATS) {
     const dt = DateTime.fromFormat(extractedValue, format, { setZone: true });
     if (dt.isValid) {
-      return dt.toISO({ suppressMilliseconds: true, includeOffset: hasExplicitTimeZone(dt) });
+      return dt.toISO({
+        suppressMilliseconds: true,
+        includeOffset: hasExplicitTimeZone(dt),
+      });
     }
   }
 
   const isoDate = DateTime.fromISO(extractedValue, { setZone: true });
   if (isoDate.isValid) {
-    return isoDate.toISO({ suppressMilliseconds: true, includeOffset: hasExplicitTimeZone(isoDate) });
+    return isoDate.toISO({
+      suppressMilliseconds: true,
+      includeOffset: hasExplicitTimeZone(isoDate),
+    });
   }
 
   return null;

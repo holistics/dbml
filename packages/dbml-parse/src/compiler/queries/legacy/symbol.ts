@@ -1,6 +1,10 @@
 import type Compiler from '../../index';
-import { ElementDeclarationNode, ProgramNode } from '@/core/types/nodes';
-import { NodeSymbol, SchemaSymbol, SymbolKind } from '@/core/types/symbol';
+import {
+  ElementDeclarationNode, ProgramNode,
+} from '@/core/types/nodes';
+import {
+  NodeSymbol, SchemaSymbol, SymbolKind,
+} from '@/core/types/symbol';
 import { UNHANDLED } from '@/constants';
 
 export function symbolOfName (this: Compiler, nameStack: string[], owner: ElementDeclarationNode | ProgramNode) {
@@ -8,7 +12,9 @@ export function symbolOfName (this: Compiler, nameStack: string[], owner: Elemen
     return [];
   }
 
-  const res: { symbol: NodeSymbol; kind: SymbolKind; name: string }[] = [];
+  const res: { symbol: NodeSymbol;
+    kind: SymbolKind;
+    name: string; }[] = [];
 
   for (
     let currentOwner: ElementDeclarationNode | ProgramNode | undefined = owner;
@@ -29,7 +35,9 @@ export function symbolOfName (this: Compiler, nameStack: string[], owner: Elemen
     }
 
     let currentPossibleSymbols: NodeSymbol[] = membersResult.getValue();
-    let matchedSymbols: { symbol: NodeSymbol; kind: SymbolKind; name: string }[] = [];
+    let matchedSymbols: { symbol: NodeSymbol;
+      kind: SymbolKind;
+      name: string; }[] = [];
 
     for (const name of nameStack) {
       matchedSymbols = currentPossibleSymbols

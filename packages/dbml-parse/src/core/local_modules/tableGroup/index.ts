@@ -1,12 +1,18 @@
 import { ElementKind } from '@/core/types/keywords';
-import { isElementNode, isElementFieldNode, destructureComplexVariable } from '@/core/utils/expression';
-import { CompileError, CompileErrorCode } from '@/core/types/errors';
-import { type LocalModule } from '../types';
-import { PASS_THROUGH, type PassThrough } from '@/constants';
 import {
-  SyntaxNode,
-} from '@/core/types/nodes';
-import { isSimpleName, Settings } from '@/core/utils/validate';
+  isElementNode, isElementFieldNode, destructureComplexVariable,
+} from '@/core/utils/expression';
+import {
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
+import { type LocalModule } from '../types';
+import {
+  PASS_THROUGH, type PassThrough,
+} from '@/constants';
+import { SyntaxNode } from '@/core/types/nodes';
+import {
+  isSimpleName, Settings,
+} from '@/core/utils/validate';
 import Report from '@/core/types/report';
 import type Compiler from '@/compiler';
 import TableGroupValidator, { validateSettingList } from './validate';
@@ -22,18 +28,22 @@ export const tableGroupModule: LocalModule = {
   nodeFullname (compiler: Compiler, node: SyntaxNode): Report<string[] | undefined> | Report<PassThrough> {
     if (isElementNode(node, ElementKind.TableGroup)) {
       if (!node.name) {
-        return new Report(undefined, [new CompileError(
-          CompileErrorCode.NAME_NOT_FOUND,
-          'A TableGroup must have a name',
-          node,
-        )]);
+        return new Report(undefined, [
+          new CompileError(
+            CompileErrorCode.NAME_NOT_FOUND,
+            'A TableGroup must have a name',
+            node,
+          ),
+        ]);
       }
       if (!isSimpleName(node.name)) {
-        return new Report(undefined, [new CompileError(
-          CompileErrorCode.INVALID_NAME,
-          'A TableGroup name must be a single identifier',
-          node.name,
-        )]);
+        return new Report(undefined, [
+          new CompileError(
+            CompileErrorCode.INVALID_NAME,
+            'A TableGroup name must be a single identifier',
+            node.name,
+          ),
+        ]);
       }
       return new Report(destructureComplexVariable(node.name));
     }
@@ -46,11 +56,13 @@ export const tableGroupModule: LocalModule = {
   nodeAlias (compiler: Compiler, node: SyntaxNode): Report<string | undefined> | Report<PassThrough> {
     if (isElementNode(node, ElementKind.TableGroup)) {
       if (node.alias) {
-        return new Report(undefined, [new CompileError(
-          CompileErrorCode.UNEXPECTED_ALIAS,
-          'A TableGroup shouldn\'t have an alias',
-          node.alias,
-        )]);
+        return new Report(undefined, [
+          new CompileError(
+            CompileErrorCode.UNEXPECTED_ALIAS,
+            'A TableGroup shouldn\'t have an alias',
+            node.alias,
+          ),
+        ]);
       }
       return new Report(undefined);
     }

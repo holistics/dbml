@@ -1,6 +1,8 @@
 import type Compiler from '@/compiler';
 import { Filepath } from '@/core/types/filepath';
-import { UseDeclarationNode, UseSpecifierListNode, WildcardNode, VariableNode, SyntaxNodeKind } from '@/core/types/nodes';
+import {
+  UseDeclarationNode, UseSpecifierListNode, WildcardNode, VariableNode, SyntaxNodeKind,
+} from '@/core/types/nodes';
 
 export interface ParsedUseStatement {
   startOffset: number;
@@ -70,7 +72,14 @@ export class UseStatementMerger {
           } else if (specifier.importKind) {
             // No explicit kind token — the "kind slot" holds the symbol name (e.g. `use { User }`)
             // Reject DBML import-kind keywords that leaked in due to parser error recovery.
-            const IMPORT_KIND_KEYWORDS = new Set(['table', 'enum', 'tablepartial', 'tablegroup', 'note', 'from']);
+            const IMPORT_KIND_KEYWORDS = new Set([
+              'table',
+              'enum',
+              'tablepartial',
+              'tablegroup',
+              'note',
+              'from',
+            ]);
             const val = specifier.importKind.value ?? null;
             if (val && !IMPORT_KIND_KEYWORDS.has(val.toLowerCase())) {
               name = val;
@@ -168,7 +177,7 @@ export class UseStatementMerger {
     const sourceFileStr = this.normalizeSourcePath(sourceFile);
 
     // Look for existing use from this source file
-    const existingUseIndex = existingUses.findIndex(u => u.sourceFile === sourceFileStr);
+    const existingUseIndex = existingUses.findIndex((u) => u.sourceFile === sourceFileStr);
 
     if (existingUseIndex !== -1) {
       // Merge into existing use statement

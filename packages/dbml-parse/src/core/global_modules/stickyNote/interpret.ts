@@ -6,7 +6,9 @@ import {
 import {
   extractColor, extractElementName, getTokenPosition, normalizeNoteContent,
 } from '../utils';
-import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import {
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
 import { aggregateSettingList } from '@/core/utils/validate';
 import Compiler from '@/compiler';
 import Report from '@/core/types/report';
@@ -21,16 +23,16 @@ export class StickyNoteInterpreter {
   constructor (compiler: Compiler, declarationNode: ElementDeclarationNode) {
     this.declarationNode = declarationNode;
     this.compiler = compiler;
-    this.note = { name: undefined, content: undefined, token: undefined };
+    this.note = {
+      name: undefined,
+      content: undefined,
+      token: undefined,
+    };
   }
 
   interpret (): Report<Note> {
     this.note.token = getTokenPosition(this.declarationNode);
-    const errors = [
-      ...this.interpretName(this.declarationNode.name),
-      ...this.interpretSettingList(this.declarationNode.attributeList),
-      ...this.interpretBody(this.declarationNode.body as BlockExpressionNode),
-    ];
+    const errors = [...this.interpretName(this.declarationNode.name), ...this.interpretSettingList(this.declarationNode.attributeList), ...this.interpretBody(this.declarationNode.body as BlockExpressionNode)];
 
     return new Report(this.note as Note, errors);
   }
@@ -58,9 +60,7 @@ export class StickyNoteInterpreter {
     const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
 
     if (fields.length !== 1 || subs.length > 0) {
-      return [
-        new CompileError(CompileErrorCode.INVALID_NOTE, 'Invalid note syntax', body),
-      ];
+      return [new CompileError(CompileErrorCode.INVALID_NOTE, 'Invalid note syntax', body)];
     }
 
     return [...this.interpretNote(fields[0] as FunctionApplicationNode)];

@@ -2,13 +2,17 @@ import { SyntaxToken } from '@/core/types/tokens';
 import {
   BlockExpressionNode, CommaExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ProgramNode, SyntaxNode,
 } from '@/core/types/nodes';
-import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import {
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
 import { scanNonListNodeForBinding } from '../utils';
 import {
   destructureCallExpression,
   extractVarNameFromPrimaryVariable,
 } from '../../utils/expression';
-import { ElementKind, NodeSymbol } from '../../types';
+import {
+  ElementKind, NodeSymbol,
+} from '../../types';
 import { isTupleOfVariables } from '../../utils/expression';
 import { getElementNameString } from '@/core/utils/expression';
 import Compiler from '@/compiler';
@@ -169,10 +173,7 @@ export default class RecordsBinder {
     const functions = body.body.filter((e) => e instanceof FunctionApplicationNode);
     const subs = body.body.filter((e) => e instanceof ElementDeclarationNode);
 
-    return [
-      ...this.bindDataRows(functions as FunctionApplicationNode[]),
-      ...this.bindSubElements(subs as ElementDeclarationNode[]),
-    ];
+    return [...this.bindDataRows(functions as FunctionApplicationNode[]), ...this.bindSubElements(subs as ElementDeclarationNode[])];
   }
 
   private bindDataRows (rows: FunctionApplicationNode[]): CompileError[] {

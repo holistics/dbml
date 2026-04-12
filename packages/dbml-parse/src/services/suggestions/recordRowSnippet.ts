@@ -1,6 +1,4 @@
-import {
-  extractVariableFromExpression,
-} from '@/core/utils/expression';
+import { extractVariableFromExpression } from '@/core/utils/expression';
 import { extractReferee } from '@/services/utils';
 import { SymbolKind } from '@/core/types/symbol';
 import {

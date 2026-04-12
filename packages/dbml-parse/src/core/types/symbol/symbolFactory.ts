@@ -1,5 +1,7 @@
 import { Filepath } from '@/core/types/filepath';
-import { NodeSymbol, NodeSymbolId, NodeSymbolIdGenerator } from './symbols';
+import {
+  NodeSymbol, NodeSymbolId, NodeSymbolIdGenerator,
+} from './symbols';
 
 export class SymbolFactory {
   private generator: NodeSymbolIdGenerator;

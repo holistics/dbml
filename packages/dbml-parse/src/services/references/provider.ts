@@ -1,4 +1,6 @@
-import { getOffsetFromMonacoPosition, extractReferee } from '@/services/utils';
+import {
+  getOffsetFromMonacoPosition, extractReferee,
+} from '@/services/utils';
 import Compiler from '@/compiler';
 import { SyntaxNodeKind } from '@/core/types/nodes';
 import {

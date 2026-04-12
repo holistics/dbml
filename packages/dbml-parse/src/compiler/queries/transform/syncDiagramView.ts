@@ -1,6 +1,10 @@
-import { isAlphaOrUnderscore, isDigit } from '@/core/utils/chars';
+import {
+  isAlphaOrUnderscore, isDigit,
+} from '@/core/utils/chars';
 import type { FilterConfig } from '@/core/types/schemaJson';
-import { applyTextEdits, TextEdit } from './applyTextEdits';
+import {
+  applyTextEdits, TextEdit,
+} from './applyTextEdits';
 
 export interface DiagramViewCreateOperation {
   operation: 'create';
@@ -25,8 +29,8 @@ export type DiagramViewSyncOperation = DiagramViewCreateOperation | DiagramViewU
 function isSimpleIdentifier (name: string): boolean {
   if (!name) return false;
   return (
-    (isAlphaOrUnderscore(name[0]) || name[0] === '_') &&
-    name.split('').every((c) => isAlphaOrUnderscore(c) || isDigit(c))
+    (isAlphaOrUnderscore(name[0]) || name[0] === '_')
+    && name.split('').every((c) => isAlphaOrUnderscore(c) || isDigit(c))
   );
 }
 
@@ -58,7 +62,10 @@ function stripQuotes (raw: string): string {
 function findDiagramViewBlock (
   source: string,
   targetName: string,
-): { nameStart: number; nameEnd: number; blockStart: number; blockEnd: number } | null {
+): { nameStart: number;
+  nameEnd: number;
+  blockStart: number;
+  blockEnd: number; } | null {
   const pattern = /DiagramView\s+("(?:[^"\\]|\\.)*"|[A-Za-z_][A-Za-z0-9_]*)\s*\{/g;
   let match: RegExpExecArray | null;
 
@@ -99,7 +106,8 @@ function findDiagramViewBlock (
 function serializeVisibleEntities (ve: FilterConfig): string {
   const lines: string[] = [];
 
-  function renderBlock (keyword: string, items: Array<{ name: string; schemaName?: string }> | null) {
+  function renderBlock (keyword: string, items: Array<{ name: string;
+    schemaName?: string; }> | null) {
     if (items === null) return;
     if (items.length === 0) {
       lines.push(`  ${keyword} { * }`);
@@ -109,7 +117,8 @@ function serializeVisibleEntities (ve: FilterConfig): string {
     }
   }
 
-  renderBlock('Tables', ve.tables as Array<{ name: string; schemaName?: string }> | null);
+  renderBlock('Tables', ve.tables as Array<{ name: string;
+    schemaName?: string; }> | null);
   renderBlock('Notes', ve.stickyNotes);
   renderBlock('TableGroups', ve.tableGroups);
   renderBlock('Schemas', ve.schemas);
@@ -151,7 +160,13 @@ export function syncDiagramView (
         if (existing) {
           // Replace existing block body
           const newBlock = buildBlock(op.name, op.visibleEntities);
-          const edits: TextEdit[] = [{ start: existing.blockStart, end: existing.blockEnd, newText: newBlock }];
+          const edits: TextEdit[] = [
+            {
+              start: existing.blockStart,
+              end: existing.blockEnd,
+              newText: newBlock,
+            },
+          ];
           result = applyTextEdits(result, edits);
         } else {
           // Append new block
@@ -166,7 +181,13 @@ export function syncDiagramView (
         const existing = findDiagramViewBlock(result, op.name);
         if (!existing) break;
         const newFormattedName = formatName(op.newName);
-        const edits: TextEdit[] = [{ start: existing.nameStart, end: existing.nameEnd, newText: newFormattedName }];
+        const edits: TextEdit[] = [
+          {
+            start: existing.nameStart,
+            end: existing.nameEnd,
+            newText: newFormattedName,
+          },
+        ];
         result = applyTextEdits(result, edits);
         break;
       }
@@ -179,7 +200,13 @@ export function syncDiagramView (
         if (deleteStart > 0 && result[deleteStart - 1] === '\n') {
           deleteStart--;
         }
-        const edits: TextEdit[] = [{ start: deleteStart, end: existing.blockEnd, newText: '' }];
+        const edits: TextEdit[] = [
+          {
+            start: deleteStart,
+            end: existing.blockEnd,
+            newText: '',
+          },
+        ];
         result = applyTextEdits(result, edits);
         break;
       }

@@ -1,28 +1,17 @@
 {
   "database": {
-    "aliases": [],
-    "diagramViews": [],
-    "enums": [],
     "externals": {
-      "enums": [],
-      "notes": [],
-      "tableGroups": [],
-      "tablePartials": [],
       "tables": [
         {
           "name": "bookings",
-          "schemaName": null,
           "visibleNames": [
             {
-              "name": "bookings",
-              "schemaName": null
+              "name": "bookings"
             }
           ]
         }
       ]
     },
-    "notes": [],
-    "records": [],
     "refs": [
       {
         "endpoints": [
@@ -31,22 +20,9 @@
               "event_id"
             ],
             "relation": "*",
-            "schemaName": null,
             "tableName": "bookings",
             "token": {
-              "end": {
-                "column": 23,
-                "line": 10,
-                "offset": 237
-              },
-              "filepath": {
-                "path": "/main.dbml"
-              },
-              "start": {
-                "column": 6,
-                "line": 10,
-                "offset": 220
-              }
+              "filepath": "/main.dbml"
             }
           },
           {
@@ -54,157 +30,55 @@
               "id"
             ],
             "relation": "1",
-            "schemaName": null,
             "tableName": "events",
             "token": {
-              "end": {
-                "column": 35,
-                "line": 10,
-                "offset": 249
-              },
-              "filepath": {
-                "path": "/main.dbml"
-              },
-              "start": {
-                "column": 26,
-                "line": 10,
-                "offset": 240
-              }
+              "filepath": "/main.dbml"
             }
           }
         ],
-        "name": null,
-        "schemaName": null,
         "token": {
-          "end": {
-            "column": 35,
-            "line": 10,
-            "offset": 249
-          },
-          "filepath": {
-            "path": "/main.dbml"
-          },
-          "start": {
-            "column": 1,
-            "line": 10,
-            "offset": 215
-          }
+          "filepath": "/main.dbml"
         }
       }
     ],
-    "schemas": [],
-    "tableGroups": [],
-    "tablePartials": [],
     "tables": [
       {
-        "alias": null,
-        "checks": [],
         "fields": [
           {
-            "checks": [],
-            "increment": false,
-            "inline_refs": [],
             "name": "id",
-            "pk": true,
             "token": {
-              "end": {
-                "column": 14,
-                "line": 2,
-                "offset": 30
-              },
-              "filepath": {
-                "path": "/tables.dbml"
-              },
-              "start": {
-                "column": 3,
-                "line": 2,
-                "offset": 19
-              }
+              "filepath": "/tables.dbml"
             },
             "type": {
-              "args": null,
-              "schemaName": null,
               "type_name": "int"
-            },
-            "unique": false
+            }
           },
           {
-            "inline_refs": [],
             "name": "user_id",
-            "pk": false,
             "token": {
-              "end": {
-                "column": 14,
-                "line": 3,
-                "offset": 44
-              },
-              "filepath": {
-                "path": "/tables.dbml"
-              },
-              "start": {
-                "column": 3,
-                "line": 3,
-                "offset": 33
-              }
+              "filepath": "/tables.dbml"
             },
             "type": {
-              "args": null,
-              "schemaName": null,
               "type_name": "int"
-            },
-            "unique": false
+            }
           },
           {
-            "inline_refs": [],
             "name": "event_id",
-            "pk": false,
             "token": {
-              "end": {
-                "column": 15,
-                "line": 4,
-                "offset": 59
-              },
-              "filepath": {
-                "path": "/tables.dbml"
-              },
-              "start": {
-                "column": 3,
-                "line": 4,
-                "offset": 47
-              }
+              "filepath": "/tables.dbml"
             },
             "type": {
-              "args": null,
-              "schemaName": null,
               "type_name": "int"
-            },
-            "unique": false
+            }
           },
           {
-            "inline_refs": [],
             "name": "created_at",
-            "pk": false,
             "token": {
-              "end": {
-                "column": 23,
-                "line": 5,
-                "offset": 82
-              },
-              "filepath": {
-                "path": "/tables.dbml"
-              },
-              "start": {
-                "column": 3,
-                "line": 5,
-                "offset": 62
-              }
+              "filepath": "/tables.dbml"
             },
             "type": {
-              "args": null,
-              "schemaName": null,
               "type_name": "timestamp"
-            },
-            "unique": false
+            }
           }
         ],
         "indexes": [
@@ -212,216 +86,73 @@
             "columns": [
               {
                 "token": {
-                  "end": {
-                    "column": 13,
-                    "line": 8,
-                    "offset": 108
-                  },
-                  "filepath": {
-                    "path": "/tables.dbml"
-                  },
-                  "start": {
-                    "column": 6,
-                    "line": 8,
-                    "offset": 101
-                  }
+                  "filepath": "/tables.dbml"
                 },
                 "type": "column",
                 "value": "user_id"
               },
               {
                 "token": {
-                  "end": {
-                    "column": 23,
-                    "line": 8,
-                    "offset": 118
-                  },
-                  "filepath": {
-                    "path": "/tables.dbml"
-                  },
-                  "start": {
-                    "column": 15,
-                    "line": 8,
-                    "offset": 110
-                  }
+                  "filepath": "/tables.dbml"
                 },
                 "type": "column",
                 "value": "event_id"
               }
             ],
             "name": "unique_booking",
-            "pk": false,
             "token": {
-              "end": {
-                "column": 57,
-                "line": 8,
-                "offset": 152
-              },
-              "filepath": {
-                "path": "/tables.dbml"
-              },
-              "start": {
-                "column": 5,
-                "line": 8,
-                "offset": 100
-              }
-            },
-            "unique": true
+              "filepath": "/tables.dbml"
+            }
           },
           {
             "columns": [
               {
                 "token": {
-                  "end": {
-                    "column": 15,
-                    "line": 9,
-                    "offset": 167
-                  },
-                  "filepath": {
-                    "path": "/tables.dbml"
-                  },
-                  "start": {
-                    "column": 5,
-                    "line": 9,
-                    "offset": 157
-                  }
+                  "filepath": "/tables.dbml"
                 },
                 "type": "column",
                 "value": "created_at"
               }
             ],
             "token": {
-              "end": {
-                "column": 15,
-                "line": 9,
-                "offset": 167
-              },
-              "filepath": {
-                "path": "/tables.dbml"
-              },
-              "start": {
-                "column": 5,
-                "line": 9,
-                "offset": 157
-              }
+              "filepath": "/tables.dbml"
             }
           }
         ],
         "name": "bookings",
-        "partials": [],
-        "schemaName": null,
         "token": {
-          "end": {
-            "column": 2,
-            "line": 11,
-            "offset": 173
-          },
-          "filepath": {
-            "path": "/tables.dbml"
-          },
-          "start": {
-            "column": 1,
-            "line": 1,
-            "offset": 0
-          }
+          "filepath": "/tables.dbml"
         }
       },
       {
-        "alias": null,
-        "checks": [],
         "fields": [
           {
-            "checks": [],
-            "increment": false,
-            "inline_refs": [],
             "name": "id",
-            "pk": true,
             "token": {
-              "end": {
-                "column": 14,
-                "line": 6,
-                "offset": 196
-              },
-              "filepath": {
-                "path": "/main.dbml"
-              },
-              "start": {
-                "column": 3,
-                "line": 6,
-                "offset": 185
-              }
+              "filepath": "/main.dbml"
             },
             "type": {
-              "args": null,
-              "schemaName": null,
               "type_name": "int"
-            },
-            "unique": false
+            }
           },
           {
-            "inline_refs": [],
             "name": "name",
-            "pk": false,
             "token": {
-              "end": {
-                "column": 15,
-                "line": 7,
-                "offset": 211
-              },
-              "filepath": {
-                "path": "/main.dbml"
-              },
-              "start": {
-                "column": 3,
-                "line": 7,
-                "offset": 199
-              }
+              "filepath": "/main.dbml"
             },
             "type": {
-              "args": null,
-              "schemaName": null,
               "type_name": "varchar"
-            },
-            "unique": false
+            }
           }
         ],
-        "indexes": [],
         "name": "events",
-        "partials": [],
-        "schemaName": null,
         "token": {
-          "end": {
-            "column": 2,
-            "line": 8,
-            "offset": 213
-          },
-          "filepath": {
-            "path": "/main.dbml"
-          },
-          "start": {
-            "column": 1,
-            "line": 5,
-            "offset": 168
-          }
+          "filepath": "/main.dbml"
         }
       }
     ],
     "token": {
-      "end": {
-        "column": 1,
-        "line": 11,
-        "offset": 250
-      },
-      "filepath": {
-        "path": "/main.dbml"
-      },
-      "start": {
-        "column": 1,
-        "line": 3,
-        "offset": 123
-      }
+      "filepath": "/main.dbml"
     }
-  },
-  "errors": [],
-  "warnings": []
+  }
 }

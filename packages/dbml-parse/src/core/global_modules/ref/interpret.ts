@@ -1,21 +1,31 @@
-import { destructureComplexVariable, extractVariableFromExpression } from '@/core/utils/expression';
+import {
+  destructureComplexVariable, extractVariableFromExpression,
+} from '@/core/utils/expression';
 import { aggregateSettingList } from '@/core/utils/validate';
-import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import {
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, IdentiferStreamNode, InfixExpressionNode, ListExpressionNode, SyntaxNode, TupleExpressionNode,
 } from '@/core/types/nodes';
-import type { Ref, RefEndpoint, RelationCardinality, TokenPosition } from '@/core/types/schemaJson';
+import type {
+  Ref, RefEndpoint, RelationCardinality, TokenPosition,
+} from '@/core/types/schemaJson';
 import {
   extractColor, extractNamesFromRefOperand, getMultiplicities, getTokenPosition, getSymbolSchemaAndName,
 } from '../utils';
-import { extractStringFromIdentifierStream, isAccessExpression } from '@/core/utils/expression';
+import {
+  extractStringFromIdentifierStream, isAccessExpression,
+} from '@/core/utils/expression';
 import Compiler from '@/compiler';
 import Report from '@/core/types/report';
 import { ElementKind } from '@/core/types/keywords';
 import { UNHANDLED } from '@/constants';
 
 function buildRefEndpoint (
-  names: { schemaName: string | null; tableName: string; fieldNames: string[] },
+  names: { schemaName: string | null;
+    tableName: string;
+    fieldNames: string[]; },
   relation: RelationCardinality,
   token: TokenPosition,
 ): RefEndpoint {
@@ -67,10 +77,7 @@ export class RefInterpreter {
 
   interpret (): Report<Ref> {
     this.ref.token = getTokenPosition(this.declarationNode);
-    const errors = [
-      ...this.interpretName(this.declarationNode.name!),
-      ...this.interpretBody(this.declarationNode.body!),
-    ];
+    const errors = [...this.interpretName(this.declarationNode.name!), ...this.interpretBody(this.declarationNode.body!)];
     return new Report(this.ref as Ref, errors);
   }
 
@@ -97,7 +104,9 @@ export class RefInterpreter {
 
   private interpretField (field: FunctionApplicationNode): CompileError[] {
     const op = (field.callee as InfixExpressionNode).op!.value;
-    const { leftExpression, rightExpression } = field.callee as InfixExpressionNode;
+    const {
+      leftExpression, rightExpression,
+    } = field.callee as InfixExpressionNode;
 
     if (field.args[0]) {
       const settingMap = aggregateSettingList(field.args[0] as ListExpressionNode).getValue();
@@ -120,10 +129,7 @@ export class RefInterpreter {
 
     const leftNames = extractNamesFromRefOperand(leftExpression!, this.ownerSchema, this.ownerTable);
     const rightNames = extractNamesFromRefOperand(rightExpression!, this.ownerSchema, this.ownerTable);
-    this.ref.endpoints = [
-      buildRefEndpoint(leftNames, multiplicities[0], getTokenPosition(leftExpression!)),
-      buildRefEndpoint(rightNames, multiplicities[1], getTokenPosition(rightExpression!)),
-    ];
+    this.ref.endpoints = [buildRefEndpoint(leftNames, multiplicities[0], getTokenPosition(leftExpression!)), buildRefEndpoint(rightNames, multiplicities[1], getTokenPosition(rightExpression!))];
 
     return [];
   }

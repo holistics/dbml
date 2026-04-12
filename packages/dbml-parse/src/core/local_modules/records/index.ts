@@ -1,12 +1,22 @@
-import { isElementNode, isElementFieldNode } from '@/core/utils/expression';
-import { destructureComplexVariable, extractVariableFromExpression, extractQuotedStringToken } from '@/core/utils/expression';
-import { CompileError, CompileErrorCode } from '@/core/types/errors';
-import { PASS_THROUGH, UNHANDLED, type PassThrough } from '@/constants';
+import {
+  isElementNode, isElementFieldNode,
+} from '@/core/utils/expression';
+import {
+  destructureComplexVariable, extractVariableFromExpression, extractQuotedStringToken,
+} from '@/core/utils/expression';
+import {
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
+import {
+  PASS_THROUGH, UNHANDLED, type PassThrough,
+} from '@/constants';
 import {
   CallExpressionNode, ElementDeclarationNode, ProgramNode, SyntaxNode, TupleExpressionNode,
 } from '@/core/types/nodes';
 import { ElementKind } from '@/core/types/keywords';
-import { type LocalModule, type Settings } from '../types';
+import {
+  type LocalModule, type Settings,
+} from '../types';
 import { isValidName } from '@/core/utils/validate';
 import { isTupleOfVariables } from '@/core/utils/expression';
 import Report from '@/core/types/report';
@@ -32,11 +42,13 @@ export const recordsModule: LocalModule = {
       if (isTopLevel) {
         // Top-level: must have name in form table(col1, col2, ...)
         if (!(node.name instanceof CallExpressionNode)) {
-          return new Report(undefined, [new CompileError(
-            CompileErrorCode.INVALID_RECORDS_NAME,
-            'Records at top-level must have a name in the form of table(col1, col2, ...) or schema.table(col1, col2, ...)',
-            node.name || node.type || node,
-          )]);
+          return new Report(undefined, [
+            new CompileError(
+              CompileErrorCode.INVALID_RECORDS_NAME,
+              'Records at top-level must have a name in the form of table(col1, col2, ...) or schema.table(col1, col2, ...)',
+              node.name || node.type || node,
+            ),
+          ]);
         }
 
         const errs: CompileError[] = [];
@@ -61,11 +73,13 @@ export const recordsModule: LocalModule = {
       } else {
         // Inside a table: optional column list only
         if (node.name && !isTupleOfVariables(node.name)) {
-          return new Report(undefined, [new CompileError(
-            CompileErrorCode.INVALID_RECORDS_NAME,
-            'Records inside a Table can only have a column list like (col1, col2, ...)',
-            node.name,
-          )]);
+          return new Report(undefined, [
+            new CompileError(
+              CompileErrorCode.INVALID_RECORDS_NAME,
+              'Records inside a Table can only have a column list like (col1, col2, ...)',
+              node.name,
+            ),
+          ]);
         }
         return new Report(destructureComplexVariable(node.name));
       }

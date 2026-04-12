@@ -12,12 +12,18 @@ import {
   isExpressionAQuotedString, isExpressionAVariableNode,
   isExpressionASignedNumberExpression, getNumberTextFromExpression,
 } from '@/core/utils/expression';
-import type { InlineRef, ColumnType } from '@/core/types/schemaJson';
+import type {
+  InlineRef, ColumnType,
+} from '@/core/types/schemaJson';
 
 export function interpretColumnType (typeNode?: SyntaxNode): ColumnType {
   // Skip ListExpressionNode (settings bracket [pk, ...]) - it's not a type
   let rawTypeNode: SyntaxNode | undefined = typeNode instanceof ListExpressionNode ? undefined : typeNode;
-  let columnType: ColumnType = { schemaName: null, type_name: '', args: null };
+  let columnType: ColumnType = {
+    schemaName: null,
+    type_name: '',
+    args: null,
+  };
 
   if (rawTypeNode) {
     let typeSuffix = '';
@@ -92,7 +98,13 @@ export function interpretInlineRefs (refs: any[]): InlineRef[] {
         const fieldNames = rightTuple.tupleElements.length > 0
           ? rightTuple.tupleElements.map((e) => e.expression.variable?.value ?? '')
           : [];
-        inlineRefs.push({ schemaName, tableName, fieldNames, relation: op, token: getTokenPosition(ref) });
+        inlineRefs.push({
+          schemaName,
+          tableName,
+          fieldNames,
+          relation: op,
+          token: getTokenPosition(ref),
+        });
       }
     } else if (ref.value instanceof PrefixExpressionNode && isRelationshipOp(ref.value.op?.value)) {
       // Handle prefix form: `ref: > users.id`
@@ -114,7 +126,13 @@ export function interpretInlineRefs (refs: any[]): InlineRef[] {
           tableName = vars.length > 1 ? vars.at(-2)! : '';
           schemaName = vars.length > 2 ? vars.slice(0, -2).join('.') : null;
         }
-        inlineRefs.push({ schemaName, tableName, fieldNames, relation: op, token: getTokenPosition(ref) });
+        inlineRefs.push({
+          schemaName,
+          tableName,
+          fieldNames,
+          relation: op,
+          token: getTokenPosition(ref),
+        });
       }
     }
   }

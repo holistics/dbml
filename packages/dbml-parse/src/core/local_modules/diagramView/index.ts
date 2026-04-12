@@ -1,8 +1,14 @@
-import { CompileError, CompileErrorCode } from '@/core/types/errors';
-import { BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, SyntaxNode, WildcardNode } from '@/core/types/nodes';
+import {
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
+import {
+  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, SyntaxNode, WildcardNode,
+} from '@/core/types/nodes';
 import { ElementKind } from '@/core/types/keywords';
 import type { LocalModule } from '../types';
-import { PASS_THROUGH, type PassThrough } from '@/constants';
+import {
+  PASS_THROUGH, type PassThrough,
+} from '@/constants';
 import Report from '@/core/types/report';
 import type Compiler from '@/compiler';
 import { isElementNode } from '@/core/utils/expression';

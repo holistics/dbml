@@ -1,10 +1,18 @@
 import type Compiler from '@/compiler';
-import { DEFAULT_ENTRY, UNHANDLED } from '@/constants';
+import {
+  DEFAULT_ENTRY, UNHANDLED,
+} from '@/constants';
 import Report from '@/core/types/report';
 import { AliasKind } from '@/core/types';
-import type { Database, ElementRef, MasterDatabase, Table, TablePartial } from '@/core/types';
-import { Filepath, type FilepathId } from '@/core/types/filepath';
-import type { CompileError, CompileWarning } from '@/core/types/errors';
+import type {
+  Database, ElementRef, MasterDatabase, Table, TablePartial,
+} from '@/core/types';
+import {
+  Filepath, type FilepathId,
+} from '@/core/types/filepath';
+import type {
+  CompileError, CompileWarning,
+} from '@/core/types/errors';
 
 // Strip internal-only column type properties for public JSON export.
 function stripColumnInternals<T extends Table | TablePartial> (table: T): T {
@@ -108,7 +116,10 @@ export function interpretProject (this: Compiler): Report<MasterDatabase> {
     if (db.project && !merged.project) merged.project = db.project;
   }
 
-  return new Report({ files, items: merged }, errors, warnings);
+  return new Report({
+    files,
+    items: merged,
+  }, errors, warnings);
 }
 
 // Export a reconciled, stripped Database for a single file.
@@ -168,7 +179,13 @@ export function exportSchemaJson (this: Compiler, filepath: Filepath): Report<Re
 
       // Add with primary name; strip schema if renamed
       const isRenamed = primaryName !== ext.name || ext.schemaName !== null;
-      pushItem(reconciled, kind, isRenamed ? { ...found, name: primaryName, schemaName: null } : found);
+      pushItem(reconciled, kind, isRenamed
+        ? {
+            ...found,
+            name: primaryName,
+            schemaName: null,
+          }
+        : found);
 
       if (kind === AliasKind.Table) {
         renameMap.set(canonicalElementKey(ext.schemaName, ext.name), primaryName);
@@ -179,7 +196,11 @@ export function exportSchemaJson (this: Compiler, filepath: Filepath): Report<Re
         reconciled.aliases.push({
           name: visible.name,
           kind,
-          value: { elementName: primaryName, tableName: primaryName, schemaName: null },
+          value: {
+            elementName: primaryName,
+            tableName: primaryName,
+            schemaName: null,
+          },
         });
       }
     }
@@ -207,7 +228,11 @@ export function exportSchemaJson (this: Compiler, filepath: Filepath): Report<Re
     endpoints: ref.endpoints.map((ep) => {
       const local = renameMap.get(canonicalElementKey(ep.schemaName, ep.tableName));
       return (local && (local !== ep.tableName || ep.schemaName))
-        ? { ...ep, tableName: local, schemaName: null }
+        ? {
+            ...ep,
+            tableName: local,
+            schemaName: null,
+          }
         : ep;
     }) as typeof ref.endpoints,
   }));
@@ -216,7 +241,11 @@ export function exportSchemaJson (this: Compiler, filepath: Filepath): Report<Re
   reconciled.records = reconciled.records.map((rec) => {
     const local = renameMap.get(canonicalElementKey(rec.schemaName ?? null, rec.tableName));
     return (local && (local !== rec.tableName || rec.schemaName))
-      ? { ...rec, tableName: local, schemaName: undefined }
+      ? {
+          ...rec,
+          tableName: local,
+          schemaName: undefined,
+        }
       : rec;
   });
 

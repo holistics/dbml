@@ -1,8 +1,14 @@
 import { isProgramNode } from '@/core/utils/expression';
-import { ProgramNode, type SyntaxNode } from '@/core/types/nodes';
-import { NodeSymbol, SchemaSymbol, SymbolKind } from '@/core/types/symbol';
+import {
+  ProgramNode, type SyntaxNode,
+} from '@/core/types/nodes';
+import {
+  NodeSymbol, SchemaSymbol, SymbolKind,
+} from '@/core/types/symbol';
 import type { GlobalModule } from '../types';
-import { DEFAULT_SCHEMA_NAME, PASS_THROUGH, type PassThrough, UNHANDLED } from '@/constants';
+import {
+  DEFAULT_SCHEMA_NAME, PASS_THROUGH, type PassThrough, UNHANDLED,
+} from '@/constants';
 import Report from '@/core/types/report';
 import type Compiler from '@/compiler/index';
 import { shouldInterpretNode } from '../utils';
@@ -38,9 +44,7 @@ export const programModule: GlobalModule = {
     if (!(ast instanceof ProgramNode)) return Report.create([]);
 
     // Collect and create schemas
-    const schemaMembers = new Map<string, SchemaSymbol>([
-      [DEFAULT_SCHEMA_NAME, compiler.symbolFactory.create(SchemaSymbol, { name: DEFAULT_SCHEMA_NAME }, symbol.filepath)],
-    ]);
+    const schemaMembers = new Map<string, SchemaSymbol>([[DEFAULT_SCHEMA_NAME, compiler.symbolFactory.create(SchemaSymbol, { name: DEFAULT_SCHEMA_NAME }, symbol.filepath)]]);
 
     for (const element of ast.body) {
       const fullname = compiler.nodeFullname(element).getValue();
@@ -69,9 +73,7 @@ export const programModule: GlobalModule = {
   interpretNode (compiler: Compiler, node: SyntaxNode): Report<Database | undefined> | Report<PassThrough> {
     if (!isProgramNode(node)) return Report.create(PASS_THROUGH);
 
-    if (!shouldInterpretNode(compiler, node)) return Report.create(undefined, [
-      ...compiler.validateNode(node).getErrors(),
-      ...compiler.bindNode(node).getErrors()],
+    if (!shouldInterpretNode(compiler, node)) return Report.create(undefined, [...compiler.validateNode(node).getErrors(), ...compiler.bindNode(node).getErrors()],
     );
 
     return new ProgramInterpreter(compiler, node).interpret() as Report<Database | undefined>;

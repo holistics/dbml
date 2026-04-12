@@ -18,7 +18,9 @@ export function parseFile (this: Compiler, filepath: Filepath): Report<FileParse
   return new Lexer(source ?? '', filepath)
     .lex()
     .chain((lexedTokens) => new Parser(filepath, source ?? '', lexedTokens, this.nodeIdGenerator).parse())
-    .map(({ ast, tokens }) => ({
+    .map(({
+      ast, tokens,
+    }) => ({
       ast,
       tokens,
       path: filepath,

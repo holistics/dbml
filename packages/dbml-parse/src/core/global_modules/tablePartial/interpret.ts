@@ -1,4 +1,6 @@
-import { last, head, partition } from 'lodash-es';
+import {
+  last, head, partition,
+} from 'lodash-es';
 import Compiler from '@/compiler/index';
 import type {
   Column, Check, SchemaElement, Index, InlineRef,
@@ -23,10 +25,16 @@ import {
   isExpressionAQuotedString, isExpressionAVariableNode,
   parseNumber, isRelationshipOp,
 } from '@/core/utils/expression';
-import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import {
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
 import { aggregateSettingList } from '@/core/utils/validate';
-import { ElementKind, SettingName } from '@/core/types/keywords';
-import { PASS_THROUGH, UNHANDLED } from '@/constants';
+import {
+  ElementKind, SettingName,
+} from '@/core/types/keywords';
+import {
+  PASS_THROUGH, UNHANDLED,
+} from '@/constants';
 import { SymbolKind } from '@/core/types/symbol';
 import Report from '@/core/types/report';
 
@@ -42,7 +50,11 @@ export class TablePartialInterpreter {
     this.node = node;
     this.declarationNode = node as ElementDeclarationNode;
     this.tablePartial = {
-      name: undefined, fields: [], token: undefined, indexes: [], checks: [],
+      name: undefined,
+      fields: [],
+      token: undefined,
+      indexes: [],
+      checks: [],
     };
     this.pkColumns = [];
   }
@@ -65,22 +77,32 @@ export class TablePartialInterpreter {
     this.declarationNode = this.node as ElementDeclarationNode;
     this.tablePartial.token = getTokenPosition(this.declarationNode);
 
-    const errors = [
-      ...this.interpretName(this.declarationNode.name!),
-      ...this.interpretSettingList(this.declarationNode.attributeList),
-      ...this.interpretBody(this.declarationNode.body as BlockExpressionNode),
-    ];
+    const errors = [...this.interpretName(this.declarationNode.name!), ...this.interpretSettingList(this.declarationNode.attributeList), ...this.interpretBody(this.declarationNode.body as BlockExpressionNode)];
 
     // Handle cases where there are multiple primary columns
     // all the pk field of the columns are reset to false
     // and a new pk composite index is added
     if (this.pkColumns.length >= 2) {
       this.tablePartial.indexes!.push({
-        columns: this.pkColumns.map(({ name, token }) => ({ value: name, type: 'column', token })),
+        columns: this.pkColumns.map(({
+          name, token,
+        }) => ({
+          value: name,
+          type: 'column',
+          token,
+        })),
         pk: true,
         token: {
-          start: { offset: -1, line: -1, column: -1 }, // do not make sense to have a meaningful start (?)
-          end: { offset: -1, line: -1, column: -1 }, // do not make sense to have a meaningful end (?)
+          start: {
+            offset: -1,
+            line: -1,
+            column: -1,
+          }, // do not make sense to have a meaningful start (?)
+          end: {
+            offset: -1,
+            line: -1,
+            column: -1,
+          }, // do not make sense to have a meaningful end (?)
           filepath: this.declarationNode.filepath,
         },
       });
@@ -127,10 +149,7 @@ export class TablePartialInterpreter {
 
   private interpretBody (body: BlockExpressionNode): CompileError[] {
     const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
-    return [
-      ...this.interpretFields(fields as FunctionApplicationNode[]),
-      ...this.interpretSubElements(subs as ElementDeclarationNode[]),
-    ];
+    return [...this.interpretFields(fields as FunctionApplicationNode[]), ...this.interpretSubElements(subs as ElementDeclarationNode[])];
   }
 
   private interpretSubElements (subs: ElementDeclarationNode[]): CompileError[] {
@@ -202,18 +221,33 @@ export class TablePartialInterpreter {
       const defaultSetting = settingMap[SettingName.Default]?.at(0)?.value;
       if (defaultSetting) {
         if (isExpressionAQuotedString(defaultSetting)) {
-          column.dbdefault = { value: extractQuotedStringToken(defaultSetting) ?? '', type: 'string' };
+          column.dbdefault = {
+            value: extractQuotedStringToken(defaultSetting) ?? '',
+            type: 'string',
+          };
         } else if (isExpressionASignedNumberExpression(defaultSetting)) {
-          column.dbdefault = { type: 'number', value: parseNumber(defaultSetting) };
+          column.dbdefault = {
+            type: 'number',
+            value: parseNumber(defaultSetting),
+          };
         } else if (defaultSetting instanceof FunctionExpressionNode) {
-          column.dbdefault = { value: defaultSetting.value?.value ?? '', type: 'expression' };
+          column.dbdefault = {
+            value: defaultSetting.value?.value ?? '',
+            type: 'expression',
+          };
         } else if (isExpressionAVariableNode(defaultSetting)) {
           const val = defaultSetting.expression.variable.value.toLowerCase();
-          column.dbdefault = { value: val, type: 'boolean' };
+          column.dbdefault = {
+            value: val,
+            type: 'boolean',
+          };
         } else {
           const fragments = destructureComplexVariable(defaultSetting);
           if (fragments && fragments.length > 0) {
-            column.dbdefault = { value: fragments.at(-1) ?? '', type: 'string' };
+            column.dbdefault = {
+              value: fragments.at(-1) ?? '',
+              type: 'string',
+            };
           }
         }
       }
@@ -268,7 +302,10 @@ export class TablePartialInterpreter {
       column.checks = checkNodes.map((checkNode) => {
         const token = getTokenPosition(checkNode);
         const expression = (checkNode.value as FunctionExpressionNode).value!.value!;
-        return { token, expression } as Check;
+        return {
+          token,
+          expression,
+        } as Check;
       });
     }
 
@@ -292,7 +329,11 @@ export class TablePartialInterpreter {
 
   private interpretColumnType (field: FunctionApplicationNode): ColumnType {
     let rawTypeNode: SyntaxNode | undefined = field.args[0];
-    let columnType: ColumnType = { schemaName: null, type_name: '', args: null };
+    let columnType: ColumnType = {
+      schemaName: null,
+      type_name: '',
+      args: null,
+    };
 
     if (!rawTypeNode) return columnType;
 
@@ -377,7 +418,9 @@ export class TablePartialInterpreter {
         fragments.push(argPtr);
         return fragments;
       }).forEach((arg) => {
-        const { functional, nonFunctional } = destructureIndexNode(arg)!;
+        const {
+          functional, nonFunctional,
+        } = destructureIndexNode(arg)!;
         index.columns!.push(
           ...functional.map((s) => ({
             value: s.value!.value,

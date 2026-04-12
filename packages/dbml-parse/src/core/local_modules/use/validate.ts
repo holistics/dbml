@@ -1,5 +1,9 @@
-import { CompileError, CompileErrorCode } from '@/core/types/errors';
-import { ProgramNode, UseDeclarationNode, UseSpecifierNode, WildcardNode } from '@/core/types/nodes';
+import {
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
+import {
+  ProgramNode, UseDeclarationNode, UseSpecifierNode, WildcardNode,
+} from '@/core/types/nodes';
 import { ImportKind } from '@/core/types';
 import { Filepath } from '@/core/types/filepath';
 import type Compiler from '@/compiler';
@@ -17,10 +21,7 @@ export default class UseDeclarationValidator {
   }
 
   validate (): CompileError[] {
-    return [
-      ...this.validateContext(),
-      ...this.validateBody(),
-    ];
+    return [...this.validateContext(), ...this.validateBody()];
   }
 
   private validateContext (): CompileError[] {
@@ -57,10 +58,6 @@ export default class UseDeclarationValidator {
       errors.push(new CompileError(CompileErrorCode.INVALID_USE_SPECIFIER_KIND, `'${specifier.importKind.value}' is not a valid specifier type`, specifier.importKind));
     }
 
-    return [
-      ...errors,
-      ...this.compiler.nodeFullname(specifier).getErrors(),
-      ...this.compiler.nodeAlias(specifier).getErrors(),
-    ];
+    return [...errors, ...this.compiler.nodeFullname(specifier).getErrors(), ...this.compiler.nodeAlias(specifier).getErrors()];
   }
 }

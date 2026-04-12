@@ -1,15 +1,25 @@
-import { isElementNode, isElementFieldNode, isExpressionAVariableNode, isInsideSettingList } from '@/core/utils/expression';
+import {
+  isElementNode, isElementFieldNode, isExpressionAVariableNode, isInsideSettingList,
+} from '@/core/utils/expression';
 import { ElementKind } from '@/core/types/keywords';
-import { ElementDeclarationNode, PrimaryExpressionNode } from '@/core/types/nodes';
+import {
+  ElementDeclarationNode, PrimaryExpressionNode,
+} from '@/core/types/nodes';
 import type { SyntaxNode } from '@/core/types/nodes';
 import type { SyntaxToken } from '@/core/types/tokens';
-import { NodeSymbol, SymbolKind } from '@/core/types/symbol';
+import {
+  NodeSymbol, SymbolKind,
+} from '@/core/types/symbol';
 import type { GlobalModule } from '../types';
-import { PASS_THROUGH, type PassThrough, UNHANDLED } from '@/constants';
+import {
+  PASS_THROUGH, type PassThrough, UNHANDLED,
+} from '@/constants';
 import Report from '@/core/types/report';
 import type Compiler from '@/compiler/index';
 import type { SchemaElement } from '@/core/types/schemaJson';
-import { getNodeMemberSymbols, lookupMember, shouldInterpretNode } from '../utils';
+import {
+  getNodeMemberSymbols, lookupMember, shouldInterpretNode,
+} from '../utils';
 import IndexesBinder from './bind';
 import IndexesInterpreter from './interpret';
 
@@ -23,7 +33,10 @@ export const indexesModule: GlobalModule = {
     }
     if (isElementFieldNode(node, ElementKind.Indexes)) {
       if (node instanceof PrimaryExpressionNode) {
-        return new Report(compiler.symbolFactory.create(NodeSymbol, { kind: SymbolKind.IndexesField, declaration: node }, node.filepath));
+        return new Report(compiler.symbolFactory.create(NodeSymbol, {
+          kind: SymbolKind.IndexesField,
+          declaration: node,
+        }, node.filepath));
       }
       return Report.create(PASS_THROUGH);
     }

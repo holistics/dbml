@@ -152,8 +152,10 @@ export function isTupleEmpty (tuple: TupleExpressionNode): boolean {
 export function getColumnsFromTableSymbol (
   compiler: Compiler,
   tableSymbol: NodeSymbol,
-): Array<{ name: string; type: string }> | null {
-  const columns: Array<{ name: string; type: string }> = [];
+): Array<{ name: string;
+  type: string; }> | null {
+  const columns: Array<{ name: string;
+    type: string; }> = [];
 
   const members = compiler.symbolMembers(tableSymbol).getFiltered(UNHANDLED) || [];
   for (const member of members) {
@@ -174,7 +176,8 @@ export function getColumnsFromTableSymbol (
 export function extractNameAndTypeOfColumnSymbol (
   columnSymbol: NodeSymbol,
   columnName: string,
-): { name: string; type: string } | null {
+): { name: string;
+  type: string; } | null {
   const columnDeclaration = columnSymbol.declaration;
   if (!(columnDeclaration instanceof FunctionApplicationNode)) return null;
 

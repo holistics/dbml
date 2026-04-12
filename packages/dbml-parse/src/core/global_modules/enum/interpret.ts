@@ -1,13 +1,19 @@
-import { extractQuotedStringToken, extractVariableFromExpression } from '@/core/utils/expression';
+import {
+  extractQuotedStringToken, extractVariableFromExpression,
+} from '@/core/utils/expression';
 import { aggregateSettingList } from '@/core/utils/validate';
-import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import {
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode,
 } from '@/core/types/nodes';
 import type {
   Enum, EnumField,
 } from '@/core/types/schemaJson';
-import { extractElementName, getTokenPosition, normalizeNoteContent } from '../utils';
+import {
+  extractElementName, getTokenPosition, normalizeNoteContent,
+} from '../utils';
 import Compiler from '@/compiler';
 import Report from '@/core/types/report';
 
@@ -33,7 +39,9 @@ export default class EnumInterpreter {
   }
 
   private interpretName (nameNode: SyntaxNode): CompileError[] {
-    const { name, schemaName } = extractElementName(nameNode);
+    const {
+      name, schemaName,
+    } = extractElementName(nameNode);
 
     if (schemaName.length > 1) {
       this.enum.name = name;

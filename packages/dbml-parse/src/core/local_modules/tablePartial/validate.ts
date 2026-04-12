@@ -1,7 +1,13 @@
-import { partition, forIn, last } from 'lodash-es';
+import {
+  partition, forIn, last,
+} from 'lodash-es';
 import Compiler from '@/compiler';
-import { CompileError, CompileErrorCode } from '@/core/types/errors';
-import { ElementKind, SettingName } from '@/core/types/keywords';
+import {
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
+import {
+  ElementKind, SettingName,
+} from '@/core/types/keywords';
 import {
   AttributeNode,
   BlockExpressionNode,
@@ -13,7 +19,9 @@ import {
   PrimaryExpressionNode,
   SyntaxNode,
 } from '@/core/types/nodes';
-import { isExpressionAVariableNode, isExpressionAnIdentifierNode, isExpressionAQuotedString, extractVariableFromExpression } from '@/core/utils/expression';
+import {
+  isExpressionAVariableNode, isExpressionAnIdentifierNode, isExpressionAQuotedString, extractVariableFromExpression,
+} from '@/core/utils/expression';
 import {
   aggregateSettingList,
   isSimpleName,
@@ -21,7 +29,7 @@ import {
   isValidColor,
   isValidColumnType,
   isValidDefaultValue,
-  isVoid,
+
   Settings,
 } from '@/core/utils/validate';
 import Report from '@/core/types/report';
@@ -47,29 +55,35 @@ export default class TablePartialValidator {
 
   validateContext (): CompileError[] {
     if (this.declarationNode.parent instanceof ElementDeclarationNode) {
-      return [new CompileError(
-        CompileErrorCode.INVALID_TABLE_PARTIAL_CONTEXT,
-        'TablePartial must appear top-level',
-        this.declarationNode,
-      )];
+      return [
+        new CompileError(
+          CompileErrorCode.INVALID_TABLE_PARTIAL_CONTEXT,
+          'TablePartial must appear top-level',
+          this.declarationNode,
+        ),
+      ];
     }
     return [];
   }
 
   validateName (nameNode?: SyntaxNode): CompileError[] {
     if (!nameNode) {
-      return [new CompileError(
-        CompileErrorCode.NAME_NOT_FOUND,
-        'A TablePartial must have a name',
-        this.declarationNode,
-      )];
+      return [
+        new CompileError(
+          CompileErrorCode.NAME_NOT_FOUND,
+          'A TablePartial must have a name',
+          this.declarationNode,
+        ),
+      ];
     }
     if (!isSimpleName(nameNode)) {
-      return [new CompileError(
-        CompileErrorCode.INVALID_NAME,
-        'A TablePartial name must be an identifier or a quoted identifer',
-        nameNode,
-      )];
+      return [
+        new CompileError(
+          CompileErrorCode.INVALID_NAME,
+          'A TablePartial name must be an identifier or a quoted identifer',
+          nameNode,
+        ),
+      ];
     }
 
     return [];
@@ -77,11 +91,13 @@ export default class TablePartialValidator {
 
   validateAlias (aliasNode?: SyntaxNode): CompileError[] {
     if (aliasNode) {
-      return [new CompileError(
-        CompileErrorCode.UNEXPECTED_ALIAS,
-        'A TablePartial shouldn\'t have an alias',
-        aliasNode,
-      )];
+      return [
+        new CompileError(
+          CompileErrorCode.UNEXPECTED_ALIAS,
+          'A TablePartial shouldn\'t have an alias',
+          aliasNode,
+        ),
+      ];
     }
 
     return [];
@@ -129,10 +145,7 @@ export default class TablePartialValidator {
     }
 
     const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
-    return [
-      ...this.validateFields(fields as FunctionApplicationNode[]),
-      ...this.validateSubElements(subs as ElementDeclarationNode[]),
-    ];
+    return [...this.validateFields(fields as FunctionApplicationNode[]), ...this.validateSubElements(subs as ElementDeclarationNode[])];
   }
 
   validateFields (fields: FunctionApplicationNode[]): CompileError[] {
@@ -236,7 +249,7 @@ export default class TablePartialValidator {
             errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, `'${name}' can only appear once`, attr)));
           }
           attrs.forEach((attr) => {
-            if (!isVoid(attr.value)) {
+            if (attr.value !== undefined) {
               errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, `'${name}' must not have a value`, attr.value || attr.name!));
             }
           });
@@ -247,7 +260,7 @@ export default class TablePartialValidator {
             errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, `'${name}' can only appear once`, attr)));
           }
           attrs.forEach((attr) => {
-            if (attr instanceof AttributeNode && !isVoid(attr.value)) {
+            if (attr instanceof AttributeNode && attr.value !== undefined) {
               errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, `'${name}' must not have a value`, attr.value || attr.name!));
             }
           });
@@ -266,7 +279,7 @@ export default class TablePartialValidator {
             )));
           }
           attrs.forEach((attr) => {
-            if (!isVoid(attr.value)) {
+            if (attr.value !== undefined) {
               errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, `'${name}' must not have a value`, attr.value || attr.name!));
             }
           });
@@ -278,7 +291,7 @@ export default class TablePartialValidator {
             errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, `'${name}' can only appear once`, attr)));
           }
           attrs.forEach((attr) => {
-            if (!isVoid(attr.value)) {
+            if (attr.value !== undefined) {
               errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, `'${name}' must not have a value`, attr.value || attr.name!));
             }
           });
@@ -289,7 +302,7 @@ export default class TablePartialValidator {
             errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, `'${name}' can only appear once`, attr)));
           }
           attrs.forEach((attr) => {
-            if (attr instanceof AttributeNode && !isVoid(attr.value)) {
+            if (attr instanceof AttributeNode && attr.value !== undefined) {
               errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, `'${name}' must not have a value`, attr.value || attr.name!));
             }
           });
@@ -300,7 +313,7 @@ export default class TablePartialValidator {
             errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, `'${name}' can only appear once`, attr)));
           }
           attrs.forEach((attr) => {
-            if (attr instanceof AttributeNode && !isVoid(attr.value)) {
+            if (attr instanceof AttributeNode && attr.value !== undefined) {
               errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, `'${name}' must not have a value`, attr.value || attr.name!));
             }
           });
@@ -462,7 +475,7 @@ export function validateFieldSetting (parts: ExpressionNode[]): Report<Settings>
           errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, `'${name}' can only appear once`, attr)));
         }
         attrs.forEach((attr) => {
-          if (!isVoid(attr.value)) {
+          if (attr.value !== undefined) {
             errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, `'${name}' must not have a value`, attr.value || attr.name!));
           }
         });
@@ -473,7 +486,7 @@ export function validateFieldSetting (parts: ExpressionNode[]): Report<Settings>
           errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, `'${name}' can only appear once`, attr)));
         }
         attrs.forEach((attr) => {
-          if (attr instanceof AttributeNode && !isVoid(attr.value)) {
+          if (attr instanceof AttributeNode && attr.value !== undefined) {
             errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, `'${name}' must not have a value`, attr.value || attr.name!));
           }
         });
@@ -492,7 +505,7 @@ export function validateFieldSetting (parts: ExpressionNode[]): Report<Settings>
           )));
         }
         attrs.forEach((attr) => {
-          if (!isVoid(attr.value)) {
+          if (attr.value !== undefined) {
             errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, `'${name}' must not have a value`, attr.value || attr.name!));
           }
         });
@@ -504,7 +517,7 @@ export function validateFieldSetting (parts: ExpressionNode[]): Report<Settings>
           errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, `'${name}' can only appear once`, attr)));
         }
         attrs.forEach((attr) => {
-          if (!isVoid(attr.value)) {
+          if (attr.value !== undefined) {
             errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, `'${name}' must not have a value`, attr.value || attr.name!));
           }
         });
@@ -515,7 +528,7 @@ export function validateFieldSetting (parts: ExpressionNode[]): Report<Settings>
           errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, `'${name}' can only appear once`, attr)));
         }
         attrs.forEach((attr) => {
-          if (attr instanceof AttributeNode && !isVoid(attr.value)) {
+          if (attr instanceof AttributeNode && attr.value !== undefined) {
             errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, `'${name}' must not have a value`, attr.value || attr.name!));
           }
         });
@@ -526,7 +539,7 @@ export function validateFieldSetting (parts: ExpressionNode[]): Report<Settings>
           errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, `'${name}' can only appear once`, attr)));
         }
         attrs.forEach((attr) => {
-          if (attr instanceof AttributeNode && !isVoid(attr.value)) {
+          if (attr instanceof AttributeNode && attr.value !== undefined) {
             errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, `'${name}' must not have a value`, attr.value || attr.name!));
           }
         });

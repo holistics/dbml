@@ -34,7 +34,9 @@ import {
   UseSpecifierNode,
   WildcardNode,
 } from '@/core/types/nodes';
-import { extractVariableNode, isAsKeyword, isExpressionAnIdentifierNode } from '../utils/expression';
+import {
+  extractVariableNode, isAsKeyword, isExpressionAnIdentifierNode,
+} from '../utils/expression';
 
 // Try to interpret a function application as an element
 export function convertFuncAppToElem (
@@ -204,8 +206,6 @@ function markInvalidNode (node: SyntaxNode) {
     markInvalid(node.token);
   } else if (node instanceof EmptyNode) {
     // DummyNode has no children to mark invalid
-  } else if (node instanceof WildcardNode) {
-    markInvalid(node.token);
   } else {
     throw new Error('Unreachable case in markInvalidNode');
   }
@@ -341,7 +341,6 @@ export function getMemberChain (node: SyntaxNode): Readonly<(SyntaxNode | Syntax
 
   throw new Error('Unreachable - no other possible cases');
 }
-
 
 export function isWildcardExpression (node: SyntaxNode | undefined): node is WildcardNode {
   return node instanceof WildcardNode;

@@ -7,7 +7,9 @@ import {
   SyntaxNode,
   TupleExpressionNode,
 } from '@/core/types/nodes';
-import { CompileError, CompileErrorCode, CompileWarning } from '@/core/types/errors';
+import {
+  CompileError, CompileErrorCode, CompileWarning,
+} from '@/core/types/errors';
 import Report from '@/core/types/report';
 import type {
   RecordValue,
@@ -32,14 +34,26 @@ import {
   getRecordValueType,
   isSerialType,
 } from './utils/data/sqlTypes';
-import { destructureCallExpression, extractQuotedStringToken, extractVariableFromExpression, isExpressionAVariableNode, isElementNode } from '@/core/utils/expression';
+import {
+  destructureCallExpression, extractQuotedStringToken, extractVariableFromExpression, isExpressionAVariableNode, isElementNode,
+} from '@/core/utils/expression';
 import Compiler from '@/compiler/index';
 import { ElementKind } from '@/core/types/keywords';
-import { NodeSymbol, SymbolKind } from '@/core/types/symbol';
-import { PASS_THROUGH, UNHANDLED } from '@/constants';
-import { getTokenPosition, lookupMember, lookupInDefaultSchema } from '../utils';
-import { validateForeignKeys, validatePrimaryKey, validateUnique } from './utils/constraints';
-import { buildMergedTableFromElement, getEnumMembers, parseNumericParams, parseLengthParam } from './utils/interpret';
+import {
+  NodeSymbol, SymbolKind,
+} from '@/core/types/symbol';
+import {
+  PASS_THROUGH, UNHANDLED,
+} from '@/constants';
+import {
+  getTokenPosition, lookupMember, lookupInDefaultSchema,
+} from '../utils';
+import {
+  validateForeignKeys, validatePrimaryKey, validateUnique,
+} from './utils/constraints';
+import {
+  buildMergedTableFromElement, getEnumMembers, parseNumericParams, parseLengthParam,
+} from './utils/interpret';
 
 export default class RecordsInterpreter {
   private compiler: Compiler;
@@ -57,7 +71,9 @@ export default class RecordsInterpreter {
     const warnings: CompileWarning[] = [];
 
     const element = this.node as ElementDeclarationNode;
-    const { table, mergedColumns } = getTableAndColumnsOfRecords(element, this.compiler);
+    const {
+      table, mergedColumns,
+    } = getTableAndColumnsOfRecords(element, this.compiler);
 
     if (!table || mergedColumns.length === 0) {
       return new Report<TableRecord | undefined>(undefined, errors);
@@ -108,12 +124,16 @@ export default class RecordsInterpreter {
 //   - `table`: The original interpreted table object that `records` refer to
 //   - `mergedTable`: The interpreted table object merged with its table partials
 //   - `mergedColumns`: The columns of the `mergedTable``
-function getTableAndColumnsOfRecords (records: ElementDeclarationNode, compiler: Compiler): { table: Table | undefined; mergedColumns: Column[] } {
+function getTableAndColumnsOfRecords (records: ElementDeclarationNode, compiler: Compiler): { table: Table | undefined;
+  mergedColumns: Column[]; } {
   const nameNode = records.name;
   const parent = records.parent;
   if (parent instanceof ElementDeclarationNode) {
     const table = buildMergedTableFromElement(parent, compiler);
-    if (!table) return { table: undefined, mergedColumns: [] };
+    if (!table) return {
+      table: undefined,
+      mergedColumns: [],
+    };
     if (!nameNode) return {
       table,
       mergedColumns: table.fields,
@@ -125,32 +145,53 @@ function getTableAndColumnsOfRecords (records: ElementDeclarationNode, compiler:
     };
   }
   const fragments = destructureCallExpression(nameNode!);
-  if (!fragments) return { table: undefined, mergedColumns: [] };
+  if (!fragments) return {
+    table: undefined,
+    mergedColumns: [],
+  };
   const tableNameFragments = fragments.variables.map((v) => v.expression.variable?.value ?? '');
   const tableName = tableNameFragments.at(-1) ?? '';
   const schemaName = tableNameFragments.length > 1 ? tableNameFragments.slice(0, -1).join('.') : undefined;
 
   const ast = compiler.parseFile(records.filepath).getValue().ast;
   const programSymbol = compiler.nodeSymbol(ast);
-  if (programSymbol.hasValue(UNHANDLED)) return { table: undefined, mergedColumns: [] };
+  if (programSymbol.hasValue(UNHANDLED)) return {
+    table: undefined,
+    mergedColumns: [],
+  };
 
   let tableSymbol: NodeSymbol | undefined;
   if (schemaName) {
     // Schema-qualified: look up the schema first, then the table within it
-    const schemaResult = lookupMember(compiler, programSymbol.getValue(), schemaName, { kinds: [SymbolKind.Schema], ignoreNotFound: true });
+    const schemaResult = lookupMember(compiler, programSymbol.getValue(), schemaName, {
+      kinds: [SymbolKind.Schema],
+      ignoreNotFound: true,
+    });
     if (schemaResult.getValue()) {
-      tableSymbol = lookupMember(compiler, schemaResult.getValue()!, tableName, { kinds: [SymbolKind.Table], ignoreNotFound: true }).getValue() ?? undefined;
+      tableSymbol = lookupMember(compiler, schemaResult.getValue()!, tableName, {
+        kinds: [SymbolKind.Table],
+        ignoreNotFound: true,
+      }).getValue() ?? undefined;
     }
   }
   if (!tableSymbol) {
-    tableSymbol = lookupInDefaultSchema(compiler, programSymbol.getValue(), tableName, { kinds: [SymbolKind.Table], ignoreNotFound: true }).getValue() ?? undefined;
+    tableSymbol = lookupInDefaultSchema(compiler, programSymbol.getValue(), tableName, {
+      kinds: [SymbolKind.Table],
+      ignoreNotFound: true,
+    }).getValue() ?? undefined;
   }
 
-  if (!tableSymbol?.declaration) return { table: undefined, mergedColumns: [] };
+  if (!tableSymbol?.declaration) return {
+    table: undefined,
+    mergedColumns: [],
+  };
 
   const tableNode = tableSymbol.declaration as ElementDeclarationNode;
   const table = buildMergedTableFromElement(tableNode, compiler);
-  if (!table) return { table: undefined, mergedColumns: [] };
+  if (!table) return {
+    table: undefined,
+    mergedColumns: [],
+  };
   const mergedColumns = fragments.args.map((e) => table.fields.find((f) => f.name === extractVariableFromExpression(e))!);
   return {
     table,
@@ -158,7 +199,8 @@ function getTableAndColumnsOfRecords (records: ElementDeclarationNode, compiler:
   };
 }
 
-type RowData = { row: RecordValue[] | null; columnNodes: Record<string, SyntaxNode> };
+type RowData = { row: RecordValue[] | null;
+  columnNodes: Record<string, SyntaxNode>; };
 
 function extractDataFromRow (
   row: FunctionApplicationNode,
@@ -176,7 +218,10 @@ function extractDataFromRow (
       `Expected ${mergedColumns.length} values but got ${args.length}`,
       row,
     ));
-    return new Report({ row: null, columnNodes: {} }, errors, warnings);
+    return new Report({
+      row: null,
+      columnNodes: {},
+    }, errors, warnings);
   }
 
   const rowValues: RecordValue[] = [];
@@ -188,10 +233,16 @@ function extractDataFromRow (
     errors.push(...result.getErrors());
     warnings.push(...result.getWarnings());
     const value = result.getValue();
-    rowValues.push(value ?? { value: null, type: 'expression' });
+    rowValues.push(value ?? {
+      value: null,
+      type: 'expression',
+    });
   }
 
-  return new Report({ row: rowValues, columnNodes }, errors, warnings);
+  return new Report({
+    row: rowValues,
+    columnNodes,
+  }, errors, warnings);
 }
 
 function getNodeSourceText (node: SyntaxNode): string {
@@ -208,7 +259,9 @@ function extractValue (
 ): Report<RecordValue | null> {
   // FIXME: Make this more precise
   const type = column.type.type_name.split('(')[0];
-  const { increment, not_null: notNull, dbdefault } = column;
+  const {
+    increment, not_null: notNull, dbdefault,
+  } = column;
   const isEnum = column.type.isEnum || false;
   const valueType = getRecordValueType(type, isEnum);
   const rawString = tryExtractString(node);
@@ -227,13 +280,21 @@ function extractValue (
     const hasDefaultValue = dbdefault && dbdefault.value.toString().toLowerCase() !== 'null';
     const isSerial = isSerialType(type);
     if (notNull && !hasDefaultValue && !increment && !isSerial) {
-      return new Report({ value: null, type: valueType }, [], [new CompileWarning(
-        CompileErrorCode.INVALID_RECORDS_FIELD,
-        `NULL not allowed for non-nullable column '${column.name}' without default and increment`,
-        node,
-      )]);
+      return new Report({
+        value: null,
+        type: valueType,
+      }, [], [
+        new CompileWarning(
+          CompileErrorCode.INVALID_RECORDS_FIELD,
+          `NULL not allowed for non-nullable column '${column.name}' without default and increment`,
+          node,
+        ),
+      ]);
     }
-    return new Report({ value: null, type: valueType }, [], []);
+    return new Report({
+      value: null,
+      type: valueType,
+    }, [], []);
   }
 
   // Enum type
@@ -244,14 +305,22 @@ function extractValue (
       enumValue = isExpressionAVariableNode(node) ? node.expression.variable.value : undefined;
     }
     if (!(enumMembers as (string | undefined)[]).includes(enumValue)) {
-      return new Report({ value: enumValue, type: valueType }, [], [new CompileWarning(
-        CompileErrorCode.INVALID_RECORDS_FIELD,
-        `Invalid enum value for column '${column.name}'`,
-        node,
-      )]);
+      return new Report({
+        value: enumValue,
+        type: valueType,
+      }, [], [
+        new CompileWarning(
+          CompileErrorCode.INVALID_RECORDS_FIELD,
+          `Invalid enum value for column '${column.name}'`,
+          node,
+        ),
+      ]);
     }
 
-    return new Report({ value: enumValue, type: valueType }, [], []);
+    return new Report({
+      value: enumValue,
+      type: valueType,
+    }, [], []);
   }
 
   // Numeric type
@@ -259,29 +328,41 @@ function extractValue (
     const numValue = extractSignedNumber(node);
     if (numValue === null) {
       return new Report(
-        { value: fallbackValue, type: fallbackType },
+        {
+          value: fallbackValue,
+          type: fallbackType,
+        },
         [],
-        [new CompileWarning(
-          CompileErrorCode.INVALID_RECORDS_FIELD,
-          `Invalid numeric value for column '${column.name}'`,
-          node,
-        )],
+        [
+          new CompileWarning(
+            CompileErrorCode.INVALID_RECORDS_FIELD,
+            `Invalid numeric value for column '${column.name}'`,
+            node,
+          ),
+        ],
       );
     }
 
     // Integer type: validate no decimal point
     if (isIntegerType(type) && !Number.isInteger(numValue)) {
-      return new Report({ value: Math.floor(numValue), type: valueType }, [], [new CompileWarning(
-        CompileErrorCode.INVALID_RECORDS_FIELD,
-        `Invalid integer value ${numValue} for column '${column.name}': expected integer, got decimal`,
-        node,
-      )]);
+      return new Report({
+        value: Math.floor(numValue),
+        type: valueType,
+      }, [], [
+        new CompileWarning(
+          CompileErrorCode.INVALID_RECORDS_FIELD,
+          `Invalid integer value ${numValue} for column '${column.name}': expected integer, got decimal`,
+          node,
+        ),
+      ]);
     }
 
     // Decimal/numeric type: validate precision and scale
     const numericParams = isFloatType(type) ? parseNumericParams(column) : undefined;
     if (isFloatType(type) && numericParams) {
-      const { precision, scale } = numericParams;
+      const {
+        precision, scale,
+      } = numericParams;
       const numStr = numValue.toString();
       const parts = numStr.split('.');
       const integerPart = parts[0].replace(/^-/, ''); // Remove sign
@@ -291,23 +372,36 @@ function extractValue (
       const decimalDigits = decimalPart.length;
 
       if (totalDigits > precision) {
-        return new Report({ value: numValue, type: valueType }, [], [new CompileWarning(
-          CompileErrorCode.INVALID_RECORDS_FIELD,
-          `Numeric value ${numValue} for column '${column.name}' exceeds precision: expected at most ${precision} total digits, got ${totalDigits}`,
-          node,
-        )]);
+        return new Report({
+          value: numValue,
+          type: valueType,
+        }, [], [
+          new CompileWarning(
+            CompileErrorCode.INVALID_RECORDS_FIELD,
+            `Numeric value ${numValue} for column '${column.name}' exceeds precision: expected at most ${precision} total digits, got ${totalDigits}`,
+            node,
+          ),
+        ]);
       }
 
       if (decimalDigits > scale) {
-        return new Report({ value: numValue, type: valueType }, [], [new CompileWarning(
-          CompileErrorCode.INVALID_RECORDS_FIELD,
-          `Numeric value ${numValue} for column '${column.name}' exceeds scale: expected at most ${scale} decimal digits, got ${decimalDigits}`,
-          node,
-        )]);
+        return new Report({
+          value: numValue,
+          type: valueType,
+        }, [], [
+          new CompileWarning(
+            CompileErrorCode.INVALID_RECORDS_FIELD,
+            `Numeric value ${numValue} for column '${column.name}' exceeds scale: expected at most ${scale} decimal digits, got ${decimalDigits}`,
+            node,
+          ),
+        ]);
       }
     }
 
-    return new Report({ value: numValue, type: valueType }, [], []);
+    return new Report({
+      value: numValue,
+      type: valueType,
+    }, [], []);
   }
 
   // Boolean type
@@ -315,16 +409,24 @@ function extractValue (
     const boolValue = tryExtractBoolean(node);
     if (boolValue === null) {
       return new Report(
-        { value: fallbackValue, type: fallbackType },
+        {
+          value: fallbackValue,
+          type: fallbackType,
+        },
         [],
-        [new CompileWarning(
-          CompileErrorCode.INVALID_RECORDS_FIELD,
-          `Invalid boolean value for column '${column.name}'`,
-          node,
-        )],
+        [
+          new CompileWarning(
+            CompileErrorCode.INVALID_RECORDS_FIELD,
+            `Invalid boolean value for column '${column.name}'`,
+            node,
+          ),
+        ],
       );
     }
-    return new Report({ value: boolValue, type: valueType }, [], []);
+    return new Report({
+      value: boolValue,
+      type: valueType,
+    }, [], []);
   }
 
   // Datetime type
@@ -332,16 +434,24 @@ function extractValue (
     const dtValue = tryExtractDateTime(node);
     if (dtValue === null) {
       return new Report(
-        { value: fallbackValue, type: fallbackType },
+        {
+          value: fallbackValue,
+          type: fallbackType,
+        },
         [],
-        [new CompileWarning(
-          CompileErrorCode.INVALID_RECORDS_FIELD,
-          `Invalid datetime value for column '${column.name}', expected valid datetime format (e.g., 'YYYY-MM-DD', 'HH:MM:SS', 'YYYY-MM-DD HH:MM:SS', 'MM/DD/YYYY', 'D MMM YYYY', or 'MMM D, YYYY')`,
-          node,
-        )],
+        [
+          new CompileWarning(
+            CompileErrorCode.INVALID_RECORDS_FIELD,
+            `Invalid datetime value for column '${column.name}', expected valid datetime format (e.g., 'YYYY-MM-DD', 'HH:MM:SS', 'YYYY-MM-DD HH:MM:SS', 'MM/DD/YYYY', 'D MMM YYYY', or 'MMM D, YYYY')`,
+            node,
+          ),
+        ],
       );
     }
-    return new Report({ value: dtValue, type: valueType }, [], []);
+    return new Report({
+      value: dtValue,
+      type: valueType,
+    }, [], []);
   }
 
   // String type
@@ -349,13 +459,18 @@ function extractValue (
     const strValue = tryExtractString(node);
     if (strValue === null) {
       return new Report(
-        { value: fallbackValue, type: fallbackType },
+        {
+          value: fallbackValue,
+          type: fallbackType,
+        },
         [],
-        [new CompileWarning(
-          CompileErrorCode.INVALID_RECORDS_FIELD,
-          `Invalid string value for column '${column.name}'`,
-          node,
-        )],
+        [
+          new CompileWarning(
+            CompileErrorCode.INVALID_RECORDS_FIELD,
+            `Invalid string value for column '${column.name}'`,
+            node,
+          ),
+        ],
       );
     }
 
@@ -367,17 +482,28 @@ function extractValue (
       const actualByteLength = new TextEncoder().encode(strValue).length;
 
       if (actualByteLength > length) {
-        return new Report({ value: strValue, type: valueType }, [], [new CompileWarning(
-          CompileErrorCode.INVALID_RECORDS_FIELD,
-          `String value for column '${column.name}' exceeds maximum length: expected at most ${length} bytes (UTF-8), got ${actualByteLength} bytes`,
-          node,
-        )]);
+        return new Report({
+          value: strValue,
+          type: valueType,
+        }, [], [
+          new CompileWarning(
+            CompileErrorCode.INVALID_RECORDS_FIELD,
+            `String value for column '${column.name}' exceeds maximum length: expected at most ${length} bytes (UTF-8), got ${actualByteLength} bytes`,
+            node,
+          ),
+        ]);
       }
     }
 
-    return new Report({ value: strValue, type: 'string' }, [], []);
+    return new Report({
+      value: strValue,
+      type: 'string',
+    }, [], []);
   }
 
   // Fallback - try to extract as string
-  return new Report({ value: fallbackValue, type: fallbackType }, [], []);
+  return new Report({
+    value: fallbackValue,
+    type: fallbackType,
+  }, [], []);
 }

@@ -1,6 +1,10 @@
-import { last, partition } from 'lodash-es';
+import {
+  last, partition,
+} from 'lodash-es';
 import Compiler from '@/compiler';
-import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import {
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
 import {
   BlockExpressionNode,
   CallExpressionNode,
@@ -12,9 +16,11 @@ import {
   SyntaxNode,
   VariableNode,
 } from '@/core/types/nodes';
-import { isExpressionAQuotedString, isExpressionAVariableNode } from '@/core/utils/expression';
+import {
+  isExpressionAQuotedString, isExpressionAVariableNode,
+} from '@/core/utils/expression';
 import { destructureIndexNode } from '@/core/utils/expression';
-import { aggregateSettingList, isVoid } from '@/core/utils/validate';
+import { aggregateSettingList } from '@/core/utils/validate';
 import { ElementKind } from '@/core/types/keywords';
 
 export default class IndexesValidator {
@@ -141,7 +147,7 @@ export default class IndexesValidator {
             attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.DUPLICATE_INDEX_SETTING, `'${name}' can only appear once`, attr)));
           }
           attrs.forEach((attr) => {
-            if (!isVoid(attr.value)) {
+            if (attr.value !== undefined) {
               errors.push(new CompileError(CompileErrorCode.INVALID_INDEX_SETTING_VALUE, `'${name}' must not have a value`, attr));
             }
           });

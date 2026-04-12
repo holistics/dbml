@@ -5,8 +5,12 @@ import {
   SyntaxNode,
   WildcardNode,
 } from '@/core/types/nodes';
-import type { DiagramView, FilterConfig } from '@/core/types/schemaJson';
-import { extractElementName, getTokenPosition } from '../utils';
+import type {
+  DiagramView, FilterConfig,
+} from '@/core/types/schemaJson';
+import {
+  extractElementName, getTokenPosition,
+} from '../utils';
 import { extractVarNameFromPrimaryVariable } from '@/core/utils/expression';
 import { DEFAULT_SCHEMA_NAME } from '@/constants';
 import { ElementKind } from '@/core/types/keywords';
@@ -26,7 +30,9 @@ export class DiagramViewInterpreter {
   interpret (): Report<DiagramView> {
     const errors: CompileError[] = [];
     const token = getTokenPosition(this.node);
-    const { name, schemaName } = extractElementName(this.node.name!);
+    const {
+      name, schemaName,
+    } = extractElementName(this.node.name!);
     const body = this.node.body as BlockExpressionNode;
 
     // Body-level wildcard: DiagramView v { * } → all dims = []
@@ -35,7 +41,12 @@ export class DiagramViewInterpreter {
         {
           name,
           schemaName: schemaName[0] || null,
-          visibleEntities: { tables: [], stickyNotes: [], tableGroups: [], schemas: [] },
+          visibleEntities: {
+            tables: [],
+            stickyNotes: [],
+            tableGroups: [],
+            schemas: [],
+          },
           token,
         },
         errors,
@@ -78,9 +89,19 @@ export class DiagramViewInterpreter {
       tableGroups = this.getAllTableGroupNames();
     }
 
-    const visibleEntities: FilterConfig = { tables, stickyNotes, tableGroups, schemas };
+    const visibleEntities: FilterConfig = {
+      tables,
+      stickyNotes,
+      tableGroups,
+      schemas,
+    };
 
-    return new Report({ name, schemaName: schemaName[0] || null, visibleEntities, token }, errors);
+    return new Report({
+      name,
+      schemaName: schemaName[0] || null,
+      visibleEntities,
+      token,
+    }, errors);
   }
 
   private blockHasWildcard (block: BlockExpressionNode): boolean {
@@ -91,7 +112,8 @@ export class DiagramViewInterpreter {
 
   private interpretTableBlock (
     block?: ElementDeclarationNode,
-  ): Array<{ name: string; schemaName: string }> | null {
+  ): Array<{ name: string;
+    schemaName: string; }> | null {
     if (!block) return null;
     const body = block.body as BlockExpressionNode;
     if (body.body.length === 0) return null;
@@ -113,12 +135,11 @@ export class DiagramViewInterpreter {
 
     return body.body
       .filter((n): n is FunctionApplicationNode => n instanceof FunctionApplicationNode)
-      .map((field) => ({
-        name: extractVarNameFromPrimaryVariable(field.callee as any) ?? '',
-      }));
+      .map((field) => ({ name: extractVarNameFromPrimaryVariable(field.callee as any) ?? '' }));
   }
 
-  private resolveTableAlias (nameOrAlias: string): { name: string; schemaName: string } {
+  private resolveTableAlias (nameOrAlias: string): { name: string;
+    schemaName: string; } {
     const programNode = this.compiler.parseFile(this.node.filepath).getValue().ast;
     for (const n of programNode.body) {
       if (!(n instanceof ElementDeclarationNode) || !n.isKind(ElementKind.Table)) continue;
@@ -126,17 +147,30 @@ export class DiagramViewInterpreter {
       if (n.alias) {
         const alias = extractVarNameFromPrimaryVariable(n.alias as any);
         if (alias === nameOrAlias) {
-          const { name, schemaName } = extractElementName(n.name!);
-          return { name, schemaName: schemaName[0] || DEFAULT_SCHEMA_NAME };
+          const {
+            name, schemaName,
+          } = extractElementName(n.name!);
+          return {
+            name,
+            schemaName: schemaName[0] || DEFAULT_SCHEMA_NAME,
+          };
         }
       }
       // Check real name match
-      const { name, schemaName } = extractElementName(n.name!);
+      const {
+        name, schemaName,
+      } = extractElementName(n.name!);
       if (name === nameOrAlias) {
-        return { name, schemaName: schemaName[0] || DEFAULT_SCHEMA_NAME };
+        return {
+          name,
+          schemaName: schemaName[0] || DEFAULT_SCHEMA_NAME,
+        };
       }
     }
-    return { name: nameOrAlias, schemaName: DEFAULT_SCHEMA_NAME };
+    return {
+      name: nameOrAlias,
+      schemaName: DEFAULT_SCHEMA_NAME,
+    };
   }
 
   private getAllTableGroupNames (): Array<{ name: string }> {

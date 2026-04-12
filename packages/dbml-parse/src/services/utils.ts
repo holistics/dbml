@@ -1,6 +1,8 @@
 import type Compiler from '@/compiler/index';
 import type { SyntaxNode } from '@/core/types/nodes';
-import { NodeSymbol, SchemaSymbol } from '@/core/types/symbol';
+import {
+  NodeSymbol, SchemaSymbol,
+} from '@/core/types/symbol';
 import { InfixExpressionNode } from '@/core/types/nodes';
 import type {
   TextModel, Position,

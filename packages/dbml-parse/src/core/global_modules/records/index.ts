@@ -14,13 +14,21 @@ import {
 } from '@/core/types/nodes';
 import type { SyntaxNode } from '@/core/types/nodes';
 import type { SyntaxToken } from '@/core/types/tokens';
-import { NodeSymbol, SymbolKind } from '@/core/types/symbol';
+import {
+  NodeSymbol, SymbolKind,
+} from '@/core/types/symbol';
 import type { GlobalModule } from '../types';
-import { PASS_THROUGH, UNHANDLED, type PassThrough } from '@/constants';
+import {
+  PASS_THROUGH, UNHANDLED, type PassThrough,
+} from '@/constants';
 import Report from '@/core/types/report';
 import type Compiler from '@/compiler/index';
-import { lookupMember, lookupInDefaultSchema, nodeRefereeOfLeftExpression, shouldInterpretNode } from '../utils';
-import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import {
+  lookupMember, lookupInDefaultSchema, nodeRefereeOfLeftExpression, shouldInterpretNode,
+} from '../utils';
+import {
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
 import type { TableRecord } from '@/core/types/schemaJson';
 import RecordsBinder from './bind';
 import RecordsInterpreter from './interpret';
@@ -195,7 +203,10 @@ function nodeRefereeOfEnumValue (compiler: Compiler, globalSymbol: NodeSymbol, n
       compiler,
       globalSymbol,
       name,
-      { kinds: [SymbolKind.Enum], ignoreNotFound: true },
+      {
+        kinds: [SymbolKind.Enum],
+        ignoreNotFound: true,
+      },
     );
     const symbol = symbolResult.getValue();
 

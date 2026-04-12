@@ -180,9 +180,6 @@ export default class Lexer {
             this.operator(c);
           }
           break;
-        case '*':
-          this.addToken(SyntaxTokenKind.WILDCARD);
-          break;
         default:
           if (isOp(c)) {
             this.operator(c);

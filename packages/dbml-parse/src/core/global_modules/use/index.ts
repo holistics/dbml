@@ -1,8 +1,12 @@
 import Report from '@/core/types/report';
 import { GlobalModule } from '../types';
 import Compiler from '@/compiler';
-import { InfixExpressionNode, SyntaxNode, UseDeclarationNode, UseSpecifierNode, UseSpecifierListNode } from '@/core/types/nodes';
-import { PASS_THROUGH, UNHANDLED, type PassThrough } from '@/constants';
+import {
+  InfixExpressionNode, SyntaxNode, UseDeclarationNode, UseSpecifierNode, UseSpecifierListNode,
+} from '@/core/types/nodes';
+import {
+  PASS_THROUGH, UNHANDLED, type PassThrough,
+} from '@/constants';
 import {
   destructureComplexVariable,
   extractVariableFromExpression,
@@ -12,9 +16,15 @@ import {
   isUseDeclaration,
   isUseSpecifier,
 } from '@/core/utils/expression';
-import { NodeSymbol, SymbolKind, UseSymbol } from '@/core/types/symbol';
-import { Filepath, resolveImportFilepath } from '@/core/types/filepath';
-import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import {
+  NodeSymbol, SymbolKind, UseSymbol,
+} from '@/core/types/symbol';
+import {
+  Filepath, resolveImportFilepath,
+} from '@/core/types/filepath';
+import {
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
 import { lookupMember } from '../utils';
 import type { SchemaElement } from '@/core/types/schemaJson';
 
@@ -63,9 +73,7 @@ export const useModule: GlobalModule = {
 
     if (!compiler.layout.exists(importPath)) return Report.create(
       undefined,
-      [
-        new CompileError(CompileErrorCode.NONEXISTENT_MODULE, `${symbolKind} '${fullname?.join('.') ?? name}' does not exist in file ${importPath.toString()}. Does the file exist?`, node),
-      ],
+      [new CompileError(CompileErrorCode.NONEXISTENT_MODULE, `${symbolKind} '${fullname?.join('.') ?? name}' does not exist in file ${importPath.toString()}. Does the file exist?`, node)],
     );
 
     const leftNode = node.parentOfKind(InfixExpressionNode)?.leftExpression;
@@ -84,9 +92,7 @@ export const useModule: GlobalModule = {
 
     return Report.create(
       undefined,
-      [
-        new CompileError(CompileErrorCode.BINDING_ERROR, `${symbolKind} '${name}' does not exist in file ${importPath.toString()}`, node),
-      ],
+      [new CompileError(CompileErrorCode.BINDING_ERROR, `${symbolKind} '${name}' does not exist in file ${importPath.toString()}`, node)],
     );
   },
 
@@ -147,7 +153,10 @@ export const useModule: GlobalModule = {
     const name = compiler.symbolName(symbol);
 
     if (name && 'name' in value) {
-      return Report.create({ ...value, name } as typeof value);
+      return Report.create({
+        ...value,
+        name,
+      } as typeof value);
     }
 
     return Report.create(value);

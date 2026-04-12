@@ -1,15 +1,25 @@
-import { isElementNode, isElementFieldNode, isExpressionAVariableNode } from '@/core/utils/expression';
+import {
+  isElementNode, isElementFieldNode, isExpressionAVariableNode,
+} from '@/core/utils/expression';
 import { last } from 'lodash-es';
-import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import {
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
 import {
   AttributeNode,
   ListExpressionNode,
   type SyntaxNode,
 } from '@/core/types/nodes';
-import { ElementKind, SettingName } from '@/core/types/keywords';
+import {
+  ElementKind, SettingName,
+} from '@/core/types/keywords';
 import { type LocalModule } from '../types';
-import { PASS_THROUGH, type PassThrough } from '@/constants';
-import { aggregateSettingList, isVoid, Settings } from '@/core/utils/validate';
+import {
+  PASS_THROUGH, type PassThrough,
+} from '@/constants';
+import {
+  aggregateSettingList, Settings,
+} from '@/core/utils/validate';
 import { isExpressionAQuotedString } from '@/core/utils/expression';
 import Report from '@/core/types/report';
 import type Compiler from '@/compiler';
@@ -99,7 +109,7 @@ export const indexesModule: LocalModule = {
               attrs.forEach((attr: AttributeNode) => errors.push(new CompileError(CompileErrorCode.DUPLICATE_INDEX_SETTING, `'${name}' can only appear once`, attr)));
             }
             attrs.forEach((attr: AttributeNode) => {
-              if (!isVoid(attr.value)) {
+              if (attr.value !== undefined) {
                 errors.push(new CompileError(CompileErrorCode.INVALID_INDEX_SETTING_VALUE, `'${name}' must not have a value`, attr));
               }
             });

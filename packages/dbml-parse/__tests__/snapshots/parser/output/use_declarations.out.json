@@ -1,5 +1,4 @@
 {
-  "errors": [],
   "program": {
     "context": {
       "id": "node@<program>@@[L0:C0, L17:C0]",
@@ -18,7 +17,6 @@
                 "id": "token@<identifier>@from@[L0:C6, L0:C10]",
                 "snippet": "from"
               },
-              "leadingTrivia": "",
               "trailingTrivia": " ",
               "value": "from"
             },
@@ -27,7 +25,6 @@
                 "id": "token@<string>@./index.dbml@[L0:C11, L0:C25]",
                 "snippet": "'./index.dbml'"
               },
-              "leadingTrivia": "",
               "trailingTrivia": "\n",
               "value": "./index.dbml"
             },
@@ -42,26 +39,20 @@
                     "id": "token@<wildcard>@*@[L0:C4, L0:C5]",
                     "snippet": "*"
                   },
-                  "leadingTrivia": "",
                   "trailingTrivia": " ",
                   "value": "*"
                 }
-              },
-              "fullEnd": 6,
-              "fullStart": 4
+              }
             },
             "useKeyword": {
               "context": {
                 "id": "token@<identifier>@use@[L0:C0, L0:C3]",
                 "snippet": "use"
               },
-              "leadingTrivia": "",
               "trailingTrivia": " ",
               "value": "use"
             }
-          },
-          "fullEnd": 26,
-          "fullStart": 0
+          }
         },
         {
           "context": {
@@ -74,7 +65,6 @@
                 "id": "token@<identifier>@from@[L7:C2, L7:C6]",
                 "snippet": "from"
               },
-              "leadingTrivia": "",
               "trailingTrivia": " ",
               "value": "from"
             },
@@ -83,7 +73,6 @@
                 "id": "token@<string>@../index.dbml@[L7:C7, L7:C22]",
                 "snippet": "'../index.dbml'"
               },
-              "leadingTrivia": "",
               "trailingTrivia": "\n",
               "value": "../index.dbml"
             },
@@ -98,17 +87,14 @@
                     "id": "token@<rbrace>@}@[L7:C0, L7:C1]",
                     "snippet": "}"
                   },
-                  "leadingTrivia": "",
                   "trailingTrivia": " ",
                   "value": "}"
                 },
-                "commaList": [],
                 "openBrace": {
                   "context": {
                     "id": "token@<lbrace>@{@[L1:C4, L1:C5]",
                     "snippet": "{"
                   },
-                  "leadingTrivia": "",
                   "trailingTrivia": "\n",
                   "value": "{"
                 },
@@ -145,27 +131,18 @@
                                   "id": "token@<identifier>@my_table@[L2:C8, L2:C16]",
                                   "snippet": "my_table"
                                 },
-                                "leadingTrivia": "",
                                 "trailingTrivia": "\n",
                                 "value": "my_table"
                               }
-                            },
-                            "fullEnd": 49,
-                            "fullStart": 40
+                            }
                           }
-                        },
-                        "fullEnd": 49,
-                        "fullStart": 40
+                        }
                       }
                     },
-                    "fullEnd": 49,
-                    "fullStart": 32,
                     "symbol": {
                       "context": {
                         "id": "symbol@Table@@[L?:C?, L?:C?]"
-                      },
-                      "members": [],
-                      "references": []
+                      }
                     }
                   },
                   {
@@ -200,27 +177,18 @@
                                   "id": "token@<identifier>@my_tablepartial@[L3:C15, L3:C30]",
                                   "snippet": "my_tablepartial"
                                 },
-                                "leadingTrivia": "",
                                 "trailingTrivia": "\n",
                                 "value": "my_tablepartial"
                               }
-                            },
-                            "fullEnd": 80,
-                            "fullStart": 64
+                            }
                           }
-                        },
-                        "fullEnd": 80,
-                        "fullStart": 64
+                        }
                       }
                     },
-                    "fullEnd": 80,
-                    "fullStart": 49,
                     "symbol": {
                       "context": {
                         "id": "symbol@TablePartial@@[L?:C?, L?:C?]"
-                      },
-                      "members": [],
-                      "references": []
+                      }
                     }
                   },
                   {
@@ -246,24 +214,18 @@
                                   "id": "token@<identifier>@MY_ENUM@[L4:C18, L4:C25]",
                                   "snippet": "MY_ENUM"
                                 },
-                                "leadingTrivia": "",
                                 "trailingTrivia": "\n",
                                 "value": "MY_ENUM"
                               }
-                            },
-                            "fullEnd": 106,
-                            "fullStart": 98
+                            }
                           }
-                        },
-                        "fullEnd": 106,
-                        "fullStart": 98
+                        }
                       },
                       "asKeyword": {
                         "context": {
                           "id": "token@<identifier>@as@[L4:C15, L4:C17]",
                           "snippet": "as"
                         },
-                        "leadingTrivia": "",
                         "trailingTrivia": " ",
                         "value": "as"
                       },
@@ -293,27 +255,18 @@
                                   "id": "token@<identifier>@my_enum@[L4:C7, L4:C14]",
                                   "snippet": "my_enum"
                                 },
-                                "leadingTrivia": "",
                                 "trailingTrivia": " ",
                                 "value": "my_enum"
                               }
-                            },
-                            "fullEnd": 95,
-                            "fullStart": 87
+                            }
                           }
-                        },
-                        "fullEnd": 95,
-                        "fullStart": 87
+                        }
                       }
                     },
-                    "fullEnd": 106,
-                    "fullStart": 80,
                     "symbol": {
                       "context": {
                         "id": "symbol@Enum@@[L?:C?, L?:C?]"
-                      },
-                      "members": [],
-                      "references": []
+                      }
                     }
                   },
                   {
@@ -339,24 +292,18 @@
                                   "id": "token@<identifier>@G@[L5:C22, L5:C23]",
                                   "snippet": "G"
                                 },
-                                "leadingTrivia": "",
                                 "trailingTrivia": "\n",
                                 "value": "G"
                               }
-                            },
-                            "fullEnd": 130,
-                            "fullStart": 128
+                            }
                           }
-                        },
-                        "fullEnd": 130,
-                        "fullStart": 128
+                        }
                       },
                       "asKeyword": {
                         "context": {
                           "id": "token@<identifier>@as@[L5:C19, L5:C21]",
                           "snippet": "as"
                         },
-                        "leadingTrivia": "",
                         "trailingTrivia": " ",
                         "value": "as"
                       },
@@ -386,27 +333,18 @@
                                   "id": "token@<identifier>@group@[L5:C13, L5:C18]",
                                   "snippet": "group"
                                 },
-                                "leadingTrivia": "",
                                 "trailingTrivia": " ",
                                 "value": "group"
                               }
-                            },
-                            "fullEnd": 125,
-                            "fullStart": 119
+                            }
                           }
-                        },
-                        "fullEnd": 125,
-                        "fullStart": 119
+                        }
                       }
                     },
-                    "fullEnd": 130,
-                    "fullStart": 106,
                     "symbol": {
                       "context": {
                         "id": "symbol@TableGroup@@[L?:C?, L?:C?]"
-                      },
-                      "members": [],
-                      "references": []
+                      }
                     }
                   },
                   {
@@ -432,24 +370,18 @@
                                   "id": "token@<identifier>@note@[L6:C15, L6:C19]",
                                   "snippet": "note"
                                 },
-                                "leadingTrivia": "",
                                 "trailingTrivia": "\n",
                                 "value": "note"
                               }
-                            },
-                            "fullEnd": 150,
-                            "fullStart": 145
+                            }
                           }
-                        },
-                        "fullEnd": 150,
-                        "fullStart": 145
+                        }
                       },
                       "asKeyword": {
                         "context": {
                           "id": "token@<identifier>@as@[L6:C12, L6:C14]",
                           "snippet": "as"
                         },
-                        "leadingTrivia": "",
                         "trailingTrivia": " ",
                         "value": "as"
                       },
@@ -479,46 +411,32 @@
                                   "id": "token@<identifier>@note@[L6:C7, L6:C11]",
                                   "snippet": "note"
                                 },
-                                "leadingTrivia": "",
                                 "trailingTrivia": " ",
                                 "value": "note"
                               }
-                            },
-                            "fullEnd": 142,
-                            "fullStart": 137
+                            }
                           }
-                        },
-                        "fullEnd": 142,
-                        "fullStart": 137
+                        }
                       }
                     },
-                    "fullEnd": 150,
-                    "fullStart": 130,
                     "symbol": {
                       "context": {
                         "id": "symbol@Note@@[L?:C?, L?:C?]"
-                      },
-                      "members": [],
-                      "references": []
+                      }
                     }
                   }
                 ]
-              },
-              "fullEnd": 152,
-              "fullStart": 30
+              }
             },
             "useKeyword": {
               "context": {
                 "id": "token@<identifier>@use@[L1:C0, L1:C3]",
                 "snippet": "use"
               },
-              "leadingTrivia": "",
               "trailingTrivia": " ",
               "value": "use"
             }
-          },
-          "fullEnd": 173,
-          "fullStart": 26
+          }
         },
         {
           "context": {
@@ -531,7 +449,6 @@
                 "id": "token@<identifier>@from@[L9:C8, L9:C12]",
                 "snippet": "from"
               },
-              "leadingTrivia": "",
               "trailingTrivia": " ",
               "value": "from"
             },
@@ -540,7 +457,6 @@
                 "id": "token@<string>@./index.dbml@[L9:C13, L9:C27]",
                 "snippet": "'./index.dbml'"
               },
-              "leadingTrivia": "",
               "trailingTrivia": "\n",
               "value": "./index.dbml"
             },
@@ -555,13 +471,10 @@
                     "id": "token@<wildcard>@*@[L9:C6, L9:C7]",
                     "snippet": "*"
                   },
-                  "leadingTrivia": "",
                   "trailingTrivia": " ",
                   "value": "*"
                 }
-              },
-              "fullEnd": 182,
-              "fullStart": 180
+              }
             },
             "useKeyword": {
               "context": {
@@ -572,9 +485,7 @@
               "trailingTrivia": " ",
               "value": "reuse"
             }
-          },
-          "fullEnd": 202,
-          "fullStart": 173
+          }
         },
         {
           "context": {
@@ -587,7 +498,6 @@
                 "id": "token@<identifier>@from@[L16:C2, L16:C6]",
                 "snippet": "from"
               },
-              "leadingTrivia": "",
               "trailingTrivia": " ",
               "value": "from"
             },
@@ -596,7 +506,6 @@
                 "id": "token@<string>@../index.dbml@[L16:C7, L16:C22]",
                 "snippet": "'../index.dbml'"
               },
-              "leadingTrivia": "",
               "trailingTrivia": "\n",
               "value": "../index.dbml"
             },
@@ -611,17 +520,14 @@
                     "id": "token@<rbrace>@}@[L16:C0, L16:C1]",
                     "snippet": "}"
                   },
-                  "leadingTrivia": "",
                   "trailingTrivia": " ",
                   "value": "}"
                 },
-                "commaList": [],
                 "openBrace": {
                   "context": {
                     "id": "token@<lbrace>@{@[L10:C6, L10:C7]",
                     "snippet": "{"
                   },
-                  "leadingTrivia": "",
                   "trailingTrivia": "\n",
                   "value": "{"
                 },
@@ -658,27 +564,18 @@
                                   "id": "token@<identifier>@my_table@[L11:C8, L11:C16]",
                                   "snippet": "my_table"
                                 },
-                                "leadingTrivia": "",
                                 "trailingTrivia": "\n",
                                 "value": "my_table"
                               }
-                            },
-                            "fullEnd": 227,
-                            "fullStart": 218
+                            }
                           }
-                        },
-                        "fullEnd": 227,
-                        "fullStart": 218
+                        }
                       }
                     },
-                    "fullEnd": 227,
-                    "fullStart": 210,
                     "symbol": {
                       "context": {
                         "id": "symbol@Table@@[L?:C?, L?:C?]"
-                      },
-                      "members": [],
-                      "references": []
+                      }
                     }
                   },
                   {
@@ -713,27 +610,18 @@
                                   "id": "token@<identifier>@my_tablepartial@[L12:C15, L12:C30]",
                                   "snippet": "my_tablepartial"
                                 },
-                                "leadingTrivia": "",
                                 "trailingTrivia": "\n",
                                 "value": "my_tablepartial"
                               }
-                            },
-                            "fullEnd": 258,
-                            "fullStart": 242
+                            }
                           }
-                        },
-                        "fullEnd": 258,
-                        "fullStart": 242
+                        }
                       }
                     },
-                    "fullEnd": 258,
-                    "fullStart": 227,
                     "symbol": {
                       "context": {
                         "id": "symbol@TablePartial@@[L?:C?, L?:C?]"
-                      },
-                      "members": [],
-                      "references": []
+                      }
                     }
                   },
                   {
@@ -759,24 +647,18 @@
                                   "id": "token@<identifier>@MY_ENUM@[L13:C18, L13:C25]",
                                   "snippet": "MY_ENUM"
                                 },
-                                "leadingTrivia": "",
                                 "trailingTrivia": "\n",
                                 "value": "MY_ENUM"
                               }
-                            },
-                            "fullEnd": 284,
-                            "fullStart": 276
+                            }
                           }
-                        },
-                        "fullEnd": 284,
-                        "fullStart": 276
+                        }
                       },
                       "asKeyword": {
                         "context": {
                           "id": "token@<identifier>@as@[L13:C15, L13:C17]",
                           "snippet": "as"
                         },
-                        "leadingTrivia": "",
                         "trailingTrivia": " ",
                         "value": "as"
                       },
@@ -806,27 +688,18 @@
                                   "id": "token@<identifier>@my_enum@[L13:C7, L13:C14]",
                                   "snippet": "my_enum"
                                 },
-                                "leadingTrivia": "",
                                 "trailingTrivia": " ",
                                 "value": "my_enum"
                               }
-                            },
-                            "fullEnd": 273,
-                            "fullStart": 265
+                            }
                           }
-                        },
-                        "fullEnd": 273,
-                        "fullStart": 265
+                        }
                       }
                     },
-                    "fullEnd": 284,
-                    "fullStart": 258,
                     "symbol": {
                       "context": {
                         "id": "symbol@Enum@@[L?:C?, L?:C?]"
-                      },
-                      "members": [],
-                      "references": []
+                      }
                     }
                   },
                   {
@@ -852,24 +725,18 @@
                                   "id": "token@<identifier>@G@[L14:C22, L14:C23]",
                                   "snippet": "G"
                                 },
-                                "leadingTrivia": "",
                                 "trailingTrivia": "\n",
                                 "value": "G"
                               }
-                            },
-                            "fullEnd": 308,
-                            "fullStart": 306
+                            }
                           }
-                        },
-                        "fullEnd": 308,
-                        "fullStart": 306
+                        }
                       },
                       "asKeyword": {
                         "context": {
                           "id": "token@<identifier>@as@[L14:C19, L14:C21]",
                           "snippet": "as"
                         },
-                        "leadingTrivia": "",
                         "trailingTrivia": " ",
                         "value": "as"
                       },
@@ -899,27 +766,18 @@
                                   "id": "token@<identifier>@group@[L14:C13, L14:C18]",
                                   "snippet": "group"
                                 },
-                                "leadingTrivia": "",
                                 "trailingTrivia": " ",
                                 "value": "group"
                               }
-                            },
-                            "fullEnd": 303,
-                            "fullStart": 297
+                            }
                           }
-                        },
-                        "fullEnd": 303,
-                        "fullStart": 297
+                        }
                       }
                     },
-                    "fullEnd": 308,
-                    "fullStart": 284,
                     "symbol": {
                       "context": {
                         "id": "symbol@TableGroup@@[L?:C?, L?:C?]"
-                      },
-                      "members": [],
-                      "references": []
+                      }
                     }
                   },
                   {
@@ -945,24 +803,18 @@
                                   "id": "token@<identifier>@note@[L15:C15, L15:C19]",
                                   "snippet": "note"
                                 },
-                                "leadingTrivia": "",
                                 "trailingTrivia": "\n",
                                 "value": "note"
                               }
-                            },
-                            "fullEnd": 328,
-                            "fullStart": 323
+                            }
                           }
-                        },
-                        "fullEnd": 328,
-                        "fullStart": 323
+                        }
                       },
                       "asKeyword": {
                         "context": {
                           "id": "token@<identifier>@as@[L15:C12, L15:C14]",
                           "snippet": "as"
                         },
-                        "leadingTrivia": "",
                         "trailingTrivia": " ",
                         "value": "as"
                       },
@@ -992,60 +844,41 @@
                                   "id": "token@<identifier>@note@[L15:C7, L15:C11]",
                                   "snippet": "note"
                                 },
-                                "leadingTrivia": "",
                                 "trailingTrivia": " ",
                                 "value": "note"
                               }
-                            },
-                            "fullEnd": 320,
-                            "fullStart": 315
+                            }
                           }
-                        },
-                        "fullEnd": 320,
-                        "fullStart": 315
+                        }
                       }
                     },
-                    "fullEnd": 328,
-                    "fullStart": 308,
                     "symbol": {
                       "context": {
                         "id": "symbol@Note@@[L?:C?, L?:C?]"
-                      },
-                      "members": [],
-                      "references": []
+                      }
                     }
                   }
                 ]
-              },
-              "fullEnd": 330,
-              "fullStart": 208
+              }
             },
             "useKeyword": {
               "context": {
                 "id": "token@<identifier>@reuse@[L10:C0, L10:C5]",
                 "snippet": "reuse"
               },
-              "leadingTrivia": "",
               "trailingTrivia": " ",
               "value": "reuse"
             }
-          },
-          "fullEnd": 351,
-          "fullStart": 202
+          }
         }
       ],
       "eof": {
         "context": {
           "id": "token@<eof>@@[L17:C0, L17:C0]",
           "snippet": ""
-        },
-        "leadingTrivia": "",
-        "trailingTrivia": "",
-        "value": ""
+        }
       }
     },
-    "fullEnd": 351,
-    "fullStart": 0,
     "symbol": {
       "context": {
         "id": "symbol@Program@@[L0:C0, L17:C0]",
@@ -1111,9 +944,7 @@
             "id": "symbol@Note@@[L?:C?, L?:C?]"
           }
         }
-      ],
-      "references": []
+      ]
     }
-  },
-  "warnings": []
+  }
 }

@@ -1,16 +1,5 @@
 {
   "database": {
-    "aliases": [],
-    "diagramViews": [],
-    "enums": [],
-    "externals": {
-      "enums": [],
-      "notes": [],
-      "tableGroups": [],
-      "tablePartials": [],
-      "tables": []
-    },
-    "notes": [],
     "records": [
       {
         "columns": [
@@ -18,37 +7,22 @@
         ],
         "tableName": "a",
         "token": {
-          "end": {
-            "column": 4,
-            "line": 9,
-            "offset": 72
-          },
-          "filepath": {
-            "path": "/records-and-tables.dbml"
-          },
-          "start": {
-            "column": 3,
-            "line": 5,
-            "offset": 36
-          }
+          "filepath": "/records-and-tables.dbml"
         },
         "values": [
           [
             {
-              "type": "integer",
-              "value": 1
+              "type": "integer"
             }
           ],
           [
             {
-              "type": "integer",
-              "value": 2
+              "type": "integer"
             }
           ],
           [
             {
-              "type": "integer",
-              "value": 3
+              "type": "integer"
             }
           ]
         ]
@@ -59,192 +33,74 @@
         ],
         "tableName": "b",
         "token": {
-          "end": {
-            "column": 2,
-            "line": 20,
-            "offset": 127
-          },
-          "filepath": {
-            "path": "/records-and-tables.dbml"
-          },
-          "start": {
-            "column": 1,
-            "line": 16,
-            "offset": 98
-          }
+          "filepath": "/records-and-tables.dbml"
         },
         "values": [
           [
             {
-              "type": "integer",
-              "value": 5
+              "type": "integer"
             }
           ],
           [
             {
-              "type": "integer",
-              "value": 6
+              "type": "integer"
             }
           ],
           [
             {
-              "type": "integer",
-              "value": 7
+              "type": "integer"
             }
           ]
         ]
       }
     ],
-    "refs": [],
-    "schemas": [],
-    "tableGroups": [],
-    "tablePartials": [],
     "tables": [
       {
-        "alias": null,
-        "checks": [],
         "fields": [
           {
-            "inline_refs": [],
             "name": "id",
-            "pk": false,
             "token": {
-              "end": {
-                "column": 9,
-                "line": 2,
-                "offset": 18
-              },
-              "filepath": {
-                "path": "/records-and-tables.dbml"
-              },
-              "start": {
-                "column": 3,
-                "line": 2,
-                "offset": 12
-              }
+              "filepath": "/records-and-tables.dbml"
             },
             "type": {
-              "args": null,
-              "schemaName": null,
               "type_name": "int"
-            },
-            "unique": false
+            }
           },
           {
-            "inline_refs": [],
             "name": "name",
-            "pk": false,
             "token": {
-              "end": {
-                "column": 14,
-                "line": 3,
-                "offset": 32
-              },
-              "filepath": {
-                "path": "/records-and-tables.dbml"
-              },
-              "start": {
-                "column": 3,
-                "line": 3,
-                "offset": 21
-              }
+              "filepath": "/records-and-tables.dbml"
             },
             "type": {
-              "args": null,
-              "schemaName": null,
               "type_name": "string"
-            },
-            "unique": false
+            }
           }
         ],
-        "indexes": [],
         "name": "a",
-        "partials": [],
-        "schemaName": null,
         "token": {
-          "end": {
-            "column": 2,
-            "line": 10,
-            "offset": 74
-          },
-          "filepath": {
-            "path": "/records-and-tables.dbml"
-          },
-          "start": {
-            "column": 1,
-            "line": 1,
-            "offset": 0
-          }
+          "filepath": "/records-and-tables.dbml"
         }
       },
       {
-        "alias": null,
-        "checks": [],
         "fields": [
           {
-            "inline_refs": [],
             "name": "id",
-            "pk": false,
             "token": {
-              "end": {
-                "column": 9,
-                "line": 13,
-                "offset": 94
-              },
-              "filepath": {
-                "path": "/records-and-tables.dbml"
-              },
-              "start": {
-                "column": 3,
-                "line": 13,
-                "offset": 88
-              }
+              "filepath": "/records-and-tables.dbml"
             },
             "type": {
-              "args": null,
-              "schemaName": null,
               "type_name": "int"
-            },
-            "unique": false
+            }
           }
         ],
-        "indexes": [],
         "name": "b",
-        "partials": [],
-        "schemaName": null,
         "token": {
-          "end": {
-            "column": 2,
-            "line": 14,
-            "offset": 96
-          },
-          "filepath": {
-            "path": "/records-and-tables.dbml"
-          },
-          "start": {
-            "column": 1,
-            "line": 12,
-            "offset": 76
-          }
+          "filepath": "/records-and-tables.dbml"
         }
       }
     ],
     "token": {
-      "end": {
-        "column": 1,
-        "line": 21,
-        "offset": 128
-      },
-      "filepath": {
-        "path": "/records-and-tables.dbml"
-      },
-      "start": {
-        "column": 1,
-        "line": 1,
-        "offset": 0
-      }
+      "filepath": "/records-and-tables.dbml"
     }
-  },
-  "errors": [],
-  "warnings": []
+  }
 }

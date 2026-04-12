@@ -1,5 +1,9 @@
-import { PASS_THROUGH, type PassThrough, type Unhandled, UNHANDLED } from '@/constants';
-import type { LocalModule, Settings } from './types';
+import {
+  PASS_THROUGH, type PassThrough, type Unhandled, UNHANDLED,
+} from '@/constants';
+import type {
+  LocalModule, Settings,
+} from './types';
 import { tableModule } from './table';
 import { enumModule } from './enum';
 import { recordsModule } from './records';

@@ -1,5 +1,9 @@
-import { CompileWarning, CompileErrorCode } from '@/core/types/errors';
-import type { Table, Column, TableRecord } from '@/core/types/schemaJson';
+import {
+  CompileWarning, CompileErrorCode,
+} from '@/core/types/errors';
+import type {
+  Table, Column, TableRecord,
+} from '@/core/types/schemaJson';
 import {
   buildColumnIndex,
   extractKeyValueWithDefault,
@@ -10,7 +14,9 @@ import {
   createConstraintErrors,
 } from './helper';
 import { isSerialType } from '../data';
-import { groupBy, partition, compact, isEmpty, difference, filter, flatMap } from 'lodash-es';
+import {
+  groupBy, partition, compact, isEmpty, difference, filter, flatMap,
+} from 'lodash-es';
 
 const getConstraintType = (columnCount: number) =>
   columnCount > 1 ? 'Composite PK' : 'PK';
@@ -134,10 +140,7 @@ function findDuplicateErrors (
 }
 
 function collectPkConstraints (mergedTable: Table): string[][] {
-  return [
-    ...mergedTable.fields.filter((field) => field.pk).map((field) => [field.name]),
-    ...mergedTable.indexes.filter((index) => index.pk).map((index) => index.columns.map((c) => c.value)),
-  ];
+  return [...mergedTable.fields.filter((field) => field.pk).map((field) => [field.name]), ...mergedTable.indexes.filter((index) => index.pk).map((index) => index.columns.map((c) => c.value))];
 }
 
 function collectAvailableColumns (record: TableRecord): Set<string> {

@@ -1,4 +1,6 @@
-import { partition, last } from 'lodash-es';
+import {
+  partition, last,
+} from 'lodash-es';
 import {
   Column, Check, Index, InlineRef,
   Table, TablePartialInjection,
@@ -17,10 +19,16 @@ import {
   destructureComplexVariable, destructureIndexNode, extractQuotedStringToken, extractVarNameFromPrimaryVariable,
   extractVariableFromExpression,
 } from '@/core/utils/expression';
-import { CompileError, CompileErrorCode } from '@/core/types/errors';
-import { aggregateSettingList, isValidPartialInjection } from '@/core/utils/validate';
+import {
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
+import {
+  aggregateSettingList, isValidPartialInjection,
+} from '@/core/utils/validate';
 import { SymbolKind } from '@/core/types/symbol';
-import { ElementKind, SettingName } from '@/core/types/keywords';
+import {
+  ElementKind, SettingName,
+} from '@/core/types/keywords';
 import Compiler from '@/compiler';
 import { UNHANDLED } from '@/constants';
 import Report from '@/core/types/report';
@@ -62,10 +70,24 @@ export class TableInterpreter {
     // and a new pk composite index is added
     if (this.pkColumns.length >= 2) {
       this.table.indexes!.push({
-        columns: this.pkColumns.map(({ name, token }) => ({ value: name, type: 'column', token })),
+        columns: this.pkColumns.map(({
+          name, token,
+        }) => ({
+          value: name,
+          type: 'column',
+          token,
+        })),
         token: {
-          start: { offset: -1, line: -1, column: -1 }, // do not make sense to have a meaningful start (?)
-          end: { offset: -1, line: -1, column: -1 }, // do not make sense to have a meaningful end (?)
+          start: {
+            offset: -1,
+            line: -1,
+            column: -1,
+          }, // do not make sense to have a meaningful start (?)
+          end: {
+            offset: -1,
+            line: -1,
+            column: -1,
+          }, // do not make sense to have a meaningful end (?)
           filepath: this.declarationNode.filepath,
         },
         pk: true,
@@ -79,7 +101,9 @@ export class TableInterpreter {
   }
 
   private interpretName (nameNode: SyntaxNode): CompileError[] {
-    const { name, schemaName } = extractElementName(nameNode);
+    const {
+      name, schemaName,
+    } = extractElementName(nameNode);
 
     if (schemaName.length > 1) {
       this.table.name = name;
@@ -125,10 +149,7 @@ export class TableInterpreter {
 
   private interpretBody (body: BlockExpressionNode): CompileError[] {
     const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
-    return [
-      ...this.interpretFields(fields as FunctionApplicationNode[]),
-      ...this.interpretSubElements(subs as ElementDeclarationNode[]),
-    ];
+    return [...this.interpretFields(fields as FunctionApplicationNode[]), ...this.interpretSubElements(subs as ElementDeclarationNode[])];
   }
 
   private interpretSubElements (subs: ElementDeclarationNode[]): CompileError[] {
@@ -162,7 +183,10 @@ export class TableInterpreter {
   }
 
   private interpretInjection (injection: PrefixExpressionNode, order: number) {
-    const partial: Partial<TablePartialInjection> = { order, token: getTokenPosition(injection) };
+    const partial: Partial<TablePartialInjection> = {
+      order,
+      token: getTokenPosition(injection),
+    };
     partial.name = extractVariableFromExpression(injection.expression) || '';
     this.table.partials!.push(partial as TablePartialInjection);
     return [];
@@ -186,10 +210,7 @@ export class TableInterpreter {
         : this.interpretColumn(field);
     });
 
-    return [
-      ...columnCountErrors,
-      ...interpretFieldErrors,
-    ];
+    return [...columnCountErrors, ...interpretFieldErrors];
   }
 
   private interpretColumn (field: FunctionApplicationNode): CompileError[] {
@@ -345,7 +366,9 @@ export class TableInterpreter {
 
         return fragments;
       }).forEach((arg) => {
-        const { functional, nonFunctional } = destructureIndexNode(arg)!;
+        const {
+          functional, nonFunctional,
+        } = destructureIndexNode(arg)!;
         index.columns!.push(
           ...functional.map((s) => ({
             value: s.value!.value,

@@ -1,17 +1,33 @@
 import type Compiler from '@/compiler';
-import { DEFAULT_SCHEMA_NAME, UNHANDLED } from '@/constants';
-import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import {
+  DEFAULT_SCHEMA_NAME, UNHANDLED,
+} from '@/constants';
+import {
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
 import { SyntaxTokenKind } from '@/core/types/tokens';
-import { ArrayNode, CallExpressionNode, FunctionExpressionNode, InfixExpressionNode, LiteralNode, PostfixExpressionNode, PrefixExpressionNode, PrimaryExpressionNode, SyntaxNode, TupleExpressionNode, VariableNode } from '@/core/types/nodes';
+import {
+  ArrayNode, CallExpressionNode, FunctionExpressionNode, InfixExpressionNode, LiteralNode, PostfixExpressionNode, PrefixExpressionNode, PrimaryExpressionNode, SyntaxNode, TupleExpressionNode, VariableNode,
+} from '@/core/types/nodes';
 import { getMemberChain } from '@/core/parser/utils';
 import Report from '@/core/types/report';
-import { NodeSymbol, SchemaSymbol, SymbolKind, UseSymbol } from '@/core/types/symbol';
-import type { ColumnType, RelationCardinality, Table, TokenPosition } from '@/core/types';
-import { destructureComplexVariable, destructureComplexVariableTuple, destructureMemberAccessExpression, extractQuotedStringToken, extractVariableFromExpression, extractVarNameFromPrimaryVariable, getNumberTextFromExpression, isAccessExpression, isDotDelimitedIdentifier, isExpressionAnIdentifierNode, isExpressionAQuotedString, isExpressionASignedNumberExpression, isExpressionAVariableNode, parseNumber } from '@/core/utils/expression';
+import {
+  NodeSymbol, SchemaSymbol, SymbolKind, UseSymbol,
+} from '@/core/types/symbol';
+import type {
+  ColumnType, RelationCardinality, Table, TokenPosition,
+} from '@/core/types';
+import {
+  destructureComplexVariable, destructureComplexVariableTuple, destructureMemberAccessExpression, extractQuotedStringToken, extractVariableFromExpression, extractVarNameFromPrimaryVariable, getNumberTextFromExpression, isAccessExpression, isDotDelimitedIdentifier, isExpressionAnIdentifierNode, isExpressionAQuotedString, isExpressionASignedNumberExpression, isExpressionAVariableNode, parseNumber,
+} from '@/core/utils/expression';
 import { zip } from 'lodash-es';
 
-export function extractNamesFromRefOperand (operand: SyntaxNode, ownerSchema?: string | null, ownerName?: string): { schemaName: string | null; tableName: string; fieldNames: string[] } {
-  const { variables, tupleElements } = destructureComplexVariableTuple(operand)!;
+export function extractNamesFromRefOperand (operand: SyntaxNode, ownerSchema?: string | null, ownerName?: string): { schemaName: string | null;
+  tableName: string;
+  fieldNames: string[]; } {
+  const {
+    variables, tupleElements,
+  } = destructureComplexVariableTuple(operand)!;
 
   const tupleNames = tupleElements?.map((e) => extractVarNameFromPrimaryVariable(e)!);
   const variableNames = variables?.map((e) => extractVarNameFromPrimaryVariable(e)!);
@@ -71,7 +87,8 @@ export function getColumnSymbolsOfRefOperand (compiler: Compiler, ref: SyntaxNod
   return [compiler.nodeReferee(colNode).getFiltered(UNHANDLED)!];
 }
 
-export function extractElementName (nameNode: SyntaxNode): { schemaName: string[]; name: string } {
+export function extractElementName (nameNode: SyntaxNode): { schemaName: string[];
+  name: string; } {
   const fragments = destructureComplexVariable(nameNode)!;
   const name = fragments.pop()!;
 
@@ -167,7 +184,8 @@ export function processDefaultValue (valueNode?: SyntaxNode):
 export function processColumnType (compiler: Compiler, typeNode: SyntaxNode): Report<ColumnType> {
   let typeSuffix: string = '';
   let typeArgs: string | null = null;
-  let numericParams: { precision: number; scale: number } | undefined;
+  let numericParams: { precision: number;
+    scale: number; } | undefined;
   let lengthParam: { length: number } | undefined;
 
   if (typeNode instanceof CallExpressionNode) {
@@ -191,7 +209,10 @@ export function processColumnType (compiler: Compiler, typeNode: SyntaxNode): Re
       const precision = parseNumber(argElements[0]);
       const scale = parseNumber(argElements[1]);
       if (!Number.isNaN(precision) && !Number.isNaN(scale)) {
-        numericParams = { precision: Math.trunc(precision), scale: Math.trunc(scale) };
+        numericParams = {
+          precision: Math.trunc(precision),
+          scale: Math.trunc(scale),
+        };
       }
     } else if (argElements.length === 1 && isExpressionASignedNumberExpression(argElements[0])) {
       const length = parseNumber(argElements[0]);
@@ -229,7 +250,9 @@ export function processColumnType (compiler: Compiler, typeNode: SyntaxNode): Re
     }
   }
 
-  const { name: typeName, schemaName: typeSchemaName } = extractElementName(typeNode);
+  const {
+    name: typeName, schemaName: typeSchemaName,
+  } = extractElementName(typeNode);
 
   // Check if this type references an enum
   const isEnum = !!compiler.nodeReferee(typeNode).getFiltered(UNHANDLED);
@@ -277,21 +300,9 @@ export function getNodeMemberSymbols (compiler: Compiler, node: SyntaxNode): Rep
       const symbol = compiler.nodeSymbol(child);
       const nestedSymbols = getNodeMemberSymbols(compiler, child);
       return new Report(
-        [
-          ...report.getValue(),
-          ...(nestedSymbols.hasValue(UNHANDLED) ? [] : nestedSymbols.getValue()),
-        ],
-        [
-          ...report.getErrors(),
-          ...(symbol.hasValue(UNHANDLED) ? [] : symbol.getErrors()),
-          ...(nestedSymbols.hasValue(UNHANDLED) ? [] : nestedSymbols.getErrors()),
-        ],
-        [
-          ...report.getWarnings(),
-          ...(symbol.hasValue(UNHANDLED) ? [] : symbol.getWarnings()),
-          ...(nestedSymbols.hasValue(UNHANDLED) ? [] : nestedSymbols.getWarnings()),
-
-        ],
+        [...report.getValue(), ...(nestedSymbols.hasValue(UNHANDLED) ? [] : nestedSymbols.getValue())],
+        [...report.getErrors(), ...(symbol.hasValue(UNHANDLED) ? [] : symbol.getErrors()), ...(nestedSymbols.hasValue(UNHANDLED) ? [] : nestedSymbols.getErrors())],
+        [...report.getWarnings(), ...(symbol.hasValue(UNHANDLED) ? [] : symbol.getWarnings()), ...(nestedSymbols.hasValue(UNHANDLED) ? [] : nestedSymbols.getWarnings())],
       );
     },
     new Report<NodeSymbol[]>([]),
@@ -300,11 +311,17 @@ export function getNodeMemberSymbols (compiler: Compiler, node: SyntaxNode): Rep
 
 // Scan an AST node (excluding ListExpressions) for variable references.
 // Returns structured binding fragments with dotted-path variables and tuple elements.
-export function scanNonListNodeForBinding (node?: SyntaxNode): { variables: (PrimaryExpressionNode & { expression: VariableNode })[]; tupleElements: (PrimaryExpressionNode & { expression: VariableNode })[] }[] {
+export function scanNonListNodeForBinding (node?: SyntaxNode): { variables: (PrimaryExpressionNode & { expression: VariableNode })[];
+  tupleElements: (PrimaryExpressionNode & { expression: VariableNode })[]; }[] {
   if (!node) return [];
 
   if (isExpressionAVariableNode(node)) {
-    return [{ variables: [node], tupleElements: [] }];
+    return [
+      {
+        variables: [node],
+        tupleElements: [],
+      },
+    ];
   }
 
   if (node instanceof InfixExpressionNode) {
@@ -406,7 +423,10 @@ export function lookupInDefaultSchema (
   if (members) {
     const publicSchema = members.find((m: NodeSymbol) => m.isPublicSchema());
     if (publicSchema) {
-      const result = lookupMember(compiler, publicSchema, name, { ...options, ignoreNotFound: true });
+      const result = lookupMember(compiler, publicSchema, name, {
+        ...options,
+        ignoreNotFound: true,
+      });
       if (result.getValue()) return result;
     }
   }
@@ -445,11 +465,15 @@ export function getMultiplicities (
   }
 }
 
-export function getSymbolSchemaAndName (compiler: Compiler, symbol: NodeSymbol): { schemaName: string | null; name: string } {
+export function getSymbolSchemaAndName (compiler: Compiler, symbol: NodeSymbol): { schemaName: string | null;
+  name: string; } {
   const name = compiler.symbolName(symbol);
 
   const fullname = symbol.declaration ? compiler.nodeFullname(symbol.declaration).getFiltered(UNHANDLED) : undefined;
   const schemaName = (fullname && fullname.length > 1) ? fullname[0] : null;
 
-  return { schemaName, name: name || '' };
+  return {
+    schemaName,
+    name: name || '',
+  };
 }

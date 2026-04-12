@@ -1,4 +1,6 @@
-import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import {
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
 import {
   ElementDeclarationNode,
   FunctionApplicationNode,
@@ -21,7 +23,9 @@ import {
   isRelationshipOp,
   isExpressionAVariableNode,
 } from '@/core/utils/expression';
-import { ElementKind, SettingName } from '@/core/types/keywords';
+import {
+  ElementKind, SettingName,
+} from '@/core/types/keywords';
 import { UNHANDLED } from '@/constants';
 import { SchemaSymbol } from '@/core/types/symbol';
 
@@ -266,7 +270,8 @@ export default class Binder {
    */
   private checkTableGroups (): CompileError[] {
     const errors: CompileError[] = [];
-    const tableOwner = new Map<number, { groupName: string; node: SyntaxNode }>();
+    const tableOwner = new Map<number, { groupName: string;
+      node: SyntaxNode; }>();
 
     const reachableFiles = this.compiler.reachableFiles(this.ast.filepath);
 
@@ -306,7 +311,10 @@ export default class Binder {
               field,
             ));
           } else {
-            tableOwner.set(tableSym.id, { groupName, node: field });
+            tableOwner.set(tableSym.id, {
+              groupName,
+              node: field,
+            });
           }
         }
       }

@@ -1,10 +1,20 @@
-import { DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLReferencesProvider, DBMLDiagnosticsProvider } from '@/services/index';
-import { invalidStream, flatStream } from './queries/legacy/token';
-import { splitQualifiedIdentifier, unescapeString, escapeString, formatRecordValue, isValidIdentifier, addDoubleQuoteIfNeeded } from './queries/utils';
-import { containerStack, containerToken, containerElement, containerScope, containerScopeKind } from './queries/container';
+import {
+  DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLReferencesProvider, DBMLDiagnosticsProvider,
+} from '@/services/index';
+import {
+  invalidStream, flatStream,
+} from './queries/legacy/token';
+import {
+  splitQualifiedIdentifier, unescapeString, escapeString, formatRecordValue, isValidIdentifier, addDoubleQuoteIfNeeded,
+} from './queries/utils';
+import {
+  containerStack, containerToken, containerElement, containerScope, containerScopeKind,
+} from './queries/container';
 import { renameTable } from './queries/transform';
 export { ScopeKind } from './types';
-export type { TextEdit, TableNameInput } from './queries/transform';
+export type {
+  TextEdit, TableNameInput,
+} from './queries/transform';
 import {
   nodeSymbol,
   symbolMembers,
@@ -13,27 +23,43 @@ import {
   interpretNode,
 } from '@/core/global_modules';
 import { symbolReferences } from './queries/symbolReferences';
-import { intern, type Internable, type Primitive } from '@/core/types/internable';
+import {
+  intern, type Internable, type Primitive,
+} from '@/core/types/internable';
 import { DEFAULT_ENTRY } from '@/constants';
-import { nodeAlias, nodeFullname as fullname, nodeSettings, validateNode } from '@/core/local_modules';
+import {
+  nodeAlias, nodeFullname as fullname, nodeSettings, validateNode,
+} from '@/core/local_modules';
 import { NodeSymbolIdGenerator } from '@/core/types/symbol';
 import { SymbolFactory } from '@/core/types/symbol';
 import { lookupMembers } from './queries/lookupMembers';
 import { symbolName } from './queries/symbolName';
 import { SyntaxNodeIdGenerator } from '@/core/types/nodes';
-import { type DbmlProjectLayout, MemoryProjectLayout } from './projectLayout';
+import {
+  type DbmlProjectLayout, MemoryProjectLayout,
+} from './projectLayout';
 import { fileDependencies } from './queries/fileDependencies';
 import { Filepath } from '@/core/types/filepath';
 import { usableMembers } from './queries/usableMembers';
 import { topLevelSchemaMembers } from './queries/topLevelSchemaMembers';
 import { reachableFiles } from './queries/reachableFiles';
-import { parseFile, parseProject } from './queries/pipeline/parse';
-import { ast, errors, publicSymbolTable, rawDb, tokens, warnings } from './queries/legacy/parse';
-import { interpretFile, interpretProject, exportSchemaJson } from './queries/pipeline/interpret';
-import { bindFile, bindProject } from './queries/pipeline/bind';
+import {
+  parseFile, parseProject,
+} from './queries/pipeline/parse';
+import {
+  ast, errors, publicSymbolTable, rawDb, tokens, warnings,
+} from './queries/legacy/parse';
+import {
+  interpretFile, interpretProject, exportSchemaJson,
+} from './queries/pipeline/interpret';
+import {
+  bindFile, bindProject,
+} from './queries/pipeline/bind';
 
 // Re-export utilities
-export { splitQualifiedIdentifier, unescapeString, escapeString, formatRecordValue, isValidIdentifier, addDoubleQuoteIfNeeded };
+export {
+  splitQualifiedIdentifier, unescapeString, escapeString, formatRecordValue, isValidIdentifier, addDoubleQuoteIfNeeded,
+};
 
 // To detect cyclic queries
 // Indicating that a query is being computed, but we're trying to compute it again
@@ -150,7 +176,6 @@ export default class Compiler {
   // () => Map<string, Report<FileParseIndex>>
   parseProject = this.query(parseProject);
 
-
   // A global query.
   // Run the binder on a single AST node (dispatches to global modules). Related: bindFile, bindProject.
   // (node: SyntaxNode) => Report<void> | Report<Unhandled>
@@ -163,7 +188,6 @@ export default class Compiler {
   // Bind all entry-point files in dependency order. Related: bindFile.
   // () => Map<string, Report<void>>
   bindProject = this.query(bindProject);
-
 
   // A global query.
   // Interpret a single AST node into a SchemaElement (dispatches to global modules). Related: interpretFile, interpretProject.
@@ -181,7 +205,6 @@ export default class Compiler {
   // Export a reconciled, alias-resolved Database for a single file (calls interpretProject internally). Related: interpretProject.
   // (filepath: Filepath) => Report<Readonly<Database> | undefined>
   exportSchemaJson = this.query(exportSchemaJson);
-
 
   // A global query.
   // Resolve the NodeSymbol declared by a given AST node. Related: symbolMembers, nodeReferee.
@@ -204,7 +227,6 @@ export default class Compiler {
   // (symbol: NodeSymbol) => Report<SyntaxNode[]>
   symbolReferences = this.query(symbolReferences);
 
-
   // A global query.
   // Validate an AST node and return any compile errors.
   // (node: SyntaxNode) => Report<void> | Report<Unhandled>
@@ -225,7 +247,6 @@ export default class Compiler {
   // Return the settings/options map of an AST node.
   // (node: SyntaxNode) => Report<Settings> | Report<Unhandled>
   nodeSettings = this.query(nodeSettings);
-
 
   // A local query.
   // Return the direct import filepath IDs declared by use statements in a file. Related: reachableFiles.

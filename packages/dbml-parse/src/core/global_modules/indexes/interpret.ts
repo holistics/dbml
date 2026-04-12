@@ -1,12 +1,22 @@
 import Compiler from '@/compiler/index';
-import { ElementKind, SettingName } from '@/core/types/keywords';
-import { BlockExpressionNode, CallExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode } from '@/core/types/nodes';
+import {
+  ElementKind, SettingName,
+} from '@/core/types/keywords';
+import {
+  BlockExpressionNode, CallExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode,
+} from '@/core/types/nodes';
 import type { SyntaxNode } from '@/core/types/nodes';
-import { PASS_THROUGH, UNHANDLED } from '@/constants';
+import {
+  PASS_THROUGH, UNHANDLED,
+} from '@/constants';
 import Report from '@/core/types/report';
-import type { Index, TokenPosition, SchemaElement } from '@/core/types/schemaJson';
+import type {
+  Index, TokenPosition, SchemaElement,
+} from '@/core/types/schemaJson';
 import { getTokenPosition } from '../utils';
-import { isElementNode, extractQuotedStringToken, extractVariableFromExpression, destructureIndexNode, extractVarNameFromPrimaryVariable } from '@/core/utils/expression';
+import {
+  isElementNode, extractQuotedStringToken, extractVariableFromExpression, destructureIndexNode, extractVarNameFromPrimaryVariable,
+} from '@/core/utils/expression';
 import { last } from 'lodash-es';
 
 export default class IndexesInterpreter {
@@ -37,7 +47,8 @@ export default class IndexesInterpreter {
       let pk: boolean | undefined;
       let unique: boolean | undefined;
       let name: string | undefined;
-      let note: { value: string; token: TokenPosition } | undefined;
+      let note: { value: string;
+        token: TokenPosition; } | undefined;
       let type: string | undefined;
 
       // Pop trailing ListExpressionNode so it doesn't pollute column parsing
@@ -55,7 +66,10 @@ export default class IndexesInterpreter {
         if (noteNode) {
           const noteValue = extractQuotedStringToken(noteNode.value);
           if (noteValue !== undefined) {
-            note = { value: noteValue, token: getTokenPosition(noteNode) };
+            note = {
+              value: noteValue,
+              token: getTokenPosition(noteNode),
+            };
           }
         }
         type = extractVariableFromExpression(settingsMap[SettingName.Type]?.at(0)?.value);

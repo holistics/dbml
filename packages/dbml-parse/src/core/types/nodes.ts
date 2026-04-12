@@ -4,8 +4,9 @@ import {
 import {
   SyntaxToken, SyntaxTokenKind,
 } from '@/core/types/tokens';
-import { ElementKind, ImportKind } from '@/core/types/keywords';
-import { NodeSymbol } from '@/core/types/symbol/symbols';
+import {
+  ElementKind, ImportKind,
+} from '@/core/types/keywords';
 import { Position } from '@/core/types/position';
 import type { SymbolKind } from '@/core/types/symbol';
 import {
@@ -106,6 +107,7 @@ export class SyntaxNode implements Internable<InternedSyntaxNode> {
   }
 
   parentOfKind<T extends SyntaxNode> (cls: (new (...args: any[]) => T)): T | undefined {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     let current: SyntaxNode | undefined = this;
     while (current) {
       if (current instanceof cls) {
@@ -243,7 +245,12 @@ export class UseDeclarationNode extends SyntaxNode {
       id,
       SyntaxNodeKind.USE_DECLARATION,
       filepath,
-      [useKeyword, specifiers, fromKeyword, importPath],
+      [
+        useKeyword,
+        specifiers,
+        fromKeyword,
+        importPath,
+      ],
     );
     this.useKeyword = useKeyword;
     this.specifiers = specifiers;
@@ -271,7 +278,9 @@ export class UseSpecifierNode extends SyntaxNode {
   alias?: NormalExpressionNode;
 
   constructor (
-    { importKind, name, asKeyword, alias }: {
+    {
+      importKind, name, asKeyword, alias,
+    }: {
       importKind?: SyntaxToken;
       name?: NormalExpressionNode;
       asKeyword?: SyntaxToken;
@@ -284,7 +293,12 @@ export class UseSpecifierNode extends SyntaxNode {
       id,
       SyntaxNodeKind.USE_SPECIFIER,
       filepath,
-      [importKind, name, asKeyword, alias],
+      [
+        importKind,
+        name,
+        asKeyword,
+        alias,
+      ],
     );
     this.importKind = importKind;
     this.name = name;
@@ -348,11 +362,7 @@ export class UseSpecifierListNode extends SyntaxNode {
       id,
       SyntaxNodeKind.USE_SPECIFIER_LIST,
       filepath,
-      [
-        openBrace,
-        ...interleave(specifiers, commaList),
-        closeBrace,
-      ],
+      [openBrace, ...interleave(specifiers, commaList), closeBrace],
     );
     this.openBrace = openBrace;
     this.specifiers = specifiers;

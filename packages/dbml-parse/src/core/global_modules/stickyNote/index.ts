@@ -1,10 +1,16 @@
 import { isElementNode } from '@/core/utils/expression';
 import { ElementKind } from '@/core/types/keywords';
-import { type SyntaxNode, type ElementDeclarationNode, ProgramNode } from '@/core/types/nodes';
+import {
+  type SyntaxNode, type ElementDeclarationNode, ProgramNode,
+} from '@/core/types/nodes';
 import type { SyntaxToken } from '@/core/types/tokens';
-import { NodeSymbol, SymbolKind } from '@/core/types/symbol';
+import {
+  NodeSymbol, SymbolKind,
+} from '@/core/types/symbol';
 import type { GlobalModule } from '../types';
-import { PASS_THROUGH, type PassThrough } from '@/constants';
+import {
+  PASS_THROUGH, type PassThrough,
+} from '@/constants';
 import Report from '@/core/types/report';
 import type Compiler from '@/compiler/index';
 import type { Note } from '@/core/types/schemaJson';

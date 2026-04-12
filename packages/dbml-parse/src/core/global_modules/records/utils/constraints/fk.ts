@@ -1,5 +1,7 @@
 import type { CompileWarning } from '@/core/types/errors';
-import type { Ref, RefEndpoint, Table, TableRecord } from '@/core/types/schemaJson';
+import type {
+  Ref, RefEndpoint, Table, TableRecord,
+} from '@/core/types/schemaJson';
 import {
   buildColumnIndex,
   extractKeyValueWithDefault,
@@ -9,7 +11,9 @@ import {
   createConstraintErrors,
 } from './helper';
 import { DEFAULT_SCHEMA_NAME } from '@/constants';
-import { isEmpty, flatMap } from 'lodash-es';
+import {
+  isEmpty, flatMap,
+} from 'lodash-es';
 
 type TableInfo = {
   rows: TableRecord;
@@ -103,10 +107,7 @@ function validateRelationship (
   // Bidirectional relationships: both 1-1 and many-to-many
   const isBidirectional = (rel1 === '1' && rel2 === '1') || (rel1 === '*' && rel2 === '*');
   if (isBidirectional) {
-    return [
-      ...validateFkSourceToTarget(table1, table2, endpoint1, endpoint2),
-      ...validateFkSourceToTarget(table2, table1, endpoint2, endpoint1),
-    ];
+    return [...validateFkSourceToTarget(table1, table2, endpoint1, endpoint2), ...validateFkSourceToTarget(table2, table1, endpoint2, endpoint1)];
   }
 
   // Many-to-one: validate FK from "many" side to "one" side

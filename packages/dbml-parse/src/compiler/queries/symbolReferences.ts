@@ -1,8 +1,12 @@
 import type Compiler from '../index';
-import { SyntaxNode, TupleExpressionNode, InfixExpressionNode } from '@/core/types/nodes';
+import {
+  SyntaxNode, TupleExpressionNode, InfixExpressionNode,
+} from '@/core/types/nodes';
 import { NodeSymbol } from '@/core/types/symbol';
 import { UNHANDLED } from '@/constants';
-import { isExpressionAVariableNode, isAccessExpression } from '@/core/utils/expression';
+import {
+  isExpressionAVariableNode, isAccessExpression,
+} from '@/core/utils/expression';
 import { getMemberChain } from '@/core/parser/utils';
 import Report from '@/core/types/report';
 import { nodeReferee } from '@/core/global_modules';
