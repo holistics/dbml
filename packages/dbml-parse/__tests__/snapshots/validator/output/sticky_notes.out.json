@@ -1,30 +1,6 @@
 {
   "errors": [
     {
-      "code": "DUPLICATE_NAME",
-      "diagnostic": "Duplicate Note 'note2' in schema 'public'",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<primary-expression>@note2@[L9:C5, L9:C10]",
-          "snippet": "note2"
-        }
-      }
-    },
-    {
-      "code": "DUPLICATE_NAME",
-      "diagnostic": "Duplicate Note 'note3' in schema 'public'",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<primary-expression>@note3@[L17:C5, L17:C12]",
-          "snippet": "\"note3\""
-        }
-      }
-    },
-    {
       "code": "INVALID_NAME",
       "diagnostic": "Invalid name for sticky note ",
       "filepath": "/main.dbml",

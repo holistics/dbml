@@ -51,14 +51,14 @@ function setupCompilerWithProject(files: Map<Filepath, string>): {
 }
 
 describe('[samples] multifile language services', () => {
-  describe('enum-across-files project', () => {
+  describe('enum-imports project', () => {
     it('should find definition of imported enum', () => {
-      const files = loadSampleProject('enum-across-files');
+      const files = loadSampleProject('enum-imports');
       const { compiler } = setupCompilerWithProject(files);
 
-      // Find main.dbml file
-      const mainFile = Array.from(files.keys()).find(f => f.basename === 'main.dbml');
-      if (!mainFile) throw new Error('main.dbml not found');
+      // Find the direct-import consumer entrypoint
+      const mainFile = Array.from(files.keys()).find(f => f.basename === 'consumer-direct-import.dbml');
+      if (!mainFile) throw new Error('consumer-direct-import.dbml not found');
 
       const mainContent = files.get(mainFile)!;
       const definitionProvider = new DBMLDefinitionProvider(compiler);
@@ -79,12 +79,12 @@ describe('[samples] multifile language services', () => {
     });
 
     it('should find all references to imported enum', () => {
-      const files = loadSampleProject('enum-across-files');
+      const files = loadSampleProject('enum-imports');
       const { compiler } = setupCompilerWithProject(files);
 
-      // Find types.dbml file
-      const typesFile = Array.from(files.keys()).find(f => f.basename === 'types.dbml');
-      if (!typesFile) throw new Error('types.dbml not found');
+      // Find the enum-source file
+      const typesFile = Array.from(files.keys()).find(f => f.basename === 'enum-source.dbml');
+      if (!typesFile) throw new Error('enum-source.dbml not found');
 
       const typesContent = files.get(typesFile)!;
       const referencesProvider = new DBMLReferencesProvider(compiler);
@@ -389,7 +389,7 @@ Table jobs {
   describe('robustness across all sample projects', () => {
     it('should load all sample projects without errors', () => {
       const sampleDirs = [
-        'enum-across-files',
+        'enum-imports',
         'alias-and-schema-strip',
         'transitive-ref-chain',
         'imported-tablegroup',
@@ -414,7 +414,7 @@ Table jobs {
 
     it('should handle language services on all sample projects', () => {
       const sampleDirs = [
-        'enum-across-files',
+        'enum-imports',
         'alias-and-schema-strip',
         'transitive-ref-chain',
       ];

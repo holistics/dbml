@@ -1,30 +1,4 @@
 {
-  "errors": [
-    {
-      "code": "DUPLICATE_NAME",
-      "diagnostic": "Table name 'Users' already exists in schema 'public'",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<primary-expression>@Users@[L4:C6, L4:C11]",
-          "snippet": "Users"
-        }
-      }
-    },
-    {
-      "code": "DUPLICATE_NAME",
-      "diagnostic": "Table name 'U1' already exists in schema 'public'",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<primary-expression>@Products@[L8:C6, L8:C14]",
-          "snippet": "Products"
-        }
-      }
-    }
-  ],
   "program": {
     "context": {
       "id": "node@<program>@@[L0:C0, L10:C1]",
