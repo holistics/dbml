@@ -1,3 +1,16 @@
+import Compiler from '@/compiler';
+import {
+  DEFAULT_SCHEMA_NAME,
+} from '@/constants';
+import type {
+  CompileError,
+} from '@/core/types/errors';
+import {
+  ElementKind,
+} from '@/core/types/keywords';
+import {
+  UNHANDLED,
+} from '@/core/types/module';
 import {
   BlockExpressionNode,
   ElementDeclarationNode,
@@ -5,12 +18,16 @@ import {
   SyntaxNode,
   WildcardNode,
 } from '@/core/types/nodes';
+import Report from '@/core/types/report';
 import type {
   DiagramView, FilterConfig,
 } from '@/core/types/schemaJson';
 import {
-  ElementKind,
-} from '@/core/types/keywords';
+  SchemaSymbol, SymbolKind,
+} from '@/core/types/symbol';
+import {
+  destructureComplexVariable, extractVarNameFromPrimaryVariable, isWildcardExpression,
+} from '@/core/utils/expression';
 import {
   extractElementName,
   getTokenPosition,
@@ -18,23 +35,6 @@ import {
   lookupMember,
   scanNonListNodeForBinding,
 } from '../utils';
-import {
-  destructureComplexVariable, extractVarNameFromPrimaryVariable, isWildcardExpression,
-} from '@/core/utils/expression';
-import {
-  DEFAULT_SCHEMA_NAME,
-} from '@/constants';
-import {
-  UNHANDLED,
-} from '@/core/types/module';
-import {
-  SchemaSymbol, SymbolKind,
-} from '@/core/types/symbol';
-import Compiler from '@/compiler';
-import Report from '@/core/types/report';
-import type {
-  CompileError,
-} from '@/core/types/errors';
 
 export class DiagramViewInterpreter {
   private compiler: Compiler;

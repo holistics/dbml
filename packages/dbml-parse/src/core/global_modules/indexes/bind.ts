@@ -1,6 +1,13 @@
 import {
   partition,
 } from 'lodash-es';
+import Compiler from '@/compiler';
+import {
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
+import {
+  UNHANDLED,
+} from '@/core/types/module';
 import {
   BlockExpressionNode,
   ElementDeclarationNode,
@@ -11,21 +18,14 @@ import {
   SyntaxToken,
 } from '@/core/types/tokens';
 import {
-  CompileError, CompileErrorCode,
-} from '@/core/types/errors';
-import {
-  scanNonListNodeForBinding,
-} from '../utils';
+  ElementKind,
+} from '../../types';
 import {
   destructureComplexVariable, extractVarNameFromPrimaryVariable,
 } from '../../utils/expression';
 import {
-  ElementKind,
-} from '../../types';
-import Compiler from '@/compiler';
-import {
-  UNHANDLED,
-} from '@/core/types/module';
+  scanNonListNodeForBinding,
+} from '../utils';
 
 export default class IndexesBinder {
   private compiler: Compiler;

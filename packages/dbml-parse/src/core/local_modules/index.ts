@@ -1,18 +1,11 @@
+import type Compiler from '@/compiler';
+import {
+  PASS_THROUGH, type PassThrough, UNHANDLED, type Unhandled,
+} from '@/core/types/module';
 import type {
-  LocalModule, Settings,
-} from './types';
-import {
-  tableModule,
-} from './table';
-import {
-  enumModule,
-} from './enum';
-import {
-  recordsModule,
-} from './records';
-import {
-  indexesModule,
-} from './indexes';
+  SyntaxNode,
+} from '@/core/types/nodes';
+import Report from '@/core/types/report';
 import {
   checksModule,
 } from './checks';
@@ -20,17 +13,14 @@ import {
   customModule,
 } from './custom';
 import {
-  refModule,
-} from './ref';
+  diagramViewModule,
+} from './diagramView';
 import {
-  projectModule,
-} from './project';
+  enumModule,
+} from './enum';
 import {
-  tableGroupModule,
-} from './tableGroup';
-import {
-  tablePartialModule,
-} from './tablePartial';
+  indexesModule,
+} from './indexes';
 import {
   noteModule,
 } from './note';
@@ -38,19 +28,29 @@ import {
   programModule,
 } from './program';
 import {
+  projectModule,
+} from './project';
+import {
+  recordsModule,
+} from './records';
+import {
+  refModule,
+} from './ref';
+import {
+  tableModule,
+} from './table';
+import {
+  tableGroupModule,
+} from './tableGroup';
+import {
+  tablePartialModule,
+} from './tablePartial';
+import type {
+  LocalModule, Settings,
+} from './types';
+import {
   useModule,
 } from './use';
-import {
-  diagramViewModule,
-} from './diagramView';
-import type Compiler from '@/compiler';
-import type {
-  SyntaxNode,
-} from '@/core/types/nodes';
-import Report from '@/core/types/report';
-import {
-  PASS_THROUGH, type PassThrough, type Unhandled, UNHANDLED,
-} from '@/core/types/module';
 
 // Each time you add a new element, register its module here.
 export const modules: LocalModule[] = [

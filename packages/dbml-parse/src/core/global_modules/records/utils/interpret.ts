@@ -1,31 +1,31 @@
 import {
-  ElementDeclarationNode, FunctionApplicationNode,
-} from '@/core/types/nodes';
+  uniqBy,
+} from 'lodash-es';
 import type Compiler from '@/compiler/index';
-import {
-  NodeSymbol, SymbolKind,
-} from '@/core/types/symbol';
-import type {
-  Table, Column, TablePartial, Ref,
-} from '@/core/types/schemaJson';
-import {
-  isValidPartialInjection,
-} from '@/core/utils/validate';
-import {
-  extractVariableFromExpression, getBody, isElementNode,
-} from '@/core/utils/expression';
 import {
   ElementKind,
 } from '@/core/types';
 import {
-  uniqBy,
-} from 'lodash-es';
+  UNHANDLED,
+} from '@/core/types/module';
+import {
+  ElementDeclarationNode, FunctionApplicationNode,
+} from '@/core/types/nodes';
+import type {
+  Column, Ref, Table, TablePartial,
+} from '@/core/types/schemaJson';
+import {
+  NodeSymbol, SymbolKind,
+} from '@/core/types/symbol';
+import {
+  extractVariableFromExpression, getBody, isElementNode,
+} from '@/core/utils/expression';
+import {
+  isValidPartialInjection,
+} from '@/core/utils/validate';
 import {
   getMultiplicities, lookupInDefaultSchema, lookupMember,
 } from '../../utils';
-import {
-  UNHANDLED,
-} from '@/core/types/module';
 
 // Build a Table object from an element node using interpret (includes indexes, checks, etc.)
 // and symbolMembers (includes partial-injected columns).

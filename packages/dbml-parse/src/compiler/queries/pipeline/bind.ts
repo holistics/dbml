@@ -1,8 +1,8 @@
-import type Compiler from '../../index';
-import Report from '@/core/types/report';
 import type {
   Filepath,
 } from '@/core/types/filepath';
+import Report from '@/core/types/report';
+import type Compiler from '../../index';
 import {
   collectTransitiveDependencies,
 } from '../utils';

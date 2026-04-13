@@ -1,19 +1,19 @@
-import {
-  Definition, DefinitionProvider, TextModel, Position,
-} from '@/services/types';
-import {
-  getOffsetFromMonacoPosition,
-} from '@/services/utils';
 import Compiler from '@/compiler';
-import {
-  SyntaxNode, SyntaxNodeKind,
-} from '@/core/types/nodes';
 import {
   Filepath,
 } from '@/core/types/filepath';
 import {
   UNHANDLED,
 } from '@/core/types/module';
+import {
+  SyntaxNode, SyntaxNodeKind,
+} from '@/core/types/nodes';
+import {
+  Definition, DefinitionProvider, Position, TextModel,
+} from '@/services/types';
+import {
+  getOffsetFromMonacoPosition,
+} from '@/services/utils';
 
 export default class DBMLDefinitionProvider implements DefinitionProvider {
   private compiler: Compiler;

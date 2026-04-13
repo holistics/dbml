@@ -1,47 +1,47 @@
 import {
   uniqBy,
 } from 'lodash-es';
+import type Compiler from '@/compiler/index';
+import {
+  shouldBelongToThisSchema,
+} from '@/compiler/queries/usableMembers';
+import {
+  DEFAULT_SCHEMA_NAME,
+} from '@/constants';
+import {
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
+import {
+  type Filepath,
+} from '@/core/types/filepath';
+import {
+  PASS_THROUGH, type PassThrough, UNHANDLED,
+} from '@/core/types/module';
 import {
   ElementDeclarationNode, UseDeclarationNode, UseSpecifierListNode, WildcardNode,
 } from '@/core/types/nodes';
 import {
   SyntaxNode, UseSpecifierNode,
 } from '@/core/types/nodes';
+import Report from '@/core/types/report';
 import {
   NodeSymbol, SchemaSymbol, SymbolKind, UseSymbol,
 } from '@/core/types/symbol';
-import type {
-  GlobalModule,
-} from '../types';
-import {
-  DEFAULT_SCHEMA_NAME,
-} from '@/constants';
-import {
-  PASS_THROUGH, type PassThrough, UNHANDLED,
-} from '@/core/types/module';
-import Report from '@/core/types/report';
-import type Compiler from '@/compiler/index';
-import {
-  CompileError, CompileErrorCode,
-} from '@/core/types/errors';
-import {
-  tableUtils,
-} from '../table';
 import {
   enumUtils,
 } from '../enum';
 import {
-  tablePartialUtils,
-} from '../tablePartial';
+  tableUtils,
+} from '../table';
 import {
   tableGroupUtils,
 } from '../tableGroup';
 import {
-  shouldBelongToThisSchema,
-} from '@/compiler/queries/usableMembers';
-import {
-  type Filepath,
-} from '@/core/types/filepath';
+  tablePartialUtils,
+} from '../tablePartial';
+import type {
+  GlobalModule,
+} from '../types';
 
 export const schemaModule: GlobalModule = {
   symbolMembers (compiler: Compiler, symbol: NodeSymbol): Report<NodeSymbol[]> | Report<PassThrough> {

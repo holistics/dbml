@@ -1,5 +1,5 @@
 import {
-  partition, forIn, last,
+  forIn, last, partition,
 } from 'lodash-es';
 import Compiler from '@/compiler';
 import {
@@ -19,20 +19,20 @@ import {
   PrimaryExpressionNode,
   SyntaxNode,
 } from '@/core/types/nodes';
+import Report from '@/core/types/report';
 import {
-  isExpressionAVariableNode, isExpressionAnIdentifierNode, isExpressionAQuotedString, extractVariableFromExpression,
+  extractVariableFromExpression, isExpressionAQuotedString, isExpressionAVariableNode, isExpressionAnIdentifierNode,
 } from '@/core/utils/expression';
 import {
+  Settings,
   aggregateSettingList,
   isSimpleName,
   isUnaryRelationship,
   isValidColor,
   isValidColumnType,
-  isValidDefaultValue,
 
-  Settings,
+  isValidDefaultValue,
 } from '@/core/utils/validate';
-import Report from '@/core/types/report';
 
 export default class TablePartialValidator {
   private compiler: Compiler;

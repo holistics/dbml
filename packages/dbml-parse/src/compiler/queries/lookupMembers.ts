@@ -1,14 +1,14 @@
-import type Compiler from '../index';
-import {
-  NodeSymbol, SchemaSymbol, SymbolKind,
-} from '@/core/types/symbol';
-import Report from '@/core/types/report';
-import {
-  SyntaxNode,
-} from '@/core/types/nodes';
 import {
   UNHANDLED,
 } from '@/core/types/module';
+import {
+  SyntaxNode,
+} from '@/core/types/nodes';
+import Report from '@/core/types/report';
+import {
+  NodeSymbol, SchemaSymbol, SymbolKind,
+} from '@/core/types/symbol';
+import type Compiler from '../index';
 
 export function lookupMembers (this: Compiler, symbolOrNode: NodeSymbol | SyntaxNode, targetKind: SymbolKind, targetName: string): Report<NodeSymbol | undefined> {
   let symbol: NodeSymbol;

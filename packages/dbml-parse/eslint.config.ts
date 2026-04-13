@@ -3,8 +3,9 @@ import { defineConfig } from 'eslint/config';
 import stylistic from '@stylistic/eslint-plugin';
 import tseslint from 'typescript-eslint';
 import tsparser from '@typescript-eslint/parser';
+import importPlugin from 'eslint-plugin-import';
 
-export default defineConfig( 
+export default defineConfig(
   eslint.configs.recommended,
   tseslint.configs.recommended,
   stylistic.configs.customize({
@@ -36,8 +37,30 @@ export default defineConfig(
       },
       plugins: {
         '@stylistic': stylistic,
+        import: importPlugin,
       },
       rules: {
+        'import/order': ['error', {
+          'groups': [
+            'builtin',
+            'external',
+            'internal',
+            'parent',
+            'sibling',
+            'index',
+          ],
+          'newlines-between': 'never',
+          'alphabetize': {
+            order: 'asc',
+            caseInsensitive: false,
+          },
+        }],
+        'import/newline-after-import': ['error', { count: 1 }],
+        'sort-imports': ['error', {
+          ignoreDeclarationSort: true, // let import/order handle statement ordering
+          ignoreCase: false,
+          memberSyntaxSortOrder: ['none', 'all', 'multiple', 'single'],
+        }],
         '@typescript-eslint/no-explicit-any': 'off',
         'no-use-before-define': 'off',
         'no-continue': 'off',
@@ -72,9 +95,11 @@ export default defineConfig(
         'import/resolver': {
           typescript: {
             alwaysTryTypes: true,
-            project: 'packages/*/{ts,js}config.json',
+            project: './tsconfig.json',
           },
+          node: true,
         },
+        'import/internal-regex': '^@/',
       },
     },
   ],

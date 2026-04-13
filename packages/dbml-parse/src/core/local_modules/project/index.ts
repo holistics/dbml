@@ -1,21 +1,21 @@
+import type Compiler from '@/compiler';
 import {
   ElementKind,
 } from '@/core/types/keywords';
 import {
-  isElementNode, isElementFieldNode,
-} from '@/core/utils/expression';
-import {
-  type LocalModule, type Settings,
-} from '../types';
+  PASS_THROUGH, type PassThrough,
+} from '@/core/types/module';
 import {
   SyntaxNode,
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
-import type Compiler from '@/compiler';
-import ProjectValidator from './validate';
 import {
-  PASS_THROUGH, type PassThrough,
-} from '@/core/types/module';
+  isElementFieldNode, isElementNode,
+} from '@/core/utils/expression';
+import {
+  type LocalModule, type Settings,
+} from '../types';
+import ProjectValidator from './validate';
 
 export const projectModule: LocalModule = {
   validateNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {

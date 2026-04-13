@@ -1,62 +1,62 @@
-import type {
-  GlobalModule,
-} from './types';
+import type Compiler from '@/compiler/index';
 import {
-  tableModule,
-} from './table';
+  PASS_THROUGH, type PassThrough, UNHANDLED, Unhandled,
+} from '@/core/types/module';
+import type {
+  SyntaxNode,
+} from '@/core/types/nodes';
+import Report from '@/core/types/report';
+import type {
+  SchemaElement,
+} from '@/core/types/schemaJson';
+import type {
+  NodeSymbol,
+} from '@/core/types/symbol';
+import {
+  checksModule,
+} from './checks';
+import {
+  diagramViewModule,
+} from './diagramView';
+import {
+  enumModule,
+} from './enum';
+import {
+  indexesModule,
+} from './indexes';
+import {
+  programModule,
+} from './program';
+import {
+  projectModule,
+} from './project';
+import {
+  recordsModule,
+} from './records';
 import {
   refModule,
 } from './ref';
 import {
-  projectModule,
-} from './project';
+  schemaModule,
+} from './schema';
+import {
+  noteModule,
+} from './stickyNote';
+import {
+  tableModule,
+} from './table';
 import {
   tableGroupModule,
 } from './tableGroup';
 import {
   tablePartialModule,
 } from './tablePartial';
-import {
-  noteModule,
-} from './stickyNote';
-import {
-  enumModule,
-} from './enum';
-import {
-  recordsModule,
-} from './records';
-import {
-  indexesModule,
-} from './indexes';
-import {
-  checksModule,
-} from './checks';
-import {
-  programModule,
-} from './program';
-import {
-  schemaModule,
-} from './schema';
+import type {
+  GlobalModule,
+} from './types';
 import {
   useModule,
 } from './use';
-import {
-  diagramViewModule,
-} from './diagramView';
-import type Compiler from '@/compiler/index';
-import type {
-  SyntaxNode,
-} from '@/core/types/nodes';
-import Report from '@/core/types/report';
-import type {
-  NodeSymbol,
-} from '@/core/types/symbol';
-import type {
-  SchemaElement,
-} from '@/core/types/schemaJson';
-import {
-  Unhandled, PASS_THROUGH, UNHANDLED, type PassThrough,
-} from '@/core/types/module';
 
 // Registry of all element modules; the dispatcher tries each in order until one claims the node.
 // Each time you add a new element, register its module here.

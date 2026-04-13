@@ -3,6 +3,9 @@ import {
   DEFAULT_SCHEMA_NAME,
 } from '@/constants';
 import {
+  Filepath, resolveImportFilepath,
+} from '@/core/types/filepath';
+import {
   UNHANDLED,
 } from '@/core/types/module';
 import {
@@ -12,9 +15,6 @@ import Report from '@/core/types/report';
 import {
   type NodeSymbol, SchemaSymbol,
 } from '@/core/types/symbol';
-import {
-  Filepath, resolveImportFilepath,
-} from '@/core/types/filepath';
 
 // This does not perform duplicate checks
 export function usableMembers (this: Compiler, symbolOrFilepath: SchemaSymbol | Filepath): Report<{

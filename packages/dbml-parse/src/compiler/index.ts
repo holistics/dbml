@@ -1,92 +1,89 @@
 import {
-  DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLReferencesProvider, DBMLDiagnosticsProvider,
-} from '@/services/index';
-import {
-  invalidStream, flatStream,
-} from './queries/legacy/token';
-import {
-  splitQualifiedIdentifier, unescapeString, escapeString, formatRecordValue, isValidIdentifier, addDoubleQuoteIfNeeded,
-} from './queries/utils';
-import {
-  containerStack, containerToken, containerElement, containerScope, containerScopeKind,
-} from './queries/container';
-import {
-  renameTable, syncDiagramView,
-} from './queries/transform';
-export {
-  ScopeKind,
-} from './types';
-export type {
-  TextEdit, TableNameInput,
-} from './queries/transform';
-import {
-  nodeSymbol,
-  symbolMembers,
-  nodeReferee,
-  bindNode,
-  interpretNode,
-} from '@/core/global_modules';
-import {
-  symbolReferences,
-} from './queries/symbolReferences';
-import {
-  intern, type Internable, type Primitive,
-} from '@/core/types/internable';
-import {
   DEFAULT_ENTRY,
 } from '@/constants';
 import {
-  nodeAlias, nodeFullname as fullname, nodeSettings, validateNode,
+  bindNode,
+  interpretNode,
+  nodeReferee,
+  nodeSymbol,
+  symbolMembers,
+} from '@/core/global_modules';
+import {
+  nodeFullname as fullname, nodeAlias, nodeSettings, validateNode,
 } from '@/core/local_modules';
-import {
-  NodeSymbolIdGenerator,
-} from '@/core/types/symbol';
-import {
-  SymbolFactory,
-} from '@/core/types/symbol';
-import {
-  lookupMembers,
-} from './queries/lookupMembers';
-import {
-  symbolName,
-} from './queries/symbolName';
-import {
-  SyntaxNodeIdGenerator,
-} from '@/core/types/nodes';
-import {
-  type DbmlProjectLayout, MemoryProjectLayout,
-} from './projectLayout';
-import {
-  fileDependencies,
-} from './queries/fileDependencies';
 import {
   Filepath,
 } from '@/core/types/filepath';
 import {
-  usableMembers,
-} from './queries/usableMembers';
+  type Internable, type Primitive, intern,
+} from '@/core/types/internable';
 import {
-  topLevelSchemaMembers,
-} from './queries/topLevelSchemaMembers';
+  SyntaxNodeIdGenerator,
+} from '@/core/types/nodes';
 import {
-  reachableFiles,
-} from './queries/reachableFiles';
+  NodeSymbolIdGenerator, SymbolFactory,
+} from '@/core/types/symbol';
 import {
-  parseFile, parseProject,
-} from './queries/pipeline/parse';
+  DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLDiagnosticsProvider, DBMLReferencesProvider,
+} from '@/services/index';
+import {
+  type DbmlProjectLayout, MemoryProjectLayout,
+} from './projectLayout';
+import {
+  containerElement, containerScope, containerScopeKind, containerStack, containerToken,
+} from './queries/container';
+import {
+  fileDependencies,
+} from './queries/fileDependencies';
 import {
   ast, errors, publicSymbolTable, rawDb, tokens, warnings,
 } from './queries/legacy/parse';
 import {
-  interpretFile, interpretProject, exportSchemaJson,
-} from './queries/pipeline/interpret';
+  flatStream, invalidStream,
+} from './queries/legacy/token';
+import {
+  lookupMembers,
+} from './queries/lookupMembers';
 import {
   bindFile, bindProject,
 } from './queries/pipeline/bind';
+import {
+  exportSchemaJson, interpretFile, interpretProject,
+} from './queries/pipeline/interpret';
+import {
+  parseFile, parseProject,
+} from './queries/pipeline/parse';
+import {
+  reachableFiles,
+} from './queries/reachableFiles';
+import {
+  symbolName,
+} from './queries/symbolName';
+import {
+  symbolReferences,
+} from './queries/symbolReferences';
+import {
+  topLevelSchemaMembers,
+} from './queries/topLevelSchemaMembers';
+import {
+  renameTable, syncDiagramView,
+} from './queries/transform';
+import {
+  usableMembers,
+} from './queries/usableMembers';
+import {
+  addDoubleQuoteIfNeeded, escapeString, formatRecordValue, isValidIdentifier, splitQualifiedIdentifier, unescapeString,
+} from './queries/utils';
 
+export {
+  ScopeKind,
+} from './types';
+export type {
+  TableNameInput, TextEdit,
+} from './queries/transform';
 // Re-export utilities
 export {
-  splitQualifiedIdentifier, unescapeString, escapeString, formatRecordValue, isValidIdentifier, addDoubleQuoteIfNeeded,
+  addDoubleQuoteIfNeeded, escapeString, formatRecordValue, isValidIdentifier, splitQualifiedIdentifier, unescapeString,
 };
 
 // To detect cyclic queries

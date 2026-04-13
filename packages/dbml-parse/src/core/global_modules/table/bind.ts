@@ -1,21 +1,22 @@
 import {
   last, partition,
 } from 'lodash-es';
+import Compiler from '@/compiler';
 import {
-  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, PrefixExpressionNode, ProgramNode, SyntaxNode,
-} from '@/core/types/nodes';
-import {
-  SyntaxToken,
-} from '@/core/types/tokens';
+  KEYWORDS_OF_DEFAULT_SETTING,
+} from '@/constants';
 import {
   CompileError,
 } from '@/core/types/errors';
 import {
-  scanNonListNodeForBinding,
-} from '../utils';
+  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, PrefixExpressionNode, ProgramNode, SyntaxNode,
+} from '@/core/types/nodes';
 import {
-  aggregateSettingList, isValidPartialInjection,
-} from '../../utils/validate';
+  InfixExpressionNode,
+} from '@/core/types/nodes';
+import {
+  SyntaxToken,
+} from '@/core/types/tokens';
 import {
   destructureComplexVariableTuple, extractVariableFromExpression, isAccessExpression,
 } from '../../utils/expression';
@@ -23,12 +24,11 @@ import {
   isExpressionAQuotedString, isExpressionAVariableNode,
 } from '../../utils/expression';
 import {
-  KEYWORDS_OF_DEFAULT_SETTING,
-} from '@/constants';
-import Compiler from '@/compiler';
+  aggregateSettingList, isValidPartialInjection,
+} from '../../utils/validate';
 import {
-  InfixExpressionNode,
-} from '@/core/types/nodes';
+  scanNonListNodeForBinding,
+} from '../utils';
 
 export default class TableBinder {
   private compiler: Compiler;

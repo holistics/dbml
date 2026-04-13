@@ -1,52 +1,52 @@
-import {
-  isElementNode,
-  isExpressionAVariableNode,
-  isAccessExpression,
-  isElementFieldNode,
-  isInsideElementBody,
-  isWithinNthArgOfField,
-  isInsideSettingValue,
-  extractVarNameFromPrimaryVariable,
-  getBody,
-} from '@/core/utils/expression';
-import {
-  ElementKind, SettingName,
-} from '@/core/types/keywords';
-import {
-  InfixExpressionNode, ElementDeclarationNode,
-} from '@/core/types/nodes';
-import type {
-  SyntaxNode,
-} from '@/core/types/nodes';
-import type {
-  SyntaxToken,
-} from '@/core/types/tokens';
-import {
-  NodeSymbol, SymbolKind,
-} from '@/core/types/symbol';
-import type {
-  GlobalModule,
-} from '../types';
+import type Compiler from '@/compiler/index';
 import {
   KEYWORDS_OF_DEFAULT_SETTING,
 } from '@/constants';
 import {
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
+import {
+  ElementKind, SettingName,
+} from '@/core/types/keywords';
+import {
   PASS_THROUGH, type PassThrough, UNHANDLED,
 } from '@/core/types/module';
+import {
+  ElementDeclarationNode, InfixExpressionNode,
+} from '@/core/types/nodes';
+import type {
+  SyntaxNode,
+} from '@/core/types/nodes';
 import Report from '@/core/types/report';
-import type Compiler from '@/compiler/index';
 import type {
   SchemaElement,
 } from '@/core/types/schemaJson';
 import {
-  lookupMember, nodeRefereeOfLeftExpression, lookupInDefaultSchema, shouldInterpretNode,
-} from '../utils';
+  NodeSymbol, SymbolKind,
+} from '@/core/types/symbol';
+import type {
+  SyntaxToken,
+} from '@/core/types/tokens';
 import {
-  CompileError, CompileErrorCode,
-} from '@/core/types/errors';
+  extractVarNameFromPrimaryVariable,
+  getBody,
+  isAccessExpression,
+  isElementFieldNode,
+  isElementNode,
+  isExpressionAVariableNode,
+  isInsideElementBody,
+  isInsideSettingValue,
+  isWithinNthArgOfField,
+} from '@/core/utils/expression';
 import {
   tableUtils,
 } from '../table';
+import type {
+  GlobalModule,
+} from '../types';
+import {
+  lookupInDefaultSchema, lookupMember, nodeRefereeOfLeftExpression, shouldInterpretNode,
+} from '../utils';
 import TablePartialBinder from './bind';
 import {
   TablePartialInterpreter,

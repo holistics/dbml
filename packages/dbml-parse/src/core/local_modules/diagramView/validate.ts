@@ -1,23 +1,23 @@
 import {
   partition,
 } from 'lodash-es';
+import Compiler from '@/compiler';
 import {
   CompileError, CompileErrorCode, CompileWarning,
 } from '@/core/types/errors';
 import {
-  isSimpleName, aggregateSettingList,
-} from '@/core/utils/validate';
+  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode,
+} from '@/core/types/nodes';
 import {
   SyntaxToken,
 } from '@/core/types/tokens';
 import {
-  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode,
-} from '@/core/types/nodes';
-import {
   extractVarNameFromPrimaryVariable,
   isExpressionAVariableNode, isWildcardExpression,
 } from '@/core/utils/expression';
-import Compiler from '@/compiler';
+import {
+  aggregateSettingList, isSimpleName,
+} from '@/core/utils/validate';
 
 export default class DiagramViewValidator {
   private compiler: Compiler;

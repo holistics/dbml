@@ -2,12 +2,12 @@ import type Compiler from '@/compiler';
 import {
   DEFAULT_SCHEMA_NAME,
 } from '@/constants';
-import {
-  SchemaSymbol,
-} from '@/core/types/symbol';
 import type {
   Filepath,
 } from '@/core/types/filepath';
+import {
+  SchemaSymbol,
+} from '@/core/types/symbol';
 
 export function topLevelSchemaMembers (this: Compiler, filepath: Filepath): SchemaSymbol[] {
   const ast = this.parseFile(filepath).getValue().ast;

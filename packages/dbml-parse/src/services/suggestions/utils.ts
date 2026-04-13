@@ -1,19 +1,22 @@
+import Compiler from '@/compiler';
 import {
-  SymbolKind, NodeSymbol,
-} from '@/core/types/symbol';
-import {
-  CompletionItemKind, CompletionItemInsertTextRule, type CompletionList,
-} from '@/services/types';
-import {
-  SyntaxToken, SyntaxTokenKind,
-} from '@/core/types/tokens';
+  addDoubleQuoteIfNeeded,
+} from '@/compiler/queries/utils';
 import {
   hasTrailingSpaces,
 } from '@/core/lexer/utils';
 import {
-  SyntaxNode, TupleExpressionNode, FunctionApplicationNode,
+  UNHANDLED,
+} from '@/core/types/module';
+import {
+  FunctionApplicationNode, SyntaxNode, TupleExpressionNode,
 } from '@/core/types/nodes';
-import Compiler from '@/compiler';
+import {
+  NodeSymbol, SymbolKind,
+} from '@/core/types/symbol';
+import {
+  SyntaxToken, SyntaxTokenKind,
+} from '@/core/types/tokens';
 import {
   extractVariableFromExpression,
 } from '@/core/utils/expression';
@@ -21,11 +24,8 @@ import {
   isValidPartialInjection,
 } from '@/core/utils/validate';
 import {
-  addDoubleQuoteIfNeeded,
-} from '@/compiler/queries/utils';
-import {
-  UNHANDLED,
-} from '@/core/types/module';
+  CompletionItemInsertTextRule, CompletionItemKind, type CompletionList,
+} from '@/services/types';
 
 export function pickCompletionItemKind (symbolKind: SymbolKind): CompletionItemKind {
   switch (symbolKind) {

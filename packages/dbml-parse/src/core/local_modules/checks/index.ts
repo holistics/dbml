@@ -6,6 +6,9 @@ import {
   ElementKind,
 } from '@/core/types/keywords';
 import {
+  PASS_THROUGH, PassThrough,
+} from '@/core/types/module';
+import {
   SyntaxNode,
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
@@ -13,15 +16,12 @@ import {
   isElementNode,
 } from '@/core/utils/expression';
 import {
-  LocalModule,
-} from '../types';
-import {
   Settings,
 } from '@/core/utils/validate';
-import ChecksValidator from './validate';
 import {
-  PASS_THROUGH, PassThrough,
-} from '@/core/types/module';
+  LocalModule,
+} from '../types';
+import ChecksValidator from './validate';
 
 export const checksModule: LocalModule = {
   validateNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {

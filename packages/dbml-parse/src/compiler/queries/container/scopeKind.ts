@@ -1,10 +1,10 @@
+import {
+  ElementDeclarationNode, ProgramNode,
+} from '@/core/types/nodes';
 import type Compiler from '../../index';
 import {
   ScopeKind,
 } from '../../types';
-import {
-  ElementDeclarationNode, ProgramNode,
-} from '@/core/types/nodes';
 
 export function containerScopeKind (this: Compiler, offset: number): ScopeKind {
   const elem = this.container.element(offset);

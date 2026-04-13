@@ -1,3 +1,9 @@
+import {
+  flatMap, isEmpty,
+} from 'lodash-es';
+import {
+  DEFAULT_SCHEMA_NAME,
+} from '@/constants';
 import type {
   CompileWarning,
 } from '@/core/types/errors';
@@ -6,18 +12,12 @@ import type {
 } from '@/core/types/schemaJson';
 import {
   buildColumnIndex,
+  createConstraintErrors,
   extractKeyValueWithDefault,
-  hasNullWithoutDefaultInKey,
   formatFullColumnNames,
   formatValues,
-  createConstraintErrors,
+  hasNullWithoutDefaultInKey,
 } from './helper';
-import {
-  DEFAULT_SCHEMA_NAME,
-} from '@/constants';
-import {
-  isEmpty, flatMap,
-} from 'lodash-es';
 
 type TableInfo = {
   rows: TableRecord;

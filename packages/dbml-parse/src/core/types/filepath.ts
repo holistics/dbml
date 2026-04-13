@@ -1,12 +1,12 @@
 import {
   basename, dirname, extname, isAbsolute, join, normalize, relative, resolve,
 } from 'pathe';
-import type {
-  Internable,
-} from './internable';
 import {
   DBML_EXT,
 } from '@/constants';
+import type {
+  Internable,
+} from './internable';
 
 // Matches a Windows drive-letter prefix after normalization (e.g. "C:/").
 // Used only in fromUri/toUri where URL parsing adds/needs an extra leading slash.

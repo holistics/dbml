@@ -1,21 +1,21 @@
+import type Compiler from '@/compiler';
+import {
+  PASS_THROUGH, type PassThrough,
+} from '@/core/types/module';
+import type {
+  ProgramNode, SyntaxNode,
+} from '@/core/types/nodes';
+import Report from '@/core/types/report';
 import {
   isProgramNode,
 } from '@/core/utils/expression';
-import type {
-  SyntaxNode, ProgramNode,
-} from '@/core/types/nodes';
-import {
-  type LocalModule,
-} from '../types';
-import Report from '@/core/types/report';
-import type Compiler from '@/compiler';
-import ProgramValidator from './validate';
 import {
   Settings,
 } from '@/core/utils/validate';
 import {
-  PASS_THROUGH, type PassThrough,
-} from '@/core/types/module';
+  type LocalModule,
+} from '../types';
+import ProgramValidator from './validate';
 
 export const programModule: LocalModule = {
   validateNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {

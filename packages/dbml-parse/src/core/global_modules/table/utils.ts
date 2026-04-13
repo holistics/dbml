@@ -1,24 +1,24 @@
 import {
-  CallExpressionNode,
-  ListExpressionNode, PrefixExpressionNode,
   ArrayNode,
+  CallExpressionNode, ListExpressionNode,
+  PrefixExpressionNode,
 } from '@/core/types/nodes';
 import type {
   SyntaxNode,
 } from '@/core/types/nodes';
+import type {
+  ColumnType, InlineRef,
+} from '@/core/types/schemaJson';
+import {
+  destructureComplexVariable, destructureComplexVariableTuple,
+  extractQuotedStringToken, extractVariableFromExpression,
+  getNumberTextFromExpression, isBinaryRelationship,
+  isExpressionAQuotedString, isExpressionASignedNumberExpression,
+  isExpressionAVariableNode, isRelationshipOp,
+} from '@/core/utils/expression';
 import {
   getTokenPosition,
 } from '../utils';
-import {
-  destructureComplexVariable, extractQuotedStringToken,
-  extractVariableFromExpression, destructureComplexVariableTuple,
-  isBinaryRelationship, isRelationshipOp,
-  isExpressionAQuotedString, isExpressionAVariableNode,
-  isExpressionASignedNumberExpression, getNumberTextFromExpression,
-} from '@/core/utils/expression';
-import type {
-  InlineRef, ColumnType,
-} from '@/core/types/schemaJson';
 
 export function interpretColumnType (typeNode?: SyntaxNode): ColumnType {
   // Skip ListExpressionNode (settings bracket [pk, ...]) - it's not a type

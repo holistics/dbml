@@ -1,26 +1,7 @@
 import Compiler from '@/compiler/index';
 import {
-  CallExpressionNode, ElementDeclarationNode, ProgramNode, UseSpecifierListNode, UseSpecifierNode,
-} from '@/core/types/nodes';
-import {
-  ElementKind,
-} from '@/core/types/keywords';
-import {
   DEFAULT_SCHEMA_NAME,
 } from '@/constants';
-import {
-  UNHANDLED,
-} from '@/core/types/module';
-import Report from '@/core/types/report';
-import {
-  AliasKind,
-} from '@/core/types/schemaJson';
-import type {
-  Database, DiagramView, ElementRef, Ref, RefEndpoint, Table, TableRecord, SchemaElement, Enum, TableGroup, TablePartial, Note, Project,
-} from '@/core/types/schemaJson';
-import {
-  getTokenPosition, getMultiplicities,
-} from '../utils';
 import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
@@ -28,17 +9,36 @@ import type {
   CompileWarning,
 } from '@/core/types/errors';
 import {
+  ElementKind,
+} from '@/core/types/keywords';
+import {
+  UNHANDLED,
+} from '@/core/types/module';
+import {
+  CallExpressionNode, ElementDeclarationNode, ProgramNode, UseSpecifierListNode, UseSpecifierNode,
+} from '@/core/types/nodes';
+import Report from '@/core/types/report';
+import {
+  AliasKind,
+} from '@/core/types/schemaJson';
+import type {
+  Database, DiagramView, ElementRef, Enum, Note, Project, Ref, RefEndpoint, SchemaElement, Table, TableGroup, TablePartial, TableRecord,
+} from '@/core/types/schemaJson';
+import {
+  SchemaSymbol, SymbolKind, UseSymbol,
+} from '@/core/types/symbol';
+import {
+  getBody,
+} from '@/core/utils/expression';
+import {
   validateForeignKeys,
 } from '../records/utils/constraints';
 import {
   buildMergedTableFromElement, extractInlineRefsFromTablePartials,
 } from '../records/utils/interpret';
 import {
-  getBody,
-} from '@/core/utils/expression';
-import {
-  UseSymbol, SymbolKind, SchemaSymbol,
-} from '@/core/types/symbol';
+  getMultiplicities, getTokenPosition,
+} from '../utils';
 
 export default class ProgramInterpreter {
   private compiler: Compiler;
@@ -183,10 +183,12 @@ export default class ProgramInterpreter {
           const ref: ElementRef = {
             name,
             schemaName,
-            visibleNames: [{
-              schemaName,
-              name,
-            }],
+            visibleNames: [
+              {
+                schemaName,
+                name,
+              },
+            ],
           };
           extMap.set(canonicalKey, ref);
           list.push(ref);

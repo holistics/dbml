@@ -1,13 +1,13 @@
+import type Compiler from '@/compiler/index';
 import {
-  isElementNode,
-  isExpressionAVariableNode,
-  isAccessExpression,
-  destructureMemberAccessExpression,
-  extractVarNameFromPrimaryVariable,
-} from '@/core/utils/expression';
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
 import {
   ElementKind,
 } from '@/core/types/keywords';
+import {
+  PASS_THROUGH, type PassThrough, UNHANDLED,
+} from '@/core/types/module';
 import {
   CallExpressionNode,
   ElementDeclarationNode,
@@ -17,31 +17,31 @@ import {
 import type {
   SyntaxNode,
 } from '@/core/types/nodes';
+import Report from '@/core/types/report';
 import type {
-  SyntaxToken,
-} from '@/core/types/tokens';
+  TableRecord,
+} from '@/core/types/schemaJson';
 import {
   NodeSymbol, SymbolKind,
 } from '@/core/types/symbol';
 import type {
+  SyntaxToken,
+} from '@/core/types/tokens';
+import {
+  destructureMemberAccessExpression,
+  extractVarNameFromPrimaryVariable,
+  isAccessExpression,
+  isElementNode,
+  isExpressionAVariableNode,
+} from '@/core/utils/expression';
+import type {
   GlobalModule,
 } from '../types';
-import Report from '@/core/types/report';
-import type Compiler from '@/compiler/index';
 import {
-  lookupMember, lookupInDefaultSchema, nodeRefereeOfLeftExpression, shouldInterpretNode,
+  lookupInDefaultSchema, lookupMember, nodeRefereeOfLeftExpression, shouldInterpretNode,
 } from '../utils';
-import {
-  CompileError, CompileErrorCode,
-} from '@/core/types/errors';
-import type {
-  TableRecord,
-} from '@/core/types/schemaJson';
 import RecordsBinder from './bind';
 import RecordsInterpreter from './interpret';
-import {
-  PASS_THROUGH, UNHANDLED, type PassThrough,
-} from '@/core/types/module';
 
 export const recordsModule: GlobalModule = {
   nodeReferee (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol | undefined> | Report<PassThrough> {

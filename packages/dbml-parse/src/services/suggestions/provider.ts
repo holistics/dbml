@@ -1,48 +1,21 @@
-import {
-  destructureMemberAccessExpression,
-  extractVariableFromExpression,
-} from '@/core/utils/expression';
-import {
-  extractStringFromIdentifierStream,
-  isExpressionAVariableNode,
-} from '@/core/utils/expression';
 import Compiler, {
   ScopeKind,
 } from '@/compiler';
 import {
-  SyntaxToken, SyntaxTokenKind,
-} from '@/core/types/tokens';
+  DEFAULT_SCHEMA_NAME,
+} from '@/constants';
 import {
-  isOffsetWithinSpan,
-} from '@/core/utils/span';
+  isComment,
+} from '@/core/lexer/utils';
 import {
-  type CompletionList,
-  type CompletionItem,
-  type TextModel,
-  type CompletionItemProvider,
-  type Position,
-  CompletionItemKind,
-  CompletionItemInsertTextRule,
-} from '@/services/types';
+  Filepath,
+} from '@/core/types/filepath';
 import {
-  type NodeSymbol,
-} from '@/core/types/symbol';
+  ElementKind, SettingName,
+} from '@/core/types/keywords';
 import {
-  SymbolKind,
-} from '@/core/types/symbol';
-import {
-  pickCompletionItemKind,
-  shouldPrependSpace,
-  addQuoteToSuggestionIfNeeded,
-  noSuggestions,
-  prependSpace,
-  isOffsetWithinElementHeader,
-  addSuggestAllSuggestion,
-  isTupleEmpty,
-} from '@/services/suggestions/utils';
-import {
-  suggestRecordRowSnippet,
-} from '@/services/suggestions/recordRowSnippet';
+  UNHANDLED,
+} from '@/core/types/module';
 import {
   AttributeNode,
   BlockExpressionNode,
@@ -59,26 +32,53 @@ import {
   TupleExpressionNode,
 } from '@/core/types/nodes';
 import {
-  getOffsetFromMonacoPosition,
-} from '@/services/utils';
+  type NodeSymbol,
+} from '@/core/types/symbol';
 import {
-  isComment,
-} from '@/core/lexer/utils';
+  SymbolKind,
+} from '@/core/types/symbol';
 import {
-  ElementKind, SettingName,
-} from '@/core/types/keywords';
+  SyntaxToken, SyntaxTokenKind,
+} from '@/core/types/tokens';
 import {
-  DEFAULT_SCHEMA_NAME,
-} from '@/constants';
+  destructureMemberAccessExpression,
+  extractVariableFromExpression,
+} from '@/core/utils/expression';
 import {
-  UNHANDLED,
-} from '@/core/types/module';
+  extractStringFromIdentifierStream,
+  isExpressionAVariableNode,
+} from '@/core/utils/expression';
+import {
+  isOffsetWithinSpan,
+} from '@/core/utils/span';
 import {
   UseStatementMerger,
 } from '@/services/completion/utils/useStatementMerger';
 import {
-  Filepath,
-} from '@/core/types/filepath';
+  suggestRecordRowSnippet,
+} from '@/services/suggestions/recordRowSnippet';
+import {
+  addQuoteToSuggestionIfNeeded,
+  addSuggestAllSuggestion,
+  isOffsetWithinElementHeader,
+  isTupleEmpty,
+  noSuggestions,
+  pickCompletionItemKind,
+  prependSpace,
+  shouldPrependSpace,
+} from '@/services/suggestions/utils';
+import {
+  type CompletionItem,
+  CompletionItemInsertTextRule,
+  CompletionItemKind,
+  type CompletionItemProvider,
+  type CompletionList,
+  type Position,
+  type TextModel,
+} from '@/services/types';
+import {
+  getOffsetFromMonacoPosition,
+} from '@/services/utils';
 
 export default class DBMLCompletionItemProvider implements CompletionItemProvider {
   private compiler: Compiler;

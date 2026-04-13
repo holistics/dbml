@@ -1,35 +1,35 @@
 import {
-  isElementNode, isElementFieldNode, isExpressionAVariableNode,
-} from '@/core/utils/expression';
-import {
   last,
 } from 'lodash-es';
+import type Compiler from '@/compiler';
 import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
+import {
+  ElementKind, SettingName,
+} from '@/core/types/keywords';
+import {
+  PASS_THROUGH, type PassThrough,
+} from '@/core/types/module';
 import {
   AttributeNode,
   ListExpressionNode,
   type SyntaxNode,
 } from '@/core/types/nodes';
+import Report from '@/core/types/report';
 import {
-  ElementKind, SettingName,
-} from '@/core/types/keywords';
-import {
-  type LocalModule,
-} from '../types';
-import {
-  aggregateSettingList, Settings,
-} from '@/core/utils/validate';
+  isElementFieldNode, isElementNode, isExpressionAVariableNode,
+} from '@/core/utils/expression';
 import {
   isExpressionAQuotedString,
 } from '@/core/utils/expression';
-import Report from '@/core/types/report';
-import type Compiler from '@/compiler';
-import IndexesValidator from './validate';
 import {
-  PASS_THROUGH, type PassThrough,
-} from '@/core/types/module';
+  Settings, aggregateSettingList,
+} from '@/core/utils/validate';
+import {
+  type LocalModule,
+} from '../types';
+import IndexesValidator from './validate';
 
 export const indexesModule: LocalModule = {
   validateNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {

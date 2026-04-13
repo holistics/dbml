@@ -1,9 +1,9 @@
-import type {
-  RecordValue, Column, TableRecord,
-} from '@/core/types/schemaJson';
 import {
-  CompileWarning, CompileErrorCode,
+  CompileErrorCode, CompileWarning,
 } from '@/core/types/errors';
+import type {
+  Column, RecordValue, TableRecord,
+} from '@/core/types/schemaJson';
 import {
   isSerialType,
 } from '../data';

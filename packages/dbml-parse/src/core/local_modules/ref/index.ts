@@ -1,32 +1,32 @@
 import {
-  ElementKind,
-} from '@/core/types/keywords';
-import {
-  isElementNode, isElementFieldNode, destructureComplexVariable,
-} from '@/core/utils/expression';
-import {
   last,
 } from 'lodash-es';
+import type Compiler from '@/compiler';
 import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
 import {
-  type LocalModule,
-} from '../types';
-import {
-  ListExpressionNode, SyntaxNode,
-} from '@/core/types/nodes';
-import {
-  isSimpleName, Settings,
-} from '@/core/utils/validate';
-import Report from '@/core/types/report';
-import type Compiler from '@/compiler';
-import RefValidator, {
-  validateFieldSettings,
-} from './validate';
+  ElementKind,
+} from '@/core/types/keywords';
 import {
   PASS_THROUGH, type PassThrough,
 } from '@/core/types/module';
+import {
+  ListExpressionNode, SyntaxNode,
+} from '@/core/types/nodes';
+import Report from '@/core/types/report';
+import {
+  destructureComplexVariable, isElementFieldNode, isElementNode,
+} from '@/core/utils/expression';
+import {
+  Settings, isSimpleName,
+} from '@/core/utils/validate';
+import {
+  type LocalModule,
+} from '../types';
+import RefValidator, {
+  validateFieldSettings,
+} from './validate';
 
 export const refModule: LocalModule = {
   validateNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {

@@ -3,21 +3,21 @@ import {
   DEFAULT_ENTRY,
 } from '@/constants';
 import {
-  UNHANDLED,
-} from '@/core/types/module';
-import Report from '@/core/types/report';
-import {
   AliasKind,
 } from '@/core/types';
 import type {
   Database, ElementRef, MasterDatabase, Table, TablePartial,
 } from '@/core/types';
-import {
-  Filepath, type FilepathId,
-} from '@/core/types/filepath';
 import type {
   CompileError, CompileWarning,
 } from '@/core/types/errors';
+import {
+  Filepath, type FilepathId,
+} from '@/core/types/filepath';
+import {
+  UNHANDLED,
+} from '@/core/types/module';
+import Report from '@/core/types/report';
 
 // Strip internal-only column type properties for public JSON export.
 function stripColumnInternals<T extends Table | TablePartial> (table: T): T {

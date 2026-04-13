@@ -1,32 +1,32 @@
 import {
   partition,
 } from 'lodash-es';
-import {
-  extractQuotedStringToken, destructureComplexVariable,
-} from '@/core/utils/expression';
+import Compiler from '@/compiler';
 import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
 import {
-  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, SyntaxNode, ListExpressionNode,
+  UNHANDLED,
+} from '@/core/types/module';
+import {
+  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode,
 } from '@/core/types/nodes';
+import Report from '@/core/types/report';
 import type {
   TableGroup, TableGroupField,
 } from '@/core/types/schemaJson';
 import {
-  extractElementName, getTokenPosition, normalizeNoteContent, extractColor, getSymbolSchemaAndName,
-} from '../utils';
-import {
-  aggregateSettingList,
-} from '@/core/utils/validate';
-import Compiler from '@/compiler';
-import Report from '@/core/types/report';
-import {
   SymbolKind,
 } from '@/core/types/symbol';
 import {
-  UNHANDLED,
-} from '@/core/types/module';
+  destructureComplexVariable, extractQuotedStringToken,
+} from '@/core/utils/expression';
+import {
+  aggregateSettingList,
+} from '@/core/utils/validate';
+import {
+  extractColor, extractElementName, getSymbolSchemaAndName, getTokenPosition, normalizeNoteContent,
+} from '../utils';
 
 export class TableGroupInterpreter {
   private declarationNode: ElementDeclarationNode;

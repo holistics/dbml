@@ -1,19 +1,19 @@
-import {
-  getOffsetFromMonacoPosition, extractReferee,
-} from '@/services/utils';
 import Compiler from '@/compiler';
-import {
-  SyntaxNodeKind,
-} from '@/core/types/nodes';
-import {
-  Location, ReferenceProvider, TextModel, Position,
-} from '@/services/types';
 import {
   Filepath,
 } from '@/core/types/filepath';
 import {
   UNHANDLED,
 } from '@/core/types/module';
+import {
+  SyntaxNodeKind,
+} from '@/core/types/nodes';
+import {
+  Location, Position, ReferenceProvider, TextModel,
+} from '@/services/types';
+import {
+  extractReferee, getOffsetFromMonacoPosition,
+} from '@/services/utils';
 
 export default class DBMLReferencesProvider implements ReferenceProvider {
   private compiler: Compiler;

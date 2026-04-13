@@ -1,40 +1,40 @@
+import type Compiler from '@/compiler/index';
 import {
-  isElementNode, isElementFieldNode, getBody,
-} from '@/core/utils/expression';
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
 import {
   ElementKind,
 } from '@/core/types/keywords';
+import {
+  PASS_THROUGH, type PassThrough, UNHANDLED,
+} from '@/core/types/module';
 import {
   ElementDeclarationNode,
 } from '@/core/types/nodes';
 import type {
   SyntaxNode,
 } from '@/core/types/nodes';
-import type {
-  SyntaxToken,
-} from '@/core/types/tokens';
-import {
-  NodeSymbol, SymbolKind,
-} from '@/core/types/symbol';
-import type {
-  GlobalModule,
-} from '../types';
 import Report from '@/core/types/report';
-import type Compiler from '@/compiler/index';
 import type {
   SchemaElement,
 } from '@/core/types/schemaJson';
 import {
+  NodeSymbol, SymbolKind,
+} from '@/core/types/symbol';
+import type {
+  SyntaxToken,
+} from '@/core/types/tokens';
+import {
+  getBody, isElementFieldNode, isElementNode,
+} from '@/core/utils/expression';
+import type {
+  GlobalModule,
+} from '../types';
+import {
   getNodeMemberSymbols, shouldInterpretNode,
 } from '../utils';
-import {
-  CompileError, CompileErrorCode,
-} from '@/core/types/errors';
 import EnumBinder from './bind';
 import EnumInterpreter from './interpret';
-import {
-  PASS_THROUGH, UNHANDLED, type PassThrough,
-} from '@/core/types/module';
 
 // Public utils that other modules can use
 export const enumUtils = {

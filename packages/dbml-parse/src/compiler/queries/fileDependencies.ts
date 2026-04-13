@@ -1,10 +1,10 @@
 import type Compiler from '@/compiler/index';
 import {
+  Filepath, type FilepathId, resolveImportFilepath,
+} from '@/core/types/filepath';
+import {
   UseDeclarationNode,
 } from '@/core/types/nodes';
-import {
-  Filepath, resolveImportFilepath, type FilepathId,
-} from '@/core/types/filepath';
 
 // Returns a set of resolved filepath IDs. Validates that paths are relative and appends .dbml if missing.
 export function fileDependencies (this: Compiler, filepath: Filepath): Set<string> {

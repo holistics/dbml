@@ -1,36 +1,36 @@
-import {
-  isElementNode,
-} from '@/core/utils/expression';
+import type Compiler from '@/compiler/index';
 import {
   ElementKind,
 } from '@/core/types/keywords';
 import {
-  type SyntaxNode, type ElementDeclarationNode, ProgramNode,
+  PASS_THROUGH, type PassThrough,
+} from '@/core/types/module';
+import {
+  type ElementDeclarationNode, ProgramNode, type SyntaxNode,
 } from '@/core/types/nodes';
+import Report from '@/core/types/report';
 import type {
-  SyntaxToken,
-} from '@/core/types/tokens';
+  Note,
+} from '@/core/types/schemaJson';
 import {
   NodeSymbol, SymbolKind,
 } from '@/core/types/symbol';
 import type {
+  SyntaxToken,
+} from '@/core/types/tokens';
+import {
+  isElementNode,
+} from '@/core/utils/expression';
+import type {
   GlobalModule,
 } from '../types';
-import Report from '@/core/types/report';
-import type Compiler from '@/compiler/index';
-import type {
-  Note,
-} from '@/core/types/schemaJson';
+import {
+  shouldInterpretNode,
+} from '../utils';
 import NoteBinder from './bind';
 import {
   StickyNoteInterpreter,
 } from './interpret';
-import {
-  shouldInterpretNode,
-} from '../utils';
-import {
-  PASS_THROUGH, type PassThrough,
-} from '@/core/types/module';
 
 export const noteModule: GlobalModule = {
   nodeSymbol (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol> | Report<PassThrough> {

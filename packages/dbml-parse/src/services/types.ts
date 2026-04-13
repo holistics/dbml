@@ -1,5 +1,5 @@
 import {
-  IPosition, editor, languages, IRange, IDisposable, CancellationToken as ICancellationToken,
+  CancellationToken as ICancellationToken, IDisposable, IPosition, IRange, editor, languages,
 } from 'monaco-editor-core';
 
 export type Position = IPosition;

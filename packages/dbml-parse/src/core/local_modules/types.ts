@@ -9,6 +9,7 @@ import type Report from '@/core/types/report';
 import type {
   Settings,
 } from '@/core/utils/validate';
+
 export type {
   Settings,
 };

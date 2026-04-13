@@ -1,6 +1,13 @@
+import Compiler from '@/compiler';
 import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
+import {
+  ElementKind, SettingName,
+} from '@/core/types/keywords';
+import {
+  UNHANDLED,
+} from '@/core/types/module';
 import {
   ElementDeclarationNode,
   FunctionApplicationNode,
@@ -12,28 +19,21 @@ import {
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import {
-  SyntaxToken,
-} from '@/core/types/tokens';
-import Compiler from '@/compiler';
-import {
-  isElementNode,
-  getBody,
-  isBinaryRelationship,
-  destructureMemberAccessExpression,
-  destructureComplexVariable,
-  extractVariableFromExpression,
-  isRelationshipOp,
-  isExpressionAVariableNode,
-} from '@/core/utils/expression';
-import {
-  ElementKind, SettingName,
-} from '@/core/types/keywords';
-import {
   SchemaSymbol,
 } from '@/core/types/symbol';
 import {
-  UNHANDLED,
-} from '@/core/types/module';
+  SyntaxToken,
+} from '@/core/types/tokens';
+import {
+  destructureComplexVariable,
+  destructureMemberAccessExpression,
+  extractVariableFromExpression,
+  getBody,
+  isBinaryRelationship,
+  isElementNode,
+  isExpressionAVariableNode,
+  isRelationshipOp,
+} from '@/core/utils/expression';
 
 export default class Binder {
   private ast: ProgramNode;

@@ -3,7 +3,7 @@ import {
   Filepath,
 } from '@/core/types/filepath';
 import {
-  UseDeclarationNode, UseSpecifierListNode, WildcardNode, VariableNode, SyntaxNodeKind,
+  SyntaxNodeKind, UseDeclarationNode, UseSpecifierListNode, VariableNode, WildcardNode,
 } from '@/core/types/nodes';
 
 export interface ParsedUseStatement {

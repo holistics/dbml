@@ -6,6 +6,9 @@ import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
 import {
+  ElementKind,
+} from '@/core/types/keywords';
+import {
   BlockExpressionNode,
   CallExpressionNode,
   ElementDeclarationNode,
@@ -25,9 +28,6 @@ import {
 import {
   aggregateSettingList,
 } from '@/core/utils/validate';
-import {
-  ElementKind,
-} from '@/core/types/keywords';
 
 export default class IndexesValidator {
   private compiler: Compiler;

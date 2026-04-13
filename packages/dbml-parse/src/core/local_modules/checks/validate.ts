@@ -6,6 +6,9 @@ import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
 import {
+  ElementKind,
+} from '@/core/types/keywords';
+import {
   BlockExpressionNode,
   ElementDeclarationNode,
   FunctionApplicationNode,
@@ -20,9 +23,6 @@ import {
 import {
   aggregateSettingList,
 } from '@/core/utils/validate';
-import {
-  ElementKind,
-} from '@/core/types/keywords';
 
 export default class ChecksValidator {
   private compiler: Compiler;

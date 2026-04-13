@@ -1,41 +1,41 @@
+import type Compiler from '@/compiler/index';
 import {
-  isElementNode, isExpressionAVariableNode, isAccessExpression,
-} from '@/core/utils/expression';
+  DEFAULT_SCHEMA_NAME,
+} from '@/constants';
 import {
   ElementKind,
 } from '@/core/types/keywords';
+import {
+  PASS_THROUGH, type PassThrough, UNHANDLED,
+} from '@/core/types/module';
 import {
   AttributeNode, ElementDeclarationNode,
 } from '@/core/types/nodes';
 import type {
   InfixExpressionNode, SyntaxNode,
 } from '@/core/types/nodes';
-import type {
-  SyntaxToken,
-} from '@/core/types/tokens';
-import {
-  NodeSymbol, SchemaSymbol, SymbolKind,
-} from '@/core/types/symbol';
-import type {
-  GlobalModule,
-} from '../types';
-import {
-  DEFAULT_SCHEMA_NAME,
-} from '@/constants';
-import {
-  PASS_THROUGH, UNHANDLED, type PassThrough,
-} from '@/core/types/module';
 import Report from '@/core/types/report';
-import type Compiler from '@/compiler/index';
 import type {
   Ref,
 } from '@/core/types/schemaJson';
 import {
-  lookupMember, nodeRefereeOfLeftExpression, shouldInterpretNode,
-} from '../utils';
+  NodeSymbol, SchemaSymbol, SymbolKind,
+} from '@/core/types/symbol';
+import type {
+  SyntaxToken,
+} from '@/core/types/tokens';
+import {
+  isAccessExpression, isElementNode, isExpressionAVariableNode,
+} from '@/core/utils/expression';
 import {
   extractVarNameFromPrimaryVariable,
 } from '@/core/utils/expression';
+import type {
+  GlobalModule,
+} from '../types';
+import {
+  lookupMember, nodeRefereeOfLeftExpression, shouldInterpretNode,
+} from '../utils';
 import RefBinder from './bind';
 import {
   RefInterpreter,

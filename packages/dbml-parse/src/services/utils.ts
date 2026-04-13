@@ -1,19 +1,19 @@
 import type Compiler from '@/compiler/index';
+import {
+  UNHANDLED,
+} from '@/core/types/module';
 import type {
   SyntaxNode,
 } from '@/core/types/nodes';
 import {
-  NodeSymbol, SchemaSymbol,
-} from '@/core/types/symbol';
-import {
   InfixExpressionNode,
 } from '@/core/types/nodes';
-import type {
-  TextModel, Position,
-} from '@/services/types';
 import {
-  UNHANDLED,
-} from '@/core/types/module';
+  NodeSymbol, SchemaSymbol,
+} from '@/core/types/symbol';
+import type {
+  Position, TextModel,
+} from '@/services/types';
 
 export function getOffsetFromMonacoPosition (model: TextModel, position: Position): number {
   return model.getOffsetAt(position);

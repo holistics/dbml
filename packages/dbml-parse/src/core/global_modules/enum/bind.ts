@@ -1,3 +1,4 @@
+import Compiler from '@/compiler';
 import {
   CompileError,
 } from '@/core/types/errors';
@@ -7,7 +8,6 @@ import {
 import {
   SyntaxToken,
 } from '@/core/types/tokens';
-import Compiler from '@/compiler';
 
 export default class EnumBinder {
   private compiler: Compiler;

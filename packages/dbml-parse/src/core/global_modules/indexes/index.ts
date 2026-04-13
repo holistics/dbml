@@ -1,37 +1,37 @@
-import {
-  isElementNode, isElementFieldNode, isExpressionAVariableNode, isInsideSettingList,
-} from '@/core/utils/expression';
+import type Compiler from '@/compiler/index';
 import {
   ElementKind,
 } from '@/core/types/keywords';
+import {
+  PASS_THROUGH, type PassThrough, UNHANDLED,
+} from '@/core/types/module';
 import {
   ElementDeclarationNode, PrimaryExpressionNode,
 } from '@/core/types/nodes';
 import type {
   SyntaxNode,
 } from '@/core/types/nodes';
+import Report from '@/core/types/report';
 import type {
-  SyntaxToken,
-} from '@/core/types/tokens';
+  SchemaElement,
+} from '@/core/types/schemaJson';
 import {
   NodeSymbol, SymbolKind,
 } from '@/core/types/symbol';
 import type {
+  SyntaxToken,
+} from '@/core/types/tokens';
+import {
+  isElementFieldNode, isElementNode, isExpressionAVariableNode, isInsideSettingList,
+} from '@/core/utils/expression';
+import type {
   GlobalModule,
 } from '../types';
-import Report from '@/core/types/report';
-import type Compiler from '@/compiler/index';
-import type {
-  SchemaElement,
-} from '@/core/types/schemaJson';
 import {
   getNodeMemberSymbols, lookupMember, shouldInterpretNode,
 } from '../utils';
 import IndexesBinder from './bind';
 import IndexesInterpreter from './interpret';
-import {
-  PASS_THROUGH, type PassThrough, UNHANDLED,
-} from '@/core/types/module';
 
 export const indexesModule: GlobalModule = {
   nodeSymbol (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol> | Report<PassThrough> {

@@ -1,26 +1,29 @@
-import {
-  isElementNode,
-} from '@/core/utils/expression';
+import type Compiler from '@/compiler/index';
 import {
   ElementKind,
 } from '@/core/types/keywords';
+import {
+  PASS_THROUGH, type PassThrough,
+} from '@/core/types/module';
 import {
   ElementDeclarationNode,
 } from '@/core/types/nodes';
 import type {
   SyntaxNode,
 } from '@/core/types/nodes';
-import type {
-  SyntaxToken,
-} from '@/core/types/tokens';
-import type {
-  GlobalModule,
-} from '../types';
 import Report from '@/core/types/report';
-import type Compiler from '@/compiler/index';
 import type {
   SchemaElement,
 } from '@/core/types/schemaJson';
+import type {
+  SyntaxToken,
+} from '@/core/types/tokens';
+import {
+  isElementNode,
+} from '@/core/utils/expression';
+import type {
+  GlobalModule,
+} from '../types';
 import {
   shouldInterpretNode,
 } from '../utils';
@@ -28,9 +31,6 @@ import ProjectBinder from './bind';
 import {
   ProjectInterpreter,
 } from './interpret';
-import {
-  PASS_THROUGH, type PassThrough,
-} from '@/core/types/module';
 
 export const projectModule: GlobalModule = {
   bindNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {

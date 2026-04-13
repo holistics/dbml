@@ -1,54 +1,54 @@
-import {
-  ElementKind, SettingName,
-} from '@/core/types/keywords';
-import {
-  ElementDeclarationNode, FunctionApplicationNode, PrefixExpressionNode, InfixExpressionNode, ProgramNode,
-} from '@/core/types/nodes';
-import type {
-  SyntaxNode,
-} from '@/core/types/nodes';
-import type {
-  SyntaxToken,
-} from '@/core/types/tokens';
-import {
-  NodeSymbol, SchemaSymbol, InjectedColumnSymbol, SymbolKind,
-} from '@/core/types/symbol';
-import type {
-  GlobalModule,
-} from '../types';
+import type Compiler from '@/compiler/index';
 import {
   DEFAULT_SCHEMA_NAME, KEYWORDS_OF_DEFAULT_SETTING,
 } from '@/constants';
 import {
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
+import {
+  ElementKind, SettingName,
+} from '@/core/types/keywords';
+import {
   PASS_THROUGH, type PassThrough, UNHANDLED,
 } from '@/core/types/module';
+import {
+  ElementDeclarationNode, FunctionApplicationNode, InfixExpressionNode, PrefixExpressionNode, ProgramNode,
+} from '@/core/types/nodes';
+import type {
+  SyntaxNode,
+} from '@/core/types/nodes';
 import Report from '@/core/types/report';
-import type Compiler from '@/compiler/index';
 import type {
   SchemaElement,
 } from '@/core/types/schemaJson';
 import {
-  extractVariableFromExpression,
-  extractVarNameFromPrimaryVariable,
-  isInsideSettingValue,
-  isElementNode,
-  isInsideElementBody,
-  getBody,
-  isWithinNthArgOfField,
-  isAccessExpression,
-  isExpressionAVariableNode,
-  isElementFieldNode,
-  isTerminalAccessFragment,
-} from '@/core/utils/expression';
+  InjectedColumnSymbol, NodeSymbol, SchemaSymbol, SymbolKind,
+} from '@/core/types/symbol';
+import type {
+  SyntaxToken,
+} from '@/core/types/tokens';
 import {
-  lookupMember, nodeRefereeOfLeftExpression, shouldInterpretNode,
-} from '../utils';
+  extractVarNameFromPrimaryVariable,
+  extractVariableFromExpression,
+  getBody,
+  isAccessExpression,
+  isElementFieldNode,
+  isElementNode,
+  isExpressionAVariableNode,
+  isInsideElementBody,
+  isInsideSettingValue,
+  isTerminalAccessFragment,
+  isWithinNthArgOfField,
+} from '@/core/utils/expression';
 import {
   isValidPartialInjection,
 } from '@/core/utils/validate';
+import type {
+  GlobalModule,
+} from '../types';
 import {
-  CompileError, CompileErrorCode,
-} from '@/core/types/errors';
+  lookupMember, nodeRefereeOfLeftExpression, shouldInterpretNode,
+} from '../utils';
 import TableBinder from './bind';
 import {
   TableInterpreter,

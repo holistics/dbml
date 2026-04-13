@@ -1,24 +1,24 @@
 import {
-  CompileWarning, CompileErrorCode,
+  compact, difference, filter, flatMap, groupBy, isEmpty, partition,
+} from 'lodash-es';
+import {
+  CompileErrorCode, CompileWarning,
 } from '@/core/types/errors';
 import type {
-  Table, Column, TableRecord,
+  Column, Table, TableRecord,
 } from '@/core/types/schemaJson';
-import {
-  buildColumnIndex,
-  extractKeyValueWithDefault,
-  hasNullWithoutDefaultInKey,
-  isAutoIncrementColumn,
-  formatFullColumnNames,
-  formatValues,
-  createConstraintErrors,
-} from './helper';
 import {
   isSerialType,
 } from '../data';
 import {
-  groupBy, partition, compact, isEmpty, difference, filter, flatMap,
-} from 'lodash-es';
+  buildColumnIndex,
+  createConstraintErrors,
+  extractKeyValueWithDefault,
+  formatFullColumnNames,
+  formatValues,
+  hasNullWithoutDefaultInKey,
+  isAutoIncrementColumn,
+} from './helper';
 
 const getConstraintType = (columnCount: number) =>
   columnCount > 1 ? 'Composite PK' : 'PK';

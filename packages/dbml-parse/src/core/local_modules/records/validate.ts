@@ -3,26 +3,26 @@ import {
 } from 'lodash-es';
 import Compiler from '@/compiler';
 import {
+  KEYWORDS_OF_DEFAULT_SETTING,
+} from '@/constants';
+import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
-import {
-  BlockExpressionNode, CallExpressionNode, CommaExpressionNode, ElementDeclarationNode, EmptyNode, FunctionApplicationNode, FunctionExpressionNode, ListExpressionNode, ProgramNode, SyntaxNode,
-} from '@/core/types/nodes';
-import {
-  isExpressionASignedNumberExpression, isTupleOfVariables, isValidName,
-} from '@/core/utils/validate';
-import {
-  destructureComplexVariable,
-} from '@/core/utils/expression';
 import {
   ElementKind,
 } from '@/core/types/keywords';
 import {
+  BlockExpressionNode, CallExpressionNode, CommaExpressionNode, ElementDeclarationNode, EmptyNode, FunctionApplicationNode, FunctionExpressionNode, ListExpressionNode, ProgramNode, SyntaxNode,
+} from '@/core/types/nodes';
+import {
+  destructureComplexVariable,
+} from '@/core/utils/expression';
+import {
   isAccessExpression, isExpressionAQuotedString, isExpressionAVariableNode,
 } from '@/core/utils/expression';
 import {
-  KEYWORDS_OF_DEFAULT_SETTING,
-} from '@/constants';
+  isExpressionASignedNumberExpression, isTupleOfVariables, isValidName,
+} from '@/core/utils/validate';
 
 export default class RecordsValidator {
   private declarationNode: ElementDeclarationNode;

@@ -1,37 +1,37 @@
 import {
-  IdentiferStreamNode,
-  InfixExpressionNode,
-  LiteralNode,
-  PrefixExpressionNode,
-  PrimaryExpressionNode,
-  SyntaxNode,
-  TupleExpressionNode,
-  VariableNode,
-  ElementDeclarationNode,
-  FunctionApplicationNode,
-  BlockExpressionNode,
-  ProgramNode,
-  ListExpressionNode,
-  AttributeNode,
-  FunctionExpressionNode,
-  CallExpressionNode,
-  UseDeclarationNode,
-  UseSpecifierNode,
-  WildcardNode,
-  UseSpecifierListNode,
-} from '@/core/types/nodes';
-import type {
-  ElementKind, ImportKind, SettingName,
-} from '@/core/types/keywords';
-import {
-  SyntaxToken, SyntaxTokenKind,
-} from '@/core/types/tokens';
-import {
   last,
 } from 'lodash-es';
 import {
   NUMERIC_LITERAL_PREFIX,
 } from '@/constants';
+import type {
+  ElementKind, ImportKind, SettingName,
+} from '@/core/types/keywords';
+import {
+  AttributeNode,
+  BlockExpressionNode,
+  CallExpressionNode,
+  ElementDeclarationNode,
+  FunctionApplicationNode,
+  FunctionExpressionNode,
+  IdentiferStreamNode,
+  InfixExpressionNode,
+  ListExpressionNode,
+  LiteralNode,
+  PrefixExpressionNode,
+  PrimaryExpressionNode,
+  ProgramNode,
+  SyntaxNode,
+  TupleExpressionNode,
+  UseDeclarationNode,
+  UseSpecifierListNode,
+  UseSpecifierNode,
+  VariableNode,
+  WildcardNode,
+} from '@/core/types/nodes';
+import {
+  SyntaxToken, SyntaxTokenKind,
+} from '@/core/types/tokens';
 
 export function getNumberTextFromExpression (node: PrimaryExpressionNode | PrefixExpressionNode): string {
   if (node instanceof PrefixExpressionNode) {

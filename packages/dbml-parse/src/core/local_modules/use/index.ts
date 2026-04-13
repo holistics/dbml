@@ -1,28 +1,28 @@
-import {
-  destructureComplexVariable, extractVariableFromExpression, isUseSpecifier,
-} from '@/core/utils/expression';
-import {
-  CompileError, CompileErrorCode,
-} from '@/core/types/errors';
-import {
-  SyntaxNode,
-  UseDeclarationNode,
-} from '@/core/types/nodes';
-import type {
-  LocalModule, Settings,
-} from '../types';
-import Report from '@/core/types/report';
 import type Compiler from '@/compiler';
-import UseDeclarationValidator from './validate';
 import {
   ImportKind,
 } from '@/core/types';
 import {
-  isValidAlias,
-} from '@/core/utils/validate';
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
 import {
   PASS_THROUGH, type PassThrough,
 } from '@/core/types/module';
+import {
+  SyntaxNode,
+  UseDeclarationNode,
+} from '@/core/types/nodes';
+import Report from '@/core/types/report';
+import {
+  destructureComplexVariable, extractVariableFromExpression, isUseSpecifier,
+} from '@/core/utils/expression';
+import {
+  isValidAlias,
+} from '@/core/utils/validate';
+import type {
+  LocalModule, Settings,
+} from '../types';
+import UseDeclarationValidator from './validate';
 
 // Handle use declaration, use specifier name, use specifier list
 export const useModule: LocalModule = {

@@ -1,9 +1,14 @@
 import {
-  SyntaxToken, SyntaxTokenKind,
-} from '@/core/types/tokens';
+  NUMERIC_LITERAL_PREFIX,
+} from '@/constants';
 import {
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
+import {
+  ArrayNode,
   AttributeNode,
   BlockExpressionNode,
+  CallExpressionNode,
   ElementDeclarationNode,
   FunctionExpressionNode,
   ListExpressionNode,
@@ -13,9 +18,14 @@ import {
   SyntaxNode,
   TupleExpressionNode,
   VariableNode,
-  CallExpressionNode,
-  ArrayNode,
 } from '@/core/types/nodes';
+import Report from '@/core/types/report';
+import {
+  SyntaxToken, SyntaxTokenKind,
+} from '@/core/types/tokens';
+import {
+  SettingName,
+} from '../types/keywords';
 import {
   isHexChar,
 } from './chars';
@@ -23,16 +33,6 @@ import {
   destructureComplexVariable, destructureMemberAccessExpression,
   extractStringFromIdentifierStream, isAccessExpression, isDotDelimitedIdentifier, isExpressionAQuotedString, isExpressionAVariableNode, isExpressionAnIdentifierNode,
 } from './expression';
-import {
-  NUMERIC_LITERAL_PREFIX,
-} from '@/constants';
-import Report from '@/core/types/report';
-import {
-  CompileError, CompileErrorCode,
-} from '@/core/types/errors';
-import {
-  SettingName,
-} from '../types/keywords';
 
 // Is the name valid (either simple or complex)
 export function isValidName (nameNode: SyntaxNode): boolean {

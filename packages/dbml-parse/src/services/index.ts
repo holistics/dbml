@@ -1,7 +1,7 @@
-import DBMLCompletionItemProvider from './suggestions/provider';
 import DBMLDefinitionProvider from './definition/provider';
-import DBMLReferencesProvider from './references/provider';
 import DBMLDiagnosticsProvider from './diagnostics/provider';
+import DBMLReferencesProvider from './references/provider';
+import DBMLCompletionItemProvider from './suggestions/provider';
 
 export * from '@/services/types';
 

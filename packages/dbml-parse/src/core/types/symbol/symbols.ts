@@ -1,18 +1,18 @@
 import {
-  type SyntaxNode, UseDeclarationNode, type UseSpecifierNode, type WildcardNode,
-} from '@/core/types/nodes';
-import type {
-  Internable,
-} from '@/core/types/internable';
-import {
   DEFAULT_SCHEMA_NAME,
 } from '@/constants';
 import type {
   Filepath,
 } from '@/core/types/filepath';
+import type {
+  Internable,
+} from '@/core/types/internable';
 import {
   ImportKind,
 } from '@/core/types/keywords';
+import {
+  type SyntaxNode, UseDeclarationNode, type UseSpecifierNode, type WildcardNode,
+} from '@/core/types/nodes';
 
 export enum SymbolKind {
   Schema = 'Schema',

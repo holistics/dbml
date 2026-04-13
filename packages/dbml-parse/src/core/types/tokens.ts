@@ -1,9 +1,9 @@
 import {
-  Position,
-} from '@/core/types/position';
-import {
   Filepath,
 } from '@/core/types/filepath';
+import {
+  Position,
+} from '@/core/types/position';
 
 export enum SyntaxTokenKind {
   SPACE = '<space>',

@@ -1,12 +1,10 @@
+import Compiler from '@/compiler';
 import {
-  extractVariableFromExpression,
-} from '@/core/utils/expression';
+  ElementKind,
+} from '@/core/types/keywords';
 import {
-  extractReferee,
-} from '@/services/utils';
-import {
-  SymbolKind,
-} from '@/core/types/symbol';
+  UNHANDLED,
+} from '@/core/types/module';
 import {
   BlockExpressionNode,
   CallExpressionNode,
@@ -15,27 +13,29 @@ import {
   TupleExpressionNode,
 } from '@/core/types/nodes';
 import {
-  type CompletionList,
-  type TextModel,
-  type Position,
-  CompletionItemKind,
-  CompletionItemInsertTextRule,
-} from '@/services/types';
+  SymbolKind,
+} from '@/core/types/symbol';
 import {
-  ElementKind,
-} from '@/core/types/keywords';
-import Compiler from '@/compiler';
-import {
-  noSuggestions,
-  getColumnsFromTableSymbol,
-  extractNameAndTypeOfColumnSymbol,
-} from '@/services/suggestions/utils';
+  extractVariableFromExpression,
+} from '@/core/utils/expression';
 import {
   isOffsetWithinSpan,
 } from '@/core/utils/span';
 import {
-  UNHANDLED,
-} from '@/core/types/module';
+  extractNameAndTypeOfColumnSymbol,
+  getColumnsFromTableSymbol,
+  noSuggestions,
+} from '@/services/suggestions/utils';
+import {
+  CompletionItemInsertTextRule,
+  CompletionItemKind,
+  type CompletionList,
+  type Position,
+  type TextModel,
+} from '@/services/types';
+import {
+  extractReferee,
+} from '@/services/utils';
 
 export function suggestRecordRowSnippet (
   compiler: Compiler,

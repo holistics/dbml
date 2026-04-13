@@ -1,22 +1,22 @@
 import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
-import Report from '@/core/types/report';
 import {
-  isAlphaOrUnderscore, isAlphaNumeric, isDigit,
-} from '@/core/utils/chars';
+  Filepath,
+} from '@/core/types/filepath';
+import {
+  Position,
+} from '@/core/types/position';
+import Report from '@/core/types/report';
 import {
   SyntaxToken, SyntaxTokenKind, isOp, isTriviaToken,
 } from '@/core/types/tokens';
 import {
-  Position,
-} from '@/core/types/position';
+  isAlphaNumeric, isAlphaOrUnderscore, isDigit,
+} from '@/core/utils/chars';
 import {
   isInvalidToken,
 } from '@/core/utils/expression';
-import {
-  Filepath,
-} from '@/core/types/filepath';
 
 export default class Lexer {
   private start: Position = {

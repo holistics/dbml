@@ -2,8 +2,14 @@ import {
   flatten, zip,
 } from 'lodash-es';
 import {
-  SyntaxToken, SyntaxTokenKind,
-} from '@/core/types/tokens';
+  getTokenFullEnd, getTokenFullStart,
+} from '@/core/lexer/utils';
+import {
+  Filepath,
+} from '@/core/types/filepath';
+import {
+  type Internable,
+} from '@/core/types/internable';
 import {
   ElementKind, ImportKind,
 } from '@/core/types/keywords';
@@ -14,14 +20,8 @@ import type {
   SymbolKind,
 } from '@/core/types/symbol';
 import {
-  getTokenFullEnd, getTokenFullStart,
-} from '@/core/lexer/utils';
-import {
-  Filepath,
-} from '@/core/types/filepath';
-import {
-  type Internable,
-} from '@/core/types/internable';
+  SyntaxToken, SyntaxTokenKind,
+} from '@/core/types/tokens';
 import {
   isReuseKeyword,
 } from '@/core/utils/expression';

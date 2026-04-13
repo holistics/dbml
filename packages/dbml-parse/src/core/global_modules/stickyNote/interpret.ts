@@ -1,29 +1,29 @@
 import {
   partition,
 } from 'lodash-es';
-import type {
-  Note,
-} from '@/core/types/schemaJson';
-import {
-  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode,
-} from '@/core/types/nodes';
-import {
-  extractColor, extractElementName, getTokenPosition, normalizeNoteContent,
-} from '../utils';
+import Compiler from '@/compiler';
 import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
 import {
-  aggregateSettingList,
-} from '@/core/utils/validate';
-import Compiler from '@/compiler';
+  SettingName,
+} from '@/core/types/keywords';
+import {
+  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode,
+} from '@/core/types/nodes';
 import Report from '@/core/types/report';
+import type {
+  Note,
+} from '@/core/types/schemaJson';
 import {
   extractQuotedStringToken,
 } from '@/core/utils/expression';
 import {
-  SettingName,
-} from '@/core/types/keywords';
+  aggregateSettingList,
+} from '@/core/utils/validate';
+import {
+  extractColor, extractElementName, getTokenPosition, normalizeNoteContent,
+} from '../utils';
 
 export class StickyNoteInterpreter {
   private declarationNode: ElementDeclarationNode;

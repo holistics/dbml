@@ -1,44 +1,44 @@
-import {
-  isElementNode, isExpressionAVariableNode, isAccessExpression, isElementFieldNode, isInsideElementBody, isInsideSettingList, getBody,
-} from '@/core/utils/expression';
-import {
-  ElementKind,
-} from '@/core/types/keywords';
-import {
-  PrimaryExpressionNode, VariableNode, ElementDeclarationNode,
-} from '@/core/types/nodes';
-import type {
-  SyntaxNode,
-} from '@/core/types/nodes';
-import type {
-  SyntaxToken,
-} from '@/core/types/tokens';
-import {
-  NodeSymbol, SchemaSymbol, SymbolKind,
-} from '@/core/types/symbol';
-import type {
-  GlobalModule,
-} from '../types';
+import type Compiler from '@/compiler/index';
 import {
   DEFAULT_SCHEMA_NAME,
 } from '@/constants';
 import {
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
+import {
+  ElementKind,
+} from '@/core/types/keywords';
+import {
   PASS_THROUGH, type PassThrough, UNHANDLED,
 } from '@/core/types/module';
+import {
+  ElementDeclarationNode, PrimaryExpressionNode, VariableNode,
+} from '@/core/types/nodes';
+import type {
+  SyntaxNode,
+} from '@/core/types/nodes';
 import Report from '@/core/types/report';
-import type Compiler from '@/compiler/index';
 import type {
   SchemaElement,
 } from '@/core/types/schemaJson';
 import {
-  getNodeMemberSymbols, lookupMember, nodeRefereeOfLeftExpression, shouldInterpretNode,
-} from '../utils';
+  NodeSymbol, SchemaSymbol, SymbolKind,
+} from '@/core/types/symbol';
+import type {
+  SyntaxToken,
+} from '@/core/types/tokens';
+import {
+  getBody, isAccessExpression, isElementFieldNode, isElementNode, isExpressionAVariableNode, isInsideElementBody, isInsideSettingList,
+} from '@/core/utils/expression';
 import {
   extractVarNameFromPrimaryVariable,
 } from '@/core/utils/expression';
+import type {
+  GlobalModule,
+} from '../types';
 import {
-  CompileError, CompileErrorCode,
-} from '@/core/types/errors';
+  getNodeMemberSymbols, lookupMember, nodeRefereeOfLeftExpression, shouldInterpretNode,
+} from '../utils';
 import TableGroupBinder from './bind';
 import {
   TableGroupInterpreter,

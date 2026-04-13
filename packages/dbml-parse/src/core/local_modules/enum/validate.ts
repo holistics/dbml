@@ -1,3 +1,6 @@
+import {
+  last, partition,
+} from 'lodash-es';
 import Compiler from '@/compiler';
 import {
   CompileError, CompileErrorCode,
@@ -9,14 +12,11 @@ import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode, WildcardNode,
 } from '@/core/types/nodes';
 import {
-  isElementFieldNode, isExpressionAQuotedString, isExpressionAVariableNode, extractVariableFromExpression,
+  extractVariableFromExpression, isElementFieldNode, isExpressionAQuotedString, isExpressionAVariableNode,
 } from '@/core/utils/expression';
 import {
   aggregateSettingList, isValidName,
 } from '@/core/utils/validate';
-import {
-  last, partition,
-} from 'lodash-es';
 
 export default class EnumValidator {
   private compiler: Compiler;

@@ -1,25 +1,25 @@
 import type Compiler from '@/compiler';
-import type {
-  ProgramNode,
-} from '@/core/types/nodes';
-import type {
-  SyntaxToken,
-} from '@/core/types/tokens';
-import type {
-  CompileError, CompileWarning,
-} from '@/core/types/errors';
-import {
-  type NodeSymbol, SchemaSymbol,
-} from '@/core/types/symbol';
 import {
   DEFAULT_ENTRY, DEFAULT_SCHEMA_NAME,
 } from '@/constants';
 import {
-  UNHANDLED,
-} from '@/core/types/module';
-import {
   Database,
 } from '@/core/types';
+import type {
+  CompileError, CompileWarning,
+} from '@/core/types/errors';
+import {
+  UNHANDLED,
+} from '@/core/types/module';
+import type {
+  ProgramNode,
+} from '@/core/types/nodes';
+import {
+  type NodeSymbol, SchemaSymbol,
+} from '@/core/types/symbol';
+import type {
+  SyntaxToken,
+} from '@/core/types/tokens';
 
 export function ast (this: Compiler): Readonly<ProgramNode> {
   return this.parseFile(DEFAULT_ENTRY).getValue().ast;

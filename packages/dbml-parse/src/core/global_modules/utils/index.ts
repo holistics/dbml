@@ -1,35 +1,35 @@
+import {
+  zip,
+} from 'lodash-es';
 import type Compiler from '@/compiler';
 import {
   DEFAULT_SCHEMA_NAME,
 } from '@/constants';
 import {
-  UNHANDLED,
-} from '@/core/types/module';
-import {
-  CompileError, CompileErrorCode,
-} from '@/core/types/errors';
-import {
-  SyntaxTokenKind,
-} from '@/core/types/tokens';
-import {
-  ArrayNode, CallExpressionNode, FunctionExpressionNode, InfixExpressionNode, LiteralNode, PostfixExpressionNode, PrefixExpressionNode, PrimaryExpressionNode, SyntaxNode, TupleExpressionNode, VariableNode,
-} from '@/core/types/nodes';
-import {
   getMemberChain,
 } from '@/core/parser/utils';
-import Report from '@/core/types/report';
-import {
-  NodeSymbol, SchemaSymbol, SymbolKind, UseSymbol,
-} from '@/core/types/symbol';
 import type {
   ColumnType, RelationCardinality, Table, TokenPosition,
 } from '@/core/types';
 import {
-  destructureComplexVariable, destructureComplexVariableTuple, destructureMemberAccessExpression, extractQuotedStringToken, extractVariableFromExpression, extractVarNameFromPrimaryVariable, getNumberTextFromExpression, isAccessExpression, isDotDelimitedIdentifier, isExpressionAnIdentifierNode, isExpressionAQuotedString, isExpressionASignedNumberExpression, isExpressionAVariableNode, parseNumber,
-} from '@/core/utils/expression';
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
 import {
-  zip,
-} from 'lodash-es';
+  UNHANDLED,
+} from '@/core/types/module';
+import {
+  ArrayNode, CallExpressionNode, FunctionExpressionNode, InfixExpressionNode, LiteralNode, PostfixExpressionNode, PrefixExpressionNode, PrimaryExpressionNode, SyntaxNode, TupleExpressionNode, VariableNode,
+} from '@/core/types/nodes';
+import Report from '@/core/types/report';
+import {
+  NodeSymbol, SchemaSymbol, SymbolKind, UseSymbol,
+} from '@/core/types/symbol';
+import {
+  SyntaxTokenKind,
+} from '@/core/types/tokens';
+import {
+  destructureComplexVariable, destructureComplexVariableTuple, destructureMemberAccessExpression, extractQuotedStringToken, extractVarNameFromPrimaryVariable, extractVariableFromExpression, getNumberTextFromExpression, isAccessExpression, isDotDelimitedIdentifier, isExpressionAQuotedString, isExpressionASignedNumberExpression, isExpressionAVariableNode, isExpressionAnIdentifierNode, parseNumber,
+} from '@/core/utils/expression';
 
 export function extractNamesFromRefOperand (operand: SyntaxNode, ownerSchema?: string | null, ownerName?: string): { schemaName: string | null;
   tableName: string;

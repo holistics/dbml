@@ -1,33 +1,33 @@
-import {
-  isElementNode, isElementFieldNode,
-} from '@/core/utils/expression';
-import {
-  destructureComplexVariable, extractVariableFromExpression, extractQuotedStringToken,
-} from '@/core/utils/expression';
+import type Compiler from '@/compiler';
 import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
 import {
-  CallExpressionNode, ElementDeclarationNode, ProgramNode, SyntaxNode, TupleExpressionNode,
-} from '@/core/types/nodes';
-import {
   ElementKind,
 } from '@/core/types/keywords';
 import {
-  type LocalModule, type Settings,
-} from '../types';
+  PASS_THROUGH, type PassThrough, UNHANDLED,
+} from '@/core/types/module';
+import {
+  CallExpressionNode, ElementDeclarationNode, ProgramNode, SyntaxNode, TupleExpressionNode,
+} from '@/core/types/nodes';
+import Report from '@/core/types/report';
+import {
+  isElementFieldNode, isElementNode,
+} from '@/core/utils/expression';
+import {
+  destructureComplexVariable, extractQuotedStringToken, extractVariableFromExpression,
+} from '@/core/utils/expression';
+import {
+  isTupleOfVariables,
+} from '@/core/utils/expression';
 import {
   isValidName,
 } from '@/core/utils/validate';
 import {
-  isTupleOfVariables,
-} from '@/core/utils/expression';
-import Report from '@/core/types/report';
-import type Compiler from '@/compiler';
+  type LocalModule, type Settings,
+} from '../types';
 import RecordsValidator from './validate';
-import {
-  PASS_THROUGH, UNHANDLED, type PassThrough,
-} from '@/core/types/module';
 
 export const recordsModule: LocalModule = {
   validateNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {

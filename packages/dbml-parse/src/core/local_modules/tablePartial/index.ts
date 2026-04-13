@@ -1,29 +1,29 @@
-import {
-  isElementNode, isElementFieldNode, destructureComplexVariable, extractVariableFromExpression,
-} from '@/core/utils/expression';
+import type Compiler from '@/compiler';
 import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
 import {
-  SyntaxNode,
-} from '@/core/types/nodes';
-import {
   ElementKind,
 } from '@/core/types/keywords';
-import type {
-  LocalModule,
-} from '../types';
-import {
-  isSimpleName, Settings,
-} from '@/core/utils/validate';
-import Report from '@/core/types/report';
-import type Compiler from '@/compiler';
-import TablePartialValidator, {
-  validateTablePartialSettings, validateFieldSetting,
-} from './validate';
 import {
   PASS_THROUGH, type PassThrough,
 } from '@/core/types/module';
+import {
+  SyntaxNode,
+} from '@/core/types/nodes';
+import Report from '@/core/types/report';
+import {
+  destructureComplexVariable, extractVariableFromExpression, isElementFieldNode, isElementNode,
+} from '@/core/utils/expression';
+import {
+  Settings, isSimpleName,
+} from '@/core/utils/validate';
+import type {
+  LocalModule,
+} from '../types';
+import TablePartialValidator, {
+  validateFieldSetting, validateTablePartialSettings,
+} from './validate';
 
 export const tablePartialModule: LocalModule = {
   validateNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {

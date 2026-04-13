@@ -1,11 +1,23 @@
-import Report from '@/core/types/report';
-import {
-  GlobalModule,
-} from '../types';
 import Compiler from '@/compiler';
 import {
-  InfixExpressionNode, SyntaxNode, UseDeclarationNode, UseSpecifierNode, UseSpecifierListNode,
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
+import {
+  Filepath, resolveImportFilepath,
+} from '@/core/types/filepath';
+import {
+  PASS_THROUGH, type PassThrough, UNHANDLED,
+} from '@/core/types/module';
+import {
+  InfixExpressionNode, SyntaxNode, UseDeclarationNode, UseSpecifierListNode, UseSpecifierNode,
 } from '@/core/types/nodes';
+import Report from '@/core/types/report';
+import type {
+  SchemaElement,
+} from '@/core/types/schemaJson';
+import {
+  NodeSymbol, SymbolKind, UseSymbol,
+} from '@/core/types/symbol';
 import {
   destructureComplexVariable,
   extractVariableFromExpression,
@@ -16,23 +28,11 @@ import {
   isUseSpecifier,
 } from '@/core/utils/expression';
 import {
-  NodeSymbol, SymbolKind, UseSymbol,
-} from '@/core/types/symbol';
-import {
-  Filepath, resolveImportFilepath,
-} from '@/core/types/filepath';
-import {
-  CompileError, CompileErrorCode,
-} from '@/core/types/errors';
+  GlobalModule,
+} from '../types';
 import {
   lookupMember,
 } from '../utils';
-import type {
-  SchemaElement,
-} from '@/core/types/schemaJson';
-import {
-  PASS_THROUGH, UNHANDLED, type PassThrough,
-} from '@/core/types/module';
 
 export const useModule: GlobalModule = {
   nodeSymbol (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol> | Report<PassThrough> {

@@ -8,13 +8,13 @@ import {
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode,
 } from '@/core/types/nodes';
+import Report from '@/core/types/report';
 import {
   destructureComplexVariable,
 } from '@/core/utils/expression';
 import {
-  isSimpleName, type Settings,
+  type Settings, isSimpleName,
 } from '@/core/utils/validate';
-import Report from '@/core/types/report';
 
 export default class ProjectValidator {
   private declarationNode: ElementDeclarationNode;

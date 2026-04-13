@@ -1,6 +1,10 @@
+import type Compiler from '@/compiler/index';
 import {
   ElementKind,
 } from '@/core/types/keywords';
+import {
+  PASS_THROUGH, type PassThrough, UNHANDLED,
+} from '@/core/types/module';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode,
   PrimaryExpressionNode, VariableNode,
@@ -8,33 +12,29 @@ import {
 import type {
   SyntaxNode,
 } from '@/core/types/nodes';
-import type {
-  SyntaxToken,
-} from '@/core/types/tokens';
-import DiagramViewBinder from './bind';
-import {
-  NodeSymbol, SchemaSymbol, SymbolKind,
-} from '@/core/types/symbol';
-import type {
-  GlobalModule,
-} from '../types';
 import Report from '@/core/types/report';
-import type Compiler from '@/compiler/index';
 import type {
   SchemaElement,
 } from '@/core/types/schemaJson';
 import {
+  NodeSymbol, SchemaSymbol, SymbolKind,
+} from '@/core/types/symbol';
+import type {
+  SyntaxToken,
+} from '@/core/types/tokens';
+import {
   extractVarNameFromPrimaryVariable, isAccessExpression, isElementNode, isExpressionAVariableNode, isInsideSettingList, isTerminalAccessFragment,
 } from '@/core/utils/expression';
+import type {
+  GlobalModule,
+} from '../types';
 import {
-  lookupMember, lookupInDefaultSchema, nodeRefereeOfLeftExpression, shouldInterpretNode,
+  lookupInDefaultSchema, lookupMember, nodeRefereeOfLeftExpression, shouldInterpretNode,
 } from '../utils';
+import DiagramViewBinder from './bind';
 import {
   DiagramViewInterpreter,
 } from './interpret';
-import {
-  PASS_THROUGH, type PassThrough, UNHANDLED,
-} from '@/core/types/module';
 
 export const diagramViewModule: GlobalModule = {
   nodeSymbol (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol> | Report<PassThrough> {

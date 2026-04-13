@@ -2,16 +2,16 @@ import type Compiler from '@/compiler/index';
 import type {
   SyntaxNode,
 } from '@/core/types/nodes';
-import type {
-  NodeSymbol, SymbolKind,
-} from '../types/symbol';
 import type Report from '@/core/types/report';
+import type {
+  Module, PassThrough,
+} from '../types/module';
 import type {
   SchemaElement,
 } from '../types/schemaJson';
 import type {
-  Module, PassThrough,
-} from '../types/module';
+  NodeSymbol, SymbolKind,
+} from '../types/symbol';
 
 // Modules decouple element-specific logic from the compiler: each module handles one DBML element kind
 // (table, enum, ref, etc.) and the compiler dispatches to them via a chain-of-responsibility pattern.

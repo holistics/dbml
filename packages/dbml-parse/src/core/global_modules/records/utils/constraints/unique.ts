@@ -1,20 +1,20 @@
+import {
+  compact, filter, flatMap, groupBy, isEmpty, keyBy,
+} from 'lodash-es';
 import type {
   CompileWarning,
 } from '@/core/types/errors';
 import type {
-  Table, Column, TableRecord,
+  Column, Table, TableRecord,
 } from '@/core/types/schemaJson';
 import {
   buildColumnIndex,
+  createConstraintErrors,
   extractKeyValueWithDefault,
-  hasNullWithoutDefaultInKey,
   formatFullColumnNames,
   formatValues,
-  createConstraintErrors,
+  hasNullWithoutDefaultInKey,
 } from './helper';
-import {
-  keyBy, groupBy, compact, isEmpty, filter, flatMap,
-} from 'lodash-es';
 
 type CompileError = CompileWarning;
 

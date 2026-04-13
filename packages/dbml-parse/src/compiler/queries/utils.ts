@@ -1,19 +1,19 @@
 import {
   isBooleanType,
-  isNumericType,
   isDateTimeType,
+  isNumericType,
   tryExtractBoolean,
+  tryExtractDateTime,
   tryExtractNumeric,
   tryExtractString,
-  tryExtractDateTime,
 } from '@/core/global_modules/records/utils/data';
+import {
+  Filepath, FilepathId,
+} from '@/core/types/filepath';
 import {
   isAlphaOrUnderscore, isDigit,
 } from '@/core/utils/chars';
 import Compiler from '..';
-import {
-  Filepath, FilepathId,
-} from '@/core/types/filepath';
 
 /**
  * Checks if an identifier is valid (can be used without quotes in DBML).

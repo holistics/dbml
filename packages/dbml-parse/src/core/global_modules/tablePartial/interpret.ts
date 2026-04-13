@@ -1,46 +1,46 @@
 import {
-  last, head, partition,
+  head, last, partition,
 } from 'lodash-es';
 import Compiler from '@/compiler/index';
+import {
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
+import {
+  ElementKind, SettingName,
+} from '@/core/types/keywords';
+import {
+  PASS_THROUGH, UNHANDLED,
+} from '@/core/types/module';
+import {
+  ArrayNode, BlockExpressionNode, CallExpressionNode, ElementDeclarationNode,
+  FunctionApplicationNode,
+  FunctionExpressionNode, ListExpressionNode, PrefixExpressionNode, SyntaxNode,
+} from '@/core/types/nodes';
+import Report from '@/core/types/report';
 import type {
-  Column, Check, SchemaElement, Index, InlineRef,
-  TokenPosition, ColumnType, TablePartial,
+  Check, Column, ColumnType, Index, InlineRef,
+  SchemaElement, TablePartial, TokenPosition,
 } from '@/core/types/schemaJson';
 import {
-  BlockExpressionNode, CallExpressionNode, ElementDeclarationNode, FunctionApplicationNode,
-  FunctionExpressionNode,
-  ListExpressionNode, PrefixExpressionNode, SyntaxNode, ArrayNode,
-} from '@/core/types/nodes';
+  SymbolKind,
+} from '@/core/types/symbol';
 import {
-  extractColor, extractElementName, getTokenPosition,
-  normalizeNoteContent,
-} from '../utils';
+  getNumberTextFromExpression, isElementFieldNode,
+  isElementNode, isExpressionAQuotedString,
+  isExpressionASignedNumberExpression, isExpressionAVariableNode,
+  isRelationshipOp, parseNumber,
+} from '@/core/utils/expression';
 import {
   destructureComplexVariable, destructureIndexNode, extractQuotedStringToken, extractVarNameFromPrimaryVariable,
   extractVariableFromExpression,
 } from '@/core/utils/expression';
 import {
-  isElementNode, isElementFieldNode,
-  isExpressionASignedNumberExpression, getNumberTextFromExpression,
-  isExpressionAQuotedString, isExpressionAVariableNode,
-  parseNumber, isRelationshipOp,
-} from '@/core/utils/expression';
-import {
-  CompileError, CompileErrorCode,
-} from '@/core/types/errors';
-import {
   aggregateSettingList,
 } from '@/core/utils/validate';
 import {
-  ElementKind, SettingName,
-} from '@/core/types/keywords';
-import {
-  SymbolKind,
-} from '@/core/types/symbol';
-import Report from '@/core/types/report';
-import {
-  PASS_THROUGH, UNHANDLED,
-} from '@/core/types/module';
+  extractColor, extractElementName, getTokenPosition,
+  normalizeNoteContent,
+} from '../utils';
 
 export class TablePartialInterpreter {
   private declarationNode: ElementDeclarationNode;

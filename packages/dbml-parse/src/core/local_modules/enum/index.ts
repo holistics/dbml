@@ -1,39 +1,39 @@
 import {
+  last,
+} from 'lodash-es';
+import type Compiler from '@/compiler';
+import {
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
+import {
   ElementKind, SettingName,
 } from '@/core/types/keywords';
 import {
-  isElementNode, isElementFieldNode,
+  PASS_THROUGH, type PassThrough,
+} from '@/core/types/module';
+import {
+  AttributeNode, ElementDeclarationNode, ListExpressionNode, SyntaxNode,
+} from '@/core/types/nodes';
+import Report from '@/core/types/report';
+import {
+  isElementFieldNode, isElementNode,
 } from '@/core/utils/expression';
 import {
   destructureComplexVariable,
 } from '@/core/utils/expression';
 import {
-  last,
-} from 'lodash-es';
+  isExpressionAQuotedString,
+} from '@/core/utils/expression';
 import {
-  CompileError, CompileErrorCode,
-} from '@/core/types/errors';
-import {
-  type LocalModule, type Settings,
-} from '../types';
-import {
-  AttributeNode, ElementDeclarationNode, ListExpressionNode, SyntaxNode,
-} from '@/core/types/nodes';
+  extractVariableFromExpression,
+} from '@/core/utils/expression';
 import {
   aggregateSettingList, isValidName,
 } from '@/core/utils/validate';
 import {
-  isExpressionAQuotedString,
-} from '@/core/utils/expression';
-import Report from '@/core/types/report';
-import {
-  extractVariableFromExpression,
-} from '@/core/utils/expression';
-import type Compiler from '@/compiler';
+  type LocalModule, type Settings,
+} from '../types';
 import EnumValidator from './validate';
-import {
-  PASS_THROUGH, type PassThrough,
-} from '@/core/types/module';
 
 export const enumModule: LocalModule = {
   validateNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {

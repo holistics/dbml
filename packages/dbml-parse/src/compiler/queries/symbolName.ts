@@ -1,10 +1,10 @@
-import type Compiler from '../index';
-import {
-  NodeSymbol, SchemaSymbol, InjectedColumnSymbol, UseSymbol,
-} from '@/core/types/symbol';
 import {
   UNHANDLED,
 } from '@/core/types/module';
+import {
+  InjectedColumnSymbol, NodeSymbol, SchemaSymbol, UseSymbol,
+} from '@/core/types/symbol';
+import type Compiler from '../index';
 
 // Get the names associated with a symbol for duplicate checking and lookup.
 // For SchemaSymbol: uses its .name property directly.

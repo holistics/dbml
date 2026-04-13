@@ -1,41 +1,41 @@
 import {
-  partition, last,
+  last, partition,
 } from 'lodash-es';
+import Compiler from '@/compiler';
 import {
-  Column, Check, Index, InlineRef,
-  Table, TablePartialInjection,
-} from '@/core/types/schemaJson';
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
+import {
+  ElementKind, SettingName,
+} from '@/core/types/keywords';
+import {
+  UNHANDLED,
+} from '@/core/types/module';
 import {
   BlockExpressionNode, CallExpressionNode, ElementDeclarationNode,
   FunctionApplicationNode, FunctionExpressionNode, ListExpressionNode, PrefixExpressionNode,
   SyntaxNode,
 } from '@/core/types/nodes';
+import Report from '@/core/types/report';
 import {
-  extractColor, extractElementName, getColumnSymbolsOfRefOperand,
-  getTokenPosition, isSameEndpoint, normalizeNoteContent,
-  processColumnType, processDefaultValue,
-} from '../utils';
+  Check, Column, Index, InlineRef,
+  Table, TablePartialInjection,
+} from '@/core/types/schemaJson';
+import {
+  SymbolKind,
+} from '@/core/types/symbol';
 import {
   destructureComplexVariable, destructureIndexNode, extractQuotedStringToken, extractVarNameFromPrimaryVariable,
   extractVariableFromExpression,
 } from '@/core/utils/expression';
 import {
-  CompileError, CompileErrorCode,
-} from '@/core/types/errors';
-import {
   aggregateSettingList, isValidPartialInjection,
 } from '@/core/utils/validate';
 import {
-  SymbolKind,
-} from '@/core/types/symbol';
-import {
-  ElementKind, SettingName,
-} from '@/core/types/keywords';
-import Compiler from '@/compiler';
-import Report from '@/core/types/report';
-import {
-  UNHANDLED,
-} from '@/core/types/module';
+  extractColor, extractElementName, getColumnSymbolsOfRefOperand,
+  getTokenPosition, isSameEndpoint, normalizeNoteContent,
+  processColumnType, processDefaultValue,
+} from '../utils';
 
 export class TableInterpreter {
   private declarationNode: ElementDeclarationNode;

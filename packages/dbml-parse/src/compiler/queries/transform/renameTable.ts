@@ -1,10 +1,15 @@
 import {
+  DbmlProjectLayout,
+} from '@/compiler/projectLayout/layout';
+import {
   DEFAULT_SCHEMA_NAME,
 } from '@/constants';
 import {
+  Filepath,
+} from '@/core/types/filepath';
+import {
   UNHANDLED,
 } from '@/core/types/module';
-import type Compiler from '../../index';
 import {
   ElementDeclarationNode, SyntaxNode, UseSpecifierNode,
 } from '@/core/types/nodes';
@@ -12,20 +17,15 @@ import {
   NodeSymbol, SchemaSymbol, SymbolKind, UseSymbol,
 } from '@/core/types/symbol';
 import {
-  applyTextEdits, TextEdit,
-} from './applyTextEdits';
-import {
   isAlphaOrUnderscore, isDigit,
 } from '@/core/utils/chars';
+import type Compiler from '../../index';
 import {
-  normalizeTableName, lookupTableSymbol, stripQuotes, type TableNameInput,
+  TextEdit, applyTextEdits,
+} from './applyTextEdits';
+import {
+  type TableNameInput, lookupTableSymbol, normalizeTableName, stripQuotes,
 } from './utils';
-import {
-  Filepath,
-} from '@/core/types/filepath';
-import {
-  DbmlProjectLayout,
-} from '@/compiler/projectLayout/layout';
 
 interface FormattedTableName {
   schema: string;
@@ -294,7 +294,8 @@ function renameRealDeclaration (
   const usedQuotes = checkIfDeclarationUsesQuotes(declNode, declSource);
   const newFormatted = formatTableName(newSchema, newTable, usedQuotes);
 
-  const editsByFile = new Map<string, { fp: Filepath; edits: TextEdit[] }>();
+  const editsByFile = new Map<string, { fp: Filepath;
+    edits: TextEdit[]; }>();
   const addEdit = (fp: Filepath, edit: TextEdit): void => {
     const key = fp.absolute;
     let bucket = editsByFile.get(key);
