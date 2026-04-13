@@ -17,7 +17,7 @@ import {
   scanNonListNodeForBinding,
 } from '../utils';
 import {
-  extractVarNameFromPrimaryVariable, isWildcardExpression,
+  destructureComplexVariable, extractVarNameFromPrimaryVariable, isWildcardExpression,
 } from '@/core/utils/expression';
 import {
   DEFAULT_SCHEMA_NAME, UNHANDLED,
@@ -231,7 +231,12 @@ export class DiagramViewInterpreter {
 
     return body.body
       .filter((n): n is FunctionApplicationNode => n instanceof FunctionApplicationNode)
-      .map((field) => ({ name: extractVarNameFromPrimaryVariable(field.callee as any) ?? '' }));
+      .flatMap((field) => {
+        if (!field.callee) return [];
+        const fragments = destructureComplexVariable(field.callee) ?? [];
+        if (fragments.length === 0) return [];
+        return [{ name: fragments[fragments.length - 1] }];
+      });
   }
 
   private getAllTableGroupNames (): Array<{ name: string }> {
@@ -239,6 +244,8 @@ export class DiagramViewInterpreter {
     const programSymbol = this.compiler.nodeSymbol(programNode).getFiltered(UNHANDLED);
     if (!programSymbol) return [];
 
+    // TableGroups are always in the public schema (schema-qualified TableGroups are not supported),
+    // so searching program-level members (which includes public schema members) is sufficient.
     const programMembers = this.compiler.symbolMembers(programSymbol).getFiltered(UNHANDLED);
     if (!programMembers) return [];
 
