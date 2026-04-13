@@ -24,7 +24,6 @@ function exportDb (compiler: Compiler, fp: Filepath): Database {
   return result.getValue()! as Database;
 }
 
-// ─── enum imported from another file ─────────────────────────────────────────
 
 describe('[example] multifile interpreter — enum across files', () => {
   // types.dbml:  Enum job_status { pending running done }
@@ -77,7 +76,6 @@ Table jobs {
   });
 });
 
-// ─── enum imported under an alias ────────────────────────────────────────────
 
 describe('[example] multifile interpreter — enum alias', () => {
   // types.dbml:  Enum job_status { pending running done }
@@ -128,7 +126,6 @@ Table jobs {
   });
 });
 
-// ─── table with composite indexes imported cross-file ────────────────────────
 
 describe('[example] multifile interpreter — indexes cross-file', () => {
   // tables.dbml: Table bookings { id, user_id, event_id, created_at
@@ -192,7 +189,6 @@ Ref: bookings.event_id > events.id
   });
 });
 
-// ─── schema-qualified table imported with alias ───────────────────────────────
 
 describe('[example] multifile interpreter — schema-alias ref', () => {
   // tables.dbml: Table ecommerce.users as EU { id int [pk]; name varchar }
@@ -246,7 +242,6 @@ Table orders {
   });
 });
 
-// ─── tablegroup import pulls member tables ────────────────────────────────────
 
 describe('[example] multifile interpreter — imported tablegroup', () => {
   // base.dbml:   Table users { id int [pk]; email varchar }
@@ -296,7 +291,6 @@ use { tablegroup content } from './base.dbml'
   });
 });
 
-// ─── alias strips schema prefix (auth.users imported as u) ───────────────────
 
 describe('[example] multifile interpreter — alias-and-schema-strip', () => {
   // auth-tables.dbml: Table auth.users { id int [pk]; email varchar }
@@ -348,7 +342,6 @@ Table orders {
   });
 });
 
-// ─── mixed selective + wildcard from the same file (known bug) ───────────────
 
 describe('[example] multifile interpreter — mixed selective + wildcard from same file', () => {
   // BUG: `use { table users } from './shared.dbml'` followed by

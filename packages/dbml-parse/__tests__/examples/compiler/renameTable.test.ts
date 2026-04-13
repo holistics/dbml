@@ -1903,7 +1903,6 @@ Table Users {
   });
 });
 
-// ─── Cross-file renameTable ────────────────────────────────────────────────────
 
 describe('[example] renameTable cross-file', () => {
   function makeMultifileCompiler (files: Record<string, string>): {
