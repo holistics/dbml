@@ -1,5 +1,5 @@
 <template>
-  <div class="monaco-editor-wrapper w-full h-full flex flex-col">
+  <div class="monaco-editor-wrapper w-full h-full border border-gray-200 rounded-md flex flex-col">
     <div
       ref="editorContainer"
       class="flex-1 min-h-0"
@@ -10,7 +10,7 @@
         <span v-if="!props.readOnly">UTF-8</span>
         <span
           v-if="props.vimMode"
-          class="vim-mode-indicator bg-blue-100 text-blue-800 px-2 py-0.5 rounded text-xs font-medium"
+          class="vim-mode-indicator bg-green-100 text-green-800 px-2 py-0.5 rounded text-xs font-medium"
         >
           -- {{ vimModeStatus }} --
         </span>
@@ -37,13 +37,10 @@
  * - Information Hiding: Language setup complexity is hidden in services
  * - Shallow Module: Simple interface that delegates to deep modules
  */
-import {
-  ref, onMounted, onBeforeUnmount, watch, nextTick,
-} from 'vue';
+import { ref, onMounted, onBeforeUnmount, watch, nextTick } from 'vue';
 import * as monaco from 'monaco-editor';
-import { registerDbmlLanguage, DBML_THEME_NAME } from '@/components/editor/dbml-language';
-import logger from '@/utils/logger';
-import { useParser } from '@/stores/parserStore';
+import { DBMLLanguageService } from '@/components/monaco/dbml-language';
+import consoleLogger from '@/utils/logger';
 
 interface Props {
   modelValue: string;
@@ -57,7 +54,6 @@ interface Props {
 interface Emits {
   (e: 'update:modelValue', value: string): void;
   (e: 'editor-mounted', editor: monaco.editor.IStandaloneCodeEditor): void;
-  (e: 'cursor-move', pos: { line: number; column: number }): void;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -70,17 +66,13 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits<Emits>();
 
-const parser = useParser();
 const editorContainer = ref<HTMLElement>();
 let editor: monaco.editor.IStandaloneCodeEditor | null = null;
 
 /**
  * Reactive cursor position tracking
  */
-const cursorPosition = ref({
-  line: 1,
-  column: 1,
-});
+const cursorPosition = ref({ line: 1, column: 1 });
 
 /**
  * Reactive selection info tracking
@@ -94,7 +86,7 @@ const selectionInfo = ref({
  * Vim mode state
  */
 // eslint-disable-next-line vue/no-dupe-keys
-let vimMode: { on?: (event: string, handler: (mode: { mode?: string }) => void) => void; dispose?: () => void } | null = null;
+let vimMode: any = null;
 const vimModeStatus = ref('NORMAL');
 
 /**
@@ -102,7 +94,7 @@ const vimModeStatus = ref('NORMAL');
  * Use DBML theme for both DBML and JSON to maintain consistency
  */
 const getThemeForLanguage = (_language: string): string => {
-  return DBML_THEME_NAME;
+  return DBMLLanguageService.getThemeName();
 };
 
 /**
@@ -118,23 +110,17 @@ const createEditorConfig = (): monaco.editor.IStandaloneEditorConstructionOption
   scrollBeyondLastLine: false,
   fontSize: 14,
   lineHeight: 20,
-  tabSize: 2,
-  insertSpaces: true,
   lineNumbers: 'on',
-  lineNumbersMinChars: 2,
-  lineDecorationsWidth: 4,
+  lineNumbersMinChars: 3,
+  lineDecorationsWidth: 10,
   columnSelection: false,
-  padding: {
-    top: 10,
-    bottom: 10,
-  },
+  padding: { top: 10, bottom: 10 },
   renderWhitespace: 'boundary',
   renderControlCharacters: true,
   smoothScrolling: true,
   cursorSmoothCaretAnimation: 'off', // Disable for better vim performance
   cursorBlinking: 'solid', // Use solid cursor for vim mode
   automaticLayout: true,
-  fixedOverflowWidgets: true,
   glyphMargin: true,
   folding: true,
   showFoldingControls: 'always',
@@ -152,12 +138,12 @@ const createEditorConfig = (): monaco.editor.IStandaloneEditorConstructionOption
   disableLayerHinting: true, // Disable GPU acceleration that can interfere with vim
   selectOnLineNumbers: false, // Disable line number selection for vim compatibility
   cursorWidth: props.vimMode ? 2 : 1, // Slightly wider cursor for vim visibility
-  quickSuggestions: { other: true, comments: false, strings: false },
-  parameterHints: { enabled: false },
-  suggestOnTriggerCharacters: true,
-  acceptSuggestionOnEnter: 'on',
-  tabCompletion: 'off',
-  wordBasedSuggestions: 'off',
+  quickSuggestions: false, // Disable auto-suggestions for vim mode compatibility
+  parameterHints: { enabled: false }, // Disable parameter hints for cleaner vim experience
+  suggestOnTriggerCharacters: false, // Disable suggestion popup on typing
+  acceptSuggestionOnEnter: 'off', // Prevent Enter from accepting suggestions
+  tabCompletion: 'off', // Disable tab completion to avoid conflicts with vim
+  wordBasedSuggestions: 'off', // Disable word-based suggestions
   // Reduce rendering frequency for better performance
   mouseWheelScrollSensitivity: 1,
   fastScrollSensitivity: 5,
@@ -178,12 +164,12 @@ const setupVimMode = async (): Promise<void> => {
 
     // Track vim mode status changes
     if (vimMode && vimMode.on) {
-      vimMode.on('vim-mode-change', (mode) => {
+      vimMode.on('vim-mode-change', (mode: any) => {
         vimModeStatus.value = mode.mode?.toUpperCase() || 'NORMAL';
       });
     }
   } catch (error) {
-    logger.warn('Failed to initialize vim mode:', error);
+    consoleLogger.warn('Failed to initialize vim mode:', error);
   }
 };
 
@@ -204,7 +190,7 @@ const initializeEditor = async (): Promise<void> => {
   if (!editorContainer.value) return;
 
   // Ensure DBML language support is registered
-  registerDbmlLanguage();
+  DBMLLanguageService.registerLanguage();
 
   // Wait for next tick to ensure container is properly mounted
   await nextTick();
@@ -280,8 +266,6 @@ const setupEventListeners = (): void => {
   // Cursor position change listener
   editor.onDidChangeCursorPosition(() => {
     updateCursorPosition();
-    const pos = editor?.getPosition();
-    if (pos) emit('cursor-move', { line: pos.lineNumber, column: pos.column });
   });
 
   // Selection change listener
@@ -308,7 +292,7 @@ const cleanup = (): void => {
 // Lifecycle hooks
 onMounted(() => {
   initializeEditor().catch((error) => {
-    logger.error('Failed to initialize Monaco Editor:', error);
+    consoleLogger.error('Failed to initialize Monaco Editor:', error);
   });
 });
 
@@ -334,38 +318,12 @@ watch(() => props.language, (newLanguage) => {
     const model = editor.getModel();
     if (model) {
       monaco.editor.setModelLanguage(model, newLanguage);
-      editor.updateOptions({ theme: getThemeForLanguage(newLanguage) });
+      editor.updateOptions({
+        theme: getThemeForLanguage(newLanguage),
+      });
     }
   }
 });
-
-// Update Monaco markers whenever parser errors/warnings change
-watch(() => [parser.errors, parser.warnings] as const, ([errors, warnings]) => {
-  if (!editor || props.language !== 'dbml') return;
-  const model = editor.getModel();
-  if (!model) return;
-
-  const markers: monaco.editor.IMarkerData[] = [
-    ...errors.map((e) => ({
-      message: e.message,
-      severity: monaco.MarkerSeverity.Error,
-      startLineNumber: e.location.line,
-      startColumn: e.location.column,
-      endLineNumber: e.endLocation.line,
-      endColumn: e.endLocation.column,
-    })),
-    ...warnings.map((w) => ({
-      message: w.message,
-      severity: monaco.MarkerSeverity.Warning,
-      startLineNumber: w.location.line,
-      startColumn: w.location.column,
-      endLineNumber: w.endLocation.line,
-      endColumn: w.endLocation.column,
-    })),
-  ];
-
-  monaco.editor.setModelMarkers(model, 'dbml', markers);
-}, { deep: true });
 
 // Watch for vim mode changes
 watch(() => props.vimMode, (newVimMode) => {
