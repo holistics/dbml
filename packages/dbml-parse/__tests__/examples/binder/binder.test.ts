@@ -103,7 +103,7 @@ describe('[example] binder', () => {
       const errors = analyze(source).getErrors();
 
       expect(errors).toHaveLength(1);
-      expect(errors[0].diagnostic).toBe("Table name 'users' already exists in schema 'public'");
+      expect(errors[0].diagnostic).toBe("Table 'users' already exists in schema 'public'");
     });
 
     test('should allow same table name in different schemas', () => {

@@ -55,7 +55,7 @@ import {
 // Public utils that other modules can use
 export const tablePartialUtils = {
   getDuplicateError (name: string, schemaLabel: string, errorNode: SyntaxNode): CompileError {
-    return new CompileError(CompileErrorCode.DUPLICATE_NAME, `TablePartial name '${name}' already exists in schema '${schemaLabel}'`, errorNode);
+    return new CompileError(CompileErrorCode.DUPLICATE_NAME, `TablePartial '${name}' already exists in schema '${schemaLabel}'`, errorNode);
   },
 };
 

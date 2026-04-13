@@ -39,7 +39,7 @@ import {
 // Public utils that other modules can use
 export const enumUtils = {
   getDuplicateError (name: string, schemaLabel: string, errorNode: SyntaxNode): CompileError {
-    return new CompileError(CompileErrorCode.DUPLICATE_NAME, `Enum name ${name} already exists in schema '${schemaLabel}'`, errorNode);
+    return new CompileError(CompileErrorCode.DUPLICATE_NAME, `Enum '${name}' already exists in schema '${schemaLabel}'`, errorNode);
   },
   getFieldDuplicateError (name: string, errorNode: SyntaxNode): CompileError {
     return new CompileError(CompileErrorCode.DUPLICATE_COLUMN_NAME, `Duplicate enum field ${name}`, errorNode);

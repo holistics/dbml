@@ -57,7 +57,7 @@ import {
 // Public utils that other modules can use
 export const tableUtils = {
   getDuplicateError (name: string, schemaLabel: string, errorNode: SyntaxNode): CompileError {
-    return new CompileError(CompileErrorCode.DUPLICATE_NAME, `Table name '${name}' already exists in schema '${schemaLabel}'`, errorNode);
+    return new CompileError(CompileErrorCode.DUPLICATE_NAME, `Table '${name}' already exists in schema '${schemaLabel}'`, errorNode);
   },
   getColumnDuplicateError (name: string, errorNode: SyntaxNode): CompileError {
     return new CompileError(CompileErrorCode.DUPLICATE_COLUMN_NAME, `Duplicate column ${name}`, errorNode);
