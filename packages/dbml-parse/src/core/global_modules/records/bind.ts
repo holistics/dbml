@@ -1,11 +1,15 @@
-import { SyntaxToken } from '@/core/types/tokens';
+import {
+  SyntaxToken,
+} from '@/core/types/tokens';
 import {
   BlockExpressionNode, CommaExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ProgramNode, SyntaxNode,
 } from '@/core/types/nodes';
 import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
-import { scanNonListNodeForBinding } from '../utils';
+import {
+  scanNonListNodeForBinding,
+} from '../utils';
 import {
   destructureCallExpression,
   extractVarNameFromPrimaryVariable,
@@ -13,10 +17,16 @@ import {
 import {
   ElementKind, NodeSymbol,
 } from '../../types';
-import { isTupleOfVariables } from '../../utils/expression';
-import { getElementNameString } from '@/core/utils/expression';
+import {
+  isTupleOfVariables,
+} from '../../utils/expression';
+import {
+  getElementNameString,
+} from '@/core/utils/expression';
 import Compiler from '@/compiler';
-import { UNHANDLED } from '@/constants';
+import {
+  UNHANDLED,
+} from '@/constants';
 
 export default class RecordsBinder {
   private compiler: Compiler;

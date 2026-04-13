@@ -19,7 +19,9 @@ import {
 // Helper to optionally inject a comment before content
 const maybeWithComment = (contentArb: fc.Arbitrary<string>): fc.Arbitrary<string> =>
   fc.tuple(
-    fc.option(commentArbitrary, { nil: undefined }),
+    fc.option(commentArbitrary, {
+      nil: undefined,
+    }),
     contentArb,
   ).map(([comment, content]) => comment ? `${comment}${content}` : content);
 
@@ -303,7 +305,9 @@ export const columnListArbitrary = fc.array(
 // Single column index
 export const singleColumnIndexArbitrary = fc.tuple(
   anyIdentifierArbitrary,
-  fc.option(indexSettingsListArbitrary, { nil: undefined }),
+  fc.option(indexSettingsListArbitrary, {
+    nil: undefined,
+  }),
 ).chain(([col, settings]) =>
   settings ? joinWithRandomInlineSpaces(col, settings) : fc.constant(col),
 );
@@ -311,7 +315,9 @@ export const singleColumnIndexArbitrary = fc.tuple(
 // Expression index (e.g., `lower(email)`)
 export const expressionIndexArbitrary = fc.tuple(
   functionExpressionArbitrary,
-  fc.option(indexSettingsListArbitrary, { nil: undefined }),
+  fc.option(indexSettingsListArbitrary, {
+    nil: undefined,
+  }),
 ).chain(([expr, settings]) =>
   settings ? joinWithRandomInlineSpaces(expr, settings) : fc.constant(expr),
 );
@@ -322,7 +328,9 @@ export const compositeIndexArbitrary = fc.tuple(
     minLength: 2,
     maxLength: 4,
   }),
-  fc.option(indexSettingsListArbitrary, { nil: undefined }),
+  fc.option(indexSettingsListArbitrary, {
+    nil: undefined,
+  }),
 ).chain(([cols, settings]) => {
   const colList = `(${cols.join(', ')})`;
   return settings ? joinWithRandomInlineSpaces(colList, settings) : fc.constant(colList);
@@ -337,7 +345,9 @@ export const mixedCompositeIndexArbitrary = fc.tuple(
       maxLength: 4,
     },
   ),
-  fc.option(indexSettingsListArbitrary, { nil: undefined }),
+  fc.option(indexSettingsListArbitrary, {
+    nil: undefined,
+  }),
 ).chain(([items, settings]) => {
   const itemList = `(${items.join(', ')})`;
   return settings ? joinWithRandomInlineSpaces(itemList, settings) : fc.constant(itemList);
@@ -383,7 +393,9 @@ export const checkSettingArbitrary = settingKeyValue('name', anyIdentifierArbitr
 // Check constraint (for checks block): `expression` [name: 'name']
 export const checkConstraintArbitrary = fc.tuple(
   checkExpressionArbitrary,
-  fc.option(checkSettingArbitrary, { nil: undefined }),
+  fc.option(checkSettingArbitrary, {
+    nil: undefined,
+  }),
 ).chain(([expr, setting]) =>
   setting ? joinWithRandomInlineSpaces(expr, `[${setting}]`) : fc.constant(expr),
 );
@@ -464,7 +476,9 @@ export const standaloneRefArbitrary = fc.tuple(
   anyRefEndpointArbitrary, // table.col or schema.table.col
   relationshipTypeArbitrary,
   anyRefEndpointArbitrary,
-  fc.option(refSettingsListArbitrary, { nil: undefined }),
+  fc.option(refSettingsListArbitrary, {
+    nil: undefined,
+  }),
 ).chain(([
   keyword,
   endpoint1,
@@ -491,7 +505,9 @@ export const namedRefArbitrary = fc.tuple(
   anyRefEndpointArbitrary,
   relationshipTypeArbitrary,
   anyRefEndpointArbitrary,
-  fc.option(refSettingsListArbitrary, { nil: undefined }),
+  fc.option(refSettingsListArbitrary, {
+    nil: undefined,
+  }),
 ).chain(([
   keyword,
   name,
@@ -530,7 +546,9 @@ export const multiColumnRefArbitrary = fc.integer({
     minLength: nendpoints,
     maxLength: nendpoints,
   }),
-  fc.option(refSettingsListArbitrary, { nil: undefined }),
+  fc.option(refSettingsListArbitrary, {
+    nil: undefined,
+  }),
 ).chain(([
   keyword,
   table1,
@@ -648,12 +666,22 @@ export const tableWithNoteArbitrary = fc.tuple(
 export const complexTableArbitrary = fc.tuple(
   caseVariant('Table'),
   anyElementNameArbitrary,
-  fc.option(tableAliasArbitrary, { nil: undefined }),
-  fc.option(tableSettingsListArbitrary, { nil: undefined }),
+  fc.option(tableAliasArbitrary, {
+    nil: undefined,
+  }),
+  fc.option(tableSettingsListArbitrary, {
+    nil: undefined,
+  }),
   columnListArbitrary,
-  fc.option(indexesBlockArbitrary, { nil: undefined }),
-  fc.option(checksBlockArbitrary, { nil: undefined }),
-  fc.option(fc.oneof(inlineNoteArbitrary, blockNoteArbitrary), { nil: undefined }),
+  fc.option(indexesBlockArbitrary, {
+    nil: undefined,
+  }),
+  fc.option(checksBlockArbitrary, {
+    nil: undefined,
+  }),
+  fc.option(fc.oneof(inlineNoteArbitrary, blockNoteArbitrary), {
+    nil: undefined,
+  }),
 ).chain(([
   keyword,
   name,
@@ -721,12 +749,16 @@ export const tableGroupSettingsListArbitrary = fc.array(tableGroupSettingArbitra
 // TableGroup - increased table reference bounds
 export const tableGroupArbitrary = fc.tuple(
   caseVariant('TableGroup'),
-  fc.option(anyIdentifierArbitrary, { nil: undefined }), // TableGroup name must be simple identifier
+  fc.option(anyIdentifierArbitrary, {
+    nil: undefined,
+  }), // TableGroup name must be simple identifier
   fc.array(maybeWithComment(anyElementNameArbitrary), {
     minLength: 1,
     maxLength: 20,
   }), // Table refs can be schema-qualified
-  fc.option(tableGroupSettingsListArbitrary, { nil: undefined }),
+  fc.option(tableGroupSettingsListArbitrary, {
+    nil: undefined,
+  }),
 ).chain(([
   keyword,
   name,
@@ -748,8 +780,12 @@ export const tablePartialArbitrary = fc.tuple(
   caseVariant('TablePartial'),
   anyIdentifierArbitrary,
   columnListArbitrary,
-  fc.option(indexesBlockArbitrary, { nil: undefined }),
-  fc.option(checksBlockArbitrary, { nil: undefined }),
+  fc.option(indexesBlockArbitrary, {
+    nil: undefined,
+  }),
+  fc.option(checksBlockArbitrary, {
+    nil: undefined,
+  }),
 ).chain(([
   keyword,
   name,
@@ -793,12 +829,16 @@ export const projectSettingArbitrary = fc.tuple(
 
 export const projectArbitrary = fc.tuple(
   caseVariant('Project'),
-  fc.option(anyIdentifierArbitrary, { nil: undefined }),
+  fc.option(anyIdentifierArbitrary, {
+    nil: undefined,
+  }),
   fc.array(projectSettingArbitrary, {
     minLength: 0,
     maxLength: 5,
   }),
-  fc.option(blockNoteArbitrary, { nil: undefined }),
+  fc.option(blockNoteArbitrary, {
+    nil: undefined,
+  }),
 ).chain(([
   keyword,
   name,
@@ -828,7 +868,9 @@ export const schemaElementArbitrary = fc.oneof(
 
 // Small schema (1-5 tables, 0-3 enums) - increased bounds
 export const smallSchemaArbitrary = fc.tuple(
-  fc.option(projectArbitrary, { nil: undefined }),
+  fc.option(projectArbitrary, {
+    nil: undefined,
+  }),
   fc.array(enumArbitrary, {
     minLength: 0,
     maxLength: 3,
@@ -841,7 +883,9 @@ export const smallSchemaArbitrary = fc.tuple(
     minLength: 0,
     maxLength: 5,
   }),
-  fc.option(singleLineCommentArbitrary, { nil: undefined }), // Optional leading comment
+  fc.option(singleLineCommentArbitrary, {
+    nil: undefined,
+  }), // Optional leading comment
 ).map(([
   project,
   enums,
@@ -860,7 +904,9 @@ export const smallSchemaArbitrary = fc.tuple(
 
 // Medium schema (3-10 tables, 2-6 enums) - increased bounds
 export const mediumSchemaArbitrary = fc.tuple(
-  fc.option(projectArbitrary, { nil: undefined }),
+  fc.option(projectArbitrary, {
+    nil: undefined,
+  }),
   fc.array(enumArbitrary, {
     minLength: 1,
     maxLength: 6,
@@ -901,7 +947,9 @@ export const mediumSchemaArbitrary = fc.tuple(
 
 // Large schema (8-20 tables, complex relationships) - increased bounds significantly
 export const largeSchemaArbitrary = fc.tuple(
-  fc.option(projectArbitrary, { nil: undefined }),
+  fc.option(projectArbitrary, {
+    nil: undefined,
+  }),
   fc.array(enumArbitrary, {
     minLength: 3,
     maxLength: 10,
@@ -966,18 +1014,32 @@ export const dbmlSchemaArbitrary = fc.oneof(
 
 // Unclosed brackets/braces/parens
 export const unclosedBracketArbitrary = fc.oneof(
-  fc.nat({ max: 20 }).map((n) => '['.repeat(n + 1)), // more opens than closes
-  fc.nat({ max: 20 }).map((n) => '{'.repeat(n + 1)),
-  fc.nat({ max: 20 }).map((n) => '('.repeat(n + 1)),
-  fc.nat({ max: 20 }).map((n) => ']'.repeat(n + 1)), // only closes
-  fc.nat({ max: 20 }).map((n) => '}'.repeat(n + 1)),
-  fc.nat({ max: 20 }).map((n) => ')'.repeat(n + 1)),
+  fc.nat({
+    max: 20,
+  }).map((n) => '['.repeat(n + 1)), // more opens than closes
+  fc.nat({
+    max: 20,
+  }).map((n) => '{'.repeat(n + 1)),
+  fc.nat({
+    max: 20,
+  }).map((n) => '('.repeat(n + 1)),
+  fc.nat({
+    max: 20,
+  }).map((n) => ']'.repeat(n + 1)), // only closes
+  fc.nat({
+    max: 20,
+  }).map((n) => '}'.repeat(n + 1)),
+  fc.nat({
+    max: 20,
+  }).map((n) => ')'.repeat(n + 1)),
 );
 
 // Mismatched brackets - generates dynamic open/close bracket mismatches
 export const mismatchedBracketsArbitrary = fc.tuple(
   fc.constantFrom('[', '{', '('),
-  fc.nat({ max: 10 }),
+  fc.nat({
+    max: 10,
+  }),
 ).map(([open, n]) => {
   const mismatchedClose: Record<string, string> = {
     '[': '}',
@@ -1383,7 +1445,9 @@ export const charSubstitutionArbitrary = (source: string) => {
 
 export const multiCharInsertionArbitrary = (source: string) =>
   fc.tuple(
-    fc.nat({ max: source.length }),
+    fc.nat({
+      max: source.length,
+    }),
     fc.string({
       minLength: 1,
       maxLength: 10,
@@ -1392,8 +1456,12 @@ export const multiCharInsertionArbitrary = (source: string) =>
 
 export const blockDuplicationArbitrary = (source: string) =>
   fc.tuple(
-    fc.nat({ max: Math.max(0, source.length - 1) }),
-    fc.nat({ max: Math.max(0, source.length - 1) }),
+    fc.nat({
+      max: Math.max(0, source.length - 1),
+    }),
+    fc.nat({
+      max: Math.max(0, source.length - 1),
+    }),
   ).map(([start, end]) => {
     const s = Math.min(start, end);
     const e = Math.max(start, end);

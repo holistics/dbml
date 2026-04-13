@@ -1,4 +1,6 @@
-import { partition } from 'lodash-es';
+import {
+  partition,
+} from 'lodash-es';
 import Compiler from '@/compiler';
 import {
   CompileError, CompileErrorCode,

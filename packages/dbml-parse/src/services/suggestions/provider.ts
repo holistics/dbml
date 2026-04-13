@@ -6,11 +6,15 @@ import {
   extractStringFromIdentifierStream,
   isExpressionAVariableNode,
 } from '@/core/utils/expression';
-import Compiler, { ScopeKind } from '@/compiler';
+import Compiler, {
+  ScopeKind,
+} from '@/compiler';
 import {
   SyntaxToken, SyntaxTokenKind,
 } from '@/core/types/tokens';
-import { isOffsetWithinSpan } from '@/core/utils/span';
+import {
+  isOffsetWithinSpan,
+} from '@/core/utils/span';
 import {
   type CompletionList,
   type CompletionItem,
@@ -20,8 +24,12 @@ import {
   CompletionItemKind,
   CompletionItemInsertTextRule,
 } from '@/services/types';
-import { type NodeSymbol } from '@/core/types/symbol';
-import { SymbolKind } from '@/core/types/symbol';
+import {
+  type NodeSymbol,
+} from '@/core/types/symbol';
+import {
+  SymbolKind,
+} from '@/core/types/symbol';
 import {
   pickCompletionItemKind,
   shouldPrependSpace,
@@ -32,7 +40,9 @@ import {
   addSuggestAllSuggestion,
   isTupleEmpty,
 } from '@/services/suggestions/utils';
-import { suggestRecordRowSnippet } from '@/services/suggestions/recordRowSnippet';
+import {
+  suggestRecordRowSnippet,
+} from '@/services/suggestions/recordRowSnippet';
 import {
   AttributeNode,
   BlockExpressionNode,
@@ -48,16 +58,24 @@ import {
   SyntaxNode,
   TupleExpressionNode,
 } from '@/core/types/nodes';
-import { getOffsetFromMonacoPosition } from '@/services/utils';
-import { isComment } from '@/core/lexer/utils';
+import {
+  getOffsetFromMonacoPosition,
+} from '@/services/utils';
+import {
+  isComment,
+} from '@/core/lexer/utils';
 import {
   ElementKind, SettingName,
 } from '@/core/types/keywords';
 import {
   UNHANDLED, DEFAULT_SCHEMA_NAME,
 } from '@/constants';
-import { UseStatementMerger } from '@/services/completion/utils/useStatementMerger';
-import { Filepath } from '@/core/types/filepath';
+import {
+  UseStatementMerger,
+} from '@/services/completion/utils/useStatementMerger';
+import {
+  Filepath,
+} from '@/core/types/filepath';
 
 export default class DBMLCompletionItemProvider implements CompletionItemProvider {
   private compiler: Compiler;
@@ -162,7 +180,9 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
     currentFilepath: Filepath,
     currentFileContent: string,
   ): CompletionList {
-    const results: CompletionList = { suggestions: [] };
+    const results: CompletionList = {
+      suggestions: [],
+    };
 
     if (!this.compiler.layout) return results;
 
@@ -397,7 +417,9 @@ function suggestNamesInScope (
   }
 
   let curElement: SyntaxNode | undefined = parent;
-  const res: CompletionList = { suggestions: [] };
+  const res: CompletionList = {
+    suggestions: [],
+  };
   while (curElement) {
     const symbol = compiler.nodeSymbol(curElement).getFiltered(UNHANDLED);
     if (symbol) {
@@ -493,7 +515,9 @@ function suggestInAttribute (
   offset: number,
   container: AttributeNode,
 ): CompletionList {
-  const { token } = compiler.container.token(offset);
+  const {
+    token,
+  } = compiler.container.token(offset);
   if ([SyntaxTokenKind.COMMA, SyntaxTokenKind.LBRACKET].includes(token?.kind as any)) {
     const res = suggestAttributeName(compiler, offset);
 
@@ -967,7 +991,9 @@ function suggestInCallExpression (
 
     if (!tableSymbol) return noSuggestions();
     const suggestions = suggestMembersOfSymbol(compiler, tableSymbol, [SymbolKind.Column]);
-    const { argumentList } = container;
+    const {
+      argumentList,
+    } = container;
     // If the user already typed some columns, we do not suggest "all columns" anymore
     if (!argumentList || !isTupleEmpty(argumentList)) return suggestions;
     return addSuggestAllSuggestion(suggestions);
@@ -987,7 +1013,9 @@ function suggestInCallExpression (
     const tableSymbol = compiler.nodeSymbol(compiler.container.element(offset)).getFiltered(UNHANDLED);
     if (!tableSymbol) return noSuggestions();
     const suggestions = suggestMembersOfSymbol(compiler, tableSymbol, [SymbolKind.Column]);
-    const { argumentList } = container;
+    const {
+      argumentList,
+    } = container;
     // If the user already typed some columns, we do not suggest "all columns" anymore
     if (!argumentList || !isTupleEmpty(argumentList)) return suggestions;
     return addSuggestAllSuggestion(suggestions);
@@ -1180,11 +1208,15 @@ function suggestInDiagramViewSubBlock (
   switch (blockType) {
     case 'tables': {
       const namesInScope = suggestNamesInScope(compiler, offset, compiler.parse.ast(), [SymbolKind.Table, SymbolKind.Schema]);
-      return { suggestions: [wildcardSuggestion, ...namesInScope.suggestions] };
+      return {
+        suggestions: [wildcardSuggestion, ...namesInScope.suggestions],
+      };
     }
     case 'tablegroups': {
       const namesInScope = suggestNamesInScope(compiler, offset, compiler.parse.ast(), [SymbolKind.TableGroup]);
-      return { suggestions: [wildcardSuggestion, ...namesInScope.suggestions] };
+      return {
+        suggestions: [wildcardSuggestion, ...namesInScope.suggestions],
+      };
     }
     case 'schemas': {
       const defaultSchema = {
@@ -1195,11 +1227,15 @@ function suggestInDiagramViewSubBlock (
         range: undefined as any,
       };
       const namesInScope = suggestNamesInScope(compiler, offset, compiler.parse.ast(), [SymbolKind.Schema]);
-      return { suggestions: [wildcardSuggestion, defaultSchema, ...namesInScope.suggestions] };
+      return {
+        suggestions: [wildcardSuggestion, defaultSchema, ...namesInScope.suggestions],
+      };
     }
     case 'notes': {
       const namesInScope = suggestNamesInScope(compiler, offset, compiler.parse.ast(), [SymbolKind.Note]);
-      return { suggestions: [wildcardSuggestion, ...namesInScope.suggestions] };
+      return {
+        suggestions: [wildcardSuggestion, ...namesInScope.suggestions],
+      };
     }
     default:
       return noSuggestions();

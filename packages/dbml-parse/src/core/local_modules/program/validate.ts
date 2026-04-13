@@ -6,8 +6,12 @@ import {
   ElementDeclarationNode, ProgramNode,
 } from '@/core/types/nodes';
 import Compiler from '@/compiler';
-import { SyntaxToken } from '@/core/types/tokens';
-import { ElementKind } from '@/core/types/keywords';
+import {
+  SyntaxToken,
+} from '@/core/types/tokens';
+import {
+  ElementKind,
+} from '@/core/types/keywords';
 
 export default class ProgramValidator {
   private ast: ProgramNode;

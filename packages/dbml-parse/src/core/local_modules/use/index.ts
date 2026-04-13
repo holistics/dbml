@@ -17,8 +17,12 @@ import {
 import Report from '@/core/types/report';
 import type Compiler from '@/compiler';
 import UseDeclarationValidator from './validate';
-import { ImportKind } from '@/core/types';
-import { isValidAlias } from '@/core/utils/validate';
+import {
+  ImportKind,
+} from '@/core/types';
+import {
+  isValidAlias,
+} from '@/core/utils/validate';
 
 // Handle use declaration, use specifier name, use specifier list
 export const useModule: LocalModule = {

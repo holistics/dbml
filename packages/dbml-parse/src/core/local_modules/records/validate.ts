@@ -1,4 +1,6 @@
-import { partition } from 'lodash-es';
+import {
+  partition,
+} from 'lodash-es';
 import Compiler from '@/compiler';
 import {
   CompileError, CompileErrorCode,
@@ -9,12 +11,18 @@ import {
 import {
   isExpressionASignedNumberExpression, isTupleOfVariables, isValidName,
 } from '@/core/utils/validate';
-import { destructureComplexVariable } from '@/core/utils/expression';
-import { ElementKind } from '@/core/types/keywords';
+import {
+  destructureComplexVariable,
+} from '@/core/utils/expression';
+import {
+  ElementKind,
+} from '@/core/types/keywords';
 import {
   isAccessExpression, isExpressionAQuotedString, isExpressionAVariableNode,
 } from '@/core/utils/expression';
-import { KEYWORDS_OF_DEFAULT_SETTING } from '@/constants';
+import {
+  KEYWORDS_OF_DEFAULT_SETTING,
+} from '@/constants';
 
 export default class RecordsValidator {
   private declarationNode: ElementDeclarationNode;

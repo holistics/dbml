@@ -1,4 +1,6 @@
-import { partition } from 'lodash-es';
+import {
+  partition,
+} from 'lodash-es';
 import Compiler from '@/compiler';
 import {
   CompileError, CompileErrorCode,
@@ -6,7 +8,9 @@ import {
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode,
 } from '@/core/types/nodes';
-import { destructureComplexVariable } from '@/core/utils/expression';
+import {
+  destructureComplexVariable,
+} from '@/core/utils/expression';
 import {
   isSimpleName, type Settings,
 } from '@/core/utils/validate';

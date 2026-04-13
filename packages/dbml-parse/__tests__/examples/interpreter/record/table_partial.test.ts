@@ -1,7 +1,9 @@
 import {
   describe, expect, test,
 } from 'vitest';
-import { interpret } from '@tests/utils';
+import {
+  interpret,
+} from '@tests/utils';
 
 describe('[example - record] table partial with records', () => {
   test('should handle records with explicit columns from merged table partial', () => {

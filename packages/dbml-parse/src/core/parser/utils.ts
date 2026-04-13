@@ -1,8 +1,12 @@
-import { last } from 'lodash-es';
+import {
+  last,
+} from 'lodash-es';
 import {
   SyntaxToken, SyntaxTokenKind,
 } from '@/core/types/tokens';
-import { alternateLists } from '@/core/utils/array';
+import {
+  alternateLists,
+} from '@/core/utils/array';
 import NodeFactory from '@/core/parser/factory';
 import {
   ArrayNode,

@@ -1,5 +1,9 @@
-import { partition } from 'lodash-es';
-import type { Note } from '@/core/types/schemaJson';
+import {
+  partition,
+} from 'lodash-es';
+import type {
+  Note,
+} from '@/core/types/schemaJson';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode,
 } from '@/core/types/nodes';
@@ -9,11 +13,17 @@ import {
 import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
-import { aggregateSettingList } from '@/core/utils/validate';
+import {
+  aggregateSettingList,
+} from '@/core/utils/validate';
 import Compiler from '@/compiler';
 import Report from '@/core/types/report';
-import { extractQuotedStringToken } from '@/core/utils/expression';
-import { SettingName } from '@/core/types/keywords';
+import {
+  extractQuotedStringToken,
+} from '@/core/utils/expression';
+import {
+  SettingName,
+} from '@/core/types/keywords';
 
 export class StickyNoteInterpreter {
   private declarationNode: ElementDeclarationNode;
@@ -39,7 +49,9 @@ export class StickyNoteInterpreter {
 
   private interpretName (nameNode?: SyntaxNode): CompileError[] {
     if (nameNode) {
-      const { name } = extractElementName(nameNode);
+      const {
+        name,
+      } = extractElementName(nameNode);
       this.note.name = name;
     } else {
       this.note.name = '';

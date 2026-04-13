@@ -4,9 +4,15 @@ import {
 import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
-import { SyntaxNode } from '@/core/types/nodes';
-import { ElementKind } from '@/core/types/keywords';
-import type { LocalModule } from '../types';
+import {
+  SyntaxNode,
+} from '@/core/types/nodes';
+import {
+  ElementKind,
+} from '@/core/types/keywords';
+import type {
+  LocalModule,
+} from '../types';
 import {
   PASS_THROUGH, type PassThrough,
 } from '@/constants';

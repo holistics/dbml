@@ -1,5 +1,7 @@
 import type Compiler from '../../index';
-import type { SyntaxToken } from '@/core/types/tokens';
+import type {
+  SyntaxToken,
+} from '@/core/types/tokens';
 
 export function containerToken (this: Compiler, offset: number): { token: SyntaxToken;
   index: number; } | { token: undefined;

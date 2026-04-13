@@ -8,7 +8,9 @@ import {
 import type {
   DiagramView, FilterConfig,
 } from '@/core/types/schemaJson';
-import { ElementKind } from '@/core/types/keywords';
+import {
+  ElementKind,
+} from '@/core/types/keywords';
 import {
   extractElementName,
   getTokenPosition,
@@ -27,7 +29,9 @@ import {
 } from '@/core/types/symbol';
 import Compiler from '@/compiler';
 import Report from '@/core/types/report';
-import type { CompileError } from '@/core/types/errors';
+import type {
+  CompileError,
+} from '@/core/types/errors';
 
 export class DiagramViewInterpreter {
   private compiler: Compiler;
@@ -235,7 +239,11 @@ export class DiagramViewInterpreter {
         if (!field.callee) return [];
         const fragments = destructureComplexVariable(field.callee) ?? [];
         if (fragments.length === 0) return [];
-        return [{ name: fragments[fragments.length - 1] }];
+        return [
+          {
+            name: fragments[fragments.length - 1],
+          },
+        ];
       });
   }
 
@@ -251,7 +259,9 @@ export class DiagramViewInterpreter {
 
     return programMembers
       .filter((m) => m.isKind(SymbolKind.TableGroup))
-      .map((m) => ({ name: this.compiler.symbolName(m) ?? '' }))
+      .map((m) => ({
+        name: this.compiler.symbolName(m) ?? '',
+      }))
       .filter((m) => m.name !== '');
   }
 }

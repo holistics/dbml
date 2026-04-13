@@ -1,4 +1,6 @@
-import { Filepath } from '@/core/types/filepath';
+import {
+  Filepath,
+} from '@/core/types/filepath';
 import {
   NodeSymbol, NodeSymbolId, NodeSymbolIdGenerator,
 } from './symbols';

@@ -43,7 +43,9 @@ export function usableMembers (this: Compiler, symbolOrFilepath: SchemaSymbol | 
   const filepath = symbolOrFilepath instanceof Filepath ? symbolOrFilepath : symbolOrFilepath.filepath;
 
   const parseResult = this.parseFile(filepath);
-  const { ast } = parseResult.getValue();
+  const {
+    ast,
+  } = parseResult.getValue();
 
   for (const element of ast.body) {
     if (!(element instanceof UseDeclarationNode) || !element.specifiers || !element.importPath) continue;

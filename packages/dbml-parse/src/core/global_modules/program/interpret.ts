@@ -2,12 +2,16 @@ import Compiler from '@/compiler/index';
 import {
   CallExpressionNode, ElementDeclarationNode, ProgramNode, UseSpecifierListNode,
 } from '@/core/types/nodes';
-import { ElementKind } from '@/core/types/keywords';
+import {
+  ElementKind,
+} from '@/core/types/keywords';
 import {
   DEFAULT_SCHEMA_NAME, UNHANDLED,
 } from '@/constants';
 import Report from '@/core/types/report';
-import { AliasKind } from '@/core/types/schemaJson';
+import {
+  AliasKind,
+} from '@/core/types/schemaJson';
 import type {
   Database, DiagramView, ElementRef, Ref, RefEndpoint, Table, TableRecord, SchemaElement, Enum, TableGroup, TablePartial, Note, Project,
 } from '@/core/types/schemaJson';
@@ -17,12 +21,18 @@ import {
 import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
-import type { CompileWarning } from '@/core/types/errors';
-import { validateForeignKeys } from '../records/utils/constraints';
+import type {
+  CompileWarning,
+} from '@/core/types/errors';
+import {
+  validateForeignKeys,
+} from '../records/utils/constraints';
 import {
   buildMergedTableFromElement, extractInlineRefsFromTablePartials,
 } from '../records/utils/interpret';
-import { getBody } from '@/core/utils/expression';
+import {
+  getBody,
+} from '@/core/utils/expression';
 import {
   UseSymbol, SymbolKind,
 } from '@/core/types/symbol';

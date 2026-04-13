@@ -1,4 +1,6 @@
-export { renameTable } from './renameTable';
+export {
+  renameTable,
+} from './renameTable';
 export {
   syncDiagramView,
   type DiagramViewSyncOperation,
@@ -9,4 +11,6 @@ export {
 export {
   applyTextEdits, type TextEdit,
 } from './applyTextEdits';
-export { type TableNameInput } from './utils';
+export {
+  type TableNameInput,
+} from './utils';

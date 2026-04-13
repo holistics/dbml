@@ -1,6 +1,12 @@
-import { extractVariableFromExpression } from '@/core/utils/expression';
-import { extractReferee } from '@/services/utils';
-import { SymbolKind } from '@/core/types/symbol';
+import {
+  extractVariableFromExpression,
+} from '@/core/utils/expression';
+import {
+  extractReferee,
+} from '@/services/utils';
+import {
+  SymbolKind,
+} from '@/core/types/symbol';
 import {
   BlockExpressionNode,
   CallExpressionNode,
@@ -15,15 +21,21 @@ import {
   CompletionItemKind,
   CompletionItemInsertTextRule,
 } from '@/services/types';
-import { ElementKind } from '@/core/types/keywords';
+import {
+  ElementKind,
+} from '@/core/types/keywords';
 import Compiler from '@/compiler';
 import {
   noSuggestions,
   getColumnsFromTableSymbol,
   extractNameAndTypeOfColumnSymbol,
 } from '@/services/suggestions/utils';
-import { isOffsetWithinSpan } from '@/core/utils/span';
-import { UNHANDLED } from '@/constants';
+import {
+  isOffsetWithinSpan,
+} from '@/core/utils/span';
+import {
+  UNHANDLED,
+} from '@/constants';
 
 export function suggestRecordRowSnippet (
   compiler: Compiler,

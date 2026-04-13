@@ -1,7 +1,9 @@
 import {
   basename, dirname, extname, isAbsolute, join, normalize, relative, resolve,
 } from 'pathe';
-import type { Internable } from './internable';
+import type {
+  Internable,
+} from './internable';
 
 const DBML_EXT = '.dbml';
 

@@ -1,4 +1,6 @@
-import type { CompileWarning } from '@/core/types/errors';
+import type {
+  CompileWarning,
+} from '@/core/types/errors';
 import type {
   Ref, RefEndpoint, Table, TableRecord,
 } from '@/core/types/schemaJson';
@@ -10,7 +12,9 @@ import {
   formatValues,
   createConstraintErrors,
 } from './helper';
-import { DEFAULT_SCHEMA_NAME } from '@/constants';
+import {
+  DEFAULT_SCHEMA_NAME,
+} from '@/constants';
 import {
   isEmpty, flatMap,
 } from 'lodash-es';

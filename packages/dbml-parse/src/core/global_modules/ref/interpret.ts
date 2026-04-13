@@ -1,7 +1,9 @@
 import {
   destructureComplexVariable, extractVariableFromExpression,
 } from '@/core/utils/expression';
-import { aggregateSettingList } from '@/core/utils/validate';
+import {
+  aggregateSettingList,
+} from '@/core/utils/validate';
 import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
@@ -19,8 +21,12 @@ import {
 } from '@/core/utils/expression';
 import Compiler from '@/compiler';
 import Report from '@/core/types/report';
-import { ElementKind } from '@/core/types/keywords';
-import { UNHANDLED } from '@/constants';
+import {
+  ElementKind,
+} from '@/core/types/keywords';
+import {
+  UNHANDLED,
+} from '@/constants';
 
 function buildRefEndpoint (
   names: { schemaName: string | null;

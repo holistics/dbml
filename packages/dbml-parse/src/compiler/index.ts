@@ -10,8 +10,12 @@ import {
 import {
   containerStack, containerToken, containerElement, containerScope, containerScopeKind,
 } from './queries/container';
-import { renameTable } from './queries/transform';
-export { ScopeKind } from './types';
+import {
+  renameTable,
+} from './queries/transform';
+export {
+  ScopeKind,
+} from './types';
 export type {
   TextEdit, TableNameInput,
 } from './queries/transform';
@@ -22,27 +26,51 @@ import {
   bindNode,
   interpretNode,
 } from '@/core/global_modules';
-import { symbolReferences } from './queries/symbolReferences';
+import {
+  symbolReferences,
+} from './queries/symbolReferences';
 import {
   intern, type Internable, type Primitive,
 } from '@/core/types/internable';
-import { DEFAULT_ENTRY } from '@/constants';
+import {
+  DEFAULT_ENTRY,
+} from '@/constants';
 import {
   nodeAlias, nodeFullname as fullname, nodeSettings, validateNode,
 } from '@/core/local_modules';
-import { NodeSymbolIdGenerator } from '@/core/types/symbol';
-import { SymbolFactory } from '@/core/types/symbol';
-import { lookupMembers } from './queries/lookupMembers';
-import { symbolName } from './queries/symbolName';
-import { SyntaxNodeIdGenerator } from '@/core/types/nodes';
+import {
+  NodeSymbolIdGenerator,
+} from '@/core/types/symbol';
+import {
+  SymbolFactory,
+} from '@/core/types/symbol';
+import {
+  lookupMembers,
+} from './queries/lookupMembers';
+import {
+  symbolName,
+} from './queries/symbolName';
+import {
+  SyntaxNodeIdGenerator,
+} from '@/core/types/nodes';
 import {
   type DbmlProjectLayout, MemoryProjectLayout,
 } from './projectLayout';
-import { fileDependencies } from './queries/fileDependencies';
-import { Filepath } from '@/core/types/filepath';
-import { usableMembers } from './queries/usableMembers';
-import { topLevelSchemaMembers } from './queries/topLevelSchemaMembers';
-import { reachableFiles } from './queries/reachableFiles';
+import {
+  fileDependencies,
+} from './queries/fileDependencies';
+import {
+  Filepath,
+} from '@/core/types/filepath';
+import {
+  usableMembers,
+} from './queries/usableMembers';
+import {
+  topLevelSchemaMembers,
+} from './queries/topLevelSchemaMembers';
+import {
+  reachableFiles,
+} from './queries/reachableFiles';
 import {
   parseFile, parseProject,
 } from './queries/pipeline/parse';

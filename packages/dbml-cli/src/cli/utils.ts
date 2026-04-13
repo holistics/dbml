@@ -1,7 +1,11 @@
 import path from 'path';
 import fs from 'fs';
-import { type ExportFormat } from '@dbml/core';
-import { reduce } from 'lodash-es';
+import {
+  type ExportFormat,
+} from '@dbml/core';
+import {
+  reduce,
+} from 'lodash-es';
 
 interface OutputPlugin {
   write(content: string): void;

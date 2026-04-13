@@ -4,18 +4,26 @@ import {
 import {
   ElementDeclarationNode, FunctionApplicationNode, PrefixExpressionNode, InfixExpressionNode, ProgramNode,
 } from '@/core/types/nodes';
-import type { SyntaxNode } from '@/core/types/nodes';
-import type { SyntaxToken } from '@/core/types/tokens';
+import type {
+  SyntaxNode,
+} from '@/core/types/nodes';
+import type {
+  SyntaxToken,
+} from '@/core/types/tokens';
 import {
   NodeSymbol, SchemaSymbol, InjectedColumnSymbol, SymbolKind,
 } from '@/core/types/symbol';
-import type { GlobalModule } from '../types';
+import type {
+  GlobalModule,
+} from '../types';
 import {
   DEFAULT_SCHEMA_NAME, KEYWORDS_OF_DEFAULT_SETTING, PASS_THROUGH, type PassThrough, UNHANDLED,
 } from '@/constants';
 import Report from '@/core/types/report';
 import type Compiler from '@/compiler/index';
-import type { SchemaElement } from '@/core/types/schemaJson';
+import type {
+  SchemaElement,
+} from '@/core/types/schemaJson';
 import {
   extractVariableFromExpression,
   extractVarNameFromPrimaryVariable,
@@ -32,12 +40,16 @@ import {
 import {
   lookupMember, nodeRefereeOfLeftExpression, shouldInterpretNode,
 } from '../utils';
-import { isValidPartialInjection } from '@/core/utils/validate';
+import {
+  isValidPartialInjection,
+} from '@/core/utils/validate';
 import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
 import TableBinder from './bind';
-import { TableInterpreter } from './interpret';
+import {
+  TableInterpreter,
+} from './interpret';
 
 // Public utils that other modules can use
 export const tableUtils = {

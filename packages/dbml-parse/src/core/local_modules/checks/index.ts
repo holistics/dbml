@@ -5,12 +5,22 @@ import {
 import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
-import { ElementKind } from '@/core/types/keywords';
-import { SyntaxNode } from '@/core/types/nodes';
+import {
+  ElementKind,
+} from '@/core/types/keywords';
+import {
+  SyntaxNode,
+} from '@/core/types/nodes';
 import Report from '@/core/types/report';
-import { isElementNode } from '@/core/utils/expression';
-import { LocalModule } from '../types';
-import { Settings } from '@/core/utils/validate';
+import {
+  isElementNode,
+} from '@/core/utils/expression';
+import {
+  LocalModule,
+} from '../types';
+import {
+  Settings,
+} from '@/core/utils/validate';
 import ChecksValidator from './validate';
 
 export const checksModule: LocalModule = {

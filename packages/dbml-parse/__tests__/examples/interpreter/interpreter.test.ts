@@ -1236,7 +1236,14 @@ describe('[example] interpreter', () => {
       const db = interpret(source).getValue()!;
 
       const ve = db.diagramViews[0].visibleEntities;
-      expect(ve.tableGroups).toEqual([{ name: 'auth_tables' }, { name: 'content_tables' }]);
+      expect(ve.tableGroups).toEqual([
+        {
+          name: 'auth_tables',
+        },
+        {
+          name: 'content_tables',
+        },
+      ]);
       // Trinity rule still applies for tables/schemas (promoted to [])
       expect(ve.tables).toEqual([]);
       expect(ve.schemas).toEqual([]);

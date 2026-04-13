@@ -4,8 +4,12 @@ import {
 import {
   SyntaxTokenKind, isTriviaToken,
 } from '@/core/types/tokens';
-import { CompileErrorCode } from '@/core/types/errors';
-import { lex } from '@tests/utils';
+import {
+  CompileErrorCode,
+} from '@/core/types/errors';
+import {
+  lex,
+} from '@tests/utils';
 
 // Helper to get non-trivia, non-EOF tokens
 function getTokens (source: string) {

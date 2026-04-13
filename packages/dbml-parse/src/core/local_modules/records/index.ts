@@ -13,12 +13,18 @@ import {
 import {
   CallExpressionNode, ElementDeclarationNode, ProgramNode, SyntaxNode, TupleExpressionNode,
 } from '@/core/types/nodes';
-import { ElementKind } from '@/core/types/keywords';
+import {
+  ElementKind,
+} from '@/core/types/keywords';
 import {
   type LocalModule, type Settings,
 } from '../types';
-import { isValidName } from '@/core/utils/validate';
-import { isTupleOfVariables } from '@/core/utils/expression';
+import {
+  isValidName,
+} from '@/core/utils/validate';
+import {
+  isTupleOfVariables,
+} from '@/core/utils/expression';
 import Report from '@/core/types/report';
 import type Compiler from '@/compiler';
 import RecordsValidator from './validate';

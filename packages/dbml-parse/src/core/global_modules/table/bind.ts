@@ -4,9 +4,15 @@ import {
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, PrefixExpressionNode, ProgramNode, SyntaxNode,
 } from '@/core/types/nodes';
-import { SyntaxToken } from '@/core/types/tokens';
-import { CompileError } from '@/core/types/errors';
-import { scanNonListNodeForBinding } from '../utils';
+import {
+  SyntaxToken,
+} from '@/core/types/tokens';
+import {
+  CompileError,
+} from '@/core/types/errors';
+import {
+  scanNonListNodeForBinding,
+} from '../utils';
 import {
   aggregateSettingList, isValidPartialInjection,
 } from '../../utils/validate';
@@ -16,9 +22,13 @@ import {
 import {
   isExpressionAQuotedString, isExpressionAVariableNode,
 } from '../../utils/expression';
-import { KEYWORDS_OF_DEFAULT_SETTING } from '@/constants';
+import {
+  KEYWORDS_OF_DEFAULT_SETTING,
+} from '@/constants';
 import Compiler from '@/compiler';
-import { InfixExpressionNode } from '@/core/types/nodes';
+import {
+  InfixExpressionNode,
+} from '@/core/types/nodes';
 
 export default class TableBinder {
   private compiler: Compiler;

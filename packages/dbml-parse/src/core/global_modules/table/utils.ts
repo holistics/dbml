@@ -3,8 +3,12 @@ import {
   ListExpressionNode, PrefixExpressionNode,
   ArrayNode,
 } from '@/core/types/nodes';
-import type { SyntaxNode } from '@/core/types/nodes';
-import { getTokenPosition } from '../utils';
+import type {
+  SyntaxNode,
+} from '@/core/types/nodes';
+import {
+  getTokenPosition,
+} from '../utils';
 import {
   destructureComplexVariable, extractQuotedStringToken,
   extractVariableFromExpression, destructureComplexVariableTuple,

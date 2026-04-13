@@ -5,9 +5,15 @@ import type {
 import {
   MarkerSeverity, MarkerData,
 } from '@/services/types';
-import type { SyntaxNode } from '@/core/types/nodes';
-import type { SyntaxToken } from '@/core/types/tokens';
-import { Filepath } from '@/core/types/filepath';
+import type {
+  SyntaxNode,
+} from '@/core/types/nodes';
+import type {
+  SyntaxToken,
+} from '@/core/types/tokens';
+import {
+  Filepath,
+} from '@/core/types/filepath';
 
 // This is the same format that dbdiagram-frontend uses
 interface Diagnostic {

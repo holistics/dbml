@@ -1,16 +1,26 @@
 import Lexer from '@/core/lexer/lexer';
 import Parser from '@/core/parser/parser';
-import { ElementKind } from '@/core/types/keywords';
+import {
+  ElementKind,
+} from '@/core/types/keywords';
 import {
   DEFAULT_ENTRY, DEFAULT_SCHEMA_NAME,
 } from '@/constants';
-import { SyntaxNodeIdGenerator } from '@/core/types/nodes';
-import { destructureComplexVariable } from '@/core/utils/expression';
+import {
+  SyntaxNodeIdGenerator,
+} from '@/core/types/nodes';
+import {
+  destructureComplexVariable,
+} from '@/core/utils/expression';
 import {
   applyTextEdits, TextEdit,
 } from './applyTextEdits';
-import { addDoubleQuoteIfNeeded } from '../utils';
-import type { FilterConfig } from '@/core/types/schemaJson';
+import {
+  addDoubleQuoteIfNeeded,
+} from '../utils';
+import type {
+  FilterConfig,
+} from '@/core/types/schemaJson';
 
 export interface DiagramViewCreateOperation {
   operation: 'create';
@@ -192,5 +202,7 @@ export function syncDiagramView (
     }
   }
 
-  return { newDbml: result };
+  return {
+    newDbml: result,
+  };
 }

@@ -4,8 +4,12 @@ import {
 import {
   ElementDeclarationNode, SyntaxNode,
 } from '@/core/types/nodes';
-import { ElementKind } from '@/core/types/keywords';
-import type { LocalModule } from '../types';
+import {
+  ElementKind,
+} from '@/core/types/keywords';
+import type {
+  LocalModule,
+} from '../types';
 import {
   PASS_THROUGH, type PassThrough,
 } from '@/constants';
@@ -14,7 +18,9 @@ import type Compiler from '@/compiler';
 import {
   isElementNode, destructureComplexVariable,
 } from '@/core/utils/expression';
-import type { SyntaxToken } from '@/core/types/tokens';
+import type {
+  SyntaxToken,
+} from '@/core/types/tokens';
 import DiagramViewValidator from './validate';
 
 export const diagramViewModule: LocalModule = {

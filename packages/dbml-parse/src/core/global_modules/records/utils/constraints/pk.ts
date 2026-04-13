@@ -13,7 +13,9 @@ import {
   formatValues,
   createConstraintErrors,
 } from './helper';
-import { isSerialType } from '../data';
+import {
+  isSerialType,
+} from '../data';
 import {
   groupBy, partition, compact, isEmpty, difference, filter, flatMap,
 } from 'lodash-es';

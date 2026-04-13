@@ -7,14 +7,20 @@ import {
 import {
   Compiler, Filepath,
 } from '@dbml/parse';
-import { Command } from 'commander';
-import { NodeProjectLayout } from '../NodeProjectLayout';
+import {
+  Command,
+} from 'commander';
+import {
+  NodeProjectLayout,
+} from '../NodeProjectLayout';
 import {
   validateInputFilePaths,
   resolvePaths,
   getFormatOpt,
 } from './utils';
-import { validateFilePlugin } from './validatePlugins/validatePlugins';
+import {
+  validateFilePlugin,
+} from './validatePlugins/validatePlugins';
 import OutputConsolePlugin from './outputPlugins/outputConsolePlugin';
 import OutputFilePlugin from './outputPlugins/outputFilePlugin';
 import config from './config';

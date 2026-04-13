@@ -26,8 +26,12 @@ import type {
 import {
   SyntaxToken, SyntaxTokenKind,
 } from '@/core/types/tokens';
-import { last } from 'lodash-es';
-import { NUMERIC_LITERAL_PREFIX } from '@/constants';
+import {
+  last,
+} from 'lodash-es';
+import {
+  NUMERIC_LITERAL_PREFIX,
+} from '@/constants';
 
 export function getNumberTextFromExpression (node: PrimaryExpressionNode | PrefixExpressionNode): string {
   if (node instanceof PrefixExpressionNode) {

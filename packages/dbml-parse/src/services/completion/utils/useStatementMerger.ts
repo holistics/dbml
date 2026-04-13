@@ -1,5 +1,7 @@
 import type Compiler from '@/compiler';
-import { Filepath } from '@/core/types/filepath';
+import {
+  Filepath,
+} from '@/core/types/filepath';
 import {
   UseDeclarationNode, UseSpecifierListNode, WildcardNode, VariableNode, SyntaxNodeKind,
 } from '@/core/types/nodes';

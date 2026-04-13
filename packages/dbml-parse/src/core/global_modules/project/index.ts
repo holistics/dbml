@@ -1,18 +1,36 @@
-import { isElementNode } from '@/core/utils/expression';
-import { ElementKind } from '@/core/types/keywords';
-import { ElementDeclarationNode } from '@/core/types/nodes';
-import type { SyntaxNode } from '@/core/types/nodes';
-import type { SyntaxToken } from '@/core/types/tokens';
-import type { GlobalModule } from '../types';
+import {
+  isElementNode,
+} from '@/core/utils/expression';
+import {
+  ElementKind,
+} from '@/core/types/keywords';
+import {
+  ElementDeclarationNode,
+} from '@/core/types/nodes';
+import type {
+  SyntaxNode,
+} from '@/core/types/nodes';
+import type {
+  SyntaxToken,
+} from '@/core/types/tokens';
+import type {
+  GlobalModule,
+} from '../types';
 import {
   PASS_THROUGH, type PassThrough,
 } from '@/constants';
 import Report from '@/core/types/report';
 import type Compiler from '@/compiler/index';
-import type { SchemaElement } from '@/core/types/schemaJson';
-import { shouldInterpretNode } from '../utils';
+import type {
+  SchemaElement,
+} from '@/core/types/schemaJson';
+import {
+  shouldInterpretNode,
+} from '../utils';
 import ProjectBinder from './bind';
-import { ProjectInterpreter } from './interpret';
+import {
+  ProjectInterpreter,
+} from './interpret';
 
 export const projectModule: GlobalModule = {
   bindNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {

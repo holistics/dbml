@@ -1,4 +1,6 @@
-import { partition } from 'lodash-es';
+import {
+  partition,
+} from 'lodash-es';
 import {
   extractQuotedStringToken, destructureComplexVariable,
 } from '@/core/utils/expression';
@@ -14,11 +16,17 @@ import type {
 import {
   extractElementName, getTokenPosition, normalizeNoteContent, extractColor, getSymbolSchemaAndName,
 } from '../utils';
-import { aggregateSettingList } from '@/core/utils/validate';
+import {
+  aggregateSettingList,
+} from '@/core/utils/validate';
 import Compiler from '@/compiler';
 import Report from '@/core/types/report';
-import { UNHANDLED } from '@/constants';
-import { SymbolKind } from '@/core/types/symbol';
+import {
+  UNHANDLED,
+} from '@/constants';
+import {
+  SymbolKind,
+} from '@/core/types/symbol';
 
 export class TableGroupInterpreter {
   private declarationNode: ElementDeclarationNode;
@@ -28,7 +36,9 @@ export class TableGroupInterpreter {
   constructor (compiler: Compiler, declarationNode: ElementDeclarationNode) {
     this.declarationNode = declarationNode;
     this.compiler = compiler;
-    this.tableGroup = { tables: [] };
+    this.tableGroup = {
+      tables: [],
+    };
   }
 
   interpret (): Report<TableGroup> {

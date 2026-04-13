@@ -1,11 +1,15 @@
-import { partition } from 'lodash-es';
+import {
+  partition,
+} from 'lodash-es';
 import {
   CompileError, CompileErrorCode, CompileWarning,
 } from '@/core/types/errors';
 import {
   isSimpleName, aggregateSettingList,
 } from '@/core/utils/validate';
-import { SyntaxToken } from '@/core/types/tokens';
+import {
+  SyntaxToken,
+} from '@/core/types/tokens';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode,
 } from '@/core/types/nodes';

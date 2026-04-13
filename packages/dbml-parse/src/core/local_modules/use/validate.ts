@@ -4,8 +4,12 @@ import {
 import {
   ProgramNode, UseDeclarationNode, UseSpecifierNode, WildcardNode,
 } from '@/core/types/nodes';
-import { ImportKind } from '@/core/types';
-import { Filepath } from '@/core/types/filepath';
+import {
+  ImportKind,
+} from '@/core/types';
+import {
+  Filepath,
+} from '@/core/types/filepath';
 import type Compiler from '@/compiler';
 
 export default class UseDeclarationValidator {

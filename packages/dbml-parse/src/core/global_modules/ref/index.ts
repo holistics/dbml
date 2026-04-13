@@ -1,30 +1,42 @@
 import {
   isElementNode, isExpressionAVariableNode, isAccessExpression,
 } from '@/core/utils/expression';
-import { ElementKind } from '@/core/types/keywords';
+import {
+  ElementKind,
+} from '@/core/types/keywords';
 import {
   AttributeNode, ElementDeclarationNode,
 } from '@/core/types/nodes';
 import type {
   InfixExpressionNode, SyntaxNode,
 } from '@/core/types/nodes';
-import type { SyntaxToken } from '@/core/types/tokens';
+import type {
+  SyntaxToken,
+} from '@/core/types/tokens';
 import {
   NodeSymbol, SchemaSymbol, SymbolKind,
 } from '@/core/types/symbol';
-import type { GlobalModule } from '../types';
+import type {
+  GlobalModule,
+} from '../types';
 import {
   DEFAULT_SCHEMA_NAME, PASS_THROUGH, UNHANDLED, type PassThrough,
 } from '@/constants';
 import Report from '@/core/types/report';
 import type Compiler from '@/compiler/index';
-import type { Ref } from '@/core/types/schemaJson';
+import type {
+  Ref,
+} from '@/core/types/schemaJson';
 import {
   lookupMember, nodeRefereeOfLeftExpression, shouldInterpretNode,
 } from '../utils';
-import { extractVarNameFromPrimaryVariable } from '@/core/utils/expression';
+import {
+  extractVarNameFromPrimaryVariable,
+} from '@/core/utils/expression';
 import RefBinder from './bind';
-import { RefInterpreter } from './interpret';
+import {
+  RefInterpreter,
+} from './interpret';
 
 // Check if a node is a descendant of a Ref element's body (not its name/alias)
 function isInsideRefBody (node: SyntaxNode): boolean {

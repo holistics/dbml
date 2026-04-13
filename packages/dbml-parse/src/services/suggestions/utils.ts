@@ -7,15 +7,25 @@ import {
 import {
   SyntaxToken, SyntaxTokenKind,
 } from '@/core/types/tokens';
-import { hasTrailingSpaces } from '@/core/lexer/utils';
+import {
+  hasTrailingSpaces,
+} from '@/core/lexer/utils';
 import {
   SyntaxNode, TupleExpressionNode, FunctionApplicationNode,
 } from '@/core/types/nodes';
 import Compiler from '@/compiler';
-import { extractVariableFromExpression } from '@/core/utils/expression';
-import { isValidPartialInjection } from '@/core/utils/validate';
-import { addDoubleQuoteIfNeeded } from '@/compiler/queries/utils';
-import { UNHANDLED } from '@/constants';
+import {
+  extractVariableFromExpression,
+} from '@/core/utils/expression';
+import {
+  isValidPartialInjection,
+} from '@/core/utils/validate';
+import {
+  addDoubleQuoteIfNeeded,
+} from '@/compiler/queries/utils';
+import {
+  UNHANDLED,
+} from '@/constants';
 
 export function pickCompletionItemKind (symbolKind: SymbolKind): CompletionItemKind {
   switch (symbolKind) {
@@ -62,7 +72,9 @@ export function shouldPrependSpace (token: SyntaxToken | undefined, offset: numb
 }
 
 export function noSuggestions (): CompletionList {
-  return { suggestions: [] };
+  return {
+    suggestions: [],
+  };
 }
 
 export function prependSpace (completionList: CompletionList): CompletionList {

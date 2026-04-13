@@ -1,4 +1,6 @@
-import { partition } from 'lodash-es';
+import {
+  partition,
+} from 'lodash-es';
 import Compiler from '@/compiler';
 import {
   CompileError, CompileErrorCode,
@@ -6,8 +8,12 @@ import {
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, ProgramNode, SyntaxNode,
 } from '@/core/types/nodes';
-import { ElementKind } from '@/core/types/keywords';
-import { isExpressionAQuotedString } from '@/core/utils/expression';
+import {
+  ElementKind,
+} from '@/core/types/keywords';
+import {
+  isExpressionAQuotedString,
+} from '@/core/utils/expression';
 
 export default class NoteValidator {
   private compiler: Compiler;

@@ -1,4 +1,6 @@
-import { uniqBy } from 'lodash-es';
+import {
+  uniqBy,
+} from 'lodash-es';
 import {
   ElementDeclarationNode, UseDeclarationNode, UseSpecifierListNode, WildcardNode,
 } from '@/core/types/nodes';
@@ -8,7 +10,9 @@ import {
 import {
   NodeSymbol, SchemaSymbol, SymbolKind, UseSymbol,
 } from '@/core/types/symbol';
-import type { GlobalModule } from '../types';
+import type {
+  GlobalModule,
+} from '../types';
 import {
   PASS_THROUGH, type PassThrough, UNHANDLED, DEFAULT_SCHEMA_NAME,
 } from '@/constants';
@@ -17,12 +21,24 @@ import type Compiler from '@/compiler/index';
 import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
-import { tableUtils } from '../table';
-import { enumUtils } from '../enum';
-import { tablePartialUtils } from '../tablePartial';
-import { tableGroupUtils } from '../tableGroup';
-import { shouldBelongToThisSchema } from '@/compiler/queries/usableMembers';
-import { type Filepath } from '@/core/types/filepath';
+import {
+  tableUtils,
+} from '../table';
+import {
+  enumUtils,
+} from '../enum';
+import {
+  tablePartialUtils,
+} from '../tablePartial';
+import {
+  tableGroupUtils,
+} from '../tableGroup';
+import {
+  shouldBelongToThisSchema,
+} from '@/compiler/queries/usableMembers';
+import {
+  type Filepath,
+} from '@/core/types/filepath';
 
 export const schemaModule: GlobalModule = {
   symbolMembers (compiler: Compiler, symbol: NodeSymbol): Report<NodeSymbol[]> | Report<PassThrough> {
@@ -182,7 +198,9 @@ function handleMemberWildcardUses (compiler: Compiler, symbol: SchemaSymbol, imp
         schemaMember.name,
         compiler.symbolFactory.create(
           SchemaSymbol,
-          { name: schemaMember.name },
+          {
+            name: schemaMember.name,
+          },
           symbol.filepath,
         ),
       );
@@ -201,7 +219,9 @@ function handleMemberWildcardUses (compiler: Compiler, symbol: SchemaSymbol, imp
     if (externalSymbol) members.push(externalSymbol);
   }
 
-  for (const { importPath: externalFilepath } of wildcard) {
+  for (const {
+    importPath: externalFilepath,
+  } of wildcard) {
     members.push(...handleMemberWildcardUses(compiler, symbol, externalFilepath, wildcardNode, childSchemas, visited));
   }
 
@@ -214,7 +234,9 @@ function findSchemaSymbolInFilepath (compiler: Compiler, filepath: Filepath, sch
   const usableSymbols = compiler.fileUsableMembers(filepath).getFiltered(UNHANDLED);
   if (!usableSymbols) return undefined;
 
-  let { schemaMembers } = usableSymbols;
+  let {
+    schemaMembers,
+  } = usableSymbols;
   let currentSchema: SchemaSymbol | undefined;
 
   const fullname = [...schemaFullname];
@@ -223,7 +245,9 @@ function findSchemaSymbolInFilepath (compiler: Compiler, filepath: Filepath, sch
     currentSchema = schemaMembers.find((member) => member.name === currentSchemaName);
     if (!currentSchema) return undefined;
     const currentUsableSymbols = compiler.fileUsableMembers(currentSchema).getValue();
-    ({ schemaMembers } = currentUsableSymbols);
+    ({
+      schemaMembers,
+    } = currentUsableSymbols);
   }
 
   return currentSchema;

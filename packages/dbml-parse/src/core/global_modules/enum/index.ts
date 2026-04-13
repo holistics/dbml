@@ -1,20 +1,32 @@
 import {
   isElementNode, isElementFieldNode, getBody,
 } from '@/core/utils/expression';
-import { ElementKind } from '@/core/types/keywords';
-import { ElementDeclarationNode } from '@/core/types/nodes';
-import type { SyntaxNode } from '@/core/types/nodes';
-import type { SyntaxToken } from '@/core/types/tokens';
+import {
+  ElementKind,
+} from '@/core/types/keywords';
+import {
+  ElementDeclarationNode,
+} from '@/core/types/nodes';
+import type {
+  SyntaxNode,
+} from '@/core/types/nodes';
+import type {
+  SyntaxToken,
+} from '@/core/types/tokens';
 import {
   NodeSymbol, SymbolKind,
 } from '@/core/types/symbol';
-import type { GlobalModule } from '../types';
+import type {
+  GlobalModule,
+} from '../types';
 import {
   PASS_THROUGH, UNHANDLED, type PassThrough,
 } from '@/constants';
 import Report from '@/core/types/report';
 import type Compiler from '@/compiler/index';
-import type { SchemaElement } from '@/core/types/schemaJson';
+import type {
+  SchemaElement,
+} from '@/core/types/schemaJson';
 import {
   getNodeMemberSymbols, shouldInterpretNode,
 } from '../utils';

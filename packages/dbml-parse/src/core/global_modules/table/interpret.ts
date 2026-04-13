@@ -25,12 +25,16 @@ import {
 import {
   aggregateSettingList, isValidPartialInjection,
 } from '@/core/utils/validate';
-import { SymbolKind } from '@/core/types/symbol';
+import {
+  SymbolKind,
+} from '@/core/types/symbol';
 import {
   ElementKind, SettingName,
 } from '@/core/types/keywords';
 import Compiler from '@/compiler';
-import { UNHANDLED } from '@/constants';
+import {
+  UNHANDLED,
+} from '@/constants';
 import Report from '@/core/types/report';
 
 export class TableInterpreter {
@@ -331,7 +335,9 @@ export class TableInterpreter {
 
   private interpretIndexes (indexes: ElementDeclarationNode): CompileError[] {
     this.table.indexes!.push(...(indexes.body as BlockExpressionNode).body.map((_indexField) => {
-      const index: Partial<Index> = { columns: [] };
+      const index: Partial<Index> = {
+        columns: [],
+      };
 
       const indexField = _indexField as FunctionApplicationNode;
       index.token = getTokenPosition(indexField);

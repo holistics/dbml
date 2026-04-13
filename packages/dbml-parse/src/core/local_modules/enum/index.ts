@@ -4,8 +4,12 @@ import {
 import {
   isElementNode, isElementFieldNode,
 } from '@/core/utils/expression';
-import { destructureComplexVariable } from '@/core/utils/expression';
-import { last } from 'lodash-es';
+import {
+  destructureComplexVariable,
+} from '@/core/utils/expression';
+import {
+  last,
+} from 'lodash-es';
 import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
@@ -21,9 +25,13 @@ import {
 import {
   aggregateSettingList, isValidName,
 } from '@/core/utils/validate';
-import { isExpressionAQuotedString } from '@/core/utils/expression';
+import {
+  isExpressionAQuotedString,
+} from '@/core/utils/expression';
 import Report from '@/core/types/report';
-import { extractVariableFromExpression } from '@/core/utils/expression';
+import {
+  extractVariableFromExpression,
+} from '@/core/utils/expression';
 import type Compiler from '@/compiler';
 import EnumValidator from './validate';
 

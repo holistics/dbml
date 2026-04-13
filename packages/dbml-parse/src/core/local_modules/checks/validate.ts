@@ -14,9 +14,15 @@ import {
   ProgramNode,
   SyntaxNode,
 } from '@/core/types/nodes';
-import { isExpressionAQuotedString } from '@/core/utils/expression';
-import { aggregateSettingList } from '@/core/utils/validate';
-import { ElementKind } from '@/core/types/keywords';
+import {
+  isExpressionAQuotedString,
+} from '@/core/utils/expression';
+import {
+  aggregateSettingList,
+} from '@/core/utils/validate';
+import {
+  ElementKind,
+} from '@/core/types/keywords';
 
 export default class ChecksValidator {
   private compiler: Compiler;

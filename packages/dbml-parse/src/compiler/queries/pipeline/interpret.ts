@@ -3,7 +3,9 @@ import {
   DEFAULT_ENTRY, UNHANDLED,
 } from '@/constants';
 import Report from '@/core/types/report';
-import { AliasKind } from '@/core/types';
+import {
+  AliasKind,
+} from '@/core/types';
 import type {
   Database, ElementRef, MasterDatabase, Table, TablePartial,
 } from '@/core/types';
@@ -40,7 +42,9 @@ function stripDatabase (db: Database): Database {
 
 // Interpret a single file. Returns raw Database
 export function interpretFile (this: Compiler, filepath: Filepath): Report<Readonly<Database> | undefined> {
-  return this.parseFile(filepath).chain(({ ast }) =>
+  return this.parseFile(filepath).chain(({
+    ast,
+  }) =>
     this.interpretNode(ast).map((v) => v === UNHANDLED ? undefined : v as Database),
   );
 }

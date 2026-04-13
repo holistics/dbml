@@ -1,4 +1,6 @@
-import type { CompileWarning } from '@/core/types/errors';
+import type {
+  CompileWarning,
+} from '@/core/types/errors';
 import type {
   Table, Column, TableRecord,
 } from '@/core/types/schemaJson';

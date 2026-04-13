@@ -27,7 +27,9 @@ export function zeroOrManyRegex (regex: RegExp): RegExp {
  *   caseVariant('table') => 'Table' | 'tAble' | 'taBle'
  */
 export const caseVariant = (str: string) => fc.oneof(
-  fc.nat({ max: str.length - 1 }).map((pos) => str.slice(0, pos) + str[pos].toUpperCase() + str.slice(pos + 1)),
+  fc.nat({
+    max: str.length - 1,
+  }).map((pos) => str.slice(0, pos) + str[pos].toUpperCase() + str.slice(pos + 1)),
   fc.constant(str),
   fc.constant(str.toUpperCase()),
   fc.constant(str.toLowerCase()),

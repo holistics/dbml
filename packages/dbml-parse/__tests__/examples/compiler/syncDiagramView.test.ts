@@ -1,12 +1,16 @@
 import {
   describe, expect, it,
 } from 'vitest';
-import { syncDiagramView } from '@/compiler/queries/transform/syncDiagramView';
+import {
+  syncDiagramView,
+} from '@/compiler/queries/transform/syncDiagramView';
 import Compiler from '@/compiler/index';
 import Lexer from '@/core/lexer/lexer';
 import { DEFAULT_ENTRY, DEFAULT_SCHEMA_NAME } from '@/constants';
 import Parser from '@/core/parser/parser';
-import { SyntaxNodeIdGenerator } from '@/core/types/nodes';
+import {
+  SyntaxNodeIdGenerator,
+} from '@/core/types/nodes';
 
 // update operation
 
@@ -16,7 +20,9 @@ describe('syncDiagramView - update', () => {
 DiagramView my_view {
   Tables { users }
 }`;
-    const { newDbml } = syncDiagramView(dbml, [
+    const {
+      newDbml,
+    } = syncDiagramView(dbml, [
       {
         operation: 'update',
         name: 'my_view',
@@ -41,7 +47,9 @@ DiagramView my_view {
   Tables { users }
 }
 `;
-    const { newDbml } = syncDiagramView(dbml, [
+    const {
+      newDbml,
+    } = syncDiagramView(dbml, [
       {
         operation: 'delete',
         name: 'my_view',
@@ -94,7 +102,9 @@ DiagramView "New View" {
 
 describe('syncDiagramView - name quoting', () => {
   it('quotes names containing spaces', () => {
-    const { newDbml } = syncDiagramView('', [
+    const {
+      newDbml,
+    } = syncDiagramView('', [
       {
         operation: 'create',
         name: 'My View',
@@ -110,7 +120,9 @@ describe('syncDiagramView - name quoting', () => {
   });
 
   it('does not quote simple identifier names', () => {
-    const { newDbml } = syncDiagramView('', [
+    const {
+      newDbml,
+    } = syncDiagramView('', [
       {
         operation: 'create',
         name: 'my_view',
@@ -127,7 +139,9 @@ describe('syncDiagramView - name quoting', () => {
   });
 
   it('escapes internal double quotes in names', () => {
-    const { newDbml } = syncDiagramView('', [
+    const {
+      newDbml,
+    } = syncDiagramView('', [
       {
         operation: 'create',
         name: 'My "Special" View',
@@ -148,7 +162,9 @@ DiagramView "My View" {
   Tables { users }
 }
 `;
-    const { newDbml } = syncDiagramView(dbml, [
+    const {
+      newDbml,
+    } = syncDiagramView(dbml, [
       {
         operation: 'update',
         name: 'My View',
@@ -169,7 +185,9 @@ DiagramView my_view {
   Tables { users }
 }
 `;
-    const { newDbml } = syncDiagramView(dbml, [
+    const {
+      newDbml,
+    } = syncDiagramView(dbml, [
       {
         operation: 'create',
         name: 'my_view',

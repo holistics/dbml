@@ -11,7 +11,9 @@ import {
   TupleExpressionNode,
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
-import { SyntaxToken } from '@/core/types/tokens';
+import {
+  SyntaxToken,
+} from '@/core/types/tokens';
 import Compiler from '@/compiler';
 import {
   isElementNode,
@@ -26,8 +28,12 @@ import {
 import {
   ElementKind, SettingName,
 } from '@/core/types/keywords';
-import { UNHANDLED } from '@/constants';
-import { SchemaSymbol } from '@/core/types/symbol';
+import {
+  UNHANDLED,
+} from '@/constants';
+import {
+  SchemaSymbol,
+} from '@/core/types/symbol';
 
 export default class Binder {
   private ast: ProgramNode;
@@ -45,7 +51,9 @@ export default class Binder {
     const reachableFiles = this.compiler.reachableFiles(this.ast.filepath);
 
     for (const filepath of reachableFiles) {
-      const { ast } = this.compiler.parseFile(filepath).getValue();
+      const {
+        ast,
+      } = this.compiler.parseFile(filepath).getValue();
       // Program-level checks (duplicate projects) - only if it's the entry file or we want to check all?
       // Usually project is only one per whole project.
       const projects = ast.body.filter((e): e is ElementDeclarationNode => e instanceof ElementDeclarationNode && e.isKind(ElementKind.Project));
@@ -143,7 +151,9 @@ export default class Binder {
     const reachableFiles = this.compiler.reachableFiles(this.ast.filepath);
 
     for (const filepath of reachableFiles) {
-      const { ast } = this.compiler.parseFile(filepath).getValue();
+      const {
+        ast,
+      } = this.compiler.parseFile(filepath).getValue();
       for (const element of ast.body) {
         if (!(element instanceof ElementDeclarationNode) || !element.type) continue;
         const decl = element as ElementDeclarationNode & { type: SyntaxToken };
@@ -276,7 +286,9 @@ export default class Binder {
     const reachableFiles = this.compiler.reachableFiles(this.ast.filepath);
 
     for (const filepath of reachableFiles) {
-      const { ast } = this.compiler.parseFile(filepath).getValue();
+      const {
+        ast,
+      } = this.compiler.parseFile(filepath).getValue();
       for (const element of ast.body) {
         if (!(element instanceof ElementDeclarationNode) || !element.type) continue;
         const decl = element as ElementDeclarationNode & { type: SyntaxToken };

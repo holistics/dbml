@@ -1,7 +1,13 @@
-import { DEFAULT_SCHEMA_NAME } from '@/constants';
+import {
+  DEFAULT_SCHEMA_NAME,
+} from '@/constants';
 import type Compiler from '../../index';
-import { SyntaxNode } from '@/core/types/nodes';
-import { NodeSymbol } from '@/core/types/symbol';
+import {
+  SyntaxNode,
+} from '@/core/types/nodes';
+import {
+  NodeSymbol,
+} from '@/core/types/symbol';
 import {
   applyTextEdits, TextEdit,
 } from './applyTextEdits';
@@ -11,7 +17,9 @@ import {
 import {
   normalizeTableName, lookupTableSymbol, stripQuotes, type TableNameInput,
 } from './utils';
-import { Filepath } from '@/core/types/filepath';
+import {
+  Filepath,
+} from '@/core/types/filepath';
 
 interface FormattedTableName {
   schema: string;

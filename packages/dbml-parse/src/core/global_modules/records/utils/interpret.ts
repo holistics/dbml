@@ -5,16 +5,24 @@ import type Compiler from '@/compiler/index';
 import {
   NodeSymbol, SymbolKind,
 } from '@/core/types/symbol';
-import { UNHANDLED } from '@/constants';
+import {
+  UNHANDLED,
+} from '@/constants';
 import type {
   Table, Column, TablePartial, Ref,
 } from '@/core/types/schemaJson';
-import { isValidPartialInjection } from '@/core/utils/validate';
+import {
+  isValidPartialInjection,
+} from '@/core/utils/validate';
 import {
   extractVariableFromExpression, getBody, isElementNode,
 } from '@/core/utils/expression';
-import { ElementKind } from '@/core/types';
-import { uniqBy } from 'lodash-es';
+import {
+  ElementKind,
+} from '@/core/types';
+import {
+  uniqBy,
+} from 'lodash-es';
 import {
   getMultiplicities, lookupInDefaultSchema, lookupMember,
 } from '../../utils';
@@ -177,7 +185,9 @@ export function parseLengthParam (column: Column): { length: number } | undefine
   const args = column.type.args;
   if (!args) return undefined;
   const length = parseInt(args.trim(), 10);
-  if (!Number.isNaN(length)) return { length };
+  if (!Number.isNaN(length)) return {
+    length,
+  };
   return undefined;
 }
 
@@ -187,7 +197,9 @@ export function extractInlineRefsFromTablePartials (table: Table, tablePartials:
 
   // Process partials in the same order as mergeTableAndPartials
   for (const tablePartial of [...table.partials].reverse()) {
-    const { name } = tablePartial;
+    const {
+      name,
+    } = tablePartial;
     const partial = tablePartials.find((p) => p.name === name);
     if (!partial) continue;
 

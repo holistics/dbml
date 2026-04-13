@@ -1,7 +1,9 @@
 import {
   extractQuotedStringToken, extractVariableFromExpression,
 } from '@/core/utils/expression';
-import { aggregateSettingList } from '@/core/utils/validate';
+import {
+  aggregateSettingList,
+} from '@/core/utils/validate';
 import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
@@ -25,7 +27,9 @@ export default class EnumInterpreter {
   constructor (compiler: Compiler, declarationNode: ElementDeclarationNode) {
     this.compiler = compiler;
     this.declarationNode = declarationNode;
-    this.enum = { values: [] };
+    this.enum = {
+      values: [],
+    };
   }
 
   interpret (): Report<Enum> {

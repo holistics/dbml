@@ -1,5 +1,7 @@
 import Report from '@/core/types/report';
-import { GlobalModule } from '../types';
+import {
+  GlobalModule,
+} from '../types';
 import Compiler from '@/compiler';
 import {
   InfixExpressionNode, SyntaxNode, UseDeclarationNode, UseSpecifierNode, UseSpecifierListNode,
@@ -25,8 +27,12 @@ import {
 import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
-import { lookupMember } from '../utils';
-import type { SchemaElement } from '@/core/types/schemaJson';
+import {
+  lookupMember,
+} from '../utils';
+import type {
+  SchemaElement,
+} from '@/core/types/schemaJson';
 
 export const useModule: GlobalModule = {
   nodeSymbol (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol> | Report<PassThrough> {
@@ -194,7 +200,9 @@ function lookupMemberInFilepath (compiler: Compiler, importPath: Filepath | unde
   }
 
   // 4. Wildcard reuses
-  for (const { importPath: wildcardPath } of usable.reuses.wildcard) {
+  for (const {
+    importPath: wildcardPath,
+  } of usable.reuses.wildcard) {
     const member = lookupMemberInFilepath(compiler, wildcardPath, name, symbolKind, visited);
     if (member) return member;
   }

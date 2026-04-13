@@ -4,7 +4,9 @@ import type {
 import {
   CompileWarning, CompileErrorCode,
 } from '@/core/types/errors';
-import { isSerialType } from '../data';
+import {
+  isSerialType,
+} from '../data';
 
 export function buildColumnIndex (record: TableRecord): Map<string, number> {
   const index = new Map<string, number>();
@@ -107,7 +109,9 @@ export function formatValues (
   return `(${values})`;
 }
 
-export { createConstraintWarnings as createConstraintErrors };
+export {
+  createConstraintWarnings as createConstraintErrors,
+};
 
 /**
  * Create constraint warnings for a record.

@@ -41,7 +41,9 @@ const consoleLogger = createLogger({
     consoleFormat,
   ),
   transports: [
-    new transports.Console({ level: 'error' }),
+    new transports.Console({
+      level: 'error',
+    }),
   ],
 });
 

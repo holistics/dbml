@@ -1,5 +1,9 @@
-import { Filepath } from './filepath';
-import type { Position } from './position';
+import {
+  Filepath,
+} from './filepath';
+import type {
+  Position,
+} from './position';
 
 export interface TokenPosition {
   start: Position;

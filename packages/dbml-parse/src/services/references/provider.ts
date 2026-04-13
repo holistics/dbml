@@ -2,12 +2,18 @@ import {
   getOffsetFromMonacoPosition, extractReferee,
 } from '@/services/utils';
 import Compiler from '@/compiler';
-import { SyntaxNodeKind } from '@/core/types/nodes';
+import {
+  SyntaxNodeKind,
+} from '@/core/types/nodes';
 import {
   Location, ReferenceProvider, TextModel, Position,
 } from '@/services/types';
-import { UNHANDLED } from '@/constants';
-import { Filepath } from '@/core/types/filepath';
+import {
+  UNHANDLED,
+} from '@/constants';
+import {
+  Filepath,
+} from '@/core/types/filepath';
 
 export default class DBMLReferencesProvider implements ReferenceProvider {
   private compiler: Compiler;
@@ -17,7 +23,9 @@ export default class DBMLReferencesProvider implements ReferenceProvider {
   }
 
   provideReferences (model: TextModel, position: Position): Location[] {
-    const { uri } = model;
+    const {
+      uri,
+    } = model;
     const offset = getOffsetFromMonacoPosition(model, position);
 
     // Ensure binding is done before resolving references

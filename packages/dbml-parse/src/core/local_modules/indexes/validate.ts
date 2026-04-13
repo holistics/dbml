@@ -19,9 +19,15 @@ import {
 import {
   isExpressionAQuotedString, isExpressionAVariableNode,
 } from '@/core/utils/expression';
-import { destructureIndexNode } from '@/core/utils/expression';
-import { aggregateSettingList } from '@/core/utils/validate';
-import { ElementKind } from '@/core/types/keywords';
+import {
+  destructureIndexNode,
+} from '@/core/utils/expression';
+import {
+  aggregateSettingList,
+} from '@/core/utils/validate';
+import {
+  ElementKind,
+} from '@/core/types/keywords';
 
 export default class IndexesValidator {
   private compiler: Compiler;

@@ -172,13 +172,19 @@ export function toSnapshot (
     return sortArray([...value]).map((v) => toSnapshot(compiler, v as Snappable, { simple, includeReferences, includeSymbols, includeReferee }));
   }
   if (value instanceof CompileWarning) {
-    return warningToSnapshot(compiler, value, { simple });
+    return warningToSnapshot(compiler, value, {
+      simple,
+    });
   }
   if (value instanceof CompileError) {
-    return errorToSnapshot(compiler, value, { simple });
+    return errorToSnapshot(compiler, value, {
+      simple,
+    });
   }
   if (value instanceof SyntaxToken) {
-    return syntaxTokenToSnapshot(compiler, value, { simple });
+    return syntaxTokenToSnapshot(compiler, value, {
+      simple,
+    });
   }
   if (value instanceof SyntaxNode) {
     return syntaxNodeToSnapshot(compiler, value, { simple, includeReferences, includeSymbols, includeReferee });
@@ -208,7 +214,9 @@ export function toSnapshot (
 export function errorToSnapshot (
   compiler: Compiler,
   error: CompileError,
-  { simple = false }: { simple?: boolean } = {},
+  {
+    simple = false,
+  }: { simple?: boolean } = {},
 ): unknown {
   const {
     code,
@@ -230,15 +238,25 @@ export function errorToSnapshot (
     diagnostic,
     filepath: filepath.toString(),
     ...(nodeOrToken instanceof SyntaxNode
-      ? { node: syntaxNodeToSnapshot(compiler, nodeOrToken, { simple: true }) }
-      : { token: syntaxTokenToSnapshot(compiler, nodeOrToken as SyntaxToken, { simple: true }) }),
+      ? {
+          node: syntaxNodeToSnapshot(compiler, nodeOrToken, {
+            simple: true,
+          }),
+        }
+      : {
+          token: syntaxTokenToSnapshot(compiler, nodeOrToken as SyntaxToken, {
+            simple: true,
+          }),
+        }),
   });
 }
 
 export function warningToSnapshot (
   compiler: Compiler,
   warning: CompileWarning,
-  { simple = false }: { simple?: boolean } = {},
+  {
+    simple = false,
+  }: { simple?: boolean } = {},
 ): unknown {
   const {
     code,
@@ -260,15 +278,25 @@ export function warningToSnapshot (
     diagnostic,
     filepath: filepath.toString(),
     ...(nodeOrToken instanceof SyntaxNode
-      ? { node: syntaxNodeToSnapshot(compiler, nodeOrToken, { simple: true }) }
-      : { token: syntaxTokenToSnapshot(compiler, nodeOrToken as SyntaxToken, { simple: true }) }),
+      ? {
+          node: syntaxNodeToSnapshot(compiler, nodeOrToken, {
+            simple: true,
+          }),
+        }
+      : {
+          token: syntaxTokenToSnapshot(compiler, nodeOrToken as SyntaxToken, {
+            simple: true,
+          }),
+        }),
   });
 }
 
 export function syntaxTokenToSnapshot (
   compiler: Compiler,
   token: SyntaxToken,
-  { simple = false }: { simple?: boolean } = {},
+  {
+    simple = false,
+  }: { simple?: boolean } = {},
 ): unknown {
   const tokenReadableId = getReadableId(token);
   const snippet = getCodeSnippet(token, compiler);

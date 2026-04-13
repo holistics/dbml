@@ -15,27 +15,39 @@ import {
 import {
   InfixExpressionNode, ElementDeclarationNode,
 } from '@/core/types/nodes';
-import type { SyntaxNode } from '@/core/types/nodes';
-import type { SyntaxToken } from '@/core/types/tokens';
+import type {
+  SyntaxNode,
+} from '@/core/types/nodes';
+import type {
+  SyntaxToken,
+} from '@/core/types/tokens';
 import {
   NodeSymbol, SymbolKind,
 } from '@/core/types/symbol';
-import type { GlobalModule } from '../types';
+import type {
+  GlobalModule,
+} from '../types';
 import {
   PASS_THROUGH, type PassThrough, UNHANDLED, KEYWORDS_OF_DEFAULT_SETTING,
 } from '@/constants';
 import Report from '@/core/types/report';
 import type Compiler from '@/compiler/index';
-import type { SchemaElement } from '@/core/types/schemaJson';
+import type {
+  SchemaElement,
+} from '@/core/types/schemaJson';
 import {
   lookupMember, nodeRefereeOfLeftExpression, lookupInDefaultSchema, shouldInterpretNode,
 } from '../utils';
 import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
-import { tableUtils } from '../table';
+import {
+  tableUtils,
+} from '../table';
 import TablePartialBinder from './bind';
-import { TablePartialInterpreter } from './interpret';
+import {
+  TablePartialInterpreter,
+} from './interpret';
 
 // Public utils that other modules can use
 export const tablePartialUtils = {

@@ -1,5 +1,9 @@
-import { extractQuotedStringToken } from '@/core/utils/expression';
-import { CompileError } from '@/core/types/errors';
+import {
+  extractQuotedStringToken,
+} from '@/core/utils/expression';
+import {
+  CompileError,
+} from '@/core/types/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, SyntaxNode,
 } from '@/core/types/nodes';
@@ -43,7 +47,9 @@ export class ProjectInterpreter {
       return [];
     }
 
-    const { name } = extractElementName(nameNode);
+    const {
+      name,
+    } = extractElementName(nameNode);
     this.project.name = name;
 
     return [];

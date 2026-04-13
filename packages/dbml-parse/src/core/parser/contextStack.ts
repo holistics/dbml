@@ -1,4 +1,6 @@
-import { last } from 'lodash-es';
+import {
+  last,
+} from 'lodash-es';
 import {
   SyntaxToken, SyntaxTokenKind,
 } from '@/core/types/tokens';

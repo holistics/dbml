@@ -5,7 +5,9 @@ import {
 import {
   NodeSymbol, SchemaSymbol, SymbolKind,
 } from '@/core/types/symbol';
-import { UNHANDLED } from '@/constants';
+import {
+  UNHANDLED,
+} from '@/constants';
 
 export function symbolOfName (this: Compiler, nameStack: string[], owner: ElementDeclarationNode | ProgramNode) {
   if (nameStack.length === 0) {

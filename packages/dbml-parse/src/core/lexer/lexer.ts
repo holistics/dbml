@@ -8,9 +8,15 @@ import {
 import {
   SyntaxToken, SyntaxTokenKind, isOp, isTriviaToken,
 } from '@/core/types/tokens';
-import { Position } from '@/core/types/position';
-import { isInvalidToken } from '@/core/utils/expression';
-import { Filepath } from '@/core/types/filepath';
+import {
+  Position,
+} from '@/core/types/position';
+import {
+  isInvalidToken,
+} from '@/core/utils/expression';
+import {
+  Filepath,
+} from '@/core/types/filepath';
 
 export default class Lexer {
   private start: Position = {
@@ -44,7 +50,9 @@ export default class Lexer {
 
   private advance (): string {
     const c = this.peek();
-    this.current = { ...this.current };
+    this.current = {
+      ...this.current,
+    };
     if (c === '\n') {
       this.current.line += 1;
       this.current.column = 0;
@@ -203,7 +211,9 @@ export default class Lexer {
           );
           break;
       }
-      this.start = { ...this.current };
+      this.start = {
+        ...this.current,
+      };
     }
   }
 

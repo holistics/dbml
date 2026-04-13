@@ -1,12 +1,18 @@
-import { ElementKind } from '@/core/types/keywords';
+import {
+  ElementKind,
+} from '@/core/types/keywords';
 import {
   isElementNode, isElementFieldNode, destructureComplexVariable,
 } from '@/core/utils/expression';
-import { last } from 'lodash-es';
+import {
+  last,
+} from 'lodash-es';
 import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
-import { type LocalModule } from '../types';
+import {
+  type LocalModule,
+} from '../types';
 import {
   PASS_THROUGH, type PassThrough,
 } from '@/constants';
@@ -18,7 +24,9 @@ import {
 } from '@/core/utils/validate';
 import Report from '@/core/types/report';
 import type Compiler from '@/compiler';
-import RefValidator, { validateFieldSettings } from './validate';
+import RefValidator, {
+  validateFieldSettings,
+} from './validate';
 
 export const refModule: LocalModule = {
   validateNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {

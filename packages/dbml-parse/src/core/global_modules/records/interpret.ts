@@ -38,7 +38,9 @@ import {
   destructureCallExpression, extractQuotedStringToken, extractVariableFromExpression, isExpressionAVariableNode, isElementNode,
 } from '@/core/utils/expression';
 import Compiler from '@/compiler/index';
-import { ElementKind } from '@/core/types/keywords';
+import {
+  ElementKind,
+} from '@/core/types/keywords';
 import {
   NodeSymbol, SymbolKind,
 } from '@/core/types/symbol';
@@ -477,7 +479,9 @@ function extractValue (
     // Validate string length (using UTF-8 byte length like SQL engines)
     const lengthParam = parseLengthParam(column);
     if (lengthParam) {
-      const { length } = lengthParam;
+      const {
+        length,
+      } = lengthParam;
       // Calculate byte length in UTF-8 encoding (matching SQL behavior)
       const actualByteLength = new TextEncoder().encode(strValue).length;
 

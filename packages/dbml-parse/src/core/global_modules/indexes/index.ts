@@ -1,22 +1,32 @@
 import {
   isElementNode, isElementFieldNode, isExpressionAVariableNode, isInsideSettingList,
 } from '@/core/utils/expression';
-import { ElementKind } from '@/core/types/keywords';
+import {
+  ElementKind,
+} from '@/core/types/keywords';
 import {
   ElementDeclarationNode, PrimaryExpressionNode,
 } from '@/core/types/nodes';
-import type { SyntaxNode } from '@/core/types/nodes';
-import type { SyntaxToken } from '@/core/types/tokens';
+import type {
+  SyntaxNode,
+} from '@/core/types/nodes';
+import type {
+  SyntaxToken,
+} from '@/core/types/tokens';
 import {
   NodeSymbol, SymbolKind,
 } from '@/core/types/symbol';
-import type { GlobalModule } from '../types';
+import type {
+  GlobalModule,
+} from '../types';
 import {
   PASS_THROUGH, type PassThrough, UNHANDLED,
 } from '@/constants';
 import Report from '@/core/types/report';
 import type Compiler from '@/compiler/index';
-import type { SchemaElement } from '@/core/types/schemaJson';
+import type {
+  SchemaElement,
+} from '@/core/types/schemaJson';
 import {
   getNodeMemberSymbols, lookupMember, shouldInterpretNode,
 } from '../utils';
@@ -78,7 +88,9 @@ export const indexesModule: GlobalModule = {
     if (tableSymbol.hasValue(UNHANDLED)) return new Report(undefined);
 
     const varName = isExpressionAVariableNode(node) ? (node.expression.variable?.value ?? '') : '';
-    return lookupMember(compiler, tableSymbol.getValue(), varName, { kinds: [SymbolKind.Column] });
+    return lookupMember(compiler, tableSymbol.getValue(), varName, {
+      kinds: [SymbolKind.Column],
+    });
   },
 
   bindNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {

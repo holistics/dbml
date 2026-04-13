@@ -4,7 +4,9 @@ import {
 import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
-import type { LocalModule } from '../types';
+import type {
+  LocalModule,
+} from '../types';
 import {
   PASS_THROUGH, type PassThrough,
 } from '@/constants';
@@ -12,7 +14,9 @@ import {
   ArrayNode,
   SyntaxNode,
 } from '@/core/types/nodes';
-import { ElementKind } from '@/core/types/keywords';
+import {
+  ElementKind,
+} from '@/core/types/keywords';
 import {
   isValidAlias, Settings,
 } from '@/core/utils/validate';

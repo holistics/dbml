@@ -5,7 +5,9 @@ import * as fc from 'fast-check';
 import {
   dbmlSchemaArbitrary, tableArbitrary, enumArbitrary, tablePartialArbitrary, partialInjectionArbitrary,
 } from '../utils/arbitraries';
-import { isEqual } from 'lodash-es';
+import {
+  isEqual,
+} from 'lodash-es';
 import {
   parse, print, lex,
 } from '../utils';
@@ -13,11 +15,17 @@ import {
   SyntaxNodeKind, BlockExpressionNode,
 } from '@/core/types/nodes';
 
-const PROPERTY_TEST_CONFIG = { numRuns: 50 };
-const EXTENDED_CONFIG = { numRuns: 25 };
+const PROPERTY_TEST_CONFIG = {
+  numRuns: 50,
+};
+const EXTENDED_CONFIG = {
+  numRuns: 25,
+};
 
 describe('[property] parser', () => {
-  it('should produce consistent ASTs', { timeout: 30000 }, () => {
+  it('should produce consistent ASTs', {
+    timeout: 30000,
+  }, () => {
     // Property: Parsing the same source twice should produce the same ASTs
     fc.assert(
       fc.property(dbmlSchemaArbitrary, (source: string) => {
@@ -59,7 +67,9 @@ describe('[property] parser', () => {
     // Property: Source 1 -parse-> ast -print-> Source 2
     // Then: Source 1 === Source 2
     fc.assert(
-      fc.property(dbmlSchemaArbitrary, fc.nat({ max: 10 }), fc.string(), (source: string, injectedPos: number, injectSource: string) => {
+      fc.property(dbmlSchemaArbitrary, fc.nat({
+        max: 10,
+      }), fc.string(), (source: string, injectedPos: number, injectSource: string) => {
         const injectedSource = `${source.slice(0, injectedPos)}${injectSource}${source.slice(injectedPos)}`;
         const ast = parse(injectedSource).getValue().ast;
         const newSource = print(injectedSource, ast);
@@ -359,7 +369,9 @@ describe('[property] parser - AST structure semantics', () => {
 
         ast.body.forEach((elem) => checkNested(elem, 0, source.length));
       }),
-      { numRuns: 50 },
+      {
+        numRuns: 50,
+      },
     );
   });
 });

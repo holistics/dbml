@@ -1,14 +1,24 @@
-import { partition } from 'lodash-es';
+import {
+  partition,
+} from 'lodash-es';
 import {
   BlockExpressionNode,
   ElementDeclarationNode,
   FunctionApplicationNode,
   ProgramNode,
 } from '@/core/types/nodes';
-import { SyntaxToken } from '@/core/types/tokens';
-import { CompileError } from '@/core/types/errors';
-import { scanNonListNodeForBinding } from '../utils';
-import { ElementKind } from '../../types';
+import {
+  SyntaxToken,
+} from '@/core/types/tokens';
+import {
+  CompileError,
+} from '@/core/types/errors';
+import {
+  scanNonListNodeForBinding,
+} from '../utils';
+import {
+  ElementKind,
+} from '../../types';
 import Compiler from '@/compiler';
 
 export default class RefBinder {

@@ -28,14 +28,18 @@ import {
 import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
-import { aggregateSettingList } from '@/core/utils/validate';
+import {
+  aggregateSettingList,
+} from '@/core/utils/validate';
 import {
   ElementKind, SettingName,
 } from '@/core/types/keywords';
 import {
   PASS_THROUGH, UNHANDLED,
 } from '@/constants';
-import { SymbolKind } from '@/core/types/symbol';
+import {
+  SymbolKind,
+} from '@/core/types/symbol';
 import Report from '@/core/types/report';
 
 export class TablePartialInterpreter {
@@ -117,13 +121,19 @@ export class TablePartialInterpreter {
       token: this.tablePartial.token!,
       indexes: this.tablePartial.indexes!,
       checks: this.tablePartial.checks!,
-      ...(this.tablePartial.headerColor && { headerColor: this.tablePartial.headerColor }),
-      ...(this.tablePartial.note && { note: this.tablePartial.note }),
+      ...(this.tablePartial.headerColor && {
+        headerColor: this.tablePartial.headerColor,
+      }),
+      ...(this.tablePartial.note && {
+        note: this.tablePartial.note,
+      }),
     }, errors);
   }
 
   private interpretName (nameNode: SyntaxNode): CompileError[] {
-    const { name } = extractElementName(nameNode);
+    const {
+      name,
+    } = extractElementName(nameNode);
 
     this.tablePartial.name = name;
 
@@ -384,7 +394,9 @@ export class TablePartialInterpreter {
 
   private interpretIndexes (indexes: ElementDeclarationNode): CompileError[] {
     this.tablePartial.indexes!.push(...(indexes.body as BlockExpressionNode).body.map((_indexField) => {
-      const index: Partial<Index> = { columns: [] };
+      const index: Partial<Index> = {
+        columns: [],
+      };
 
       const indexField = _indexField as FunctionApplicationNode;
       index.token = getTokenPosition(indexField);

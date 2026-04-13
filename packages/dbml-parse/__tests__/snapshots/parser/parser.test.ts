@@ -1,12 +1,18 @@
-import { DEFAULT_ENTRY } from '@/constants';
-import { readFileSync } from 'node:fs';
+import {
+  DEFAULT_ENTRY,
+} from '@/constants';
+import {
+  readFileSync,
+} from 'node:fs';
 import path from 'node:path';
 import {
   describe, expect, it,
 } from 'vitest';
 import Lexer from '@/core/lexer/lexer';
 import Parser from '@/core/parser/parser';
-import type { ProgramNode } from '@/core/types/nodes';
+import type {
+  ProgramNode,
+} from '@/core/types/nodes';
 import {
   scanTestNames, toSnapshot,
 } from '@tests/utils';

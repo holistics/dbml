@@ -4,22 +4,52 @@ import {
 import type {
   LocalModule, Settings,
 } from './types';
-import { tableModule } from './table';
-import { enumModule } from './enum';
-import { recordsModule } from './records';
-import { indexesModule } from './indexes';
-import { checksModule } from './checks';
-import { customModule } from './custom';
-import { refModule } from './ref';
-import { projectModule } from './project';
-import { tableGroupModule } from './tableGroup';
-import { tablePartialModule } from './tablePartial';
-import { noteModule } from './note';
-import { programModule } from './program';
-import { useModule } from './use';
-import { diagramViewModule } from './diagramView';
+import {
+  tableModule,
+} from './table';
+import {
+  enumModule,
+} from './enum';
+import {
+  recordsModule,
+} from './records';
+import {
+  indexesModule,
+} from './indexes';
+import {
+  checksModule,
+} from './checks';
+import {
+  customModule,
+} from './custom';
+import {
+  refModule,
+} from './ref';
+import {
+  projectModule,
+} from './project';
+import {
+  tableGroupModule,
+} from './tableGroup';
+import {
+  tablePartialModule,
+} from './tablePartial';
+import {
+  noteModule,
+} from './note';
+import {
+  programModule,
+} from './program';
+import {
+  useModule,
+} from './use';
+import {
+  diagramViewModule,
+} from './diagramView';
 import type Compiler from '@/compiler';
-import type { SyntaxNode } from '@/core/types/nodes';
+import type {
+  SyntaxNode,
+} from '@/core/types/nodes';
 import Report from '@/core/types/report';
 
 // Each time you add a new element, register its module here.

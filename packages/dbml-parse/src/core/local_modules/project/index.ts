@@ -1,4 +1,6 @@
-import { ElementKind } from '@/core/types/keywords';
+import {
+  ElementKind,
+} from '@/core/types/keywords';
 import {
   isElementNode, isElementFieldNode,
 } from '@/core/utils/expression';
@@ -8,7 +10,9 @@ import {
 import {
   PASS_THROUGH, type PassThrough,
 } from '@/constants';
-import { SyntaxNode } from '@/core/types/nodes';
+import {
+  SyntaxNode,
+} from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import type Compiler from '@/compiler';
 import ProjectValidator from './validate';

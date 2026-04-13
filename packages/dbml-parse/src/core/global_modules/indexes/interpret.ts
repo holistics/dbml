@@ -5,7 +5,9 @@ import {
 import {
   BlockExpressionNode, CallExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode,
 } from '@/core/types/nodes';
-import type { SyntaxNode } from '@/core/types/nodes';
+import type {
+  SyntaxNode,
+} from '@/core/types/nodes';
 import {
   PASS_THROUGH, UNHANDLED,
 } from '@/constants';
@@ -13,11 +15,15 @@ import Report from '@/core/types/report';
 import type {
   Index, TokenPosition, SchemaElement,
 } from '@/core/types/schemaJson';
-import { getTokenPosition } from '../utils';
+import {
+  getTokenPosition,
+} from '../utils';
 import {
   isElementNode, extractQuotedStringToken, extractVariableFromExpression, destructureIndexNode, extractVarNameFromPrimaryVariable,
 } from '@/core/utils/expression';
-import { last } from 'lodash-es';
+import {
+  last,
+} from 'lodash-es';
 
 export default class IndexesInterpreter {
   private compiler: Compiler;

@@ -19,7 +19,9 @@ import {
   SyntaxNode,
   WildcardNode,
 } from '@/core/types/nodes';
-import { extractVariableFromExpression } from '@/core/utils/expression';
+import {
+  extractVariableFromExpression,
+} from '@/core/utils/expression';
 import {
   aggregateSettingList,
   isUnaryRelationship,
@@ -37,7 +39,9 @@ import {
   isExpressionAVariableNode,
   isExpressionAnIdentifierNode,
 } from '@/core/utils/expression';
-import { SettingName } from '@/core/types/keywords';
+import {
+  SettingName,
+} from '@/core/types/keywords';
 import Report from '@/core/types/report';
 
 export default class TableValidator {

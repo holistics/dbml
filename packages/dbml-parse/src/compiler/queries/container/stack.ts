@@ -17,8 +17,12 @@ import {
 import {
   SyntaxToken, SyntaxTokenKind,
 } from '@/core/types/tokens';
-import { isOffsetWithinSpan } from '@/core/utils/span';
-import { getMemberChain } from '@/core/parser/utils';
+import {
+  isOffsetWithinSpan,
+} from '@/core/utils/span';
+import {
+  getMemberChain,
+} from '@/core/parser/utils';
 
 export function containerStack (this: Compiler, offset: number): readonly Readonly<SyntaxNode>[] {
   const tokens = this.token.flatStream();
