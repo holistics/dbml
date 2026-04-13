@@ -22,11 +22,11 @@ import {
 import Compiler from '@/compiler';
 import Report from '@/core/types/report';
 import {
-  UNHANDLED,
-} from '@/constants';
-import {
   SymbolKind,
 } from '@/core/types/symbol';
+import {
+  UNHANDLED,
+} from '@/core/types/module';
 
 export class TableGroupInterpreter {
   private declarationNode: ElementDeclarationNode;

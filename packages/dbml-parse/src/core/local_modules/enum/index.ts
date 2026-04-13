@@ -17,9 +17,6 @@ import {
   type LocalModule, type Settings,
 } from '../types';
 import {
-  PASS_THROUGH, type PassThrough,
-} from '@/constants';
-import {
   AttributeNode, ElementDeclarationNode, ListExpressionNode, SyntaxNode,
 } from '@/core/types/nodes';
 import {
@@ -34,6 +31,9 @@ import {
 } from '@/core/utils/expression';
 import type Compiler from '@/compiler';
 import EnumValidator from './validate';
+import {
+  PASS_THROUGH, type PassThrough,
+} from '@/core/types/module';
 
 export const enumModule: LocalModule = {
   validateNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {

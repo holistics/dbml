@@ -5,9 +5,6 @@ import {
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, FunctionExpressionNode, ListExpressionNode,
 } from '@/core/types/nodes';
-import {
-  PASS_THROUGH,
-} from '@/constants';
 import Report from '@/core/types/report';
 import type {
   Check, SchemaElement,
@@ -24,6 +21,9 @@ import {
 import {
   SyntaxToken,
 } from '@/core/types/tokens';
+import {
+  PASS_THROUGH,
+} from '@/core/types/module';
 
 export default class ChecksInterpreter {
   private compiler: Compiler;

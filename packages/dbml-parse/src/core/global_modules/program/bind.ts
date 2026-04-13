@@ -29,11 +29,11 @@ import {
   ElementKind, SettingName,
 } from '@/core/types/keywords';
 import {
-  UNHANDLED,
-} from '@/constants';
-import {
   SchemaSymbol,
 } from '@/core/types/symbol';
+import {
+  UNHANDLED,
+} from '@/core/types/module';
 
 export default class Binder {
   private ast: ProgramNode;

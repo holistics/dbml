@@ -14,9 +14,6 @@ import {
   type LocalModule,
 } from '../types';
 import {
-  PASS_THROUGH, type PassThrough,
-} from '@/constants';
-import {
   ListExpressionNode, SyntaxNode,
 } from '@/core/types/nodes';
 import {
@@ -27,6 +24,9 @@ import type Compiler from '@/compiler';
 import RefValidator, {
   validateFieldSettings,
 } from './validate';
+import {
+  PASS_THROUGH, type PassThrough,
+} from '@/core/types/module';
 
 export const refModule: LocalModule = {
   validateNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {

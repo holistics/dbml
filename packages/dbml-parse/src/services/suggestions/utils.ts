@@ -25,7 +25,7 @@ import {
 } from '@/compiler/queries/utils';
 import {
   UNHANDLED,
-} from '@/constants';
+} from '@/core/types/module';
 
 export function pickCompletionItemKind (symbolKind: SymbolKind): CompletionItemKind {
   switch (symbolKind) {

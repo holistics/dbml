@@ -14,9 +14,6 @@ import type {
   LocalModule,
 } from '../types';
 import {
-  PASS_THROUGH, type PassThrough,
-} from '@/constants';
-import {
   isSimpleName, Settings,
 } from '@/core/utils/validate';
 import Report from '@/core/types/report';
@@ -24,6 +21,9 @@ import type Compiler from '@/compiler';
 import TablePartialValidator, {
   validateTablePartialSettings, validateFieldSetting,
 } from './validate';
+import {
+  PASS_THROUGH, type PassThrough,
+} from '@/core/types/module';
 
 export const tablePartialModule: LocalModule = {
   validateNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {

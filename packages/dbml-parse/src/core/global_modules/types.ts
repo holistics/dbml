@@ -1,6 +1,3 @@
-import type {
-  PassThrough,
-} from '@/constants';
 import type Compiler from '@/compiler/index';
 import type {
   SyntaxNode,
@@ -13,7 +10,7 @@ import type {
   SchemaElement,
 } from '../types/schemaJson';
 import type {
-  Module,
+  Module, PassThrough,
 } from '../types/module';
 
 // Modules decouple element-specific logic from the compiler: each module handles one DBML element kind

@@ -1,7 +1,7 @@
 import { describe, expect } from 'vitest';
 import { SyntaxNodeKind, ElementDeclarationNode, BlockExpressionNode, ProgramNode } from '@/core/types/nodes';
 import { SchemaSymbol, NodeSymbol, SymbolKind } from '@/core/types/symbol';
-import { UNHANDLED } from '@/constants';
+import { UNHANDLED } from '@/core/types/module';
 import { CompileErrorCode } from '@/core/types/errors';
 import { analyze } from '@tests/utils';
 import type Compiler from '@/compiler';

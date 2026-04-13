@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 import { SchemaSymbol, NodeSymbol, SymbolKind } from '@/core/types/symbol';
-import { UNHANDLED } from '@/constants';
+import { UNHANDLED } from '@/core/types/module';
 import { analyze } from '@tests/utils';
 import { ProgramNode, ElementDeclarationNode } from '@/core/types/nodes';
 import type Compiler from '@/compiler';

@@ -10,9 +10,6 @@ import {
 import type {
   LocalModule,
 } from '../types';
-import {
-  PASS_THROUGH, type PassThrough,
-} from '@/constants';
 import Report from '@/core/types/report';
 import type Compiler from '@/compiler';
 import {
@@ -22,6 +19,9 @@ import type {
   SyntaxToken,
 } from '@/core/types/tokens';
 import DiagramViewValidator from './validate';
+import {
+  PASS_THROUGH, type PassThrough,
+} from '@/core/types/module';
 
 export const diagramViewModule: LocalModule = {
   validateNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {

@@ -35,7 +35,7 @@ import {
 } from '@/core/utils/span';
 import {
   UNHANDLED,
-} from '@/constants';
+} from '@/core/types/module';
 
 export function suggestRecordRowSnippet (
   compiler: Compiler,

@@ -68,8 +68,11 @@ import {
   ElementKind, SettingName,
 } from '@/core/types/keywords';
 import {
-  UNHANDLED, DEFAULT_SCHEMA_NAME,
+  DEFAULT_SCHEMA_NAME,
 } from '@/constants';
+import {
+  UNHANDLED,
+} from '@/core/types/module';
 import {
   UseStatementMerger,
 } from '@/services/completion/utils/useStatementMerger';

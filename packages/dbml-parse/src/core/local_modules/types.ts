@@ -1,9 +1,6 @@
 import type Compiler from '@/compiler';
 import type {
-  PassThrough,
-} from '@/constants';
-import type {
-  Module,
+  Module, PassThrough,
 } from '@/core/types/module';
 import type {
   SyntaxNode,

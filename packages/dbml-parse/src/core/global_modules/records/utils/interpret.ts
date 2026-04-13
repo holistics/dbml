@@ -5,9 +5,6 @@ import type Compiler from '@/compiler/index';
 import {
   NodeSymbol, SymbolKind,
 } from '@/core/types/symbol';
-import {
-  UNHANDLED,
-} from '@/constants';
 import type {
   Table, Column, TablePartial, Ref,
 } from '@/core/types/schemaJson';
@@ -26,6 +23,9 @@ import {
 import {
   getMultiplicities, lookupInDefaultSchema, lookupMember,
 } from '../../utils';
+import {
+  UNHANDLED,
+} from '@/core/types/module';
 
 // Build a Table object from an element node using interpret (includes indexes, checks, etc.)
 // and symbolMembers (includes partial-injected columns).

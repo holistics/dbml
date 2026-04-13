@@ -8,9 +8,6 @@ import type {
   LocalModule,
 } from '../types';
 import {
-  PASS_THROUGH, type PassThrough,
-} from '@/constants';
-import {
   ArrayNode,
   SyntaxNode,
 } from '@/core/types/nodes';
@@ -25,6 +22,9 @@ import type Compiler from '@/compiler';
 import TableValidator, {
   validateTableSettings, validateFieldSetting,
 } from './validate';
+import {
+  PASS_THROUGH, type PassThrough,
+} from '@/core/types/module';
 
 export const tableModule: LocalModule = {
   validateNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {

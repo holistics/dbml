@@ -20,8 +20,11 @@ import type {
   GlobalModule,
 } from '../types';
 import {
-  DEFAULT_SCHEMA_NAME, PASS_THROUGH, type PassThrough, UNHANDLED,
+  DEFAULT_SCHEMA_NAME,
 } from '@/constants';
+import {
+  PASS_THROUGH, type PassThrough, UNHANDLED,
+} from '@/core/types/module';
 import Report from '@/core/types/report';
 import type Compiler from '@/compiler/index';
 import type {

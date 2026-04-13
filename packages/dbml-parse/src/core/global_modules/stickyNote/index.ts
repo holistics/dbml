@@ -16,9 +16,6 @@ import {
 import type {
   GlobalModule,
 } from '../types';
-import {
-  PASS_THROUGH, type PassThrough,
-} from '@/constants';
 import Report from '@/core/types/report';
 import type Compiler from '@/compiler/index';
 import type {
@@ -31,6 +28,9 @@ import {
 import {
   shouldInterpretNode,
 } from '../utils';
+import {
+  PASS_THROUGH, type PassThrough,
+} from '@/core/types/module';
 
 export const noteModule: GlobalModule = {
   nodeSymbol (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol> | Report<PassThrough> {

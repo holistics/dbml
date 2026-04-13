@@ -18,9 +18,6 @@ import {
 import type {
   GlobalModule,
 } from '../types';
-import {
-  PASS_THROUGH, type PassThrough, UNHANDLED,
-} from '@/constants';
 import Report from '@/core/types/report';
 import type Compiler from '@/compiler/index';
 import type {
@@ -35,6 +32,9 @@ import {
 import {
   DiagramViewInterpreter,
 } from './interpret';
+import {
+  PASS_THROUGH, type PassThrough, UNHANDLED,
+} from '@/core/types/module';
 
 export const diagramViewModule: GlobalModule = {
   nodeSymbol (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol> | Report<PassThrough> {

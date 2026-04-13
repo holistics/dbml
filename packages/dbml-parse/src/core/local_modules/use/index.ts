@@ -11,9 +11,6 @@ import {
 import type {
   LocalModule, Settings,
 } from '../types';
-import {
-  PASS_THROUGH, type PassThrough,
-} from '@/constants';
 import Report from '@/core/types/report';
 import type Compiler from '@/compiler';
 import UseDeclarationValidator from './validate';
@@ -23,6 +20,9 @@ import {
 import {
   isValidAlias,
 } from '@/core/utils/validate';
+import {
+  PASS_THROUGH, type PassThrough,
+} from '@/core/types/module';
 
 // Handle use declaration, use specifier name, use specifier list
 export const useModule: LocalModule = {

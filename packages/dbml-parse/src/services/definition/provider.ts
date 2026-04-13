@@ -9,11 +9,11 @@ import {
   SyntaxNode, SyntaxNodeKind,
 } from '@/core/types/nodes';
 import {
-  UNHANDLED,
-} from '@/constants';
-import {
   Filepath,
 } from '@/core/types/filepath';
+import {
+  UNHANDLED,
+} from '@/core/types/module';
 
 export default class DBMLDefinitionProvider implements DefinitionProvider {
   private compiler: Compiler;

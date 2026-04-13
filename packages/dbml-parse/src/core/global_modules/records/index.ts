@@ -26,9 +26,6 @@ import {
 import type {
   GlobalModule,
 } from '../types';
-import {
-  PASS_THROUGH, UNHANDLED, type PassThrough,
-} from '@/constants';
 import Report from '@/core/types/report';
 import type Compiler from '@/compiler/index';
 import {
@@ -42,6 +39,9 @@ import type {
 } from '@/core/types/schemaJson';
 import RecordsBinder from './bind';
 import RecordsInterpreter from './interpret';
+import {
+  PASS_THROUGH, UNHANDLED, type PassThrough,
+} from '@/core/types/module';
 
 export const recordsModule: GlobalModule = {
   nodeReferee (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol | undefined> | Report<PassThrough> {

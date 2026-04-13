@@ -16,12 +16,12 @@ import {
 import {
   type LocalModule, type Settings,
 } from '../types';
-import {
-  PASS_THROUGH, type PassThrough,
-} from '@/constants';
 import Report from '@/core/types/report';
 import type Compiler from '@/compiler';
 import NoteValidator from './validate';
+import {
+  PASS_THROUGH, type PassThrough,
+} from '@/core/types/module';
 
 export const noteModule: LocalModule = {
   validateNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {

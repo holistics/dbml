@@ -8,9 +8,6 @@ import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
 import {
-  PASS_THROUGH, UNHANDLED, type PassThrough,
-} from '@/constants';
-import {
   CallExpressionNode, ElementDeclarationNode, ProgramNode, SyntaxNode, TupleExpressionNode,
 } from '@/core/types/nodes';
 import {
@@ -28,6 +25,9 @@ import {
 import Report from '@/core/types/report';
 import type Compiler from '@/compiler';
 import RecordsValidator from './validate';
+import {
+  PASS_THROUGH, UNHANDLED, type PassThrough,
+} from '@/core/types/module';
 
 export const recordsModule: LocalModule = {
   validateNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {

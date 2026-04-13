@@ -16,9 +16,6 @@ import type {
 import type {
   GlobalModule,
 } from '../types';
-import {
-  PASS_THROUGH, type PassThrough,
-} from '@/constants';
 import Report from '@/core/types/report';
 import type Compiler from '@/compiler/index';
 import type {
@@ -31,6 +28,9 @@ import ProjectBinder from './bind';
 import {
   ProjectInterpreter,
 } from './interpret';
+import {
+  PASS_THROUGH, type PassThrough,
+} from '@/core/types/module';
 
 export const projectModule: GlobalModule = {
   bindNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {

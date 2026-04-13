@@ -32,10 +32,10 @@ import {
   ElementKind, SettingName,
 } from '@/core/types/keywords';
 import Compiler from '@/compiler';
+import Report from '@/core/types/report';
 import {
   UNHANDLED,
-} from '@/constants';
-import Report from '@/core/types/report';
+} from '@/core/types/module';
 
 export class TableInterpreter {
   private declarationNode: ElementDeclarationNode;

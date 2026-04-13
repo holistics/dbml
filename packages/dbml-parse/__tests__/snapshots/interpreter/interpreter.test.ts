@@ -32,7 +32,7 @@ describe('[snapshot] interpreter', () => {
 
     const compiler = new Compiler();
     compiler.setSource(DEFAULT_ENTRY, program);
-    const report = compiler.parse._(DEFAULT_ENTRY);
+    const report = compiler.parse._();
 
     it(testName, () => expect(serializeInterpreterResult(compiler, report)).toMatchFileSnapshot(path.resolve(__dirname, `./output/${testName}.out.json`)));
   });

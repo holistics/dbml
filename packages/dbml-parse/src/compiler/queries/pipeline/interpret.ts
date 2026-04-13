@@ -1,7 +1,10 @@
 import type Compiler from '@/compiler';
 import {
-  DEFAULT_ENTRY, UNHANDLED,
+  DEFAULT_ENTRY,
 } from '@/constants';
+import {
+  UNHANDLED,
+} from '@/core/types/module';
 import Report from '@/core/types/report';
 import {
   AliasKind,

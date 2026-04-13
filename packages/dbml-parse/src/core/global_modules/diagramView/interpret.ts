@@ -22,8 +22,11 @@ import {
   destructureComplexVariable, extractVarNameFromPrimaryVariable, isWildcardExpression,
 } from '@/core/utils/expression';
 import {
-  DEFAULT_SCHEMA_NAME, UNHANDLED,
+  DEFAULT_SCHEMA_NAME,
 } from '@/constants';
+import {
+  UNHANDLED,
+} from '@/core/types/module';
 import {
   SchemaSymbol, SymbolKind,
 } from '@/core/types/symbol';

@@ -19,9 +19,6 @@ import {
   type LocalModule,
 } from '../types';
 import {
-  PASS_THROUGH, type PassThrough,
-} from '@/constants';
-import {
   aggregateSettingList, Settings,
 } from '@/core/utils/validate';
 import {
@@ -30,6 +27,9 @@ import {
 import Report from '@/core/types/report';
 import type Compiler from '@/compiler';
 import IndexesValidator from './validate';
+import {
+  PASS_THROUGH, type PassThrough,
+} from '@/core/types/module';
 
 export const indexesModule: LocalModule = {
   validateNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {

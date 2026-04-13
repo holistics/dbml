@@ -25,7 +25,7 @@ import {
 import Compiler from '@/compiler';
 import {
   UNHANDLED,
-} from '@/constants';
+} from '@/core/types/module';
 
 export default class IndexesBinder {
   private compiler: Compiler;

@@ -4,7 +4,7 @@ import {
 } from '@/core/types/symbol';
 import {
   UNHANDLED,
-} from '@/constants';
+} from '@/core/types/module';
 
 // @deprecated - returns the members of the element at offset
 export function containerScope (this: Compiler, offset: number): NodeSymbol[] | undefined {

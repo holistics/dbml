@@ -9,11 +9,11 @@ import {
   Location, ReferenceProvider, TextModel, Position,
 } from '@/services/types';
 import {
-  UNHANDLED,
-} from '@/constants';
-import {
   Filepath,
 } from '@/core/types/filepath';
+import {
+  UNHANDLED,
+} from '@/core/types/module';
 
 export default class DBMLReferencesProvider implements ReferenceProvider {
   private compiler: Compiler;

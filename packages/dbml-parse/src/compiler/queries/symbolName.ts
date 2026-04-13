@@ -4,7 +4,7 @@ import {
 } from '@/core/types/symbol';
 import {
   UNHANDLED,
-} from '@/constants';
+} from '@/core/types/module';
 
 // Get the names associated with a symbol for duplicate checking and lookup.
 // For SchemaSymbol: uses its .name property directly.

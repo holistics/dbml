@@ -4,7 +4,8 @@ import { describe, expect, it } from 'vitest';
 import type { ProgramNode } from '@/core/types/nodes';
 import { scanTestNames, toSnapshot, collectNodesWithReferee } from '@tests/utils';
 import Compiler from '@/compiler';
-import { DEFAULT_ENTRY, UNHANDLED } from '@/constants';
+import { DEFAULT_ENTRY } from '@/constants';
+import { UNHANDLED } from '@/core/types/module';
 import { SymbolKind, SchemaSymbol } from '@/core/types/symbol';
 import type { NodeSymbol } from '@/core/types/symbol';
 

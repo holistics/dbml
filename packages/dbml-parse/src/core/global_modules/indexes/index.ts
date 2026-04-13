@@ -19,9 +19,6 @@ import {
 import type {
   GlobalModule,
 } from '../types';
-import {
-  PASS_THROUGH, type PassThrough, UNHANDLED,
-} from '@/constants';
 import Report from '@/core/types/report';
 import type Compiler from '@/compiler/index';
 import type {
@@ -32,6 +29,9 @@ import {
 } from '../utils';
 import IndexesBinder from './bind';
 import IndexesInterpreter from './interpret';
+import {
+  PASS_THROUGH, type PassThrough, UNHANDLED,
+} from '@/core/types/module';
 
 export const indexesModule: GlobalModule = {
   nodeSymbol (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol> | Report<PassThrough> {

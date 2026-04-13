@@ -35,12 +35,12 @@ import {
   ElementKind, SettingName,
 } from '@/core/types/keywords';
 import {
-  PASS_THROUGH, UNHANDLED,
-} from '@/constants';
-import {
   SymbolKind,
 } from '@/core/types/symbol';
 import Report from '@/core/types/report';
+import {
+  PASS_THROUGH, UNHANDLED,
+} from '@/core/types/module';
 
 export class TablePartialInterpreter {
   private declarationNode: ElementDeclarationNode;

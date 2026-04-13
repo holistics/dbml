@@ -13,7 +13,7 @@ import type {
 } from '@/services/types';
 import {
   UNHANDLED,
-} from '@/constants';
+} from '@/core/types/module';
 
 export function getOffsetFromMonacoPosition (model: TextModel, position: Position): number {
   return model.getOffsetAt(position);

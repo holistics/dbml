@@ -8,7 +8,8 @@ import {
 } from '@tests/utils';
 import { getColumnsFromTableSymbol } from '@/services/suggestions/utils';
 import { NodeSymbol, SymbolKind } from '@/core/types/symbol';
-import { DEFAULT_ENTRY, UNHANDLED } from '@/constants';
+import { DEFAULT_ENTRY } from '@/constants';
+import { UNHANDLED } from '@/core/types/module';
 
 describe('[example] CompletionItemProvider - Records', () => {
   describe('should NOT suggest record entry snippets in Records body (handled by inline completions)', () => {
@@ -189,7 +190,7 @@ describe('[example] Suggestions Utils - Records', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(DEFAULT_ENTRY, program);
-      compiler.parse._(DEFAULT_ENTRY);
+      compiler.parse._();
 
       const ast = compiler.parse.ast();
       const tableElement = ast.body[2]; // users table is the third element
@@ -225,7 +226,7 @@ describe('[example] Suggestions Utils - Records', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(DEFAULT_ENTRY, program);
-      compiler.parse._(DEFAULT_ENTRY);
+      compiler.parse._();
 
       const ast = compiler.parse.ast();
       const tableElement = ast.body[1];
@@ -257,7 +258,7 @@ describe('[example] Suggestions Utils - Records', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(DEFAULT_ENTRY, program);
-      compiler.parse._(DEFAULT_ENTRY);
+      compiler.parse._();
 
       const ast = compiler.parse.ast();
       const tableElement = ast.body[1];
@@ -288,7 +289,7 @@ describe('[example] Suggestions Utils - Records', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(DEFAULT_ENTRY, program);
-      compiler.parse._(DEFAULT_ENTRY); // Trigger parsing
+      compiler.parse._(); // Trigger parsing
 
       // Get the table symbol
       const ast = compiler.parse.ast();
@@ -324,7 +325,7 @@ describe('[example] Suggestions Utils - Records', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(DEFAULT_ENTRY, program);
-      compiler.parse._(DEFAULT_ENTRY);
+      compiler.parse._();
 
       const ast = compiler.parse.ast();
       const tableElement = ast.body[0];
@@ -359,7 +360,7 @@ describe('[example] Suggestions Utils - Records', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(DEFAULT_ENTRY, program);
-      compiler.parse._(DEFAULT_ENTRY);
+      compiler.parse._();
 
       const ast = compiler.parse.ast();
       const tableElement = ast.body[0];
@@ -386,7 +387,7 @@ describe('[example] Suggestions Utils - Records', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(DEFAULT_ENTRY, program);
-      compiler.parse._(DEFAULT_ENTRY);
+      compiler.parse._();
 
       const ast = compiler.parse.ast();
       const tableElement = ast.body[0];
@@ -414,7 +415,7 @@ describe('[example] Suggestions Utils - Records', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(DEFAULT_ENTRY, program);
-      compiler.parse._(DEFAULT_ENTRY);
+      compiler.parse._();
 
       const ast = compiler.parse.ast();
       const tableElement = ast.body[0];
@@ -441,7 +442,7 @@ describe('[example] Suggestions Utils - Records', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(DEFAULT_ENTRY, program);
-      compiler.parse._(DEFAULT_ENTRY);
+      compiler.parse._();
 
       const ast = compiler.parse.ast();
       const tableElement = ast.body[0];
@@ -470,7 +471,7 @@ describe('[example] Suggestions Utils - Records', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(DEFAULT_ENTRY, program);
-      compiler.parse._(DEFAULT_ENTRY);
+      compiler.parse._();
 
       const ast = compiler.parse.ast();
       const tableElement = ast.body[0];

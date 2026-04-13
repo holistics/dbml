@@ -1,7 +1,10 @@
 import type Compiler from '@/compiler';
 import {
-  DEFAULT_SCHEMA_NAME, UNHANDLED,
+  DEFAULT_SCHEMA_NAME,
 } from '@/constants';
+import {
+  UNHANDLED,
+} from '@/core/types/module';
 import {
   ElementDeclarationNode, UseDeclarationNode, type UseSpecifierNode, WildcardNode,
 } from '@/core/types/nodes';

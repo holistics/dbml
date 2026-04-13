@@ -7,7 +7,7 @@ import {
 } from '@/core/types/symbol';
 import {
   UNHANDLED,
-} from '@/constants';
+} from '@/core/types/module';
 
 export function symbolOfName (this: Compiler, nameStack: string[], owner: ElementDeclarationNode | ProgramNode) {
   if (nameStack.length === 0) {

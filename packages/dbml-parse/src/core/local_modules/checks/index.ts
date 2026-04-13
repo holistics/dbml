@@ -1,8 +1,5 @@
 import Compiler from '@/compiler';
 import {
-  PASS_THROUGH, PassThrough,
-} from '@/constants';
-import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
 import {
@@ -22,6 +19,9 @@ import {
   Settings,
 } from '@/core/utils/validate';
 import ChecksValidator from './validate';
+import {
+  PASS_THROUGH, PassThrough,
+} from '@/core/types/module';
 
 export const checksModule: LocalModule = {
   validateNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {

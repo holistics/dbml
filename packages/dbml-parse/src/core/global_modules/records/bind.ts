@@ -26,7 +26,7 @@ import {
 import Compiler from '@/compiler';
 import {
   UNHANDLED,
-} from '@/constants';
+} from '@/core/types/module';
 
 export default class RecordsBinder {
   private compiler: Compiler;

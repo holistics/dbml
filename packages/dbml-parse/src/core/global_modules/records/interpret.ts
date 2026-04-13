@@ -45,9 +45,6 @@ import {
   NodeSymbol, SymbolKind,
 } from '@/core/types/symbol';
 import {
-  PASS_THROUGH, UNHANDLED,
-} from '@/constants';
-import {
   getTokenPosition, lookupMember, lookupInDefaultSchema,
 } from '../utils';
 import {
@@ -56,6 +53,9 @@ import {
 import {
   buildMergedTableFromElement, getEnumMembers, parseNumericParams, parseLengthParam,
 } from './utils/interpret';
+import {
+  PASS_THROUGH, UNHANDLED,
+} from '@/core/types/module';
 
 export default class RecordsInterpreter {
   private compiler: Compiler;

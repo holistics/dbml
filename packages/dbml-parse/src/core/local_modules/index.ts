@@ -1,6 +1,3 @@
-import {
-  PASS_THROUGH, type PassThrough, type Unhandled, UNHANDLED,
-} from '@/constants';
 import type {
   LocalModule, Settings,
 } from './types';
@@ -51,6 +48,9 @@ import type {
   SyntaxNode,
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
+import {
+  PASS_THROUGH, type PassThrough, type Unhandled, UNHANDLED,
+} from '@/core/types/module';
 
 // Each time you add a new element, register its module here.
 export const modules: LocalModule[] = [

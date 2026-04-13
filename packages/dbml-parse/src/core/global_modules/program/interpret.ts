@@ -6,8 +6,11 @@ import {
   ElementKind,
 } from '@/core/types/keywords';
 import {
-  DEFAULT_SCHEMA_NAME, UNHANDLED,
+  DEFAULT_SCHEMA_NAME,
 } from '@/constants';
+import {
+  UNHANDLED,
+} from '@/core/types/module';
 import Report from '@/core/types/report';
 import {
   AliasKind,

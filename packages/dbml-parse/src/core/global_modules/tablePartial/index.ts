@@ -28,8 +28,11 @@ import type {
   GlobalModule,
 } from '../types';
 import {
-  PASS_THROUGH, type PassThrough, UNHANDLED, KEYWORDS_OF_DEFAULT_SETTING,
+  KEYWORDS_OF_DEFAULT_SETTING,
 } from '@/constants';
+import {
+  PASS_THROUGH, type PassThrough, UNHANDLED,
+} from '@/core/types/module';
 import Report from '@/core/types/report';
 import type Compiler from '@/compiler/index';
 import type {

@@ -7,15 +7,15 @@ import {
 import type {
   LocalModule,
 } from '../types';
-import {
-  PASS_THROUGH, type PassThrough,
-} from '@/constants';
 import Report from '@/core/types/report';
 import type Compiler from '@/compiler';
 import CustomValidator from './validate';
 import {
   Settings,
 } from '@/core/utils/validate';
+import {
+  PASS_THROUGH, type PassThrough,
+} from '@/core/types/module';
 
 function isCustomElement (node: SyntaxNode): node is ElementDeclarationNode {
   return node instanceof ElementDeclarationNode && !!node.type?.value;

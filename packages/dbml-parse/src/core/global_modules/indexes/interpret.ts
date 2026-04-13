@@ -8,9 +8,6 @@ import {
 import type {
   SyntaxNode,
 } from '@/core/types/nodes';
-import {
-  PASS_THROUGH, UNHANDLED,
-} from '@/constants';
 import Report from '@/core/types/report';
 import type {
   Index, TokenPosition, SchemaElement,
@@ -24,6 +21,9 @@ import {
 import {
   last,
 } from 'lodash-es';
+import {
+  PASS_THROUGH, UNHANDLED,
+} from '@/core/types/module';
 
 export default class IndexesInterpreter {
   private compiler: Compiler;

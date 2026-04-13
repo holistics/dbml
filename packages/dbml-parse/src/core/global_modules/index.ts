@@ -2,9 +2,6 @@ import type {
   GlobalModule,
 } from './types';
 import {
-  PASS_THROUGH, UNHANDLED, type PassThrough,
-} from '@/constants';
-import {
   tableModule,
 } from './table';
 import {
@@ -57,9 +54,9 @@ import type {
 import type {
   SchemaElement,
 } from '@/core/types/schemaJson';
-import type {
-  Unhandled,
-} from '@/constants';
+import {
+  Unhandled, PASS_THROUGH, UNHANDLED, type PassThrough,
+} from '@/core/types/module';
 
 // Registry of all element modules; the dispatcher tries each in order until one claims the node.
 // Each time you add a new element, register its module here.

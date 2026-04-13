@@ -19,9 +19,6 @@ import {
 import type {
   GlobalModule,
 } from '../types';
-import {
-  PASS_THROUGH, UNHANDLED, type PassThrough,
-} from '@/constants';
 import Report from '@/core/types/report';
 import type Compiler from '@/compiler/index';
 import type {
@@ -35,6 +32,9 @@ import {
 } from '@/core/types/errors';
 import EnumBinder from './bind';
 import EnumInterpreter from './interpret';
+import {
+  PASS_THROUGH, UNHANDLED, type PassThrough,
+} from '@/core/types/module';
 
 // Public utils that other modules can use
 export const enumUtils = {

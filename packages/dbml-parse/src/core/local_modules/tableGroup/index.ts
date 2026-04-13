@@ -11,9 +11,6 @@ import {
   type LocalModule,
 } from '../types';
 import {
-  PASS_THROUGH, type PassThrough,
-} from '@/constants';
-import {
   SyntaxNode,
 } from '@/core/types/nodes';
 import {
@@ -24,6 +21,9 @@ import type Compiler from '@/compiler';
 import TableGroupValidator, {
   validateSettingList,
 } from './validate';
+import {
+  PASS_THROUGH, type PassThrough,
+} from '@/core/types/module';
 
 export const tableGroupModule: LocalModule = {
   validateNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {

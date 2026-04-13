@@ -5,7 +5,7 @@ import { ElementDeclarationNode, FunctionApplicationNode, FunctionExpressionNode
 import { getElementNameString } from '@/core/utils/expression';
 import { CompileError, CompileErrorCode, CompileWarning } from '@/core/types/errors';
 import type Compiler from '@/compiler';
-import { UNHANDLED } from '@/constants';
+import { UNHANDLED } from '@/core/types/module';
 import { Filepath, SchemaElement, TokenPosition } from '@/core/types';
 import { isEmpty } from 'lodash-es';
 

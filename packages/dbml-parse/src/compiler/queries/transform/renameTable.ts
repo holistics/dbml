@@ -1,6 +1,9 @@
 import {
-  DEFAULT_SCHEMA_NAME, UNHANDLED,
+  DEFAULT_SCHEMA_NAME,
 } from '@/constants';
+import {
+  UNHANDLED,
+} from '@/core/types/module';
 import type Compiler from '../../index';
 import {
   ElementDeclarationNode, SyntaxNode, UseSpecifierNode,

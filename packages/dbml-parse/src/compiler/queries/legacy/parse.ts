@@ -12,8 +12,11 @@ import {
   type NodeSymbol, SchemaSymbol,
 } from '@/core/types/symbol';
 import {
-  DEFAULT_ENTRY, DEFAULT_SCHEMA_NAME, UNHANDLED,
+  DEFAULT_ENTRY, DEFAULT_SCHEMA_NAME,
 } from '@/constants';
+import {
+  UNHANDLED,
+} from '@/core/types/module';
 import {
   Database,
 } from '@/core/types';

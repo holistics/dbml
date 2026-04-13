@@ -26,7 +26,7 @@ import {
 } from '@/core/types/keywords';
 import {
   UNHANDLED,
-} from '@/constants';
+} from '@/core/types/module';
 
 function buildRefEndpoint (
   names: { schemaName: string | null;

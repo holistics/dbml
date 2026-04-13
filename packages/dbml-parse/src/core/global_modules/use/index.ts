@@ -7,9 +7,6 @@ import {
   InfixExpressionNode, SyntaxNode, UseDeclarationNode, UseSpecifierNode, UseSpecifierListNode,
 } from '@/core/types/nodes';
 import {
-  PASS_THROUGH, UNHANDLED, type PassThrough,
-} from '@/constants';
-import {
   destructureComplexVariable,
   extractVariableFromExpression,
   isAccessExpression,
@@ -33,6 +30,9 @@ import {
 import type {
   SchemaElement,
 } from '@/core/types/schemaJson';
+import {
+  PASS_THROUGH, UNHANDLED, type PassThrough,
+} from '@/core/types/module';
 
 export const useModule: GlobalModule = {
   nodeSymbol (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol> | Report<PassThrough> {

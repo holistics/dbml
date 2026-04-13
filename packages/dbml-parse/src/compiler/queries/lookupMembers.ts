@@ -4,11 +4,11 @@ import {
 } from '@/core/types/symbol';
 import Report from '@/core/types/report';
 import {
-  UNHANDLED,
-} from '@/constants';
-import {
   SyntaxNode,
 } from '@/core/types/nodes';
+import {
+  UNHANDLED,
+} from '@/core/types/module';
 
 export function lookupMembers (this: Compiler, symbolOrNode: NodeSymbol | SyntaxNode, targetKind: SymbolKind, targetName: string): Report<NodeSymbol | undefined> {
   let symbol: NodeSymbol;
