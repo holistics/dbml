@@ -14,7 +14,7 @@
     },
     {
       "code": "DUPLICATE_NAME",
-      "diagnostic": "Table name 'U1' already exists",
+      "diagnostic": "Table name 'U1' already exists in schema 'public'",
       "filepath": "/main.dbml",
       "level": "error",
       "node": {

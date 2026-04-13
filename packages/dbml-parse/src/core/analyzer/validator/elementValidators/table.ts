@@ -185,7 +185,7 @@ export default class TableValidator implements ElementValidator {
       const aliasName = extractVarNameFromPrimaryVariable(alias as any)!;
       const aliasId = createTableSymbolIndex(aliasName);
       if (this.publicSymbolTable.has(aliasId)) {
-        errors.push(new CompileError(CompileErrorCode.DUPLICATE_NAME, `Table name '${aliasName}' already exists`, name!));
+        errors.push(new CompileError(CompileErrorCode.DUPLICATE_NAME, `Table name '${aliasName}' already exists in schema '${DEFAULT_SCHEMA_NAME}'`, name!));
       }
       this.publicSymbolTable.set(aliasId, this.declarationNode.symbol!);
     }

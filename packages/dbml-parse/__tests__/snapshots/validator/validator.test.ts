@@ -23,7 +23,7 @@ function serializeValidatorResult (compiler: Compiler, report: Report<ProgramNod
     program: value,
     errors,
     warnings,
-  }), null, 2);
+  }, { includeSymbols: false }), null, 2);
 }
 
 describe('[snapshot] validator', () => {
