@@ -12,9 +12,9 @@ import type Report from '@/core/types/report';
 import { DEFAULT_ENTRY } from '@/constants';
 
 function serializeInterpreterResult (compiler: Compiler, report: Report<Database | undefined>): string {
-  const value = report.getValue();
   const errors = report.getErrors();
   const warnings = report.getWarnings();
+  const value = errors.length > 0 ? undefined : report.getValue();
   return JSON.stringify(toSnapshot(compiler, {
     database: value as any,
     errors,
