@@ -39,8 +39,8 @@ describe('[snapshot] parser', () => {
     const compiler = new Compiler();
     compiler.setSource(program);
 
-    // @ts-expect-error "Current workaround to use compiler but only trigger validator"
     const {
+      // @ts-expect-error "Current workaround to use compiler but only trigger validator"
       nodeIdGenerator,
     } = compiler;
 

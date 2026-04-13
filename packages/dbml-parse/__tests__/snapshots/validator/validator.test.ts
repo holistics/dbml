@@ -43,8 +43,8 @@ describe('[snapshot] validator', () => {
     const compiler = new Compiler();
     compiler.setSource(program);
 
-    // @ts-expect-error "Current workaround to use compiler but only trigger analyzer"
     const {
+      // @ts-expect-error "Current workaround to use compiler but only trigger analyzer"
       nodeIdGenerator, symbolIdGenerator,
     } = compiler;
 

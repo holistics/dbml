@@ -52,7 +52,7 @@ function serializeBinderResult (compiler: Compiler, report: Report<ProgramNode>)
     program: {
       schemas,
       publicSchema: publicSchemaMembers,
-    },
+    } as any,
     nodeReferees,
     errors,
     warnings,
