@@ -39,6 +39,7 @@ import { ElementKind } from '@/core/analyzer/types';
 import TablePartialValidator from './elementValidators/tablePartial';
 import ChecksValidator from './elementValidators/checks';
 import RecordsValidator from './elementValidators/records';
+import DiagramViewValidator from './elementValidators/diagramView';
 
 export function pickValidator (element: ElementDeclarationNode & { type: SyntaxToken }) {
   switch (element.type.value.toLowerCase() as ElementKind) {
@@ -62,6 +63,8 @@ export function pickValidator (element: ElementDeclarationNode & { type: SyntaxT
       return ChecksValidator;
     case ElementKind.Records:
       return RecordsValidator;
+    case ElementKind.DiagramView:
+      return DiagramViewValidator;
     default:
       return CustomValidator;
   }

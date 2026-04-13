@@ -11,6 +11,26 @@ export interface ElementInterpreter {
   interpret(): CompileError[];
 }
 
+/**
+ * FilterConfig is a tri-state filter:
+ * - [] (empty array) = show all
+ * - [...] (array with items) = show only these specific items
+ * - null = hide all
+ */
+export interface FilterConfig {
+  tables: Array<{ name: string; schemaName: string }> | null;
+  stickyNotes: Array<{ name: string }> | null;
+  tableGroups: Array<{ name: string }> | null;
+  schemas: Array<{ name: string }> | null;
+}
+
+export interface DiagramView {
+  name: string;
+  schemaName: string | null;
+  visibleEntities: FilterConfig;
+  token: TokenPosition;
+}
+
 export interface InterpreterDatabase {
   schema: [];
   tables: Map<ElementDeclarationNode, Table>;
@@ -28,6 +48,9 @@ export interface InterpreterDatabase {
   recordsElements: ElementDeclarationNode[];
   cachedMergedTables: Map<Table, Table>; // map Table to Table that has been merged with table partials
   source: string;
+  diagramViews: Map<ElementDeclarationNode, DiagramView>;
+  diagramViewWildcards: Map<DiagramView, Set<string>>;
+  diagramViewExplicitlySet: Map<DiagramView, Set<string>>;
 }
 
 // Record value type
@@ -72,6 +95,7 @@ export interface Database {
   project: Project;
   tablePartials: TablePartial[];
   records: TableRecord[];
+  diagramViews: DiagramView[];
 }
 
 export interface Table {

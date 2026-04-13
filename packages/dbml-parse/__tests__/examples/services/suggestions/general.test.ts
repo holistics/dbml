@@ -23,10 +23,12 @@ describe('[example] CompletionItemProvider', () => {
       expect(labels).toContain('Ref');
       expect(labels).toContain('TablePartial');
       expect(labels).toContain('Records');
+      expect(labels).toContain('DiagramView');
 
       // Test insertTexts - should have Records keyword
       const insertTexts = result.suggestions.map((s) => s.insertText);
       expect(insertTexts).toContain('Records');
+      expect(insertTexts).toContain('DiagramView');
     });
 
     it('- work even if some characters have been typed out', () => {
@@ -42,10 +44,12 @@ describe('[example] CompletionItemProvider', () => {
       const labels = result.suggestions.map((s) => s.label);
       expect(labels).toContain('Table');
       expect(labels).toContain('Records');
+      expect(labels).toContain('DiagramView');
 
       // Test insertTexts - should have Records keyword
       const insertTexts = result.suggestions.map((s) => s.insertText);
       expect(insertTexts).toContain('Records');
+      expect(insertTexts).toContain('DiagramView');
     });
 
     it('- work even if there are some not directly following nonsensical characters', () => {
@@ -61,10 +65,12 @@ describe('[example] CompletionItemProvider', () => {
       const labels = result.suggestions.map((s) => s.label);
       expect(labels).toContain('Table');
       expect(labels).toContain('Records');
+      expect(labels).toContain('DiagramView');
 
       // Test insertTexts - should have Records keyword
       const insertTexts = result.suggestions.map((s) => s.insertText);
       expect(insertTexts).toContain('Records');
+      expect(insertTexts).toContain('DiagramView');
     });
 
     it('- work even if there are some directly following nonsensical characters', () => {
@@ -80,10 +86,12 @@ describe('[example] CompletionItemProvider', () => {
       const labels = result.suggestions.map((s) => s.label);
       expect(labels).toContain('Table');
       expect(labels).toContain('Records');
+      expect(labels).toContain('DiagramView');
 
       // Test insertTexts - should have Records keyword
       const insertTexts = result.suggestions.map((s) => s.insertText);
       expect(insertTexts).toContain('Records');
+      expect(insertTexts).toContain('DiagramView');
     });
   });
 

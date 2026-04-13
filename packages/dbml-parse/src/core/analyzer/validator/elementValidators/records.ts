@@ -1,8 +1,8 @@
 import { partition } from 'lodash-es';
 import SymbolFactory from '@/core/analyzer/symbol/factory';
-import { CompileError, CompileErrorCode } from '@/core/errors';
+import { CompileError, CompileErrorCode, CompileWarning } from '@/core/errors';
 import {
-  BlockExpressionNode, CallExpressionNode, CommaExpressionNode, ElementDeclarationNode, EmptyNode, FunctionApplicationNode, FunctionExpressionNode, ListExpressionNode, ProgramNode, SyntaxNode,
+  BlockExpressionNode, CallExpressionNode, CommaExpressionNode, ElementDeclarationNode, EmptyNode, FunctionApplicationNode, FunctionExpressionNode, ListExpressionNode, ProgramNode, SyntaxNode, WildcardNode,
 } from '@/core/parser/nodes';
 import { SyntaxToken } from '@/core/lexer/tokens';
 import { ElementValidator } from '@/core/analyzer/validator/types';
@@ -24,8 +24,11 @@ export default class RecordsValidator implements ElementValidator {
     this.symbolFactory = symbolFactory;
   }
 
-  validate (): CompileError[] {
-    return [...this.validateContext(), ...this.validateName(this.declarationNode.name), ...this.validateAlias(this.declarationNode.alias), ...this.validateSettingList(this.declarationNode.attributeList), ...this.validateBody(this.declarationNode.body)];
+  validate (): { errors: CompileError[]; warnings: CompileWarning[] } {
+    return {
+      errors: [...this.validateContext(), ...this.validateName(this.declarationNode.name), ...this.validateAlias(this.declarationNode.alias), ...this.validateSettingList(this.declarationNode.attributeList), ...this.validateBody(this.declarationNode.body)],
+      warnings: [],
+    };
   }
 
   // Validate that Records can only appear top-level or inside a Table.
@@ -59,6 +62,9 @@ export default class RecordsValidator implements ElementValidator {
   }
 
   private validateName (nameNode?: SyntaxNode): CompileError[] {
+    if (nameNode instanceof WildcardNode) {
+      return [new CompileError(CompileErrorCode.INVALID_NAME, 'Wildcard (*) is not allowed as a Records name', nameNode)];
+    }
     const parent = this.declarationNode.parent;
     const isTopLevel = parent instanceof ProgramNode;
 
@@ -255,7 +261,7 @@ export default class RecordsValidator implements ElementValidator {
       }
       const _Validator = pickValidator(sub as ElementDeclarationNode & { type: SyntaxToken });
       const validator = new _Validator(sub as ElementDeclarationNode & { type: SyntaxToken }, this.publicSymbolTable, this.symbolFactory);
-      return validator.validate();
+      return validator.validate().errors;
     });
   }
 }

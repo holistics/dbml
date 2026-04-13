@@ -33,6 +33,7 @@ import {
   SyntaxNodeIdGenerator,
   TupleExpressionNode,
   VariableNode,
+  WildcardNode,
 } from '@/core/parser/nodes';
 import NodeFactory from '@/core/parser/factory';
 import { hasTrailingNewLines, hasTrailingSpaces, isAtStartOfLine } from '@/core/lexer/utils';
@@ -719,7 +720,15 @@ export default class Parser {
     | BlockExpressionNode
     | TupleExpressionNode
     | FunctionExpressionNode
-    | GroupExpressionNode {
+    | GroupExpressionNode
+    | WildcardNode {
+    if (this.check(SyntaxTokenKind.WILDCARD)) {
+      this.advance();
+      return this.nodeFactory.create(WildcardNode, {
+        token: this.previous(),
+      });
+    }
+
     if (
       this.check(
         SyntaxTokenKind.NUMERIC_LITERAL,
@@ -1196,7 +1205,6 @@ const infixBindingPowerMap: {
   [index: string]: { left: number; right: number } | undefined;
 } = {
   '+': { left: 9, right: 10 },
-  '*': { left: 11, right: 12 },
   '-': { left: 9, right: 10 },
   '/': { left: 11, right: 12 },
   '%': { left: 11, right: 12 },
