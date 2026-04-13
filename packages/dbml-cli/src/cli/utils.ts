@@ -2,7 +2,7 @@ import path from 'path';
 import fs from 'fs';
 import {
   CompilerError,
-  ExportFormat,
+  type ExportFormat,
 } from '@dbml/core';
 import {
   reduce,
@@ -35,14 +35,14 @@ function getFormatOpt (opts: Record<string, unknown>): ExportFormat {
     return ['postgres', 'mysql', 'mssql', 'postgresLegacy', 'mysqlLegacy', 'mssqlLegacy', 'oracle', 'snowflake'].includes(opt);
   });
 
-  let format = 'postgres';
+  let format: ExportFormat = 'postgres';
   let cnt = 0;
 
   formatOpts.forEach((opt) => {
     if (opts[opt]) {
       cnt += 1;
       if (cnt > 1) throw new Error('Too many format options');
-      format = opt;
+      format = opt as ExportFormat;
     }
   });
 
@@ -77,7 +77,11 @@ function getConnectionOpt (args: string[]): ConnectionOpt {
   }, defaultConnectionOpt);
 }
 
-function generate (inputPaths: string[], transform: (source: string) => string, outputPlugin: OutputPlugin) {
+function generate (
+  inputPaths: string[],
+  transform: (source: string) => string,
+  outputPlugin: OutputPlugin,
+): void {
   inputPaths.forEach((_path) => {
     const source = fs.readFileSync(_path, 'utf-8');
     try {
