@@ -94,17 +94,7 @@
             }
           },
           "fullEnd": 12,
-          "fullStart": 0,
-          "symbol": {
-            "context": {
-              "id": "symbol@Table@A@[L0:C0, L1:C1]",
-              "snippet": "Table A {\n}"
-            },
-            "declaration": {
-              "id": "node@<element-declaration>@A@[L0:C0, L1:C1]",
-              "snippet": "Table A {\n}"
-            }
-          }
+          "fullStart": 0
         },
         {
           "context": {
@@ -174,17 +164,7 @@
                       }
                     },
                     "fullEnd": 46,
-                    "fullStart": 42,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@TableGroup field@A@[L4:C2, L4:C3]",
-                        "snippet": "A"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@A@[L4:C2, L4:C3]",
-                        "snippet": "A"
-                      }
-                    }
+                    "fullStart": 42
                   }
                 ]
               },
@@ -279,25 +259,7 @@
             }
           },
           "fullEnd": 48,
-          "fullStart": 12,
-          "symbol": {
-            "context": {
-              "id": "symbol@TableGroup@schema.alphabet@[L3:C0, L5:C1]",
-              "snippet": "TableGroup...et {\n  A\n}"
-            },
-            "declaration": {
-              "id": "node@<element-declaration>@schema.alphabet@[L3:C0, L5:C1]",
-              "snippet": "TableGroup...et {\n  A\n}"
-            },
-            "members": [
-              {
-                "context": {
-                  "id": "symbol@TableGroup field@A@[L4:C2, L4:C3]",
-                  "snippet": "A"
-                }
-              }
-            ]
-          }
+          "fullStart": 12
         }
       ],
       "eof": {
@@ -311,29 +273,6 @@
       }
     },
     "fullEnd": 48,
-    "fullStart": 0,
-    "symbol": {
-      "context": {
-        "id": "symbol@Schema@@[L0:C0, L6:C0]",
-        "snippet": "Table A {\n...t {\n  A\n}\n"
-      },
-      "declaration": {
-        "id": "node@<program>@@[L0:C0, L6:C0]",
-        "snippet": "Table A {\n...t {\n  A\n}\n"
-      },
-      "members": [
-        {
-          "context": {
-            "id": "symbol@Schema@@[L?:C?, L?:C?]"
-          }
-        },
-        {
-          "context": {
-            "id": "symbol@Table@A@[L0:C0, L1:C1]",
-            "snippet": "Table A {\n}"
-          }
-        }
-      ]
-    }
+    "fullStart": 0
   }
 }

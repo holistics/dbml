@@ -311,17 +311,7 @@
                       }
                     },
                     "fullEnd": 37,
-                    "fullStart": 10,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@id@[L1:C2, L1:C26]",
-                        "snippet": "id int(-1)...fault: -2]"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@id@[L1:C2, L1:C26]",
-                        "snippet": "id int(-1)...fault: -2]"
-                      }
-                    }
+                    "fullStart": 10
                   },
                   {
                     "context": {
@@ -635,17 +625,7 @@
                       }
                     },
                     "fullEnd": 67,
-                    "fullStart": 37,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@id2@[L2:C2, L2:C29]",
-                        "snippet": "id2 int(--...ault: +-2]"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@id2@[L2:C2, L2:C29]",
-                        "snippet": "id2 int(--...ault: +-2]"
-                      }
-                    }
+                    "fullStart": 37
                   },
                   {
                     "context": {
@@ -1092,17 +1072,7 @@
                       }
                     },
                     "fullEnd": 124,
-                    "fullStart": 67,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@id3@[L3:C2, L3:C44]",
-                        "snippet": "id3 int (+...-++7.2225]"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@id3@[L3:C2, L3:C44]",
-                        "snippet": "id3 int (+...-++7.2225]"
-                      }
-                    }
+                    "fullStart": 67
                   }
                 ]
               },
@@ -1149,37 +1119,7 @@
             }
           },
           "fullEnd": 126,
-          "fullStart": 0,
-          "symbol": {
-            "context": {
-              "id": "symbol@Table@a@[L0:C0, L4:C1]",
-              "snippet": "Table a {\n...positive\n}"
-            },
-            "declaration": {
-              "id": "node@<element-declaration>@a@[L0:C0, L4:C1]",
-              "snippet": "Table a {\n...positive\n}"
-            },
-            "members": [
-              {
-                "context": {
-                  "id": "symbol@Column@id2@[L2:C2, L2:C29]",
-                  "snippet": "id2 int(--...ault: +-2]"
-                }
-              },
-              {
-                "context": {
-                  "id": "symbol@Column@id3@[L3:C2, L3:C44]",
-                  "snippet": "id3 int (+...-++7.2225]"
-                }
-              },
-              {
-                "context": {
-                  "id": "symbol@Column@id@[L1:C2, L1:C26]",
-                  "snippet": "id int(-1)...fault: -2]"
-                }
-              }
-            ]
-          }
+          "fullStart": 0
         },
         {
           "context": {
@@ -1486,17 +1426,7 @@
                       }
                     },
                     "fullEnd": 172,
-                    "fullStart": 145,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@id@[L7:C2, L7:C26]",
-                        "snippet": "id int(-1)...fault: -2]"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@id@[L7:C2, L7:C26]",
-                        "snippet": "id int(-1)...fault: -2]"
-                      }
-                    }
+                    "fullStart": 145
                   },
                   {
                     "context": {
@@ -1810,17 +1740,7 @@
                       }
                     },
                     "fullEnd": 202,
-                    "fullStart": 172,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@id2@[L8:C2, L8:C29]",
-                        "snippet": "id2 int(--...ault: +-2]"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@id2@[L8:C2, L8:C29]",
-                        "snippet": "id2 int(--...ault: +-2]"
-                      }
-                    }
+                    "fullStart": 172
                   },
                   {
                     "context": {
@@ -2343,17 +2263,7 @@
                       }
                     },
                     "fullEnd": 263,
-                    "fullStart": 202,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@id3@[L9:C2, L9:C48]",
-                        "snippet": "id3 int (+...+--7.2225]"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@id3@[L9:C2, L9:C48]",
-                        "snippet": "id3 int (+...+--7.2225]"
-                      }
-                    }
+                    "fullStart": 202
                   }
                 ]
               },
@@ -2400,37 +2310,7 @@
             }
           },
           "fullEnd": 265,
-          "fullStart": 126,
-          "symbol": {
-            "context": {
-              "id": "symbol@TablePartial@P1@[L6:C0, L10:C1]",
-              "snippet": "TableParti...negative\n}"
-            },
-            "declaration": {
-              "id": "node@<element-declaration>@P1@[L6:C0, L10:C1]",
-              "snippet": "TableParti...negative\n}"
-            },
-            "members": [
-              {
-                "context": {
-                  "id": "symbol@Column@id2@[L8:C2, L8:C29]",
-                  "snippet": "id2 int(--...ault: +-2]"
-                }
-              },
-              {
-                "context": {
-                  "id": "symbol@Column@id3@[L9:C2, L9:C48]",
-                  "snippet": "id3 int (+...+--7.2225]"
-                }
-              },
-              {
-                "context": {
-                  "id": "symbol@Column@id@[L7:C2, L7:C26]",
-                  "snippet": "id int(-1)...fault: -2]"
-                }
-              }
-            ]
-          }
+          "fullStart": 126
         },
         {
           "context": {
@@ -2531,17 +2411,7 @@
                       }
                     },
                     "fullEnd": 285,
-                    "fullStart": 276,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@id@[L13:C2, L13:C8]",
-                        "snippet": "id int"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@id@[L13:C2, L13:C8]",
-                        "snippet": "id int"
-                      }
-                    }
+                    "fullStart": 276
                   },
                   {
                     "context": {
@@ -2646,31 +2516,7 @@
             }
           },
           "fullEnd": 292,
-          "fullStart": 265,
-          "symbol": {
-            "context": {
-              "id": "symbol@Table@b@[L12:C0, L15:C1]",
-              "snippet": "Table b {\n...nt\n  ~P1\n}"
-            },
-            "declaration": {
-              "id": "node@<element-declaration>@b@[L12:C0, L15:C1]",
-              "snippet": "Table b {\n...nt\n  ~P1\n}"
-            },
-            "members": [
-              {
-                "context": {
-                  "id": "symbol@Column@id@[L13:C2, L13:C8]",
-                  "snippet": "id int"
-                }
-              },
-              {
-                "context": {
-                  "id": "symbol@PartialInjection@@[L14:C2, L14:C5]",
-                  "snippet": "~P1"
-                }
-              }
-            ]
-          }
+          "fullStart": 265
         }
       ],
       "eof": {
@@ -2684,36 +2530,6 @@
       }
     },
     "fullEnd": 292,
-    "fullStart": 0,
-    "symbol": {
-      "context": {
-        "id": "symbol@Schema@@[L0:C0, L15:C1]",
-        "snippet": "Table a {\n...nt\n  ~P1\n}"
-      },
-      "declaration": {
-        "id": "node@<program>@@[L0:C0, L15:C1]",
-        "snippet": "Table a {\n...nt\n  ~P1\n}"
-      },
-      "members": [
-        {
-          "context": {
-            "id": "symbol@Table@a@[L0:C0, L4:C1]",
-            "snippet": "Table a {\n...positive\n}"
-          }
-        },
-        {
-          "context": {
-            "id": "symbol@Table@b@[L12:C0, L15:C1]",
-            "snippet": "Table b {\n...nt\n  ~P1\n}"
-          }
-        },
-        {
-          "context": {
-            "id": "symbol@TablePartial@P1@[L6:C0, L10:C1]",
-            "snippet": "TableParti...negative\n}"
-          }
-        }
-      ]
-    }
+    "fullStart": 0
   }
 }

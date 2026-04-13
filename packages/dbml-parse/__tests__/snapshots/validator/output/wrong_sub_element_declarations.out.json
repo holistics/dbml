@@ -361,17 +361,7 @@
                       }
                     },
                     "fullEnd": 86,
-                    "fullStart": 10,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@Indexes@[L1:C4, L1:C32]",
-                        "snippet": "Indexes wr...x alias {}"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@Indexes@[L1:C4, L1:C32]",
-                        "snippet": "Indexes wr...x alias {}"
-                      }
-                    }
+                    "fullStart": 10
                   },
                   {
                     "context": {
@@ -498,17 +488,7 @@
                       }
                     },
                     "fullEnd": 142,
-                    "fullStart": 86,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@Indexes@[L2:C4, L2:C21]",
-                        "snippet": "Indexes 2 args {}"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@Indexes@[L2:C4, L2:C21]",
-                        "snippet": "Indexes 2 args {}"
-                      }
-                    }
+                    "fullStart": 86
                   },
                   {
                     "context": {
@@ -693,17 +673,7 @@
                       }
                     },
                     "fullEnd": 212,
-                    "fullStart": 142,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@Indexes@[L3:C4, L3:C35]",
-                        "snippet": "Indexes wr...of args {}"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@Indexes@[L3:C4, L3:C35]",
-                        "snippet": "Indexes wr...of args {}"
-                      }
-                    }
+                    "fullStart": 142
                   }
                 ]
               },
@@ -750,25 +720,7 @@
             }
           },
           "fullEnd": 214,
-          "fullStart": 0,
-          "symbol": {
-            "context": {
-              "id": "symbol@Table@A@[L0:C0, L4:C1]",
-              "snippet": "Table A {\n...s column\n}"
-            },
-            "declaration": {
-              "id": "node@<element-declaration>@A@[L0:C0, L4:C1]",
-              "snippet": "Table A {\n...s column\n}"
-            },
-            "members": [
-              {
-                "context": {
-                  "id": "symbol@Column@Indexes@[L1:C4, L1:C32]",
-                  "snippet": "Indexes wr...x alias {}"
-                }
-              }
-            ]
-          }
+          "fullStart": 0
         }
       ],
       "eof": {
@@ -782,24 +734,6 @@
       }
     },
     "fullEnd": 214,
-    "fullStart": 0,
-    "symbol": {
-      "context": {
-        "id": "symbol@Schema@@[L0:C0, L5:C0]",
-        "snippet": "Table A {\n... column\n}\n"
-      },
-      "declaration": {
-        "id": "node@<program>@@[L0:C0, L5:C0]",
-        "snippet": "Table A {\n... column\n}\n"
-      },
-      "members": [
-        {
-          "context": {
-            "id": "symbol@Table@A@[L0:C0, L4:C1]",
-            "snippet": "Table A {\n...s column\n}"
-          }
-        }
-      ]
-    }
+    "fullStart": 0
   }
 }

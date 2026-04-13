@@ -155,17 +155,7 @@
                       }
                     },
                     "fullEnd": 36,
-                    "fullStart": 23,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@name@[L1:C2, L1:C11]",
-                        "snippet": "name text"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@name@[L1:C2, L1:C11]",
-                        "snippet": "name text"
-                      }
-                    }
+                    "fullStart": 23
                   }
                 ]
               },
@@ -212,25 +202,7 @@
             }
           },
           "fullEnd": 39,
-          "fullStart": 0,
-          "symbol": {
-            "context": {
-              "id": "symbol@TablePartial@common@[L0:C0, L2:C1]",
-              "snippet": "TableParti...me text\r\n}"
-            },
-            "declaration": {
-              "id": "node@<element-declaration>@common@[L0:C0, L2:C1]",
-              "snippet": "TableParti...me text\r\n}"
-            },
-            "members": [
-              {
-                "context": {
-                  "id": "symbol@Column@name@[L1:C2, L1:C11]",
-                  "snippet": "name text"
-                }
-              }
-            ]
-          }
+          "fullStart": 0
         },
         {
           "context": {
@@ -331,17 +303,7 @@
                       }
                     },
                     "fullEnd": 66,
-                    "fullStart": 56,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@id@[L5:C2, L5:C8]",
-                        "snippet": "id int"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@id@[L5:C2, L5:C8]",
-                        "snippet": "id int"
-                      }
-                    }
+                    "fullStart": 56
                   },
                   {
                     "context": {
@@ -562,31 +524,7 @@
             }
           },
           "fullEnd": 102,
-          "fullStart": 40,
-          "symbol": {
-            "context": {
-              "id": "symbol@Table@Users@[L4:C0, L9:C1]",
-              "snippet": "Table User...~common\r\n}"
-            },
-            "declaration": {
-              "id": "node@<element-declaration>@Users@[L4:C0, L9:C1]",
-              "snippet": "Table User...~common\r\n}"
-            },
-            "members": [
-              {
-                "context": {
-                  "id": "symbol@Column@id@[L5:C2, L5:C8]",
-                  "snippet": "id int"
-                }
-              },
-              {
-                "context": {
-                  "id": "symbol@PartialInjection@@[L6:C2, L6:C9]",
-                  "snippet": "~common"
-                }
-              }
-            ]
-          }
+          "fullStart": 40
         }
       ],
       "eof": {
@@ -600,30 +538,6 @@
       }
     },
     "fullEnd": 102,
-    "fullStart": 0,
-    "symbol": {
-      "context": {
-        "id": "symbol@Schema@@[L0:C0, L10:C0]",
-        "snippet": "TableParti...ommon\r\n}\r\n"
-      },
-      "declaration": {
-        "id": "node@<program>@@[L0:C0, L10:C0]",
-        "snippet": "TableParti...ommon\r\n}\r\n"
-      },
-      "members": [
-        {
-          "context": {
-            "id": "symbol@Table@Users@[L4:C0, L9:C1]",
-            "snippet": "Table User...~common\r\n}"
-          }
-        },
-        {
-          "context": {
-            "id": "symbol@TablePartial@common@[L0:C0, L2:C1]",
-            "snippet": "TableParti...me text\r\n}"
-          }
-        }
-      ]
-    }
+    "fullStart": 0
   }
 }

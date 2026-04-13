@@ -256,17 +256,7 @@
                       }
                     },
                     "fullEnd": 58,
-                    "fullStart": 21,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@balance@[L1:C2, L1:C36]",
-                        "snippet": "balance in...ance > 0`]"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@balance@[L1:C2, L1:C36]",
-                        "snippet": "balance in...ance > 0`]"
-                      }
-                    }
+                    "fullStart": 21
                   },
                   {
                     "context": {
@@ -495,17 +485,7 @@
                       }
                     },
                     "fullEnd": 128,
-                    "fullStart": 58,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@dependents@[L2:C2, L2:C69]",
-                        "snippet": "dependents...nts < 10`]"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@dependents@[L2:C2, L2:C69]",
-                        "snippet": "dependents...nts < 10`]"
-                      }
-                    }
+                    "fullStart": 58
                   },
                   {
                     "context": {
@@ -988,17 +968,7 @@
                       }
                     },
                     "fullEnd": 360,
-                    "fullStart": 128,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@invalid_col@[L4:C2, L8:C40]",
-                        "snippet": "invalid_co...eck: null]"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@invalid_col@[L4:C2, L8:C40]",
-                        "snippet": "invalid_co...eck: null]"
-                      }
-                    }
+                    "fullStart": 128
                   }
                 ]
               },
@@ -1045,37 +1015,7 @@
             }
           },
           "fullEnd": 362,
-          "fullStart": 0,
-          "symbol": {
-            "context": {
-              "id": "symbol@TablePartial@Users@[L0:C0, L9:C1]",
-              "snippet": "TableParti...k: null]\n}"
-            },
-            "declaration": {
-              "id": "node@<element-declaration>@Users@[L0:C0, L9:C1]",
-              "snippet": "TableParti...k: null]\n}"
-            },
-            "members": [
-              {
-                "context": {
-                  "id": "symbol@Column@balance@[L1:C2, L1:C36]",
-                  "snippet": "balance in...ance > 0`]"
-                }
-              },
-              {
-                "context": {
-                  "id": "symbol@Column@dependents@[L2:C2, L2:C69]",
-                  "snippet": "dependents...nts < 10`]"
-                }
-              },
-              {
-                "context": {
-                  "id": "symbol@Column@invalid_col@[L4:C2, L8:C40]",
-                  "snippet": "invalid_co...eck: null]"
-                }
-              }
-            ]
-          }
+          "fullStart": 0
         }
       ],
       "eof": {
@@ -1089,24 +1029,6 @@
       }
     },
     "fullEnd": 362,
-    "fullStart": 0,
-    "symbol": {
-      "context": {
-        "id": "symbol@Schema@@[L0:C0, L10:C0]",
-        "snippet": "TableParti...: null]\n}\n"
-      },
-      "declaration": {
-        "id": "node@<program>@@[L0:C0, L10:C0]",
-        "snippet": "TableParti...: null]\n}\n"
-      },
-      "members": [
-        {
-          "context": {
-            "id": "symbol@TablePartial@Users@[L0:C0, L9:C1]",
-            "snippet": "TableParti...k: null]\n}"
-          }
-        }
-      ]
-    }
+    "fullStart": 0
   }
 }

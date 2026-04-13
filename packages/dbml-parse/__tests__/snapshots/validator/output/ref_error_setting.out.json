@@ -278,17 +278,7 @@
                       }
                     },
                     "fullEnd": 42,
-                    "fullStart": 33,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@id@[L1:C2, L1:C8]",
-                        "snippet": "id int"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@id@[L1:C2, L1:C8]",
-                        "snippet": "id int"
-                      }
-                    }
+                    "fullStart": 33
                   },
                   {
                     "context": {
@@ -358,17 +348,7 @@
                       }
                     },
                     "fullEnd": 53,
-                    "fullStart": 42,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@c_id@[L2:C2, L2:C10]",
-                        "snippet": "c_id int"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@c_id@[L2:C2, L2:C10]",
-                        "snippet": "c_id int"
-                      }
-                    }
+                    "fullStart": 42
                   },
                   {
                     "context": {
@@ -438,17 +418,7 @@
                       }
                     },
                     "fullEnd": 63,
-                    "fullStart": 53,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@id2@[L3:C2, L3:C9]",
-                        "snippet": "id2 int"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@id2@[L3:C2, L3:C9]",
-                        "snippet": "id2 int"
-                      }
-                    }
+                    "fullStart": 53
                   },
                   {
                     "context": {
@@ -518,17 +488,7 @@
                       }
                     },
                     "fullEnd": 73,
-                    "fullStart": 63,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@id3@[L4:C2, L4:C9]",
-                        "snippet": "id3 int"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@id3@[L4:C2, L4:C9]",
-                        "snippet": "id3 int"
-                      }
-                    }
+                    "fullStart": 63
                   },
                   {
                     "context": {
@@ -598,17 +558,7 @@
                       }
                     },
                     "fullEnd": 83,
-                    "fullStart": 73,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@id4@[L5:C2, L5:C9]",
-                        "snippet": "id4 int"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@id4@[L5:C2, L5:C9]",
-                        "snippet": "id4 int"
-                      }
-                    }
+                    "fullStart": 73
                   },
                   {
                     "context": {
@@ -678,17 +628,7 @@
                       }
                     },
                     "fullEnd": 93,
-                    "fullStart": 83,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@id5@[L6:C2, L6:C9]",
-                        "snippet": "id5 int"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@id5@[L6:C2, L6:C9]",
-                        "snippet": "id5 int"
-                      }
-                    }
+                    "fullStart": 83
                   },
                   {
                     "context": {
@@ -758,17 +698,7 @@
                       }
                     },
                     "fullEnd": 103,
-                    "fullStart": 93,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@id6@[L7:C2, L7:C9]",
-                        "snippet": "id6 int"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@id6@[L7:C2, L7:C9]",
-                        "snippet": "id6 int"
-                      }
-                    }
+                    "fullStart": 93
                   },
                   {
                     "context": {
@@ -838,17 +768,7 @@
                       }
                     },
                     "fullEnd": 113,
-                    "fullStart": 103,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@id7@[L8:C2, L8:C9]",
-                        "snippet": "id7 int"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@id7@[L8:C2, L8:C9]",
-                        "snippet": "id7 int"
-                      }
-                    }
+                    "fullStart": 103
                   }
                 ]
               },
@@ -895,67 +815,7 @@
             }
           },
           "fullEnd": 115,
-          "fullStart": 0,
-          "symbol": {
-            "context": {
-              "id": "symbol@Table@b@[L0:C0, L9:C1]",
-              "snippet": "Table b [h... id7 int\n}"
-            },
-            "declaration": {
-              "id": "node@<element-declaration>@b@[L0:C0, L9:C1]",
-              "snippet": "Table b [h... id7 int\n}"
-            },
-            "members": [
-              {
-                "context": {
-                  "id": "symbol@Column@c_id@[L2:C2, L2:C10]",
-                  "snippet": "c_id int"
-                }
-              },
-              {
-                "context": {
-                  "id": "symbol@Column@id2@[L3:C2, L3:C9]",
-                  "snippet": "id2 int"
-                }
-              },
-              {
-                "context": {
-                  "id": "symbol@Column@id3@[L4:C2, L4:C9]",
-                  "snippet": "id3 int"
-                }
-              },
-              {
-                "context": {
-                  "id": "symbol@Column@id4@[L5:C2, L5:C9]",
-                  "snippet": "id4 int"
-                }
-              },
-              {
-                "context": {
-                  "id": "symbol@Column@id5@[L6:C2, L6:C9]",
-                  "snippet": "id5 int"
-                }
-              },
-              {
-                "context": {
-                  "id": "symbol@Column@id6@[L7:C2, L7:C9]",
-                  "snippet": "id6 int"
-                }
-              },
-              {
-                "context": {
-                  "id": "symbol@Column@id7@[L8:C2, L8:C9]",
-                  "snippet": "id7 int"
-                }
-              },
-              {
-                "context": {
-                  "id": "symbol@Column@id@[L1:C2, L1:C8]",
-                  "snippet": "id int"
-                }
-              }
-            ]
-          }
+          "fullStart": 0
         },
         {
           "context": {
@@ -1056,17 +916,7 @@
                       }
                     },
                     "fullEnd": 135,
-                    "fullStart": 126,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@id@[L12:C2, L12:C8]",
-                        "snippet": "id int"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@id@[L12:C2, L12:C8]",
-                        "snippet": "id int"
-                      }
-                    }
+                    "fullStart": 126
                   },
                   {
                     "context": {
@@ -1136,17 +986,7 @@
                       }
                     },
                     "fullEnd": 146,
-                    "fullStart": 135,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@b_id@[L13:C2, L13:C10]",
-                        "snippet": "b_id int"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@b_id@[L13:C2, L13:C10]",
-                        "snippet": "b_id int"
-                      }
-                    }
+                    "fullStart": 135
                   },
                   {
                     "context": {
@@ -1216,17 +1056,7 @@
                       }
                     },
                     "fullEnd": 156,
-                    "fullStart": 146,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@id2@[L14:C2, L14:C9]",
-                        "snippet": "id2 int"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@id2@[L14:C2, L14:C9]",
-                        "snippet": "id2 int"
-                      }
-                    }
+                    "fullStart": 146
                   },
                   {
                     "context": {
@@ -1296,17 +1126,7 @@
                       }
                     },
                     "fullEnd": 166,
-                    "fullStart": 156,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@id3@[L15:C2, L15:C9]",
-                        "snippet": "id3 int"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@id3@[L15:C2, L15:C9]",
-                        "snippet": "id3 int"
-                      }
-                    }
+                    "fullStart": 156
                   },
                   {
                     "context": {
@@ -1376,17 +1196,7 @@
                       }
                     },
                     "fullEnd": 176,
-                    "fullStart": 166,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@id4@[L16:C2, L16:C9]",
-                        "snippet": "id4 int"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@id4@[L16:C2, L16:C9]",
-                        "snippet": "id4 int"
-                      }
-                    }
+                    "fullStart": 166
                   },
                   {
                     "context": {
@@ -1456,17 +1266,7 @@
                       }
                     },
                     "fullEnd": 186,
-                    "fullStart": 176,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@id5@[L17:C2, L17:C9]",
-                        "snippet": "id5 int"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@id5@[L17:C2, L17:C9]",
-                        "snippet": "id5 int"
-                      }
-                    }
+                    "fullStart": 176
                   },
                   {
                     "context": {
@@ -1536,17 +1336,7 @@
                       }
                     },
                     "fullEnd": 196,
-                    "fullStart": 186,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@id6@[L18:C2, L18:C9]",
-                        "snippet": "id6 int"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@id6@[L18:C2, L18:C9]",
-                        "snippet": "id6 int"
-                      }
-                    }
+                    "fullStart": 186
                   },
                   {
                     "context": {
@@ -1616,17 +1406,7 @@
                       }
                     },
                     "fullEnd": 206,
-                    "fullStart": 196,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@id7@[L19:C2, L19:C9]",
-                        "snippet": "id7 int"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@id7@[L19:C2, L19:C9]",
-                        "snippet": "id7 int"
-                      }
-                    }
+                    "fullStart": 196
                   }
                 ]
               },
@@ -1673,67 +1453,7 @@
             }
           },
           "fullEnd": 208,
-          "fullStart": 115,
-          "symbol": {
-            "context": {
-              "id": "symbol@Table@c@[L11:C0, L20:C1]",
-              "snippet": "Table c {\n... id7 int\n}"
-            },
-            "declaration": {
-              "id": "node@<element-declaration>@c@[L11:C0, L20:C1]",
-              "snippet": "Table c {\n... id7 int\n}"
-            },
-            "members": [
-              {
-                "context": {
-                  "id": "symbol@Column@b_id@[L13:C2, L13:C10]",
-                  "snippet": "b_id int"
-                }
-              },
-              {
-                "context": {
-                  "id": "symbol@Column@id2@[L14:C2, L14:C9]",
-                  "snippet": "id2 int"
-                }
-              },
-              {
-                "context": {
-                  "id": "symbol@Column@id3@[L15:C2, L15:C9]",
-                  "snippet": "id3 int"
-                }
-              },
-              {
-                "context": {
-                  "id": "symbol@Column@id4@[L16:C2, L16:C9]",
-                  "snippet": "id4 int"
-                }
-              },
-              {
-                "context": {
-                  "id": "symbol@Column@id5@[L17:C2, L17:C9]",
-                  "snippet": "id5 int"
-                }
-              },
-              {
-                "context": {
-                  "id": "symbol@Column@id6@[L18:C2, L18:C9]",
-                  "snippet": "id6 int"
-                }
-              },
-              {
-                "context": {
-                  "id": "symbol@Column@id7@[L19:C2, L19:C9]",
-                  "snippet": "id7 int"
-                }
-              },
-              {
-                "context": {
-                  "id": "symbol@Column@id@[L12:C2, L12:C8]",
-                  "snippet": "id int"
-                }
-              }
-            ]
-          }
+          "fullStart": 115
         },
         {
           "context": {
@@ -4716,30 +4436,6 @@
       }
     },
     "fullEnd": 692,
-    "fullStart": 0,
-    "symbol": {
-      "context": {
-        "id": "symbol@Schema@@[L0:C0, L45:C0]",
-        "snippet": "Table b [h... goodbye]\n"
-      },
-      "declaration": {
-        "id": "node@<program>@@[L0:C0, L45:C0]",
-        "snippet": "Table b [h... goodbye]\n"
-      },
-      "members": [
-        {
-          "context": {
-            "id": "symbol@Table@b@[L0:C0, L9:C1]",
-            "snippet": "Table b [h... id7 int\n}"
-          }
-        },
-        {
-          "context": {
-            "id": "symbol@Table@c@[L11:C0, L20:C1]",
-            "snippet": "Table c {\n... id7 int\n}"
-          }
-        }
-      ]
-    }
+    "fullStart": 0
   }
 }

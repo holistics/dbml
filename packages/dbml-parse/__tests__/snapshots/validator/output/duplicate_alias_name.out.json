@@ -213,17 +213,7 @@
                       }
                     },
                     "fullEnd": 40,
-                    "fullStart": 15,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@id@[L1:C4, L1:C24]",
-                        "snippet": "id int [primary key]"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@id@[L1:C4, L1:C24]",
-                        "snippet": "id int [primary key]"
-                      }
-                    }
+                    "fullStart": 15
                   }
                 ]
               },
@@ -270,25 +260,7 @@
             }
           },
           "fullEnd": 42,
-          "fullStart": 0,
-          "symbol": {
-            "context": {
-              "id": "symbol@Table@A@[L0:C0, L2:C1]",
-              "snippet": "Table A as...ary key]\n}"
-            },
-            "declaration": {
-              "id": "node@<element-declaration>@A@[L0:C0, L2:C1]",
-              "snippet": "Table A as...ary key]\n}"
-            },
-            "members": [
-              {
-                "context": {
-                  "id": "symbol@Column@id@[L1:C4, L1:C24]",
-                  "snippet": "id int [primary key]"
-                }
-              }
-            ]
-          }
+          "fullStart": 0
         },
         {
           "context": {
@@ -497,17 +469,7 @@
                       }
                     },
                     "fullEnd": 85,
-                    "fullStart": 60,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@id@[L5:C4, L5:C24]",
-                        "snippet": "id int [primary key]"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@id@[L5:C4, L5:C24]",
-                        "snippet": "id int [primary key]"
-                      }
-                    }
+                    "fullStart": 60
                   }
                 ]
               },
@@ -554,25 +516,7 @@
             }
           },
           "fullEnd": 87,
-          "fullStart": 42,
-          "symbol": {
-            "context": {
-              "id": "symbol@Table@B@[L4:C0, L6:C1]",
-              "snippet": "Table \"B\" ...ary key]\n}"
-            },
-            "declaration": {
-              "id": "node@<element-declaration>@B@[L4:C0, L6:C1]",
-              "snippet": "Table \"B\" ...ary key]\n}"
-            },
-            "members": [
-              {
-                "context": {
-                  "id": "symbol@Column@id@[L5:C4, L5:C24]",
-                  "snippet": "id int [primary key]"
-                }
-              }
-            ]
-          }
+          "fullStart": 42
         },
         {
           "context": {
@@ -781,17 +725,7 @@
                       }
                     },
                     "fullEnd": 130,
-                    "fullStart": 105,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@id@[L9:C4, L9:C24]",
-                        "snippet": "id int [primary key]"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@id@[L9:C4, L9:C24]",
-                        "snippet": "id int [primary key]"
-                      }
-                    }
+                    "fullStart": 105
                   }
                 ]
               },
@@ -838,25 +772,7 @@
             }
           },
           "fullEnd": 132,
-          "fullStart": 87,
-          "symbol": {
-            "context": {
-              "id": "symbol@Table@C@[L8:C0, L10:C1]",
-              "snippet": "Table C as...ary key]\n}"
-            },
-            "declaration": {
-              "id": "node@<element-declaration>@C@[L8:C0, L10:C1]",
-              "snippet": "Table C as...ary key]\n}"
-            },
-            "members": [
-              {
-                "context": {
-                  "id": "symbol@Column@id@[L9:C4, L9:C24]",
-                  "snippet": "id int [primary key]"
-                }
-              }
-            ]
-          }
+          "fullStart": 87
         },
         {
           "context": {
@@ -1065,17 +981,7 @@
                       }
                     },
                     "fullEnd": 177,
-                    "fullStart": 152,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@id@[L13:C4, L13:C24]",
-                        "snippet": "id int [primary key]"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@id@[L13:C4, L13:C24]",
-                        "snippet": "id int [primary key]"
-                      }
-                    }
+                    "fullStart": 152
                   }
                 ]
               },
@@ -1122,25 +1028,7 @@
             }
           },
           "fullEnd": 178,
-          "fullStart": 132,
-          "symbol": {
-            "context": {
-              "id": "symbol@Table@D@[L12:C0, L14:C1]",
-              "snippet": "Table \"D\" ...ary key]\n}"
-            },
-            "declaration": {
-              "id": "node@<element-declaration>@D@[L12:C0, L14:C1]",
-              "snippet": "Table \"D\" ...ary key]\n}"
-            },
-            "members": [
-              {
-                "context": {
-                  "id": "symbol@Column@id@[L13:C4, L13:C24]",
-                  "snippet": "id int [primary key]"
-                }
-              }
-            ]
-          }
+          "fullStart": 132
         }
       ],
       "eof": {
@@ -1154,42 +1042,6 @@
       }
     },
     "fullEnd": 178,
-    "fullStart": 0,
-    "symbol": {
-      "context": {
-        "id": "symbol@Schema@@[L0:C0, L14:C1]",
-        "snippet": "Table A as...ary key]\n}"
-      },
-      "declaration": {
-        "id": "node@<program>@@[L0:C0, L14:C1]",
-        "snippet": "Table A as...ary key]\n}"
-      },
-      "members": [
-        {
-          "context": {
-            "id": "symbol@Table@A@[L0:C0, L2:C1]",
-            "snippet": "Table A as...ary key]\n}"
-          }
-        },
-        {
-          "context": {
-            "id": "symbol@Table@B@[L4:C0, L6:C1]",
-            "snippet": "Table \"B\" ...ary key]\n}"
-          }
-        },
-        {
-          "context": {
-            "id": "symbol@Table@C@[L8:C0, L10:C1]",
-            "snippet": "Table C as...ary key]\n}"
-          }
-        },
-        {
-          "context": {
-            "id": "symbol@Table@D@[L12:C0, L14:C1]",
-            "snippet": "Table \"D\" ...ary key]\n}"
-          }
-        }
-      ]
-    }
+    "fullStart": 0
   }
 }

@@ -287,17 +287,7 @@
             }
           },
           "fullEnd": 111,
-          "fullStart": 0,
-          "symbol": {
-            "context": {
-              "id": "symbol@Table@A@[L0:C0, L5:C1]",
-              "snippet": "Table A {\r...\r\n    }\r\n}"
-            },
-            "declaration": {
-              "id": "node@<element-declaration>@A@[L0:C0, L5:C1]",
-              "snippet": "Table A {\r...\r\n    }\r\n}"
-            }
-          }
+          "fullStart": 0
         },
         {
           "context": {
@@ -466,24 +456,6 @@
       }
     },
     "fullEnd": 202,
-    "fullStart": 0,
-    "symbol": {
-      "context": {
-        "id": "symbol@Schema@@[L0:C0, L13:C3]",
-        "snippet": "Table A {\r... note\r\n'''"
-      },
-      "declaration": {
-        "id": "node@<program>@@[L0:C0, L13:C3]",
-        "snippet": "Table A {\r... note\r\n'''"
-      },
-      "members": [
-        {
-          "context": {
-            "id": "symbol@Table@A@[L0:C0, L5:C1]",
-            "snippet": "Table A {\r...\r\n    }\r\n}"
-          }
-        }
-      ]
-    }
+    "fullStart": 0
   }
 }

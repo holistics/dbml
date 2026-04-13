@@ -162,17 +162,7 @@
                                 }
                               },
                               "fullEnd": 53,
-                              "fullStart": 33,
-                              "symbol": {
-                                "context": {
-                                  "id": "symbol@Column@id@[L2:C8, L2:C18]",
-                                  "snippet": "id integer"
-                                },
-                                "declaration": {
-                                  "id": "node@<function-application>@id@[L2:C8, L2:C18]",
-                                  "snippet": "id integer"
-                                }
-                              }
+                              "fullStart": 33
                             },
                             {
                               "context": {
@@ -485,17 +475,7 @@
                                 }
                               },
                               "fullEnd": 104,
-                              "fullStart": 53,
-                              "symbol": {
-                                "context": {
-                                  "id": "symbol@Column@status@[L3:C8, L3:C49]",
-                                  "snippet": "status v2....tatus.new]"
-                                },
-                                "declaration": {
-                                  "id": "node@<function-application>@status@[L3:C8, L3:C49]",
-                                  "snippet": "status v2....tatus.new]"
-                                }
-                              }
+                              "fullStart": 53
                             }
                           ]
                         },
@@ -590,31 +570,7 @@
                       }
                     },
                     "fullEnd": 111,
-                    "fullStart": 11,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Table@v1.Users@[L1:C4, L4:C5]",
-                        "snippet": "Table v1.U...ew]\r\n    }"
-                      },
-                      "declaration": {
-                        "id": "node@<element-declaration>@v1.Users@[L1:C4, L4:C5]",
-                        "snippet": "Table v1.U...ew]\r\n    }"
-                      },
-                      "members": [
-                        {
-                          "context": {
-                            "id": "symbol@Column@id@[L2:C8, L2:C18]",
-                            "snippet": "id integer"
-                          }
-                        },
-                        {
-                          "context": {
-                            "id": "symbol@Column@status@[L3:C8, L3:C49]",
-                            "snippet": "status v2....tatus.new]"
-                          }
-                        }
-                      ]
-                    }
+                    "fullStart": 11
                   },
                   {
                     "context": {
@@ -684,17 +640,7 @@
                                 }
                               },
                               "fullEnd": 148,
-                              "fullStart": 135,
-                              "symbol": {
-                                "context": {
-                                  "id": "symbol@Enum field@new@[L7:C8, L7:C11]",
-                                  "snippet": "new"
-                                },
-                                "declaration": {
-                                  "id": "node@<function-application>@new@[L7:C8, L7:C11]",
-                                  "snippet": "new"
-                                }
-                              }
+                              "fullStart": 135
                             },
                             {
                               "context": {
@@ -733,17 +679,7 @@
                                 }
                               },
                               "fullEnd": 163,
-                              "fullStart": 148,
-                              "symbol": {
-                                "context": {
-                                  "id": "symbol@Enum field@churn@[L8:C8, L8:C13]",
-                                  "snippet": "churn"
-                                },
-                                "declaration": {
-                                  "id": "node@<function-application>@churn@[L8:C8, L8:C13]",
-                                  "snippet": "churn"
-                                }
-                              }
+                              "fullStart": 148
                             },
                             {
                               "context": {
@@ -782,17 +718,7 @@
                                 }
                               },
                               "fullEnd": 179,
-                              "fullStart": 163,
-                              "symbol": {
-                                "context": {
-                                  "id": "symbol@Enum field@active@[L9:C8, L9:C14]",
-                                  "snippet": "active"
-                                },
-                                "declaration": {
-                                  "id": "node@<function-application>@active@[L9:C8, L9:C14]",
-                                  "snippet": "active"
-                                }
-                              }
+                              "fullStart": 163
                             },
                             {
                               "context": {
@@ -831,17 +757,7 @@
                                 }
                               },
                               "fullEnd": 195,
-                              "fullStart": 179,
-                              "symbol": {
-                                "context": {
-                                  "id": "symbol@Enum field@tenant@[L10:C8, L10:C14]",
-                                  "snippet": "tenant"
-                                },
-                                "declaration": {
-                                  "id": "node@<function-application>@tenant@[L10:C8, L10:C14]",
-                                  "snippet": "tenant"
-                                }
-                              }
+                              "fullStart": 179
                             }
                           ]
                         },
@@ -936,43 +852,7 @@
                       }
                     },
                     "fullEnd": 202,
-                    "fullStart": 112,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Enum@v2.Status@[L6:C4, L11:C5]",
-                        "snippet": "Enum v2.St...ant\r\n    }"
-                      },
-                      "declaration": {
-                        "id": "node@<element-declaration>@v2.Status@[L6:C4, L11:C5]",
-                        "snippet": "Enum v2.St...ant\r\n    }"
-                      },
-                      "members": [
-                        {
-                          "context": {
-                            "id": "symbol@Enum field@active@[L9:C8, L9:C14]",
-                            "snippet": "active"
-                          }
-                        },
-                        {
-                          "context": {
-                            "id": "symbol@Enum field@churn@[L8:C8, L8:C13]",
-                            "snippet": "churn"
-                          }
-                        },
-                        {
-                          "context": {
-                            "id": "symbol@Enum field@new@[L7:C8, L7:C11]",
-                            "snippet": "new"
-                          }
-                        },
-                        {
-                          "context": {
-                            "id": "symbol@Enum field@tenant@[L10:C8, L10:C14]",
-                            "snippet": "tenant"
-                          }
-                        }
-                      ]
-                    }
+                    "fullStart": 112
                   }
                 ]
               },
@@ -1004,28 +884,6 @@
       }
     },
     "fullEnd": 203,
-    "fullStart": 0,
-    "symbol": {
-      "context": {
-        "id": "symbol@Schema@@[L0:C0, L12:C1]",
-        "snippet": "Project {\r...\r\n    }\r\n}"
-      },
-      "declaration": {
-        "id": "node@<program>@@[L0:C0, L12:C1]",
-        "snippet": "Project {\r...\r\n    }\r\n}"
-      },
-      "members": [
-        {
-          "context": {
-            "id": "symbol@Schema@@[L?:C?, L?:C?]"
-          }
-        },
-        {
-          "context": {
-            "id": "symbol@Schema@@[L?:C?, L?:C?]"
-          }
-        }
-      ]
-    }
+    "fullStart": 0
   }
 }

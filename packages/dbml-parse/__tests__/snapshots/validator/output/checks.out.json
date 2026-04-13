@@ -238,17 +238,7 @@
                       }
                     },
                     "fullEnd": 39,
-                    "fullStart": 25,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@balance@[L3:C2, L3:C13]",
-                        "snippet": "balance int"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@balance@[L3:C2, L3:C13]",
-                        "snippet": "balance int"
-                      }
-                    }
+                    "fullStart": 25
                   },
                   {
                     "context": {
@@ -776,25 +766,7 @@
             }
           },
           "fullEnd": 188,
-          "fullStart": 10,
-          "symbol": {
-            "context": {
-              "id": "symbol@Table@Users@[L2:C0, L12:C1]",
-              "snippet": "Table User...lid]\n  }\n}"
-            },
-            "declaration": {
-              "id": "node@<element-declaration>@Users@[L2:C0, L12:C1]",
-              "snippet": "Table User...lid]\n  }\n}"
-            },
-            "members": [
-              {
-                "context": {
-                  "id": "symbol@Column@balance@[L3:C2, L3:C13]",
-                  "snippet": "balance int"
-                }
-              }
-            ]
-          }
+          "fullStart": 10
         },
         {
           "context": {
@@ -895,17 +867,7 @@
                       }
                     },
                     "fullEnd": 224,
-                    "fullStart": 210,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@balance@[L15:C2, L15:C13]",
-                        "snippet": "balance int"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@balance@[L15:C2, L15:C13]",
-                        "snippet": "balance int"
-                      }
-                    }
+                    "fullStart": 210
                   },
                   {
                     "context": {
@@ -1433,25 +1395,7 @@
             }
           },
           "fullEnd": 372,
-          "fullStart": 188,
-          "symbol": {
-            "context": {
-              "id": "symbol@TablePartial@Users@[L14:C0, L23:C1]",
-              "snippet": "TableParti...lid]\n  }\n}"
-            },
-            "declaration": {
-              "id": "node@<element-declaration>@Users@[L14:C0, L23:C1]",
-              "snippet": "TableParti...lid]\n  }\n}"
-            },
-            "members": [
-              {
-                "context": {
-                  "id": "symbol@Column@balance@[L15:C2, L15:C13]",
-                  "snippet": "balance int"
-                }
-              }
-            ]
-          }
+          "fullStart": 188
         }
       ],
       "eof": {
@@ -1465,30 +1409,6 @@
       }
     },
     "fullEnd": 372,
-    "fullStart": 0,
-    "symbol": {
-      "context": {
-        "id": "symbol@Schema@@[L0:C0, L24:C0]",
-        "snippet": "checks {}\n...id]\n  }\n}\n"
-      },
-      "declaration": {
-        "id": "node@<program>@@[L0:C0, L24:C0]",
-        "snippet": "checks {}\n...id]\n  }\n}\n"
-      },
-      "members": [
-        {
-          "context": {
-            "id": "symbol@Table@Users@[L2:C0, L12:C1]",
-            "snippet": "Table User...lid]\n  }\n}"
-          }
-        },
-        {
-          "context": {
-            "id": "symbol@TablePartial@Users@[L14:C0, L23:C1]",
-            "snippet": "TableParti...lid]\n  }\n}"
-          }
-        }
-      ]
-    }
+    "fullStart": 0
   }
 }

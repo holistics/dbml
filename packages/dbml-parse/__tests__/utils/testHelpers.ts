@@ -166,10 +166,10 @@ function sortArray (array: unknown[]): unknown[] {
 export function toSnapshot (
   compiler: Compiler,
   value: Readonly<Snappable | Readonly<Snappable>[] | Record<string, Readonly<Snappable> | Readonly<Snappable>[]>>,
-  { simple = false }: { simple?: boolean } = {},
+  { simple = false, includeSymbols = true }: { simple?: boolean; includeSymbols?: boolean } = {},
 ): unknown {
   if (Array.isArray(value)) {
-    return sortArray([...value]).map((v) => toSnapshot(compiler, v as Snappable, { simple }));
+    return sortArray([...value]).map((v) => toSnapshot(compiler, v as Snappable, { simple, includeSymbols }));
   }
   if (value instanceof CompileWarning) {
     return warningToSnapshot(compiler, value, { simple });
@@ -181,7 +181,7 @@ export function toSnapshot (
     return syntaxTokenToSnapshot(compiler, value, { simple });
   }
   if (value instanceof SyntaxNode) {
-    return syntaxNodeToSnapshot(compiler, value, { simple });
+    return syntaxNodeToSnapshot(compiler, value, { simple, includeSymbols });
   }
   if (value instanceof Filepath) {
     return value.absolute;
@@ -196,7 +196,7 @@ export function toSnapshot (
     return sortObject(Object.fromEntries(
       Object.entries(value)
         .map(
-          ([key, value]) => [key, toSnapshot(compiler, value as Snappable, { simple })],
+          ([key, value]) => [key, toSnapshot(compiler, value as Snappable, { simple, includeSymbols })],
         ),
     ));
   }
@@ -311,7 +311,7 @@ export function syntaxTokenToSnapshot (
 export function syntaxNodeToSnapshot (
   compiler: Compiler,
   node: SyntaxNode,
-  { simple = false }: { simple?: boolean } = {},
+  { simple = false, includeSymbols = true }: { simple?: boolean; includeSymbols?: boolean } = {},
 ): unknown {
   const nodeReadableId = getReadableId(node);
   const snippet = getCodeSnippet(node, compiler);
@@ -350,7 +350,7 @@ export function syntaxNodeToSnapshot (
       snippet,
     },
     ...sortObject({
-      symbol: symbol && symbolToSnapshot(compiler, symbol),
+      symbol: includeSymbols ? symbol && symbolToSnapshot(compiler, symbol) : undefined,
       referee: referee && symbolToSnapshot(compiler, referee, { simple: true }),
       fullStart,
       fullEnd,
@@ -358,7 +358,7 @@ export function syntaxNodeToSnapshot (
         Object.entries(props)
           .map(
             ([key, value]) =>
-              [key, toSnapshot(compiler, value as Snappable | Snappable[] | Record<string, Snappable>)],
+              [key, toSnapshot(compiler, value as Snappable | Snappable[] | Record<string, Snappable>, { includeSymbols })],
           ),
       )),
     }),
