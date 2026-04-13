@@ -21,7 +21,8 @@ export function renameTable (
 ): string {
   const compiler = new Compiler();
   compiler.setSource(DEFAULT_ENTRY, dbmlCode);
-  return compiler.renameTable(DEFAULT_ENTRY, oldName, newName);
+  const layout = compiler.renameTable(DEFAULT_ENTRY, oldName, newName);
+  return layout.getSource(DEFAULT_ENTRY) ?? dbmlCode;
 }
 
 /**

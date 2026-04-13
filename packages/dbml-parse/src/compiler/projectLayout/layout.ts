@@ -19,6 +19,10 @@ export interface DbmlProjectLayout {
   listDirectory (dirPath?: Filepath): Filepath[];
 
   getEntryPoints (): Filepath[];
+
+  // Returns a deep copy of the layout. Mutations on the returned layout do
+  // not affect the source.
+  clone (): DbmlProjectLayout;
 }
 
 export class MemoryProjectLayout implements DbmlProjectLayout {
@@ -78,5 +82,9 @@ export class MemoryProjectLayout implements DbmlProjectLayout {
     return [...this.files.keys()]
       .map(Filepath.from)
       .sort((a, b) => a.absolute.localeCompare(b.absolute));
+  }
+
+  clone (): MemoryProjectLayout {
+    return new MemoryProjectLayout(this.files);
   }
 }
