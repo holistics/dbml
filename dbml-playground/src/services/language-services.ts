@@ -1,6 +1,6 @@
 import * as monaco from 'monaco-editor';
 import type { Compiler } from '@dbml/parse';
-import { DBML_LANGUAGE_ID } from '@/components/editor/dbml-language';
+import { DBML_LANGUAGE_ID } from '@/services/dbml-language';
 
 let registered = false;
 let diagnosticsProvider: { provideMarkers(): monaco.editor.IMarkerData[] } | null = null;

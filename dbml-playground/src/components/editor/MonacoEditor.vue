@@ -41,7 +41,7 @@ import {
   ref, onMounted, onBeforeUnmount, watch, nextTick,
 } from 'vue';
 import * as monaco from 'monaco-editor';
-import { registerDbmlLanguage, DBML_THEME_NAME } from '@/components/editor/dbml-language';
+import { registerDbmlLanguage, DBML_THEME_NAME } from '@/services/dbml-language';
 import logger from '@/utils/logger';
 import { useParser } from '@/stores/parserStore';
 
