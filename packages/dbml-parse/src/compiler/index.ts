@@ -11,7 +11,7 @@ import {
   containerStack, containerToken, containerElement, containerScope, containerScopeKind,
 } from './queries/container';
 import {
-  renameTable,
+  renameTable, syncDiagramView,
 } from './queries/transform';
 export {
   ScopeKind,
@@ -295,6 +295,7 @@ export default class Compiler {
 
   // transform queries
   renameTable = renameTable.bind(this);
+  syncDiagramView = syncDiagramView.bind(this);
 
   // @deprecated - legacy APIs for services compatibility
   readonly token = {

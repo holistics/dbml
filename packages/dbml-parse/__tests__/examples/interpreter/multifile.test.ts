@@ -347,3 +347,41 @@ Table orders {
     expect(ref.fieldNames).toContain('id');
   });
 });
+
+// ─── mixed selective + wildcard from the same file (known bug) ───────────────
+
+describe('[example] multifile interpreter — mixed selective + wildcard from same file', () => {
+  // BUG: `use { table users } from './shared.dbml'` followed by
+  // `use * from './shared.dbml'` exposes the same underlying `users` table twice;
+  // duplicate-checking in schemaModule.symbolMembers fails to dedupe the pair of
+  // UseSymbols and surfaces a DUPLICATE_NAME error, which poisons interpretation.
+  const { compiler, fps } = makeCompiler({
+    '/shared.dbml': `
+Table users {
+  id int [pk]
+  name varchar
+}
+
+Table roles {
+  id int [pk]
+  label varchar
+}
+`,
+    '/main.dbml': `
+use { table users } from './shared.dbml'
+use * from './shared.dbml'
+
+Table memberships {
+  id int [pk]
+  user_id int [ref: > users.id]
+  role_id int [ref: > roles.id]
+}
+`,
+  });
+
+  test.fails('interpretation succeeds and surfaces users, roles, memberships without errors', () => {
+    const db = exportDb(compiler, fps['/main.dbml']);
+    const names = db.tables.map((t) => t.name).sort();
+    expect(names).toEqual(['memberships', 'roles', 'users']);
+  });
+});

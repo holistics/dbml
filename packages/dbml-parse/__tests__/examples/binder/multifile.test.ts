@@ -355,6 +355,36 @@ describe('[example] multifile binder', () => {
     });
   });
 
+  describe('mixed selective + wildcard from the same file (known bug)', () => {
+    // BUG: importing the same symbol twice from the same file — once via a selective
+    // `use { table users }` and once via `use * from` — must be idempotent. Both
+    // specifiers resolve to the same underlying declaration, so the consumer scope
+    // should contain a single `users`, not two. Today the UseSymbols are deduped by
+    // object identity in schemaModule.symbolMembers, so two distinct UseSymbol
+    // wrappers around the same original leak through and collide as DUPLICATE_NAME.
+    test.fails('selective + wildcard from the same file is idempotent (no DUPLICATE_NAME)', () => {
+      const { compiler, fps } = makeCompiler({
+        '/shared.dbml': 'Table users { id int [pk] }\nTable roles { id int [pk] }',
+        '/main.dbml': [
+          "use { table users } from './shared.dbml'",
+          "use * from './shared.dbml'",
+          'Table memberships { user_id int [ref: > users.id] }',
+        ].join('\n'),
+      });
+
+      const mainAst = compiler.parseFile(fps['/main.dbml']).getValue().ast;
+      const bindErrors = compiler.bindNode(mainAst).getErrors();
+      expect(bindErrors.some((e) => e.code === CompileErrorCode.DUPLICATE_NAME)).toBe(false);
+
+      const schemaSymbol = compiler.lookupMembers(mainAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME).getValue()!;
+      const users = compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'users').getValue();
+      const roles = compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'roles').getValue();
+      // expect: both tables reachable — selective import does not conflict with wildcard re-exposure
+      expect(users).toBeInstanceOf(UseSymbol);
+      expect(roles).toBeInstanceOf(UseSymbol);
+    });
+  });
+
   describe('DiagramView — non-importable', () => {
     test('wildcard use does NOT pull DiagramView into consumer scope', () => {
       const { compiler, fps } = makeCompiler({

@@ -52,10 +52,11 @@ export type {
 } from '@/core/types/schemaJson';
 export type {
   DiagramViewSyncOperation,
+  DiagramViewBlock,
   TextEdit,
 } from '@/compiler/queries/transform';
 export {
-  syncDiagramView,
+  findDiagramViewBlocks,
 } from '@/compiler/queries/transform';
 
 export {

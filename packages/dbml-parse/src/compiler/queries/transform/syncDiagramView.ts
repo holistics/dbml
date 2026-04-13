@@ -18,38 +18,33 @@ import {
 import {
   addDoubleQuoteIfNeeded,
 } from '../utils';
+import type Compiler from '../../index';
 import type {
-  FilterConfig,
-} from '@/core/types/schemaJson';
+  Filepath,
+} from '@/core/types/filepath';
 
-export interface DiagramViewCreateOperation {
-  operation: 'create';
+export interface DiagramViewSyncOperation {
+  operation: 'create' | 'update' | 'delete';
   name: string;
-  visibleEntities: FilterConfig;
+  newName?: string;
+  visibleEntities?: {
+    tables?: Array<{
+      name: string;
+      schemaName: string;
+    }> | null;
+    stickyNotes?: Array<{ name: string }> | null;
+    tableGroups?: Array<{ name: string }> | null;
+    schemas?: Array<{ name: string }> | null;
+  };
 }
 
-export interface DiagramViewUpdateOperation {
-  operation: 'update';
+export interface DiagramViewBlock {
   name: string;
-  newName: string;
+  startIndex: number;
+  endIndex: number;
 }
 
-export interface DiagramViewDeleteOperation {
-  operation: 'delete';
-  name: string;
-}
-
-export type DiagramViewSyncOperation = DiagramViewCreateOperation | DiagramViewUpdateOperation | DiagramViewDeleteOperation;
-
-interface DiagramViewBlock {
-  name: string;
-  nameStart: number;
-  nameEnd: number;
-  blockStart: number;
-  blockEnd: number;
-}
-
-function findDiagramViewBlocks (source: string): DiagramViewBlock[] {
+export function findDiagramViewBlocks (source: string): DiagramViewBlock[] {
   const blocks: DiagramViewBlock[] = [];
   const lexerResult = new Lexer(source, DEFAULT_ENTRY).lex();
   if (lexerResult.getErrors().length > 0) return blocks;
@@ -66,10 +61,8 @@ function findDiagramViewBlocks (source: string): DiagramViewBlock[] {
       const name = fragments.length > 0 ? fragments[fragments.length - 1] : '';
       blocks.push({
         name,
-        nameStart: element.name?.start ?? element.start,
-        nameEnd: element.name?.end ?? element.start,
-        blockStart: element.start,
-        blockEnd: element.end,
+        startIndex: element.start,
+        endIndex: element.end,
       });
     }
   }
@@ -77,50 +70,61 @@ function findDiagramViewBlocks (source: string): DiagramViewBlock[] {
   return blocks;
 }
 
-function buildBlock (name: string, ve: FilterConfig): string {
+function generateDiagramViewBlock (
+  name: string,
+  visibleEntities: DiagramViewSyncOperation['visibleEntities'],
+): string {
   const lines: string[] = [`DiagramView ${addDoubleQuoteIfNeeded(name)} {`];
 
-  if (ve.tables !== null) {
-    if (ve.tables.length === 0) {
+  // Tables
+  if (visibleEntities?.tables !== undefined) {
+    if (visibleEntities.tables === null) {
+      // Hide all - don't add block
+    } else if (visibleEntities.tables.length === 0) {
       lines.push('  Tables { * }');
     } else {
+      const tableNames = visibleEntities.tables.map((t) => (t.schemaName === DEFAULT_SCHEMA_NAME ? t.name : `${t.schemaName}.${t.name}`));
       lines.push('  Tables {');
-      ve.tables.forEach((t) => {
-        const qualName = (t.schemaName && t.schemaName !== DEFAULT_SCHEMA_NAME)
-          ? `${t.schemaName}.${t.name}`
-          : t.name;
-        lines.push(`    ${qualName}`);
-      });
+      tableNames.forEach((n) => lines.push(`    ${n}`));
       lines.push('  }');
     }
   }
 
-  if (ve.stickyNotes !== null) {
-    if (ve.stickyNotes.length === 0) {
+  // Notes
+  if (visibleEntities?.stickyNotes !== undefined) {
+    if (visibleEntities.stickyNotes === null) {
+      // Hide all - don't add block
+    } else if (visibleEntities.stickyNotes.length === 0) {
       lines.push('  Notes { * }');
     } else {
       lines.push('  Notes {');
-      ve.stickyNotes.forEach((n) => lines.push(`    ${n.name}`));
+      visibleEntities.stickyNotes.forEach((n) => lines.push(`    ${n.name}`));
       lines.push('  }');
     }
   }
 
-  if (ve.tableGroups !== null) {
-    if (ve.tableGroups.length === 0) {
+  // TableGroups
+  if (visibleEntities?.tableGroups !== undefined) {
+    if (visibleEntities.tableGroups === null) {
+      // Hide all - don't add block
+    } else if (visibleEntities.tableGroups.length === 0) {
       lines.push('  TableGroups { * }');
     } else {
       lines.push('  TableGroups {');
-      ve.tableGroups.forEach((n) => lines.push(`    ${n.name}`));
+      visibleEntities.tableGroups.forEach((n) => lines.push(`    ${n.name}`));
       lines.push('  }');
     }
   }
 
-  if (ve.schemas !== null) {
-    if (ve.schemas.length === 0) {
+  // Schemas
+  if (visibleEntities?.schemas !== undefined) {
+    if (visibleEntities.schemas === null) {
+      // Hide all - don't add block
+    } else if (visibleEntities.schemas.length === 0) {
       lines.push('  Schemas { * }');
     } else {
       lines.push('  Schemas {');
-      ve.schemas.forEach((n) => lines.push(`    ${n.name}`));
+      visibleEntities.schemas.forEach((n) => lines.push(`    ${n.name}`));
       lines.push('  }');
     }
   }
@@ -130,79 +134,151 @@ function buildBlock (name: string, ve: FilterConfig): string {
 }
 
 /**
- * Applies a sequence of create / update / delete operations to a DBML string
- * and returns the updated string.  Operations are applied sequentially so that
- * later ops see the result of earlier ones (e.g. create then delete cancels out).
+ * Synchronizes DiagramView blocks in the DBML source at `filepath`.
  *
- * - **create** is idempotent: if a block with the same name already exists it
- *   is replaced in-place; otherwise the new block is appended.
- * - **update** renames the name token of an existing block (no-op when not found).
- * - **delete** removes the entire block (no-op when not found).
+ * @param filepath   The file whose source should be rewritten. Source is
+ *                   read from the compiler's project layout, which makes the
+ *                   query multifile-aware.
+ * @param operations Array of operations to apply (create, update, delete).
+ * @param blocks     Optional pre-parsed blocks from findDiagramViewBlocks. If
+ *                   not provided, parses internally.
+ * @returns Object containing the new DBML source code and the text edits applied.
  */
 export function syncDiagramView (
-  source: string,
+  this: Compiler,
+  filepath: Filepath,
   operations: DiagramViewSyncOperation[],
-): { newDbml: string } {
-  let result = source;
+  blocks?: DiagramViewBlock[],
+): {
+  newDbml: string;
+  edits: TextEdit[];
+} {
+  const dbml = this.layout.getSource(filepath) ?? '';
+  const originalBlocks = blocks ?? findDiagramViewBlocks(dbml);
+  const allEdits: TextEdit[] = [];
 
   for (const op of operations) {
-    const blocks = findDiagramViewBlocks(result);
-    const edits: TextEdit[] = [];
+    const edits = applyOperation(dbml, op, originalBlocks);
+    allEdits.push(...edits);
+  }
 
-    switch (op.operation) {
-      case 'create': {
-        const existing = blocks.find((b) => b.name === op.name);
-        if (existing) {
-          edits.push({
-            start: existing.blockStart,
-            end: existing.blockEnd,
-            newText: buildBlock(op.name, op.visibleEntities),
-          });
-        } else {
-          const newBlock = buildBlock(op.name, op.visibleEntities);
-          const separator = result.length > 0 && !result.endsWith('\n') ? '\n' : '';
-          edits.push({
-            start: result.length,
-            end: result.length,
-            newText: separator + newBlock,
-          });
-        }
-        break;
-      }
+  // Sort edits descending by start position for tail-first application
+  allEdits.sort((a, b) => b.start - a.start);
+  const newDbml = applyTextEdits(dbml, allEdits, true);
+  return {
+    newDbml,
+    edits: allEdits,
+  };
+}
 
-      case 'update': {
-        const existing = blocks.find((b) => b.name === op.name);
-        if (!existing) break;
-        edits.push({
-          start: existing.nameStart,
-          end: existing.nameEnd,
-          newText: addDoubleQuoteIfNeeded(op.newName),
-        });
-        break;
-      }
+function applyOperation (
+  dbml: string,
+  operation: DiagramViewSyncOperation,
+  blocks: DiagramViewBlock[],
+): TextEdit[] {
+  switch (operation.operation) {
+    case 'create':
+      return computeCreateEdit(dbml, operation, blocks);
+    case 'update':
+      return computeUpdateEdit(dbml, operation, blocks);
+    case 'delete':
+      return computeDeleteEdit(dbml, operation, blocks);
+    default:
+      return [];
+  }
+}
 
-      case 'delete': {
-        const existing = blocks.find((b) => b.name === op.name);
-        if (!existing) break;
-        let deleteStart = existing.blockStart;
-        if (deleteStart > 0 && result[deleteStart - 1] === '\n') {
-          deleteStart--;
-        }
-        edits.push({
-          start: deleteStart,
-          end: existing.blockEnd,
-          newText: '',
-        });
-        break;
-      }
+function computeCreateEdit (
+  dbml: string,
+  operation: DiagramViewSyncOperation,
+  blocks: DiagramViewBlock[],
+): TextEdit[] {
+  // If a block with this name already exists, treat as update to avoid duplicate blocks
+  const existing = blocks.find((b) => b.name === operation.name);
+  if (existing) {
+    return computeUpdateEdit(dbml, operation, blocks);
+  }
+
+  const newBlock = generateDiagramViewBlock(operation.name, operation.visibleEntities);
+  const appendText = '\n\n' + newBlock + '\n';
+  return [
+    {
+      start: dbml.length,
+      end: dbml.length,
+      newText: appendText,
+    },
+  ];
+}
+
+function computeUpdateEdit (
+  dbml: string,
+  operation: DiagramViewSyncOperation,
+  blocks: DiagramViewBlock[],
+): TextEdit[] {
+  const block = blocks.find((b) => b.name === operation.name);
+  if (!block) return [];
+
+  const edits: TextEdit[] = [];
+
+  if (operation.newName || operation.visibleEntities) {
+    // Generate new block content
+    const newName = operation.newName || operation.name;
+    const newBlock = generateDiagramViewBlock(newName, operation.visibleEntities);
+
+    // Replace entire block
+    edits.push({
+      start: block.startIndex,
+      end: block.endIndex,
+      newText: newBlock,
+    });
+  }
+
+  return edits;
+}
+
+function computeDeleteEdit (
+  dbml: string,
+  operation: DiagramViewSyncOperation,
+  blocks: DiagramViewBlock[],
+): TextEdit[] {
+  const block = blocks.find((b) => b.name === operation.name);
+  if (!block) return [];
+
+  // Expand range to include surrounding whitespace/newlines
+  let start = block.startIndex;
+  let end = block.endIndex;
+
+  // Expand backwards to consume preceding blank lines
+  while (start > 0 && dbml[start - 1] === '\n') {
+    start--;
+    // Also consume \r for CRLF
+    if (start > 0 && dbml[start - 1] === '\r') {
+      start--;
     }
-
-    if (edits.length > 0) {
-      result = applyTextEdits(result, edits, true);
+    // Check if the line before is blank — if not, stop
+    const prevLineStart = dbml.lastIndexOf('\n', start - 1) + 1;
+    const prevLine = dbml.substring(prevLineStart, start);
+    if (prevLine.trim() !== '') {
+      // Not a blank line, restore position
+      start = block.startIndex;
+      // But still consume one newline before the block
+      if (start > 0 && dbml[start - 1] === '\n') {
+        start--;
+        if (start > 0 && dbml[start - 1] === '\r') start--;
+      }
+      break;
     }
   }
 
-  return {
-    newDbml: result,
-  };
+  // Expand forward to consume trailing newline
+  if (end < dbml.length && dbml[end] === '\r') end++;
+  if (end < dbml.length && dbml[end] === '\n') end++;
+
+  return [
+    {
+      start,
+      end,
+      newText: '',
+    },
+  ];
 }
