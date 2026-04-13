@@ -190,7 +190,7 @@ export default class TablePartialValidator implements ElementValidator {
     const symbolTable = registerSchemaStack(namePartials, this.publicSymbolTable, this.symbolFactory);
     const tablePartialId = createTablePartialSymbolIndex(tablePartialName);
     if (symbolTable.has(tablePartialId)) {
-      return [new CompileError(CompileErrorCode.DUPLICATE_NAME, `TablePartial name '${tablePartialName}' already exists in schema '${namePartials.join('.') || DEFAULT_SCHEMA_NAME}'`, name!)];
+      return [new CompileError(CompileErrorCode.DUPLICATE_NAME, `TablePartial '${tablePartialName}' already exists in schema '${namePartials.join('.') || DEFAULT_SCHEMA_NAME}'`, name!)];
     }
     symbolTable.set(tablePartialId, this.declarationNode.symbol!);
 

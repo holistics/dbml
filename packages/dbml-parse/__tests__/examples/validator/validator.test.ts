@@ -29,7 +29,7 @@ describe('[example] validator', () => {
 
       expect(errors).toHaveLength(1);
       expect(errors[0].code).toBe(CompileErrorCode.DUPLICATE_NAME);
-      expect(errors[0].diagnostic).toBe("Table name 'users' already exists in schema 'public'");
+      expect(errors[0].diagnostic).toBe("Table 'users' already exists in schema 'public'");
 
       // Error should point to the SECOND (duplicate) table, not the first
       expect((errors[0].nodeOrToken as SyntaxToken).startPos.line).toBe(2);
@@ -222,7 +222,7 @@ describe('[example] validator', () => {
 
       expect(errors).toHaveLength(1);
       expect(errors[0].code).toBe(CompileErrorCode.DUPLICATE_NAME);
-      expect(errors[0].diagnostic).toBe("Enum name status already exists in schema 'public'");
+      expect(errors[0].diagnostic).toBe("Enum 'status' already exists in schema 'public'");
 
       // Error should be on second enum
       expect((errors[0].nodeOrToken as SyntaxToken).startPos.line).toBe(2);
@@ -1083,7 +1083,7 @@ Table users { name varchar }`;
       const errors = analyze(source).getErrors();
 
       expect(errors).toHaveLength(1);
-      expect(errors[0].diagnostic).toBe("Table name 'users' already exists in schema 'public'");
+      expect(errors[0].diagnostic).toBe("Table 'users' already exists in schema 'public'");
     });
 
     test('should include schema context in error messages when relevant', () => {
@@ -1094,7 +1094,7 @@ Table users { name varchar }`;
       const errors = analyze(source).getErrors();
 
       expect(errors).toHaveLength(1);
-      expect(errors[0].diagnostic).toBe("Table name 'users' already exists in schema 'auth'");
+      expect(errors[0].diagnostic).toBe("Table 'users' already exists in schema 'auth'");
     });
 
     test('should provide actionable error messages for unknown references', () => {

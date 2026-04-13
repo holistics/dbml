@@ -1,0 +1,225 @@
+{
+  "errors": [
+    {
+      "code": "DUPLICATE_TABLE_PARTIAL_INJECTION_NAME",
+      "diagnostic": "Duplicate table partial injection 'common'",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<function-application>@@[L6:C2, L6:C9]",
+          "snippet": "~common"
+        }
+      }
+    },
+    {
+      "code": "DUPLICATE_TABLE_PARTIAL_INJECTION_NAME",
+      "diagnostic": "Duplicate table partial injection 'common'",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<function-application>@@[L6:C2, L6:C9]",
+          "snippet": "~common"
+        }
+      }
+    },
+    {
+      "code": "DUPLICATE_TABLE_PARTIAL_INJECTION_NAME",
+      "diagnostic": "Duplicate table partial injection 'common'",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<function-application>@@[L7:C2, L7:C9]",
+          "snippet": "~common"
+        }
+      }
+    },
+    {
+      "code": "DUPLICATE_TABLE_PARTIAL_INJECTION_NAME",
+      "diagnostic": "Duplicate table partial injection 'common'",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<function-application>@@[L8:C2, L8:C9]",
+          "snippet": "~common"
+        }
+      }
+    }
+  ],
+  "nodeReferees": [
+    {
+      "context": {
+        "id": "node@<primary-expression>@common@[L6:C3, L6:C9]",
+        "snippet": "common"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@common@[L6:C3, L6:C9]",
+            "snippet": "common"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@common@[L6:C3, L6:C9]",
+                "snippet": "common"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": "\n",
+              "value": "common"
+            }
+          },
+          "fullEnd": 77,
+          "fullStart": 69
+        }
+      },
+      "fullEnd": 77,
+      "fullStart": 69,
+      "referee": {
+        "context": {
+          "id": "symbol@TablePartial@common@[L0:C0, L2:C1]",
+          "snippet": "TableParti...me text\r\n}"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@common@[L7:C3, L7:C9]",
+        "snippet": "common"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@common@[L7:C3, L7:C9]",
+            "snippet": "common"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@common@[L7:C3, L7:C9]",
+                "snippet": "common"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": "\n",
+              "value": "common"
+            }
+          },
+          "fullEnd": 88,
+          "fullStart": 80
+        }
+      },
+      "fullEnd": 88,
+      "fullStart": 80,
+      "referee": {
+        "context": {
+          "id": "symbol@TablePartial@common@[L0:C0, L2:C1]",
+          "snippet": "TableParti...me text\r\n}"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@common@[L8:C3, L8:C9]",
+        "snippet": "common"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@common@[L8:C3, L8:C9]",
+            "snippet": "common"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@common@[L8:C3, L8:C9]",
+                "snippet": "common"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": "\n",
+              "value": "common"
+            }
+          },
+          "fullEnd": 99,
+          "fullStart": 91
+        }
+      },
+      "fullEnd": 99,
+      "fullStart": 91,
+      "referee": {
+        "context": {
+          "id": "symbol@TablePartial@common@[L0:C0, L2:C1]",
+          "snippet": "TableParti...me text\r\n}"
+        }
+      }
+    }
+  ],
+  "program": {
+    "publicSchema": [
+      {
+        "context": {
+          "id": "symbol@TablePartial@common@[L0:C0, L2:C1]",
+          "snippet": "TableParti...me text\r\n}"
+        },
+        "declaration": {
+          "id": "node@<element-declaration>@common@[L0:C0, L2:C1]",
+          "snippet": "TableParti...me text\r\n}"
+        },
+        "members": [
+          {
+            "context": {
+              "id": "symbol@Column@name@[L1:C2, L1:C11]",
+              "snippet": "name text"
+            }
+          }
+        ],
+        "references": [
+          {
+            "id": "node@<primary-expression>@common@[L6:C3, L6:C9]",
+            "snippet": "common"
+          },
+          {
+            "id": "node@<primary-expression>@common@[L7:C3, L7:C9]",
+            "snippet": "common"
+          },
+          {
+            "id": "node@<primary-expression>@common@[L8:C3, L8:C9]",
+            "snippet": "common"
+          }
+        ]
+      },
+      {
+        "context": {
+          "id": "symbol@Table@Users@[L4:C0, L9:C1]",
+          "snippet": "Table User...~common\r\n}"
+        },
+        "declaration": {
+          "id": "node@<element-declaration>@Users@[L4:C0, L9:C1]",
+          "snippet": "Table User...~common\r\n}"
+        },
+        "members": [
+          {
+            "context": {
+              "id": "symbol@Column@@[L8:C2, L8:C9]",
+              "snippet": "~common"
+            }
+          },
+          {
+            "context": {
+              "id": "symbol@Column@id@[L5:C2, L5:C8]",
+              "snippet": "id int"
+            }
+          },
+          {
+            "context": {
+              "id": "symbol@PartialInjection@@[L6:C2, L6:C9]",
+              "snippet": "~common"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -113,7 +113,7 @@ export default class EnumValidator implements ElementValidator {
       const symbolTable = registerSchemaStack(nameFragments, this.publicSymbolTable, this.symbolFactory);
       const enumId = createEnumSymbolIndex(enumName);
       if (symbolTable.has(enumId)) {
-        errors.push(new CompileError(CompileErrorCode.DUPLICATE_NAME, `Enum name ${enumName} already exists in schema '${nameFragments.join('.') || DEFAULT_SCHEMA_NAME}'`, name!));
+        errors.push(new CompileError(CompileErrorCode.DUPLICATE_NAME, `Enum '${enumName}' already exists in schema '${nameFragments.join('.') || DEFAULT_SCHEMA_NAME}'`, name!));
       }
       symbolTable.set(enumId, this.declarationNode.symbol!);
     }

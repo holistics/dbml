@@ -126,7 +126,7 @@ export default class DiagramViewValidator implements ElementValidator {
       const symbolTable = registerSchemaStack(nameFragments, this.publicSymbolTable, this.symbolFactory);
       const diagramViewId = createDiagramViewSymbolIndex(diagramViewName);
       if (symbolTable.has(diagramViewId)) {
-        return [new CompileError(CompileErrorCode.DUPLICATE_DIAGRAMVIEW_NAME, `DiagramView name '${diagramViewName}' already exists`, name!)];
+        return [new CompileError(CompileErrorCode.DUPLICATE_DIAGRAMVIEW_NAME, `DiagramView '${diagramViewName}' already exists`, name!)];
       }
       symbolTable.set(diagramViewId, this.declarationNode.symbol!);
     }

@@ -26,7 +26,7 @@
     },
     {
       "code": "DUPLICATE_NAME",
-      "diagnostic": "Enum name status already exists in schema 'public'",
+      "diagnostic": "Enum 'status' already exists in schema 'public'",
       "filepath": "/main.dbml",
       "level": "error",
       "node": {

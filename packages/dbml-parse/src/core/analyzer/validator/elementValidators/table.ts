@@ -178,7 +178,7 @@ export default class TableValidator implements ElementValidator {
       const symbolTable = registerSchemaStack(nameFragments, this.publicSymbolTable, this.symbolFactory);
       const tableId = createTableSymbolIndex(tableName);
       if (symbolTable.has(tableId)) {
-        errors.push(new CompileError(CompileErrorCode.DUPLICATE_NAME, `Table name '${tableName}' already exists in schema '${nameFragments.join('.') || DEFAULT_SCHEMA_NAME}'`, name!));
+        errors.push(new CompileError(CompileErrorCode.DUPLICATE_NAME, `Table '${tableName}' already exists in schema '${nameFragments.join('.') || DEFAULT_SCHEMA_NAME}'`, name!));
       }
       symbolTable.set(tableId, this.declarationNode.symbol!);
     }
@@ -191,7 +191,7 @@ export default class TableValidator implements ElementValidator {
       const aliasName = extractVarNameFromPrimaryVariable(alias as any)!;
       const aliasId = createTableSymbolIndex(aliasName);
       if (this.publicSymbolTable.has(aliasId)) {
-        errors.push(new CompileError(CompileErrorCode.DUPLICATE_NAME, `Table name '${aliasName}' already exists in schema '${DEFAULT_SCHEMA_NAME}'`, name!));
+        errors.push(new CompileError(CompileErrorCode.DUPLICATE_NAME, `Table '${aliasName}' already exists in schema '${DEFAULT_SCHEMA_NAME}'`, name!));
       }
       this.publicSymbolTable.set(aliasId, this.declarationNode.symbol!);
     }
