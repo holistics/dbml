@@ -20,6 +20,7 @@ export default defineConfig(
         'dist/*',
         'vite.config.ts',
         'eslint.config.ts',
+        '__tests__/*',
       ],
     },
     {
