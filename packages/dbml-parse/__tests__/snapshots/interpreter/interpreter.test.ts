@@ -11,9 +11,9 @@ import type { Database } from '@/index';
 import type Report from '@/core/types/report';
 
 function serializeInterpreterResult (compiler: Compiler, report: Report<Database | undefined>): string {
-  const value = report.getValue();
   const errors = report.getErrors();
   const warnings = report.getWarnings();
+  const value = errors.length > 0 ? undefined : report.getValue();
   return JSON.stringify(toSnapshot(compiler, {
     database: value as any,
     errors,
