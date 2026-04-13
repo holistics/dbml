@@ -4,6 +4,9 @@ import {
 import {
   SyntaxNode,
 } from '@/core/types/nodes';
+import {
+  Filepath,
+} from './filepath';
 
 export enum CompileErrorCode {
   UNKNOWN_SYMBOL = 1000,
@@ -163,6 +166,10 @@ export class CompileError extends Error {
       this.nodeOrToken,
     );
   }
+
+  get filepath (): Filepath {
+    return this.nodeOrToken.filepath;
+  }
 }
 
 export class CompileWarning extends Error {
@@ -185,5 +192,9 @@ export class CompileWarning extends Error {
     this.end = nodeOrToken.end;
     this.name = this.constructor.name;
     Object.setPrototypeOf(this, CompileError.prototype);
+  }
+
+  get filepath (): Filepath {
+    return this.nodeOrToken.filepath;
   }
 }
