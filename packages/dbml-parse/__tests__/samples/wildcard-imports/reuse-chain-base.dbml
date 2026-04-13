@@ -1,4 +1,4 @@
-// base: defines tables and an enum
+// base of the reuse chain: defines tables and an enum
 Enum order_status {
   pending
   shipped

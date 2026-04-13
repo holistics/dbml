@@ -1,0 +1,8 @@
+// consumer of the reuse chain: imports from the middle which transitively
+// re-exports everything from the base via reuse *
+use * from './reuse-chain-middle.dbml'
+
+Table payments {
+  id int [pk]
+  order_id int
+}

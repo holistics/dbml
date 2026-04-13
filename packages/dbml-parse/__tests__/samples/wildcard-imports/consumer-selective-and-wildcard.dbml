@@ -1,8 +1,8 @@
 // two use statements importing from the same file:
 // one selective (only users), one wildcard (everything)
 // should result in all symbols being visible without duplicates
-use { table users } from './shared.dbml'
-use * from './shared.dbml'
+use { table users } from './single-source-tables.dbml'
+use * from './single-source-tables.dbml'
 
 Table memberships {
   id int [pk]

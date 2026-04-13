@@ -1,0 +1,6 @@
+// shared enum definition imported by both consumer entrypoints
+Enum job_status {
+  pending
+  running
+  done
+}

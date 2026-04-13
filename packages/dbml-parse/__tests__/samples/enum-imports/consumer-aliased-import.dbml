@@ -1,0 +1,7 @@
+// import the enum under an alias; the alias should be the resolvable name
+use { enum job_status as Status } from './enum-source.dbml'
+
+Table jobs {
+  id int [pk]
+  status Status
+}

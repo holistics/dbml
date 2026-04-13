@@ -1,5 +1,5 @@
 // wildcard import where all source tables are schema-qualified
-use * from './auth-tables.dbml'
+use * from './schema-qualified-tables.dbml'
 
 Table orders {
   id int [pk]

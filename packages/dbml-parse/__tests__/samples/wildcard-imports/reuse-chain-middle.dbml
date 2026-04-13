@@ -1,0 +1,2 @@
+// middle of the reuse chain: re-exports everything from the base
+reuse * from './reuse-chain-base.dbml'

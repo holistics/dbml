@@ -1,6 +1,6 @@
 // import a table that has composite indexes defined
 // verifies indexes are preserved when a table is pulled across files
-use { table bookings } from './tables.dbml'
+use { table bookings } from './composite-index-source.dbml'
 
 Table events {
   id int [pk]
