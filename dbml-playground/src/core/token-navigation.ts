@@ -11,8 +11,12 @@
  * - Pull Complexity Downwards: Complex event filtering handled internally
  */
 import * as monaco from 'monaco-editor';
-import { TokenMappingService } from './token-mapping';
-import type { Token, TokenNavigationEvents } from '@/types';
+import {
+  TokenMappingService,
+} from './token-mapping';
+import type {
+  Token, TokenNavigationEvents,
+} from '@/types';
 
 export type TokenNavigationEventType = keyof TokenNavigationEvents;
 
@@ -21,7 +25,9 @@ export class TokenNavigationEventBus extends EventTarget {
     event: K,
     data: TokenNavigationEvents[K],
   ): void {
-    this.dispatchEvent(new CustomEvent(event, { detail: data }));
+    this.dispatchEvent(new CustomEvent(event, {
+      detail: data,
+    }));
   }
 
   on<K extends TokenNavigationEventType>(
@@ -103,7 +109,10 @@ export class TokenNavigationCoordinator {
    * Navigate from token to DBML (triggered by button click or Cmd+Click in JSON)
    */
   public navigateToDbmlFromToken (tokenIndex: number, modifier: 'cmd' | 'ctrl' | 'button' = 'button'): void {
-    this.eventBus.emit('navigate:token-to-dbml', { tokenIndex, modifier });
+    this.eventBus.emit('navigate:token-to-dbml', {
+      tokenIndex,
+      modifier,
+    });
   }
 
   /**
@@ -120,12 +129,20 @@ export class TokenNavigationCoordinator {
       this.switchToCardsMode();
       // Wait for view mode transition to complete before navigating
       setTimeout(() => {
-        this.eventBus.emit('navigate:dbml-to-token', { line, column, modifier });
+        this.eventBus.emit('navigate:dbml-to-token', {
+          line,
+          column,
+          modifier,
+        });
       }, 50); // Small delay to ensure view mode switch completes
       return;
     }
 
-    this.eventBus.emit('navigate:dbml-to-token', { line, column, modifier });
+    this.eventBus.emit('navigate:dbml-to-token', {
+      line,
+      column,
+      modifier,
+    });
   }
 
   /**
@@ -142,12 +159,22 @@ export class TokenNavigationCoordinator {
       this.switchToCardsMode();
       // Wait for view mode transition to complete before navigating
       setTimeout(() => {
-        this.eventBus.emit('navigate:range-to-tokens', { startLine, startCol, endLine, endCol });
+        this.eventBus.emit('navigate:range-to-tokens', {
+          startLine,
+          startCol,
+          endLine,
+          endCol,
+        });
       }, 50); // Small delay to ensure view mode switch completes
       return;
     }
 
-    this.eventBus.emit('navigate:range-to-tokens', { startLine, startCol, endLine, endCol });
+    this.eventBus.emit('navigate:range-to-tokens', {
+      startLine,
+      startCol,
+      endLine,
+      endCol,
+    });
   }
 
   /**
@@ -176,19 +203,25 @@ export class TokenNavigationCoordinator {
    */
   private setupEventHandlers (): void {
     // Token → DBML navigation
-    this.eventBus.on('navigate:token-to-dbml', ({ tokenIndex }) => {
+    this.eventBus.on('navigate:token-to-dbml', ({
+      tokenIndex,
+    }) => {
       if (this.isNavigating) return;
       this.highlightTokenInDbml(tokenIndex);
     });
 
     // DBML → Token navigation
-    this.eventBus.on('navigate:dbml-to-token', ({ line, column }) => {
+    this.eventBus.on('navigate:dbml-to-token', ({
+      line, column,
+    }) => {
       if (this.isNavigating) return;
       this.highlightTokenInLexer(line, column);
     });
 
     // DBML Range → Tokens navigation
-    this.eventBus.on('navigate:range-to-tokens', ({ startLine, startCol, endLine, endCol }) => {
+    this.eventBus.on('navigate:range-to-tokens', ({
+      startLine, startCol, endLine, endCol,
+    }) => {
       if (this.isNavigating) return;
       this.highlightTokensInLexer(startLine, startCol, endLine, endCol);
     });

@@ -311,10 +311,16 @@
  * Shows detailed information about selected AST nodes including
  * access paths, properties, and navigation options.
  */
-import { computed, ref, inject } from 'vue';
-import type { SemanticASTNode, AccessPath } from '@/core/ast-transformer';
+import {
+  computed, ref, inject,
+} from 'vue';
+import type {
+  SemanticASTNode, AccessPath,
+} from '@/core/ast-transformer';
 import MonacoEditor from '@/components/editors/MonacoEditor.vue';
-import type { TokenNavigationEventBus } from '@/core/token-navigation';
+import type {
+  TokenNavigationEventBus,
+} from '@/core/token-navigation';
 import consoleLogger from '@/utils/logger';
 
 interface Props {
@@ -514,7 +520,10 @@ const navigateToPosition = (line: number, column: number) => {
   if (tokenNavigationCoordinator?.dbmlEditor) {
     try {
       // Create Monaco position (1-indexed)
-      const position = { lineNumber: line, column: column };
+      const position = {
+        lineNumber: line,
+        column: column,
+      };
 
       // Set cursor position
       tokenNavigationCoordinator.dbmlEditor.setPosition(position);
@@ -547,16 +556,32 @@ const navigateToPosition = (line: number, column: number) => {
       consoleLogger.warn('Direct navigation failed:', error);
       // Fallback to emit
       const position = {
-        start: { line, column, offset: 0 },
-        end: { line, column, offset: 0 },
+        start: {
+          line,
+          column,
+          offset: 0,
+        },
+        end: {
+          line,
+          column,
+          offset: 0,
+        },
       };
       emit('navigate-to-source', position);
     }
   } else {
     // Fallback to old method if coordinator not available
     const position = {
-      start: { line, column, offset: 0 },
-      end: { line, column, offset: 0 },
+      start: {
+        line,
+        column,
+        offset: 0,
+      },
+      end: {
+        line,
+        column,
+        offset: 0,
+      },
     };
     emit('navigate-to-source', position);
   }
@@ -600,16 +625,32 @@ const navigateToRange = (startLine: number, startColumn: number, endLine: number
       consoleLogger.warn('Direct range navigation failed:', error);
       // Fallback to emit
       const position = {
-        start: { line: startLine, column: startColumn, offset: 0 },
-        end: { line: endLine, column: endColumn, offset: 0 },
+        start: {
+          line: startLine,
+          column: startColumn,
+          offset: 0,
+        },
+        end: {
+          line: endLine,
+          column: endColumn,
+          offset: 0,
+        },
       };
       emit('navigate-to-source', position);
     }
   } else {
     // Fallback to old method if coordinator not available
     const position = {
-      start: { line: startLine, column: startColumn, offset: 0 },
-      end: { line: endLine, column: endColumn, offset: 0 },
+      start: {
+        line: startLine,
+        column: startColumn,
+        offset: 0,
+      },
+      end: {
+        line: endLine,
+        column: endColumn,
+        offset: 0,
+      },
     };
     emit('navigate-to-source', position);
   }
@@ -618,7 +659,11 @@ const navigateToRange = (startLine: number, startColumn: number, endLine: number
 // AST Statistics for debugging
 const getASTStats = () => {
   if (!props.rawAst?.body) {
-    return { totalElements: 0, uniqueTypes: 0, typeBreakdown: [] };
+    return {
+      totalElements: 0,
+      uniqueTypes: 0,
+      typeBreakdown: [],
+    };
   }
 
   const typeCounts: Record<string, number> = {};

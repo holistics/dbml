@@ -37,9 +37,13 @@
  * - Information Hiding: Language setup complexity is hidden in services
  * - Shallow Module: Simple interface that delegates to deep modules
  */
-import { ref, onMounted, onBeforeUnmount, watch, nextTick } from 'vue';
+import {
+  ref, onMounted, onBeforeUnmount, watch, nextTick,
+} from 'vue';
 import * as monaco from 'monaco-editor';
-import { DBMLLanguageService } from '@/components/monaco/dbml-language';
+import {
+  DBMLLanguageService,
+} from '@/components/monaco/dbml-language';
 import consoleLogger from '@/utils/logger';
 
 interface Props {
@@ -72,7 +76,10 @@ let editor: monaco.editor.IStandaloneCodeEditor | null = null;
 /**
  * Reactive cursor position tracking
  */
-const cursorPosition = ref({ line: 1, column: 1 });
+const cursorPosition = ref({
+  line: 1,
+  column: 1,
+});
 
 /**
  * Reactive selection info tracking
@@ -105,7 +112,9 @@ const createEditorConfig = (): monaco.editor.IStandaloneEditorConstructionOption
   language: props.language,
   theme: getThemeForLanguage(props.language),
   readOnly: props.readOnly,
-  minimap: { enabled: props.minimap },
+  minimap: {
+    enabled: props.minimap,
+  },
   wordWrap: props.wordWrap,
   scrollBeyondLastLine: false,
   fontSize: 14,
@@ -114,7 +123,10 @@ const createEditorConfig = (): monaco.editor.IStandaloneEditorConstructionOption
   lineNumbersMinChars: 3,
   lineDecorationsWidth: 10,
   columnSelection: false,
-  padding: { top: 10, bottom: 10 },
+  padding: {
+    top: 10,
+    bottom: 10,
+  },
   renderWhitespace: 'boundary',
   renderControlCharacters: true,
   smoothScrolling: true,
@@ -139,7 +151,9 @@ const createEditorConfig = (): monaco.editor.IStandaloneEditorConstructionOption
   selectOnLineNumbers: false, // Disable line number selection for vim compatibility
   cursorWidth: props.vimMode ? 2 : 1, // Slightly wider cursor for vim visibility
   quickSuggestions: false, // Disable auto-suggestions for vim mode compatibility
-  parameterHints: { enabled: false }, // Disable parameter hints for cleaner vim experience
+  parameterHints: {
+    enabled: false,
+  }, // Disable parameter hints for cleaner vim experience
   suggestOnTriggerCharacters: false, // Disable suggestion popup on typing
   acceptSuggestionOnEnter: 'off', // Prevent Enter from accepting suggestions
   tabCompletion: 'off', // Disable tab completion to avoid conflicts with vim
@@ -157,7 +171,9 @@ const setupVimMode = async (): Promise<void> => {
 
   try {
     // Dynamically import monaco-vim
-    const { initVimMode } = await import('monaco-vim' as any);
+    const {
+      initVimMode,
+    } = await import('monaco-vim' as any);
 
     // Initialize vim mode with status tracking
     vimMode = initVimMode(editor);
@@ -309,7 +325,9 @@ watch(() => props.modelValue, (newValue) => {
 
 watch(() => props.readOnly, (newReadOnly) => {
   if (editor) {
-    editor.updateOptions({ readOnly: newReadOnly });
+    editor.updateOptions({
+      readOnly: newReadOnly,
+    });
   }
 });
 

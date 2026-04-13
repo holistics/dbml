@@ -57,8 +57,12 @@ export interface SemanticASTNode {
 
   // Source position using parser's Position interface
   sourcePosition?: {
-    start: { line: number; column: number; offset: number };
-    end: { line: number; column: number; offset: number };
+    start: { line: number;
+      column: number;
+      offset: number; };
+    end: { line: number;
+      column: number;
+      offset: number; };
     // Raw parser node information - use raw.id for debugging display
     raw?: {
       startPos: Position;
@@ -404,7 +408,13 @@ export class ASTTransformerService {
     const semantic = transformer.transformToSemantic(ast);
     const parserInfo = ASTTransformerService.getParserIntegrationInfo();
 
-    return { semantic, tokens, errors, interpretedData, parserInfo };
+    return {
+      semantic,
+      tokens,
+      errors,
+      interpretedData,
+      parserInfo,
+    };
   }
 
   /**

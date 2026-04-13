@@ -70,12 +70,16 @@
  * - Information Hiding: Stage detection logic is encapsulated
  * - Shallow Module: Simple interface that delegates to specialized components
  */
-import { computed, ref } from 'vue';
+import {
+  computed, ref,
+} from 'vue';
 import MonacoEditor from '@/components/editors/MonacoEditor.vue';
 import LexerView from './LexerView.vue';
 import ParserASTView from './ParserASTView.vue';
 import InterpreterView from './InterpreterView.vue';
-import type { Token, ParserOutputViewerProps, NavigationPosition } from '@/types';
+import type {
+  Token, ParserOutputViewerProps, NavigationPosition,
+} from '@/types';
 
 const props = defineProps<ParserOutputViewerProps>();
 
@@ -106,11 +110,15 @@ const transformedData = computed(() => {
     try {
       return JSON.parse(props.data);
     } catch {
-      return { value: props.data };
+      return {
+        value: props.data,
+      };
     }
   }
 
-  return { value: props.data };
+  return {
+    value: props.data,
+  };
 });
 
 /**
@@ -218,7 +226,12 @@ const setViewMode = (mode: 'cards' | 'json'): void => {
 /**
  * Handle navigate to source event from AST view
  */
-const handleNavigateToSource = (position: { start: { line: number; column: number; offset: number }; end: { line: number; column: number; offset: number } }) => {
+const handleNavigateToSource = (position: { start: { line: number;
+  column: number;
+  offset: number; };
+end: { line: number;
+  column: number;
+  offset: number; }; }) => {
   emit('navigate-to-source', position);
 };
 

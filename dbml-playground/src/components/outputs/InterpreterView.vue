@@ -157,10 +157,14 @@
  * Generic design allows it to handle new features added to dbml-parse
  * without breaking when the parser structure evolves.
  */
-import { computed, ref } from 'vue';
+import {
+  computed, ref,
+} from 'vue';
 import MonacoEditor from '@/components/editors/MonacoEditor.vue';
 import InterpreterTreeView from './ast/InterpreterTreeView.vue';
-import type { Database, InterpreterViewProps } from '@/types';
+import type {
+  Database, InterpreterViewProps,
+} from '@/types';
 import consoleLogger from '@/utils/logger';
 
 const props = defineProps<InterpreterViewProps>();
@@ -205,7 +209,8 @@ const handleTreeNodeClick = (node: any) => {
   consoleLogger.log('Tree node clicked:', node);
 };
 
-const handleTreePositionClick = (event: { node: any; position: any }) => {
+const handleTreePositionClick = (event: { node: any;
+  position: any; }) => {
   consoleLogger.log('Tree position clicked:', event);
 };
 </script>
