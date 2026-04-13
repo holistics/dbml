@@ -4,6 +4,21 @@ import { defineConfig } from 'eslint/config';
 import stylistic from '@stylistic/eslint-plugin';
 import tseslint from 'typescript-eslint';
 import tsparser from '@typescript-eslint/parser';
+import importPlugin from 'eslint-plugin-import';
+
+const IMPORT_ORDER_RULES = {
+  'import/order': ['error', {
+    groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
+    'newlines-between': 'never',
+    alphabetize: { order: 'asc', caseInsensitive: false },
+  }],
+  'import/newline-after-import': ['error', { count: 1 }],
+  'sort-imports': ['error', {
+    ignoreDeclarationSort: true,
+    ignoreCase: false,
+    memberSyntaxSortOrder: ['none', 'all', 'multiple', 'single'],
+  }],
+};
 
 export default defineConfig(
   eslint.configs.recommended,
@@ -41,8 +56,10 @@ export default defineConfig(
       },
       plugins: {
         '@stylistic': stylistic,
+        import: importPlugin,
       },
       rules: {
+        ...IMPORT_ORDER_RULES,
         '@stylistic/object-curly-newline': ['error', {
           ObjectExpression: { multiline: true, minProperties: 1 },
           ObjectPattern: { multiline: true, minProperties: 1 },
@@ -74,8 +91,9 @@ export default defineConfig(
         'import/resolver': {
           typescript: {
             alwaysTryTypes: true,
-            project: 'packages/*/{ts,js}config.json',
+            project: './tsconfig.json',
           },
+          node: true,
         },
       },
     },

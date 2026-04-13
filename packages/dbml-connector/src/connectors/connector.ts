@@ -1,10 +1,10 @@
-import { DatabaseSchema } from './types';
-import { fetchSchemaJson as fetchPostgresSchemaJson } from './postgres';
+import { fetchSchemaJson as fetchBigQuerySchemaJson } from './bigquery';
 import { fetchSchemaJson as fetchMssqlSchemaJson } from './mssql';
 import { fetchSchemaJson as fetchMysqlSchemaJson } from './mysql';
-import { fetchSchemaJson as fetchSnowflakeSchemaJson } from './snowflake';
-import { fetchSchemaJson as fetchBigQuerySchemaJson } from './bigquery';
 import { fetchSchemaJson as fetchOracleSchemaJson } from './oracle';
+import { fetchSchemaJson as fetchPostgresSchemaJson } from './postgres';
+import { fetchSchemaJson as fetchSnowflakeSchemaJson } from './snowflake';
+import { DatabaseSchema } from './types';
 
 const fetchSchemaJson = async (connection: string, databaseType: string): Promise<DatabaseSchema> => {
   switch (databaseType) {

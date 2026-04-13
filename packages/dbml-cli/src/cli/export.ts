@@ -1,5 +1,3 @@
-import figures from 'figures';
-import chalk from 'chalk';
 import path from 'path';
 import {
   ModelExporter, Parser,
@@ -7,24 +5,26 @@ import {
 import {
   Compiler, Filepath,
 } from '@dbml/parse';
+import chalk from 'chalk';
 import {
   Command,
 } from 'commander';
+import figures from 'figures';
 import {
   NodeProjectLayout,
 } from '../NodeProjectLayout';
+import logger from '../helpers/logger';
+import config from './config';
+import OutputConsolePlugin from './outputPlugins/outputConsolePlugin';
+import OutputFilePlugin from './outputPlugins/outputFilePlugin';
 import {
-  validateInputFilePaths,
-  resolvePaths,
   getFormatOpt,
+  resolvePaths,
+  validateInputFilePaths,
 } from './utils';
 import {
   validateFilePlugin,
 } from './validatePlugins/validatePlugins';
-import OutputConsolePlugin from './outputPlugins/outputConsolePlugin';
-import OutputFilePlugin from './outputPlugins/outputFilePlugin';
-import config from './config';
-import logger from '../helpers/logger';
 
 export default async function exportHandler (program: Command): Promise<void> {
   const inputPaths = resolvePaths(program.args);

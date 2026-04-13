@@ -2,7 +2,7 @@ import {
   existsSync, readFileSync, readdirSync,
 } from 'node:fs';
 import {
-  Filepath, type DbmlProjectLayout,
+  type DbmlProjectLayout, Filepath,
 } from '@dbml/parse';
 
 /**

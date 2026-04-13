@@ -1,19 +1,19 @@
-import {
-  importer,
-} from '@dbml/core';
+import path from 'path';
 import {
   connector,
 } from '@dbml/connector';
-import figures from 'figures';
-import chalk from 'chalk';
-import path from 'path';
 import {
-  resolvePaths,
-  getConnectionOpt,
-} from './utils';
+  importer,
+} from '@dbml/core';
+import chalk from 'chalk';
+import figures from 'figures';
+import logger from '../helpers/logger';
 import OutputConsolePlugin from './outputPlugins/outputConsolePlugin';
 import OutputFilePlugin from './outputPlugins/outputFilePlugin';
-import logger from '../helpers/logger';
+import {
+  getConnectionOpt,
+  resolvePaths,
+} from './utils';
 
 interface Program {
   args: string[];

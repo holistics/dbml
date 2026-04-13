@@ -1,20 +1,20 @@
-import { concat, flatten, isEmpty } from 'lodash-es';
 import {
-  hasWhiteSpaceOrUpperCase,
-  shouldPrintSchema,
+  isBinaryType,
+  isBooleanType,
+  isDateTimeType,
+  isNumericType,
+  isStringType,
+} from '@dbml/parse';
+import { concat, flatten, isEmpty } from 'lodash-es';
+import { shouldPrintSchemaName } from '../model_structure/utils';
+import {
   buildJunctionFields1,
   buildJunctionFields2,
   buildNewTableName,
   hasWhiteSpace,
+  hasWhiteSpaceOrUpperCase,
+  shouldPrintSchema,
 } from './utils';
-import { shouldPrintSchemaName } from '../model_structure/utils';
-import {
-  isNumericType,
-  isStringType,
-  isBooleanType,
-  isDateTimeType,
-  isBinaryType,
-} from '@dbml/parse';
 
 // PostgreSQL built-in data types
 // Generated from PostgreSQLParser.g4 and PostgreSQLLexer.g4

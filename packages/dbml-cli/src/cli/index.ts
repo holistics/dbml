@@ -1,8 +1,8 @@
 import program from 'commander';
-import importHandler from './import';
-import exportHandler from './export';
-import connectionHandler from './connector';
 import projectInfo from '../../package.json';
+import connectionHandler from './connector';
+import exportHandler from './export';
+import importHandler from './import';
 
 function showHelp (args: string[]) {
   if (args.length < 3) program.help();

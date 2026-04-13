@@ -1,7 +1,7 @@
-import { isEmpty, flatten, flattenDepth } from 'lodash-es';
+import { flatten, flattenDepth, isEmpty } from 'lodash-es';
 import SnowflakeParserVisitor from '../../parsers/snowflake/SnowflakeParserVisitor';
 import { Enum, Field, Index, Table, TableRecord } from '../AST';
-import { TABLE_CONSTRAINT_KIND, COLUMN_CONSTRAINT_KIND, DATA_TYPE, CONSTRAINT_TYPE } from '../constants';
+import { COLUMN_CONSTRAINT_KIND, CONSTRAINT_TYPE, DATA_TYPE, TABLE_CONSTRAINT_KIND } from '../constants';
 import { getOriginalText } from '../helpers';
 
 const DEFAULT_SCHEMA = 'public';
