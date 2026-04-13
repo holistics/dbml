@@ -32,9 +32,13 @@ function serializeBinderResult (compiler: Compiler, report: Report<ProgramNode>)
   const warnings = report.getWarnings();
   const nodeReferees = collectNodesWithReferee(value);
 
-  // Simulate module-system-3 structure:
-  // - Named schemas live at "program" level
-  // - Public schema only contains non-schema members
+  // FIXME: this snapshot manually splits the program's symbol table into
+  // (named schemas at the top, public-schema members below) so the output
+  // matches what we want long-term: named schemas owned by the program node and
+  // the public schema only carrying non-schema members. The current analyzer
+  // can't express that directly. The query-based-compiler rework will surface
+  // this shape natively, at which point this loop can be replaced by a single
+  // `compiler.symbolMembers(programSymbol)` walk.
   const programSymbol = value.symbol;
   const schemas: NodeSymbol[] = [];
   const publicSchemaMembers: NodeSymbol[] = [];
