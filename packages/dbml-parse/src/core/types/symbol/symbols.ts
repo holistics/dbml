@@ -86,9 +86,10 @@ export class NodeSymbol implements Internable<InternedNodeSymbol> {
     this.filepath = filepath;
   }
 
-  // Whether this symbol can be imported from other files
+  // Whether this symbol can be imported from other files.
+  // DiagramView is file-local: wildcard imports must not pull it in.
   get canBeImported (): boolean {
-    return true;
+    return this.kind !== SymbolKind.DiagramView;
   }
 
   get originalSymbol (): NodeSymbol {
@@ -142,7 +143,8 @@ export class UseSymbol extends NodeSymbol {
 
   get canBeImported (): boolean {
     const useDeclaration = this.useSpecifierDeclaration?.parentOfKind(UseDeclarationNode);
-    return !useDeclaration || useDeclaration.isReuse;
+    const isReuse = !useDeclaration || useDeclaration.isReuse;
+    return isReuse && this.originalSymbol.canBeImported;
   }
 
   get originalSymbol (): NodeSymbol {

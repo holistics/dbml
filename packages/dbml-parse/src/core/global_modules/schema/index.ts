@@ -167,12 +167,14 @@ function handleMemberWildcardUses (compiler: Compiler, symbol: SchemaSymbol, imp
 
   const usableMembers = compiler.fileUsableMembers(externalSchemaSymbol).getFiltered(UNHANDLED);
   if (!usableMembers) return [];
-  const members = usableMembers.nonSchemaMembers.map((m) => compiler.symbolFactory.create(UseSymbol, {
-    kind: m.kind,
-    declaration: m.declaration,
-    usedSymbol: m,
-    useSpecifierDeclaration: wildcardNode,
-  }, symbol.filepath));
+  const members = usableMembers.nonSchemaMembers
+    .filter((m) => m.canBeImported)
+    .map((m) => compiler.symbolFactory.create(UseSymbol, {
+      kind: m.kind,
+      declaration: m.declaration,
+      usedSymbol: m,
+      useSpecifierDeclaration: wildcardNode,
+    }, symbol.filepath));
 
   for (const schemaMember of usableMembers.schemaMembers) {
     if (!childSchemas.has(schemaMember.name)) {

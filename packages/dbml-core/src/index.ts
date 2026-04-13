@@ -75,6 +75,5 @@ export type {
   DiagramView,
   FilterConfig,
   DiagramViewSyncOperation,
-  DiagramViewBlock,
   TextEdit,
 } from '@dbml/parse';
