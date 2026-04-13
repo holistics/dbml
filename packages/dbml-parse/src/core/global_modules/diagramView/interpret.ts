@@ -8,6 +8,7 @@ import {
 import type {
   DiagramView, FilterConfig,
 } from '@/core/types/schemaJson';
+import { ElementKind } from '@/core/types/keywords';
 import {
   extractElementName,
   getTokenPosition,
@@ -15,7 +16,9 @@ import {
   lookupMember,
   scanNonListNodeForBinding,
 } from '../utils';
-import { extractVarNameFromPrimaryVariable, isWildcardExpression } from '@/core/utils/expression';
+import {
+  extractVarNameFromPrimaryVariable, isWildcardExpression,
+} from '@/core/utils/expression';
 import {
   DEFAULT_SCHEMA_NAME, UNHANDLED,
 } from '@/constants';
@@ -63,12 +66,12 @@ export class DiagramViewInterpreter {
 
     // Find sub-element blocks
     const subBlocks = body.body.filter((n) => n instanceof ElementDeclarationNode) as ElementDeclarationNode[];
-    const findSub = (kind: string) => subBlocks.find((b) => b.type?.value.toLowerCase() === kind);
+    const findSub = (kind: ElementKind) => subBlocks.find((b) => b.isKind(kind));
 
-    const tablesBlock = findSub('tables');
-    const notesBlock = findSub('notes');
-    const tableGroupsBlock = findSub('tablegroups');
-    const schemasBlock = findSub('schemas');
+    const tablesBlock = findSub(ElementKind.DiagramViewTables);
+    const notesBlock = findSub(ElementKind.DiagramViewNotes);
+    const tableGroupsBlock = findSub(ElementKind.DiagramViewTableGroups);
+    const schemasBlock = findSub(ElementKind.DiagramViewSchemas);
 
     // Interpret each block
     const tablesOriginal = this.interpretTableBlock(tablesBlock);
@@ -131,12 +134,14 @@ export class DiagramViewInterpreter {
       .filter((n): n is FunctionApplicationNode => n instanceof FunctionApplicationNode)
       .filter((field) => !isWildcardExpression(field.callee))
       .map((field) => this.resolveTableRef(field))
-      .filter((r): r is { name: string; schemaName: string } => r !== null);
+      .filter((r): r is { name: string;
+        schemaName: string; } => r !== null);
   }
 
   private resolveTableRef (
     field: FunctionApplicationNode,
-  ): { name: string; schemaName: string } | null {
+  ): { name: string;
+    schemaName: string; } | null {
     if (!field.callee) return null;
 
     const programNode = this.compiler.parseFile(this.node.filepath).getValue().ast;

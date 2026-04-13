@@ -354,4 +354,91 @@ describe('[example] multifile binder', () => {
       expect((u1 as UseSymbol).usedSymbol?.declaration).toBe((u2 as UseSymbol).usedSymbol?.declaration);
     });
   });
+
+  describe('DiagramView — non-importable', () => {
+    test('wildcard use does NOT pull DiagramView into consumer scope', () => {
+      const { compiler, fps } = makeCompiler({
+        '/base.dbml': `
+          Table users { id int [pk] }
+          DiagramView myView {
+            Tables { users }
+          }
+        `,
+        '/main.dbml': "use * from './base.dbml'",
+      });
+
+      const mainAst = compiler.parseFile(fps['/main.dbml']).getValue().ast;
+      expect(compiler.bindNode(mainAst).getErrors()).toHaveLength(0);
+
+      const dvInMain = compiler.lookupMembers(mainAst, SymbolKind.DiagramView, 'myView').getValue();
+      expect(dvInMain).toBeUndefined();
+    });
+
+    test('reuse wildcard does NOT re-export DiagramView to downstream importers', () => {
+      const { compiler, fps } = makeCompiler({
+        '/base.dbml': `
+          Table users { id int [pk] }
+          DiagramView myView {
+            Tables { users }
+          }
+        `,
+        '/middle.dbml': "reuse * from './base.dbml'",
+        '/consumer.dbml': "use * from './middle.dbml'",
+      });
+
+      const consumerAst = compiler.parseFile(fps['/consumer.dbml']).getValue().ast;
+      expect(compiler.bindNode(consumerAst).getErrors()).toHaveLength(0);
+
+      const dvInConsumer = compiler.lookupMembers(consumerAst, SymbolKind.DiagramView, 'myView').getValue();
+      expect(dvInConsumer).toBeUndefined();
+    });
+
+    test('DiagramView is still visible in its own file scope', () => {
+      const { compiler, fps } = makeCompiler({
+        '/base.dbml': `
+          Table users { id int [pk] }
+          DiagramView myView {
+            Tables { users }
+          }
+        `,
+      });
+
+      const baseAst = compiler.parseFile(fps['/base.dbml']).getValue().ast;
+      expect(compiler.bindNode(baseAst).getErrors()).toHaveLength(0);
+
+      const dvInBase = compiler.lookupMembers(baseAst, SymbolKind.DiagramView, 'myView').getValue();
+      expect(dvInBase).toBeDefined();
+      expect(dvInBase!.isKind(SymbolKind.DiagramView)).toBe(true);
+    });
+
+    test('DiagramView can reference a table imported from another file', () => {
+      const { compiler, fps } = makeCompiler({
+        '/base.dbml': 'Table users { id int [pk] }',
+        '/main.dbml': `
+          use { table users } from './base.dbml'
+          DiagramView myView {
+            Tables { users }
+          }
+        `,
+      });
+
+      const mainAst = compiler.parseFile(fps['/main.dbml']).getValue().ast;
+      expect(compiler.bindNode(mainAst).getErrors()).toHaveLength(0);
+    });
+
+    test('DiagramView can reference a table from a wildcard import', () => {
+      const { compiler, fps } = makeCompiler({
+        '/base.dbml': 'Table users { id int [pk] }\nTable posts { id int [pk] }',
+        '/main.dbml': `
+          use * from './base.dbml'
+          DiagramView myView {
+            Tables { users }
+          }
+        `,
+      });
+
+      const mainAst = compiler.parseFile(fps['/main.dbml']).getValue().ast;
+      expect(compiler.bindNode(mainAst).getErrors()).toHaveLength(0);
+    });
+  });
 });

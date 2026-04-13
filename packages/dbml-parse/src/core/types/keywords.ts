@@ -20,6 +20,10 @@ export enum ElementKind {
   Checks = 'checks',
   Records = 'records',
   DiagramView = 'diagramview',
+  DiagramViewTables = 'tables',
+  DiagramViewNotes = 'notes',
+  DiagramViewTableGroups = 'tablegroups',
+  DiagramViewSchemas = 'schemas',
 }
 
 export enum SettingName {

@@ -3,6 +3,7 @@ import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode,
 } from '@/core/types/nodes';
 import { isWildcardExpression } from '@/core/utils/expression';
+import { ElementKind } from '@/core/types/keywords';
 import { scanNonListNodeForBinding } from '../utils';
 import { SyntaxToken } from '@/core/types/tokens';
 import { CompileError } from '@/core/types/errors';
@@ -41,18 +42,11 @@ export default class DiagramViewBinder {
         return [];
       }
 
-      switch (sub.type.value.toLowerCase()) {
-        case 'tables':
-          return this.bindTableReferences(sub.body);
-        case 'notes':
-          return this.bindNoteReferences(sub.body);
-        case 'tablegroups':
-          return this.bindTableGroupReferences(sub.body);
-        case 'schemas':
-          return this.bindSchemaReferences(sub.body);
-        default:
-          return [];
-      }
+      if (sub.isKind(ElementKind.DiagramViewTables)) return this.bindTableReferences(sub.body);
+      if (sub.isKind(ElementKind.DiagramViewNotes)) return this.bindNoteReferences(sub.body);
+      if (sub.isKind(ElementKind.DiagramViewTableGroups)) return this.bindTableGroupReferences(sub.body);
+      if (sub.isKind(ElementKind.DiagramViewSchemas)) return this.bindSchemaReferences(sub.body);
+      return [];
     });
   }
 

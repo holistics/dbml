@@ -2,6 +2,7 @@ import { describe, expect } from 'vitest';
 import { SyntaxNodeKind, ElementDeclarationNode, BlockExpressionNode, ProgramNode } from '@/core/types/nodes';
 import { SchemaSymbol, NodeSymbol, SymbolKind } from '@/core/types/symbol';
 import { UNHANDLED } from '@/constants';
+import { CompileErrorCode } from '@/core/types/errors';
 import { analyze } from '@tests/utils';
 import type Compiler from '@/compiler';
 
@@ -988,6 +989,72 @@ describe('[example] binder', () => {
       const { ast, compiler } = result.getValue();
       const schemaSymbol = nodeSymbol(compiler, ast)!;
       expect(findMember(compiler, schemaSymbol, SymbolKind.Table, 'users')).toSatisfy((s: any) => s?.isKind(SymbolKind.Table));
+    });
+  });
+
+  describe('DiagramView', () => {
+    test('should create DiagramView symbol with correct kind', () => {
+      const source = `
+        Table users { id int }
+        DiagramView myView {
+          Tables { users }
+        }
+      `;
+      const { ast, compiler } = analyze(source).getValue();
+      const dvSymbol = findMember(compiler, nodeSymbol(compiler, ast)!, SymbolKind.DiagramView, 'myView');
+      expect(dvSymbol).toBeDefined();
+      expect(dvSymbol!.isKind(SymbolKind.DiagramView)).toBe(true);
+    });
+
+    test('should produce no binding errors when DiagramView references existing table', () => {
+      const source = `
+        Table users { id int }
+        DiagramView myView {
+          Tables { users }
+        }
+      `;
+      expect(analyze(source).getErrors()).toHaveLength(0);
+    });
+
+    test('should produce binding error when DiagramView.Tables references non-existent table', () => {
+      const source = `
+        DiagramView myView {
+          Tables { ghost_table }
+        }
+      `;
+      const errors = analyze(source).getErrors();
+      expect(errors.some((e: any) => e.code === CompileErrorCode.BINDING_ERROR)).toBe(true);
+    });
+
+    test('should produce no binding errors when DiagramView.Tables references aliased table', () => {
+      const source = `
+        Table users as U { id int }
+        DiagramView myView {
+          Tables { U }
+        }
+      `;
+      expect(analyze(source).getErrors()).toHaveLength(0);
+    });
+
+    test('should produce binding error when DiagramView.Tables references non-existent schema-qualified table', () => {
+      const source = `
+        Table auth.users { id int }
+        DiagramView myView {
+          Tables { auth.ghost }
+        }
+      `;
+      const errors = analyze(source).getErrors();
+      expect(errors.some((e: any) => e.code === CompileErrorCode.BINDING_ERROR)).toBe(true);
+    });
+
+    test('should produce no binding errors for schema-qualified table reference', () => {
+      const source = `
+        Table auth.users { id int }
+        DiagramView myView {
+          Tables { auth.users }
+        }
+      `;
+      expect(analyze(source).getErrors()).toHaveLength(0);
     });
   });
 });

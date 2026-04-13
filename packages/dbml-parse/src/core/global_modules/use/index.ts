@@ -53,7 +53,7 @@ export const useModule: GlobalModule = {
     if (!isExpressionAVariableNode(node) && !isDotDelimitedIdentifier(node)) return Report.create(PASS_THROUGH);
 
     const useSpecifier = node.parentOfKind(UseSpecifierNode);
-    if (!useSpecifier) return Report.create(undefined);
+    if (!useSpecifier) return Report.create(PASS_THROUGH);
 
     // Determine if we're in the schema qualified part
     // use { table public.table } from '...'

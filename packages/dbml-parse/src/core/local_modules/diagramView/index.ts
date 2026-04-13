@@ -11,7 +11,9 @@ import {
 } from '@/constants';
 import Report from '@/core/types/report';
 import type Compiler from '@/compiler';
-import { isElementNode, destructureComplexVariable } from '@/core/utils/expression';
+import {
+  isElementNode, destructureComplexVariable,
+} from '@/core/utils/expression';
 import type { SyntaxToken } from '@/core/types/tokens';
 import DiagramViewValidator from './validate';
 
@@ -19,7 +21,9 @@ export const diagramViewModule: LocalModule = {
   validateNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
     if (!isElementNode(node, ElementKind.DiagramView)) return Report.create(PASS_THROUGH);
     const decl = node as ElementDeclarationNode & { type: SyntaxToken };
-    const { errors, warnings } = new DiagramViewValidator(compiler, decl).validate();
+    const {
+      errors, warnings,
+    } = new DiagramViewValidator(compiler, decl).validate();
     return Report.create(undefined, errors, warnings);
   },
 

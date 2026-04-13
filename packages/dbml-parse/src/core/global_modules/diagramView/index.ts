@@ -47,19 +47,19 @@ export const diagramViewModule: GlobalModule = {
     const globalSymbol = compiler.nodeSymbol(programNode).getFiltered(UNHANDLED);
     if (!globalSymbol) return Report.create(undefined);
 
-    const subBlockType = subBlock.type!.value.toLowerCase();
-    switch (subBlockType) {
-      case 'tables':
-        return nodeRefereeOfDiagramViewTableRef(compiler, globalSymbol, node as PrimaryExpressionNode & { expression: VariableNode });
-      case 'notes':
-        return nodeRefereeOfDiagramViewSimpleRef(compiler, globalSymbol, node as PrimaryExpressionNode & { expression: VariableNode }, SymbolKind.Note);
-      case 'tablegroups':
-        return nodeRefereeOfDiagramViewSimpleRef(compiler, globalSymbol, node as PrimaryExpressionNode & { expression: VariableNode }, SymbolKind.TableGroup);
-      case 'schemas':
-        return nodeRefereeOfDiagramViewSchemaRef(compiler, globalSymbol, node as PrimaryExpressionNode & { expression: VariableNode });
-      default:
-        return Report.create(PASS_THROUGH);
+    if (subBlock.isKind(ElementKind.DiagramViewTables)) {
+      return nodeRefereeOfDiagramViewTableRef(compiler, globalSymbol, node as PrimaryExpressionNode & { expression: VariableNode });
     }
+    if (subBlock.isKind(ElementKind.DiagramViewNotes)) {
+      return nodeRefereeOfDiagramViewSimpleRef(compiler, globalSymbol, node as PrimaryExpressionNode & { expression: VariableNode }, SymbolKind.Note);
+    }
+    if (subBlock.isKind(ElementKind.DiagramViewTableGroups)) {
+      return nodeRefereeOfDiagramViewSimpleRef(compiler, globalSymbol, node as PrimaryExpressionNode & { expression: VariableNode }, SymbolKind.TableGroup);
+    }
+    if (subBlock.isKind(ElementKind.DiagramViewSchemas)) {
+      return nodeRefereeOfDiagramViewSchemaRef(compiler, globalSymbol, node as PrimaryExpressionNode & { expression: VariableNode });
+    }
+    return Report.create(PASS_THROUGH);
   },
 
   bindNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
@@ -85,19 +85,17 @@ function getContainingDiagramViewSubBlock (node: SyntaxNode): ElementDeclaration
   const parentField = node.parentOfKind(FunctionApplicationNode);
   if (!parentField) return null;
 
-  const subBlockBody = parentField.parent;
+  const subBlockBody = parentField.parentNode;
   if (!(subBlockBody instanceof BlockExpressionNode)) return null;
 
-  const subBlock = subBlockBody.parent;
-  if (!(subBlock instanceof ElementDeclarationNode) || !subBlock.type) return null;
+  const subBlock = subBlockBody.parentNode;
+  if (!(subBlock instanceof ElementDeclarationNode)) return null;
+  if (!subBlock.isKind(ElementKind.DiagramViewTables, ElementKind.DiagramViewNotes, ElementKind.DiagramViewTableGroups, ElementKind.DiagramViewSchemas)) return null;
 
-  const subBlockType = subBlock.type.value.toLowerCase();
-  if (!['tables', 'notes', 'tablegroups', 'schemas'].includes(subBlockType)) return null;
-
-  const dvBody = subBlock.parent;
+  const dvBody = subBlock.parentNode;
   if (!(dvBody instanceof BlockExpressionNode)) return null;
 
-  const diagramView = dvBody.parent;
+  const diagramView = dvBody.parentNode;
   if (!(diagramView instanceof ElementDeclarationNode) || !diagramView.isKind(ElementKind.DiagramView)) return null;
 
   return subBlock;
@@ -120,12 +118,18 @@ function nodeRefereeOfDiagramViewTableRef (
     const left = nodeRefereeOfLeftExpression(compiler, node);
     if (left) {
       if (left.isKind(SymbolKind.Schema)) {
-        return lookupMember(compiler, left, name, { kinds: [SymbolKind.Table, SymbolKind.Schema] });
+        return lookupMember(compiler, left, name, {
+          kinds: [SymbolKind.Table, SymbolKind.Schema],
+          errorNode: node,
+        });
       }
       return new Report(undefined);
     }
     // Left side of access: look up as Schema
-    return lookupMember(compiler, globalSymbol, name, { kinds: [SymbolKind.Schema] });
+    return lookupMember(compiler, globalSymbol, name, {
+      kinds: [SymbolKind.Schema],
+      errorNode: node,
+    });
   }
 
   // Standalone reference: search all schemas (aliases included)
