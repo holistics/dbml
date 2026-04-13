@@ -1,19 +1,3 @@
-/**
- * Sample DBML Content
- *
- * Centralized management of sample DBML content for the playground.
- * This module encapsulates all sample content and provides a simple interface
- * for accessing different types of examples.
- *
- * Design Principles Applied:
- * - Information Hiding: Sample content details are hidden from consumers
- * - Single Responsibility: Only manages sample content
- * - General Purpose: Extensible for different content types
- */
-
-/**
- * Default sample DBML content for the playground
- */
 export const DEFAULT_SAMPLE_CONTENT = `Table users {
   id int [pk]
   username varchar [not null]
@@ -40,18 +24,12 @@ Enum post_status {
   archived
 }`;
 
-/**
- * Sample content categories
- */
 export interface SampleCategory {
   readonly name: string;
   readonly description: string;
   readonly content: string;
 }
 
-/**
- * Available sample content organized by category
- */
 export const SAMPLE_CATEGORIES: readonly SampleCategory[] = [
   {
     name: 'Basic Example',
@@ -145,17 +123,11 @@ Enum status {
   },
 ] as const;
 
-/**
- * Get sample content by category name
- */
 export function getSampleContent (categoryName: string): string | null {
   const category = SAMPLE_CATEGORIES.find((cat) => cat.name === categoryName);
   return category?.content ?? null;
 }
 
-/**
- * Get all available sample categories
- */
 export function getSampleCategories (): readonly SampleCategory[] {
   return SAMPLE_CATEGORIES;
 }
